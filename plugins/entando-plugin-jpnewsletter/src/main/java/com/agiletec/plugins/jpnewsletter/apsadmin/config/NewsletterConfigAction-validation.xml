@@ -1,0 +1,98 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+	
+    <field name="newsletterConfig.senderCode">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.mailAttrName">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.subject">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.htmlHeader">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.htmlFooter">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.textHeader">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.textFooter">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    
+    <field name="newsletterConfig.unsubscriptionPageCode">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.subscribersTextFooter">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.subscribersHtmlFooter">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.subscriptionPageCode">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.subscriptionTokenValidityDays">
+        <field-validator type="required">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.subscriptionSubject">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.subscriptionTextBody">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterConfig.subscriptionHtmlBody">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+</validators>

@@ -1,0 +1,15 @@
+/* Bootstrap fix for google maps images */
+.jpgeoref-contentlist-map img {
+	max-width: none !important;
+}
+
+.jpgeoref-contentlist-map label {
+	width: auto;
+	display:inline !important;
+}
+
+.jpgeoref-contentlist-map {
+	width: 100%;
+	min-height: 200px;
+	height: 20em;
+}

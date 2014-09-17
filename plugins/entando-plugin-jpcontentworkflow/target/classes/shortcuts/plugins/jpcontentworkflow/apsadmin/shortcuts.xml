@@ -1,0 +1,27 @@
+<shortcut-def>
+	<shortcuts>
+		
+		<shortcut id="jpcontentworkflow.workflow.config" requiredPermission="superuser" menusection="plugins" source="jpcontentworkflow">
+			<description key="jpcontentworkflow.workflow.config.shortDesc">Workflow Config</description>
+			<longdesc key="jpcontentworkflow.workflow.config.longDesc">
+				<![CDATA[Workflow Configuration: configure steps and privileges.]]>
+			</longdesc>
+			<url>
+				<param name="namespace">/do/jpcontentworkflow/Workflow</param>
+				<param name="actionName">list</param>
+			</url>
+		</shortcut>
+
+		<shortcut id="jpcontentworkflow.workflow.notifier.config" requiredPermission="superuser" menusection="plugins" source="jpcontentworkflow">
+			<description key="jpcontentworkflow.workflow.notifier.config.shortDesc">Workflow Notifier</description>
+			<longdesc key="jpcontentworkflow.workflow.notifier.config.longDesc">
+				<![CDATA[Configure the notifier for the workflow process.]]>
+			</longdesc>
+			<url>
+				<param name="namespace">/do/jpcontentworkflow/Notifier</param>
+				<param name="actionName">config</param>
+			</url>
+		</shortcut>
+		
+	</shortcuts>
+</shortcut-def>

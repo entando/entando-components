@@ -1,0 +1,33 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10012</id>
+  <contentType>CNG</contentType>
+  <description>Hero Unit + Picture</description>
+  <shape><![CDATA[<article>
+  <div class="hero-unit span6">
+  <h1>$content.Title.text</h1>
+  #if ( $content.Abstract.text != "" )
+  $content.Abstract.text
+  #end
+  #if ( $content.Links.size() != 0 )
+  #set ( $link = $content.Links.get(0) )
+  <p><a href="$link.destination" class="btn btn-primary btn-large">$link.text</a></p>
+  #end
+</div>
+#if ( $content.Picture.getImagePath("0") != "" )
+<div class="span4 well well-small">
+<figure>
+  <img src="$content.Picture.getImagePath("0")" alt="$content.Picture.text" />
+  #if ( $content.Caption.text != "" )
+  <figcaption class="text-center"><p class="margin-medium-all">$content.Caption.text</p></figcaption>
+  #end
+</figure>
+</div>
+#end
+</article>]]></shape>
+</contentModel>

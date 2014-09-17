@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="0" time="149.179" errors="0" skipped="0" tests="56" name="com.agiletec.plugins.jpsurvey.AllTests">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-7-oracle/jre/lib/i386"/>
+    <property name="java.vm.version" value="24.65-b04"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="IT"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/home/eu/ENTANDO/github_eugeniosant/entando-components"/>
+    <property name="java.runtime.version" value="1.7.0_65-b17"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-7-oracle/jre/lib/endorsed"/>
+    <property name="os.arch" value="i386"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="os.name" value="Linux"/>
+    <property name="classworlds.conf" value="/usr/share/maven/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib/i386:/lib:/usr/lib"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="51.0"/>
+    <property name="sun.management.compiler" value="HotSpot Tiered Compilers"/>
+    <property name="os.version" value="3.11.0-26-generic"/>
+    <property name="user.home" value="/home/eu"/>
+    <property name="user.timezone" value="Europe/Rome"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="1.7"/>
+    <property name="user.name" value="eu"/>
+    <property name="java.class.path" value="/usr/share/maven/boot/plexus-classworlds-2.x.jar"/>
+    <property name="java.vm.specification.version" value="1.7"/>
+    <property name="sun.arch.data.model" value="32"/>
+    <property name="java.home" value="/usr/lib/jvm/java-7-oracle/jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean test"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="it"/>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.7.0_65"/>
+    <property name="java.ext.dirs" value="/usr/lib/jvm/java-7-oracle/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="securerandom.source" value="file:/dev/./urandom"/>
+    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-7-oracle/jre/lib/resources.jar:/usr/lib/jvm/java-7-oracle/jre/lib/rt.jar:/usr/lib/jvm/java-7-oracle/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-7-oracle/jre/lib/jsse.jar:/usr/lib/jvm/java-7-oracle/jre/lib/jce.jar:/usr/lib/jvm/java-7-oracle/jre/lib/charsets.jar:/usr/lib/jvm/java-7-oracle/jre/lib/jfr.jar:/usr/lib/jvm/java-7-oracle/jre/classes"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="/usr/share/maven"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="gnome"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase time="48.954" classname="com.agiletec.plugins.jpsurvey.aps.system.services.collect.TestVoterManager" name="testSearchByIds"/>
+  <testcase time="7.193" classname="com.agiletec.plugins.jpsurvey.aps.system.services.collect.TestVoterManager" name="testDeleteVoterBySurveyId"/>
+  <testcase time="3.297" classname="com.agiletec.plugins.jpsurvey.aps.system.services.collect.TestVoterManager" name="testSaveLoadDelete"/>
+  <testcase time="2.488" classname="com.agiletec.plugins.jpsurvey.aps.system.services.collect.TestResultManager" name="testSaveResponse"/>
+  <testcase time="2.456" classname="com.agiletec.plugins.jpsurvey.aps.system.services.collect.TestResultManager" name="testAggregateResults"/>
+  <testcase time="2.375" classname="com.agiletec.plugins.jpsurvey.aps.system.services.collect.TestResultManager" name="testDeleteResponseBySurvey"/>
+  <testcase time="2.575" classname="com.agiletec.plugins.jpsurvey.aps.system.services.collect.TestResultManager" name="testDeleteQuestionByQuestionId"/>
+  <testcase time="2.301" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testLoadSurvey"/>
+  <testcase time="2.551" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testLoadQuestion"/>
+  <testcase time="2.327" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testSaveQuestion"/>
+  <testcase time="2.325" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testLoadChoice"/>
+  <testcase time="2.288" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testGetChoiceByQuestionId"/>
+  <testcase time="2.387" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testSaveChoice"/>
+  <testcase time="2.554" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testDeleteQuestion"/>
+  <testcase time="2.407" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testDeleteSurvey"/>
+  <testcase time="2.76" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testSaveSurvey"/>
+  <testcase time="2.51" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testSaveChoiceInSortedPosition"/>
+  <testcase time="2.51" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testUpdateChoice"/>
+  <testcase time="2.545" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testDeleteChoiceByQuestionid"/>
+  <testcase time="2.678" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testUpdateQuestion"/>
+  <testcase time="2.599" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testDeleteQuestionBySurveyId"/>
+  <testcase time="2.722" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testUpdateSurvey"/>
+  <testcase time="2.777" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testChangeQuestionPosition"/>
+  <testcase time="2.733" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testSwapChoicePosition"/>
+  <testcase time="2.778" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testSaveQuestionInSortedPosition"/>
+  <testcase time="2.866" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testSearchSurvey"/>
+  <testcase time="2.844" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testSearchSurveyXMLsafe"/>
+  <testcase time="2.878" classname="com.agiletec.plugins.jpsurvey.aps.system.services.survey.TestSurveyManager" name="testGetSurveyList"/>
+  <testcase time="7.095" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyAction" name="testDeleteSurvey"/>
+  <testcase time="2.012" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyAction" name="testSaveSurvey"/>
+  <testcase time="1.011" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyAction" name="testEditSurvey"/>
+  <testcase time="1.242" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyAction" name="testPublishSurvey"/>
+  <testcase time="1.221" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyAction" name="testRestireSurvey"/>
+  <testcase time="1.212" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyAction" name="testAssociateSurveyImageEntry"/>
+  <testcase time="0.857" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyAction" name="testRemoveImage"/>
+  <testcase time="0.768" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyAction" name="testTrashSurvey"/>
+  <testcase time="0.789" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyDetailAction" name="testView"/>
+  <testcase time="0.545" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestQuestionAction" name="testSaveQuestion"/>
+  <testcase time="0.673" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestQuestionAction" name="testDeleteQuestion"/>
+  <testcase time="0.502" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestQuestionAction" name="testEditSingleQuestion"/>
+  <testcase time="0.542" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestQuestionAction" name="testMoveQuestionUp"/>
+  <testcase time="0.489" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestQuestionAction" name="testMoveQuestionDown"/>
+  <testcase time="0.545" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestQuestionAction" name="testAddFreeText"/>
+  <testcase time="0.511" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestQuestionAction" name="testAddChoice"/>
+  <testcase time="0.332" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestQuestionAction" name="testTrashQuestion"/>
+  <testcase time="0.546" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestChoiceAction" name="testSaveChoice"/>
+  <testcase time="0.494" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestChoiceAction" name="testAddFreeText"/>
+  <testcase time="0.334" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestChoiceAction" name="testEditSingleChoice"/>
+  <testcase time="0.484" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestChoiceAction" name="testDeleteChoice"/>
+  <testcase time="0.603" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestChoiceAction" name="testMoveChoiceDown"/>
+  <testcase time="0.662" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestChoiceAction" name="testMoveChoiceUp"/>
+  <testcase time="0.327" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestChoiceAction" name="testFreeTextList"/>
+  <testcase time="0.361" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestChoiceAction" name="testTrashChoice"/>
+  <testcase time="0.404" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyImageAction" name="testList"/>
+  <testcase time="0.399" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyImageAction" name="testAssociateSurveyImage"/>
+  <testcase time="0.541" classname="com.agiletec.plugins.jpsurvey.apsadmin.survey.TestSurveyImageAction" name="testJoinImage"/>
+</testsuite>

@@ -1,0 +1,16 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10041</id>
+  <contentType>RSL</contentType>
+  <description>Lists - Default</description>
+  <shape><![CDATA[<article>
+<h2><a href="$content.contentLink">$content.Number.value &ndash; $content.Date.getFormattedDate("yyyy.MM.dd")</a></h2>
+<p>$content.Title.text</p>
+</article>]]></shape>
+</contentModel>
+

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<bean id="jpmyportalplusSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jpmyportalplus/apsadmin/jsp/common/layouts/subMenu.jsp</value></property>
+	</bean>
+	
+	<bean id="jpmyportalplusConfigAction" scope="prototype" 
+			class="com.agiletec.plugins.jpmyportalplus.apsadmin.config.ConfigAction" parent="abstractBaseAction" >
+		<property name="myPortalConfigManager" ref="jpmyportalplusMyPortalConfigManager" />
+		<property name="widgetTypeManager" ref="WidgetTypeManager" />
+		<property name="stockWidgetCodes"><value>${widgets.stock}</value></property>
+	</bean>
+	
+	<bean id="widgetTypeAction" scope="prototype" 
+			class="com.agiletec.plugins.jpmyportalplus.apsadmin.portal.WidgetTypeAction" parent="abstractPortalAction">
+		<property name="guiFragmentManager" ref="GuiFragmentManager" />
+		<property name="myPortalConfigManager" ref="jpmyportalplusMyPortalConfigManager" />
+	</bean>
+	
+	<bean id="jpmyportalplusUserWidgetTypeEntryHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
+		<property name="filePath"><value>/WEB-INF/plugins/jpmyportalplus/apsadmin/jsp/portal/widget-entry-jack.jsp</value></property>
+		<property name="hookPointKey"><value>core.showletType.entry</value></property>
+	</bean>
+	
+	<bean id="jpmyportalplusWidgetTypeListThHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
+		<property name="filePath"><value>/WEB-INF/plugins/jpmyportalplus/apsadmin/jsp/portal/widget-list-table-th-jack.jsp</value></property>
+		<property name="hookPointKey"><value>core.showletType.list.table.th</value></property>
+	</bean>
+	
+	<bean id="jpmyportalplusWidgetTypeListTdHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
+		<property name="filePath"><value>/WEB-INF/plugins/jpmyportalplus/apsadmin/jsp/portal/widget-list-table-td-jack.jsp</value></property>
+		<property name="hookPointKey"><value>core.showletType.list.table.td</value></property>
+	</bean>
+	
+	<!-- ******************** -->
+	
+	<bean id="jpmyportalplusPageModelListActionHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
+		<property name="filePath"><value>/WEB-INF/plugins/jpmyportalplus/apsadmin/jsp/portal/model/pageModel-list-action-jack.jsp</value></property>
+		<property name="hookPointKey"><value>core.pageModel.list.action</value></property>
+	</bean>
+	
+	<bean id="jpmyportalPageModelConfigAction" scope="prototype" 
+			class="org.entando.entando.plugins.jpmyportalplus.apsadmin.portal.model.PageModelConfigAction" parent="abstractBaseAction">
+		<property name="pageModelManager" ref="PageModelManager" />
+		<property name="myPortalPageModelManager" ref="jpmyportalplusMyPortalPageModelManager" />
+	</bean>
+	
+</beans>

@@ -1,0 +1,6 @@
+<disablingcodes>
+	<disablingcode>
+		<name>jpuserreg:onEdit</name>
+		<description>Disable attribute on user registration interface</description>
+	</disablingcode>
+</disablingcodes>

@@ -1,0 +1,54 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+	
+    <field name="config.hoursDelay">
+    	<field-validator type="int">
+    		<param name="min">1</param>
+            <message key="wrongMinValue" />
+        </field-validator>
+    </field>
+    
+	<field name="startDate">
+        <field-validator type="requiredstring" short-circuit="true">
+			<param name="trim">true</param>
+            <message key="requiredstring"/>
+        </field-validator>
+        <field-validator type="regex">
+           <param name="regex"><![CDATA[(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/]\d\d\d\d]]></param>
+           <message key="wrongDate" />
+        </field-validator>
+	</field>
+	
+    <field name="hour">
+    	<field-validator type="int">
+    		<param name="min">0</param>
+    		<param name="max">23</param>
+            <message key="wrongIntRange" />
+        </field-validator>
+    </field>
+    
+    <field name="minute">
+    	<field-validator type="int">
+    		<param name="min">0</param>
+    		<param name="max">59</param>
+            <message key="wrongIntRange" />
+        </field-validator>
+    </field>
+    
+    <field name="config.subject">
+        <field-validator type="requiredstring" short-circuit="true">
+			<param name="trim">true</param>
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="config.template">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+	
+</validators>

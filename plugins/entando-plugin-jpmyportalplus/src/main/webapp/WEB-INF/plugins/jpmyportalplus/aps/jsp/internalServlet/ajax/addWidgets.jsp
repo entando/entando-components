@@ -1,0 +1,1 @@
+<%-- file inutile non è prevista la funzionalità ajax --%>

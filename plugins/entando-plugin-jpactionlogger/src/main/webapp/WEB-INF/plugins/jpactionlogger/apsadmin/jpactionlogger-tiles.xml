@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+	<!-- ********* START tiles jpactionlogger ********* -->
+	
+        <definition extends="main.layout" name="jpactionlogger.admin.actionlogger.list">
+		<put-attribute name="title" value="title.actionLogger.management" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpactionlogger/apsadmin/jsp/common/template/extraresources/actionlogger_extraResources.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpactionlogger/apsadmin/jsp/actionlogger/actionLoggerFinding.jsp" />
+	</definition>
+        
+        <definition extends="main.layout" name="jpactionlogger.admin.actionlogger.testResult">
+		<put-attribute name="title" value="title.actionLogger.management" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpactionlogger/apsadmin/jsp/actionlogger/testResult.jsp" />
+	</definition>
+        
+	<!-- ********* END tiles jpactionlogger  ********* -->
+	
+</tiles-definitions>

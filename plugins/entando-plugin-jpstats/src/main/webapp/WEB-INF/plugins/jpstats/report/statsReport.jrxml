@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="start" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="statsRecords" class="java.util.List" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ipByDateInterval" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="averageTimePage" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="averageTimeSite" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="numPageSession" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="visitsForDate" class="java.util.List" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="visitsForPages" class="java.util.List" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="visitsForContents" class="java.util.List" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="baseDirectory" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<title>
+		<band height="80">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="30"/>
+				<textElement textAlignment="Center">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="38" width="555" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["###########  from date " + $P{start} + " to date " + $P{end} +  " ###########"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="152">
+			<staticText>
+				<reportElement x="0" y="41" width="250" height="20"/>
+				<textElement/>
+				<text><![CDATA[Average number of page views per session]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="21" width="250" height="20"/>
+				<textElement/>
+				<text><![CDATA[Average time spent on page]]></text>
+			</staticText>
+			<line>
+				<reportElement x="350" y="1" width="1" height="80"/>
+			</line>
+			<line>
+				<reportElement x="250" y="1" width="1" height="80"/>
+			</line>
+			<textField>
+				<reportElement x="260" y="1" width="90" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{averageTimeSite}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="1" width="250" height="20"/>
+				<textElement/>
+				<text><![CDATA[Average time spent on site]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="61" width="350" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="21" width="350" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="41" width="350" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="260" y="41" width="90" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{numPageSession}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="61" width="250" height="20"/>
+				<textElement/>
+				<text><![CDATA[Unique visitors]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="1" width="1" height="80"/>
+			</line>
+			<textField>
+				<reportElement x="260" y="61" width="90" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{ipByDateInterval}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="260" y="21" width="90" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{averageTimePage}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="80" width="350" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="350" height="1"/>
+			</line>
+			<subreport>
+				<reportElement positionType="Float" x="-20" y="81" width="595" height="18"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{visitsForDate})]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{baseDirectory} + "include_visitsForDays.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="false">
+				<reportElement positionType="Float" x="-20" y="99" width="595" height="17"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{visitsForPages})]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{baseDirectory} + "include_visitsForPages.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="false">
+				<reportElement positionType="Float" x="-20" y="116" width="596" height="18"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{visitsForContents})]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{baseDirectory} + "include_visitsForContents.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="false">
+				<reportElement positionType="Float" x="-19" y="134" width="595" height="18"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{statsRecords})]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{baseDirectory} + "include_statisticRecords.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40">
+			<textField evaluationTime="Report">
+				<reportElement positionType="FixRelativeToBottom" x="88" y="5" width="37" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="FixRelativeToBottom" x="1" y="5" width="84" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page " + $V{PAGE_NUMBER} + " di "]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

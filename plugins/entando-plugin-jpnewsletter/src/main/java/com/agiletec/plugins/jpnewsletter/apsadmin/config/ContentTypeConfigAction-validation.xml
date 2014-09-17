@@ -1,0 +1,25 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+	
+    <field name="newsletterContentType.contentTypeCode">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterContentType.simpleTextModel">
+        <field-validator type="required">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="newsletterContentType.htmlModel">
+        <field-validator type="required">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+</validators>

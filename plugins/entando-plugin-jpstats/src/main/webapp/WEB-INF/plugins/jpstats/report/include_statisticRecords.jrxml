@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<field name="ip" class="java.lang.String"/>
+	<field name="referer" class="java.lang.String"/>
+	<field name="sessionId" class="java.lang.String"/>
+	<field name="pageCode" class="java.lang.String"/>
+	<field name="langcode" class="java.lang.String"/>
+	<field name="timestamp" class="java.lang.String"/>
+	<field name="useragent" class="java.lang.String"/>
+	<field name="browserLang" class="java.lang.String"/>
+	<field name="contentId" class="java.lang.String"/>
+	<title>
+		<band height="35" splitType="Prevent">
+			<staticText>
+				<reportElement x="0" y="0" width="575" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Portal Requests]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Prevent">
+			<staticText>
+				<reportElement x="128" y="1" width="22" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="1" width="70" height="24"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Page code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="495" y="1" width="60" height="24"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Browser]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="265" y="1" width="120" height="24"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Refereer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="385" y="1" width="110" height="24"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[User Agent]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="69" y="1" width="60" height="24"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IP Address]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="219" y="1" width="45" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Content ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="1" width="20" height="24"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="1" width="50" height="24"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Timestamp]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="19" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="69" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="128" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="149" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="219" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="264" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="384" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="494" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="555" y="0" width="1" height="25"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Prevent">
+			<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue()<=100)]]></printWhenExpression>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="19" height="25"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="129" y="0" width="21" height="25"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{langcode}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="20" y="0" width="49" height="25"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{timestamp}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="150" y="0" width="69" height="25"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{pageCode}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="69" y="0" width="59" height="25">
+					<property name="net.sf.jasperreports.export.pdf.tag.table" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ip}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="220" y="0" width="44" height="25"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[(($F{contentId}==null || $F{contentId}.length()==0) ? "-" : $F{contentId})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="495" y="0" width="59" height="25"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{browserLang}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="385" y="0" width="109" height="25"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{useragent}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="265" y="0" width="119" height="25"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[(($F{referer}==null || $F{referer}.length()==0) ? " -" : $F{referer})]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="19" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="69" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="128" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="149" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="219" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="264" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="384" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="494" y="0" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="555" y="0" width="1" height="25"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="1" splitType="Prevent">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1"/>
+			</line>
+		</band>
+	</columnFooter>
+</jasperReport>

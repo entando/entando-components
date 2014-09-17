@@ -1,0 +1,12 @@
+<roles>
+	<role>
+		<name>jpuserprofile:firstname</name>
+		<description>The Attribute that contains the first name</description>
+		<allowedTypes>Monotext</allowedTypes>
+	</role>
+	<role>
+		<name>jpuserprofile:surname</name>
+		<description>The Attribute that contains the surname</description>
+		<allowedTypes>Monotext</allowedTypes>
+	</role>
+</roles>

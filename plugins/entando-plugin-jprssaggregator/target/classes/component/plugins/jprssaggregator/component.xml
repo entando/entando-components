@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>jprssaggregator</code>
+	<description>RSS Aggregator</description>
+	<dependencies>
+		<code>jacms</code>
+	</dependencies>
+	<installation>
+		<tableMapping>
+			<datasource name="servDataSource">
+				<class>org.entando.entando.plugins.jprssaggregator.aps.system.init.servdb.AggregatorItem</class>
+			</datasource>
+		</tableMapping>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jprssaggregator/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jprssaggregator/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+			<postProcesses>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentType"
+						method="POST" expected="202" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jprssaggregator/postprocess/RSS.xml" />
+				</selfRestCall>
+			</postProcesses>
+		</environment>
+		<environment code="test">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jprssaggregator/port_data_test.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jprssaggregator/serv_data_test.sql
+				</datasource>
+			</defaultSqlResources>
+			<postProcesses>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentType"
+						method="POST" expected="202" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jprssaggregator/postprocess/RSS.xml" />
+				</selfRestCall>
+			</postProcesses>
+		</environment>
+	</installation>
+</component>

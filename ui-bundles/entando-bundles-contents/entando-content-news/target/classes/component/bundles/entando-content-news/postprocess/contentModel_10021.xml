@@ -1,0 +1,19 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10021</id>
+  <contentType>NWS</contentType>
+  <description>Lists - Default</description>
+  <shape><![CDATA[<article>
+<p class="text-right"><time class="label" datetime="$content.Date.shortDate">$content.Date.getFormattedDate("EEEE dd MMMM yyyy")</time></p>
+<h2>$content.Title.text</h2>
+#if ( $content.Abstract.text != "" )
+  $content.Abstract.text
+#end
+<p class="text-right"><a class="btn" href="$content.contentLink">$i18n.getLabel("NWS_READ_MORE")</a></p>
+</article>]]></shape>
+</contentModel>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+	<package name="jpnewsletter_do/jpnewsletter/Front/RegSubscriber" namespace="/do/jpnewsletter/Front/RegSubscriber" extends="entando-front-default">
+		
+		<action name="entry" class="jpnewsletterRegSubscriberAction">
+			<result type="dispatcher">/WEB-INF/plugins/jpnewsletter/aps/jsp/internalservlet/subscriber/subscription_form.jsp</result>
+			<interceptor-ref name="entandoFrontEndFreeStack" />
+		</action>
+		
+		<action name="addSubscription" class="jpnewsletterRegSubscriberAction" method="addSubscription">
+			<result name="input" type="dispatcher">/WEB-INF/plugins/jpnewsletter/aps/jsp/internalservlet/subscriber/subscription_form.jsp</result>
+			<result type="dispatcher">/WEB-INF/plugins/jpnewsletter/aps/jsp/internalservlet/subscriber/subscription_sentMail.jsp</result>
+			<interceptor-ref name="entandoFrontEndFreeValidationStack" />
+		</action>
+		
+		<action name="subscription" class="jpnewsletterRegSubscriberAction" method="activateSubscription">
+			<result type="dispatcher" name="input" >/WEB-INF/plugins/jpnewsletter/aps/jsp/internalservlet/subscriber/activationFailed.jsp</result>
+			<result type="dispatcher">/WEB-INF/plugins/jpnewsletter/aps/jsp/internalservlet/subscriber/subscription_activated.jsp</result>
+			<interceptor-ref name="entandoFrontEndFreeStack" />
+		</action>
+		
+		<action name="unsubscriptionEntry" class="jpnewsletterRegSubscriberAction" method="trashSubscription">
+			<result type="dispatcher">/WEB-INF/plugins/jpnewsletter/aps/jsp/internalservlet/subscriber/unsubscription_confirm.jsp</result>
+			<interceptor-ref name="entandoFrontEndFreeStack" />
+		</action>
+		
+		<action name="unsubscription" class="jpnewsletterRegSubscriberAction" method="deleteSubscription">
+			<result name="input" type="dispatcher">/WEB-INF/plugins/jpnewsletter/aps/jsp/internalservlet/subscriber/unsubscription_error.jsp</result>
+			<result type="dispatcher">/WEB-INF/plugins/jpnewsletter/aps/jsp/internalservlet/subscriber/unsubscription_done.jsp</result>
+			<interceptor-ref name="entandoFrontEndFreeStack" />
+		</action>
+		
+	</package>
+	
+</struts>

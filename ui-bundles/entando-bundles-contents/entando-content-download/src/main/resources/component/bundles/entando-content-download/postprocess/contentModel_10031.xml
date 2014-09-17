@@ -1,0 +1,19 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10031</id>
+  <contentType>DLD</contentType>
+  <description>Lists - Default</description>
+  <shape><![CDATA[<article>
+<h2>$content.Title.text</h2>
+$content.ShortDescr.text
+<p class="btn-group">
+  <a class="btn" href="$content.contentLink">$i18n.getLabel("DLD_GET_INFO")&nbsp;<i class="icon-info-sign"></i></a>
+  <a class="btn btn-primary" href="$content.File.attachPath">$i18n.getLabel("DLD_DOWNLOAD")&nbsp;<i class="icon-download-alt icon-white"></i></a>
+</p>
+</article>]]></shape>
+</contentModel>

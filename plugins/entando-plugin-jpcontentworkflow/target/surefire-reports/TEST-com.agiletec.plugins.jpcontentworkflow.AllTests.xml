@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="0" time="115.532" errors="0" skipped="0" tests="32" name="com.agiletec.plugins.jpcontentworkflow.AllTests">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-7-oracle/jre/lib/i386"/>
+    <property name="java.vm.version" value="24.65-b04"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="IT"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/home/eu/ENTANDO/github_eugeniosant/entando-components"/>
+    <property name="java.runtime.version" value="1.7.0_65-b17"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-7-oracle/jre/lib/endorsed"/>
+    <property name="os.arch" value="i386"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="os.name" value="Linux"/>
+    <property name="classworlds.conf" value="/usr/share/maven/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib/i386:/lib:/usr/lib"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="51.0"/>
+    <property name="sun.management.compiler" value="HotSpot Tiered Compilers"/>
+    <property name="os.version" value="3.11.0-26-generic"/>
+    <property name="user.home" value="/home/eu"/>
+    <property name="user.timezone" value="Europe/Rome"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="1.7"/>
+    <property name="user.name" value="eu"/>
+    <property name="java.class.path" value="/usr/share/maven/boot/plexus-classworlds-2.x.jar"/>
+    <property name="java.vm.specification.version" value="1.7"/>
+    <property name="sun.arch.data.model" value="32"/>
+    <property name="java.home" value="/usr/lib/jvm/java-7-oracle/jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean test"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="it"/>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.7.0_65"/>
+    <property name="java.ext.dirs" value="/usr/lib/jvm/java-7-oracle/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="securerandom.source" value="file:/dev/./urandom"/>
+    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-7-oracle/jre/lib/resources.jar:/usr/lib/jvm/java-7-oracle/jre/lib/rt.jar:/usr/lib/jvm/java-7-oracle/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-7-oracle/jre/lib/jsse.jar:/usr/lib/jvm/java-7-oracle/jre/lib/jce.jar:/usr/lib/jvm/java-7-oracle/jre/lib/charsets.jar:/usr/lib/jvm/java-7-oracle/jre/lib/jfr.jar:/usr/lib/jvm/java-7-oracle/jre/classes"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="/usr/share/maven"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="gnome"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase time="49.189" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.parse.TestWorkflowNotifierDOM" name="testSetNotifierConfig"/>
+  <testcase time="8.057" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.parse.TestWorkflowNotifierDOM" name="testExtractConfig"/>
+  <testcase time="3.699" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.TestWorkflowNotifierDAO" name="testSaveContentEvent"/>
+  <testcase time="2.831" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.TestWorkflowNotifierDAO" name="testSignNotifiedEvents"/>
+  <testcase time="2.586" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.TestWorkflowNotifierManager" name="testSetNotifierConfig"/>
+  <testcase time="2.47" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.TestWorkflowNotifierManager" name="testGetNotifierConfig"/>
+  <testcase time="3.587" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.TestWorkflowNotifierManager" name="testSendEMails"/>
+  <testcase time="2.916" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.content.TestContentSearcherDAO" name="testLoadContentsId"/>
+  <testcase time="3.483" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.content.TestContentManager" name="testLoadContentsId"/>
+  <testcase time="2.69" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.TestContentWorkflowManager" name="testGetWorkflow"/>
+  <testcase time="2.658" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.TestContentWorkflowManager" name="testGetRole"/>
+  <testcase time="2.622" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.TestContentWorkflowManager" name="testUpdateRole"/>
+  <testcase time="2.688" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.TestContentWorkflowManager" name="testGetSteps"/>
+  <testcase time="2.723" classname="com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.TestContentWorkflowManager" name="testUpdateSteps"/>
+  <testcase time="6.772" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.notifier.TestWorkflowNotifierConfigAction" name="testConfig"/>
+  <testcase time="2.039" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.notifier.TestWorkflowNotifierConfigAction" name="testSaveFailure"/>
+  <testcase time="1.958" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.notifier.TestWorkflowNotifierConfigAction" name="testSave"/>
+  <testcase time="1.367" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowListAction" name="testListForAdminUser"/>
+  <testcase time="1.901" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowListAction" name="testListForNotAllowedUser"/>
+  <testcase time="1.475" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowAction" name="testSave"/>
+  <testcase time="0.74" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowAction" name="testEdit"/>
+  <testcase time="0.841" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowStepAction" name="testSave"/>
+  <testcase time="0.507" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowStepAction" name="testEditSteps"/>
+  <testcase time="0.599" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowStepAction" name="testMoveStep"/>
+  <testcase time="0.456" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowStepAction" name="testRemoveStep"/>
+  <testcase time="0.556" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowStepAction" name="testAddStep"/>
+  <testcase time="0.934" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.TestContentAction" name="testPreviousStep"/>
+  <testcase time="0.777" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.TestContentAction" name="testNextStep"/>
+  <testcase time="0.632" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.TestContentFinderAction" name="testSearch_1"/>
+  <testcase time="0.741" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.TestContentFinderAction" name="testSearch_2"/>
+  <testcase time="0.461" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.TestIntroNewContentAction" name="testOpenNew"/>
+  <testcase time="0.577" classname="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.TestIntroNewContentAction" name="testCreateNewVoid"/>
+</testsuite>

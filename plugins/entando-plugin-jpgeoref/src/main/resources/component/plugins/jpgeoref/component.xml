@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>jpgeoref</code>
+	<description>GeoReferenced contents</description>
+	<dependencies>
+		<code>jacms</code>
+	</dependencies>
+	<installation>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpgeoref/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpgeoref/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+		<environment code="test">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpgeoref/port_data_test.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpgeoref/serv_data_test.sql
+				</datasource>
+			</defaultSqlResources>
+			<postProcesses>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentType"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jpgeoref/postprocess/GEO.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="content"
+						method="POST" expected="200" printresponse="true" >
+					<query>
+						<parameter name="insertOnLine" value="true" />
+					</query>
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jpgeoref/postprocess/content1.xml" />
+				</selfRestCall>
+			</postProcesses>
+		</environment>
+	</installation>
+</component>

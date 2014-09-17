@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<bean id="jpgeorefCoordsAttribute" class="com.agiletec.plugins.jpgeoref.aps.system.services.content.model.extraAttribute.CoordsAttribute" >
+		<property name="type" value="Coords" />
+		<property name="handler" >
+			<bean class="com.agiletec.plugins.jpgeoref.aps.system.services.content.parse.extraAttribute.CoordsAttributeHandler" />
+		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.plugins.jpgeoref.apsadmin.content.attribute.manager.CoordsAttributeManager" />
+	</bean>
+	
+	<bean id="jpgeorefCoordsAttributeWrapper" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeWrapper" >
+		<property name="attribute" ref="jpgeorefCoordsAttribute" />
+		<property name="entityManagerNameDest"><value>jacmsContentManager</value></property>
+	</bean>
+	
+</beans>

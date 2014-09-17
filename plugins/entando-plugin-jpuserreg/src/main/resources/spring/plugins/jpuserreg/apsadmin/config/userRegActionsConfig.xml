@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<bean id="jpuserregSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jpuserreg/apsadmin/jsp/common/layouts/subMenu.jsp</value></property>
+	</bean>
+	
+	<bean id="jpuserregUserRegConfigAction" class="com.agiletec.plugins.jpuserreg.apsadmin.config.UserRegConfigAction" 
+			scope="prototype" parent="abstractBaseAction" >
+		<property name="userRegManager" ref="jpuserregUserRegManager" />
+		<property name="mailManager" ref="jpmailMailManager" />
+		<property name="pageManager" ref="PageManager" />
+		<property name="roleManager" ref="RoleManager" />
+		<property name="groupManager" ref="GroupManager" />
+	</bean>
+	
+	<bean id="jpuserregUserRegWidgetAction" scope="prototype" 
+			class="com.agiletec.plugins.jpuserreg.apsadmin.portal.specialwidget.userreg.UserRegWidgetAction" 
+			parent="simpleWidgetAction" >
+		<property name="userProfileManager" ref="UserProfileManager" />
+	</bean>
+	
+</beans>

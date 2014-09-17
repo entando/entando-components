@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+	<package name="jprssaggregator_do/jprssaggregator/Aggregator" namespace="/do/jprssaggregator/Aggregator" extends="entando-default">
+
+		<action name="intro" class="jprssaggregatorAggregatorAction">
+			<result type="tiles">jprssaggregator.aggregator.intro</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+		
+		<action name="list" class="jprssaggregatorAggregatorAction">
+			<result type="tiles">jprssaggregator.aggregator.list</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+		
+		<action name="new" class="jprssaggregatorAggregatorAction" method="newItem">
+			<result type="tiles">jprssaggregator.aggregator.entryItem</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+		
+		<action name="edit" class="jprssaggregatorAggregatorAction" method="edit">
+			<result name="itemList" type="tiles">jprssaggregator.aggregator.list</result>
+			<result type="tiles">jprssaggregator.aggregator.entryItem</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+		
+		<action name="save" class="jprssaggregatorAggregatorAction" method="save">
+			<result name="input" type="tiles">jprssaggregator.aggregator.entryItem</result>
+			<result type="redirectAction">list</result>
+			<interceptor-ref name="entandoValidationStack">
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+
+		<action name="delete" class="jprssaggregatorAggregatorAction">
+			<result type="tiles">jprssaggregator.aggregator.confirmRemove</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+		
+		<action name="doDelete" class="jprssaggregatorAggregatorAction" method="delete">
+			<result name="input" type="tiles">jprssaggregator.aggregator.list</result>
+			<result type="redirectAction">list</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+		
+        <action name="openCloseCategoryTreeNode*" class="jprssaggregatorAggregatorAction" method="buildTree">
+    		<result type="tiles">jprssaggregator.aggregator.entryItem</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+		
+        <action name="joinCategory" class="jprssaggregatorAggregatorAction" method="joinCategory">
+            <result type="tiles">jprssaggregator.aggregator.entryItem</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="removeCategory*" class="jprssaggregatorAggregatorAction" method="removeCategory">
+            <result type="tiles">jprssaggregator.aggregator.entryItem</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+		
+		<action name="syncronize" class="jprssaggregatorAggregatorAction" method="syncronize">
+			<result type="redirectAction">list</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+
+	</package>
+	
+</struts>

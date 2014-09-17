@@ -1,0 +1,66 @@
+<contentType>
+	<defaultModelId>10002</defaultModelId>
+	<listModelId>10021</listModelId>
+	<typeCode>NWS</typeCode>
+	<typeDescription>News</typeDescription>
+	<attributes>
+		<attribute>
+			<name>Date</name>
+			<type>Date</type>
+			<searchable>true</searchable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="dateAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Title</name>
+			<type>Text</type>
+			<roles>
+				<role>jacms:title</role>
+			</roles>
+			<searchable>true</searchable>
+			<indexable>true</indexable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Abstract</name>
+			<type>Hypertext</type>
+			<indexable>true</indexable>
+		</attribute>
+		<attribute>
+			<name>MainBody</name>
+			<description>Main Body</description>
+			<type>Hypertext</type>
+			<indexable>true</indexable>
+		</attribute>
+		<attribute>
+			<name>Picture</name>
+			<type>Image</type>
+		</attribute>
+		<attribute>
+			<name>Caption</name>
+			<type>Text</type>
+			<indexable>true</indexable>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbListAttributeType">
+			<name>Links</name>
+			<type>Monolist</type>
+			<nestedType>
+				<name>Links</name>
+				<type>Link</type>
+				<indexable>true</indexable>
+			</nestedType>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbListAttributeType">
+			<name>Attaches</name>
+			<type>Monolist</type>
+			<nestedType>
+				<name>Attaches</name>
+				<type>Attach</type>
+				<indexable>true</indexable>
+			</nestedType>
+		</attribute>
+	</attributes>
+</contentType>

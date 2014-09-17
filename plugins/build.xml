@@ -1,0 +1,11 @@
+<project name="entando-plugins-parent" default="Test-init" basedir=".">
+	<description>Entando Plugins - Build file</description>
+	<target name="Test-init">
+		<echo message="========================================================================" />
+		<echo message=".:[Maven] :: Getting ready for Tests" />
+		<echo message="========================================================================" />
+		<exec executable="mvn" dir="${basedir}">
+			<arg value="process-test-classes"/>
+		</exec>		
+	</target>
+</project>

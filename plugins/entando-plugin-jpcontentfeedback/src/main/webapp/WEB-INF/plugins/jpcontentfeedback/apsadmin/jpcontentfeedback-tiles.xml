@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+	<!-- ********* INIZIO Area amministrazione jpcontentfeedback ********* -->
+
+	<definition extends="layout.default" name="admin.jpcontentfeedback.comments.search">
+		<put-attribute name="title" value="jpcontentfeedback.title.commentsManager" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpcontentfeedback/apsadmin/jsp/common/layouts/assets-more/comment.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentfeedback/apsadmin/jsp/comments/comment-list.jsp" />
+	</definition>
+
+	<definition extends="layout.default" name="admin.jpcontentfeedback.comments.view">
+		<put-attribute name="title" value="jpcontentfeedback.title.commentsManager" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentfeedback/apsadmin/jsp/comments/comment-detail.jsp" />
+	</definition>
+
+	<definition extends="layout.default" name="admin.jpcontentfeedback.comments.trash">
+		<put-attribute name="title" value="jpcontentfeedback.title.commentsManager" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentfeedback/apsadmin/jsp/comments/comment-trash.jsp" />
+	</definition>
+
+	<definition extends="layout.default" name="admin.jpcontentfeedback.page.widget.contentViewer.config">
+		<put-attribute name="title" value="jpcontentfeedback.title.commentsManager" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentfeedback/apsadmin/jsp/portal/specialwidget/contentViewer/viewer-config.jsp" />
+	</definition>
+
+	<definition extends="layout.default" name="admin.jpcontentfeedback.config.edit">
+		<put-attribute name="title" value="jpcontentfeedback.title.configuration" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentfeedback/apsadmin/jsp/config/config_edit.jsp" />
+	</definition>
+
+	<!-- ********* FINE Area amministrazione jpcontentfeedback ********* -->
+
+</tiles-definitions>

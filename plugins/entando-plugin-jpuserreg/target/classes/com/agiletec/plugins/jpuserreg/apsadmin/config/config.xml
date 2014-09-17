@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpuserreg_do/jpuserreg/Config" namespace="/do/jpuserreg/Config" extends="entando-default">
+		
+    	<action name="edit" class="jpuserregUserRegConfigAction" method="edit" >
+            <result type="tiles">admin.jpuserreg.UserReg.Config.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+		
+    	<action name="save" class="jpuserregUserRegConfigAction" method="save" >
+            <result name="input" type="tiles">admin.jpuserreg.UserReg.Config.entry</result>
+            <result type="tiles">admin.jpuserreg.UserReg.Config.saveConfirmed</result>
+        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+    	
+    	<action name="addGroup*" class="jpuserregUserRegConfigAction" method="addGroup">
+            <result type="tiles">admin.jpuserreg.UserReg.Config.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+    	</action>
+    	<action name="removeGroup*" class="jpuserregUserRegConfigAction" method="removeGroup">
+            <result type="tiles">admin.jpuserreg.UserReg.Config.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+    	</action>
+    	<action name="addRole*" class="jpuserregUserRegConfigAction" method="addRole">
+            <result type="tiles">admin.jpuserreg.UserReg.Config.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+    	</action>
+    	<action name="removeRole*" class="jpuserregUserRegConfigAction" method="removeRole">
+            <result type="tiles">admin.jpuserreg.UserReg.Config.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+    	</action>
+    	
+    </package>
+    
+</struts>

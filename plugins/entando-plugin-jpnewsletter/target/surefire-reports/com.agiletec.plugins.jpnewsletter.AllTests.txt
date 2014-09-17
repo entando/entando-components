@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.agiletec.plugins.jpnewsletter.AllTests
+-------------------------------------------------------------------------------
+Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 104.231 sec

@@ -1,0 +1,50 @@
+<contentType>
+<defaultModelId>10004</defaultModelId>
+<listModelId>10041</listModelId>
+<typeCode>RSL</typeCode>
+<typeDescription>Resolution</typeDescription>
+	<attributes>
+		<attribute>
+			<name>Number</name>
+			<type>Number</type>
+			<searchable>true</searchable>
+			<indexable>true</indexable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Date</name>
+			<type>Date</type>
+			<searchable>true</searchable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="dateAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Title</name>
+			<type>Longtext</type>
+			<roles>
+			<role>jacms:title</role>
+			</roles>
+			<indexable>true</indexable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Summary</name>
+			<type>Hypertext</type>
+			<indexable>true</indexable>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbListAttributeType">
+			<name>Documents</name>
+			<type>Monolist</type>
+			<indexable>true</indexable>
+			<nestedType>
+				<name>Documents</name>
+				<type>Attach</type>
+			</nestedType>
+		</attribute>
+	</attributes>
+</contentType>

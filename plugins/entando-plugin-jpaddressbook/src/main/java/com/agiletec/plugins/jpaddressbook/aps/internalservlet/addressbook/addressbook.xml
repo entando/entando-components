@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpaddressbook_do/jpaddressbook/Front/AddressBook" namespace="/do/jpaddressbook/Front/AddressBook" extends="entando-front-default">
+    	
+    	<interceptors>
+    		<interceptor name="guestWonderInterceptor" class="com.agiletec.plugins.jpaddressbook.aps.internalservlet.addressbook.GuestWonderInterceptor"></interceptor>
+    	</interceptors>
+    	
+    	<global-results>
+    		<result name="guestUserNotAllowed" type="dispatcher">/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/guestUserNotAllowed.jsp</result>
+    	</global-results>
+    	
+    	<action name="searchIntro" class="jpaddressbookContactsFinderAction" >
+    		<result type="dispatcher">/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/contactFinding_searchForm.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+
+    	<action name="searchIntroAdvanced" class="jpaddressbookContactsFinderAction" >
+    		<result type="dispatcher">/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/contactFinding_searchForm_advanced.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+    	<action name="resultIntro" class="jpaddressbookContactsFinderAction" >
+    		<result type="dispatcher">/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/contactFinding_result.jsp</result>
+    		<interceptor-ref name="entandoFrontEndFreeStack"><param name="chain.includeParameters">fieldErrors</param></interceptor-ref>
+        </action>
+    	
+    	<action name="trash" class="jpaddressbookContactsFinderAction" method="trash" >
+    		<result name="input" type="chain">resultIntro</result>
+    		<result type="dispatcher">/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/trashContact.jsp</result>
+        	<interceptor-ref name="guestWonderInterceptor"></interceptor-ref>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+    	
+    	<action name="delete" class="jpaddressbookContactsFinderAction" method="delete" >
+    		<result name="input" type="chain">resultIntro</result>
+    		<result type="chain">resultIntro</result>
+        	<interceptor-ref name="guestWonderInterceptor"></interceptor-ref>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+    	<!-- ********************* -->
+    	
+    	<action name="view" class="jpaddressbookContactAction" method="view">
+    		<result name="input" type="chain">resultIntro</result>
+    		<result type="dispatcher">/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/viewContact.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+    	
+        <action name="new" class="jpaddressbookContactAction" method="createNew">
+    		<result type="dispatcher">/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/entryContact.jsp</result>
+        	<interceptor-ref name="guestWonderInterceptor"></interceptor-ref>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+        <action name="edit" class="jpaddressbookContactAction" method="edit">
+    		<result name="input" type="chain">resultIntro</result>
+    		<result type="dispatcher">/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/entryContact.jsp</result>
+        	<interceptor-ref name="guestWonderInterceptor"></interceptor-ref>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+        <action name="save" class="jpaddressbookContactAction" method="save">
+        	<result name="input" type="dispatcher">/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/entryContact.jsp</result>
+            <result type="chain">resultIntro</result>
+        	<interceptor-ref name="guestWonderInterceptor"></interceptor-ref>
+        	<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+        </action>
+    	
+    	<action name="entryContact" class="jpaddressbookContactAction">
+            <result type="dispatcher">/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/entryContact.jsp</result>
+        	<interceptor-ref name="guestWonderInterceptor"></interceptor-ref>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+    	
+    	<!-- ######## INIZIO GESTIONE ATTRIBUTI IN LISTA ######## -->
+         
+        <action name="addListElement*" class="jpaddressbookListAttributeAction" method="addListElement">
+        	<result type="chain">
+        		<param name="actionName">entryContact</param>
+        	</result>
+        	<interceptor-ref name="guestWonderInterceptor"></interceptor-ref>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+        <action name="removeListElement*" class="jpaddressbookListAttributeAction" method="removeListElement">
+            <result type="chain">
+        		<param name="actionName">entryContact</param>
+        	</result>
+        	<interceptor-ref name="guestWonderInterceptor"></interceptor-ref>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+        <action name="moveListElement*" class="jpaddressbookListAttributeAction" method="moveListElement">
+            <result type="chain">
+        		<param name="actionName">entryContact</param>
+        	</result>
+        	<interceptor-ref name="guestWonderInterceptor"></interceptor-ref>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+        <!-- ######## FINE GESTIONE ATTRIBUTI IN LISTA ######## -->
+    	
+    </package>
+    
+</struts>

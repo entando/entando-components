@@ -1,0 +1,40 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+	
+	<field name="url" >
+		<field-validator type="requiredstring" >
+			<message key="requiredstring" />
+		</field-validator>
+	</field>
+	
+	<field name="resourceTypeCode">
+		<field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+	</field>
+	
+	<field name="descr">
+		<field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+           <param name="regex"><![CDATA[([^\"'])+]]></param>
+           <message key="wrongCharacters" />
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+        	<param name="maxLength">50</param>
+        	<message key="wrongMaxLenght" />
+        </field-validator>  
+	</field>
+	
+	<field name="mainGroup">
+		<field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+	</field>
+	
+
+</validators>

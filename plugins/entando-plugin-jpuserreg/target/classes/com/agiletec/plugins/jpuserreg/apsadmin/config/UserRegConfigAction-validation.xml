@@ -1,0 +1,43 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+	
+    <field name="config.tokenValidityMinutes">
+        <field-validator type="int">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="config.eMailSenderCode">
+        <field-validator type="requiredstring" short-circuit="true" >
+            <message key="requiredstring"/>
+        </field-validator>
+        <field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[checkSenderCode()]]></param>
+            <message key="requiredstring" />
+        </field-validator>
+    </field>
+    
+    <field name="config.activationPageCode">
+        <field-validator type="requiredstring" short-circuit="true" >
+            <message key="requiredstring"/>
+        </field-validator>
+        <field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[checkPage(config.activationPageCode)]]></param>
+			<message key="requiredstring" />
+        </field-validator>
+    </field>
+    
+    <field name="config.reactivationPageCode">
+        <field-validator type="requiredstring" short-circuit="true" >
+            <message key="requiredstring"/>
+        </field-validator>
+        <field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[checkPage(config.reactivationPageCode)]]></param>
+            <message key="requiredstring" />
+        </field-validator>
+    </field>
+    
+</validators>

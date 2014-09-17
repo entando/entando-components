@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<bean id="jpfrontshortcutFrontContentAction" scope="prototype" 
+			class="org.entando.entando.plugins.jpfrontshortcut.aps.internalservlet.content.FrontContentAction" 
+			parent="jacmsAbstractContentAction">
+		<property name="categoryManager" ref="CategoryManager"/>
+		<property name="pageManager" ref="PageManager" />
+		<property name="configManager" ref="BaseConfigManager" />
+		<property name="resourceIconUtil" ref="jacmsResourceIconUtil" />
+		<property name="contentModelManager" ref="jacmsContentModelManager" />
+		<property name="i18nManager" ref="I18nManager" />
+  	</bean>
+  	
+	<bean id="jpfrontshortcutFrontPageAction" scope="prototype" 
+			class="org.entando.entando.plugins.jpfrontshortcut.aps.internalservlet.portal.FrontPageAction" parent="abstractPortalAction">
+		<property name="pageModelManager" ref="PageModelManager" />
+		<property name="urlManager" ref="URLManager" />
+		<property name="contentManager" ref="jacmsContentManager" />
+		<property name="helper" ref="pageActionHelper" />
+		<property name="viewerShowletCode"><value>${widgets.viewer}</value></property>
+	</bean>
+	
+	<bean id="jpfrontshortcutFrontPageConfigAction" scope="prototype" 
+			class="org.entando.entando.plugins.jpfrontshortcut.aps.internalservlet.portal.FrontPageConfigAction" parent="abstractPortalAction">
+	</bean>
+	
+	<bean id="jpfrontshortcutWidgetDecorationContainer" class="com.agiletec.aps.tags.util.BaseFrameDecoratorContainer" >
+		<property name="headerJspPath"><value>/WEB-INF/plugins/jpfrontshortcut/aps/jsp/widgets/inc/widgetDecorator_header.jsp</value></property>
+		<property name="footerJspPath"><value>/WEB-INF/plugins/jpfrontshortcut/aps/jsp/widgets/inc/widgetDecorator_footer.jsp</value></property>
+		<property name="order"><value>5</value></property>
+	</bean>
+	
+</beans>

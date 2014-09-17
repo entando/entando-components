@@ -1,0 +1,57 @@
+<content>
+	<description>Sample - News 4</description>
+	<typeCode>NWS</typeCode>
+	<typeDescription>News</typeDescription>	
+	<mainGroup>free</mainGroup>
+	<attributes>
+		<attribute>
+			<name>Date</name>
+			<type>Date</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:dateTime">2012-06-13T00:00:00+02:00</value>
+		</attribute>
+		<attribute>
+			<name>Title</name>
+			<type>Text</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Here come the news 4</value>
+			<roles>
+				<role>jacms:title</role>
+			</roles>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbHypertextAttribute">
+			<name>Abstract</name>
+			<type>Hypertext</type>
+			<htmlValue>
+			<![CDATA[
+			<p> Scenester farm-to-table, ethical pinterest DIY quinoa before they sold out cardigan. Wolf sriracha portland ethical freegan. Fingerstache locavore +1 selvage chambray. Flexitarian umami cray quinoa raw denim whatever. American apparel viral vegan DIY polaroid, cosby sweater etsy williamsburg +1 bicycle rights whatever PBR hoodie photo booth. Master cleanse blog mumblecore vice, pork belly fap leggings cosby sweater. Synth whatever put a bird on it lo-fi, stumptown tumblr typewriter helvetica odd future banksy terry richardson post-ironic selvage.</p>
+			]]>
+			</htmlValue>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbHypertextAttribute">
+			<name>MainBody</name>
+			<type>Hypertext</type>
+			<htmlValue>
+			<![CDATA[
+			<p> Scenester farm-to-table, ethical pinterest DIY quinoa before they sold out cardigan. Wolf sriracha portland ethical freegan. Fingerstache locavore +1 selvage chambray. Flexitarian umami cray quinoa raw denim whatever. American apparel viral vegan DIY polaroid, cosby sweater etsy williamsburg +1 bicycle rights whatever PBR hoodie photo booth. Master cleanse blog mumblecore vice, pork belly fap leggings cosby sweater. Synth whatever put a bird on it lo-fi, stumptown tumblr typewriter helvetica odd future banksy terry richardson post-ironic selvage.</p> <p> Mustache brunch single-origin coffee, pitchfork hoodie messenger bag freegan fixie fingerstache twee ethical pour-over. Stumptown lomo DIY art party organic next level. Squid cliche gentrify mustache. American apparel chambray leggings PBR pour-over skateboard. Mcsweeney&#39;s next level retro tumblr, ethical fanny pack beard. Put a bird on it mustache art party, biodiesel banh mi artisan direct trade thundercats trust fund wayfarers salvia vice authentic. Lo-fi chillwave small batch, organic pour-over williamsburg VHS narwhal leggings ennui ethnic tofu.</p>
+			]]>
+			</htmlValue>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbListAttribute">
+			<name>Links</name>
+			<type>Monolist</type>
+			<attributes>
+				<attribute>
+					<name>Link</name>
+					<type>Link</type>
+					<value xsi:type="jaxbLinkValue">
+						<text xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Entando.com</text>
+						<url>http://www.entando.com/</url>
+						<symbolikLink>
+							<symbolicDestination>#!U;http://www.entando.com/!#</symbolicDestination>
+						</symbolikLink>
+					</value>
+				</attribute>
+			</attributes>
+		</attribute>
+	</attributes>
+	<lastEditor>admin</lastEditor>
+</content>

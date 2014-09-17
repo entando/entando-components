@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
+	
+	<bean id="jpwebmailSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jpwebmail/apsadmin/jsp/common/template/subMenu.jsp</value></property>
+	</bean>
+	
+	<bean id="jpwebmailWebMailConfigAction" scope="prototype" 
+			class="com.agiletec.plugins.jpwebmail.apsadmin.config.WebMailConfigAction" parent="abstractBaseAction" >
+		<property name="webMailManager" ref="jpwebmailWebMailManager" />
+	</bean>
+	
+	<bean id="jpwebmailWebMailLoginAction" scope="prototype" 
+			class="org.entando.entando.plugins.jpwebmail.apsadmin.login.WebMailLoginAction" parent="abstractBaseAction" >
+		<property name="webMailManager" ref="jpwebmailWebMailManager" />
+	</bean>
+	
+	<bean id="jpwebmailNewMessageActionHelper" 
+			class="com.agiletec.plugins.jpwebmail.apsadmin.webmail.message.helper.NewMessageActionHelper" >
+		<property name="webMailManager" ref="jpwebmailWebMailManager" />
+	</bean>
+	
+	<bean id="jpwebmailWebMailAction" scope="prototype" 
+			class="com.agiletec.plugins.jpwebmail.apsadmin.webmail.folder.WebmailAction" parent="abstractBaseAction" >
+		<property name="webMailManager" ref="jpwebmailWebMailManager" />
+	</bean>
+	
+	<bean id="jpwebmailInboxMessagesAction" scope="prototype" 
+			class="com.agiletec.plugins.jpwebmail.apsadmin.webmail.folder.InboxMessagesAction" parent="abstractBaseAction" >
+		<property name="webMailManager" ref="jpwebmailWebMailManager" />
+	</bean>
+	
+	<bean id="jpwebmailMessageAction" scope="prototype" 
+			class="com.agiletec.plugins.jpwebmail.apsadmin.webmail.message.MessageAction" parent="abstractBaseAction" >
+	</bean>
+	
+	<bean id="jpwebmailNewMessageAction" scope="prototype" 
+			class="com.agiletec.plugins.jpwebmail.apsadmin.webmail.message.NewMessageAction" parent="abstractBaseAction" >
+		<property name="webMailManager" ref="jpwebmailWebMailManager" />
+		<property name="newMessageHelper" ref="jpwebmailNewMessageActionHelper" />
+		<property name="userMailHelper" ref="jpwebmailUserMailHelper" />
+	</bean>
+	
+	<bean id="jpwebmailAttachmentAction" scope="prototype" 
+			class="com.agiletec.plugins.jpwebmail.apsadmin.webmail.message.AttachmentAction" parent="abstractBaseAction" >
+		<property name="newMessageHelper" ref="jpwebmailNewMessageActionHelper" />		
+	</bean>
+	
+	<bean id="jpwebmailAddressBookAction" scope="prototype" 
+			class="com.agiletec.plugins.jpwebmail.apsadmin.webmail.addressbook.AddressBookAction" >
+		<property name="newMessageHelper" ref="jpwebmailNewMessageActionHelper" />
+	</bean>
+	
+</beans>

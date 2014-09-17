@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.agiletec.plugins.jpfastcontentedit.AllTests
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 58.535 sec

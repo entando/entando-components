@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpcontentrefs_do/jpcontentrefs/Category" namespace="/do/jpcontentrefs/Category" extends="entando-default">
+    	
+    	<action name="intro" class="jpcontentrefsContentCategoryRefsAction">
+            <result type="tiles">admin.jpcontentrefs.category.intro</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="edit" class="jpcontentrefsContentCategoryRefsAction" method="edit">
+        	<result name="intro" type="tiles">admin.jpcontentrefs.category.intro</result>
+            <result type="tiles">admin.jpcontentrefs.category.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="join" class="jpcontentrefsContentCategoryRefsAction" method="join">
+            <result name="intro" type="tiles">admin.jpcontentrefs.category.intro</result>
+            <result type="tiles">admin.jpcontentrefs.category.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="remove*" class="jpcontentrefsContentCategoryRefsAction" method="remove">
+        	<result name="references" type="tiles">admin.jpcontentrefs.category.references</result>
+        	<result name="intro" type="tiles">admin.jpcontentrefs.category.intro</result>
+            <result type="tiles">admin.jpcontentrefs.category.config</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+		<action name="openCloseFacetTree*" class="jpcontentrefsContentCategoryRefsAction" method="buildTree">
+    		<result type="tiles">admin.jpcontentrefs.category.config</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">manageFacets</param></interceptor-ref>
+        </action>
+		
+    </package>
+    
+</struts>

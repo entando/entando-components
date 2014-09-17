@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+    <definition extends="main.layout" name="jpaddressbook.admin.AddressBook.Contact.intro" >
+		<put-attribute name="title" value="jpaddressbook.title.addressbook" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpaddressbook/apsadmin/jsp/common/template/extraresources/contact-intro-extras.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpaddressbook/apsadmin/jsp/addressBook/contact-intro.jsp" />
+	</definition>
+
+    <definition extends="main.layout" name="jpaddressbook.admin.AddressBook.Contact.list" >
+		<put-attribute name="title" value="jpaddressbook.title.addressbook" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpaddressbook/apsadmin/jsp/common/template/extraresources/contactFinding_extraresources.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpaddressbook/apsadmin/jsp/addressBook/contactFinding.jsp" />
+	</definition>
+	
+	<definition extends="main.layout" name="jpaddressbook.admin.AddressBook.Contact.entry" >
+		<put-attribute name="title" value="jpaddressbook.title.addressbook" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpaddressbook/apsadmin/jsp/common/template/extraresources/contact.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpaddressbook/apsadmin/jsp/addressBook/entryContact.jsp" />
+	</definition>
+	
+	<definition extends="main.layout" name="jpaddressbook.admin.AddressBook.Contact.view" >
+		<put-attribute name="title" value="jpaddressbook.title.addressbook" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpaddressbook/apsadmin/jsp/addressBook/viewContact.jsp" />
+	</definition>
+	
+	<definition extends="main.layout" name="jpaddressbook.admin.AddressBook.Contact.trash" >
+		<put-attribute name="title" value="jpaddressbook.title.addressbook" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpaddressbook/apsadmin/jsp/addressBook/trashContact.jsp" />
+	</definition>
+	
+	<!-- ### VCard -->
+	<definition extends="main.layout" name="jpaddressbook.admin.VCard.entry" >
+		<put-attribute name="title" value="jpaddressbook.title.vcard" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpaddressbook/apsadmin/jsp/vcard/entryConfig.jsp" />
+	</definition>
+	<definition extends="main.layout" name="jpaddressbook.admin.VCard.configFields" >
+		<put-attribute name="title" value="jpaddressbook.title.vcard" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpaddressbook/apsadmin/jsp/vcard/configFields.jsp" />
+	</definition>
+	
+</tiles-definitions>

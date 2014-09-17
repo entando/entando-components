@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpimagemap_do/jpimagemap/Content/ImageMap" namespace="/do/jpimagemap/Content/ImageMap" extends="jacms_do/jacms/Content/Link">
+    	
+        <!-- ######## INIZIO GESTIONE ATTRIBUTO MAPPA IMMAGINE ######## -->
+        
+        <action name="defineArea" class="jpimagemapImageMapAttributeAction">
+            <result type="dispatcher">/WEB-INF/plugins/jpimagemap/apsadmin/jsp/content/modules/include/imagemap/defineArea.jsp</result>
+        	<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">editContents</param>
+				<param name="chain.includeParameters">contentOnSessionMarker</param>
+			</interceptor-ref>
+        </action>
+        
+        <action name="saveArea" class="jpimagemapImageMapAttributeAction" method="saveArea">
+            <result type="redirectActionWithAnchor">
+            	<param name="namespace">/do/jacms/Content</param>
+        		<param name="actionName">entryContent</param>
+        		<param name="anchorDest">${langCode}_tab</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+        	</result>
+            <result name="input" type="dispatcher">/WEB-INF/plugins/jpimagemap/apsadmin/jsp/content/modules/include/imagemap/defineArea.jsp</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+		<action name="chooseLink" class="jacmsLinkAttributeAction" method="chooseLinkType">
+			<result type="tiles">admin.jacms.content.chooseLinkType</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">editContents</param>
+				<param name="chain.includeParameters">contentOnSessionMarker</param>
+			</interceptor-ref>
+		</action>
+        
+    	<action name="chooseImageMapLink" class="linkAttributeAction" method="chooseLinkType">
+            <result type="tiles">admin.jpimagemap.Content.ImageMap.chooseLinkType</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="configImageMapLink" class="linkAttributeAction" method="configLink">
+            <result name="input" type="tiles">admin.jpimagemap.Content.ImageMap.chooseLinkType</result>
+			<result name="configUrlLink" type="redirectAction">
+				<param name="actionName">configUrlLink</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+			</result>
+			<result name="configPageLink" type="redirectAction">
+				<param name="actionName">configPageLink</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+			</result>
+			<result name="configContentLink" type="redirectAction">
+				<param name="actionName">configContentLink</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+			</result>
+			<result type="tiles">admin.jpimagemap.Content.ImageMap.chooseLinkType</result>
+        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <!-- ######## FINE GESTIONE ATTRIBUTO MAPPA IMMAGINE ######## -->
+        
+    </package>
+    
+</struts>

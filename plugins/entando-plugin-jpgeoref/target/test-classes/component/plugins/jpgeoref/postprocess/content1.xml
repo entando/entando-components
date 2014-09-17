@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<content>
+	<description>Test Content</description>
+	<typeCode>GEO</typeCode>
+	<typeDescription>georef content</typeDescription>
+	<mainGroup>free</mainGroup>
+	<groups/>
+	<attributes>
+		<attribute>
+			<name>title</name>
+			<type>Monotext</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Title</value>
+		</attribute>
+		<attribute>
+			<name>coords</name>
+			<type>Coords</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">(1.2,2.3,3.4)</value>
+			<roles>
+				<role>jpgeroref:coord</role>
+			</roles>
+		</attribute>
+	</attributes>
+	<created>2013-02-06T12:07:47+01:00</created>
+	<lastModified>2013-02-06T12:07:47+01:00</lastModified>
+	<version>1.0</version>
+	<lastEditor>admin</lastEditor>
+</content>

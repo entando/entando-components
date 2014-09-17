@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
+
+	<bean id="jpcontentfeedbackSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jpcontentfeedback/apsadmin/jsp/common/layouts/subMenu.jsp</value></property>
+	</bean>
+
+	<bean id="jpcontentfeedbackContentFeedbackAction" scope="prototype"
+			class="com.agiletec.plugins.jpcontentfeedback.apsadmin.feedback.ContentFeedbackAction" parent="abstractBaseAction" >
+		<property name="commentManager" ref="jpcontentfeedbackCommentManager" />
+	</bean>
+
+	<bean id="jpcontentfeedbackContentFeedbackConfigAction" scope="prototype"
+			class="com.agiletec.plugins.jpcontentfeedback.apsadmin.config.ContentFeedbackConfigAction" parent="abstractBaseAction" >
+		<property name="contentFeedbackManager" ref="jpcontentfeedbackContentFeedbackManager" />
+	</bean>
+
+</beans>

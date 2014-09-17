@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+				http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	
+	<aop:aspectj-autoproxy />
+	
+	<bean id="jpcontentworkflowWorkflowManager" class="com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.ContentWorkflowManager" parent="abstractService">
+		<property name="configManager" ref="BaseConfigManager" />
+		<property name="workflowDAO">
+			<bean class="com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.ContentWorkflowDAO">
+				<property name="dataSource" ref="portDataSource" />
+			</bean>
+		</property>
+		<property name="authorizationManager" ref="AuthorizationManager" />
+		<property name="contentManager" ref="jacmsContentManager" />
+	</bean>
+	
+	<bean id="jpcontentworkflowNotifierManager" class="com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.WorkflowNotifierManager" 
+			parent="abstractService" >
+		<property name="notifierDAO">
+			<bean class="com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.WorkflowNotifierDAO" >
+				<property name="dataSource" ref="servDataSource" />
+			</bean>
+		</property>
+		<property name="configManager" ref="BaseConfigManager"/>
+		<property name="userManager" ref="UserManager"/>
+		<property name="authProvider" ref="AuthenticationProviderManager" />
+		<property name="authorizationManager" ref="AuthorizationManager"/>
+		<property name="roleManager" ref="RoleManager" />
+		<property name="workflowManager" ref="jpcontentworkflowWorkflowManager"/>
+		<property name="mailManager" ref="jpmailMailManager"/>
+		<property name="contentManager" ref="jacmsContentManager"/>
+	</bean>
+	
+</beans>

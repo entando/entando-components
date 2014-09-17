@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+    <!-- ********* INIZIO Area Gestione Workflow Contenuti ********* -->
+	<definition extends="main.layout" name="admin.jpcontentworkflow.workflow.list">
+		<put-attribute name="title" value="title.workflowManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/workflow/workflowList.jsp" />
+	</definition>
+	
+	<definition extends="main.layout" name="admin.jpcontentworkflow.workflow.entryRole">
+		<put-attribute name="title" value="title.workflowManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/workflow/entryRole.jsp" />
+	</definition>
+	
+	<definition extends="main.layout" name="admin.jpcontentworkflow.workflow.entrySteps">
+		<put-attribute name="title" value="title.workflowManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/workflow/entrySteps.jsp" />
+	</definition>
+	<!-- ********* FINE Area Gestione Workflow Contenuti ********* -->
+	
+	<!-- ********* INIZIO Area Gestione Configurazione Notificatore Cambiamaneto Stato Contenuti ********* -->
+	<definition extends="main.layout" name="admin.jpcontentworkflow.notifier.config">
+		<put-attribute name="title" value="title.workflowNotifierManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/common/template/extraresources/notifier_extraResources.jsp" />		
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/notifier/config.jsp" />
+	</definition>
+	
+	<definition extends="main.layout" name="admin.jpcontentworkflow.notifier.savedConfirm">
+		<put-attribute name="title" value="title.workflowNotifierManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/notifier/configSavedConfirm.jsp" />
+	</definition>
+	<!-- ********* FINE Area Gestione Configurazione Notificatore Cambiamaneto Stato Contenuti ********* -->
+	
+</tiles-definitions>

@@ -1,0 +1,6 @@
+<disablingcodes>
+	<disablingcode>
+		<name>jpaddressbook:hideOnAddressBook</name>
+		<description>Disable attribute on manage contacts</description>
+	</disablingcode>
+</disablingcodes>

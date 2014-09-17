@@ -1,0 +1,257 @@
+2014-09-16 15:01:57.354 - INFO  -  org.entando.entando.aps.system.init.InstallationReportDAO - Report not availablejava.sql.SQLSyntaxErrorException: Schema 'AGILE' does not exist
+2014-09-16 15:01:57.554 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'SYSCONFIG'
+2014-09-16 15:01:57.653 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  SYSCONFIG  ( VERSION  VARCHAR(10) NOT NULL ,  ITEM  VARCHAR(40) NOT NULL ,  DESCR  VARCHAR(100) NOT NULL ,  CONFIG  LONG VARCHAR NOT NULL ) 
+2014-09-16 15:01:57.653 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/sysconfig
+2014-09-16 15:01:57.844 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CATEGORIES'
+2014-09-16 15:01:58.053 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CATEGORIES  ( CATCODE  VARCHAR(30) NOT NULL ,  PARENTCODE  VARCHAR(30) NOT NULL ,  TITLES  LONG VARCHAR NOT NULL , PRIMARY KEY ( CATCODE ) ) 
+2014-09-16 15:01:58.053 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/categories
+2014-09-16 15:01:58.055 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'LOCALSTRINGS'
+2014-09-16 15:01:58.131 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  LOCALSTRINGS  ( KEYCODE  VARCHAR(50) NOT NULL ,  LANGCODE  VARCHAR(2) NOT NULL ,  STRINGVALUE  LONG VARCHAR NOT NULL ) 
+2014-09-16 15:01:58.131 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/localstrings
+2014-09-16 15:01:58.300 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'PAGEMODELS'
+2014-09-16 15:01:58.520 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  PAGEMODELS  ( CODE  VARCHAR(40) NOT NULL ,  DESCR  VARCHAR(50) NOT NULL ,  FRAMES  LONG VARCHAR ,  PLUGINCODE  VARCHAR(30) ,  TEMPLATEGUI  LONG VARCHAR , PRIMARY KEY ( CODE ) ) 
+2014-09-16 15:01:58.520 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/pagemodels
+2014-09-16 15:01:58.524 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'PAGES'
+2014-09-16 15:01:58.753 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  PAGES  ( CODE  VARCHAR(30) NOT NULL ,  PARENTCODE  VARCHAR(30) NOT NULL ,  POS  INTEGER NOT NULL ,  MODELCODE  VARCHAR(40) NOT NULL ,  TITLES  LONG VARCHAR NOT NULL ,  GROUPCODE  VARCHAR(30) NOT NULL ,  SHOWINMENU  SMALLINT NOT NULL ,  EXTRACONFIG  LONG VARCHAR , PRIMARY KEY ( CODE ) ) 
+2014-09-16 15:01:58.754 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/pages
+2014-09-16 15:01:58.956 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'WIDGETCATALOG'
+2014-09-16 15:01:59.165 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  WIDGETCATALOG  ( CODE  VARCHAR(40) NOT NULL ,  TITLES  LONG VARCHAR NOT NULL ,  PARAMETERS  LONG VARCHAR ,  PLUGINCODE  VARCHAR(30) ,  PARENTTYPECODE  VARCHAR(40) ,  DEFAULTCONFIG  LONG VARCHAR ,  LOCKED  SMALLINT NOT NULL ,  MAINGROUP  VARCHAR(20) , PRIMARY KEY ( CODE ) ) 
+2014-09-16 15:01:59.165 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/widgetcatalog
+2014-09-16 15:01:59.167 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'GUIFRAGMENT'
+2014-09-16 15:01:59.398 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  GUIFRAGMENT  ( CODE  VARCHAR(50) NOT NULL ,  WIDGETTYPECODE  VARCHAR(40) ,  PLUGINCODE  VARCHAR(30) ,  GUI  LONG VARCHAR ,  DEFAULTGUI  LONG VARCHAR ,  LOCKED  SMALLINT NOT NULL , PRIMARY KEY ( CODE ) ) 
+2014-09-16 15:01:59.398 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/guifragment
+2014-09-16 15:01:59.556 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'WIDGETCONFIG'
+2014-09-16 15:01:59.776 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  WIDGETCONFIG  ( PAGECODE  VARCHAR(30) NOT NULL ,  FRAMEPOS  INTEGER NOT NULL ,  WIDGETCODE  VARCHAR(40) NOT NULL ,  CONFIG  LONG VARCHAR ,  PUBLISHEDCONTENT  VARCHAR(30) ) 
+2014-09-16 15:01:59.777 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/widgetconfig
+2014-09-16 15:02:00.289 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'UNIQUEKEYS'
+2014-09-16 15:02:00.498 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  UNIQUEKEYS  ( ID  INTEGER NOT NULL ,  KEYVALUE  INTEGER NOT NULL , PRIMARY KEY ( ID ) ) 
+2014-09-16 15:02:00.498 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/uniquekeys
+2014-09-16 15:02:08.796 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHGROUPS'
+2014-09-16 15:02:09.015 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHGROUPS  ( GROUPNAME  VARCHAR(20) NOT NULL ,  DESCR  VARCHAR(50) NOT NULL , PRIMARY KEY ( GROUPNAME ) ) 
+2014-09-16 15:02:09.015 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authgroups
+2014-09-16 15:02:09.016 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHPERMISSIONS'
+2014-09-16 15:02:09.226 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHPERMISSIONS  ( PERMISSIONNAME  VARCHAR(30) NOT NULL ,  DESCR  VARCHAR(50) NOT NULL , PRIMARY KEY ( PERMISSIONNAME ) ) 
+2014-09-16 15:02:09.226 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authpermissions
+2014-09-16 15:02:09.227 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHROLES'
+2014-09-16 15:02:09.448 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHROLES  ( ROLENAME  VARCHAR(20) NOT NULL ,  DESCR  VARCHAR(50) NOT NULL , PRIMARY KEY ( ROLENAME ) ) 
+2014-09-16 15:02:09.448 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authroles
+2014-09-16 15:02:09.450 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHROLEPERMISSIONS'
+2014-09-16 15:02:09.526 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHROLEPERMISSIONS  ( ROLENAME  VARCHAR(20) NOT NULL ,  PERMISSIONNAME  VARCHAR(30) NOT NULL ) 
+2014-09-16 15:02:09.526 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authrolepermissions
+2014-09-16 15:02:10.198 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERS'
+2014-09-16 15:02:10.393 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERS  ( USERNAME  VARCHAR(40) NOT NULL ,  PASSWD  VARCHAR(40) ,  REGISTRATIONDATE  TIMESTAMP NOT NULL ,  LASTACCESS  TIMESTAMP ,  LASTPASSWORDCHANGE  TIMESTAMP ,  ACTIVE  SMALLINT , PRIMARY KEY ( USERNAME ) ) 
+2014-09-16 15:02:10.393 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authusers
+2014-09-16 15:02:10.394 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERGROUPS'
+2014-09-16 15:02:10.471 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERGROUPS  ( USERNAME  VARCHAR(40) NOT NULL ,  GROUPNAME  VARCHAR(20) NOT NULL ) 
+2014-09-16 15:02:10.471 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authusergroups
+2014-09-16 15:02:10.628 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERROLES'
+2014-09-16 15:02:10.704 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERROLES  ( USERNAME  VARCHAR(40) NOT NULL ,  ROLENAME  VARCHAR(20) NOT NULL ) 
+2014-09-16 15:02:10.704 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authuserroles
+2014-09-16 15:02:10.861 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'API_OAUTH_CONSUMERS'
+2014-09-16 15:02:11.093 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  API_OAUTH_CONSUMERS  ( CONSUMERKEY  VARCHAR(100) NOT NULL ,  CONSUMERSECRET  VARCHAR(100) NOT NULL ,  DESCRIPTION  LONG VARCHAR NOT NULL ,  CALLBACKURL  LONG VARCHAR ,  EXPIRATIONDATE  TIMESTAMP , PRIMARY KEY ( CONSUMERKEY ) ) 
+2014-09-16 15:02:11.093 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/api_oauth_consumers
+2014-09-16 15:02:11.096 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'API_OAUTH_TOKENS'
+2014-09-16 15:02:11.304 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  API_OAUTH_TOKENS  ( ACCESSTOKEN  VARCHAR(100) NOT NULL ,  TOKENSECRET  VARCHAR(100) NOT NULL ,  CONSUMERKEY  VARCHAR(100) NOT NULL ,  LASTACCESS  TIMESTAMP NOT NULL ,  USERNAME  VARCHAR(40) NOT NULL , PRIMARY KEY ( ACCESSTOKEN ) ) 
+2014-09-16 15:02:11.304 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/api_oauth_tokens
+2014-09-16 15:02:11.306 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'APICATALOG_METHODS'
+2014-09-16 15:02:11.382 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  APICATALOG_METHODS  ( RESOURCECODE  VARCHAR(100) NOT NULL ,  HTTPMETHOD  VARCHAR(6) NOT NULL ,  ISACTIVE  SMALLINT NOT NULL ,  ISHIDDEN  SMALLINT NOT NULL ,  AUTHENTICATIONREQUIRED  SMALLINT ,  AUTHORIZATIONREQUIRED  VARCHAR(30) ) 
+2014-09-16 15:02:11.382 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/apicatalog_methods
+2014-09-16 15:02:11.696 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'APICATALOG_SERVICES'
+2014-09-16 15:02:11.915 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  APICATALOG_SERVICES  ( SERVICEKEY  VARCHAR(100) NOT NULL ,  RESOURCECODE  VARCHAR(100) NOT NULL ,  DESCRIPTION  LONG VARCHAR NOT NULL ,  PARAMETERS  LONG VARCHAR ,  TAG  VARCHAR(100) ,  FREEPARAMETERS  LONG VARCHAR ,  ISACTIVE  SMALLINT NOT NULL ,  ISHIDDEN  SMALLINT NOT NULL ,  MYENTANDO  SMALLINT NOT NULL ,  AUTHENTICATIONREQUIRED  SMALLINT ,  REQUIREDPERMISSION  VARCHAR(30) ,  REQUIREDGROUP  VARCHAR(20) , PRIMARY KEY ( SERVICEKEY ) ) 
+2014-09-16 15:02:11.915 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/apicatalog_services
+2014-09-16 15:02:12.217 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERPROFILES'
+2014-09-16 15:02:12.217 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILES_profiletype_idx' for table 'AUTHUSERPROFILES
+2014-09-16 15:02:12.427 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERPROFILES  ( USERNAME  VARCHAR(40) NOT NULL ,  PROFILETYPE  VARCHAR(30) NOT NULL ,  PROFILEXML  LONG VARCHAR NOT NULL ,  PUBLICPROFILE  SMALLINT NOT NULL , PRIMARY KEY ( USERNAME ) ) 
+2014-09-16 15:02:12.582 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILES_PROFILETYPE_IDX  ON  AUTHUSERPROFILES  (  PROFILETYPE  )
+2014-09-16 15:02:12.582 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authuserprofiles
+2014-09-16 15:02:12.585 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERPROFILESEARCH'
+2014-09-16 15:02:12.586 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILESEARCH_attrname_idx' for table 'AUTHUSERPROFILESEARCH
+2014-09-16 15:02:12.586 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILESEARCH_username_idx' for table 'AUTHUSERPROFILESEARCH
+2014-09-16 15:02:12.660 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERPROFILESEARCH  ( USERNAME  VARCHAR(40) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  TEXTVALUE  VARCHAR(255) ,  DATEVALUE  TIMESTAMP ,  NUMVALUE  INTEGER ,  LANGCODE  VARCHAR(3) ) 
+2014-09-16 15:02:12.815 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILESEARCH_ATTRNAME_IDX  ON  AUTHUSERPROFILESEARCH  (  ATTRNAME  )
+2014-09-16 15:02:12.971 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILESEARCH_USERNAME_IDX  ON  AUTHUSERPROFILESEARCH  (  USERNAME  )
+2014-09-16 15:02:12.971 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authuserprofilesearch
+2014-09-16 15:02:12.995 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERPROFILEATTRROLES'
+2014-09-16 15:02:12.995 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILEATTRROLES_username_idx' for table 'AUTHUSERPROFILEATTRROLES
+2014-09-16 15:02:12.995 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILEATTRROLES_attrname_idx' for table 'AUTHUSERPROFILEATTRROLES
+2014-09-16 15:02:12.995 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILEATTRROLES_rolename_idx' for table 'AUTHUSERPROFILEATTRROLES
+2014-09-16 15:02:13.082 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERPROFILEATTRROLES  ( USERNAME  VARCHAR(40) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  ROLENAME  VARCHAR(50) NOT NULL ) 
+2014-09-16 15:02:13.227 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILEATTRROLES_USERNAME_IDX  ON  AUTHUSERPROFILEATTRROLES  (  USERNAME  )
+2014-09-16 15:02:13.393 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILEATTRROLES_ATTRNAME_IDX  ON  AUTHUSERPROFILEATTRROLES  (  ATTRNAME  )
+2014-09-16 15:02:13.549 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILEATTRROLES_ROLENAME_IDX  ON  AUTHUSERPROFILEATTRROLES  (  ROLENAME  )
+2014-09-16 15:02:13.549 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authuserprofileattrroles
+2014-09-16 15:02:13.574 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'ACTIONLOGRECORDS'
+2014-09-16 15:02:13.784 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  ACTIONLOGRECORDS  ( ID  INTEGER NOT NULL ,  USERNAME  VARCHAR(20) ,  ACTIONDATE  TIMESTAMP ,  NAMESPACE  LONG VARCHAR ,  ACTIONNAME  VARCHAR(250) ,  PARAMETERS  LONG VARCHAR ,  ACTIVITYSTREAMINFO  LONG VARCHAR ,  UPDATEDATE  TIMESTAMP , PRIMARY KEY ( ID ) ) 
+2014-09-16 15:02:13.785 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/actionlogrecords
+2014-09-16 15:02:13.787 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'ACTIONLOGRELATIONS'
+2014-09-16 15:02:13.787 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'ACTIONLOGRELATIONS_recordid_idx' for table 'ACTIONLOGRELATIONS
+2014-09-16 15:02:13.787 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'ACTIONLOGRELATIONS_refgroup_idx' for table 'ACTIONLOGRELATIONS
+2014-09-16 15:02:13.862 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  ACTIONLOGRELATIONS  ( RECORDID  INTEGER NOT NULL ,  REFGROUP  VARCHAR(20) ) 
+2014-09-16 15:02:14.007 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  ACTIONLOGRELATIONS_RECORDID_IDX  ON  ACTIONLOGRELATIONS  (  RECORDID  )
+2014-09-16 15:02:14.151 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  ACTIONLOGRELATIONS_REFGROUP_IDX  ON  ACTIONLOGRELATIONS  (  REFGROUP  )
+2014-09-16 15:02:14.151 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/actionlogrelations
+2014-09-16 15:02:14.186 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERSHORTCUTS'
+2014-09-16 15:02:14.429 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERSHORTCUTS  ( USERNAME  VARCHAR(40) NOT NULL ,  CONFIG  LONG VARCHAR NOT NULL , PRIMARY KEY ( USERNAME ) ) 
+2014-09-16 15:02:14.429 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authusershortcuts
+2014-09-16 15:02:14.432 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'ACTIONLOGLIKERECORDS'
+2014-09-16 15:02:14.507 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  ACTIONLOGLIKERECORDS  ( RECORDID  INTEGER NOT NULL ,  USERNAME  VARCHAR(20) NOT NULL ,  LIKEDATE  TIMESTAMP NOT NULL ) 
+2014-09-16 15:02:14.507 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/actionloglikerecords
+2014-09-16 15:02:14.820 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'ACTIONLOGCOMMENTRECORDS'
+2014-09-16 15:02:15.040 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  ACTIONLOGCOMMENTRECORDS  ( ID  INTEGER NOT NULL ,  RECORDID  INTEGER NOT NULL ,  USERNAME  VARCHAR(20) NOT NULL ,  COMMENT  LONG VARCHAR NOT NULL ,  COMMENTDATE  TIMESTAMP NOT NULL , PRIMARY KEY ( ID ) ) 
+2014-09-16 15:02:15.040 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/actionlogcommentrecords
+2014-09-16 15:02:15.209 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CONTENTMODELS'
+2014-09-16 15:02:15.418 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CONTENTMODELS  ( MODELID  INTEGER NOT NULL ,  CONTENTTYPE  VARCHAR(30) NOT NULL ,  DESCR  VARCHAR(50) NOT NULL ,  MODEL  LONG VARCHAR ,  STYLESHEET  VARCHAR(50) , PRIMARY KEY ( MODELID ) ) 
+2014-09-16 15:02:15.418 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/contentmodels
+2014-09-16 15:02:15.421 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CONTENTS'
+2014-09-16 15:02:15.421 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTS_lastmodified_idx' for table 'CONTENTS
+2014-09-16 15:02:15.421 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTS_maingroup_idx' for table 'CONTENTS
+2014-09-16 15:02:15.421 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTS_contenttype_idx' for table 'CONTENTS
+2014-09-16 15:02:15.421 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTS_status_idx' for table 'CONTENTS
+2014-09-16 15:02:15.662 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CONTENTS  ( CONTENTID  VARCHAR(16) NOT NULL ,  CONTENTTYPE  VARCHAR(30) NOT NULL ,  DESCR  VARCHAR(255) NOT NULL ,  STATUS  VARCHAR(12) NOT NULL ,  WORKXML  LONG VARCHAR NOT NULL ,  CREATED  VARCHAR(20) ,  LASTMODIFIED  VARCHAR(20) ,  ONLINEXML  LONG VARCHAR ,  MAINGROUP  VARCHAR(20) NOT NULL ,  CURRENTVERSION  VARCHAR(7) NOT NULL ,  LASTEDITOR  VARCHAR(40) , PRIMARY KEY ( CONTENTID ) ) 
+2014-09-16 15:02:15.807 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTS_LASTMODIFIED_IDX  ON  CONTENTS  (  LASTMODIFIED  )
+2014-09-16 15:02:15.963 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTS_MAINGROUP_IDX  ON  CONTENTS  (  MAINGROUP  )
+2014-09-16 15:02:16.096 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTS_CONTENTTYPE_IDX  ON  CONTENTS  (  CONTENTTYPE  )
+2014-09-16 15:02:16.240 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTS_STATUS_IDX  ON  CONTENTS  (  STATUS  )
+2014-09-16 15:02:16.240 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/contents
+2014-09-16 15:02:16.243 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'RESOURCES'
+2014-09-16 15:02:16.463 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  RESOURCES  ( RESID  VARCHAR(16) NOT NULL ,  RESTYPE  VARCHAR(30) NOT NULL ,  DESCR  VARCHAR(255) NOT NULL ,  MAINGROUP  VARCHAR(20) NOT NULL ,  RESOURCEXML  LONG VARCHAR NOT NULL ,  MASTERFILENAME  VARCHAR(100) NOT NULL ,  CREATIONDATE  TIMESTAMP ,  LASTMODIFIED  TIMESTAMP , PRIMARY KEY ( RESID ) ) 
+2014-09-16 15:02:16.463 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/resources
+2014-09-16 15:02:16.465 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'RESOURCERELATIONS'
+2014-09-16 15:02:16.540 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  RESOURCERELATIONS  ( RESID  VARCHAR(16) NOT NULL ,  REFCATEGORY  VARCHAR(30) NOT NULL ) 
+2014-09-16 15:02:16.541 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/resourcerelations
+2014-09-16 15:02:16.834 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CONTENTRELATIONS'
+2014-09-16 15:02:16.834 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTRELATIONS_refgroup_idx' for table 'CONTENTRELATIONS
+2014-09-16 15:02:16.834 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTRELATIONS_contentid_idx' for table 'CONTENTRELATIONS
+2014-09-16 15:02:16.834 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTRELATIONS_refcategory_idx' for table 'CONTENTRELATIONS
+2014-09-16 15:02:16.907 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CONTENTRELATIONS  ( CONTENTID  VARCHAR(16) NOT NULL ,  REFPAGE  VARCHAR(30) ,  REFCONTENT  VARCHAR(16) ,  REFRESOURCE  VARCHAR(16) ,  REFCATEGORY  VARCHAR(30) ,  REFGROUP  VARCHAR(20) ) 
+2014-09-16 15:02:17.052 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTRELATIONS_REFGROUP_IDX  ON  CONTENTRELATIONS  (  REFGROUP  )
+2014-09-16 15:02:17.185 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTRELATIONS_CONTENTID_IDX  ON  CONTENTRELATIONS  (  CONTENTID  )
+2014-09-16 15:02:17.352 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTRELATIONS_REFCATEGORY_IDX  ON  CONTENTRELATIONS  (  REFCATEGORY  )
+2014-09-16 15:02:17.352 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/contentrelations
+2014-09-16 15:02:17.876 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CONTENTSEARCH'
+2014-09-16 15:02:17.876 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTSEARCH_attrname_idx' for table 'CONTENTSEARCH
+2014-09-16 15:02:17.876 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTSEARCH_contentid_idx' for table 'CONTENTSEARCH
+2014-09-16 15:02:17.952 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CONTENTSEARCH  ( CONTENTID  VARCHAR(16) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  TEXTVALUE  VARCHAR(255) ,  DATEVALUE  TIMESTAMP ,  NUMVALUE  INTEGER ,  LANGCODE  VARCHAR(3) ) 
+2014-09-16 15:02:18.096 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTSEARCH_ATTRNAME_IDX  ON  CONTENTSEARCH  (  ATTRNAME  )
+2014-09-16 15:02:18.241 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTSEARCH_CONTENTID_IDX  ON  CONTENTSEARCH  (  CONTENTID  )
+2014-09-16 15:02:18.241 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/contentsearch
+2014-09-16 15:02:18.265 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CONTENTATTRIBUTEROLES'
+2014-09-16 15:02:18.266 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTATTRIBUTEROLES_contentid_idx' for table 'CONTENTATTRIBUTEROLES
+2014-09-16 15:02:18.266 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTATTRIBUTEROLES_attrname_idx' for table 'CONTENTATTRIBUTEROLES
+2014-09-16 15:02:18.266 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTATTRIBUTEROLES_rolename_idx' for table 'CONTENTATTRIBUTEROLES
+2014-09-16 15:02:18.352 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CONTENTATTRIBUTEROLES  ( CONTENTID  VARCHAR(16) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  ROLENAME  VARCHAR(50) NOT NULL ) 
+2014-09-16 15:02:18.496 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTATTRIBUTEROLES_CONTENTID_IDX  ON  CONTENTATTRIBUTEROLES  (  CONTENTID  )
+2014-09-16 15:02:18.630 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTATTRIBUTEROLES_ATTRNAME_IDX  ON  CONTENTATTRIBUTEROLES  (  ATTRNAME  )
+2014-09-16 15:02:18.785 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTATTRIBUTEROLES_ROLENAME_IDX  ON  CONTENTATTRIBUTEROLES  (  ROLENAME  )
+2014-09-16 15:02:18.785 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/contentattributeroles
+2014-09-16 15:02:18.831 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'WORKCONTENTRELATIONS'
+2014-09-16 15:02:18.831 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTRELATIONS_contentid_idx' for table 'WORKCONTENTRELATIONS
+2014-09-16 15:02:18.831 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTRELATIONS_refcategory_idx' for table 'WORKCONTENTRELATIONS
+2014-09-16 15:02:18.908 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  WORKCONTENTRELATIONS  ( CONTENTID  VARCHAR(16) NOT NULL ,  REFCATEGORY  VARCHAR(30) ) 
+2014-09-16 15:02:19.074 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTRELATIONS_CONTENTID_IDX  ON  WORKCONTENTRELATIONS  (  CONTENTID  )
+2014-09-16 15:02:19.219 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTRELATIONS_REFCATEGORY_IDX  ON  WORKCONTENTRELATIONS  (  REFCATEGORY  )
+2014-09-16 15:02:19.219 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/workcontentrelations
+2014-09-16 15:02:19.243 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'WORKCONTENTSEARCH'
+2014-09-16 15:02:19.243 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTSEARCH_attrname_idx' for table 'WORKCONTENTSEARCH
+2014-09-16 15:02:19.243 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTSEARCH_contentid_idx' for table 'WORKCONTENTSEARCH
+2014-09-16 15:02:19.319 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  WORKCONTENTSEARCH  ( CONTENTID  VARCHAR(16) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  TEXTVALUE  VARCHAR(255) ,  DATEVALUE  TIMESTAMP ,  NUMVALUE  INTEGER ,  LANGCODE  VARCHAR(3) ) 
+2014-09-16 15:02:19.463 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTSEARCH_ATTRNAME_IDX  ON  WORKCONTENTSEARCH  (  ATTRNAME  )
+2014-09-16 15:02:19.619 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTSEARCH_CONTENTID_IDX  ON  WORKCONTENTSEARCH  (  CONTENTID  )
+2014-09-16 15:02:19.619 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/workcontentsearch
+2014-09-16 15:02:19.643 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'WORKCONTENTATTRIBUTEROLES'
+2014-09-16 15:02:19.643 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTATTRIBUTEROLES_attrname_idx' for table 'WORKCONTENTATTRIBUTEROLES
+2014-09-16 15:02:19.643 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTATTRIBUTEROLES_rolename_idx' for table 'WORKCONTENTATTRIBUTEROLES
+2014-09-16 15:02:19.643 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTATTRIBUTEROLES_contentid_idx' for table 'WORKCONTENTATTRIBUTEROLES
+2014-09-16 15:02:19.719 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  WORKCONTENTATTRIBUTEROLES  ( CONTENTID  VARCHAR(16) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  ROLENAME  VARCHAR(50) NOT NULL ) 
+2014-09-16 15:02:19.875 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTATTRIBUTEROLES_ATTRNAME_IDX  ON  WORKCONTENTATTRIBUTEROLES  (  ATTRNAME  )
+2014-09-16 15:02:20.019 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTATTRIBUTEROLES_ROLENAME_IDX  ON  WORKCONTENTATTRIBUTEROLES  (  ROLENAME  )
+2014-09-16 15:02:20.152 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTATTRIBUTEROLES_CONTENTID_IDX  ON  WORKCONTENTATTRIBUTEROLES  (  CONTENTID  )
+2014-09-16 15:02:20.152 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/workcontentattributeroles
+2014-09-16 15:02:20.167 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'JPVERSIONING_VERSIONEDCONTENTS'
+2014-09-16 15:02:20.386 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  JPVERSIONING_VERSIONEDCONTENTS  ( ID  INTEGER NOT NULL ,  CONTENTID  VARCHAR(16) NOT NULL ,  CONTENTTYPE  VARCHAR(30) NOT NULL ,  DESCR  VARCHAR(100) NOT NULL ,  STATUS  VARCHAR(12) NOT NULL ,  CONTENTXML  LONG VARCHAR NOT NULL ,  VERSIONDATE  TIMESTAMP NOT NULL ,  VERSIONCODE  VARCHAR(7) NOT NULL ,  ONLINEVERSION  INTEGER NOT NULL ,  APPROVED  SMALLINT NOT NULL ,  USERNAME  VARCHAR(40) , PRIMARY KEY ( ID ) ) 
+2014-09-16 15:02:20.386 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/jpversioning_versionedcontents
+2014-09-16 15:02:20.569 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'JPVERSIONING_TRASHEDRESOURCES'
+2014-09-16 15:02:20.797 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  JPVERSIONING_TRASHEDRESOURCES  ( RESID  VARCHAR(16) NOT NULL ,  RESTYPE  VARCHAR(30) NOT NULL ,  DESCR  VARCHAR(100) NOT NULL ,  MAINGROUP  VARCHAR(20) NOT NULL ,  RESXML  LONG VARCHAR NOT NULL , PRIMARY KEY ( RESID ) ) 
+2014-09-16 15:02:20.797 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/jpversioning_trashedresources
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:09.963 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 201
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:12.685 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 202
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:21.867 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.305 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70
+2014-09-16 15:03:24.339 - INFO  -  com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager - loaded trashed resource 70

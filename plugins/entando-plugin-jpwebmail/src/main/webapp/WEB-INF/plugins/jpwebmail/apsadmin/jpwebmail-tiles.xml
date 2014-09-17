@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+	<!-- START - WebMail configuration -->
+    <definition extends="main.layout" name="admin.jpwebmail.Config.entry">
+		<put-attribute name="title" value="title.webMail.config" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebmail/apsadmin/jsp/config/entryConfig.jsp" />
+	</definition>
+    <definition extends="main.layout" name="admin.jpwebmail.Config.savedConfirmation">
+		<put-attribute name="title" value="title.webMail.config" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebmail/apsadmin/jsp/config/savedConfirmation.jsp" />
+	</definition>
+	<!-- END - WebMail configuration -->
+	
+	<!-- START - WebMail navigation -->
+    <definition name="webmail.main.layout" template="/WEB-INF/apsadmin/jsp/common/template/mainLayout.jsp">
+		<put-attribute name="title" value="title.webMail.navigation" />
+		<put-attribute name="extraResources" value="/WEB-INF/apsadmin/jsp/common/template/defaultExtraResources.jsp" />
+		<put-attribute name="header" value="/WEB-INF/apsadmin/jsp/common/template/header.jsp" />
+		<put-attribute name="menu" value="/WEB-INF/plugins/jpwebmail/apsadmin/jsp/common/menu.jsp" />
+		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/common/template/mainBody.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/apsadmin/jsp/common/template/footer.jsp" />
+	</definition>
+	
+    <definition extends="main.layout" name="admin.jpwebmail.webmail.noStore">
+		<put-attribute name="title" value="title.webMail.navigation" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebmail/apsadmin/jsp/webmail/noStore.jsp" />
+	</definition>
+	
+    <definition extends="main.layout" name="admin.jpwebmail.webmail.error">
+		<put-attribute name="title" value="title.webMail.navigation" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebmail/apsadmin/jsp/webmail/error.jsp" />
+	</definition>
+	
+	<definition extends="webmail.main.layout" name="admin.jpwebmail.webmail.inbox">
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebmail/apsadmin/jsp/webmail/webmailInbox.jsp" />
+	</definition>
+	
+	<definition extends="webmail.main.layout" name="admin.jpwebmail.webmail.viewMessage">
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebmail/apsadmin/jsp/webmail/viewMessage.jsp" />
+	</definition>
+	
+	<definition extends="webmail.main.layout" name="admin.jpwebmail.webmail.newMessage">
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebmail/apsadmin/jsp/webmail/newMessage.jsp" />
+	</definition>
+	
+	<definition extends="webmail.main.layout" name="admin.jpwebmail.webmail.addressBook">
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebmail/apsadmin/jsp/webmail/addressbook/addressBook.jsp" />
+	</definition>
+	
+	<definition extends="webmail.main.layout" name="admin.jpwebmail.webmail.addressBookNotifier">
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebmail/apsadmin/jsp/webmail/addressbook/addressBookNotifier.jsp" />
+	</definition>
+	<!-- END - WebMail navigation -->
+	
+</tiles-definitions>

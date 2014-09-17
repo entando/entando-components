@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpnewsletter_do/jpnewsletter/Newsletter/Config" namespace="/do/jpnewsletter/Newsletter/Config" extends="entando-default">
+    	
+    	<action name="edit" class="jpnewsletterNewsletterConfigAction" method="edit" >
+            <result type="tiles">admin.jpnewsletter.Config.edit</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpnewsletter_config</param></interceptor-ref>
+        </action>
+    	
+    	<action name="entryConfig" class="jpnewsletterNewsletterConfigAction" method="entryConfig" >
+            <result type="tiles">admin.jpnewsletter.Config.edit</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpnewsletter_config</param></interceptor-ref>
+        </action>
+    	
+    	<action name="addCategoryMapping" class="jpnewsletterNewsletterConfigAction" method="addCategoryMapping" >
+            <result name="input" type="tiles">admin.jpnewsletter.Config.edit</result>
+            <result type="tiles">admin.jpnewsletter.Config.edit</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpnewsletter_config</param></interceptor-ref>
+        </action>
+    	
+        <action name="removeCategoryMapping*" class="jpnewsletterNewsletterConfigAction" method="removeCategoryMapping">
+           	<result type="redirectAction">entryConfig</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpnewsletter_config</param></interceptor-ref>
+        </action>
+        
+    	<action name="addContentType" class="jpnewsletterNewsletterConfigAction" method="addContentType" >
+            <result name="input" type="tiles">admin.jpnewsletter.Config.edit</result>
+            <result type="redirectAction">
+            	<param name="namespace">/do/jpnewsletter/Newsletter/ContentType/Config</param>
+            	<param name="actionName">configContentType</param>
+            	<param name="contentTypeCode">${contentTypeCode}</param>
+            </result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpnewsletter_config</param></interceptor-ref>
+        </action>
+    	
+        <action name="removeContentType*" class="jpnewsletterNewsletterConfigAction" method="removeContentType">
+           	<result type="redirectAction">entryConfig</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpnewsletter_config</param></interceptor-ref>
+        </action>
+        
+    	<action name="save" class="jpnewsletterNewsletterConfigAction" method="save" >
+            <result name="input" type="tiles">admin.jpnewsletter.Config.edit</result>
+            <result type="tiles">admin.jpnewsletter.Config.savedConfirmation</result>
+        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">jpnewsletter_config</param></interceptor-ref>
+        </action>
+    	
+    </package>
+    
+    <package name="jpnewsletter_do/jpnewsletter/Newsletter/ContentType/Config" namespace="/do/jpnewsletter/Newsletter/ContentType/Config" extends="entando-default">
+    	
+    	<action name="configContentType" class="jpnewsletterContentTypeConfigAction" >
+            <result type="tiles">admin.jpnewsletter.contentTypeConfig.edit</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpnewsletter_config</param></interceptor-ref>
+        </action>
+        
+    	<action name="addContentTypeConfig" class="jpnewsletterContentTypeConfigAction" method="addContentTypeConfig" >
+            <result name="input" type="tiles">admin.jpnewsletter.contentTypeConfig.edit</result>
+        	<result type="redirectAction">
+				<param name="namespace">/do/jpnewsletter/Newsletter/Config</param>
+            	<param name="actionName">entryConfig</param>
+			</result>
+        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">jpnewsletter_config</param></interceptor-ref>
+        </action>
+        
+	</package>
+	
+</struts>

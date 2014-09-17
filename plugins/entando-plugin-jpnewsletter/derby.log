@@ -1,0 +1,20 @@
+----------------------------------------------------------------
+Tue Sep 16 14:46:33 CEST 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-0148-7e7f-f25f-00001ad5cf88 
+on database directory /home/eu/ENTANDO/github_eugeniosant/entando-components/plugins/entando-plugin-jpnewsletter/target/test/db/entando-plugin-jpnewslettertestPort  with class loader sun.misc.Launcher$AppClassLoader@309ee1 
+Loaded from file:/home/eu/.m2/repository/org/apache/derby/derby/10.9.1.0/derby-10.9.1.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_65-b17
+user.dir=/home/eu/ENTANDO/github_eugeniosant/entando-components/plugins/entando-plugin-jpnewsletter
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue Sep 16 14:46:45 CEST 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance 856dc0f6-0148-7e7f-f25f-00001ad5cf88 
+on database directory /home/eu/ENTANDO/github_eugeniosant/entando-components/plugins/entando-plugin-jpnewsletter/target/test/db/entando-plugin-jpnewslettertestServ  with class loader sun.misc.Launcher$AppClassLoader@309ee1 
+Loaded from file:/home/eu/.m2/repository/org/apache/derby/derby/10.9.1.0/derby-10.9.1.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_65-b17
+user.dir=/home/eu/ENTANDO/github_eugeniosant/entando-components/plugins/entando-plugin-jpnewsletter
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

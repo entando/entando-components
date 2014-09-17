@@ -1,0 +1,171 @@
+.jpcontentfeedback {
+	float: left;
+	width: 100%;
+	margin-top: 2em;
+}
+
+.jpcontentfeedback .jpcontentfeedback_title {
+	margin: 1em 0;
+	padding: 0.5em 0;
+	border-bottom: 2px solid #0F4780;
+	background-color: #E5ECFA;
+	color: #144873;
+} 
+.jpcontentfeedback .jpcontentfeedback_title span{
+	padding-left: 0.5em;
+}
+.jpcontentfeedback .centerText { 
+	text-align: center; 
+}
+
+.jpcontentfeedback fieldset {
+	border: 1px dashed #aaa;
+}
+
+.jpcontentfeedback legend {
+	font-size: 0.8em;
+}
+.jpcontentfeedback .content_rating {
+	padding-bottom: 1em;
+	border-bottom: 1px dashed #666666;
+}
+
+.jpcontentfeedback .content_rating,
+.jpcontentfeedback .content_comments {
+	margin: 0 0 1em 0;
+	float: left;
+	width: 100%;
+	/*border-bottom: 1px dashed #333333;*/
+}
+
+.jpcontentfeedback .rate_values {
+	list-style-type: none;
+	text-align: left;
+	display: block;
+	margin: 0.5em 0;
+	padding: 0.5em 0;
+	text-align: center;
+}
+.jpcontentfeedback .rate_values .rate_value { 
+	display: inline;
+	border: 1px solid #144873;
+	padding: 0.5em 0 0.5em 0.5em;
+	margin-right: 0.5em;
+}
+.jpcontentfeedback .rate_values .rate_value label {
+	padding: 0 1em 0 0;
+	margin: 0;
+	text-align: left;
+	color: #144873;
+} 
+.jpcontentfeedback .rate_values .rate_value input { 
+	padding: 0 0 0 0; 
+	margin: 0; 
+}
+
+.jpcontentfeedback .content_comments .paginazione {
+	float: left; 
+	width: 100%;
+	text-align: center;
+	/*border-bottom: 1px dashed #333333;*/
+}
+.jpcontentfeedback .content_comments ol {
+	float: left;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+
+.jpcontentfeedback .content_comments li { 
+	float: left;
+	width: 100%;
+	margin: 0 0 1em 0;
+	padding: 0 0 0.5em 0; 
+	border-bottom: 1px dashed #666;
+}
+.jpcontentfeedback .content_comments li.last_comment {
+	border-bottom: 1px dashed #fff;
+} 
+
+/********************/
+.jpcontentfeedback .comment_info  {
+	float: left;
+	width: 70%;
+	margin: 0;
+	padding: 0;
+	border-right: 1px dashed #666;
+}
+
+.jpcontentfeedback .comment_rating  {
+	margin: 0 0 0 70%;
+	padding: 0;
+	width: 29%;
+	text-align: right;
+}
+
+.jpcontentfeedback .comment_rating h4 {
+	margin-top: 0;
+	padding: 0.25em 0;
+}
+.jpcontentfeedback .comment_info .comment_text {
+	position: absolute;
+	top: -1000em;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+} 
+.jpcontentfeedback .comment_rating  select {
+	background-color: #fff;
+	color: #000;
+}
+
+.jpcontentfeedback .comment_info blockquote {
+	margin: 0;
+	padding: 0.25em;
+	line-height: 170%;
+	background-color: #EEF6FC;
+	color: #000;
+	overflow: scroll;
+	overflow-y: visible;
+	overflow-x: auto;
+}
+
+.jpcontentfeedback .comment_info dl {
+	margin: 0;
+	padding: 0;
+}
+.jpcontentfeedback .comment_info dt {
+	/*background-color: #D7E5F2;*/
+	float: left;
+	/*width: 8em;*/
+	margin: 0 0 0.25em 0;
+	padding:  0.25em  0;
+	clear: left;
+}
+
+.jpcontentfeedback .comment_info dd { 
+	/*background-color: #EEF6FC;*/
+	margin: 0 0 0.25em 0;
+	padding:  0.25em 0;
+	text-indent: 0.25em;
+}
+.jpcontentfeedback .comment_actions {
+	text-align: center;
+	margin: 0.5em 0;
+}
+.jpcontentfeedback .comment_current_average_vote {
+	font-weight: bold;
+	font-size: 1.5em;
+	color: #144873;
+}
+/***********************************************************/
+.jpcontentfeedback .comment_form {
+	margin: 1em 0;
+	float: left;
+	width: 100%;
+}
+.jpcontentfeedback .comment_form textarea {
+	border: 1px solid #333333;
+}

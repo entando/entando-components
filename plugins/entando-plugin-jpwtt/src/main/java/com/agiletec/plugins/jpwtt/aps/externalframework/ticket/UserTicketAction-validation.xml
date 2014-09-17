@@ -1,0 +1,108 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+	
+    <field name="nome">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">50</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+    </field>
+	
+    <field name="cognome">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">50</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+    </field>
+	
+    <field name="codFisc">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="minLength">16</param>
+			<param name="maxLength">16</param>
+			<param name="trim">true</param>
+           <message key="stringlengthrange" />
+		</field-validator>
+    </field>
+	
+    <field name="comune">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">50</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+    </field>
+	
+    <field name="localita">
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">100</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+    </field>
+	
+    <field name="tipoIndirizzo">
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">10</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+    </field>
+	
+    <field name="indirizzo">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">100</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+    </field>
+	
+    <field name="numeroIndirizzo">
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">8</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+    </field>
+	
+    <field name="telefono">
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">15</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+    </field>
+	
+    <field name="email">
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">100</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+    </field>
+	
+    <validator type="expression">
+		<param name="expression"><![CDATA[(email==null || email.length()==0 || email.equals(emailConfirm)) ]]></param>
+		<message key="errors.email.wrongConfirm" />
+	</validator>
+    
+</validators>

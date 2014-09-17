@@ -1,0 +1,41 @@
+.jpfacetfilter {
+	/*border: 1px solid black;*/   
+	/*padding: 0 0.2em;*/ 
+}
+
+a.jpfacetfilter:link {
+	/*
+	background-color: #DDFFDD; 
+	color: black;
+	border: 1px solid silver;
+	*/
+}
+
+a.jpfacetfilter:visited {
+	/*
+	background-color: gray;
+	color: black;
+	*/  
+}
+
+a.jpfacetfilter:hover, a.jpfacetfilter:active, a.jpfacetfilter:focus  {
+	background-color: white;
+	color: black;
+}
+
+.jpfacetnav_filterlist {
+	list-style-type: none;
+	list-style-position: inside;
+	margin: 0 0 1.5em 0;
+	padding: 0; 
+	
+}
+
+.jpfacetnav_filterlist li {
+	margin: 0.5em 0;
+}
+.jpfacetnav .jpfacetnav_tree_occurences { 
+	background-color: #E5ECFA;
+	color: #144873;
+	padding: 0 0.5em;
+}

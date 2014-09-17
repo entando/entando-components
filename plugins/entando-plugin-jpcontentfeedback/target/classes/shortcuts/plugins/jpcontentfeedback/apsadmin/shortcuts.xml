@@ -1,0 +1,14 @@
+<shortcut-def>
+	<shortcuts>
+		<shortcut id="jpcontentfeedback.profile.current.entry" requiredPermission="superuser" menusection="plugins" source="jpcontentfeedback">
+			<description key="jpcontentfeedback.shortcut.content.list.shortDesc" >Comment List</description>
+			<longdesc key="jpcontentfeedback.shortcut.content.list.longDesc">
+				<![CDATA[Per visualizzare e moderare i commenti inseriti dagli utenti]]>
+			</longdesc>
+			<url>
+				<param name="namespace">/do/jpcontentfeedback/Comments</param>
+				<param name="actionName">list</param>
+			</url>
+		</shortcut>
+	</shortcuts>
+</shortcut-def>

@@ -1,0 +1,7 @@
+<roles>
+	<role>
+		<name>jpuserreg:language</name>
+		<description>The Attribute that contains the user's language</description>
+		<allowedTypes>Monotext,Enumerator</allowedTypes>
+	</role>
+</roles>

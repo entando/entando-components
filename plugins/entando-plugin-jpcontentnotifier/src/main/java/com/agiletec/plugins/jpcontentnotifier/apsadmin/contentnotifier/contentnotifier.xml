@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+	<package name="jpcontentnotifier_do/jpcontentnotifier/NotifierConfig" namespace="/do/jpcontentnotifier/NotifierConfig" extends="entando-default">
+		
+		<action name="config" class="jpcontentnotifierConfigAction" method="config">
+			<result type="tiles">admin.jpcontentnotifier.contentnotifier.config</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+		
+		<action name="save" class="jpcontentnotifierConfigAction" method="save">
+			<result type="tiles">admin.jpcontentnotifier.contentnotifier.savedConfirm</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+		
+	</package>
+	
+</struts>

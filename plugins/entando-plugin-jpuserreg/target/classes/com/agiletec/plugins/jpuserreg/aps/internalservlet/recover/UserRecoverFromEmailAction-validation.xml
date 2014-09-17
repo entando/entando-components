@@ -1,0 +1,16 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+
+    <field name="email" >
+        <field-validator type="requiredstring">
+            <message key="jpuserreg.recover.mail.required"/>
+        </field-validator>
+        <field-validator type="email">
+      		<message key="Messages.mail.unvalid" />
+  		</field-validator>
+    </field>
+    
+</validators>

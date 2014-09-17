@@ -1,0 +1,13 @@
+<i18nLabel>
+  <key>COPYRIGHT</key>
+  <labels>
+    <label>
+      <langCode>en</langCode>
+      <value><![CDATA[Copyright &copy; My Company YYYY]]></value>
+    </label>
+    <label>
+      <langCode>it</langCode>
+      <value><![CDATA[Copyright &copy; Mia Azienda AAAA]]></value>
+    </label>
+  </labels>
+</i18nLabel>

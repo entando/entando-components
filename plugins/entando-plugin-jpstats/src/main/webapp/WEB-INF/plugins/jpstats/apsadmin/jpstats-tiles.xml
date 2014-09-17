@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+<!--    <definition extends="main.layout" name="admin.jpstats.entry">-->
+<!--		<put-attribute name="title" value="Amministrazione :: Statistiche" />-->
+<!--		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpstats/apsadmin/jsp/common/template/extraresources/statistics.jsp" />		-->
+<!--		<put-attribute name="body" value="/WEB-INF/plugins/jpstats/apsadmin/jsp/statistics/showStatistics.jsp" />-->
+<!--	</definition>-->
+<!--    -->
+<!--    <definition extends="main.layout" name="admin.jpstats.trash">-->
+<!--		<put-attribute name="title" value="Amministrazione :: Statistiche" />-->
+<!--		<put-attribute name="body" value="/WEB-INF/plugins/jpstats/apsadmin/jsp/statistics/trashStatistics.jsp" />-->
+<!--	</definition>-->
+
+  <!-- ********* INIZIO Area STATS ********* -->
+         <definition extends="main.layout" name="admin.jpstats.entry">
+		<put-attribute name="title" value="Amministrazione :: Statistiche" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpstats/apsadmin/jsp/common/template/extraresources/statistics.jsp" />		
+		<put-attribute name="body" value="/WEB-INF/plugins/jpstats/apsadmin/jsp/statistics/showStatistics.jsp" />
+	</definition>
+
+    <definition extends="main.layout" name="admin.jpstats.charts">
+		<put-attribute name="title" value="Amministrazione :: Statistiche" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpstats/apsadmin/jsp/common/template/extraresources/statistics.jsp" />		
+		<put-attribute name="body" value="/WEB-INF/plugins/jpstats/apsadmin/jsp/statistics/showCharts.jsp" />
+	</definition>
+    
+    <definition extends="main.layout" name="admin.jpstats.trash">
+		<put-attribute name="title" value="Amministrazione :: Statistiche" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpstats/apsadmin/jsp/statistics/trashStatistics.jsp" />
+	</definition>
+     <!-- ********* FINE Area STATS ********* -->
+    
+</tiles-definitions>

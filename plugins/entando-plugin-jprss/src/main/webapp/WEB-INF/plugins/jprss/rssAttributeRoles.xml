@@ -1,0 +1,12 @@
+<roles>
+	<role>
+		<name>jprss:title</name>
+		<description>The Attribute that contains the title of rss content</description>
+		<allowedTypes>Text,Monotext,Longtext</allowedTypes>
+	</role>
+	<role>
+		<name>jprss:description</name>
+		<description>The Attribute that contains the description of rss content</description>
+		<allowedTypes>Text,Monotext,Longtext,Hypertext</allowedTypes>
+	</role>
+</roles>

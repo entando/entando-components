@@ -1,0 +1,16 @@
+<shortcut-def>
+
+	<shortcuts>
+		<shortcut id="jpavatar.edit.shortCut" requiredPermission="" menusection="plugins" source="jpavatar">
+			<description key="jpavatar.shortCut.edit.shortDesc" >Avatar</description><!-- key e corpo alternativo -->
+			<longdesc key="jpavatar.shortCut.edit.longDesc">
+				<![CDATA[Avatar Management]]>
+			</longdesc>
+			<url>
+				<param name="namespace">/do/jpavatar/Avatar</param>
+				<param name="actionName">edit</param>
+			</url>
+		</shortcut>
+	</shortcuts>
+
+</shortcut-def>

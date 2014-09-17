@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
+
+	<bean id="jpwttTicketManager" class="com.agiletec.plugins.jpwtt.aps.system.services.ticket.TicketManager"
+			parent="abstractService" >
+		<property name="configManager" ref="BaseConfigManager"/>
+		<property name="ticketDAO" >
+			<bean class="com.agiletec.plugins.jpwtt.aps.system.services.ticket.TicketDAO">
+				<property name="dataSource" ref="servDataSource" />
+			</bean>
+		</property>
+		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+		<property name="ticketAlerters">
+			<list>
+				<bean class="com.agiletec.plugins.jpwtt.aps.system.services.ticket.alerter.mail.MailTicketAlerter"
+						init-method="init" >
+					<property name="configManager" ref="BaseConfigManager"/>
+					<property name="roleManager" ref="RoleManager"/>
+					<property name="ticketManager" ref="jpwttTicketManager" />
+					<property name="mailManager" ref="jpmailMailManager"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+</beans>

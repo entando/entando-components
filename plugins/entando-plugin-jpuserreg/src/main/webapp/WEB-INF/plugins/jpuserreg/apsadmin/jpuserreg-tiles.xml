@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+    <!-- ********* START UserReg Configuration ********* -->
+    <definition extends="layout.default" name="admin.jpuserreg.UserReg.Config.entry" >
+		<put-attribute name="title" value="jpuserreg.title.config" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpuserreg/apsadmin/jsp/config/config-entry.jsp" />
+	</definition>
+
+    <definition extends="layout.default" name="admin.jpuserreg.UserReg.Config.saveConfirmed">
+		<put-attribute name="title" value="jpuserreg.title.config" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpuserreg/apsadmin/jsp/config/config-saved.jsp" />
+	</definition>
+    <!-- ********* END UserReg Configuration ********* -->
+
+    <!-- ********* START UserReg Widget Configuration ********* -->
+    <definition extends="layout.default" name="admin.jpuserreg.Page.Widget.UserReg.config">
+		<put-attribute name="title" value="title.pageManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpuserreg/apsadmin/jsp/portal/specialwidget/userRegConfig.jsp" />
+	</definition>
+    <!-- ********* END UserReg Widget Configuration ********* -->
+
+</tiles-definitions>

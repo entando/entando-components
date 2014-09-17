@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-content-generic</code>
+	<description>Content Type: Generic</description>
+	<dependencies>
+		<code>jacms</code>
+	</dependencies>
+	<installation>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/bundles/entando-content-generic/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/bundles/entando-content-generic/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+			<postProcesses>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentType"
+						method="POST" expected="202" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-content-generic/postprocess/CNG.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-content-generic/postprocess/contentModel_10001.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-content-generic/postprocess/contentModel_10011.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-content-generic/postprocess/contentModel_10012.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-content-generic/postprocess/contentModel_10013.xml" />
+				</selfRestCall>
+				<!-- avoid loop dependency between Content and Content Models -->
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentType"
+						method="PUT" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-content-generic/postprocess/CNG.xml" />
+				</selfRestCall>
+				<!--// avoid loop dependency between Content and Content Models -->
+				<selfRestCall langCode="en" namespace="jacms" resourceName="image"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-content-generic/postprocess/image1.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="content"
+						method="POST" expected="200" printresponse="true" >
+					<query>
+						<parameter name="insertOnLine" value="true" />
+					</query>
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-content-generic/postprocess/content1.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="content"
+						method="POST" expected="200" printresponse="true" >
+					<query>
+						<parameter name="insertOnLine" value="true" />
+					</query>
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-content-generic/postprocess/content2.xml" />
+				</selfRestCall>
+			</postProcesses>
+		</environment>
+	</installation>
+</component>

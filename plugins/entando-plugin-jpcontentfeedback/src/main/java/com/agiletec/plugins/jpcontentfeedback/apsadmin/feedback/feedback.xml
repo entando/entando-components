@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<package name="jpcontentfeedback_do/jpcontentfeedback/Comments" namespace="/do/jpcontentfeedback/Comments" extends="entando-default">
+		
+		<action name="list" class="jpcontentfeedbackContentFeedbackAction" method="search">
+	        <result type="tiles">admin.jpcontentfeedback.comments.search</result>
+	      	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpcontentfeedback_moderate</param></interceptor-ref>
+	    </action>
+
+		<action name="search" class="jpcontentfeedbackContentFeedbackAction" method="search">
+	        <result name="input" type="tiles">admin.jpcontentfeedback.comments.search</result>
+	        <result type="tiles">admin.jpcontentfeedback.comments.search</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">jpcontentfeedback_moderate</param></interceptor-ref>
+	    </action>
+	    
+	    <action name="trash" class="jpcontentfeedbackContentFeedbackAction" method="trash">
+	    	<result type="tiles">admin.jpcontentfeedback.comments.trash</result>
+	    	<result name="input" type="redirectAction">list</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">jpcontentfeedback_moderate</param></interceptor-ref>
+	    </action>
+
+	    <action name="delete" class="jpcontentfeedbackContentFeedbackAction" method="delete">
+	    	<result type="redirectAction">list</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">jpcontentfeedback_moderate</param></interceptor-ref>
+	    </action>
+	    
+	    <action name="view" class="jpcontentfeedbackContentFeedbackAction" method="view">
+	        <result type="tiles">admin.jpcontentfeedback.comments.view</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">jpcontentfeedback_moderate</param></interceptor-ref>
+	    </action>
+
+	    <action name="updateStatus" class="jpcontentfeedbackContentFeedbackAction" method="updateStatus">
+	    	<result type="redirectAction">list</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">jpcontentfeedback_moderate</param></interceptor-ref>
+	    </action>
+
+	</package>
+
+</struts>

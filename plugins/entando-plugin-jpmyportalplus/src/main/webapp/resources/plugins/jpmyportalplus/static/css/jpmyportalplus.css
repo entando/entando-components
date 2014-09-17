@@ -1,0 +1,78 @@
+.hide {
+	display: none;
+}
+
+#widget-columns-container {
+
+}
+
+.widget-column {
+	min-height: 40px;
+}
+
+.widget {
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.widget-hover {
+	-webkit-box-shadow: 0 4px 1px 1px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 4px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.widget-while-dragging {
+
+}
+
+.widget-placeholder {
+
+}
+
+.widget .widget-spacer {
+
+}
+
+.widget h1 {
+	font-size: 1em;
+	line-height: 1em;
+	padding-right: 0.25em;
+}
+
+.widget-loading,
+.widget .widget-toolbar .button {
+
+}
+
+.widget .widget-toolbar :hover {
+
+}
+
+.widget-draggable {
+	cursor: move;
+}
+
+
+.widget .widget-header,
+.widget .widget-content,
+.widget .widget-footer {
+
+}
+
+.widget .widget-content {
+
+}
+
+.widget .widget-header {
+
+}
+
+.widget-border-bottom {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/** configure page block **/
+
+#editshowletlist {
+
+}

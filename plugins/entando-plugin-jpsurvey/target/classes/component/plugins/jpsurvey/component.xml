@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>jpsurvey</code>
+	<description>Survey - Questionnaire</description>
+	<installation>
+		<tableMapping>
+			<datasource name="servDataSource">
+				<class>org.entando.entando.plugins.jpsurvey.aps.system.init.servdb.Survey</class>
+				<class>org.entando.entando.plugins.jpsurvey.aps.system.init.servdb.Question</class>
+				<class>org.entando.entando.plugins.jpsurvey.aps.system.init.servdb.Choice</class>
+				<class>org.entando.entando.plugins.jpsurvey.aps.system.init.servdb.Voter</class>
+				<class>org.entando.entando.plugins.jpsurvey.aps.system.init.servdb.Response</class>
+			</datasource>
+		</tableMapping>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpsurvey/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpsurvey/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+		<environment code="test">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpsurvey/port_data_test.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpsurvey/serv_data_test.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+</component>

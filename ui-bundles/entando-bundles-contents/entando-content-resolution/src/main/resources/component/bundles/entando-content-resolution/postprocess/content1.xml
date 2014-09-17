@@ -1,0 +1,38 @@
+<content>
+	<description>Sample - Resolution 20</description>
+	<typeCode>RSL</typeCode>
+	<typeDescription>Resolution</typeDescription>
+	<mainGroup>free</mainGroup>
+	<attributes>
+		<attribute>
+			<name>Number</name>
+			<type>Number</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:decimal">20</value>
+		</attribute>
+		<attribute>
+			<name>Date</name>
+			<type>Date</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:dateTime">2012-06-13T00:00:00+02:00</value>
+		</attribute>
+		<attribute>
+			<name>Title</name>
+			<type>Longtext</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">
+			Examination and approval of Villamarina Balance Sheet 2013
+			</value>
+			<roles>
+				<role>jacms:title</role>
+			</roles>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbHypertextAttribute">
+			<name>Summary</name>
+			<type>Hypertext</type>
+			<htmlValue>
+			<![CDATA[
+			<p> Examination and approval of Villamarina Balance Sheet 2013</p>
+			]]>
+			</htmlValue>
+		</attribute>
+	</attributes>
+	<lastEditor>admin</lastEditor>
+</content>

@@ -1,0 +1,18 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10011</id>
+  <contentType>CNG</contentType>
+  <description>Lists - Default</description>
+  <shape><![CDATA[<article>
+  <h2>$content.Title.text</h2>
+#if ( $content.Abstract.text != "" )
+  $content.Abstract.text
+#end
+<p class="text-right"><a class="btn" href="$content.contentLink">$i18n.getLabel("CNG_READ_MORE")</a></p>
+</article>]]></shape>
+</contentModel>

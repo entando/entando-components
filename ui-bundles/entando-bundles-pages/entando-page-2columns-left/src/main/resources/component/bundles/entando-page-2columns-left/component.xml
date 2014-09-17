@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-page-2columns-left</code>
+	<description>Page: 2 Columns, Left + Main</description>
+	<dependencies>
+		<code>entando-misc-bootstrap</code>
+		<code>entando-widget-language_choose</code>
+		<code>entando-widget-search_form</code>
+		<code>entando-widget-navigation_bar</code>
+		<code>entando-widget-navigation_menu</code>
+		<code>entando-widget-login_form</code>
+		<code>entando-widget-navigation_breadcrumbs</code>
+		<code>entando-widget-generic</code>
+	</dependencies>
+	<installation>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/bundles/entando-page-2columns-left/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/bundles/entando-page-2columns-left/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+			<postProcesses>
+				<selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+						method="POST" expected="200" failonerror="false" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-page-2columns-left/postprocess/i18n_COPYRIGHT.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+						method="POST" expected="200" failonerror="false" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-page-2columns-left/postprocess/i18n_PORTAL_TITLE.xml" />
+				</selfRestCall>
+			</postProcesses>
+		</environment>
+	</installation>
+</component>

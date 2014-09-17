@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+    <definition extends="layout.default" name="admin.jpmyportalplus.config.entry">
+		<put-attribute name="title" value="title.jpmyportalplus.config" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpmyportalplus/apsadmin/jsp/config/entryConfig.jsp" />
+	</definition>
+    
+	<definition extends="layout.default" name="admin.jpmyportalplus.config.savedConfirmation">
+		<put-attribute name="title" value="title.jpmyportalplus.config" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpmyportalplus/apsadmin/jsp/config/savedConfirmation.jsp" />
+	</definition>
+	
+    <!-- ********************************* -->
+	
+	<definition extends="layout.default" name="admin.jpmyportalplus.modelConfig.entry">
+		<put-attribute name="title" value="title.jpmyportalplus.config" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpmyportalplus/apsadmin/jsp/portal/model/pagemodel-config.jsp" />
+	</definition>
+    
+</tiles-definitions>

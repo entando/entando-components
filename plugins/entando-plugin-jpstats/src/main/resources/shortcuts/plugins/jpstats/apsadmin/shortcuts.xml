@@ -1,0 +1,14 @@
+<shortcut-def>
+	<shortcuts>
+		<shortcut id="jpstats.edit.shortCut" requiredPermission="superuser" menusection="plugins" source="jpstats">
+			<description key="jpstats.shortCut.edit.shortDesc" >Stats</description><!-- key e corpo alternativo -->
+			<longdesc key="jpstats.shortCut.edit.longtDesc">
+				<![CDATA[Statistics]]>
+			</longdesc>
+			<url>
+				<param name="namespace">/do/jpstats/Statistics</param>
+				<param name="actionName">entryPoint</param>
+			</url>
+		</shortcut>
+	</shortcuts>
+</shortcut-def>

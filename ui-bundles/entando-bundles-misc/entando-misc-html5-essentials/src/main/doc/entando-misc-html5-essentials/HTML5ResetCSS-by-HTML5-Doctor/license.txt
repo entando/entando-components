@@ -1,0 +1,3 @@
+Public Domain.
+
+http://code.google.com/p/html5resetcss/

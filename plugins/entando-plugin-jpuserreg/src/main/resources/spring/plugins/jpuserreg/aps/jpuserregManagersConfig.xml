@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	
+	<aop:aspectj-autoproxy />
+	
+	<bean id="jpuserregUserRegManager"
+			class="com.agiletec.plugins.jpuserreg.aps.system.services.userreg.UserRegManager"
+			parent="abstractService">
+		<property name="userManager" ref="UserManager" />
+		<property name="roleManager" ref="RoleManager" />
+		<property name="groupManager" ref="GroupManager" />
+		<property name="userProfileManager" ref="UserProfileManager" />
+		<property name="configManager" ref="BaseConfigManager" />
+		<property name="langManager" ref="LangManager" />
+		<property name="mailManager" ref="jpmailMailManager" />
+		<property name="urlManager" ref="URLManager" />
+		<property name="pageManager" ref="PageManager" />
+		<property name="userRegDAO" >
+			<bean class="com.agiletec.plugins.jpuserreg.aps.system.services.userreg.UserRegDAO">
+				<property name="dataSource" ref="servDataSource" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="jpuserregAttributeDisablingCodesLoader" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeRolesWrapper">
+		<property name="entityManagerNameDest"><value>UserProfileManager</value></property>
+		<property name="defsFilePath"><value>/WEB-INF/plugins/jpuserreg/attributeDisablingCodes.xml</value></property>
+	</bean>
+	
+	<bean id="jpuserregAttributeRolesLoader" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeRolesWrapper">
+		<property name="entityManagerNameDest"><value>UserProfileManager</value></property>
+		<property name="defsFilePath"><value>/WEB-INF/plugins/jpuserreg/attributeRoles.xml</value></property>
+	</bean>
+	
+	<bean id="jpuserregLangItemsExtractor" class="com.agiletec.plugins.jpuserreg.aps.system.common.entity.model.attribute.util.LangItemsExtractor" >
+		<property name="langManager" ref="LangManager"/>
+	</bean>
+	
+</beans>

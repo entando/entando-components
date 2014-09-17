@@ -1,0 +1,84 @@
+<apiMethodDefinitions>
+    
+    <resource name="messageType" namespace="jpwebdynamicform">
+        <description>The representation of message type</description>
+        <source pluginCode="jpwebdynamicform">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a message type</description>
+            <springBean name="jpwebdynamicformApiMessageTypeInterface" method="getMessageType" />
+            <responseClass>org.entando.entando.plugins.jpwebdynamicform.aps.system.services.api.response.MessageTypeResponse</responseClass>
+            <parameters>
+                <parameter key="typeCode" required="true">
+                    <description>The code of the type to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Add a message type</description>
+            <springBean name="jpwebdynamicformApiMessageTypeInterface" method="addMessageType" />
+            <expectedType>org.entando.entando.plugins.jpwebdynamicform.aps.system.services.api.model.JAXBMessageType</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Update a message type</description>
+            <springBean name="jpwebdynamicformApiMessageTypeInterface" method="updateMessageType" />
+            <expectedType>org.entando.entando.plugins.jpwebdynamicform.aps.system.services.api.model.JAXBMessageType</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Delete a message type</description>
+            <springBean name="jpwebdynamicformApiMessageTypeInterface" method="deleteMessageType" />
+            <parameters>
+                <parameter key="typeCode" required="true">
+                    <description>The code of the type to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    
+    <resource name="messages" namespace="jpwebdynamicform">
+        <description>The list of messages, composed using the specified filters to messages.</description>
+        <source pluginCode="jpwebdynamicform">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Returns a list of message codes, composed using the specified filters to message.</description>
+            <springBean name="jpwebdynamicformApiMessageInterface" method="getMessages" />
+            <responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+            <parameters>
+                <parameter key="typeCode" required="true">
+                    <description>The code of a message type.</description>
+                </parameter>
+                <parameter key="filters" required="false">
+                    <description>The filters (Example: "(order=DESC;attributeFilter=true;key=Date)+(order=ASC;attributeFilter=true;key=Title)" )</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    
+    <resource name="message" namespace="jpwebdynamicform">
+        <description>The representation of a message</description>
+        <source pluginCode="jpwebdynamicform">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a message and its answers</description>
+            <springBean name="jpwebdynamicformApiMessageInterface" method="getMessage" />
+            <responseClass>org.entando.entando.plugins.jpwebdynamicform.aps.system.services.api.response.MessageResponse</responseClass>
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The code of the message to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="jpwebdynamicform_profile_edit">
+            <description>Add a message</description>
+            <springBean name="jpwebdynamicformApiMessageInterface" method="addMessage" />
+            <expectedType>org.entando.entando.plugins.jpwebdynamicform.aps.system.services.api.model.JAXBMessage</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="jpwebdynamicform_profile_edit">
+            <description>Delete a message and its answers</description>
+            <springBean name="jpwebdynamicformApiMessageInterface" method="deleteMessage" />
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The code of the message to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    
+</apiMethodDefinitions>

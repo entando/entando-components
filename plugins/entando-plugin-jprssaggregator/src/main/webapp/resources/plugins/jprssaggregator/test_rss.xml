@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+    xmlns:admin="http://webns.net/mvcb/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:content="http://purl.org/rss/1.0/modules/content/"
+    xmlns:atom="http://www.w3.org/2005/Atom">
+
+    <channel>
+    
+    <title>A List Apart</title>
+    <link>http://www.alistapart.com/articles/</link>
+    <description></description>
+    <dc:language>en</dc:language>
+    <dc:creator>nospam@example.com	</dc:creator>
+
+    <dc:rights>Copyright 2009</dc:rights>
+    <dc:date>2009-05-25T11:00:30+00:00</dc:date>
+    <admin:generatorAgent rdf:resource="http://expressionengine.com/" />
+	<atom:link href="http://www.alistapart.com/site/rss" rel="self" type="application/rss+xml" />
+    
+
+    <item>
+      <title>Burnout</title>
+      <link>http://www.alistapart.com/articles/burnout/</link>
+
+      <author><![CDATA[contact.us@alistapart.com (Scott Boms)]]></author>
+      <guid>http://www.alistapart.com/articles/burnout/</guid>
+      <description>Does every day feel like a bad day? Blurry boundaries between work and home, and the &#8220;always on&#8221; demands of the web can lead to depression and burnout. Learn the signs of burnout and how to maintain your bliss.</description>
+      <dc:subject>Culture, State of the Web</dc:subject>
+      <dc:date>2009-05-25T11:00:30+00:00</dc:date>
+
+    </item>
+
+    <item>
+      <title>Creating Intrinsic Ratios for Video</title>
+      <link>http://www.alistapart.com/articles/creating-intrinsic-ratios-for-video/</link>
+      <author><![CDATA[contact.us@alistapart.com (Thierry Koblentz)]]></author>
+      <guid>http://www.alistapart.com/articles/creating-intrinsic-ratios-for-video/</guid>
+      <description>Have you ever wanted to resize a video on the fly, scaling it as you would an image? Using intrinsic ratios for video and some padding property magic, you can. Thierry Koblentz shows us how.</description>
+
+      <dc:subject>Code, CSS, HTML and XHTML, Scripting</dc:subject>
+      <dc:date>2009-05-25T11:00:08+00:00</dc:date>
+    </item>
+
+    <item>
+      <title></title>
+      <link>http://www.alistapart.com/articles/taking-the-guesswork-out-of-design/</link>
+
+      <author><![CDATA[contact.us@alistapart.com (Daniel Ritzenthaler)]]></author>
+      <guid>http://www.alistapart.com/articles/taking-the-guesswork-out-of-design/</guid>
+      <description></description>
+      <dc:subject>Design, Graphic Design, Layout, User Interface Design, Process, Creativity</dc:subject>
+      <dc:date>2009-05-05T11:47:59+00:00</dc:date>
+
+    </item>
+
+
+
+    
+    </channel>
+</rss>

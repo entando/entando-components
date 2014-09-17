@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<package name="jpfastcontentedit_do/Page/SpecialWidget" namespace="/do/Page/SpecialWidget" extends="core_do/Page/SpecialWidget">
+
+    	<global-results>
+    		<result name="pageTree" type="chain">
+    			<param name="namespace">/do/Page</param>
+    			<param name="actionName">viewTree</param>
+    		</result>
+    		<result name="configure" type="chain">
+            	<param name="namespace">/do/Page</param>
+    			<param name="actionName">configure</param>
+            </result>
+		</global-results>
+
+    	<!-- ##### WIDGET jpfastcontentedit **** ENTRY POINT ##### -->
+    	<action name="jpfastcontenteditConfig" class="jfastcontenteditConfigWidgetAction" method="init">
+        	<result type="tiles">admin.jpfastcontentedit.Widget.configParameter</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+    </package>
+
+    <package name="jpfastcontentedit_do/jpfastcontentedit/WidgetConfig" namespace="/do/jpfastcontentedit/Page/SpecialWidget" extends="entando-default">
+
+    	<global-results>
+    		<result name="pageTree" type="chain">
+    			<param name="namespace">/do/Page</param>
+    			<param name="actionName">viewTree</param>
+    		</result>
+    		<result name="configure" type="chain">
+            	<param name="namespace">/do/Page</param>
+    			<param name="actionName">configure</param>
+            </result>
+		</global-results>
+
+    	<action name="fastcontenteditConfigParameter" class="jfastcontenteditConfigWidgetAction" method="init">
+        	<result type="tiles">admin.jpfastcontentedit.Widget.configParameter</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+        <action name="configContentType" class="jfastcontenteditConfigWidgetAction" method="configContentType">
+        	<result type="tiles">admin.jpfastcontentedit.Widget.configParameter</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+    	<action name="changeContentType" class="jfastcontenteditConfigWidgetAction" method="changeContentType"  >
+        	<result type="tiles">admin.jpfastcontentedit.Widget.configParameter</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+    	<action name="saveConfigParameters" class="jfastcontenteditConfigWidgetAction" method="save"  >
+        	<result type="tiles">admin.jpfastcontentedit.Widget.configParameter</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+	</package>
+
+</struts>

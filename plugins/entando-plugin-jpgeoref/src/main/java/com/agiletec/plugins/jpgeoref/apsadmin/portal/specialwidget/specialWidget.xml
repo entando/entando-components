@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <package name="jpgeoref_do/jpgeoref/Page/SpecialWidget" namespace="/do/Page/SpecialWidget" extends="core_do/Page/SpecialWidget">
+		
+    	<!-- ##### WIDGET CONTENT LIST VIEWER **** ENTRY POINT ##### -->
+    	<action name="jpgeorefListViewerConfig" class="jpgeorefContentListViewerWidgetAction" method="init">
+        	<result type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+		
+    </package>
+	
+	<package name="jpgeoref_do/jpgeoref/Page/SpecialWidget/ListViewer" namespace="/do/jpgeoref/Page/SpecialWidget/ListViewer" extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+
+	<action name="configListViewer" class="jpgeorefContentListViewerWidgetAction" method="configContentType">
+        	<result name="input" type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <result type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+        <action name="changeContentType" class="jpgeorefContentListViewerWidgetAction" method="changeContentType">
+        	<result type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+	<action name="addCategory" class="jpgeorefContentListViewerWidgetAction" method="addCategory">
+        	<result type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+		<action name="removeCategory*" class="jpgeorefContentListViewerWidgetAction" method="removeCategory">
+        	<result type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+	<action name="addUserFilter" class="jpgeorefContentListViewerWidgetAction" method="addUserFilter">
+        	<result name="input" type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <result type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <result name="userfiltercategory" type="tiles">admin.jpgeoref.page.widget.contentListViewer.config.userfilter.category</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+	<action name="removeFilter*" class="jpgeorefContentListViewerWidgetAction" method="removeFilter">
+        	<result type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+	<action name="moveFilter*" class="jpgeorefContentListViewerWidgetAction" method="moveFilter">
+        	<result type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+	<action name="saveListViewerConfig" class="jpgeorefContentListViewerWidgetAction" method="save">
+        	<result name="input" type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+	<action name="addFilter" class="jpgeorefContentListViewerWidgetAction" method="addFilter">
+        	<result type="tiles">admin.jpgeoref.page.widget.contentListViewer.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+            	<param name="requestAuth.requiredPermission">managePages</param>
+            	<param name="chain.includeParameters">newFilter</param>
+            </interceptor-ref>
+        </action>
+
+	</package>
+
+</struts>

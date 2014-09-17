@@ -1,0 +1,26 @@
+<shortcut-def>
+	<shortcuts>
+		<shortcut id="jpsurvey.questionnaire.shortCut" requiredPermission="manageSurvey" menusection="plugins" source="jpsurvey">
+			<description key="jpsurvey.shortCut.questionnaire.shortDesc" >Questionnaires</description><!-- key e corpo alternativo -->
+			<longdesc key="jpsurvey.shortCut.questionnaire.longDesc">
+				<![CDATA[Manage Questionnaires]]>
+			</longdesc>
+			<url>
+				<param name="namespace">/do/jpsurvey/Survey</param>
+				<param name="actionName">listSurveys</param>
+				<param name="questionnaire">true</param>
+			</url>
+		</shortcut>
+		<shortcut id="jpsurvey.polls.shortCut" requiredPermission="manageSurvey" menusection="plugins" source="jpsurvey">
+			<description key="jpsurvey.shortCut.polls.shortDesc" >Polls</description><!-- key e corpo alternativo -->
+			<longdesc key="jpsurvey.shortCut.polls.longDesc">
+				<![CDATA[Manage Polls]]>
+			</longdesc>
+			<url>
+				<param name="namespace">/do/jpsurvey/Survey</param>
+				<param name="actionName">listSurveys</param>
+				<param name="questionnaire">false</param>
+			</url>
+		</shortcut>
+	</shortcuts>
+</shortcut-def>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+  <description><![CDATA["jpmyportalplus core tag library"]]></description>
+  <display-name>"jpmyportalplus core tag library"</display-name>
+  <tlib-version>2.2</tlib-version>
+  <short-name>jpmyportalplus-core</short-name>
+  <uri>/jpmyportalplus-core</uri>
+	
+	<tag>
+		<description><![CDATA[]]></description>
+		<name>isCurrentFrameClosed</name>
+		<tag-class>com.agiletec.plugins.jpmyportalplus.aps.tags.CheckFrameStatusTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	
+	<tag>
+		<description>
+			<![CDATA[Returns the list of widget (in form of {@link WidgetCheckInfo}) to use into the function of page configuration.]]>
+		</description>
+		<name>customizableWidgets</name>
+		<tag-class>com.agiletec.plugins.jpmyportalplus.aps.tags.CustomizableWidgetsTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>
+				<![CDATA[Nome della variabile mediante il quale inserire il valore 
+				del parametro di pagina richiesto nel pageContext.]]>
+			</description>
+			<name>var</name>
+			<required>yes</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description>
+			<![CDATA[Returns the list of select items to use in the select inside the frame swap function of each widget]]>
+		</description>
+		<name>frameSelectItem</name>
+		<tag-class>com.agiletec.plugins.jpmyportalplus.aps.tags.FrameSelectItemTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>
+				<![CDATA[Nome della variabile mediante il quale inserire il valore 
+				del parametro di pagina richiesto nel pageContext.]]>
+			</description>
+			<name>var</name>
+			<required>yes</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description>
+			<![CDATA[Restituisce il valore di un parametro del contesto della richiesta.
+			Il Parametro è restituito in funzione della showlet nella quale il tag è inserito.]]>
+		</description>
+		<name>requestContextParam</name>
+		<tag-class>com.agiletec.plugins.jpmyportalplus.aps.tags.RequestContextParamTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>
+				<![CDATA[Identificativo del parametro da erogare.]]>
+			</description>
+			<name>param</name>
+			<required>yes</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				<![CDATA[Nome della variabile mediante il quale inserire il valore 
+				del parametro di pagina richiesto nel pageContext.]]>
+			</description>
+			<name>var</name>
+			<required>no</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description></description>	
+		<name>columnInfo</name>
+		<tag-class>com.agiletec.plugins.jpmyportalplus.aps.tags.ColumnInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description></description>
+			<name>columnId</name>
+			<required>yes</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>	
+		<attribute>
+			<description></description>
+			<name>var</name>
+			<required>no</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description>
+			<![CDATA[Toggle the visibility of the elements contained in body tag, depending on the presents of showlet type into the allowed types of MyPortal Service.
+			Is possible to insert the result of the check in a variable placed in the page context.]]>
+		</description>
+		<name>checkValidWidget</name>
+		<tag-class>com.agiletec.plugins.jpmyportalplus.aps.tags.CheckValidWidgetTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description><![CDATA[Name of the variable where to store the boolean resulted by the check.]]></description>
+			<name>var</name>
+			<required>no</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	
+</taglib>

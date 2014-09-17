@@ -1,0 +1,26 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10005</id>
+  <contentType>ANN</contentType>
+  <description>Full - Default</description>
+  <shape><![CDATA[<article>
+<p class="text-right">$i18n.getLabel("ANN_FROM"): <time class="label" datetime="$content.StartDate.shortDate">$content.StartDate.getFormattedDate("EEEE dd MMMM yyyy")</time>&#32;$i18n.getLabel("ANN_TO"): <time class="label" datetime="$content.EndDate.shortDate">$content.EndDate.getFormattedDate("EEEE dd MMMM yyyy")</time></p>
+<h1>$content.Title.text</h1>
+#if ($content.Summary.text != "")
+$content.Summary.text
+#end
+#if ($content.Documents && $content.Documents.size() > 0)
+<h2>$i18n.getLabel("ANN_DOCUMENTS")</h2>
+  <ul>
+    #foreach ($attach in $content.Documents)
+    <li><a href="$attach.attachPath">$attach.text</a></li>
+    #end
+  </ul>
+#end
+</article>]]></shape>
+</contentModel>

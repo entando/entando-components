@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<bean id="jpwebdynamicformSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/common/layouts/subMenu.jsp</value></property>
+	</bean>
+	
+    <bean id="jpwebdynamicformConfigSystemParamsHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
+        <property name="filePath"><value>/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/admin/configSystemParams-jack.jsp</value></property>
+        <property name="hookPointKey"><value>core.configSystemParams</value></property>
+    </bean>
+    
+	<bean id="jpwebdynamicformMessageFinderAction" scope="prototype"
+			class="com.agiletec.plugins.jpwebdynamicform.apsadmin.message.MessageFinderAction"
+			parent="defaultEntityFinderAction" >
+		<property name="messageManager" ref="jpwebdynamicformMessageManager" />
+	</bean>
+
+	<bean id="jpwebdynamicformOperatorMessageAction" scope="prototype"
+			class="com.agiletec.plugins.jpwebdynamicform.apsadmin.message.OperatorMessageAction"
+			parent="abstractBaseAction" >
+		<property name="messageManager" ref="jpwebdynamicformMessageManager" />
+	</bean>
+
+	<bean id="jpwebdynamicformNotifierConfigAction" scope="prototype"
+			class="com.agiletec.plugins.jpwebdynamicform.apsadmin.message.config.NotifierConfigAction"
+			parent="abstractBaseAction" >
+		<property name="messageManager" ref="jpwebdynamicformMessageManager" />
+		<property name="mailManager" ref="jpmailMailManager" />
+	</bean>
+
+</beans>

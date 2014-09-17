@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<bean id="jpwebdynamicformEntityTypeDom" 
+			class="com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.parse.MessageTypeDOM" scope="prototype" >
+		<property name="attributeTypes">
+		<map>
+			<entry key="Date"><ref bean="DateAttribute" /></entry>
+			<entry key="Number"><ref bean="NumberAttribute" /></entry>
+			<entry key="Monotext"><ref bean="MonoTextAttribute" /></entry>
+			<entry key="Enumerator"><ref bean="EnumeratorAttribute" /></entry>
+			<entry key="Text"><ref bean="TextAttribute" /></entry>
+			<entry key="Longtext"><ref bean="LongtextAttribute" /></entry>
+			<entry key="Boolean"><ref bean="BooleanAttribute" /></entry>
+			<entry key="CheckBox"><ref bean="CheckBoxAttribute"/></entry>
+			<entry key="ThreeState"><ref bean="ThreeStateBooleanAttribute" /></entry>
+			<entry key="Composite"><ref bean="CompositeAttribute" /></entry>
+		</map>
+		</property>
+	</bean>
+	
+	<bean id="jpwebdynamicformMessageManager" class="com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.MessageManager"
+			parent="abstractEntityManager" >
+		<property name="entityClassName" value="com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.Message"/>
+		<property name="configItemName" value="jpwebdynamicform_messageTypes" />
+		<property name="xmlAttributeRootElementName" value="messagetype" />
+		<property name="entityTypeDom" ref="jpwebdynamicformEntityTypeDom" />
+		<property name="messageDAO" >
+			<bean class="com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.MessageDAO" parent="abstractEntityDAO" >
+				<property name="dataSource" ref="servDataSource" />
+			</bean>
+		</property>
+		<property name="entitySearcherDAO" >
+			<bean class="com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.MessageSearcherDAO">
+				<property name="dataSource" ref="servDataSource" />
+				<property name="forceCaseInsensitiveLikeSearch"><value>true</value></property>
+			</bean>
+		</property>
+		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+		<property name="configManager" ref="BaseConfigManager" />
+		<property name="langManager" ref="LangManager" />
+		<property name="mailManager" ref="jpmailMailManager" />
+		<property name="entityRenderer" ref="jpwebdynamicformBaseMessageRenderer" />
+	</bean>
+
+	<bean id="jpwebdynamicformBaseMessageRenderer" class="com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.renderer.BaseMessageRenderer"
+			parent="BaseEntityRenderer" />
+	
+    <!-- API -->
+    
+    <bean id="jpwebdynamicformApiMessageTypeInterface" 
+            class="org.entando.entando.plugins.jpwebdynamicform.aps.system.services.api.ApiMessageTypeInterface" >
+        <property name="messageManager" ref="jpwebdynamicformMessageManager" />
+    </bean>
+    
+    <bean id="jpwebdynamicformApiMessageInterface" 
+            class="org.entando.entando.plugins.jpwebdynamicform.aps.system.services.api.ApiMessageInterface" >
+        <property name="messageManager" ref="jpwebdynamicformMessageManager" />
+        <property name="groupManager" ref="GroupManager" />
+    </bean>
+    
+</beans>

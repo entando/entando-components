@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+	<package name="jpfrontshortcut_do/jpfrontshortcut/Content" namespace="/do/jpfrontshortcut/Content" extends="jpfrontshortcut_do/jpfrontshortcut">
+		
+		<interceptors>
+            <interceptor name="backToEntryContent" class="org.entando.entando.plugins.jpfrontshortcut.aps.internalservlet.content.EntryContentInterceptor" />
+		</interceptors>
+    	
+		<action name="intro" class="jpfrontshortcutFrontContentAction" method="edit">
+			<result>/WEB-INF/plugins/jpfrontshortcut/aps/jsp/internalservlet/content/frontEntryContent.jsp</result>
+			<interceptor-ref name="i18nInterceptor" />
+			<interceptor-ref name="jpfrontshortcutFrontEndStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+		</action>
+        
+		<action name="introView" class="jpfrontshortcutFrontContentAction" method="editView">
+			<result>/WEB-INF/plugins/jpfrontshortcut/aps/jsp/internalservlet/content/frontEntryContent.jsp</result>
+			<interceptor-ref name="i18nInterceptor" />
+			<interceptor-ref name="jpfrontshortcutFrontEndStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+		</action>
+        
+		<action name="save" class="jpfrontshortcutFrontContentAction" method="saveAndApprove">
+			<result name="input">/WEB-INF/plugins/jpfrontshortcut/aps/jsp/internalservlet/content/frontEntryContent.jsp</result>
+			<result>/WEB-INF/plugins/jpfrontshortcut/aps/jsp/internalservlet/success-reload.jsp</result>
+			<interceptor-ref name="jpfrontshortcutFrontEndValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+		</action>
+		
+		<action name="entryContent" class="jpfrontshortcutFrontContentAction" method="forwardToEntryContent">
+			<result>/WEB-INF/plugins/jpfrontshortcut/aps/jsp/internalservlet/content/frontEntryContent.jsp</result>
+			<interceptor-ref name="backToEntryContent" />
+			<interceptor-ref name="jpfrontshortcutFrontEndStack">
+				<param name="requestAuth.requiredPermission">editContents</param>
+				<param name="chain.includeParameters">contentOnSessionMarker</param>
+			</interceptor-ref>
+		</action>
+		
+        <!-- ######## List Attribute ######## -->
+        
+        <action name="addListElement*" class="jacmsListAttributeAction" method="addListElement">
+        	<!--
+			<result name="chooseResource" type="redirectAction">
+        		<param name="actionName">chooseResource</param>
+        		<param name="attributeName">${attributeName}</param>
+        		<param name="elementIndex">${elementIndex}</param>
+        		<param name="resourceTypeCode">${resourceTypeCode}</param>
+        		<param name="resourceLangCode">${listLangCode}</param>
+        	</result>
+        	<result name="chooseLink" type="redirectAction">
+    			<param name="actionName">chooseLink</param>
+        		<param name="attributeName">${attributeName}</param>
+        		<param name="elementIndex">${elementIndex}</param>
+        		<param name="langCode">${listLangCode}</param>
+        	</result>
+        	<result type="redirectActionWithAnchor">
+        		<param name="actionName">entryContent</param>
+        		<param name="anchorDest">${entryContentAnchorDest}</param>
+        	</result>
+			-->
+        	<result name="chooseResource" type="chain">
+        		<param name="actionName">entryContent</param>
+        	</result>
+        	<result name="chooseLink" type="chain">
+        		<param name="actionName">entryContent</param>
+        	</result>
+        	<result type="chain">
+        		<param name="actionName">entryContent</param>
+        	</result>
+			<interceptor-ref name="jpfrontshortcutFrontEndStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="removeListElement*" class="jacmsListAttributeAction" method="removeListElement">
+            <result type="chain">
+				<!-- <result type="redirectActionWithAnchor"> -->
+        		<param name="actionName">entryContent</param>
+        		<!-- <param name="anchorDest">${entryContentAnchorDest}</param> -->
+        	</result>
+        	<interceptor-ref name="jpfrontshortcutFrontEndStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="moveListElement*" class="jacmsListAttributeAction" method="moveListElement">
+            <result type="chain">
+				<!-- <result type="redirectActionWithAnchor"> -->
+        		<param name="actionName">entryContent</param>
+        		<!-- <param name="anchorDest">${entryContentAnchorDest}</param> -->
+        	</result>
+			
+        	<interceptor-ref name="jpfrontshortcutFrontEndStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <!-- ######## FINE GESTIONE ATTRIBUTI IN LISTA ######## -->
+        
+        
+        
+        <!-- ######## INIZIO GESTIONE ATTRIBUTI RISORSA ######## -->
+        
+        <action name="chooseResource*" class="jacmsResourceAttributeAction" method="chooseResource">
+            <result type="chain">
+            	<param name="namespace">/do/jpfrontshortcut/Content/Resource</param>
+    			<param name="actionName">findResource</param>
+            </result>
+        	<interceptor-ref name="jpfrontshortcutFrontEndStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="removeResource*" class="jacmsResourceAttributeAction" method="removeResource">
+            <result type="chain">
+			<!-- <result type="redirectActionWithAnchor"> -->
+        		<param name="actionName">entryContent</param>
+        		<!-- <param name="anchorDest">${entryContentAnchorDestFromRemove}</param> -->
+        	</result>
+        	<interceptor-ref name="jpfrontshortcutFrontEndStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <!-- ######## FINE GESTIONE ATTRIBUTI RISORSA ######## -->
+        
+        
+        <!-- ######## INIZIO GESTIONE ATTRIBUTI LINK ######## -->
+        
+        <action name="chooseLink*" class="jacmsLinkAttributeAction" method="chooseLink">
+            <result type="chain">
+            	<param name="namespace">/do/jpfrontshortcut/Content/Link</param>
+    			<param name="actionName">chooseLink</param>
+            </result>
+        	<interceptor-ref name="jpfrontshortcutFrontEndStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="removeLink*" class="jacmsLinkAttributeAction" method="removeLink">
+            <result type="chain">
+			<!-- <result type="redirectActionWithAnchor"> -->
+        		<param name="actionName">entryContent</param>
+        		<!-- <param name="anchorDest">${entryContentAnchorDestFromRemove}</param> -->
+        	</result>
+        	<interceptor-ref name="jpfrontshortcutFrontEndStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <!-- ######## FINE GESTIONE ATTRIBUTI LINK ######## -->
+        
+	</package>
+	
+</struts>

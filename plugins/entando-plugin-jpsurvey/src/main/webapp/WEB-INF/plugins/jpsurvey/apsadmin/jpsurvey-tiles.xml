@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+	<definition extends="layout.default" name="jpsurvey.admin.listSurveys">
+		<put-attribute name="title" value="admin.jpsurvey.title.surveyManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/surveyList.jsp" />
+	</definition>
+	
+	<definition extends="layout.default" name="jpsurvey.admin.surveyView">
+		<put-attribute name="title" value="admin.jpsurvey.title.surveyManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/common/layouts/assets-more/surveyView.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/surveyView.jsp" />
+	</definition>
+	
+	<definition extends="layout.default" name="jpsurvey.admin.entrySurvey">
+		<put-attribute name="title" value="admin.jpsurvey.title.surveyManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/common/layouts/assets-more/surveyEdit.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/surveyEdit.jsp" />
+	</definition>
+	
+	<definition extends="layout.default" name="jpsurvey.admin.trashSurvey">
+		<put-attribute name="title" value="admin.jpsurvey.title.surveyManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/trashSurvey.jsp" />		
+	</definition>
+	
+	<definition extends="layout.default" name="jpsurvey.admin.editQuestion">
+		<put-attribute name="title" value="admin.jpsurvey.title.surveyManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/common/layouts/assets-more/questionEdit.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/questionEdit.jsp" />
+	</definition>
+	
+	<definition extends="layout.default" name="jpsurvey.admin.trashQuestion">
+		<put-attribute name="title" value="admin.jpsurvey.title.surveyManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/trashQuestion.jsp" />		
+	</definition>
+	
+	<definition extends="layout.default" name="jpsurvey.admin.editChoice">
+		<put-attribute name="title" value="admin.jpsurvey.title.surveyManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/common/layouts/assets-more/questionEdit.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/choiceEdit.jsp" />
+	</definition>
+	
+	<definition extends="layout.default" name="jpsurvey.admin.trashChoice">
+		<put-attribute name="title" value="admin.jpsurvey.title.surveyManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/trashChoice.jsp" />		
+	</definition>
+	
+	<definition extends="layout.default" name="jpsurvey.admin.freeTextList">
+		<put-attribute name="title" value="admin.jpsurvey.title.surveyManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/freeTextList.jsp" />		
+	</definition>
+	
+	<definition extends="layout.default" name="jpsurvey.admin.associateImage">
+		<put-attribute name="title" value="admin.jpsurvey.title.surveyManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/surveyImage.jsp" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpsurvey/apsadmin/jsp/common/layouts/assets-more/questionEdit.jsp" />
+	</definition>
+	
+</tiles-definitions>

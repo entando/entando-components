@@ -1,0 +1,427 @@
+2014-09-16 14:46:42.343 - INFO  -  org.entando.entando.aps.system.init.InstallationReportDAO - Report not availablejava.sql.SQLSyntaxErrorException: Schema 'AGILE' does not exist
+2014-09-16 14:46:42.596 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'SYSCONFIG'
+2014-09-16 14:46:42.689 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  SYSCONFIG  ( VERSION  VARCHAR(10) NOT NULL ,  ITEM  VARCHAR(40) NOT NULL ,  DESCR  VARCHAR(100) NOT NULL ,  CONFIG  LONG VARCHAR NOT NULL ) 
+2014-09-16 14:46:42.689 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/sysconfig
+2014-09-16 14:46:42.891 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CATEGORIES'
+2014-09-16 14:46:43.101 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CATEGORIES  ( CATCODE  VARCHAR(30) NOT NULL ,  PARENTCODE  VARCHAR(30) NOT NULL ,  TITLES  LONG VARCHAR NOT NULL , PRIMARY KEY ( CATCODE ) ) 
+2014-09-16 14:46:43.101 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/categories
+2014-09-16 14:46:43.106 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'LOCALSTRINGS'
+2014-09-16 14:46:43.179 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  LOCALSTRINGS  ( KEYCODE  VARCHAR(50) NOT NULL ,  LANGCODE  VARCHAR(2) NOT NULL ,  STRINGVALUE  LONG VARCHAR NOT NULL ) 
+2014-09-16 14:46:43.179 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/localstrings
+2014-09-16 14:46:43.314 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'PAGEMODELS'
+2014-09-16 14:46:43.512 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  PAGEMODELS  ( CODE  VARCHAR(40) NOT NULL ,  DESCR  VARCHAR(50) NOT NULL ,  FRAMES  LONG VARCHAR ,  PLUGINCODE  VARCHAR(30) ,  TEMPLATEGUI  LONG VARCHAR , PRIMARY KEY ( CODE ) ) 
+2014-09-16 14:46:43.512 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/pagemodels
+2014-09-16 14:46:43.516 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'PAGES'
+2014-09-16 14:46:43.723 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  PAGES  ( CODE  VARCHAR(30) NOT NULL ,  PARENTCODE  VARCHAR(30) NOT NULL ,  POS  INTEGER NOT NULL ,  MODELCODE  VARCHAR(40) NOT NULL ,  TITLES  LONG VARCHAR NOT NULL ,  GROUPCODE  VARCHAR(30) NOT NULL ,  SHOWINMENU  SMALLINT NOT NULL ,  EXTRACONFIG  LONG VARCHAR , PRIMARY KEY ( CODE ) ) 
+2014-09-16 14:46:43.723 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/pages
+2014-09-16 14:46:43.893 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'WIDGETCATALOG'
+2014-09-16 14:46:44.112 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  WIDGETCATALOG  ( CODE  VARCHAR(40) NOT NULL ,  TITLES  LONG VARCHAR NOT NULL ,  PARAMETERS  LONG VARCHAR ,  PLUGINCODE  VARCHAR(30) ,  PARENTTYPECODE  VARCHAR(40) ,  DEFAULTCONFIG  LONG VARCHAR ,  LOCKED  SMALLINT NOT NULL ,  MAINGROUP  VARCHAR(20) , PRIMARY KEY ( CODE ) ) 
+2014-09-16 14:46:44.112 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/widgetcatalog
+2014-09-16 14:46:44.116 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'GUIFRAGMENT'
+2014-09-16 14:46:44.323 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  GUIFRAGMENT  ( CODE  VARCHAR(50) NOT NULL ,  WIDGETTYPECODE  VARCHAR(40) ,  PLUGINCODE  VARCHAR(30) ,  GUI  LONG VARCHAR ,  DEFAULTGUI  LONG VARCHAR ,  LOCKED  SMALLINT NOT NULL , PRIMARY KEY ( CODE ) ) 
+2014-09-16 14:46:44.323 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/guifragment
+2014-09-16 14:46:44.481 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'WIDGETCONFIG'
+2014-09-16 14:46:44.557 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  WIDGETCONFIG  ( PAGECODE  VARCHAR(30) NOT NULL ,  FRAMEPOS  INTEGER NOT NULL ,  WIDGETCODE  VARCHAR(40) NOT NULL ,  CONFIG  LONG VARCHAR ,  PUBLISHEDCONTENT  VARCHAR(30) ) 
+2014-09-16 14:46:44.557 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/widgetconfig
+2014-09-16 14:46:45.036 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'UNIQUEKEYS'
+2014-09-16 14:46:45.257 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  UNIQUEKEYS  ( ID  INTEGER NOT NULL ,  KEYVALUE  INTEGER NOT NULL , PRIMARY KEY ( ID ) ) 
+2014-09-16 14:46:45.257 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/uniquekeys
+2014-09-16 14:46:53.777 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHGROUPS'
+2014-09-16 14:46:53.978 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHGROUPS  ( GROUPNAME  VARCHAR(20) NOT NULL ,  DESCR  VARCHAR(50) NOT NULL , PRIMARY KEY ( GROUPNAME ) ) 
+2014-09-16 14:46:53.978 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authgroups
+2014-09-16 14:46:53.982 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHPERMISSIONS'
+2014-09-16 14:46:54.174 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHPERMISSIONS  ( PERMISSIONNAME  VARCHAR(30) NOT NULL ,  DESCR  VARCHAR(50) NOT NULL , PRIMARY KEY ( PERMISSIONNAME ) ) 
+2014-09-16 14:46:54.174 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authpermissions
+2014-09-16 14:46:54.176 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHROLES'
+2014-09-16 14:46:54.385 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHROLES  ( ROLENAME  VARCHAR(20) NOT NULL ,  DESCR  VARCHAR(50) NOT NULL , PRIMARY KEY ( ROLENAME ) ) 
+2014-09-16 14:46:54.385 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authroles
+2014-09-16 14:46:54.387 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHROLEPERMISSIONS'
+2014-09-16 14:46:54.462 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHROLEPERMISSIONS  ( ROLENAME  VARCHAR(20) NOT NULL ,  PERMISSIONNAME  VARCHAR(30) NOT NULL ) 
+2014-09-16 14:46:54.462 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authrolepermissions
+2014-09-16 14:46:54.790 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERS'
+2014-09-16 14:46:54.998 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERS  ( USERNAME  VARCHAR(40) NOT NULL ,  PASSWD  VARCHAR(40) ,  REGISTRATIONDATE  TIMESTAMP NOT NULL ,  LASTACCESS  TIMESTAMP ,  LASTPASSWORDCHANGE  TIMESTAMP ,  ACTIVE  SMALLINT , PRIMARY KEY ( USERNAME ) ) 
+2014-09-16 14:46:54.998 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authusers
+2014-09-16 14:46:55.000 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERGROUPS'
+2014-09-16 14:46:55.076 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERGROUPS  ( USERNAME  VARCHAR(40) NOT NULL ,  GROUPNAME  VARCHAR(20) NOT NULL ) 
+2014-09-16 14:46:55.076 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authusergroups
+2014-09-16 14:46:55.233 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERROLES'
+2014-09-16 14:46:55.309 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERROLES  ( USERNAME  VARCHAR(40) NOT NULL ,  ROLENAME  VARCHAR(20) NOT NULL ) 
+2014-09-16 14:46:55.309 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authuserroles
+2014-09-16 14:46:55.459 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'API_OAUTH_CONSUMERS'
+2014-09-16 14:46:55.654 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  API_OAUTH_CONSUMERS  ( CONSUMERKEY  VARCHAR(100) NOT NULL ,  CONSUMERSECRET  VARCHAR(100) NOT NULL ,  DESCRIPTION  LONG VARCHAR NOT NULL ,  CALLBACKURL  LONG VARCHAR ,  EXPIRATIONDATE  TIMESTAMP , PRIMARY KEY ( CONSUMERKEY ) ) 
+2014-09-16 14:46:55.654 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/api_oauth_consumers
+2014-09-16 14:46:55.656 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'API_OAUTH_TOKENS'
+2014-09-16 14:46:55.843 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  API_OAUTH_TOKENS  ( ACCESSTOKEN  VARCHAR(100) NOT NULL ,  TOKENSECRET  VARCHAR(100) NOT NULL ,  CONSUMERKEY  VARCHAR(100) NOT NULL ,  LASTACCESS  TIMESTAMP NOT NULL ,  USERNAME  VARCHAR(40) NOT NULL , PRIMARY KEY ( ACCESSTOKEN ) ) 
+2014-09-16 14:46:55.843 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/api_oauth_tokens
+2014-09-16 14:46:55.846 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'APICATALOG_METHODS'
+2014-09-16 14:46:55.909 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  APICATALOG_METHODS  ( RESOURCECODE  VARCHAR(100) NOT NULL ,  HTTPMETHOD  VARCHAR(6) NOT NULL ,  ISACTIVE  SMALLINT NOT NULL ,  ISHIDDEN  SMALLINT NOT NULL ,  AUTHENTICATIONREQUIRED  SMALLINT ,  AUTHORIZATIONREQUIRED  VARCHAR(30) ) 
+2014-09-16 14:46:55.909 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/apicatalog_methods
+2014-09-16 14:46:56.201 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'APICATALOG_SERVICES'
+2014-09-16 14:46:56.398 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  APICATALOG_SERVICES  ( SERVICEKEY  VARCHAR(100) NOT NULL ,  RESOURCECODE  VARCHAR(100) NOT NULL ,  DESCRIPTION  LONG VARCHAR NOT NULL ,  PARAMETERS  LONG VARCHAR ,  TAG  VARCHAR(100) ,  FREEPARAMETERS  LONG VARCHAR ,  ISACTIVE  SMALLINT NOT NULL ,  ISHIDDEN  SMALLINT NOT NULL ,  MYENTANDO  SMALLINT NOT NULL ,  AUTHENTICATIONREQUIRED  SMALLINT ,  REQUIREDPERMISSION  VARCHAR(30) ,  REQUIREDGROUP  VARCHAR(20) , PRIMARY KEY ( SERVICEKEY ) ) 
+2014-09-16 14:46:56.399 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/apicatalog_services
+2014-09-16 14:46:56.690 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERPROFILES'
+2014-09-16 14:46:56.690 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILES_profiletype_idx' for table 'AUTHUSERPROFILES
+2014-09-16 14:46:56.887 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERPROFILES  ( USERNAME  VARCHAR(40) NOT NULL ,  PROFILETYPE  VARCHAR(30) NOT NULL ,  PROFILEXML  LONG VARCHAR NOT NULL ,  PUBLICPROFILE  SMALLINT NOT NULL , PRIMARY KEY ( USERNAME ) ) 
+2014-09-16 14:46:57.032 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILES_PROFILETYPE_IDX  ON  AUTHUSERPROFILES  (  PROFILETYPE  )
+2014-09-16 14:46:57.032 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authuserprofiles
+2014-09-16 14:46:57.034 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERPROFILESEARCH'
+2014-09-16 14:46:57.035 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILESEARCH_attrname_idx' for table 'AUTHUSERPROFILESEARCH
+2014-09-16 14:46:57.035 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILESEARCH_username_idx' for table 'AUTHUSERPROFILESEARCH
+2014-09-16 14:46:57.098 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERPROFILESEARCH  ( USERNAME  VARCHAR(40) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  TEXTVALUE  VARCHAR(255) ,  DATEVALUE  TIMESTAMP ,  NUMVALUE  INTEGER ,  LANGCODE  VARCHAR(3) ) 
+2014-09-16 14:46:57.221 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILESEARCH_ATTRNAME_IDX  ON  AUTHUSERPROFILESEARCH  (  ATTRNAME  )
+2014-09-16 14:46:57.354 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILESEARCH_USERNAME_IDX  ON  AUTHUSERPROFILESEARCH  (  USERNAME  )
+2014-09-16 14:46:57.354 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authuserprofilesearch
+2014-09-16 14:46:57.378 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERPROFILEATTRROLES'
+2014-09-16 14:46:57.379 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILEATTRROLES_username_idx' for table 'AUTHUSERPROFILEATTRROLES
+2014-09-16 14:46:57.379 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILEATTRROLES_attrname_idx' for table 'AUTHUSERPROFILEATTRROLES
+2014-09-16 14:46:57.379 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'AUTHUSERPROFILEATTRROLES_rolename_idx' for table 'AUTHUSERPROFILEATTRROLES
+2014-09-16 14:46:57.477 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERPROFILEATTRROLES  ( USERNAME  VARCHAR(40) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  ROLENAME  VARCHAR(50) NOT NULL ) 
+2014-09-16 14:46:57.632 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILEATTRROLES_USERNAME_IDX  ON  AUTHUSERPROFILEATTRROLES  (  USERNAME  )
+2014-09-16 14:46:57.776 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILEATTRROLES_ATTRNAME_IDX  ON  AUTHUSERPROFILEATTRROLES  (  ATTRNAME  )
+2014-09-16 14:46:58.396 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  AUTHUSERPROFILEATTRROLES_ROLENAME_IDX  ON  AUTHUSERPROFILEATTRROLES  (  ROLENAME  )
+2014-09-16 14:46:58.397 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authuserprofileattrroles
+2014-09-16 14:46:58.445 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'ACTIONLOGRECORDS'
+2014-09-16 14:46:58.665 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  ACTIONLOGRECORDS  ( ID  INTEGER NOT NULL ,  USERNAME  VARCHAR(20) ,  ACTIONDATE  TIMESTAMP ,  NAMESPACE  LONG VARCHAR ,  ACTIONNAME  VARCHAR(250) ,  PARAMETERS  LONG VARCHAR ,  ACTIVITYSTREAMINFO  LONG VARCHAR ,  UPDATEDATE  TIMESTAMP , PRIMARY KEY ( ID ) ) 
+2014-09-16 14:46:58.665 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/actionlogrecords
+2014-09-16 14:46:58.667 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'ACTIONLOGRELATIONS'
+2014-09-16 14:46:58.667 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'ACTIONLOGRELATIONS_recordid_idx' for table 'ACTIONLOGRELATIONS
+2014-09-16 14:46:58.667 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'ACTIONLOGRELATIONS_refgroup_idx' for table 'ACTIONLOGRELATIONS
+2014-09-16 14:46:58.754 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  ACTIONLOGRELATIONS  ( RECORDID  INTEGER NOT NULL ,  REFGROUP  VARCHAR(20) ) 
+2014-09-16 14:46:58.876 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  ACTIONLOGRELATIONS_RECORDID_IDX  ON  ACTIONLOGRELATIONS  (  RECORDID  )
+2014-09-16 14:46:59.054 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  ACTIONLOGRELATIONS_REFGROUP_IDX  ON  ACTIONLOGRELATIONS  (  REFGROUP  )
+2014-09-16 14:46:59.055 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/actionlogrelations
+2014-09-16 14:46:59.101 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'AUTHUSERSHORTCUTS'
+2014-09-16 14:46:59.310 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  AUTHUSERSHORTCUTS  ( USERNAME  VARCHAR(40) NOT NULL ,  CONFIG  LONG VARCHAR NOT NULL , PRIMARY KEY ( USERNAME ) ) 
+2014-09-16 14:46:59.310 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/authusershortcuts
+2014-09-16 14:46:59.313 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'ACTIONLOGLIKERECORDS'
+2014-09-16 14:46:59.399 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  ACTIONLOGLIKERECORDS  ( RECORDID  INTEGER NOT NULL ,  USERNAME  VARCHAR(20) NOT NULL ,  LIKEDATE  TIMESTAMP NOT NULL ) 
+2014-09-16 14:46:59.399 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/actionloglikerecords
+2014-09-16 14:46:59.568 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'ACTIONLOGCOMMENTRECORDS'
+2014-09-16 14:46:59.805 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  ACTIONLOGCOMMENTRECORDS  ( ID  INTEGER NOT NULL ,  RECORDID  INTEGER NOT NULL ,  USERNAME  VARCHAR(20) NOT NULL ,  COMMENT  LONG VARCHAR NOT NULL ,  COMMENTDATE  TIMESTAMP NOT NULL , PRIMARY KEY ( ID ) ) 
+2014-09-16 14:46:59.805 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/actionlogcommentrecords
+2014-09-16 14:47:00.123 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CONTENTMODELS'
+2014-09-16 14:47:00.310 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CONTENTMODELS  ( MODELID  INTEGER NOT NULL ,  CONTENTTYPE  VARCHAR(30) NOT NULL ,  DESCR  VARCHAR(50) NOT NULL ,  MODEL  LONG VARCHAR ,  STYLESHEET  VARCHAR(50) , PRIMARY KEY ( MODELID ) ) 
+2014-09-16 14:47:00.310 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/contentmodels
+2014-09-16 14:47:00.313 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CONTENTS'
+2014-09-16 14:47:00.313 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTS_lastmodified_idx' for table 'CONTENTS
+2014-09-16 14:47:00.313 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTS_maingroup_idx' for table 'CONTENTS
+2014-09-16 14:47:00.313 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTS_contenttype_idx' for table 'CONTENTS
+2014-09-16 14:47:00.313 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTS_status_idx' for table 'CONTENTS
+2014-09-16 14:47:00.510 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CONTENTS  ( CONTENTID  VARCHAR(16) NOT NULL ,  CONTENTTYPE  VARCHAR(30) NOT NULL ,  DESCR  VARCHAR(255) NOT NULL ,  STATUS  VARCHAR(12) NOT NULL ,  WORKXML  LONG VARCHAR NOT NULL ,  CREATED  VARCHAR(20) ,  LASTMODIFIED  VARCHAR(20) ,  ONLINEXML  LONG VARCHAR ,  MAINGROUP  VARCHAR(20) NOT NULL ,  CURRENTVERSION  VARCHAR(7) NOT NULL ,  LASTEDITOR  VARCHAR(40) , PRIMARY KEY ( CONTENTID ) ) 
+2014-09-16 14:47:00.643 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTS_LASTMODIFIED_IDX  ON  CONTENTS  (  LASTMODIFIED  )
+2014-09-16 14:47:00.810 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTS_MAINGROUP_IDX  ON  CONTENTS  (  MAINGROUP  )
+2014-09-16 14:47:01.269 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTS_CONTENTTYPE_IDX  ON  CONTENTS  (  CONTENTTYPE  )
+2014-09-16 14:47:01.499 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTS_STATUS_IDX  ON  CONTENTS  (  STATUS  )
+2014-09-16 14:47:01.499 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/contents
+2014-09-16 14:47:01.502 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'RESOURCES'
+2014-09-16 14:47:01.733 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  RESOURCES  ( RESID  VARCHAR(16) NOT NULL ,  RESTYPE  VARCHAR(30) NOT NULL ,  DESCR  VARCHAR(255) NOT NULL ,  MAINGROUP  VARCHAR(20) NOT NULL ,  RESOURCEXML  LONG VARCHAR NOT NULL ,  MASTERFILENAME  VARCHAR(100) NOT NULL ,  CREATIONDATE  TIMESTAMP ,  LASTMODIFIED  TIMESTAMP , PRIMARY KEY ( RESID ) ) 
+2014-09-16 14:47:01.733 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/resources
+2014-09-16 14:47:01.735 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'RESOURCERELATIONS'
+2014-09-16 14:47:01.810 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  RESOURCERELATIONS  ( RESID  VARCHAR(16) NOT NULL ,  REFCATEGORY  VARCHAR(30) NOT NULL ) 
+2014-09-16 14:47:01.810 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/resourcerelations
+2014-09-16 14:47:02.182 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CONTENTRELATIONS'
+2014-09-16 14:47:02.183 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTRELATIONS_refgroup_idx' for table 'CONTENTRELATIONS
+2014-09-16 14:47:02.183 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTRELATIONS_contentid_idx' for table 'CONTENTRELATIONS
+2014-09-16 14:47:02.183 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTRELATIONS_refcategory_idx' for table 'CONTENTRELATIONS
+2014-09-16 14:47:02.255 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CONTENTRELATIONS  ( CONTENTID  VARCHAR(16) NOT NULL ,  REFPAGE  VARCHAR(30) ,  REFCONTENT  VARCHAR(16) ,  REFRESOURCE  VARCHAR(16) ,  REFCATEGORY  VARCHAR(30) ,  REFGROUP  VARCHAR(20) ) 
+2014-09-16 14:47:02.388 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTRELATIONS_REFGROUP_IDX  ON  CONTENTRELATIONS  (  REFGROUP  )
+2014-09-16 14:47:02.588 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTRELATIONS_CONTENTID_IDX  ON  CONTENTRELATIONS  (  CONTENTID  )
+2014-09-16 14:47:02.744 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTRELATIONS_REFCATEGORY_IDX  ON  CONTENTRELATIONS  (  REFCATEGORY  )
+2014-09-16 14:47:02.744 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/contentrelations
+2014-09-16 14:47:03.213 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CONTENTSEARCH'
+2014-09-16 14:47:03.213 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTSEARCH_attrname_idx' for table 'CONTENTSEARCH
+2014-09-16 14:47:03.213 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTSEARCH_contentid_idx' for table 'CONTENTSEARCH
+2014-09-16 14:47:03.299 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CONTENTSEARCH  ( CONTENTID  VARCHAR(16) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  TEXTVALUE  VARCHAR(255) ,  DATEVALUE  TIMESTAMP ,  NUMVALUE  INTEGER ,  LANGCODE  VARCHAR(3) ) 
+2014-09-16 14:47:03.433 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTSEARCH_ATTRNAME_IDX  ON  CONTENTSEARCH  (  ATTRNAME  )
+2014-09-16 14:47:03.555 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTSEARCH_CONTENTID_IDX  ON  CONTENTSEARCH  (  CONTENTID  )
+2014-09-16 14:47:03.555 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/contentsearch
+2014-09-16 14:47:03.580 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'CONTENTATTRIBUTEROLES'
+2014-09-16 14:47:03.580 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTATTRIBUTEROLES_contentid_idx' for table 'CONTENTATTRIBUTEROLES
+2014-09-16 14:47:03.580 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTATTRIBUTEROLES_attrname_idx' for table 'CONTENTATTRIBUTEROLES
+2014-09-16 14:47:03.581 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'CONTENTATTRIBUTEROLES_rolename_idx' for table 'CONTENTATTRIBUTEROLES
+2014-09-16 14:47:03.655 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  CONTENTATTRIBUTEROLES  ( CONTENTID  VARCHAR(16) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  ROLENAME  VARCHAR(50) NOT NULL ) 
+2014-09-16 14:47:03.777 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTATTRIBUTEROLES_CONTENTID_IDX  ON  CONTENTATTRIBUTEROLES  (  CONTENTID  )
+2014-09-16 14:47:03.911 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTATTRIBUTEROLES_ATTRNAME_IDX  ON  CONTENTATTRIBUTEROLES  (  ATTRNAME  )
+2014-09-16 14:47:04.055 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  CONTENTATTRIBUTEROLES_ROLENAME_IDX  ON  CONTENTATTRIBUTEROLES  (  ROLENAME  )
+2014-09-16 14:47:04.055 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/contentattributeroles
+2014-09-16 14:47:04.079 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'WORKCONTENTRELATIONS'
+2014-09-16 14:47:04.079 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTRELATIONS_contentid_idx' for table 'WORKCONTENTRELATIONS
+2014-09-16 14:47:04.079 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTRELATIONS_refcategory_idx' for table 'WORKCONTENTRELATIONS
+2014-09-16 14:47:04.155 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  WORKCONTENTRELATIONS  ( CONTENTID  VARCHAR(16) NOT NULL ,  REFCATEGORY  VARCHAR(30) ) 
+2014-09-16 14:47:04.277 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTRELATIONS_CONTENTID_IDX  ON  WORKCONTENTRELATIONS  (  CONTENTID  )
+2014-09-16 14:47:04.411 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTRELATIONS_REFCATEGORY_IDX  ON  WORKCONTENTRELATIONS  (  REFCATEGORY  )
+2014-09-16 14:47:04.411 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/workcontentrelations
+2014-09-16 14:47:04.436 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'WORKCONTENTSEARCH'
+2014-09-16 14:47:04.436 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTSEARCH_attrname_idx' for table 'WORKCONTENTSEARCH
+2014-09-16 14:47:04.437 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTSEARCH_contentid_idx' for table 'WORKCONTENTSEARCH
+2014-09-16 14:47:04.511 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  WORKCONTENTSEARCH  ( CONTENTID  VARCHAR(16) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  TEXTVALUE  VARCHAR(255) ,  DATEVALUE  TIMESTAMP ,  NUMVALUE  INTEGER ,  LANGCODE  VARCHAR(3) ) 
+2014-09-16 14:47:04.633 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTSEARCH_ATTRNAME_IDX  ON  WORKCONTENTSEARCH  (  ATTRNAME  )
+2014-09-16 14:47:04.789 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTSEARCH_CONTENTID_IDX  ON  WORKCONTENTSEARCH  (  CONTENTID  )
+2014-09-16 14:47:04.789 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/workcontentsearch
+2014-09-16 14:47:04.813 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'WORKCONTENTATTRIBUTEROLES'
+2014-09-16 14:47:04.813 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTATTRIBUTEROLES_attrname_idx' for table 'WORKCONTENTATTRIBUTEROLES
+2014-09-16 14:47:04.813 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTATTRIBUTEROLES_rolename_idx' for table 'WORKCONTENTATTRIBUTEROLES
+2014-09-16 14:47:04.813 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating index 'WORKCONTENTATTRIBUTEROLES_contentid_idx' for table 'WORKCONTENTATTRIBUTEROLES
+2014-09-16 14:47:04.889 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  WORKCONTENTATTRIBUTEROLES  ( CONTENTID  VARCHAR(16) NOT NULL ,  ATTRNAME  VARCHAR(30) NOT NULL ,  ROLENAME  VARCHAR(50) NOT NULL ) 
+2014-09-16 14:47:05.022 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTATTRIBUTEROLES_ATTRNAME_IDX  ON  WORKCONTENTATTRIBUTEROLES  (  ATTRNAME  )
+2014-09-16 14:47:05.144 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTATTRIBUTEROLES_ROLENAME_IDX  ON  WORKCONTENTATTRIBUTEROLES  (  ROLENAME  )
+2014-09-16 14:47:05.278 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE INDEX  WORKCONTENTATTRIBUTEROLES_CONTENTID_IDX  ON  WORKCONTENTATTRIBUTEROLES  (  CONTENTID  )
+2014-09-16 14:47:05.278 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - portDataSource/workcontentattributeroles
+2014-09-16 14:47:05.295 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'JPNEWSLETTER_NEWSLETTERREPORT'
+2014-09-16 14:47:05.487 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  JPNEWSLETTER_NEWSLETTERREPORT  ( ID  INTEGER NOT NULL ,  DATE  TIMESTAMP NOT NULL ,  SUBJECT  LONG VARCHAR NOT NULL , PRIMARY KEY ( ID ) ) 
+2014-09-16 14:47:05.488 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/jpnewsletter_newsletterreport
+2014-09-16 14:47:05.491 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'JPNEWSLETTER_CONTENTREPORT'
+2014-09-16 14:47:05.731 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  JPNEWSLETTER_CONTENTREPORT  ( ID  INTEGER NOT NULL ,  NEWSLETTERID  INTEGER NOT NULL ,  CONTENTID  VARCHAR(16) NOT NULL ,  TEXTBODY  LONG VARCHAR NOT NULL ,  HTMLBODY  LONG VARCHAR , PRIMARY KEY ( ID ) ) 
+2014-09-16 14:47:05.732 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/jpnewsletter_contentreport
+2014-09-16 14:47:05.878 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'JPNEWSLETTER_RECIPIENT'
+2014-09-16 14:47:05.954 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  JPNEWSLETTER_RECIPIENT  ( CONTENTREPORTID  INTEGER NOT NULL ,  USERNAME  VARCHAR(40) NOT NULL ,  MAILADDRESS  VARCHAR(100) NOT NULL ) 
+2014-09-16 14:47:05.954 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/jpnewsletter_recipient
+2014-09-16 14:47:06.233 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'JPNEWSLETTER_CONTENTQUEUE'
+2014-09-16 14:47:06.432 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  JPNEWSLETTER_CONTENTQUEUE  ( CONTENTID  VARCHAR(16) NOT NULL , PRIMARY KEY ( CONTENTID ) ) 
+2014-09-16 14:47:06.432 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/jpnewsletter_contentqueue
+2014-09-16 14:47:06.433 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'JPNEWSLETTER_SUBSCRIBERS'
+2014-09-16 14:47:06.610 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  JPNEWSLETTER_SUBSCRIBERS  ( MAILADDRESS  VARCHAR(100) NOT NULL ,  SUBSCRIPTION_DATE  TIMESTAMP ,  ACTIVE  SMALLINT , PRIMARY KEY ( MAILADDRESS ) ) 
+2014-09-16 14:47:06.610 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/jpnewsletter_subscribers
+2014-09-16 14:47:06.611 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - creating table 'JPNEWSLETTER_SUBSCRIBERTOKENS'
+2014-09-16 14:47:06.798 - INFO  -  org.entando.entando.aps.system.init.util.ApsTableUtils - executed create table statement changed 0 rows: CREATE TABLE  JPNEWSLETTER_SUBSCRIBERTOKENS  ( MAILADDRESS  VARCHAR(100) NOT NULL ,  TOKEN  VARCHAR(250) NOT NULL ,  REGTIME  TIMESTAMP NOT NULL , PRIMARY KEY ( MAILADDRESS ) ) 
+2014-09-16 14:47:06.798 - INFO  -  org.entando.entando.aps.system.init.util.TableFactory - Created table - servDataSource/jpnewsletter_subscribertokens
+2014-09-16 14:47:28.335 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:28.335 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:28.335 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:28.336 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:28.336 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:28.336 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:34.179 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:34.179 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:34.179 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:34.179 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:34.179 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:34.179 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:34.179 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:34.179 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:34.179 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:34.179 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:34.190 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:34.190 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:34.190 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:34.190 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:34.190 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:34.191 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:34.191 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:34.191 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:34.191 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:34.191 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.245 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:48.245 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:48.245 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:48.245 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:48.245 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:48.245 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:48.245 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:48.245 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:48.245 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:48.245 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:47:48.246 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.246 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.246 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.246 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.246 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.246 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.246 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.246 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.246 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.246 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:47:48.285 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:47:48.285 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:47:48.285 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:47:48.285 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:47:48.285 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:47:48.285 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:47:48.285 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:47:48.285 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:47:48.285 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:47:48.285 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:47:48.422 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.422 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.422 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.422 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.422 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.422 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.422 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.422 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.422 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.422 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.427 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.427 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.427 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.427 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.427 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.427 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.427 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.427 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.427 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.427 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Oggetto della mail
+2014-09-16 14:47:48.526 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:47:48.526 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:47:48.526 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:47:48.526 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:47:48.526 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:47:48.526 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:47:48.526 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:47:48.526 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:47:48.526 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:47:48.526 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:47:51.482 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:01.006 - INFO  -  com.agiletec.aps.system.common.entity.parse.AbstractAttributeSupportObjectDOM - Valid definition : attributeRoles.xml
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.265 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart issued
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.266 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: scheduler restart completed
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.305 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process initiated
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.320 - ERROR -  com.agiletec.aps.system.ApsSystemUtils - Newsletter: no receivers to send newsletter to!
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:06.356 - INFO  -  com.agiletec.aps.system.ApsSystemUtils - Newletter: delivery process completed
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.032 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:08.879 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.590 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:09.681 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter
+2014-09-16 14:48:10.179 - INFO  -  com.agiletec.plugins.jpmail.aps.services.mail.MailManager - Sender function disabled : mail Subject Conferma la sottoscrizione al servizio di Newsletter

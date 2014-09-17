@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+	<description><![CDATA["jpcontentworkflow-apsadmin-core tag library"]]></description>
+	<display-name>"jpcontentworkflow-apsadmin-core tag library"</display-name>
+	<tlib-version>2.2</tlib-version>
+	<short-name>wpcw</short-name>
+	<uri>/jpcontentworkflow-apsadmin-core</uri>
+	
+	<tag>
+		<description>
+			<![CDATA[todo.]]>
+		</description>
+		<name>contentStep</name>
+		<tag-class>com.agiletec.plugins.jpcontentworkflow.apsadmin.tags.ContentStepTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[todo.]]></description>
+			<name>nextStep</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[todo.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<description>
+			<![CDATA[Extract the list of steps related to the typeCode of the current content]]>
+		</description>
+		<name>contentSteps</name>
+		<tag-class>com.agiletec.plugins.jpcontentworkflow.apsadmin.tags.ContentStepsTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[the nome of the var holding the result]]></description>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+</taglib>

@@ -1,0 +1,30 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+	
+    <field name="smtpHost">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    
+    <field name="smtpProtocol">
+        <field-validator type="required" short-circuit="true">
+            <message key="requiredstring" />
+        </field-validator>
+        <field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[(isValidProtocol())]]></param>
+			<message key="error.smtpProtocol.invalidValue" />
+		</field-validator>
+    </field>
+    
+    <field name="smtpUserName">
+        <field-validator type="fieldexpression">
+			<param name="expression"><![CDATA[(!isValidProtocol() || smtpProtocol == 0 || (smtpProtocol > 0 && smtpUserName != null && smtpUserName.trim().length() > 0))]]></param>
+			<message key="error.smtpUserName.required" />
+		</field-validator>
+    </field>
+    
+</validators>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+  <description><![CDATA["jpshowletreplicator core tag library"]]></description>
+  <display-name>"jpshowletreplicator core tag library"</display-name>
+  <tlib-version>2.2</tlib-version>
+  <short-name>jpsr</short-name>
+  <uri>/jpshowletreplicator-core</uri>
+	
+	<!-- Tag da usare esclusivamente nelle showlet -->
+	<tag>
+		<description>Renderizza il Replicatore</description>
+		<name>widgetReplicator</name>
+		<tag-class>com.agiletec.plugins.jpshowletreplicator.aps.tags.WidgetReplicatorTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+	
+</taglib>

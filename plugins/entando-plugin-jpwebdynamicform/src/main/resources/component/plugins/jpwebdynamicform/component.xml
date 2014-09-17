@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>jpwebdynamicform</code>
+	<description>Web Dynamic Forms</description>
+	<dependencies>
+		<code>jpmail</code>
+	</dependencies>
+	<installation>
+		<tableMapping>
+			<datasource name="servDataSource">
+				<class>org.entando.entando.plugins.jpwebdynamicform.aps.system.init.servdb.Message</class>
+				<class>org.entando.entando.plugins.jpwebdynamicform.aps.system.init.servdb.MessageSearch</class>
+				<class>org.entando.entando.plugins.jpwebdynamicform.aps.system.init.servdb.Answer</class>
+				<class>org.entando.entando.plugins.jpwebdynamicform.aps.system.init.servdb.MessageAttributeRole</class>
+			</datasource>
+		</tableMapping>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpwebdynamicform/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpwebdynamicform/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+		<environment code="test">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpwebdynamicform/port_data_test.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpwebdynamicform/serv_data_test.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+</component>

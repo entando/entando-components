@@ -1,0 +1,13 @@
+.iframe { 
+text-align: left;
+width: 95%; 
+height: 300px; 
+overflow: auto;
+border: 1px solid #000000;
+background-color: #ffffff;
+padding: 5px;
+}
+
+img {
+border: none;
+}

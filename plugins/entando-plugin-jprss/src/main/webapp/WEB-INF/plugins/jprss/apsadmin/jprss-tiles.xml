@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+	<definition extends="main.layout" name="admin.jprss.intro">
+		<put-attribute name="title" value="jprss.title.rssManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jprss/apsadmin/jsp/common/template/extraresources/channels-intro-extras.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jprss/apsadmin/jsp/channels-intro.jsp" />
+	</definition>
+	
+	<definition extends="main.layout" name="admin.jprss.list">
+		<put-attribute name="title" value="jprss.title.rssManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jprss/apsadmin/jsp/channelsList.jsp" />
+	</definition>
+	
+	<definition extends="main.layout" name="admin.jprss.entryChannel">
+		<put-attribute name="title" value="jprss.title.rssManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jprss/apsadmin/jsp/entryChannel.jsp" />
+	</definition>
+
+	<definition extends="main.layout" name="admin.jprss.trashChannel">
+		<put-attribute name="title" value="jprss.title.rssManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jprss/apsadmin/jsp/trashChannel.jsp" />
+	</definition>
+
+	<definition extends="main.layout" name="admin.jprss.entryFilter">
+		<put-attribute name="title" value="jprss.title.rssManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jprss/apsadmin/jsp/entryFilter.jsp" />
+	</definition>
+	
+</tiles-definitions>

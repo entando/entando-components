@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<package name="jpmyportalplus_do/jpmyportalplus/front" namespace="/do/jpmyportalplus/front" extends="entando-default">
+
+		<global-results>
+ 			<result type="redirect" >${destForwardPath}</result>
+		</global-results>
+
+		<action name="swapFrames" class="jpmyportalplusStandardFrontAction" method="swapFrames">
+			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+ 		<action name="removeFrame" class="jpmyportalplusStandardFrontAction" method="removeFrame">
+			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+        <action name="addWidgets" class="jpmyportalplusStandardFrontAction" method="addWidgets">
+			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+        <action name="resetFrames" class="jpmyportalplusStandardFrontAction" method="resetFrames">
+			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+        <action name="closeFrame" class="jpmyportalplusStandardFrontAction" method="closeFrame">
+			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+ 		<action name="openFrame" class="jpmyportalplusStandardFrontAction" method="openFrame">
+			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+	</package>
+
+	<package name="jpmyportalplus_do/jpmyportalplus/front/ajax" namespace="/do/jpmyportalplus/front/ajax" extends="entando-default">
+
+ 		<action name="swapFrames" class="jpmyportalplusSpecialFrontFrameSwapperAction" method="swapFrames">
+			<result name="success" type="dispatcher">/WEB-INF/plugins/jpmyportalplus/aps/jsp/internalServlet/ajax/swapFrames.jsp</result>
+ 			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+ 		<action name="removeFrame" class="jpmyportalplusAjaxFrontAction" method="removeFrame">
+			<result name="success" type="dispatcher">/WEB-INF/plugins/jpmyportalplus/aps/jsp/internalServlet/ajax/removeFrame.jsp</result>
+ 			<interceptor-ref name="entandoFreeStack" />
+        </action>
+        <!--
+        <action name="addWidgets" class="jpmyportalplusAjaxFrontAction" method="addWidgets">
+			<result name="success" type="dispatcher">/WEB-INF/plugins/jpmyportalplus/aps/jsp/internalServlet/ajax/addWidgets.jsp</result>
+ 			<interceptor-ref name="entandoFreeStack" />
+        </action>
+        <action name="resetFrames" class="jpmyportalplusAjaxFrontAction" method="resetFrames">
+			<result name="success" type="dispatcher">/WEB-INF/plugins/jpmyportalplus/aps/jsp/internalServlet/ajax/resetFrames.jsp</result>
+ 			<interceptor-ref name="entandoFreeStack" />
+        </action>
+        -->
+
+        <action name="closeFrame" class="jpmyportalplusAjaxFrontAction" method="closeFrame">
+			<result name="success" type="dispatcher">/WEB-INF/plugins/jpmyportalplus/aps/jsp/internalServlet/ajax/resizeFrame.jsp</result>
+ 			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+ 		<action name="openFrame" class="jpmyportalplusAjaxFrontAction" method="openFrame">
+			<result name="success" type="dispatcher">/WEB-INF/plugins/jpmyportalplus/aps/jsp/internalServlet/ajax/resizeFrame.jsp</result>
+ 			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+ 		<action name="openSwapSection" class="jpmyportalplusAjaxFrontAction" method="openSwapSection">
+			<result name="success" type="dispatcher">/WEB-INF/plugins/jpmyportalplus/aps/jsp/internalServlet/ajax/openSwapSection.jsp</result>
+ 			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+ 		<action name="openConfigSection"  class="jpmyportalplusAjaxFrontAction">
+			<result name="success" type="dispatcher">/WEB-INF/plugins/jpmyportalplus/aps/jsp/internalServlet/ajax/openConfigSection.jsp</result>
+ 			<interceptor-ref name="entandoFreeStack" />
+        </action>
+
+	</package>
+
+</struts>

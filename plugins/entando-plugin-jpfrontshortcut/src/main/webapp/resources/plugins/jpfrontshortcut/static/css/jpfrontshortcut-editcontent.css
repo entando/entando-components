@@ -1,0 +1,251 @@
+.jpfrontshortcut {
+	float: left;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.jpfrontshortcut .noborder
+.jpfrontshortcut .noborder:link,
+.jpfrontshortcut .noborder:visited,
+.jpfrontshortcut .noborder:hover,
+.jpfrontshortcut .noborder:active, 
+.jpfrontshortcut .noborder:focus {
+	border: 0;
+}
+
+.jpfrontshortcut form {
+	margin: 0;
+	padding: 0;
+	float: left;
+	width: 100%;
+}
+
+.jpfrontshortcut .attribute {
+	float: left;
+	width: 100%;
+	margin: 0 0 1.5em 0;
+	padding: 0 0 1.5em 0;
+	border-bottom: 1px solid silver;
+}
+
+.jpfrontshortcut .attribute > p {
+	margin: 0;
+	padding: 0;
+	float: left;
+	width: 100%;
+}
+
+.jpfrontshortcut .attribute-label {
+	float: left;
+	width: 100%;
+	margin: 0 0 1em 0;
+	padding: 0;
+	font-weight: bold;
+	font-size: 14px;
+	color: gray;
+}
+
+.jpfrontshortcut .attribute-label-separator {
+	display: none;
+}
+
+.jpfrontshortcut .attribute-label input[type="checkbox"],
+.jpfrontshortcut .attribute-label input[type="radio"] {
+	vertical-align: middle;
+}
+
+
+.jpfrontshortcut .attribute.image .imageAttribute {
+	display: block;
+	vertical-align: bottom;
+	float: left;
+	width: 100%;
+}
+
+.jpfrontshortcut .attribute.image .imageAttribute input[type="image"] {
+	vertical-align: middle;
+	float: right;
+	margin: 0 0 0 2px;
+}
+
+.jpfrontshortcut .attribute.image .imageAttribute-img {
+	float: right;
+	margin: 0;
+	padding: 3px;
+	border: 1px solid silver;
+}
+
+.jpfrontshortcut .attribute.image .imageAttribute-img img {
+	max-width: 72px;
+	max-height: 72px;
+}
+
+.jpfrontshortcut .attribute.link img, 
+.jpfrontshortcut .attribute.link [type="image"]  {
+	vertical-align: middle;
+}
+
+
+.jpfrontshortcut .message {
+	float: left;
+	width: 100%;
+	margin: 0 0 2.5em 0;
+	background-color: #f0f0f0;
+	box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.jpfrontshortcut .message h3,
+.jpfrontshortcut .message h2 {
+	text-align: center;
+	font-size: 14px;
+	margin: 0.5em 0 1em 0;
+}
+
+.jpfrontshortcut .message.message_error {
+	background-color: #FFA4A4;
+}
+
+.jpfrontshortcut .attribute.attach p,
+.jpfrontshortcut .attribute.attach img {
+	vertical-align: bottom;
+}
+
+.jpfrontshortcut .attribute.attach input[type="image"] {
+	float: right;
+	margin: 0;
+}
+
+
+
+
+.jpfrontshortcut .archive-list {
+	float: left;
+	width: 100%;
+	margin: 1.5em 0;
+	padding: 0;
+}
+
+.jpfrontshortcut .archive-item {
+	float: left;
+	width: 22%;
+	max-width: 105px;
+	margin: 0 5px 1em 5px;
+	display: inline-block;
+	text-align: center;
+}
+
+.jpfrontshortcut .archive-item.n0 {
+	clear: left;
+}
+
+.jpfrontshortcut .archive-item .item-image {
+	border: 1px solid silver;
+	padding: 1px;
+	max-width: 98%;
+	margin: 4px 0;
+}
+
+.jpfrontshortcut .archive-item .size {
+	color: gray;
+	font-size: 80%;
+}
+
+
+
+.jpfrontshortcut  .archive-category-list {
+	margin: 0;
+	padding: 0;
+}
+
+.jpfrontshortcut .archive-category-list li,
+.jpfrontshortcut  .archive-category-list ul {
+	margin: 0 0 0 4px;
+	padding: 0;
+}
+
+
+
+.jpfrontshortcut .archive-pager {
+	float: left;
+	width: 100%;
+	margin: 1em 0 0em 0;
+	padding: 1em 0;
+	text-align: center;
+	vertical-align: middle;
+	border-top: 1px solid silver;
+	border-bottom: 1px solid silver;
+}
+
+.jpfrontshortcut .archive-pager input {
+	vertical-align: middle;
+	margin-left: 1px;
+	margin-right: 1px;
+}
+
+.jpfrontshortcut .archive-pager input[type="submit"] {
+	height: 34px;
+}
+
+.jpfrontshortcut .archive-pager [disabled="disabled"],
+.jpfrontshortcut .archive-pager [disabled] {
+	display: none;
+}
+
+
+
+.jpfrontshortcut .lower-actions {
+	float: left;
+	width: 100%;
+	margin: 1.5em 0;
+}
+
+
+
+
+.jpfrontshortcut .attribute .list-container {
+	margin: 1em 0;
+	padding: 0;
+	float: left;
+	width: 100%;
+	list-style-type: none;
+}
+
+.jpfrontshortcut .attribute .list-container .list-item {
+	list-style-type: none;
+	float: left;
+	margin: 0 0 1em 0;
+	vertical-align: middle;
+	width: 100%;
+}
+
+.jpfrontshortcut .attribute .list-container .list-item [type="image"],
+.jpfrontshortcut .attribute .list-container img {
+	vertical-align: middle;
+}
+
+.jpfrontshortcut .compositeAttribute-element {
+	margin-bottom: 1em;
+}
+
+.jpfrontshortcut .attribute .list-container textarea {
+	display: block;
+	width: 80%;
+}
+
+.jpfrontshortcut .attribute .list-container .imageAttribute {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+.jpfrontshortcut .attribute .list-container .imageAttribute img {
+	width: 30px;
+	border: 1px solid silver;
+	vertical-align: middle;
+}
+
+.jpfrontshortcut .attribute.hypertext textarea {
+	float: left;
+	width: 98%;
+}

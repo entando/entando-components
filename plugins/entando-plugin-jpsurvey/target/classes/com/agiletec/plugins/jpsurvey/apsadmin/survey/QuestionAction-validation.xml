@@ -1,0 +1,63 @@
+<!DOCTYPE validators PUBLIC
+		"-//Apache Struts//XWork Validator 1.0.2//EN"
+		"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+
+	<field name="surveyId">
+		<field-validator type="regex">
+			<param name="regex"><![CDATA["^[1-0]{1}.*"]]></param>
+			<message key="message.surveyAction.sysError"/>
+		</field-validator>
+		<field-validator type="int">
+			<message key="message.surveyAction.sysError"/>
+		</field-validator>
+	</field>
+	
+	<field name="questionId">
+		<field-validator type="regex">
+			<param name="regex"><![CDATA["^[1-0]{1}.*"]]></param>
+			<message key="message.surveyAction.sysError"/>
+		</field-validator>
+		<field-validator type="int">
+			<message key="message.surveyAction.sysError"/>
+		</field-validator>
+	</field>
+	
+	<field name="strutsAction">
+		<field-validator type="regex">
+			<param name="regex"><![CDATA["^[1-0]{1}.*"]]></param>
+			<message key="message.surveyAction.sysError"/>
+		</field-validator>
+		<field-validator type="int">
+			<message key="message.surveyAction.sysError"/>
+		</field-validator>
+	</field>
+	
+	<field name="minResponseNumber">
+		<field-validator type="fieldexpression">
+			<param name="expression"><![CDATA[!(singleChoice == 0 && minResponseNumber == null)]]></param>
+			<message key="requiredstring"/>
+		</field-validator>
+	</field>
+	
+	<field name="maxResponseNumber">
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[!(singleChoice == 0 && maxResponseNumber == null)]]></param>
+			<message key="requiredstring"/>
+		</field-validator>
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[!(singleChoice == 0 && maxResponseNumber == 0)]]></param>
+			<message key="message.questionAction.wrongValue"/>
+		</field-validator>
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[!(singleChoice == 0 && minResponseNumber != null && minResponseNumber>maxResponseNumber)]]></param>
+			<message key="message.surveyAction.wrongResponseSet"/>
+		</field-validator>
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[!(singleChoice == 0 && minResponseNumber != null && minResponseNumber == 1 && minResponseNumber==maxResponseNumber)]]></param>
+			<message key="message.questionAction.wrongQuestionType"/>
+		</field-validator>
+	</field>
+	
+ </validators>

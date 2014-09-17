@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpversioning_do/jpversioning/Content/Versioning" namespace="/do/jpversioning/Content/Versioning" extends="entando-default">
+        
+        <!-- Lista contenuti "cestinati" -->
+        <action name="list" class="jpversioningVersionFinderAction" >
+        	<result type="tiles" >admin.jpversioning.content.versioning.list</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="search" class="jpversioningVersionFinderAction" >
+        	<result type="tiles" >admin.jpversioning.content.versioning.list</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="history" class="jpversioningVersionAction" method="history" >
+        	<result type="tiles" >admin.jpversioning.content.versioning.history</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>        
+        
+        <action name="trash" class="jpversioningVersionAction" method="trash" >
+        	<result type="tiles">admin.jpversioning.content.versioning.trash</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="delete" class="jpversioningVersionAction" method="delete">
+			<result type="redirectAction">
+    			<param name="actionName">history</param>
+    			<param name="versionId">${backId}</param>
+    			<param name="contentId">${contentId}</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+            </result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="preview" class="jpversioningVersionAction" method="preview" >
+        	<result type="tiles" >admin.jpversioning.content.versioning.viewPreview</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="entryRecover" class="jpversioningVersionAction" method="entryRecover" >
+        	<result type="tiles" >admin.jpversioning.content.versioning.recover</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+        <action name="recover" class="jpversioningVersionAction" method="recover" >
+        	<result type="redirectAction">
+            	<param name="namespace">/do/jacms/Content</param>
+    			<param name="actionName">entryContent</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+            </result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+    </package>
+    
+</struts>

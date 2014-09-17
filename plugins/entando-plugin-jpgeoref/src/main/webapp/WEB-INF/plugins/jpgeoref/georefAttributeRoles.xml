@@ -1,0 +1,8 @@
+<roles>
+	<role>
+		<name>jpgeroref:coord</name>
+		<description>The Attribute that contains the coordinates</description>
+		<allowedTypes>Coords</allowedTypes>
+	</role>
+
+</roles>

@@ -1,0 +1,502 @@
+.tab-separation {
+	margin: 3em 0 1em 0;
+	border-top: 1px solid #dedede; 
+}
+
+.message {
+	margin-bottom: 1em;
+}
+
+/*grafico Sondaggi*/
+
+ dl.graph,  .graph dt,  .graph dd {
+	margin: 0;
+	padding: 0;
+}
+
+ div.graphic {
+	background-image: url("../../administration/img/icons/bg_stat.png");
+	background-repeat: no-repeat;
+	background-position: 0% 0%;
+	padding: 33px 0 33px 7px;
+	margin-bottom: 50px;
+}
+
+ dl.graph dt {
+	display: none;
+}
+
+ dl.graph dd {
+	width: 330px;
+	height: 33px;
+	margin-left: 35px;
+	text-align: right;
+	vertical-align: middle;
+}
+
+ dl.graph span {
+	height: 29px;
+	color: #555555;
+	float: left;
+}
+	
+ dl.graph span em.leftEm {
+	margin-left: -20px;
+	position: relative;
+	height: 29px;
+	color: #555555;
+	float: left;
+}
+
+ dl.graph em.rightEm {
+	border-top: 1px solid #cdc7d1;
+	border-left: 1px solid #cdc7d1;
+	border-bottom: 1px solid #555555;
+	border-right: 1px solid #555555;
+	background-color: #ffffff;
+	margin-right: 5px;
+	margin-top: 2px;
+	font-family: monospace;
+	padding: 0 4px 2px 4px;
+}
+
+ dl.graph em.rightEmZero {
+	font-family: monospace;
+	margin-left: 3px;
+	margin-top: 2px;
+	padding: 0 4px 2px 4px;
+	border-top: 1px solid #cdc7d1;
+	border-left: 1px solid #cdc7d1;
+	border-bottom: 1px solid #555555;
+	border-right: 1px solid #555555;
+	float: left;
+	background-color: #ffffff;
+}
+		
+ dl.graph span {
+	background-image: url("../../administration/img/icons/colonna.gif");
+	background-repeat: repeat-x;
+	background-position: 0 0;
+	border-top: 1px solid #555555;
+}
+
+/* percentuali */
+
+ dl.graph span.p0 {
+	width: 0%;
+}
+
+ dl.graph span.p1 {
+	width: 1%;
+}
+
+ dl.graph span.p2 {
+	width: 2%;
+}
+
+ dl.graph span.p3 {
+	width: 3%;
+}
+
+ dl.graph span.p4 {
+	width: 4%;
+}
+
+ dl.graph span.p5 {
+	width: 5%;
+}
+
+ dl.graph span.p6 {
+	width: 6%;
+}
+
+ dl.graph span.p7 {
+	width: 7%;
+}
+
+ dl.graph span.p8 {
+	width: 8%;
+}
+
+ dl.graph span.p9 {
+	width: 9%;
+}
+
+ dl.graph span.p10 {
+	width: 10%;
+}
+
+ dl.graph span.p11 {
+	width: 11%;
+}
+
+ dl.graph span.p12 {
+	width: 12%;
+}
+
+ dl.graph span.p13 {
+	width: 13%;
+}
+
+ dl.graph span.p14 {
+	width: 14%;
+}
+
+ dl.graph span.p15 {
+	width: 15%;
+}
+
+ dl.graph span.p16 {
+	width: 16%;
+}
+
+ dl.graph span.p17 {
+	width: 17%;
+}
+
+ dl.graph span.p18 {
+	width: 18%;
+}
+
+ dl.graph span.p19 {
+	width: 19%;
+}
+
+ dl.graph span.p20 {
+	width: 20%;
+}
+
+ dl.graph span.p21 {
+	width: 21%;
+}
+
+ dl.graph span.p22 {
+	width: 22%;
+}
+
+ dl.graph span.p23 {
+	width: 23%;
+}
+
+ dl.graph span.p24 {
+	width: 24%;
+}
+
+ dl.graph span.p25 {
+	width: 25%;
+}
+
+ dl.graph span.p26 {
+	width: 26%;
+}
+
+ dl.graph span.p27 {
+	width: 27%;
+}
+
+ dl.graph span.p28 {
+	width: 28%;
+}
+
+ dl.graph span.p29 {
+	width: 29%;
+}
+
+ dl.graph span.p30 {
+	width: 30%;
+}
+
+ dl.graph span.p31 {
+	width: 31%;
+}
+
+ dl.graph span.p32 {
+	width: 32%;
+}
+
+ dl.graph span.p33 {
+	width: 33%;
+}
+
+ dl.graph span.p34 {
+	width: 34%;
+}
+
+ dl.graph span.p35 {
+	width: 35%;
+}
+
+ dl.graph span.p36 {
+	width: 36%;
+}
+
+ dl.graph span.p37 {
+	width: 37%;
+}
+
+ dl.graph span.p38 {
+	width: 38%;
+}
+
+ dl.graph span.p39 {
+	width: 39%;
+}
+
+ dl.graph span.p40 {
+	width: 40%;
+}
+
+ dl.graph span.p41 {
+	width: 41%;
+}
+
+ dl.graph span.p42 {
+	width: 42%;
+}
+
+ dl.graph span.p43 {
+	width: 43%;
+}
+
+ dl.graph span.p44 {
+	width: 44%;
+}
+
+ dl.graph span.p45 {
+	width: 45%;
+}
+
+ dl.graph span.p46 {
+	width: 46%;
+}
+
+ dl.graph span.p47 {
+	width: 47%;
+}
+
+ dl.graph span.p48 {
+	width: 48%;
+}
+
+ dl.graph span.p49 {
+	width: 49%;
+}
+
+ dl.graph span.p50 {
+	width: 50%;
+}
+
+ dl.graph span.p51 {
+	width: 51%;
+}
+
+ dl.graph span.p52 {
+	width: 52%;
+}
+
+ dl.graph span.p53 {
+	width: 53%;
+}
+
+ dl.graph span.p54 {
+	width: 54%;
+}
+
+ dl.graph span.p55 {
+	width: 55%;
+}
+
+ dl.graph span.p56 {
+	width: 56%;
+}
+
+ dl.graph span.p57 {
+	width: 57%;
+}
+
+ dl.graph span.p58 {
+	width: 58%;
+}
+
+ dl.graph span.p59 {
+	width: 59%;
+}
+
+ dl.graph span.p60 {
+	width: 60%;
+}
+
+ dl.graph span.p61 {
+	width: 61%;
+}
+
+ dl.graph span.p62 {
+	width: 62%;
+}
+
+ dl.graph span.p63 {
+	width: 63%;
+}
+
+ dl.graph span.p64 {
+	width: 64%;
+}
+
+ dl.graph span.p65 {
+	width: 65%;
+}
+
+ dl.graph span.p66 {
+	width: 66%;
+}
+
+ dl.graph span.p67 {
+	width: 67%;
+}
+
+ dl.graph span.p68 {
+	width: 68%;
+}
+
+ dl.graph span.p69 {
+	width: 69%;
+}
+
+ dl.graph span.p70 {
+	width: 70%;
+}
+
+ dl.graph span.p71 {
+	width: 71%;
+}
+
+ dl.graph span.p72 {
+	width: 72%;
+}
+
+ dl.graph span.p73 {
+	width: 73%;
+}
+
+ dl.graph span.p74 {
+	width: 74%;
+}
+
+ dl.graph span.p75 {
+	width: 75%;
+}
+
+ dl.graph span.p76 {
+	width: 76%;
+}
+
+ dl.graph span.p77 {
+	width: 77%;
+}
+
+ dl.graph span.p78 {
+	width: 78%;
+}
+
+ dl.graph span.p79 {
+	width: 79%;
+}
+
+ dl.graph span.p80 {
+	width: 80%;
+}
+
+ dl.graph span.p81 {
+	width: 81%;
+}
+
+ dl.graph span.p82 {
+	width: 82%;
+}
+
+ dl.graph span.p83 {
+	width: 83%;
+}
+
+ dl.graph span.p84 {
+	width: 84%;
+}
+
+ dl.graph span.p85 {
+	width: 85%;
+}
+
+ dl.graph span.p86 {
+	width: 86%;
+}
+
+ dl.graph span.p87 {
+	width: 87%;
+}
+
+ dl.graph span.p88 {
+	width: 88%;
+}
+
+ dl.graph span.p89 {
+	width: 89%;
+}
+
+ dl.graph span.p90 {
+	width: 90%;
+}
+
+ dl.graph span.p91 {
+	width: 91%;
+}
+
+ dl.graph span.p92 {
+	width: 92%;
+}
+
+ dl.graph span.p93 {
+	width: 93%;
+}
+
+ dl.graph span.p94 {
+	width: 94%;
+}
+
+ dl.graph span.p95 {
+	width: 95%;
+}
+
+ dl.graph span.p96 {
+	width: 96%;
+}
+
+ dl.graph span.p97 {
+	width: 97%;
+}
+
+ dl.graph span.p98 {
+	width: 98%;
+}
+
+ dl.graph span.p99 {
+	width: 99%;
+}
+
+ dl.graph span.p100 {
+	width: 100%;
+}
+
+ .bold {
+	font-weight: bold;
+}
+
+ .uppercase {
+	text-transform: uppercase;
+}
+
+
+/**************************************************
+*
+*	END! 
+*
+***************************************************/

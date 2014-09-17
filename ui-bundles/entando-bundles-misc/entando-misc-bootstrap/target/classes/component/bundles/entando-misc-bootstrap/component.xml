@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-misc-bootstrap</code>
+	<description>Misc: Twitter Bootstrap</description>
+	<dependencies>
+		<code>entando-misc-html5-essentials</code>
+		<code>entando-misc-jquery</code>
+	</dependencies>
+	<installation>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/bundles/entando-misc-bootstrap/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/bundles/entando-misc-bootstrap/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+</component>

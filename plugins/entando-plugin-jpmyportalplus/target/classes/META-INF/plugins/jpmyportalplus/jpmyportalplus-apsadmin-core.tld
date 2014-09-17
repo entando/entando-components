@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+  <description><![CDATA["jpmyportalplus apsadmin core tag library"]]></description>
+  <display-name>"jpmyportalplus apsadmin core tag library"</display-name>
+  <tlib-version>2.2</tlib-version>
+  <short-name>wpmpp</short-name>
+  <uri>/jpmyportalplus-apsadmin-core</uri>
+	
+	<!--  INFO TAG DEFINITION - START -->
+	
+	<tag>
+		<description>
+			<![CDATA[Tag equals to {@link com.agiletec.apsadmin.tags.WidgetTypeInfoTag} tag.
+			Return also a "swappable" property of the type.]]>
+		</description>
+		<name>widgetType</name>
+		<tag-class>com.agiletec.plugins.jpmyportalplus.apsadmin.tags.WidgetTypeInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The code of the showlet type to return.]]></description>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the showlet type (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The name of the property to return. It can be one of the following:<br/>
+			The available properties of "ShowletType" are:
+			 "code"<br/> "titles" (map of titles indexed by the system languages)<br/>
+			 "parameters" (list of object "ShowletTypeParameter")<br/> 
+			 "action" (the code of the action used to manage the type)<br/>
+			 "pluginCode"<br/> "parentTypeCode"<br/>
+			 "config" (map of default parameter values indexed by the key)<br/>
+			 "locked"<br/>
+			 "swappable" (If the showlet type is uncompatible with MyPortal Engine, return -1,
+			 if it's unswappable return 0, else return 1.)]]></description>
+			<name>property</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the showlet type (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+</taglib>

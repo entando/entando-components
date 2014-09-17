@@ -1,0 +1,57 @@
+<apiMethodDefinitions>
+    
+    <resource name="content" namespace="jacms">
+        <description>The representation of the content</description>
+        <source pluginCode="jacms">plugins</source>
+        <method httpMethod="GET" active="true" canSpawnOthers="true">
+            <description>Return a public content</description>
+            <springBean name="jpimagemapApiContentInterface" method="getContent" />
+            <responseClass>com.agiletec.plugins.jpimagemap.aps.system.services.api.response.ImageMapContentResponse</responseClass>
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The Id of the content to return (Example: "CNG34", or "NEW45")</description>
+                </parameter>
+                <parameter key="modelId" required="false">
+                    <description>The Id of the content model used to render each content in the HTML section of the response. Must be an integer, "default" or "list".</description>
+                </parameter>
+            </parameters>
+            <relatedWidget code="content_viewer">
+                <mapParameter widget="contentId" method="id" />
+                <mapParameter widget="modelId" method="modelId" />
+            </relatedWidget>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="validateContents">
+            <description>Add a content</description>
+            <springBean name="jpimagemapApiContentInterface" method="addContent" />
+            <expectedType>com.agiletec.plugins.jpimagemap.aps.system.services.api.model.JAXBImageMapContent</expectedType>
+            <parameters>
+                <parameter key="insertOnLine" required="false">
+                    <description>If true, insert the new content online. Default value false.</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="validateContents">
+            <description>Update a content</description>
+            <springBean name="jpimagemapApiContentInterface" method="updateContent" />
+            <expectedType>com.agiletec.plugins.jpimagemap.aps.system.services.api.model.JAXBImageMapContent</expectedType>
+            <parameters>
+                <parameter key="insertOnLine" required="false">
+                    <description>If true, update the new content online. Default value false.</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="validateContents">
+            <description>Delete a content</description>
+            <springBean name="jpimagemapApiContentInterface" method="deleteContent" />
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The Id of the content to delete (Example: "CNG34", or "NEW45")</description>
+                </parameter>
+                <parameter key="removeWorkVersion" required="false">
+                    <description>If true, remove also the work version. Default value false.</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    
+</apiMethodDefinitions>

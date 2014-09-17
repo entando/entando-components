@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taglib
+ PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+ "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>jpphotogallery-aps-core</short-name>
+	<uri>/jpphotogallery-aps-core</uri>
+	<display-name>jpphotogallery aps core tag library</display-name>
+	<description>jpphotogallery aps core tag library</description>
+
+<!-- TAG DI USO GENERALE -->
+	
+	<tag>
+		<name>pager</name>
+		<tag-class>com.agiletec.plugins.jpphotogallery.aps.tags.PhotogalleryPagerTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>Tag Paginatore liste per photogallery</description>
+		<attribute>
+			<name>max</name>
+			<required>no</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				Numero massimo di valori per ogni gruppo di oggetti.
+			</description>
+		</attribute>
+		<attribute>
+			<name>listName</name>
+      		<required>yes</required>
+      		<rtexprvalue>false</rtexprvalue>
+      		<description>
+      			Nome della lista completa preso dalla request.
+      		</description>
+		</attribute>
+		<attribute>
+			<name>objectName</name>
+			<required>yes</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				Nome con il quale viene trattato l'oggetto corrente e che da l'accesso ai metodi:
+				getMax, getPrevItem, getNextItem, getCurrItem, 
+				getSize, getBegin, getEnd, getMaxItem, getPagerId.
+      		</description>
+      	</attribute>
+      	<attribute>
+			<name>pagerId</name>
+      		<required>no</required>
+      		<rtexprvalue>false</rtexprvalue>
+      		<description>
+      			Identificativo del paginatore (necessario quando ci sono più 
+      			paginatori nella stessa pagina)
+      		</description>
+		</attribute>
+		<attribute>
+			<name>pagerIdFromFrame</name>
+      		<required>no</required>
+      		<rtexprvalue>false</rtexprvalue>
+      		<description>
+      			Setta l'identificativo del paginatore (necessario quando ci sono più 
+      			paginatori nella stessa pagina) in base al frame dove è posizionato il tag.
+      			Possibili immissioni "true" o "false" (di default).
+      			La specificazione dell'attributo "pagerId" rende l'attributo "pagerIdFromFrame" 
+      			ininfluente.
+      		</description>
+		</attribute>
+		<attribute>
+			<name>advanced</name>
+      		<required>no</required>
+      		<rtexprvalue>false</rtexprvalue>
+      		<description>(true or false)</description>
+		</attribute>
+		<attribute>
+			<name>offset</name>
+      		<required>no</required>
+      		<rtexprvalue>false</rtexprvalue>
+      		<description></description>
+		</attribute>
+	</tag>
+	
+<!-- FINE TAG DI USO GENERALE -->  
+
+</taglib>

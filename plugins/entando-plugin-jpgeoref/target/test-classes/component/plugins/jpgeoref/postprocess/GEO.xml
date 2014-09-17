@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<contentType>
+	<typeCode>GEO</typeCode>
+	<typeDescription>georef content</typeDescription>
+	<attributes>
+		<attribute>
+			<name>title</name>
+			<type>Monotext</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+				<maxLength>-1</maxLength>
+				<minLength>-1</minLength>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>coords</name>
+			<type>Coords</type>
+			<roles>
+				<role>jpgeroref:coord</role>
+			</roles>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="baseAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+	</attributes>
+</contentType>

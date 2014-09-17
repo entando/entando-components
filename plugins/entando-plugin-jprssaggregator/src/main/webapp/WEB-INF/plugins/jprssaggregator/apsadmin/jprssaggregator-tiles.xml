@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+<!-- ********* INIZIO Area Gestione Item Rss ********* -->
+    
+    <definition extends="main.layout" name="jprssaggregator.aggregator.intro">
+		<put-attribute name="title" value="jprssaggregator.title.rssAggregator.rssManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/common/template/extraResources/intro-extras.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/aggregator/intro.jsp" />
+	</definition>
+
+    <definition extends="main.layout" name="jprssaggregator.aggregator.list">
+		<put-attribute name="title" value="jprssaggregator.title.rssAggregator.rssManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/aggregator/list.jsp" />
+	</definition>
+	
+    <definition extends="main.layout" name="jprssaggregator.aggregator.entryItem">
+		<put-attribute name="title" value="jprssaggregator.title.rssAggregator.rssManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/aggregator/entryItem.jsp" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/common/template/extraResources/extraResources.jsp" />
+	</definition>
+	
+    <definition extends="main.layout" name="jprssaggregator.aggregator.confirmRemove">
+		<put-attribute name="title" value="jprssaggregator.title.rssAggregator.rssManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/aggregator/confirmRemove.jsp" />
+	</definition>
+
+<!-- ********* FINE   Area Gestione Item Rss ********* -->
+
+</tiles-definitions>

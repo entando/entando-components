@@ -1,0 +1,61 @@
+.jpcmstagcloud .cloud_list {
+	padding: 0;
+	margin: 1em;
+	list-style-type: none;
+	display: block;
+	line-height: 2em;
+}
+
+.jpcmstagcloud .cloud_list li {
+	display: inline;
+}
+
+.jpcmstagcloud .cloud_list a.tag1 {
+	font-size: 0.7em;
+	font-weight: 100;
+}
+
+.jpcmstagcloud .cloud_list a.tag2 {
+	font-size: 0.8em;
+	font-weight: 200;
+}
+
+.jpcmstagcloud .cloud_list a.tag3 {
+	font-size: 0.9em;
+	font-weight: 300;
+}
+
+.jpcmstagcloud .cloud_list a.tag4 {
+	font-size: 1.0em;
+	font-weight: 400;
+}
+
+.jpcmstagcloud .cloud_list a.tag5 {
+	font-size: 1.2em;
+	font-weight: 500;
+}
+
+.jpcmstagcloud .cloud_list a.tag6 {
+	font-size: 1.4em;
+	font-weight: 600;
+}
+
+.jpcmstagcloud .cloud_list a.tag7 {
+	font-size: 1.6em;
+	font-weight: 700;
+}
+
+.jpcmstagcloud .cloud_list a.tag8 {
+	font-size: 1.8em;
+	font-weight: 800;
+}
+
+.jpcmstagcloud .cloud_list a.tag9 {
+	font-size: 2.2em;
+	font-weight: 900;
+}
+
+.jpcmstagcloud .cloud_list a.tag10 {
+	font-size: 2.5em;
+	font-weight: 900;
+}
