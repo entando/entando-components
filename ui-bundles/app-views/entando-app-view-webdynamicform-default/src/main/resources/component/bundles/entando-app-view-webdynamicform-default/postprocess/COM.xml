@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<messageType>
+	<typeCode>COM</typeCode>
+	<typeDescription>Company Form</typeDescription>
+	<attributes>
+		<attribute>
+			<name>Company</name>
+			<type>Monotext</type>
+			<searchable>true</searchable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Address</name>
+			<type>Monotext</type>
+		</attribute>
+		<attribute>
+			<name>eMail</name>
+			<type>Monotext</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+				<regexp>(.*&lt;.+@.+\.[a-z]+&gt;)|(.+@.+\.[a-z]+)</regexp>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Note</name>
+			<type>Monotext</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+	</attributes>
+</messageType>

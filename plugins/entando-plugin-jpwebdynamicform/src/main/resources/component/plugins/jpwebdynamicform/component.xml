@@ -3,6 +3,7 @@
 	<code>jpwebdynamicform</code>
 	<description>Web Dynamic Forms</description>
 	<dependencies>
+		<code>entando-admin-console</code>
 		<code>jpmail</code>
 	</dependencies>
 	<installation>

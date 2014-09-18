@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-app-view-webdynamicform-default</code>
+	<description>APP view: webdynamicform default</description>
+	<dependencies>
+		<code>entando-portal-ui</code>
+		<code>jpwebdynamicform</code>
+	</dependencies>
+	<installation>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/bundles/entando-app-view-webdynamicform-default/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/bundles/entando-app-view-webdynamicform-default/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+			<postProcesses>
+				<selfRestCall langCode="en" namespace="jpwebdynamicform" resourceName="messageType"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-app-view-webdynamicform-default/postprocess/COM.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jpwebdynamicform" resourceName="messageType"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-app-view-webdynamicform-default/postprocess/PER.xml" />
+				</selfRestCall>
+			</postProcesses>
+		</environment>
+	</installation>
+</component>

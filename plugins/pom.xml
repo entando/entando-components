@@ -44,11 +44,13 @@
 		<url>http://www.entando.com/</url>
 	</organization>
 	<modules>
+		<!--
 		<module>entando-plugin-jpfacetnav</module>
+		-->
 		<module>entando-plugin-jpmail</module>
 		<module>entando-plugin-jpwebdynamicform</module>
+		<!--
 		<module>entando-plugin-jprss</module>
-		<!-- jpsharewith is now a bundle -->
 		<module>entando-plugin-jpcalendar</module>
 		<module>entando-plugin-jpldap</module>
 		<module>entando-plugin-jpuserprofile</module>
@@ -58,9 +60,6 @@
 		<module>entando-plugin-jpsurvey</module>
 		<module>entando-plugin-jpavatar</module>
 		<module>entando-plugin-jpactionlogger</module>
-		<!--
-		<module>entando-plugin-jpcontentnotifier</module>**
-		-->
 		<module>entando-plugin-jpfastcontentedit</module>
 		<module>entando-plugin-jpgeoref</module>
 		<module>entando-plugin-jpwebmail</module>
@@ -68,14 +67,7 @@
 		<module>entando-plugin-jpphotogallery</module>
 		<module>entando-plugin-jprssaggregator</module>
 		<module>entando-plugin-jpshowletreplicator</module>
-		<!--
-		<module>entando-plugin-jpwtt</module>**
-		<module>entando-plugin-jpmyportal</module>**
-		-->
 		<module>entando-plugin-jpmassiveresourceloader</module>
-		<!--
-		<module>entando-plugin-jpremoteresourceloader</module>**
-		-->
 		<module>entando-plugin-jpversioning</module>
 		<module>entando-plugin-jpcasclient</module>
 		<module>entando-plugin-jpstats</module>
@@ -87,6 +79,7 @@
 		<module>entando-plugin-jptokenapi</module>
 		<module>entando-plugin-jpfrontshortcut</module>
 		<module>entando-plugin-jpehcache</module>
+		-->
 	</modules>
 	<properties>
 		<!--

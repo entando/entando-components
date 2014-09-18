@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<messageType>
+	<typeCode>PER</typeCode>
+	<typeDescription>Person Form</typeDescription>
+	<attributes>
+		<attribute>
+			<name>Name</name>
+			<type>Monotext</type>
+			<searchable>true</searchable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Surname</name>
+			<type>Monotext</type>
+			<searchable>true</searchable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Address</name>
+			<type>Monotext</type>
+		</attribute>
+		<attribute>
+			<name>eMail</name>
+			<type>Monotext</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+				<regexp>(.*&lt;.+@.+\.[a-z]+&gt;)|(.+@.+\.[a-z]+)</regexp>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Note</name>
+			<type>Monotext</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Date</name>
+			<type>Date</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="dateAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Number</name>
+			<type>Number</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbEnumeratorAttributeType">
+			<name>Enumerator</name>
+			<type>Enumerator</type>
+			<validationRules xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+			<customSeparator>,</customSeparator>
+			<staticItems>Opzione A,Opzione B,Opzione C,Opzione D,Opzione E,Opzione F,Opzione G</staticItems>
+		</attribute>
+		<attribute>
+			<name>Text</name>
+			<type>Text</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Longtext</name>
+			<type>Longtext</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Boolean</name>
+			<type>Boolean</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="baseAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>CheckBox</name>
+			<type>CheckBox</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="baseAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>ThreeState</name>
+			<type>ThreeState</type>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="baseAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+	</attributes>
+</messageType>
