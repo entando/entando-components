@@ -93,9 +93,10 @@ public class MessageNotifierConfigDOM {
 		messageTypeConfig.setRecipientsBcc(this.extractRecipients(recipentsElem, RECIPIENTS_BCC_CHILD));
 		
 		Element modelElem = messageTypeElem.getChild(MODEL_ELEM);
-		MessageModel messageModel = this.extractMessageModel(modelElem);
-		messageTypeConfig.setMessageModel(messageModel);
-		
+		if (null != modelElem) {
+			MessageModel messageModel = this.extractMessageModel(modelElem);
+			messageTypeConfig.setMessageModel(messageModel);
+		}
 		return messageTypeConfig;
 	}
 	
@@ -138,8 +139,10 @@ public class MessageNotifierConfigDOM {
 		configElem.addContent(recipientsElem);
 		
 		MessageModel model = config.getMessageModel();
-		Element modelElem = this.createModelElement(model);
-		configElem.addContent(modelElem);
+		if (null != model) {
+			Element modelElem = this.createModelElement(model);
+			configElem.addContent(modelElem);
+		}
 		
 		return configElem;
 	}

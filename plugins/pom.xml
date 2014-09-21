@@ -44,12 +44,9 @@
 		<url>http://www.entando.com/</url>
 	</organization>
 	<modules>
-		<!--
 		<module>entando-plugin-jpfacetnav</module>
-		-->
 		<module>entando-plugin-jpmail</module>
 		<module>entando-plugin-jpwebdynamicform</module>
-		<!--
 		<module>entando-plugin-jprss</module>
 		<module>entando-plugin-jpcalendar</module>
 		<module>entando-plugin-jpldap</module>
@@ -79,7 +76,6 @@
 		<module>entando-plugin-jptokenapi</module>
 		<module>entando-plugin-jpfrontshortcut</module>
 		<module>entando-plugin-jpehcache</module>
-		-->
 	</modules>
 	<properties>
 		<!--

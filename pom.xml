@@ -42,6 +42,7 @@
 	<modules>
 		<module>plugins</module>
 		<module>ui-bundles</module>
+		<module>apps</module>
 	</modules>
 	<properties>
 		<!--
