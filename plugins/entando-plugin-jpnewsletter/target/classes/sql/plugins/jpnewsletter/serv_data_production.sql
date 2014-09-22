@@ -1,2 +1,0 @@
-INSERT INTO authpermissions ( permissionname, descr ) VALUES ('jpnewsletter_management', 'Newsletter management' );
-INSERT INTO authpermissions ( permissionname, descr ) VALUES ('jpnewsletter_config', 'Newsletter Configuration' );

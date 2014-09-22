@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.agiletec.plugins.jpcontentfeedback.AllTests
--------------------------------------------------------------------------------
-Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 78.335 sec
