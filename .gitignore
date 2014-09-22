@@ -1,3 +1,6 @@
 nb-configuration.xml
 target
 derby.log
+plugins/entando-plugin-*/target/
+plugins/entando-plugin-*/nb-configuration.xml
+plugins/entando-plugin-*/derby.log
