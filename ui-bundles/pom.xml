@@ -65,6 +65,7 @@
 		<module>page-models/entando-page-2columns-left</module>
 		<module>page-models/entando-page-myportalplus-basic</module>
 		<module>app-views/entando-app-view-webdynamicform-default</module>
+		<module>app-views/entando-app-view-calendar-default</module>
 	</modules>
 	<properties>
 	</properties>

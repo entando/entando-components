@@ -40,6 +40,7 @@
 	</organization>
 	<modules>
 		<module>entando-app-webdynamicform</module>
+	 <module>entando-app-calendar</module>
 	</modules>
 	<properties>
 		<spring.version>4.0.0.RELEASE</spring.version>

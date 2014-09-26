@@ -2,28 +2,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>entando-plugins-parent</artifactId>
-		<groupId>org.entando.entando.plugins</groupId>
+		<artifactId>entando-apps-parent</artifactId>
+		<groupId>org.entando.entando.apps</groupId>
 		<version>4.1.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>entando-plugin-jpmyportalplus</artifactId>
-	<groupId>org.entando.entando.plugins</groupId>
+	<artifactId>entando-app-calendar</artifactId>
+	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: My Portal</name>
-	<description>My Portal</description>
+	<name>Entando App: Calendar</name>
+	<description>Calendar APP</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
 			<name>Eugenio Santoboni</name>
 			<email>e.santoboni@entando.com</email>
 		</developer>
-		<developer>
-			<id>a.dessi</id>
-			<name>Andrea Dessì</name>
-			<email>a.dessi@agiletec.it</email>
-		</developer>
 	</developers>
 	<url>http://www.entando.com/</url>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -53,14 +49,24 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>			
 		</plugins>
 	</build>
 	<dependencies>
+		
 		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1</version>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpcalendar</artifactId>
+			<version>4.1.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+			<type>war</type>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.entando.entando.bundles.app-view</groupId>
+			<artifactId>entando-app-view-calendar-default</artifactId>
+			<version>4.1.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+			<type>war</type>
+		</dependency>
+		
 	</dependencies>
 </project>

@@ -100,5 +100,13 @@
 			<version>4.1.2-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpmyportalplus</artifactId>
+			<version>4.1.2-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+		
 	</dependencies>
 </project>

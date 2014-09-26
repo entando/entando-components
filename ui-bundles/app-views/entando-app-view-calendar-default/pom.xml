@@ -2,28 +2,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>entando-plugins-parent</artifactId>
-		<groupId>org.entando.entando.plugins</groupId>
+		<artifactId>entando-bundles-parent</artifactId>
+		<groupId>org.entando.entando.bundles</groupId>
 		<version>4.1.2-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
-	<artifactId>entando-plugin-jpmyportalplus</artifactId>
-	<groupId>org.entando.entando.plugins</groupId>
+	<artifactId>entando-app-view-calendar-default</artifactId>
+	<groupId>org.entando.entando.bundles.app-view</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: My Portal</name>
-	<description>My Portal</description>
+	<name>Entando Bundle: APP calendar - default view</name>
+	<description>The default view for the APP calendar</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
 			<name>Eugenio Santoboni</name>
 			<email>e.santoboni@entando.com</email>
 		</developer>
-		<developer>
-			<id>a.dessi</id>
-			<name>Andrea Dessì</name>
-			<email>a.dessi@agiletec.it</email>
-		</developer>
 	</developers>
 	<url>http://www.entando.com/</url>
+	<properties>
+		<project.parent.build.directory>../../target</project.parent.build.directory>
+		<project.parent.basedir>../..</project.parent.basedir>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -58,9 +58,10 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1</version>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpcalendar</artifactId>
+			<version>4.1.2-SNAPSHOT</version>
+			<type>war</type>
 		</dependency>
 	</dependencies>
 </project>
