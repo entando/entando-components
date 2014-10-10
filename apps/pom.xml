@@ -41,6 +41,7 @@
 	<modules>
 		<module>entando-app-webdynamicform</module>
 		<module>entando-app-calendar</module>
+		<module>entando-app-rss</module>
 		<module>entando-app-facetnav</module>
 	</modules>
 	<properties>

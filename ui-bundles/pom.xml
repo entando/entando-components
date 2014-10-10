@@ -66,6 +66,7 @@
 		<module>page-models/entando-page-myportalplus-basic</module>
 		<module>app-views/entando-app-view-webdynamicform-default</module>
 		<module>app-views/entando-app-view-calendar-default</module>
+		<module>app-views/entando-app-view-rss-default</module>
 		<module>app-views/entando-app-view-facetnav-default</module>
 	</modules>
 	<properties>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-app-view-rss-default</code>
+	<description>APP view: RSS default</description>
+	<dependencies>
+		<code>entando-portal-ui</code>
+		<code>jprss</code>
+	</dependencies>
+	<installation>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/bundles/entando-app-view-rss-default/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/bundles/entando-app-view-rss-default/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+</component>
