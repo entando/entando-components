@@ -37,6 +37,7 @@ import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jpstats.aps.system.services.stats.StatsManager;
 import com.agiletec.plugins.jpstats.aps.system.services.stats.StatsRecord;
 
@@ -110,7 +111,7 @@ public class StatsMonitor implements ControlServiceInterface {
 		statsRecord.setReferer(reqCtx.getRequest().getHeader("Referer"));
 		statsRecord.setSessionId(session.getId());
 		UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-		StringBuffer rolesBuffer = new StringBuffer();
+		StringBuilder rolesBuffer = new StringBuilder();
 		boolean isFirstRole = true;
 		IApsAuthority[] auths = currentUser.getAuthorities();
 		for (int i=0; i<auths.length; i++) {
@@ -124,12 +125,11 @@ public class StatsMonitor implements ControlServiceInterface {
 		statsRecord.setRole(rolesBuffer.toString());
 		NumberFormat formato = NumberFormat.getIntegerInstance(java.util.Locale.ITALIAN);
 		formato.setMinimumIntegerDigits(2);
-		String contentId = this.getContentId(page);
 		statsRecord.setPageCode(page.getCode());
 		statsRecord.setLangcode(lang.getCode());
 		statsRecord.setUseragent(reqCtx.getRequest().getHeader("User-Agent"));
 		statsRecord.setBrowserLang(reqCtx.getRequest().getHeader("accept-language"));
-		statsRecord.setContentId(contentId);
+		statsRecord.setContentId(this.getContentId(page));
 		return statsRecord;
 	}
 
@@ -140,15 +140,14 @@ public class StatsMonitor implements ControlServiceInterface {
 	 * @return String the content id rendered in the main frame of the page, or null
 	 */
 	private String getContentId(Page page) {
-		String content = null;
+		String contentId = null;
 		int mainFrame = page.getModel().getMainFrame();
-		if(mainFrame >= 0) {
+		if (mainFrame >= 0) {
 			Widget widget = page.getWidgets()[mainFrame];
-			if(null != widget && null != widget.getPublishedContent()) {
-				content = widget.getPublishedContent();
-			}
+			ApsProperties config = (null != widget) ? widget.getConfig() : null;
+			contentId = (null != config) ? config.getProperty("contentId") : null;
 		}
-		return content;
+		return contentId;
 	}
 
 	protected StatsManager getStatsManager() {

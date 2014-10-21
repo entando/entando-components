@@ -69,15 +69,14 @@ public class TestCommentFrontEndAction extends JpContentFeedbackApsAdminBaseTest
 			Widget widget = new Widget();
             IWidgetTypeManager widgetTypeMan =
             	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-            WidgetType WidgetType = widgetTypeMan.getWidgetType("content_feedback_viewer");
-            widget.setType(WidgetType);
+            WidgetType widgetType = widgetTypeMan.getWidgetType("content_feedback_viewer");
+            widget.setType(widgetType);
             ApsProperties prop = new ApsProperties();
             prop.put("contentId", contentId);
             prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ACTIVE, "true");
             prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_MODERATED, "false");
             prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ANONYMOUS, "false");
             widget.setConfig(prop);
-            widget.setPublishedContent(contentId);
 
             List<String> listaIds = this._commentManager.searchCommentIds(null);
 			assertEquals(0, listaIds.size());
@@ -136,11 +135,11 @@ public class TestCommentFrontEndAction extends JpContentFeedbackApsAdminBaseTest
 			PublicContentAuthorizationInfo authInfo = new PublicContentAuthorizationInfo(content);
 			cacheManager.putInCache(JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + contentId, authInfo);
 			this.setUserOnSession("admin");
-			Widget showlet = new Widget();
+			Widget widget = new Widget();
             IWidgetTypeManager showletTypeMan =
             	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-            WidgetType WidgetType = showletTypeMan.getWidgetType("content_feedback_viewer");
-            showlet.setType(WidgetType);
+            WidgetType widgetType = showletTypeMan.getWidgetType("content_feedback_viewer");
+            widget.setType(widgetType);
             ApsProperties prop = new ApsProperties();
             prop.put("contentId", contentId);
             prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ACTIVE, "true");
@@ -148,11 +147,10 @@ public class TestCommentFrontEndAction extends JpContentFeedbackApsAdminBaseTest
             prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ANONYMOUS, "false");
             prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_RATE_COMMENT, "true");
             prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_RATE_CONTENT, "true");
-            showlet.setConfig(prop);
-            showlet.setPublishedContent(contentId);
+            widget.setConfig(prop);
 
             RequestContext e = new RequestContext();
-            e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, showlet);
+            e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
             Lang lang = new Lang();
     		lang.setCode("en");
             e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
@@ -226,7 +224,7 @@ public class TestCommentFrontEndAction extends JpContentFeedbackApsAdminBaseTest
 //			ratingConten = action.getContentRating();
 //			assertEquals(1, ratingConten.getVoters());
 //			assertEquals(4, ratingConten.getSumvote());
-
+			
 		} catch (Throwable t) {
 			throw t;
 		} finally{
@@ -245,7 +243,7 @@ public class TestCommentFrontEndAction extends JpContentFeedbackApsAdminBaseTest
 			}
 		}
 	}
-
+	
 	public void testViewContentAndAddCommentByRequest()throws Throwable{
 		String contentId = "ART1";
 		try {
