@@ -30,10 +30,8 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.authorization.IApsAuthority;
-import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthorityManager;
-import com.agiletec.aps.system.services.group.IGroupManager;
-import com.agiletec.aps.system.services.role.IRoleManager;
+import com.agiletec.aps.system.services.authorization.Authorization;
+import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.plugins.jpmail.aps.services.JpmailSystemConstants;
@@ -92,11 +90,9 @@ public class TestUserRegManager extends ApsAdminPluginBaseTestCase {
 			_userRegManager.activateUser(username, "password", token);
 			user = (User) _userManager.getUser(username);
 			assertNotNull(user);
-			assertNotNull(user.getAuthorities());
-			List<IApsAuthority> groups = ((IApsAuthorityManager) this._groupManager).getAuthorizationsByUser(user);
-			List<IApsAuthority> roles = ((IApsAuthorityManager) this._roleManager).getAuthorizationsByUser(user);
-			assertEquals(2, groups.size());
-			assertEquals(2, roles.size());
+			List<Authorization> authorizations = this._authorizationManager.getUserAuthorizations(username);
+			assertNotNull(authorizations);
+			assertEquals(2, authorizations.size());
 			assertFalse(user.isDisabled());
 		} finally {
 			_userManager.removeUser(username);
@@ -116,11 +112,8 @@ public class TestUserRegManager extends ApsAdminPluginBaseTestCase {
 			_userRegManager.reactivateUser(username, "password", token);
 			user = (User) _userManager.getUser(username);
 			assertNotNull(user);
-			assertNotNull(user.getAuthorities());
-			List<IApsAuthority> groups = ((IApsAuthorityManager) this._groupManager).getAuthorizationsByUser(user);
-			List<IApsAuthority> roles = ((IApsAuthorityManager) this._roleManager).getAuthorizationsByUser(user);
-			assertEquals(0, groups.size());
-			assertEquals(0, roles.size());
+			assertNotNull(user.getAuthorizations());
+			assertEquals(0, user.getAuthorizations().size());
 			assertFalse(user.isDisabled());
 		} finally {
 			//		clean
@@ -222,8 +215,7 @@ public class TestUserRegManager extends ApsAdminPluginBaseTestCase {
     		this._userRegManager = (IUserRegManager) this.getService(JpUserRegSystemConstants.USER_REG_MANAGER);
     		this._userProfileManager = (IUserProfileManager) this.getService(SystemConstants.USER_PROFILE_MANAGER);
     		this._userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
-    		this._roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
-    		this._groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
+    		this._authorizationManager = (IAuthorizationManager) this.getService(SystemConstants.AUTHORIZATION_SERVICE);
     		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
     		UserRegDAO userRegDAO = new UserRegDAO();
     		userRegDAO.setDataSource(dataSource);
@@ -249,10 +241,9 @@ public class TestUserRegManager extends ApsAdminPluginBaseTestCase {
 		}
 	}
 	
-	private IGroupManager _groupManager;
-	private IRoleManager _roleManager;
 	private IUserProfileManager _userProfileManager;
 	private IUserManager _userManager;
+	private IAuthorizationManager _authorizationManager;
 	private IUserRegManager _userRegManager;
 	private IUserRegDAO _userRegDAO;
 	private JpUserRegTestHelper _testHelper;

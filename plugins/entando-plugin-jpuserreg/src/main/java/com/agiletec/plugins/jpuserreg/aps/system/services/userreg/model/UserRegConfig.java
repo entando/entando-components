@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.Map.Entry;
 
 /**
@@ -38,27 +37,20 @@ public class UserRegConfig implements IUserRegConfig, Cloneable {
 	public UserRegConfig clone() {
 		UserRegConfig config = new UserRegConfig();
 		config.setTokenValidityMinutes(this.getTokenValidityMinutes());
-//		config.setProfileEMailAttr(this.getProfileEMailAttr());
-		
 		config.setEMailSenderCode(this.getEMailSenderCode());
 		config.setActivationPageCode(this.getActivationPageCode());
 		config.setReactivationPageCode(this.getReactivationPageCode());
-		
-		config.setRoles(new TreeSet<String>(this.getRoles()));
-		config.setGroups(new TreeSet<String>(this.getGroups()));
-		
+		config.setDefaultCsvAuthorizations(this.getDefaultCsvAuthorizations());
 		Iterator<Entry<String, Template>> activationTemplates = this.getActivationTemplates().entrySet().iterator();
 		while (activationTemplates.hasNext()) {
 			Entry<String, Template> current = activationTemplates.next();
 			config.addActivationTemplate(current.getKey(), current.getValue().clone());
 		}
-		
 		Iterator<Entry<String, Template>> reactivationTemplates = this.getReactivationTemplates().entrySet().iterator();
 		while (reactivationTemplates.hasNext()) {
 			Entry<String, Template> current = reactivationTemplates.next();
 			config.addReactivationTemplate(current.getKey(), current.getValue().clone());
 		}
-		
 		return config;
 	}
 	
@@ -99,39 +91,21 @@ public class UserRegConfig implements IUserRegConfig, Cloneable {
 	}
 	
 	@Override
-	public void addRole(String role) {
-		if (null == this._roles ) {
-			this._roles = new HashSet<String>();
+	public void addDefaultCsvAuthorization(String csv) {
+		if (null == csv) return;
+		if (null == this.getDefaultCsvAuthorizations()) {
+			this.setDefaultCsvAuthorizations(new HashSet<String>());
 		}
-		this._roles.add(role);
+		this.getDefaultCsvAuthorizations().add(csv);
 	}
 	
 	@Override
-	public void setRoles(Set<String> roles) {
-		this._roles = roles;
+	public Set<String> getDefaultCsvAuthorizations() {
+		return _defaultCsvAuthorizations;
 	}
-	
 	@Override
-	public Set<String> getRoles() {
-		return _roles;
-	}
-	
-	@Override
-	public void addGroup(String group) {
-		if (null == this._groups ) {
-			this._groups = new HashSet<String>();
-		}
-		this._groups.add(group);
-	}
-	
-	@Override
-	public void setGroups(Set<String> groups) {
-		this._groups = groups;
-	}
-	
-	@Override
-	public Set<String> getGroups() {
-		return _groups;
+	public void setDefaultCsvAuthorizations(Set<String> defaultCsvAuthorizations) {
+		this._defaultCsvAuthorizations = defaultCsvAuthorizations;
 	}
 	
 	@Override
@@ -164,8 +138,8 @@ public class UserRegConfig implements IUserRegConfig, Cloneable {
 	private String _eMailSenderCode;
 	private String _activationPageCode;
 	private String _reactivationPageCode;
-	private Set<String> _roles = new TreeSet<String>();
-	private Set<String> _groups = new TreeSet<String>();
+	
+	private Set<String> _defaultCsvAuthorizations;
 	
 	private Map<String, Template> _activationTemplates = new HashMap<String, Template>();
 	private Map<String, Template> _reactivationTemplates = new HashMap<String, Template>();

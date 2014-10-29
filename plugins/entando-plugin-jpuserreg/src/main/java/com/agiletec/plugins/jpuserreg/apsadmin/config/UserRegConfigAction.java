@@ -23,9 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthorityManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -41,8 +39,13 @@ import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.model.IUserReg
 import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.model.Template;
 import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.model.UserRegConfig;
 
-public class UserRegConfigAction extends BaseAction implements IUserRegConfigAction {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class UserRegConfigAction extends BaseAction {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(UserRegConfigAction.class);
+	
 	@Override
 	public void validate() {
 		super.validate();
@@ -50,10 +53,9 @@ public class UserRegConfigAction extends BaseAction implements IUserRegConfigAct
 			IUserRegConfig config = this.getConfig();
 			this.checkTemplates(config.getActivationTemplates(), "config.activationTemplates");
 			this.checkTemplates(config.getReactivationTemplates(), "config.reactivationTemplates");
-			this.checkAuthorities(config.getRoles(), (IApsAuthorityManager) this.getRoleManager(), "config.roles");
-			this.checkAuthorities(config.getGroups(), (IApsAuthorityManager) this.getGroupManager(), "config.groups");
+			this.checkAuthorities();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "validate", "Error during validation");
+			_logger.error("Error during validation", t);
 			this.addActionError(this.getText("jpuserreg.errors.genericError"));
 		}
 	}
@@ -71,121 +73,99 @@ public class UserRegConfigAction extends BaseAction implements IUserRegConfigAct
 					this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.subject.notValued", new String[] { this.getText(fieldName), lang.getDescr() }));
 				}
 				String body = template.getBody();
-				if (body==null || body.trim().length()==0) {
+				if (body == null || body.trim().length()==0) {
 					this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.body.notValued", new String[] { this.getText(fieldName), lang.getDescr() }));
 				}
 			}
 		}
 	}
-
-	private void checkAuthorities(Collection<String> authorities, IApsAuthorityManager authorityManager, String fieldName) {
-		if (authorities!=null) {
-			Iterator<String> authIter = authorities.iterator();
-			while (authIter.hasNext()) {
-				String authName = authIter.next();
-				if (authorityManager.getAuthority(authName)==null) {
-					this.addFieldError(fieldName, this.getText("jpuserreg.errors.authority.notFound", new String[] { this.getText(fieldName), authName }));
+	
+	private void checkAuthorities() {
+		Collection<String> csvs = this.getConfig().getDefaultCsvAuthorizations();
+		if (csvs != null) {
+			Iterator<String> authsIter = csvs.iterator();
+			while (authsIter.hasNext()) {
+				String csv = authsIter.next();
+				String[] params = csv.split(",");
+				String groupName = (params.length > 0) ? params[0] : null;
+				String roleName = (params.length > 1) ? params[1] : null;
+				if (null == groupName 
+						|| null == getGroupManager().getGroup(groupName) 
+						|| (roleName != null && null == this.getRoleManager().getRole(roleName))) {
+					this.addFieldError("config.defaultCsvAuthorizations", this.getText("jpuserreg.errors.authority.invalid", new String[] { groupName, roleName }));
 				}
 			}
 		}
 	}
-
-	/*
-	 * Used in validation xml
-	 */
+	
 	public boolean checkPage(String pageCode) {
 		return this.getPageManager().getPage(pageCode)!=null;
 	}
-
-	/*
-	 * Used in validation xml
-	 */
+	
 	public boolean checkSenderCode() {
 		boolean existsSender = false;
 		try {
 			String senderCode = this.getConfig().getEMailSenderCode();
 			existsSender = null!=this.getMailManager().getMailConfig().getSender(senderCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "Error loading mail configuration");
+			_logger.error("Error loading mail configuration", t);
 		}
 		return existsSender;
 	}
-
-	@Override
+	
 	public String edit() {
 		try {
 			IUserRegConfig config = this.getUserRegManager().getUserRegConfig();
 			this.setConfig(config);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("Error in edit", t);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
-
-	@Override
+	
 	public String save() {
 		try {
 			this.getUserRegManager().saveUserRegConfig(this.getConfig());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("Error in save", t);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
-
-	@Override
-	public String addGroup() {
+	
+	public String addAuthorization() {
 		try {
 			String groupName = this.getGroupName();
-			Collection<String> groups = this.getConfig().getGroups();
-			if (null!=groupName && !groups.contains(groupName) && null!=this.getGroupManager().getGroup(groupName)) {
-				groups.add(groupName);
+			Collection<String> csvs = this.getConfig().getDefaultCsvAuthorizations();
+			if (null != groupName && null != this.getGroupManager().getGroup(groupName)) {
+				String csv = groupName + ",";
+				String roleName = this.getRoleName();
+				if (null != roleName && null != this.getRoleManager().getRole(roleName)) {
+					csv += roleName;
+				}
+				csvs.add(csv);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addGroup");
+			_logger.error("Error in addAuthorization", t);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
-
-	@Override
-	public String removeGroup() {
+	
+	public String removeAuthorization() {
 		try {
-			this.getConfig().getGroups().remove(this.getGroupName());
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeGroup");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-
-	@Override
-	public String addRole() {
-		try {
-			String roleName = this.getRoleName();
-			Collection<String> roles = this.getConfig().getRoles();
-			if (null!=roleName && !roles.contains(roleName) && null!=this.getRoleManager().getRole(roleName)) {
-				roles.add(roleName);
+			Collection<String> csvs = this.getConfig().getDefaultCsvAuthorizations();
+			if (null != csvs && null != this.getCsvAuthorization()) {
+				this.getConfig().getDefaultCsvAuthorizations().remove(this.getCsvAuthorization());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addRole");
+			_logger.error("Error in removeAuthorization", t);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
-
-	@Override
-	public String removeRole() {
-		try {
-			this.getConfig().getRoles().remove(this.getRoleName());
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeRoles");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-
+	
 	public List<SelectItem> getMailSenders() {
 		try {
 			Map<String, String> senders = this.getMailManager().getMailConfig().getSenders();
@@ -198,19 +178,25 @@ public class UserRegConfigAction extends BaseAction implements IUserRegConfigAct
 			}
 			return items;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getMailSenders");
-			throw new RuntimeException(t);
+			_logger.error("Error in getMailSenders", t);
+			throw new RuntimeException("Error in getMailSenders", t);
 		}
 	}
-
+	
 	public List<Role> getSystemRoles() {
 		return this.getRoleManager().getRoles();
 	}
-
+	public Role getRole(String roleName) {
+		return this.getRoleManager().getRole(roleName);
+	}
+	
 	public List<Group> getSystemGroups() {
 		return this.getGroupManager().getGroups();
 	}
-
+	public Group getGroup(String groupName) {
+		return this.getGroupManager().getGroup(groupName);
+	}
+	
 	public List<IPage> getPages() {
 		if (this._pages==null) {
 			this._pages = new ArrayList<IPage>();
@@ -241,7 +227,7 @@ public class UserRegConfigAction extends BaseAction implements IUserRegConfigAct
 		try {
 			pages = this.getPageManager().getWidgetUtilizers(widgetCode);
 		} catch (Exception e) {
-			ApsSystemUtils.logThrowable(e, this, "getSystemPages");
+			_logger.error("Error in getSystemPages", e);
 			pages = new ArrayList<IPage>();
 		}
 		return pages;
@@ -285,7 +271,14 @@ public class UserRegConfigAction extends BaseAction implements IUserRegConfigAct
 	public void setRoleName(String roleName) {
 		this._roleName = roleName;
 	}
-
+	
+	public String getCsvAuthorization() {
+		return _csvAuthorization;
+	}
+	public void setCsvAuthorization(String csvAuthorization) {
+		this._csvAuthorization = csvAuthorization;
+	}
+	
 	protected IUserRegManager getUserRegManager() {
 		return _userRegManager;
 	}
@@ -327,6 +320,7 @@ public class UserRegConfigAction extends BaseAction implements IUserRegConfigAct
 	private IUserRegConfig _config = new UserRegConfig();
 	private String _groupName;
 	private String _roleName;
+	private String _csvAuthorization;
 
 	private List<IPage> _pages;
 
