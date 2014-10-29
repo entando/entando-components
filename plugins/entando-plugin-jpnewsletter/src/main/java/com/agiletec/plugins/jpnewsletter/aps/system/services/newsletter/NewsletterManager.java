@@ -33,21 +33,25 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.security.NoSuchAlgorithmException;
+
 import org.apache.commons.lang.StringEscapeUtils;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.authorization.IApsAuthority;
-import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthorityManager;
+import com.agiletec.aps.system.services.authorization.Authorization;
+import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
@@ -67,9 +71,11 @@ import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Ne
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Subscriber;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.parse.NewsletterConfigDOM;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.util.ShaEncoder;
-import java.security.NoSuchAlgorithmException;
+
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Servizio gestore delle newsletter.
@@ -78,11 +84,13 @@ import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 public class NewsletterManager extends AbstractService 
 		implements INewsletterManager, MailSendersUtilizer, INewsletterSchedulerManager {
 	
+	private static final Logger _logger = LoggerFactory.getLogger(NewsletterManager.class);
+	
 	@Override
 	public void init() throws Exception {
 		this.loadConfigs();
 		this.startScheduler();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized");
+		_logger.info(this.getClass().getName() + ": initialized");
 	}
 	
 	@Override
@@ -118,8 +126,8 @@ public class NewsletterManager extends AbstractService
 			NewsletterConfigDOM configDOM = new NewsletterConfigDOM();
 			this.setConfig(configDOM.extractConfig(xml));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadConfigs");
-			throw new ApsSystemException("Errore in fase di inizializzazione", t);
+			_logger.error("Error loading config", t);
+			throw new ApsSystemException("Error loading config", t);
 		}
 	}
 	
@@ -160,14 +168,14 @@ public class NewsletterManager extends AbstractService
 			this.setConfig(config);
 			// restart the scheduler if necessary
 			if (originalStartDate.getTime() != config.getStartScheduler().getTime()) {
-				ApsSystemUtils.getLogger().info("Newsletter: scheduler restart issued");
+				_logger.info("Newsletter: scheduler restart issued");
 				stopScheduler();
 				restartScheduler(config);
-				ApsSystemUtils.getLogger().info("Newsletter: scheduler restart completed");
+				_logger.info("Newsletter: scheduler restart completed");
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateNewsletterConfig");
-			throw new ApsSystemException("Errore in fase di aggiornamento configurazione newsletter", t);
+			_logger.error("Error updating configuration", t);
+			throw new ApsSystemException("Error updating configuration", t);
 		}
 	}
 	
@@ -176,7 +184,7 @@ public class NewsletterManager extends AbstractService
 		try {
 			this.getNewsletterDAO().addContentToQueue(contentId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addContentToQueue");
+			_logger.error("Error adding content on queue", t);
 			// Do not throws exceptions
 		}
 	}
@@ -186,8 +194,8 @@ public class NewsletterManager extends AbstractService
 		try {
 			this.getNewsletterDAO().deleteContentFromQueue(contentId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeContentFromQueue");
-			throw new ApsSystemException("Errore in aggiunta contenuto in coda newsLetter", t);
+			_logger.error("Error removing content from queue", t);
+			throw new ApsSystemException("Error removing content from queue", t);
 		}
 	}
 	
@@ -196,7 +204,7 @@ public class NewsletterManager extends AbstractService
 		try {
 			return this.getNewsletterDAO().loadContentQueue();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentQueue");
+			_logger.error("Error loading content queue", t);
 			throw new ApsSystemException("Errore in caricamento coda contenuti newsLetter", t);
 		}
 	}
@@ -206,7 +214,7 @@ public class NewsletterManager extends AbstractService
 		try {
 			return this.getNewsletterDAO().existsContentReport(contentId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentQueue");
+			_logger.error("Error on 'existsContentReport' method", t);
 			throw new ApsSystemException("Error verifying content report existence", t);
 		}
 	}
@@ -216,7 +224,7 @@ public class NewsletterManager extends AbstractService
 		try {
 			return this.getNewsletterDAO().loadSentContentIds();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentQueue");
+			_logger.error("Error on 'getSentContentIds' method", t);
 			throw new ApsSystemException("Error loading sent contents ids", t);
 		}
 	}
@@ -226,7 +234,7 @@ public class NewsletterManager extends AbstractService
 		try {
 			return this.getNewsletterDAO().loadContentReport(contentId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentQueue");
+			_logger.error("Error on 'getContentReport' method", t);
 			throw new ApsSystemException("Error loading content report", t);
 		}
 	}
@@ -254,7 +262,7 @@ public class NewsletterManager extends AbstractService
 			}
 		}
 		try {
-			ApsSystemUtils.getLogger().info("Newletter: delivery process initiated"); 
+			_logger.info("Newletter: delivery process initiated"); 
 			if (!this.getConfig().isActive()) return;
 			List<String> contentIds = this.getContentQueue();
 			if (contentIds.size() > 0) {
@@ -269,16 +277,15 @@ public class NewsletterManager extends AbstractService
 				if (contents.size() > 0) {
 					this.sendNewsletterToUsers(contents);
 				} else {
-					ApsSystemUtils.getLogger().info("Newletter: had some contents ids selected, corresponding to no actual content: this is quite strange!");
+					_logger.info("Newletter: had some contents ids selected, corresponding to no actual content: this is quite strange!");
 				}
 				this.getNewsletterDAO().cleanContentQueue(contentIds);
 			} else {
-				ApsSystemUtils.getLogger().info("Newletter: no contents found for delivery");
+				_logger.info("Newletter: no contents found for delivery");
 			}
-			ApsSystemUtils.getLogger().info("Newletter: delivery process completed"); 
+			_logger.info("Newletter: delivery process completed"); 
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().info("Newletter: delivery process ended abnormally");
-			ApsSystemUtils.logThrowable(t, this, "sendNewsletterFromThread");
+			_logger.error("Newletter: delivery process ended abnormally", t);
 		} finally {
 			this.setSendingNewsletter(false);
 		}
@@ -293,7 +300,7 @@ public class NewsletterManager extends AbstractService
 			int modelId = html ? contentType.getHtmlModel() : contentType.getSimpleTextModel();
 			mailBody = this.buildMailBody(content, modelId, html);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "buildMailBody");
+			_logger.error("Error on 'buildMailBody' method", t);
 			throw new ApsSystemException("Errore in generazione body contenuto " + content.getId(), t);
 		}
 		return mailBody;
@@ -320,12 +327,12 @@ public class NewsletterManager extends AbstractService
 					}
 				}
 			} else {
-				ApsSystemUtils.getLogger().error("Newsletter: no receivers to send newsletter to!");
+				_logger.warn("Newsletter: no receivers to send newsletter to!");
 			}
 			this.sendNewsletterToSubscribers(contents, newsletterReport);
 			this.addNewsletterReport(newsletterReport);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "sendNewsletterToUsers");
+			_logger.error("Error on 'sendNewsletterToUsers' method", t);
 			throw new ApsSystemException("Error sending Newsletter To Users ", t);
 		}
 	}
@@ -345,7 +352,7 @@ public class NewsletterManager extends AbstractService
 			}
 			this.getNewsletterDAO().addNewsletterReport(newsletterReport);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "buildMailBody", "Error adding newsletter report : id " + newsletterReport.getId());
+			_logger.error("Error adding newsletter report : id {}", newsletterReport.getId(), t);
 		}
 	}
 	
@@ -385,7 +392,7 @@ public class NewsletterManager extends AbstractService
 			if (isConfiguredWithModels) {
 				newsletterReport.addContentReport(contentReport);
 			} else {
-				ApsSystemUtils.getLogger().info(" Newsletter content " + content.getId() + " not added, because has not model in config.");
+				_logger.info(" Newsletter content {} not added, because has not model in config.", content.getId());
 			}
 		}
 		return newsletterReport;
@@ -395,12 +402,11 @@ public class NewsletterManager extends AbstractService
 			Map<String, List<String>> profileAttributes, NewsletterReport newsletterReport) {
 		NewsletterConfig config = this.getConfig();
 		try {
-			UserDetails user = this.getUserManager().getUser(username);
-			IUserProfile profile = (IUserProfile) user.getProfile();
+			IUserProfile profile = this.getProfileManager().getProfile(username);
 			if (profile != null) {
 				String eMail = (String) profile.getValue(config.getMailAttrName());
 				if (eMail != null && eMail.length() > 0) {
-					List<Content> userContents = this.extractContentsForUser(user, eMail, contents, profileAttributes, newsletterReport);
+					List<Content> userContents = this.extractContentsForUser(profile, eMail, contents, profileAttributes, newsletterReport);
 					if (userContents.size() > 0) {
 						String[] emailAddresses = { eMail };
 						String simpleText = this.prepareMailBody(userContents, newsletterReport, false);
@@ -414,7 +420,7 @@ public class NewsletterManager extends AbstractService
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "sendNewsletterToUser");
+			_logger.error("Error on 'sendNewsletterToUser' method", t);
 		}
 	}
 	
@@ -483,7 +489,7 @@ public class NewsletterManager extends AbstractService
 				List<String> usernamesForAllContents = ((IEntityManager) this.getProfileManager()).searchId(filters);
 				usernames.addAll(usernamesForAllContents);
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "extractUsernames");
+				_logger.error("Error on 'extractUsernames' method", t);
 				throw new ApsSystemException("Error searching for usernames on profile's attribute " + allContentsAttribute, t);
 			}
 		}
@@ -497,7 +503,7 @@ public class NewsletterManager extends AbstractService
 					List<String> usernamesForCategory = ((IEntityManager) this.getProfileManager()).searchId(filters);
 					usernames.addAll(usernamesForCategory);
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "extractUsernames");
+					_logger.error("Error on 'extractUsernames' method", t);
 					throw new ApsSystemException("Error searching for usernames on profile's attribute " + boolAttributeName, t);
 				}
 			}
@@ -505,20 +511,19 @@ public class NewsletterManager extends AbstractService
 		return usernames;
 	}
 	
-	private List<Content> extractContentsForUser(UserDetails user, String eMail, List<Content> contents, 
+	private List<Content> extractContentsForUser(IUserProfile profile, String eMail, List<Content> contents, 
 			Map<String, List<String>> profileAttributes, NewsletterReport newsletterReport) throws ApsSystemException {
 		NewsletterConfig config = this.getConfig();
 		List<Content> userContents = new ArrayList<Content>();
-		String username = user.getUsername();
-		IUserProfile profile = (IUserProfile) user.getProfile();
 		if (profile != null) {
+			String username = profile.getUsername();
 			String allContentsAttribute = config.getAllContentsAttributeName();
 			boolean allContents = false;
 			if (null != allContentsAttribute) {
 				Boolean value = (Boolean) profile.getValue(allContentsAttribute);
 				allContents = value != null && value.booleanValue();
 			}
-			List<String> groupNames = this.extractUserGroupNames(user);
+			List<String> groupNames = this.extractUserGroupNames(/*user*/username);
 			boolean isGroupAdmin = groupNames.contains(Group.ADMINS_GROUP_NAME);
 			for (int i=0; i<contents.size(); i++) {
 				Content content = contents.get(i);
@@ -568,11 +573,19 @@ public class NewsletterManager extends AbstractService
 		return mailContentBody;
 	}
 	
-	private List<String> extractUserGroupNames(UserDetails user) throws ApsSystemException {
-		List<IApsAuthority> authorities = this.getGroupManager().getAuthorizationsByUser(user);
-		List<String> groupNames = new ArrayList<String>(authorities.size());
-		for (IApsAuthority authority : authorities) {
-			groupNames.add(authority.getAuthority());
+	private List<String> extractUserGroupNames(String username) throws ApsSystemException {
+		List<Authorization> authorizations = this.getAuthorizationManager().getUserAuthorizations(username);
+		List<String> groupNames = new ArrayList<String>();
+		if (null != authorizations) {
+			for (int i = 0; i < authorizations.size(); i++) {
+				Authorization authorization = authorizations.get(i);
+				if (null != authorization && null != authorization.getGroup()) {
+					String groupName = authorization.getGroup().getName();
+					if (null != groupName && !groupNames.contains(groupName)) {
+						groupNames.add(groupName);
+					}
+				}
+			}
 		}
 		return groupNames;
 	}
@@ -654,8 +667,7 @@ public class NewsletterManager extends AbstractService
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadNewsletterContentsId", 
-					"Errore spedizione lista contenuti newsletter ");
+			_logger.error("Error sending newsletter", t);
 		}
 		return contentsId;
 	}
@@ -691,9 +703,8 @@ public class NewsletterManager extends AbstractService
 		try {
 			subscribers = this.getNewsletterDAO().loadSubscribers();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadSubscribers");
-			throw new ApsSystemException(
-					"Errore caricamento di tutte le sottoscrizioni", t);
+			_logger.error("Error loading subscribers", t);
+			throw new ApsSystemException("Error loading subscribers", t);
 		}
 		return subscribers;
 	}
@@ -704,8 +715,8 @@ public class NewsletterManager extends AbstractService
 		try {
 			subscribers = this.getNewsletterDAO().searchSubscribers(mailAddress, active);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "searchSubscribers");
-			throw new ApsSystemException("Errore in ricerca sottoscrizioni", t);
+			_logger.error("Error searching subscribers", t);
+			throw new ApsSystemException("Error searching subscribers", t);
 		}
 		return subscribers;
 	}
@@ -717,8 +728,8 @@ public class NewsletterManager extends AbstractService
 			Subscriber subscriber = this.getNewsletterDAO().loadSubscriber(mailAddress);
 			return subscriber;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadSubscriber");
-			throw new ApsSystemException("Errore caricamento di un sottoscrizioni " + mailAddress, t);
+			_logger.error("Error loading subscriber {}", mailAddress, t);
+			throw new ApsSystemException("Error loading subscriber " + mailAddress, t);
 		}
 	}
 	
@@ -733,8 +744,8 @@ public class NewsletterManager extends AbstractService
 			this.getNewsletterDAO().addSubscriber(subscriber, token);
 			this.sendSubscriptionMail(mailAddress, token);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addSubscriber");
-			throw new ApsSystemException("Errore in aggiunta sottoscrizione", t);
+			_logger.error("Error adding subscriber {}", mailAddress, t);
+			throw new ApsSystemException("Error adding subscriber", t);
 		}
 	}
 	
@@ -749,8 +760,8 @@ public class NewsletterManager extends AbstractService
 			this.getNewsletterDAO().updateSubscriber(subscriber, token);
 			this.sendSubscriptionMail(mailAddress, token);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "resetSubscriber");
-			throw new ApsSystemException("Errore in reset sottoscrizione", t);
+			_logger.error("Error reseting subscriber {}", mailAddress, t);
+			throw new ApsSystemException("Error reseting subscriber", t);
 		}
 	}
 	
@@ -759,8 +770,8 @@ public class NewsletterManager extends AbstractService
 		try {
 			this.getNewsletterDAO().deleteSubscriber(mailAddress);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteSubscriber");
-			throw new ApsSystemException("Errore cancellazione sottoscrizione", t);
+			_logger.error("Error deleting subscriber {}", mailAddress, t);
+			throw new ApsSystemException("Error deleting subscriber", t);
 		}
 	}
 	
@@ -770,8 +781,8 @@ public class NewsletterManager extends AbstractService
 			this.cleanOldSubscribers();
 			this.getNewsletterDAO().activateSubscriber(mailAddress);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "activateSubscriber");
-			throw new ApsSystemException("Errore attivazione sottoscrizione", t);
+			_logger.error("Error activating subscriber {}", mailAddress, t);
+			throw new ApsSystemException("Error activating subscriber", t);
 		}
 	}
 	
@@ -781,7 +792,7 @@ public class NewsletterManager extends AbstractService
 			String mailAddress = this.getNewsletterDAO().getAddressFromToken(token);
 			return mailAddress;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAddressFromToken");
+			_logger.error("Error loading address from token", t);
 			throw new ApsSystemException("Error loading address from token", t);
 		}
 	}
@@ -803,15 +814,12 @@ public class NewsletterManager extends AbstractService
 			EntitySearchFilter[] filters = {filterByEmail};
 			usernames = ((IEntityManager) this.getProfileManager()).searchId(filters);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "isAlreadyAnUser");
+			_logger.error("Error on 'isAlreadyAnUser' method", t);
 			throw new ApsSystemException("Errore ricerca indirizzo e-mail tra gli utenti registrati", t);
 		}
 		return (null != usernames && usernames.size() > 0);
 	}
 	
-	/**
-	 * Generated random token 
-	 */
 	protected String createToken(String word) throws NoSuchAlgorithmException {
 		Random random = new Random();
 		StringBuilder salt = new StringBuilder();
@@ -832,29 +840,26 @@ public class NewsletterManager extends AbstractService
 			thread.setName(JpnewsletterSystemConstants.EMAIL_SENDER_NAME_THREAD_PREFIX + System.currentTimeMillis());
 			thread.start();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "sendMail");
-			throw new ApsSystemException("errore in invio email", t);
+			_logger.error("Sending email", t);
+			throw new ApsSystemException("Sending email", t);
 		}
 	}
 	
-	/**
-	 * Create link for email confirmation
-	 * */
 	protected String createLink(String mailAddress, String token) {
 		NewsletterConfig config = this.getConfig();
-		String langcode = this.getLangManager().getDefaultLang().getCode();
 		String pageCode = config.getSubscriptionPageCode();
-		String applBaseUrl = this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL);
-		StringBuffer link = new StringBuffer(applBaseUrl);
-		link.append(langcode);
-		link.append("/");
-		link.append(pageCode);
-		link.append(".wp");
-		link.append("?mailAddress=");
-		link.append(mailAddress);
-		link.append("&token=");
-		link.append(token);
-		return link.toString();
+		IPage page = this.getPageManager().getPage(pageCode);
+		Lang lang = this.getLangManager().getDefaultLang();
+		if (null == page || null == lang) {
+			if (null == page) {
+				_logger.warn("null subscriprion page {}", pageCode);
+			}
+			return "";
+		}
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", token);
+		params.put("mailAddress", mailAddress);
+		return this.getUrlManager().createUrl(page, lang, params, false);
 	}
 	
 	protected String parseText(String defaultText, Map<String, String> params) {
@@ -874,7 +879,6 @@ public class NewsletterManager extends AbstractService
 	protected void sendSubscriptionFormThread(String mailAddress, String token) throws ApsSystemException {
 		try {
 			NewsletterConfig config = this.getConfig();
-			
 			String senderCode = config.getSenderCode();
 			String subject = config.getSubscriptionSubject();
 			if (subject!=null) {
@@ -890,10 +894,10 @@ public class NewsletterManager extends AbstractService
 					this.getMailManager().sendMail(textBody, subject, recipientsTo, null, null, senderCode, IMailManager.CONTENTTYPE_TEXT_PLAIN);
 				}
 			} else {
-				ApsSystemUtils.getLogger().warn("Incomplete configuration for newsletter subscribers! CHECK " + JpnewsletterSystemConstants.NEWSLETTER_CONFIG_ITEM + " item!!");
+				_logger.warn("Incomplete configuration for newsletter subscribers! CHECK {} item!!", JpnewsletterSystemConstants.NEWSLETTER_CONFIG_ITEM);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "sendMail");
+			_logger.error("Error on 'sendSubscriptionFormThread' method", t);
 			throw new ApsSystemException("Error sending email for subscription confirmation request to address " + mailAddress, t);
 		}
 	}
@@ -948,27 +952,25 @@ public class NewsletterManager extends AbstractService
 			body.append(unlink);
 			return body.toString();
 		} else {
-			ApsSystemUtils.getLogger().warn("Incomplete configuration for newsletter subscribers! CHECK " + JpnewsletterSystemConstants.NEWSLETTER_CONFIG_ITEM + " item!!");
+			_logger.warn("Incomplete configuration for newsletter subscribers! CHECK {} item!!", JpnewsletterSystemConstants.NEWSLETTER_CONFIG_ITEM);
 			return this.prepareMailBody(userContents, newsletterReport, isHtml);
 		}
 	}
 	
-	/**
-	 * Create link for newsletter unsubscription
-	 * */
 	protected String createUnsubscriptionLink(String mailAddress) {
 		NewsletterConfig config = this.getConfig();
-		String langcode = this.getLangManager().getDefaultLang().getCode();
 		String pageCode = config.getUnsubscriptionPageCode();
-		String applBaseUrl = this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL);
-		StringBuffer link = new StringBuffer(applBaseUrl);
-		link.append(langcode);
-		link.append("/");
-		link.append(pageCode);
-		link.append(".wp");
-		link.append("?mailAddress=");
-		link.append(mailAddress);
-		return link.toString();
+		IPage page = this.getPageManager().getPage(pageCode);
+		Lang lang = this.getLangManager().getDefaultLang();
+		if (null == page || null == lang) {
+			if (null == page) {
+				_logger.warn("null unsubscriprion page {}", pageCode);
+			}
+			return "";
+		}
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("mailAddress", mailAddress);
+		return this.getUrlManager().createUrl(page, lang, params, false);
 	}
 	
 	protected boolean isSendingNewsletter() {
@@ -1011,11 +1013,25 @@ public class NewsletterManager extends AbstractService
 		this._contentManager = contentManager;
 	}
 	
-	public IApsAuthorityManager getGroupManager() {
-		return _groupManager;
+	protected IAuthorizationManager getAuthorizationManager() {
+		return _authorizationManager;
 	}
-	public void setGroupManager(IApsAuthorityManager groupManager) {
-		this._groupManager = groupManager;
+	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
+		this._authorizationManager = authorizationManager;
+	}
+	
+	protected IURLManager getUrlManager() {
+		return _urlManager;
+	}
+	public void setUrlManager(IURLManager urlManager) {
+		this._urlManager = urlManager;
+	}
+	
+	protected IPageManager getPageManager() {
+		return _pageManager;
+	}
+	public void setPageManager(IPageManager pageManager) {
+		this._pageManager = pageManager;
 	}
 	
 	protected IUserProfileManager getProfileManager() {
@@ -1089,7 +1105,9 @@ public class NewsletterManager extends AbstractService
 	private IUserProfileManager _profileManager;
 	private IUserManager _userManager;
 	private IContentManager _contentManager;
-	private IApsAuthorityManager _groupManager;
+	private IAuthorizationManager _authorizationManager;
+	private IURLManager _urlManager;
+	private IPageManager _pageManager;
 	private ILinkResolverManager _linkResolver;
 	private ILangManager _langManager;
 	private IContentRenderer _contentRenderer;

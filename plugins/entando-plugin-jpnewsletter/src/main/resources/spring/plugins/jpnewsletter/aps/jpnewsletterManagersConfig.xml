@@ -11,7 +11,9 @@
 		<property name="profileManager" ref="UserProfileManager" />
 		<property name="userManager" ref="UserManager" />
 		<property name="contentManager" ref="jacmsContentManager" />
-		<property name="groupManager" ref="GroupManager" />
+		<property name="authorizationManager" ref="AuthorizationManager" />
+		<property name="urlManager" ref="URLManager" />
+		<property name="pageManager" ref="PageManager" />
 		<property name="linkResolver" ref="jacmsLinkResolverManager" />
 		<property name="langManager" ref="LangManager" />
 		<property name="contentRenderer" ref="jacmsBaseContentRenderer" />
