@@ -7,5 +7,5 @@ INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('contentType_
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('contentType_EVN', 'editContents');
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('contentType_EVN', 'enterBackend');
 
-INSERT INTO authuserroles (username, rolename) VALUES ('editorCoach', 'contentType_RAH');
-INSERT INTO authuserroles (username, rolename) VALUES ('editorCoach', 'contentType_ART');
+INSERT INTO authusergrouprole (username, groupname, rolename) VALUES ('editorCoach', 'coach', 'contentType_RAH');
+INSERT INTO authusergrouprole (username, groupname, rolename) VALUES ('editorCoach', 'coach', 'contentType_ART');

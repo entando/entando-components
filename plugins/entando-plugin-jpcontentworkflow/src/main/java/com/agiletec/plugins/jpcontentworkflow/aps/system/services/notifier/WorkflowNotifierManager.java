@@ -36,9 +36,9 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
-import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthorityManager;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
@@ -83,7 +83,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		this.release();
 		super.destroy();
 	}
-
+	
 	protected void loadConfigs() throws ApsSystemException {
 		try {
 			ConfigInterface configManager = this.getConfigManager();
@@ -98,7 +98,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			throw new ApsSystemException("Error loading configs", t);
 		}
 	}
-
+	
 	@Before("execution(* com.agiletec.plugins.jacms.aps.system.services.content.IContentManager.saveContent(..)) && args(content,..)")
 	public void listenContentSaving(Object content) {
 		try {
@@ -172,7 +172,6 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		if (notifierConfig.isActive()) {
 			long milliSecondsDelay = notifierConfig.getHoursDelay() * 3600000l; // x minuti secondi millisecondi
 			Date startTime = notifierConfig.getStartScheduler();
-
 			startTime = this.calculateStartTime(startTime, milliSecondsDelay);
 			Task task = new MailSenderTask(this);
 			this._mailSenderScheduler = new Scheduler(task, startTime, milliSecondsDelay);
@@ -316,27 +315,29 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 	}
 	
 	protected void findContentOperators(List<String> editors, List<String> supervisors) throws ApsSystemException {
-		List<Role> rolesWithSupervisor = ((IRoleManager) this.getRoleManager()).getRolesWithPermission(Permission.SUPERVISOR);
+		List<Role> rolesWithSupervisor = this.getRoleManager().getRolesWithPermission(Permission.CONTENT_SUPERVISOR);
 		List<String> roleNamesWithSupervisor = this.getRolesNames(rolesWithSupervisor);
-		List<Role> rolesWithEditors = ((IRoleManager) this.getRoleManager()).getRolesWithPermission("editContents");
+		List<Role> rolesWithEditors = this.getRoleManager().getRolesWithPermission(Permission.CONTENT_EDITOR);
 		List<String> roleNamesWithEditor = this.getRolesNames(rolesWithEditors);
 		IUserProfileManager profileManager = (IUserProfileManager) super.getBeanFactory().getBean(SystemConstants.USER_PROFILE_MANAGER);
 		List<String> usernames = profileManager.searchId(null);
 		for (int i = 0; i < usernames.size(); i++) {
 			String extractedUsername = usernames.get(i);
-			List<IApsAuthority> userRoles = this.getRoleManager().getAuthorizationsByUser(extractedUsername);
-			if (null == userRoles) {
+			List<Authorization> authorizations = this.getAuthorizationManager().getUserAuthorizations(extractedUsername);
+			if (null == authorizations) {
 				continue;
 			}
-			for (int j = 0; j < userRoles.size(); j++) {
-				IApsAuthority role = userRoles.get(j);
-				if (null == role) {
+			for (int j = 0; j < authorizations.size(); j++) {
+				Authorization authorization = authorizations.get(j);
+				Role role = (null != authorization) ? authorization.getRole() : null;
+				String roleName = (null != role) ? role.getName() : null;
+				if (null == roleName) {
 					continue;
 				}
-				if (roleNamesWithSupervisor.contains(role.getAuthority())) {
+				if (roleNamesWithSupervisor.contains(roleName)) {
 					supervisors.add(extractedUsername);
 				}
-				if (roleNamesWithEditor.contains(role.getAuthority())) {
+				if (roleNamesWithEditor.contains(roleName)) {
 					editors.add(extractedUsername);
 				}
 			}
@@ -394,22 +395,14 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 				usersForContentType = users;
 			} else {
 				usersForContentType = new ArrayList<String>();
-				IApsAuthorityManager roleManager = this.getRoleManager();
-				IApsAuthority authority = roleManager.getAuthority(roleName);
-				List<String> usernamesWithAuth = this.getRoleManager().getUsernamesByAuthority(authority);
+				List<String> usersWithAuth = this.getAuthorizationManager().getUsersByRole(roleName);
 				for (int i = 0; i < users.size(); i++) {
 					String username = users.get(i);
-					if (null == username) {
+					if (null == username || null == usersWithAuth) {
 						continue;
 					}
-					for (int j = 0; j < usernamesWithAuth.size(); j++) {
-						String userWithAuth = usernamesWithAuth.get(j);
-						if (null == userWithAuth) {
-							continue;
-						}
-						if (username.equals(userWithAuth)) {
-							usersForContentType.add(username);
-						}
+					if (usersWithAuth.contains(username)) {
+						usersForContentType.add(username);
 					}
 				}
 			}
@@ -426,22 +419,14 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			usersForContentType = usernames;
 		} else {
 			usersForContentType = new ArrayList<String>();
-			IApsAuthorityManager groupManager = (IApsAuthorityManager) super.getBeanFactory().getBean(SystemConstants.GROUP_MANAGER);
-			IApsAuthority authority = groupManager.getAuthority(groupName);
-			List<String> usersWithAuth = groupManager.getUsernamesByAuthority(authority);
+			List<String> usersWithAuth = this.getAuthorizationManager().getUsersByGroup(groupName);
 			for (int i = 0; i < usernames.size(); i++) {
 				String username = usernames.get(i);
-				if (null == username) {
+				if (null == username || null == usersWithAuth) {
 					continue;
 				}
-				for (int j = 0; j < usersWithAuth.size(); j++) {
-					String userWithAuth = usersWithAuth.get(j);
-					if (null == userWithAuth) {
-						continue;
-					}
-					if (username.equals(userWithAuth)) {
-						usersForContentType.add(username);
-					}
+				if (usersWithAuth.contains(username)) {
+					usersForContentType.add(username);
 				}
 			}
 		}
@@ -492,10 +477,10 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		this._authorizationManager = authorizationManager;
 	}
 	
-	protected IApsAuthorityManager getRoleManager() {
+	protected IRoleManager getRoleManager() {
 		return _roleManager;
 	}
-	public void setRoleManager(IApsAuthorityManager roleManager) {
+	public void setRoleManager(IRoleManager roleManager) {
 		this._roleManager = roleManager;
 	}
 	
@@ -534,7 +519,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 	private IUserManager _userManager;
 	private IAuthenticationProviderManager _authProvider;
 	private IAuthorizationManager _authorizationManager;
-	private IApsAuthorityManager _roleManager;
+	private IRoleManager _roleManager;
 	private IContentWorkflowManager _workflowManager;
 	private IMailManager _mailManager;
 	private IContentManager _contentManager;
