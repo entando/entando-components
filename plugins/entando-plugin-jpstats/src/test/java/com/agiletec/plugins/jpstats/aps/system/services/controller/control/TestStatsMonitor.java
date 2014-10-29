@@ -31,7 +31,6 @@ import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
-import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jpstats.aps.ApsPluginBaseTestCase;
@@ -41,7 +40,6 @@ import com.agiletec.plugins.jpstats.util.TestStatsUtils;
 
 /**
  * Test the Stats Monitor.
- * @version 1.0
  * @author IFTS
  */
 public class TestStatsMonitor extends ApsPluginBaseTestCase {
@@ -52,19 +50,15 @@ public class TestStatsMonitor extends ApsPluginBaseTestCase {
 
 	public void testService() throws ApsSystemException {
 		RequestContext reqCtx = this.getRequestContext();
-
-		Role role = new Role();
-		role.setName("testRole");
-
+		
 		User user =  new User();
-		user.addAutority(role);
-
+		
 		reqCtx.getRequest().getSession().setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, user);
 
 		Page page = new Page();
 		page.setCode("login");
 		page.setGroup("free");
-		page.setModel(new PageModel() );
+		page.setModel(new PageModel());
 
 		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, page);
 
@@ -86,11 +80,8 @@ public class TestStatsMonitor extends ApsPluginBaseTestCase {
 
 	public void testServiceFailure() throws ApsSystemException {
 		RequestContext reqCtx = this.getRequestContext();
-
-		Role role = new Role();
-		role.setName("testRole");
+		
 		User user =  new User();
-		user.addAutority(role);
 		reqCtx.getRequest().getSession().setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, user);
 
 		Page page = new Page();
@@ -127,7 +118,8 @@ public class TestStatsMonitor extends ApsPluginBaseTestCase {
 		super.init();
 		this._statMonitor = (StatsMonitor) this.getApplicationContext().getBean(JpStatsSystemConstants.STATS_MONITOR_CONTROL_SERVICE);
 	}
-
+	
+	@Override
 	protected void tearDown() throws Exception {
 		try {
 			DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
@@ -138,8 +130,8 @@ public class TestStatsMonitor extends ApsPluginBaseTestCase {
 			throw new Exception(t);
 		}
 	}
-
+	
 	private StatsMonitor _statMonitor = null;
-	private String ip = "255.255.255.255";
-
+	private static final String ip = "255.255.255.255";
+	
 }

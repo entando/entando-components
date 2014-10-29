@@ -17,19 +17,10 @@
 */
 package com.agiletec.plugins.jpstats.aps.system.services.controller.control;
 
-import java.text.NumberFormat;
-import java.util.Calendar;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.authorization.IApsAuthority;
+import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -41,6 +32,15 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jpstats.aps.system.services.stats.StatsManager;
 import com.agiletec.plugins.jpstats.aps.system.services.stats.StatsRecord;
 
+import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Statistic Service. The following informations are collected:<br>
@@ -113,13 +113,16 @@ public class StatsMonitor implements ControlServiceInterface {
 		UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 		StringBuilder rolesBuffer = new StringBuilder();
 		boolean isFirstRole = true;
-		IApsAuthority[] auths = currentUser.getAuthorities();
-		for (int i=0; i<auths.length; i++) {
-			if (auths[i] instanceof Role) {
-				Role role = (Role) auths[i];
-				if (!isFirstRole) rolesBuffer.append(" - ");
-				rolesBuffer.append(role.getName());
-				isFirstRole = false;
+		List<Authorization> authorizations = currentUser.getAuthorizations();
+		if (null != authorizations && !authorizations.isEmpty()) {
+			for (int i = 0; i < authorizations.size(); i++) {
+				Authorization authorization = authorizations.get(i);
+				if (null != authorization && null != authorization.getRole()) {
+					Role role = authorization.getRole();
+					if (!isFirstRole) rolesBuffer.append(" - ");
+					rolesBuffer.append(role.getName());
+					isFirstRole = false;
+				}
 			}
 		}
 		statsRecord.setRole(rolesBuffer.toString());
