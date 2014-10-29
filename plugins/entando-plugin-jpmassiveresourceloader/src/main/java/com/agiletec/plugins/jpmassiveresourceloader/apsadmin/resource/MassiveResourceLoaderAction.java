@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.system.ApsFileUploadInterceptor;
@@ -43,11 +42,10 @@ import com.agiletec.plugins.jacms.apsadmin.resource.AbstractResourceAction;
 /**
  * @author E.Santoboni
  */
-public class MassiveResourceLoaderAction extends AbstractResourceAction implements IMassiveResourceLoaderAction {
+public class MassiveResourceLoaderAction extends AbstractResourceAction {
 
 	private static final Logger _logger = LoggerFactory.getLogger(MassiveResourceLoaderAction.class);
 	
-	@Override
 	public String save() {
 		try {
 			MassiveResourceDataBean bean = this.prepareDataBean();
@@ -86,12 +84,10 @@ public class MassiveResourceLoaderAction extends AbstractResourceAction implemen
 		}
 	}
 	
-	@Override
 	public String joinCategory() {
 		return this.joinRemoveCategory(true, this.getCategoryCode());
 	}
 	
-	@Override
 	public String removeCategory() {
 		return this.joinRemoveCategory(false, this.getCategoryCode());
 	}
@@ -160,10 +156,6 @@ public class MassiveResourceLoaderAction extends AbstractResourceAction implemen
 			_logger.error("Error while check duplicate file - master file name '{}'",fileName, t);
 		}
     	return isDuplicated;
-	}
-	
-	public List<Group> getAllowedGroups() {
-		return this.getResourceActionHelper().getAllowedGroups(this.getCurrentUser());
 	}
 	
 	public Category getCategory(String categoryCode) {
