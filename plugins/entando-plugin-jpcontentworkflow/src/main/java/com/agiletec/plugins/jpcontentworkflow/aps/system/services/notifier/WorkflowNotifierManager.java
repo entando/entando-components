@@ -395,7 +395,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 				usersForContentType = users;
 			} else {
 				usersForContentType = new ArrayList<String>();
-				List<String> usersWithAuth = this.getAuthorizationManager().getUsersByRole(roleName);
+				List<String> usersWithAuth = this.getAuthorizationManager().getUsersByRole(roleName, false);
 				for (int i = 0; i < users.size(); i++) {
 					String username = users.get(i);
 					if (null == username || null == usersWithAuth) {
@@ -419,7 +419,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			usersForContentType = usernames;
 		} else {
 			usersForContentType = new ArrayList<String>();
-			List<String> usersWithAuth = this.getAuthorizationManager().getUsersByGroup(groupName);
+			List<String> usersWithAuth = this.getAuthorizationManager().getUsersByGroup(groupName, false);
 			for (int i = 0; i < usernames.size(); i++) {
 				String username = usernames.get(i);
 				if (null == username || null == usersWithAuth) {
@@ -448,7 +448,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			infos.add(contentInfo);
 		}
 	}
-
+	
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
