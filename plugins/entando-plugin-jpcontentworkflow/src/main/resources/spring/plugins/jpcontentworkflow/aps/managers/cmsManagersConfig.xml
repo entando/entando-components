@@ -19,6 +19,7 @@
 		<property name="contentManager" ref="jacmsContentManager" />
 		<property name="authorizationManager" ref="AuthorizationManager" />
 		<property name="contentWorkflowManager" ref="jpcontentworkflowWorkflowManager"/>
+		<property name="langManager" ref="LangManager"/>
 	</bean>
 	
 </beans>
