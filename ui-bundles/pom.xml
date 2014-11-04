@@ -69,6 +69,7 @@
 		<module>app-views/entando-app-view-rss-default</module>
 		<module>app-views/entando-app-view-facetnav-default</module>
 		<module>app-views/entando-app-view-userreg-default</module>
+		<module>app-views/entando-app-view-addressbook-default</module>
 	</modules>
 	<properties>
 	</properties>

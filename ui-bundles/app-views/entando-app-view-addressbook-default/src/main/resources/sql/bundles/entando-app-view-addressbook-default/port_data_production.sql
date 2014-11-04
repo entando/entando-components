@@ -1,28 +1,3 @@
-INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jpaddressbook_vcardConfig', 'Configurazione campi vcard', '<?xml version="1.0" encoding="UTF-8"?>
-<vcardfields>
-	<vcardfield code="NAME" description="Nome" enabled="true" profileAttribute="" />
-	<vcardfield code="SURNAME" description="Cognome" enabled="true" profileAttribute="" />
-	<vcardfield code="TITLE" description="Titolo" enabled="true" profileAttribute="PaeseResidenza" />
-	<vcardfield code="ROLE" description="Ruolo Lavorativo" enabled="false" profileAttribute="" />
-	<vcardfield code="ORG" description="Azienda" enabled="false" profileAttribute="" />
-	<vcardfield code="BDAY" description="Data di Nascita" enabled="false" profileAttribute="" />
-	<vcardfield code="ADDR_HOME_COUNTRY" description="Paese Residenza" enabled="false" profileAttribute="" />
-	<vcardfield code="ADDR_HOME_REGION" description="Regione Residenza" enabled="false" profileAttribute="" />
-	<vcardfield code="ADDR_HOME_STREET" description="Indirizzo Residenza" enabled="false" profileAttribute="" />
-	<vcardfield code="ADDR_HOME_CITY" description="Citta'' Residenza" enabled="false" profileAttribute="" />
-	<vcardfield code="ADDR_HOME_CAP" description="Cap Citta'' Residenza" enabled="false" profileAttribute="" />
-	<vcardfield code="TEL_CELL" description="Telefono Cellulare" enabled="false" profileAttribute="" />
-	<vcardfield code="TEL_HOME" description="Telefono Casa" enabled="false" profileAttribute="" />
-	<vcardfield code="TEL_WORK" description="Telefono Lavoro" enabled="false" profileAttribute="" />
-	<vcardfield code="TEL_FAX" description="Telefono Fax" enabled="false" profileAttribute="" />
-	<vcardfield code="EMAIL_FIRST" description="Prima Email" enabled="false" profileAttribute="" />
-	<vcardfield code="EMAIL_SECOND" description="Seconda Email" enabled="false" profileAttribute="" />
-	<vcardfield code="EMAIL_THIRD" description="Terza Email" enabled="false" profileAttribute="" />
-	<vcardfield code="NOTE" description="Note" enabled="false" profileAttribute="" />
-	<vcardfield code="URL" description="Site" enabled="false" profileAttribute="" />
-</vcardfields>
-');
-
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('jpaddressbook_search_form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Address Book - Search Form</property>
@@ -31,6 +6,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="actionPath">/ExtStr2/do/jpaddressbook/Front/AddressBook/searchIntro.action</property>
 </properties>', 1);
+
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('jpaddressbook_search_result', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Address Book - Search Risult</property>
@@ -39,6 +15,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="actionPath">/ExtStr2/do/jpaddressbook/Front/AddressBook/resultIntro.action</property>
 </properties>', 1);
+
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('jpaddressbook_search_form_advanced', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Address Book - Advanced Search Form</property>
@@ -49,7 +26,6 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 </properties>', 1);
 
 
---delete from localstrings where keycode like 'jpaddressbook_%';
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jpaddressbook_TRASH_CONTACT','it','Rimozione Contatto');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jpaddressbook_TRASH_CONTACT','en','Delete Contact');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jpaddressbook_PREV','it','Precedenti');
