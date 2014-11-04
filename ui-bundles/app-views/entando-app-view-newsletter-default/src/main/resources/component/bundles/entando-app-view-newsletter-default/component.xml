@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-app-view-newsletter-default</code>
+	<description>APP view: Newsletter default</description>
+	<dependencies>
+		<code>entando-portal-ui</code>
+		<code>jpnewsletter</code>
+	</dependencies>
+	<installation>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/bundles/entando-app-view-newsletter-default/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/bundles/entando-app-view-newsletter-default/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+</component>
