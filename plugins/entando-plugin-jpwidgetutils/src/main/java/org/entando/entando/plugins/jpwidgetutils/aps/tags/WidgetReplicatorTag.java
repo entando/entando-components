@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.plugins.jpshowletreplicator.aps.tags;
+package org.entando.entando.plugins.jpwidgetutils.aps.tags;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
