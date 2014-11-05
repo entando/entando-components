@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpwidgetutils_do/Page/SpecialWidget" namespace="/do/Page/SpecialWidget" extends="entando-default">
+    	
+    	<!-- ##### WIDGET REPLICATOR **** ENTRY POINT ##### -->
+    	<action name="jpwidgetutilsReplicatorConfig" class="jpwidgetutilsReplicatorWidgetAction">
+        	<result type="chain">
+        		<param name="namespace">/do/jpwidgetutils/Page/SpecialWidget/Replicator</param>
+        		<param name="actionName">entryPoint</param>
+        	</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+    </package>
+	
+	<package name="jpwidgetutils_do/jpwidgetutils/Page/SpecialWidget/Replicator" namespace="/do/jpwidgetutils/Page/SpecialWidget/Replicator" extends="entando-default">
+		
+		<global-results>
+    		<result name="pageTree" type="chain">
+    			<param name="namespace">/do/Page</param>
+    			<param name="actionName">viewTree</param>
+    		</result>
+    		<result name="configure" type="chain">
+            	<param name="namespace">/do/Page</param>
+    			<param name="actionName">configure</param>
+            </result>
+		</global-results>
+		
+        <action name="entryPoint" class="jpwidgetutilsReplicatorWidgetAction" method="init">
+            <result type="tiles">admin.jpwidgetutils.Page.Widget.Replicator.config</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+		
+        <action name="reset" class="jpwidgetutilsReplicatorWidgetAction" method="resetConfig">
+            <result type="tiles">admin.jpwidgetutils.Page.Widget.Replicator.config</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+        <action name="backToChoosePage*" class="jpwidgetutilsReplicatorWidgetAction" method="buildTree">
+            <result type="tiles">admin.jpwidgetutils.Page.Widget.Replicator.config</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+        <action name="browseFrames*" class="jpwidgetutilsReplicatorWidgetAction" method="browseFrames">
+            <result name="input" type="tiles">admin.jpwidgetutils.Page.Widget.Replicator.config</result>
+            <result type="tiles">admin.jpwidgetutils.Page.Widget.Replicator.showPageFrames</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+        <action name="selectFrame*" class="jpwidgetutilsReplicatorWidgetAction" method="selectFrame">
+            <result name="input" type="tiles">admin.jpwidgetutils.Page.Widget.Replicator.showPageFrames</result>
+            <result type="tiles">admin.jpwidgetutils.Page.Widget.Replicator.config</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+		<action name="saveConfig" class="jpwidgetutilsReplicatorWidgetAction" method="save">
+    		<result type="tiles" name="input">admin.jpwidgetutils.Page.Widget.Replicator.config</result>
+        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+	</package>
+	
+</struts>
