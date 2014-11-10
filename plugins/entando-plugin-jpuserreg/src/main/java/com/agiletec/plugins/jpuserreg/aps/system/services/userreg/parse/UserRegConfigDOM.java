@@ -18,12 +18,12 @@
 package com.agiletec.plugins.jpuserreg.aps.system.services.userreg.parse;
 
 import java.io.StringReader;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jdom.CDATA;
 import org.jdom.Document;
@@ -71,16 +71,14 @@ import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.model.UserRegC
 	
 	<!-- Authorities to load on user request profile -->
 	<userAuthDefaults>
-		<role name="editorCoach" />
-		<role name="supervisorCustomers" />
-		<group name="coach" />
-		<group name="customers" />
+		<authotization group="coach" role="editor" />
+		<authotization group="customers" role="supervisor" />
 	</userAuthDefaults>
 	
 	<!-- Activation page name -->
 	<activation pageCode="attivazione">
 		<template lang="it">
-			<subject>[jAPS] : Attivazione utente</subject>
+			<subject>[Entando] : Attivazione utente</subject>
 			<body>
 Gentile {name} {surname}, 
 grazie per esserti registrato.
@@ -94,7 +92,7 @@ Cordiali Saluti.
 	<!-- Activation page name -->
 	<reactivation pageCode="riattivazione">
 		<template lang="it">
-			<subject>[jAPS] : Riattivazione utente</subject>
+			<subject>[Entando] : Riattivazione utente</subject>
 			<body>
 Gentile {name} {surname}, 
 il tuo userName è {userName}.
@@ -115,8 +113,7 @@ Cordiali Saluti.
 		</question>
 	</reactivationQuestions>
 </regProfileConfig>
-
-
+ * 
  * @author S.Puddu
  * @author E.Mezzano
  * @author G.Cocco
@@ -155,20 +152,17 @@ public class UserRegConfigDOM {
 	}
 	
 	protected void extractUserAuthDefaults(Element root, IUserRegConfig config) {
-		Element userAuths = root.getChild(USER_AUTH);
+		Element userAuths = root.getChild(USER_DEFAULT_AUTHS);
 		if (null != userAuths) {
-			List<Element> auths = userAuths.getChildren();
+			List<Element> auths = userAuths.getChildren(USER_DEFAULT_AUTH_ELEM);
 			Iterator<Element> it = auths.iterator();
 			while (it.hasNext()) {
 				Element current = (Element) it.next();
-				String name = current.getName();
-				if (name.equals(USER_AUTH_ROLE)) {
-					String role = current.getAttributeValue(USER_AUTH_NAME_ATTR);
-					config.addRole(role);
-				} else if (name.equals(USER_AUTH_GROUP)) {
-					String group = current.getAttributeValue(USER_AUTH_NAME_ATTR);
-					config.addGroup(group);
-				}
+				String groupName = current.getAttributeValue(USER_AUTH_GROUP_ATTR);
+				String roleName = current.getAttributeValue(USER_AUTH_ROLE_ATTR);
+				if (null == roleName) roleName = "";
+				String csv = groupName + "," + roleName;
+				config.addDefaultCsvAuthorization(csv);
 			}
 		}
 	}
@@ -226,11 +220,6 @@ public class UserRegConfigDOM {
 		return doc;
 	}
 	
-	/**
-	 * Extract the smtp configuration from the xml element and save it into the MailConfig object.
-	 * @param root The xml root element containing the smtp configuration.
-	 * @param config The configuration.
-	 */
 	protected Element createConfigElement(IUserRegConfig config) {
 		Element configElem = new Element(ROOT);
 		Element tokenElem = this.createTokenValidityElement(config);
@@ -259,18 +248,24 @@ public class UserRegConfigDOM {
 	}
 	
 	private Element createUserAuthsElement(IUserRegConfig config) {
-		Element userAuthsElement = new Element(USER_AUTH);
-		this.addAuthorities(userAuthsElement, USER_AUTH_ROLE, config.getRoles());
-		this.addAuthorities(userAuthsElement, USER_AUTH_GROUP, config.getGroups());
-		return userAuthsElement;
-	}
-	private void addAuthorities(Element userAuthsElement, String authTypeName, Collection<String> authorities) {
-		Iterator<String> authIter = authorities.iterator();
-		while (authIter.hasNext()) {
-			Element authElem = new Element(authTypeName);
-			authElem.setAttribute(USER_AUTH_NAME_ATTR, authIter.next());
-			userAuthsElement.addContent(authElem);
+		Element userAuthsElement = new Element(USER_DEFAULT_AUTHS);
+		Set<String> csvs = config.getDefaultCsvAuthorizations();
+		if (null != csvs) {
+			Iterator<String> iter = csvs.iterator();
+			while (iter.hasNext()) {
+				String csv = iter.next();
+				String[] params = csv.split(",");
+				if (params.length > 0) {
+					Element authElem = new Element(USER_DEFAULT_AUTH_ELEM);
+					authElem.setAttribute(USER_AUTH_GROUP_ATTR, params[0]);
+					if (params.length > 1) {
+						authElem.setAttribute(USER_AUTH_ROLE_ATTR, params[1]);
+					}
+					userAuthsElement.addContent(authElem);
+				}
+			}
 		}
+		return userAuthsElement;
 	}
 	
 	private Element createActivationMailElement(IUserRegConfig config) {
@@ -316,10 +311,10 @@ public class UserRegConfigDOM {
 	private final String MAIL_SENDER = "sender";
 	private final String MAIL_SENDER_CODE_ATTR = "code";
 	
-	private final String USER_AUTH = "userAuthDefaults";
-	private final String USER_AUTH_ROLE = "role";
-	private final String USER_AUTH_GROUP = "group";
-	private final String USER_AUTH_NAME_ATTR = "name";
+	private final String USER_DEFAULT_AUTHS = "userAuthDefaults";
+	private final String USER_DEFAULT_AUTH_ELEM = "authotization";
+	private final String USER_AUTH_ROLE_ATTR = "role";
+	private final String USER_AUTH_GROUP_ATTR = "group";
 	
 	private final String ACTIVATION = "activation";
 	private final String REACTIVATION = "reactivation";

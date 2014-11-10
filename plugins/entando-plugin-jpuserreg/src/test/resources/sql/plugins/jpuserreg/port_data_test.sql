@@ -9,16 +9,14 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpuserreg_
 
 	<!-- Authorities to load on user request profile -->
 	<userAuthDefaults>
-		<role name="editor" />
-		<role name="supervisor" />
-		<group name="coach" />
-		<group name="customers" />
+		<authotization group="coach" role="editor" />
+		<authotization group="customers" role="supervisor" />
 	</userAuthDefaults>
 	
 	<!-- Activation page name -->
 	<activation pageCode="activation">
 		<template lang="it">
-			<subject><![CDATA[[jAPS]: Attivazione account]]></subject>
+			<subject><![CDATA[[Entando]: Attivazione account]]></subject>
 			<body><![CDATA[
 			Gentile {name} {surname}, 
 			grazie per esserti registrato.
@@ -28,7 +26,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpuserreg_
 			]]></body>
 		</template>
 		<template lang="en">
-			<subject><![CDATA[[jAPS]: Account activation]]></subject>
+			<subject><![CDATA[[Entando]: Account activation]]></subject>
 			<body><![CDATA[
 			Dear {name} {surname}, 
 			thank you to register.
@@ -42,7 +40,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpuserreg_
 	<!-- Reactivation page name -->
 	<reactivation pageCode="riattivazione">
 		<template lang="it">
-			<subject><![CDATA[[jAPS]: Ripristino password]]></subject>
+			<subject><![CDATA[[Entando]: Ripristino password]]></subject>
 			<body><![CDATA[
 			Gentile {name} {surname}, 
 			il tuo userName è {userName}.
@@ -52,7 +50,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpuserreg_
 			]]></body>
 		</template>
 		<template lang="en">
-			<subject><![CDATA[[jAPS]: Password recover]]></subject>
+			<subject><![CDATA[[Entando]: Password recover]]></subject>
 			<body><![CDATA[
 			Dear {name} {surname}, 
 			your username is {userName}.

@@ -13,8 +13,7 @@
 			class="com.agiletec.plugins.jpuserreg.aps.system.services.userreg.UserRegManager"
 			parent="abstractService">
 		<property name="userManager" ref="UserManager" />
-		<property name="roleManager" ref="RoleManager" />
-		<property name="groupManager" ref="GroupManager" />
+		<property name="authorizationManager" ref="AuthorizationManager" />
 		<property name="userProfileManager" ref="UserProfileManager" />
 		<property name="configManager" ref="BaseConfigManager" />
 		<property name="langManager" ref="LangManager" />

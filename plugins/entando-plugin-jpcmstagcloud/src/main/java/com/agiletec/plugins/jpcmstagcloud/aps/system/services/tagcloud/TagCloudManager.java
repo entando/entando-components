@@ -31,12 +31,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.authorization.IApsAuthority;
+import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
@@ -59,6 +58,7 @@ public class TagCloudManager extends AbstractService
 
 	private static final Logger _logger = LoggerFactory.getLogger(TagCloudManager.class);
 	
+	@Override
     public void init() throws Exception {
         this.checkCategoryRoot();
         _logger.debug("{}: ready ", this.getClass().getName());
@@ -91,6 +91,7 @@ public class TagCloudManager extends AbstractService
         }
     }
     
+	@Override
     public void updateFromPublicContentChanged(PublicContentChangedEvent event) {
         try {
             this.refresh();
@@ -99,11 +100,13 @@ public class TagCloudManager extends AbstractService
         }
     }
     
+	@Override
     protected void release() {
         this.setElaborationDate(null);
         this.getGlobalCloudInfos().clear();
     }
     
+	@Override
     public Map<ITreeNode, Integer> getCloudInfos(UserDetails currentUser) throws ApsSystemException {
         Map<ITreeNode, Integer> cloudInfos = null;
         if (null == this.getElaborationDate() || !this.getElaborationDate().equals(DateConverter.getFormattedDate(new Date(), "yyyyMMdd"))) {
@@ -143,6 +146,7 @@ public class TagCloudManager extends AbstractService
         return cloudInfos;
     }
     
+	@Override
     public List<String> loadPublicTaggedContentsId(String categoryCode, UserDetails currentUser) throws ApsSystemException {
         List<String> contentsId = null;
         try {
@@ -156,12 +160,12 @@ public class TagCloudManager extends AbstractService
         }
         return contentsId;
     }
-
+	
     private String createGroupMappingKey(Set<String> groupSet) {
         if (groupSet.contains(Group.ADMINS_GROUP_NAME)) {
             return Group.ADMINS_GROUP_NAME;
         } else {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             List<String> groups = new ArrayList<String>(groupSet);
             Collections.sort(groups);
             for (int i = 0; i < groups.size(); i++) {
@@ -173,17 +177,18 @@ public class TagCloudManager extends AbstractService
             return buffer.toString();
         }
     }
-
+	
     private Set<String> getGroupsForSearch(UserDetails currentUser) {
         Set<String> groupForSearch = new HashSet<String>();
         groupForSearch.add(Group.FREE_GROUP_NAME);
-        IApsAuthority[] autorities = currentUser.getAuthorities();
-        for (int i = 0; i < autorities.length; i++) {
-            IApsAuthority autority = autorities[i];
-            if (autority instanceof Group) {
-                groupForSearch.add(autority.getAuthority());
-            }
-        }
+		List<Authorization> authorizations = currentUser.getAuthorizations();
+		for (int i = 0; i < authorizations.size(); i++) {
+			Authorization authorization = authorizations.get(i);
+			Group group = (null != authorization) ? authorization.getGroup() : null;
+			if (null != group) {
+				groupForSearch.add(group.getName());
+			}
+		}
         return groupForSearch;
     }
 

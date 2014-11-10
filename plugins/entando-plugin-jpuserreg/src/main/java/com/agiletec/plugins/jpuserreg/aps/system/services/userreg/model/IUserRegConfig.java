@@ -43,17 +43,11 @@ public interface IUserRegConfig {
 	
 	public void setReactivationPageCode(String reactivationPageCode);
 	
-	public void addRole(String role);
+	public void addDefaultCsvAuthorization(String csv);
 	
-	public void setRoles(Set<String> roles);
+	public void setDefaultCsvAuthorizations(Set<String> authorizations);
 	
-	public Set<String> getRoles();
-	
-	public void addGroup(String group);
-	
-	public void setGroups(Set<String> groups);
-	
-	public Set<String> getGroups();
+	public Set<String> getDefaultCsvAuthorizations();
 	
 	public Map<String, Template> getActivationTemplates();
 	public void setActivationTemplates(Map<String, Template> activationTemplates);

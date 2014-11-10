@@ -50,7 +50,7 @@ public class LdapUser extends AbstractUser {
         LdapUser cl = new LdapUser();
         cl.setUsername(this.getUsername());
         cl.setPassword("");
-        cl.setAuthorities(this.getAuthorities());
+        cl.setAuthorizations(this.getAuthorizations());
         cl.setAttributes(this.getAttributes());
         return cl;
     }

@@ -224,12 +224,6 @@ public class LdapUserDAO implements ILdapUserDAO {
     }
     
     @Override
-    public List<UserDetails> loadUsersForGroup(String groupName) {
-        ApsSystemUtils.getLogger().error("Method not supported");
-        return null;
-    }
-    
-    @Override
     public void changePassword(String username, String password) {
         this.updateUser(username, password);
     }
@@ -265,12 +259,6 @@ public class LdapUserDAO implements ILdapUserDAO {
             closeDirContext(dirCtx);
         }
 	}
-    
-    @Override
-    public List<String> loadUsernamesForGroup(String groupName) {
-        ApsSystemUtils.getLogger().error("Method not supported");
-        return null;
-    }
     
     @Override
     public void updateLastAccess(String username) {

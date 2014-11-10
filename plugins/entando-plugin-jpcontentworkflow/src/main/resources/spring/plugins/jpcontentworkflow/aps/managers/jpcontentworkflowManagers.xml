@@ -27,9 +27,9 @@
 		</property>
 		<property name="configManager" ref="BaseConfigManager"/>
 		<property name="userManager" ref="UserManager"/>
+		<property name="roleManager" ref="RoleManager" />
 		<property name="authProvider" ref="AuthenticationProviderManager" />
 		<property name="authorizationManager" ref="AuthorizationManager"/>
-		<property name="roleManager" ref="RoleManager" />
 		<property name="workflowManager" ref="jpcontentworkflowWorkflowManager"/>
 		<property name="mailManager" ref="jpmailMailManager"/>
 		<property name="contentManager" ref="jacmsContentManager"/>

@@ -41,16 +41,12 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthorityManager;
+import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.role.IRoleManager;
-import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.user.AbstractUser;
 import com.agiletec.aps.system.services.user.IUserManager;
@@ -188,8 +184,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
  				((User) user).setLastPasswordChange(new Date());
 				((User) user).setDisabled(false);
 			}
-			this.loadUserDefaultRoles(user);
-			this.loadUserDefaultGroups(user);
+			this.addDefaultAuthorities(user);
 			user.setPassword(password);
 			userManager.updateUser(user);
 			if(user instanceof User){
@@ -411,100 +406,84 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 		String text = this.replaceParams(template.getBody(), params);
 		this.getMailManager().sendMail(text, subject, eMail, null, null, config.getEMailSenderCode());
 	}
-
-	private void loadUserDefaultRoles(AbstractUser user) throws ApsSystemException {
-		Set<String> roleNames = this.getConfig().getRoles();
-		if (null != roleNames) {
-			Iterator<String> it = roleNames.iterator();
-			while (it.hasNext()) {
-				String rolename = it.next();
-				Role role = this.getRoleManager().getRole(rolename);
-				((IApsAuthorityManager) this.getRoleManager()).setUserAuthorization(user.getUsername(), role);
+	
+	private void addDefaultAuthorities(AbstractUser user) throws ApsSystemException {
+		Set<String> csvs = this.getConfig().getDefaultCsvAuthorizations();
+		if (null != csvs) {
+			Iterator<String> iter = csvs.iterator();
+			while (iter.hasNext()) {
+				String csv = iter.next();
+				String[] params = csv.split(",");
+				String groupName = (params.length > 0) ? params[0] : null;
+				String roleName = (params.length > 1) ? params[1] : null;
+				this.getAuthorizationManager().addUserAuthorization(user.getUsername(), groupName, roleName);
 			}
 		}
 	}
-
-	private void loadUserDefaultGroups(AbstractUser user) throws ApsSystemException {
-		Set<String> groupNames = this.getConfig().getGroups();
-		if (null != groupNames) {
-			Iterator<String> it = groupNames.iterator();
-			while (it.hasNext()) {
-				Group group = this.getGroupManager().getGroup(it.next());
-				((IApsAuthorityManager) this.getGroupManager()).setUserAuthorization(user.getUsername(), group);
-			}
-		}
-	}
-
+	
 	protected void setTokenValidityInMillis(long tokenValidityInMillis) {
 		this._tokenValidityInMillis = tokenValidityInMillis;
 	}
 	protected long getTokenValidityInMillis() {
 		return _tokenValidityInMillis;
 	}
-
+	
 	protected IUserManager getUserManager() {
 		return _userManager;
 	}
 	public void setUserManager(IUserManager userManager) {
 		this._userManager = userManager;
 	}
-
+	
 	protected IURLManager getUrlManager() {
 		return _urlManager;
 	}
 	public void setUrlManager(IURLManager urlManager) {
 		this._urlManager = urlManager;
 	}
-
+	
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
-
+	
 	protected IUserProfileManager getUserProfileManager() {
 		return _userProfileManager;
 	}
 	public void setUserProfileManager(IUserProfileManager userProfileManager) {
 		this._userProfileManager = userProfileManager;
 	}
-
+	
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
 	public void setConfigManager(ConfigInterface baseConfigManager) {
 		this._configManager = baseConfigManager;
 	}
-
+	
 	protected ILangManager getLangManager() {
 		return _langManager;
 	}
 	public void setLangManager(ILangManager langManager) {
 		this._langManager = langManager;
 	}
-
+	
 	protected IMailManager getMailManager() {
 		return _mailManager;
 	}
 	public void setMailManager(IMailManager mailManager) {
 		this._mailManager = mailManager;
 	}
-
-	protected IGroupManager getGroupManager() {
-		return _groupManager;
+	
+	protected IAuthorizationManager getAuthorizationManager() {
+		return _authorizationManager;
 	}
-	public void setGroupManager(IGroupManager groupManager) {
-		this._groupManager = groupManager;
+	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
+		this._authorizationManager = authorizationManager;
 	}
-
-	protected IRoleManager getRoleManager() {
-		return _roleManager;
-	}
-	public void setRoleManager(IRoleManager roleManager) {
-		this._roleManager = roleManager;
-	}
-
+	
 	protected IUserRegDAO getUserRegDAO() {
 		return _userRegDAO;
 	}
@@ -522,8 +501,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 	private IPageManager _pageManager;
 	private IUserProfileManager _userProfileManager;
 	private ConfigInterface _configManager;
-	private IGroupManager _groupManager;
-	private IRoleManager _roleManager;
+	private IAuthorizationManager _authorizationManager;
 	private IUserRegDAO _userRegDAO;
-
+	
 }

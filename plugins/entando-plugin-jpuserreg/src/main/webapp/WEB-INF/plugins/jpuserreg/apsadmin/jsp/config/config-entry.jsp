@@ -40,11 +40,8 @@
 		<fieldset class="col-xs-12">
 			<legend><s:text name="label.info" /></legend>
 			<p>
-				<s:iterator var="auth" value="config.groups">
-					<wpsf:hidden name="config.groups" value="%{#auth}" />
-				</s:iterator>
-				<s:iterator var="auth" value="config.roles">
-					<wpsf:hidden name="config.roles" value="%{#auth}" />
+				<s:iterator var="defaultAuthVar" value="config.defaultCsvAuthorizations">
+					<wpsf:hidden name="config.defaultCsvAuthorizations" value="%{#defaultAuthVar}" />
 				</s:iterator>
 			</p>
 
@@ -74,77 +71,87 @@
 				</wpsf:select>
 			</div>
 		</fieldset>
-
+		
 		<fieldset class="col-xs-12">
-			<legend><s:text name="jpuserreg.groups" /></legend>
-
+			<legend><s:text name="jpuserreg.defaultAuthorizations" /></legend>
+			
 			<div class="form-group">
-				<label for="groupName"><s:text name="jpuserreg.label.group" /></label>
-				<div class="input-group">
-					<wpsf:select name="groupName" id="groupName" list="systemGroups" listKey="name" listValue="descr" cssClass="form-control"/>
-					<span class="input-group-btn">
-						<wpsf:submit action="addGroup" type="button" cssClass="btn btn-default" value="%{getText('label.add')}" title="%{getText('label.add')}" /> 
-					</span>                              
+				<div class="col-xs-12">
+					<label for="userGroup"><s:text name="jpuserreg.label.userGroup" /></label>
+					<wpsf:select id="userGroup" name="groupName" list="groups" 
+						listKey="name" listValue="description" cssClass="form-control" />
 				</div>
 			</div>
-            <p><s:text name="jpuserreg.note.groupList" /></p>
-            <s:if test="%{config.groups.size() > 0}">
-                <s:iterator var="auth" value="config.groups">
-
-                    <span class="label label-default label-sm pull-left padding-small-top padding-small-bottom margin-small-right margin-small-bottom">
-                        <span class="icon fa fa-tag"></span>&#32;
-                        <abbr><s:property value="#auth" /></abbr>&#32;
-                        <wpsa:actionParam action="removeGroup" var="removeGroupActionName" >
-                            <wpsa:actionSubParam name="groupName" value="%{#auth}" />
-                        </wpsa:actionParam>
-                        <wpsf:submit
-                            type="button"
-                            action="%{#removeGroupActionName}"
-                            title="%{getText('label.remove')}"
-                            cssClass="btn btn-default btn-xs badge">
-                            <span class="icon fa fa-times"></span>
-                            <span class="sr-only">x</span>
-                        </wpsf:submit>
-                    </span>
-                </s:iterator>
-            </s:if>
-
-		</fieldset>
-
-		<fieldset class="col-xs-12">
-			<legend><s:text name="jpuserreg.roles" /></legend>
 			<div class="form-group">
-				<label for="roleName"><s:text name="jpuserreg.label.role" /></label>
-				<div class="input-group">
-					<wpsf:select name="roleName" id="roleName" list="systemRoles" listKey="name" listValue="description" cssClass="form-control" />
-					<span class="input-group-btn">
-						<wpsf:submit action="addRole" type="button" cssClass="btn btn-default" value="%{getText('label.add')}" title="%{getText('label.add')}" />
-
-					</span>
+				<div class="col-xs-12">
+					<label for="userRole"><s:text name="jpuserreg.label.userRole" /></label>
+					<wpsf:select id="userRole" name="roleName" list="roles" 
+						headerKey="" headerValue="" 
+						listKey="name" listValue="description" cssClass="form-control" />
 				</div>
 			</div>
-			<p><s:text name="jpuserreg.note.roleList" /></p>
-
-			<s:if test="%{config.roles.size > 0}">
-				<s:iterator var="auth" value="config.roles">
-					<span class="label label-default label-sm pull-left padding-small-top padding-small-bottom margin-small-right margin-small-bottom">
-                        <span class="icon fa fa-tag"></span>&#32;
-                        <abbr><s:property value="#auth" /></abbr>&#32;
-						<wpsa:actionParam action="removeRole" var="removeRoleActionName" >
-							<wpsa:actionSubParam name="roleName" value="%{#auth}" />
-						</wpsa:actionParam>
-						<wpsf:submit type="button" 
-									 action="%{#removeRoleActionName}"
-									 title="%{getText('label.remove')}"
-									 cssClass="btn btn-default btn-xs badge">        
-                            <span class="icon fa fa-times"></span>
-                            <span class="sr-only">x</span>
+			<div class="form-group">
+				<div class="col-xs-12">
+					<span class="input-group-btn">
+						<wpsa:actionParam action="addAuthorization" var="actionName" />
+						<wpsf:submit type="button" action="%{#actionName}" cssClass="btn btn-info">
+							<span class="icon fa fa-plus"></span>
+							<s:text name="jpuserreg.label.addAuthorization"></s:text>
 						</wpsf:submit>
 					</span>
-				</s:iterator>
+				</div>
+				&#32;
+			</div>
+			
+			<p><s:text name="jpuserreg.note.authorizationsList" /></p>
+			
+			<s:set var="userCvsAuthorizationsVar" value="%{config.defaultCsvAuthorizations}" />
+			<s:if test="%{#userCvsAuthorizationsVar.size()>0}">
+				<div class="table-responsive">
+					<table class="table table-striped table-hover table-condensed">
+						<tr>
+							<th class="text-center text-nowrap"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
+							<th><s:text name="jpuserreg.label.userGroup" /></th>
+							<th><s:text name="jpuserreg.label.userRole" /></th>
+						</tr>
+						<s:iterator value="#userCvsAuthorizationsVar" var="userCvsAuthorizationVar" status="elementStatus">
+							<s:set var="userCvsAuthorizationParamsVar" value="#userCvsAuthorizationVar.split('','')" />
+							<tr>
+								<td class="text-center text-nowrap">
+									<s:set name="elementIndexVar" value="#elementStatus.index" />
+									<div class="btn-group btn-group-xs">
+										<wpsa:actionParam action="removeAuthorization" var="actionName" >
+											<wpsa:actionSubParam name="csvAuthorization" value="%{#userCvsAuthorizationVar}" />
+										</wpsa:actionParam>
+										<wpsf:submit action="%{#actionName}" type="button" value="%{getText('label.remove')}" title="%{getText('label.remove')}" cssClass="btn btn-warning">
+											<span class="icon fa fa-times-circle"></span>
+										</wpsf:submit>
+									</div>
+								</td>
+								<td>
+									<s:set var="groupVar" value="%{getGroup(#userCvsAuthorizationParamsVar[0])}" />
+									<s:if test="null != #groupVar">
+										<s:property value="#groupVar.description" />&#32;<code><s:property value="#groupVar.name" /></code>
+									</s:if>
+									<s:else><code>&ndash;</code></s:else>
+								</td>
+								<td>
+									<s:set var="roleVar" value="%{getRole(#userCvsAuthorizationParamsVar[1])}" />
+									<s:if test="null != #roleVar">
+										<s:property value="#roleVar.description" />&#32;<code><s:property value="#roleVar.name" /></code>
+									</s:if>
+									<s:else><code>&ndash;</code></s:else>
+								</td>
+							</tr>
+						</s:iterator>
+					</table>
+				</div>
 			</s:if>
+			<s:else>
+				<p><s:text name="jpuserreg.note.userAuthorizations.empty" /></p>
+			</s:else>
 		</fieldset>
-
+		
 		<fieldset class="col-xs-12">
 			<legend><s:text name="jpuserreg.activation" /></legend>
 
