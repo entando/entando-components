@@ -44,7 +44,7 @@ public class TestActionLoggerAction extends ApsAdminPluginBaseTestCase {
 		this.executeDummyAction("admin", null);
 		String result = this.executeList("admin");
 		assertEquals(Action.SUCCESS, result);
-		List<Integer> ids = ((IActionLoggerAction) this.getAction()).getActionRecords();
+		List<Integer> ids = ((ActionLoggerAction) this.getAction()).getActionRecords();
 		assertEquals(1, ids.size());
 		ActionLogRecord record = this._actionLoggerManager.getActionRecord(ids.get(0).intValue());
 
@@ -68,25 +68,25 @@ public class TestActionLoggerAction extends ApsAdminPluginBaseTestCase {
 		Map<String, String> params = this.createSearchParams("name", "Name", "space", "arams", null, null);
 		String result = this.executeSearch("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		List<Integer> ids = ((IActionLoggerAction) this.getAction()).getActionRecords();
+		List<Integer> ids = ((ActionLoggerAction) this.getAction()).getActionRecords();
 		this.compareIds(new Integer [] { 1, 2, 3 }, ids);
 
 		params = this.createSearchParams("name", "Name", "space", "arams", "03/01/2009", null);
 		result = this.executeSearch("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		ids = ((IActionLoggerAction) this.getAction()).getActionRecords();
+		ids = ((ActionLoggerAction) this.getAction()).getActionRecords();
 		this.compareIds(new Integer [] { 3 }, ids);
 
 		params = this.createSearchParams(null, null, null, null, null, "02/01/2009");
 		result = this.executeSearch("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		ids = ((IActionLoggerAction) this.getAction()).getActionRecords();
+		ids = ((ActionLoggerAction) this.getAction()).getActionRecords();
 		this.compareIds(new Integer [] { 1, 2 }, ids);
 
 		params = this.createSearchParams(null, "Name", null, null, "02/01/2009", "02/01/2009");
 		result = this.executeSearch("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		ids = ((IActionLoggerAction) this.getAction()).getActionRecords();
+		ids = ((ActionLoggerAction) this.getAction()).getActionRecords();
 		this.compareIds(new Integer [] { 2 }, ids);
 	}
 
@@ -96,7 +96,7 @@ public class TestActionLoggerAction extends ApsAdminPluginBaseTestCase {
 		searchParams.put("password", "password");
 		String result = this.executeSearch("admin", searchParams);
 		assertEquals(Action.SUCCESS, result);
-		List<Integer> ids = ((IActionLoggerAction) this.getAction()).getActionRecords();
+		List<Integer> ids = ((ActionLoggerAction) this.getAction()).getActionRecords();
 		this.compareIds(new Integer [] {}, ids);
 
 		this.executeDummyAction("admin", searchParams);
@@ -221,8 +221,8 @@ public class TestActionLoggerAction extends ApsAdminPluginBaseTestCase {
 		this._helper.cleanRecords();
 		super.tearDown();
 	}
-
+	
 	private IActionLogManager _actionLoggerManager;
 	private ActionLoggerTestHelper _helper;
-
+	
 }

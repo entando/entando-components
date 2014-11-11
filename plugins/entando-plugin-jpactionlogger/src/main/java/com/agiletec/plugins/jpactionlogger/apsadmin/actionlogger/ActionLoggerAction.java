@@ -31,11 +31,10 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.opensymphony.xwork2.Action;
 
-public class ActionLoggerAction extends BaseAction implements IActionLoggerAction {
-
+public class ActionLoggerAction extends BaseAction {
+	
 	private static final Logger _logger = LoggerFactory.getLogger(ActionLoggerAction.class);
 	
-	@Override
 	public List<Integer> getActionRecords() {
 		List<Integer> actionRecords = new ArrayList<Integer>();
 		try {
@@ -47,7 +46,6 @@ public class ActionLoggerAction extends BaseAction implements IActionLoggerActio
 		return actionRecords;
 	}
 	
-	@Override
 	public String delete() {
 		try {
 			this.getActionLogManager().deleteActionRecord(this.getId());
