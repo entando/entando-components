@@ -1,0 +1,16 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+<validators>
+	<field name="providerUrl">
+		<field-validator type="url">
+			<message key="error.providerUrl.invalid"/>
+		</field-validator>
+	</field>
+	<field name="maxResultSize">
+		<field-validator type="regex" short-circuit="true">
+			<param name="regex"><![CDATA[^\d+$]]></param>
+			<message key="error.maxResultSize.invalid" />
+		</field-validator>
+	</field>
+</validators>

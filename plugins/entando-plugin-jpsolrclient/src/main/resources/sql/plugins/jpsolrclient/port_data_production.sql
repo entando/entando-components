@@ -1,0 +1,1 @@
+INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jpsolrclient_config', 'Configuration of SolrClient', '');

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+    <definition extends="main.layout" name="admin.jpsolrclient.config">
+		<put-attribute name="title" value="admin.jpwebform.title.messageManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpsolrclient/apsadmin/jsp/config/config.jsp" />
+	</definition>
+
+
+</tiles-definitions>
