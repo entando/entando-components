@@ -66,11 +66,11 @@ INSERT INTO pages (code, parentcode, pos, modelcode, titles, groupcode, showinme
   <mimeType>text/html</mimeType>
 </config>');
 
-INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ('jpfrontshortcut_test', 1, 'jpfrontshortcut_navigation_menu', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('jpfrontshortcut_test', 1, 'jpfrontshortcut_navigation_menu', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="navSpec">code(homepage).subtree(2)</property>
-</properties>', NULL);
-INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ('jpfrontshortcut_test', 5, 'jpfrontshortcut_info', NULL, NULL);
+</properties>');
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('jpfrontshortcut_test', 5, 'jpfrontshortcut_info', NULL);
 
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('jpfrontshortcut_POPUP_TITLE','en','Edit');
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('jpfrontshortcut_POPUP_TITLE','it','Modifica');
