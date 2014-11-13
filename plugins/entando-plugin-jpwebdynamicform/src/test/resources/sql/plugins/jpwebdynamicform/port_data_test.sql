@@ -16,6 +16,9 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpwebdynam
             <attribute name="Address" attributetype="Monotext" searcheable="false" required="false" />
             <attribute name="eMail" attributetype="Monotext" searcheable="false" required="true" >
                 <regexp><![CDATA[(.*<.+@.+.[a-z]+>)|(.+@.+.[a-z]+)]]></regexp>
+				<roles>
+					<role>jpwebdynamicform:email</role>
+				</roles>
             </attribute>
             <attribute name="Note" attributetype="Monotext" searcheable="false" required="true" />
         </attributes>
