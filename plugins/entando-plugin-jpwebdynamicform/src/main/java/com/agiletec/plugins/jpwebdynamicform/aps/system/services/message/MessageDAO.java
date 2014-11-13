@@ -93,9 +93,7 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 
 	protected void executeDeleteEntity(String entityId, Connection conn) throws Throwable {
 		this.deleteMessageAnswers(entityId, conn);
-		this.deleteRecordsByEntityId(entityId, this.getRemovingSearchRecordQuery(), conn);
-		this.deleteRecordsByEntityId(entityId, this.getRemovingAttributeRoleRecordQuery(), conn);
-		this.deleteRecordsByEntityId(entityId, this.getDeleteEntityRecordQuery(), conn);
+		super.executeDeleteEntity(entityId, conn);
 	}
 
 	@Override
