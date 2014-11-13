@@ -24,6 +24,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.AbstractEntityDAO;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -38,6 +41,8 @@ import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.M
  */
 public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 
+	private static final Logger _logger =  LoggerFactory.getLogger(MessageDAO.class);
+	
 	@Override
 	protected ApsEntityRecord createEntityRecord(ResultSet res) throws Throwable {
 		MessageRecordVO messageRecord = new MessageRecordVO();
@@ -111,7 +116,8 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error removing messages for user " + username, "deleteUserMessages");
+			_logger.error("Error removing messages for user {}", username,  t);
+			throw new RuntimeException("Error removing messages for user " + username, t);
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -134,7 +140,8 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error adding message answer", "addAnswer");
+			_logger.error("Error adding message answer",  t);
+			throw new RuntimeException("Error adding message answer", t);
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -161,7 +168,8 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 				answers.add(answer);
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error reading answers to message " + messageId, "loadAnswers");
+			_logger.error("Error reading answers to message {}", messageId, t);
+			throw new RuntimeException("Error reading answers to message " + messageId, t);
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -175,7 +183,8 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 			stat.setString(1, username);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			processDaoException(t, "Error removing messages search records for user " + username, "deleteUserMessagesSearchRecord");
+			_logger.error("Error removing messages search records for user {}", username, t);
+			throw new RuntimeException("Error removing messages search records for user " + username, t);
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -188,7 +197,8 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 			stat.setString(1, username);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			processDaoException(t, "Error removing answers to messages of for user " + username, "deleteUserMessagesAnswers");
+			_logger.error("Error removing answers to messages of for user {}", username, t);
+			throw new RuntimeException("Error removing answers to messages of for user " + username, t);
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -201,7 +211,8 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 			stat.setString(1, messageId);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			processDaoException(t, "Error removing answers to message " + messageId, "deleteMessageAnswers");
+			_logger.error("Error removing answers to message {}", messageId, t);
+			throw new RuntimeException("Error removing answers to message " + messageId, t);
 		} finally {
 			closeDaoResources(null, stat);
 		}
