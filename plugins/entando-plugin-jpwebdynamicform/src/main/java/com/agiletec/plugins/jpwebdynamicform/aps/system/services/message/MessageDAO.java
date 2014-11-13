@@ -91,24 +91,11 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 		return DELETE_MESSAGE;
 	}
 
-	@Override
-	public void deleteEntity(String entityId) {
-		Connection conn = null;
-		PreparedStatement stat = null;
-		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
-			this.deleteMessageAnswers(entityId, conn);
-			this.deleteEntitySearchRecord(entityId, conn);
-			stat = conn.prepareStatement(this.getDeleteEntityRecordQuery());
-			stat.setString(1, entityId);
-			stat.executeUpdate();
-			conn.commit();
-		} catch (Throwable t) {
-			processDaoException(t, "Errore on delete entity by id", "deleteEntity");
-		} finally {
-			closeDaoResources(null, stat, conn);
-		}
+	protected void executeDeleteEntity(String entityId, Connection conn) throws Throwable {
+		this.deleteMessageAnswers(entityId, conn);
+		this.deleteRecordsByEntityId(entityId, this.getRemovingSearchRecordQuery(), conn);
+		this.deleteRecordsByEntityId(entityId, this.getRemovingAttributeRoleRecordQuery(), conn);
+		this.deleteRecordsByEntityId(entityId, this.getDeleteEntityRecordQuery(), conn);
 	}
 
 	@Override
