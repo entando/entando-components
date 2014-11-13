@@ -17,21 +17,6 @@
 */
 package com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
@@ -60,6 +45,20 @@ import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.Workflow;
 import com.agiletec.plugins.jpmail.aps.services.mail.IMailManager;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Aspect
 public class WorkflowNotifierManager extends AbstractService implements IWorkflowNotifierManager {
@@ -99,7 +98,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		}
 	}
 	
-	@Before("execution(* com.agiletec.plugins.jacms.aps.system.services.content.IContentManager.saveContent(..)) && args(content,..)")
+	@After("execution(* com.agiletec.plugins.jacms.aps.system.services.content.IContentManager.saveContent(..)) && args(content,..)")
 	public void listenContentSaving(Object content) {
 		try {
 			boolean notify = true;
