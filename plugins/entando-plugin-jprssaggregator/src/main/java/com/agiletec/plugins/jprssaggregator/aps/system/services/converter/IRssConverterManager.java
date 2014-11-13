@@ -23,7 +23,8 @@ import java.util.Set;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jprssaggregator.aps.system.services.aggregator.ApsAggregatorItem;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.rometools.rome.feed.synd.SyndEntry;
+
 /**
  * Base interface for the service that builds contents from a rss feed.
  */
@@ -36,7 +37,7 @@ public interface IRssConverterManager {
 	 * @return a list of SyndEntryImpl
 	 * @throws ApsSystemException if an error occurs
 	 */
-	public List<SyndEntryImpl> getRssEntries(String feedType, String url) throws ApsSystemException;
+	public List<SyndEntry> getRssEntries(String feedType, String url) throws ApsSystemException;
 
 	/**
 	 * Ping the source and returns a List of contents according with the configuration

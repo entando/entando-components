@@ -40,7 +40,7 @@ import com.agiletec.plugins.jprssaggregator.aps.JpRssAggregatorSystemConstants;
 import com.agiletec.plugins.jprssaggregator.aps.system.services.aggregator.ApsAggregatorItem;
 import com.agiletec.plugins.jprssaggregator.aps.system.services.aggregator.IAggregatorManager;
 import com.agiletec.plugins.jprssaggregator.aps.system.services.aggregator.TestAggregatorManagerHelper;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.rometools.rome.feed.synd.SyndEntry;
 
 /**
  * Before running this test, copy the file src/main/webapp/resources/plugins/jprssaggregator/test_rss.xml
@@ -71,7 +71,7 @@ public class TestRssConverterManager extends ApsPluginBaseTestCase {
 	}
 	
 	public void _testGetRssEntries() throws Throwable {
-		List<SyndEntryImpl> entries = _rssConverterManager.getRssEntries(IRssConverterManager.RSS_2_0, PluginConfigTestUtils.TEST_URL);
+		List<SyndEntry> entries = _rssConverterManager.getRssEntries(IRssConverterManager.RSS_2_0, PluginConfigTestUtils.TEST_URL);
 		assertNotNull(entries);
 		assertEquals(3, entries.size());
 	}
@@ -80,7 +80,7 @@ public class TestRssConverterManager extends ApsPluginBaseTestCase {
 		String url = PluginConfigTestUtils.TEST_URL;
 		ApsAggregatorItem item = TestAggregatorManagerHelper.createItem(3600, "dummy_descr", url);
 		//_aggregatorManager.addItem(item);
-		List<SyndEntryImpl> entries = _rssConverterManager.getRssEntries(IRssConverterManager.RSS_2_0, url);
+		List<SyndEntry> entries = _rssConverterManager.getRssEntries(IRssConverterManager.RSS_2_0, url);
 		assertNotNull(entries);
 		List<Content> contents = _rssConverterManager.getContents(item);
 		assertNotNull(contents);

@@ -27,9 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,13 +38,16 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jprssaggregator.aps.system.services.aggregator.ApsAggregatorItem;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
-import com.sun.syndication.fetcher.FeedFetcher;
-import com.sun.syndication.fetcher.impl.FeedFetcherCache;
-import com.sun.syndication.fetcher.impl.HashMapFeedInfoCache;
-import com.sun.syndication.fetcher.impl.HttpURLFeedFetcher;
+import com.rometools.fetcher.FeedFetcher;
+import com.rometools.fetcher.impl.FeedFetcherCache;
+import com.rometools.fetcher.impl.HashMapFeedInfoCache;
+import com.rometools.fetcher.impl.HttpURLFeedFetcher;
+import com.rometools.rome.feed.synd.SyndEntry;
+import com.rometools.rome.feed.synd.SyndFeed;
+import com.rometools.rome.feed.synd.SyndFeedImpl;
+import com.rometools.rome.io.SAXBuilder;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 /**
  * This service builds {@link Content} objects from a feed.
@@ -102,6 +102,7 @@ public class RssConverterManager extends AbstractService implements IRssConverte
 		return doc;
 	}
 	
+	@Override
 	public AggregatorConfig getAggregatorConfig(String contentType) {
 		return this.getMappingMap().get(contentType);
 	}
@@ -111,12 +112,12 @@ public class RssConverterManager extends AbstractService implements IRssConverte
 		List<Content> contents = new ArrayList<Content>();
 		AggregatorConfig aggregatorConfig = this.getMappingMap().get(item.getContentType());
 		try {
-			List<SyndEntryImpl> entries = this.getRssEntries(IRssConverterManager.RSS_2_0, item.getLink());
+			List<SyndEntry> entries = this.getRssEntries(IRssConverterManager.RSS_2_0, item.getLink());
 			if(null == entries) return contents;
-			Iterator<SyndEntryImpl> entriesIt = entries.iterator();
+			Iterator<SyndEntry> entriesIt = entries.iterator();
 			String linkAttributeName = aggregatorConfig.getLinkAttributeName();// this.getLinkAttributeName(typeCode);
 			while (entriesIt.hasNext()) {
-				SyndEntryImpl feedItem = entriesIt.next();
+				SyndEntry feedItem = entriesIt.next();
 				String link = feedItem.getLink();
 				Content content = this.getExistingContent(link, linkAttributeName, item.getContentType());
 				if (null == content) {
@@ -135,7 +136,7 @@ public class RssConverterManager extends AbstractService implements IRssConverte
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SyndEntryImpl> getRssEntries(String feedType, String url) throws ApsSystemException {
+	public List<SyndEntry> getRssEntries(String feedType, String url) throws ApsSystemException {
 		SyndFeed feed = null;
 		try {
 			feed = new SyndFeedImpl();
@@ -143,12 +144,12 @@ public class RssConverterManager extends AbstractService implements IRssConverte
 
 			feed.setFeedType(outputType);
 
-			feed.setTitle("jAPS Aggregated Feed");
-			feed.setDescription("jAPS Aggregated Feed");
-			feed.setAuthor("jAPS");
-			feed.setLink("www.japsportal.org");
+			feed.setTitle("Entando Aggregated Feed");
+			feed.setDescription("Entando Aggregated Feed");
+			feed.setAuthor("Entando");
+			feed.setLink("www.entando.com");
 
-			List<SyndFeed> entries = new ArrayList<SyndFeed>();
+			List<SyndEntry> entries = new ArrayList<SyndEntry>();
 			feed.setEntries(entries);
 			SyndFeed inFeed = this.retrieveFeed(url);
 			if (null == inFeed) return null;

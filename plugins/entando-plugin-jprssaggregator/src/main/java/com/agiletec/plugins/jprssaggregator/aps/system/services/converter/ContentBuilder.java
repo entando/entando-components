@@ -22,8 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.jdom.Attribute;
-import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +42,9 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
 import com.agiletec.plugins.jprssaggregator.aps.system.services.aggregator.ApsAggregatorItem;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.rometools.rome.feed.synd.SyndEntry;
+import org.jdom2.Attribute;
+import org.jdom2.Element;
 
 /**
  * This class populates a {@link Content} from a {@link SyndEntryImpl} object
@@ -61,7 +61,7 @@ public class ContentBuilder {
 	 * @param aggregatorConfig The object tha handles the mapping informations
 	 * @throws ApsSystemException if an error occurs
 	 */
-	public void populateContentFromMapping(Content content, SyndEntryImpl feedItem, ApsAggregatorItem apsAggregatorItem, AggregatorConfig aggregatorConfig) throws ApsSystemException {
+	public void populateContentFromMapping(Content content, SyndEntry feedItem, ApsAggregatorItem apsAggregatorItem, AggregatorConfig aggregatorConfig) throws ApsSystemException {
 		String typeCode = content.getTypeCode();
 		//set descrizione contenuto
 		this.setContentDescr(typeCode, content, feedItem, aggregatorConfig);
@@ -78,7 +78,7 @@ public class ContentBuilder {
 		this.setAggregatorItemParams(content, apsAggregatorItem, feedItem, aggregatorConfig);
 	}
 
-	private void setContentDescr(String typeCode, Content content, SyndEntryImpl feedItem, AggregatorConfig aggregatorConfig) throws ApsSystemException {
+	private void setContentDescr(String typeCode, Content content, SyndEntry feedItem, AggregatorConfig aggregatorConfig) throws ApsSystemException {
 		try {
 			String description = "";
 			Element descr = aggregatorConfig.getDescr();
@@ -221,8 +221,8 @@ public class ContentBuilder {
 			((MonoTextAttribute)attr).setText(feedvalue);
 		}
 	}
-
-	protected void setAggregatorItemParams(Content content, ApsAggregatorItem item, SyndEntryImpl feedItem, AggregatorConfig aggregatorConfig) throws ApsSystemException {
+	
+	protected void setAggregatorItemParams(Content content, ApsAggregatorItem item, SyndEntry feedItem, AggregatorConfig aggregatorConfig) throws ApsSystemException {
 		List<Element> elements = aggregatorConfig.getApsAggregatorItems();
 		if (null != elements && elements.size() > 0) {
 			Iterator<Element> it = elements.iterator();

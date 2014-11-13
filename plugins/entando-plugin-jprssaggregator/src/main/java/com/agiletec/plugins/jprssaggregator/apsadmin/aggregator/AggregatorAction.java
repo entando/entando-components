@@ -42,7 +42,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContent
 import com.agiletec.plugins.jprssaggregator.aps.system.services.aggregator.ApsAggregatorItem;
 import com.agiletec.plugins.jprssaggregator.aps.system.services.aggregator.IAggregatorManager;
 import com.agiletec.plugins.jprssaggregator.aps.system.services.converter.IRssConverterManager;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.rometools.rome.feed.synd.SyndEntry;
 
 /**
  * This class executes the operations for the backend administration
@@ -59,7 +59,7 @@ public class AggregatorAction extends AbstractTreeAction implements IAggregatorA
 	private void checkLink() {
 		try {
 			if (isValidUrl(this.getLink())) {
-				List<SyndEntryImpl> entries = this.getRssConverterManager().getRssEntries("rss_2.0", this.getLink());
+				List<SyndEntry> entries = this.getRssConverterManager().getRssEntries("rss_2.0", this.getLink());
 				if (null == entries || entries.size() == 0) {
 					this.addFieldError("link", this.getText("jprssaggregator.error.link.nofeeds"));
 				}

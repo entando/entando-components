@@ -80,7 +80,9 @@ public class RssTimerManager extends AbstractService implements AggregatorItemsC
 			} else if (event.getOperationCode() == AggregatorItemsChangedEvent.UPDATE_OPERATION_CODE) {
 				String taskKey = new Integer(event.getItemCode()).toString();
 				RssTimerTask task = this.getTimerTaskMap().get(taskKey);
-				task.cancel();
+				if (null != task) {
+					task.cancel();
+				}
 				this.getTimerTaskMap().remove(taskKey);
 				ApsAggregatorItem item = this.getAggregatorManager().getItem(event.getItemCode());
 				RssTimerTask timerTask = new RssTimerTask(item, this.getAggregatorManager());
