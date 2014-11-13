@@ -1,0 +1,7 @@
+<roles>
+	<role>
+		<name>jpwebdynamicform:email</name>
+		<description>The Attribute that contains the email</description>
+		<allowedTypes>Monotext</allowedTypes>
+	</role>
+</roles>
