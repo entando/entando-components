@@ -23,7 +23,7 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jprss.aps.system.services.rss.Channel;
 import com.agiletec.plugins.jprss.aps.system.services.rss.IRssManager;
-import com.sun.syndication.feed.synd.SyndFeed;
+import com.rometools.rome.feed.synd.SyndFeed;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,9 +34,12 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import org.slf4j.Logger;
 
-public class RssPortalAction extends BaseAction implements ServletResponseAware, IRssPortalAction {
+/**
+ * The action that renders the feed
+ * @author S.Puddu
+ */
+public class RssPortalAction extends BaseAction implements ServletResponseAware {
 	
-	@Override
 	public String show() {
 		Logger log = ApsSystemUtils.getLogger();
 		try {

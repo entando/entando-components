@@ -46,8 +46,9 @@ import com.opensymphony.xwork2.Action;
 
 /**
  * This action handles backend operations for the channel
+ * @author S.Puddu
  */
-public class RssAction extends BaseAction implements IRssAction {
+public class RssAction extends BaseAction {
 	
 	@Override
 	public void validate() {
@@ -59,7 +60,6 @@ public class RssAction extends BaseAction implements IRssAction {
 		}
 	}
 
-	@Override
 	public List<Channel> getChannels() {
 		List<Channel> channels = new ArrayList<Channel>();
 		try {
@@ -71,7 +71,6 @@ public class RssAction extends BaseAction implements IRssAction {
 		return channels;
 	}
 
-	@Override
 	public String newChannel() {
 		try {
 			this.setStrutsAction(ApsAdminSystemConstants.ADD);
@@ -82,7 +81,6 @@ public class RssAction extends BaseAction implements IRssAction {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String save() {
 		try {
 			Channel channel = this.buildChannel();
@@ -98,7 +96,6 @@ public class RssAction extends BaseAction implements IRssAction {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String delete() {
 		try {
 			if (0 == this.getId()) {
@@ -113,7 +110,6 @@ public class RssAction extends BaseAction implements IRssAction {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String edit() {
 		try {
 			if (0 == this.getId()) {
@@ -138,7 +134,6 @@ public class RssAction extends BaseAction implements IRssAction {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String trash() {
 		try {
 			if (0 == this.getId()) {
@@ -316,12 +311,12 @@ public class RssAction extends BaseAction implements IRssAction {
 			//FAI LO SPOSTAMENTO.
 			int filterIndex = this.getFilterIndex();
 			Properties element = properties.get(filterIndex);
-			if (getMovement().equalsIgnoreCase(IRssAction.MOVEMENT_UP_CODE)){
+			if (getMovement().equalsIgnoreCase(MOVEMENT_UP_CODE)){
 				if (filterIndex > 0) {
 					properties.remove(filterIndex);
 					properties.add(filterIndex -1, element);
 				}
-			} else if (getMovement().equalsIgnoreCase(IRssAction.MOVEMENT_DOWN_CODE)) {
+			} else if (getMovement().equalsIgnoreCase(MOVEMENT_DOWN_CODE)) {
 				if (filterIndex < properties.size() -1) {
 					properties.remove(filterIndex);
 					properties.add(filterIndex + 1, element);
@@ -484,5 +479,8 @@ public class RssAction extends BaseAction implements IRssAction {
 	private IRssManager _rssManager;
 	private ICategoryManager _categoryManager;
 	private IContentManager _contentManager;
+	
+	public static final String MOVEMENT_UP_CODE ="UP";
+	public static final String MOVEMENT_DOWN_CODE ="DOWN";
 	
 }

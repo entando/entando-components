@@ -11,8 +11,9 @@
 package com.agiletec.plugins.jprss.apsadmin.rss;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedOutput;
+import com.rometools.rome.feed.synd.SyndFeed;
+import com.rometools.rome.io.SyndFeedOutput;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
@@ -68,6 +69,7 @@ public class RomeResult extends StrutsResultSupport {
      * @param actionInvocation the ActionInvocation
      * @throws Exception
      */
+	@Override
     public void doExecute(String location, ActionInvocation actionInvocation) throws Exception {
         if (feedName == null) {
             // ack, we need this to find the feed on the stack, if not, blow up
@@ -129,8 +131,9 @@ public class RomeResult extends StrutsResultSupport {
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }
-
+	
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
+	
 }

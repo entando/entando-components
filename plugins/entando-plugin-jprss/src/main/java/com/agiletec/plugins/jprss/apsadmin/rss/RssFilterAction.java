@@ -25,6 +25,7 @@ import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.BaseF
 /**
  * This class manages allows to build the content filters for the channel configuration.
  * Extends BaseFilterAction for filters configuration
+ * @author S.Puddu
  */
 public class RssFilterAction extends BaseFilterAction {
 	

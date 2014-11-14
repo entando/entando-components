@@ -13,11 +13,11 @@
         
         <action name="show" class="jprssPortalAction" method="show">
             <result type="rss">
-		<!-- Required: the expression to find the SyndFeed object on the stack -->
+				<!-- Required: the expression to find the SyndFeed object on the stack -->
                 <param name="feedName">syndFeed</param>
-		<!-- Optional: the encoding type -->
+				<!-- Optional: the encoding type -->
                 <param name="encoding">UTF-8</param>
-		<!-- Optional: mime type -->
+				<!-- Optional: mime type -->
                 <param name="mimeType">text/xml</param>
             </result>
         </action>
