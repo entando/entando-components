@@ -19,9 +19,11 @@ package com.agiletec.plugins.jpwebdynamicform;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
 import com.agiletec.plugins.jpwebdynamicform.aps.internalservlet.message.TestUserNewMessageAction;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.TestMessageDAO;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.TestMessageManager;
+import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.TestMessageManagerWithRoles;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.TestMessageSearcherDAO;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.parse.TestMessageNotifierConfigDOM;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.renderer.TestBaseMessageRenderer;
@@ -39,6 +41,7 @@ public class AllTests {
 		suite.addTestSuite(TestMessageDAO.class);
 		suite.addTestSuite(TestMessageSearcherDAO.class);
 		suite.addTestSuite(TestMessageManager.class);
+		suite.addTestSuite(TestMessageManagerWithRoles.class);
 		suite.addTestSuite(TestMessageNotifierConfigDOM.class);
 
 		suite.addTestSuite(TestUserNewMessageAction.class);
