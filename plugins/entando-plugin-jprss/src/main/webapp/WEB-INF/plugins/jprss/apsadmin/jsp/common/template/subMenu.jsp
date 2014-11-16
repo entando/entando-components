@@ -3,5 +3,5 @@
 <%@ taglib prefix="wp" uri="/aps-core" %>
 
 <wp:ifauthorized permission="jprss_channels_edit">
-	<li><a href="<s:url action="intro" namespace="/do/jprss/Rss" />" id="menu_rss" ><s:text name="jprss.name" /></a></li>
+	<li><a href="<s:url action="list" namespace="/do/jprss/Rss" />" id="menu_rss" ><s:text name="jprss.name" /></a></li>
 </wp:ifauthorized>

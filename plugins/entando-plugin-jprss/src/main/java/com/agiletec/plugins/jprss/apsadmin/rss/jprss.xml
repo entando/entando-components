@@ -26,11 +26,6 @@
     
 	<package name="jprss_do/jprss/Rss" namespace="/do/jprss/Rss" extends="entando-default">
 		
-		<action name="intro" class="jprssAction">
-			<result type="tiles">admin.jprss.intro</result>
-			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jprss_channels_edit</param></interceptor-ref>
-		</action>
-	
 		<action name="list" class="jprssAction">
 			<result type="tiles">admin.jprss.list</result>
 			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jprss_channels_edit</param></interceptor-ref>
