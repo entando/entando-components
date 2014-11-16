@@ -10,15 +10,6 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-navigation_bar', 'entando-widget-navigation_bar', NULL, NULL, '<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
 <#assign wp=JspTaglibs["/aps-core"]>
 
-<#--
-	A 8-year-long effort, lovely brought to you by:
-
-	- Marco Diana <m.diana@entando.com>
-	- Eugenio Santoboni <e.santoboni@entando.com>
-	- William Ghelfi <w.ghelfi@entando.com>
-	- Andrea Dessì <a.dessi@entando.com>
--->
-
 <@wp.headInfo type="JS" info="entando-misc-jquery/jquery-1.10.0.min.js" />
 <@wp.headInfo type="JS" info="entando-misc-bootstrap/bootstrap.min.js" />
 

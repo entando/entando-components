@@ -3,15 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="jacms" uri="/jacms-aps-core" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
-<%
-/*
-	Author: William Ghelfi <w.ghelfi@agiletec.it> - 2005/05/23
-	Author: Eugenio Santoboni <e.santoboni@agiletec.it>
-	Author: Rinaldo Bonazzo <r.bonazzo@agiletec.it>
-	Erogatore automatico di contenuti eventi del giorno.
 
-*/
-%>
 <wp:info key="currentLang" var="currentLang" />
 <fmt:setLocale value="${currentLang}" />
 <h1>

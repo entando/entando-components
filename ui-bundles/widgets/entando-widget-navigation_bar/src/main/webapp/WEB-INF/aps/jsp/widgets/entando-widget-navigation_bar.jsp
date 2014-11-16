@@ -1,15 +1,6 @@
 <%@ taglib prefix="wp" uri="/aps-core" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%--
-	A 8-year-long effort, lovely brought to you by:
-
-	- Marco Diana <m.diana@entando.com>
-	- Eugenio Santoboni <e.santoboni@entando.com>
-	- William Ghelfi <w.ghelfi@@entando.com>
-	- Andrea Dessì <a.dessi@entando.com>
---%>
-
 <wp:headInfo type="JS" info="entando-misc-jquery/jquery-1.10.0.min.js" />
 <wp:headInfo type="JS" info="entando-misc-bootstrap/bootstrap.min.js" />
 
