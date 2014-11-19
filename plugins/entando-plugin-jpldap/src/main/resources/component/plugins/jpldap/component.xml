@@ -2,4 +2,9 @@
 <component>
 	<code>jpldap</code>
 	<description>LDAP Connector</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 </component>

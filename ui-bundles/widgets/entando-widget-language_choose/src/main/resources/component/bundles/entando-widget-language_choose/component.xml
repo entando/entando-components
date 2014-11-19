@@ -2,6 +2,11 @@
 <component>
 	<code>entando-widget-language_choose</code>
 	<description>Widget: Choose Language</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>entando-misc-bootstrap</code>
 	</dependencies>

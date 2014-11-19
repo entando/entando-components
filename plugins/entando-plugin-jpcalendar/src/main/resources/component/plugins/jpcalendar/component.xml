@@ -2,6 +2,11 @@
 <component>
 	<code>jpcalendar</code>
 	<description>Calendar</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>jacms</code>
 	</dependencies>

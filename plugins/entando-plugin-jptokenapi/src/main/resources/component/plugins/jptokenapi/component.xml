@@ -2,6 +2,11 @@
 <component>
 	<code>jptokenapi</code>
 	<description>Token API</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<installation>
 		<tableMapping>
 			<datasource name="servDataSource">

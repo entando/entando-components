@@ -2,6 +2,11 @@
 <component>
 	<code>entando-widget-sharewith</code>
 	<description>Widget: entando-widget-sharewith.jsp</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>entando-misc-jquery</code>
 	</dependencies>

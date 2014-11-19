@@ -2,6 +2,11 @@
 <component>
 	<code>entando-app-view-rss-default</code>
 	<description>APP view: RSS default</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>entando-portal-ui</code>
 		<code>jprss</code>

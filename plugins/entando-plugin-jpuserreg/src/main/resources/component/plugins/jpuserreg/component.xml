@@ -2,6 +2,11 @@
 <component>
 	<code>jpuserreg</code>
 	<description>User Registration</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>jpmail</code>
 		<code>jpuserprofile</code>

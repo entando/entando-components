@@ -2,6 +2,11 @@
 <component>
 	<code>entando-page-2columns-left</code>
 	<description>Page: 2 Columns, Left + Main</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>entando-misc-bootstrap</code>
 		<code>entando-widget-language_choose</code>

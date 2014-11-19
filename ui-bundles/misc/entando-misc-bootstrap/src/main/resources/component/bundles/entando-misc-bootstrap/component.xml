@@ -2,6 +2,11 @@
 <component>
 	<code>entando-misc-bootstrap</code>
 	<description>Misc: Twitter Bootstrap</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>entando-misc-html5-essentials</code>
 		<code>entando-misc-jquery</code>

@@ -2,6 +2,11 @@
 <component>
 	<code>jpversioning</code>
 	<description>Content Versioning</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>jacms</code>
 	</dependencies>

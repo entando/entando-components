@@ -2,6 +2,11 @@
 <component>
 	<code>entando-page-bootstrap-hero</code>
 	<description>Page: Bootstrap Hero Unit</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>entando-misc-bootstrap</code>
 		<code>entando-widget-language_choose</code>

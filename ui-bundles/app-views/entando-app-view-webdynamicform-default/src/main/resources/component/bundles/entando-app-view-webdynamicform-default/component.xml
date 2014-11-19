@@ -2,6 +2,11 @@
 <component>
 	<code>entando-app-view-webdynamicform-default</code>
 	<description>APP view: webdynamicform default</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>entando-portal-ui</code>
 		<code>jpwebdynamicform</code>

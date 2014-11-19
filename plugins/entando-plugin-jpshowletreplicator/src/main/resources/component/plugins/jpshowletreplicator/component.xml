@@ -2,6 +2,11 @@
 <component>
 	<code>jpshowletreplicator</code>
 	<description>Widget Replicator</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<installation>
 		<environment code="production">
 			<defaultSqlResources>

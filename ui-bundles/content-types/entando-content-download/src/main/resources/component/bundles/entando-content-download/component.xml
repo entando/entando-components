@@ -2,6 +2,11 @@
 <component>
 	<code>entando-content-download</code>
 	<description>Content Type: Download</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>jacms</code>
 	</dependencies>

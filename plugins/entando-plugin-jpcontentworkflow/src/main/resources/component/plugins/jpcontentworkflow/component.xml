@@ -2,6 +2,11 @@
 <component>
 	<code>jpcontentworkflow</code>
 	<description>Content Workflow</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
 	<dependencies>
 		<code>jacms</code>
 		<code>jpmail</code>
