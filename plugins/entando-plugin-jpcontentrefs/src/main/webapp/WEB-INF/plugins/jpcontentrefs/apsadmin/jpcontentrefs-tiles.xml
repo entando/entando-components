@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE tiles-definitions PUBLIC 
+<!DOCTYPE tiles-definitions PUBLIC
 	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
 	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 
 <tiles-definitions>
-	
+
 	<!-- ********* INIZIO Area Gestione Contenuti ********* -->
-	
+
 	<definition extends="main.layout" name="admin.jacms.content.entry">
 		<put-attribute name="title" value="title.contentManagement" />
-		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpcontentrefs/apsadmin/jsp/common/template/extraresources/content.jsp" />		
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpcontentrefs/apsadmin/jsp/common/template/extraresources/content.jsp" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentrefs/apsadmin/jsp/content/entryContent.jsp" />
 	</definition>
-	
+
    <!-- ********* FINE Area Gestione Contenuti ********* -->
-	
+
 	<definition extends="main.layout" name="admin.jpcontentrefs.category.intro">
 		<put-attribute name="title" value="jpcontentrefs.title.contentTypesManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentrefs/apsadmin/jsp/category/categoryIntro.jsp" />
 	</definition>
-	
+
     <definition extends="main.layout" name="admin.jpcontentrefs.category.config">
 		<put-attribute name="title" value="jpcontentrefs.title.contentTypesManagement" />
-		<put-attribute name="extraResources" value="/WEB-INF/apsadmin/jsp/common/template/extraresources/category.jsp" />		
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpcontentrefs/apsadmin/jsp/common/template/extraresources/categoryTree.jsp" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentrefs/apsadmin/jsp/category/categoryRefConfig.jsp" />
 	</definition>
-	
+
 	<definition extends="main.layout" name="admin.jpcontentrefs.category.references">
 		<put-attribute name="title" value="jpcontentrefs.title.contentTypesManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentrefs/apsadmin/jsp/category/references.jsp" />
 	</definition>
-	
+
 </tiles-definitions>
