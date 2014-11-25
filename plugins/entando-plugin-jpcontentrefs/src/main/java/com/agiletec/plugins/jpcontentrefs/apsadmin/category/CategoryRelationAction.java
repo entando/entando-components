@@ -17,10 +17,6 @@
 */
 package com.agiletec.plugins.jpcontentrefs.apsadmin.category;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.category.ICategoryManager;
@@ -28,12 +24,19 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecor
 import com.agiletec.plugins.jpcontentrefs.aps.system.services.category.IContentCategoryRefManager;
 import com.agiletec.plugins.jpcontentrefs.apsadmin.contentrelations.AbstractContentRelationAction;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author E.Santoboni
  */
 public class CategoryRelationAction extends AbstractContentRelationAction {
 	
-	@Override
+	private static final Logger _logger = LoggerFactory.getLogger(CategoryRelationAction.class);
+	
 	public String join() {
 		try {
 			if (!this.isValidContentType()) return "intro";
@@ -46,13 +49,12 @@ public class CategoryRelationAction extends AbstractContentRelationAction {
 				this.getContentCategoryRefManager().addRelation(this.getSelectedNode(), this.getContentTypeCode());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "join");
+			_logger.error("error joining category", t);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
 	
-	@Override
 	public String remove() {
 		try {
 			if (!this.isValidContentType()) return "intro";
@@ -64,7 +66,7 @@ public class CategoryRelationAction extends AbstractContentRelationAction {
 			}
 			this.getContentCategoryRefManager().removeRelation(this.getSelectedNode(), this.getContentTypeCode());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "remove");
+			_logger.error("error removing category", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -73,10 +75,14 @@ public class CategoryRelationAction extends AbstractContentRelationAction {
 	private List<ContentRecordVO> getReferencingContents() throws Throwable {
 		List<ContentRecordVO> list = new ArrayList<ContentRecordVO>();
 		CategoryUtilizer contentManager = (CategoryUtilizer) this.getContentManager();
-		List<ContentRecordVO> referencingContents = contentManager.getCategoryUtilizers(this.getSelectedNode());
-		for (ContentRecordVO contentVo : referencingContents) {
-			if (contentVo.getTypeCode().equals(this.getContentTypeCode())) {
-				list.add(contentVo);
+		List<String> referencingContents = contentManager.getCategoryUtilizers(this.getSelectedNode());
+		for (int i = 0; i < referencingContents.size(); i++) {
+			String contentId = referencingContents.get(i);
+			if (contentId.startsWith(this.getContentTypeCode())) {
+				ContentRecordVO contentVo = this.getContentManager().loadContentVO(contentId);
+				if (null != contentVo) {
+					list.add(contentVo);
+				}
 			}
 		}
 		return list;

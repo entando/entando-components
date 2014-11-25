@@ -25,80 +25,29 @@
 					<s:set var="selectedTreeNode" value="%{selectedNode}" />
 					<s:set var="liClassName" value="'category'" />
 					<s:set var="treeItemIconName" value="'fa-folder'" />
-
 					<s:if test="%{#categoryTreeStyleVar == 'classic'}">
 						<s:set var="currentRoot" value="allowedTreeRootNode" />
 						<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
 					</s:if>
 					<s:elseif test="%{#categoryTreeStyleVar == 'request'}">
-						<s:set var="openTreeActionName" value="'openCloseFacetTree'" />
-						<s:set var="closeTreeActionName" value="'openCloseFacetTree'" />
+						<s:set var="openTreeActionName" value="'openCloseCategoryTree'" />
+						<s:set var="closeTreeActionName" value="'openCloseCategoryTree'" />
 						<s:set var="currentRoot" value="showableTree" />
-						<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-links.jsp" />
+						<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-submits.jsp" />
 					</s:elseif>
 				</ul>
-
-			<%-- mocked category tree
-				<div class="panel-body">
-						<ul id="categoryTree" class="fa-ul list-unstyled">
-								<li class="category tree_node_flag"><span class="icon fa fa-li fa-folder"></span>&#32;
-										<input type="radio" name="selectedNode" id="fagianonode_home" value="home" class="subTreeToggler tree_home" />&#32;
-										<label for="fagianonode_home">All</label>
-										<ul class="treeToggler fa-ul" id="tree_home">
-												<li class="category tree_node_flag"><span class="icon fa fa-li fa-folder"></span>&#32;
-														<input type="radio" name="selectedNode" id="fagianonode_1" value="1" class="subTreeToggler tree_1" />&#32;
-														<label for="fagianonode_1">1</label>
-														<ul class="treeToggler fa-ul" id="tree_1">
-																<li class="category tree_node_flag"><span class="icon fa fa-li fa-folder"></span>&#32;
-																		<input type="radio" name="selectedNode" id="fagianonode_11" value="11" class="subTreeToggler tree_11" />&#32;
-																		<label for="fagianonode_11">11</label>
-																		<ul class="treeToggler fa-ul" id="tree_11">
-																				<li class="category tree_node_flag"><span class="icon fa fa-li fa-folder-o"></span>&#32;
-																						<input type="radio" name="selectedNode" id="fagianonode_111" value="111" />&#32;
-																						<label for="fagianonode_111">111</label>
-																				</li>
-																		</ul>
-																</li>
-														</ul>
-												</li>
-												<li class="category tree_node_flag"><span class="icon fa fa-li fa-folder"></span>&#32;
-														<input type="radio" name="selectedNode" id="fagianonode_2" value="2" class="subTreeToggler tree_2" />&#32;
-														<label for="fagianonode_2">2</label>
-														<ul class="treeToggler fa-ul" id="tree_2">
-																<li class="category tree_node_flag"><span class="icon fa fa-li fa-folder"></span>&#32;
-																		<input type="radio" name="selectedNode" id="fagianonode_22" value="22" class="subTreeToggler tree_22" />&#32;
-																		<label for="fagianonode_22">22</label>
-																		<ul class="treeToggler fa-ul" id="tree_22">
-																				<li class="category tree_node_flag"><span class="icon fa fa-li fa-folder-o"></span>&#32;
-																						<input type="radio" name="selectedNode" id="fagianonode_222" value="222" />&#32;
-																						<label for="fagianonode_222">222</label>
-																				</li>
-																		</ul>
-																</li>
-														</ul>
-												</li>
-												<li class="category tree_node_flag"><span class="icon fa fa-li fa-folder-o"></span>&#32;
-														<input type="radio" name="selectedNode" id="fagianonode_3" value="3" />&#32;
-														<label for="fagianonode_3">3</label>
-												</li>
-										</ul>
-								</li>
-						</ul>
-				</div>
-			 --%>
-			<%-- mocked category tree --%>
 		</fieldset>
 
 		<%-- Fieldset button --%>
 			<fieldset data-toggle="tree-toolbar"><legend><s:text name="label.actions" /></legend>
 				<div class="btn-toolbar" data-toggle="tree-toolbar-actions">
-						<%-- Join button --%>
-							<div class="btn-group btn-group-sm margin-small-top margin-small-bottom">
-								<wpsf:submit action="join" type="button" title="%{getText('label.join')}" cssClass="btn btn-info" data-toggle="tooltip">
-									<span class="icon fa fa-plus">&#32;
-									</span>
-								</wpsf:submit>
-							</div>
+					<%-- Join button --%>
+						<div class="btn-group btn-group-sm margin-small-top margin-small-bottom">
+							<wpsf:submit action="join" type="button" title="%{getText('label.join')}" cssClass="btn btn-info" data-toggle="tooltip">
+								<span class="icon fa fa-plus">&#32;
+								</span>
+							</wpsf:submit>
+						</div>
 				</div>
 			</fieldset>
 
