@@ -25,14 +25,14 @@
 			<th><s:text name="jpcontentrefs.label.code" /></th>
 			<th><s:text name="jpcontentrefs.label.description" /></th>
 			<th><s:text name="jpcontentrefs.label.group" /></th>
-			<th><s:text name="jpcontentrefs.label.lastModify" /></th>
+			<th class="text-center text-nowrap"><s:text name="jpcontentrefs.label.lastModify" /></th>
 		</tr>
 		<s:iterator value="references" var="content" >
 			<tr>
 				<td><code><s:property value="#content.id" /></code></td>
 				<td><s:property value="#content.descr" /></td>
 				<td><s:property value="#content.mainGroupCode" /></td>
-				<td class="icon"><span class="monospace"><s:date name="#content.modify" format="dd/MM/yyyy HH:mm" /></span></td>
+				<td class="text-center text-nowrap"><code><s:date name="#content.modify" format="dd/MM/yyyy HH:mm" /></code></td>
 			</tr>
 		</s:iterator>
 	</table>

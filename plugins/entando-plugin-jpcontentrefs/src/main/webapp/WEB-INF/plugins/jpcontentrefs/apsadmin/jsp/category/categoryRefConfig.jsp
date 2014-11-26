@@ -19,23 +19,25 @@
 
 		<fieldset class="panel panel-default">
 			<div class="panel-heading"><s:text name="jpcontentrefs.title.categoryTree" /></div>
-			<%-- Category tree --%>
-				<ul id="categoryTree" class="fa-ul list-unstyled">
-					<s:set var="inputFieldName" value="%{'selectedNode'}" />
-					<s:set var="selectedTreeNode" value="%{selectedNode}" />
-					<s:set var="liClassName" value="'category'" />
-					<s:set var="treeItemIconName" value="'fa-folder'" />
-					<s:if test="%{#categoryTreeStyleVar == 'classic'}">
-						<s:set var="currentRoot" value="allowedTreeRootNode" />
-						<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
-					</s:if>
-					<s:elseif test="%{#categoryTreeStyleVar == 'request'}">
-						<s:set var="openTreeActionName" value="'openCloseCategoryTree'" />
-						<s:set var="closeTreeActionName" value="'openCloseCategoryTree'" />
-						<s:set var="currentRoot" value="showableTree" />
-						<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-submits.jsp" />
-					</s:elseif>
-				</ul>
+			<div class="panel-body">
+				<%-- Category tree --%>
+					<ul id="categoryTree" class="fa-ul list-unstyled">
+						<s:set var="inputFieldName" value="%{'selectedNode'}" />
+						<s:set var="selectedTreeNode" value="%{selectedNode}" />
+						<s:set var="liClassName" value="'category'" />
+						<s:set var="treeItemIconName" value="'fa-folder'" />
+						<s:if test="%{#categoryTreeStyleVar == 'classic'}">
+							<s:set var="currentRoot" value="allowedTreeRootNode" />
+							<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
+						</s:if>
+						<s:elseif test="%{#categoryTreeStyleVar == 'request'}">
+							<s:set var="openTreeActionName" value="'openCloseCategoryTree'" />
+							<s:set var="closeTreeActionName" value="'openCloseCategoryTree'" />
+							<s:set var="currentRoot" value="showableTree" />
+							<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-submits.jsp" />
+						</s:elseif>
+					</ul>
+			</div>
 		</fieldset>
 
 		<%-- Fieldset button --%>
