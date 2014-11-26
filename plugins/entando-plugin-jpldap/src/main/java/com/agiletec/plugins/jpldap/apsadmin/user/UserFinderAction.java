@@ -17,24 +17,21 @@
 */
 package com.agiletec.plugins.jpldap.apsadmin.user;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.beanutils.BeanComparator;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jpldap.aps.system.services.user.ILdapUserManager;
+
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 
 /**
- * Classe action delegate alla ricerca utenti.
  * @author E.Santoboni
  */
 public class UserFinderAction extends org.entando.entando.apsadmin.user.UserProfileFinderAction {
-	
+
 	@Override
 	public List<String> getSearchResult() {
 		List<String> mainSearchResult = super.getSearchResult();
@@ -56,7 +53,7 @@ public class UserFinderAction extends org.entando.entando.apsadmin.user.UserProf
 			throw new RuntimeException("Error while searching users", t);
 		}
 	}
-	
+
 	protected List<String> getLdapUsernames() throws ApsSystemException {
 		List<UserDetails> users = ((ILdapUserManager) this.getUserManager()).searchUsers(this.getUsername(), true);
 		List<String> usernames = new ArrayList<String>();
@@ -68,14 +65,14 @@ public class UserFinderAction extends org.entando.entando.apsadmin.user.UserProf
 		}
 		return usernames;
 	}
-	
+
 	public Integer getUserType() {
 		return _userType;
 	}
 	public void setUserType(Integer userType) {
 		this._userType = userType;
 	}
-	
+
 	private Integer _userType;
-	
+
 }

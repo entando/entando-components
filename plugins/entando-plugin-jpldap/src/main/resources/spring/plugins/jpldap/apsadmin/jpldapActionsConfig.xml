@@ -5,18 +5,6 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
     
-    <bean id="userAction" scope="prototype" 
-            class="com.agiletec.plugins.jpldap.apsadmin.user.UserAction" parent="abstractBaseAction" >
-        <property name="userManager" ref="UserManager" />
-    </bean>
-    
-    <bean id="userFinderAction" scope="prototype" 
-            class="com.agiletec.plugins.jpldap.apsadmin.user.UserFinderAction" parent="abstractBaseAction" >
-        <property name="userProfileManager" ref="UserProfileManager" />
-        <property name="userManager" ref="UserManager" />
-        <property name="entityActionHelper" ref="entityActionHelper" />
-    </bean>
-    
     <bean id="jpldapUserFindingFormFieldHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
         <property name="filePath"><value>/WEB-INF/plugins/jpldap/apsadmin/jsp/user/user-list-formField-jack.jsp</value></property>
         <property name="hookPointKey"><value>core.user-list.form-field</value></property>
