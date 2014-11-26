@@ -61,7 +61,7 @@ public class UserAction extends org.entando.entando.apsadmin.user.UserAction {
 			this.addActionError(this.getText("error.user.notExist"));
 			return "userList";
 		}
-		if (!this.getUserManager().isWriteUserEnable() && !this.isJapsUser(this.getUsername())) {
+		if (!this.getUserManager().isWriteUserEnable() && !this.isEntandoUser(this.getUsername())) {
 			this.addActionError(this.getText("error.user.notLocal"));
 			return "userList";
 		}

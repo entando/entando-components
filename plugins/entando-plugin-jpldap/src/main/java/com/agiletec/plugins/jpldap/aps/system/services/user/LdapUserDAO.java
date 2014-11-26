@@ -76,13 +76,10 @@ public class LdapUserDAO implements ILdapUserDAO {
 			dirCtx.createSubcontext(this.getEntryName(user), attrs);
 		} catch (ConnectException e) {
 			_logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (CommunicationException e) {
          	_logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (PartialResultException e) {
         	_logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (Throwable t) {
             throw new RuntimeException("Error while adding user '" + user.getUsername() + "'", t);
         } finally {
@@ -113,13 +110,10 @@ public class LdapUserDAO implements ILdapUserDAO {
 			result = dirCtx.createSubcontext(this.getBaseDn(), attrs);
 		} catch (ConnectException e) {
 			_logger.error("Error while adding new OU : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (CommunicationException e) {
         	_logger.error("Error while adding new OU : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (PartialResultException e) {
         	_logger.error("Error while adding new OU : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (Throwable t) {
         	_logger.error("Error while adding new OU.", t);
             throw new RuntimeException("Error while adding new OU ", t);
@@ -203,13 +197,10 @@ public class LdapUserDAO implements ILdapUserDAO {
 			dirCtx.destroySubcontext(uid);
 		} catch (ConnectException e) {
             _logger.error("Error while deleting user '{}' : Directory not available", uid, e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (CommunicationException e) {
         	_logger.error("Error while deleting user '{}' : Directory not available", uid, e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (PartialResultException e) {
         	_logger.error("Error while deleting user '{}' : Directory not available", uid, e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (Throwable t) {
         	_logger.error("Error while deleting user '{}'", t);
             throw new RuntimeException("Error while deleting user '" + uid + "'", t);
@@ -246,13 +237,10 @@ public class LdapUserDAO implements ILdapUserDAO {
 			dirCtx.modifyAttributes(uid, mods);
 		} catch (ConnectException e) {
 			_logger.error("Error while editing user '{}' : Directory not available", uid, e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (CommunicationException e) {
         	_logger.error("Error while editing user '{}' : Directory not available", uid, e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (PartialResultException e) {
         	_logger.error("Error while editing user '{}' : Directory not available", uid, e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (Throwable t) {
             throw new RuntimeException("Error while editing user '" + uid + "'", t);
         } finally {
@@ -311,13 +299,10 @@ public class LdapUserDAO implements ILdapUserDAO {
             }
         } catch (ConnectException e) {
         	_logger.error("Extracting SearchResult : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (CommunicationException e) {
         	_logger.error("Extracting SearchResult : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (PartialResultException e) {
         	_logger.error("Extracting SearchResult : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (Throwable t) {
             throw new RuntimeException("Error extracting serach result ", t);
         } finally {
@@ -361,13 +346,10 @@ public class LdapUserDAO implements ILdapUserDAO {
             answer.close();
         } catch (ConnectException e) {
         	_logger.error("Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (CommunicationException e) {
         	_logger.error("Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (NamingException e) {
         	_logger.error("user authentication '{}' : Directory not available", username, e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (Throwable t) {
         	_logger.error("Error verifying user authentication {}", username, t);
             throw new RuntimeException("Error verifying user authentication " + username, t);
@@ -449,13 +431,10 @@ public class LdapUserDAO implements ILdapUserDAO {
             }
         } catch (ConnectException e) {
         	_logger.error("Error loading users : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (CommunicationException e) {
         	_logger.error("Error loading users : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (NamingException e) {
         	_logger.error("Error loading users : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (Throwable t) {
         	_logger.error("Error loading users", t);
             throw new RuntimeException("Error loading users", t);
@@ -486,13 +465,10 @@ public class LdapUserDAO implements ILdapUserDAO {
             }
         } catch (ConnectException e) {
         	_logger.error("Error loading users : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (CommunicationException e) {
         	_logger.error("Error loading users : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (NamingException e) {
         	_logger.error("Error loading users : Directory not available", e);
-            //non rilancia eccezioni in maniera da non fermare i servizi in caso di non funzionamento della Directory
         } catch (Throwable t) {
         	_logger.error("Error loading users ", t);
             throw new RuntimeException("Error loading users", t);
@@ -519,7 +495,6 @@ public class LdapUserDAO implements ILdapUserDAO {
 						sslsf = sslC.getSocketFactory();
 					} catch(NoSuchAlgorithmException nSAE) {
 						_logger.error("error Hier: {}", nSAE.getMessage(), nSAE);
-						//ApsSystemUtils.logThrowable(nSAE, this, "Hier: " + nSAE.getMessage());
 					} catch(KeyManagementException kME) {
 						_logger.error("error Hier: {}", kME.getMessage(), kME);
 					}
