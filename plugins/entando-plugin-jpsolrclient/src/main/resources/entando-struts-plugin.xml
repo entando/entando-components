@@ -5,6 +5,6 @@
 
 <struts>
 	
-	<include file="org/entando/entando/plugins/jpsolrclient/aps/system/jpsolrclient.xml"/>
+	<include file="org/entando/entando/plugins/jpsolrclient/apsadmin/config/jpsolrclient.xml" />
 	
 </struts>
