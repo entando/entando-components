@@ -32,7 +32,7 @@
 				<td><code><s:property value="#content.id" /></code></td>
 				<td><s:property value="#content.descr" /></td>
 				<td><s:property value="#content.mainGroupCode" /></td>
-				<td class=" class="text-center text-nowrap""><s:date name="#content.modify" format="dd/MM/yyyy HH:mm" /></td>
+				<td class="text-center text-nowrap"><code><s:date name="#content.modify" format="dd/MM/yyyy HH:mm" /></code></td>
 			</tr>
 		</s:iterator>
 	</table>
