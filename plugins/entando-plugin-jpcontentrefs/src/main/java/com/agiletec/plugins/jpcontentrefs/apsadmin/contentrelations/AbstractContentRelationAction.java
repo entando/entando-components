@@ -26,9 +26,8 @@ import java.util.List;
 /**
  * @author E.Santoboni
  */
-public abstract class AbstractContentRelationAction extends AbstractTreeAction implements IContentRelationAction {
+public abstract class AbstractContentRelationAction extends AbstractTreeAction {
 	
-	@Override
 	public String edit() {
 		if (!this.isValidContentType()) {
 			return "intro";

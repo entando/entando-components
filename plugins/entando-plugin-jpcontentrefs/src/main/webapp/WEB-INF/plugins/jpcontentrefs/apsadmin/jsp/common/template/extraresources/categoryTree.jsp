@@ -1,35 +1,9 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
-
-<s:include value="/WEB-INF/apsadmin/jsp/common/template/defaultExtraResources.jsp" />
-
-<s:set var="categoryTreeStyleVar" ><wp:info key="systemParam" paramName="treeStyle_category" /></s:set>
-
+<s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-common.jsp" />
 <script type="text/javascript">
-<!--//--><![CDATA[//><!--
-window.addEvent('domready', function(){
-<s:if test="#categoryTreeStyleVar == 'classic'">
-	var catTree  = new Wood({
-		menuToggler: "subTreeToggler",
-		rootId: "categoryTree",
-		closedClass: "node_closed",
-		showTools: "true",
-		expandAllLabel: "<s:text name="label.expandAll" />",
-		collapseAllLabel: "<s:text name="label.collapseAll" />",
-		type: "tree",
-		<s:if test="%{selectedNode != null && !(selectedNode.equalsIgnoreCase(''))}">
-		startIndex: "fagianonode_<s:property value="selectedNode" />",
-		</s:if>
-		toolTextIntro: "<s:text name="label.introExpandAll" />",
-		toolexpandAllLabelTitle: "<s:text name="label.expandAllTitle" />",
-		toolcollapseLabelTitle: "<s:text name="label.collapseAllTitle" />"	
+	jQuery(function() {
+		<s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/inc/snippet-categoryTree.jsp" />
+		<s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/inc/js_trees_context_menu.jsp" />
 	});
-</s:if>
-
-<s:if test="#myClient == 'advanced'">
-	<s:include value="/WEB-INF/apsadmin/jsp/common/template/extraresources/inc/js_trees_context_menu.jsp" />
-</s:if>
-	
-});
-
-//--><!]]></script>
+</script>

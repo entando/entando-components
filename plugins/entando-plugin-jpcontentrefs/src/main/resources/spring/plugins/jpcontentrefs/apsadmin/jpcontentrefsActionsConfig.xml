@@ -16,6 +16,7 @@
 		<property name="contentManager" ref="jacmsContentManager" />
 		<property name="categoryManager" ref="CategoryManager" />
 		<property name="contentCategoryRefManager" ref="jpcontentrefsContentCategoryRefManager" />
+		<property name="treeHelper" ref="categoryActionHelper" />
 	</bean>
 	
 	<bean id="jpcontentrefsCategoryReferencesHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
