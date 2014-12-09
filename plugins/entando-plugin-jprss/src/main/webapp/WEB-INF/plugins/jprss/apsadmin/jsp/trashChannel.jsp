@@ -2,16 +2,30 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
-<s:set var="targetNS" value="%{'/do/jprss/Rss'}" />
-<h1><s:text name="jprss.title.rssManagement" /><s:include value="/WEB-INF/apsadmin/jsp/common/inc/operations-context-general.jsp" /></h1>
 
-<div id="main">
-	<s:form action="delete">
+<h1 class="panel panel-default title-page">
+	<span class="panel-body display-block">
+		<a href="<s:url namespace="/do/jprss/Rss" action="list" />"><s:text name="jprss.title.rssManagement" /></a>
+		&#32;/&#32;
+		<s:text name="jprss.title.userManagement.channelTrash" />
+	</span>
+</h1>
+<s:form action="delete" namespace="/do/jprss/Rss">
+	<p class="sr-only">
+		<wpsf:hidden name="id" />
+	</p>
+	<div class="alert alert-warning">
 		<p>
-			<wpsf:hidden name="id" />
-			<s:text name="note.deleteChannel.areYouSure" />&#32;<em class="important"><s:property value="title"/></em>?
-			&#32;
-			<wpsf:submit useTabindexAutoIncrement="true" value="%{getText('label.remove')}" cssClass="button" />
+			<s:text name="note.deleteChannel.areYouSure" />&#32;
+			<code><s:property value="title"/></code>?
 		</p>
-	</s:form>
-</div>
+		<div class="text-center margin-large-top">
+			<wpsf:submit type="button" cssClass="btn btn-warning btn-lg">
+			    <span class="icon fa fa-times-circle"></span>&#32;
+				<s:text name="label.confirm" />
+			</wpsf:submit>
+			<a class="btn btn-link" href="<s:url namespace="/do/jprss/Rss" action="list" />">
+			<s:text name="note.goToSomewhere" />:&#32;<s:text name="jprss.title.rssManagement" /></a>
+		</div>
+	</div>
+</s:form>
