@@ -18,12 +18,7 @@
 package org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.io.IOException;
 import java.io.InputStream;
-import javax.xml.parsers.ParserConfigurationException;
-import org.apache.tiles.definition.DefinitionsFactoryException;
-import org.eclipse.aether.resolution.ArtifactResolutionException;
-import org.xml.sax.SAXException;
 
 /**
  * @author M.Casari

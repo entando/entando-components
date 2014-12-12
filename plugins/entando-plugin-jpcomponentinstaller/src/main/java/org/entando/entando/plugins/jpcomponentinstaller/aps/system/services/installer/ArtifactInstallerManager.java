@@ -17,7 +17,6 @@
 */
 package org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer;
 
-import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;

@@ -24,8 +24,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- *
- * @author casari
+ * @author M.Casari
  */
 public class XmlWebApplicationContext extends org.springframework.web.context.support.XmlWebApplicationContext {
 

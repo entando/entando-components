@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software;
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package org.entando.entando.plugins.jpcomponentinstaller.aps.system;
