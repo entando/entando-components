@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpcomponentinstaller_do/jpcomponentinstaller/Installer" namespace="/do/jpcomponentinstaller/Installer" extends="entando-default">
+		
+        <action name="intro" class="jpcomponentinstallerInstallerAction">
+            <result type="tiles">admin.jpcomponentinstaller.intro</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+		
+        <action name="chooseVersion" class="jpcomponentinstallerInstallerAction" method="chooseVersion">
+            <result name="intro" type="tiles">admin.jpcomponentinstaller.intro</result>
+            <result type="tiles">admin.jpcomponentinstaller.chooseVersion</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+		
+        <action name="downloadIntro" class="jpcomponentinstallerInstallerAction" method="downloadIntro">
+            <result name="intro" type="tiles">admin.jpcomponentinstaller.intro</result>
+            <result name="chooseVersion" type="tiles">admin.jpcomponentinstaller.chooseVersion</result>
+            <result type="tiles">admin.jpcomponentinstaller.install.confirmDownload</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+	
+        <action name="installIntro" class="jpcomponentinstallerInstallerAction" method="installIntro">
+            <result name="intro" type="tiles">admin.jpcomponentinstaller.intro</result>
+            <result name="chooseVersion" type="tiles">admin.jpcomponentinstaller.chooseVersion</result>
+            <result type="tiles">admin.jpcomponentinstaller.install.confirmInstall</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+		
+        <action name="install" class="jpcomponentinstallerInstallerAction" method="install">
+            <result name="intro" type="tiles">admin.jpcomponentinstaller.intro</result>
+            <result name="chooseVersion" type="tiles">admin.jpcomponentinstaller.chooseVersion</result>
+            <result type="tiles">admin.jpcomponentinstaller.intro</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+		
+    </package>
+	
+</struts>

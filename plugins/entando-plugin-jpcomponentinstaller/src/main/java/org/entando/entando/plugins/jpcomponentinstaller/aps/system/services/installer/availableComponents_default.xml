@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components>
+	<plugins>
+		<type>PLUGIN</type>
+		<label>PLUGINS</label>
+		
+		<artifact>
+			<description>Faceted Navigation</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpfacetnav</artifactId>
+		</artifact>
+		<artifact>
+			<description>Mail</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpmail</artifactId>
+		</artifact>
+		<artifact>
+			<description>Web Form (Community)</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpwebdynamicform</artifactId>
+		</artifact>
+		<artifact>
+			<description>RSS</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jprss</artifactId>
+		</artifact>
+		<artifact>
+			<description>LDAP</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpldap</artifactId>
+		</artifact>
+		<artifact>
+			<description>User Profile</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpuserprofile</artifactId>
+		</artifact>
+		<artifact>
+			<description>User Registration</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpuserreg</artifactId>
+		</artifact>
+		<artifact>
+			<description>Address Book</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpaddressbook</artifactId>
+		</artifact>
+		<artifact>
+			<description>Newsletter</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpnewsletter</artifactId>
+		</artifact>
+		<artifact>
+			<description>Survey</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpsurvey</artifactId>
+		</artifact>
+		<artifact>
+			<description>Avatar</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpavatar</artifactId>
+		</artifact>
+		<!--
+		<artifactId>entando-plugin-jpactionlogger</artifactId>
+		<artifactId>entando-plugin-jpcasclient</artifactId>
+		<artifactId>entando-plugin-jpstats</artifactId>
+		<artifactId>entando-plugin-jpshowletreplicator</artifactId>
+		-->
+		<artifact>
+			<description>Fast Content Edit</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpfastcontentedit</artifactId>
+		</artifact>
+		<artifact>
+			<description>GeoReferenced Content</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpgeoref</artifactId>
+		</artifact>
+		<artifact>
+			<description>Webmail</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpwebmail</artifactId>
+		</artifact>
+		<artifact>
+			<description>Image Map</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpimagemap</artifactId>
+		</artifact>
+		<artifact>
+			<description>Photo Gallery</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpphotogallery</artifactId>
+		</artifact>
+		<artifact>
+			<description>RSS Aggregator</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jprssaggregator</artifactId>
+		</artifact>
+		<artifact>
+			<description>Widget Utils</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpwidgetutils</artifactId>
+		</artifact>
+		<artifact>
+			<description>Massive Resource Loader</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpmassiveresourceloader</artifactId>
+		</artifact>
+		<artifact>
+			<description>Content Versioning</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpversioning</artifactId>
+		</artifact>
+		<artifact>
+			<description>Content Workflow</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpcontentworkflow</artifactId>
+		</artifact>
+		<artifact>
+			<description>Content Feedback</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpcontentfeedback</artifactId>
+		</artifact>
+		<artifact>
+			<description>Content Tag Cloud</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpcmstagcloud</artifactId>
+		</artifact>
+		
+		<!--
+		<artifactId>entando-plugin-jpcontentrefs</artifactId>
+		<artifactId>entando-plugin-jptokenapi</artifactId>
+		<artifactId>entando-plugin-jpehcache</artifactId>
+		<artifactId>entando-plugin-jps3awsclient</artifactId>
+		<artifactId>entando-plugin-jpsolrclient</artifactId>
+		-->
+		
+		<artifact>
+			<description>My Portal</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpmyportalplus</artifactId>
+		</artifact>
+		<artifact>
+			<description>Front Shortcut</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpfrontshortcut</artifactId>
+		</artifact>
+		
+		<artifact>
+			<description>Blog</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpblog</artifactId>
+		</artifact>
+		<artifact>
+			<description>Collaboration</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpcollaboration</artifactId>
+		</artifact>
+		<!--
+		<artifact>
+			<description>Forum</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpforum</artifactId>
+		</artifact>
+		-->
+		<!--
+		<artifactId>entando-plugin-jpoauthclient</artifactId>
+		<artifactId>entando-plugin-jpsocial</artifactId>
+		<artifactId>entando-plugin-jpxsswarden</artifactId>
+		-->
+		<artifact>
+			<description>Web Form</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpwebform</artifactId>
+		</artifact>
+		<artifact>
+			<description>File Attribute</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpfileattribute</artifactId>
+		</artifact>
+		<artifact>
+			<description>SEO</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpseo</artifactId>
+		</artifact>
+		<!--
+		<artifactId>entando-plugin-jpmemcached</artifactId>
+		-->
+		
+		<artifact>
+			<description>Share Docs</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpsharedocs</artifactId>
+		</artifact>
+		<artifact>
+			<description>Weather Forecast</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpweatherforecast</artifactId>
+		</artifact>
+		<artifact>
+			<description>Mailgun</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpmailgun</artifactId>
+		</artifact>
+		<artifact>
+			<description>Email Marketing</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpemailmarketing</artifactId>
+		</artifact>
+		<artifact>
+			<description>JasperSoft Connector</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpjasper</artifactId>
+		</artifact>
+		<artifact>
+			<description>Pentaho Connector</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jppentaho</artifactId>
+		</artifact>
+		<artifact>
+			<description>SugarCRM Connector</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpsugarcrm</artifactId>
+		</artifact>
+		<artifact>
+			<description>Activiti BPM Connector</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpactiviti</artifactId>
+		</artifact>
+		
+		<!--
+		<artifactId>entando-plugin-jpremotenotifier</artifactId>
+		<artifactId>entando-plugin-jpforumremotenotifier</artifactId>
+		<artifactId>entando-plugin-jpwebformremotenotifier</artifactId>
+		<artifactId>entando-plugin-jpblogremotenotifier</artifactId>
+		<artifactId>entando-plugin-jpcrowdsourcingremotenotifier</artifactId>
+		<artifactId>entando-plugin-jpseoremotenotifier</artifactId>
+		<artifactId>entando-plugin-jpjasperremotenotifier</artifactId>
+		<artifactId>entando-plugin-jppentahoremotenotifier</artifactId>
+		-->
+		
+		<artifact>
+			<description>SalesForge Connector</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpsalesforce</artifactId>
+		</artifact>
+		<artifact>
+			<description>Constant Contact Connector</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpconstantcontact</artifactId>
+		</artifact>
+		
+		<!--
+		<artifactId>entando-plugin-jpmultisite</artifactId>
+		<artifactId>entando-plugin-jpcomponentinstaller</artifactId>
+		-->
+	</plugins>
+	<ui-bundles>
+		<type>BUNDLE</type>
+		<label>UI Bundles</label>
+		<app-views>
+			<label>APP Views</label>
+			<artifact>
+				<description>Web Form (Community) - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-webdynamicform-default</artifactId>
+			</artifact>
+			<artifact>
+				<description>Calendar - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-calendar-default</artifactId>
+			</artifact>
+			<artifact>
+				<description>RSS - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-rss-default</artifactId>
+			</artifact>
+			<artifact>
+				<description>Faceted Navigation - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-facetnav-default</artifactId>
+			</artifact>
+			<artifact>
+				<description>User Registration - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-userreg-default</artifactId>
+			</artifact>
+			<artifact>
+				<description>Address Book - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-addressbook-default</artifactId>
+			</artifact>
+			<artifact>
+				<description>Newsletter - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-newsletter-default</artifactId>
+			</artifact>
+			<artifact>
+				<description>Survey - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-survey-default</artifactId>
+			</artifact>
+			<artifact>
+				<description>Blog - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-blog-default</artifactId>
+			</artifact>
+		</app-views>
+		<content-types>
+			<label>Content Type</label>
+			<artifact>
+				<description>Generic Content</description>
+				<groupId>org.entando.entando.bundles.contents</groupId>
+				<artifactId>entando-content-generic</artifactId>
+			</artifact>
+			<artifact>
+				<description>News</description>
+				<groupId>org.entando.entando.bundles.contents</groupId>
+				<artifactId>entando-content-news</artifactId>
+			</artifact>
+			<artifact>
+				<description>Download card</description>
+				<groupId>org.entando.entando.bundles.contents</groupId>
+				<artifactId>entando-content-download</artifactId>
+			</artifact>
+			<artifact>
+				<description>Generic government Resolution</description>
+				<groupId>org.entando.entando.bundles.contents</groupId>
+				<artifactId>entando-content-resolution</artifactId>
+			</artifact>
+			<artifact>
+				<description>Announcement</description>
+				<groupId>org.entando.entando.bundles.contents</groupId>
+				<artifactId>entando-content-announcement</artifactId>
+			</artifact>
+			
+			<artifact>
+				<description>Blog Post</description>
+				<groupId>org.entando.entando.bundles.contents</groupId>
+				<artifactId>entando-content-blogpost</artifactId>
+			</artifact>
+		</content-types>
+		<!--
+		<misc>
+			<label>MISC</label>
+			<groupId>org.entando.entando.bundles.misc</groupId>
+			
+			<artifactId>entando-misc-less</artifactId>
+			<artifactId>entando-misc-jquery</artifactId>
+			<artifactId>entando-misc-jquery-ui</artifactId>
+			<artifactId>entando-misc-html5-essentials</artifactId>
+			<artifactId>entando-misc-bootstrap</artifactId>
+		</misc>
+		-->
+		
+		<page-models>
+			<label>Page Model</label>
+			<artifact>
+				<description>Full width layout, like classic Hero unit</description>
+				<groupId>org.entando.entando.bundles.pages</groupId>
+				<artifactId>entando-page-bootstrap-hero</artifactId>
+			</artifact>
+			<artifact>
+				<description>Classic 2 columns layout</description>
+				<groupId>org.entando.entando.bundles.pages</groupId>
+				<artifactId>entando-page-2columns-left</artifactId>
+			</artifact>
+			<artifact>
+				<description>A dashboard-like page model, used by My Portal Plugin</description>
+				<groupId>org.entando.entando.bundles.pages</groupId>
+				<artifactId>entando-page-myportalplus-basic</artifactId>
+			</artifact>
+		</page-models>
+		
+		<widgets>
+			<label>Widget</label>
+			<artifact>
+				<description>Navigation Bar</description>
+				<groupId>org.entando.entando.bundles.widgets</groupId>
+				<artifactId>entando-widget-navigation_bar</artifactId>
+			</artifact>
+			<artifact>
+				<description>Navigation Menu</description>
+				<groupId>org.entando.entando.bundles.widgets</groupId>
+				<artifactId>entando-widget-navigation_menu</artifactId>
+			</artifact>
+			<artifact>
+				<description>Navigation Breadcrumbs</description>
+				<groupId>org.entando.entando.bundles.widgets</groupId>
+				<artifactId>entando-widget-navigation_breadcrumbs</artifactId>
+			</artifact>
+			<artifact>
+				<description>Choose Language</description>
+				<groupId>org.entando.entando.bundles.widgets</groupId>
+				<artifactId>entando-widget-language_choose</artifactId>
+			</artifact>
+			<artifact>
+				<description>Content Search Form</description>
+				<groupId>org.entando.entando.bundles.widgets</groupId>
+				<artifactId>entando-widget-search_form</artifactId>
+			</artifact>
+			<artifact>
+				<description>Login Form</description>
+				<groupId>org.entando.entando.bundles.widgets</groupId>
+				<artifactId>entando-widget-login_form</artifactId>
+			</artifact>
+			<artifact>
+				<description>Share With...</description>
+				<groupId>org.entando.entando.bundles.widgets</groupId>
+				<artifactId>entando-widget-sharewith</artifactId>
+			</artifact>
+		</widgets>
+	</ui-bundles>
+	<!--
+	<apps>
+		<type>APP</type>
+		<label>APPS</label>
+		<groupId>org.entando.entando.plugins</groupId>
+		<artifactId>entando-app-webdynamicform</artifactId>
+		<artifactId>entando-app-calendar</artifactId>
+		<artifactId>entando-app-rss</artifactId>
+		<artifactId>entando-app-facetnav</artifactId>
+		<artifactId>entando-app-userreg</artifactId>
+		<artifactId>entando-app-addressbook</artifactId>
+		<artifactId>entando-app-newsletter</artifactId>
+		<artifactId>entando-app-survey</artifactId>
+		<artifactId>entando-app-blog</artifactId>
+	</apps>
+	-->
+</components>

@@ -19,14 +19,6 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	<!--
-	<scm>
-		<connection>scm:git:git://github.com/entando/entando-plugins-parent.git</connection>
-		<developerConnection>scm:git:git@github.com:entando/entando-plugins-parent.git</developerConnection>
-		<url>https://github.com/entando/entando-plugins-parent</url>
-		<tag>HEAD</tag>
-	</scm>
-	-->
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
@@ -77,9 +69,9 @@
 		<module>entando-plugin-jptokenapi</module>
 		<module>entando-plugin-jpfrontshortcut</module>
 		<module>entando-plugin-jpehcache</module>
-		
 		<module>entando-plugin-jps3awsclient</module>
 		<module>entando-plugin-jpsolrclient</module>
+		<module>entando-plugin-jpcomponentinstaller</module>
   </modules>
 	<properties>
 		<!--
