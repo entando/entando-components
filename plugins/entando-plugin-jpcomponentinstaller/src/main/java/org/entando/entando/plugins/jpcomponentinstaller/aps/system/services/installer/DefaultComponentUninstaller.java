@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software;
@@ -12,30 +12,38 @@
 * 
 * 
 * 
-* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.util.FileTextReader;
+
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.init.model.IPostProcess;
-import org.entando.entando.aps.system.init.model.InvalidPostProcessResultException;
-import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.FatalBeanException;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.aps.system.init.AbstractInitializerManager;
 import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.IPostProcessor;
 import org.entando.entando.aps.system.init.InstallationReportDAO;
 import org.entando.entando.aps.system.init.model.Component;
+import org.entando.entando.aps.system.init.model.ComponentUninstallerInfo;
+import org.entando.entando.aps.system.init.model.IPostProcess;
+import org.entando.entando.aps.system.init.model.InvalidPostProcessResultException;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.entando.entando.aps.system.init.util.QueryExtractor;
+import org.entando.entando.aps.system.init.util.TableDataUtils;
+import org.entando.entando.aps.system.init.util.TableFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.FatalBeanException;
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.core.io.Resource;
 
 /**
  * @author E.Santoboni
@@ -54,12 +62,46 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
 			if (null == component || null == component.getUninstallerInfo()) {
 				return false;
 			}
-			//backup database
+			this.getDatabaseManager().createBackup();//backup database
+			
+			SystemInstallationReport report = super.extractReport();
+			
 			//move resources (jar, files and folders) on temp folder
+			//TODO
+			
+			ComponentUninstallerInfo ui = component.getUninstallerInfo();
+			
 			//remove records from db
+			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
+			for (int j = 0; j < dataSourceNames.length; j++) {
+				String dataSourceName = dataSourceNames[j];
+				Resource resource = (null != ui) ? ui.getSqlResources(dataSourceName) : null;
+				String script = (null != resource) ? this.readFile(resource) : null;
+				if (null != script && script.trim().length() > 0) {
+					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+					String[] queries = QueryExtractor.extractDeleteQueries(script);
+					TableDataUtils.executeQueries(dataSource, queries, true);
+				}
+			}
+			this.executePostProcesses(ui.getPostProcesses());
+			
 			//drop tables
+			Map<String, List<String>> tableMapping = component.getTableMapping();
+			for (int j = 0; j < dataSourceNames.length; j++) {
+				String dataSourceName = dataSourceNames[j];
+				List<String> classes = tableMapping.get(dataSourceName);
+				if (null != classes && classes.size() > 0) {
+					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+					IDatabaseManager.DatabaseType type = this.getDatabaseManager().getDatabaseType(dataSource);
+					TableFactory tableFactory = new TableFactory(dataSourceName, dataSource, type);
+					tableFactory.dropTables(classes);
+				}
+			}
+			
 			//upgrade report
-		} catch (Exception e) {
+			report.removeComponentReport(component.getCode());
+			this.saveReport(report);
+		} catch (Throwable t) {
 			//restore files on temp folder
 			return false;
 		} finally {
@@ -68,51 +110,9 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
 		return true;
 	}
 	
-	/*
-	public void executePostInitProcesses() throws BeansException {
-		SystemInstallationReport report = null;
-		try {
-			report = this.extractReport();
-			List<Component> components = this.getComponentManager().getCurrentComponents();
-			for (int i = 0; i < components.size(); i++) {
-				Component component = components.get(i);
-				ComponentInstallationReport componentReport = report.getComponentReport(component.getCode(), false);
-				SystemInstallationReport.Status postProcessStatus = componentReport.getPostProcessStatus();
-				if (!postProcessStatus.equals(SystemInstallationReport.Status.INIT)) {
-					continue;
-				}
-				String compEnvKey = (AbstractInitializerManager.Environment.test.equals(this.getEnvironment())) 
-						? AbstractInitializerManager.Environment.test.toString() : AbstractInitializerManager.Environment.production.toString();
-				ComponentEnvironment componentEnvironment = (null != component.getEnvironments()) ? 
-						component.getEnvironments().get(compEnvKey) :
-						null;
-				List<IPostProcess> postProcesses = (null != componentEnvironment) ? componentEnvironment.getPostProcesses() : null;
-				if (null == postProcesses || postProcesses.isEmpty()) {
-					postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
-				} else if (!this.isCheckOnStartup()) {
-					postProcessStatus = SystemInstallationReport.Status.SKIPPED;
-				} else if (!componentReport.isPostProcessExecutionRequired()) {
-					//Porting or restore
-					postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
-				} else {
-					postProcessStatus = this.executePostProcesses(postProcesses);
-				}
-				componentReport.setPostProcessStatus(postProcessStatus);
-				report.setUpdated();
-			}
-		} catch (Throwable t) {
-			_logger.error("Error while executing post processes", t);
-			throw new FatalBeanException("Error while executing post processes", t);
-		} finally {
-			if (null != report && report.isUpdated()) {
-				this.saveReport(report);
-			}
-		}
-	}
-	*/
-	protected SystemInstallationReport.Status executePostProcesses(List<IPostProcess> postProcesses) throws ApsSystemException {
+	protected void executePostProcesses(List<IPostProcess> postProcesses) throws ApsSystemException {
 		if (null == postProcesses || postProcesses.isEmpty()) {
-			return SystemInstallationReport.Status.NOT_AVAILABLE;
+			return;
 		}
 		for (int i = 0; i < postProcesses.size(); i++) {
 			IPostProcess postProcess = postProcesses.get(i);
@@ -125,13 +125,10 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
 				}
 			} catch (InvalidPostProcessResultException t) {
 				_logger.error("Error while executing post process of index {}",i, t);
-				return SystemInstallationReport.Status.INCOMPLETE;
 			} catch (Throwable t) {
 				_logger.error("Error while executing post process - index {}", i, t);
-				return SystemInstallationReport.Status.INCOMPLETE;
 			}
 		}
-		return SystemInstallationReport.Status.OK;
 	}
 	
 	private void saveReport(SystemInstallationReport report) throws BeansException {
@@ -147,6 +144,34 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
 			_logger.error("Error saving report", t);
 			throw new FatalBeanException("Error saving report", t);
 		}
+	}
+	
+	private String[] extractBeanNames(Class beanClass) {
+		ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
+		return factory.getBeanNamesForType(beanClass);
+	}
+	
+	private String readFile(Resource resource) throws Throwable {
+		if (resource == null) {
+			return null;
+		}
+		InputStream is = null;
+		String text = null;
+		try {
+			is = resource.getInputStream();
+			if (null == is) {
+				return null;
+			}
+			text = FileTextReader.getText(is);
+		} catch (Throwable t) {
+			_logger.error("Error reading resource", t);
+			throw new ApsSystemException("Error reading resource", t);
+		} finally {
+			if (null != is) {
+				is.close();
+			}
+		}
+		return text;
 	}
 	
 	public Map<String, IPostProcessor> getPostProcessors() {
