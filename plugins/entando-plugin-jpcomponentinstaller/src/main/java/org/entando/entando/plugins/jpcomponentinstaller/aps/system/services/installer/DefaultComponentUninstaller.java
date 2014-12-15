@@ -21,10 +21,13 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.FileTextReader;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
+import org.apache.commons.collections.ListUtils;
 
 import org.entando.entando.aps.system.init.AbstractInitializerManager;
 import org.entando.entando.aps.system.init.IDatabaseManager;
@@ -89,12 +92,15 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
 			Map<String, List<String>> tableMapping = component.getTableMapping();
 			for (int j = 0; j < dataSourceNames.length; j++) {
 				String dataSourceName = dataSourceNames[j];
-				List<String> classes = tableMapping.get(dataSourceName);
-				if (null != classes && classes.size() > 0) {
+				List<String> tableClasses = tableMapping.get(dataSourceName);
+				if (null != tableClasses && tableClasses.size() > 0) {
+					List<String> newList = new ArrayList<String>();
+					newList.addAll(tableClasses);
+					Collections.reverse(newList);
 					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
 					IDatabaseManager.DatabaseType type = this.getDatabaseManager().getDatabaseType(dataSource);
 					TableFactory tableFactory = new TableFactory(dataSourceName, dataSource, type);
-					tableFactory.dropTables(classes);
+					tableFactory.dropTables(newList);
 				}
 			}
 			
