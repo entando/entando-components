@@ -44,4 +44,19 @@ classpath:sql/plugins/jpnewsletter/serv_data_test.sql
 			</defaultSqlResources>
 		</environment>
 	</installation>
+	<uninstallation>
+		<sqlResources>
+			<datasource name="portDataSource">
+classpath:sql/plugins/jpnewsletter/port_uninstallation.sql
+			</datasource>
+			<datasource name="servDataSource">
+classpath:sql/plugins/jpnewsletter/serv_uninstallation.sql
+			</datasource>
+		</sqlResources>
+		<resources>
+			<resource>WEB-INF/plugins/jpnewsletter/</resource>
+			<resource>WEB-INF/lib/${project.artifactId}-${project.version}.jar</resource>
+			<resource>resources/plugins/jpnewsletter/</resource>
+		</resources>
+	</uninstallation>
 </component>
