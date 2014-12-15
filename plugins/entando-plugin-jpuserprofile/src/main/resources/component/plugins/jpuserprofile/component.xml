@@ -29,4 +29,18 @@ classpath:sql/plugins/jpuserprofile/serv_data_test.sql
 			</defaultSqlResources>
 		</environment>
 	</installation>
+	<uninstallation>
+		<sqlResources>
+			<datasource name="portDataSource">
+classpath:sql/plugins/jpuserprofile/port_uninstallation.sql
+			</datasource>
+			<datasource name="servDataSource">
+classpath:sql/plugins/jpuserprofile/serv_uninstallation.sql
+			</datasource>
+		</sqlResources>
+		<resources>
+			<resource>WEB-INF/plugins/jpuserprofile/</resource>
+			<resource>WEB-INF/lib/${project.artifactId}-${project.version}.jar</resource>
+		</resources>
+	</uninstallation>
 </component>
