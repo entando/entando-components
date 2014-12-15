@@ -32,4 +32,19 @@ classpath:sql/plugins/jpcalendar/serv_data_test.sql
 			</defaultSqlResources>
 		</environment>
 	</installation>
+	<uninstallation>
+		<sqlResources>
+			<datasource name="portDataSource">
+classpath:sql/plugins/jpcalendar/port_uninstallation.sql
+			</datasource>
+			<datasource name="servDataSource">
+classpath:sql/plugins/jpcalendar/serv_uninstallation.sql
+			</datasource>
+		</sqlResources>
+		<resources>
+			<resource>WEB-INF/plugins/jpcalendar/</resource>
+			<resource>WEB-INF/lib/${project.artifactId}-${project.version}.jar</resource>
+			<resource>resources/plugins/jpcalendar/</resource>
+		</resources>
+	</uninstallation>
 </component>
