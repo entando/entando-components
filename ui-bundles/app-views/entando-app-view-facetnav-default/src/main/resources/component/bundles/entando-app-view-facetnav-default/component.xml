@@ -23,4 +23,18 @@ classpath:sql/bundles/entando-app-view-facetnav-default/serv_data_production.sql
 			</defaultSqlResources>
 		</environment>
 	</installation>
+	<uninstallation>
+		<sqlResources>
+			<datasource name="portDataSource">
+classpath:sql/bundles/entando-app-view-facetnav-default/port_uninstallation.sql
+			</datasource>
+			<datasource name="servDataSource">
+classpath:sql/bundles/entando-app-view-facetnav-default/serv_uninstallation.sql
+			</datasource>
+		</sqlResources>
+		<resources>
+			<resource>WEB-INF/plugins/jpfacetnav/aps/</resource>
+			<resource>resources/plugins/jpfacetnav/</resource>
+		</resources>
+	</uninstallation>
 </component>
