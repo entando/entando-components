@@ -17,17 +17,15 @@
 */
 package org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer;
 
-import java.util.List;
+import com.agiletec.aps.system.exception.ApsSystemException;
+
+import org.entando.entando.aps.system.init.model.Component;
 
 /**
  * @author E.Santoboni
  */
-public interface IComponentCatalogueManager {
+public interface IComponentUninstaller {
 	
-	public List<AvailableArtifact> getArtifacts();
-	
-	public AvailableArtifact getArtifact(Integer id);
-	
-	public AvailableArtifact getArtifact(String groupId, String artifactId);
+	public boolean uninstallComponent(Component component) throws ApsSystemException;
 	
 }

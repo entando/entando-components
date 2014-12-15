@@ -53,18 +53,34 @@
 		
 		<table class="table table-bordered table-hover table-condensed table-striped">
 			<tr>
+				<th class="text-center padding-large-left padding-large-right col-xs-4 col-sm-3 col-md-2 col-lg-2"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
 				<th>Component</th>
 				<th class="text-center">Date</th>
 			</tr>
 			<s:iterator var="componentReportVar" value="#currentReportVar.reports">
+			<s:set var="componentVar" value="%{getComponent(#componentReportVar.componentCode)}" />
 			<tr>
+				<td class="text-center text-nowrap">
+					<s:if test="%{null != componentVar.uninstallerInfo}" >
+						<%-- remove --%>
+						<s:url action="installIntro" var="uninstallActionVar">
+							<s:param name="componentCode" value="#componentVar.code"/>
+						</s:url>
+						<div class="btn-group btn-group-xs">
+							<a class="btn btn-warning"
+								href="<s:property value="#uninstallActionVar" escapeHtml="false" />"
+								title="<s:text name="label.uninstall" />: <s:property value="#componentVar.description" />" >
+								<span class="sr-only"><s:text name="label.alt.clear" /></span>
+								<span class="icon fa fa-times-circle-o"></span>&#32;
+							</a>
+						</div>
+					</s:if>
+				</td>
 				<td>
-					<s:set var="componentVar" value="%{getComponent(#componentReportVar.componentCode)}" />
 					<s:property value="#componentVar.description" />&#32;<code><s:property value="#componentReportVar.componentCode" /></code>
 					<br />
 					<s:property value="#componentVar.artifactId" />&#32;<s:property value="#componentVar.artifactGroupId" />&#32;
 					<s:property value="#componentVar.artifactVersion" />&#32;
-					
 				</td>
 				<td class="text-center">
 					<code><s:date name="#componentReportVar.date" format="dd/MM/yyyy HH:mm:ss" /></code>

@@ -32,4 +32,8 @@ public interface IArtifactInstallerManager {
     
     public boolean installArtifact(Integer availableComponentId, String version) throws ApsSystemException;
 	
+	public boolean uninstallArtifact(Integer availableComponentId) throws ApsSystemException;
+	
+	//public boolean uninstallArtifact(Component component) throws ApsSystemException;
+	
 }

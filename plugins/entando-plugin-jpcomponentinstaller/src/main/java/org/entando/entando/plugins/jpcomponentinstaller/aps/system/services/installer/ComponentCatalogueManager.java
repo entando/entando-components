@@ -89,6 +89,23 @@ public class ComponentCatalogueManager extends AbstractService implements ICompo
 	}
 	
 	@Override
+	public AvailableArtifact getArtifact(String groupId, String artifactId) {
+		if (null == groupId || null == artifactId) {
+			return null;
+		}
+		if (null == this._artifacts) {
+			this.loadCatalogue();
+		}
+		for (int i = 0; i < this._artifacts.size(); i++) {
+			AvailableArtifact artifact = this._artifacts.get(i);
+			if (artifact.getGroupId().equals(groupId) && artifact.getArtifactId().equals(artifactId)) {
+				return (AvailableArtifact) artifact.clone();
+			}
+		}
+		return null;
+	}
+	
+	@Override
 	public List<AvailableArtifact> getArtifacts() {
 		if (null == this._artifacts) {
 			this.loadCatalogue();

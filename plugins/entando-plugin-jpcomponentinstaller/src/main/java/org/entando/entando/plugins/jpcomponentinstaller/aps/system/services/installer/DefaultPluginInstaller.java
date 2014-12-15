@@ -21,6 +21,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.BaseConfigManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,7 +29,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.instrument.Instrumentation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -40,20 +40,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.access.TilesAccess;
@@ -63,7 +63,6 @@ import org.apache.tiles.definition.ReloadableDefinitionsFactory;
 import org.apache.tiles.definition.UrlDefinitionsFactory;
 import org.apache.tiles.impl.BasicTilesContainer;
 import org.entando.entando.aps.system.init.InitializerManager;
-import org.entando.entando.apsadmin.common.UserAvatarAction;
 import org.entando.entando.plugins.jpcomponentinstaller.aps.TextProviderSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,26 +79,17 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * @author mcasari
+ * @author M.Casari
  */
 public class DefaultPluginInstaller implements IPluginInstaller, ApplicationContextAware {
 
-    private static final Logger _logger = LoggerFactory.getLogger(UserAvatarAction.class);
+    private static final Logger _logger = LoggerFactory.getLogger(DefaultPluginInstaller.class);
 
-    private ApplicationContext applicationContext;
-
-    private String artifactName;
-
+    private ApplicationContext _applicationContext;
+	
     @Override
     public void install(AvailableArtifact availableArtifact, String version, InputStream is) throws ApsSystemException {
-        String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
-        //TODO PARLARE CON MARIO
-        //IL FILE WAR contiene anche le dipendenze, non c'è bisogno di scaricare anche quelle...
-        System.out.println("*************INSTALL****************");
-        System.out.println("filename " + filename);
-        System.out.println("type " + availableArtifact.getType());
-        System.out.println("version " + version);
-        System.out.println("*****************************");
+        //String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
         try {
             if (availableArtifact.getType() == AvailableArtifact.Type.PLUGIN) {
                 this.installPlugin(availableArtifact, version, is);
@@ -110,17 +100,18 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
             } else {
                 throw new ApsSystemException("Wrong artifact type value");
             }
-        } catch (Exception e) {
-            throw new ApsSystemException("Unexpected error during artifact installation", e);
+        } catch (Throwable t) {
+			_logger.error("Unexpected error during artifact installation", t);
+            throw new ApsSystemException("Unexpected error during artifact installation", t);
         }
     }
-
+	
     private void installPlugin(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
 
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) applicationContext).getServletContext();
-
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
+		
         String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
-        artifactName = availableArtifact.getArtifactId().split("-")[2];
+        String artifactName = availableArtifact.getArtifactId().split("-")[2];
 
         String appRootPath = servletContext.getRealPath("/");
         File destDir = new File(appRootPath);
@@ -178,7 +169,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
     }
 
     private void installBundle(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) applicationContext).getServletContext();
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
 
         String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
         String artifactName = availableArtifact.getArtifactId().split("-")[2];
@@ -194,9 +185,9 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
                 + File.separator + artifactName);
         FileUtils.copyDirectory(artifactFileRootDir, destDir);
 
-        InitializerManager initializerManager = (InitializerManager) applicationContext.getBean("InitializerManager");
+        InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
         initializerManager.init();
-        BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) applicationContext).getBean(SystemConstants.BASE_CONFIG_MANAGER);
+        BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) _applicationContext).getBean(SystemConstants.BASE_CONFIG_MANAGER);
         baseConfigManager.init();
     }
 
@@ -282,7 +273,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
             _logger.debug("Trying to load resources @{}", cur);
             LocalizedTextUtil.addDefaultResourceBundle(cur + this.PLUGIN_RESOURCE_NAME);
         }
-        _logger.info("JapsPluginLabelListener summary: {} plugin detected ({} under development)", (classPlugins.size() + jaredPlugins.size()), classPlugins.size());
+        _logger.info("EntandoPluginLabelListener summary: {} plugin detected ({} under development)", (classPlugins.size() + jaredPlugins.size()), classPlugins.size());
     }
 
     /**
@@ -384,7 +375,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
     }
 
     private ApplicationContext loadContext(String[] configLocations, URLClassLoader cl, String contextDisplayName, Properties properties) throws Exception {
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) applicationContext).getServletContext();
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
 
         //if plugin's classes have been loaded we can go on
         List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
@@ -402,7 +393,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
             if (initializerManager != null) {
                 initializerManager.init();
             }
-            BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) applicationContext).getBean("BaseConfigManager");
+            BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) _applicationContext).getBean("BaseConfigManager");
             baseConfigManager.init();
             newContext.setDisplayName(contextDisplayName);
             ctxList.add(newContext);
@@ -468,7 +459,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         newContext.addBeanFactoryPostProcessor(configurer);
         newContext.setClassLoader(cl);
         newContext.setConfigLocations(configLocations);
-        newContext.setParent(applicationContext);
+        newContext.setParent(_applicationContext);
         newContext.refresh();
 
         return newContext;
@@ -550,12 +541,12 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         }
         return resultFile;
     }
-
+	
     @Override
     public void setApplicationContext(ApplicationContext ac) throws BeansException {
-        applicationContext = ac;
+        this._applicationContext = ac;
     }
-
+	
     /**
      * This contains all the directories to exclude from the recursive search
      * when PLUGIN_DIRECTORY does NOT exist in the URL or path

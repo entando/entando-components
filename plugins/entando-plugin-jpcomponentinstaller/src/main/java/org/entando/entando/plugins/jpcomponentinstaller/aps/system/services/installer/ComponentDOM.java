@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import org.entando.entando.aps.system.services.api.model.ApiMethod;
 
 /**
  * @author E.Santoboni

@@ -20,10 +20,12 @@ package org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.ins
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
@@ -39,6 +41,8 @@ import org.eclipse.aether.resolution.VersionRangeRequest;
 import org.eclipse.aether.resolution.VersionRangeResult;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.version.Version;
+import org.entando.entando.aps.system.init.IComponentManager;
+import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.plugins.jpcomponentinstaller.aps.aetherutil.manual.ManualRepositorySystemFactory;
 import org.entando.entando.plugins.jpcomponentinstaller.aps.system.InstallerSystemConstants;
@@ -118,55 +122,21 @@ public class ArtifactInstallerManager extends AbstractService implements IArtifa
 			if (null == aa) {
 				return false;
 			}
-			//System.out.println("************************** 1111");
-			
 			RepositorySystem system = this.newSystem();
 			RepositorySystemSession localSession = this.newSession(system);
-			//System.out.println("************************** 2222");
-			//RepositorySystemSession session = Booter.newRepositorySystemSession(system);
-			//RemoteRepository centralRepos = Booter.newCentralRepository();
 			List<RemoteRepository> remoteRepositories = this.newRepositories();
-            
 			ArtifactRequest artifactRequest = new ArtifactRequest();
             Artifact artifact = new DefaultArtifact(aa.getGroupId(), aa.getArtifactId(), "", "war", version);
 			artifactRequest.setArtifact(artifact);
-			//System.out.println("************************** 3333");
-			//artifactRequest.addRepository(centralRepos);
 			artifactRequest.setRepositories(remoteRepositories);
-			
 			ArtifactResult artifactResult = system.resolveArtifact(localSession, artifactRequest);
 			artifact = artifactResult.getArtifact();
-			//System.out.println("************************** 4444");
-			
 			String basePath = "plugins/jpcomponentinstaller/";
-			
 			InputStream ais = new FileInputStream(artifact.getFile());
 			String filename = basePath + aa.getGroupId() + "_" + aa.getArtifactId() + "_" + version + ".war";
 			if (!this.getStorageManager().exists(filename, true)) {
 				this.getStorageManager().saveFile(filename, true, ais);
 			}
-            
-			//System.out.println(artifact + " resolved to " + artifact.getFile());
-			/*
-			DependencyFilter classpathFlter = DependencyFilterUtils.classpathFilter(JavaScopes.COMPILE);
-			
-			CollectRequest collectRequest = new CollectRequest();
-			collectRequest.setRoot(new Dependency(artifact, JavaScopes.COMPILE));
-			collectRequest.setRepositories(Booter.newRepositories(system, localSession));
-			
-			DependencyRequest dependencyRequest = new DependencyRequest(collectRequest, classpathFlter);
-			
-			List<ArtifactResult> artifactResults = 
-					system.resolveDependencies(localSession, dependencyRequest).getArtifactResults();
-			
-			for (ArtifactResult dependencyResult : artifactResults) {
-				System.out.println(dependencyResult.getArtifact() + " resolved to " + dependencyResult.getArtifact().getFile());
-				Artifact da = dependencyResult.getArtifact();
-				String filenameDep = basePath + da.getGroupId() + "_" + da.getArtifactId() + "_" + da.getVersion() + ".war";
-				InputStream dais = new FileInputStream(da.getFile());
-				this.getStorageManager().saveFile(filenameDep, true, dais);
-			}
-			*/
 			return true;
 		} catch (Throwable t) {
 			aa = (null != aa) ? aa : new AvailableArtifact();
@@ -203,19 +173,61 @@ public class ArtifactInstallerManager extends AbstractService implements IArtifa
 		}
     }
 	
-	public boolean uninstallArtifact(Integer availableComponentId, String version) throws ApsSystemException {
+	@Override
+	public boolean uninstallArtifact(Integer availableComponentId) throws ApsSystemException {
+		AvailableArtifact aa = null;
 		try {
-			//backup database
-			//spostare da parte jar e cartelle plugin
-			//chiamare inizializer manager per rimuovere record database
-		} catch (Exception e) {
-			//ripristinare file
-		} finally {
-			//cancellare file spostati
+			if (null == availableComponentId) {
+				return false;
+			}
+			aa = this.getComponentCatalogueManager().getArtifact(availableComponentId);
+			if (null == aa) {
+				return false;
+			}
+			Component componentToRemove = null;
+			List<Component> components = this.getComponentManager().getCurrentComponents();
+			for (int i = 0; i < components.size(); i++) {
+				Component component = components.get(i);
+				boolean checkGroupId = (null != component.getArtifactGroupId()) ? component.getArtifactGroupId().equals(aa.getGroupId()) : false;
+				boolean checkArtifactId = (null != component.getArtifactId()) ? component.getArtifactId().equals(aa.getArtifactId()) : false;
+				if (checkArtifactId && checkGroupId) {
+					componentToRemove = component;
+					break;
+				}
+			}
+			if (null == componentToRemove) {
+				return false;
+			}
+			this.getComponentUninstaller().uninstallComponent(componentToRemove);
+		} catch (Throwable t) {
+			aa = (null != aa) ? aa : new AvailableArtifact();
+			_logger.error("Error uninstalling artifact '{}' - '{}'", 
+					aa.getGroupId(), aa.getArtifactId(), t);
+			return false;
 		}
 		return true;
 	}
-	
+	/*
+	@Override
+	public boolean uninstallArtifact(Component component) throws ApsSystemException {
+		try {
+			if (null == component || null == component.getUninstallerInfo()) {
+				return false;
+			}
+			//backup database
+			//move resources (jar, files and folders) on temp folder
+			//remove records from db
+			//drop tables
+			//upgrade report
+		} catch (Exception e) {
+			//restore files on temp folder
+			return false;
+		} finally {
+			//clean temp folder
+		}
+		return true;
+	}
+	*/
 	private List<RemoteRepository> newRepositories() {
 		List<RemoteRepository> list = new ArrayList<RemoteRepository>();
 		list.add(this.newCentralRepository());
@@ -265,6 +277,20 @@ public class ArtifactInstallerManager extends AbstractService implements IArtifa
 	public void setComponentCatalogueManager(IComponentCatalogueManager componentCatalogueManager) {
 		this._componentCatalogueManager = componentCatalogueManager;
 	}
+	
+	protected IComponentUninstaller getComponentUninstaller() {
+		return _componentUninstaller;
+	}
+	public void setComponentUninstaller(IComponentUninstaller componentUninstaller) {
+		this._componentUninstaller = componentUninstaller;
+	}
+	
+	protected IComponentManager getComponentManager() {
+		return _componentManager;
+	}
+	public void setComponentManager(IComponentManager componentManager) {
+		this._componentManager = componentManager;
+	}
     
     protected IPluginInstaller getPluginInstaller() {
         return _pluginInstaller;
@@ -276,6 +302,8 @@ public class ArtifactInstallerManager extends AbstractService implements IArtifa
 	private IStorageManager _storageManager;
 	private ConfigInterface _configManager;
 	private IComponentCatalogueManager _componentCatalogueManager;
+	private IComponentUninstaller _componentUninstaller;
+	private IComponentManager _componentManager;
     private IPluginInstaller _pluginInstaller;
 	
 }

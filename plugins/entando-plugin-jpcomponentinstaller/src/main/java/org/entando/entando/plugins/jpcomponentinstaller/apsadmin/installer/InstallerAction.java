@@ -180,6 +180,77 @@ public class InstallerAction extends BaseAction {
 		return this.getInitializerManager().getCurrentReport();
 	}
 	
+	public String uninstallIntro() {
+		try {
+			String result = this.checkComponentToUninstall();
+			if (null != result) return result;
+		} catch (Throwable t) {
+			_logger.error("error on uninstallIntro", t);
+		}
+		return SUCCESS;
+	}
+	
+	public String uninstall() {
+		try {
+			String result = this.checkComponentToUninstall();
+			if (null != result) return result;
+			Component component = this.getComponent(this.getComponentCode());
+			AvailableArtifact artifact = 
+				this.getComponentCatalogueManager().getArtifact(component.getArtifactGroupId(), component.getArtifactId());
+			this.getArtifactInstallerManager().uninstallArtifact(artifact.getId());
+			String[] args = {component.getDescription()};
+			this.addActionMessage(this.getText("jpcomponentinstaller.message.component.uninstallDone", args));
+		} catch (Throwable t) {
+			_logger.error("error on uninstall", t);
+		}
+		return SUCCESS;
+	}
+	
+	protected String checkComponentToUninstall() {
+		String componentCode = this.getComponentCode();
+		if (null == componentCode) {
+			return "intro";
+		}
+		Component component = this.getComponent(componentCode);
+		if (null == component) {
+			this.addActionError(this.getText("jpcomponentinstaller.error.component.notInstalled"));
+			return "intro";
+		}
+		if (null == component.getUninstallerInfo()) {
+			String[] args = {component.getDescription()};
+			this.addActionError(this.getText("jpcomponentinstaller.error.component.uninstallable", args));
+			return "intro";
+		}
+		AvailableArtifact artifact = 
+				this.getComponentCatalogueManager().getArtifact(component.getArtifactGroupId(), component.getArtifactId());
+		if (null == artifact) {
+			String[] args = {component.getDescription()};
+			this.addActionError(this.getText("jpcomponentinstaller.error.component.uninstallable", args));
+			return "intro";
+		}
+		boolean hasDependencies = false;
+		StringBuilder builder = new StringBuilder();
+		List<Component> components = this.getComponentManager().getCurrentComponents();
+		for (int i = 0; i < components.size(); i++) {
+			Component installedComponent = components.get(i);
+			List<String> dependencies = installedComponent.getDependencies();
+			if (null == dependencies || !dependencies.contains(component.getCode())) {
+				continue;
+			}
+			if (hasDependencies) {
+				builder.append(" - ");
+			}
+			builder.append("'").append(installedComponent.getDescription()).append("'");
+			hasDependencies = true;
+		}
+		if (hasDependencies) {
+			String[] args = {builder.toString()};
+			this.addActionError(this.getText("jpcomponentinstaller.error.component.locked", args));
+			return "intro";
+		}
+		return null;
+	}
+	
 	public Integer getAvailableArtifactId() {
 		return _availableArtifactId;
 	}
@@ -199,6 +270,13 @@ public class InstallerAction extends BaseAction {
 	}
 	public void setArtifactToInstall(AvailableArtifact artifactToInstall) {
 		this._artifactToInstall = artifactToInstall;
+	}
+	
+	public String getComponentCode() {
+		return _componentCode;
+	}
+	public void setComponentCode(String componentCode) {
+		this._componentCode = componentCode;
 	}
 	
 	protected IInitializerManager getInitializerManager() {
@@ -226,6 +304,8 @@ public class InstallerAction extends BaseAction {
 	private String _version;
 	
 	private AvailableArtifact _artifactToInstall;
+	
+	private String _componentCode;
 	
 	private IInitializerManager _initializerManager;
 	private IComponentCatalogueManager _componentCatalogueManager;

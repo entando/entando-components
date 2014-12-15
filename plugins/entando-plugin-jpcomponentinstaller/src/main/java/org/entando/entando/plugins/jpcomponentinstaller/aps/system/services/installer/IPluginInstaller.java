@@ -24,7 +24,7 @@ import java.io.InputStream;
  * @author M.Casari
  */
 public interface IPluginInstaller {
-        
+	
     public void install(AvailableArtifact availableArtifact, String version, InputStream is) throws ApsSystemException;
     
 }
