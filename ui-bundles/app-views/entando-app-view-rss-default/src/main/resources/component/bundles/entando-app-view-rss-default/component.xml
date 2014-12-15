@@ -23,4 +23,16 @@ classpath:sql/bundles/entando-app-view-rss-default/serv_data_production.sql
 			</defaultSqlResources>
 		</environment>
 	</installation>
+	<uninstallation>
+		<sqlResources>
+			<datasource name="portDataSource">
+classpath:sql/bundles/entando-app-view-rss-default/port_uninstallation.sql
+			</datasource>
+			<datasource name="servDataSource">
+classpath:sql/bundles/entando-app-view-rss-default/serv_uninstallation.sql
+			</datasource>
+		</sqlResources>
+		<resources>
+			<resource>WEB-INF/plugins/jprss/aps/</resource>
+		</resources>
 </component>
