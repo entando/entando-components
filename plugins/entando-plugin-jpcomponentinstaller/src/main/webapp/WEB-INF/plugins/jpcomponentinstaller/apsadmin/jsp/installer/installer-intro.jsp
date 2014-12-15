@@ -20,15 +20,27 @@
 	</div>
 </s:if>
 <s:if test="hasActionErrors()">
-	<div class="alert alert-danger alert-dismissable">
-		<button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-		<p><s:text name="message.title.ActionErrors" /></p>
+	<div class="alert alert-danger alert-dismissable fade in">
+		<button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
+		<h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
+		<ul class="margin-base-top">
+			<s:iterator value="actionErrors">
+				<li><s:property escape="false" /></li>
+			</s:iterator>
+		</ul>
 	</div>
 </s:if>
 <s:if test="hasFieldErrors()">
-	<div class="alert alert-danger alert-dismissable">
-		<button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-		<p><s:text name="message.title.FieldErrors" /></p>
+	<div class="alert alert-danger alert-dismissable fade in">
+		<button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
+		<h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
+		<ul class="margin-base-top">
+			<s:iterator value="fieldErrors">
+				<s:iterator value="value">
+					<li><s:property escape="false" /></li>
+				</s:iterator>
+			</s:iterator>
+		</ul>
 	</div>
 </s:if>
 
@@ -53,7 +65,7 @@
 		
 		<table class="table table-bordered table-hover table-condensed table-striped">
 			<tr>
-				<th class="text-center padding-large-left padding-large-right col-xs-4 col-sm-3 col-md-2 col-lg-2"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
+				<th class="text-center"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
 				<th>Component</th>
 				<th class="text-center">Date</th>
 			</tr>
@@ -61,9 +73,9 @@
 			<s:set var="componentVar" value="%{getComponent(#componentReportVar.componentCode)}" />
 			<tr>
 				<td class="text-center text-nowrap">
-					<s:if test="%{null != componentVar.uninstallerInfo}" >
+					<s:if test="%{null != #componentVar.uninstallerInfo}" >
 						<%-- remove --%>
-						<s:url action="installIntro" var="uninstallActionVar">
+						<s:url action="uninstallIntro" var="uninstallActionVar">
 							<s:param name="componentCode" value="#componentVar.code"/>
 						</s:url>
 						<div class="btn-group btn-group-xs">
@@ -75,6 +87,7 @@
 							</a>
 						</div>
 					</s:if>
+					<s:else>&ndash;</s:else>
 				</td>
 				<td>
 					<s:property value="#componentVar.description" />&#32;<code><s:property value="#componentReportVar.componentCode" /></code>

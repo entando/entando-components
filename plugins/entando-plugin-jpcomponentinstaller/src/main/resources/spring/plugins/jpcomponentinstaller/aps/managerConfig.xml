@@ -29,6 +29,7 @@
         <property name="componentCatalogueManager" ref="jpcomponentinstallerComponentCatalogueManager" />
         <property name="configManager" ref="BaseConfigManager" />
         <property name="storageManager" ref="StorageManager" />
+        <property name="componentManager" ref="ComponentManager" />
         <property name="pluginInstaller" ref="jpcomponentinstallerPluginInstaller" />
 		<property name="componentUninstaller" ref="jpcomponentinstallerComponentUninstaller" />
     </bean>
