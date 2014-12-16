@@ -238,13 +238,13 @@ public class InstallerAction extends BaseAction {
 				continue;
 			}
 			if (hasDependencies) {
-				builder.append(" - ");
+				builder.append(", ");
 			}
 			builder.append("'").append(installedComponent.getDescription()).append("'");
 			hasDependencies = true;
 		}
 		if (hasDependencies) {
-			String[] args = {builder.toString()};
+			String[] args = {component.getDescription(), builder.toString()};
 			this.addActionError(this.getText("jpcomponentinstaller.error.component.locked", args));
 			return "intro";
 		}

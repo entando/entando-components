@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Component Installer</name>
-	<description>entando Component Installer and Uninstaller</description>
+	<description>Entando Component Installer and Uninstaller</description>
     <developers>
         <developer>
             <id>mcasari</id>
