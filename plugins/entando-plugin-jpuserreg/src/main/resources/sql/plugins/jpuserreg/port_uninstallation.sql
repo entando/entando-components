@@ -1,0 +1,1 @@
+DELETE FROM sysconfig WHERE item = 'jpuserreg_Config';

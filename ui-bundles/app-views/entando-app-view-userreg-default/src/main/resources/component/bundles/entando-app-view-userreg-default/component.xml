@@ -23,4 +23,17 @@ classpath:sql/bundles/entando-app-view-userreg-default/serv_data_production.sql
 			</defaultSqlResources>
 		</environment>
 	</installation>
+	<uninstallation>
+		<sqlResources>
+			<datasource name="portDataSource">
+classpath:sql/bundles/entando-app-view-userreg-default/port_uninstallation.sql
+			</datasource>
+			<datasource name="servDataSource">
+classpath:sql/bundles/entando-app-view-userreg-default/serv_uninstallation.sql
+			</datasource>
+		</sqlResources>
+		<resources>
+			<resource>WEB-INF/plugins/jpuserreg/aps/</resource>
+		</resources>
+	</uninstallation>
 </component>
