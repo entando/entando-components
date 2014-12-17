@@ -157,7 +157,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         allFiles.addAll(pluginJarLibraries);
         allFiles.addAll(pluginSqlFiles);
         allFiles.addAll(pluginXmlFiles);
-        URLClassLoader cl = getURLClassLoader(allFiles.toArray(new File[0]));
+        URLClassLoader cl = getURLClassLoader(allFiles.toArray(new File[0]), servletContext);
         loadClasses((File[]) pluginJarLibraries.toArray(new File[0]), cl);
         configLocs.add("classpath*:spring/plugins/jacms/aps/**/**.xml");
         configLocs.add("classpath*:spring/plugins/jacms/apsadmin/**/**.xml");
@@ -421,8 +421,8 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
             newContext.addBeanFactoryPostProcessor(configurer);
             newContext.setClassLoader(cl);
             newContext.setParent(applicationContext);
-            String[] configLocs = new String[]{"classpath:spring/restServerConfig.xml", 
-                "classpath:spring/baseSystemConfig.xml"}; 
+            String[] configLocs = new String[]{"classpath:spring/restServerConfig.xml",
+                "classpath:spring/baseSystemConfig.xml"};
             newContext.setConfigLocations(configLocs);
             newContext.refresh();
             BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) applicationContext).getBean("BaseConfigManager");
@@ -442,11 +442,17 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         return newContext;
     }
 
-    private URLClassLoader getURLClassLoader(File[] files) {
-        List<URL> urlList = new ArrayList<URL>();
+    private URLClassLoader getURLClassLoader(File[] files, ServletContext servletContext) {
+        List<URL> urlList = (List<URL>) servletContext.getAttribute("pluginInstallerURLList");
+        if (urlList == null) {
+            urlList = new ArrayList<URL>();
+            servletContext.setAttribute("pluginInstallerURLList", urlList);
+        }
         for (File input : files) {
             try {
-                urlList.add(input.toURI().toURL());
+                if (!urlList.contains(input.toURI().toURL())) {
+                    urlList.add(input.toURI().toURL());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
