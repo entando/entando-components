@@ -1,27 +1,26 @@
 /*
-*
-* Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-* This file is part of Entando software.
-* Entando is a free software;
-* You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
-* and limitations under the License
-* 
-* 
-* 
-* Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-*/
+ *
+ * Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ * This file is part of Entando software.
+ * Entando is a free software;
+ * You can redistribute it and/or modify it
+ * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+ * 
+ * See the file License for the specific language governing permissions   
+ * and limitations under the License
+ * 
+ * 
+ * 
+ * Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ */
 package org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.BaseConfigManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.instrument.Instrumentation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -40,20 +40,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.access.TilesAccess;
@@ -63,6 +63,7 @@ import org.apache.tiles.definition.ReloadableDefinitionsFactory;
 import org.apache.tiles.definition.UrlDefinitionsFactory;
 import org.apache.tiles.impl.BasicTilesContainer;
 import org.entando.entando.aps.system.init.InitializerManager;
+import org.entando.entando.apsadmin.common.UserAvatarAction;
 import org.entando.entando.plugins.jpcomponentinstaller.aps.TextProviderSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,17 +80,26 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * @author M.Casari
+ * @author mcasari
  */
 public class DefaultPluginInstaller implements IPluginInstaller, ApplicationContextAware {
 
-    private static final Logger _logger = LoggerFactory.getLogger(DefaultPluginInstaller.class);
+    private static final Logger _logger = LoggerFactory.getLogger(UserAvatarAction.class);
 
-    private ApplicationContext _applicationContext;
-	
+    private ApplicationContext applicationContext;
+
+    private String artifactName;
+
     @Override
     public void install(AvailableArtifact availableArtifact, String version, InputStream is) throws ApsSystemException {
-        //String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
+        String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
+        //TODO PARLARE CON MARIO
+        //IL FILE WAR contiene anche le dipendenze, non c'è bisogno di scaricare anche quelle...
+        System.out.println("*************INSTALL****************");
+        System.out.println("filename " + filename);
+        System.out.println("type " + availableArtifact.getType());
+        System.out.println("version " + version);
+        System.out.println("*****************************");
         try {
             if (availableArtifact.getType() == AvailableArtifact.Type.PLUGIN) {
                 this.installPlugin(availableArtifact, version, is);
@@ -100,18 +110,17 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
             } else {
                 throw new ApsSystemException("Wrong artifact type value");
             }
-        } catch (Throwable t) {
-			_logger.error("Unexpected error during artifact installation", t);
-            throw new ApsSystemException("Unexpected error during artifact installation", t);
+        } catch (Exception e) {
+            throw new ApsSystemException("Unexpected error during artifact installation", e);
         }
     }
-	
+
     private void installPlugin(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
 
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
-		
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) applicationContext).getServletContext();
+
         String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
-        String artifactName = availableArtifact.getArtifactId().split("-")[2];
+        artifactName = availableArtifact.getArtifactId().split("-")[2];
 
         String appRootPath = servletContext.getRealPath("/");
         File destDir = new File(appRootPath);
@@ -132,12 +141,9 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
 
         File tempArtifactRootDir = this.extractArtifactJar(destDir, artifactName);
         List<File> pluginSqlFiles = (List<File>) FileUtils.listFiles(tempArtifactRootDir, new String[]{"sql"}, true);
+        List<File> pluginXmlFiles = (List<File>) FileUtils.listFiles(tempArtifactRootDir, new String[]{"xml"}, true);
         File componentFile = this.getFileFromArtifactJar(tempArtifactRootDir, "component.xml");
         fillConfPathsFromDependencies(componentFile, configLocs, tilesFiles, destDir);
-        try {
-            FileUtils.forceDelete(tempArtifactRootDir);
-        } catch (Exception e) {
-        }
 
         List<File> mainAppJarLibraries = (List<File>) FileUtils.listFiles(new File(destDir.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "lib"), new String[]{"jar"}, true);
         List<File> pluginJarLibraries = (List<File>) FileUtils.listFiles(artifactFileRootDir, new String[]{"jar"}, true);
@@ -150,6 +156,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         allFiles.add(systemParamsFile);
         allFiles.addAll(pluginJarLibraries);
         allFiles.addAll(pluginSqlFiles);
+        allFiles.addAll(pluginXmlFiles);
         URLClassLoader cl = getURLClassLoader(allFiles.toArray(new File[0]));
         loadClasses((File[]) pluginJarLibraries.toArray(new File[0]), cl);
         configLocs.add("classpath*:spring/plugins/jacms/aps/**/**.xml");
@@ -169,7 +176,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
     }
 
     private void installBundle(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) applicationContext).getServletContext();
 
         String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
         String artifactName = availableArtifact.getArtifactId().split("-")[2];
@@ -185,9 +192,9 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
                 + File.separator + artifactName);
         FileUtils.copyDirectory(artifactFileRootDir, destDir);
 
-        InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
+        InitializerManager initializerManager = (InitializerManager) applicationContext.getBean("InitializerManager");
         initializerManager.init();
-        BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) _applicationContext).getBean(SystemConstants.BASE_CONFIG_MANAGER);
+        BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) applicationContext).getBean(SystemConstants.BASE_CONFIG_MANAGER);
         baseConfigManager.init();
     }
 
@@ -207,7 +214,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         List<File> filesToRemove = new ArrayList<File>();
         for (File file : pluginJarLibraries) {
             String fileName = file.getName();
-            if (!filesToRemove.contains(file) && fileName.contains("struts2-core")) {
+            if (!filesToRemove.contains(file) && fileName.contains("struts2")) {
                 filesToRemove.add(file);
             }
         }
@@ -273,7 +280,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
             _logger.debug("Trying to load resources @{}", cur);
             LocalizedTextUtil.addDefaultResourceBundle(cur + this.PLUGIN_RESOURCE_NAME);
         }
-        _logger.info("EntandoPluginLabelListener summary: {} plugin detected ({} under development)", (classPlugins.size() + jaredPlugins.size()), classPlugins.size());
+        _logger.info("JapsPluginLabelListener summary: {} plugin detected ({} under development)", (classPlugins.size() + jaredPlugins.size()), classPlugins.size());
     }
 
     /**
@@ -365,7 +372,26 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         for (File input : jarFiles) {
             try {
                 //load classes from plugin's jar files using the classloader above
-                loadClassesFromJar(input, cl);
+                //loadClassesFromJar(input, cl);
+
+                JarFile jarFile = new JarFile(input.getAbsolutePath());
+                Enumeration e = jarFile.entries();
+
+                while (e.hasMoreElements()) {
+                    JarEntry je = (JarEntry) e.nextElement();
+                    if (je.isDirectory() || !je.getName().endsWith(".class")) {
+                        continue;
+                    }
+
+                    String className = je.getName().substring(0, je.getName().length() - 6);
+                    className = className.replace('/', '.');
+                    try {
+                        cl.loadClass(className);
+                    } catch (Throwable ex) {
+                        String error = "Error loadin class: " + className;
+                        _logger.error(error);
+                    }
+                }
             } catch (Throwable e) {
                 String error = "Unexpected error loading class for file: " + input.getName() + " - " + e.getMessage();
                 _logger.error(error);
@@ -375,7 +401,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
     }
 
     private ApplicationContext loadContext(String[] configLocations, URLClassLoader cl, String contextDisplayName, Properties properties) throws Exception {
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) applicationContext).getServletContext();
 
         //if plugin's classes have been loaded we can go on
         List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
@@ -388,13 +414,21 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
             //create a new spring context with the classloader and the paths defined as parameter in pluginsInstallerContext.xml.
             //The new context is given the default webapplication context as its parent  
             Thread.currentThread().setContextClassLoader(cl);
-            newContext = loadContext(cl, configLocations, properties);
-            org.entando.entando.aps.system.init.InitializerManager initializerManager = (org.entando.entando.aps.system.init.InitializerManager) newContext.getBean("InitializerManager");
-            if (initializerManager != null) {
-                initializerManager.init();
-            }
-            BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) _applicationContext).getBean("BaseConfigManager");
+            newContext = new ClassPathXmlApplicationContext();
+            //ClassPathXmlApplicationContext newContext = new ClassPathXmlApplicationContext(configLocations, applicationContext);    
+            PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
+            configurer.setProperties(properties);
+            newContext.addBeanFactoryPostProcessor(configurer);
+            newContext.setClassLoader(cl);
+            newContext.setParent(applicationContext);
+            String[] configLocs = new String[]{"classpath:spring/restServerConfig.xml", 
+                "classpath:spring/baseSystemConfig.xml"}; 
+            newContext.setConfigLocations(configLocs);
+            newContext.refresh();
+            BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) applicationContext).getBean("BaseConfigManager");
             baseConfigManager.init();
+            newContext.setConfigLocations(configLocations);
+            newContext.refresh();
             newContext.setDisplayName(contextDisplayName);
             ctxList.add(newContext);
             servletContext.setAttribute("pluginsContextsList", ctxList);
@@ -427,44 +461,6 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         return cl;
     }
 
-    private void loadClassesFromJar(File input, URLClassLoader cl) throws Exception {
-
-        JarFile jarFile = new JarFile(input.getAbsolutePath());
-        Enumeration e = jarFile.entries();
-
-        while (e.hasMoreElements()) {
-            JarEntry je = (JarEntry) e.nextElement();
-            if (je.isDirectory() || !je.getName().endsWith(".class")) {
-                continue;
-            }
-
-            String className = je.getName().substring(0, je.getName().length() - 6);
-            className = className.replace('/', '.');
-            try {
-                cl.loadClass(className);
-            } catch (Throwable ex) {
-                String error = "Error loadin class: " + className;
-                _logger.error(error);
-            }
-        }
-
-    }
-
-    private ClassPathXmlApplicationContext loadContext(URLClassLoader cl, String[] configLocations, Properties properties) {
-
-        ClassPathXmlApplicationContext newContext = new ClassPathXmlApplicationContext();
-        //ClassPathXmlApplicationContext newContext = new ClassPathXmlApplicationContext(configLocations, applicationContext);    
-        PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-        configurer.setProperties(properties);
-        newContext.addBeanFactoryPostProcessor(configurer);
-        newContext.setClassLoader(cl);
-        newContext.setConfigLocations(configLocations);
-        newContext.setParent(_applicationContext);
-        newContext.refresh();
-
-        return newContext;
-    }
-    
     private void extractArchiveFile(File file, String destinationPath) throws ZipException, FileNotFoundException, IOException {
         ZipFile zipFile = new ZipFile(file);
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -541,12 +537,12 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         }
         return resultFile;
     }
-	
+
     @Override
     public void setApplicationContext(ApplicationContext ac) throws BeansException {
-        this._applicationContext = ac;
+        applicationContext = ac;
     }
-	
+
     /**
      * This contains all the directories to exclude from the recursive search
      * when PLUGIN_DIRECTORY does NOT exist in the URL or path
