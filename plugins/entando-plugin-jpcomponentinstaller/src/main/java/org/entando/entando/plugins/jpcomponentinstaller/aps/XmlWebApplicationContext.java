@@ -17,6 +17,8 @@
 */
 package org.entando.entando.plugins.jpcomponentinstaller.aps;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.ArrayUtils;
@@ -66,11 +68,15 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
         List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
         if (contexts != null) {
             for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
-                try {
-                    String[] beanNamesTemp = classPathXmlApplicationContext.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
-                    beanNames = (String[]) ArrayUtils.addAll(beanNames, beanNamesTemp);
-                } catch (Exception ex) {
+                String[] beanNamesTemp = classPathXmlApplicationContext.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
+                beanNames = (String[]) ArrayUtils.addAll(beanNames, beanNamesTemp);
+                HashSet hs = new HashSet();
+                for (int i = 0; i < beanNames.length; i++) {
+                    String beanName = beanNames[i];
+                    hs.add(beanName);
                 }
+                beanNames = (String[])hs.toArray(new String[0]);
+                Arrays.sort(beanNames);
             }
         }
         return beanNames;
@@ -83,11 +89,15 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
         List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
         if (contexts != null) {
             for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
-                try {
-                    String[] beanNamesTemp = classPathXmlApplicationContext.getBeanNamesForType(type);
-                    beanNames = (String[]) ArrayUtils.addAll(beanNames, beanNamesTemp);
-                } catch (Exception ex) {
+                String[] beanNamesTemp = classPathXmlApplicationContext.getBeanNamesForType(type);
+                beanNames = (String[]) ArrayUtils.addAll(beanNames, beanNamesTemp);
+                HashSet hs = new HashSet();
+                for (int i = 0; i < beanNames.length; i++) {
+                    String beanName = beanNames[i];
+                    hs.add(beanName);
                 }
+                beanNames = (String[])hs.toArray(new String[0]);
+                Arrays.sort(beanNames);
             }
         }
         return beanNames;

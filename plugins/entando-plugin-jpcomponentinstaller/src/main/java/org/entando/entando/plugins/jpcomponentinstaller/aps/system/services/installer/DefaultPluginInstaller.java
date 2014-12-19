@@ -146,7 +146,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         fillConfPathsFromDependencies(componentFile, configLocs, tilesFiles, destDir);
 
         List<File> mainAppJarLibraries = (List<File>) FileUtils.listFiles(new File(destDir.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "lib"), new String[]{"jar"}, true);
-        List<File> pluginJarLibraries = (List<File>) FileUtils.listFiles(artifactFileRootDir, new String[]{"jar"}, true);
+        List<File> pluginJarLibraries = (List<File>) FileUtils.listFiles(artifactFileRootDir, new String[]{"jar"}, true);   
         pluginJarLibraries = filterOutDuplicateLibraries(mainAppJarLibraries, pluginJarLibraries);
 
         FileUtils.copyDirectory(artifactFileRootDir, destDir);
@@ -492,8 +492,8 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         File tempDir = null;
         for (File jarFile : files) {
             if (jarFile.getName().contains(artifactId)) {
-                tempDir = new File(rootDir + File.separator + "temp" + File.separator + jarFile.getName().replaceAll(".jar", "") + "-temp");
-                extractArchiveFile(jarFile, rootDir + File.separator + "temp" + File.separator + jarFile.getName().replaceAll(".jar", "") + "-temp");
+                tempDir = new File(rootDir + File.separator + "temp" + File.separator + artifactId + File.separator + jarFile.getName().replaceAll(".jar", ""));
+                extractArchiveFile(jarFile, rootDir + File.separator + "temp" + File.separator + artifactId + File.separator + jarFile.getName().replaceAll(".jar", ""));
             }
         }
         return tempDir;
