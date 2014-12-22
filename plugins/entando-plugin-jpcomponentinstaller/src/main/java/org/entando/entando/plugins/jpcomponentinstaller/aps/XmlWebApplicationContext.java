@@ -1,26 +1,27 @@
 /*
-*
-* Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-* This file is part of Entando software.
-* Entando is a free software;
-* You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
-* and limitations under the License
-* 
-* 
-* 
-* Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-*/
+ *
+ * Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ * This file is part of Entando software.
+ * Entando is a free software;
+ * You can redistribute it and/or modify it
+ * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+ * 
+ * See the file License for the specific language governing permissions   
+ * and limitations under the License
+ * 
+ * 
+ * 
+ * Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ */
 package org.entando.entando.plugins.jpcomponentinstaller.aps;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -66,19 +67,24 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
     public String[] getBeanNamesForType(Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
         String[] beanNames = super.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
         List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
+        Set removedPluginsSubMenuSet = (Set<String>) this.getServletContext().getAttribute("removedPluginsSubMenuSet");
         if (contexts != null) {
             for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
+
                 String[] beanNamesTemp = classPathXmlApplicationContext.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
                 beanNames = (String[]) ArrayUtils.addAll(beanNames, beanNamesTemp);
-                HashSet hs = new HashSet();
-                for (int i = 0; i < beanNames.length; i++) {
-                    String beanName = beanNames[i];
-                    hs.add(beanName);
-                }
-                beanNames = (String[])hs.toArray(new String[0]);
-                Arrays.sort(beanNames);
             }
         }
+        Set hs = new HashSet();
+        for (int i = 0; i < beanNames.length; i++) {
+            String beanName = beanNames[i];
+            if (removedPluginsSubMenuSet != null && removedPluginsSubMenuSet.contains(beanName)) {
+                continue;
+            }
+            hs.add(beanName);
+        }
+        beanNames = (String[]) hs.toArray(new String[0]);
+        Arrays.sort(beanNames);
         return beanNames;
 
     }
@@ -87,6 +93,7 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
     public String[] getBeanNamesForType(Class<?> type) {
         String[] beanNames = super.getBeanNamesForType(type);
         List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
+        Set removedPluginsSubMenuSet = (Set<String>) this.getServletContext().getAttribute("removedPluginsSubMenuSet");
         if (contexts != null) {
             for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
                 String[] beanNamesTemp = classPathXmlApplicationContext.getBeanNamesForType(type);
@@ -96,10 +103,20 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
                     String beanName = beanNames[i];
                     hs.add(beanName);
                 }
-                beanNames = (String[])hs.toArray(new String[0]);
+                beanNames = (String[]) hs.toArray(new String[0]);
                 Arrays.sort(beanNames);
             }
         }
+        Set hs = new HashSet();
+        for (int i = 0; i < beanNames.length; i++) {
+            String beanName = beanNames[i];
+            if (removedPluginsSubMenuSet != null && removedPluginsSubMenuSet.contains(beanName)) {
+                continue;
+            }
+            hs.add(beanName);
+        }
+        beanNames = (String[]) hs.toArray(new String[0]);
+        Arrays.sort(beanNames);
         return beanNames;
     }
 

@@ -166,7 +166,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         //load plugin context 
         Properties properties = new Properties();
         properties.load(new FileInputStream(systemParamsFile));
-        ClassPathXmlApplicationContext newContext = (ClassPathXmlApplicationContext) loadContext((String[]) configLocs.toArray(new String[0]), cl, artifactName, properties);
+        ClassPathXmlApplicationContext newContext = (ClassPathXmlApplicationContext) loadContext((String[]) configLocs.toArray(new String[0]), cl, availableArtifact.getArtifactId(), properties);
 
         this.reloadActionsDefinitions(newContext);
         this.reloadResourcsBundles(newContext, servletContext);
@@ -492,8 +492,8 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         File tempDir = null;
         for (File jarFile : files) {
             if (jarFile.getName().contains(artifactId)) {
-                tempDir = new File(rootDir + File.separator + "temp" + File.separator + artifactId + File.separator + jarFile.getName().replaceAll(".jar", ""));
-                extractArchiveFile(jarFile, rootDir + File.separator + "temp" + File.separator + artifactId + File.separator + jarFile.getName().replaceAll(".jar", ""));
+                tempDir = new File(rootDir + File.separator + "temp" + File.separator + artifactId + "-extractedJars" + File.separator + jarFile.getName().replaceAll(".jar", ""));
+                extractArchiveFile(jarFile, rootDir + File.separator + "temp" + File.separator + artifactId + "-extractedJars" + File.separator + jarFile.getName().replaceAll(".jar", ""));
             }
         }
         return tempDir;
