@@ -53,6 +53,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.tiles.TilesContainer;
@@ -121,29 +122,26 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
 
         String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
         artifactName = availableArtifact.getArtifactId().split("-")[2];
-
         String appRootPath = servletContext.getRealPath("/");
         File destDir = new File(appRootPath);
-        String tempDirPath = appRootPath + "temp" + File.separator + artifactName;
-        File artifactFile = new File(appRootPath + "temp" + File.separator + filename);
+        String tempDirPath = appRootPath + "componentinstaller" + File.separator + artifactName;
+        File artifactFile = new File(appRootPath + "componentinstaller" + File.separator + filename);
 
         FileUtils.copyInputStreamToFile(is, artifactFile);
         this.extractArchiveFile(artifactFile, tempDirPath);
         File artifactFileRootDir = new File(artifactFile.getParentFile().getAbsolutePath()
                 + File.separator + artifactName);
 
-        List<String> configLocs = new ArrayList<String>();
-        List<File> tilesFiles = new ArrayList<File>();
-        File tilesFile = this.getFileFromDir(artifactFileRootDir, artifactName + "-tiles.xml", new String[]{"xml"});
-        if (tilesFile != null) {
-            tilesFiles.add(tilesFile);
+        List<String> configLocs = new ArrayList<String>();       
+        List<File> tilesFiles = (List<File>) FileUtils.listFiles(artifactFileRootDir, FileFilterUtils.suffixFileFilter("-tiles.xml"), FileFilterUtils.trueFileFilter());
+        if(tilesFiles == null){
+            tilesFiles = new ArrayList<File>();
         }
-
+        
         File tempArtifactRootDir = this.extractArtifactJar(destDir, artifactName);
         List<File> pluginSqlFiles = (List<File>) FileUtils.listFiles(tempArtifactRootDir, new String[]{"sql"}, true);
         List<File> pluginXmlFiles = (List<File>) FileUtils.listFiles(tempArtifactRootDir, new String[]{"xml"}, true);
         File componentFile = this.getFileFromArtifactJar(tempArtifactRootDir, "component.xml");
-        fillConfPathsFromDependencies(componentFile, configLocs, tilesFiles, destDir);
 
         List<File> mainAppJarLibraries = (List<File>) FileUtils.listFiles(new File(destDir.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "lib"), new String[]{"jar"}, true);
         List<File> pluginJarLibraries = (List<File>) FileUtils.listFiles(artifactFileRootDir, new String[]{"jar"}, true);   
@@ -159,6 +157,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         allFiles.addAll(pluginXmlFiles);
         URLClassLoader cl = getURLClassLoader(allFiles.toArray(new File[0]), servletContext);
         loadClasses((File[]) pluginJarLibraries.toArray(new File[0]), cl);
+        configLocs.addAll(getConfPathsFromDependencies(componentFile));
         configLocs.add("classpath*:spring/plugins/jacms/aps/**/**.xml");
         configLocs.add("classpath*:spring/plugins/jacms/apsadmin/**/**.xml");
         configLocs.add("classpath*:spring/plugins/" + artifactName + "/aps/**/**.xml");
@@ -170,8 +169,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
 
         this.reloadActionsDefinitions(newContext);
         this.reloadResourcsBundles(newContext, servletContext);
-
-        TilesContainer container = TilesAccess.getContainer(servletContext);
+        TilesContainer container = TilesAccess.getContainer(servletContext);   
         this.reloadTilesDefinitions(tilesFiles, container);
     }
 
@@ -183,8 +181,8 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
 
         String appRootPath = servletContext.getRealPath("/");
         File destDir = new File(appRootPath);
-        String tempDirPath = appRootPath + "temp" + File.separator + artifactName;
-        File artifactFile = new File(appRootPath + "temp" + File.separator + filename);
+        String tempDirPath = appRootPath + "componentinstaller" + File.separator + artifactName;
+        File artifactFile = new File(appRootPath + "componentinstaller" + File.separator + filename);
 
         FileUtils.copyInputStreamToFile(is, artifactFile);
         this.extractArchiveFile(artifactFile, tempDirPath);
@@ -198,17 +196,16 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         baseConfigManager.init();
     }
 
-    private void fillConfPathsFromDependencies(File componentFile, List<String> configLocs, List<File> tilesFiles, File destDir) throws Exception {
+    private List<String> getConfPathsFromDependencies(File componentFile) throws Exception {
         List<String> dependencies = this.getDependencies(componentFile);
+        List<String> configLocs = new ArrayList<String>();
         for (String depencencyName : dependencies) {
             configLocs.add("classpath*:spring/plugins/" + depencencyName + "/aps/**/**.xml");
             configLocs.add("classpath*:spring/plugins/" + depencencyName + "/apsadmin/**/**.xml");
-            File tilesFile = this.getFileFromDir(destDir, depencencyName + "-tiles.xml", new String[]{"xml"});
-            if (tilesFile != null) {
-                tilesFiles.add(tilesFile);
-            }
         }
+        return configLocs;
     }
+    
 
     private List<File> filterOutDuplicateLibraries(List<File> mainAppJarLibraries, List<File> pluginJarLibraries) throws Exception {
         List<File> filesToRemove = new ArrayList<File>();
@@ -492,8 +489,8 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         File tempDir = null;
         for (File jarFile : files) {
             if (jarFile.getName().contains(artifactId)) {
-                tempDir = new File(rootDir + File.separator + "temp" + File.separator + artifactId + "-extractedJars" + File.separator + jarFile.getName().replaceAll(".jar", ""));
-                extractArchiveFile(jarFile, rootDir + File.separator + "temp" + File.separator + artifactId + "-extractedJars" + File.separator + jarFile.getName().replaceAll(".jar", ""));
+                tempDir = new File(rootDir + File.separator + "componentinstaller" + File.separator + artifactId + "-extractedJars" + File.separator + jarFile.getName().replaceAll(".jar", ""));
+                extractArchiveFile(jarFile, rootDir + File.separator + "componentinstaller" + File.separator + artifactId + "-extractedJars" + File.separator + jarFile.getName().replaceAll(".jar", ""));
             }
         }
         return tempDir;

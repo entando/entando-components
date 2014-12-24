@@ -80,7 +80,7 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
         ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();        
         String artifactName = component.getArtifactId().split("-")[2];
         String appRootPath = servletContext.getRealPath("/");
-        String backupDirPath = appRootPath + "temp" + File.separator + component.getArtifactId() + "-backup";
+        String backupDirPath = appRootPath + "componentinstaller" + File.separator + component.getArtifactId() + "-backup";
         Map<File, File> resourcesMap = new HashMap<File, File>();
         
         Set removedPluginsSubMenuSet = (Set<String>) servletContext.getAttribute("removedPluginsSubMenuSet");
@@ -164,6 +164,7 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                 ClassPathXmlApplicationContext contextToremove = null;
                 for (ClassPathXmlApplicationContext context : contexts) {
                     if (context.getDisplayName().equalsIgnoreCase(component.getArtifactId())) {
+                        context.close();
                         contextToremove = context;
                     }
                 }   
