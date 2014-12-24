@@ -14,19 +14,11 @@
 	<url>http://www.entando.com/</url>
 	<licenses>
 		<license>
-			<name>GNU GENERAL PUBLIC LICENSE,  Version 2, June 1991</name>
-			<url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+			<name>MIT LICENSE</name>
+			<url>http://opensource.org/licenses/MIT</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	<!--
-	<scm>
-		<connection>scm:git:git://github.com/entando/entando-plugins-parent.git</connection>
-		<developerConnection>scm:git:git@github.com:entando/entando-plugins-parent.git</developerConnection>
-		<url>https://github.com/entando/entando-plugins-parent</url>
-		<tag>HEAD</tag>
-	</scm>
-	-->
 	<developers>
 		<developer>
 			<id>e.santoboni</id>

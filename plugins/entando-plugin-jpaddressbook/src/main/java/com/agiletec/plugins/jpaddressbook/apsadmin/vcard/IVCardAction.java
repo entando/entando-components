@@ -1,58 +1,62 @@
 /*
-*
-* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-* This file is part of Entando software. 
-* Entando is a free software; 
-* You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
-* and limitations under the License
-* 
-* 
-* 
-* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-*/
-package com.agiletec.plugins.jpaddressbook.apsadmin.vcard;
-
-import java.io.InputStream;
-
-/**
- * @author A.Cocco
+ * Copyright 2013-Present Entando Corporation (http://www.entando.com) All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-public interface IVCardAction {
-	
-	/**
-	 * Entry point for the VCard configuration.
-	 * @return the result of the action.
-	 */
-	public String edit();
-	
-	/**
-	 * Filter the fields of the VCard.
-	 * @return the result of the action.
-	 */
-	public String filterFields();
-	
-	/**
-	 * Save the VCard configurationVCardFields
-	 * @return true if the result of configuration's save it's ok.
-	 */
-	public String save();
-	
-	/**
-	 * Returns vcard inputstream
-	 * @return vcard inputstream
-	 */
-	public InputStream getInputStream();
-	
-	/**
-	 * Download VCard
-	 * @return VCard
-	 * @throws Exception
-	 */
-	public String downloadVCard();	
-	
+package com.agiletec.plugins.jpaddressbook.apsadmin.vcard;
+
+import java.io.InputStream;
+
+/**
+ * @author A.Cocco
+ */
+public interface IVCardAction {
+	
+	/**
+	 * Entry point for the VCard configuration.
+	 * @return the result of the action.
+	 */
+	public String edit();
+	
+	/**
+	 * Filter the fields of the VCard.
+	 * @return the result of the action.
+	 */
+	public String filterFields();
+	
+	/**
+	 * Save the VCard configurationVCardFields
+	 * @return true if the result of configuration's save it's ok.
+	 */
+	public String save();
+	
+	/**
+	 * Returns vcard inputstream
+	 * @return vcard inputstream
+	 */
+	public InputStream getInputStream();
+	
+	/**
+	 * Download VCard
+	 * @return VCard
+	 * @throws Exception
+	 */
+	public String downloadVCard();	
+	
 }
