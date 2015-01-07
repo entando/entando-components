@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-app-rss</code>
+	<description>RSS APP</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
+	<dependencies>
+		<code>jprss</code>
+		<code>entando-app-view-rss-default</code>
+	</dependencies>
+	<uninstallation>
+		<resources>
+			<resource>WEB-INF/lib/${project.artifactId}-${project.version}.jar</resource>
+		</resources>
+	</uninstallation>
+</component>
