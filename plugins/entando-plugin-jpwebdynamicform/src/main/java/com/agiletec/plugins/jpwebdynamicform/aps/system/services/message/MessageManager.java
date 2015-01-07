@@ -21,16 +21,6 @@
  */
 package com.agiletec.plugins.jpwebdynamicform.aps.system.services.message;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityDAO;
 import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
@@ -55,22 +45,38 @@ import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.M
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.SmallMessageType;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.parse.MessageNotifierConfigDOM;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Implementation of the Manager of Message Object.
  * @author E.Mezzano
  */
 public class MessageManager extends ApsEntityManager implements IMessageManager, EntityTypesChangingObserver, MailSendersUtilizer {
-
+	
+	private static final Logger _logger = LoggerFactory.getLogger(ApsEntityManager.class);
+	
 	@Override
 	public void init() throws Exception {
-		super.init();
-		this.initSmallMessageTypes();
-		this.loadNotifierConfig();
-		this.checkConfig();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized " +
-				super.getEntityTypes().size() + " entity types");
+		try {
+			super.init();
+			this.initSmallMessageTypes();
+			this.loadNotifierConfig();
+			this.checkConfig();
+			_logger.debug("{} : inizializated {} entity types", this.getName(), super.getEntityTypes().size());
+		} catch (Throwable t) {
+			_logger.error("{} Manager: Error on initialization", this.getClass().getName(), t);
+		}
 	}
-
+	
 	/**
 	 * Initialize the SmallMessageType list and map.
 	 */
@@ -97,7 +103,7 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 			MessageNotifierConfigDOM configDOM = new MessageNotifierConfigDOM();
 			this.setNotifierConfigMap(configDOM.extractConfig(xml));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadNotifierConfig");
+			_logger.error("Error initializing the configuration", t);
 			throw new ApsSystemException("Error initializing the configuration", t);
 		}
 	}
@@ -110,7 +116,7 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 				case EntityTypesChangingEvent.REMOVE_OPERATION_CODE:
 					String typeCode = event.getOldEntityType().getTypeCode();
 					this.removeNotifierConfig(typeCode);
-					ApsSystemUtils.getLogger().trace("Removed notifier configuration for entity type " + typeCode);
+					_logger.debug("Removed notifier configuration for entity type " + typeCode);
 					break;
 				case EntityTypesChangingEvent.INSERT_OPERATION_CODE:
 					MessageTypeNotifierConfig config = new MessageTypeNotifierConfig();
@@ -123,13 +129,13 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateFromEntityTypesChanging");
+			_logger.error("Error on updateFromEntityTypesChanging method", t);
 		}
 	}
-
+	
 	/**
 	 * Returns the notifier's configuration for a given type of message.
-	 * @param type The type of the message.
+	 * @param typeCode The type of the message.
 	 * @return The notifier's configuration for a given type of message.
 	 */
 	@Override
@@ -148,7 +154,7 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 			ConfigInterface configManager = this.getConfigManager();
 			configManager.updateConfigItem(JpwebdynamicformSystemConstants.MESSAGE_NOTIFIER_CONFIG_ITEM, xml);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveNotifierConfig");
+			_logger.error("Error updating notifier configuration", t);
 			this.loadNotifierConfig();
 			throw new ApsSystemException("Error updating notifier configuration");
 		}
@@ -161,10 +167,10 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 	protected void setNotifierConfigMap(Map<String, MessageTypeNotifierConfig> messageNotifierConfigMap) {
 		this._messageNotifierConfigMap = messageNotifierConfigMap;
 	}
-
+	
 	/**
 	 * Remove the notifier's configuration for the given type of message.
-	 * @param type The type of the message.
+	 * @param typeCode The type of the message.
 	 * @throws ApsSystemException
 	 */
 	protected void removeNotifierConfig(String typeCode) throws ApsSystemException {
@@ -177,17 +183,17 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 			ConfigInterface configManager = this.getConfigManager();
 			configManager.updateConfigItem(JpwebdynamicformSystemConstants.MESSAGE_NOTIFIER_CONFIG_ITEM, xml);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeNotifierConfig");
+			_logger.error("Error updating notifier configuration", t);
 			this.loadNotifierConfig();
 			throw new ApsSystemException("Error updating notifier configuration");
 		}
 	}
-
+	
 	protected void checkConfig() {
 		Map<String, MessageTypeNotifierConfig> notifierConfig = this.getNotifierConfigMap();
 		for (String messageType : this.getSmallMessageTypesMap().keySet()) {
 			if (!notifierConfig.containsKey(messageType)) {
-				ApsSystemUtils.getLogger().warn("Message Type " + messageType + " hasn't notifier configuration!");
+				_logger.warn("Message Type '{}' hasn't notifier configuration!", messageType);
 			}
 		}
 	}
@@ -241,8 +247,8 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 		try {
 			contentsId = this.getEntitySearcherDao().searchId(filters);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadMessagesId");
-			throw new ApsSystemException("Errore caricamento id message", t);
+			_logger.error("Error loading message ids", t);
+			throw new ApsSystemException("Error loading message ids", t);
 		}
 		return contentsId;
 	}
@@ -253,8 +259,8 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 		try {
 			contentsId = ((IMessageSearcherDAO) this.getEntitySearcherDao()).searchId(filters, answered);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadMessagesId");
-			throw new ApsSystemException("Errore caricamento id message", t);
+			_logger.error("Error loading message ids", t);
+			throw new ApsSystemException("Error loading message ids", t);
 		}
 		return contentsId;
 	}
@@ -270,8 +276,8 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 				message.setCreationDate(messageRecord.getCreationDate());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getMessage");
-			throw new ApsSystemException("Error loading messageRecord", t);
+			_logger.error("Error loading message", t);
+			throw new ApsSystemException("Error loading message", t);
 		}
 		return message;
 	}
@@ -287,8 +293,8 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 				this.getMessageDAO().addEntity(message);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addMessage");
-			throw new ApsSystemException("Error saving message", t);
+			_logger.error("Error adding message", t);
+			throw new ApsSystemException("Error adding message", t);
 		}
 	}
 
@@ -298,8 +304,8 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 			this.sendMessageNotification(message);
 			this.addMessage(message);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addMessage");
-			throw new ApsSystemException("Error saving message", t);
+			_logger.error("Error sending message", t);
+			throw new ApsSystemException("Error sending message", t);
 		}
 	}
 
@@ -308,8 +314,8 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 		try {
 			this.getMessageDAO().deleteEntity(messageId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteMessage");
-			throw new ApsSystemException("Error deleting message " + messageId, t);
+			_logger.error("Error deleting message", t);
+			throw new ApsSystemException("Error deleting message", t);
 		}
 	}
 
@@ -322,8 +328,8 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 			boolean sent = this.sendAnswerNotification(answer);
 			return sent;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addAnswer");
-			throw new ApsSystemException("Error saving answer", t);
+			_logger.error("Error sending message answer", t);
+			throw new ApsSystemException("Error sending message answer", t);
 		}
 	}
 
@@ -332,8 +338,8 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 		try {
 			return this.getMessageDAO().loadAnswers(messageId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addMessage");
-			throw new ApsSystemException("Error saving message", t);
+			_logger.error("Error loading message answer", t);
+			throw new ApsSystemException("Error loading message answer", t);
 		}
 	}
 
@@ -355,10 +361,10 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 						recipientsTo, recipientsCc, recipientsBcc, senderCode, IMailManager.CONTENTTYPE_TEXT_HTML);
 				sent = true;
 			} else {
-				ApsSystemUtils.getLogger().warn("Message notification not sent! Message lacking in notifier configuration.");
+				_logger.warn("Message notification not sent! Message lacking in notifier configuration.");
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "sendMessageNotification");
+			_logger.error("Error sending notification to message {}", message.getId(), t);
 			throw new ApsSystemException("Error sending notification to message " + message.getId(), t);
 		}
 		return sent;
@@ -373,7 +379,7 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 				String email = this.extractUserMail(message, config);
 				if (null!=email) {
 					String renderingLangCode = message.getLangCode();
-					if (renderingLangCode==null || this.getLangManager().getLang(renderingLangCode)==null) {
+					if (renderingLangCode == null || this.getLangManager().getLang(renderingLangCode)==null) {
 						renderingLangCode = this.getLangManager().getDefaultLang().getCode();
 					}
 					MessageModel messageModel = config.getMessageModel();
@@ -387,16 +393,15 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 							attachmentFiles, recipientsTo, null, null, senderCode);
 					sent = true;
 				} else {
-					ApsSystemUtils.getLogger().warn("ATTENTION: email Attribute \"" +
-							config.getMailAttrName() + "\" for Message \"" + message.getId() +
-							"\" isn't valued!!\nCheck \"jpwebdynamicform_messageTypes\" Configuration or " +
-							"\"" + JpwebdynamicformSystemConstants.MESSAGE_NOTIFIER_CONFIG_ITEM + "\" Configuration");
+					_logger.warn("ATTENTION: email Attribute '{}' for Message '{}' isn't valued!!\n"
+							+ "Check 'jpwebdynamicform_messageTypes' Configuration or '{}' Configuration", 
+							config.getMailAttrName(), message.getId(), JpwebdynamicformSystemConstants.MESSAGE_NOTIFIER_CONFIG_ITEM);
 				}
 			} else {
-				ApsSystemUtils.getLogger().warn("Answer not sent! Message lacking in notifier configuration.");
+				_logger.warn("Answer not sent! Message lacking in notifier configuration.");
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "sendAnswerNotification");
+			_logger.error("Error sending notification for answer {}", answer.getAnswerId(), t);
 			// Do not launch any exception
 //			throw new ApsSystemException("Error sending notification for answer " + answer.getAnswerId(), t);
 		}
