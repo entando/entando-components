@@ -111,7 +111,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
             } else if (availableArtifact.getType() == AvailableArtifact.Type.BUNDLE) {
                 this.installBundle(availableArtifact, version, is);
             } else if (availableArtifact.getType() == AvailableArtifact.Type.APP) {
-                //type app (currently not handled)
+                this.installApp(availableArtifact, version, is);
             } else {
                 throw new ApsSystemException("Wrong artifact type value");
             }
@@ -162,8 +162,6 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         URLClassLoader cl = getURLClassLoader(allFiles.toArray(new File[0]), servletContext);
         loadClasses((File[]) pluginJarLibraries.toArray(new File[0]), cl);
         configLocs.addAll(getConfPathsFromDependencies(componentFile));
-        configLocs.add("classpath*:spring/plugins/jacms/aps/**/**.xml");
-        configLocs.add("classpath*:spring/plugins/jacms/apsadmin/**/**.xml");
         configLocs.add("classpath*:spring/plugins/" + artifactName + "/aps/**/**.xml");
         configLocs.add("classpath*:spring/plugins/" + artifactName + "/apsadmin/**/**.xml");
         //load plugin context 
@@ -198,6 +196,11 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         initializerManager.init();
         BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) applicationContext).getBean(SystemConstants.BASE_CONFIG_MANAGER);
         baseConfigManager.init();
+    }
+    
+    
+    private void installApp(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
+        this.installPlugin(availableArtifact, version, is);
     }
 
     private List<String> getConfPathsFromDependencies(File componentFile) throws Exception {
