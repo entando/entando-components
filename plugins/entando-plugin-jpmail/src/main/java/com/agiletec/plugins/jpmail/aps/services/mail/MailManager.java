@@ -52,10 +52,8 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.plugins.jpmail.aps.services.JpmailSystemConstants;
 import com.agiletec.plugins.jpmail.aps.services.mail.parse.MailConfigDOM;
 
-
 /**
  * Implementation for the manager providing email sending functions.
- *
  * @author E.Santoboni, E.Mezzano
  */
 public class MailManager extends AbstractService implements IMailManager {
@@ -64,10 +62,15 @@ public class MailManager extends AbstractService implements IMailManager {
 	
 	@Override
 	public void init() throws Exception {
-		this.loadConfigs();
-		_logger.debug("{} ready with activie: {}", this.getClass().getName(), isActive());
+		try {
+			this.loadConfigs();
+			_logger.debug("{} ready: active {}", this.getClass().getName(), this.isActive());
+		} catch (Throwable t) {
+			_logger.error("{} Manager: Error on initialization", this.getClass().getName(), t);
+			this.setActive(false);
+		}
 	}
-
+	
 	/**
 	 * Load the XML configuration containing smtp configuration and the sender
 	 * addresses.
