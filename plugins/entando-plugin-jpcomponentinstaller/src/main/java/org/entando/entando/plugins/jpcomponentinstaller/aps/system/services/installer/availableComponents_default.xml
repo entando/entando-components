@@ -3,7 +3,6 @@
 	<plugins>
 		<type>PLUGIN</type>
 		<label>PLUGINS</label>
-		
 		<artifact>
 			<description>Faceted Navigation</description>
 			<groupId>org.entando.entando.plugins</groupId>
@@ -24,11 +23,13 @@
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jprss</artifactId>
 		</artifact>
+		<!--
 		<artifact>
 			<description>LDAP</description>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpldap</artifactId>
 		</artifact>
+		-->
 		<artifact>
 			<description>User Profile</description>
 			<groupId>org.entando.entando.plugins</groupId>
@@ -54,17 +55,20 @@
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpsurvey</artifactId>
 		</artifact>
+		<!--
 		<artifact>
 			<description>Avatar</description>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpavatar</artifactId>
 		</artifact>
+		-->
 		<!--
 		<artifactId>entando-plugin-jpactionlogger</artifactId>
 		<artifactId>entando-plugin-jpcasclient</artifactId>
 		<artifactId>entando-plugin-jpstats</artifactId>
 		<artifactId>entando-plugin-jpshowletreplicator</artifactId>
 		-->
+		<!--
 		<artifact>
 			<description>Fast Content Edit</description>
 			<groupId>org.entando.entando.plugins</groupId>
@@ -125,7 +129,7 @@
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpcmstagcloud</artifactId>
 		</artifact>
-		
+		-->
 		<!--
 		<artifactId>entando-plugin-jpcontentrefs</artifactId>
 		<artifactId>entando-plugin-jptokenapi</artifactId>
@@ -133,7 +137,7 @@
 		<artifactId>entando-plugin-jps3awsclient</artifactId>
 		<artifactId>entando-plugin-jpsolrclient</artifactId>
 		-->
-		
+		<!--
 		<artifact>
 			<description>My Portal</description>
 			<groupId>org.entando.entando.plugins</groupId>
@@ -144,7 +148,6 @@
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpfrontshortcut</artifactId>
 		</artifact>
-		
 		<artifact>
 			<description>Blog</description>
 			<groupId>org.entando.entando.plugins</groupId>
@@ -155,6 +158,7 @@
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpcollaboration</artifactId>
 		</artifact>
+		-->
 		<!--
 		<artifact>
 			<description>Forum</description>
@@ -167,6 +171,7 @@
 		<artifactId>entando-plugin-jpsocial</artifactId>
 		<artifactId>entando-plugin-jpxsswarden</artifactId>
 		-->
+		<!--
 		<artifact>
 			<description>Web Form</description>
 			<groupId>org.entando.entando.plugins</groupId>
@@ -182,10 +187,11 @@
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpseo</artifactId>
 		</artifact>
+		-->
 		<!--
 		<artifactId>entando-plugin-jpmemcached</artifactId>
 		-->
-		
+		<!--
 		<artifact>
 			<description>Share Docs</description>
 			<groupId>org.entando.entando.plugins</groupId>
@@ -226,7 +232,7 @@
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpactiviti</artifactId>
 		</artifact>
-		
+		-->
 		<!--
 		<artifactId>entando-plugin-jpremotenotifier</artifactId>
 		<artifactId>entando-plugin-jpforumremotenotifier</artifactId>
@@ -237,7 +243,7 @@
 		<artifactId>entando-plugin-jpjasperremotenotifier</artifactId>
 		<artifactId>entando-plugin-jppentahoremotenotifier</artifactId>
 		-->
-		
+		<!--
 		<artifact>
 			<description>SalesForge Connector</description>
 			<groupId>org.entando.entando.plugins</groupId>
@@ -248,7 +254,7 @@
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpconstantcontact</artifactId>
 		</artifact>
-		
+		-->
 		<!--
 		<artifactId>entando-plugin-jpmultisite</artifactId>
 		<artifactId>entando-plugin-jpcomponentinstaller</artifactId>
@@ -299,12 +305,15 @@
 				<groupId>org.entando.entando.bundles.app-view</groupId>
 				<artifactId>entando-app-view-survey-default</artifactId>
 			</artifact>
+			<!--
 			<artifact>
 				<description>Blog - default</description>
 				<groupId>org.entando.entando.bundles.app-view</groupId>
 				<artifactId>entando-app-view-blog-default</artifactId>
 			</artifact>
+			-->
 		</app-views>
+		<!--
 		<content-types>
 			<label>Content Type</label>
 			<artifact>
@@ -332,13 +341,13 @@
 				<groupId>org.entando.entando.bundles.contents</groupId>
 				<artifactId>entando-content-announcement</artifactId>
 			</artifact>
-			
 			<artifact>
 				<description>Blog Post</description>
 				<groupId>org.entando.entando.bundles.contents</groupId>
 				<artifactId>entando-content-blogpost</artifactId>
 			</artifact>
 		</content-types>
+		-->
 		<!--
 		<misc>
 			<label>MISC</label>
@@ -351,7 +360,7 @@
 			<artifactId>entando-misc-bootstrap</artifactId>
 		</misc>
 		-->
-		
+		<!--
 		<page-models>
 			<label>Page Model</label>
 			<artifact>
@@ -370,7 +379,8 @@
 				<artifactId>entando-page-myportalplus-basic</artifactId>
 			</artifact>
 		</page-models>
-		
+		-->
+		<!--
 		<widgets>
 			<label>Widget</label>
 			<artifact>
@@ -409,21 +419,53 @@
 				<artifactId>entando-widget-sharewith</artifactId>
 			</artifact>
 		</widgets>
+		-->
 	</ui-bundles>
-	<!--
 	<apps>
 		<type>APP</type>
 		<label>APPS</label>
-		<groupId>org.entando.entando.plugins</groupId>
-		<artifactId>entando-app-webdynamicform</artifactId>
-		<artifactId>entando-app-calendar</artifactId>
-		<artifactId>entando-app-rss</artifactId>
-		<artifactId>entando-app-facetnav</artifactId>
-		<artifactId>entando-app-userreg</artifactId>
-		<artifactId>entando-app-addressbook</artifactId>
-		<artifactId>entando-app-newsletter</artifactId>
-		<artifactId>entando-app-survey</artifactId>
+		<artifact>
+			<description>Web Dynamic Forms</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-app-webdynamicform</artifactId>
+		</artifact>
+		<artifact>
+			<description>Calendar</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-app-calendar</artifactId>
+		</artifact>
+		<artifact>
+			<description>RSS</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-app-rss</artifactId>
+		</artifact>
+		<artifact>
+			<description>Faceted Navigation</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-app-facetnav</artifactId>
+		</artifact>
+		<artifact>
+			<description>User Registration</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-app-userreg</artifactId>
+		</artifact>
+		<artifact>
+			<description>Address Book</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-app-addressbook</artifactId>
+		</artifact>
+		<artifact>
+			<description>Newsletter</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-app-newsletter</artifactId>
+		</artifact>
+		<artifact>
+			<description>Survey - Questionnaire</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-app-survey</artifactId>
+		</artifact>
+		<!--
 		<artifactId>entando-app-blog</artifactId>
+		-->
 	</apps>
-	-->
 </components>
