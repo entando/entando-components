@@ -6,11 +6,12 @@
 	<version>4.1.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Entando: Components</name>
+	<description>Components for Entando</description>
 	<url>http://www.entando.com/</url>
 	<licenses>
 		<license>
-			<name>GNU GENERAL PUBLIC LICENSE,  Version 2, June 1991</name>
-			<url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+			<name>MIT LICENSE</name>
+			<url>http://opensource.org/licenses/MIT</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -27,18 +28,9 @@
 		</developer>
 	</developers>
 	<organization>
-		<name>Entando S.r.l.</name>
+		<name>Entando Corporation</name>
 		<url>http://www.entando.com/</url>
 	</organization>
-	<!--
-	<scm>
-		<connection>scm:git:git://github.com/entando/entando-bundles-parent.git</connection>
-		<developerConnection>scm:git:git@github.com:entando/entando-bundles-parent.git</developerConnection>
-		<url>https://github.com/entando/entando-bundles-parent</url>
-		<tag>HEAD</tag>
-	</scm>
-	-->
-	<description>Components for Entando</description>
 	<modules>
 		<module>plugins</module>
 		<module>ui-bundles</module>
