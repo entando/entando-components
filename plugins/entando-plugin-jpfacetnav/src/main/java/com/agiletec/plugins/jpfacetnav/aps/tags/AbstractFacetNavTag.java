@@ -36,7 +36,7 @@ import com.agiletec.aps.system.common.tree.ITreeNodeManager;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jpfacetnav.aps.system.JpFacetNavSystemConstants;
-import com.agiletec.plugins.jpfacetnav.aps.system.services.content.showlet.IFacetNavHelper;
+import com.agiletec.plugins.jpfacetnav.aps.system.services.content.widget.IFacetNavHelper;
 import com.agiletec.plugins.jpfacetnav.aps.tags.util.FacetBreadCrumbs;
 
 import com.agiletec.aps.system.services.page.Widget;
@@ -243,7 +243,7 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 		for (int i = 0; i < widgets.length; i++) {
 			if (i == currentFrame.intValue()) continue;
 			Widget widget = widgets[i];
-			String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_SHOWLET_PARAM_NAME;
+			String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_WIDGET_PARAM_NAME;
 			if (null != widget && null != widget.getConfig()
 					&& null != widget.getConfig().getProperty(configParamName)) {
 				String facetParamConfig = widget.getConfig().getProperty(configParamName);

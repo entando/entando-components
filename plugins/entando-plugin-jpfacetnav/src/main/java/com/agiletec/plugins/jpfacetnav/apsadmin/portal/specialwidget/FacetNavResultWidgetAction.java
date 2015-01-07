@@ -55,7 +55,7 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction impleme
 		for (String contentTypeCode : contentTypes) {
 			if (!smallContentTypes.containsKey(contentTypeCode)) {
 				String[] args = { contentTypeCode };
-				String fieldName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_SHOWLET_PARAM_NAME;
+				String fieldName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_WIDGET_PARAM_NAME;
 				this.addFieldError(fieldName, this.getText("message.facetNavWidget.contentTypesFilter.notValid", args));
 			}
 		}
@@ -87,7 +87,7 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction impleme
 			if (contentTypeCode!=null && contentTypeCode.length()>0 && !contentTypes.contains(contentTypeCode) && this.getContentType(contentTypeCode)!=null) {
 				contentTypes.add(contentTypeCode);
 				String contentTypesFilter = FacetNavWidgetHelper.concatStrings(contentTypes, ",");
-				String configParamName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_SHOWLET_PARAM_NAME;
+				String configParamName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_WIDGET_PARAM_NAME;
 				this.getWidget().getConfig().setProperty(configParamName, contentTypesFilter);
 				this.setContentTypesFilter(contentTypesFilter);
 			}
@@ -110,7 +110,7 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction impleme
 			if (contentTypeCode != null) {
 				contentTypes.remove(contentTypeCode);
 				String contentTypesFilter = FacetNavWidgetHelper.concatStrings(contentTypes, ",");
-				String configParamName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_SHOWLET_PARAM_NAME;
+				String configParamName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_WIDGET_PARAM_NAME;
 				this.getWidget().getConfig().setProperty(configParamName, contentTypesFilter);
 				this.setContentTypesFilter(contentTypesFilter);
 			}
@@ -126,7 +126,7 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction impleme
 	 */
 	protected void initSpecialParams() {
 		if (null != this.getWidget().getConfig()) {
-			String paramName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_SHOWLET_PARAM_NAME;
+			String paramName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_WIDGET_PARAM_NAME;
 			String configParamName = this.getWidget().getConfig().getProperty(paramName);
 			this.setContentTypesFilter(configParamName);
 		}

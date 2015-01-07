@@ -30,7 +30,12 @@ public interface JpFacetNavSystemConstants {
 	
 	public static final String CONTENT_FACET_NAV_HELPER = "jpfacetnavContentFacetNavHelper";
 	
-	public static final String CONTENT_TYPES_FILTER_SHOWLET_PARAM_NAME = "contentTypesFilter";
-	public static final String FACET_ROOTS_SHOWLET_PARAM_NAME = "facetRootNodes";
+	public static final String CONTENT_TYPES_FILTER_WIDGET_PARAM_NAME = "contentTypesFilter";
+	public static final String FACET_ROOTS_WIDGET_PARAM_NAME = "facetRootNodes";
+	
+	@Deprecated
+	public static final String CONTENT_TYPES_FILTER_SHOWLET_PARAM_NAME = CONTENT_TYPES_FILTER_WIDGET_PARAM_NAME;
+	@Deprecated
+	public static final String FACET_ROOTS_SHOWLET_PARAM_NAME = FACET_ROOTS_WIDGET_PARAM_NAME;
 	
 }

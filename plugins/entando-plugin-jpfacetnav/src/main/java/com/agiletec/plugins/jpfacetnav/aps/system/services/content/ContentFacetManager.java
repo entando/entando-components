@@ -31,7 +31,6 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
- * 
  * @author E.Santoboni
  */
 public class ContentFacetManager extends AbstractService implements IContentFacetManager {

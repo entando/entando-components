@@ -54,7 +54,7 @@ public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction impleme
 		for (String facetCode : facetCodes) {
 			if (null == this.getFacet(facetCode)) {
 				String[] args = { facetCode };
-				String fieldName = JpFacetNavSystemConstants.FACET_ROOTS_SHOWLET_PARAM_NAME;
+				String fieldName = JpFacetNavSystemConstants.FACET_ROOTS_WIDGET_PARAM_NAME;
 				this.addFieldError(fieldName, this.getText("message.facetNavWidget.facets.notValid", args));
 			}
 		}
@@ -67,7 +67,7 @@ public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction impleme
 	protected void initSpecialParams() {
 		super.initSpecialParams();
 		if (null != this.getWidget().getConfig()) {
-			String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_SHOWLET_PARAM_NAME;
+			String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_WIDGET_PARAM_NAME;
 			String facetsParam = this.getWidget().getConfig().getProperty(configParamName);
 			this.setFacetRootNodes(facetsParam);
 		}
@@ -84,7 +84,7 @@ public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction impleme
 				if (facet != null && !facet.getCode().equals(facet.getParent().getCode()) && !facetCodes.contains(facetCode)) {//se esiste, non è la Home e non è 
 					facetCodes.add(facetCode);
 					String facetsFilter = FacetNavWidgetHelper.concatStrings(facetCodes, ",");
-					String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_SHOWLET_PARAM_NAME;
+					String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_WIDGET_PARAM_NAME;
 					this.getWidget().getConfig().setProperty(configParamName, facetsFilter);
 					this.setFacetRootNodes(facetsFilter);
 				}
@@ -108,7 +108,7 @@ public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction impleme
 			if (facetCode != null) {
 				facetCodes.remove(facetCode);
 				String facetsFilter = FacetNavWidgetHelper.concatStrings(facetCodes, ",");
-				String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_SHOWLET_PARAM_NAME;
+				String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_WIDGET_PARAM_NAME;
 				this.getWidget().getConfig().setProperty(configParamName, facetsFilter);
 				this.setFacetRootNodes(facetsFilter);
 			}

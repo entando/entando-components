@@ -15,7 +15,7 @@
 		</property>
 	</bean>
 	
-	<bean id="jpfacetnavContentFacetNavHelper" class="com.agiletec.plugins.jpfacetnav.aps.system.services.content.showlet.FacetNavHelper" >
+	<bean id="jpfacetnavContentFacetNavHelper" class="com.agiletec.plugins.jpfacetnav.aps.system.services.content.widget.FacetNavHelper" >
 		<property name="treeNodeManager" ref="CategoryManager" />
 		<property name="contentFacetManager" ref="jpfacetnavContentFacetManager" />
 	</bean>

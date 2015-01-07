@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpfacetnav.aps.system.services.content.showlet;
+package com.agiletec.plugins.jpfacetnav.aps.system.services.content.widget;
 
 import java.util.List;
 import java.util.Map;
@@ -29,33 +29,14 @@ import com.agiletec.aps.system.common.tree.ITreeNodeManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
- * 
  * @author E.Santoboni
  */
 public interface IFacetNavHelper {
-
-	/**
-	 * Returns search result
-	 * @param selectedFacetNodes
-	 * @param reqCtx the request context
-	 * @return search result
-	 * @throws ApsSystemException
-	 */
+	
 	public List<String> getSearchResult(List<String> selectedFacetNodes, RequestContext reqCtx) throws ApsSystemException;
-
-	/**
-	 * Returns occurrences
-	 * @param selectedFacetNodes
-	 * @param reqCtx
-	 * @return occurrences
-	 * @throws ApsSystemException
-	 */
+	
 	public Map<String, Integer> getOccurences(List<String> selectedFacetNodes, RequestContext reqCtx) throws ApsSystemException;
-
-	/**
-	 * Returns tree node manager
-	 * @return tree node manager
-	 */
+	
 	public ITreeNodeManager getTreeNodeManager();
-
+	
 }

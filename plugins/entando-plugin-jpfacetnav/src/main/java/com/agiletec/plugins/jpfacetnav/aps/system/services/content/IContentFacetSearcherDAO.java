@@ -27,27 +27,12 @@ import java.util.Map;
 import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
 
 /**
- * 
  * @author E.Santoboni
  */
 public interface IContentFacetSearcherDAO extends IEntitySearcherDAO {
 	
-	/**
-	 * Returns contents id
-	 * @param contentTypeCodes
-	 * @param facetNodeCodes
-	 * @param groupCodes
-	 * @return contents id
-	 */
 	public List<String> loadContentsId(List<String> contentTypeCodes, List<String> facetNodeCodes, List<String> groupCodes);
 	
-	/**
-	 * Returns occurrences
-	 * @param contentTypeCodes
-	 * @param facetNodeCodes
-	 * @param groupCodes
-	 * @return occurrences
-	 */
 	public Map<String, Integer> getOccurrences(List<String> contentTypeCodes, List<String> facetNodeCodes, List<String> groupCodes);
 	
 }

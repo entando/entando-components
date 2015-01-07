@@ -27,29 +27,12 @@ import java.util.Map;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
- * 
  * @author E.Santoboni
  */
 public interface IContentFacetManager {
 	
-	/**
-	 * Returns contents id
-	 * @param contentTypeCodes
-	 * @param facetNodeCodes 
-	 * @param groupCodes
-	 * @return contents id
-	 * @throws ApsSystemException
-	 */
 	public List<String> loadContentsId(List<String> contentTypeCodes, List<String> facetNodeCodes, List<String> groupCodes) throws ApsSystemException;
 	
-	/**
-	 * Returns occurrences
-	 * @param contentTypeCodes
-	 * @param facetNodeCodes
-	 * @param groupCodes
-	 * @return occurrences
-	 * @throws ApsSystemException
-	 */
 	public Map<String, Integer> getOccurrences(List<String> contentTypeCodes, List<String> facetNodeCodes, List<String> groupCodes) throws ApsSystemException;
 	
 }

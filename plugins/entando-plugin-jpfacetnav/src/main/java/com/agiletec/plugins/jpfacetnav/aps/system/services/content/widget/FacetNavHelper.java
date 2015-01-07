@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpfacetnav.aps.system.services.content.showlet;
+package com.agiletec.plugins.jpfacetnav.aps.system.services.content.widget;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,19 +47,14 @@ import com.agiletec.plugins.jpfacetnav.aps.system.services.content.IContentFacet
  * @author E.Santoboni
  */
 public class FacetNavHelper implements IFacetNavHelper {
-
-
-
-	/**
-	 * Returns search result
-	 */
+	
 	@Override
 	public List<String> getSearchResult(List<String> selectedFacetNodes, RequestContext reqCtx) throws ApsSystemException {
 		List<String> contentTypesFilter = this.getContentTypesFilter(reqCtx);
 		List<String> userGroupCodes = new ArrayList<String>(this.getAllowedGroups(reqCtx));
 		return this.getContentFacetManager().loadContentsId(contentTypesFilter, selectedFacetNodes, userGroupCodes);
 	}
-
+	
 	/**
 	 * Returns Content types filter
 	 * @param reqCtx
@@ -70,7 +65,7 @@ public class FacetNavHelper implements IFacetNavHelper {
 		List<String> contentTypes = new ArrayList<String>();
 		Widget currentShowlet = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 		if (null == currentShowlet.getConfig()) return contentTypes;
-		String paramName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_SHOWLET_PARAM_NAME;
+		String paramName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_WIDGET_PARAM_NAME;
 		String contentTypesParamValue = currentShowlet.getConfig().getProperty(paramName);
 		if (null != contentTypesParamValue) {
 			IContentManager contentManager = (IContentManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MANAGER, reqCtx.getRequest());
@@ -85,9 +80,6 @@ public class FacetNavHelper implements IFacetNavHelper {
 		return contentTypes;
 	}
 
-	/**
-	 * Returns occurrences
-	 */
 	@Override
 	public Map<String, Integer> getOccurences(List<String> selectedFacetNodes, RequestContext reqCtx) throws ApsSystemException {
 		List<String> contentTypesFilter = this.getContentTypesFilter(reqCtx);
@@ -103,7 +95,7 @@ public class FacetNavHelper implements IFacetNavHelper {
 	private Collection<String> getAllowedGroups(RequestContext reqCtx) {
 		IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, reqCtx.getRequest());
 		UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-		List<Group> groups = authManager.getGroupsOfUser(currentUser);
+		List<Group> groups = authManager.getUserGroups(currentUser);
 		Set<String> allowedGroup = new HashSet<String>();
 		Iterator<Group> iter = groups.iterator();
 		while (iter.hasNext()) {

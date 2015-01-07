@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jpfacetnav.aps.system.JpFacetNavSystemConstants;
-import com.agiletec.plugins.jpfacetnav.aps.system.services.content.showlet.IFacetNavHelper;
+import com.agiletec.plugins.jpfacetnav.aps.system.services.content.widget.IFacetNavHelper;
 
 /**
  * 
