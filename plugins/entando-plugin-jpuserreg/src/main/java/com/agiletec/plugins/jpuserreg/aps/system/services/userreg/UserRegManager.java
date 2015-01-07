@@ -83,8 +83,12 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 	
 	@Override
 	public void init() throws Exception {
-		this.loadConfigs();
-		_logger.debug("{} ready", this.getClass().getName());
+		try {
+			this.loadConfigs();
+			_logger.debug("{} ready", this.getClass().getName());
+		} catch (Throwable t) {
+			_logger.error("{} Manager: Error on initialization", this.getClass().getName(), t);
+		}
 	}
 
 	private void loadConfigs() throws ApsSystemException {
