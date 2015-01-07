@@ -92,9 +92,13 @@ public class NewsletterManager extends AbstractService
 	
 	@Override
 	public void init() throws Exception {
-		this.loadConfigs();
-		this.startScheduler();
-		_logger.info(this.getClass().getName() + ": initialized");
+		try {
+			this.loadConfigs();
+			this.startScheduler();
+			_logger.info(this.getClass().getName() + ": initialized");
+		} catch (Throwable t) {
+			_logger.error("{} Manager: Error on initialization", this.getClass().getName(), t);
+		}
 	}
 	
 	@Override
@@ -487,7 +491,7 @@ public class NewsletterManager extends AbstractService
 		Set<String> usernames = new HashSet<String>();
 		String allContentsAttribute = config.getAllContentsAttributeName();
 		if (null != allContentsAttribute && allContentsAttribute.trim().length() > 0) {
-			EntitySearchFilter filter = new EntitySearchFilter(allContentsAttribute, true, new Boolean(true), false);
+			EntitySearchFilter filter = new EntitySearchFilter(allContentsAttribute, true, Boolean.TRUE, false);
 			EntitySearchFilter[] filters = {filter};
 			try {
 				List<String> usernamesForAllContents = ((IEntityManager) this.getProfileManager()).searchId(filters);
@@ -501,7 +505,7 @@ public class NewsletterManager extends AbstractService
 		while (subscriptionsIter.hasNext()) {
 			String boolAttributeName = (String) subscriptionsIter.next();
 			if (null != boolAttributeName && boolAttributeName.trim().length() > 0) {
-				EntitySearchFilter filter = new EntitySearchFilter(boolAttributeName, true, new Boolean(true), false);
+				EntitySearchFilter filter = new EntitySearchFilter(boolAttributeName, true, Boolean.TRUE, false);
 				EntitySearchFilter[] filters = {filter};
 				try {
 					List<String> usernamesForCategory = ((IEntityManager) this.getProfileManager()).searchId(filters);
@@ -525,7 +529,7 @@ public class NewsletterManager extends AbstractService
 			boolean allContents = false;
 			if (null != allContentsAttribute) {
 				Boolean value = (Boolean) profile.getValue(allContentsAttribute);
-				allContents = value != null && value.booleanValue();
+				allContents = value != null && value;
 			}
 			List<String> groupNames = this.extractUserGroupNames(/*user*/username);
 			boolean isGroupAdmin = groupNames.contains(Group.ADMINS_GROUP_NAME);
@@ -541,7 +545,7 @@ public class NewsletterManager extends AbstractService
 					} else if (contentProfileAttributes!=null && contentProfileAttributes.size() > 0) {
 						for (String profileAttrName : contentProfileAttributes) {
 							Boolean value = (Boolean) profile.getValue(profileAttrName);
-							if (value != null && value.booleanValue()) {
+							if (value != null && value) {
 								userContents.add(content);
 								contentReport.addRecipient(username, eMail);
 								break;
@@ -652,18 +656,18 @@ public class NewsletterManager extends AbstractService
 				contentsId = this.getNewsletterSearcherDAO().loadNewsletterContentsId(contentTypes, 
 						categories, filters, userGroupCodes);
 				Boolean inQueue = searchBean.getInQueue();
-				if (inQueue!=null) {
+				if (inQueue != null) {
 					List<String> contentQueue = this.getNewsletterDAO().loadContentQueue();
-					if (inQueue.booleanValue()) {
+					if (inQueue) {
 						contentsId = this.intersectContentIds(contentsId, contentQueue);
 					} else {
 						contentsId = this.exceptContentIds(contentsId, contentQueue);
 					}
 				}
 				Boolean sent = searchBean.getSent();
-				if (sent!=null) {
+				if (sent != null) {
 					List<String> sentContentIds = this.getNewsletterDAO().loadSentContentIds();
-					if (sent.booleanValue()) {
+					if (sent) {
 						contentsId = this.intersectContentIds(contentsId, sentContentIds);
 					} else {
 						contentsId = this.exceptContentIds(contentsId, sentContentIds);
@@ -680,7 +684,7 @@ public class NewsletterManager extends AbstractService
 		if (exceptedContentIds.size()>0 && contentIds.size()>0) {
 			for (String contentId : exceptedContentIds) {
 				contentIds.remove(contentId);
-				if (contentIds.size()==0) {
+				if (contentIds.isEmpty()) {
 					break;
 				}
 			}
@@ -929,7 +933,7 @@ public class NewsletterManager extends AbstractService
 	}
 	
 	private void sendContentsToSubscribers(List<Content> contents, NewsletterReport newsletterReport) throws ApsSystemException {
-		List<Subscriber> subscribers = this.searchSubscribers(null, new Boolean(true));
+		List<Subscriber> subscribers = this.searchSubscribers(null, Boolean.TRUE);
 		NewsletterConfig config = this.getConfig();
 		for (Subscriber subscriber : subscribers) {
 			String mailAddress = subscriber.getMailAddress();
