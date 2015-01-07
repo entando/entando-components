@@ -64,18 +64,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Manager that handles the Channels
+ * Manager that handles the RSS Channels
+ * @author S.Puddu - E.Santoboni
  */
 public class RssManager extends AbstractService implements IRssManager, EntityTypesChangingObserver {
-
+	
 	private static final Logger _logger = LoggerFactory.getLogger(RssManager.class);
-
+	
 	@Override
 	public void init() throws Exception {
-		this.loadMappingConfig();
-		_logger.debug("{} ready", this.getClass().getName());
+		try {
+			this.loadMappingConfig();
+			_logger.debug("{} ready", this.getClass().getName());
+		} catch (Throwable t) {
+			_logger.error("{} Manager: Error on initialization", this.getClass().getName(), t);
+		}
 	}
-
+	
 	@Override
 	public void updateFromEntityTypesChanging(EntityTypesChangingEvent event) {
 		if (!event.getEntityManagerName().equals(JacmsSystemConstants.CONTENT_MANAGER)) {
