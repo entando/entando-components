@@ -14,14 +14,15 @@
 		<put-attribute name="title" value="jprss.title.rssManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jprss/apsadmin/jsp/entryChannel.jsp" />
 	</definition>
-
+	
 	<definition extends="main.layout" name="admin.jprss.trashChannel">
 		<put-attribute name="title" value="jprss.title.rssManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jprss/apsadmin/jsp/trashChannel.jsp" />
 	</definition>
-
+	
 	<definition extends="main.layout" name="admin.jprss.entryFilter">
 		<put-attribute name="title" value="jprss.title.rssManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/entryFilter.jsp" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jprss/apsadmin/jsp/entryFilter.jsp" />
 	</definition>
 	

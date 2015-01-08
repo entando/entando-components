@@ -2,221 +2,368 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 
-<h1><a href="<s:url action="list" namespace="/do/jprss/Rss" />" title="<s:text name="note.goToSomewhere" />: <s:text name="jprss.title.rssManagement" />"><s:text name="jprss.title.rssManagement" /></a></h1>
-<div id="main">
-	<s:if test="strutsAction ==  1">
-		<h2><s:text name="jprss.title.addChannel" /></h2>
-	</s:if>
-	<s:if test="strutsAction ==  2">
-		<h2><s:text name="jprss.title.editChannel" /></h2>
-	</s:if>
-	
-	<h3 class="margin-bit-top"><s:text name="jprss.title.manageFilter" /></h3> 
-	
-	<s:form>
-		<p class="noscreen">
-			<wpsf:hidden name="id" />
-			<wpsf:hidden name="title" />
-			<wpsf:hidden name="description" />
-			<wpsf:hidden name="contentType" />
-			<wpsf:hidden name="feedType" />
-			<wpsf:hidden name="category" />
-			<wpsf:hidden name="maxContentsSize" />
-			<wpsf:hidden name="filters" />
-			<wpsf:hidden name="active" />
-			<wpsf:hidden name="strutsAction" />
-		</p>
+<h1 class="panel panel-default title-page">
+	<span class="panel-body display-block">
+		<a href="<s:url action="viewTree" namespace="/do/Page" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageManagement" />">
+			<s:text name="title.pageManagement" /></a>&#32;/&#32;
+		<s:if test="strutsAction ==  1"><s:text name="jprss.title.addChannel" /></s:if>
+		<s:if test="strutsAction == 2"><s:text name="jprss.title.editChannel" /></s:if>
+		&#32;/&#32;
+		<s:text name="jprss.title.manageFilter" />
+	</span>
+</h1>
+
+<s:form>
+	<p class="noscreen">
+		<wpsf:hidden name="id" />
+		<wpsf:hidden name="title" />
+		<wpsf:hidden name="description" />
+		<wpsf:hidden name="contentType" />
+		<wpsf:hidden name="feedType" />
+		<wpsf:hidden name="category" />
+		<wpsf:hidden name="maxContentsSize" />
+		<wpsf:hidden name="filters" />
+		<wpsf:hidden name="active" />
+		<wpsf:hidden name="strutsAction" />
+	</p>
 	<s:if test="hasFieldErrors()">
-<div class="message message_error">
-<h4><s:text name="message.title.FieldErrors" /></h4>	
-	<ul>
-	<s:iterator value="fieldErrors">
-		<s:iterator value="value">
-		<li><s:property escape="false" /></li>
-		</s:iterator>
-	</s:iterator>
-	</ul>
-</div>
+		<div class="message message_error">
+			<h4><s:text name="message.title.FieldErrors" /></h4>	
+			<ul>
+				<s:iterator value="fieldErrors">
+					<s:iterator value="value">
+						<li><s:property escape="false" /></li>
+					</s:iterator>
+				</s:iterator>
+			</ul>
+		</div>
 	</s:if>
 	<s:if test="hasActionErrors()">
-<div class="message message_error">
-<h4><s:text name="message.title.ActionErrors" /></h4>	
-	<ul>
-	<s:iterator value="actionErrors">
-		<li><s:property escape="false" /></li>
-	</s:iterator>
-	</ul>
-</div>
+		<div class="message message_error">
+			<h4><s:text name="message.title.ActionErrors" /></h4>	
+			<ul>
+				<s:iterator value="actionErrors">
+					<li><s:property escape="false" /></li>
+				</s:iterator>
+			</ul>
+		</div>
 	</s:if>
 
-<s:if test="filterTypeId < 0">
+	<div class="panel-body">
+	<s:if test="filterTypeId < 0">
 
-<fieldset class="margin-more-top"><legend><s:text name="label.info" /></legend>
-<p>
-	<label for="filterKey" class="basic-mint-label"><s:text name="label.type"/>:</label>
-	<wpsf:select useTabindexAutoIncrement="true" name="filterKey" id="filterKey" list="filterTypes" listKey="key" listValue="value" cssClass="text" />
-	<wpsf:submit useTabindexAutoIncrement="true" action="setFilterType" value="%{getText('label.continue')}" cssClass="button" />
-</p>
-</fieldset>
-</s:if>
-<s:else>
-<p class="noscreen">
-	<wpsf:hidden name="filterKey" />
-	<wpsf:hidden name="filterTypeId" />
-	<wpsf:hidden name="attributeFilter" value="%{filterTypeId>0 && filterTypeId<5}"/>
-</p>
+	<fieldset class="margin-base-top"><legend><s:text name="label.info" /></legend>
+	<p>
+		<label for="filterKey" class="control-label"><s:text name="label.type"/>:</label>
+		<wpsf:select name="filterKey" id="filterKey" list="filterTypes" listKey="key" listValue="value" cssClass="form-control" />
+		<wpsf:submit action="setFilterType" value="%{getText('label.continue')}" cssClass="button" />
+	</p>
+	</fieldset>
 
-<s:set name="filterDescription" value="%{filterKey}" />
-<s:if test="%{filterKey == 'created'}">
-	<s:set name="filterDescription" value="%{getText('label.creationDate')}" />
-</s:if>
-<s:elseif test="%{filterKey == 'modified'}">
-	<s:set name="filterDescription" value="%{getText('label.lastModifyDate')}" />			
-</s:elseif>
-<p class="margin-more-bottom"><s:text name="note.filterTypes.intro" />: <span class="important"><s:property value="filterDescription" /></span><em> (
-<s:if test="filterTypeId == 0">
-	<s:text name="note.filterTypes.metadata" /> )</em></p>
-</s:if>
+	</s:if>
+	<s:else>
+	<p class="sr-only">
+		<wpsf:hidden name="filterKey" />
+		<wpsf:hidden name="filterTypeId" />
+		<wpsf:hidden name="attributeFilter" value="%{filterTypeId>0 && filterTypeId<5}"/>
+	</p>
 
-<s:elseif test="filterTypeId == 1">
-<%-- INIZIO FILTRO PER ATTRIBUTO TIPO STRINGA --%>
-	<s:text name="note.filterTypes.TextAttribute" /> )</em></p>
-<fieldset><legend><s:text name="label.settings"/></legend>
-<p>
-	<label for="filterOptionId" class="basic-mint-label"><s:text name="label.option"/>:</label>
-	<wpsf:select useTabindexAutoIncrement="true" id="filterOptionId" name="filterOptionId" list="#{3:getText('label.presenceOptionFilter'),4:getText('label.absenceOptionFilter'),1:getText('label.valueLikeOptionFilter'),2:getText('label.rangeOptionFilter')}" disabled="filterOptionId>-1" cssClass="text" />
-	<s:if test="filterOptionId>-1"><wpsf:hidden name="filterOptionId" /></s:if>
-	<s:else><wpsf:submit useTabindexAutoIncrement="true" action="setFilterOption" value="%{getText('label.continue')}" cssClass="button" /></s:else>	
-</p>
+	<s:set name="filterDescription" value="%{filterKey}" />
+	<s:if test="%{filterKey == 'created'}">
+		<s:set name="filterDescription" value="%{getText('label.creationDate')}" />
+	</s:if>
+	<s:elseif test="%{filterKey == 'modified'}">
+		<s:set name="filterDescription" value="%{getText('label.lastModifyDate')}" />
+	</s:elseif>
 
-<s:if test="filterOptionId == 1">
-<p>
-	<label for="stringValue" class="basic-mint-label"><s:text name="label.filterValue" />:</label>
-	<wpsf:textfield useTabindexAutoIncrement="true" name="stringValue" id="stringValue" cssClass="text" />
-</p>
-<p>
-	<wpsf:checkbox useTabindexAutoIncrement="true" name="like" id="like" cssClass="radiocheck" /><label for="like"><s:text name="label.filterValue.isLike" /></label>
-</p>
-</s:if>
+	<p>
+		<span class="icon fa fa-filter" title="<s:text name="note.filterTypes.intro" />"></span>&#32;
+		<s:property value="filterDescription" />
+		<span class="label label-info">
+	<s:if test="filterTypeId == 0">
+		<s:text name="note.filterTypes.metadata" /></span>
+	</p>
+	</s:if>
 
-<s:if test="filterOptionId == 2">
-<p>
-	<label for="stringStart" class="basic-mint-label"><s:text name="label.filterFrom" />:</label>
-	<wpsf:textfield useTabindexAutoIncrement="true" name="stringStart" id="stringStart" cssClass="text" />
-</p>
-<p>
-	<label for="stringEnd" class="basic-mint-label"><s:text name="label.filterTo" />:</label>
-	<wpsf:textfield useTabindexAutoIncrement="true" name="stringEnd" id="stringEnd" cssClass="text" />
-</p>
-</s:if>
-</fieldset>
-<%-- FINE FILTRO PER ATTRIBUTO TIPO STRINGA --%>
-</s:elseif>
+	<s:elseif test="filterTypeId==1">
+	<%-- String --%>
+		<s:text name="note.filterTypes.TextAttribute" /></span>
+	</p>
+	<fieldset class="margin-base-top"><legend><s:text name="label.settings"/></legend>
+	<div class="form-group">
+		<div class="col-xs-12">
+			<label for="filterOptionId"><s:text name="label.option"/></label>
+			<s:if test="filterOptionId<=-1">
+				<div class="input-group">
+			</s:if>
+				<wpsf:select id="filterOptionId" name="filterOptionId" list="#{3:getText('label.presenceOptionFilter'),4:getText('label.absenceOptionFilter'),1:getText('label.valueLikeOptionFilter'),2:getText('label.rangeOptionFilter')}" disabled="filterOptionId>-1" cssClass="form-control" />
+				<s:if test="filterOptionId>-1"><wpsf:hidden name="filterOptionId" /></s:if>
+				<s:else>
+					<div class="input-group-btn">
+						<wpsf:submit action="setFilterOption" value="%{getText('label.continue')}" cssClass="btn btn-info" />
+					</div>
+				</div>
+				</s:else>
+		</div>
+	</div>
 
-<s:elseif test="filterTypeId == 2">
-<%-- INIZIO FILTRO PER ATTRIBUTO TIPO NUMERO --%>
-	<s:text name="note.filterTypes.NumberAttribute" /> )</em></p>
-<fieldset><legend><s:text name="label.settings"/></legend>
-<p>
-	<label for="filterOptionId" class="basic-mint-label"><s:text name="label.option"/>:</label>
-	<wpsf:select useTabindexAutoIncrement="true" name="filterOptionId" id="filterOptionId" list="#{3:getText('label.presenceOptionFilter'),4:getText('label.absenceOptionFilter'),1:getText('label.valueOptionFilter'),2:getText('label.rangeOptionFilter')}" disabled="filterOptionId>-1" cssClass="text" />
-	<s:if test="filterOptionId > -1"><wpsf:hidden name="filterOptionId" /></s:if>
-	<s:else><wpsf:submit useTabindexAutoIncrement="true" action="setFilterOption" value="%{getText('label.continue')}" cssClass="button" /></s:else>	
-</p>
+	<s:if test="filterOptionId==1">
+	<div class="form-group">
+		<div class="col-xs-12">
+			<label for="stringValue"><s:text name="label.filterValue" /></label>
+			<wpsf:textfield name="stringValue" id="stringValue" cssClass="form-control" />
+		</div>
+	</div>
+	<div class="checkbox">
+		<label>
+			<wpsf:checkbox name="like" />&#32;<s:text name="label.filterValue.isLike" />
+		</label>
+	</div>
+	</s:if>
 
-<s:if test="filterOptionId == 1">
-<p>
-	<label for="numberValue" class="basic-mint-label"><s:text name="label.filterValue.exact" />:</label>
-	<wpsf:textfield useTabindexAutoIncrement="true" name="numberValue" id="numberValue" cssClass="text" />
-</p>
-</s:if>
+	<s:if test="filterOptionId==2">
+	<div class="form-group">
+		<div class="col-xs-12">
+			<label for="stringStart"><s:text name="label.filterFrom" /></label>
+			<wpsf:textfield name="stringStart" id="stringStart" cssClass="form-control" />
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-xs-12">
+			<label for="stringEnd"><s:text name="label.filterTo" /></label>
+			<wpsf:textfield name="stringEnd" id="stringEnd" cssClass="form-control" />
+		</div>
+	</div>
+	</s:if>
+	</fieldset>
+	<%-- // String --%>
+	</s:elseif>
 
-<s:if test="filterOptionId == 2">
-<p>
-	<label for="numberStart" class="basic-mint-label"><s:text name="label.filterFrom" />:</label>
-	<wpsf:textfield useTabindexAutoIncrement="true" name="numberStart" id="numberStart" cssClass="text" />
-</p>
-<p>
-	<label for="numberEnd" class="basic-mint-label"><s:text name="label.filterTo" />:</label>
-	<wpsf:textfield useTabindexAutoIncrement="true" name="numberEnd" id="numberEnd" cssClass="text" />
-</p>
-</s:if>
-</fieldset>
+	<s:elseif test="filterTypeId==2">
+	<%-- Number --%>
+		<s:text name="note.filterTypes.NumberAttribute" /><span>
+	</p>
+	<fieldset class="margin-base-top"><legend><s:text name="label.settings"/></legend>
+	<div class="form-group">
+		<div class="col-xs-12">
+			<label for="filterOptionId"><s:text name="label.option"/></label>
+		<s:if test="filterOptionId<=-1">
+			<div class="input-group">
+		</s:if>
+			<wpsf:select name="filterOptionId" id="filterOptionId" list="#{3:getText('label.presenceOptionFilter'),4:getText('label.absenceOptionFilter'),1:getText('label.valueOptionFilter'),2:getText('label.rangeOptionFilter')}" disabled="filterOptionId>-1" cssClass="form-control" />
+			<s:if test="filterOptionId>-1"><wpsf:hidden name="filterOptionId" /></s:if>
+			<s:else>
+				<div class="input-group-btn">
+					<wpsf:submit action="setFilterOption" value="%{getText('label.continue')}" cssClass="btn btn-info" />
+				</div>
+			</div>
+			</s:else>
+		</div>
+	</div>
 
-<%-- FINE FILTRO PER ATTRIBUTO TIPO NUMERO --%>
-</s:elseif>
+	<s:if test="filterOptionId==1">
+	<div class="form-group">
+		<div class="col-xs-12">
+			<label for="numberValue"><s:text name="label.filterValue.exact" /></label>
+			<wpsf:textfield name="numberValue" id="numberValue" cssClass="form-control" />
+		</div>
+	</div>
+	</s:if>
 
-<s:elseif test="filterTypeId == 3">
-<%-- INIZIO FILTRO PER ATTRIBUTO TIPO BULEANO --%>
-	<s:text name="note.filterTypes.BooleanAttribute" /> )</em></p>
-<fieldset><legend><s:text name="label.settings"/></legend>	
-<ul class="noBullet radiocheck">
-	<li><input type="radio" name="booleanValue" id="booleanValue_true" value="true" /><label for="booleanValue_true"><s:text name="label.yes" /></label></li>
-	<li><input type="radio" name="booleanValue" id="booleanValue_false" value="false" /><label for="booleanValue_false"><s:text name="label.no" /></label></li>
-	<li><input type="radio" name="booleanValue" id="booleanValue_none" checked="checked" value="" /><label for="booleanValue_none"><s:text name="label.all" /></label></li>		
-</ul>
-</fieldset>
-<%-- FINE FILTRO PER ATTRIBUTO TIPO BULEANO --%>
-</s:elseif>
+	<s:if test="filterOptionId==2">
+	<div class="form-group">
+		<div class="col-xs-12">
+			<label for="numberStart"><s:text name="label.filterFrom" /></label>
+			<wpsf:textfield name="numberStart" id="numberStart" cssClass="form-control" />
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-xs-12">
+			<label for="numberEnd"><s:text name="label.filterTo" /></label>
+			<wpsf:textfield name="numberEnd" id="numberEnd" cssClass="form-control" />
+		</div>
+	</div>
+	</s:if>
+	</fieldset>
 
-<s:elseif test="filterTypeId == 4">
-<%-- INIZIO FILTRO PER ATTRIBUTO TIPO DATA --%>
-	<s:text name="note.filterTypes.DateAttribute" /> )</em></p>
-<fieldset><legend><s:text name="label.settings"/></legend>
-<p>
-	<label for="filterOptionId" class="basic-mint-label"><s:text name="label.option"/>:</label>
-	<wpsf:select useTabindexAutoIncrement="true" name="filterOptionId" id="filterOptionId" list="#{3:getText('label.presenceOptionFilter'),4:getText('label.absenceOptionFilter'),1:getText('label.valueOptionFilter'),2:getText('label.rangeOptionFilter')}" disabled="filterOptionId>-1" cssClass="text" />
-	<s:if test="filterOptionId>-1"><wpsf:hidden name="filterOptionId" /></s:if>
-	<s:else><wpsf:submit useTabindexAutoIncrement="true" action="setFilterOption" value="%{getText('label.continue')}" cssClass="button" /></s:else>	
-</p>
+	<%-- // Number --%>
+	</s:elseif>
 
-<s:if test="filterOptionId == 1">
-<ul class="noBullet radiocheck">
-	<li><input type="radio" name="dateValueType" id="dateValueType_today" value="2" <s:if test="(2 == dateValueType)">checked="checked"</s:if> /> <label for="dateValueType_today"><s:text name="label.today" /></label>&nbsp;&nbsp;&nbsp;<label for="valueDateDelay"><s:text name="label.delay" /></label> <wpsf:textfield name="valueDateDelay" id="valueDateDelay" cssClass="text" /></li>
-	<li><input type="radio" name="dateValueType" id="dateValueType_chosen" value="3" <s:if test="(3 == dateValueType)">checked="checked"</s:if> /> <label for="dateValueType_chosen"><s:text name="label.chosenDate" /></label>, 
-		<label for="dateValue_cal"><s:text name="label.filterValue.exact" />:</label> <wpsf:textfield useTabindexAutoIncrement="true" name="dateValue" id="dateValue_cal" cssClass="text" /></li>
-</ul>
-</s:if>
-</fieldset>
+	<s:elseif test="filterTypeId==3">
+	<%-- Boolean --%>
+		<s:text name="note.filterTypes.BooleanAttribute" /><span>
+	</p>
+	<fieldset class="margin-base-top"><legend><s:text name="label.settings"/></legend>
+	<ul class="list-unstyled">
+		<li class="radio">
+			<label><input type="radio" name="booleanValue" id="booleanValue_true" value="true" />&#32;<s:text name="label.yes" /></label>
+		</li>
+		<li class="radio">
+			<label><input type="radio" name="booleanValue" id="booleanValue_false" value="false" />&#32;<s:text name="label.no" /></label>
+		</li>
+		<li class="radio">
+			<label><input type="radio" name="booleanValue" id="booleanValue_none" checked="checked" value="" /><s:text name="label.all" /></label>
+		</li>
+	</ul>
+	</fieldset>
+	<%-- // Boolean --%>
+	</s:elseif>
 
-<s:if test="filterOptionId == 2">
-<fieldset><legend><s:text name="label.filterFrom" /></legend>
-<ul class="noBullet radiocheck">
-	<li><input type="radio" name="dateStartType" id="dateStartType_none" value="1" <s:if test="(1 == dateStartType)">checked="checked"</s:if> /> <label for="dateStartType_none"><s:text name="label.none" /></label></li>
-	<li><input type="radio" name="dateStartType" id="dateStartType_today" value="2" <s:if test="(2 == dateStartType)">checked="checked"</s:if> /> <label for="dateStartType_today"><s:text name="label.today" /></label>&nbsp;&nbsp;&nbsp;<label for="startDateDelay"><s:text name="label.delay" /></label> <wpsf:textfield name="startDateDelay" id="startDateDelay" cssClass="text" /></li>
-	<li><input type="radio" name="dateStartType" id="dateStartType_chosen" value="3" <s:if test="(3 == dateStartType)">checked="checked"</s:if> /> <label for="dateStartType_chosen"><s:text name="label.chosenDate" /></label>, 
-		<label for="dateStart_cal"><s:text name="label.filterValue.exact" />:</label> <wpsf:textfield useTabindexAutoIncrement="true" name="dateStart" id="dateStart_cal" cssClass="text" /><span class="inlineNote">dd/MM/yyyy</span></li>
-</ul>
-</fieldset>
-<fieldset><legend><s:text name="label.filterTo" /></legend>
-<ul class="noBullet radiocheck">
-	<li><input type="radio" name="dateEndType" id="dateEndType_none" value="1" <s:if test="(1 == dateEndType)">checked="checked"</s:if> /> <label for="dateEndType_none"><s:text name="label.none" /></label></li>
-	<li><input type="radio" name="dateEndType" id="dateEndType_today" value="2" <s:if test="(2 == dateEndType)">checked="checked"</s:if> /> <label for="dateEndType_today"><s:text name="label.today" /></label>&nbsp;&nbsp;&nbsp;<label for="endDateDelay"><s:text name="label.delay" /></label> <wpsf:textfield name="endDateDelay" id="endDateDelay" cssClass="text" /></li>
-	<li><input type="radio" name="dateEndType" id="dateEndType_chosen" value="3" <s:if test="(3 == dateEndType)">checked="checked"</s:if> /> <label for="dateEndType_chosen"><s:text name="label.chosenDate" /></label>, 
-		<label for="dateEnd_cal"><s:text name="label.filterValue.exact" />:</label> <wpsf:textfield useTabindexAutoIncrement="true" name="dateEnd" id="dateEnd_cal" cssClass="text" /><span class="inlineNote">dd/MM/yyyy</span></li>
-</ul>
-</fieldset>
-</s:if>
+	<s:elseif test="filterTypeId==4">
+	<%-- Date --%>
+		<s:text name="note.filterTypes.DateAttribute" /></span>
+	</p>
+	<fieldset class="margin-base-top"><legend><s:text name="label.settings"/></legend>
 
-<%-- FINE FILTRO PER ATTRIBUTO TIPO DATA --%>
-</s:elseif>
+		<div class="form-group">
+			<div class="col-xs-12">
+				<label for="filterOptionId"><s:text name="label.option"/></label>
+				<s:if test="filterOptionId<=-1">
+				<div class="input-group">
+				</s:if>
+					<wpsf:select name="filterOptionId" id="filterOptionId" list="#{3:getText('label.presenceOptionFilter'),4:getText('label.absenceOptionFilter'),1:getText('label.valueOptionFilter'),2:getText('label.rangeOptionFilter')}" disabled="filterOptionId>-1" cssClass="form-control" />
+				<s:if test="filterOptionId>-1"><wpsf:hidden name="filterOptionId" /></s:if>
+				<s:else>
+					<span class="input-group-btn">
+						<wpsf:submit action="setFilterOption" value="%{getText('label.continue')}" cssClass="btn btn-info" />
+					</span>
+				</div>
+				</s:else>
+			</div>
+		</div>
 
-<fieldset><legend><s:text name="label.order" /></legend>
-<ul class="noBullet radiocheck">
-	<li><input type="radio" name="order" id="order_none" checked="checked" value="" /><label for="order_none"><s:text name="label.none" /></label></li>
-	<li><input type="radio" name="order" id="order_asc" value="ASC" <s:if test="('ASC' == order)">checked="checked"</s:if> /><label for="order_asc"><s:text name="label.order.ascendant" /></label></li>
-	<li><input type="radio" name="order" id="order_desc" value="DESC" <s:if test="('DESC' == order)">checked="checked"</s:if> /><label for="order_desc"><s:text name="label.order.descendant" /></label></li>
-</ul>
-</fieldset>
+		<s:if test="filterOptionId==1">
+		<ul class="list-unstyled">
+			<li class="form-inline margin-base-vertical">
+				<div class="radio-inline">
+					<label>
+						<input type="radio" name="dateValueType" id="dateValueType_today" value="2" <s:if test="(2 == dateValueType)">checked="checked"</s:if> />&#32;<s:text name="label.today" />
+					</label>
+				</div>
+				<div class="form-group margin-small-left">
+					<label for="valueDateDelay" class="sr-only"><s:text name="label.delay" /></label>
+					<wpsf:textfield name="valueDateDelay" id="valueDateDelay" cssClass="form-control" style="width: 60%;" placeholder="%{getText('label.delay')}" />
+				</div>
+			</li>
+			<li class="form-inline margin-base-vertical">
+				<div class="radio-inline">
+					<label>
+						<input type="radio" name="dateValueType" id="dateValueType_chosen" value="3" <s:if test="(3 == dateValueType)">checked="checked"</s:if> />&#32;<s:text name="label.chosenDate" />,
+					</label>
+				</div>
+				<div class="form-group margin-small-left">
+					<label for="dateValue_cal"><s:text name="label.filterValue.exact" /></label>
+					<wpsf:textfield name="dateValue" id="dateValue_cal" cssClass="form-control datepicker" style="width: 60%;" placeholder="dd/MM/yyyy" />
+				</div>
+			</li>
+		</ul>
+		</s:if>
+	</fieldset>
 
-<s:set name="saveFilterActionName"><s:if test="filterTypeId == 0">saveFilter</s:if><s:elseif test="filterTypeId == 1">saveTextFilter</s:elseif><s:elseif test="filterTypeId == 2">saveNumberFilter</s:elseif><s:elseif test="filterTypeId == 3">saveBooleanFilter</s:elseif><s:elseif test="filterTypeId == 4">saveDateFilter</s:elseif></s:set>
+	<s:if test="filterOptionId==2">
+	<fieldset class="margin-base-top"><legend><s:text name="label.filterFrom" /></legend>
+	<ul class="list-unstyled">
+		<li class="form-inline margin-base-vertical">
+			<div class="radio-inline">
+				<label>
+					<input type="radio" name="dateStartType" id="dateStartType_none" value="1" <s:if test="(1 == dateStartType)">checked="checked"</s:if> />&#32;<s:text name="label.none" />
+				</label>
+			</div>
+		</li>
+		<li class="form-inline margin-base-vertical">
+			<div class="radio-inline">
+				<label>
+					<input type="radio" name="dateStartType" id="dateStartType_today" value="2" <s:if test="(2 == dateStartType)">checked="checked"</s:if> />&#32;<s:text name="label.today" />
+				</label>
+			</div>
+			<div class="form-group margin-small-left">
+				<label for="startDateDelay" class="sr-only"><s:text name="label.delay" /></label>
+				<wpsf:textfield name="startDateDelay" id="startDateDelay" cssClass="form-control" style="width: 60%;" placeholder="%{getText('label.delay')}" />
+			</div>
+		</li>
+		<li class="form-inline margin-base-vertical">
+			<div class="radio-inline">
+				<label>
+					<input type="radio" name="dateStartType" id="dateStartType_chosen" value="3" <s:if test="(3 == dateStartType)">checked="checked"</s:if> />&#32;<s:text name="label.chosenDate" />,
+				</label>
+			</div>
+			<div class="form-group margin-small-left">
+				<label for="dateStart_cal"><s:text name="label.filterValue.exact" /></label>
+				<wpsf:textfield name="dateStart" id="dateStart_cal" cssClass="form-control datepicker" style="width: 60%;" placeholder="dd/MM/yyyy" />
+			</div>
+		</li>
+	</ul>
+	</fieldset>
+	<fieldset class="margin-base-top"><legend><s:text name="label.filterTo" /></legend>
+	<ul class="list-unstyled">
+		<li class="form-inline margin-base-vertical">
+			<div class="radio-inline">
+				<label>
+					<input type="radio" name="dateEndType" id="dateEndType_none" value="1" <s:if test="(1 == dateEndType)">checked="checked"</s:if> />&#32;<s:text name="label.none" />
+				</label>
+			</div>
+		</li>
+		<li class="form-inline margin-base-vertical">
+			<div class="radio-inline">
+				<label>
+					<input type="radio" name="dateEndType" id="dateEndType_today" value="2" <s:if test="(2 == dateEndType)">checked="checked"</s:if> />&#32;<s:text name="label.today" />
+				</label>
+			</div>
+			<div class="form-group margin-small-left">
+				<label for="endDateDelay" class="sr-only"><s:text name="label.delay" /></label>
+				<wpsf:textfield name="endDateDelay" id="endDateDelay" cssClass="form-control" style="width: 60%" placeholder="%{getText('label.delay')}" />
+			</div>
+		</li>
+		<li class="form-inline margin-base-vertical">
+			<div class="radio-inline">
+				<label>
+					<input type="radio" name="dateEndType" id="dateEndType_chosen" value="3" <s:if test="(3 == dateEndType)">checked="checked"</s:if> /><s:text name="label.chosenDate" />,
+				</label>
+			</div>
+			<div class="form-group margin-small-left">
+				<label for="dateEnd_cal"><s:text name="label.filterValue.exact" />:</label> 
+				<wpsf:textfield name="dateEnd" id="dateEnd_cal" cssClass="form-control datepicker" style="width: 60%;" placeholder="dd/MM/yyyy" />
+			</div>
+		</li>
+	</ul>
+	</fieldset>
+	</s:if>
 
-<p class="centerText">
-	<wpsf:submit useTabindexAutoIncrement="true" action="%{#saveFilterActionName}" value="%{getText('label.save')}" cssClass="button" />
-</p>
+	<%-- // Date --%>
+	</s:elseif>
+
+	<fieldset class="margin-base-top"><legend><s:text name="label.order" /></legend>
+		<div class="form-group">
+			<div class="btn-group col-sm-5" data-toggle="buttons">
+
+				<label class="btn btn-default active">
+					<input type="radio" name="order" checked="checked" value="" />&#32;
+					<s:text name="label.none" />
+				</label>
+				<label class="btn btn-default">
+					<input type="radio" name="order" value="ASC" <s:if test="('ASC' == order)">checked="checked"</s:if> />&#32;
+					<s:text name="label.order.ascendant" />
+				</label>
+				<label class="btn btn-default">
+					<input type="radio" name="order" value="DESC" <s:if test="('DESC' == order)">checked="checked"</s:if> />&#32;<s:text name="label.order.descendant" />
+				</label>
+			</div>
+		</div>
+	</fieldset>
+
+	<s:set name="saveFilterActionName"><s:if test="filterTypeId == 0">saveFilter</s:if><s:elseif test="filterTypeId == 1">saveTextFilter</s:elseif><s:elseif test="filterTypeId == 2">saveNumberFilter</s:elseif><s:elseif test="filterTypeId == 3">saveBooleanFilter</s:elseif><s:elseif test="filterTypeId == 4">saveDateFilter</s:elseif></s:set>
+	
+	</div>
+	
+	<div class="form-group">
+		<div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
+			<wpsf:submit action="%{#saveFilterActionName}" type="button" cssClass="btn btn-primary btn-block">
+				<span class="icon fa fa-filter"></span>&#32;
+				<s:text name="label.save" />
+			</wpsf:submit>
+		</div>
+	</div>
 
 </s:else>
 
 </s:form>
-
-</div>

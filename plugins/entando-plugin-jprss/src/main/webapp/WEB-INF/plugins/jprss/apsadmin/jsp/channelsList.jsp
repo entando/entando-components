@@ -3,117 +3,142 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
 
-<s:set var="targetNS" value="%{'/do/jprss/Rss'}" />
-<h1><s:text name="jprss.title.rssManagement" /><s:include value="/WEB-INF/apsadmin/jsp/common/inc/operations-context-general.jsp" /></h1>
+<h1 class="panel panel-default title-page">
+	<span class="panel-body display-block">
+		<s:text name="jprss.title.rssManagement" />
+	</span>
+</h1>
 
-<div id="main">
-	<s:if test="%{channels.size > 0}" >
-		<s:form>
-			<s:if test="hasActionErrors()">
-				<div class="message message_error">
-				<h2><s:text name="message.title.ActionErrors" /></h2>	
-				<ul>
-					<s:iterator value="actionErrors">
-						<li><s:property/></li>
-					</s:iterator>
-				</ul>
-				</div>
-			</s:if>
-		
-			<table class="generic" summary="<s:text name="TODO" />">
-				<caption><span><s:text name="jprss.rss.rssList" /></span></caption>
-				<tr>
-					<th><s:text name="title" /></th>
-					<th><s:text name="status" /></th>
-					<th><s:text name="description" /></th>
-					<th><s:text name="active" /></th>
-					<th><s:text name="contentType" /></th>
-					<th><s:text name="feedType" /></th>
-					<th class="icon"><abbr title="<s:text name="label.remove" />">&ndash;</abbr></th>
-				</tr>
-				<s:iterator var="channel" value="channels">
-					<tr>
-						<td> 
-							<a href="<s:url action="edit"><s:param name="id" value="#channel.id"/></s:url>" title="<s:text name="label.edit" />: <s:property value="#channel.title" />">
-								<s:property value="#channel.title" />
-							</a>
-						</td>
-						<td>
-							<s:set var="rssMapping" value="%{getContentMapping(#channel.contentType)}" ></s:set>
-							<s:if test="null == #rssMapping">
-								<s:text name="label.status.invalid" />
-							</s:if>
-							<s:else>
-								<s:text name="label.status.ok" />
-							</s:else>
-						</td>
-						<td><s:property value="#channel.description" /></td>
-						<td class="icon">
-							<s:if test="#channel.active"><s:text name="label.yes" /></s:if>
-							<s:else><s:text name="label.no" /></s:else>
-						</td>
-						<td>
-							<s:property value="%{getSmallContentType(#channel.contentType).descr}" />
-						</td>
-						<td><s:property value="%{getAvailableFeedTypes()[#channel.feedType]}" /></td> 
-						<td class="icon">
-							<a href="<s:url action="trash"><s:param name="id" value="#channel.id"/></s:url>" title="<s:text name="label.remove" />: <s:property value="#channel.title" />"><img src="<wp:resourceURL />administration/common/img/icons/delete.png" alt="<s:text name="label.remove" />" /></a>
-						</td> 
-					</tr>	
-				</s:iterator>
-			</table>
-		</s:form>
-	</s:if>
-	<s:else>
-		<p><s:text name="note.channels.noChannels" />.</p> 
-	</s:else>
-	
-	<div class="subsection-light">
-		<h2><s:text name="title.contenttypes.manage" /> </h2>
-		<p><s:text name="contenttypes.manage.intro.1" /></p>
-		<p><s:text name="contenttypes.manage.intro.2" /></p>
-		
-		<s:set var="contentTypes" value="contentTypes" />
-		<s:if test="%{#contentTypes.size > 0}">
-			<wp:ifauthorized permission="superuser" var="isSuperuser" />
-			<s:set var="isSuperuserVar">${isSuperuser}</s:set>
-			<table class="generic" summary="<s:text name="contenttypes.manage.summary" />" >
-				<caption><span><s:text name="contenttypes.list" /></span></caption>
-				<tr>
-					<th><s:text name="label.code" /></th>
-					<th><s:text name="label.description" /></th>
-					<th><s:text name="label.status.info" /></th>
-				</tr>
-				<s:iterator value="#contentTypes" var="entityType" status="counter">
-					<s:set var="entityAnchor" value="%{'entityCounter'+#counter.count}" />
-					<tr>
-						<td><span class="monospace"><s:property value="#entityType.typeCode" /></span></td>
-						<td>
-							<s:if test="#isSuperuserVar == 'true'">
-							<a title="<s:text name="label.edit" />:&#32;<s:property value="#entityType.typeDescr" />" href="<s:url action="initEditEntityType" namespace="/do/Entity" />?entityManagerName=jacmsContentManager&entityTypeCode=<s:property value="#entityType.typeCode" />">
-								<s:property value="#entityType.typeDescr" />
-							</a>
-							</s:if>
-							<s:else><s:property value="#entityType.typeDescr" /></s:else>
-						</td>
-						<td>
-							<s:set var="rssMapping" value="%{getContentMapping(#entityType.typeCode)}" />
-							<s:if test="null == #rssMapping">
-								<s:text name="contenttype.not.configurable" />
-							</s:if>
-							<s:else>
-								<s:text name="title" />:&#32;<em><s:property value="#rssMapping.titleAttributeName" /></em>
-								<s:if test="null != #rssMapping.descriptionAttributeName">,
-									<s:text name="description" />:&#32;<em><s:property value="#rssMapping.descriptionAttributeName" /></em>
-								</s:if>
-							</s:else>
-						</td>
-					</tr>
-				</s:iterator>
-			</table>
-		</s:if>
-		<s:else>
-			<p><s:text name="no.contentytpes" /></p> 
-		</s:else>
+<s:if test="hasActionErrors()">
+	<div class="alert alert-danger alert-dismissable fade in">
+		<button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
+		<h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
+		<ul class="margin-base-top">
+			<s:iterator value="actionErrors">
+				<li><s:property escape="false" /></li>
+			</s:iterator>
+		</ul>
 	</div>
+</s:if>
+
+<s:set var="channelsVar" value="channels" />
+
+<s:if test="%{#channelsVar.size > 0}" >
+	<div class="table-responsive">
+		<table class="table table-bordered">
+			<tr>
+				<th class="text-center padding-large-left padding-large-right col-xs-4 col-sm-3 col-md-2 col-lg-2"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
+				<th><s:text name="title" /></th>
+				<th><s:text name="description" /></th>
+				<th><s:text name="status" /></th>
+				<th><s:text name="active" /></th>
+				<th><s:text name="contentType" /></th>
+				<th><s:text name="feedType" /></th>
+			</tr>
+			<s:iterator value="#channelsVar" var="channelVar">
+			<tr>
+				<td class="text-center text-nowrap">
+					<%-- edit --%>
+					<div class="btn-group btn-group-xs">
+						<a href="<s:url action="edit"><s:param name="id" value="#channelVar.id"/></s:url>" 
+						   title="<s:text name="label.edit" />: <s:property value="#channelVar.title" />" 
+						   class="btn btn-default" >
+							<span class="sr-only"><s:text name="label.edit" />: <s:property value="#channelVar.title" /></span>
+							<span class="icon fa fa-pencil-square-o"></span>
+						</a>
+					</div>
+					<%-- remove --%>
+					<div class="btn-group btn-group-xs">
+						<a href="<s:url action="trash"><s:param name="id" value="#channelVar.id"/></s:url>"
+							title="<s:text name="label.remove" />: <s:property value="#channelVar.title" />"
+							class="btn btn-warning">
+							<span class="icon fa fa-times-circle-o"></span>&#32;
+							<span class="sr-only"><s:text name="label.alt.clear" /></span>
+						</a>
+					</div>
+				</td>
+				<td><s:property value="#channelVar.title" /></td>
+				<td><s:property value="#channelVar.description" /></td>
+				<td>
+					<s:set var="rssMappingChannelVar" value="%{getContentMapping(#channelVar.contentType)}" ></s:set>
+					<s:if test="null == #rssMappingChannelVar">
+						<s:text name="label.status.invalid" />
+					</s:if>
+					<s:else>
+						<s:text name="label.status.ok" />
+					</s:else>
+				</td>
+				<td class="icon">
+					<s:if test="#channelVar.active"><s:text name="label.yes" /></s:if>
+					<s:else><s:text name="label.no" /></s:else>
+				</td>
+				<td>
+					<s:property value="%{getSmallContentType(#channelVar.contentType).descr}" />
+				</td>
+				<td><s:property value="%{getAvailableFeedTypes()[#channelVar.feedType]}" /></td> 
+			</tr>
+			</s:iterator>
+		</table>
+	</div>
+</s:if>
+<s:else>
+	<p><s:text name="note.channels.noChannels" /></p> 
+</s:else>
+
+<a href="<s:url namespace="/do/jprss/Rss" action="new" />" class="btn btn-default">
+	<span class="icon fa fa-plus-circle"></span>&#32;
+	<s:text name="jprss.options.new" />
+</a>
+
+<s:set var="contentTypesVar" value="contentTypes" />
+<s:if test="%{#contentTypesVar.size > 0}">
+<wp:ifauthorized permission="superuser" var="isSuperuser" />
+<s:set var="isSuperuserVar">${isSuperuser}</s:set>
+<div class="table-responsive margin-base-vertical">
+<table class="table table-bordered">
+	<tr>
+		<th class="text-center padding-large-left padding-large-right col-xs-4 col-sm-3 col-md-2 col-lg-2"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
+		<th><s:text name="contentType" /></th>
+		<th><s:text name="label.status.info" /></th>
+	</tr> 
+	<s:iterator value="#contentTypesVar" var="contentTypeVar" status="counter">
+	<s:set var="entityAnchor" value="%{'entityCounter'+#counter.count}" />
+	<tr>
+		<td class="text-center text-nowrap">
+			<div class="btn-group btn-group-xs">
+				<s:if test="#isSuperuserVar == 'true'">
+				<a class="btn btn-default" id="<s:property value="#entityAnchor" />" href="
+				<s:url namespace="/do/Entity" action="initEditEntityType">
+					<s:param name="entityManagerName">jacmsContentManager</s:param>
+					<s:param name="entityTypeCode"><s:property value="#contentTypeVar.typeCode" /></s:param>
+				</s:url>" title="<s:text name="label.edit" />: <s:property value="#contentTypeVar.typeDescr" />">
+					<span class="sr-only"><s:text name="label.edit" />&#32;<s:property value="#contentTypeVar.typeDescr" /></span>
+					<span class="icon fa fa-pencil-square-o"></span>
+				</a>
+				</s:if>
+				<s:else>&ndash;</s:else>
+			</div>
+		</td>
+		<td>
+			<s:property value="#contentTypeVar.typeDescr" />&#32;<code><s:property value="#contentTypeVar.typeCode" /></code>
+		</td>
+		<td>
+			<s:set var="rssMappingVar" value="%{getContentMapping(#contentTypeVar.typeCode)}" />
+			<s:if test="null == #rssMappingVar">
+				<s:text name="contenttype.not.configurable" />
+			</s:if>
+			<s:else>
+				<s:text name="title" />:&#32;<code><s:property value="#rssMappingVar.titleAttributeName" /></code>
+				<s:if test="null != #rssMappingVar.descriptionAttributeName">,
+					<s:text name="description" />:&#32;<code><s:property value="#rssMappingVar.descriptionAttributeName" /></code>
+				</s:if>
+			</s:else>
+		</td>
+	</tr>
+	</s:iterator>
+</table>
 </div>
+</s:if>
+<s:else>
+	<p><s:text name="no.contentytpes" /></p>
+</s:else>
