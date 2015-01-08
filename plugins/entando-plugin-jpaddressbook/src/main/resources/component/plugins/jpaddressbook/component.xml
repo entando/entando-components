@@ -38,6 +38,7 @@ classpath:sql/plugins/jpaddressbook/serv_data_test.sql
 				</datasource>
 			</defaultSqlResources>
 		</environment>
+	</installation>
 	<uninstallation>
 		<sqlResources>
 			<datasource name="portDataSource">
@@ -52,5 +53,4 @@ classpath:sql/plugins/jpaddressbook/serv_uninstallation.sql
 			<resource>WEB-INF/lib/${project.artifactId}-${project.version}.jar</resource>
 		</resources>
 	</uninstallation>
-	</installation>
 </component>
