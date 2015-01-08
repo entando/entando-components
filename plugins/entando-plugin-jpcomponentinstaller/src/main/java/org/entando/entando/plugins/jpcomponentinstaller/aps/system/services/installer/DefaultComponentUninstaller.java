@@ -133,7 +133,7 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                     DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
                     IDatabaseManager.DatabaseType type = this.getDatabaseManager().getDatabaseType(dataSource);
                     TableFactory tableFactory = new TableFactory(dataSourceName, dataSource, type);
-//                    tableFactory.dropTables(newList);
+                    tableFactory.dropTables(newList);
                 }
             }
 

@@ -50,19 +50,19 @@ public class ComponentDOM {
 		List<Element> elements = this._doc.getRootElement().getChildren();
 		for (int i=0; i<elements.size(); i++) {
 			Element containerElement = elements.get(i);
-			this.loadArtifacts(artifacts, index, containerElement, null, null);
+			index = this.loadArtifacts(artifacts, index, containerElement, null, null);
 		}
 		return artifacts;
 	}
 	
-	protected void loadArtifacts(List<AvailableArtifact> artifacts, 
+	protected Integer loadArtifacts(List<AvailableArtifact> artifacts, 
 			Integer index, Element containerElement, String section, AvailableArtifact.Type type) {
 		if (null == containerElement) {
-			return;
+			return index;
 		}
 		String label = containerElement.getChildText("label");
 		if (null == label) {
-			return;
+			return index;
 		}
 		if (null == type) {
 			String typeString = containerElement.getChildText("type");
@@ -82,7 +82,7 @@ public class ComponentDOM {
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpactiviti</artifactId>
 		</artifact>
-				 */
+				*/
 				String description = element.getChildText("description");
 				String groupId = element.getChildText("groupId");
 				String artifactId = element.getChildText("artifactId");
@@ -96,9 +96,10 @@ public class ComponentDOM {
 				index = index + 1;
 				artifacts.add(artifact);
 			} else {
-				this.loadArtifacts(artifacts, index, element, currentSection, type);
+				index = this.loadArtifacts(artifacts, index, element, currentSection, type);
 			}
 		}
+		return index;
 	}
 	
 	private void decodeDOM(String xmlText) throws ApsSystemException {
