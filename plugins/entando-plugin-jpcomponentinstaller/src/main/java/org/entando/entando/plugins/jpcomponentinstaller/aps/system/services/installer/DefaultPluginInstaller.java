@@ -52,6 +52,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -67,12 +68,16 @@ import org.apache.tiles.definition.DefinitionsFactoryException;
 import org.apache.tiles.definition.ReloadableDefinitionsFactory;
 import org.apache.tiles.definition.UrlDefinitionsFactory;
 import org.apache.tiles.impl.BasicTilesContainer;
+import org.entando.entando.aps.system.init.AbstractInitializerManager;
 import org.entando.entando.aps.system.init.InitializerManager;
+import org.entando.entando.aps.system.init.InstallationReportDAO;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.apsadmin.common.UserAvatarAction;
 import org.entando.entando.plugins.jpcomponentinstaller.aps.TextProviderSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -87,7 +92,7 @@ import org.xml.sax.SAXException;
 /**
  * @author mcasari
  */
-public class DefaultPluginInstaller implements IPluginInstaller, ApplicationContextAware {
+public class DefaultPluginInstaller extends AbstractInitializerManager implements IPluginInstaller, ApplicationContextAware {
 
     private static final Logger _logger = LoggerFactory.getLogger(UserAvatarAction.class);
 
@@ -115,6 +120,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
             } else {
                 throw new ApsSystemException("Wrong artifact type value");
             }
+            
         } catch (Exception e) {
             throw new ApsSystemException("Unexpected error during artifact installation", e);
         }
@@ -547,6 +553,7 @@ public class DefaultPluginInstaller implements IPluginInstaller, ApplicationCont
         }
         return resultFile;
     }
+    
 
     @Override
     public void setApplicationContext(ApplicationContext ac) throws BeansException {

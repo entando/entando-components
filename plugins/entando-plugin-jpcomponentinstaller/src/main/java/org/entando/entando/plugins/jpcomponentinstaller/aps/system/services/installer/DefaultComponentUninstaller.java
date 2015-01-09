@@ -81,14 +81,14 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
 
     @Override
     public boolean uninstallComponent(Component component) throws ApsSystemException {
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();        
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
         String artifactName = component.getArtifactId().split("-")[2];
         String appRootPath = servletContext.getRealPath("/");
         String backupDirPath = appRootPath + "componentinstaller" + File.separator + component.getArtifactId() + "-backup";
         Map<File, File> resourcesMap = new HashMap<File, File>();
-        
+
         Set removedPluginsSubMenuSet = (Set<String>) servletContext.getAttribute("removedPluginsSubMenuSet");
-        if(removedPluginsSubMenuSet == null){
+        if (removedPluginsSubMenuSet == null) {
             removedPluginsSubMenuSet = new HashSet<String>();
             servletContext.setAttribute("removedPluginsSubMenuSet", removedPluginsSubMenuSet);
         }
@@ -101,12 +101,11 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
             SystemInstallationReport report = super.extractReport();
 
             ComponentUninstallerInfo ui = component.getUninstallerInfo();
-           
-            
+
             //Remove plugin menu item
             removedPluginsSubMenuSet.add(artifactName + "SubMenu");
             //
-            
+
             //remove records from db
             String[] dataSourceNames = this.extractBeanNames(DataSource.class);
             for (int j = 0; j < dataSourceNames.length; j++) {
@@ -123,45 +122,45 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
 
             //drop tables
             Map<String, List<String>> tableMapping = component.getTableMapping();
-            for (int j = 0; j < dataSourceNames.length; j++) {
-                String dataSourceName = dataSourceNames[j];
-                List<String> tableClasses = tableMapping.get(dataSourceName);
-                if (null != tableClasses && tableClasses.size() > 0) {
-                    List<String> newList = new ArrayList<String>();
-                    newList.addAll(tableClasses);
-                    Collections.reverse(newList);
-                    DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-                    IDatabaseManager.DatabaseType type = this.getDatabaseManager().getDatabaseType(dataSource);
-                    TableFactory tableFactory = new TableFactory(dataSourceName, dataSource, type);
-                    tableFactory.dropTables(newList);
+            if (tableMapping != null) {
+                for (int j = 0; j < dataSourceNames.length; j++) {
+                    String dataSourceName = dataSourceNames[j];
+                    List<String> tableClasses = tableMapping.get(dataSourceName);
+                    if (null != tableClasses && tableClasses.size() > 0) {
+                        List<String> newList = new ArrayList<String>();
+                        newList.addAll(tableClasses);
+                        Collections.reverse(newList);
+                        DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+                        IDatabaseManager.DatabaseType type = this.getDatabaseManager().getDatabaseType(dataSource);
+                        TableFactory tableFactory = new TableFactory(dataSourceName, dataSource, type);
+                        tableFactory.dropTables(newList);
+                    }
                 }
             }
 
             //move resources (jar, files and folders) on temp folder  
             List<String> resourcesPaths = ui.getResourcesPaths();
-            for (String resourcePath : resourcesPaths) {   
-                String fullResourcePath = servletContext.getRealPath(resourcePath);
-                File resFile = new File(fullResourcePath);    
-                if (resFile.isDirectory()) {
-                    File backupRootDir = new File(backupDirPath);
-                    FileUtils.copyDirectoryToDirectory(resFile, backupRootDir);
-                    File newResFile = new File(backupRootDir + File.separator + resFile.getName());
-                    resourcesMap.put(resFile, newResFile);
-                    FileUtils.deleteDirectory(resFile);
-                } else {
-                    String relResPath = FilenameUtils.getPath(resFile.getAbsolutePath());
-                    File newResFile = new File(backupDirPath + File.separator 
-                            + relResPath + resFile.getName());
-                    FileUtils.copyFile(resFile, newResFile);
-                    resourcesMap.put(resFile, newResFile);
-                    FileUtils.forceDelete(resFile);
-                }                
+            if (resourcesPaths != null) {
+                for (String resourcePath : resourcesPaths) {
+                    String fullResourcePath = servletContext.getRealPath(resourcePath);
+                    File resFile = new File(fullResourcePath);
+                    if (resFile.isDirectory()) {
+                        File backupRootDir = new File(backupDirPath);
+                        FileUtils.copyDirectoryToDirectory(resFile, backupRootDir);
+                        File newResFile = new File(backupRootDir + File.separator + resFile.getName());
+                        resourcesMap.put(resFile, newResFile);
+                        FileUtils.deleteDirectory(resFile);
+                    } else {
+                        String relResPath = FilenameUtils.getPath(resFile.getAbsolutePath());
+                        File newResFile = new File(backupDirPath + File.separator
+                                + relResPath + resFile.getName());
+                        FileUtils.copyFile(resFile, newResFile);
+                        resourcesMap.put(resFile, newResFile);
+                        FileUtils.forceDelete(resFile);
+                    }
+                }
             }
 
-            //upgrade report
-            report.removeComponentReport(component.getCode());
-            this.saveReport(report);
-               
             //remove plugin's xmlapplicationcontext if present
             List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
             if (contexts != null) {
@@ -171,11 +170,13 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                         context.close();
                         contextToremove = context;
                     }
-                }   
+                }
                 contexts.remove(contextToremove);
             }
-            
-           
+
+            //upgrade report
+            report.removeComponentReport(component.getCode());
+            this.saveReport(report);
 
         } catch (Throwable t) {
             //restore files on temp folder
@@ -188,11 +189,11 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                         FileUtils.copyDirectoryToDirectory(newResFile, resFile.getParentFile());
                     } else {
                         FileUtils.copyFile(newResFile, resFile.getParentFile());
-                    }                   
-                }        
+                    }
+                }
             } catch (Exception e) {
             }
-            return false;
+            throw new ApsSystemException("Unexpected error in component uninstallation process.", t);
         } finally {
             //clean temp folder
         }
