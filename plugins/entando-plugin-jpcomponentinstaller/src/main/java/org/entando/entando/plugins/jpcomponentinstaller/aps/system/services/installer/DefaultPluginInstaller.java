@@ -32,7 +32,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.instrument.Instrumentation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -44,7 +43,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -52,14 +50,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import javax.servlet.ServletContext;
-import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.access.TilesAccess;
@@ -70,14 +66,10 @@ import org.apache.tiles.definition.UrlDefinitionsFactory;
 import org.apache.tiles.impl.BasicTilesContainer;
 import org.entando.entando.aps.system.init.AbstractInitializerManager;
 import org.entando.entando.aps.system.init.InitializerManager;
-import org.entando.entando.aps.system.init.InstallationReportDAO;
-import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.entando.entando.apsadmin.common.UserAvatarAction;
 import org.entando.entando.plugins.jpcomponentinstaller.aps.TextProviderSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -94,22 +86,10 @@ import org.xml.sax.SAXException;
  */
 public class DefaultPluginInstaller extends AbstractInitializerManager implements IPluginInstaller, ApplicationContextAware {
 
-    private static final Logger _logger = LoggerFactory.getLogger(UserAvatarAction.class);
-
-    private ApplicationContext applicationContext;
-
-    private String artifactName;
-
+    private static final Logger _logger = LoggerFactory.getLogger(DefaultPluginInstaller.class);
+	
     @Override
     public void install(AvailableArtifact availableArtifact, String version, InputStream is) throws ApsSystemException {
-        String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
-        //TODO PARLARE CON MARIO
-        //IL FILE WAR contiene anche le dipendenze, non c'è bisogno di scaricare anche quelle...
-        System.out.println("*************INSTALL****************");
-        System.out.println("filename " + filename);
-        System.out.println("type " + availableArtifact.getType());
-        System.out.println("version " + version);
-        System.out.println("*****************************");
         try {
             if (availableArtifact.getType() == AvailableArtifact.Type.PLUGIN) {
                 this.installPlugin(availableArtifact, version, is);
@@ -128,10 +108,10 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
 
     private void installPlugin(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
 
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) applicationContext).getServletContext();
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) this._applicationContext).getServletContext();
 
         String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
-        artifactName = availableArtifact.getArtifactId().split("-")[2];
+        String artifactName = availableArtifact.getArtifactId().split("-")[2];
         String appRootPath = servletContext.getRealPath("/");
         File destDir = new File(appRootPath);
         String tempDirPath = appRootPath + "componentinstaller" + File.separator + artifactName;
@@ -182,7 +162,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
     }
 
     private void installBundle(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) applicationContext).getServletContext();
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) this._applicationContext).getServletContext();
 
         String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
         String artifactName = availableArtifact.getArtifactId().split("-")[2];
@@ -198,9 +178,9 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
                 + File.separator + artifactName);
         FileUtils.copyDirectory(artifactFileRootDir, destDir);
 
-        InitializerManager initializerManager = (InitializerManager) applicationContext.getBean("InitializerManager");
+        InitializerManager initializerManager = (InitializerManager) this._applicationContext.getBean("InitializerManager");
         initializerManager.init();
-        BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) applicationContext).getBean(SystemConstants.BASE_CONFIG_MANAGER);
+        BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) this._applicationContext).getBean(SystemConstants.BASE_CONFIG_MANAGER);
         baseConfigManager.init();
     }
     
@@ -411,7 +391,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
     }
 
     private ApplicationContext loadContext(String[] configLocations, URLClassLoader cl, String contextDisplayName, Properties properties) throws Exception {
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) applicationContext).getServletContext();
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) this._applicationContext).getServletContext();
 
         //if plugin's classes have been loaded we can go on
         List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
@@ -430,12 +410,12 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             configurer.setProperties(properties);
             newContext.addBeanFactoryPostProcessor(configurer);
             newContext.setClassLoader(cl);
-            newContext.setParent(applicationContext);
+            newContext.setParent(this._applicationContext);
             String[] configLocs = new String[]{"classpath:spring/restServerConfig.xml",
                 "classpath:spring/baseSystemConfig.xml"};
             newContext.setConfigLocations(configLocs);
             newContext.refresh();
-            BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) applicationContext).getBean("BaseConfigManager");
+            BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) this._applicationContext).getBean("BaseConfigManager");
             baseConfigManager.init();
             newContext.setConfigLocations(configLocations);
             newContext.refresh();
@@ -542,7 +522,8 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         }
         return dependencies;
     }
-
+	
+	/*
     private File getFileFromDir(File rootDir, String fileName, String[] extensions) throws ZipException, IOException {
         File resultFile = null;
         List<File> files = (List<File>) FileUtils.listFiles(rootDir, extensions, true);
@@ -553,21 +534,22 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         }
         return resultFile;
     }
-    
-
+    */
+	
     @Override
     public void setApplicationContext(ApplicationContext ac) throws BeansException {
-        applicationContext = ac;
+        this._applicationContext = ac;
     }
-
+	
+	private ApplicationContext _applicationContext;
+	
     /**
      * This contains all the directories to exclude from the recursive search
      * when PLUGIN_DIRECTORY does NOT exist in the URL or path
      */
-    private List<String> _plugin_exclusion_directories = Arrays.asList("/test/",
-            "/aps/",
-            "/apsadmin/");
-
+    private final List<String> _plugin_exclusion_directories = Arrays.asList("/test/",
+            "/aps/", "/apsadmin/");
+	
     /**
      * Path within the plugin where the global properties are stored.
      */
@@ -586,11 +568,11 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
     /**
      * The URL of Tomcat classes
      */
-    private String TOMCAT_CLASSES = "/WEB-INF/classes/";
+    private final String TOMCAT_CLASSES = "/WEB-INF/classes/";
 
     /**
      * The URL of the Tomcat shared lib directory
      */
-    private String TOMCAT_LIB = "/WEB-INF/lib/";
+    private final String TOMCAT_LIB = "/WEB-INF/lib/";
 
 }
