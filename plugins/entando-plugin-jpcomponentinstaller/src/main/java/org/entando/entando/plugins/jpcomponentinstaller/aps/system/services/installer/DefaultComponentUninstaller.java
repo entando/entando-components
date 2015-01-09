@@ -26,8 +26,6 @@ import com.agiletec.aps.util.FileTextReader;
 
 import java.io.InputStream;
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,7 +36,6 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 
 import javax.sql.DataSource;
-import org.apache.commons.collections.ListUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -47,6 +44,7 @@ import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.IPostProcessor;
 import org.entando.entando.aps.system.init.InstallationReportDAO;
 import org.entando.entando.aps.system.init.model.Component;
+import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.ComponentUninstallerInfo;
 import org.entando.entando.aps.system.init.model.IPostProcess;
 import org.entando.entando.aps.system.init.model.InvalidPostProcessResultException;
@@ -59,9 +57,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -173,11 +168,13 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                 }
                 contexts.remove(contextToremove);
             }
-
+			
             //upgrade report
-            report.removeComponentReport(component.getCode());
+			ComponentInstallationReport cir = report.getComponentReport(component.getCode(), true);
+			cir.getDataSourceReport().upgradeDatabaseStatus(SystemInstallationReport.Status.UNINSTALLED);
+            cir.getDataReport().upgradeDatabaseStatus(SystemInstallationReport.Status.UNINSTALLED);
+            //report.removeComponentReport(component.getCode());
             this.saveReport(report);
-
         } catch (Throwable t) {
             //restore files on temp folder
             try {
