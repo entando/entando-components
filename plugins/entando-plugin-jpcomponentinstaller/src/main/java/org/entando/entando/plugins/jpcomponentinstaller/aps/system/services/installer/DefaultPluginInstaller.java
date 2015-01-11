@@ -65,7 +65,9 @@ import org.apache.tiles.definition.ReloadableDefinitionsFactory;
 import org.apache.tiles.definition.UrlDefinitionsFactory;
 import org.apache.tiles.impl.BasicTilesContainer;
 import org.entando.entando.aps.system.init.AbstractInitializerManager;
+import org.entando.entando.aps.system.init.ComponentManager;
 import org.entando.entando.aps.system.init.InitializerManager;
+import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.plugins.jpcomponentinstaller.aps.TextProviderSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +89,7 @@ import org.xml.sax.SAXException;
 public class DefaultPluginInstaller extends AbstractInitializerManager implements IPluginInstaller, ApplicationContextAware {
 
     private static final Logger _logger = LoggerFactory.getLogger(DefaultPluginInstaller.class);
-	
+
     @Override
     public void install(AvailableArtifact availableArtifact, String version, InputStream is) throws ApsSystemException {
         try {
@@ -100,7 +102,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             } else {
                 throw new ApsSystemException("Wrong artifact type value");
             }
-            
+
         } catch (Exception e) {
             throw new ApsSystemException("Unexpected error during artifact installation", e);
         }
@@ -122,19 +124,19 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         File artifactFileRootDir = new File(artifactFile.getParentFile().getAbsolutePath()
                 + File.separator + artifactName);
 
-        List<String> configLocs = new ArrayList<String>();       
+        List<String> configLocs = new ArrayList<String>();
         List<File> tilesFiles = (List<File>) FileUtils.listFiles(artifactFileRootDir, FileFilterUtils.suffixFileFilter("-tiles.xml"), FileFilterUtils.trueFileFilter());
-        if(tilesFiles == null){
+        if (tilesFiles == null) {
             tilesFiles = new ArrayList<File>();
         }
-        
+
         File tempArtifactRootDir = this.extractArtifactJar(destDir, artifactName);
         List<File> pluginSqlFiles = (List<File>) FileUtils.listFiles(tempArtifactRootDir, new String[]{"sql"}, true);
         List<File> pluginXmlFiles = (List<File>) FileUtils.listFiles(tempArtifactRootDir, new String[]{"xml"}, true);
         File componentFile = this.getFileFromArtifactJar(tempArtifactRootDir, "component.xml");
 
         List<File> mainAppJarLibraries = (List<File>) FileUtils.listFiles(new File(destDir.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "lib"), new String[]{"jar"}, true);
-        List<File> pluginJarLibraries = (List<File>) FileUtils.listFiles(artifactFileRootDir, new String[]{"jar"}, true);   
+        List<File> pluginJarLibraries = (List<File>) FileUtils.listFiles(artifactFileRootDir, new String[]{"jar"}, true);
         pluginJarLibraries = filterOutDuplicateLibraries(mainAppJarLibraries, pluginJarLibraries);
 
         FileUtils.copyDirectory(artifactFileRootDir, destDir);
@@ -157,8 +159,20 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
 
         this.reloadActionsDefinitions(newContext);
         this.reloadResourcsBundles(newContext, servletContext);
-        TilesContainer container = TilesAccess.getContainer(servletContext);   
+        TilesContainer container = TilesAccess.getContainer(servletContext);
         this.reloadTilesDefinitions(tilesFiles, container);
+
+        ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
+        ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(newContext.getClassLoader());
+            componentManager.refresh();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            Thread.currentThread().setContextClassLoader(currentClassLoader);
+        }
+
     }
 
     private void installBundle(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
@@ -183,8 +197,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) this._applicationContext).getBean(SystemConstants.BASE_CONFIG_MANAGER);
         baseConfigManager.init();
     }
-    
-    
+
     private void installApp(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
         this.installPlugin(availableArtifact, version, is);
     }
@@ -198,7 +211,6 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         }
         return configLocs;
     }
-    
 
     private List<File> filterOutDuplicateLibraries(List<File> mainAppJarLibraries, List<File> pluginJarLibraries) throws Exception {
         List<File> filesToRemove = new ArrayList<File>();
@@ -522,34 +534,21 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         }
         return dependencies;
     }
-	
-	/*
-    private File getFileFromDir(File rootDir, String fileName, String[] extensions) throws ZipException, IOException {
-        File resultFile = null;
-        List<File> files = (List<File>) FileUtils.listFiles(rootDir, extensions, true);
-        for (File xmlFile : files) {
-            if (xmlFile.getName().equalsIgnoreCase(fileName)) {
-                resultFile = xmlFile;
-            }
-        }
-        return resultFile;
-    }
-    */
-	
+
     @Override
     public void setApplicationContext(ApplicationContext ac) throws BeansException {
         this._applicationContext = ac;
     }
-	
-	private ApplicationContext _applicationContext;
-	
+
+    private ApplicationContext _applicationContext;
+
     /**
      * This contains all the directories to exclude from the recursive search
      * when PLUGIN_DIRECTORY does NOT exist in the URL or path
      */
     private final List<String> _plugin_exclusion_directories = Arrays.asList("/test/",
             "/aps/", "/apsadmin/");
-	
+
     /**
      * Path within the plugin where the global properties are stored.
      */

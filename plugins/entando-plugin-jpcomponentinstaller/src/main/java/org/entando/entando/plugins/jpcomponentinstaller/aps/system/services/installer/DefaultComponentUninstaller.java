@@ -40,6 +40,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import org.entando.entando.aps.system.init.AbstractInitializerManager;
+import org.entando.entando.aps.system.init.ComponentManager;
 import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.IPostProcessor;
 import org.entando.entando.aps.system.init.InstallationReportDAO;
@@ -77,108 +78,108 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
     @Override
     public boolean uninstallComponent(Component component) throws ApsSystemException {
         ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
-        String artifactName = component.getArtifactId().split("-")[2];
+        List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
+        ClassPathXmlApplicationContext appCtx = null;
+        for (ClassPathXmlApplicationContext ctx : ctxList) {
+            if (component.getArtifactId().equals(ctx.getDisplayName())) {
+                appCtx = ctx;
+            }
+        }
+
         String appRootPath = servletContext.getRealPath("/");
         String backupDirPath = appRootPath + "componentinstaller" + File.separator + component.getArtifactId() + "-backup";
         Map<File, File> resourcesMap = new HashMap<File, File>();
 
-        Set removedPluginsSubMenuSet = (Set<String>) servletContext.getAttribute("removedPluginsSubMenuSet");
-        if (removedPluginsSubMenuSet == null) {
-            removedPluginsSubMenuSet = new HashSet<String>();
-            servletContext.setAttribute("removedPluginsSubMenuSet", removedPluginsSubMenuSet);
-        }
         try {
-            if (null == component || null == component.getUninstallerInfo()) {
-                return false;
-            }
-            this.getDatabaseManager().createBackup();//backup database
 
-            SystemInstallationReport report = super.extractReport();
-
-            ComponentUninstallerInfo ui = component.getUninstallerInfo();
-
-            //Remove plugin menu item
-            removedPluginsSubMenuSet.add(artifactName + "SubMenu");
-            //
-
-            //remove records from db
-            String[] dataSourceNames = this.extractBeanNames(DataSource.class);
-            for (int j = 0; j < dataSourceNames.length; j++) {
-                String dataSourceName = dataSourceNames[j];
-                Resource resource = (null != ui) ? ui.getSqlResources(dataSourceName) : null;
-                String script = (null != resource) ? this.readFile(resource) : null;
-                if (null != script && script.trim().length() > 0) {
-                    DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-                    String[] queries = QueryExtractor.extractDeleteQueries(script);
-                    TableDataUtils.executeQueries(dataSource, queries, true);
+            ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+            try {
+                Thread.currentThread().setContextClassLoader(appCtx.getClassLoader());
+                if (null == component || null == component.getUninstallerInfo()) {
+                    return false;
                 }
-            }
-            this.executePostProcesses(ui.getPostProcesses());
+                this.getDatabaseManager().createBackup();//backup database
 
-            //drop tables
-            Map<String, List<String>> tableMapping = component.getTableMapping();
-            if (tableMapping != null) {
+                SystemInstallationReport report = super.extractReport();
+
+                ComponentUninstallerInfo ui = component.getUninstallerInfo();
+
+                //remove records from db
+                String[] dataSourceNames = this.extractBeanNames(DataSource.class);
                 for (int j = 0; j < dataSourceNames.length; j++) {
                     String dataSourceName = dataSourceNames[j];
-                    List<String> tableClasses = tableMapping.get(dataSourceName);
-                    if (null != tableClasses && tableClasses.size() > 0) {
-                        List<String> newList = new ArrayList<String>();
-                        newList.addAll(tableClasses);
-                        Collections.reverse(newList);
+                    Resource resource = (null != ui) ? ui.getSqlResources(dataSourceName) : null;
+                    String script = (null != resource) ? this.readFile(resource) : null;
+                    if (null != script && script.trim().length() > 0) {
                         DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-                        IDatabaseManager.DatabaseType type = this.getDatabaseManager().getDatabaseType(dataSource);
-                        TableFactory tableFactory = new TableFactory(dataSourceName, dataSource, type);
-                        tableFactory.dropTables(newList);
+                        String[] queries = QueryExtractor.extractDeleteQueries(script);
+                        TableDataUtils.executeQueries(dataSource, queries, true);
                     }
                 }
-            }
+                this.executePostProcesses(ui.getPostProcesses());
 
-            //move resources (jar, files and folders) on temp folder  
-            List<String> resourcesPaths = ui.getResourcesPaths();
-            if (resourcesPaths != null) {
-                for (String resourcePath : resourcesPaths) {
-                    String fullResourcePath = servletContext.getRealPath(resourcePath);
-                    File resFile = new File(fullResourcePath);
-                    if (resFile.isDirectory()) {
-                        File backupRootDir = new File(backupDirPath);
-                        FileUtils.copyDirectoryToDirectory(resFile, backupRootDir);
-                        File newResFile = new File(backupRootDir + File.separator + resFile.getName());
-                        resourcesMap.put(resFile, newResFile);
-                        FileUtils.deleteDirectory(resFile);
-                    } else {
+                //drop tables
+                Map<String, List<String>> tableMapping = component.getTableMapping();
+                if (tableMapping != null) {
+                    for (int j = 0; j < dataSourceNames.length; j++) {
+                        String dataSourceName = dataSourceNames[j];
+                        List<String> tableClasses = tableMapping.get(dataSourceName);
+                        if (null != tableClasses && tableClasses.size() > 0) {
+                            List<String> newList = new ArrayList<String>();
+                            newList.addAll(tableClasses);
+                            Collections.reverse(newList);
+                            DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+                            IDatabaseManager.DatabaseType type = this.getDatabaseManager().getDatabaseType(dataSource);
+                            TableFactory tableFactory = new TableFactory(dataSourceName, dataSource, type);
+                            tableFactory.dropTables(newList);
+                        }
+                    }
+                }
+
+                //move resources (jar, files and folders) on temp folder  
+                List<String> resourcesPaths = ui.getResourcesPaths();
+                if (resourcesPaths != null) {
+                    for (String resourcePath : resourcesPaths) {
+                        String fullResourcePath = servletContext.getRealPath(resourcePath);
+                        File resFile = new File(fullResourcePath);
                         String relResPath = FilenameUtils.getPath(resFile.getAbsolutePath());
                         File newResFile = new File(backupDirPath + File.separator
                                 + relResPath + resFile.getName());
-                        FileUtils.copyFile(resFile, newResFile);
-                        resourcesMap.put(resFile, newResFile);
-                        FileUtils.forceDelete(resFile);
+                        if (resFile.isDirectory()) {
+                            FileUtils.copyDirectory(resFile, newResFile);
+                            resourcesMap.put(resFile, newResFile);
+                            FileUtils.deleteDirectory(resFile);
+                        } else {
+                            FileUtils.copyFile(resFile, newResFile);
+                            resourcesMap.put(resFile, newResFile);
+                            FileUtils.forceDelete(resFile);
+                        }
                     }
                 }
+
+                //upgrade report
+                ComponentInstallationReport cir = report.getComponentReport(component.getCode(), true);
+                cir.getDataSourceReport().upgradeDatabaseStatus(SystemInstallationReport.Status.UNINSTALLED);
+                cir.getDataReport().upgradeDatabaseStatus(SystemInstallationReport.Status.UNINSTALLED);
+                //report.removeComponentReport(component.getCode());
+                this.saveReport(report);
+
+                //remove plugin's xmlapplicationcontext if present
+                appCtx.close();
+                ctxList.remove(appCtx);
+
+            } catch (Exception e) {
+                throw e;
+            } finally {
+                Thread.currentThread().setContextClassLoader(currentClassLoader);
             }
 
-            //remove plugin's xmlapplicationcontext if present
-            List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
-            if (contexts != null) {
-                ClassPathXmlApplicationContext contextToremove = null;
-                for (ClassPathXmlApplicationContext context : contexts) {
-                    if (context.getDisplayName().equalsIgnoreCase(component.getArtifactId())) {
-                        context.close();
-                        contextToremove = context;
-                    }
-                }
-                contexts.remove(contextToremove);
-            }
-			
-            //upgrade report
-			ComponentInstallationReport cir = report.getComponentReport(component.getCode(), true);
-			cir.getDataSourceReport().upgradeDatabaseStatus(SystemInstallationReport.Status.UNINSTALLED);
-            cir.getDataReport().upgradeDatabaseStatus(SystemInstallationReport.Status.UNINSTALLED);
-            //report.removeComponentReport(component.getCode());
-            this.saveReport(report);
+            ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
+            componentManager.refresh();
+
         } catch (Throwable t) {
             //restore files on temp folder
             try {
-                removedPluginsSubMenuSet.remove(artifactName + "SubMenu");
                 for (Object object : resourcesMap.entrySet()) {
                     File resFile = ((Map.Entry<File, File>) object).getKey();
                     File newResFile = ((Map.Entry<File, File>) object).getValue();
