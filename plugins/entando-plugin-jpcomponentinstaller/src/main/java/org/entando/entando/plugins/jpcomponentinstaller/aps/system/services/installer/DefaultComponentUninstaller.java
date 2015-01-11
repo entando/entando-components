@@ -43,6 +43,7 @@ import org.entando.entando.aps.system.init.AbstractInitializerManager;
 import org.entando.entando.aps.system.init.ComponentManager;
 import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.IPostProcessor;
+import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.init.InstallationReportDAO;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
@@ -173,7 +174,9 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
             } finally {
                 Thread.currentThread().setContextClassLoader(currentClassLoader);
             }
-
+            
+            InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
+            initializerManager.reloadCurrentReport();
             ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
             componentManager.refresh();
 

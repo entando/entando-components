@@ -161,6 +161,8 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         this.reloadResourcsBundles(newContext, servletContext);
         TilesContainer container = TilesAccess.getContainer(servletContext);
         this.reloadTilesDefinitions(tilesFiles, container);
+        InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
+        initializerManager.reloadCurrentReport();
 
         ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
