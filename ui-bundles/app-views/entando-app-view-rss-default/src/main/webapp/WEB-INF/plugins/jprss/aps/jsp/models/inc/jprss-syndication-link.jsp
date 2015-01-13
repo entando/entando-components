@@ -14,7 +14,7 @@
 		</head>
 		
 	Author:
-		Andrea DessÃ¬ <a.dessi@agiletec.it>
+		Andrea Dessì <a.dessi@entando.it>
 		
 	Date:
 		16/mag/2011 16.59.37

@@ -1,7 +1,7 @@
 <%@ taglib prefix="jprss" uri="/jprss-core" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <jprss:rssList listName="rssList" />
 <wp:info key="langs" var="langs" />
 
