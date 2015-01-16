@@ -32,37 +32,61 @@ import java.util.Locale;
  */
 public class ApsCalendar {
 	
-	public CellaCalendar[][] getCalendario() {
-		return _calendario;
+	public CalendarDay[][] getCalendar() {
+		return _calendar;
 	}
-	public void setCalendario(CellaCalendar[][] calendario) {
-		this._calendario = calendario;
+	public void setCalendar(CalendarDay[][] calendar) {
+		this._calendar = calendar;
 	}
+	@Deprecated
+	public CalendarDay[][] getCalendario() {
+		return this.getCalendar();
+	}
+	@Deprecated
+	public void setCalendario(CalendarDay[][] calendar) {
+		this.setCalendar(calendar);
+	}
+	public Date getDate() {
+		return _date;
+	}
+	public void setDate(Date date) {
+		this._date = date;
+	}
+	@Deprecated
 	public Date getData() {
-		return _data;
+		return this.getDate();
 	}
+	@Deprecated
 	public void setData(Date data) {
-		this._data = data;
+		this.setDate(data);
 	}
+	public int[] getWeeks() {
+		return _weeks;
+	}
+	public void setWeeks(int[] weeks) {
+		this._weeks = weeks;
+	}
+	@Deprecated
 	public int[] getSettimane() {
-		return _settimane;
+		return this.getWeeks();
 	}
-	public void setSettimane(int[] settimane) {
-		this._settimane = settimane;
+	@Deprecated
+	public void setSettimane(int[] weeks) {
+		this.setWeeks(weeks);
 	}
 	
 	public int getCurrentWeek() {
 		Calendar cal = Calendar.getInstance(Locale.ITALIAN);
 		Calendar required = Calendar.getInstance(Locale.ITALIAN);
-		required.setTime(_data);
+		required.setTime(this.getDate());
 		if (cal.get(Calendar.YEAR) == required.get(Calendar.YEAR)) {
 			return cal.get(Calendar.WEEK_OF_YEAR);
 		}
 		return -1;
 	}
 	
-	private Date _data;
-	private CellaCalendar[][] _calendario;
-	private int[] _settimane;
+	private Date _date;
+	private CalendarDay[][] _calendar;
+	private int[] _weeks;
 	
 }

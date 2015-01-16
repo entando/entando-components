@@ -22,6 +22,5 @@
 	</wp:pager>
 </c:if>
 <%-- Important: reset variables --%>
-<c:set var="userFilterOptionsVar" value="${null}" scope="request" />
 <c:set var="contentList" value="${null}"  scope="request" />
 <c:set var="group" value="${null}"  scope="request" />
