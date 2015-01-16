@@ -2,7 +2,8 @@
 <%@ taglib prefix="cal" uri="/jpcalendar-aps-core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
-<cal:calendar nomeGruppo="jpcalendarCal" datePattern="yyyyMMdd" />
+
+<cal:calendar groupName="jpcalendarCal" datePattern="yyyyMMdd" />
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate value="${now}" pattern="yyyyMMdd" var="today" />
 <wp:pageWithWidget var="jpcalendar_dailyEventsVar" widgetTypeCode="jpcalendar_dailyEvents" />
@@ -102,17 +103,10 @@
 				<th scope="col"><wp:i18n key="jpcalendar_WEEK_SATURDAY" /></th>
 				<th scope="col"><wp:i18n key="jpcalendar_WEEK_SUNDAY" /></th>
 			</tr>
-			<c:forEach items="${jpcalendarCal.calendario}" var="week" varStatus="status">
+			<c:forEach items="${jpcalendarCal.calendar}" var="week" varStatus="status">
 				<tr>
 					<th scope="row">
-						<c:choose>
-							<c:when test="${jpcalendarCal.settimane[status.count-1] == jpcalendarCal.currentWeek}">
-								<c:out value="${jpcalendarCal.settimane[status.count-1]}"/>
-							</c:when>
-							<c:otherwise>
-								<c:out value="${jpcalendarCal.settimane[status.count-1]}"/>
-							</c:otherwise>
-						</c:choose>
+						<c:out value="${jpcalendarCal.weeks[status.count-1]}"/>
 					</th>
 					<c:forEach items="${week}" var="dayItem" varStatus="dayStatus">
 						<c:if test="${!(empty dayItem)}">

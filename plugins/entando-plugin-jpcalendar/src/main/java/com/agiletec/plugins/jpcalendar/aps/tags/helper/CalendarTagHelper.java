@@ -27,12 +27,11 @@ import java.util.Locale;
 
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jpcalendar.aps.tags.util.ApsCalendar;
-import com.agiletec.plugins.jpcalendar.aps.tags.util.CellaCalendar;
+import com.agiletec.plugins.jpcalendar.aps.tags.util.CalendarDay;
 
 /**
  * Helper for Calendar Tag
- *
- * */
+ */
 public class CalendarTagHelper {
 
 	public Calendar getPrevMonth(Calendar cal) {
@@ -67,14 +66,6 @@ public class CalendarTagHelper {
 		return years;
 	}
 
-	/**
-	 * Create the calendar for month and year required; if month and year are
-	 * not specified, it returns the calendar for the current month
-	 *
-	 * @param request
-	 *            the request
-	 * @return the required Calendar
-	 */
 	public Calendar getRequiredCalendar(String monthString, String yearString, String selectedDate, String datePattern, Calendar lastRequiredCalendar) {
 		Calendar cal = Calendar.getInstance(Locale.ENGLISH);
 		cal.setTime(new Date());
@@ -86,82 +77,79 @@ public class CalendarTagHelper {
 			cal.set(Calendar.MONTH, month);
 			cal.set(Calendar.YEAR, year);
 		} else if (null != selectedDate) {
-			if (selectedDate != null && selectedDate.length() > 0) {
+			if (selectedDate.length() > 0) {
 				Date date = DateConverter.parseDate(selectedDate, datePattern);
-				if (date != null)
+				if (date != null) {
 					cal.setTime(date);
+				}
 				return cal;
 			}
 		} else {
-//			Calendar lastRequiredCalendar = (Calendar) this.pageContext
-//					.getSession().getAttribute(
-//							LAST_REQUIRED_CALENDAR_SESSION_PARAM);
-			if (lastRequiredCalendar != null)
+			if (lastRequiredCalendar != null) {
 				return lastRequiredCalendar;
+			}
 		}
 		return cal;
 	}
-
+	
+	@Deprecated
 	public ApsCalendar getCalendarioDelMese(Calendar cal, int[] array, String datePattern) {
+		return this.getRequiredApsCalendar(cal, array, datePattern);
+	}
+	
+	public ApsCalendar getRequiredApsCalendar(Calendar cal, int[] array, String datePattern) {
 		cal.set(Calendar.DAY_OF_MONTH, 1);
-		int righe = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
-
-		int giornoSettimanaPrimoDelMese = cal.get(Calendar.DAY_OF_WEEK) - 2;
-		// Sapendo che il calendario richiesto parte da 1
-		if (giornoSettimanaPrimoDelMese < 0) {
-			righe++;
+		int rows = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
+		int firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 2;
+		if (firstDayOfWeek < 0) {
+			rows++;
 		}
-
-		cal.set(Calendar.DAY_OF_MONTH, cal
-				.getActualMaximum(Calendar.DAY_OF_MONTH));
-		int giornoSettimanaUltimoDelMese = cal.get(Calendar.DAY_OF_WEEK) - 2;
-		if (giornoSettimanaUltimoDelMese < 0) {
-			righe--;
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		int lastDayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 2;
+		if (lastDayOfWeek < 0) {
+			rows--;
 		}
-
 		cal.set(Calendar.DAY_OF_MONTH, 1);
-
-		int colonne = 7;
-		CellaCalendar[][] mese = new CellaCalendar[righe][colonne];
+		int columns = 7;
+		CalendarDay[][] month = new CalendarDay[rows][columns];
 		ApsCalendar apsCalendar = new ApsCalendar();
-		apsCalendar.setCalendario(mese);
-		apsCalendar.setData(cal.getTime());
-		apsCalendar.setSettimane(this.getNumeriSettimana(cal, righe));
-
-		int settimanaCorrente = 0;
-		int indiceGiornoSettimana = cal.get(Calendar.DAY_OF_WEEK) - 2;
-		if (indiceGiornoSettimana < 0) {
-			indiceGiornoSettimana = 7 + indiceGiornoSettimana;
+		apsCalendar.setCalendar(month);
+		apsCalendar.setDate(cal.getTime());
+		apsCalendar.setWeeks(this.getNumberOfWeek(cal, rows));
+		int currentWeek = 0;
+		int dayOfWeekIndex = cal.get(Calendar.DAY_OF_WEEK) - 2;
+		if (dayOfWeekIndex < 0) {
+			dayOfWeekIndex = 7 + dayOfWeekIndex;
 		}
-		int giornoMaxDelMese = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-		for (int i = 1; i <= giornoMaxDelMese; i++) {
+		int maxDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		for (int i = 1; i <= maxDayOfMonth; i++) {
 			cal.set(Calendar.DAY_OF_MONTH, i);
-			CellaCalendar cella = new CellaCalendar();
-			cella.setDay(i);
-			cella.setFormattedDate(DateConverter.getFormattedDate(cal.getTime(), datePattern));
+			CalendarDay calendarDay = new CalendarDay();
+			calendarDay.setDay(i);
+			calendarDay.setFormattedDate(DateConverter.getFormattedDate(cal.getTime(), datePattern));
 			int events = array[i - 1];
-			cella.setHasEvents(events > 0);
-			mese[settimanaCorrente][indiceGiornoSettimana] = cella;
-			indiceGiornoSettimana++;
-			if (indiceGiornoSettimana > 6) {
-				++settimanaCorrente;
-				indiceGiornoSettimana = 0;
+			calendarDay.setHasEvents(events > 0);
+			month[currentWeek][dayOfWeekIndex] = calendarDay;
+			dayOfWeekIndex++;
+			if (dayOfWeekIndex > 6) {
+				++currentWeek;
+				dayOfWeekIndex = 0;
 			}
 		}
 		return apsCalendar;
 	}
 
-	private int[] getNumeriSettimana(Calendar requiredCalendar, int righe) {
-		int[] settimane = new int[righe];
+	private int[] getNumberOfWeek(Calendar requiredCalendar, int rows) {
+		int[] weeks = new int[rows];
 		Calendar clone2 = Calendar.getInstance(Locale.ENGLISH);
 		clone2.setTime(requiredCalendar.getTime());
 		int j = 0;
-		while ( j < righe) {
+		while ( j < rows) {
 			int currentWeek = clone2.get(Calendar.WEEK_OF_YEAR);
-			settimane[j++] = currentWeek;
+			weeks[j++] = currentWeek;
 			clone2.set(Calendar.WEEK_OF_YEAR, currentWeek+1);
 		}
-		return settimane;
+		return weeks;
 	}
 
 }

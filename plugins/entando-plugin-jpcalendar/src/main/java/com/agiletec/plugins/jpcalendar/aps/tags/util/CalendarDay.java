@@ -22,11 +22,10 @@
 package com.agiletec.plugins.jpcalendar.aps.tags.util;
 
 /**
- * Calendar Cell. Object used by CalendarTag
- * 
+ * Calendar Day. Object used by CalendarTag
  * @author E.Santoboni
  */
-public class CellaCalendar {
+public class CalendarDay {
 	
 	public int getDay() {
 		return _day;
