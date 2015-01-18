@@ -111,9 +111,8 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
     private void installPlugin(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
 
         ServletContext servletContext = ((ConfigurableWebApplicationContext) this._applicationContext).getServletContext();
-
         String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
-        String artifactName = availableArtifact.getArtifactId().split("-")[2];
+        String artifactName = availableArtifact.getArtifactId();
         String appRootPath = servletContext.getRealPath("/");
         File destDir = new File(appRootPath);
         String tempDirPath = appRootPath + "componentinstaller" + File.separator + artifactName;
@@ -129,11 +128,9 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         if (tilesFiles == null) {
             tilesFiles = new ArrayList<File>();
         }
-
         File tempArtifactRootDir = this.extractArtifactJar(destDir, artifactName);
         List<File> pluginSqlFiles = (List<File>) FileUtils.listFiles(tempArtifactRootDir, new String[]{"sql"}, true);
         List<File> pluginXmlFiles = (List<File>) FileUtils.listFiles(tempArtifactRootDir, new String[]{"xml"}, true);
-        File componentFile = this.getFileFromArtifactJar(tempArtifactRootDir, "component.xml");
 
         List<File> mainAppJarLibraries = (List<File>) FileUtils.listFiles(new File(destDir.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "lib"), new String[]{"jar"}, true);
         List<File> pluginJarLibraries = (List<File>) FileUtils.listFiles(artifactFileRootDir, new String[]{"jar"}, true);
@@ -149,9 +146,11 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         allFiles.addAll(pluginXmlFiles);
         URLClassLoader cl = getURLClassLoader(allFiles.toArray(new File[0]), servletContext);
         loadClasses((File[]) pluginJarLibraries.toArray(new File[0]), cl);
-        configLocs.addAll(getConfPathsFromDependencies(componentFile));
-        configLocs.add("classpath*:spring/plugins/" + artifactName + "/aps/**/**.xml");
-        configLocs.add("classpath*:spring/plugins/" + artifactName + "/apsadmin/**/**.xml");
+
+        File pluginsRootDir = new File(artifactFile.getParentFile().getAbsolutePath()
+                + File.separator + artifactName + File.separator
+                + "WEB-INF" + File.separator + "plugins");
+        configLocs.addAll(getConfPaths(pluginsRootDir));
         //load plugin context 
         Properties properties = new Properties();
         properties.load(new FileInputStream(systemParamsFile));
@@ -178,30 +177,24 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
     }
 
     private void installBundle(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
-        ServletContext servletContext = ((ConfigurableWebApplicationContext) this._applicationContext).getServletContext();
-
-        String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
-        String artifactName = availableArtifact.getArtifactId().split("-")[2];
-
-        String appRootPath = servletContext.getRealPath("/");
-        File destDir = new File(appRootPath);
-        String tempDirPath = appRootPath + "componentinstaller" + File.separator + artifactName;
-        File artifactFile = new File(appRootPath + "componentinstaller" + File.separator + filename);
-
-        FileUtils.copyInputStreamToFile(is, artifactFile);
-        this.extractArchiveFile(artifactFile, tempDirPath);
-        File artifactFileRootDir = new File(artifactFile.getParentFile().getAbsolutePath()
-                + File.separator + artifactName);
-        FileUtils.copyDirectory(artifactFileRootDir, destDir);
-
-        InitializerManager initializerManager = (InitializerManager) this._applicationContext.getBean("InitializerManager");
-        initializerManager.init();
-        BaseConfigManager baseConfigManager = (BaseConfigManager) ((ConfigurableWebApplicationContext) this._applicationContext).getBean(SystemConstants.BASE_CONFIG_MANAGER);
-        baseConfigManager.init();
+        this.installPlugin(availableArtifact, version, is);
     }
 
     private void installApp(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
         this.installPlugin(availableArtifact, version, is);
+    }
+
+    private List<String> getConfPaths(File pluginsDir) throws Exception {
+        List<String> configLocs = new ArrayList<String>();
+        File[] files = pluginsDir.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (file.isDirectory()) {
+                configLocs.add("classpath*:spring/plugins/" + file.getName() + "/aps/**/**.xml");
+                configLocs.add("classpath*:spring/plugins/" + file.getName() + "/apsadmin/**/**.xml");
+            }
+        }
+        return configLocs;
     }
 
     private List<String> getConfPathsFromDependencies(File componentFile) throws Exception {

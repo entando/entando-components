@@ -170,7 +170,7 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                 ctxList.remove(appCtx);
 
             } catch (Exception e) {
-                throw e;
+                throw new ApsSystemException("Unexpected error in component uninstallation process.", e);           
             } finally {
                 Thread.currentThread().setContextClassLoader(currentClassLoader);
             }
