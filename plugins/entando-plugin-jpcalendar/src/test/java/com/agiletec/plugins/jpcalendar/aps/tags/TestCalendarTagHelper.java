@@ -31,7 +31,7 @@ import com.agiletec.plugins.jpcalendar.aps.system.services.CalendarConstants;
 import com.agiletec.plugins.jpcalendar.aps.system.services.calendar.ICalendarManager;
 import com.agiletec.plugins.jpcalendar.aps.tags.helper.CalendarTagHelper;
 import com.agiletec.plugins.jpcalendar.aps.tags.util.ApsCalendar;
-import com.agiletec.plugins.jpcalendar.aps.tags.util.CellaCalendar;
+import com.agiletec.plugins.jpcalendar.aps.tags.util.CalendarDay;
 
 /**
 * @author G.Cocco
@@ -71,7 +71,7 @@ public class TestCalendarTagHelper extends ApsPluginBaseTestCase {
 		calendarioRichiesto = calendarTagHelper.getCalendarioDelMese( (Calendar) cal.clone(), array, datePattern);
 
 		assertNotNull(calendarioRichiesto);
-		CellaCalendar[][] calend = calendarioRichiesto.getCalendario();
+		CalendarDay[][] calend = calendarioRichiesto.getCalendario();
 
 		assertNotNull(calend);
 		assertEquals(5, calend.length);

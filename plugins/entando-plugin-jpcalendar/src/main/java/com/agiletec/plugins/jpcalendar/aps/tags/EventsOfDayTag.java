@@ -84,73 +84,65 @@ public class EventsOfDayTag extends TagSupport implements EventsOfDayDataBean {
 		}
 		return EVAL_BODY_INCLUDE;
 	}
-
+	
+	@Override
 	public void release() {
-		_listName = null;
-		_calMan = null;
-		_requiredDate = null;
-		_allowedGroups = null;
+		this._listName = null;
+		this._calMan = null;
+		this._requiredDate = null;
+		this._allowedGroups = null;
 	}
-
+	
 	private void extractRequiredDate() {
 		ServletRequest request = this.pageContext.getRequest();
 		String stringData = request.getParameter("selectedDate");
-		_requiredDate = DateConverter.parseDate(stringData,
+		this._requiredDate = DateConverter.parseDate(stringData,
 				CalendarManager.REQUIRED_DATE_PATTERN);
-		if (_requiredDate == null) {
-			_requiredDate = (Date) this.pageContext.getSession().getAttribute(
+		if (this._requiredDate == null) {
+			this._requiredDate = (Date) this.pageContext.getSession().getAttribute(
 					SESSION_PARAM_LAST_SELECTED_DATE);
 			// PRESA DATA DI Ultima richiesta eventi;
 		}
-		if (_requiredDate == null) {
-			_requiredDate = new Date();
+		if (this._requiredDate == null) {
+			this._requiredDate = new Date();
 			// PRESA DATA DI OGGI
 		}
-		this.pageContext.getSession().setAttribute(
-				SESSION_PARAM_LAST_SELECTED_DATE, _requiredDate);
+		this.pageContext.getSession().setAttribute(SESSION_PARAM_LAST_SELECTED_DATE, this._requiredDate);
 	}
 
-	/**
-	 * Restituisce il nome con il quale viene inserita nel pageContext la lista
-	 * degli identificativi trovati.
-	 * 
-	 * @return Returns the listName.
-	 */
 	public String getListName() {
 		return _listName;
 	}
-
-	/**
-	 * Setta il nome con il quale viene inserita nel pageContext la lista degli
-	 * identificativi trovati.
-	 * 
-	 * @param listName
-	 *            The listName to set.
-	 */
 	public void setListName(String listName) {
 		this._listName = listName;
 	}
 	
+	@Override
 	public String getContentType() {
 		return _calMan.getConfig().getContentTypeCode();
 	}
 	
+	@Override
 	public Set getAllowedGroups() {
 		return _allowedGroups;
 	}
 	
+	@Override
 	public String getAttributeNameEnd() {
 		return _calMan.getConfig().getEndAttributeName();
 	}
 	
+	@Override
 	public String getAttributeNameStart() {
 		return _calMan.getConfig().getStartAttributeName();
 	}
 	
+	@Override
 	public Date getRequiredDay() {
 		return _requiredDate;
 	}
-
+	
+	@Override
 	public void setAllowedGroups(Set allowedGroups) {
 		Set temp = new HashSet();
 		if (allowedGroups != null && !allowedGroups.isEmpty()) {

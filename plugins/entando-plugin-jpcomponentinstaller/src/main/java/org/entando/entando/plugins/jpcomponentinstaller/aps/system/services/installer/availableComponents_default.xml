@@ -9,6 +9,11 @@
 			<artifactId>entando-plugin-jpfacetnav</artifactId>
 		</artifact>
 		<artifact>
+			<description>Calendar</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpcalendar</artifactId>
+		</artifact>
+		<artifact>
 			<description>Mail</description>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpmail</artifactId>
