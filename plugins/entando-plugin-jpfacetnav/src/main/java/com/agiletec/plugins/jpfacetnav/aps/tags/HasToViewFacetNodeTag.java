@@ -21,18 +21,19 @@
  */
 package com.agiletec.plugins.jpfacetnav.aps.tags;
 
+import com.agiletec.aps.system.common.tree.ITreeNode;
+import com.agiletec.aps.system.common.tree.ITreeNodeManager;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.common.tree.ITreeNode;
-import com.agiletec.aps.system.common.tree.ITreeNodeManager;
-
 /**
- * 
  * @author E.Santoboni
  */
 public class HasToViewFacetNodeTag extends AbstractFacetNavTag {
@@ -45,11 +46,8 @@ public class HasToViewFacetNodeTag extends AbstractFacetNavTag {
 		this.setRequiredFacets(requiredFacets);
 		try {
 			boolean hasToView = 
-				this.getRequiredFacets().contains(this.getFacetNodeCode())
-				|| (this.isParentSeleted() || this.isSelectedOneChild()) 
-				//&& !this.hasBrotherSelected() //&& NON HA FRATELLI SELEZIONATI 
-				//&& !this.hasBrotherWithChildSelected();//&& NON HA FRATELLI CON FIGLI SELEZIONATI
-				;
+				this.getRequiredFacets().contains(this.getFacetNodeCode()) 
+					|| (this.isParentSeleted() || this.isSelectedOneChild());
 			if (hasToView) {
 				return EVAL_BODY_INCLUDE;
 			} else {
@@ -60,32 +58,7 @@ public class HasToViewFacetNodeTag extends AbstractFacetNavTag {
 			throw new JspException("Error initialization tag", t);
 		}
 	}
-
-	/*
-	private boolean hasBrotherSelected() {
-		ITreeNodeManager facetManager = super.getFacetManager();
-		ITreeNode parent = facetManager.getNode(this.getFacetNodeCode()).getParent();
-		for (int i=0; i<parent.getChildren().length; i++) {
-			ITreeNode node = parent.getChildren()[i];
-			if (!node.getCode().equals(this.getFacetNodeCode()) && this.getRequiredFacets().contains(node.getCode())) return true;
-		}
-		return false;
-	}
-
-	private boolean hasBrotherWithChildSelected() {
-		ITreeNodeManager facetManager = super.getFacetManager();
-		ITreeNode parent = facetManager.getNode(this.getFacetNodeCode()).getParent();
-		for (int i=0; i<parent.getChildren().length; i++) {
-			ITreeNode node = parent.getChildren()[i];
-			if (!node.getCode().equals(this.getFacetNodeCode())) {
-				boolean check = this.checkSelectChild(node, this.getFacetNodeCode());
-				if (check) return true;
-			}
-		}
-		return false;
-	}
-	 */
-
+	
 	/**
 	 * Returns true if a child is selected.
 	 * @return true if a child is selected
@@ -138,8 +111,22 @@ public class HasToViewFacetNodeTag extends AbstractFacetNavTag {
 	public void setFacetNodeCode(String facetNodeCode) {
 		this._facetNodeCode = facetNodeCode;
 	}
-
+	
+	@Override
 	public List<String> getRequiredFacets() {
+		if (null == this._facetNodeCode) {
+			if (null == this.getRequiredFacetsParamName()) {
+				return new ArrayList<String>();
+			} else {
+				ServletRequest request = this.pageContext.getRequest();
+				List<String> list = (List<String>) request.getAttribute(this.getRequiredFacetsParamName());
+				if (null == list) {
+					return new ArrayList<String>();
+				} else {
+					return list;
+				}
+			}
+		}
 		return _requiredFacets;
 	}
 	public void setRequiredFacets(List<String> requiredFacets) {

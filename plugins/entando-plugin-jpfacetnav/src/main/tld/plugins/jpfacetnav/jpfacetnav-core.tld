@@ -24,7 +24,13 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Nome del parametro della lista di faccette da erogare</description>
+			<description></description>
+			<name>occurrencesParamName</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>facetsTreeParamName</name>
 			<required>yes</required>
 			<rtexprvalue>false</rtexprvalue>
@@ -82,9 +88,15 @@
 		<attribute>
 			<description></description>
 			<name>requiredFacets</name>
-			<required>yes</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
     	</attribute>
+		<attribute>
+			<description></description>
+			<name>requiredFacetsParamName</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
 	</tag>
 	
 	<tag>
@@ -101,15 +113,27 @@
 		<attribute>
 			<description></description>
 			<name>requiredFacets</name>
-			<required>yes</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
     	</attribute>
 		<attribute>
 			<description></description>
+			<name>requiredFacetsParamName</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>occurrences</name>
-			<required>yes</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
     	</attribute>
+		<attribute>
+			<description></description>
+			<name>occurrencesParamName</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
 	</tag>
 	
 	<tag>
