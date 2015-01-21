@@ -356,7 +356,9 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 			/>
 	</p>
 </form>', 1);
-INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynamicform_is_entryMessage', 'jpwebdynamicform_message_form', 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynamicform_message_form', 'jpwebdynamicform_message_form', 'jpwebdynamicform', NULL, '<#assign wp=JspTaglibs["/aps-core"]>
+<@wp.internalServlet actionPath="/ExtStr2/do/jpwebdynamicform/Message/User/new" />', 1);
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynamicform_is_entryMessage', NULL, 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
 <#assign wp=JspTaglibs["/aps-core"]>
 <#assign wpsa=JspTaglibs["/apsadmin-core"]>
 <#assign wpsf=JspTaglibs["/apsadmin-form"]>
@@ -473,7 +475,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 			value="%{#attr.labelSubmit}" />
 	</p>
 </form>', 1);
-INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynamicform_is_captchaPage', 'jpwebdynamicform_message_form', 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynamicform_is_captchaPage', NULL, 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
 <#assign wp=JspTaglibs["/aps-core"]>
 <#assign wpsf=JspTaglibs["/apsadmin-form"]>
 
@@ -519,7 +521,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 	<@wpsf.submit useTabindexAutoIncrement=true value="%{#labelSubmit}" cssClass="btn btn-inverse"/>
 </p>
 </form>', 1);
-INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynamicform_is_messageSaveConfirmed', 'jpwebdynamicform_message_form', 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynamicform_is_messageSaveConfirmed', NULL, 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
 <#assign wp=JspTaglibs["/aps-core"]>
 <@s.set var="titleKey">jpwebdynamicform_TITLE_<@s.property value="typeCode"/></@s.set>
 <h1><@wp.i18n key="${titleKey}" /></h1>
