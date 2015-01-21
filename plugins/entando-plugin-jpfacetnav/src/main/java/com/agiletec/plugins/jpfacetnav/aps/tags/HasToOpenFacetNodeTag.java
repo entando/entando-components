@@ -21,19 +21,21 @@
  */
 package com.agiletec.plugins.jpfacetnav.aps.tags;
 
+import com.agiletec.aps.system.common.tree.ITreeNode;
+import com.agiletec.aps.system.common.tree.ITreeNodeManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.common.tree.ITreeNode;
-import com.agiletec.aps.system.common.tree.ITreeNodeManager;
-
 /**
- * 
  * @author E.Santoboni
  */
 public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
@@ -115,19 +117,48 @@ public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
 	public void setFacetNodeCode(String facetNodeCode) {
 		this._facetNodeCode = facetNodeCode;
 	}
+	
+	@Override
 	public List<String> getRequiredFacets() {
+		if (null == this._requiredFacets) {
+			if (null == this.getRequiredFacetsParamName()) {
+				return new ArrayList<String>();
+			} else {
+				ServletRequest request = this.pageContext.getRequest();
+				List<String> list = (List<String>) request.getAttribute(this.getRequiredFacetsParamName());
+				if (null == list) {
+					return new ArrayList<String>();
+				} else {
+					return list;
+				}
+			}
+		}
 		return _requiredFacets;
 	}
 	public void setRequiredFacets(List<String> requiredFacets) {
 		this._requiredFacets = requiredFacets;
 	}
+	
 	public Map<String, Integer> getOccurrences() {
+		if (null == this._occurrences) {
+			if (null == this.getOccurrencesParamName()) {
+				return new HashMap<String, Integer>();
+			} else {
+				ServletRequest request = this.pageContext.getRequest();
+				Map<String, Integer> map = (Map<String, Integer>) request.getAttribute(this.getOccurrencesParamName());
+				if (null == map) {
+					return new HashMap<String, Integer>();
+				} else {
+					return map;
+				}
+			}
+		}
 		return _occurrences;
 	}
 	public void setOccurrences(Map<String, Integer> occurrences) {
 		this._occurrences = occurrences;
 	}
-
+	
 	private String _facetNodeCode;//="${facetNode.code}"
 	private List<String> _requiredFacets;//="requiredFacets" 
 	private Map<String, Integer> _occurrences; //="${occurrences}"

@@ -284,8 +284,19 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 	public void setRequiredFacetsParamName(String requiredFacetsParamName) {
 		this._requiredFacetsParamName = requiredFacetsParamName;
 	}
-
+	
+	public String getOccurrencesParamName() {
+		if (null == this._occurrencesParamName) {
+			return "occurrences";
+		}
+		return _occurrencesParamName;
+	}
+	public void setOccurrencesParamName(String occurrencesParamName) {
+		this._occurrencesParamName = occurrencesParamName;
+	}
+	
 	private String _facetNodesParamName;
 	private String _requiredFacetsParamName;
+	private String _occurrencesParamName;
 
 }

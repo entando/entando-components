@@ -39,7 +39,6 @@ import com.agiletec.plugins.jpfacetnav.aps.system.JpFacetNavSystemConstants;
 import com.agiletec.plugins.jpfacetnav.aps.system.services.content.widget.IFacetNavHelper;
 
 /**
- *
  * @author E.Santoboni
  */
 public class FacetNavTreeTag extends AbstractFacetNavTag {
@@ -58,7 +57,7 @@ public class FacetNavTreeTag extends AbstractFacetNavTag {
 
 			List<ITreeNode> facetsForTree = this.getFacetRootNodes(reqCtx);
 			this.pageContext.setAttribute(this.getFacetsTreeParamName(), facetsForTree);
-			this.pageContext.setAttribute("occurrences", occurrences);
+			request.setAttribute(this.getOccurrencesParamName(), occurrences);
 			request.setAttribute(this.getRequiredFacetsParamName(), requiredFacets);
 		} catch (Throwable t) {
 			_logger.error("Error in doStartTag", t);
@@ -84,7 +83,7 @@ public class FacetNavTreeTag extends AbstractFacetNavTag {
 	public void setFacetsTreeParamName(String facetsTreeParamName) {
 		this._facetsTreeParamName = facetsTreeParamName;
 	}
-
+	
 	private String _facetsTreeParamName;
 
 }
