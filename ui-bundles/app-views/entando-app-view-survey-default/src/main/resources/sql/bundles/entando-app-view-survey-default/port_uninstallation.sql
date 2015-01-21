@@ -1,3 +1,5 @@
+DELETE FROM guifragment WHERE plugincode = 'jpsurvey';
+
 DELETE FROM widgetconfig WHERE widgetcode = 'jpsurvey_pollArchive';
 DELETE FROM widgetconfig WHERE widgetcode IN (SELECT code FROM widgetcatalog WHERE parenttypecode = 'jpsurvey_pollArchive');
 DELETE FROM widgetcatalog WHERE parenttypecode = 'jpsurvey_pollArchive';

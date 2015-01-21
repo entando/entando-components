@@ -1,3 +1,5 @@
+DELETE FROM guifragment WHERE plugincode = 'jpuserreg';
+
 DELETE FROM widgetconfig WHERE widgetcode = 'jpuserreg_loginUserReg';
 DELETE FROM widgetconfig WHERE widgetcode IN (SELECT code FROM widgetcatalog WHERE parenttypecode = 'jpuserreg_loginUserReg');
 DELETE FROM widgetcatalog WHERE parenttypecode = 'jpuserreg_loginUserReg';

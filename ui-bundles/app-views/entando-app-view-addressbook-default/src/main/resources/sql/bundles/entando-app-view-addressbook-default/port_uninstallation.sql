@@ -1,3 +1,5 @@
+DELETE FROM guifragment WHERE plugincode = 'jpaddressbook';
+
 DELETE FROM widgetconfig WHERE widgetcode = 'jpaddressbook_search_form';
 DELETE FROM widgetconfig WHERE widgetcode = 'jpaddressbook_search_result';
 DELETE FROM widgetconfig WHERE widgetcode = 'jpaddressbook_search_form_advanced';

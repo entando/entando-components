@@ -1,3 +1,5 @@
+DELETE FROM guifragment WHERE plugincode = 'jpwebdynamicform';
+
 DELETE FROM widgetconfig WHERE widgetcode = 'jpwebdynamicform_message_form';
 DELETE FROM widgetconfig WHERE widgetcode IN (SELECT code FROM widgetcatalog WHERE parenttypecode = 'jpwebdynamicform_message_form');
 

@@ -1,3 +1,5 @@
+DELETE FROM guifragment WHERE plugincode = 'jpcalendar';
+
 DELETE FROM widgetconfig WHERE widgetcode = 'jpcalendar_calendar';
 DELETE FROM widgetconfig WHERE widgetcode = 'jpcalendar_dailyEvents';
 DELETE FROM widgetconfig WHERE widgetcode IN (SELECT code FROM widgetcatalog WHERE parenttypecode = 'jpcalendar_calendar');

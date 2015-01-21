@@ -1,3 +1,5 @@
+DELETE FROM guifragment WHERE plugincode = 'jprss';
+
 DELETE FROM widgetconfig WHERE widgetcode = 'jprss_rssChannels';
 DELETE FROM widgetconfig WHERE widgetcode IN (SELECT code FROM widgetcatalog WHERE parenttypecode = 'jprss_rssChannels');
 

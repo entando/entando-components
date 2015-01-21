@@ -1,3 +1,5 @@
+DELETE FROM guifragment WHERE plugincode = 'jpfacetnav';
+
 DELETE FROM widgetconfig WHERE widgetcode = 'jpfacetnav_results';
 DELETE FROM widgetconfig WHERE widgetcode = 'jpfacetnav_tree';
 DELETE FROM widgetconfig WHERE widgetcode IN (SELECT code FROM widgetcatalog WHERE parenttypecode = 'jpfacetnav_results');
