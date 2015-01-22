@@ -29,4 +29,18 @@ classpath:sql/plugins/jpmail/serv_data_test.sql
 			</defaultSqlResources>
 		</environment>
 	</installation>
+	<uninstallation>
+		<sqlResources>
+			<datasource name="portDataSource">
+classpath:sql/plugins/jpmail/port_uninstallation.sql
+			</datasource>
+			<datasource name="servDataSource">
+classpath:sql/plugins/jpmail/serv_uninstallation.sql
+			</datasource>
+		</sqlResources>
+		<resources>
+			<resource>WEB-INF/plugins/jpmail/</resource>
+			<resource>WEB-INF/lib/${project.artifactId}-${project.version}.jar</resource>
+		</resources>
+	</uninstallation>
 </component>
