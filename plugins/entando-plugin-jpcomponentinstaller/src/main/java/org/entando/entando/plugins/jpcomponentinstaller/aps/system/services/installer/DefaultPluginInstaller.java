@@ -123,7 +123,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         File artifactFileRootDir = new File(artifactFile.getParentFile().getAbsolutePath()
                 + File.separator + artifactName);
 
-        List<String> configLocs = new ArrayList<String>();
+        
         List<File> tilesFiles = (List<File>) FileUtils.listFiles(artifactFileRootDir, FileFilterUtils.suffixFileFilter("-tiles.xml"), FileFilterUtils.trueFileFilter());
         if (tilesFiles == null) {
             tilesFiles = new ArrayList<File>();
@@ -147,31 +147,39 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         URLClassLoader cl = getURLClassLoader(allFiles.toArray(new File[0]), servletContext);
         loadClasses((File[]) pluginJarLibraries.toArray(new File[0]), cl);
 
-        File pluginsRootDir = new File(artifactFile.getParentFile().getAbsolutePath()
-                + File.separator + artifactName + File.separator
-                + "WEB-INF" + File.separator + "plugins");
-        configLocs.addAll(getConfPaths(pluginsRootDir));
-        //load plugin context 
+        //load plugin and dependencies contexts 
+        File componentPluginsDir = new File(tempArtifactRootDir.getAbsolutePath() 
+                + File.separator + "spring" 
+                + File.separator + "plugins");
+        String compName = componentPluginsDir.list()[0];
+        tempArtifactRootDir.getAbsolutePath();
         Properties properties = new Properties();
         properties.load(new FileInputStream(systemParamsFile));
-        ClassPathXmlApplicationContext newContext = (ClassPathXmlApplicationContext) loadContext((String[]) configLocs.toArray(new String[0]), cl, availableArtifact.getArtifactId(), properties);
+        File componentFile = this.getFileFromArtifactJar(tempArtifactRootDir, "component.xml");
+        List<String> components = this.getDependencies(componentFile);
+        components.add(compName);
+        for (String componentName : components) {
+            List<String> configLocs = new ArrayList<String>();
+            configLocs.add("classpath*:spring/plugins/" + componentName + "/aps/**/**.xml");
+            configLocs.add("classpath*:spring/plugins/" + componentName + "/apsadmin/**/**.xml");
+            ClassPathXmlApplicationContext newContext = (ClassPathXmlApplicationContext) loadContext((String[]) configLocs.toArray(new String[0]), cl, componentName, properties);
 
-        this.reloadActionsDefinitions(newContext);
-        this.reloadResourcsBundles(newContext, servletContext);
-        TilesContainer container = TilesAccess.getContainer(servletContext);
-        this.reloadTilesDefinitions(tilesFiles, container);
-        InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
-        initializerManager.reloadCurrentReport();
-
-        ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
-        ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(newContext.getClassLoader());
-            componentManager.refresh();
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            Thread.currentThread().setContextClassLoader(currentClassLoader);
+            this.reloadActionsDefinitions(newContext);
+            this.reloadResourcsBundles(newContext, servletContext);
+            TilesContainer container = TilesAccess.getContainer(servletContext);
+            this.reloadTilesDefinitions(tilesFiles, container);
+            InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
+            initializerManager.reloadCurrentReport();
+            ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
+            ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+            try {
+                Thread.currentThread().setContextClassLoader(newContext.getClassLoader());
+                componentManager.refresh();
+            } catch (Exception e) {
+                throw e;
+            } finally {
+                Thread.currentThread().setContextClassLoader(currentClassLoader);
+            }
         }
 
     }
@@ -182,29 +190,6 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
 
     private void installApp(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
         this.installPlugin(availableArtifact, version, is);
-    }
-
-    private List<String> getConfPaths(File pluginsDir) throws Exception {
-        List<String> configLocs = new ArrayList<String>();
-        File[] files = pluginsDir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-            if (file.isDirectory()) {
-                configLocs.add("classpath*:spring/plugins/" + file.getName() + "/aps/**/**.xml");
-                configLocs.add("classpath*:spring/plugins/" + file.getName() + "/apsadmin/**/**.xml");
-            }
-        }
-        return configLocs;
-    }
-
-    private List<String> getConfPathsFromDependencies(File componentFile) throws Exception {
-        List<String> dependencies = this.getDependencies(componentFile);
-        List<String> configLocs = new ArrayList<String>();
-        for (String depencencyName : dependencies) {
-            configLocs.add("classpath*:spring/plugins/" + depencencyName + "/aps/**/**.xml");
-            configLocs.add("classpath*:spring/plugins/" + depencencyName + "/apsadmin/**/**.xml");
-        }
-        return configLocs;
     }
 
     private List<File> filterOutDuplicateLibraries(List<File> mainAppJarLibraries, List<File> pluginJarLibraries) throws Exception {
@@ -404,6 +389,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
         if (ctxList == null) {
             ctxList = new ArrayList<ClassPathXmlApplicationContext>();
+            servletContext.setAttribute("pluginsContextsList", ctxList);
         }
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         ClassPathXmlApplicationContext newContext = null;
@@ -427,8 +413,9 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             newContext.setConfigLocations(configLocations);
             newContext.refresh();
             newContext.setDisplayName(contextDisplayName);
-            ctxList.add(newContext);
-            servletContext.setAttribute("pluginsContextsList", ctxList);
+            if (!this.contextStored(contextDisplayName)) {
+                ctxList.add(newContext);
+            }
         } catch (Exception e) {
             _logger.error("Unexpected error loading application context: " + e.getMessage());
             e.printStackTrace();
@@ -437,6 +424,17 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             Thread.currentThread().setContextClassLoader(currentClassLoader);
         }
         return newContext;
+    }
+
+    private boolean contextStored(String contextDisplayName) {
+        ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
+        List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
+        for (ClassPathXmlApplicationContext ctx : ctxList) {
+            if (contextDisplayName.equals(ctx.getDisplayName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private URLClassLoader getURLClassLoader(File[] files, ServletContext servletContext) {

@@ -82,7 +82,7 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
         List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
         ClassPathXmlApplicationContext appCtx = null;
         for (ClassPathXmlApplicationContext ctx : ctxList) {
-            if (component.getArtifactId().equals(ctx.getDisplayName())) {
+            if (component.getCode().equals(ctx.getDisplayName())) {
                 appCtx = ctx;
             }
         }
@@ -169,16 +169,20 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                 appCtx.close();
                 ctxList.remove(appCtx);
 
+                InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
+                initializerManager.reloadCurrentReport();
+                ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
+                componentManager.refresh();
+
             } catch (Exception e) {
-                throw new ApsSystemException("Unexpected error in component uninstallation process.", e);           
+                throw new ApsSystemException("Unexpected error in component uninstallation process.", e);
             } finally {
                 Thread.currentThread().setContextClassLoader(currentClassLoader);
+                InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
+                initializerManager.reloadCurrentReport();
+                ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
+                componentManager.refresh();
             }
-            
-            InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
-            initializerManager.reloadCurrentReport();
-            ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
-            componentManager.refresh();
 
         } catch (Throwable t) {
             //restore files on temp folder
