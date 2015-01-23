@@ -4,9 +4,9 @@
 		<type>PLUGIN</type>
 		<label>PLUGINS</label>
 		<artifact>
-			<description>Faceted Navigation</description>
+			<description>Address Book</description>
 			<groupId>org.entando.entando.plugins</groupId>
-			<artifactId>entando-plugin-jpfacetnav</artifactId>
+			<artifactId>entando-plugin-jpaddressbook</artifactId>
 		</artifact>
 		<artifact>
 			<description>Calendar</description>
@@ -14,19 +14,29 @@
 			<artifactId>entando-plugin-jpcalendar</artifactId>
 		</artifact>
 		<artifact>
+			<description>Faceted Navigation</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpfacetnav</artifactId>
+		</artifact>
+		<artifact>
 			<description>Mail</description>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpmail</artifactId>
 		</artifact>
 		<artifact>
-			<description>Web Form (Community)</description>
+			<description>Newsletter</description>
 			<groupId>org.entando.entando.plugins</groupId>
-			<artifactId>entando-plugin-jpwebdynamicform</artifactId>
+			<artifactId>entando-plugin-jpnewsletter</artifactId>
 		</artifact>
 		<artifact>
 			<description>RSS</description>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jprss</artifactId>
+		</artifact>
+		<artifact>
+			<description>Survey</description>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpsurvey</artifactId>
 		</artifact>
 		<!--
 		<artifact>
@@ -46,19 +56,9 @@
 			<artifactId>entando-plugin-jpuserreg</artifactId>
 		</artifact>
 		<artifact>
-			<description>Address Book</description>
+			<description>Web Form (Community)</description>
 			<groupId>org.entando.entando.plugins</groupId>
-			<artifactId>entando-plugin-jpaddressbook</artifactId>
-		</artifact>
-		<artifact>
-			<description>Newsletter</description>
-			<groupId>org.entando.entando.plugins</groupId>
-			<artifactId>entando-plugin-jpnewsletter</artifactId>
-		</artifact>
-		<artifact>
-			<description>Survey</description>
-			<groupId>org.entando.entando.plugins</groupId>
-			<artifactId>entando-plugin-jpsurvey</artifactId>
+			<artifactId>entando-plugin-jpwebdynamicform</artifactId>
 		</artifact>
 		<!--
 		<artifact>
@@ -271,9 +271,9 @@
 		<app-views>
 			<label>APP Views</label>
 			<artifact>
-				<description>Web Form (Community) - default</description>
+				<description>Address Book - default</description>
 				<groupId>org.entando.entando.bundles.app-view</groupId>
-				<artifactId>entando-app-view-webdynamicform-default</artifactId>
+				<artifactId>entando-app-view-addressbook-default</artifactId>
 			</artifact>
 			<artifact>
 				<description>Calendar - default</description>
@@ -281,24 +281,9 @@
 				<artifactId>entando-app-view-calendar-default</artifactId>
 			</artifact>
 			<artifact>
-				<description>RSS - default</description>
-				<groupId>org.entando.entando.bundles.app-view</groupId>
-				<artifactId>entando-app-view-rss-default</artifactId>
-			</artifact>
-			<artifact>
 				<description>Faceted Navigation - default</description>
 				<groupId>org.entando.entando.bundles.app-view</groupId>
 				<artifactId>entando-app-view-facetnav-default</artifactId>
-			</artifact>
-			<artifact>
-				<description>User Registration - default</description>
-				<groupId>org.entando.entando.bundles.app-view</groupId>
-				<artifactId>entando-app-view-userreg-default</artifactId>
-			</artifact>
-			<artifact>
-				<description>Address Book - default</description>
-				<groupId>org.entando.entando.bundles.app-view</groupId>
-				<artifactId>entando-app-view-addressbook-default</artifactId>
 			</artifact>
 			<artifact>
 				<description>Newsletter - default</description>
@@ -306,9 +291,24 @@
 				<artifactId>entando-app-view-newsletter-default</artifactId>
 			</artifact>
 			<artifact>
+				<description>RSS - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-rss-default</artifactId>
+			</artifact>
+			<artifact>
 				<description>Survey - default</description>
 				<groupId>org.entando.entando.bundles.app-view</groupId>
 				<artifactId>entando-app-view-survey-default</artifactId>
+			</artifact>
+			<artifact>
+				<description>User Registration - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-userreg-default</artifactId>
+			</artifact>
+			<artifact>
+				<description>Web Form (Community) - default</description>
+				<groupId>org.entando.entando.bundles.app-view</groupId>
+				<artifactId>entando-app-view-webdynamicform-default</artifactId>
 			</artifact>
 			<!--
 			<artifact>
@@ -430,9 +430,9 @@
 		<type>APP</type>
 		<label>APPS</label>
 		<artifact>
-			<description>Web Dynamic Forms</description>
+			<description>Address Book</description>
 			<groupId>org.entando.entando.apps</groupId>
-			<artifactId>entando-app-webdynamicform</artifactId>
+			<artifactId>entando-app-addressbook</artifactId>
 		</artifact>
 		<artifact>
 			<description>Calendar</description>
@@ -440,24 +440,9 @@
 			<artifactId>entando-app-calendar</artifactId>
 		</artifact>
 		<artifact>
-			<description>RSS</description>
-			<groupId>org.entando.entando.apps</groupId>
-			<artifactId>entando-app-rss</artifactId>
-		</artifact>
-		<artifact>
 			<description>Faceted Navigation</description>
 			<groupId>org.entando.entando.apps</groupId>
 			<artifactId>entando-app-facetnav</artifactId>
-		</artifact>
-		<artifact>
-			<description>User Registration</description>
-			<groupId>org.entando.entando.apps</groupId>
-			<artifactId>entando-app-userreg</artifactId>
-		</artifact>
-		<artifact>
-			<description>Address Book</description>
-			<groupId>org.entando.entando.apps</groupId>
-			<artifactId>entando-app-addressbook</artifactId>
 		</artifact>
 		<artifact>
 			<description>Newsletter</description>
@@ -465,9 +450,24 @@
 			<artifactId>entando-app-newsletter</artifactId>
 		</artifact>
 		<artifact>
+			<description>RSS</description>
+			<groupId>org.entando.entando.apps</groupId>
+			<artifactId>entando-app-rss</artifactId>
+		</artifact>
+		<artifact>
 			<description>Survey - Questionnaire</description>
 			<groupId>org.entando.entando.apps</groupId>
 			<artifactId>entando-app-survey</artifactId>
+		</artifact>
+		<artifact>
+			<description>User Registration</description>
+			<groupId>org.entando.entando.apps</groupId>
+			<artifactId>entando-app-userreg</artifactId>
+		</artifact>
+		<artifact>
+			<description>Web Dynamic Forms</description>
+			<groupId>org.entando.entando.apps</groupId>
+			<artifactId>entando-app-webdynamicform</artifactId>
 		</artifact>
 		<!--
 		<artifactId>entando-app-blog</artifactId>
