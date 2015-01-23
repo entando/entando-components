@@ -106,17 +106,24 @@ public class InstallerAction extends BaseAction {
 		if (null == id) {
 			return "intro";
 		}
-		AvailableArtifact availableArtifact = this.getComponentCatalogueManager().getArtifact(id);
-		if (null == availableArtifact) {
+		AvailableArtifact artifact = this.getComponentCatalogueManager().getArtifact(id);
+		if (null == artifact) {
 			this.addActionError(this.getText("jpcomponentinstaller.error.artifact.notExists"));
 			return "intro";
 		}
-		if (this.isInstalledArtifact(availableArtifact)) {
-			String[] args = {availableArtifact.getDescription()};
+		String[] args = {artifact.getDescription()};
+		boolean checkPortalUi = this.isPortalUIInstalled();
+		if (!checkPortalUi && 
+				(null == artifact.getType() || 
+				!artifact.getType().equals(AvailableArtifact.Type.PLUGIN))) {
+			this.addActionError(this.getText("jpcomponentinstaller.error.artifact.notCompatible", args));
+			return "intro";
+		}
+		if (this.isInstalledArtifact(artifact)) {
 			this.addActionError(this.getText("jpcomponentinstaller.error.artifact.alreadyInstalled", args));
 			return "intro";
 		}
-		this.setArtifactToInstall(availableArtifact);
+		this.setArtifactToInstall(artifact);
 		return null;
 	}
 	
@@ -139,8 +146,14 @@ public class InstallerAction extends BaseAction {
 	public List<SelectItem> getAvailableComponents() {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		List<AvailableArtifact> artifacts = this.getComponentCatalogueManager().getArtifacts();
+		boolean checkPortalUi = this.isPortalUIInstalled();
 		for (int i = 0; i < artifacts.size(); i++) {
 			AvailableArtifact artifact = artifacts.get(i);
+			if (!checkPortalUi && 
+					(null == artifact.getType() || 
+					!artifact.getType().equals(AvailableArtifact.Type.PLUGIN))) {
+				continue;
+			}
 			if (!this.isInstalledArtifact(artifact)) {
 				SelectItem item = new SelectItem(artifact.getId().toString(), artifact.getDescription(), artifact.getLabel());
 				items.add(item);
@@ -174,6 +187,10 @@ public class InstallerAction extends BaseAction {
 			_logger.error("error extracting artifact versions", t);
 			return new ArrayList<String>();
 		}
+	}
+	
+	protected boolean isPortalUIInstalled() {
+		return this.getComponentManager().isComponentInstalled("entando-portal-ui");
 	}
 	
 	public Component getComponent(String code) {
