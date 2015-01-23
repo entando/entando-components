@@ -79,6 +79,7 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
     @Override
     public boolean uninstallComponent(Component component) throws ApsSystemException {
         ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
+        ClassLoader cl = (ClassLoader) servletContext.getAttribute("componentInstallerCL-" + component.getArtifactId());
         List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
         ClassPathXmlApplicationContext appCtx = null;
         for (ClassPathXmlApplicationContext ctx : ctxList) {
@@ -95,7 +96,9 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
 
             ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
             try {
-                Thread.currentThread().setContextClassLoader(appCtx.getClassLoader());
+
+                Thread.currentThread().setContextClassLoader(cl);
+
                 if (null == component || null == component.getUninstallerInfo()) {
                     return false;
                 }
@@ -141,19 +144,22 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                 List<String> resourcesPaths = ui.getResourcesPaths();
                 if (resourcesPaths != null) {
                     for (String resourcePath : resourcesPaths) {
-                        String fullResourcePath = servletContext.getRealPath(resourcePath);
-                        File resFile = new File(fullResourcePath);
-                        String relResPath = FilenameUtils.getPath(resFile.getAbsolutePath());
-                        File newResFile = new File(backupDirPath + File.separator
-                                + relResPath + resFile.getName());
-                        if (resFile.isDirectory()) {
-                            FileUtils.copyDirectory(resFile, newResFile);
-                            resourcesMap.put(resFile, newResFile);
-                            FileUtils.deleteDirectory(resFile);
-                        } else {
-                            FileUtils.copyFile(resFile, newResFile);
-                            resourcesMap.put(resFile, newResFile);
-                            FileUtils.forceDelete(resFile);
+                        try {
+                            String fullResourcePath = servletContext.getRealPath(resourcePath);
+                            File resFile = new File(fullResourcePath);
+                            String relResPath = FilenameUtils.getPath(resFile.getAbsolutePath());
+                            File newResFile = new File(backupDirPath + File.separator
+                                    + relResPath + resFile.getName());
+                            if (resFile.isDirectory()) {
+                                FileUtils.copyDirectory(resFile, newResFile);
+                                resourcesMap.put(resFile, newResFile);
+                                FileUtils.deleteDirectory(resFile);
+                            } else {
+                                FileUtils.copyFile(resFile, newResFile);
+                                resourcesMap.put(resFile, newResFile);
+                                FileUtils.forceDelete(resFile);
+                            }
+                        } catch (Exception e) {
                         }
                     }
                 }
@@ -162,12 +168,14 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                 ComponentInstallationReport cir = report.getComponentReport(component.getCode(), true);
                 cir.getDataSourceReport().upgradeDatabaseStatus(SystemInstallationReport.Status.UNINSTALLED);
                 cir.getDataReport().upgradeDatabaseStatus(SystemInstallationReport.Status.UNINSTALLED);
-                //report.removeComponentReport(component.getCode());
+                report.removeComponentReport(component.getCode());
                 this.saveReport(report);
 
                 //remove plugin's xmlapplicationcontext if present
-                appCtx.close();
-                ctxList.remove(appCtx);
+                if (appCtx != null) {
+                    appCtx.close();
+                    ctxList.remove(appCtx);
+                }
 
                 InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
                 initializerManager.reloadCurrentReport();
@@ -178,10 +186,6 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                 throw new ApsSystemException("Unexpected error in component uninstallation process.", e);
             } finally {
                 Thread.currentThread().setContextClassLoader(currentClassLoader);
-                InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
-                initializerManager.reloadCurrentReport();
-                ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
-                componentManager.refresh();
             }
 
         } catch (Throwable t) {

@@ -123,7 +123,6 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         File artifactFileRootDir = new File(artifactFile.getParentFile().getAbsolutePath()
                 + File.separator + artifactName);
 
-        
         List<File> tilesFiles = (List<File>) FileUtils.listFiles(artifactFileRootDir, FileFilterUtils.suffixFileFilter("-tiles.xml"), FileFilterUtils.trueFileFilter());
         if (tilesFiles == null) {
             tilesFiles = new ArrayList<File>();
@@ -146,18 +145,22 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         allFiles.addAll(pluginXmlFiles);
         URLClassLoader cl = getURLClassLoader(allFiles.toArray(new File[0]), servletContext);
         loadClasses((File[]) pluginJarLibraries.toArray(new File[0]), cl);
-
+        servletContext.setAttribute("componentInstallerCL-" + availableArtifact.getArtifactId(), cl);
+        
         //load plugin and dependencies contexts 
-        File componentPluginsDir = new File(tempArtifactRootDir.getAbsolutePath() 
-                + File.separator + "spring" 
-                + File.separator + "plugins");
-        String compName = componentPluginsDir.list()[0];
-        tempArtifactRootDir.getAbsolutePath();
-        Properties properties = new Properties();
-        properties.load(new FileInputStream(systemParamsFile));
         File componentFile = this.getFileFromArtifactJar(tempArtifactRootDir, "component.xml");
         List<String> components = this.getDependencies(componentFile);
-        components.add(compName);
+        if (availableArtifact.getType() == AvailableArtifact.Type.PLUGIN) {
+            File componentPluginsDir = new File(tempArtifactRootDir.getAbsolutePath()
+                    + File.separator + "spring"
+                    + File.separator + "plugins");
+            String compName = componentPluginsDir.list()[0];
+            components.add(compName);
+        }
+       
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(systemParamsFile));
+
         for (String componentName : components) {
             List<String> configLocs = new ArrayList<String>();
             configLocs.add("classpath*:spring/plugins/" + componentName + "/aps/**/**.xml");
