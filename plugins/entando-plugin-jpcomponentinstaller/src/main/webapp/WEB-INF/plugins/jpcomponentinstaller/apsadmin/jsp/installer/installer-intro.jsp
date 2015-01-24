@@ -73,7 +73,7 @@
 			<s:set var="componentVar" value="%{getComponent(#componentReportVar.componentCode)}" />
 			<tr>
 				<td class="text-center text-nowrap">
-					<s:if test="%{null != #componentVar.uninstallerInfo}" >
+					<s:if test="%{null != #componentVar.uninstallerInfo && !#componentReportVar.isUninstalled()}" >
 						<%-- remove --%>
 						<s:url action="uninstallIntro" var="uninstallActionVar">
 							<s:param name="componentCode" value="#componentVar.code"/>
@@ -91,9 +91,11 @@
 				</td>
 				<td>
 					<s:property value="#componentVar.description" />&#32;<code><s:property value="#componentReportVar.componentCode" /></code>
+					<%--
 					<br />
 					<s:property value="#componentVar.artifactId" />&#32;<s:property value="#componentVar.artifactGroupId" />&#32;
 					<s:property value="#componentVar.artifactVersion" />&#32;
+					--%>
 				</td>
 				<td class="text-center">
 					<code><s:date name="#componentReportVar.date" format="dd/MM/yyyy HH:mm:ss" /></code>

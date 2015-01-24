@@ -18,7 +18,7 @@
 	<div>
 		<p>
 			<s:text name="jpcomponentinstaller.note.installer.confirmInstall" />&#32;
-			'<s:property value="artifactToInstall.description" />',&#32;version&#32;<code><s:property value="version" /><code>&#32;?
+			'<s:property value="artifactToInstall.description" />',&#32;version&#32;<code><s:property value="version" /></code>&#32;?
 		</p>
 		<div class="input-group">
 			<div class="text-center margin-large-top">
