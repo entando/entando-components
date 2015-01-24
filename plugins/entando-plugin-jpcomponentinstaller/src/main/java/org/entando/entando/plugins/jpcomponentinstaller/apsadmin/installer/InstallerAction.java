@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import org.entando.entando.aps.system.init.IInitializerManager;
 import org.entando.entando.aps.system.init.model.Component;
+import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer.AvailableArtifact;
 import org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer.IArtifactInstallerManager;
@@ -48,6 +49,17 @@ public class InstallerAction extends BaseAction {
 		try {
 			String result = this.checkArtifactId();
 			if (null != result) return result;
+			List<String> availableVersions = this.getArtifactVersions(this.getAvailableArtifactId());
+			if (availableVersions == null || availableVersions.isEmpty()) {
+				AvailableArtifact aa = this.getArtifactToInstall();
+                String[] args = {aa.getDescription(), aa.getGroupId(), aa.getArtifactId()};
+                this.addActionError(this.getText("jpcomponentinstaller.error.artifact.versionNotAvailable", args));
+                return "intro";
+			}
+			if (availableVersions.size() == 1) {
+				this.setVersion(availableVersions.get(0));
+				return "downloadIntro";
+			}
 		} catch (Throwable t) {
 			_logger.error("error on chooseVersion", t);
 		}
@@ -119,7 +131,8 @@ public class InstallerAction extends BaseAction {
 			this.addActionError(this.getText("jpcomponentinstaller.error.artifact.notCompatible", args));
 			return "intro";
 		}
-		if (this.isInstalledArtifact(artifact)) {
+		SystemInstallationReport report = this.getCurrentReport();
+		if (this.isInstalledArtifact(artifact, report)) {
 			this.addActionError(this.getText("jpcomponentinstaller.error.artifact.alreadyInstalled", args));
 			return "intro";
 		}
@@ -147,6 +160,7 @@ public class InstallerAction extends BaseAction {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		List<AvailableArtifact> artifacts = this.getComponentCatalogueManager().getArtifacts();
 		boolean checkPortalUi = this.isPortalUIInstalled();
+		SystemInstallationReport report = this.getCurrentReport();
 		for (int i = 0; i < artifacts.size(); i++) {
 			AvailableArtifact artifact = artifacts.get(i);
 			if (!checkPortalUi && 
@@ -154,7 +168,7 @@ public class InstallerAction extends BaseAction {
 					!artifact.getType().equals(AvailableArtifact.Type.PLUGIN))) {
 				continue;
 			}
-			if (!this.isInstalledArtifact(artifact)) {
+			if (!this.isInstalledArtifact(artifact, report)) {
 				SelectItem item = new SelectItem(artifact.getId().toString(), artifact.getDescription(), artifact.getLabel());
 				items.add(item);
 			}
@@ -162,7 +176,7 @@ public class InstallerAction extends BaseAction {
 		return items;
 	}
 	
-	protected boolean isInstalledArtifact(AvailableArtifact artifact) {
+	protected boolean isInstalledArtifact(AvailableArtifact artifact, SystemInstallationReport report) {
 		if (null == artifact) {
 			return false;
 		}
@@ -171,9 +185,14 @@ public class InstallerAction extends BaseAction {
 			Component component = components.get(i);
 			String artifactId = component.getArtifactId();
 			String groupId = component.getArtifactGroupId();
+			ComponentInstallationReport componentReport = report.getComponentReport(component.getCode(), false);
 			if (null != groupId && null != artifactId) {
 				if (groupId.equals(artifact.getGroupId()) && artifactId.equals(artifact.getArtifactId())) {
-					return true;
+					if (null == componentReport || componentReport.isUninstalled()) {
+						return false;
+					} else {
+						return true;
+					}
 				}
 			}
 		}
@@ -181,12 +200,16 @@ public class InstallerAction extends BaseAction {
 	}
 	
 	public List<String> getArtifactVersions(Integer availableArtifactId) {
+		if (null != this._artifactVersions) {
+			return this._artifactVersions;
+		}
 		try {
-			return this.getArtifactInstallerManager().findAvailableVersions(availableArtifactId);
+			this._artifactVersions = this.getArtifactInstallerManager().findAvailableVersions(availableArtifactId);
 		} catch (Throwable t) {
 			_logger.error("error extracting artifact versions", t);
 			return new ArrayList<String>();
 		}
+		return this._artifactVersions;
 	}
 	
 	protected boolean isPortalUIInstalled() {
@@ -327,6 +350,8 @@ public class InstallerAction extends BaseAction {
 	private AvailableArtifact _artifactToInstall;
 	
 	private String _componentCode;
+	
+	private List<String> _artifactVersions;
 	
 	private IInitializerManager _initializerManager;
 	private IComponentCatalogueManager _componentCatalogueManager;

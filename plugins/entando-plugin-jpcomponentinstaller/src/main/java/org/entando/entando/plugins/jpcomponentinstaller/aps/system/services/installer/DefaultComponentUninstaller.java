@@ -87,27 +87,19 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                 appCtx = ctx;
             }
         }
-
         String appRootPath = servletContext.getRealPath("/");
         String backupDirPath = appRootPath + "componentinstaller" + File.separator + component.getArtifactId() + "-backup";
         Map<File, File> resourcesMap = new HashMap<File, File>();
-
         try {
-
             ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
             try {
-
                 Thread.currentThread().setContextClassLoader(cl);
-
                 if (null == component || null == component.getUninstallerInfo()) {
                     return false;
                 }
                 this.getDatabaseManager().createBackup();//backup database
-
                 SystemInstallationReport report = super.extractReport();
-
                 ComponentUninstallerInfo ui = component.getUninstallerInfo();
-
                 //remove records from db
                 String[] dataSourceNames = this.extractBeanNames(DataSource.class);
                 for (int j = 0; j < dataSourceNames.length; j++) {
@@ -168,7 +160,6 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                 ComponentInstallationReport cir = report.getComponentReport(component.getCode(), true);
                 cir.getDataSourceReport().upgradeDatabaseStatus(SystemInstallationReport.Status.UNINSTALLED);
                 cir.getDataReport().upgradeDatabaseStatus(SystemInstallationReport.Status.UNINSTALLED);
-                report.removeComponentReport(component.getCode());
                 this.saveReport(report);
 
                 //remove plugin's xmlapplicationcontext if present

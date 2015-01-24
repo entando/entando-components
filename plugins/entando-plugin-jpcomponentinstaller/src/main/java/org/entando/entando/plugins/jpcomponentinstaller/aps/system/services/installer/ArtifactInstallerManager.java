@@ -93,7 +93,10 @@ public class ArtifactInstallerManager extends AbstractService implements IArtifa
 			List<Version> versions = rangeResult.getVersions();
 			for (int i = 0; i < versions.size(); i++) {
 				Version version = versions.get(i);
-				versionsArray.add(version.toString());
+				String componentVersion = version.toString();
+				if (componentVersion.startsWith(entandoVersion)) {
+					versionsArray.add(componentVersion);
+				}
 			}
 		} catch (Throwable t) {
 			availableArtifact = (null != availableArtifact) ? availableArtifact : new AvailableArtifact();
