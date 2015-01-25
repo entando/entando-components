@@ -31,8 +31,6 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.JpcontentworkflowSystemConstants;
-import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.ContentWorkflowManager;
-import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.IContentWorkflowManager;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.Step;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.Workflow;
 

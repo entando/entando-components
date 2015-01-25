@@ -67,6 +67,7 @@ public class JpwebdynamicformTestHelper extends AbstractDAO {
 			conn = this.getConnection();
 			this.executeQuery(DELETE_MESSAGE_ANSWERS, conn);
 			this.executeQuery(DELETE_MESSAGE_SEARCH_RECORDS, conn);
+			this.executeQuery(DELETE_MESSAGE_ROLE_RECORDS, conn);
 			this.executeQuery(DELETE_MESSAGES, conn);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -134,6 +135,9 @@ public class JpwebdynamicformTestHelper extends AbstractDAO {
 
 	private static final String DELETE_MESSAGE_SEARCH_RECORDS =
 		"DELETE FROM jpwebdynamicform_search";
+
+	private static final String DELETE_MESSAGE_ROLE_RECORDS =
+		"DELETE FROM jpwebdynamicform_attroles";
 
 	private static final String DELETE_MESSAGE_ANSWERS =
 		"DELETE FROM jpwebdynamicform_answers";

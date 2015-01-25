@@ -16,7 +16,6 @@
 			<ref bean="CasClientTicketValidation" />
 			<ref bean="AuthenticatorControlService" />
 			<ref bean="RequestAuthorizatorControlService" />
-			<ref bean="ExecutorControlService" />
 			<ref bean="ErrorManagerControlService" />
 		</list>
 		</property>

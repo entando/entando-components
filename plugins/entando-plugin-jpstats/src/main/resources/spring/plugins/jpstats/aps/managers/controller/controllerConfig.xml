@@ -21,7 +21,6 @@
 			<ref bean="AuthenticatorControlService" />
 			<ref bean="RequestAuthorizatorControlService" />
 			<ref bean="jpstatsStatsMonitorControlService" />
-			<ref bean="ExecutorControlService" />
 			<ref bean="ErrorManagerControlService" />
 		</list>
 		</property>
