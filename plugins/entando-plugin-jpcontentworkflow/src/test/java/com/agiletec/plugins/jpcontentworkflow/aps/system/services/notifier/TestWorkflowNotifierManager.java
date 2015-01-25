@@ -35,7 +35,6 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.JpcontentworkflowSystemConstants;
-import com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.IWorkflowNotifierManager;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.notifier.model.NotifierConfig;
 import com.agiletec.plugins.jpmail.aps.services.JpmailSystemConstants;
 import com.agiletec.plugins.jpmail.aps.services.mail.IMailManager;
@@ -100,6 +99,7 @@ public class TestWorkflowNotifierManager extends ApsPluginBaseTestCase {
 			this.addContentStatusChangedEvent("ART1", Content.STATUS_READY);
 			this.addContentStatusChangedEvent("ART180", Content.STATUS_DRAFT);
 			this.addContentStatusChangedEvent("EVN41", Content.STATUS_READY);
+			super.waitNotifyingThread();
 			assertEquals(0, this._helper.getEventsToNotify().size());
 			assertEquals(0, this._helper.getNotifiedEvents().size());
 			
@@ -109,10 +109,12 @@ public class TestWorkflowNotifierManager extends ApsPluginBaseTestCase {
 			this.addContentStatusChangedEvent("ART1", Content.STATUS_DRAFT);
 			this.addContentStatusChangedEvent("ART180", Content.STATUS_READY);
 			this.addContentStatusChangedEvent("EVN41", Content.STATUS_DRAFT);
+			super.waitNotifyingThread();
 			assertEquals(2, this._helper.getEventsToNotify().size());
 			assertEquals(0, this._helper.getNotifiedEvents().size());
 			
 			this._notifierManager.sendMails();
+			super.waitNotifyingThread();
 			assertEquals(0, this._helper.getEventsToNotify().size());
 			assertEquals(2, this._helper.getNotifiedEvents().size());
 		} catch (Throwable t) {
