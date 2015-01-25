@@ -35,10 +35,6 @@ import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.DateConverter;
-import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.IMessageDAO;
-import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.IMessageSearcherDAO;
-import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.MessageDAO;
-import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.MessageSearcherDAO;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.Answer;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.Message;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.MessageRecordVO;
@@ -66,20 +62,20 @@ public class TestMessageSearcherDAO extends ApsPluginBaseTestCase {
 				DateConverter.getFormattedDate(record.getCreationDate(), "dd/MM/yyyy"));
 		Date start = new Date(currentDate.getTime()-86400001);
 		Date end = new Date(currentDate.getTime()+86400001);
-		EntitySearchFilter filter = new EntitySearchFilter(IMessageSearcherDAO.CREATION_DATE_FILTER_KEY, false, start, end);
+		EntitySearchFilter filter = new EntitySearchFilter(IMessageManager.CREATION_DATE_FILTER_KEY, false, start, end);
 		records = this._messageSearcherDao.searchRecords(new EntitySearchFilter[] { filter });
 		assertEquals(1, records.size());
 		
 		end = new Date(currentDate.getTime()-86400001);
-		filter = new EntitySearchFilter(IMessageSearcherDAO.CREATION_DATE_FILTER_KEY, false, start, end);
+		filter = new EntitySearchFilter(IMessageManager.CREATION_DATE_FILTER_KEY, false, start, end);
 		records = this._messageSearcherDao.searchRecords(new EntitySearchFilter[] { filter });
 		assertEquals(0, records.size());
 		
-		filter = new EntitySearchFilter(IMessageSearcherDAO.CREATION_DATE_FILTER_KEY, false, null, end);
+		filter = new EntitySearchFilter(IMessageManager.CREATION_DATE_FILTER_KEY, false, null, end);
 		records = this._messageSearcherDao.searchRecords(new EntitySearchFilter[] { filter });
 		assertEquals(0, records.size());
 		
-		filter = new EntitySearchFilter(IMessageSearcherDAO.CREATION_DATE_FILTER_KEY, false, start, null);
+		filter = new EntitySearchFilter(IMessageManager.CREATION_DATE_FILTER_KEY, false, start, null);
 		records = this._messageSearcherDao.searchRecords(new EntitySearchFilter[] { filter });
 		assertEquals(1, records.size());
 	}
@@ -102,7 +98,7 @@ public class TestMessageSearcherDAO extends ApsPluginBaseTestCase {
 		assertEquals(1, messageIds.size());
 		assertTrue(messageIds.contains("TEST1"));
 		
-		filter = new EntitySearchFilter(IMessageSearcherDAO.USERNAME_FILTER_KEY, false, "mainEditor", true);
+		filter = new EntitySearchFilter(IMessageManager.USERNAME_FILTER_KEY, false, "mainEditor", true);
 		messageIds = this._messageSearcherDao.searchId(new EntitySearchFilter[] { filter });
 		assertEquals(1, messageIds.size());
 		assertTrue(messageIds.contains("TEST2"));
@@ -137,11 +133,11 @@ public class TestMessageSearcherDAO extends ApsPluginBaseTestCase {
 		assertEquals(1, messageIds.size());
 		assertTrue(messageIds.contains(message1Id));
 		
-		filter = new EntitySearchFilter(IMessageSearcherDAO.USERNAME_FILTER_KEY, false, "mainEditor", true);
+		filter = new EntitySearchFilter(IMessageManager.USERNAME_FILTER_KEY, false, "mainEditor", true);
 		messageIds = this._messageSearcherDao.searchId(new EntitySearchFilter[] { filter }, true);
 		assertEquals(0, messageIds.size());
 		
-		filter = new EntitySearchFilter(IMessageSearcherDAO.USERNAME_FILTER_KEY, false, "admin", true);
+		filter = new EntitySearchFilter(IMessageManager.USERNAME_FILTER_KEY, false, "admin", true);
 		messageIds = this._messageSearcherDao.searchId(new EntitySearchFilter[] { filter }, true);
 		assertEquals(1, messageIds.size());
 		assertTrue(messageIds.contains(message1Id));

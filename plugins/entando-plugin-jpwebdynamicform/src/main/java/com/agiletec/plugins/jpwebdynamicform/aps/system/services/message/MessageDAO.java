@@ -99,31 +99,30 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 	protected String getDeleteEntityRecordQuery() {
 		return DELETE_MESSAGE;
 	}
-
+	
+	@Override
 	protected void executeDeleteEntity(String entityId, Connection conn) throws Throwable {
-		this.deleteMessageAnswers(entityId, conn);
+		super.executeQueryWithoutResultset(conn, DELETE_MESSAGE_ANSWERS, entityId);
 		super.executeDeleteEntity(entityId, conn);
 	}
 
 	@Override
 	public void deleteUserMessages(String username) throws ApsSystemException {
 		Connection conn = null;
-		PreparedStatement stat = null;
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteUserMessagesAnswers(username, conn);
-			this.deleteUserMessagesSearchRecord(username, conn);
-			stat = conn.prepareStatement(DELETE_USERMESSAGES);
-			stat.setString(1, username);
-			stat.executeUpdate();
+			super.executeQueryWithoutResultset(conn, DELETE_USERMESSAGES_ANSWERS, username);
+			super.executeQueryWithoutResultset(conn, DELETE_USERMESSAGES_SEARCH_RECORD, username);
+			super.executeQueryWithoutResultset(conn, DELETE_USERMESSAGES_ROLES, username);
+			super.executeQueryWithoutResultset(conn, DELETE_USERMESSAGES, username);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
 			_logger.error("Error removing messages for user {}", username,  t);
 			throw new RuntimeException("Error removing messages for user " + username, t);
 		} finally {
-			closeDaoResources(null, stat, conn);
+			this.closeConnection(conn);
 		}
 	}
 
@@ -179,49 +178,7 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 		}
 		return answers;
 	}
-
-	private void deleteUserMessagesSearchRecord(String username, Connection conn) throws ApsSystemException {
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(DELETE_USERMESSAGES_SEARCH_RECORD);
-			stat.setString(1, username);
-			stat.executeUpdate();
-		} catch (Throwable t) {
-			_logger.error("Error removing messages search records for user {}", username, t);
-			throw new RuntimeException("Error removing messages search records for user " + username, t);
-		} finally {
-			closeDaoResources(null, stat);
-		}
-	}
-
-	private void deleteUserMessagesAnswers(String username, Connection conn) throws ApsSystemException {
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(DELETE_USERMESSAGES_ANSWERS);
-			stat.setString(1, username);
-			stat.executeUpdate();
-		} catch (Throwable t) {
-			_logger.error("Error removing answers to messages of for user {}", username, t);
-			throw new RuntimeException("Error removing answers to messages of for user " + username, t);
-		} finally {
-			closeDaoResources(null, stat);
-		}
-	}
-
-	private void deleteMessageAnswers(String messageId, Connection conn) throws ApsSystemException {
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(DELETE_MESSAGE_ANSWERS);
-			stat.setString(1, messageId);
-			stat.executeUpdate();
-		} catch (Throwable t) {
-			_logger.error("Error removing answers to message {}", messageId, t);
-			throw new RuntimeException("Error removing answers to message " + messageId, t);
-		} finally {
-			closeDaoResources(null, stat);
-		}
-	}
-
+	
 	@Override
 	protected String getAddingSearchRecordQuery() {
 		return ADD_MESSAGE_SEARCH_RECORD;
@@ -259,6 +216,9 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 
 	private final String LOAD_ALL_MESSAGES_ID =
 		"SELECT messageid FROM jpwebdynamicform_messages";
+	
+	private final String LOAD_MESSAGES_BY_USERNAME =
+		LOAD_ALL_MESSAGES_ID + "  WHERE username = ?";
 
 	private final String LOAD_MESSAGE_VO =
 		"SELECT messageid, username, langcode, messagetype, creationdate, messagexml FROM jpwebdynamicform_messages WHERE messageid = ? ";
@@ -279,10 +239,13 @@ public class MessageDAO extends AbstractEntityDAO implements IMessageDAO {
 		"DELETE FROM jpwebdynamicform_messages WHERE username = ? ";
 	
 	private final String DELETE_USERMESSAGES_SEARCH_RECORD =
-		"DELETE FROM jpwebdynamicform_search WHERE messageid IN ( SELECT messageid FROM jpwebdynamicform_messages WHERE username = ? ) ";
+		"DELETE FROM jpwebdynamicform_search WHERE messageid IN ( " + LOAD_MESSAGES_BY_USERNAME + " ) ";
 	
 	private final String DELETE_USERMESSAGES_ANSWERS =
-		"DELETE FROM jpwebdynamicform_answers WHERE messageid IN ( SELECT messageid FROM jpwebdynamicform_messages WHERE username = ? ) ";
+		"DELETE FROM jpwebdynamicform_answers WHERE messageid IN ( " + LOAD_MESSAGES_BY_USERNAME + " ) ";
+	
+	private final String DELETE_USERMESSAGES_ROLES =
+		"DELETE FROM jpwebdynamicform_attroles WHERE messageid IN ( " + LOAD_MESSAGES_BY_USERNAME + " ) ";
 	
 	private final String ADD_ATTRIBUTE_ROLE_RECORD =
 		"INSERT INTO jpwebdynamicform_attroles (messageid, attrname, rolename) VALUES ( ? , ? , ? )";
