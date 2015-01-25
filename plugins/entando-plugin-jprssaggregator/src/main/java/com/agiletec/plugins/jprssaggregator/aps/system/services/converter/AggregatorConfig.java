@@ -24,7 +24,7 @@ package com.agiletec.plugins.jprssaggregator.aps.system.services.converter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 /**
  * This class stores the plugin's xml configuration 

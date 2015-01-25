@@ -47,8 +47,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
 import com.agiletec.plugins.jprssaggregator.aps.system.services.aggregator.ApsAggregatorItem;
 import com.rometools.rome.feed.synd.SyndEntry;
-import org.jdom2.Attribute;
-import org.jdom2.Element;
+import org.jdom.Attribute;
+import org.jdom.Element;
 
 /**
  * This class populates a {@link Content} from a {@link SyndEntryImpl} object
