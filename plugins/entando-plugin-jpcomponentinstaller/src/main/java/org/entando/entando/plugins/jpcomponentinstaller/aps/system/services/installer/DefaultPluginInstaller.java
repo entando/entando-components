@@ -143,10 +143,24 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         allFiles.addAll(pluginJarLibraries);
         allFiles.addAll(pluginSqlFiles);
         allFiles.addAll(pluginXmlFiles);
-        URLClassLoader cl = getURLClassLoader(allFiles.toArray(new File[0]), servletContext);
-        loadClasses((File[]) pluginJarLibraries.toArray(new File[0]), cl);
-        servletContext.setAttribute("componentInstallerCL-" + availableArtifact.getArtifactId(), cl);
-        
+        //The classloader's content is stored in servlet context and 
+        //updated every time so the classloader will eventually contain 
+        //the classes and resources of all the installed plugins
+        List<URL> urlList = (List<URL>) servletContext.getAttribute("pluginInstallerURLList");
+        if (urlList == null) {
+            urlList = new ArrayList<URL>();
+            servletContext.setAttribute("pluginInstallerURLList", urlList);
+        }
+        Set<File> jarSet = (Set<File>) servletContext.getAttribute("pluginInstallerJarSet");
+        if (jarSet == null) {
+            jarSet = new HashSet<File>();
+            servletContext.setAttribute("pluginInstallerJarSet", jarSet);
+        }
+        jarSet.addAll(pluginJarLibraries);
+        URLClassLoader cl = getURLClassLoader(urlList, allFiles.toArray(new File[0]), servletContext);
+        loadClasses(jarSet.toArray(new File[0]), cl);
+        servletContext.setAttribute("componentInstallerClassLoader", cl);
+
         //load plugin and dependencies contexts 
         File componentFile = this.getFileFromArtifactJar(tempArtifactRootDir, "component.xml");
         List<String> components = this.getDependencies(componentFile);
@@ -157,7 +171,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             String compName = componentPluginsDir.list()[0];
             components.add(compName);
         }
-       
+
         Properties properties = new Properties();
         properties.load(new FileInputStream(systemParamsFile));
 
@@ -416,9 +430,13 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             newContext.setConfigLocations(configLocations);
             newContext.refresh();
             newContext.setDisplayName(contextDisplayName);
-            if (!this.contextStored(contextDisplayName)) {
-                ctxList.add(newContext);
+            ClassPathXmlApplicationContext currentCtx = (ClassPathXmlApplicationContext)this.getStoredContext(contextDisplayName);
+            if (currentCtx != null) {
+                currentCtx.close();
+                ctxList.remove(currentCtx);
             }
+            ctxList.add(newContext);
+            
         } catch (Exception e) {
             _logger.error("Unexpected error loading application context: " + e.getMessage());
             e.printStackTrace();
@@ -429,23 +447,25 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         return newContext;
     }
 
-    private boolean contextStored(String contextDisplayName) {
+    private ApplicationContext getStoredContext(String contextDisplayName) {
         ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
         List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
         for (ClassPathXmlApplicationContext ctx : ctxList) {
             if (contextDisplayName.equals(ctx.getDisplayName())) {
-                return true;
+                return ctx;
             }
         }
-        return false;
+        return null;
     }
 
-    private URLClassLoader getURLClassLoader(File[] files, ServletContext servletContext) {
-        List<URL> urlList = (List<URL>) servletContext.getAttribute("pluginInstallerURLList");
-        if (urlList == null) {
-            urlList = new ArrayList<URL>();
-            servletContext.setAttribute("pluginInstallerURLList", urlList);
-        }
+    /**
+     * 
+     * @param files
+     * @param servletContext
+     * @return URLClassLoader
+     * 
+    */   
+    private URLClassLoader getURLClassLoader(List<URL> urlList, File[] files, ServletContext servletContext) {
         for (File input : files) {
             try {
                 if (!urlList.contains(input.toURI().toURL())) {

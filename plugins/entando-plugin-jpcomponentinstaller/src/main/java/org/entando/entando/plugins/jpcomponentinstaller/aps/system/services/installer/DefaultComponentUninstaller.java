@@ -79,13 +79,15 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
     @Override
     public boolean uninstallComponent(Component component) throws ApsSystemException {
         ServletContext servletContext = ((ConfigurableWebApplicationContext) _applicationContext).getServletContext();
-        ClassLoader cl = (ClassLoader) servletContext.getAttribute("componentInstallerCL-" + component.getArtifactId());
+        ClassLoader cl = (ClassLoader) servletContext.getAttribute("componentInstallerClassLoader");
         List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
         ClassPathXmlApplicationContext appCtx = null;
-        for (ClassPathXmlApplicationContext ctx : ctxList) {
-            if (component.getCode().equals(ctx.getDisplayName())) {
-                appCtx = ctx;
-            }
+        if (ctxList != null) {
+            for (ClassPathXmlApplicationContext ctx : ctxList) {
+                if (component.getCode().equals(ctx.getDisplayName())) {
+                    appCtx = ctx;
+                }
+            }            
         }
         String appRootPath = servletContext.getRealPath("/");
         String backupDirPath = appRootPath + "componentinstaller" + File.separator + component.getArtifactId() + "-backup";
@@ -93,7 +95,9 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
         try {
             ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
             try {
-                Thread.currentThread().setContextClassLoader(cl);
+                if (cl != null) {
+                    Thread.currentThread().setContextClassLoader(cl);                    
+                }
                 if (null == component || null == component.getUninstallerInfo()) {
                     return false;
                 }
