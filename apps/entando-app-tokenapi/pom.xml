@@ -2,15 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>entando-plugins-parent</artifactId>
-		<groupId>org.entando.entando.plugins</groupId>
+		<artifactId>entando-apps-parent</artifactId>
+		<groupId>org.entando.entando.apps</groupId>
 		<version>4.1.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>entando-plugin-jptokenapi</artifactId>
-	<groupId>org.entando.entando.plugins</groupId>
+	<artifactId>entando-app-tokenapi</artifactId>
+	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: Token API</name>
-	<description>The plugin allows entando users to use protected Entando APIs through self-generated tokens</description>
+	<name>Entando App: Token API</name>
+	<description>Token API APP</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
@@ -19,6 +19,7 @@
 		</developer>
 	</developers>
 	<url>http://www.entando.com/</url>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -51,4 +52,21 @@
 			</plugin>			
 		</plugins>
 	</build>
+	<dependencies>
+		
+		<dependency>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jptokenapi</artifactId>
+			<version>4.1.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+			<type>war</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.entando.entando.bundles.app-view</groupId>
+			<artifactId>entando-app-view-tokenapi-default</artifactId>
+			<version>4.1.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+			<type>war</type>
+		</dependency>
+		
+	</dependencies>
 </project>

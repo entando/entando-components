@@ -41,6 +41,7 @@
 		<module>entando-app-survey</module>
 		<module>entando-app-avatar</module>
 		<module>entando-app-cmstagcloud</module>
+		<module>entando-app-tokenapi</module>
 	</modules>
 	<properties>
 		<spring.version>4.0.6.RELEASE</spring.version>
