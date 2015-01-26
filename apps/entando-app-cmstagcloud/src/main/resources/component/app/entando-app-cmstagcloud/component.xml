@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-app-cmstagcloud</code>
+	<description>Tag Cloud APP</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
+	<dependencies>
+		<code>jpcmstagcloud</code>
+		<code>entando-app-view-cmstagcloud-default</code>
+	</dependencies>
+</component>
