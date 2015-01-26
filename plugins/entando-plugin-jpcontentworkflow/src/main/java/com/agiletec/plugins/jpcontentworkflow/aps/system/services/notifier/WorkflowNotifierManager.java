@@ -56,12 +56,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.aspectj.lang.ProceedingJoinPoint;
 
-import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.slf4j.Logger;
@@ -105,8 +103,8 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		}
 	}
 	
-	@Before("execution(* com.agiletec.plugins.jacms.aps.system.services.content.IContentManager.saveContent(..)) && args(content,..)")
-	public void listenContentSaving(Object content) {
+	@Around("execution(* com.agiletec.plugins.jacms.aps.system.services.content.IContentManager.saveContent(..)) && args(content,..)")
+	public void listenContentSaving(ProceedingJoinPoint pjp, Object content) {
 		try {
 			boolean notify = true;
 			Content currentContent = (Content) content;
@@ -117,6 +115,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 					notify = false;
 				}
 			}
+			pjp.proceed();
 			if (notify) {
 				this.saveContentStatusChanged(currentContent);
 			}
@@ -167,11 +166,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			}
 		}
 	}
-
-	/**
-	 * Apre lo scheduler istanziando il task relativo 
-	 * alla spedizione degli sms con i rilevamenti meteo.
-	 */
+	
 	protected void openScheduler() {
 		this.closeScheduler();
 		NotifierConfig notifierConfig = this.getWorkflowNotifierConfig();
@@ -284,14 +279,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		text.append(footer);
 		return text.toString();
 	}
-
-	/**
-	 * @param defaultText Il testo di partenza, contenente le stringhe da rimpiazzare secondo la sintassi {chiaveStringa}.
-	 * @param params La mappa dei parametri da rimpiazzare (solo il nome, esluse le { })<br />
-	 * ATTENZIONE: le chiavi non devono contenere caratteri speciali per le regular expressions.<br />
-	 * In tal caso vanno utilizzati i caratteri di escape.
-	 * @return Il testo con tutte le occorrenze delle parole chiave sostituite.
-	 */
+	
 	protected String replaceParams(String defaultText, Map<String, String> params) {
 		String body = defaultText;
 		Iterator<Entry<String, String>> it = params.entrySet().iterator();
