@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans xmlns="http://www.springframework.org/schema/beans" 
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:context="http://www.springframework.org/schema/context" 
+		xmlns:jee="http://www.springframework.org/schema/jee" 
 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
-    
-    <bean id="jpcomponentinstallerComponentCatalogueManager" 
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd" >
+	
+	<bean id="jpcomponentinstallerComponentCatalogueManager" 
               class="org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer.ComponentCatalogueManager" 
               parent="abstractService" >
     </bean>
     
     <bean id="jpcomponentinstallerPluginInstaller" class="org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer.DefaultPluginInstaller" >
+		<property name="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></property>
     </bean>
     
     <bean id="jpcomponentinstallerComponentUninstaller" class="org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer.DefaultComponentUninstaller" 

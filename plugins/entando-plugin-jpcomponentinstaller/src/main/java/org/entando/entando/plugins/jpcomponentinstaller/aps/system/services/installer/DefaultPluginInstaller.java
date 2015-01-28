@@ -21,7 +21,6 @@
  */
 package org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer;
 
-import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.BaseConfigManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
@@ -50,6 +49,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -67,11 +67,14 @@ import org.apache.tiles.impl.BasicTilesContainer;
 import org.entando.entando.aps.system.init.AbstractInitializerManager;
 import org.entando.entando.aps.system.init.ComponentManager;
 import org.entando.entando.aps.system.init.InitializerManager;
-import org.entando.entando.aps.system.init.model.Component;
+import org.entando.entando.aps.system.init.InstallationReportDAO;
+import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.plugins.jpcomponentinstaller.aps.TextProviderSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -84,7 +87,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * @author mcasari
+ * @author M.Casari
  */
 public class DefaultPluginInstaller extends AbstractInitializerManager implements IPluginInstaller, ApplicationContextAware {
 
@@ -107,9 +110,8 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             throw new ApsSystemException("Unexpected error during artifact installation", e);
         }
     }
-
+	
     private void installPlugin(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
-
         ServletContext servletContext = ((ConfigurableWebApplicationContext) this._applicationContext).getServletContext();
         String filename = availableArtifact.getGroupId() + "_" + availableArtifact.getArtifactId() + "_" + version + ".war";
         String artifactName = availableArtifact.getArtifactId();
@@ -163,6 +165,18 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
 
         //load plugin and dependencies contexts 
         File componentFile = this.getFileFromArtifactJar(tempArtifactRootDir, "component.xml");
+		String componentToInstallName = this.getComponentName(componentFile);
+		
+		
+		InitializerManager initializerManager = (InitializerManager) this._applicationContext.getBean("InitializerManager");
+		initializerManager.reloadCurrentReport();
+		SystemInstallationReport currentReport = initializerManager.getCurrentReport();
+		if (null != currentReport.getComponentReport(componentToInstallName, false)) {
+			currentReport.removeComponentReport(componentToInstallName);
+			this.saveReport(currentReport);
+			initializerManager.reloadCurrentReport();
+		}
+		
         List<String> components = this.getDependencies(componentFile);
         if (availableArtifact.getType() == AvailableArtifact.Type.PLUGIN) {
             File componentPluginsDir = new File(tempArtifactRootDir.getAbsolutePath()
@@ -177,6 +191,14 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
 
         for (String componentName : components) {
             List<String> configLocs = new ArrayList<String>();
+			InitializerManager currenInitializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
+			currentReport = currenInitializerManager.getCurrentReport();
+			ComponentInstallationReport cir = currentReport.getComponentReport(componentName, false);
+			if (null != cir && cir.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
+				currentReport.removeComponentReport(componentName);
+				currenInitializerManager.reloadCurrentReport();
+			}
+			
             configLocs.add("classpath*:spring/plugins/" + componentName + "/aps/**/**.xml");
             configLocs.add("classpath*:spring/plugins/" + componentName + "/apsadmin/**/**.xml");
             ClassPathXmlApplicationContext newContext = (ClassPathXmlApplicationContext) loadContext((String[]) configLocs.toArray(new String[0]), cl, componentName, properties);
@@ -185,8 +207,8 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             this.reloadResourcsBundles(newContext, servletContext);
             TilesContainer container = TilesAccess.getContainer(servletContext);
             this.reloadTilesDefinitions(tilesFiles, container);
-            InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
-            initializerManager.reloadCurrentReport();
+            
+            currenInitializerManager.reloadCurrentReport();
             ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
             ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
             try {
@@ -198,13 +220,12 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
                 Thread.currentThread().setContextClassLoader(currentClassLoader);
             }
         }
-
     }
-
+	
     private void installBundle(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
         this.installPlugin(availableArtifact, version, is);
     }
-
+	
     private void installApp(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
         this.installPlugin(availableArtifact, version, is);
     }
@@ -279,14 +300,13 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             _logger.debug("Trying to load resources @{}", cur);
             LocalizedTextUtil.addDefaultResourceBundle(cur + this.PLUGIN_RESOURCE_NAME);
         }
-        _logger.info("JapsPluginLabelListener summary: {} plugin detected ({} under development)", (classPlugins.size() + jaredPlugins.size()), classPlugins.size());
+        _logger.info("EntandoPluginLabelListener summary: {} plugin detected ({} under development)", (classPlugins.size() + jaredPlugins.size()), classPlugins.size());
     }
-
+	
     /**
-     * Discover the directories holding plugins within the classpath
-     *
+     * Discover the directories holding plugins within the classpath.
      * @param path the path where to start the search from
-     * @param event the servlet context event
+     * @param servletContext the servlet context event
      */
     private Set<String> discoverClasses(String path, ServletContext servletContext) {
         Set<String> plugins = new HashSet<String>();
@@ -338,7 +358,6 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
     /**
      * Fetch all the entries in the given (jar) input stream and look for the
      * plugin directory.
-     *
      * @param is the input stream to analyse
      */
     private Set<String> discoverJarPlugin(InputStream is) {
@@ -367,21 +386,17 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
     }
 
     private void loadClasses(File[] jarFiles, URLClassLoader cl) throws Exception {
-
         for (File input : jarFiles) {
             try {
                 //load classes from plugin's jar files using the classloader above
                 //loadClassesFromJar(input, cl);
-
                 JarFile jarFile = new JarFile(input.getAbsolutePath());
                 Enumeration e = jarFile.entries();
-
                 while (e.hasMoreElements()) {
                     JarEntry je = (JarEntry) e.nextElement();
                     if (je.isDirectory() || !je.getName().endsWith(".class")) {
                         continue;
                     }
-
                     String className = je.getName().substring(0, je.getName().length() - 6);
                     className = className.replace('/', '.');
                     try {
@@ -393,15 +408,14 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
                 }
             } catch (Throwable e) {
                 String error = "Unexpected error loading class for file: " + input.getName() + " - " + e.getMessage();
-                _logger.error(error);
+                _logger.error(error, e);
                 throw new Exception(error, e);
             }
         }
     }
-
+	
     private ApplicationContext loadContext(String[] configLocations, URLClassLoader cl, String contextDisplayName, Properties properties) throws Exception {
         ServletContext servletContext = ((ConfigurableWebApplicationContext) this._applicationContext).getServletContext();
-
         //if plugin's classes have been loaded we can go on
         List<ClassPathXmlApplicationContext> ctxList = (List<ClassPathXmlApplicationContext>) servletContext.getAttribute("pluginsContextsList");
         if (ctxList == null) {
@@ -457,14 +471,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         }
         return null;
     }
-
-    /**
-     * 
-     * @param files
-     * @param servletContext
-     * @return URLClassLoader
-     * 
-    */   
+	
     private URLClassLoader getURLClassLoader(List<URL> urlList, File[] files, ServletContext servletContext) {
         for (File input : files) {
             try {
@@ -504,7 +511,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             }
         }
     }
-
+	
     private File extractArtifactJar(File rootDir, String artifactId) throws ZipException, IOException {
         List<File> files = (List<File>) FileUtils.listFiles(rootDir, new String[]{"jar"}, true);
         File tempDir = null;
@@ -516,7 +523,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         }
         return tempDir;
     }
-
+	
     private File getFileFromArtifactJar(File rootDir, String fileName) throws ZipException, IOException {
         File resultFile = null;
         List<File> files = (List<File>) FileUtils.listFiles(rootDir, new String[]{"xml"}, true);
@@ -550,7 +557,36 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
         }
         return dependencies;
     }
-
+	
+	private String getComponentName(File file) throws SAXException, ParserConfigurationException, IOException {
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(file);
+		doc.getDocumentElement().normalize();
+		String code = null;
+		Node codeNode = doc.getElementsByTagName("code").item(0);
+		if (codeNode.getNodeType() == Node.ELEMENT_NODE) {
+			Element eElement = (Element) codeNode;
+			code = eElement.getTextContent();
+		}
+		return code;
+	}
+	
+	private void saveReport(SystemInstallationReport report) throws BeansException {
+		if (null == report || report.getReports().isEmpty()) {
+			return;
+		}
+		try {
+			InstallationReportDAO dao = new InstallationReportDAO();
+			DataSource dataSource = (DataSource) this.getBeanFactory().getBean("portDataSource");
+			dao.setDataSource(dataSource);
+			dao.saveConfigItem(report.toXml(), "production"/*this.getConfigVersion()*/);
+		} catch (Throwable t) {
+			_logger.error("Error saving report", t);
+			throw new FatalBeanException("Error saving report", t);
+		}
+	}
+	
     @Override
     public void setApplicationContext(ApplicationContext ac) throws BeansException {
         this._applicationContext = ac;

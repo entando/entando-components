@@ -272,11 +272,16 @@ public class InstallerAction extends BaseAction {
 			this.addActionError(this.getText("jpcomponentinstaller.error.component.uninstallable", args));
 			return "intro";
 		}
+		SystemInstallationReport report = this.getCurrentReport();
 		boolean hasDependencies = false;
 		StringBuilder builder = new StringBuilder();
 		List<Component> components = this.getComponentManager().getCurrentComponents();
 		for (int i = 0; i < components.size(); i++) {
 			Component installedComponent = components.get(i);
+			ComponentInstallationReport componentReport = report.getComponentReport(component.getCode(), false);
+			if (null != componentReport && componentReport.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
+				continue;
+			}
 			List<String> dependencies = installedComponent.getDependencies();
 			if (null == dependencies || !dependencies.contains(component.getCode())) {
 				continue;
