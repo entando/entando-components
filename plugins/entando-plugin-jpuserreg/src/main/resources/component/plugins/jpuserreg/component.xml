@@ -9,7 +9,6 @@
 	</artifact>
 	<dependencies>
 		<code>jpmail</code>
-		<code>jpuserprofile</code>
 	</dependencies>
 	<installation>
 		<tableMapping>

@@ -9,7 +9,6 @@
 	</artifact>
 	<dependencies>
 		<code>jacms</code>
-		<code>jpuserprofile</code>
 		<code>jpmail</code>
 	</dependencies>
 	<installation>
