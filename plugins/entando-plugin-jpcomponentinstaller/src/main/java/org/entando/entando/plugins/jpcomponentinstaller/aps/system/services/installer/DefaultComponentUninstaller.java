@@ -22,6 +22,7 @@
 package org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.FileTextReader;
 
 import java.io.InputStream;
@@ -29,10 +30,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.servlet.ServletContext;
 
 import javax.sql.DataSource;
@@ -171,18 +170,17 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                     appCtx.close();
                     ctxList.remove(appCtx);
                 }
-
                 InitializerManager initializerManager = (InitializerManager) _applicationContext.getBean("InitializerManager");
                 initializerManager.reloadCurrentReport();
                 ComponentManager componentManager = (ComponentManager) _applicationContext.getBean("ComponentManager");
                 componentManager.refresh();
-
             } catch (Exception e) {
+				_logger.error("Unexpected error in component uninstallation process", e);
                 throw new ApsSystemException("Unexpected error in component uninstallation process.", e);
             } finally {
                 Thread.currentThread().setContextClassLoader(currentClassLoader);
+				ApsWebApplicationUtils.executeSystemRefresh(servletContext);
             }
-
         } catch (Throwable t) {
             //restore files on temp folder
             try {
@@ -197,6 +195,7 @@ public class DefaultComponentUninstaller extends AbstractInitializerManager impl
                 }
             } catch (Exception e) {
             }
+			_logger.error("Unexpected error in component uninstallation process", t);
             throw new ApsSystemException("Unexpected error in component uninstallation process.", t);
         } finally {
             //clean temp folder

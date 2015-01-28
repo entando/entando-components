@@ -23,6 +23,7 @@ package org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.ins
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.BaseConfigManager;
+import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import java.io.File;
 import java.io.FileInputStream;
@@ -105,10 +106,17 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
             } else {
                 throw new ApsSystemException("Wrong artifact type value");
             }
-
         } catch (Exception e) {
             throw new ApsSystemException("Unexpected error during artifact installation", e);
-        }
+        } finally {
+			try {
+				ServletContext servletContext = ((ConfigurableWebApplicationContext) this._applicationContext).getServletContext();
+				ApsWebApplicationUtils.executeSystemRefresh(servletContext);
+			} catch (Throwable t) {
+				_logger.error("Error while reloading configuration", t);
+				throw new ApsSystemException("Error while reloading configuration", t);
+			}
+		}
     }
 	
     private void installPlugin(AvailableArtifact availableArtifact, String version, InputStream is) throws Exception {
