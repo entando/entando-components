@@ -196,6 +196,7 @@ public class DefaultPluginInstaller extends AbstractInitializerManager implement
 			ComponentInstallationReport cir = currentReport.getComponentReport(componentName, false);
 			if (null != cir && cir.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
 				currentReport.removeComponentReport(componentName);
+				this.saveReport(currentReport);
 				currenInitializerManager.reloadCurrentReport();
 			}
 			

@@ -26,8 +26,8 @@ import com.agiletec.apsadmin.system.BaseAction;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.init.IInitializerManager;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
@@ -278,12 +278,12 @@ public class InstallerAction extends BaseAction {
 		List<Component> components = this.getComponentManager().getCurrentComponents();
 		for (int i = 0; i < components.size(); i++) {
 			Component installedComponent = components.get(i);
-			ComponentInstallationReport componentReport = report.getComponentReport(component.getCode(), false);
-			if (null != componentReport && componentReport.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
-				continue;
-			}
 			List<String> dependencies = installedComponent.getDependencies();
 			if (null == dependencies || !dependencies.contains(component.getCode())) {
+				continue;
+			}
+			ComponentInstallationReport installedComponentReport = report.getComponentReport(installedComponent.getCode(), false);
+			if (null != installedComponentReport && installedComponentReport.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
 				continue;
 			}
 			if (hasDependencies) {
