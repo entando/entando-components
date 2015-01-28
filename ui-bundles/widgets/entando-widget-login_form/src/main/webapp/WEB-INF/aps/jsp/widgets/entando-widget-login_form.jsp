@@ -17,7 +17,7 @@
 						<%--
 						<div class="divider"></div>
 						<p>
-							<a href="<wp:url page="profile" />"><span class="icon-user"></span> <wp:i18n key="jpuserprofile_EDITPROFILE_TITLE" /></a>
+							<a href="<wp:url page="profile" />"><span class="icon-user"></span> <wp:i18n key="userprofile_EDITPROFILE_TITLE" /></a>
 						</p>
 						--%>
 						<wp:ifauthorized permission="enterBackend">

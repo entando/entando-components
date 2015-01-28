@@ -7,9 +7,6 @@
 		<groupId>${project.groupId}</groupId>
 		<version>${project.version}</version>
 	</artifact>
-	<dependencies>
-		<code>jpuserprofile</code>
-	</dependencies>
 	<installation>
 		<tableMapping>
 			<datasource name="servDataSource">

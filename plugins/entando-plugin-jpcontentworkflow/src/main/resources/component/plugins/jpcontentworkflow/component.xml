@@ -10,7 +10,6 @@
 	<dependencies>
 		<code>jacms</code>
 		<code>jpmail</code>
-		<code>jpuserprofile</code>
 	</dependencies>
 	<installation>
 		<tableMapping>
