@@ -58,7 +58,6 @@ import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jpmail.aps.services.mail.IMailManager;
-import com.agiletec.plugins.jpuserprofile.aps.system.services.ProfileSystemConstants;
 import com.agiletec.plugins.jpuserreg.aps.JpUserRegSystemConstants;
 import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.model.IUserRegConfig;
 import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.model.Template;
@@ -343,9 +342,9 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 	protected Map<String, String> prepareMailParams(IUserProfile profile, String token, String pageCode) {
 		Map<String, String> params = new HashMap<String, String>();
 		
-		String name = this.getFieldValue(profile, ProfileSystemConstants.ATTRIBUTE_ROLE_FIRST_NAME);
+		String name = this.getFieldValue(profile, SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FIRST_NAME);
 		params.put("name", name!=null ? name : "");
-		String surname = this.getFieldValue(profile, ProfileSystemConstants.ATTRIBUTE_ROLE_SURNAME);
+		String surname = this.getFieldValue(profile, SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_SURNAME);
 		params.put("surname", surname!=null ? surname : "");
 		
 		String fullname = this.getFieldValue(profile, SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME);
