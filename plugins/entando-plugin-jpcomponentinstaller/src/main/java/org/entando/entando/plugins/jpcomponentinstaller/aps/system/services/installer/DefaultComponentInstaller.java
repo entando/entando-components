@@ -90,9 +90,9 @@ import org.xml.sax.SAXException;
 /**
  * @author M.Casari
  */
-public class DefaultPluginInstaller extends AbstractInitializerManager implements IPluginInstaller, ApplicationContextAware {
+public class DefaultComponentInstaller extends AbstractInitializerManager implements IComponentInstaller, ApplicationContextAware {
 
-    private static final Logger _logger = LoggerFactory.getLogger(DefaultPluginInstaller.class);
+    private static final Logger _logger = LoggerFactory.getLogger(DefaultComponentInstaller.class);
 
     @Override
     public void install(AvailableArtifact availableArtifact, String version, InputStream is) throws ApsSystemException {

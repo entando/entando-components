@@ -12,7 +12,7 @@
               parent="abstractService" >
     </bean>
     
-    <bean id="jpcomponentinstallerPluginInstaller" class="org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer.DefaultPluginInstaller" >
+    <bean id="jpcomponentinstallerComponentInstaller" class="org.entando.entando.plugins.jpcomponentinstaller.aps.system.services.installer.DefaultComponentInstaller" >
 		<property name="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></property>
     </bean>
     
@@ -33,7 +33,7 @@
         <property name="configManager" ref="BaseConfigManager" />
         <property name="storageManager" ref="StorageManager" />
         <property name="componentManager" ref="ComponentManager" />
-        <property name="pluginInstaller" ref="jpcomponentinstallerPluginInstaller" />
+        <property name="componentInstaller" ref="jpcomponentinstallerComponentInstaller" />
 		<property name="componentUninstaller" ref="jpcomponentinstallerComponentUninstaller" />
     </bean>
 	

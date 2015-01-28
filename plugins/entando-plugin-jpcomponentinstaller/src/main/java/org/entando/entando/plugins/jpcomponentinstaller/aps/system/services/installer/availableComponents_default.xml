@@ -46,17 +46,12 @@
 		</artifact>
 		-->
 		<artifact>
-			<description>User Profile</description>
-			<groupId>org.entando.entando.plugins</groupId>
-			<artifactId>entando-plugin-jpuserprofile</artifactId>
-		</artifact>
-		<artifact>
 			<description>User Registration</description>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpuserreg</artifactId>
 		</artifact>
 		<artifact>
-			<description>Web Form (Community)</description>
+			<description>Web Dynamic Forms</description>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpwebdynamicform</artifactId>
 		</artifact>
@@ -306,7 +301,7 @@
 				<artifactId>entando-app-view-userreg-default</artifactId>
 			</artifact>
 			<artifact>
-				<description>Web Form (Community) - default</description>
+				<description>Web Dynamic Forms - default</description>
 				<groupId>org.entando.entando.bundles.app-view</groupId>
 				<artifactId>entando-app-view-webdynamicform-default</artifactId>
 			</artifact>

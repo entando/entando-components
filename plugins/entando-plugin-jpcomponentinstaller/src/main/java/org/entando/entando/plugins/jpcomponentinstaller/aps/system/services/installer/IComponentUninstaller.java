@@ -26,7 +26,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.aps.system.init.model.Component;
 
 /**
- * @author E.Santoboni
+ * @author M.Casari - E.Santoboni
  */
 public interface IComponentUninstaller {
 	

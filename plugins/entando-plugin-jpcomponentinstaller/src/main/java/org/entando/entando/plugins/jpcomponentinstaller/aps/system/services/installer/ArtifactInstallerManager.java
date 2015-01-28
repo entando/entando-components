@@ -170,7 +170,7 @@ public class ArtifactInstallerManager extends AbstractService implements IArtifa
 				return false;
 			}
             InputStream is = this.getStorageManager().getStream(filename, true);
-            this.getPluginInstaller().install(aa, version, is);
+            this.getComponentInstaller().install(aa, version, is);
 			return true;
 		} catch (Throwable t) {
 			aa = (null != aa) ? aa : new AvailableArtifact();
@@ -298,19 +298,19 @@ public class ArtifactInstallerManager extends AbstractService implements IArtifa
 	public void setComponentManager(IComponentManager componentManager) {
 		this._componentManager = componentManager;
 	}
-    
-    protected IPluginInstaller getPluginInstaller() {
-        return _pluginInstaller;
-    }
-    public void setPluginInstaller(IPluginInstaller pluginInstaller) {
-        this._pluginInstaller = pluginInstaller;
-    }
 	
+	protected IComponentInstaller getComponentInstaller() {
+		return _componentInstaller;
+	}
+	public void setComponentInstaller(IComponentInstaller componentInstaller) {
+		this._componentInstaller = componentInstaller;
+	}
+    
 	private IStorageManager _storageManager;
 	private ConfigInterface _configManager;
 	private IComponentCatalogueManager _componentCatalogueManager;
 	private IComponentUninstaller _componentUninstaller;
 	private IComponentManager _componentManager;
-    private IPluginInstaller _pluginInstaller;
+    private IComponentInstaller _componentInstaller;
 	
 }
