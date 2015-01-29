@@ -20,11 +20,16 @@ all Entando extensions ready to use just now:
 
 3. ```ui-bundles``` module, including all Bundles.
 
-To create a new Entando component, for example a new Plugin, you have to use the Entando archetype for plugin. 
+To create a new Entando component, for example a new Plugin, you have to use the Entando archetype for plugin: https://github.com/entando/entando-archetypes.
+
+Regarding the App, currently a related archetype is not available. An App is a component that has the pom.xml file where you can set the dependencies with the appropriate Plugin and Bundle for the view.
+Shortly, the archetype for App components will be create.
+
 
 ```entando-components``` depends strictly on ```entando-core``` and ```entando-archetypes```.
 
-Entando core and Entando archetypes are Open Source projects; more information about them can be found respectively in https://github.com/entando/entando-core and 
+Entando core and Entando archetypes are Open Source projects; more information about them can be found respectively in 
+https://github.com/entando/entando-core and 
 https://github.com/entando/entando-archetypes.
 
 For latest updated news, please visit the company websites: http://www.entando.com.
