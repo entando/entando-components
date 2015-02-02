@@ -35,4 +35,5 @@ classpath:sql/bundles/entando-app-view-rss-default/serv_uninstallation.sql
 		<resources>
 			<resource>WEB-INF/plugins/jprss/aps/</resource>
 		</resources>
+	</uninstallation>
 </component>
