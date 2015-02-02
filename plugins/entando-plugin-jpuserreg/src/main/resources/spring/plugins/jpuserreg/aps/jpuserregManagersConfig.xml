@@ -27,7 +27,7 @@
 		</property>
 	</bean>
 	
-	<bean id="jpuserregAttributeDisablingCodesLoader" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeRolesWrapper">
+	<bean id="jpuserregAttributeDisablingCodesLoader" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeDisablingCodesWrapper">
 		<property name="entityManagerNameDest"><value>UserProfileManager</value></property>
 		<property name="defsFilePath"><value>/WEB-INF/plugins/jpuserreg/attributeDisablingCodes.xml</value></property>
 	</bean>
