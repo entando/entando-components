@@ -18,23 +18,16 @@
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
     	
-    	<action name="addGroup*" class="jpuserregUserRegConfigAction" method="addGroup">
+		<action name="addAuthorization*" class="jpuserregUserRegConfigAction" method="addAuthorization">
             <result type="tiles">admin.jpuserreg.UserReg.Config.entry</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
     	</action>
-    	<action name="removeGroup*" class="jpuserregUserRegConfigAction" method="removeGroup">
+		
+    	<action name="removeAuthorization*" class="jpuserregUserRegConfigAction" method="removeAuthorization">
             <result type="tiles">admin.jpuserreg.UserReg.Config.entry</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
     	</action>
-    	<action name="addRole*" class="jpuserregUserRegConfigAction" method="addRole">
-            <result type="tiles">admin.jpuserreg.UserReg.Config.entry</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
-    	</action>
-    	<action name="removeRole*" class="jpuserregUserRegConfigAction" method="removeRole">
-            <result type="tiles">admin.jpuserreg.UserReg.Config.entry</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
-    	</action>
-    	
+		
     </package>
     
 </struts>
