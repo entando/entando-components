@@ -143,7 +143,7 @@ public class UserRegConfig implements IUserRegConfig, Cloneable {
 	private String _activationPageCode;
 	private String _reactivationPageCode;
 	
-	private Set<String> _defaultCsvAuthorizations;
+	private Set<String> _defaultCsvAuthorizations = new HashSet<String>();
 	
 	private Map<String, Template> _activationTemplates = new HashMap<String, Template>();
 	private Map<String, Template> _reactivationTemplates = new HashMap<String, Template>();

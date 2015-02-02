@@ -19,8 +19,8 @@
 					<s:iterator value="fieldErrors">
 						<s:iterator value="value">
 							<li><s:property/></li>
-							</s:iterator>
 						</s:iterator>
+					</s:iterator>
 				</ul>
 			</div>
 		</s:if>
@@ -71,30 +71,29 @@
 				</wpsf:select>
 			</div>
 		</fieldset>
-		
+
 		<fieldset class="col-xs-12">
 			<legend><s:text name="jpuserreg.defaultAuthorizations" /></legend>
-			
+
 			<div class="form-group">
 				<div class="col-xs-12">
 					<label for="userGroup"><s:text name="jpuserreg.label.userGroup" /></label>
-					<wpsf:select id="userGroup" name="groupName" list="groups" 
-						listKey="name" listValue="description" cssClass="form-control" />
+					<wpsf:select id="userGroup" name="groupName" list="systemGroups" 
+								 listKey="name" listValue="description" cssClass="form-control" />
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-xs-12">
 					<label for="userRole"><s:text name="jpuserreg.label.userRole" /></label>
-					<wpsf:select id="userRole" name="roleName" list="roles" 
-						headerKey="" headerValue="" 
-						listKey="name" listValue="description" cssClass="form-control" />
+					<wpsf:select id="userRole" name="roleName" list="systemRoles" 
+								 headerKey="" headerValue="" 
+								 listKey="name" listValue="description" cssClass="form-control" />
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-xs-12">
 					<span class="input-group-btn">
-						<wpsa:actionParam action="addAuthorization" var="actionName" />
-						<wpsf:submit type="button" action="%{#actionName}" cssClass="btn btn-info">
+						<wpsf:submit type="button" action="addAuthorization" cssClass="btn btn-info">
 							<span class="icon fa fa-plus"></span>
 							<s:text name="jpuserreg.label.addAuthorization"></s:text>
 						</wpsf:submit>
@@ -102,9 +101,9 @@
 				</div>
 				&#32;
 			</div>
-			
+
 			<p><s:text name="jpuserreg.note.authorizationsList" /></p>
-			
+
 			<s:set var="userCvsAuthorizationsVar" value="%{config.defaultCsvAuthorizations}" />
 			<s:if test="%{#userCvsAuthorizationsVar.size()>0}">
 				<div class="table-responsive">
@@ -134,15 +133,15 @@
 										<s:property value="#groupVar.description" />&#32;<code><s:property value="#groupVar.name" /></code>
 									</s:if>
 									<s:else><code>&ndash;</code></s:else>
-								</td>
-								<td>
+									</td>
+									<td>
 									<s:set var="roleVar" value="%{getRole(#userCvsAuthorizationParamsVar[1])}" />
 									<s:if test="null != #roleVar">
 										<s:property value="#roleVar.description" />&#32;<code><s:property value="#roleVar.name" /></code>
 									</s:if>
 									<s:else><code>&ndash;</code></s:else>
-								</td>
-							</tr>
+									</td>
+								</tr>
 						</s:iterator>
 					</table>
 				</div>
@@ -151,7 +150,7 @@
 				<p><s:text name="jpuserreg.note.userAuthorizations.empty" /></p>
 			</s:else>
 		</fieldset>
-		
+
 		<fieldset class="col-xs-12">
 			<legend><s:text name="jpuserreg.activation" /></legend>
 
@@ -184,7 +183,7 @@
 				<wpsf:select name="config.activationPageCode" id="activationPageCode" 
 							 list="%{activationPages}" listKey="code" listValue="%{getShortFullTitle(currentLang.code)}" cssClass="form-control" />
 			</div>
-			
+
 			<s:iterator var="lang" value="langs" > 
 				<s:set var="template" value="%{config.activationTemplates.get(#lang.code)}" />
 				<div class="form-group">
@@ -236,7 +235,7 @@
 				<wpsf:select name="config.reactivationPageCode" id="reactivationPageCode" 
 							 list="%{reactivationPages}" listKey="code" listValue="%{getShortFullTitle(currentLang.code)}" cssClass="form-control" />
 			</div>
-			
+
 			<s:iterator var="lang" value="langs">
 				<s:set var="template" value="%{config.reactivationTemplates.get(#lang.code)}" />
 				<div class="form-group">
