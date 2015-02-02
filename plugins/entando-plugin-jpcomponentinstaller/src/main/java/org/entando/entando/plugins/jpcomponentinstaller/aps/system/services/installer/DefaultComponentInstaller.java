@@ -171,6 +171,7 @@ public class DefaultComponentInstaller extends AbstractInitializerManager implem
         URLClassLoader cl = getURLClassLoader(urlList, allFiles.toArray(new File[0]), servletContext);
         loadClasses(jarSet.toArray(new File[0]), cl);
         servletContext.setAttribute("componentInstallerClassLoader", cl);
+        ComponentManager.setComponentInstallerClassLoader(cl);
 
         //load plugin and dependencies contexts 
         File componentFile = this.getFileFromArtifactJar(tempArtifactRootDir, "component.xml");
