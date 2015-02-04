@@ -49,20 +49,57 @@
 --%>
 <div id="main" role="main">
 	
+	<fieldset>
+		<legend><s:text name="jpcomponentinstaller.title.newComponent" /></span></legend>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<p class="sr-only"><s:text name="jpcomponentinstaller.note.chooseAComponent" /></p>
+				<s:form action="chooseVersion">
+					<div class="form-group margin-base-vertical">
+						<label for="availableComponent" class="sr-only"><s:text name="jpcomponentinstaller.title.chooseAComponent" /></label>
+						<div class="input-group">
+							<span class="input-group-addon" title="<s:text name="jpcomponentinstaller.title.chooseAComponent" />">
+								<span class="icon fa fa-puzzle-piece"></span>
+							</span>
+							<select name="availableArtifactId" id="artifactCode" class="form-control">
+								<wpsa:set var="tmpAvailableComponentVar">tmpAvailableComponentValue</wpsa:set>
+								<s:iterator var="availableComponentVar" value="availableComponents">
+									<s:if test="#availableComponentVar.optgroup != #tmpAvailableComponentVar">
+									</optgroup>
+									<optgroup label="<s:property value="#availableComponentVar.optgroup" />">
+									</s:if>
+									<option value="<s:property value="#availableComponentVar.key" />"><s:property value="#availableComponentVar.value" /></option>
+									<wpsa:set var="tmpAvailableComponentVar"><s:property value="#availableComponentVar.optgroup" /></wpsa:set>
+								</s:iterator>
+								</optgroup>
+							</select>
+							<span class="input-group-btn">
+								<wpsf:submit type="button" cssClass="btn btn-success">
+									<span class="icon fa fa-check"></span>&#32;
+									<s:text name="label.install" />
+								</wpsf:submit>
+							</span>
+						</div>
+					</div>
+				</s:form>
+			</div>
+		</div>
+	</fieldset>
+	
 	<s:set var="currentReportVar" value="currentReport" />
 	
 	<fieldset class="margin-large-top">
-	<legend data-toggle="collapse" data-target="#installed-components"><s:text name="jpcomponentinstaller.title.installedComponents" />&#32;<span class="icon fa fa-chevron-down"></span></legend>
+		<legend <%--data-toggle="collapse" data-target="#installed-components"--%>><s:text name="jpcomponentinstaller.title.installedComponents" /><%--&#32;<span class="icon fa fa-chevron-down"></span>--%></legend>
 	
-	<div class="collapse" id="installed-components">
-		
+	<%-- <div class="collapse" id="installed-components"> --%>
+		<%--
 		CREATION: <s:date name="#currentReportVar.creation" format="dd/MMMM/yyyy HH:mm" />
 		<br />
 		LAST UPDATE: <s:date name="#currentReportVar.lastUpdate" format="dd/MMMM/yyyy HH:mm" />
 		<br />
 		STATUS: <s:property value="#currentReportVar.status" />
 		<br />
-		
+		--%>
 		<table class="table table-bordered table-hover table-condensed table-striped">
 			<tr>
 				<th class="text-center"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
@@ -103,44 +140,7 @@
 			</tr>
 			</s:iterator>
 		</table>
-	</div>
-	</fieldset>
-	
-	<fieldset>
-		<legend><s:text name="jpcomponentinstaller.title.newComponent" /></span></legend>
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<p class="sr-only"><s:text name="jpcomponentinstaller.note.chooseAComponent" /></p>
-				<s:form action="chooseVersion">
-					<div class="form-group margin-base-vertical">
-						<label for="availableComponent" class="sr-only"><s:text name="jpcomponentinstaller.title.chooseAComponent" /></label>
-						<div class="input-group">
-							<span class="input-group-addon" title="<s:text name="jpcomponentinstaller.title.chooseAComponent" />">
-								<span class="icon fa fa-puzzle-piece"></span>
-							</span>
-							<select name="availableArtifactId" id="artifactCode" class="form-control">
-								<wpsa:set var="tmpAvailableComponentVar">tmpAvailableComponentValue</wpsa:set>
-								<s:iterator var="availableComponentVar" value="availableComponents">
-									<s:if test="#availableComponentVar.optgroup != #tmpAvailableComponentVar">
-									</optgroup>
-									<optgroup label="<s:property value="#availableComponentVar.optgroup" />">
-									</s:if>
-									<option value="<s:property value="#availableComponentVar.key" />"><s:property value="#availableComponentVar.value" /></option>
-									<wpsa:set var="tmpAvailableComponentVar"><s:property value="#availableComponentVar.optgroup" /></wpsa:set>
-								</s:iterator>
-								</optgroup>
-							</select>
-							<span class="input-group-btn">
-								<wpsf:submit type="button" cssClass="btn btn-success">
-									<span class="icon fa fa-check"></span>&#32;
-									<s:text name="label.install" />
-								</wpsf:submit>
-							</span>
-						</div>
-					</div>
-				</s:form>
-			</div>
-		</div>
+	<%-- </div> --%>
 	</fieldset>
 	
 </div>
