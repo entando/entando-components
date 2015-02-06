@@ -194,11 +194,6 @@
 		<p><s:text name="jpnewsletter.subscription.help1" /></p>
 		
 		<p>
-			<label for="jpnewsletter_emailmapping" class="basic-mint-label"><s:text name="jpnewsletter.mapping.email.profile" />:</label>
-			<wpsf:select useTabindexAutoIncrement="true" id="jpnewsletter_emailmapping" name="newsletterConfig.mailAttrName" list="defaultProfile.attributeList" listKey="name" listValue="name" />
-		</p>
-		
-		<p>
 			<label for="jpnewsletter_subscription_attr" class="basic-mint-label"><s:text name="jpnewsletter.mapping.subscription.preference" />:</label>
 			<wpsf:select useTabindexAutoIncrement="true" id="jpnewsletter_subscription_attr" name="newsletterConfig.allContentsAttributeName" list="booleanProfileAttributes" listKey="name" listValue="name" />
 		</p>

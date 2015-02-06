@@ -28,9 +28,8 @@ import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Ne
 /**
  * @author E.Santoboni
  */
-public class ContentTypeConfigAction extends AbstractNewsletterConfigAction implements IContentTypeConfigAction {
+public class ContentTypeConfigAction extends AbstractNewsletterConfigAction {
 	
-	@Override
 	public String addContentTypeConfig() {
 		try {
 			NewsletterConfig config = this.getNewsletterConfig();

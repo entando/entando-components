@@ -38,9 +38,8 @@ import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Ne
 /**
  * @author E.Santoboni
  */
-public class NewsletterAction extends BaseAction implements INewsletterAction {
+public class NewsletterAction extends BaseAction {
 	
-	@Override
 	public String entry() {
 		try {
 			Content content = this.getContent();

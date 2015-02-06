@@ -5,7 +5,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jpne
 		<subscription categoryCode="diritto_penale" attributeName="NewsletterDirittoPenale" />
 	</subscriptions>
 	<contentTypes />
-	<mail alsoHtml="true" senderCode="CODE1" mailAttrName="email" >
+	<mail alsoHtml="true" senderCode="CODE1" >
 		<subject><![CDATA[Newsletter]]></subject>
 		<htmlHeader><![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

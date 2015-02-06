@@ -57,7 +57,6 @@ public class ApsPluginBaseTestCase extends BaseTestCase {
 	public NewsletterConfig createNewsletterConfig() {
 		NewsletterConfig config = new NewsletterConfig();
 		config.setSenderCode("senderCode");
-		config.setMailAttrName("mailAttrName");
 		config.setAlsoHtml(false);
 		config.setUnsubscriptionPageCode("newsletter_unsubscribe");
 		config.setSubject("subject");
@@ -94,7 +93,6 @@ public class ApsPluginBaseTestCase extends BaseTestCase {
 	
 	public void compareConfigs(NewsletterConfig conf1, NewsletterConfig conf2) {
 		assertEquals(conf1.getSenderCode(), conf2.getSenderCode());
-		assertEquals(conf1.getMailAttrName(), conf2.getMailAttrName());
 		assertEquals(conf1.isAlsoHtml(), conf2.isAlsoHtml());
 		assertEquals(conf1.getUnsubscriptionPageCode(), conf2.getUnsubscriptionPageCode());
 		assertEquals(conf1.getSubject(), conf2.getSubject());
@@ -147,7 +145,6 @@ public class ApsPluginBaseTestCase extends BaseTestCase {
 		assertEquals(3, contentType.getHtmlModel());
 		
 		assertEquals("CODE1", config.getSenderCode());
-		assertEquals("email", config.getMailAttrName());
 		assertEquals(true, config.isAlsoHtml());
 		assertEquals("Oggetto della mail", config.getSubject());
 		

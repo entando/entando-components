@@ -45,9 +45,8 @@ import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 /**
  * @author E.Santoboni
  */
-public class NewsletterConfigAction extends AbstractNewsletterConfigAction implements INewsletterConfigAction {
-
-	@Override
+public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
+	
 	public String edit() {
 		try {
 			NewsletterConfig config = this.getNewsletterManager().getNewsletterConfig();
@@ -59,8 +58,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction imple
 		}
 		return SUCCESS;
 	}
-
-	@Override
+	
 	public String entryConfig() {
 		try {
 			NewsletterConfig config = this.getNewsletterConfig();
@@ -75,8 +73,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction imple
 		}
 		return SUCCESS;
 	}
-
-	@Override
+	
 	public String addCategoryMapping() {
 		this.updateConfigOnSession();
 		try {
@@ -104,7 +101,6 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction imple
 		return SUCCESS;
 	}
 
-	@Override
 	public String removeCategoryMapping() {
 		this.updateConfigOnSession();
 		try {
@@ -118,7 +114,6 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction imple
 		return SUCCESS;
 	}
 
-	@Override
 	public String addContentType() {
 		this.updateConfigOnSession();
 		try {
@@ -137,7 +132,6 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction imple
 		return SUCCESS;
 	}
 
-	@Override
 	public String removeContentType() {
 		this.updateConfigOnSession();
 		try {
@@ -150,7 +144,6 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction imple
 		return SUCCESS;
 	}
 
-	@Override
 	public String save() {
 		this.updateConfigOnSession();
 		try {
@@ -200,10 +193,6 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction imple
 		}
 	}
 	
-	/**
-	 * Restituisce la lista di categorie definite nel sistema.
-	 * @return La lista di categorie definite nel sistema.
-	 */
 	public List<Category> getCategories() {
 		return this.getCategoryManager().getCategoriesList();
 	}
@@ -233,7 +222,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction imple
 	}
 
 	public Boolean getActiveService() {
-		if (null == this._activeService) return new Boolean(false);
+		if (null == this._activeService) return false;
 		return _activeService;
 	}
 	public void setActiveService(Boolean activeService) {
@@ -241,7 +230,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction imple
 	}
 
 	public Boolean getAlsoHtml() {
-		if (null == this._alsoHtml) return new Boolean(false);
+		if (null == this._alsoHtml) return false;
 		return _alsoHtml;
 	}
 	public void setAlsoHtml(Boolean alsoHtml) {

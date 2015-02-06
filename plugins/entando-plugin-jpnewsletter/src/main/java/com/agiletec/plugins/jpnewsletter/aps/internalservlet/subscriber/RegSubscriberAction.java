@@ -26,9 +26,8 @@ import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.INewsletterManager;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Subscriber;
 
-public class RegSubscriberAction extends BaseAction implements IRegSubscriberAction {
+public class RegSubscriberAction extends BaseAction {
 	
-	@Override
 	public String addSubscription() {
 		try {
 			String mailAddress = this.getMailAddress();
@@ -48,7 +47,6 @@ public class RegSubscriberAction extends BaseAction implements IRegSubscriberAct
 		return SUCCESS;
 	}
 	
-	@Override
 	public String activateSubscription() {
 		try {
 			String token = this.getToken();
@@ -93,12 +91,10 @@ public class RegSubscriberAction extends BaseAction implements IRegSubscriberAct
 		return isAlreadyAnUser;
 	}
 	
-	@Override
 	public String trashSubscription() {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String deleteSubscription() {
 		try {
 			INewsletterManager newsletterManager = this.getNewsletterManager();
