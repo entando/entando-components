@@ -36,7 +36,7 @@ import com.agiletec.plugins.jpmail.aps.services.mail.util.EmailAddressValidator;
  * The saving action doesn't save the sender permanently but only in a session object, so must be followed by save operation in MailConfigAction.
  * @author E.Mezzano
  */
-public class MailSenderConfigAction extends BaseAction implements IMailSenderConfigAction {
+public class MailSenderConfigAction extends BaseAction {
 	
 	@Override
 	public void validate() {
@@ -59,13 +59,11 @@ public class MailSenderConfigAction extends BaseAction implements IMailSenderCon
 		}
 	}
 	
-	@Override
 	public String newSender() {
 		this.setStrutsAction(ApsAdminSystemConstants.ADD);
 		return SUCCESS;
 	}
 	
-	@Override
 	public String edit() {
 		try {
 			MailConfig config = this.getConfig();
@@ -85,7 +83,6 @@ public class MailSenderConfigAction extends BaseAction implements IMailSenderCon
 		return SUCCESS;
 	}
 	
-	@Override
 	public String save() {
 		try {
 			MailConfig config = this.prepareConfig();
@@ -97,7 +94,6 @@ public class MailSenderConfigAction extends BaseAction implements IMailSenderCon
 		return SUCCESS;
 	}
 	
-	@Override
 	public String trash() {
 		try {
 			MailConfig config = this.getConfig();
@@ -113,7 +109,6 @@ public class MailSenderConfigAction extends BaseAction implements IMailSenderCon
 		return SUCCESS;
 	}
 	
-	@Override
 	public String delete() {
 		try {
 			MailConfig config = this.getConfig();

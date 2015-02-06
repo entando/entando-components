@@ -21,12 +21,8 @@
         </action>
 		
     	<action name="testSmtp" class="jpmailSmtpConfigAction" method="testSmtp">
-            <result name="input" type="dispatcher">
-				/WEB-INF/plugins/jpmail/apsadmin/jsp/mail/inc/smtp-messages.jsp
-			</result>
-        	<result type="dispatcher">
-				/WEB-INF/plugins/jpmail/apsadmin/jsp/mail/inc/smtp-messages.jsp
-			</result>
+            <result name="input" type="dispatcher">/WEB-INF/plugins/jpmail/apsadmin/jsp/mail/inc/smtp-messages.jsp</result>
+        	<result type="dispatcher">/WEB-INF/plugins/jpmail/apsadmin/jsp/mail/inc/smtp-messages.jsp</result>
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
 		
