@@ -210,7 +210,8 @@
 		
 		<p>
 			<label for="jpnewsletter.subscriptors_confirm_tokenValidity" class="basic-mint-label"><s:text name="jpnewsletter.email.tokenValidity" />:</label>
-			<wpsf:textfield useTabindexAutoIncrement="true" id="jpnewsletter.subscriptors_confirm_tokenValidity" name="newsletterConfig.subscriptionTokenValidityDays" cssClass="text" />
+			<wpsf:select id="jpnewsletter.subscriptors_confirm_tokenValidity" name="newsletterConfig.subscriptionTokenValidityDays"
+							list="#{1:1,2:2,5:5,10:10,15:15,20:20}" />
 		</p>
 		<p>
 			<label for="jpnewsletter.subscriptors_confirm_subject" class="basic-mint-label"><s:text name="jpnewsletter.email.subject" />:</label>
