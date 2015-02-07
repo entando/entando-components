@@ -24,7 +24,7 @@
 
 <body>
 
-	<div class="navbar navbar-fixed-top">
+	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
 				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -143,35 +143,31 @@
 					</div>
 				</div>
 			</div>
+		</div>
 	</div> <!-- /container -->
-
-
-		<footer class="padding-medium-top">
-
-			<div class="container">
-				<div class="row margin-medium-bottom">
-					<div class="span12">
-						<wp:show frame="28" />
-						<wp:show frame="29" />
-					</div>
-				</div>
-				<div class="row margin-medium-bottom">
-					<div class="span4">
-						<wp:show frame="30" />
-					</div>
-					<div class="span4">
-						<wp:show frame="31" />
-					</div>
-					<div class="span4">
-						<wp:show frame="32" />
-					</div>
-				</div>
-				<div class="row">
-					<p class="span12 text-center margin-medium-top"><wp:i18n key="COPYRIGHT" escapeXml="false" /> - Powered by <a href="http://www.entando.com/">Entando - Simplifying Enterprise Portals</a></p>
+	<footer class="padding-medium-top">
+		<div class="container">
+			<div class="row margin-medium-bottom">
+				<div class="span12">
+					<wp:show frame="28" />
+					<wp:show frame="29" />
 				</div>
 			</div>
-		</footer>
-
-
+			<div class="row margin-medium-bottom">
+				<div class="span4">
+					<wp:show frame="30" />
+				</div>
+				<div class="span4">
+					<wp:show frame="31" />
+				</div>
+				<div class="span4">
+					<wp:show frame="32" />
+				</div>
+			</div>
+			<div class="row">
+				<p class="span12 text-center margin-medium-top"><wp:i18n key="COPYRIGHT" escapeXml="false" /> - Powered by <a href="http://www.entando.com/">Entando - Simplifying Enterprise Portals</a></p>
+			</div>
+		</div>
+	</footer>
 </body>
 </html>
