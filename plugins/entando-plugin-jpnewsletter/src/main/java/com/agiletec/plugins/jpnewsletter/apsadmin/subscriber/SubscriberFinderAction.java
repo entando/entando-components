@@ -30,12 +30,9 @@ import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.INewslet
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Subscriber;
 
 /**
- * Classe per la ricerca dei sottoscritti al servizio generico di newsletter in
- * Back-End.
- * 
  * @author A.Turrini
  */
-public class SubscriberFinderAction extends BaseAction implements ISubscriberFinderAction {
+public class SubscriberFinderAction extends BaseAction {
 	
 	public List<Subscriber> getSubscribers() {
 		List<Subscriber> subscribers = new ArrayList<Subscriber>();

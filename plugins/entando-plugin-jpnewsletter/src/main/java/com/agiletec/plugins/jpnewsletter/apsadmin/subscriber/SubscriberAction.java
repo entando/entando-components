@@ -26,19 +26,14 @@ import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.INewsletterManager;
 
 /**
- * Classe per la gestione dei sottoscritti al servizio generico di newsletter in
- * Back-End.
- * 
  * @author A.Turrini
  */
-public class SubscriberAction extends BaseAction implements ISubscriberAction {
+public class SubscriberAction extends BaseAction {
 	
-	@Override
 	public String trashSubscriber() {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String deleteSubscriber() {
 		try {
 			this.getNewsletterManager().deleteSubscriber(this.getMailAddress());

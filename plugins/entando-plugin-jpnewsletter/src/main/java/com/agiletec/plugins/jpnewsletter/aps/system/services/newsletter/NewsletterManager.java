@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -412,7 +413,7 @@ public class NewsletterManager extends AbstractService
 		try {
 			IUserProfile profile = this.getProfileManager().getProfile(username);
 			if (profile != null) {
-				String eMail = (String) profile.getValue(config.getMailAttrName());
+				String eMail = (String) profile.getValue(profile.getMailAttributeName());
 				if (eMail != null && eMail.length() > 0) {
 					List<Content> userContents = this.extractContentsForUser(profile, eMail, contents, profileAttributes, newsletterReport);
 					if (userContents.size() > 0) {
@@ -815,17 +816,28 @@ public class NewsletterManager extends AbstractService
 	
 	@Override
 	public Boolean isAlreadyAnUser(String mailAddress) throws ApsSystemException {
-		List<String> usernames = null;
 		try {
-			String emailAttributeName = this.getConfig().getMailAttrName();
-			EntitySearchFilter filterByEmail = new EntitySearchFilter(emailAttributeName, true, mailAddress, true);
-			EntitySearchFilter[] filters = {filterByEmail};
-			usernames = ((IEntityManager) this.getProfileManager()).searchId(filters);
+			Collection<IApsEntity> profileTypes = this.getProfileManager().getEntityPrototypes().values();
+			if (null == profileTypes || profileTypes.isEmpty()) {
+				return false;
+			}
+			Iterator<IApsEntity> iter = profileTypes.iterator();
+			while (iter.hasNext()) {
+				IUserProfile type = (IUserProfile) iter.next();
+				if (null != type.getMailAttributeName()) {
+					EntitySearchFilter filterByEmail = new EntitySearchFilter(type.getMailAttributeName(), true, mailAddress, true);
+					EntitySearchFilter[] filters = {filterByEmail};
+					List<String> usernames = ((IEntityManager) this.getProfileManager()).searchId(filters);
+					if (null != usernames && usernames.size() > 0) {
+						return true;
+					}
+				}
+			}
 		} catch (Throwable t) {
 			_logger.error("Error on 'isAlreadyAnUser' method", t);
 			throw new ApsSystemException("Errore ricerca indirizzo e-mail tra gli utenti registrati", t);
 		}
-		return (null != usernames && usernames.size() > 0);
+		return false;//(null != usernames && usernames.size() > 0);
 	}
 	
 	protected String createToken(String word) throws NoSuchAlgorithmException {

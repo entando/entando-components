@@ -39,7 +39,10 @@ import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Ne
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterContentType;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterSearchBean;
 
-public class NewsletterFinderAction extends ContentFinderAction implements INewsletterFinderAction {
+/**
+ * @author E.Santoboni
+ */
+public class NewsletterFinderAction extends ContentFinderAction {
 	
 	@Override
 	public List<String> getContents() {
@@ -74,7 +77,6 @@ public class NewsletterFinderAction extends ContentFinderAction implements INews
 		return searchBean;
 	}
 	
-	@Override
 	public String addToQueue() {
 		try {
 			INewsletterManager newsletterManager = this.getNewsletterManager();
@@ -100,7 +102,6 @@ public class NewsletterFinderAction extends ContentFinderAction implements INews
 		return SUCCESS;
 	}
 	
-	@Override
 	public String removeFromQueue() {
 		try {
 			INewsletterManager newsletterManager = this.getNewsletterManager();
@@ -117,9 +118,6 @@ public class NewsletterFinderAction extends ContentFinderAction implements INews
 		return SUCCESS;
 	}
 	
-	/**
-	 * @return il valore corrispondente allo stato "onLine"
-	 */
 	@Override
 	public String getOnLineState() {
 		return "yes";
@@ -129,11 +127,6 @@ public class NewsletterFinderAction extends ContentFinderAction implements INews
 		return this.getContentQueue().contains(contentId);
 	}
 	
-	/**
-	 * Restituisce il riepilogo della newsletter per il contenuto di id dato.
-	 * @param contentId L'id del contenuto per cui recuperare l'invio della newsletter.
-	 * @return Il riepilogo della newsletter per il contenuto di id dato.
-	 */
 	public NewsletterContentReportVO getContentReport(String contentId) {
 		try {
 			return this.getNewsletterManager().getContentReport(contentId);
@@ -143,10 +136,6 @@ public class NewsletterFinderAction extends ContentFinderAction implements INews
 		}
 	}
 	
-	/**
-	 * Restituisce i tipi di contenuto per cui è possibile inviare una newsletter.
-	 * @return La lista dei tipi di contenuto.
-	 */
 	@Override
 	public List<SmallContentType> getContentTypes() {
 		List<SmallContentType> contentTypes = new ArrayList<SmallContentType>();
@@ -160,12 +149,6 @@ public class NewsletterFinderAction extends ContentFinderAction implements INews
 		return contentTypes;
 	}
 	
-	/**
-	 * Verifica l'accesso al contenuto dato.
-	 * @param content Il contenuto per cui si vuole gestire la newsletter.
-	 * @return true se l'accesso è consentito, false in caso contrario.
-	 * @throws ApsSystemException
-	 */
 	private boolean checkContent(Content content) throws ApsSystemException {
 		boolean allowed = false;
 		if (content!=null) {
@@ -180,12 +163,6 @@ public class NewsletterFinderAction extends ContentFinderAction implements INews
 		return allowed;
 	}
 	
-	/**
-	 * Verifica l'accesso al contenuto dato.
-	 * @param content Il contenuto per cui si vuole gestire la newsletter.
-	 * @return true se l'accesso è consentito, false in caso contrario.
-	 * @throws ApsSystemException
-	 */
 	private boolean isContentAllowed(Content content) throws ApsSystemException {
 		NewsletterConfig newsletterConfig = this.getNewsletterManager().getNewsletterConfig();
 		NewsletterContentType contentType = newsletterConfig.getContentType(content.getTypeCode());

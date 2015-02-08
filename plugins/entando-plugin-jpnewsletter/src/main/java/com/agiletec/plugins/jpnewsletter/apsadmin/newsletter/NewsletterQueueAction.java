@@ -31,9 +31,11 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecor
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.INewsletterManager;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterConfig;
 
-public class NewsletterQueueAction extends BaseAction implements INewsletterQueueAction {
+/**
+ * @author E.Santoboni
+ */
+public class NewsletterQueueAction extends BaseAction {
 	
-	@Override
 	public List<String> getContentIds() {
 		if (this._contentIds == null) {
 			try {
@@ -46,7 +48,6 @@ public class NewsletterQueueAction extends BaseAction implements INewsletterQueu
 		return this._contentIds;
 	}
 	
-	@Override
 	public String removeFromQueue() {
 		try {
 			INewsletterManager newsletterManager = this.getNewsletterManager();
@@ -61,7 +62,6 @@ public class NewsletterQueueAction extends BaseAction implements INewsletterQueu
 		return SUCCESS;
 	}
 	
-	@Override
 	public String send() {
 		try {
 			this.getNewsletterManager().sendNewsletter();
@@ -73,11 +73,6 @@ public class NewsletterQueueAction extends BaseAction implements INewsletterQueu
 		return SUCCESS;
 	}
 	
-	/**
-	 * Indica se esiste una newsletter per il contenuto di id dato.
-	 * @param contentId L'id del contenuto per cui verificare l'invio della newsletter.
-	 * @return true se la newsletter risulta inviata, false in caso contrario.
-	 */
 	public boolean existsContentReport(String contentId) {
 		try {
 			return this.getNewsletterManager().existsContentReport(contentId);
@@ -86,20 +81,13 @@ public class NewsletterQueueAction extends BaseAction implements INewsletterQueu
 		}
 	}
 	
-	/**
-	 * Restituisce il contenuto vo in base all'identificativo.
-	 * Metodo a servizio dell'interfaccia di gestione 
-	 * contenuti singoli ed in lista.
-	 * @param contentId L'identificativo del contenuto.
-	 * @return Il contenuto vo cercato.
-	 */
 	public ContentRecordVO getContentVo(String contentId) {
 		ContentRecordVO contentVo = null;
 		try {
 			contentVo = this.getContentManager().loadContentVO(contentId);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getContentVo");
-			throw new RuntimeException("Errore in caricamento contenuto vo", t);
+			throw new RuntimeException("Error loading contentvo", t);
 		}
 		return contentVo;
 	}

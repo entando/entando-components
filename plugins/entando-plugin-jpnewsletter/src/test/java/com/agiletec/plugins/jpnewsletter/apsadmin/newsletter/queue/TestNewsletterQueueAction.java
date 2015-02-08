@@ -33,7 +33,7 @@ import com.agiletec.plugins.jpnewsletter.aps.system.JpnewsletterSystemConstants;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.INewsletterManager;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterConfig;
 import com.agiletec.plugins.jpnewsletter.apsadmin.ApsAdminPluginBaseTestCase;
-import com.agiletec.plugins.jpnewsletter.apsadmin.newsletter.INewsletterQueueAction;
+import com.agiletec.plugins.jpnewsletter.apsadmin.newsletter.NewsletterQueueAction;
 import com.agiletec.plugins.jpnewsletter.util.JpnewsletterTestHelper;
 
 import com.opensymphony.xwork2.Action;
@@ -51,15 +51,15 @@ public class TestNewsletterQueueAction extends ApsAdminPluginBaseTestCase {
 		try {
 			String result = this.executeList("admin");
 			assertEquals(Action.SUCCESS, result);
-			this.checkQueue(((INewsletterQueueAction) this.getAction()).getContentIds(), new String[] { });
+			this.checkQueue(((NewsletterQueueAction) this.getAction()).getContentIds(), new String[] { });
 			this._newsletterManager.addContentToQueue("ART180");
 			result = this.executeList("admin");
 			assertEquals(Action.SUCCESS, result);
-			this.checkQueue(((INewsletterQueueAction) this.getAction()).getContentIds(), new String[] { "ART180" });
+			this.checkQueue(((NewsletterQueueAction) this.getAction()).getContentIds(), new String[] { "ART180" });
 			this._newsletterManager.addContentToQueue("ART102");
 			result = this.executeList("admin");
 			assertEquals(Action.SUCCESS, result);
-			this.checkQueue(((INewsletterQueueAction) this.getAction()).getContentIds(), new String[] { "ART180", "ART102" });
+			this.checkQueue(((NewsletterQueueAction) this.getAction()).getContentIds(), new String[] { "ART180", "ART102" });
 		} catch (Throwable t) {
 			throw t;
 		} finally {

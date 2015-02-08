@@ -194,11 +194,6 @@
 		<p><s:text name="jpnewsletter.subscription.help1" /></p>
 		
 		<p>
-			<label for="jpnewsletter_emailmapping" class="basic-mint-label"><s:text name="jpnewsletter.mapping.email.profile" />:</label>
-			<wpsf:select useTabindexAutoIncrement="true" id="jpnewsletter_emailmapping" name="newsletterConfig.mailAttrName" list="defaultProfile.attributeList" listKey="name" listValue="name" />
-		</p>
-		
-		<p>
 			<label for="jpnewsletter_subscription_attr" class="basic-mint-label"><s:text name="jpnewsletter.mapping.subscription.preference" />:</label>
 			<wpsf:select useTabindexAutoIncrement="true" id="jpnewsletter_subscription_attr" name="newsletterConfig.allContentsAttributeName" list="booleanProfileAttributes" listKey="name" listValue="name" />
 		</p>
@@ -215,7 +210,8 @@
 		
 		<p>
 			<label for="jpnewsletter.subscriptors_confirm_tokenValidity" class="basic-mint-label"><s:text name="jpnewsletter.email.tokenValidity" />:</label>
-			<wpsf:textfield useTabindexAutoIncrement="true" id="jpnewsletter.subscriptors_confirm_tokenValidity" name="newsletterConfig.subscriptionTokenValidityDays" cssClass="text" />
+			<wpsf:select id="jpnewsletter.subscriptors_confirm_tokenValidity" name="newsletterConfig.subscriptionTokenValidityDays"
+							list="#{1:1,2:2,5:5,10:10,15:15,20:20}" />
 		</p>
 		<p>
 			<label for="jpnewsletter.subscriptors_confirm_subject" class="basic-mint-label"><s:text name="jpnewsletter.email.subject" />:</label>

@@ -24,18 +24,19 @@ package com.agiletec.plugins.jpmail.apsadmin.mail;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.BaseAction;
-import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
 import com.agiletec.plugins.jpmail.aps.services.mail.IMailManager;
 import com.agiletec.plugins.jpmail.aps.services.mail.MailConfig;
-import static com.opensymphony.xwork2.Action.SUCCESS;
+
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
-public class SmtpConfigAction extends BaseAction implements ISmtpConfigAction {
+public class SmtpConfigAction extends BaseAction {
 
-	@Override
 	public String edit() {
 		try {
 			MailConfig config = this.getMailManager().getMailConfig();
@@ -47,7 +48,6 @@ public class SmtpConfigAction extends BaseAction implements ISmtpConfigAction {
 		return SUCCESS;
 	}
 
-	@Override
 	public String save() {
 		try {
 			MailConfig config = this.prepareConfig();
@@ -60,7 +60,6 @@ public class SmtpConfigAction extends BaseAction implements ISmtpConfigAction {
 		return SUCCESS;
 	}
 
-	@Override
 	public String testSmtp() {
 		MailConfig config;
 		try {
@@ -78,29 +77,27 @@ public class SmtpConfigAction extends BaseAction implements ISmtpConfigAction {
 		return SUCCESS;
 	}
 
-	@Override
 	public String testMail() {
 		if (hasEmailCurrentUser()) {
 			IUserProfile userProfile = (IUserProfile) this.getCurrentUser().getProfile();
-			String mail = (userProfile).getValue(userProfile.getMailAttributeName()).toString();
+			String mail = userProfile.getValue(userProfile.getMailAttributeName()).toString();
 			String mailText = this.getText("test.mail.subject");
 			String mailSubject = this.getText("test.mail.text");
 			String[] mailAddresses = {mail};
 			try {
-				String sender = this.getMailManager().getMailConfig().getSender("CODE1");
-				if(null == sender){
-					Map<String, String> senders = this.getMailManager().getMailConfig().getSenders();
-					if(senders.entrySet().iterator().hasNext()){
-						sender = senders.entrySet().iterator().next().getKey();
-					} else {
-						throw new ApsSystemException(this.getText("note.mail.nosender"));
-					}
+				String sender = null;
+				Map<String, String> senders = this.getMailManager().getMailConfig().getSenders();
+				if (null != senders && !senders.isEmpty()) {
+					List<String> codes = new ArrayList<String>();
+					codes.addAll(senders.keySet());
+					sender = codes.get(0);
+				}
+				if (null == sender) {
+					this.addActionError(this.getText("note.mail.nosender"));
+					return INPUT;
 				}
 				this.getMailManager().sendMailForTest(mailText, mailSubject, mailAddresses, sender);
 				this.addActionMessage(this.getText("note.mail.ok"));
-			} catch (ApsSystemException t) {
-				this.addActionError(this.getText("note.mail.nosender"));
-				ApsSystemUtils.logThrowable(t, this, "testMail");
 			} catch (Throwable t) {
 				this.addActionError(this.getText("note.mail.ko"));
 				ApsSystemUtils.logThrowable(t, this, "testMail");
@@ -110,10 +107,9 @@ public class SmtpConfigAction extends BaseAction implements ISmtpConfigAction {
 		}
 		return SUCCESS;
 	}
-
+	
 	/**
 	 * Populate the action with the content of the given MailConfig.
-	 *
 	 * @param config The configuration used to populate the action.
 	 */
 	protected void populateForm(MailConfig config) {
@@ -130,10 +126,9 @@ public class SmtpConfigAction extends BaseAction implements ISmtpConfigAction {
 			config = new MailConfig();
 		}
 	}
-
+	
 	/**
 	 * Prepares a MailConfig starting from the action form fields.
-	 *
 	 * @return a MailConfig starting from the action form fields.
 	 * @throws ApsSystemException In case of errors.
 	 */
@@ -178,46 +173,41 @@ public class SmtpConfigAction extends BaseAction implements ISmtpConfigAction {
 				&& this.getSmtpProtocol().intValue() >= 0
 				&& this.getSmtpProtocol().intValue() <= 2);
 	}
-
+	
 	public boolean isActive() {
 		return _active;
 	}
-
 	public void setActive(boolean active) {
 		this._active = active;
 	}
-
+	
 	/**
 	 * Returns the smtp host name.
-	 *
 	 * @return The smtp host name.
 	 */
 	public String getSmtpHost() {
 		return _smtpHost;
 	}
-
+	
 	/**
 	 * Sets the smtp host name.
-	 *
 	 * @param smtpHost The smtp host name.
 	 */
 	public void setSmtpHost(String smtpHost) {
 		this._smtpHost = smtpHost;
 	}
-
+	
 	/**
 	 * Return the smtp port.
-	 *
 	 * @return The smtp port.
 	 */
 	public Integer getSmtpPort() {
 		return _smtpPort;
 	}
-
+	
 	/**
 	 * Sets the smtp port.
-	 *
-	 * @param port The smtp port.
+	 * @param smtpPort The smtp port.
 	 */
 	public void setSmtpPort(Integer smtpPort) {
 		this._smtpPort = smtpPort;
@@ -225,120 +215,98 @@ public class SmtpConfigAction extends BaseAction implements ISmtpConfigAction {
 
 	/**
 	 * Return the smtp timeout.
-	 *
 	 * @return The smtp timeout.
 	 */
 	public Integer getSmtpTimeout() {
 		return _smtpTimeout;
 	}
-
+	
 	/**
 	 * Sets the smtp timeout. If 0 or null uses default.
-	 *
-	 * @param port The smtp timeout.
+	 * @param smtpTimeout The smtp timeout.
 	 */
 	public void setSmtpTimeout(Integer smtpTimeout) {
 		this._smtpTimeout = smtpTimeout;
 	}
-
+	
 	/**
 	 * Returns the smtp username.
-	 *
 	 * @return The smtp username.
 	 */
 	public String getSmtpUserName() {
 		return _smtpUserName;
 	}
-
+	
 	/**
 	 * Sets the smtp username.
-	 *
 	 * @param smtpUserName The smtp username.
 	 */
 	public void setSmtpUserName(String smtpUserName) {
 		this._smtpUserName = smtpUserName;
 	}
-
+	
 	/**
 	 * Returns the smtp password.
-	 *
 	 * @return The smtp password.
 	 */
 	public String getSmtpPassword() {
 		return _smtpPassword;
 	}
-
+	
 	/**
 	 * Sets the smtp password.
-	 *
 	 * @param smtpPassword The smtp password.
 	 */
 	public void setSmtpPassword(String smtpPassword) {
 		this._smtpPassword = smtpPassword;
 	}
-
+	
 	/**
 	 * Returns the debug flag, used to trace debug informations.
-	 *
 	 * @return The debug flag.
 	 */
 	public boolean isDebug() {
 		return _debug;
 	}
-
+	
 	/**
 	 * Sets the debug flag, used to trace debug informations.
-	 *
 	 * @param debug The debug flag.
 	 */
 	public void setDebug(boolean debug) {
 		this._debug = debug;
 	}
-
-	/**
-	 * Returns the IMailManager service.
-	 *
-	 * @return The IMailManager service.
-	 */
-	public IMailManager getMailManager() {
+	
+	protected IMailManager getMailManager() {
 		return _mailManager;
 	}
-
-	/**
-	 * Set method for Spring bean injection.<br /> Sets the IMailManager
-	 * service.
-	 *
-	 * @param mailManager The IMailManager service.
-	 */
 	public void setMailManager(IMailManager mailManager) {
 		this._mailManager = mailManager;
 	}
 
 	/**
 	 * Set the transport security layer protocol
-	 *
-	 * @param protocol
+	 * @param smtpProtocol the smtp protocol
 	 */
 	public void setSmtpProtocol(Integer smtpProtocol) {
 		this._smtpProtocol = smtpProtocol;
 	}
-
+	
 	/**
 	 * Get the transport security layer protocol
-	 *
-	 * @param protocol
+	 * @return the smtp protocol
 	 */
 	public Integer getSmtpProtocol() {
 		return _smtpProtocol;
 	}
-
+	
 	public InputStream getInputStream() {
 		return _inputStream;
 	}
-
 	public void setInputStream(InputStream inputStream) {
 		this._inputStream = inputStream;
 	}
+	
 	private boolean _active;
 	private String _smtpHost;
 	private Integer _smtpPort;
@@ -349,4 +317,5 @@ public class SmtpConfigAction extends BaseAction implements ISmtpConfigAction {
 	private boolean _debug;
 	private IMailManager _mailManager;
 	private InputStream _inputStream;
+	
 }

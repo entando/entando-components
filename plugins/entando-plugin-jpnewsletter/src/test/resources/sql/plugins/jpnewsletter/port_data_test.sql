@@ -12,7 +12,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpnewslett
 	<contentTypes>
 		<contentType code="ART" defaultModel="2" htmlModel="3" />
 	</contentTypes>
-	<mail alsoHtml="true" senderCode="CODE1" mailAttrName="email" unsubscriptionPage="newsletter_unsubscribe" >
+	<mail alsoHtml="true" senderCode="CODE1" unsubscriptionPage="newsletter_unsubscribe" >
 		<subject><![CDATA[Oggetto della mail]]></subject>
 		<htmlHeader><![CDATA[<strong>Header html della mail</strong>]]></htmlHeader>
 		<htmlFooter><![CDATA[<strong>Footer html della mail</strong>]]></htmlFooter>
