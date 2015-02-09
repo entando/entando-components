@@ -38,6 +38,7 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jpmail.aps.services.mail.IMailManager;
+import com.agiletec.plugins.jpnewsletter.aps.system.JpnewsletterSystemConstants;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterConfig;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
@@ -278,7 +279,15 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 		startScheduler.setTime(config.getStartScheduler());
 		return startScheduler.get(field);
 	}
-
+	
+	public List<IPage> getConfirmSubscriptionPages() throws Throwable {
+		return this.getPageManager().getWidgetUtilizers(JpnewsletterSystemConstants.SUBSCRIPTION_CONFIRM_WIDGET_CODE);
+	}
+	
+	public List<IPage> getConfirmUnsubscriptionPages() throws Throwable {
+		return this.getPageManager().getWidgetUtilizers(JpnewsletterSystemConstants.UNSUBSCRIPTION_CONFIRM_WIDGET_CODE);
+	}
+	/*
 	public List<IPage> getPages() {
 		if (this._pages==null) {
 			this._pages = new ArrayList<IPage>();
@@ -287,7 +296,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 		}
 		return this._pages;
 	}
-
+	
 	protected void addPages(IPage page, List<IPage> pages) {
 		pages.add(page);
 		IPage[] children = page.getChildren();
@@ -295,7 +304,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 			this.addPages(children[i], pages);
 		}
 	}
-	
+	*/
 	public String getContentTypeCode() {
 		return _contentTypeCode;
 	}

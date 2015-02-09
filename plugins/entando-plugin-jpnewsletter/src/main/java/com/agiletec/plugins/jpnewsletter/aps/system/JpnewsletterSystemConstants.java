@@ -19,19 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpnewsletter.aps.system;
-
-/**
- * Interfaccia contenente le costanti del plugin jpnewsletter.
- */
-public interface JpnewsletterSystemConstants {
-	
-	public static String NEWSLETTER_MANAGER = "jpnewsletterNewsletterManager";
-	
-	public static String NEWSLETTER_CONFIG_ITEM = "jpnewsletter_config";
-	
-	public static final String NEWSLETTER_SENDER_THREAD_NAME = "jpnewsletterNewsletterSenderThread";
-	
-	public static final String EMAIL_SENDER_NAME_THREAD_PREFIX = "SubscriptionRequestEmailThread";
-	
+package com.agiletec.plugins.jpnewsletter.aps.system;
+
+public interface JpnewsletterSystemConstants {
+	
+	public static String NEWSLETTER_MANAGER = "jpnewsletterNewsletterManager";
+	
+	public static String NEWSLETTER_CONFIG_ITEM = "jpnewsletter_config";
+	
+	public static final String NEWSLETTER_SENDER_THREAD_NAME = "jpnewsletterNewsletterSenderThread";
+	
+	public static final String EMAIL_SENDER_NAME_THREAD_PREFIX = "SubscriptionRequestEmailThread";
+	
+	public static final String SUBSCRIPTION_WIDGET_CODE = "jpnewsletter_registration";
+	
+	public static final String SUBSCRIPTION_CONFIRM_WIDGET_CODE = "jpnewsletter_subscription";
+	
+	public static final String UNSUBSCRIPTION_CONFIRM_WIDGET_CODE = "jpnewsletter_unsubscription";
+	
 }

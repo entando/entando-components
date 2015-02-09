@@ -231,7 +231,7 @@
 
 		<div class="form-group">
 			<label for="newsletterConfig_subscriptionPageCode"><s:text name="jpnewsletter.email.page" /></label>
-			<wpsf:select list="pages" name="newsletterConfig.subscriptionPageCode" id="newsletterConfig_subscriptionPageCode" 
+			<wpsf:select list="confirmSubscriptionPages" name="newsletterConfig.subscriptionPageCode" id="newsletterConfig_subscriptionPageCode" 
 						 listKey="code" listValue="getShortFullTitle(currentLang.code)" headerKey="" headerValue="%{getText('label.none')}" cssClass="form-control" />
 		</div>
 		<div class="form-group">
@@ -257,7 +257,7 @@
 		
 		<div class="form-group">
 			<label for="newsletterConfig_unsubscriptionPageCode"><s:text name="jpnewsletter.email.page" /></label>
-			<wpsf:select list="pages" name="newsletterConfig.unsubscriptionPageCode" id="newsletterConfig_unsubscriptionPageCode" listKey="code" listValue="getShortFullTitle(currentLang.code)" 
+			<wpsf:select list="confirmUnsubscriptionPages" name="newsletterConfig.unsubscriptionPageCode" id="newsletterConfig_unsubscriptionPageCode" listKey="code" listValue="getShortFullTitle(currentLang.code)" 
 					headerKey="" headerValue="%{getText('label.none')}" cssClass="form-control" />
 		</div>
 		
