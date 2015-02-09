@@ -5,8 +5,6 @@
 
 <tiles-definitions>
 	
-    <!-- ********* START Config Management Area ********* -->
-    
     <definition extends="main.layout" name="admin.jpnewsletter.Config.edit">
 		<put-attribute name="title" value="jpnewsletter.title.newsletterManagement" />
 		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/common/template/extraresources/newsletterConfig.jsp" />		
@@ -23,9 +21,6 @@
 		<put-attribute name="body" value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/config/config-confirm.jsp" />
 	</definition>
 	
-    <!-- ********* END Config Management Area ********* -->
-	
-    <!-- ********* INIZIO Area Lista Contenuti per NEWSLETTER ********* -->
     <definition extends="main.layout" name="admin.jpnewsletter.Newsletter.list">
 		<put-attribute name="title" value="jpnewsletter.title.newsletterManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/newsletter/content-list.jsp" />
@@ -55,20 +50,17 @@
 		<put-attribute name="title" value="jpnewsletter.title.newsletterManagement" />
 		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/common/userNotAllowedMessage.jsp" />
 	</definition>
-	<!-- *** Fine Area Lista Contenuti per NEWSLETTER *** -->
 	
-    <!-- ********* INIZIO Area Coda NEWSLETTER ********* -->
     <definition extends="main.layout" name="admin.jpnewsletter.Newsletter.Queue.list">
 		<put-attribute name="title" value="jpnewsletter.title.newsletterManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/newsletter/queue/content-list.jsp" />
 	</definition>
+	
     <definition extends="main.layout" name="admin.jpnewsletter.Newsletter.Queue.detail">
 		<put-attribute name="title" value="jpnewsletter.title.newsletterManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/newsletter/queue/content-detail.jsp" />
 	</definition>
-    <!-- ********* FINE Area Coda NEWSLETTER ********* -->
     
-    <!-- ********* INIZIO Area Subscriber ********* -->
 	<definition extends="main.layout" name="admin.jpnewsletter.Subscriber.list">
 		<put-attribute name="title" value="jpnewsletter.title.newsletterManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/subscriber/subscribers_list.jsp" />
@@ -78,6 +70,5 @@
 		<put-attribute name="title" value="jpnewsletter.title.newsletterManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/subscriber/unsubscription_confirm.jsp" />
 	</definition>
-    <!-- ********* FINE Area Subscriber ********* -->
 	
 </tiles-definitions>
