@@ -21,42 +21,23 @@
  */
 package com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.parse;
 
-
-
 import java.io.StringReader;
-
 import java.util.Date;
-
 import java.util.Iterator;
-
 import java.util.List;
-
 import java.util.Map.Entry;
 
-
-
 import org.jdom.CDATA;
-
 import org.jdom.Document;
-
 import org.jdom.Element;
-
 import org.jdom.input.SAXBuilder;
-
 import org.jdom.output.Format;
-
 import org.jdom.output.XMLOutputter;
 
-
-
 import com.agiletec.aps.system.ApsSystemUtils;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
-
 import com.agiletec.aps.util.DateConverter;
-
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterConfig;
-
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterContentType;
 
 

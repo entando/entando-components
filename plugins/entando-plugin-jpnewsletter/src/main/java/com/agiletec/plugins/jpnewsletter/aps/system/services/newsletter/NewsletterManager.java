@@ -83,7 +83,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Servizio gestore delle newsletter.
  * @author E.Santoboni, A.Turrini, E.Mezzano
  */
 public class NewsletterManager extends AbstractService 
@@ -121,10 +120,6 @@ public class NewsletterManager extends AbstractService
 		this._scheduler = null;
 	}
 	
-	/**
-	 * Carica e salva la configurazione di sistema del servizio.
-	 * @throws ApsSystemException
-	 */
 	protected void loadConfigs() throws ApsSystemException {
 		try {
 			ConfigInterface configManager = this.getConfigManager();
@@ -147,11 +142,6 @@ public class NewsletterManager extends AbstractService
 		this._scheduler = new Scheduler(this, start, config.getHoursDelay());
 	}
 	
-	/**
-	 * Restart the scheduler at the intended time and NOT at the next iteration. This may
-	 * result in an immediate execution of the delivery process
-	 * @param config
-	 */
 	private void restartScheduler(NewsletterConfig config) {
 		Date start = config.getStartScheduler();
 		this._scheduler = new Scheduler(this, start, config.getHoursDelay());
@@ -248,11 +238,6 @@ public class NewsletterManager extends AbstractService
 		}
 	}
 	
-	/**
-	 * Istanzia un thread che esegue l'invio della newsletter. 
-	 * Verifica che in ogni istante sia in esecuzione al più un processo di invio della newsletter.
-	 * @throws ApsSystemException In caso di errore.
-	 */
 	@Override
 	public void sendNewsletter() throws ApsSystemException {
 		if (!this.isSendingNewsletter() && this.getContentQueue().size()>0) {
@@ -310,17 +295,11 @@ public class NewsletterManager extends AbstractService
 			mailBody = this.buildMailBody(content, modelId, html);
 		} catch (Throwable t) {
 			_logger.error("Error on 'buildMailBody' method", t);
-			throw new ApsSystemException("Errore in generazione body contenuto " + content.getId(), t);
+			throw new ApsSystemException("Error building body for content " + content.getId(), t);
 		}
 		return mailBody;
 	}
 	
-	/**
-	 * Invia i contenuti dati agli utenti registrati alla newsletter discriminando, per ogni utente, 
-	 * i contenuti a lui visibili e per i quali ha fatto implicita richiesta nel proprio profilo.
-	 * @param contents La lista dei contenuti da inviare tramite newsletter.
-	 * @throws ApsSystemException In caso di errore.
-	 */
 	protected void sendNewsletterToUsers(List<Content> contents) throws ApsSystemException {
 		try {
 			Map<String, List<String>> profileAttributes = this.prepareProfileAttributesForContents(contents);
@@ -346,11 +325,6 @@ public class NewsletterManager extends AbstractService
 		}
 	}
 	
-	/**
-	 * Salva il report della newsletter appena inviata.
-	 * @param newsletterReport Il report della newsletter.
-	 * @throws ApsSystemException In caso di errore.
-	 */
 	protected void addNewsletterReport(NewsletterReport newsletterReport) throws ApsSystemException {
 		if (null == newsletterReport) return;
 		try {
@@ -460,14 +434,6 @@ public class NewsletterManager extends AbstractService
 		return body;
 	}
 	
-	/**
-	 * Prepara il body della mail in base al contenuto e al modello.
-	 * @param content Il Contenuto per cui costruire il body della mail.
-	 * @param modelId L'id del modello utilizzato.
-	 * @param html Indica se il modello è di tipo html o testo semplice.
-	 * @return Il body della mail completo di blocchi iniziale e finale.
-	 * @throws ApsSystemException
-	 */
 	private String buildMailBody(Content content, long modelId, boolean html) throws ApsSystemException {
 		NewsletterConfig config = this.getConfig();
 		String header = html ? config.getHtmlHeader() : config.getTextHeader();
@@ -482,11 +448,6 @@ public class NewsletterManager extends AbstractService
 		return mailBody;
 	}
 	
-	/**
-	 * Estrae gli username dei destinatari della newsletter.
-	 * @return Il set contenente gli username dei destinatari della newsletter.
-	 * @throws ApsSystemException
-	 */
 	private Set<String> extractUsernames() throws ApsSystemException {
 		NewsletterConfig config = this.getConfig();
 		Set<String> usernames = new HashSet<String>();
@@ -615,11 +576,6 @@ public class NewsletterManager extends AbstractService
 		return allowed;
 	}
 	
-	/**
-	 * Estrae i codici delle categorie della newsletter
-	 * @param content Il contenuto a cui si riferisce la newsletter.
-	 * @return Il set contenente i codici delle categorie della newsletter come {@link String}.
-	 */
 	private Set<String> extractCategoryCodes(Content content) {
 		Set<String> categoryCodes = new HashSet<String>();
 		Iterator<Category> categoryIter = content.getCategories().iterator();
@@ -630,11 +586,6 @@ public class NewsletterManager extends AbstractService
 		return categoryCodes;
 	}
 	
-	/**
-	 * Aggiunge al {@link Set} dei codici il codice della categoria data.
-	 * @param category La categoria da aggiungere.
-	 * @param codes Il {@link Set} dei codici delle categorie.
-	 */
 	private void addCategoryCode(Category category, Set<String> codes) {
 		codes.add(category.getCode());
 		Category parentCategory = (Category) category.getParent();
@@ -835,7 +786,7 @@ public class NewsletterManager extends AbstractService
 			}
 		} catch (Throwable t) {
 			_logger.error("Error on 'isAlreadyAnUser' method", t);
-			throw new ApsSystemException("Errore ricerca indirizzo e-mail tra gli utenti registrati", t);
+			throw new ApsSystemException("Error on 'isAlreadyAnUser' method", t);
 		}
 		return false;//(null != usernames && usernames.size() > 0);
 	}
@@ -1082,17 +1033,9 @@ public class NewsletterManager extends AbstractService
 		this._contentRenderer = renderer;
 	}
 	
-	/**
-	 * Returns the configuration manager.
-	 * @return The Configuration manager.
-	 */
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
-	/**
-	 * Set method for Spring bean injection.<br /> Set the Configuration manager.
-	 * @param configManager The Configuration manager.
-	 */
 	public void setConfigManager(ConfigInterface configManager) {
 		this._configManager = configManager;
 	}

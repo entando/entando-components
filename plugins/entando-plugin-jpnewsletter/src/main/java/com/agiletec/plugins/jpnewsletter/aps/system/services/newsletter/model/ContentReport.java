@@ -63,11 +63,6 @@ public class ContentReport {
 	public void setRecipients(Map<String, String> recipients) {
 		this._recipients = recipients;
 	}
-	/**
-	 * Aggiunge un destinatario della newsletter.
-	 * @param username Lo username del destinatario.
-	 * @param mailAddress L'indirizzo eMail del destinatario.
-	 */
 	public void addRecipient(String username, String eMail) {
 		this._recipients.put(username, eMail);
 	}

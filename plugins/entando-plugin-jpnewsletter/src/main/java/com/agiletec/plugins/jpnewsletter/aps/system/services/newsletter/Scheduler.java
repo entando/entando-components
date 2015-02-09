@@ -28,7 +28,6 @@ import java.util.TimerTask;
 import com.agiletec.aps.system.ApsSystemUtils;
 
 /**
- * Classe Scheduler
  * @author M.Casari - E.Santoboni
  */
 public class Scheduler extends TimerTask {

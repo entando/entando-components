@@ -53,12 +53,6 @@ public class NewsletterAction extends BaseAction {
 		return SUCCESS;
 	}
 	
-	/**
-	 * Verifica l'accesso al contenuto dato.
-	 * @param content Il contenuto per cui si vuole gestire la newsletter.
-	 * @return true se l'accesso è consentito, false in caso contrario.
-	 * @throws ApsSystemException
-	 */
 	private boolean checkContent(Content content) throws ApsSystemException {
 		boolean allowed = false;
 		if (content != null) {
@@ -73,12 +67,6 @@ public class NewsletterAction extends BaseAction {
 		return allowed;
 	}
 	
-	/**
-	 * Verifica l'accesso al contenuto dato.
-	 * @param content Il contenuto per cui si vuole gestire la newsletter.
-	 * @return true se l'accesso è consentito, false in caso contrario.
-	 * @throws ApsSystemException 
-	 */
 	private boolean isContentAllowed(Content content) throws ApsSystemException {
 		NewsletterConfig newsletterConfig = this.getNewsletterManager().getNewsletterConfig();
 		NewsletterContentType contentType = newsletterConfig.getContentType(content.getTypeCode());
@@ -106,13 +94,6 @@ public class NewsletterAction extends BaseAction {
 		return contain;
 	}
 	
-	/**
-	 * Verifica se l'utente corrente è abilitato all'accesso 
-	 * del contenuto specificato.
-	 * @param content Il contenuto su cui verificare il permesso di accesso.
-	 * @return True se l'utente corrente è abilitato all'eccesso al contenuto,
-	 * false in caso contrario.
-	 */
 	protected boolean isUserAllowed(Content content) {
 		String group = content.getMainGroup();
 		return this.isCurrentUserMemberOf(group);
