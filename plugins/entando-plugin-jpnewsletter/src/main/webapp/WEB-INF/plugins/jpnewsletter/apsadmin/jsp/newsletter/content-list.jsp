@@ -176,6 +176,7 @@
 		<table class="table table-bordered" id="contentListTable">
 		<caption class="sr-only"><s:text name="title.contentList" /></caption>
 		<tr>
+			<th class="text-center padding-large-left padding-large-right"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
 			<th>
 			<a href="<s:url action="changeOrder" anchor="content_list_intro" includeParams="all" >
 				<s:param name="lastGroupBy"><s:property value="lastGroupBy"/></s:param>
@@ -224,16 +225,24 @@
 			</th>
 			<th class="text-center"><s:text name="jpnewsletter.label.sendDate" /></th>
 			<th class="text-center"><abbr title="<s:text name="label.state" />">S</abbr></th>
-			<th class="text-center"><abbr title="<s:text name="jpnewsletter.label.details" />">D</abbr></th>
 		</tr>
 		<s:iterator var="contentId">
 		<s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
 		<s:set name="contentReport" value="%{getContentReport(#contentId)}" />
 		<tr>
+		<td class="text-center text-nowrap">
+			<div class="btn-group btn-group-xs">
+				<a class="btn btn-default" title="Newsletter&nbsp;<s:text name="jpnewsletter.label.detailOf" />: <s:property value="#content.description" />" 
+				   href="<s:url action="entry" ><s:param name="contentId" value="#content.id" /></s:url>">
+					<span class="icon fa fa-fw fa-info"></span>
+					<span class="sr-only">Newsletter&nbsp;<s:text name="jpnewsletter.label.detailOf" />: <s:property value="#content.description" /></span>
+				</a>
+			</div>
+		</td>
 		<td>
 			<label>
 				<input type="checkbox" name="contentIds" id="content_<s:property value="#content.id" />" value="<s:property value="#content.id" />" />
-				<s:property value="#content.descr" />
+				<s:property value="#content.description" />
 			</label>
 		</td>
 		<s:if test="viewCode">
@@ -292,11 +301,6 @@
 		<td class="text-center">
 			<span class="icon fa fa-<s:property value="#iconName" /> text-<s:property value="#textVariant" />" title="<s:property value="#statusVar" />"></span>
 			<span class="sr-only"><s:property value="#statusVar" /></span>
-		</td>
-		<td class="text-center">
-		<a href="<s:url action="entry" ><s:param name="contentId" value="#content.id" /></s:url>" title="<s:text name="jpnewsletter.label.detailOf" />: <s:property value="#content.descr" />">
-			<img src="<wp:resourceURL />plugins/jpnewsletter/administration/img/icons/system-search.png" alt="<s:text name="label.view" />" />
-		</a>
 		</td>
 		</tr>
 		</s:iterator>

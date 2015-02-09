@@ -3,8 +3,12 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
 
-<h1><a href="<s:url action="list" />" title="<s:text name="note.goToSomewhere" />: <s:text name="jpnewsletter.title.newsletterQueue" />"><s:text name="jpnewsletter.title.newsletterManagement" /></a></h1>
+<h1 class="panel panel-default title-page">
+	<span class="panel-body display-block">
+		<a href="<s:url action="list" />" title="<s:text name="note.goToSomewhere" />: <s:text name="jpnewsletter.title.newsletterManagement" />"><s:text name="jpnewsletter.title.newsletterManagement" /></a>
+		&#32;/&#32;
+		<s:text name="jpnewsletter.title.newsletterEntry" />
+	</span>
+</h1>
 
-<h2><s:text name="jpnewsletter.title.newsletterEntry" /></h2>
-
-<s:include value="../include/content-detail.jsp" />
+<s:include value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/newsletter/include/content-detail.jsp" />

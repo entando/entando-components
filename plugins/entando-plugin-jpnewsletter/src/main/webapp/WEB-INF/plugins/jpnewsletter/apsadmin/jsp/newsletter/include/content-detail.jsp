@@ -13,12 +13,17 @@
 <s:else>
 <p><s:text name="Message.newsletter.sent" />&#32;<s:date name="%{#contentReport.sendDate}" format="dd/MM/yyyy" />.</p>
 	
-	<dl class="table-display">		
-		<dt><s:text name="jpnewsletter.label.subject" /></dt>
-			<dd><s:property value="%{#contentReport.subject}"/></dd>
-		<dt><s:text name="jpnewsletter.label.simpleTextBody" /></dt>
-			<dd><s:property value="%{#contentReport.textBody}" /></dd>
-	</dl>
+<table class="table table-bordered">
+	<tr>
+		<th class="text-right"><s:text name="jpnewsletter.label.subject" /></th>
+		<td><s:property value="%{#contentReport.subject}"/></td>
+	</tr>
+	<tr>
+		<th class="text-right"><s:text name="jpnewsletter.label.simpleTextBody" /></th>
+		<td><s:property value="%{#contentReport.textBody}" /></td>
+	</tr>
+</table>
+
 <%--<wpsf:textarea useTabindexAutoIncrement="true" disabled="true" id="body" value="%{#contentReport.textBody}" cols="60" rows="20" cssClass="text"/>
 	<s:if test="%{#contentReport.htmlBody!=null && #contentReport.htmlBody!=''}">
 <p><a href="<s:url action="viewHtmlBody" >
@@ -29,19 +34,20 @@
 </s:if>
 --%>
 
+<hr />
+
 <s:if test="%{#contentReport.recipients != null && #contentReport.recipients.size() > 0}">
-	<table class="generic" summary="<s:text name="jpnewsletter.note.newsletter.dest.summary" />">
-	<caption><span><s:text name="jpnewsletter.title.newsletter.dest.caption" /></span></caption>
+	<table class="table table-bordered">
 		<tr>
 			<th><s:text name="label.username"/></th>
 			<th><s:text name="label.eMail"/></th>
 		</tr>
-	<s:iterator value="%{#contentReport.recipients.entrySet()}" var="recipient">
+		<s:iterator value="%{#contentReport.recipients.entrySet()}" var="recipient">
 		<tr>
-			<td><s:property value="#recipient.key"/></td>
+			<td><code><s:property value="#recipient.key"/></code></td>
 			<td><s:property value="#recipient.value"/></td>
 		</tr>
-	</s:iterator>
+		</s:iterator>
 	</table>
 </s:if>
 </s:else>
