@@ -7,7 +7,7 @@
 		<attribute>
 			<name>Title</name>
 			<type>Longtext</type>
-			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Lorem ipsum for the management of dolor sit amet - 1.</value>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Lorem ipsum for the management of dolor sit amet - 1</value>
 			<roles>
 				<role>jacms:title</role>
 			</roles>
