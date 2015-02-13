@@ -142,11 +142,6 @@ public class NewsletterManager extends AbstractService
 		this._scheduler = new Scheduler(this, start, config.getHoursDelay());
 	}
 	
-	private void restartScheduler(NewsletterConfig config) {
-		Date start = config.getStartScheduler();
-		this._scheduler = new Scheduler(this, start, config.getHoursDelay());
-	}
-	
 	@Override
 	public void stopScheduler() throws ApsSystemException {
 		this.release();
@@ -159,19 +154,11 @@ public class NewsletterManager extends AbstractService
 	
 	@Override
 	public void updateNewsletterConfig(NewsletterConfig config) throws ApsSystemException {
-		Date originalStartDate = null;
 		try {
-			originalStartDate = this.getConfig().getStartScheduler();
 			String xml = new NewsletterConfigDOM().createConfigXml(config);
 			this.getConfigManager().updateConfigItem(JpnewsletterSystemConstants.NEWSLETTER_CONFIG_ITEM, xml);
 			this.setConfig(config);
-			// restart the scheduler if necessary
-			if (originalStartDate.getTime() != config.getStartScheduler().getTime()) {
-				_logger.info("Newsletter: scheduler restart issued");
-				stopScheduler();
-				restartScheduler(config);
-				_logger.info("Newsletter: scheduler restart completed");
-			}
+			this.refresh();
 		} catch (Throwable t) {
 			_logger.error("Error updating configuration", t);
 			throw new ApsSystemException("Error updating configuration", t);
