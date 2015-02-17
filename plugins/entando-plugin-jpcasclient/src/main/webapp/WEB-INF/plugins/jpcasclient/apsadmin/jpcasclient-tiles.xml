@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+    <!-- ######### Start - Editing of CAS configuration ######### -->
+    <definition extends="main.layout" name="admin.jpcasclient.config.entryConfig">
+		<put-attribute name="title" value="jpcasclient.title.casConfigManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcasclient/apsadmin/jsp/config/configEdit.jsp" />
+	</definition>
+	
+    <definition extends="main.layout" name="admin.jpcasclient.config.saveConfirmed">
+		<put-attribute name="title" value="jpcasclient.title.casConfigManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcasclient/apsadmin/jsp/config/configConfirmed.jsp" />
+	</definition>
+	<!-- ######### End - Editing of CAS configuration ######### -->
+	
+</tiles-definitions>

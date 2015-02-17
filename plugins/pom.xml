@@ -65,6 +65,7 @@
 		<module>entando-plugin-jpehcache</module>
 		<module>entando-plugin-jps3awsclient</module>
 		<module>entando-plugin-jpsolrclient</module>
+		<module>entando-plugin-jpcasclient</module>
 		<module>entando-plugin-jpcomponentinstaller</module>
   </modules>
 	<properties>
