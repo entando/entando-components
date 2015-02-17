@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.entando.entando.bundles</groupId>
 		<artifactId>entando-bundles-parent</artifactId>
-		<version>4.1.2-SNAPSHOT</version>
+		<version>4.2.0-TP1</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>entando-misc-html5-essentials</artifactId>

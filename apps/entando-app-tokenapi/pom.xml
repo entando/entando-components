@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>entando-apps-parent</artifactId>
 		<groupId>org.entando.entando.apps</groupId>
-		<version>4.1.2-SNAPSHOT</version>
+		<version>4.2.0-TP1</version>
 	</parent>
 	<artifactId>entando-app-tokenapi</artifactId>
 	<groupId>org.entando.entando.apps</groupId>
@@ -57,14 +57,14 @@
 		<dependency>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jptokenapi</artifactId>
-			<version>4.1.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+			<version>4.2.0-TP1</version><!-- version. Don't remove this comment. -->
 			<type>war</type>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.entando.entando.bundles.app-view</groupId>
 			<artifactId>entando-app-view-tokenapi-default</artifactId>
-			<version>4.1.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+			<version>4.2.0-TP1</version><!-- version. Don't remove this comment. -->
 			<type>war</type>
 		</dependency>
 		
