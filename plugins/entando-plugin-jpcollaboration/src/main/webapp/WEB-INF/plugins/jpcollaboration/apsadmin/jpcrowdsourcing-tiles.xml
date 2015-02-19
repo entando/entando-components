@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+  <!-- ********* INIZIO Area amministrazione ideainstance ********* -->
+
+    <definition extends="layout.default" name="jpcrowdsourcing.admin.IdeaInstance.list">
+		<put-attribute name="title" value="jpcrowdsourcing.title.ideaInstanceManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/ideainstance/ideaInstance_list.jsp" />
+		<!--<put-attribute name="extraResources" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/common/template/extraresources/ideainstance-list-extras.jsp"/>-->
+	</definition>
+    <definition extends="layout.default" name="jpcrowdsourcing.admin.IdeaInstance.entry">
+		<put-attribute name="title" value="jpcrowdsourcing.title.ideaInstanceManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/ideainstance/ideaInstance-entry.jsp" />
+		<!--<put-attribute name="extraResources" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/common/template/extraresources/ideainstance-entry-extras.jsp"/>-->
+	</definition>
+    <definition extends="layout.default" name="jpcrowdsourcing.admin.IdeaInstance.trash">
+		<put-attribute name="title" value="jpcrowdsourcing.title.ideaInstanceManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/ideainstance/ideaInstance-trash.jsp" />
+		<!--<put-attribute name="extraResources" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/common/template/extraresources/ideainstance-trash-extras.jsp"/>-->
+	</definition>
+
+  <!-- ********* FINE Area amministrazione ideainstance ********* -->
+
+
+  <!-- ********* special-widget ********* -->
+
+    <definition extends="layout.default" name="admin.jpcrowdsourcing.page.widget.publish-instance.config">
+		<put-attribute name="title" value="jpcrowdsourcing.title.ideaInstanceManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/portal/specialwidget/ideainstance/config_ideaInstance.jsp" />
+	</definition>
+
+  <!-- ********* special-widget ********* -->
+
+
+  <!-- ********* INIZIO Area amministrazione idea ********* -->
+
+  <definition extends="layout.default" name="admin.jpcrowdsourcing.idea.list">
+	<put-attribute name="title" value="jpcrowdsourcing.title.ideas" />
+	<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/idea/idea-list.jsp" />
+  </definition>
+
+   <definition extends="layout.default" name="admin.jpcrowdsourcing.idea.delete">
+	<put-attribute name="title" value="jpcrowdsourcing.title.ideas" />
+	<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/idea/idea-delete.jsp" />
+  </definition>
+
+   <definition extends="layout.default" name="admin.jpcrowdsourcing.idea.delete.ref">
+	<put-attribute name="title" value="jpcrowdsourcing.title.ideas" />
+	<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/idea/idea-delete-ref.jsp" />
+  </definition>
+
+   <definition extends="layout.default" name="admin.jpcrowdsourcing.idea.entry">
+   	<put-attribute name="extraResources" value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/categoryTree.jsp" />
+	<put-attribute name="title" value="jpcrowdsourcing.title.ideas" />
+	<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/idea/idea-entry.jsp" />
+  </definition>
+
+
+  <!-- ********* FINE Area amministrazione idea ********* -->
+
+  <!-- ********* INIZIO Area amministrazione commenti ********* -->
+
+  <definition extends="layout.default" name="admin.jpcrowdsourcing.idea.comment.list">
+	<put-attribute name="title" value="jpcrowdsourcing.title.comments" />
+	<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/comment/comment-list.jsp" />
+  </definition>
+
+   <definition extends="layout.default" name="admin.jpcrowdsourcing.idea.comment.delete">
+	<put-attribute name="title" value="jpcrowdsourcing.title.comments" />
+	<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/comment/comment-delete.jsp" />
+  </definition>
+
+   <definition extends="layout.default" name="admin.jpcrowdsourcing.idea.comment.view">
+	<put-attribute name="title" value="jpcrowdsourcing.title.comments" />
+	<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/comment/comment-view.jsp" />
+  </definition>
+
+  <!-- ********* FINE Area amministrazione commenti ********* -->
+
+
+
+
+  <!-- ********* INIZIO Area configurazione plugin ********* -->
+
+  <definition extends="layout.default" name="admin.jpcrowdsourcing.config.entry">
+	<put-attribute name="title" value="jpcrowdsourcing.title.configure" />
+	<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/config/entryConfig.jsp" />
+  </definition>
+
+   <definition extends="layout.default" name="admin.jpcrowdsourcing.config.saved">
+	<put-attribute name="title" value="jpcrowdsourcing.title.configure" />
+	<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/config/configSaved.jsp" />
+  </definition>
+
+  <!-- ********* FINE Area configurazione plugin ********* -->
+
+</tiles-definitions>

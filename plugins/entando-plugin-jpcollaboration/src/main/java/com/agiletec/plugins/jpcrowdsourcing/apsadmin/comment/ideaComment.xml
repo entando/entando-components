@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<package name="collaboration_do/collaboration/Idea/Comment" namespace="/do/collaboration/Idea/Comment" extends="japs-default">
+
+		<action name="list" class="jpcollaborationIdeaCommentFinderAction">
+	        <result type="tiles">admin.jpcrowdsourcing.idea.comment.list</result>
+	      	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+
+		<action name="search" class="jpcollaborationIdeaCommentFinderAction">
+	        <result type="tiles">admin.jpcrowdsourcing.idea.comment.list</result>
+	      	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+	    
+	    <action name="changeStatus" class="jpcollaborationIdeaCommentFinderAction" method="changeStatus">
+	        <result name="input" type="tiles">admin.jpcrowdsourcing.idea.comment.list</result>
+	        <result type="tiles">admin.jpcrowdsourcing.idea.comment.list</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+	    
+	    <action name="trash" class="jpcollaborationIdeaCommentFinderAction" method="trash">
+	        <result name="input" type="tiles">admin.jpcrowdsourcing.idea.comment.list</result>
+	        <result type="tiles">admin.jpcrowdsourcing.idea.comment.delete</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+	    	    
+	    <action name="delete" class="jpcollaborationIdeaCommentFinderAction" method="delete">
+	        <result name="input" type="tiles">admin.jpcrowdsourcing.idea.comment.list</result>
+	    	<result type="redirectAction">list</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+
+	    <action name="view" class="jpcollaborationIdeaCommentFinderAction" method="view">
+	        <result name="input" type="chain">list</result>
+	    	<result type="tiles">admin.jpcrowdsourcing.idea.comment.view</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+	    
+	</package>
+</struts>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>jpcollaboration</code>
+	<description>Collaboration</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
+	<dependencies>
+		<code>jpavatar</code>
+	</dependencies>
+	<installation>
+		<tableMapping>
+			<datasource name="servDataSource">
+				<class>org.entando.entando.plugins.jpcrowdsourcing.aps.system.init.servdb.IdeaInstance</class>
+				<class>org.entando.entando.plugins.jpcrowdsourcing.aps.system.init.servdb.IdeaInstanceGroup</class>
+				<class>org.entando.entando.plugins.jpcrowdsourcing.aps.system.init.servdb.Idea</class>
+				<class>org.entando.entando.plugins.jpcrowdsourcing.aps.system.init.servdb.Comment</class>
+				<class>org.entando.entando.plugins.jpcrowdsourcing.aps.system.init.servdb.Tag</class>
+			</datasource>
+		</tableMapping>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpcollaboration/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpcollaboration/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+		<environment code="test">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpcollaboration/port_data_test.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpcollaboration/serv_data_test.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+</component>
