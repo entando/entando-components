@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	
+    <definition extends="main.layout" name="admin.jpfileattribute.file.entry">
+		<put-attribute name="title" value="jpfileattribute.title.file.entry" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpfileattribute/apsadmin/jsp/entity/modules/file-entry.jsp" />
+	</definition>
+	
+</tiles-definitions>

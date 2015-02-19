@@ -69,6 +69,7 @@
 		<module>entando-plugin-jpcomponentinstaller</module>
 		<module>entando-plugin-jpoauthclient</module>
 		<module>entando-plugin-jpweatherforecast</module>
+		<module>entando-plugin-jpfileattribute</module>
   </modules>
 	<properties>
 		<!--
