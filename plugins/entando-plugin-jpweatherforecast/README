@@ -1,0 +1,13 @@
+Weather forecast
+
+The jpweatherforecast plugin adds a widget to the portal which displays weather
+forecast. When the widget Weather forecast is placed in a frame the system will
+ask for the name of the city and the country.
+It is also possible to insert the geographical coordinates manually to pinpoint
+location of a given point.
+
+Latitude and longitude are returned by a third part service, namely GeoNames
+(http://www.geonames.org/) which offers this service for free upon registration.
+Before using the plugin an account at GeoNames must be created and the related
+username must be inserted in the plugin configuration page which is placed in the
+general settings page.

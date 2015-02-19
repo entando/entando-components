@@ -68,6 +68,7 @@
 		<module>entando-plugin-jpcasclient</module>
 		<module>entando-plugin-jpcomponentinstaller</module>
 		<module>entando-plugin-jpoauthclient</module>
+		<module>entando-plugin-jpweatherforecast</module>
   </modules>
 	<properties>
 		<!--
