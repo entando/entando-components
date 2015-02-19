@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpsharedocs_do/jpsharedocs/Document" namespace="/do/jpsharedocs/Document" extends="entando-front-default">
+    	
+    	<action name="entry" class="jpsharedocsEditDocumentAction" method="entry" >
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_edit.jsp</result>
+       		<interceptor-ref name="entandoFrontEndStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+        
+    	<action name="releaseDocument" class="jpsharedocsEditDocumentAction" method="releaseDocument" >
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_edit.jsp</result>
+       		<interceptor-ref name="entandoFrontEndStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+        
+    	<action name="compileFields" class="jpsharedocsEditDocumentAction" >
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_edit.jsp</result>
+       		<interceptor-ref name="entandoFrontEndStack" >
+       			<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+       			<param name="requestAuth.requiredPermission">jpsharedocs_edit</param>
+       		</interceptor-ref>
+        </action>
+    	
+    	<action name="submitFields" class="jpsharedocsEditDocumentAction" method="saveFields" >
+    		<result name="input" type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_edit.jsp</result>
+        	<result type="chain" >compileCategories</result>
+        	<interceptor-ref name="fileUpload"><param name="maximumSize">10485760</param></interceptor-ref><!-- maximun Size = 10 Mb -->
+       		<interceptor-ref name="entandoFrontEndValidationStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+    	
+    	
+    	<action name="compileCategories" class="jpsharedocsEditDocumentAction" >
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_choose_categories.jsp</result>
+       		<interceptor-ref name="entandoFrontEndStack" >
+       			<param name="chain.includeParameters">tmpFileName,fieldErrors,actionErrors,actionMessages</param>
+       			<param name="requestAuth.requiredPermission">jpsharedocs_edit</param>
+       		</interceptor-ref>
+        </action>
+        
+        <action name="joinCategory" class="jpsharedocsEditDocumentAction" method="joinCategory">
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_choose_categories.jsp</result>
+       		<interceptor-ref name="entandoFrontEndStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+        
+        <action name="removeCategory*" class="jpsharedocsEditDocumentAction" method="removeCategory">
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_choose_categories.jsp</result>
+       		<interceptor-ref name="entandoFrontEndStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+    	
+    	<action name="submitCategories" class="jpsharedocsEditDocumentAction" >
+    		<result name="input" type="chain">${inputActionName}</result>
+    		<result type="chain">compileGroups</result>
+       		<interceptor-ref name="entandoFrontEndValidationStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+    	
+    	
+    	<action name="compileGroups" class="jpsharedocsEditDocumentAction" >
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_choose_groups.jsp</result>
+       		<interceptor-ref name="entandoFrontEndStack" >
+       			<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+       			<param name="requestAuth.requiredPermission">jpsharedocs_edit</param>
+       		</interceptor-ref>
+        </action>
+        
+        <action name="joinGroup" class="jpsharedocsEditDocumentAction" method="joinGroup">
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_choose_groups.jsp</result>
+       		<interceptor-ref name="entandoFrontEndStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+        
+        <action name="removeGroup*" class="jpsharedocsEditDocumentAction" method="removeGroup">
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_choose_groups.jsp</result>
+       		<interceptor-ref name="entandoFrontEndStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+    	
+    	<action name="submitGroups" class="jpsharedocsEditDocumentAction" >
+    		<result name="input" type="chain">${inputActionName}</result>
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_summary.jsp</result>
+       		<interceptor-ref name="entandoFrontEndValidationStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+    	
+    	
+    	<action name="save*" class="jpsharedocsEditDocumentAction" method="saveContent" >
+    		<result name="input" type="chain">${inputActionName}</result>
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_saved_confirm.jsp</result>
+       		<interceptor-ref name="entandoFrontEndValidationStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+    	
+    	
+    	<action name="entryComment" class="jpsharedocsDocumentCommentAction" method="entry" >
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/comment_edit.jsp</result>
+       		<interceptor-ref name="entandoFrontEndStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+    	
+    	<action name="saveComment" class="jpsharedocsDocumentCommentAction" method="saveContent" >
+    		<result name="input" type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/comment_edit.jsp</result>
+    		<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/comment_saved_confirm.jsp</result>
+       		<interceptor-ref name="entandoFrontEndValidationStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+			</action>
+
+			<action name="trashContent*" class="jpsharedocsEditDocumentAction" method="trashContent" >
+				<!-- redirect action list -->
+				<result name="input" type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_edit.jsp</result>
+				<result type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/widgets/jpsharedocs_trash.jsp</result>
+				<interceptor-ref name="entandoFrontEndStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+			</action>
+
+			<action name="removeContent" class="jpsharedocsEditDocumentAction" method="removeContent" >
+				<result name="input" type="dispatcher">/WEB-INF/plugins/jpsharedocs/aps/jsp/internalservlet/sharedocs/doc_edit.jsp</result>
+				<result type="redirect">${retUrl}</result>
+				<interceptor-ref name="entandoFrontEndStack" ><param name="requestAuth.requiredPermission">jpsharedocs_edit</param></interceptor-ref>
+        </action>
+        
+    </package>
+    
+</struts>

@@ -1,0 +1,41 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>20093</id>
+  <contentType>SDC</contentType>
+  <description>Comments detail</description>
+  <shape><![CDATA[<div class="scheda_documento">
+	<h3>$i18n.getLabel("jpsharedocs_COMMENTS_FOR")&#32;$content.Title.text</h3>
+	
+	<div class="commenti">
+		#if ($content.Comments && $content.Comments.size() > 0)
+				<ol>
+					#foreach ($com in $content.Comments)
+						<li>
+							<h4>$com.Author.text, $com.CommentDate.getFormattedDate("EEEE dd MMMM yyyy"), $com.CommentDate.getFormattedDate("k:m")</h4>
+							<p>$com.Comment.text</p>
+						</li>	
+					#end
+				</ol>
+		#else 
+			<p>$i18n.getLabel("jpsharedocs_NO_COMMENTS")</p>
+		#end
+	</div>
+	
+	<div class="linkcorrelati">
+		<h4>$i18n.getLabel("jpsharedocs_ADDITIONAL_INFOS")</h4>
+		<ul>
+			<li><a href="$content.contentLink">$i18n.getLabel("jpsharedocs_DOC_INFO")</a></li>
+			#if ($content.Versions && $content.Versions.size() > 0)
+				#set ( $numVersioni = $content.Versions.size() )
+				<li><a href="$content.getContentOnPageLink("sharedocs_versions")">$i18n.getLabel("jpsharedocs_VERSIONS_DETAILS") ($numVersioni in totale)</a></li>
+			#end
+		</ul>
+	</div>	
+</div>]]></shape>
+	<stylesheet>../../plugins/jpsharedocs/static/css/model.css</stylesheet>
+</contentModel>

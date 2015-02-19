@@ -73,6 +73,7 @@
 		<module>entando-plugin-jpmailgun</module>
 		<module>entando-plugin-jpcollaboration</module>
 		<module>entando-plugin-jpwebform</module>
+		<module>entando-plugin-jpsharedocs</module>
   </modules>
 	<properties>
 		<!--

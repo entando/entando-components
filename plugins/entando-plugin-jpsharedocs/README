@@ -1,0 +1,87 @@
+Shared Docs (jpsharedocs) Plugin
+
+This plugin adds to the portal the functionality of a basic document repository;
+that is, a given document can be created, shared and modified from the frontend
+of a portal (or dashboard): all the versions of the document will be available
+for consultation, and comments can be always added.
+User permissions checking and lock mechanism of shared documents are enforced.
+
+From a technical point of view this plugin injects a new content type (SDC) which
+is made available for editing in the frontend; content models for list and
+details are also added.
+
+Installation
+
+Add the following snippet to the POM.xml
+
+		<dependency>
+			<groupId>org.entando.entando.plugins</groupId>
+			<artifactId>entando-plugin-jpsharedocs</artifactId>
+			<version>${entando.version}</version>
+			<type>war</type>
+		</dependency>
+
+Finally, users must have a role with the permission "Shared docs - edit" granted
+
+Widgets
+ 
+This plugin adds a number of widgets:
+ 
+ Share Docs - Comment document: let users add a comment to a given content
+ Share Docs - Document comments: displays all the comments of a given content
+ Share Docs - Document details: show the details of a shared document
+ Share Docs - Document versions: list all the versions of a given document
+ Share Docs - Edit document: this widgets is used to edit a new document or 
+              to create a new one
+ Share Docs - Publish a list of shared documents: this widget is a clone of a
+              standard content list viewer so that it must be configured to 
+              list shared documents.
+ Share Docs - Remove document: this widget asks for confirmation when deleting
+ 							a shared document
+
+Pages
+
+The code of few pages is fixed because is explicitly referenced by some content
+models - so care must be taken to keep pages code and content model aligned
+
+A standard pages layout is as follows:
+
+ sharedocs_comment: widget "Share Docs - Comment document"
+ 
+ sharedocs_edit: widget "widget Share Docs - Edit document"
+ 
+ sharedocs_versions: widget "Share Docs - Document versions". WARNING: this page
+										code is explicitly referenced in the content model 
+										20009 "Full (link Versions and Comments) - Default".
+										
+ sharedocs_comments: widget "Share Docs - Document comments". WARNING: this page
+										code is explicitly referenced in the content model 
+										20009 "Full (link Versions and Comments) - Default".
+
+ sharedocs_list: widget "Share Docs - Publish a list of shared documents"
+
+ sharedocs_view: widget "Share Docs - Document details". WARNING: this page
+										code is explicitly referenced in the content model 
+										20091 "Lists - Default".
+ sharedocs_trash: widget "Share Docs - Remove document"
+ 
+ Configuration options:
+ 
+ The plugins has 3 settings:
+ 
+	- Working directory: the temporary path used for internal operations
+	
+	The most useful settings are the removal options: be removal we intend the 
+	operation that an authorized perform to remove a shared document from the
+	list in the frontend (users will be asked for confirmation)
+	
+	- Delete shared content upon removal: when checked the content will be deleted
+	  from the CMS, otherwise the shared content will be suspended from publication
+	  (hence it won't appear in the frontend list). DEFAULT: false (unchecked)
+	- Delete attachments with content: (this setting has effect only when the 
+	  content will be deleted upon removal) when checked will delete all the 
+	  attachments from the CMS and from the file system, otherwise they will 
+	  be kept. DEFAULT: true (checked)
+
+ 
+ 
