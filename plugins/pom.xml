@@ -67,6 +67,7 @@
 		<module>entando-plugin-jpsolrclient</module>
 		<module>entando-plugin-jpcasclient</module>
 		<module>entando-plugin-jpcomponentinstaller</module>
+		<module>entando-plugin-jpoauthclient</module>
   </modules>
 	<properties>
 		<!--

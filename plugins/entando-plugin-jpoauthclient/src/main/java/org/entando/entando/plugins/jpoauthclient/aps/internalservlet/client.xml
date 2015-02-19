@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    
+    <package name="jpoauthclient_do/jpoauthclient/Front" namespace="/do/jpoauthclient/Front" extends="entando-front-default">
+        
+        <action name="intro" class="jpoauthclientFrontOAuthClientAction">
+            <result type="dispatcher">/WEB-INF/plugins/jpoauthclient/aps/jsp/internalServlet/intro.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+		
+        <action name="call" class="jpoauthclientFrontOAuthClientAction" method="call">
+            <result name="input" type="dispatcher">/WEB-INF/plugins/jpoauthclient/aps/jsp/internalServlet/intro.jsp</result>
+        	<result type="dispatcher">/WEB-INF/plugins/jpoauthclient/aps/jsp/internalServlet/response.jsp</result>
+        	<result name="xmlPlainTextResult" type="redirectAction">
+				<param name="actionName">xmlPlainTextResult</param>
+				<!-- <param name="serviceResponse">${serviceResponse}</param> -->
+			</result>
+			<result name="jsonPlainTextResult" type="redirectAction">
+				<param name="actionName">jsonPlainTextResult</param>
+				<!-- <param name="serviceResponse">${serviceResponse}</param> -->
+			</result>
+			<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+        </action>
+		
+        <action name="xmlPlainTextResult" class="jpoauthclientFrontOAuthClientAction" method="viewTextResult">
+            <result type="dispatcher">/WEB-INF/plugins/jpoauthclient/aps/jsp/internalServlet/response_xml.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+		
+        <action name="jsonPlainTextResult" class="jpoauthclientFrontOAuthClientAction" method="viewTextResult">
+            <result type="dispatcher">/WEB-INF/plugins/jpoauthclient/aps/jsp/internalServlet/response_json.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+		
+    </package>
+    
+</struts>
