@@ -70,6 +70,7 @@
 		<module>entando-plugin-jpoauthclient</module>
 		<module>entando-plugin-jpweatherforecast</module>
 		<module>entando-plugin-jpfileattribute</module>
+		<module>entando-plugin-jpmailgun</module>
   </modules>
 	<properties>
 		<!--
