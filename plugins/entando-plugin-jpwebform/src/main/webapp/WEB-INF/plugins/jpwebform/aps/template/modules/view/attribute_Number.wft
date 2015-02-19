@@ -1,0 +1,9 @@
+<%-- this is auto-generated code --BEGIN-- --%>
+<s:set var="attributeVar" value='%{#messageVar.getAttribute("$${attributeName}$$")}' />
+<s:if test="#lang.default">
+<s:property value="#attributeVar.value" />
+</s:if>
+<s:else>
+<s:text name="EntityAttribute.monolang.defaultValue" />
+</s:else>
+<%-- this is auto-generated code --END-- --%>

@@ -1,0 +1,9 @@
+<div class="control-group">
+	<div class="control-label">
+		[[#fieldName=##name##;type=label#]]
+		[[#fieldName=##name##;type=info#]]
+	</div>
+	<div class="controls">
+		[[#fieldName=##name##;type=input#]]
+	</div>
+</div>

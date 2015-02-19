@@ -1,0 +1,9 @@
+<%-- this is auto-generated code --BEGIN-- --%>
+<s:if test="#lang.default">
+	<s:if test="%{#attributeVar.value == true}"><s:text name="label.yes"/></s:if>
+	<s:else><s:text name="label.no"/></s:else>
+</s:if>
+<s:else>
+	<s:text name="EntityAttribute.monolang.defaultValue"/>
+</s:else>
+<%-- this is auto-generated code --END-- --%>

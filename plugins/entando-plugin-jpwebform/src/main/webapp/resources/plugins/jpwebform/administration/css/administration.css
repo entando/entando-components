@@ -1,0 +1,10 @@
+.noWrap, 
+td.editGui {
+	white-space: nowrap;
+}
+
+
+table.generic th.icon.rightText, table.generic td.icon.rightText,
+td.icon.rightText {
+	text-align: right;
+}

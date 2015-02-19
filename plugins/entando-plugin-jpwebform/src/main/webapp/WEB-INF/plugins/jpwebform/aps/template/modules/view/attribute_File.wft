@@ -1,0 +1,15 @@
+<%-- this is auto-generated code --BEGIN-- --%>
+<s:set var="attributeVar" value='%{#messageVar.getAttribute("$${attributeName}$$")}' />
+<s:set name="currentAttachedFileVar" value="#attributeVar.attachedFile"></s:set>
+<s:if test="#currentAttachedFileVar != null">
+<a class="noborder" href="<s:url action="viewFileResource" namespace="/do/jpwebform/Form/Resource" >
+	<s:param name="parentAttributeName" value="%{#parentAttribute.name}" />
+	<s:param name="attributeName" value="%{#attributeVar.name}" />
+	<s:param name="elementIndex" value="%{#elementIndex}" />
+	<s:param name="typeCode" value="%{#messageVar.typeCode}" />
+</s:url>"><s:property value="%{#currentAttachedFileVar.filename}"/></a>
+</s:if>
+<s:else>
+No file attached.
+</s:else>
+<%-- this is auto-generated code --END-- --%>

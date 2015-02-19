@@ -1,0 +1,19 @@
+.CodeMirror {
+	max-width: 900px;
+}
+
+form .CodeMirror {
+	max-width: 600px;
+	width: 600px;
+	margin: 0 5px 0 0;
+	padding: 5px 0 5px 8px;
+	display: inline-block;
+	-moz-border-radius: 4px 4px 4px 4px;
+	-moz-box-shadow: 1px 1px 1px #545454 inset;
+	background-color: #F3F3F3;
+}
+
+
+.CodeMirror {
+	color: #000;
+}

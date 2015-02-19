@@ -1,0 +1,125 @@
+<%-- this is auto-generated code --BEGIN-- --%>
+<s:set name="masterCompositeAttributeTracer" value="#attributeTracer" />
+<s:set name="masterCompositeAttribute" value="#attributeVar" />
+<s:iterator value="#attributeVar.attributes" var="attributeVar">
+<s:set name="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)"></s:set>
+<s:set name="parentAttribute" value="#masterCompositeAttribute"></s:set>
+	<div class="control-group">
+		<div class="control-label" for="">
+			<label for="<s:property value="%{#attributeTracer.getFormFieldName(#attributeVar)}" />"><s:property value="#attributeVar.name"/></label>
+
+			<%-- attribute_info //start --%>
+				<s:if test="#attributeVar.required">&#32;<span class="jpwebform-field-flag jpwebform-field-flag-mandatory"><abbr title="<wp:i18n key="jpwebform_ENTITY_ATTR_FLAG_MANDATORY_FULL"/>"><wp:i18n key="jpwebform_ENTITY_ATTR_FLAG_MANDATORY_SHORT"/></abbr></span></s:if>
+				<s:if test="#attributeVar.textAttribute">
+					<s:if test="#attributeVar.minLength != -1">&#32;<span class="jpwebform-field-flag jpwebform-field-flag-minlength"><abbr title="<wp:i18n key="jpwebform_ENTITY_ATTR_FLAG_MINLENGTH_FULL" />" ><wp:i18n key="jpwebform_ENTITY_ATTR_FLAG_MINLENGTH_SHORT" /></abbr>:&#32;<s:property value="#attributeVar.minLength" /></span></s:if>
+					<s:if test="#attributeVar.maxLength != -1">&#32;<span class="jpwebform-field-flag jpwebform-field-flag-maxlength"><abbr title="<wp:i18n key="jpwebform_ENTITY_ATTR_FLAG_MAXLENGTH_FULL" />"><wp:i18n key="jpwebform_ENTITY_ATTR_FLAG_MAXLENGTH_SHORT" /></abbr>:&#32;<s:property value="#attributeVar.maxLength" /></span></s:if>
+				</s:if>
+				<s:set var="validationRules" value="#attributeVar.validationRules" />
+				<s:if test="#validationRules != null && #validationRules.ognlValidationRule != null && #validationRules.ognlValidationRule.expression != null">
+					<s:if test="#validationRules.ognlValidationRule.helpMessageKey != null">
+						<s:set var="labelKey" value="#validationRules.ognlValidationRule.helpMessageKey" scope="page" />
+						<s:set var="langCode" value="currentLang.code" scope="page" /><wp:i18n var="helpMessageFullVar" key="${attributeLabelKeyVar}" lang="${langCode}" />
+					</s:if>
+					<s:else><s:set var="helpMessageFullVar" value="#validationRules.ognlValidationRule.helpMessage" scope="page" /></s:else>
+				&#32;<span class="jpwebform-field-flag jpwebform-field-flag-help"><abbr title="<s:property value="#attr.helpMessageFullVar" />"><wp:i18n key="jpwebform_ENTITY_ATTR_FLAG_HELP_SHORT" /></abbr></span>
+				</s:if>
+			<%-- attribute_info //end --%>
+		</div>
+		<div class="controls">
+			
+			<s:if test="%{#attributeVar.type != 'Hypertext'}">
+				<span class="jpwebform-value">
+			</s:if>
+			<s:else>
+				<div class="jpwebform-value">
+			</s:else>
+
+				<s:if test="#attributeVar.type == 'Boolean'">
+					<s:if test="#lang.default">
+						<s:if test="%{#attributeVar.value == true}"><s:text name="label.yes"/></s:if>
+						<s:else><s:text name="label.no"/></s:else>
+					</s:if>
+					<s:else><s:text name="EntityAttribute.monolang.defaultValue"/></s:else>
+				</s:if>
+
+				<s:elseif test="#attributeVar.type == 'CheckBox'">
+					<s:if test="#lang.default">
+						<s:set name="checkedValue" value="%{#attributeVar.booleanValue != null && #attributeVar.booleanValue ==true}" />
+						<s:if test="%{#checkedValue}"><s:text name="label.yes"/></s:if>
+						<s:else><s:text name="label.no"/></s:else>
+					</s:if>
+					<s:else><s:text name="EntityAttribute.monolang.defaultValue" /></s:else>
+				</s:elseif>
+
+				<s:elseif test="#attributeVar.type == 'Date'">
+					<s:if test="#lang.default"><s:property value="#attributeVar.getFormattedDate('dd/MM/yyyy')" /></s:if>
+					<s:else><s:text name="EntityAttribute.monolang.defaultValue" /></s:else>
+				</s:elseif>
+
+				<s:elseif test="#attributeVar.type == 'Enumerator'">
+					<s:if test="#lang.default"><s:property value="%{#attributeVar.getText()}" /></s:if>
+					<s:else>
+						<s:if test="#attributeTracer.listElement"><s:property value="%{#attributeVar.getText()}" /></s:if>
+						<s:else><s:text name="EntityAttribute.monolang.defaultValue" /></s:else>
+					</s:else>
+				</s:elseif>
+
+				<s:elseif test="#attributeVar.type == 'File'">
+					<s:set name="currentAttachedFileVar" value="#attributeVar.attachedFile"></s:set>
+					<s:if test="#currentAttachedFileVar != null">
+						<a class="noborder" href="<s:url action="viewFileResource" namespace="/do/jpwebform/Form/Resource" >
+							<s:param name="parentAttributeName" value="%{#parentAttribute.name}" />
+							<s:param name="attributeName" value="%{#attributeVar.name}" />
+							<s:param name="elementIndex" value="%{#elementIndex}" />
+							<s:param name="typeCode" value="%{#messageVar.typeCode}" />
+						</s:url>"><s:property value="%{#currentAttachedFileVar.filename}"/></a>
+					</s:if>
+				</s:elseif>
+
+				<s:elseif test="#attributeVar.type == 'Hypertext'">
+					<s:property value="%{#attributeVar.textMap[#lang.code]}" escape="true" />
+				</s:elseif>
+				
+				<s:elseif test="#attributeVar.type == 'Longtext'">
+					<s:property value="#attributeVar.getTextForLang(#lang.code)" />
+				</s:elseif>
+				
+				<s:elseif test="#attributeVar.type == 'Monotext'">
+					<s:property value="#attributeVar.getText()" />
+				</s:elseif>
+
+				<s:elseif test="#attributeVar.type == 'Number'">
+					<s:if test="#lang.default"><s:property value="#attributeVar.value" /></s:if>
+					<s:else><s:text name="EntityAttribute.monolang.defaultValue" /></s:else>
+				</s:elseif>
+
+				<s:if test="#attributeVar.type == 'Text'">
+					<s:property value="#attributeVar.getTextForLang(#lang.code)" />
+				</s:if>
+
+				<s:elseif test="#attributeVar.type == 'ThreeState'">
+					<s:if test="#lang.default">
+						<s:if test="%{#attributeVar.booleanValue == null}"><s:text name="label.bothYesAndNo"/></s:if>
+						<s:elseif test="%{#attributeVar.booleanValue != null && #attributeVar.booleanValue == true}"><s:text name="label.yes"/></s:elseif>
+						<s:elseif test="%{#attributeVar.booleanValue != null && #attributeVar.booleanValue == false}"><s:text name="label.no"/></s:elseif>
+					</s:if>
+					<s:else><s:text name="EntityAttribute.monolang.defaultValue" /></s:else>
+				</s:elseif>
+
+			<s:if test="%{#attributeVar.type != 'Hypertext'}">
+				</span>
+			</s:if>
+			<s:else>
+				</div>
+			</s:else>
+
+		</div>
+	</div>
+
+</s:iterator>
+<s:set name="attributeTracer" value="#masterCompositeAttributeTracer" />
+<s:set name="attributeVar" value="#masterCompositeAttribute" />
+<s:set name="parentAttribute" value=""></s:set>
+
+
+<%-- this is auto-generated code --END-- --%>

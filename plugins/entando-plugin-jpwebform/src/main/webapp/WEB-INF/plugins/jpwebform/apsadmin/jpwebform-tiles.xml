@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+	<!-- ********* INIZIO Area Gestione Entità ********* -->
+
+    <definition extends="layout.default" name="admin.jpwebform.entityManagement.viewEntityTypes">
+		<put-attribute name="title" value="jpwebform.title.formsManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/common/layouts/assets-more/form-list-extras.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/form/form-list.jsp" />
+	</definition>
+
+    <definition extends="layout.default" name="admin.jpwebform.entityManagement.entryEntityType">
+		<put-attribute name="title" value="jpwebform.title.formsManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/form/form-entry.jsp" />
+	</definition>
+
+    <definition extends="layout.default" name="admin.entityManagement.removeEntityTypeConfirm">
+        <put-attribute name="title" value="title.entityManagement" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/form/form-delete-confirm.jsp" />
+    </definition>
+
+    <!-- ********* FINE Area Gestione Entità ********* -->
+
+	<definition extends="layout.default" name="admin.jpwebform.Config.Step.entry">
+		<put-attribute name="title" value="jpwebform.title.formType.stepsConfig" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/form/entrySteps.jsp" />
+	</definition>
+
+	<definition extends="layout.default" name="admin.jpwebform.Config.Gui.entry">
+		<put-attribute name="title" value="jpwebform.title.formType.guiConfig" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/form/entryGuiConfig.jsp" />
+	</definition>
+
+	<definition extends="layout.default" name="admin.jpwebform.Config.Gui.edit">
+		<put-attribute name="title" value="jpwebform.title.formType.guiConfig" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/common/layouts/assets-more/entryGui-extras.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/form/entryGui.jsp" />
+	</definition>
+
+	<definition extends="layout.default" name="admin.jpwebform.Config.publish">
+		<put-attribute name="title" value="jpwebform.title.formType.publish" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/form/publish.jsp" />
+	</definition>
+
+    <!-- ********* START Message Notifier Config Management Area ********* -->
+
+    <definition extends="layout.default" name="admin.jpwebform.Message.Config.list">
+		<put-attribute name="title" value="jpwebform.title.messageTypes.notifierConfig" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/message/config/messageTypeSummary.jsp" />
+	</definition>
+
+    <definition extends="layout.default" name="admin.jpwebform.Message.Config.edit">
+		<put-attribute name="title" value="jpwebform.title.messageTypes.notifierConfig" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/message/config/entryMessageType.jsp" />
+	</definition>
+
+    <!-- ********* END Message Notifier Config Management Area ********* -->
+
+    <!-- ********* START Messages Management Area ********* -->
+
+    <definition extends="layout.default" name="admin.jpwebform.Message.list">
+		<put-attribute name="title" value="admin.jpwebform.title.messageManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/common/layouts/assets-more/calendar.jsp" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/message/messageFinding.jsp" />
+	</definition>
+
+    <definition extends="layout.default" name="admin.jpwebform.Message.view">
+		<put-attribute name="title" value="admin.jpwebform.title.messageManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/message/viewMessage.jsp" />
+	</definition>
+
+    <definition extends="layout.default" name="admin.jpwebform.Message.entryAnswer">
+		<put-attribute name="title" value="admin.jpwebform.title.messageManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/message/entryAnswer.jsp" />
+	</definition>
+
+    <definition extends="layout.default" name="admin.jpwebform.Message.trash">
+		<put-attribute name="title" value="admin.jpwebform.title.messageManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/message/trashMessage.jsp" />
+	</definition>
+
+    <!-- ********* END Messages Management Area ********* -->
+
+    <definition extends="layout.default" name="admin.jpwebform.Page.Widget.webform.config">
+		<put-attribute name="title" value="title.pageManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/portal/specialwidget/webFormConfig.jsp" />
+	</definition>
+
+    <definition extends="layout.default" name="admin.jpwebform.Page.Widget.webform.config.list">
+		<put-attribute name="title" value="title.pageManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/portal/specialwidget/webFormListConfig.jsp" />
+	</definition>
+
+</tiles-definitions>

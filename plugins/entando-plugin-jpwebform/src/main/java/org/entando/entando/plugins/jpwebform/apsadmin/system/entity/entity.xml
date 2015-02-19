@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpwebform_do/jpwebform/Entity" namespace="/do/jpwebform/Entity" extends="entando-default">
+		
+		<action name="initViewEntityTypes" class="jpwebformFormEntityTypeAction">
+			<result name="input" type="chain">
+				<param name="namespace">/do/Entity</param>
+				<param name="actionName">viewManagers</param>
+			</result>
+			<result type="chain">
+				<param name="namespace">/do${entityTypeManagementNamespacePrefix}/Entity</param>
+				<param name="actionName">viewEntityTypes</param>
+			</result>
+			<interceptor-ref name="entandoValidationStack">
+				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+		
+		<action name="viewEntityTypes" class="jpwebformFormEntityTypeAction">
+			<result name="input" type="chain">
+				<param name="namespace">/do/Entity</param>
+				<param name="actionName">viewManagers</param>
+			</result>
+			<result type="tiles">admin.jpwebform.entityManagement.viewEntityTypes</result>
+			<interceptor-ref name="entandoValidationStack">
+				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+		</action>
+		
+		<!-- you have to rewrite this action to manage custom entity types -->
+		<action name="addEntityType" class="entityTypeConfigAction" method="addEntityType">
+			<result name="wrongEntityManager" type="chain">viewManagers</result>
+			<result type="tiles">admin.jpwebform.entityManagement.entryEntityType</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+		<!-- you have to rewrite this action to manage custom entity types -->
+		<action name="editEntityType" class="jpwebformFormEntityTypeConfigAction" method="editEntityType">
+			<result name="wrongEntityManager" type="chain">viewManagers</result>
+			<result name="input" type="chain">initViewEntityTypes</result>
+			<result type="tiles">admin.jpwebform.entityManagement.entryEntityType</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+		<!-- you have to rewrite this action to manage custom entity types -->
+		<action name="entryEntityType" class="jpwebformFormEntityTypeConfigAction" >
+			<result type="tiles">admin.jpwebform.entityManagement.entryEntityType</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+		<!-- INIZIO operazioni su attributi -->
+		
+		<!-- you have to rewrite this action to manage custom entity types -->
+		<action name="addAttribute" class="jpwebformFormEntityTypeConfigAction" method="addAttribute">
+			<result name="input" type="tiles">admin.jpwebform.entityManagement.entryEntityType</result>
+			<result type="redirectAction">
+				<param name="namespace">/do/Entity/Attribute</param>
+				<param name="actionName">addAttribute</param>
+				<param name="attributeTypeCode">${attributeTypeCode}</param>
+			</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+		<!-- you have to rewrite this action to manage custom entity types -->
+		<action name="editAttribute*" class="jpwebformFormEntityTypeConfigAction" method="editAttribute">
+			<result name="input" type="tiles">admin.jpwebform.entityManagement.entryEntityType</result>
+			<result type="redirectAction">
+				<param name="namespace">/do/Entity/Attribute</param>
+				<param name="actionName">editAttribute</param>
+				<param name="attributeName">${attributeName}</param>
+			</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+		<!-- you have to rewrite this action to manage custom entity types -->
+		<action name="moveAttribute*" class="jpwebformFormEntityTypeConfigAction" method="moveAttribute">
+			<result type="redirectActionWithAnchor">
+        		<param name="actionName">entryEntityType</param>
+        		<param name="anchorDest">fagiano_entityTypesList</param>
+        	</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+		<!-- you have to rewrite this action to manage custom entity types -->
+		<action name="removeAttribute*" class="jpwebformFormEntityTypeConfigAction" method="removeAttribute">
+			<result type="redirectActionWithAnchor">
+        		<param name="actionName">entryEntityType</param>
+				<param name="attributeIndex">${attributeIndex}</param>
+        		<param name="anchorDest">fagiano_entityTypesList</param>
+        	</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+
+		<!-- FINE operazioni su attributi -->
+		
+		<!-- you have to rewrite this action to manage custom entity types -->
+		<action name="saveEntityType" class="jpwebformFormEntityTypeConfigAction" method="saveEntityType">
+			<result name="input" type="tiles">admin.jpwebform.entityManagement.entryEntityType</result>
+			<result type="redirectAction">
+				<param name="actionName">initViewEntityTypes</param>
+				<param name="entityManagerName">${entityManagerName}</param>
+			</result>
+			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+    </package>
+    
+</struts>

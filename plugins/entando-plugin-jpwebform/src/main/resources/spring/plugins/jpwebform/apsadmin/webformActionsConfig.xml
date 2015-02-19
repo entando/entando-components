@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<bean id="jpwebformSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jpwebform/apsadmin/jsp/common/layouts/subMenu.jsp</value></property>
+	</bean>
+	
+	<!-- ****** CONFIG ****** -->
+	
+	<bean id="jpwebformStepConfigAction" scope="prototype" 
+			class="org.entando.entando.plugins.jpwebform.apsadmin.form.StepConfigAction" 
+			parent="abstractBaseAction" >
+		<property name="formManager" ref="jpwebformFormManager" />
+	</bean>
+	
+	<bean id="jpwebformGuiConfigAction" scope="prototype" 
+			class="org.entando.entando.plugins.jpwebform.apsadmin.form.GuiConfigAction" 
+			parent="abstractBaseAction" >
+		<property name="pageManager" ref="PageManager" />
+		<property name="formManager" ref="jpwebformFormManager" />
+		<property name="guiGeneratorManager" ref="jpwebformGuiGeneratorManager" />
+		<property name="langManager" ref="LangManager" />
+	</bean>
+	
+	<bean id="jpwebformPublisherAction" scope="prototype" 
+			class="org.entando.entando.plugins.jpwebform.apsadmin.form.PublisherAction" 
+			parent="abstractBaseAction" >
+		<property name="pageManager" ref="PageManager" />
+		<property name="formManager" ref="jpwebformFormManager" />
+	</bean>
+
+
+	<bean id="jpwebformStepPreviewAction" scope="prototype" 
+			class="org.entando.entando.plugins.jpwebform.apsadmin.form.StepPreviewAction" 
+			parent="abstractBaseAction" >
+		<property name="guiGeneratorManager" ref="jpwebformGuiGeneratorManager" />
+		<property name="pageManager" ref="PageManager" />
+		<property name="formManager" ref="jpwebformFormManager" />
+		<property name="langManager" ref="LangManager" />
+	</bean>
+	
+	<!-- ****** MANAGE MESSAGE ****** -->
+	
+	<bean id="jpwebformMessageFinderAction" scope="prototype" 
+			class="org.entando.entando.plugins.jpwebform.apsadmin.message.MessageFinderAction" 
+			parent="defaultEntityFinderAction" >
+		<property name="messageManager" ref="jpwebformFormManager" />
+	</bean>
+	
+	<bean id="jpwebformOperatorMessageAction" scope="prototype"
+			class="org.entando.entando.plugins.jpwebform.apsadmin.message.OperatorMessageAction"
+			parent="abstractBaseAction" >
+		<property name="messageManager" ref="jpwebformFormManager" />
+	</bean>
+	
+	<bean id="jpwebformNotifierConfigAction" scope="prototype"
+			class="org.entando.entando.plugins.jpwebform.apsadmin.message.config.NotifierConfigAction"
+			parent="abstractBaseAction" >
+		<property name="messageManager" ref="jpwebformFormManager" />
+		<property name="mailManager" ref="jpmailMailManager" />
+	</bean>
+
+	<!-- ****** MANAGE FORM ****** -->
+
+	<bean id="jpwebformFormAction" scope="prototype" 
+		  class="org.entando.entando.plugins.jpwebform.apsadmin.form.FormAction" 
+		  parent="abstractBaseAction" >
+		<property name="formManager" ref="jpwebformFormManager" />
+	</bean>
+
+	<bean id="jpwebformFormEntityTypeAction" scope="prototype" 
+		  class="org.entando.entando.plugins.jpwebform.apsadmin.form.FormEntityTypeAction" 
+		  parent="entityTypesAction" >
+		<property name="formManager" ref="jpwebformFormManager" />
+	</bean>
+
+	<bean id="jpwebformFormEntityTypeConfigAction" scope="prototype" 
+		  class="org.entando.entando.plugins.jpwebform.apsadmin.form.FormEntityTypeConfigAction" 
+		  parent="entityTypeConfigAction" >
+	</bean>
+
+	<bean id="jpwebformWebformFileAttributeAction" scope="prototype" 
+		  class="org.entando.entando.plugins.jpwebform.apsadmin.form.WebformFileAttributeAction" 
+		  parent="abstractBaseAction" >
+		<property name="entityActionHelper" ref="entityActionHelper"/>
+		<property name="persistenceManager" ref="jpfileattributeFilePersistenceManager" />
+	</bean>
+
+	<bean id="jpwebformFileAttributeMessageAction" scope="prototype" 
+		  class="org.entando.entando.plugins.jpwebform.apsadmin.message.FileAttributeMessageAction" parent="abstractBaseAction" >
+        <property name="persistenceManager" ref="jpfileattributeFilePersistenceManager" />
+    </bean>
+
+
+</beans>
