@@ -1,0 +1,33 @@
+<contentModel>
+  <id>10006</id>
+  <contentType>BLG</contentType>
+  <description>Full - Default</description>
+  <shape><![CDATA[<article class="row-fluid">
+  <div class="span12">
+    #if ($content.getCategories() && !($content.getCategories().empty) )
+      <div class="tags">
+        <p>
+          <span class="icon-tags"></span>&#32;$i18n.getLabel("BLG_TAGS_INTRO"):
+          #foreach ($category in $content.getCategories())
+            <a href="$info.getPageURLWithWidget("blog_postlist")?jpblogcat=$category.code" title="$i18n.getLabel("BLG_TAGS_FILTER_BY"): $category.title" class="label label-info">$category.title</a>
+          #end
+          </p>
+      </div>
+    #end
+    <h1>$content.Title.text</h1>
+    <p><span class="icon icon-user"></span>&#32;$i18n.getLabel("BLG_WRITTEN_BY") $content.Author.authorname, $i18n.getLabel("BLG_WRITTEN_ON") $content.DateTime.longDate</p>
+    <p><span class="icon icon-share"></span>&#32;<a href="$content.contentLink">permalink</a></p>
+    #if ( $content.Picture.getImagePath("0") != "" )
+    <figure class="well well-small text-center">
+      <img src="$content.Picture.getImagePath("0")" alt="$content.Picture.text" />
+      #if ( $content.Caption.text != "" )
+      <figcaption><p class="margin-medium-all">$content.Caption.text</p></figcaption>
+      #end
+    </figure>
+    #end
+    #if ( $content.Body.text != "" )
+    $content.Body.text
+    #end
+  </div>
+</article>]]></shape>
+</contentModel>
