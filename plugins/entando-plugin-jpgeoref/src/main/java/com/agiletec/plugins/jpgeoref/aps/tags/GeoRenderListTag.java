@@ -113,17 +113,16 @@ public class GeoRenderListTag extends TagSupport {
 		}
 		return super.doStartTag();
 	}
-
+	
 	/**
 	 * Returns coordinate attribute
-	 * @param content jAPS content
+	 * @param content Entando content
 	 * @return coordinate attribute
 	 */
 	private CoordsAttribute extractCoordAttribute(Content content) {
 		return (CoordsAttribute) content.getAttributeByRole(GeoRefSystemConstants.ATTRIBUTE_ROLE_COORD);
 	}
-
-
+	
 	/**
 	 * Calculation of re-dimensioning of margins.
 	 * @param min minimum value

@@ -45,7 +45,7 @@ import com.opensymphony.xwork2.Action;
 
 /**
  * Before running this test, copy the file /test/com/agiletec/plugins/jprssaggregator/test_rss.xml
- * inside an instance of jAPS and run the server.
+ * inside an instance of Entando and run the server.
  * You must edit the constant TEST_URL inside com.agiletec.plugins.jprssaggregator.JpRssAggregatorConfigTestUtils
  */
 public class TestAggregatorAction extends ApsAdminPluginBaseTestCase {

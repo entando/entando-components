@@ -124,15 +124,15 @@ public class LdapUserManager extends UserManager implements ILdapUserManager {
     }
     
     @Override
-    public List<UserDetails> searchUsers(String text, Boolean japsUser) throws ApsSystemException {
+    public List<UserDetails> searchUsers(String text, Boolean entandoUser) throws ApsSystemException {
         if (!isActive()) {
 			return super.searchUsers(text);
 		}
         try {
-            if (japsUser == null) {
+            if (entandoUser == null) {
                 return this.searchUsers(text);
             }
-            IUserDAO userDAO = japsUser.booleanValue() ? super.getUserDAO() : this.getLdapUserDAO();
+            IUserDAO userDAO = entandoUser.booleanValue() ? super.getUserDAO() : this.getLdapUserDAO();
             if (text == null || text.trim().length() == 0) {
                 return userDAO.loadUsers();
             }

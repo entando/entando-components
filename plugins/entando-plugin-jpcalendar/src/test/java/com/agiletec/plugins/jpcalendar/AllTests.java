@@ -30,7 +30,7 @@ import com.agiletec.plugins.jpcalendar.aps.tags.TestCalendarTagHelper;
 public class AllTests {
 	
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for jAPS Calendar Plugin");
+		TestSuite suite = new TestSuite("Test for Entando Calendar Plugin");
 		suite.addTestSuite(TestDateEventInfo.class);
 		suite.addTestSuite(TestCalendarManager.class);
 		suite.addTestSuite(TestCalendarTagHelper.class);

@@ -28,12 +28,13 @@ import com.agiletec.plugins.jprssaggregator.aps.system.services.converter.TestRs
 import com.agiletec.plugins.jprssaggregator.apsadmin.aggregator.TestAggregatorAction;
 
 public class AllTests {
-
+	
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for jAPS RssAggregator Plugin");
+		TestSuite suite = new TestSuite("Test for Entando RssAggregator Plugin");
 		suite.addTestSuite(TestAggregatorManager.class);
 		suite.addTestSuite(TestRssConverterManager.class);
 		suite.addTestSuite(TestAggregatorAction.class);
 		return suite;
 	}
+	
 }
