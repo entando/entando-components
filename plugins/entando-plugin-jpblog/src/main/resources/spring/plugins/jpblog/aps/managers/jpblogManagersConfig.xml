@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+    
+    <aop:aspectj-autoproxy />
+    
+	<bean id="jpblogBlogManager" class="com.agiletec.plugins.jpblog.aps.system.services.blog.BlogManager" parent="abstractService" >
+		<property name="configManager" ref="BaseConfigManager" />
+		<property name="categoryManager" ref="CategoryManager" />
+		<property name="contentManager" ref="jacmsContentManager" />
+		<property name="groupManager" ref="GroupManager" />
+		<property name="blogDAO" >
+			<bean class="com.agiletec.plugins.jpblog.aps.system.services.blog.BlogDAO">
+				<property name="dataSource" ref="portDataSource" />
+				<property name="facetRefFieldName"><value>refcategory</value></property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="jpblogBlogArchiveTagHelper" class="com.agiletec.plugins.jpblog.aps.tags.helper.BlogArchiveTagHelper" >
+		<property name="blogManager" ref="jpblogBlogManager" />
+	</bean>
+	
+	<!-- estensione di jacmsBaseContentRenderer per l'aggiunta sul wrapper delle info sui commenti  -->
+	<bean id="jacmsBaseContentRenderer" class="com.agiletec.plugins.jpblog.aps.system.services.renderer.BlogContentRenderer" 
+			parent="BaseEntityRenderer" >
+		<property name="contentModelManager" ref="jacmsContentModelManager" />
+		<property name="commentManager" ref="jpcontentfeedbackCommentManager" />
+		<property name="ratingManager" ref="jpcontentfeedbackRatingManager" />
+		<property name="blogManager" ref="jpblogBlogManager" />
+	</bean>
+	
+	<bean id="jpblogCacheReleaser" class="com.agiletec.plugins.jpblog.aps.system.services.cache.CacheReleaser" 
+			parent="abstractService" >
+		<property name="cacheManager" ref="CacheManager" />
+	</bean>
+	
+	<bean id="jpblogAttributeRolesLoader" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeRolesWrapper">
+		<property name="entityManagerNameDest"><value>jacmsContentManager</value></property>
+		<property name="defsFilePath"><value>/WEB-INF/plugins/jpblog/blogAttributeRoles.xml</value></property>
+	</bean>
+	
+</beans>
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<bean id="jpblogAuthorAttribute" parent="MonoTextAttribute" class="com.agiletec.plugins.jpblog.aps.system.common.entity.model.attribute.AuthorAttribute">
+		<property name="type" value="Author" />
+	</bean>
+	
+	<bean id="jpblogTimeAttribute" class="com.agiletec.plugins.jpblog.aps.system.services.content.model.attribute.TimeAttribute"
+			parent="MonoTextAttribute">
+		<property name="type" value="Time" />
+	</bean>
+	
+	<bean id="jpblogAuthorAttributeWrapper" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeWrapper" >
+		<property name="attribute" ref="jpblogAuthorAttribute" />
+		<property name="entityManagerNameDest"><value>jacmsContentManager</value></property>
+	</bean>
+	
+	<bean id="jpblogTimeAttributeWrapper" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeWrapper" >
+		<property name="attribute" ref="jpblogTimeAttribute" />
+		<property name="entityManagerNameDest"><value>jacmsContentManager</value></property>
+	</bean>
+	
+</beans>

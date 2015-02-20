@@ -1,0 +1,22 @@
+<roles>
+	<role>
+		<name>jpblog:title</name>
+		<description>The Attribute that contains post title</description>
+		<allowedTypes>Text,Monotext,Longtext</allowedTypes>
+	</role>
+	<role>
+		<name>jpblog:body</name>
+		<description>The Attribute that contains the post body</description>
+		<allowedTypes>Text,Monotext,Longtext,Hypertext</allowedTypes>
+	</role>
+	<role>
+		<name>jpblog:date</name>
+		<description>The Attribute that contains post date</description>
+		<allowedTypes>Timestamp</allowedTypes>
+	</role>
+	<role>
+		<name>jpblog:author</name>
+		<description>The Attribute that contains post author</description>
+		<allowedTypes>Author</allowedTypes>
+	</role>
+</roles>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+	<!-- configurazione widgetBlogList -->
+	<definition extends="layout.default" name="admin.jpblog.page.widget.blogList.config">
+		<put-attribute name="title" value="title.pageManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpblog/apsadmin/jsp/portal/specialwidget/blogListViewer/configBlogListViewer.jsp" />
+	</definition>
+
+	<!-- configurazione widget BlogArchive -->
+	<definition extends="layout.default" name="admin.jpblog.page.widget.blogArchive.config">
+		<put-attribute name="title" value="title.pageManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpblog/apsadmin/jsp/portal/specialwidget/blogArchive/configBlogArchive.jsp" />
+	</definition>
+
+	<!-- configurazione widget BlogArchive -->
+	<definition extends="layout.default" name="admin.jpblog.page.widget.blogCategory.config">
+		<put-attribute name="title" value="title.pageManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpblog/apsadmin/jsp/portal/specialwidget/blogArchive/configBlogCategory.jsp" />
+	</definition>
+
+
+	<!-- configurazione generale -->
+	<definition extends="layout.default" name="admin.jpblog.config.edit">
+		<put-attribute name="title" value="admin.jpblog.title.config" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpblog/apsadmin/jsp/config/config_edit.jsp" />
+	</definition>
+
+
+</tiles-definitions>
+
+
+
+
+

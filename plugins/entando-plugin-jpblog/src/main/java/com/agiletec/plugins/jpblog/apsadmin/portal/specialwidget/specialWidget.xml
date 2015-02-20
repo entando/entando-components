@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <package name="jpblog_do/jpblog/Page/SpecialWidget" namespace="/do/Page/SpecialWidget" extends="core_do/Page/SpecialWidget">
+
+    	<!-- ##### WIDGET BlogListViewerConfig BLOG  **** ENTRY POINT ##### -->
+    	<action name="jpblogBlogListViewerConfig" class="jpblogBlogListViewerWidgetAction" method="init">
+        	<result type="tiles">admin.jpblog.page.widget.blogList.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+		<action name="jpblogArchiveViewerConfig" class="jpblogBlogArchiveWidgetAction" method="init">
+	        <result type="tiles">admin.jpblog.page.widget.blogArchive.config</result>
+	        <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+
+		<action name="jpblogCategoriesViewerConfig" class="jpblogBlogCategoryWidgetAction" method="init">
+	        <result type="tiles">admin.jpblog.page.widget.blogCategory.config</result>
+	        <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+
+    </package>
+
+	<package name="jpblog_do/jpblog/Page/SpecialWidget/BlogArchiveViewer" namespace="/do/jpblog/Page/SpecialWidget/BlogArchiveViewer" extends="jacms_do/jacms/Page/SpecialWidget/ListViewer" >
+		<action name="configListViewer" class="jpblogBlogArchiveWidgetAction" method="save">
+        	<result name="input" type="tiles">admin.jpblog.page.widget.blogArchive.config</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        <action name="changeContentType" class="jpblogBlogArchiveWidgetAction" method="changeContentType">
+        	<result type="tiles">admin.jpblog.page.widget.blogArchive.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+	</package>
+
+	<package name="jpblog_do/jpblog/Page/SpecialWidget/BlogCategoryViewer" namespace="/do/jpblog/Page/SpecialWidget/BlogCategoryViewer" extends="jacms_do/jacms/Page/SpecialWidget/ListViewer" >
+		<action name="configListViewer" class="jpblogBlogCategoryWidgetAction" method="save">
+        	<result name="input" type="tiles">admin.jpblog.page.widget.blogCategory.config</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        <action name="changeContentType" class="jpblogBlogCategoryWidgetAction" method="changeContentType">
+        	<result type="tiles">admin.jpblog.page.widget.blogArchive.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+	</package>
+
+	<package name="jpblog_do/jpblog/Page/SpecialWidget/BlogListViewer" namespace="/do/jpblog/Page/SpecialWidget/BlogListViewer" extends="jacms_do/jacms/Page/SpecialWidget/ListViewer" >
+
+		<action name="configListViewer" class="jpblogBlogListViewerWidgetAction" method="configContentType">
+        	<result name="input" type="tiles">admin.jpblog.page.widget.blogList.config</result>
+            <result type="tiles">admin.jpblog.page.widget.blogList.config</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+        <action name="changeContentType" class="jpblogBlogListViewerWidgetAction" method="changeContentType">
+        	<result type="tiles">admin.jpblog.page.widget.blogList.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+		<action name="removeFilter*" class="jpblogBlogListViewerWidgetAction" method="removeFilter">
+        	<result type="tiles">admin.jpblog.page.widget.blogList.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+		<action name="moveFilter*" class="jpblogBlogListViewerWidgetAction" method="moveFilter">
+        	<result type="tiles">admin.jpblog.page.widget.blogList.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+		<action name="saveListViewerConfig" class="jpblogBlogListViewerWidgetAction" method="save">
+        	<result name="input" type="tiles">admin.jpblog.page.widget.blogList.config</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+		<action name="blogSetFilterType" class="jpblogBlogListViewerWidgetAction" method="storeSessionParams">
+        	<result type="chain">setFilterType</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+		<action name="addFilter" class="jpblogBlogListViewerWidgetAction" method="addFilter">
+        	<result type="tiles">admin.jpblog.page.widget.blogList.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+            	<param name="requestAuth.requiredPermission">managePages</param>
+            	<param name="chain.includeParameters">newFilter</param>
+            </interceptor-ref>
+        </action>
+
+		<action name="addUserFilter" class="jpblogBlogListViewerWidgetAction" method="addUserFilter">
+        	<result name="input" type="tiles">admin.jpblog.page.widget.blogList.config</result>
+            <result type="tiles">admin.jpblog.page.widget.blogList.config</result>
+            <result name="userfiltercategory" type="tiles">admin.jacms.page.widget.contentListViewer.config.userfilter.category</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+	</package>
+
+</struts>

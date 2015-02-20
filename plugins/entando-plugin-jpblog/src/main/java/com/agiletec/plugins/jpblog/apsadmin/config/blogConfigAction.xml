@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<package name="jpblog_do/jpblog/Config" namespace="/do/jpblog/Config" extends="entando-default">
+
+		<action name="openCloseCategoryTreeNodeOnBlogConfig*" class="jacmsExtendedResourceAction" method="buildTree">
+			<result type="tiles">admin.jpblog.config.edit</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+
+		<action name="edit" class="jpblogConfigAction" method="edit">
+	        <result type="tiles">admin.jpblog.config.edit</result>
+	      	<interceptor-ref name="entandoDefaultStack">
+	      		<param name="requestAuth.requiredPermission">superuser</param>
+	      		<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+	      	</interceptor-ref>
+	    </action>
+
+		<action name="addCategory*" class="jpblogConfigAction" method="addCategory">
+	        <result name="input" type="tiles">admin.jpblog.config.edit</result>
+	        <result type="tiles">admin.jpblog.config.edit</result>
+	      	<interceptor-ref name="entandoDefaultStack">
+	      		<param name="requestAuth.requiredPermission">superuser</param>
+	      		<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+	      	</interceptor-ref>
+	    </action>
+		<action name="removeCategory*" class="jpblogConfigAction" method="removeCategory">
+	        <result name="input" type="tiles">admin.jpblog.config.edit</result>
+	        <result type="tiles">admin.jpblog.config.edit</result>
+	      	<interceptor-ref name="entandoDefaultStack">
+	      		<param name="requestAuth.requiredPermission">superuser</param>
+	      		<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+	      	</interceptor-ref>
+	    </action>
+
+		<action name="update" class="jpblogConfigAction" method="update">
+	        <result name="input" type="tiles">admin.jpblog.config.edit</result>
+	        <result type="chain">edit</result>
+	      	<interceptor-ref name="entandoValidationStack">
+	      		<param name="requestAuth.requiredPermission">superuser</param>
+	      	</interceptor-ref>
+	    </action>
+
+	</package>
+
+</struts>

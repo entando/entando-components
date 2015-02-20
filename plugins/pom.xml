@@ -74,6 +74,7 @@
 		<module>entando-plugin-jpcollaboration</module>
 		<module>entando-plugin-jpwebform</module>
 		<module>entando-plugin-jpsharedocs</module>
+		<module>entando-plugin-jpblog</module>
   </modules>
 	<properties>
 		<!--
