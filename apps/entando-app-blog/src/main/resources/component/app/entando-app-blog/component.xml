@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-app-blog</code>
+	<description>Blog APP</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
+	<dependencies>
+		<code>jpblog</code>
+		<code>entando-app-view-blog-default</code>
+	</dependencies>
+</component>
