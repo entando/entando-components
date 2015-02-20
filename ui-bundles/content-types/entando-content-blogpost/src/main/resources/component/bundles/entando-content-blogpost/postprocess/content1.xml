@@ -1,0 +1,66 @@
+<content>
+	<description>Post 1</description>
+	<typeCode>BLG</typeCode>
+	<typeDescription>Blog Post</typeDescription>
+	<mainGroup>free</mainGroup>
+	<groups />
+	<attributes>
+		<attribute>
+			<name>Author</name>
+			<description>Author</description>
+			<type>Author</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">admin</value>
+			<roles>
+				<role>jpblog:author</role>
+			</roles>
+		</attribute>
+		<attribute>
+			<name>Title</name>
+			<description>Title</description>
+			<type>Text</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Blog Post 1</value>
+			<roles>
+				<role>jpblog:title</role>
+			</roles>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbHypertextAttribute">
+			<name>Summary</name>
+			<type>Hypertext</type>
+			<htmlValue><![CDATA[<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>]]></htmlValue>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="jaxbHypertextAttribute">
+			<name>Body</name>
+			<type>Hypertext</type>
+			<roles>
+				<role>jpblog:body</role>
+			</roles>
+			<htmlValue><![CDATA[<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>]]></htmlValue>
+		</attribute>
+		<attribute>
+			<name>Picture</name>
+			<type>Image</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbResourceValue">
+				<text xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">The very first Entando Logo in an artistic reprise</text>
+				<path xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">/test-image-rest/resources/cms/images/sample-image-blog-1_d0.jpg</path>
+				<resourceId xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">sampleimgblogone</resourceId>
+				<restResourcePath>http://localhost:8080/test-image-rest/api/rs/en/jacms/image?id=sampleimgblogone</restResourcePath>
+			</value>
+		</attribute>
+		<attribute>
+			<name>Caption</name>
+			<type>Text</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">One caption to rule 'em all</value>
+		</attribute>
+		<attribute>
+			<name>DateTime</name>
+			<description>DateTime</description>
+			<type>Timestamp</type>
+			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:dateTime">2012-12-30T06:15:00+01:00</value>
+			<roles>
+				<role>jpblog:date</role>
+			</roles>
+		</attribute>
+	</attributes>
+	<lastEditor>admin</lastEditor>
+</content>

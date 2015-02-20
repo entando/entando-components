@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
+	
+	<!--
+	<bean id="jpwebformEntityTypeDom" 
+			class="org.entando.entando.plugins.jpwebform.aps.system.services.message.parse.MessageTypeDOM" scope="prototype" >
+		<property name="attributeTypes">
+		<map>
+			<entry key="Date"><ref bean="DateAttribute" /></entry>
+			<entry key="Number"><ref bean="NumberAttribute" /></entry>
+			<entry key="Monotext"><ref bean="MonoTextAttribute" /></entry>
+			<entry key="Enumerator"><ref bean="EnumeratorAttribute" /></entry>
+			<entry key="Text"><ref bean="TextAttribute" /></entry>
+			<entry key="Longtext"><ref bean="LongtextAttribute" /></entry>
+			<entry key="Boolean"><ref bean="BooleanAttribute" /></entry>
+			<entry key="CheckBox"><ref bean="CheckBoxAttribute"/></entry>
+			<entry key="ThreeState"><ref bean="ThreeStateBooleanAttribute" /></entry>
+			<entry key="Composite"><ref bean="CompositeAttribute" /></entry>
+		</map>
+		</property>
+	</bean>
+	-->
+	
+	<bean id="jpwebformEntityTypeDom" 
+			class="org.entando.entando.plugins.jpwebform.aps.system.services.form.parse.FormTypeDOM" scope="prototype"
+			parent="baseEntityTypeDom" >
+			<property name="attributeTypes">
+		<map>
+			<entry key="Date"><ref bean="DateAttribute" /></entry>
+			<entry key="Number"><ref bean="NumberAttribute" /></entry>
+			<entry key="Monotext"><ref bean="MonoTextAttribute" /></entry>
+			<entry key="Enumerator"><ref bean="EnumeratorAttribute" /></entry>
+			<entry key="Text"><ref bean="TextAttribute" /></entry>
+			<entry key="Longtext"><ref bean="LongtextAttribute" /></entry>
+			<entry key="Hypertext"><ref bean="HypertextAttribute" /></entry>
+			<entry key="Boolean"><ref bean="BooleanAttribute" /></entry>
+			<entry key="CheckBox"><ref bean="CheckBoxAttribute"/></entry>
+			<entry key="ThreeState"><ref bean="ThreeStateBooleanAttribute" /></entry>
+			<entry key="Composite"><ref bean="CompositeAttribute" /></entry>
+			<entry key="Monolist"><ref bean="MonoListAttribute" /></entry>
+		</map>
+		</property>
+	</bean>
+	
+	<bean id="jpwebformFormManager" class="org.entando.entando.plugins.jpwebform.aps.system.services.form.FormManager"
+			parent="abstractEntityManager" >
+		<property name="entityClassName" value="org.entando.entando.plugins.jpwebform.aps.system.services.message.model.Message"/>
+		<property name="configItemName" value="jpwebform_messageTypes" />
+		<property name="xmlAttributeRootElementName" value="messagetype" />
+		<property name="entityTypeDom" ref="jpwebformEntityTypeDom" />
+		<property name="entityDom">
+            <bean class="org.entando.entando.plugins.jpwebform.aps.system.services.form.parse.FormDOM" />
+        </property>
+		<property name="entityHandler">
+            <bean class="org.entando.entando.plugins.jpwebform.aps.system.services.form.parse.FormHandler" />
+        </property>
+		<property name="formDAO" >
+			<bean class="org.entando.entando.plugins.jpwebform.aps.system.services.form.FormDAO" parent="abstractEntityDAO" >
+				<property name="dataSource" ref="servDataSource" />
+			</bean>
+		</property>
+		<property name="formTypeGuiDAO" >
+			<bean class="org.entando.entando.plugins.jpwebform.aps.system.services.form.FormTypeGuiDAO">
+				<property name="dataSource" ref="servDataSource" />
+			</bean>
+		</property>
+		<property name="entitySearcherDAO" >
+			<bean class="org.entando.entando.plugins.jpwebform.aps.system.services.form.FormSearcherDAO">
+				<property name="dataSource" ref="servDataSource" />
+				<property name="forceCaseInsensitiveLikeSearch"><value>true</value></property>
+			</bean>
+		</property>
+		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+		<property name="configManager" ref="BaseConfigManager" />
+		<property name="langManager" ref="LangManager" />
+		<property name="mailManager" ref="jpmailMailManager" />
+		<property name="i18nManager" ref="I18nManager" />
+		<property name="entityRenderer" ref="jpwebformBaseMessageRenderer" />
+		<property name="userGuiGenerator" ref="jpwebformUserGuiGenerator" />
+		<property name="userProfileManager" ref="UserProfileManager" />
+	</bean>
+	
+	<bean id="jpwebformBaseMessageRenderer" class="org.entando.entando.plugins.jpwebform.aps.system.services.message.renderer.BaseMessageRenderer"
+			parent="BaseEntityRenderer" />
+	
+	<bean id="jpwebformGuiGeneratorManager" class="org.entando.entando.plugins.jpwebform.aps.system.services.form.GuiGeneratorManager"
+			parent="abstractService" >
+		<property name="formManager" ref="jpwebformFormManager" />
+		<property name="resourceDiskRootFolder" ><jee:jndi-lookup jndi-name="java:comp/env/resourceDiskRootFolder" /></property>
+	</bean>
+	
+	<bean id="jpwebformUserGuiGenerator" class="org.entando.entando.plugins.jpwebform.aps.system.services.form.UserGuiGenerator" >
+	</bean>
+	
+    <!-- API -->
+    
+    <bean id="jpwebformApiMessageTypeInterface" 
+            class="org.entando.entando.plugins.jpwebform.aps.system.services.api.ApiMessageTypeInterface" >
+        <property name="messageManager" ref="jpwebformFormManager" />
+    </bean>
+    
+    <bean id="jpwebformApiMessageInterface" 
+            class="org.entando.entando.plugins.jpwebform.aps.system.services.api.ApiMessageInterface" >
+        <property name="messageManager" ref="jpwebformFormManager" />
+        <property name="groupManager" ref="GroupManager" />
+    </bean>
+    
+</beans>

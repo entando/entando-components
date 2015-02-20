@@ -30,7 +30,7 @@ import com.agiletec.plugins.jpfacetnav.apsadmin.page.specialwidget.TestFacetNavR
 public class AllTests {
 	
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for jAPS Plugin jpfacetnav");
+		TestSuite suite = new TestSuite("Test for Entando Plugin jpfacetnav");
 		
 		suite.addTestSuite(TestContentFacetManager.class);
 		suite.addTestSuite(TestFacetNavResultWidgetAction.class);

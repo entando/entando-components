@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+  <description><![CDATA["jpcrowdsourcing core tag library"]]></description>
+  <display-name>"jpcrowdsourcing core tag library"</display-name>
+  <tlib-version>1.0</tlib-version>
+  <short-name>jpcrowdsourcing-apsadmin-core</short-name>
+  <uri>/jpcrowdsourcing-apsadmin-core</uri>
+	
+	<!--  INFO TAG DEFINITION - START -->
+	
+	<tag>
+		<description>
+			<![CDATA[Returns an idea (or one of its property) through the code.
+			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property through the "property" attribute.]]>
+		</description>
+		<name>idea</name>
+		<tag-class>com.agiletec.plugins.jpcrowdsourcing.apsadmin.tags.IdeaInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The code of the page to return.]]></description>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the page (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The name of the property to return. It can be one of the following:<br/>
+				"id"
+				"title"
+				"descr"
+				"pubDate"
+				"username"
+				"votePositive"
+				"voteNegative"
+				"status"
+				"tags" Lista di codici di categoria associati
+				"comments" mappa con chiava l'dentificativo dello status e valore lista di identificativi di commenti per il medesimo stato
+				]]></description>
+			<name>property</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib>

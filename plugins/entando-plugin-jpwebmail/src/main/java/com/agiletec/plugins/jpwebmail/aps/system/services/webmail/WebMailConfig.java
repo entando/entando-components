@@ -100,12 +100,12 @@ public class WebMailConfig implements Cloneable {
 	this._smtpEntandoUserAuth = smtpEntandoUserAuth;
 	}
 	@Deprecated
-	public boolean isSmtpJapsUserAuth() {
+	public boolean isSmtpEntandoUserAuth() {
 	return this.isSmtpEntandoUserAuth();
 	}
 	@Deprecated
-	public void setSmtpJapsUserAuth(boolean smtpJapsUserAuth) {
-	this.setSmtpEntandoUserAuth(smtpJapsUserAuth);
+	public void setSmtpEntandoUserAuth(boolean smtpEntandoUserAuth) {
+	this.setSmtpEntandoUserAuth(smtpEntandoUserAuth);
 	}
 	*/
 	public Integer getSmtpAuth() {

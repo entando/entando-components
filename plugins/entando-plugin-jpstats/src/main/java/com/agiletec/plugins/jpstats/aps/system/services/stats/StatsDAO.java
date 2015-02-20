@@ -292,7 +292,7 @@ public class StatsDAO extends AbstractDAO implements IStatsDAO {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		ResultSet res = null;
-		TimeSeries hitsPage = new TimeSeries("Japs_Chart_v0.0", Day.class);
+		TimeSeries hitsPage = new TimeSeries("Entando_Chart_v0.0", Day.class);
 		String startString = new Timestamp(start.getTimeInMillis()).toString();
 		String endString = new Timestamp(end.getTimeInMillis()).toString();
 		try {

@@ -33,7 +33,7 @@ import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.TestUserRegMan
 public class AllTests {
 	
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for jAPS User Registration Plugin");
+		TestSuite suite = new TestSuite("Test for Entando User Registration Plugin");
 		
 		suite.addTestSuite(TestUserRegDAO.class);
 		suite.addTestSuite(TestUserRegManager.class);

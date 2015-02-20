@@ -1,0 +1,77 @@
+<contentType>
+	<defaultModelId>10006</defaultModelId>
+	<listModelId>10061</listModelId>
+	<typeCode>BLG</typeCode>
+	<typeDescription>Blog Post</typeDescription>
+	<attributes>
+		<attribute>
+			<name>Author</name>
+			<description>Author</description>
+			<type>Author</type>
+			<roles>
+				<role>jpblog:author</role>
+			</roles>
+			<searchable>true</searchable>
+			<indexable>true</indexable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Title</name>
+			<description>Title</description>
+			<type>Text</type>
+			<roles>
+				<role>jpblog:title</role>
+			</roles>
+			<searchable>true</searchable>
+			<indexable>true</indexable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Summary</name>
+			<type>Hypertext</type>
+			<indexable>true</indexable>
+		</attribute>
+		<attribute>
+			<name>Body</name>
+			<description>Body</description>
+			<type>Hypertext</type>
+			<roles>
+				<role>jpblog:body</role>
+			</roles>
+			<indexable>true</indexable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+		<attribute>
+			<name>Picture</name>
+			<type>Image</type>
+		</attribute>
+		<attribute>
+			<name>Caption</name>
+			<type>Text</type>
+			<indexable>true</indexable>
+		</attribute>
+		<attribute>
+			<name>DateTime</name>
+			<description>DateTime</description>
+			<type>Timestamp</type>
+			<roles>
+				<role>jpblog:date</role>
+			</roles>
+			<searchable>true</searchable>
+			<indexable>true</indexable>
+			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:type="textAttributeValidationRules">
+				<required>true</required>
+			</validationRules>
+		</attribute>
+	</attributes>
+</contentType>

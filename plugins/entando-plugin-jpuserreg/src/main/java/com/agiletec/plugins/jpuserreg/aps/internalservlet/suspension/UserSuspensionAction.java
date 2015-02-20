@@ -72,9 +72,8 @@ public class UserSuspensionAction extends UserRegBaseAction implements IUserSusp
 			log.info(" Request for disabling user " + user.getUsername());
 			boolean isAdmin = this.getAuthManager().isAuthOnGroup(user, Group.ADMINS_GROUP_NAME) 
 										&& this.getAuthManager().isAuthOnPermission(user, Permission.SUPERUSER);
-			
-			if (isAdmin || !user.isJapsUser()) {
-				log.info(" User " + user.getUsername() + " cannot be disabled because is not a local jAPS user.");
+			if (isAdmin || !user.isEntandoUser()) {
+				log.info(" User " + user.getUsername() + " cannot be disabled because is not a local Entando user.");
 				return USERREG_ERROR;
 			}
 		} catch (Throwable t) {

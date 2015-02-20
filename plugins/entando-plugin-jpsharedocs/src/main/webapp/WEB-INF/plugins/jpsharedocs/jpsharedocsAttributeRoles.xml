@@ -1,0 +1,7 @@
+<roles>
+	<role>
+		<name>jpsharedocs:checkin</name>
+		<description>The Attribute that contains the checkin attribute</description>
+		<allowedTypes>CheckBox</allowedTypes>
+	</role>
+</roles>

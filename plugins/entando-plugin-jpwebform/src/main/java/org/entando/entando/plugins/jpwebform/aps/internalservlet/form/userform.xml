@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpwebform_do/jpwebform/Front" namespace="/do/jpwebform/Front" extends="entando-front-default">
+		
+		<interceptors>
+			<interceptor name="entandoFrontToken" class="org.entando.entando.plugins.jpwebform.aps.internalservlet.system.TokenInterceptor" />
+		</interceptors>
+		
+    	<action name="new" class="jpwebformUserFormAction" method="createNew">
+            <!-- <result name="voidTypeCode" type="chain">listTypes</result> -->
+            <result name="notRepeatable" type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/error-notRepeatable.jsp</result>
+            <result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${currentStepCode}.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+
+    	<action name="resume" class="jpwebformUserFormAction" method="resume">
+            <!-- <result name="voidTypeCode" type="chain">listTypes</result> -->
+            <result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${currentStepCode}.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+
+        <action name="submitStep" class="jpwebformUserFormAction" method="submitStep">
+            <result name="input" type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${currentStepCode}.jsp</result>
+            <result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${currentStepCode}.jsp</result>
+            <interceptor-ref name="entandoFrontToken" ><param name="typeMessages">message</param></interceptor-ref>
+            <interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+        </action>
+        
+        <action name="previousStep" class="jpwebformUserFormAction" method="previousStep">
+            <result name="input" type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${currentStepCode}.jsp</result>
+            <result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${previousStepCode}.jsp</result>
+            <interceptor-ref name="entandoFrontToken" ><param name="typeMessages">message</param></interceptor-ref>
+            <interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+		<!--
+		<action name="confirm" class="jpwebformUserFormAction" method="confirm">
+            <result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_endPoint.jsp</result>
+            <interceptor-ref name="entandoFrontToken" ><param name="typeMessages">message</param></interceptor-ref>
+			<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+		-->
+        <action name="entryForm" class="jpwebformUserFormAction" method="entryForm">
+            <result name="expiredMessage" type="chain">new</result>
+            <result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${currentStepCode}.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+
+		
+
+
+		
+		<!-- ######## INIT OPERATIONS FOR FILE ATTRIBUTES ######## -->
+
+		<action name="loadFileResource*" class="jpwebformWebformFileAttributeAction" method="loadFile">
+            <result type="chain">
+            	<param name="namespace">/do/jpwebform/Form/Resource</param>
+    			<param name="actionName">intro</param>
+            </result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+
+
+        
+        <action name="removeFileResource*" class="jpwebformWebformFileAttributeAction" method="removeFile">
+            <result type="chain">
+        		<param name="actionName">resume</param>
+        	</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        <!-- ######## END OPERATIONS FOR FILE ATTRIBUTES ######## -->
+
+
+		<!-- ######## INIT OPERATIONS FOR LIST ATTRIBUTES ######## -->
+
+        <action name="addListElement*" class="jpwebformUserFormListAttributeAction" method="addListElement">
+        	<result type="chain">entryForm</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+		
+        <action name="removeListElement*" class="jpwebformUserFormListAttributeAction" method="removeListElement">
+            <result type="chain">entryForm</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+		
+        <action name="moveListElement*" class="jpwebformUserFormListAttributeAction" method="moveListElement">
+            <result type="chain">entryForm</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+		
+        <!-- ######## END OPERATIONS FOR LIST ATTRIBUTES ######## -->
+		
+    </package>
+
+	<package name="jpwebform_do/jpwebform/Form/Resource" namespace="/do/jpwebform/Form/Resource" extends="entando-front-default">
+    	
+		
+		<action name="viewFileResource" class="jpwebformWebformFileAttributeAction" method="viewFile">
+			<result name="nullFile" type="chain">list</result>
+			<result name="success" type="stream">
+				<param name="contentType">${uploadContentType}</param>
+				<param name="inputName">uploadInputStream</param>
+				<param name="contentDisposition">attachment;filename="${uploadFileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+			<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+		</action>
+        
+		<action name="intro" class="jpwebformWebformFileAttributeAction" >
+			<result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/file-entry.jsp</result>
+			<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+		
+		<action name="backToEntryMessage" class="jpwebformWebformFileAttributeAction" method="backToEntryMessage">
+			<result type="chain">
+				<param name="actionName">resume</param>
+				<param name="namespace">/do/jpwebform/Front</param>
+			</result>
+			<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+		</action>
+		
+    	<action name="save" class="jpwebformWebformFileAttributeAction" method="save">
+            <result name="input" type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/file-entry.jsp</result>
+			<result type="chain">
+				<param name="actionName">resume</param>
+				<param name="namespace">/do/jpwebform/Front</param>
+			</result>
+			<interceptor-ref name="fileUpload"><param name="maximumSize">10485760</param></interceptor-ref><!-- maximun Size = 10 Mb -->
+			<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+        </action>
+    	
+    </package>
+
+	
+
+</struts>

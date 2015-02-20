@@ -33,7 +33,7 @@ import com.agiletec.plugins.jpstats.apsadmin.TestStatisticsAction;
 public class AllTests {
 	
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for jAPS Stats Plugin");
+		TestSuite suite = new TestSuite("Test for Entando Stats Plugin");
 		suite.addTestSuite(TestStatsDao.class);
 		suite.addTestSuite(TestStatsManager.class);
 		suite.addTestSuite(TestStatsMonitor.class);

@@ -99,10 +99,10 @@ public class AggregatorAction extends AbstractTreeAction implements IAggregatorA
 		try {
 			URL url = new URL(link);
 			URLConnection connection = url.openConnection();
-			connection.setRequestProperty("User-Agent", "jAPS jprssaggregaror");
+			connection.setRequestProperty("User-Agent", "Entando jprssaggregaror");
 			if (null != connection.getContent()) return true;
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().info("unable to parse url");
+			ApsSystemUtils.getLogger().error("unable to parse url", t);
 		}
 		return valid;
 	}

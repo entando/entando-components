@@ -33,18 +33,13 @@ import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Choice;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Question;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Survey;
 
-/**
- * BaseTestCase Class for jpsurvey apsadmin tests.
- * You have to comment "getConfigUtils()" 
- * Methods for testing plugin into custom jAPS 2.0 project.
- */
 public class ApsAdminPluginBaseTestCase extends ApsAdminBaseTestCase {
 	
 	@Override
 	protected ConfigTestUtils getConfigUtils() {
 		return new PluginConfigTestUtils();
 	}
-
+	
 	/**
 	 * Create a survey object to perform the test. This object prior its usage must be saved in database
 	 * and then reloaded to update the internal ID's

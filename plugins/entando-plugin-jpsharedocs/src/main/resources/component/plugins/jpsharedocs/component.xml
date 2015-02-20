@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>jpsharedocs</code>
+	<description>Share Documents</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
+	<dependencies>
+		<code>jacms</code>
+	</dependencies>
+	<installation>
+		<tableMapping>
+			<datasource name="portDataSource">
+				<class>org.entando.entando.plugins.jpsharedocs.aps.system.init.portdb.ContentCheckin</class>
+			</datasource>
+		</tableMapping>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpsharedocs/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpsharedocs/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+			<postProcesses>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentType"
+						method="POST" expected="202" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jpsharedocs/postprocesses/SDC.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jpsharedocs/postprocesses/contentModel_20009.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jpsharedocs/postprocesses/contentModel_20091.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jpsharedocs/postprocesses/contentModel_20092.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jpsharedocs/postprocesses/contentModel_20093.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jpsharedocs/postprocesses/contentModel_20094.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jpsharedocs/postprocesses/contentModel_20095.xml" />
+				</selfRestCall>
+				<!-- avoid loop dependency between Content and Content Models -->
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentType"
+						method="PUT" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jpsharedocs/postprocesses/SDC.xml" />
+				</selfRestCall>
+				<!--// avoid loop dependency between Content and Content Models -->
+			</postProcesses>
+		</environment>
+		<environment code="test">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpsharedocs/port_data_test.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpsharedocs/serv_data_test.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+</component>

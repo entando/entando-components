@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<package name="collaboration_do/collaboration/Idea" namespace="/do/collaboration/Idea" extends="japs-default">
+
+		<action name="list" class="jpcollaborationIdeaFinderAction">
+	        <result type="tiles">admin.jpcrowdsourcing.idea.list</result>
+	      	<interceptor-ref name="entandoDefaultStack">
+				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+	    </action>
+
+		<action name="search" class="jpcollaborationIdeaFinderAction">
+	        <result type="tiles">admin.jpcrowdsourcing.idea.list</result>
+	      	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+	    
+	    <action name="changeStatus" class="jpcollaborationIdeaFinderAction" method="changeStatus">
+	        <result name="input" type="tiles">admin.jpcrowdsourcing.idea.list</result>
+	        <result type="tiles">admin.jpcrowdsourcing.idea.list</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+	    
+	    <action name="trash" class="jpcollaborationIdeaFinderAction" method="trash">
+	        <result name="input" type="tiles">admin.jpcrowdsourcing.idea.list</result>
+	        <result type="tiles">admin.jpcrowdsourcing.idea.delete</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+	    	    
+	    <action name="delete" class="jpcollaborationIdeaFinderAction" method="delete">
+	        <result name="input" type="tiles">admin.jpcrowdsourcing.idea.list</result>
+	    	<result type="chain">list</result>
+	      	<interceptor-ref name="entandoValidationStack">
+				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+	    </action>
+		
+	    <action name="trashReference" class="jpcollaborationIdeaFinderAction" method="trash">
+	        <result name="input" type="tiles">admin.Category.viewTree</result>
+	        <result type="tiles">admin.jpcrowdsourcing.idea.delete.ref</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+	    	    
+	    <action name="deleteReference" class="jpcollaborationIdeaFinderAction" method="delete">
+	        <result name="input" type="tiles">admin.Category.viewTree</result>
+	    	<result type="chain">
+				<param name="actionName">viewTree</param>
+				<param name="namespace">/do/Category</param>
+			</result>
+	      	<interceptor-ref name="entandoValidationStack">
+				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
+			</interceptor-ref>
+	    </action>
+
+
+	<!-- IdeaAction -->
+	    <action name="edit" class="jpcollaborationIdeaAction" method="edit">
+	        <result name="input" type="chain">list</result>
+	    	<result type="tiles">admin.jpcrowdsourcing.idea.entry</result>
+	      	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+
+        <action name="joinCategory" class="jpcollaborationIdeaAction" method="joinCategory">
+            <result type="tiles">admin.jpcrowdsourcing.idea.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="removeCategory*" class="jpcollaborationIdeaAction" method="removeCategory">
+           	<result type="tiles">admin.jpcrowdsourcing.idea.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+	    <action name="save" class="jpcollaborationIdeaAction" method="save">
+	        <result name="input" type="tiles">admin.jpcrowdsourcing.idea.entry</result>
+	    	<result type="redirectAction">list</result>
+	      	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+	    </action>
+
+
+	</package>
+
+</struts>

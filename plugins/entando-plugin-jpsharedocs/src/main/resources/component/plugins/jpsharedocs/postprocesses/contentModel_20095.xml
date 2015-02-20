@@ -1,0 +1,14 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+	<id>20095</id>
+	<contentType>SDC</contentType>
+	<description>For trash operation</description>
+	<shape><![CDATA[$i18n.getLabel("jpsharedocs_ARE_YOU_SURE"):&nbsp;
+		$content.Title.text ($content.getId())]]>
+	</shape>
+</contentModel>

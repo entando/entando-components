@@ -1,0 +1,154 @@
+<apiMethodDefinitions>
+
+    <resource  name="ideaInstances" namespace="collaboration">
+        <description>The list off all idea instances</description>
+        <source pluginCode="collaboration">plugins</source>
+        <method httpMethod="GET" active="true" canSpawnOthers="true" requiredAuth="false">
+            <description>Return the idea instances list</description>
+            <springBean name="jpcollaborationApiIdeaInstanceInterface" method="getIdeaInstancesForApi" />
+            <responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+            <parameters>
+                <parameter key="code" required="false">
+                    <description>optional string token to filter results</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+
+    <resource name="ideaInstance" namespace="collaboration">
+        <description>A single idea instance</description>
+        <source pluginCode="collaboration">plugins</source>
+        <method httpMethod="GET" active="true" canSpawnOthers="true" requiredAuth="false">
+            <description>Return an idea instance by code</description>
+            <springBean name="jpcollaborationApiIdeaInstanceInterface" method="getIdeaInstanceForApi" />
+            <responseClass>com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.api.IdeaInstanceResponse</responseClass>
+            <parameters>
+                <parameter key="code" required="true">
+                    <description>The id of the idea instance to return</description>
+                </parameter>
+            </parameters>
+        </method>
+		<method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Add an idea instance</description>
+			<springBean name="jpcollaborationApiIdeaInstanceInterface" method="addIdeaInstance" />
+			<expectedType>com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.api.JAXBIdeaInstance</expectedType>
+		</method>
+		<method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Update an idea instance</description>
+			<springBean name="jpcollaborationApiIdeaInstanceInterface" method="updateIdeaInstance" />
+			<expectedType>com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.api.JAXBIdeaInstance</expectedType>
+		</method>
+		<method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Delete an idea instance</description>
+			<springBean name="jpcollaborationApiIdeaInstanceInterface" method="deleteIdeaInstance" />
+			<parameters>
+				<parameter key="code" required="true">
+					<description>The id of the idea instance to delete</description>
+				</parameter>
+			</parameters>
+		</method>
+    </resource>
+
+    <resource name="ideaList" namespace="collaboration">
+        <description>The list off all the idea elements related to a specified instance</description>
+        <source pluginCode="collaboration">plugins</source>
+        <method httpMethod="GET" active="true" canSpawnOthers="true" requiredAuth="false">
+            <description>Return the idea list. Only elements with status 'approved' will be returned.</description>
+            <springBean name="jpcollaborationApiIdeaInterface" method="getIdeaListForApi" />
+            <responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+            <parameters>
+                <parameter key="code" required="true">
+                    <description>The instance code to filter the results</description>
+                </parameter>
+                <parameter key="text" required="false">
+                    <description>optional text filter. The filter matches 'title' and 'description' fields</description>
+                </parameter>
+                <parameter key="tag" required="false">
+                    <description>optional category code filter</description>
+                </parameter>
+                <parameter key="order" required="false">
+                    <description>optional order parameter. Valid values are 'latest' and 'rated'. Default is 'latest'</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+
+    <resource name="vote" namespace="collaboration">
+        <description>An idea vote</description>
+        <source pluginCode="collaboration">plugins</source>
+        <method httpMethod="PUT" active="true" requiredAuth="true">
+            <description>Vote an Idea</description>
+            <springBean name="jpcollaborationApiIdeaInterface" method="voteIdea" />
+            <expectedType>com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.api.JAXBVote</expectedType>
+        </method>
+    </resource>
+
+    <resource name="idea" namespace="collaboration">
+        <description>A single idea</description>
+        <source pluginCode="collaboration">plugins</source>
+        <method httpMethod="GET" active="true" canSpawnOthers="true" requiredAuth="false">
+            <description>Return an idea by code</description>
+            <springBean name="jpcollaborationApiIdeaInterface" method="getIdeaForApi" />
+            <responseClass>com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.api.IdeaResponse</responseClass>
+            <parameters>
+                <parameter key="code" required="true">
+                    <description>The id of the idea to return</description>
+                </parameter>
+            </parameters>
+        </method>
+		<method httpMethod="POST" active="true" requiredAuth="true">
+			<description>Add an Idea</description>
+			<springBean name="jpcollaborationApiIdeaInterface" method="addIdea" />
+			<expectedType>com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.api.JAXBIdea</expectedType>
+		</method>
+		<method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Update an idea</description>
+			<springBean name="jpcollaborationApiIdeaInterface" method="updateIdea" />
+			<expectedType>com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.api.JAXBIdea</expectedType>
+		</method>
+		<method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Delete an idea</description>
+			<springBean name="jpcollaborationApiIdeaInterface" method="deleteIdea" />
+			<parameters>
+				<parameter key="code" required="true">
+					<description>The id of the idea to delete</description>
+				</parameter>
+			</parameters>
+		</method>
+    </resource>
+
+    <resource name="comment" namespace="collaboration">
+        <description>A single comment on a idea</description>
+        <source pluginCode="collaboration">plugins</source>
+        <method httpMethod="GET" active="true" canSpawnOthers="true" requiredAuth="false">
+            <description>Return a single comment by id</description>
+            <springBean name="jpcollaborationApiCommentInterface" method="getCommentForApi" />
+            <expectedType>com.agiletec.plugins.jpcrowdsourcing.aps.system.services.comment.api.JAXBComment</expectedType>
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The id of the comment to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" canSpawnOthers="true" requiredAuth="true">
+            <description>Add a comment</description>
+            <springBean name="jpcollaborationApiCommentInterface" method="addComment" />
+            <expectedType>com.agiletec.plugins.jpcrowdsourcing.aps.system.services.comment.api.JAXBComment</expectedType>
+        </method>
+		<method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Update a comment</description>
+			<springBean name="jpcollaborationApiCommentInterface" method="updateComment" />
+			<expectedType>com.agiletec.plugins.jpcrowdsourcing.aps.system.services.comment.api.JAXBComment</expectedType>
+		</method>
+		<method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Delete a comment</description>
+			<springBean name="jpcollaborationApiCommentInterface" method="deleteComment" />
+			<parameters>
+				<parameter key="id" required="true">
+					<description>The id of the comment to delete</description>
+				</parameter>
+			</parameters>
+		</method>
+    </resource>
+
+</apiMethodDefinitions>

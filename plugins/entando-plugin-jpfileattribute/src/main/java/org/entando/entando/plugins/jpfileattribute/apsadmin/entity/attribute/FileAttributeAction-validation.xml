@@ -1,0 +1,33 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+	
+	<field name="upload">
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[!(upload == null)]]></param>
+			<message key="error.resource.file.required" />
+		</field-validator>
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[!(inputStream == null)]]></param>
+			<message key="error.resource.file.void" />
+		</field-validator>
+	</field>
+	
+	<field name="uploadFileName">
+		<field-validator type="regex" short-circuit="true">
+           <param name="regex"><![CDATA[(^[\w|\.|\-| ]+?)\.([\w|\-]+?$)]]></param>
+           <message key="error.resource.filename.wrongCharacters" />
+        </field-validator>
+        <field-validator type="fieldexpression" short-circuit="true">
+           <param name="expression"><![CDATA[!(null != uploadFileName && uploadFileName.indexOf(' ') >= 0)]]></param>
+           <message key="error.resource.filename.blankSpace" />
+        </field-validator>
+		<field-validator type="fieldexpression">
+			<param name="expression"><![CDATA[!(null != uploadFileName && uploadFileName.length() > 100)]]></param>
+			<message key="error.resource.filename.tooLong" />
+		</field-validator>
+	</field>
+	
+</validators>

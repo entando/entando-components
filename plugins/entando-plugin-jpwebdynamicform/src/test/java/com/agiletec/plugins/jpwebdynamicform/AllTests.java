@@ -38,7 +38,7 @@ import com.agiletec.plugins.jpwebdynamicform.apsadmin.message.config.TestNotifie
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for jAPS Plugin jpwebdynamicform");
+		TestSuite suite = new TestSuite("Test for Entando Plugin jpwebdynamicform");
 
 		suite.addTestSuite(TestBaseMessageRenderer.class);
 

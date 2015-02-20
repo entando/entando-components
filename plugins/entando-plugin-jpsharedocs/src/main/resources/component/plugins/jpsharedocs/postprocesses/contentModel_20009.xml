@@ -1,0 +1,54 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>20009</id>
+  <contentType>SDC</contentType>
+  <description>Full (link Versions and Comments) - Default</description>
+  <shape><![CDATA[<div class="scheda_documento">
+	<h3>$content.Title.text</h3>
+	<div class="info">
+		<dl>
+			<dt>Author</dt><dd>$content.Author.text</dd>
+			<dt>Description</dt><dd>$content.Description.text</dd>
+			<dt>Data creazione</dt><dd>$content.CreationDate.getFormattedDate("EEEE dd MMMM yyyy"), $content.CreationDate.getFormattedDate("k:m")</dd>
+			#if ($content.Versions && $content.Versions.size() > 0)
+				#set( $n = $content.Versions.size() - 1 )
+				#set( $ver =  $content.Versions.get($n) ) 
+		
+				<dt>Data ultima versione</dt><dd>$ver.VersionDate.getFormattedDate("EEEE dd MMMM yyyy"), $ver.VersionDate.getFormattedDate("k:m")</dd>
+ 				<dt>Document</dt><dd><a href="$ver.Document.attachPath">$ver.Document.text, $ver.Document.resource.instance.fileLength $ver.Document.resource.instance.mimeType</a></dd>
+				<dt>Inserito da</dt><dd>$ver.SubmittedBy.text</dd>
+			#end
+		</dl>
+	</div>
+
+	#if ($content.DocumentiCorrelati && $content.DocumentiCorrelati.size() > 0)
+		<div class="versioni">
+			<h4>$i18n.getLabel("jpsharedocs_RELATED_DOCS")</h4>		
+			<ul>
+				#foreach ($doc in $content.DocumentiCorrelati)
+					<li><a href="$doc.destination">$doc.text</a></li>
+				#end
+			</ul>
+		</div>
+	#end	
+
+	<div class="linkcorrelati">
+		<h4>$i18n.getLabel("jpsharedocs_ADDITIONAL_INFOS")</h4>
+		<ul>
+			#if ($content.Versions && $content.Versions.size() > 0)
+				#set ( $numVersioni = $content.Versions.size() )
+				<li><a href="$content.getContentOnPageLink("sharedocs_versions")">$i18n.getLabel("jpsharedocs_VERSIONS_DETAILS") ($numVersioni in totale)</a></li>
+			#end
+			#set ( $numCommenti = $content.Comments.size() )
+			<li><a href="$content.getContentOnPageLink("sharedocs_comments")">$i18n.getLabel("jpsharedocs_COMMENTS_DETAILS") ($numCommenti in totale)</a></li>
+		</ul>
+	</div>
+
+</div>]]></shape>
+	<stylesheet>../../plugins/jpsharedocs/static/css/model.css</stylesheet>
+</contentModel>

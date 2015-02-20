@@ -1,0 +1,8 @@
+<div class="well well-small">
+	<fieldset>
+		<legend>[[#fieldName=##name##;type=label#]]&#32;[[#fieldName=##name##;type=info#]]</legend>
+				[[#fieldName=##name##;type=input#]]
+	</fieldset>
+</div>
+
+		

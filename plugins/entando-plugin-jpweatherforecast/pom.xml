@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>entando-plugins-parent</artifactId>
+		<groupId>org.entando.entando.plugins</groupId>
+		<version>4.2.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>entando-plugin-jpweatherforecast</artifactId>
+	<groupId>org.entando.entando.plugins</groupId>
+	<packaging>war</packaging>
+	<name>Entando Plugin: Weather Forecast</name>
+	<description>Weather forecast widget</description>
+	<developers>
+		<developer>
+			<id>m.minnai</id>
+			<name>Matteo Minnai</name>
+			<email>m.minnai@entando.com</email>
+		</developer>
+	</developers>
+	<url>http://www.entando.com/</url>
+	<repositories>
+		<repository>
+			<id>lib</id>
+			<name>lib</name>
+			<url>file://${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version><!--$NO-MVN-MAN-VER$ -->
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.0-beta-1</version>
+				<executions>
+					<execution>
+						<id>enforce-versions</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>2.2.1</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>1.6</version>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<!-- weatherforecast - start -->
+		<dependency>
+			<groupId>org</groupId>
+			<artifactId>geonames</artifactId>
+			<version>1.1.11</version>
+		</dependency>
+		<!--
+		<dependency>
+			<groupId>org</groupId>
+			<artifactId>jdom</artifactId>
+			<version>1.0</version>
+		</dependency>
+		-->
+		<!-- weatherforecast - end -->
+	</dependencies>
+</project>

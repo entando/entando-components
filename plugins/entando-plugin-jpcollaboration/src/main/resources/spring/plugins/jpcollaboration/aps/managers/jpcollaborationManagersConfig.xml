@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<bean id="jpcollaborationIdeaInstanceDAO" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.IdeaInstanceDAO">
+		<property name="dataSource" ref="servDataSource" />
+		<property name="ideaDAO" ref="jpcollaborationIdeaDAO" />
+	</bean>
+
+	<bean id="jpcollaborationIdeaInstanceManager" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.IdeaInstanceManager"
+		parent="abstractService">
+		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+		<property name="ideaInstanceDAO" ref="jpcollaborationIdeaInstanceDAO" />
+	</bean>
+
+	<bean id="jpcollaborationIdeaManager" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IdeaManager" parent="abstractService" >
+		<property name="categoryManager" ref="CategoryManager" />
+		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+		<property name="configManager" ref="BaseConfigManager" />
+		<property name="ideaInstanceManager" ref="jpcollaborationIdeaInstanceManager" />
+		<!--	<property name="categoryRoot" value="tematiche" /> -->
+		<property name="ideaDAO" ref="jpcollaborationIdeaDAO" />
+	</bean>
+
+	<bean id="jpcollaborationIdeaDAO" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IdeaDAO">
+		<property name="dataSource" ref="servDataSource" />
+		<property name="categoryManager" ref="CategoryManager" />
+		<property name="ideaCommentDAO" ref="jpideaCommentDAO" />
+	</bean>
+
+	<bean id="jpcollaborationIdeaCommentManager" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.services.comment.IdeaCommentManager" parent="abstractService" >
+		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+		<property name="ideaCommentDAO" ref="jpideaCommentDAO" />
+		<property name="ideaManager" ref="jpcollaborationIdeaManager" />
+	</bean>
+
+	<bean id="jpideaCommentDAO" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.services.comment.IdeaCommentDAO">
+		<property name="dataSource" ref="servDataSource" />
+	</bean>
+
+</beans>

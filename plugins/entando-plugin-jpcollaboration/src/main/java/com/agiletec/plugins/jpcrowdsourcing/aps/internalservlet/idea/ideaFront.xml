@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <package name="collaboration_do/collaboration/FrontEnd/Idea/NewIdea" namespace="/do/collaboration/FrontEnd/Idea/NewIdea" extends="entando-front-default">
+		
+        <interceptors>
+            <interceptor name="entandoToken" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.TokenInterceptor" />
+            <interceptor name="loggeduser" class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.system.LoggeduserInterceptor" />
+        </interceptors>
+        
+        <global-results>
+            <result name="userNotAllowed" type="dispatcher">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/userNotAllowed.jsp</result>
+        </global-results>
+        
+        <action name="intro" class="jpcollaborationNewIdeaFrontAction" method="entryIdea" >
+            <result type="guiFragment">
+                <param name="code">collaboration_entryIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/entryIdea.jsp</param>
+            </result>  
+            <interceptor-ref name="loggeduser" />
+            <interceptor-ref name="entandoFrontEndStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="save" class="jpcollaborationNewIdeaFrontAction" method="saveIdea">
+            <result name ="input" type="guiFragment">
+                <param name="code">collaboration_entryIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/entryIdea.jsp</param>
+            </result>  
+            <result type="chain">intro</result>
+			<result name="redirectPage" type="redirect">${redirectUrl}</result>
+            <result name="invalid.token" type="chain">intro</result>
+            <interceptor-ref name="loggeduser" />
+            <interceptor-ref name="entandoToken" >
+                <param name="typeMessages">none</param>
+            </interceptor-ref>
+            <interceptor-ref name="entandoFrontEndValidationStack" >
+				<param name="params.excludeParams">struts.token,struts.token.name</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="joinCategory" class="jpcollaborationNewIdeaFrontAction" method="joinCategory">
+            <result name ="input" type="guiFragment">
+                <param name="code">collaboration_entryIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/entryIdea.jsp</param>
+            </result>  
+            <result name ="success" type="guiFragment">
+                <param name="code">collaboration_entryIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/entryIdea.jsp</param>
+            </result>  
+            <result name="invalid.token" type="chain">intro</result>
+            <interceptor-ref name="loggeduser" />
+            <interceptor-ref name="entandoToken" >
+                <param name="typeMessages">none</param>
+            </interceptor-ref>
+            <interceptor-ref name="entandoFrontEndStack" >
+                <param name="params.excludeParams">struts.token,struts.token.name</param> 
+            </interceptor-ref>
+        </action>
+        
+        <action name="removeCategory*" class="jpcollaborationNewIdeaFrontAction" method="removeCategory">
+             <result name ="input" type="guiFragment">
+                <param name="code">collaboration_entryIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/entryIdea.jsp</param>
+            </result>  
+            <result name ="success" type="guiFragment">
+                <param name="code">collaboration_entryIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/entryIdea.jsp</param>
+            </result>  
+            <result name="invalid.token" type="chain">intro</result>
+            <interceptor-ref name="loggeduser" />
+            <interceptor-ref name="entandoToken" >
+                <param name="typeMessages">none</param>
+            </interceptor-ref>
+            <interceptor-ref name="entandoFrontEndStack" >
+                <param name="params.excludeParams">struts.token,struts.token.name</param> 
+            </interceptor-ref>
+        </action>
+        
+        <action name="joinCloudCategory" class="jpcollaborationNewIdeaFrontAction" method="joinCloudCategory">
+             <result name ="input" type="guiFragment">
+                <param name="code">collaboration_entryIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/entryIdea.jsp</param>
+            </result>  
+            <result name ="success" type="guiFragment">
+                <param name="code">collaboration_entryIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/entryIdea.jsp</param>
+            </result>  
+            <result name="invalid.token" type="chain">intro</result>
+            <interceptor-ref name="loggeduser" />
+            <interceptor-ref name="entandoToken" >
+                <param name="typeMessages">none</param>
+            </interceptor-ref>
+            <interceptor-ref name="entandoFrontEndStack" >
+                <param name="params.excludeParams">struts.token,struts.token.name</param> 
+            </interceptor-ref>
+        </action>
+        
+        <action name="removeCloudCategory*" class="jpcollaborationNewIdeaFrontAction" method="removeCloudCategory">
+              <result name ="input" type="guiFragment">
+                <param name="code">collaboration_entryIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/entryIdea.jsp</param>
+            </result>  
+            <result name ="success" type="guiFragment">
+                <param name="code">collaboration_entryIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/entryIdea.jsp</param>
+            </result>  
+            <result name="invalid.token" type="chain">intro</result>
+            <interceptor-ref name="loggeduser" />
+            <interceptor-ref name="entandoToken" >
+                <param name="typeMessages">none</param>
+            </interceptor-ref>
+            <interceptor-ref name="entandoFrontEndStack" >
+                <param name="params.excludeParams">struts.token,struts.token.name</param> 
+            </interceptor-ref>
+        </action>
+        
+    </package>
+	
+    <package name="collaboration_do/collaboration/FrontEnd/Idea" namespace="/do/collaboration/FrontEnd/Idea" extends="entando-front-default">
+		
+        <interceptors>
+            <interceptor name="entandoToken" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.TokenInterceptor" />
+            <interceptor name="loggeduser" class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.system.LoggeduserInterceptor" />
+        </interceptors>
+		
+        <global-results>
+            <result name="userNotAllowed" type="dispatcher">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/userNotAllowed.jsp</result>
+        </global-results>
+		
+        <action name="viewIdea" class="jpcollaborationIdeaFrontCommentAction" method="entryComment">
+            <result name ="success" type="guiFragment">
+                <param name="code">collaboration_viewIdea</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/viewIdea.jsp</param>
+            </result>  
+            <interceptor-ref name="entandoFrontEndFreeStack">
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages,ideaId</param>
+                <param name="params.excludeParams">struts.token,struts.token.name</param>
+            </interceptor-ref>
+        </action>
+		
+        <action name="saveComment" class="jpcollaborationIdeaFrontCommentAction" method="saveComment">
+            <result name="input" type="chain">viewIdea</result>
+            <result name="success" type="chain">viewIdea</result>
+            <result name="invalid.token" type="chain">viewIdea</result>
+            <interceptor-ref name="loggeduser" />
+            <interceptor-ref name="entandoToken" >
+                <param name="typeMessages">none</param>
+            </interceptor-ref>
+            <interceptor-ref name="entandoFrontEndValidationStack" >
+                <param name="params.excludeParams">struts.token,struts.token.name</param> 
+            </interceptor-ref>
+        </action>
+		
+        <action name="ideaLike" class="jpcollaborationListIdeaFrontAction" method="ideaLike">
+            <result name="input" type="chain">viewIdea</result>
+            <result name="alreadyVoted" type="chain">viewIdea</result>
+            <result name="success" type="chain">viewIdea</result>
+            <result name="invalid.token" type="chain">viewIdea</result>
+            <interceptor-ref name="loggeduser" />
+            <interceptor-ref name="entandoToken" >
+                <param name="typeMessages">none</param>
+            </interceptor-ref>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="params.excludeParams">struts.token,struts.token.name</param> 
+            </interceptor-ref>
+        </action>
+		
+        <action name="ideaUnlike" class="jpcollaborationListIdeaFrontAction" method="ideaUnlike">
+            <result name="input" type="chain">viewIdea</result>
+            <result name="alreadyVoted" type="chain">viewIdea</result>
+            <result name="success" type="chain">viewIdea</result>
+            <result name="invalid.token" type="chain">viewIdea</result>
+            <interceptor-ref name="loggeduser" />
+            <interceptor-ref name="entandoToken" >
+                <param name="typeMessages">none</param>
+            </interceptor-ref>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="params.excludeParams">struts.token,struts.token.name</param> 
+            </interceptor-ref>
+        </action>
+		
+    </package>
+	
+    <package name="collaboration_do/collaboration/FrontEnd/Idea/Manage" namespace="/do/collaboration/FrontEnd/Idea/Manage" extends="entando-front-default">
+		
+        <interceptors>
+            <interceptor name="entandoToken" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.TokenInterceptor" />
+            <interceptor name="loggeduser" class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.system.LoggeduserInterceptor" />
+        </interceptors>
+		
+        <global-results>
+            <result name="userNotAllowed" type="dispatcher">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/userNotAllowed.jsp</result>
+        </global-results>
+		
+        <action name="introSearchResult" class="jpcollaborationListIdeaFrontAction">
+            <result type="dispatcher">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/search-result.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+		
+		<action name="list" class="jpcollaborationListIdeaFrontAction" method="list">
+			<result type="guiFragment">
+				<param name="code">collaboration_listIdea</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/listIdea.jsp</param>
+			</result>
+			<interceptor-ref name="entandoFrontEndFreeStack">
+				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+			</interceptor-ref>
+		</action>
+
+		<action name="ideaLike" class="jpcollaborationListIdeaFrontAction" method="ideaLike">
+			<result name="success" type="chain">list</result>
+			<result name="input" type="guiFragment">
+				<param name="code">collaboration_listIdea</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/listIdea.jsp</param>
+			</result>
+			<result name="alreadyVoted" type="guiFragment">
+				<param name="code">collaboration_listIdea</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/listIdea.jsp</param>
+			</result>
+			<result name="invalid.token" type="chain">list</result>
+			<interceptor-ref name="loggeduser" />
+			<interceptor-ref name="entandoToken">
+				<param name="typeMessages">none</param>
+			</interceptor-ref>
+			<interceptor-ref name="entandoFrontEndValidationStack">
+				<param name="params.excludeParams">struts.token,struts.token.name</param>
+			</interceptor-ref>
+		</action>
+
+		<action name="ideaUnlike" class="jpcollaborationListIdeaFrontAction" method="ideaUnlike">
+			<result name="success" type="chain">list</result>
+			<result name="input" type="guiFragment">
+				<param name="code">collaboration_listIdea</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/listIdea.jsp</param>
+			</result>
+			<result name="alreadyVoted" type="guiFragment">
+				<param name="code">collaboration_listIdea</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpcollaboration/aps/jsp/internalservlet/idea/listIdea.jsp</param>
+			</result>
+			<result name="invalid.token" type="chain">list</result>
+			<interceptor-ref name="loggeduser" />
+			<interceptor-ref name="entandoToken">
+				<param name="typeMessages">none</param>
+			</interceptor-ref>
+			<interceptor-ref name="entandoFrontEndValidationStack">
+				<param name="params.excludeParams">struts.token,struts.token.name</param>
+			</interceptor-ref>
+		</action>
+
+    </package>
+	
+</struts>

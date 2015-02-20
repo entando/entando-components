@@ -51,15 +51,15 @@ import org.slf4j.LoggerFactory;
  *  <code>ip</code>(request IP address)<br>
  *  <code>referer</code>(request URL)<br>
  *  <code>session_id</code>(the session ID)<br>
- *  <code>role</code>(jAPS role of the user that performs the request)<br>
+ *  <code>role</code>(role of the user that performs the request)<br>
  *  <code>timestamp</code>(timestamp value of the request)<br>
  *  <code>year</code>(year of the request (yyyy))<br>
  *  <code>month</code>(month of the request (mm))<br>
- *  <code>day<code>(day of the request (dd))<br>
+ *  <code>day</code>(day of the request (dd))<br>
  *  <code>hour</code>(hour of the request)<br>
- *  <code>pagecode</code>(jAPS code of the page)<br>
+ *  <code>pagecode</code>(code of the page)<br>
  *  <code>content</code>(the code of the content rendered in the main frame of the page)<br>
- *  <code>langcode</code>(jAPS code of the language og the page)<br>
+ *  <code>langcode</code>(code of the language og the page)<br>
  *  <code>useragent</code>(useragent)<br>
  *  <code>browserlang</code>(useragent lang)<br>
  *  This informations are collected in a HashMap and then sent to the StatsManager

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
+
+	<bean id="jpcollaborationSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/common/layouts/subMenu.jsp</value></property>
+	</bean>
+
+	<bean id="jpcollaborationIdeaInstanceFinderAction" scope="prototype"
+			class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.ideainstance.IdeaInstanceFinderAction"
+			parent="abstractBaseAction" >
+		<property name="ideaInstanceManager" ref="jpcollaborationIdeaInstanceManager" />
+		<property name="groupManager" ref="GroupManager" />
+	</bean>
+
+	<bean id="jpcollaborationIdeaInstanceAction" scope="prototype"
+			class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.ideainstance.IdeaInstanceAction"
+			parent="abstractBaseAction" >
+		<property name="ideaInstanceManager" ref="jpcollaborationIdeaInstanceManager" />
+		<property name="groupManager" ref="GroupManager" />
+		<property name="ideaManager" ref="jpcollaborationIdeaManager" />
+		<property name="pageManager" ref="PageManager" />
+	</bean>
+
+	<bean id="jpcollaborationIdeaFinderAction" scope="prototype" parent="abstractBaseAction"
+			class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.idea.IdeaFinderAction">
+		<property name="ideaManager" ref="jpcollaborationIdeaManager" />
+		<property name="ideaInstanceManager" ref="jpcollaborationIdeaInstanceManager" />
+	</bean>
+
+	<bean id="jpcollaborationIdeaCommentFinderAction" scope="prototype" parent="abstractBaseAction"
+			class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.comment.IdeaCommentFinderAction">
+		<property name="ideaManager" ref="jpcollaborationIdeaManager" />
+		<property name="ideaCommentManager" ref="jpcollaborationIdeaCommentManager" />
+	</bean>
+
+	<bean id="jpcollaborationIdeaAction" scope="prototype" parent="abstractBaseAction"
+			class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.idea.IdeaAction">
+		<property name="ideaManager" ref="jpcollaborationIdeaManager" />
+		<property name="categoryManager" ref="CategoryManager"/>
+		<property name="ideaInstanceManager" ref="jpcollaborationIdeaInstanceManager" />
+	</bean>
+
+	<bean id="jpcollaborationConfigAction" scope="prototype" parent="abstractBaseAction"
+			class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.config.CrowdSourcingConfigAction">
+		<property name="ideaManager" ref="jpcollaborationIdeaManager" />
+	</bean>
+
+</beans>

@@ -36,7 +36,7 @@ import com.agiletec.plugins.jpnewsletter.apsadmin.subscriber.TestSubscribersFind
 public class AllTests {
 	
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for jAPS Plugin Newsletter");
+		TestSuite suite = new TestSuite("Test for Entando Plugin Newsletter");
 		
 		suite.addTestSuite(TestNewsletterConfigDOM.class);
 		suite.addTestSuite(TestNewsletterDAO.class);

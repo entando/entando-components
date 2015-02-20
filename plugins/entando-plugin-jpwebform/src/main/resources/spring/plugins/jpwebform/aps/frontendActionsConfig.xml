@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<!--
+	<bean id="jpwebformMessageTypesAction" scope="prototype"
+			class="org.entando.entando.plugins.jpwebform.aps.internalservlet.message.MessageTypesAction"
+			parent="abstractBaseAction" >
+		<property name="messageManager" ref="jpwebformFormManager" />
+	</bean>
+	
+	<bean id="jpwebformUserNewMessageAction" scope="prototype"
+			class="org.entando.entando.plugins.jpwebform.aps.internalservlet.message.UserNewMessageAction"
+			parent="abstractEntityAction" >
+		<property name="messageManager" ref="jpwebformFormManager" />
+	</bean>
+	
+	<bean id="jpwebformListAttributeAction" scope="prototype"
+			class="org.entando.entando.plugins.jpwebform.aps.internalservlet.message.attribute.action.list.ListAttributeAction"
+			parent="abstractBaseAction" >
+		<property name="entityActionHelper" ref="entityActionHelper"/>
+	</bean>
+	-->
+	
+	<bean id="jpwebformUserFormAction" scope="prototype"
+			class="org.entando.entando.plugins.jpwebform.aps.internalservlet.form.UserFormAction"
+			parent="abstractEntityAction" >
+		<property name="messageManager" ref="jpwebformFormManager" />
+		<property name="guiGeneratorManager" ref="jpwebformGuiGeneratorManager" />
+		<property name="mailManager" ref="jpmailMailManager" />
+	</bean>
+	
+	<bean id="jpwebformUserFormListAttributeAction" scope="prototype"
+			class="org.entando.entando.plugins.jpwebform.aps.internalservlet.form.attribute.action.list.ListAttributeAction"
+			parent="abstractBaseAction" >
+		<property name="entityActionHelper" ref="entityActionHelper"/>
+	</bean>
+	
+</beans>

@@ -1,0 +1,57 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+	
+	<field name="langCode">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message key="requiredstring" />
+		</field-validator>
+	</field>
+	
+	<field name="resourceName">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message key="requiredstring" />
+		</field-validator>
+	</field>
+	
+	<field name="responseContentType">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message key="requiredstring" />
+		</field-validator>
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[(isValidMediaType(responseContentType))]]></param>
+			<message key="jpoauthclient.error.responseContentType.invalid" />
+		</field-validator>
+	</field>
+	
+	<field name="method">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message key="requiredstring" />
+		</field-validator>
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[(isValidMethod())]]></param>
+			<message key="jpoauthclient.error.method.invalid" />
+		</field-validator>
+	</field>
+	
+	<field name="requestContentType">
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[(isValidMediaType(requestContentType))]]></param>
+			<message key="jpoauthclient.error.requestContentType.invalid" />
+		</field-validator>
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[!((method.equals("POST") || method.equals("PUT")) && (null == requestContentType || requestContentType.trim().length() == 0))]]></param>
+			<message key="requiredstring" />
+		</field-validator>
+	</field>
+	
+	<field name="requestBody">
+		<field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[!((method.equals("POST") || method.equals("PUT")) && (null == requestBody || requestBody.trim().length() == 0))]]></param>
+			<message key="requiredstring" />
+		</field-validator>
+	</field>
+	
+</validators>

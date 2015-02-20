@@ -1,0 +1,17 @@
+<%-- this is auto-generated code --BEGIN-- --%>
+<s:set var="attributeVar" value='%{#messageVar.getAttribute("$${attributeName}$$")}' />
+<s:if test="#lang.default">
+<s:if test="%{#attributeVar.booleanValue == null}">
+<s:text name="label.bothYesAndNo"/>
+</s:if>
+<s:elseif test="%{#attributeVar.booleanValue != null && #attributeVar.booleanValue == true}">
+<s:text name="label.yes"/>
+</s:elseif>
+<s:elseif test="%{#attributeVar.booleanValue != null && #attributeVar.booleanValue == false}">
+<s:text name="label.no"/>
+</s:elseif>
+</s:if>
+<s:else>
+<s:text name="EntityAttribute.monolang.defaultValue" />
+</s:else>
+<%-- this is auto-generated code --END-- --%>

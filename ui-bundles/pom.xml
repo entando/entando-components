@@ -53,6 +53,7 @@
 		<module>content-types/entando-content-download</module>
 		<module>content-types/entando-content-resolution</module>
 		<module>content-types/entando-content-announcement</module>
+		<module>content-types/entando-content-blogpost</module>
 		<module>themes/entando-page-bootstrap-hero</module>
 		<module>themes/entando-page-2columns-left</module>
 		<module>themes/entando-page-myportalplus-basic</module>
@@ -67,6 +68,7 @@
 		<module>app-views/entando-app-view-avatar-default</module>
 		<module>app-views/entando-app-view-cmstagcloud-default</module>
 		<module>app-views/entando-app-view-tokenapi-default</module>
+		<module>app-views/entando-app-view-blog-default</module>
 	</modules>
 	<properties>
 	</properties>

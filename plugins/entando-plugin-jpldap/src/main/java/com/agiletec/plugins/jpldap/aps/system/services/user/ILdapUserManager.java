@@ -36,12 +36,12 @@ public interface ILdapUserManager extends IUserManager {
 	/**
 	 * Returns the list of users drawn from the research.
 	 * @param text The text to search on the username.
-	 * @param japsUser true if you want to search on local users, 
+	 * @param entandoUser true if you want to search on local users, 
 	 * false if you want to search on non-local users, otherwise null.
 	 * @return The users extracted.
 	 * @throws ApsSystemException In case of error.
 	 */
-	public List<UserDetails> searchUsers(String text, Boolean japsUser) throws ApsSystemException;
+	public List<UserDetails> searchUsers(String text, Boolean entandoUser) throws ApsSystemException;
 	
 	public boolean isWriteUserEnable();
 	

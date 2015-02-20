@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <package name="collaboration_do/collaboration/Page/SpecialWidget" namespace="/do/Page/SpecialWidget" extends="core_do/Page/SpecialWidget">
+
+		<action name="jpcrowdsourcingIdeaInstanceViewerConfig" class="jpcollaborationIdeaInstanceWidgetAction" method="init">
+	        <result type="tiles">admin.jpcrowdsourcing.page.widget.publish-instance.config</result>
+	        <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+	    </action>
+
+    </package>
+
+	<package name="collaboration_do/collaboration/Page/SpecialWidget/IdeaInstanceViewer" namespace="/do/collaboration/Page/SpecialWidget/IdeaInstanceViewer" extends="jacms_do/jacms/Page/SpecialWidget/ListViewer" >
+
+		<action name="configInstance" class="jpcollaborationIdeaInstanceWidgetAction" method="save">
+        	<result name="input" type="tiles">admin.jpcrowdsourcing.page.widget.publish-instance.config</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+        <action name="changeInstance" class="jpcollaborationIdeaInstanceWidgetAction" method="changeInstance">
+        	<result type="tiles">admin.jpcrowdsourcing.page.widget.publish-instance.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+	</package>
+
+
+
+</struts>

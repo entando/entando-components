@@ -1,0 +1,32 @@
+<shortcut-def>
+	<shortcuts>
+		<shortcut id="jpwebform.message.list" requiredPermission="jpwebform_manageForms" menusection="plugins" source="jpwebform">
+			<description key="jpwebform.shortcut.message.list.shortDesc" ></description>
+			<longdesc key="jpwebform.shortcut.message.list.longDesc">
+			</longdesc>
+			<url>
+				<param name="namespace">/do/jpwebform/Message/Operator</param>
+				<param name="actionName">list</param>
+			</url>
+		</shortcut>
+		<shortcut id="jpwebform.message.config" requiredPermission="superuser" menusection="plugins" source="jpwebform">
+			<description key="jpwebform.shortcut.message.config.shortDesc" ></description>
+			<longdesc key="jpwebform.shortcut.message.config.longDesc">
+			</longdesc>
+			<url>
+				<param name="namespace">/do/jpwebform/Message/Config</param>
+				<param name="actionName">list</param>
+			</url>
+		</shortcut>
+		<shortcut id="jpwebform.form.config" requiredPermission="superuser" menusection="plugins" source="jpwebform">
+			<description key="jpwebform.shortcut.form.config.shortDesc" ></description>
+			<longdesc key="jpwebform.shortcut.form.config.longDesc">
+			</longdesc>
+			<url>
+				<param name="namespace">/do/Entity</param>
+				<param name="actionName">initViewEntityTypes</param>
+				<param name="entityManagerName">jpwebformFormManager</param>
+			</url>
+		</shortcut>
+	</shortcuts>
+</shortcut-def>

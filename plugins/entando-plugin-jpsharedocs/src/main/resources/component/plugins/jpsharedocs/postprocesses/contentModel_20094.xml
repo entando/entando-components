@@ -1,0 +1,72 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>20094</id>
+  <contentType>SDC</contentType>
+  <description>Complete with versions and comments</description>
+  <shape><![CDATA[<div class="scheda_documento">
+	<h3>$content.Title.text</h3>
+	
+	<div class="info">
+		<dl>
+			<dt>Author</dt><dd>$content.Author.text</dd>
+			<dt>Description</dt><dd>$content.Description.text</dd>
+			<dt>Data creazione</dt><dd>$content.CreationDate.getFormattedDate("EEEE dd MMMM yyyy"), $content.CreationDate.getFormattedDate("k:m")</dd>
+			#if ($content.Versions && $content.Versions.size() > 0)
+				#set( $n = $content.Versions.size() - 1 )
+				#set( $ver =  $content.Versions.get($n) ) 
+		
+				<dt>Data ultima versione</dt><dd>$ver.VersionDate.getFormattedDate("EEEE dd MMMM yyyy"), $ver.VersionDate.getFormattedDate("k:m")</dd>
+ 				<dt>Document</dt><dd><a href="$ver.Document.attachPath">$ver.Document.text, $ver.Document.resource.instance.fileLenght $ver.Document.resource.instance.mimeType</a></dd>
+				<dt>Inserito da</dt><dd>$ver.SubmittedBy.text</dd>
+			#end
+		</dl>
+	</div>
+
+	#if ($content.DocumentiCorrelati && $content.DocumentiCorrelati.size() > 0)
+		<div class="versioni">
+			<h4>$i18n.getLabel("jpsharedocs_RELATED_DOCS")</h4>		
+			<ul>
+				#foreach ($doc in $content.DocumentiCorrelati)
+					<li><a href="$doc.destination">$doc.text</a></li>
+				#end
+			</ul>
+		</div>
+	#end
+
+	#if ($content.Versions && $content.Versions.size() > 0)
+		<div class="versioni">
+			<h4>$i18n.getLabel("jpsharedocs_VERSIONS_HISTORY")</h4>
+			<dl>
+				#foreach ($ver in $content.Versions)
+					#set( $n = $content.Versions.size() - $velocityCount )
+					#set( $ver =  $content.Versions.get($n) ) 
+					<dt>$ver.VersionDate.getFormattedDate("EEEE dd MMMM yyyy"), $ver.VersionDate.getFormattedDate("k:m")</dt>
+						<dd><a href="$ver.Document.attachPath">$ver.Document.text, $ver.Document.resource.instance.fileLenght $ver.Document.resource.instance.mimeType</a></dd>
+						<dd>Inserito da $ver.SubmittedBy.text</dd>
+				#end
+			</dl>
+		</div>
+	#end
+
+	#if ($content.Comments && $content.Comments.size() > 0)
+		<div class="commenti">
+			<h4>$i18n.getLabel("jpsharedocs_COMMENTS_HISTORY")</h4>	
+			<ol>
+				#foreach ($com in $content.Comments)
+					<li>
+						<h5>$com.Author.text, $com.CommentDate.getFormattedDate("EEEE dd MMMM yyyy"), $com.CommentDate.getFormattedDate("k:m")</h5>
+						<p>$com.Comment.text</p>
+					</li>	
+				#end
+			</ol>
+		</div>
+	#end
+		
+</div>]]></shape>
+	<stylesheet>../../plugins/jpsharedocs/static/css/model.css</stylesheet>
+</contentModel>

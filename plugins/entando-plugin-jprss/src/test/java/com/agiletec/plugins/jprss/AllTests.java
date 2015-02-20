@@ -19,22 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jprss;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import com.agiletec.plugins.jprss.aps.system.services.rss.TestRssManager;
-import com.agiletec.plugins.jprss.apsadmin.rss.TestRssAction;
-import com.agiletec.plugins.jprss.apsadmin.rss.portal.TestRssPortalAction;
-
-public class AllTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for jAPS RSS Plugin");
-		suite.addTestSuite(TestRssManager.class);
-		suite.addTestSuite(TestRssAction.class);
-		suite.addTestSuite(TestRssPortalAction.class);
-		return suite;
-	}
-	
-}
+package com.agiletec.plugins.jprss;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import com.agiletec.plugins.jprss.aps.system.services.rss.TestRssManager;
+import com.agiletec.plugins.jprss.apsadmin.rss.TestRssAction;
+import com.agiletec.plugins.jprss.apsadmin.rss.portal.TestRssPortalAction;
+
+public class AllTests {
+	
+	public static Test suite() {
+		TestSuite suite = new TestSuite("Test for Entando RSS Plugin");
+		suite.addTestSuite(TestRssManager.class);
+		suite.addTestSuite(TestRssAction.class);
+		suite.addTestSuite(TestRssPortalAction.class);
+		return suite;
+	}
+	
+}

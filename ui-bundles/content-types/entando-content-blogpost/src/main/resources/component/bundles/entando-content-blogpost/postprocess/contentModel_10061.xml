@@ -1,0 +1,29 @@
+<contentModel>
+  <id>10061</id>
+  <contentType>BLG</contentType>
+  <description>Lists - Default</description>
+  <shape><![CDATA[<article class="media margin-medium-vertical">
+  #if ( $content.Picture.getImagePath("3") != "" )
+  <div class="pull-left">
+    <img src="$content.Picture.getImagePath("3")" alt="$content.Picture.text" class="media-object" />
+  </div>
+  #end
+  <div class="media-body">
+    <h2 class="media-heading" style="line-height: 1"><a href="$content.contentLink">$content.Title.text</a></h2>
+    <p><span class="icon icon-user"></span>&#32;$i18n.getLabel("BLG_WRITTEN_BY") $content.Author.authorname, $i18n.getLabel("BLG_WRITTEN_ON") $content.DateTime.longDate</p>
+    #if ( $content.Summary.text != "" )
+    $content.Summary.text
+    #end
+    #if ($content.getCategories() && !($content.getCategories().empty) )
+      <div class="tags">
+        <p>
+          <span class="icon-tags"></span>&#32;$i18n.getLabel("BLG_TAGS_INTRO"):
+          #foreach ($category in $content.getCategories())
+            <a href="$info.getPageURLWithWidget("blog_postlist")?jpblogcat=$category.code" title="$i18n.getLabel("BLG_TAGS_FILTER_BY"): $category.title" class="label label-info">$category.title</a>
+          #end
+          </p>
+      </div>
+    #end
+  </div>
+</article>]]></shape>
+</contentModel>

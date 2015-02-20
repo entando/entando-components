@@ -31,7 +31,7 @@ import com.agiletec.plugins.jpcontentfeedback.apsadmin.comment.TestCommentAction
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for jAPS jpcontentfeedback Plugin");
+		TestSuite suite = new TestSuite("Test for Entando jpcontentfeedback Plugin");
 		
 		// FrontEnd
 		suite.addTestSuite(TestCommentFrontEndAction.class);
