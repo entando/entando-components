@@ -121,12 +121,9 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
-						<!-- uncomment this configuration if you want to use jdk 1.8 -->
-						<!--
 						<configuration>
 							<additionalparam>-Xdoclint:none</additionalparam>
 						</configuration>
-						-->
 					</execution>
 				</executions>
 			</plugin>
