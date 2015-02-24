@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Email Sender</name>
-	<description>Email Sender Plugin</description>
+	<description>Provides the basis for Registration Forms and Newsletter services, and all plugins that require sending email: es: User Registration forms, Web Forms, Newsletters, etc.</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
