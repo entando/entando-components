@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Content Workflow</name>
-	<description>Content Workflow</description>
+	<description>Extends the basic CMS workflow and allowing customizable workflows for content categories</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
