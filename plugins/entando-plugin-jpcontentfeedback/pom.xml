@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Content Feedback</name>
-	<description>You can comment and vote any content of cms</description>
+	<description>Allows users to provide their feedback</description>
 	<developers>
 		<developer>
 			<id>d.cherchi</id>
