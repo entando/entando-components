@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
 	<name>Entando App: RSS</name>
-	<description>RSS APP</description>
+	<description>Shows portal content in RSS format</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
