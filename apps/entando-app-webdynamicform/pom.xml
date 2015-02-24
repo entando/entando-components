@@ -9,8 +9,8 @@
 	<artifactId>entando-app-webdynamicform</artifactId>
 	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
-	<name>Entando App: Web Dynamic Forms</name>
-	<description>Web Dynamic Forms APP</description>
+	<name>Entando App: Web Dynamic Form</name>
+	<description>Enables the deployment and management of dynamic web forms with custom fields</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
