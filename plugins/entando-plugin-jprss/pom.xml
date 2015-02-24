@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: RSS</name>
-	<description>RSS</description>
+	<description>Shows portal content in RSS format</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
