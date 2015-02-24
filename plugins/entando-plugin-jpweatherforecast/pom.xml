@@ -10,8 +10,8 @@
 	<artifactId>entando-plugin-jpweatherforecast</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: Weather Forecast</name>
-	<description>Weather forecast widget</description>
+	<name>Entando Plugin: Meteo</name>
+	<description>User customizable weather display widget</description>
 	<developers>
 		<developer>
 			<id>m.minnai</id>
