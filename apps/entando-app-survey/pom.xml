@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
 	<name>Entando App: Survey - Questionnaire</name>
-	<description>Survey-Questionnaire APP</description>
+	<description>Allows users to post and manage polls</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
