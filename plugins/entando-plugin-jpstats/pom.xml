@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Statistics</name>
-	<description>Statistics</description>
+	<description>Module on portal access to provide statistics data</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
