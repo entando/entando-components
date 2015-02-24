@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: CAS Client</name>
-	<description>Provide the Entando CAS client for CAS server authentication</description>
+	<description>Provides the Entando CAS client for CAS server authentication</description>
 	<developers>
 		<developer>
 			<id>gcocco</id>
