@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: LDAP Connector</name>
-	<description>LDAP Connector</description>
+	<description>Allows centralized authentication and user group management</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
