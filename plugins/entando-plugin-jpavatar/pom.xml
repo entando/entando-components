@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Avatar</name>
-	<description>My Avatar</description>
+	<description>Allows registered users to manage pictures associated to their profile</description>
 	<developers>
 		<developer>
 			<id>s.puddu</id>
