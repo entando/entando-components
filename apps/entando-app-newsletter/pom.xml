@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
 	<name>Entando App: Newsletter</name>
-	<description>Newsletter APP</description>
+	<description>Allows specific email services to registered users</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
