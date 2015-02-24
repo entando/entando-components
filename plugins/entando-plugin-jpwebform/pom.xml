@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Web Form</name>
-	<description>Web Form</description>
+	<description>Create webforms with approval steps and customized workflows</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
