@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Faceted Navigation</name>
-	<description>Faceted Navigation</description>
+	<description>Allows the integration of multidimensional classification within Entando based portals</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
