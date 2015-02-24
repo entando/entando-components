@@ -9,8 +9,8 @@
 	<artifactId>entando-plugin-jpphotogallery</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: Photo gallery</name>
-	<description>Photo gallery</description>
+	<name>Entando Plugin: Photogallery</name>
+	<description>Gallery Creation, with automatic image sizing and resolution setting</description>
 	<developers>
 		<developer>
 			<id>m.minnai</id>
