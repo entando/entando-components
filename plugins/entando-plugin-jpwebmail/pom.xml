@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Web Mail</name>
-	<description>Web Mail</description>
+	<description>It lets users consult and handle their email in the portal</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
