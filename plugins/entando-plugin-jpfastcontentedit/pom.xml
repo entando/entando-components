@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Fast Content Edit</name>
-	<description>Editing content on Front-End</description>
+	<description>Allows front-end editing and real time publishing of portal pages</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
