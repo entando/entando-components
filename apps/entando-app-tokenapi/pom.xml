@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
 	<name>Entando App: Token API</name>
-	<description>Token API APP</description>
+	<description>Invoke protected APIs through individual tokens</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
