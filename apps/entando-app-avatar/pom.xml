@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
 	<name>Entando App: Avatar</name>
-	<description>Avatar APP</description>
+	<description>Allows registered users to manage pictures associated to their profile</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
