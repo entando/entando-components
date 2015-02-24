@@ -9,8 +9,8 @@
 	<artifactId>entando-plugin-jpwebdynamicform</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: Web Dynamic Forms</name>
-	<description>Web Dynamic Forms</description>
+	<name>Entando Plugin: Web Dynamic Form</name>
+	<description>Enables the deployment and management of dynamic web forms with custom fields</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
