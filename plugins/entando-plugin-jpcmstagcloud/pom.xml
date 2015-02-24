@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Tag Cloud</name>
-	<description>Tag Cloud</description>
+	<description>Group content by tag and category</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
