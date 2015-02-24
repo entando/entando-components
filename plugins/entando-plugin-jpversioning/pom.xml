@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Content Versioning</name>
-	<description>Content Versioning</description>
+	<description>Manages the versioning of portal content, storing the history of performed operations</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
