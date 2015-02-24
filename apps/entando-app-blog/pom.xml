@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
 	<name>Entando App: Blog</name>
-	<description>Blog APP</description>
+	<description>Blogging management</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
