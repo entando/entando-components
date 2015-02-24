@@ -9,7 +9,7 @@
 	<artifactId>entando-plugin-jpuserreg</artifactId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: User Registration</name>
-	<description>User Registration</description>
+	<description>Provides login and access to the user's profile (complete with avatar and personal information) and additional services</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
