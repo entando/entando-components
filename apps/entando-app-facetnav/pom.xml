@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
 	<name>Entando App: Faceted Navigation</name>
-	<description>Faceted Navigation APP</description>
+	<description>Allows the integration of multidimensional classification within Entando based portals</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
