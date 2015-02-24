@@ -9,8 +9,8 @@
 	<artifactId>entando-plugin-jpgeoref</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: GeoReferenced contents</name>
-	<description>GeoReferenced contents</description>
+	<name>Entando Plugin: Geoereferenced content</name>
+	<description>Allows geotag content according to the “coordinates” attribute</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
