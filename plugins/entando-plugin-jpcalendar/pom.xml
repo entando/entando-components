@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Calendar</name>
-	<description>Calendar</description>
+	<description>Share activities, events, and news on the portal</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
