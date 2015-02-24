@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Blog</name>
-	<description>Blog</description>
+	<description>Blogging management</description>
 	<developers>
 		<developer>
 			<id>s.puddu</id>
