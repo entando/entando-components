@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: OAuth Client</name>
-	<description>OAuth Client for Entando APIs</description>
+	<description>Invoke APIs in one Entando instance from another, allowing authentication on the provider</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
