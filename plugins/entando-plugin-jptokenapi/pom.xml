@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Token API</name>
-	<description>The plugin allows entando users to use protected Entando APIs through self-generated tokens</description>
+	<description>Invoke protected APIs through individual tokens</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
