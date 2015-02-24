@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Action Logger</name>
-	<description>Action Logger</description>
+	<description>Expands the existing log system to keep track of CMS activities</description>
 	<developers>
 		<developer>
 			<id>e.mezzano</id>
