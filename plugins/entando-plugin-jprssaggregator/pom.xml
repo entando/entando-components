@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: RSS Aggregator</name>
-	<description>RSS Aggregator</description>
+	<description>Allows to import and publish content from other portals in RSS format</description>
 	<developers>
 		<developer>
 			<id>m.minnai</id>
