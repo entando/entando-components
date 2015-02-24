@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Newsletter</name>
-	<description>Newsletter</description>
+	<description>Allows specific email services to registered users</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
