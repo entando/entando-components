@@ -9,8 +9,8 @@
 	<artifactId>entando-plugin-jps3awsclient</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: S3 AWS Client</name>
-	<description>Amazon S3 AWS Storage Client</description>
+	<name>Entando Plugin: Amazon S3 Connector</name>
+	<description>Allows the storage of portal information (images, documents) on Amazon S3 (Amazon Simple Storage Service )</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
