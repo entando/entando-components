@@ -9,8 +9,8 @@
 	<artifactId>entando-plugin-jpsurvey</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: Survey - Questionnaire</name>
-	<description>Allow to manage Survey and Questionnaire</description>
+	<name>Entando Plugin: Survey</name>
+	<description>Allows users to post and manage polls and questionnaires</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
