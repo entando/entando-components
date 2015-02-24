@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.apps</groupId>
 	<packaging>war</packaging>
 	<name>Entando App: Calendar</name>
-	<description>Calendar APP</description>
+	<description>Share activities, events, and news on the portal</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
