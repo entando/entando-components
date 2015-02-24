@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Mailgun Connector</name>
-	<description>Mailgun Connector</description>
+	<description>Sends emails from applications with notifications for failure/success of transaction.</description>
 	<developers>
 		<developer>
 			<id>a.piras</id>
