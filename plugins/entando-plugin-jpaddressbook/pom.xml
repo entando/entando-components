@@ -10,7 +10,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Address Book</name>
-	<description>Address Book</description>
+	<description>Allows users to access a personal detailed contact list</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
