@@ -8,8 +8,8 @@
 	</parent>
 	<artifactId>entando-plugin-jpcollaboration</artifactId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: Collaboration</name>
-	<description>Collaboration</description>
+	<name>Entando Plugin: Social Collaboration</name>
+	<description>Creating a dedicated area where users may post and vote ideas</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
