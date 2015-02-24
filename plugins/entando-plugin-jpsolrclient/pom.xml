@@ -9,8 +9,8 @@
 	<artifactId>entando-plugin-jpsolrclient</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: Solr Client</name>
-	<description>Solr Client</description>
+	<name>Entando Plugin: Solr Connector</name>
+	<description>Activates a Solr server for transparent content indexing</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
