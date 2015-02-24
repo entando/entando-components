@@ -9,8 +9,8 @@
 	<artifactId>entando-plugin-jpehcache</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
-	<name>Entando Plugin: EhCache Connector</name>
-	<description>EhCache Connector</description>
+	<name>Entando Plugin: Ehcache Connector</name>
+	<description>Enables the use of Ehcache as system library</description>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
