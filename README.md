@@ -9,7 +9,7 @@ The Entando components are:
 * **Bundles** extend functionality of portal-ui core component and/or views’ functionality of the other Entando components.
 * **Plugins** extend functionality of engine, and admin-console core components.
 * **Apps** extend functionality of engine, admin-console and portal-ui core components. Apps are composed of business logic, 
-and one or more views. A Plugin and one or more Bundles build an Entando App.
+and one or more views. 
 
 The Entando components project, based on Apache Maven, is organized in three modules including 
 all Entando extensions ready to use just now:
