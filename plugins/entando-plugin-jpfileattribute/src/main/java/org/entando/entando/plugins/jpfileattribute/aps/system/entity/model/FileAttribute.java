@@ -25,6 +25,7 @@ import java.util.List;
 
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.AbstractJAXBAttribute;
 import com.agiletec.aps.system.services.lang.Lang;
 
 import org.entando.entando.plugins.jpfileattribute.aps.system.file.AttachedFile;
@@ -35,11 +36,6 @@ import org.jdom.Element;
  * @author E.Santoboni
  */
 public class FileAttribute extends AbstractAttribute {
-	
-	@Override
-	protected Object getJAXBValue(String langCode) {
-		return this.getAttachedFile();
-	}
 	
 	@Override
 	public boolean isSearchableOptionSupported() {
@@ -65,11 +61,6 @@ public class FileAttribute extends AbstractAttribute {
 			Element filenameElement = new Element("filename");
 			filenameElement.setText(file.getFilename());
 			fileElement.addContent(filenameElement);
-			/*
-			Element base64Element = new Element("base64");
-			base64Element.setText(file.getBase64().toString());
-			fileElement.addContent(base64Element);
-			*/
 			attributeElement.addContent(fileElement);
         }
         return attributeElement;
@@ -86,6 +77,27 @@ public class FileAttribute extends AbstractAttribute {
             return Status.VALUED;
         }
         return Status.EMPTY;
+	}
+	
+	@Override
+	protected AbstractJAXBAttribute getJAXBAttributeInstance() {
+		return new JAXBFileAttribute();
+	}
+	
+	@Override
+	public AbstractJAXBAttribute getJAXBAttribute(String langCode) {
+		JAXBFileAttribute jaxbAttribute = (JAXBFileAttribute) super.createJAXBAttribute(langCode);
+		if (null == jaxbAttribute) return null;
+		jaxbAttribute.setAttachedFile(this.getAttachedFile());
+		return jaxbAttribute;
+	}
+	
+	@Override
+	public void valueFrom(AbstractJAXBAttribute jaxbAttribute) {
+		super.valueFrom(jaxbAttribute);
+		if (null == jaxbAttribute) return;
+		AttachedFile attachedFile = ((JAXBFileAttribute) jaxbAttribute).getAttachedFile();
+		this.setAttachedFile(attachedFile);
 	}
 	
 	public AttachedFile getAttachedFile() {
