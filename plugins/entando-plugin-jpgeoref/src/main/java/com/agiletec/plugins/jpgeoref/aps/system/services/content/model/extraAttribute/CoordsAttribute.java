@@ -21,7 +21,6 @@
  */
 package com.agiletec.plugins.jpgeoref.aps.system.services.content.model.extraAttribute;
 
-import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +28,8 @@ import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.AbstractJAXBAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.JAXBTextAttribute;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.plugins.jpgeoref.aps.system.GeoRefSystemConstants;
 
@@ -74,7 +75,7 @@ public class CoordsAttribute extends AbstractAttribute {
 	
 	/**
 	 * Returns search information
-	 * @param system languages
+	 * @param systemLangs system languages
 	 * @return search information
 	 */
 	@Override
@@ -137,11 +138,9 @@ public class CoordsAttribute extends AbstractAttribute {
 	
 	@Override
 	public Object getValue() {
-		return this;
-	}
-	
-	@Override
-	protected Object getJAXBValue(String langCode) {
+		if (!this.getStatus().equals(Status.VALUED)) {
+			return null;
+		}
 		StringBuilder coords = new StringBuilder();
 		coords.append("(");
 		coords.append(this.getX());
@@ -166,11 +165,27 @@ public class CoordsAttribute extends AbstractAttribute {
 	}
 	
 	@Override
-	public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
+	protected AbstractJAXBAttribute getJAXBAttributeInstance() {
+		return new JAXBTextAttribute();
+	}
+	
+	@Override
+	public AbstractJAXBAttribute getJAXBAttribute(String langCode) {
+		JAXBTextAttribute jaxbAttribute = (JAXBTextAttribute) super.createJAXBAttribute(langCode);
+		if (null == jaxbAttribute) return null;
+		Object value = this.getValue();
+		if (null != value) {
+			jaxbAttribute.setText(value.toString());
+		}
+		return jaxbAttribute;
+	}
+	
+	@Override
+	public void valueFrom(AbstractJAXBAttribute jaxbAttribute) {
 		if (null == jaxbAttribute) {
 			return;
 		}
-		String coords = (String) jaxbAttribute.getValue();
+		String coords = ((JAXBTextAttribute) jaxbAttribute).getText();
 		if (null == coords) {
 			return;
 		}

@@ -24,6 +24,7 @@ package org.entando.entando.plugins.jpfileattribute.aps.system.file;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -81,6 +82,7 @@ public class AttachedFile {
 		this._base64 = base64;
 	}
 	
+	@XmlTransient
 	public Date getDate() {
 		return _date;
 	}
@@ -88,6 +90,7 @@ public class AttachedFile {
 		this._date = date;
 	}
 	
+	@XmlTransient
 	public String getUsername() {
 		return _username;
 	}
@@ -95,6 +98,7 @@ public class AttachedFile {
 		this._username = username;
 	}
 	
+	@XmlTransient
 	public boolean isApproved() {
 		return _approved;
 	}
