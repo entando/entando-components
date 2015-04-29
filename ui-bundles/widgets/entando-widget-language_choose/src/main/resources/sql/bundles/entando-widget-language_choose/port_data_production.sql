@@ -21,7 +21,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 				<#list langsListVar as curLangVar>
 				<li
 							<#if (curLangVar.code == currentLangVar)>class="active" </#if>>
-							<a href=<@wp.url lang="${curLangVar.code}" paramRepeat=true />">
+							<a href="<@wp.url lang="${curLangVar.code}" paramRepeat=true />">
 								<@wp.i18n key="ESLC_LANG_${curLangVar.code}" />
 							</a>
 				</li>
