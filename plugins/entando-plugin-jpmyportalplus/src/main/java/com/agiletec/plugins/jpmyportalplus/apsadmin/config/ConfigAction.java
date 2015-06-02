@@ -36,11 +36,14 @@ import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.portal.AbstractPortalAction;
 import com.agiletec.plugins.jpmyportalplus.aps.system.services.config.IMyPortalConfigManager;
 import com.agiletec.plugins.jpmyportalplus.aps.system.services.config.model.MyPortalConfig;
+import java.util.ArrayList;
+import java.util.Collections;
+import org.apache.commons.beanutils.BeanComparator;
 
 /**
  * @author E.Santoboni
  */
-public class ConfigAction extends AbstractPortalAction implements IConfigAction {
+public class ConfigAction extends AbstractPortalAction {
 	
 	@Override
 	public void validate() {
@@ -54,7 +57,6 @@ public class ConfigAction extends AbstractPortalAction implements IConfigAction 
 		}
 	}
 	
-	@Override
 	public String edit() {
 		try {
 			MyPortalConfig config = this.getMyPortalConfigManager().getConfig();
@@ -66,15 +68,11 @@ public class ConfigAction extends AbstractPortalAction implements IConfigAction 
 		return SUCCESS;
 	}
 	
-	/**
-	 * @deprecated Use {@link #addWidget()} instead
-	 */
-	@Override
+	@Deprecated
 	public String addShowlet() {
 		return addWidget();
 	}
-
-	@Override
+	
 	public String addWidget() {
 		try {
 			String widgetCode = this.getWidgetCode();
@@ -92,15 +90,11 @@ public class ConfigAction extends AbstractPortalAction implements IConfigAction 
 		return SUCCESS;
 	}
 	
-	/**
-	 * @deprecated Use {@link #removeWidget()} instead
-	 */
-	@Override
+	@Deprecated
 	public String removeShowlet() {
 		return removeWidget();
 	}
-
-	@Override
+	
 	public String removeWidget() {
 		try {
 			String widgetCode = this.getWidgetCode();
@@ -114,7 +108,6 @@ public class ConfigAction extends AbstractPortalAction implements IConfigAction 
 		return SUCCESS;
 	}
 	
-	@Override
 	public String save() {
 		try {
 			MyPortalConfig config = this.prepareConfig();
@@ -128,15 +121,15 @@ public class ConfigAction extends AbstractPortalAction implements IConfigAction 
 	}
 	
 	private void populateForm(MyPortalConfig config) {
-		Set<String> allowedShowlets = config.getAllowedShowlets();
+		Set<String> allowedWidgets = config.getAllowedWidgets();
 		IWidgetTypeManager widgetTypeManager = this.getWidgetTypeManager();
-		Set<String> showlets = new TreeSet<String>();
-		for (String showletCode : allowedShowlets) {
-			if (this.isWidgetAllowed(widgetTypeManager.getWidgetType(showletCode))) {
-				showlets.add(showletCode);
+		Set<String> widgets = new TreeSet<String>();
+		for (String widgetCode : allowedWidgets) {
+			if (this.isWidgetAllowed(widgetTypeManager.getWidgetType(widgetCode))) {
+				widgets.add(widgetCode);
 			}
 		}
-		this.setWidgetTypeCodes(showlets);
+		this.setWidgetTypeCodes(widgets);
 	}
 	
 	@Override
@@ -150,7 +143,7 @@ public class ConfigAction extends AbstractPortalAction implements IConfigAction 
 	
 	private MyPortalConfig prepareConfig() throws ApsSystemException {
 		MyPortalConfig config = new MyPortalConfig();
-		config.setAllowedShowlets(this.getWidgetTypeCodes());
+		config.setAllowedWidgets(this.getWidgetTypeCodes());
 		return config;
 	}
 	
@@ -175,6 +168,22 @@ public class ConfigAction extends AbstractPortalAction implements IConfigAction 
 	@Deprecated
 	public void setShowletTypeCodes(Set<String> showletTypeCodes) {
 		this.setWidgetTypeCodes(showletTypeCodes);
+	}
+	
+	public List<SelectItem> getWidgetTypeItems() {
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		Set<String> widgetCodes = this.getWidgetTypeCodes();
+		if (null != widgetCodes) {
+			for (String widgetCode : widgetCodes) {
+				WidgetType widgetType = this.getWidgetType(widgetCode);
+				if (null != widgetType) {
+					items.add(new SelectItem(widgetCode, super.getTitle(widgetCode, widgetType.getTitles()), widgetType.getPluginCode()));
+				}
+			}
+			BeanComparator c = new BeanComparator("value");
+			Collections.sort(items, c);
+		}
+		return items;
 	}
 	
 	public Set<String> getWidgetTypeCodes() {
