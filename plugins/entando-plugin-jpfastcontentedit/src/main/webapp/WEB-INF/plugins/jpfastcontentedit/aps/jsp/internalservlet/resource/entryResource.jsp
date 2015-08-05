@@ -155,7 +155,7 @@
 					<s:file name="upload" id="jpfastcontentedit-new-upload" label="label.file"/>
 				</div>
 			</div>
-			
+			<%--
 			<div class="control-group">
 				<label class="control-label" for="jpfastcontentedit-new-normalizeFileName"><s:text name="label.normalize" />&#32;<s:text name="label.filename" /></label>
 				<div class="controls">
@@ -165,7 +165,8 @@
 						id="jpfastcontentedit-new-normalizeFileName" 
 						/>
 				</div>
-			</div>		
+			</div>	
+                        --%>
 		</fieldset>
 
 		<p class="form-actions">
