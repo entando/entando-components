@@ -93,9 +93,11 @@ window.addEvent('domready', function(){
 	<label for="upload"><wp:i18n key="jpfastcontentedit_FILE" />&#32;<abbr title="<wp:i18n key="jpfastcontentedit_REQUIRED_FULL" />"><wp:i18n key="jpfastcontentedit_REQUIRED_SHORT" /></abbr></label><br />
 	<s:file name="upload" id="upload" label="label.file"/>
 </p>
+<%--
 <p>
 	<wpsf:checkbox useTabindexAutoIncrement="true" name="normalizeFileName" id="normalizeFileName" cssClass="radiocheck" />&#32;<label for="normalizeFileName"><s:text name="label.normalize" />&#32;<s:text name="label.filename" /></label>
 </p>
+--%>
 </fieldset>
 
 <fieldset>
