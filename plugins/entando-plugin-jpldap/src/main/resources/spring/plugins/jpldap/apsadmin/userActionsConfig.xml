@@ -4,17 +4,18 @@
 		xmlns:context="http://www.springframework.org/schema/context"
 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
-	
+    
     <bean id="userAction" scope="prototype" 
-            class="com.agiletec.plugins.jpldap.apsadmin.user.UserAction" parent="abstractBaseAction" >
+          class="com.agiletec.plugins.jpldap.apsadmin.user.UserAction" parent="abstractBaseAction" >
         <property name="userManager" ref="UserManager" />
+        <property name="userProfileManager" ref="UserProfileManager" />
     </bean>
     
-	<bean id="userFinderAction" scope="prototype" 
-			class="com.agiletec.plugins.jpldap.apsadmin.user.UserFinderAction" parent="abstractBaseAction" >
-		<property name="userManager" ref="UserManager" />
-		<property name="userProfileManager" ref="UserProfileManager" />
-		<property name="entityActionHelper" ref="entityActionHelper" />
-	</bean>
-	
+    <bean id="userFinderAction" scope="prototype" 
+              class="com.agiletec.plugins.jpldap.apsadmin.user.UserFinderAction" parent="abstractBaseAction" >
+        <property name="userManager" ref="UserManager" />
+        <property name="userProfileManager" ref="UserProfileManager" />
+        <property name="entityActionHelper" ref="entityActionHelper" />
+    </bean>
+    
 </beans>

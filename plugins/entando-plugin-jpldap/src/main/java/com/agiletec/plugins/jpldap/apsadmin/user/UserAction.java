@@ -26,10 +26,9 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.AbstractUser;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
-
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-
 import com.agiletec.plugins.jpldap.aps.system.services.user.ILdapUserManager;
+
 import java.util.Date;
 
 /**
@@ -45,10 +44,6 @@ public class UserAction extends org.entando.entando.apsadmin.user.UserAction {
 			if (null != result) return result;
 			String username = this.getUsername();
 			UserDetails user = this.getUserManager().getUser(username);
-			if (!user.isEntandoUser() && !this.isWriteUserEnable()) {
-				this.addActionError(this.getText("error.user.notLocal"));
-				return "userList";
-			}
 			this.setRemoteUser(!user.isEntandoUser());
 			this.setActive(!user.isDisabled());
 			this.setUser(user);

@@ -21,18 +21,19 @@
  */
 package com.agiletec.plugins.jpldap.aps.system.services.user;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.user.IUserDAO;
+import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.system.services.user.UserManager;
+import com.agiletec.plugins.jpldap.aps.system.LdapSystemConstants;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.user.IUserDAO;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.system.services.user.UserManager;
-import com.agiletec.plugins.jpldap.aps.system.LdapSystemConstants;
 
 /**
  * The Manager for LdapUser.
@@ -126,13 +127,16 @@ public class LdapUserManager extends UserManager implements ILdapUserManager {
     @Override
     public List<UserDetails> searchUsers(String text, Boolean entandoUser) throws ApsSystemException {
         if (!isActive()) {
+			if (null == entandoUser || !entandoUser) {
+				return new ArrayList<UserDetails>();
+			}
 			return super.searchUsers(text);
 		}
         try {
             if (entandoUser == null) {
                 return this.searchUsers(text);
             }
-            IUserDAO userDAO = entandoUser.booleanValue() ? super.getUserDAO() : this.getLdapUserDAO();
+            IUserDAO userDAO = (entandoUser) ? super.getUserDAO() : this.getLdapUserDAO();
             if (text == null || text.trim().length() == 0) {
                 return userDAO.loadUsers();
             }
