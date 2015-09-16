@@ -250,7 +250,7 @@
                                             </legend>
                                         </s:elseif>
 
-                                        <s:elseif test="#attribute.type == 'Monotext' || #attribute.type == 'Text' || #attribute.type == 'Longtext' || #attribute.type == 'Hypertext' || #attribute.type == 'Attach' || #attribute.type == 'Number' || #attribute.type == 'Date' || #attribute.type == 'Link' || #attribute.type == 'Enumerator' || #attribute.type == 'Image' || #attribute.type == 'CheckBox' || #attribute.type == 'Boolean' || #attribute.type == 'ThreeState'">
+                                        <s:elseif test="#attribute.type == 'Monotext' || #attribute.type == 'Text' || #attribute.type == 'Longtext' || #attribute.type == 'Hypertext' || #attribute.type == 'Attach' || #attribute.type == 'Number' || #attribute.type == 'Date' || #attribute.type == 'Link' || #attribute.type == 'Enumerator' || #attribute.type == 'EnumeratorMap' || #attribute.type == 'Image' || #attribute.type == 'CheckBox' || #attribute.type == 'Boolean' || #attribute.type == 'ThreeState'">
                                             <div class="control-group attribute-type-<s:property value="#attribute.type" />">
                                                 <label class="control-label" for="<s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" />">
                                                     <wp:i18n key="jpfastcontentedit_${contentType}_${attributeName}"/>
@@ -345,6 +345,12 @@
 </s:elseif>
 <s:elseif test="#attribute.type == 'Enumerator'">
     <s:include value="/WEB-INF/apsadmin/jsp/entity/modules/enumeratorAttribute.jsp" />
+    <s:include value="/WEB-INF/plugins/jpfastcontentedit/aps/jsp/internalservlet/content/modules/include/front_attributeInfo-help-block.jsp" />
+</div>
+</div>
+</s:elseif>
+<s:elseif test="#attribute.type == 'EnumeratorMap'">
+    <s:include value="/WEB-INF/apsadmin/jsp/entity/modules/enumeratorMapAttribute.jsp" />
     <s:include value="/WEB-INF/plugins/jpfastcontentedit/aps/jsp/internalservlet/content/modules/include/front_attributeInfo-help-block.jsp" />
 </div>
 </div>
