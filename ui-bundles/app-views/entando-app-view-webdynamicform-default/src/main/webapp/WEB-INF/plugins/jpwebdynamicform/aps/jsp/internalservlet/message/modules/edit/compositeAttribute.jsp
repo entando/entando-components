@@ -28,35 +28,30 @@
 			<s:if test="#attribute.type == 'Boolean'">
 				<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/booleanAttribute.jsp" />
 			</s:if>
-
 			<s:elseif test="#attribute.type == 'CheckBox'">
 				<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/checkBoxAttribute.jsp" />
 			</s:elseif>
-
 			<s:elseif test="#attribute.type == 'Date'">
 				<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/dateAttribute.jsp" />
 			</s:elseif>
-
 			<s:elseif test="#attribute.type == 'Enumerator'">
 				<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/enumeratorAttribute.jsp" />
 			</s:elseif>
-
+			<s:elseif test="#attribute.type == 'EnumeratorMap'">
+				<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/enumeratorMapAttribute.jsp" />
+			</s:elseif>
 			<s:elseif test="#attribute.type == 'Longtext'">
 				<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/longtextAttribute.jsp" />
 			</s:elseif>
-
 			<s:elseif test="#attribute.type == 'Number'">
 				<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/numberAttribute.jsp" />
 			</s:elseif>
-
 			<s:elseif test="#attribute.type == 'Monotext' || #attribute.type == 'Text'">
 				<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/monotextAttribute.jsp" />
 			</s:elseif>
-
 			<s:elseif test="#attribute.type == 'ThreeState'">
 				<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/threeStateAttribute.jsp" />
 			</s:elseif>
-
 			<s:else>
 				<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/monotextAttribute.jsp" />
 			</s:else>
@@ -64,36 +59,6 @@
 			<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/inc/front_attributeInfo-help-block.jsp" />
 		</div>
 	</div>
-
-<%--	
-	<br />
-
-	<wp:i18n key="jpwebdynamicform_${typeCodeKey}_${attributeNameI18nKey}" />
-	<s:if test="#attribute.type == 'Monotext' || #attribute.type == 'Text'">
-		<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/monotextAttribute.jsp" />
-	</s:if>
-	<s:elseif test="#attribute.type == 'Longtext'">
-		<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/longtextAttribute.jsp" />
-	</s:elseif>
-	<s:elseif test="#attribute.type == 'Number'">
-		<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/numberAttribute.jsp" />
-	</s:elseif>
-	<s:elseif test="#attribute.type == 'Date'">
-		<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/dateAttribute.jsp" />
-	</s:elseif>
-	<s:elseif test="#attribute.type == 'Boolean'">
-		<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/booleanAttribute.jsp" />
-	</s:elseif>
-	<s:elseif test="#attribute.type == 'ThreeState'">
-		<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/threeStateAttribute.jsp" />
-	</s:elseif>
-	<s:elseif test="#attribute.type == 'Enumerator'">
-		<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/enumeratorAttribute.jsp" />
-	</s:elseif>
-	<s:elseif test="#attribute.type == 'CheckBox'">
-		<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/checkBoxAttribute.jsp" />
-	</s:elseif>
---%>
 
 </s:iterator>
 <s:set var="attributeTracer" value="#masterCompositeAttributeTracer" />
