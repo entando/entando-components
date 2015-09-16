@@ -47,6 +47,12 @@
 		<s:elseif test="#attribute.type == 'Date'">
 		 	<s:include value="/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/inc/attributes/front_dateAttribute.jsp" />
 		</s:elseif>
+		<s:elseif test="#attribute.type == 'Enumerator'">
+			<s:include value="/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/inc/attributes/front_enumeratorAttribute.jsp" />
+		</s:elseif>
+		<s:elseif test="#attribute.type == 'EnumeratorMap'">
+			<s:include value="/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/inc/attributes/front_enumeratorMapAttribute.jsp" />
+		</s:elseif>
 		<s:elseif test="#attribute.type == 'Hypertext'">
 			<s:include value="/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/inc/attributes/front_hypertextAttribute.jsp" />
 		</s:elseif>
