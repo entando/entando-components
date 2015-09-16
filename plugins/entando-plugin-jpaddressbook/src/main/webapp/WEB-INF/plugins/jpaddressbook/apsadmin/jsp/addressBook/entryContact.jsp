@@ -68,19 +68,10 @@
 							<%-- Leave this completely blank --%>
 							</s:elseif>
 							<s:else>
-								<%-- Error form control--To Do
-								<s:set var="secretFieldErrorsVar" value="#attributeTracer.getFormFieldName(#attribute)"/>
-								<s:set var="secretHasFieldErrorVar" value="#secretFieldErrorsVar != null && !#secretFieldErrorsVar.isEmpty()" />
-								--%>
 								<label
 									class="display-block" for="<s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" />">
 										<s:property value="#attribute.name" />
 							 	</label>
-								<%--
-									<s:if test="#secretHasFieldErrorVar">
-										<p class="text-danger padding-small-vertical"><s:iterator value="#secretFieldErrorsVar"><s:property /> </s:iterator></p>
-									</s:if>
-								--%>
 							</s:else>
 								<s:if test="#attribute.type == 'Boolean'">
 									<s:include value="/WEB-INF/apsadmin/jsp/entity/modules/booleanAttribute.jsp" />
@@ -93,6 +84,9 @@
 								</s:elseif>
 								<s:elseif test="#attribute.type == 'Enumerator'">
 									<s:include value="/WEB-INF/apsadmin/jsp/entity/modules/enumeratorAttribute.jsp" />
+								</s:elseif>
+								<s:elseif test="#attribute.type == 'EnumeratorMap'">
+									<s:include value="/WEB-INF/apsadmin/jsp/entity/modules/enumeratorMapAttribute.jsp" />
 								</s:elseif>
 								<s:elseif test="#attribute.type == 'Hypertext'">
 									<s:include value="/WEB-INF/apsadmin/jsp/entity/modules/hypertextAttribute.jsp" />
@@ -115,15 +109,14 @@
 								<s:elseif test="#attribute.type == 'Timestamp'">
 									<s:include value="/WEB-INF/apsadmin/jsp/entity/modules/timestampAttribute.jsp" />
 								</s:elseif>
-
 								<s:elseif test="#attribute.type == 'Composite'">
-									<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/compositeAttribute.jsp" />
+									<s:include value="/WEB-INF/apsadmin/jsp/entity/modules/compositeAttribute.jsp" />
 								</s:elseif>
 								<s:elseif test="#attribute.type == 'List'">
 									<s:include value="/WEB-INF/apsadmin/jsp/entity/modules/listAttribute.jsp" />
 								</s:elseif>
 								<s:elseif test="#attribute.type == 'Monolist'">
-									<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/monolistAttribute.jsp" />
+									<s:include value="/WEB-INF/apsadmin/jsp/entity/modules/monolistAttribute.jsp" />
 								</s:elseif>
 						</div><%-- form group --%>
 					</div>

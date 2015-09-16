@@ -52,25 +52,24 @@
 								<s:elseif test="#attribute.type == 'Date'">
 									<p><s:include value="/WEB-INF/apsadmin/jsp/entity/view/dateAttribute.jsp" /></p>
 								</s:elseif>
+								<s:elseif test="#attribute.type == 'Enumerator'">
+									<p><s:include value="/WEB-INF/apsadmin/jsp/entity/view/enumeratorAttribute.jsp" /></p>
+								</s:elseif>
+								<s:elseif test="#attribute.type == 'EnumeratorMap'">
+									<p><s:include value="/WEB-INF/apsadmin/jsp/entity/view/enumeratorMapAttribute.jsp" /></p>
+								</s:elseif>
 								<s:elseif test="#attribute.type == 'Hypertext'">
 									<div><s:include value="/WEB-INF/apsadmin/jsp/entity/view/hypertextAttribute.jsp" /></div>
-								</s:elseif>
-								<s:elseif test="#attribute.type == 'Image'">
-									<p><s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/view/imageAttribute.jsp" /></p>
-								</s:elseif>
-								<s:elseif test="#attribute.type == 'Link'">
-									<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/view/linkAttribute.jsp" />
 								</s:elseif>
 								<s:elseif test="#attribute.type == 'Number'">
 									<p><s:include value="/WEB-INF/apsadmin/jsp/entity/view/numberAttribute.jsp" /></p>
 								</s:elseif>
 								<s:elseif test="#attribute.type == 'ThreeState'">
-									<s:include value="/WEB-INF/apsadmin/jsp/entity/view/threeStateAttribute.jsp" />
+									<p><s:include value="/WEB-INF/apsadmin/jsp/entity/view/threeStateAttribute.jsp" /></p>
 								</s:elseif>
 								<s:elseif test="#attribute.type == 'Timestamp'">
-									<s:include value="/WEB-INF/apsadmin/jsp/entity/view/timestampAttribute.jsp" />
+									<p><s:include value="/WEB-INF/apsadmin/jsp/entity/view/timestampAttribute.jsp" /></p>
 								</s:elseif>
-
 								<s:elseif test="#attribute.type == 'Composite'">
 									<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/view/compositeAttribute.jsp" />
 								</s:elseif>
@@ -80,11 +79,6 @@
 								<s:elseif test="#attribute.type == 'Monolist'">
 									<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/view/monolistAttribute.jsp" />
 								</s:elseif>
-								<wpsa:hookPoint key="jacms.contentDetails.attributeExtra" objectName="hookPointElements_jacms_contentDetails_attributeExtra">
-									<s:iterator value="#hookPointElements_jacms_contentDetails_attributeExtra" var="hookPointElementVar">
-										<wpsa:include value="%{#hookPointElementVar.filePath}"></wpsa:include>
-									</s:iterator>
-								</wpsa:hookPoint>
 							</div><%--input-group --%>
 						</div><%-- form-group --%>
 					</s:if>
