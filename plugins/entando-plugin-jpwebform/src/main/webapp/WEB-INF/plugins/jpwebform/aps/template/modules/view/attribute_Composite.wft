@@ -64,6 +64,14 @@
 					</s:else>
 				</s:elseif>
 
+				<s:elseif test="#attributeVar.type == 'EnumeratorMap'">
+					<s:if test="#lang.default"><s:property value="%{#attributeVar.getMapValue()}" /></s:if>
+					<s:else>
+						<s:if test="#attributeTracer.listElement"><s:property value="%{#attributeVar.getMapValue()}" /></s:if>
+						<s:else><s:text name="EntityAttribute.monolang.defaultValue" /></s:else>
+					</s:else>
+				</s:elseif>
+
 				<s:elseif test="#attributeVar.type == 'File'">
 					<s:set name="currentAttachedFileVar" value="#attributeVar.attachedFile"></s:set>
 					<s:if test="#currentAttachedFileVar != null">
