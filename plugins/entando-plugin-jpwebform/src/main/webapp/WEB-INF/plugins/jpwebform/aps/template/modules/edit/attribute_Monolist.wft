@@ -195,6 +195,16 @@
 										headerValue="%{getText('label.none')}" 
 										list="#attributeVar.items" value="%{#attributeVar.getText()}" />
 								</s:elseif>
+								
+								<s:elseif test="#attributeVar.type == 'EnumeratorMap'">
+									<wpsf:select 
+										useTabindexAutoIncrement="true" 
+										name="%{#attributeTracer.getFormFieldName(#attributeVar)}" 
+										id="%{#htmlIdPrefix}"
+										headerKey="" 
+										headerValue="%{getText('label.none')}" 
+										list="#attributeVar.mapItems" listKey="key" listValue="value" value="%{#attributeVar.getText()}" />
+								</s:elseif>
 
 								<s:elseif test="#attributeVar.type == 'File'">
 									<s:set name="currentAttachedFileVar" value="#attributeVar.attachedFile"/>
@@ -367,6 +377,16 @@
 						headerKey="" 
 						headerValue="%{getText('label.none')}" 
 						list="#attributeVar.items" 
+						value="%{#attributeVar.getText()}" />
+				</s:elseif>
+
+				<s:elseif test="#attributeVar.type == 'EnumeratorMap'">
+					<wpsf:select 
+						useTabindexAutoIncrement="true" 
+						name="%{#attributeTracer.getFormFieldName(#attributeVar)}" 
+						id="%{#htmlIdPrefix}" 
+						headerKey="" headerValue="%{getText('label.none')}" 
+						list="#attributeVar.mapItems" listKey="key" listValue="value" 
 						value="%{#attributeVar.getText()}" />
 				</s:elseif>
 

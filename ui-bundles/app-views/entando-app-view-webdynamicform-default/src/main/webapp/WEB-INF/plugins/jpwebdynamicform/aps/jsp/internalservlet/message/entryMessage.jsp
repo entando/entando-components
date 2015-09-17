@@ -7,11 +7,8 @@
 <s:set var="titleKey">jpwebdynamicform_TITLE_<s:property value="typeCode"/></s:set>
 <s:set var="typeCodeKey" value="typeCode" />
 <s:set var="lang" value="defaultLang" />
-
 <h1><wp:i18n key="${titleKey}" /></h1>
-
-<form 
-	class="form-horizontal jpwebdynamicform-<s:property value="#typeCodeKey" />"
+<form class="form-horizontal jpwebdynamicform-<s:property value="#typeCodeKey" />"
 	action="<wp:action path="/ExtStr2/do/jpwebdynamicform/Message/User/send.action"/>" 
 	method="post">
 	<s:if test="hasFieldErrors()">
@@ -21,26 +18,23 @@
 				<s:iterator value="fieldErrors">
 					<s:iterator value="value">
 						<li><s:property escape="false" /></li>
-						</s:iterator>
 					</s:iterator>
+				</s:iterator>
 			</ul>
 		</div>
 	</s:if>
-
 	<s:if test="hasActionErrors()">
 		<div class="alert alert-block">
 			<p><strong><wp:i18n key="ERRORS"/></strong></p>
 			<ul class="unstyled">
 				<s:iterator value="actionErrors">
 					<li><s:property escape="false" /></li>
-					</s:iterator>
+				</s:iterator>
 			</ul>
 		</div>
 	</s:if>
-
 	<s:set var="hasFieldErrors" value="%{hasFieldErrors()}" />
 	<s:set var="fieldErrors" value="%{fieldErrors}" />
-
 	<p class="noscreen hide">
 		<wpsf:hidden name="typeCode" />
 	</p>
@@ -50,11 +44,9 @@
 		<wpsf:textfield name="%{honeypotParamName}"	id="" maxlength="254" />
 	</p>
 	</s:if>
-
 	<p>
 		<wp:i18n key="jpwebdynamicform_INFO" />
 	</p>
-
 	<s:iterator value="message.attributeList" var="attribute">
 		<wpsa:tracerFactory var="attributeTracer" lang="%{#lang.code}" />
 		<s:set var="i18n_attribute_name" value="%{'jpwebdynamicform_'+ #typeCodeKey +'_'+ #attribute.name}" scope="request" />
@@ -72,39 +64,33 @@
 					<s:if test="#attribute.type == 'Boolean'">
 						<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/booleanAttribute.jsp" />
 					</s:if>
-
 					<s:elseif test="#attribute.type == 'CheckBox'">
 						<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/checkBoxAttribute.jsp" />
 					</s:elseif>
-
 					<s:elseif test="#attribute.type == 'Date'">
 						<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/dateAttribute.jsp" />
 					</s:elseif>
-
 					<s:elseif test="#attribute.type == 'Enumerator'">
 						<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/enumeratorAttribute.jsp" />
 					</s:elseif>
-
+					<s:elseif test="#attribute.type == 'EnumeratorMap'">
+						<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/enumeratorMapAttribute.jsp" />
+					</s:elseif>
 					<s:elseif test="#attribute.type == 'Longtext'">
 						<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/longtextAttribute.jsp" />
 					</s:elseif>
-
 					<s:elseif test="#attribute.type == 'Number'">
 						<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/numberAttribute.jsp" />
 					</s:elseif>
-
 					<s:elseif test="#attribute.type == 'Monotext' || #attribute.type == 'Text'">
 						<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/monotextAttribute.jsp" />
 					</s:elseif>
-
 					<s:elseif test="#attribute.type == 'ThreeState'">
 						<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/threeStateAttribute.jsp" />
 					</s:elseif>
-
 					<s:else>
 						<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/modules/edit/monotextAttribute.jsp" />
 					</s:else>
-
 					<s:include value="/WEB-INF/plugins/jpwebdynamicform/aps/jsp/internalservlet/message/inc/front_attributeInfo-help-block.jsp" />
 				</div>
 			</div>

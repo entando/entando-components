@@ -16,6 +16,9 @@
 	<s:elseif test="#attribute.type == 'Enumerator'">
 		<s:include value="/WEB-INF/apsadmin/jsp/entity/view/enumeratorAttribute.jsp" />
 	</s:elseif>
+	<s:elseif test="#attribute.type == 'EnumeratorMap'">
+		<s:include value="/WEB-INF/apsadmin/jsp/entity/view/enumeratorMapAttribute.jsp" />
+	</s:elseif>
 	<s:elseif test="#attribute.type == 'Date'">
 		<s:include value="/WEB-INF/apsadmin/jsp/entity/view/dateAttribute.jsp" />
 	</s:elseif>

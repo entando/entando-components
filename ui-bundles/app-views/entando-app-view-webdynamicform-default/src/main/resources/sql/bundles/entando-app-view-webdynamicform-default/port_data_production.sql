@@ -171,6 +171,9 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 		<@s.elseif test="#attribute.type == ''Enumerator''">
 			<@wp.fragment code="jpwebdynform_is_front-EnumeratorAttribute" escapeXml=false />
 		</@s.elseif>
+		<@s.elseif test="#attribute.type == ''EnumeratorMap''">
+			<@wp.fragment code="jpwebdynform_is_front-EnumeratorMapAttribute" escapeXml=false />
+		</@s.elseif>
 		<@s.elseif test="#attribute.type == ''Longtext''">
 			<@wp.fragment code="jpwebdynform_is_front-LongtextAttribute" escapeXml=false /> 
 		</@s.elseif>
@@ -270,6 +273,15 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 <@s.if test="#lang.default">
 <@wp.i18n key="jpwebdynamicform_SELECT" var="labelSelectVar" />
 <@wpsf.select useTabindexAutoIncrement=true name="%{#attributeTracer.getFormFieldName(#attribute)}" id="%{attribute_id}" headerKey="" headerValue="%{#labelSelectVar}" list="#attribute.items" value="%{#attribute.getText()}" />
+</@s.if>', 1);
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynform_is_front-EnumeratorMapAttribute', NULL, 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
+<#assign wp=JspTaglibs["/aps-core"]>
+<#assign wpsf=JspTaglibs["/apsadmin-form"]>
+<@s.if test="#lang.default">
+<@wp.i18n key="jpwebdynamicform_SELECT" var="labelSelectVar" />
+<@wpsf.select useTabindexAutoIncrement=true name="%{#attributeTracer.getFormFieldName(#attribute)}" 
+id="%{attribute_id}" headerKey="" headerValue="%{#labelSelectVar}" 
+list="#attribute.mapItems" value="%{#attribute.getText()}" listKey="key" listValue="value" />
 </@s.if>', 1);
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynform_is_front-LongtextAttribute', NULL, 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
 <#assign wpsf=JspTaglibs["/apsadmin-form"]>
@@ -427,6 +439,9 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 					</@s.elseif>
 					<@s.elseif test="#attribute.type == ''Enumerator''">
 						<@wp.fragment code="jpwebdynform_is_front-EnumeratorAttribute" escapeXml=false />
+					</@s.elseif>
+					<@s.elseif test="#attribute.type == ''EnumeratorMap''">
+						<@wp.fragment code="jpwebdynform_is_front-EnumeratorMapAttribute" escapeXml=false />
 					</@s.elseif>
 					<@s.elseif test="#attribute.type == ''Longtext''">
 						<@wp.fragment code="jpwebdynform_is_front-LongtextAttribute" escapeXml=false />

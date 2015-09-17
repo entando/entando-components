@@ -40,6 +40,9 @@
 	<s:elseif test="#attribute.type == 'Enumerator'">
 		<s:include value="/WEB-INF/apsadmin/jsp/entity/view/enumeratorAttribute.jsp" />
 	</s:elseif>
+	<s:elseif test="#attribute.type == 'EnumeratorMap'">
+		<s:include value="/WEB-INF/apsadmin/jsp/entity/view/enumeratorMapAttribute.jsp" />
+	</s:elseif>
 	<s:elseif test="#attribute.type == 'Composite'">
 		<s:include value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/message/modules/view/compositeAttribute.jsp" />
 	</s:elseif>
