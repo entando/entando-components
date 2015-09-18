@@ -42,42 +42,42 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 <#assign removeActionUrl><@wp.info key="systemParam" paramName="applicationBaseURL" />do/jpmyportalplus/front/removeFrame.action?frameToEmpty=${currentFrameVar}&currentPageCode=<@wp.currentPage param="code" /></#assign>
 
 <#if isClosed >
- <#assign opencloseActionUrl><@wp.info key="systemParam" paramName="applicationBaseURL" />do/jpmyportalplus/front/openFrame.action?frameToResize=${currentFrameVar}&currentPageCode=<@wp.currentPage param="code" /></#assign>
-<#else> 
- <#assign opencloseActionUrl><@wp.info key="systemParam" paramName="applicationBaseURL" />do/jpmyportalplus/front/closeFrame.action?frameToResize=${currentFrameVar}&currentPageCode=<@wp.currentPage param="code" /></#assign>
+<#assign opencloseActionUrl><@wp.info key="systemParam" paramName="applicationBaseURL" />do/jpmyportalplus/front/openFrame.action?frameToResize=${currentFrameVar}&currentPageCode=<@wp.currentPage param="code" /></#assign>
+<#else>
+<#assign opencloseActionUrl><@wp.info key="systemParam" paramName="applicationBaseURL" />do/jpmyportalplus/front/closeFrame.action?frameToResize=${currentFrameVar}&currentPageCode=<@wp.currentPage param="code" /></#assign>
 </#if>
 
 <#if isEditFormOpen >
- <@c.set var="editFrameValue" value=null />
-<#else> 
- <@c.set var="editFrameValue">${currentFrameVar}</@c.set>
+<@c.set var="editFrameValue" value=null />
+<#else>
+<@c.set var="editFrameValue">${currentFrameVar}</@c.set>
 </#if>
 
 <#assign moveActionUrl><@wp.url paramRepeat=false />?editFrame=<@c.out value="${editFrameValue}" escapeXml=false />&currentPageCode=<@wp.currentPage param="code" escapeXml=false /></#assign>
 
 <div class="widget margin-medium-bottom" id="${showletId}">
- <div class="widget-toolbar btn-group pull-left">
-  <a href="${removeActionUrl}" class="btn btn-mini btn-danger button-toggler-remove" title="remove"><i class="icon-remove"></i><span class="sr-only">x</span></a>&#32;
-  <a href="${moveActionUrl}" class="btn btn-mini btn-info button-toggler-edit" title="configure/options"><i class="icon-cog"></i><span class="sr-only">configure/options</span></a>
-  <a href="${opencloseActionUrl}" class="btn btn-mini btn-info button-toggler-open-close" title="toggle open close"><i class="icon-chevron-<#if isClosed >down<#else>up</#if>"></i><span class="sr-only">open/close</span></a>&#32;
- </div>
- <div class="widget-draggable">
-  <h1 class="pull-right">
+<div class="widget-toolbar btn-group pull-left">
+<a href="${removeActionUrl}" class="btn btn-mini btn-danger button-toggler-remove" title="remove"><i class="icon-remove"></i><span class="sr-only">x</span></a>&#32;
+<a href="${moveActionUrl}" class="btn btn-mini btn-info button-toggler-edit" title="configure/options"><i class="icon-cog"></i><span class="sr-only">configure/options</span></a>
+<a href="${opencloseActionUrl}" class="btn btn-mini btn-info button-toggler-open-close" title="toggle open close"><i class="icon-chevron-<#if isClosed >down<#else>up</#if>"></i><span class="sr-only">open/close</span></a>&#32;
+</div>
+<div class="widget-draggable">
+<h1 class="pull-right">
   <#if RequestParameters.search?? ><#assign showletTitle ><@c.out value="${showletTitle}" escapeXml=false /></#assign></#if>
-  <#if showletTitle?? >
-   ${showletTitle}
-  <#else>
-   <@wp.currentWidget param="title" />
-  </#if>
-  </h1>
- </div>
- 
- <div class="clearfix"></div>
- <div class="editContentBox <#if !isEditFormOpen >hide</#if>"></div>
- <div class="clearfix widget-border-bottom"></div>
- <div class="widget-body margin-medium-all padding-medium-bottom <#if isClosed >hide</#if>">', 1);
+<#if showletTitle?? >
+${showletTitle}
+<#else>
+<@wp.currentWidget param="title" />
+</#if>
+</h1>
+</div>
+
+<div class="clearfix"></div>
+<div class="editContentBox <#if !isEditFormOpen >hide</#if>"></div>
+<div class="clearfix widget-border-bottom"></div>
+<div class="widget-body margin-medium-all padding-medium-bottom <#if isClosed >hide</#if>">', 1);
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpmyportalplus_widgetdecoration_footer', NULL, 'jpmyportalplus', NULL, '<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
- </div>
+</div>
 </div>
 <@c.set var="showletTitle" scope="request" value=null />', 1);
 
