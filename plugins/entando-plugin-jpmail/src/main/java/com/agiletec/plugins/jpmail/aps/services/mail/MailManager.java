@@ -57,7 +57,7 @@ import com.agiletec.plugins.jpmail.aps.services.mail.parse.MailConfigDOM;
  * @author E.Santoboni, E.Mezzano
  */
 public class MailManager extends AbstractService implements IMailManager {
-
+	
 	private static final Logger _logger = LoggerFactory.getLogger(MailManager.class);
 	
 	@Override
@@ -71,12 +71,6 @@ public class MailManager extends AbstractService implements IMailManager {
 		}
 	}
 	
-	/**
-	 * Load the XML configuration containing smtp configuration and the sender
-	 * addresses.
-	 *
-	 * @throws ApsSystemException
-	 */
 	private void loadConfigs() throws ApsSystemException {
 		try {
 			ConfigInterface configManager = this.getConfigManager();
@@ -91,10 +85,7 @@ public class MailManager extends AbstractService implements IMailManager {
 			throw new ApsSystemException("Error in loadConfigs", t);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see com.agiletec.plugins.jpmail.aps.services.mail.IMailManager#getMailConfig()
-	 */
+	
 	@Override
 	public MailConfig getMailConfig() throws ApsSystemException {
 		try {
@@ -104,10 +95,7 @@ public class MailManager extends AbstractService implements IMailManager {
 			throw new ApsSystemException("Error loading mail service configuration", t);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see com.agiletec.plugins.jpmail.aps.services.mail.IMailManager#updateMailConfig(com.agiletec.plugins.jpmail.aps.services.mail.MailConfig)
-	 */
+	
 	@Override
 	public void updateMailConfig(MailConfig config) throws ApsSystemException {
 		try {
@@ -119,45 +107,37 @@ public class MailManager extends AbstractService implements IMailManager {
 			throw new ApsSystemException("Error updating configs", t);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see com.agiletec.plugins.jpmail.aps.services.mail.IMailManager#sendMail(java.lang.String, java.lang.String, java.lang.String[], java.lang.String[], java.lang.String[], java.lang.String)
-	 */
+	
 	@Override
 	public boolean sendMail(String text, String subject, String[] recipientsTo,
 			String[] recipientsCc, String[] recipientsBcc, String senderCode) throws ApsSystemException {
 		return this.sendMail(text, subject, CONTENTTYPE_TEXT_PLAIN, null, recipientsTo, recipientsCc, recipientsBcc, senderCode);
 	}
-
-	/* (non-Javadoc)
-	 * @see com.agiletec.plugins.jpmail.aps.services.mail.IMailManager#sendMail(java.lang.String, java.lang.String, java.lang.String[], java.lang.String[], java.lang.String[], java.lang.String, java.lang.String)
-	 */
+	
 	@Override
 	public boolean sendMail(String text, String subject, String[] recipientsTo,
 			String[] recipientsCc, String[] recipientsBcc, String senderCode, String contentType) throws ApsSystemException {
 		return this.sendMail(text, subject, contentType, null, recipientsTo, recipientsCc, recipientsBcc, senderCode);
 	}
-
-	/* (non-Javadoc)
-	 * @see com.agiletec.plugins.jpmail.aps.services.mail.IMailManager#smtpServerTest(com.agiletec.plugins.jpmail.aps.services.mail.MailConfig)
-	 */
+	
 	@Override
 	public boolean smtpServerTest(MailConfig mailConfig) {
 		try {
 			Session session = prepareSession(mailConfig);
-			Transport transport = prepareTransport(session, mailConfig);
-			transport.connect(mailConfig.getSmtpHost(), mailConfig.getSmtpPort(), mailConfig.getSmtpUserName(), mailConfig.getSmtpPassword());
-			transport.close();
+			Transport bus = session.getTransport("smtp");
+			if (mailConfig.hasAnonimousAuth()) {
+				bus.connect();
+			} else {
+				bus.connect(mailConfig.getSmtpHost(), mailConfig.getSmtpPort(), mailConfig.getSmtpUserName(), mailConfig.getSmtpPassword());
+			}
+			bus.close();
 			return true;
 		} catch (Exception e) {
 			_logger.error("error in test smptserver", e);
 			return false;
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see com.agiletec.plugins.jpmail.aps.services.mail.IMailManager#sendMail(java.lang.String, java.lang.String, java.lang.String, java.util.Properties, java.lang.String[], java.lang.String[], java.lang.String[], java.lang.String)
-	 */
+	
 	@Override
 	public boolean sendMail(String text, String subject, String contentType, Properties attachmentFiles, String[] recipientsTo,
 			String[] recipientsCc, String[] recipientsBcc, String senderCode) throws ApsSystemException {
@@ -168,9 +148,6 @@ public class MailManager extends AbstractService implements IMailManager {
 		return send(text, subject, recipientsTo, recipientsCc, recipientsBcc, senderCode, attachmentFiles, contentType);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.agiletec.plugins.jpmail.aps.services.mail.IMailManager#sendMailForTest(java.lang.String, java.lang.String, java.lang.String[], java.lang.String)
-	 */
 	@Override
 	public boolean sendMailForTest(String text, String subject, String[] recipientsTo, String senderCode) throws ApsSystemException {
 		return this.send(text, subject, recipientsTo, null, null, senderCode,null, CONTENTTYPE_TEXT_PLAIN);
@@ -182,7 +159,6 @@ public class MailManager extends AbstractService implements IMailManager {
 			Session session = this.prepareSession(this.getConfig());
 			bus = this.prepareTransport(session, this.getConfig());
 			MimeMessage msg = this.prepareVoidMimeMessage(session, subject, recipientsTo, recipientsCc, recipientsBcc, senderCode);
-
 			if (attachmentFiles == null || attachmentFiles.isEmpty()) {
 				msg.setContent(text, contentType + "; charset=utf-8");
 			} else {
@@ -201,9 +177,6 @@ public class MailManager extends AbstractService implements IMailManager {
 		return true;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.agiletec.plugins.jpmail.aps.services.mail.IMailManager#sendMixedMail(java.lang.String, java.lang.String, java.lang.String, java.util.Properties, java.lang.String[], java.lang.String[], java.lang.String[], java.lang.String)
-	 */
 	@Override
 	public boolean sendMixedMail(String simpleText, String htmlText, String subject, Properties attachmentFiles,
 			String[] recipientsTo, String[] recipientsCc, String[] recipientsBcc, String senderCode) throws ApsSystemException {
@@ -216,11 +189,9 @@ public class MailManager extends AbstractService implements IMailManager {
 			Session session = this.prepareSession(this.getConfig());
 			bus = this.prepareTransport(session, this.getConfig());
 			MimeMessage msg = this.prepareVoidMimeMessage(session, subject, recipientsTo, recipientsCc, recipientsBcc, senderCode);
-
 			boolean hasAttachments = attachmentFiles != null && attachmentFiles.size() > 0;
 			String multipartMimeType = hasAttachments ? "mixed" : "alternative";
 			MimeMultipart multiPart = new MimeMultipart(multipartMimeType);
-
 			this.addBodyPart(simpleText, CONTENTTYPE_TEXT_PLAIN, multiPart);
 			this.addBodyPart(htmlText, CONTENTTYPE_TEXT_HTML, multiPart);
 			if (hasAttachments) {
@@ -236,11 +207,11 @@ public class MailManager extends AbstractService implements IMailManager {
 		}
 		return true;
 	}
-
+	
 	/**
 	 * Prepare a Transport object ready for use.
-	 *
 	 * @param session A session object.
+	 * @param config The configuration
 	 * @return The Transport object ready for use.
 	 * @throws Exception In case of errors opening the Transport object.
 	 */
@@ -254,7 +225,7 @@ public class MailManager extends AbstractService implements IMailManager {
 
 	/**
 	 * Prepare a Session object ready for use.
-	 *
+	 * @param config The configuration
 	 * @return The Session object ready for use.
 	 */
 	protected Session prepareSession(MailConfig config) {
@@ -303,19 +274,16 @@ public class MailManager extends AbstractService implements IMailManager {
 		}
 		return session;
 	}
-
+	
 	/**
 	 * Prepare a MimeMessage complete of sender, recipient addresses, subject
 	 * and current date but lacking in the message text content.
-	 *
 	 * @param session The session object.
 	 * @param subject The e-mail subject.
 	 * @param recipientsTo The e-mail main destination addresses.
 	 * @param recipientsCc The e-mail 'carbon-copy' destination addresses.
-	 * @param recipientsBcc The e-mail 'blind carbon-copy' destination
-	 * addresses.
-	 * @param senderCode The sender code, as configured in the service
-	 * configuration.
+	 * @param recipientsBcc The e-mail 'blind carbon-copy' destination addresses.
+	 * @param senderCode The sender code, as configured in the service configuration.
 	 * @return A mime message without message text content.
 	 * @throws AddressException In case of non-valid e-mail addresses.
 	 * @throws MessagingException In case of errors preparing the mail message.
@@ -326,18 +294,15 @@ public class MailManager extends AbstractService implements IMailManager {
 		msg.setFrom(new InternetAddress(this.getConfig().getSender(senderCode)));
 		msg.setSubject(subject);
 		msg.setSentDate(new Date());
-
 		this.addRecipients(msg, Message.RecipientType.TO, recipientsTo);
 		this.addRecipients(msg, Message.RecipientType.CC, recipientsCc);
 		this.addRecipients(msg, Message.RecipientType.BCC, recipientsBcc);
-
 		msg.saveChanges();
 		return msg;
 	}
-
+	
 	/**
 	 * Add a BodyPart to the Multipart container.
-	 *
 	 * @param text The text content.
 	 * @param contentType The text contentType.
 	 * @param multiPart The Multipart container.
@@ -351,7 +316,6 @@ public class MailManager extends AbstractService implements IMailManager {
 
 	/**
 	 * Add the attachments to the Multipart container.
-	 *
 	 * @param attachmentFiles The attachments mapped as fileName/filePath.
 	 * @param multiPart The Multipart container.
 	 * @throws MessagingException In case of errors adding the attachments.
@@ -370,7 +334,6 @@ public class MailManager extends AbstractService implements IMailManager {
 
 	/**
 	 * Add recipient addresses to the e-mail.
-	 *
 	 * @param msg The mime message to which add the addresses.
 	 * @param recType The specific recipient type to which add the addresses.
 	 * @param recipients The recipient addresses.
@@ -389,10 +352,9 @@ public class MailManager extends AbstractService implements IMailManager {
 			}
 		}
 	}
-
+	
 	/**
 	 * Close the transport.
-	 *
 	 * @param transport The transport.
 	 * @throws ApsSystemException In case of errors closing the transport.
 	 */
@@ -408,7 +370,6 @@ public class MailManager extends AbstractService implements IMailManager {
 
 	/**
 	 * returns the mail service configuration.
-	 *
 	 * @return The mail service configuration.
 	 */
 	protected MailConfig getConfig() {
@@ -417,7 +378,6 @@ public class MailManager extends AbstractService implements IMailManager {
 
 	/**
 	 * Set the mail service configuration.
-	 *
 	 * @param config The mail service configuration.
 	 */
 	protected void setConfig(MailConfig config) {
@@ -430,35 +390,34 @@ public class MailManager extends AbstractService implements IMailManager {
 		}
 		return this.getConfig().isActive();
 	}
-
+	
 	public void setActive(Boolean active) {
 		this._active = active;
 	}
-
+	
 	/**
 	 * Returns the configuration manager.
-	 *
 	 * @return The Configuration manager.
 	 */
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
-
+	
 	/**
-	 * Set method for Spring bean injection.<br /> Set the Configuration
-	 * manager.
-	 *
+	 * Set method for Spring bean injection.<br /> Set the Configuration manager.
 	 * @param configManager The Configuration manager.
 	 */
 	public void setConfigManager(ConfigInterface configManager) {
 		this._configManager = configManager;
 	}
+	
 	private Boolean _active;
 	private MailConfig _config;
 	private ConfigInterface _configManager;
+	
 	/*
 	 * Default Timeout in milliseconds
 	 */
 	public static final int DEFAULT_SMTP_TIMEOUT = 5000;
-
+	
 }
