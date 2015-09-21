@@ -230,14 +230,6 @@ public class CmsSearchEngineManager extends AbstractService
     	return contentsId;
 	}
 	
-	/**
-	 * @deprecated From jAPS 2.0 version 2.0.9. Use getStatus() method
-	 */
-	@Override
-	public int getState() {
-		return this.getStatus();
-	}
-	
 	@Override
 	public int getStatus() {
 		return this._status;
