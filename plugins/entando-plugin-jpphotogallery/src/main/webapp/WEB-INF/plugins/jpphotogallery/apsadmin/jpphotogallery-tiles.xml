@@ -12,7 +12,7 @@
     
 	<definition extends="main.layout" name="admin.jpphotogallery.Page.Widget.Photogallery.entryFilter">
 		<put-attribute name="title" value="title.pageManagement" />
-		<put-attribute name="extraResources" value="/WEB-INF/apsadmin/jsp/common/template/extraresources/entryFilter.jsp" />		
+		<put-attribute name="extraResources" value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/entryFilter.jsp" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpphotogallery/apsadmin/jsp/portal/specialwidget/photogallery/entryFilter.jsp" />
 	</definition>
     
