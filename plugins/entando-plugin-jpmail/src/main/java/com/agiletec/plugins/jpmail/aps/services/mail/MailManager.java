@@ -229,7 +229,7 @@ public class MailManager extends AbstractService implements IMailManager {
 	 * @return The Session object ready for use.
 	 */
 	protected Session prepareSession(MailConfig config) {
-		Properties props = new Properties();
+		Properties props = System.getProperties();
 		Session session = null;
 		// Timeout
 		int timeout = DEFAULT_SMTP_TIMEOUT;
