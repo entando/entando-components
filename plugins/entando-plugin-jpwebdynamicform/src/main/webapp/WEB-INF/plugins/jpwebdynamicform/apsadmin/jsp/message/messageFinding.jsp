@@ -195,7 +195,9 @@
             <div class="alert alert-info"><s:text name="note.message.list.none" /></div>
         </s:if>
         <s:else>
+            <s:form action="search" >
             <p class="noscreen">
+                <wpsf:hidden name="entityTypeCode" />
                 <wpsf:hidden name="from" />
                 <wpsf:hidden name="to" />
                 <wpsf:hidden name="answered"/>
@@ -289,6 +291,7 @@
                 </div>
 
             </wpsa:subset>
+            </s:form>
         </s:else>
     </div>
 </div>
