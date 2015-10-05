@@ -15,7 +15,7 @@
 	</li>
 	</c:when>
 	<c:otherwise>
-		<wp:ifauthorized permission="jpwebdynamicformOperator">
+		<wp:ifauthorized permission="jpwebdynamicform_manageForms">
 			<li class="margin-large-bottom"><a href="<s:url action="list" namespace="/do/jpwebdynamicform/Message/Operator" />" ><s:text name="jpwebdynamicform.menu.messages"/></a></li>
 		</wp:ifauthorized>
 	</c:otherwise>
