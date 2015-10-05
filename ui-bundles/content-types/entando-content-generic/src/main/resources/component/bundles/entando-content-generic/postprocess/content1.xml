@@ -4,10 +4,10 @@
 	<typeDescription>Generic Content</typeDescription>
 	<mainGroup>free</mainGroup>
 	<attributes>
-		<attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbTextAttribute">
 			<name>Title</name>
 			<type>Text</type>
-			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Hello, world!</value>
+			<value>Hello, world!</value>
 			<roles>
 				<role>jacms:title</role>
 			</roles>
@@ -22,35 +22,35 @@
 			<type>Hypertext</type>
 			<htmlValue><![CDATA[<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>]]></htmlValue>
 		</attribute>
-		<attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbResourceAttribute">
 			<name>Picture</name>
 			<type>Image</type>
-			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbResourceValue">
-				<text xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">The very first Entando Logo in an artistic reprise</text>
-				<path xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">/test-image-rest/resources/cms/images/sample-image-1_d0.jpg</path>
-				<resourceId xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">sampleimgone</resourceId>
+			<resource>
+				<text>The very first Entando Logo in an artistic reprise</text>
+				<path>/test-image-rest/resources/cms/images/sample-image-1_d0.jpg</path>
+				<resourceId>sampleimgone</resourceId>
 				<restResourcePath>http://localhost:8080/test-image-rest/api/rs/en/jacms/image?id=sampleimgone</restResourcePath>
-			</value>
+			</resource>
 		</attribute>
-		<attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbTextAttribute">
 			<name>Caption</name>
 			<type>Text</type>
-			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">One caption to rule 'em all</value>
+			<value>One caption to rule 'em all</value>
 		</attribute>
 		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbListAttribute">
 			<name>Links</name>
 			<type>Monolist</type>
 			<attributes>
-				<attribute>
+				<attribute xsi:type="jaxbLinkAttribute">
 					<name>Links</name>
 					<type>Link</type>
-					<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbLinkValue">
-						<text xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Learn more</text>
+					<link>
+						<text>Learn more</text>
 						<url>http://www.entando.com/</url>
-						<symbolikLink>
+						<symbolicLink>
 							<symbolicDestination>#!U;http://www.entando.com/!#</symbolicDestination>
-						</symbolikLink>
-					</value>
+						</symbolicLink>
+					</link>
 				</attribute>
 			</attributes>
 		</attribute>

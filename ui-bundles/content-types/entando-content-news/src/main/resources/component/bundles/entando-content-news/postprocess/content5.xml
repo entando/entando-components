@@ -4,15 +4,15 @@
 	<typeDescription>News</typeDescription>	
 	<mainGroup>free</mainGroup>
 	<attributes>
-		<attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbDateAttribute">
 			<name>Date</name>
 			<type>Date</type>
-			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:dateTime">2012-06-13T00:00:00+02:00</value>
+			<value>2012-06-13T00:00:00+02:00</value>
 		</attribute>
-		<attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbTextAttribute">
 			<name>Title</name>
 			<type>Text</type>
-			<value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Here come the news 5</value>
+			<value>Here come the news 5</value>
 			<roles>
 				<role>jacms:title</role>
 			</roles>
@@ -39,16 +39,16 @@
 			<name>Links</name>
 			<type>Monolist</type>
 			<attributes>
-				<attribute>
+				<attribute xsi:type="jaxbLinkAttribute">
 					<name>Link</name>
 					<type>Link</type>
-					<value xsi:type="jaxbLinkValue">
-						<text xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Entando.com</text>
+					<link>
+						<text>Entando.com</text>
 						<url>http://www.entando.com/</url>
-						<symbolikLink>
+						<symbolicLink>
 							<symbolicDestination>#!U;http://www.entando.com/!#</symbolicDestination>
-						</symbolikLink>
-					</value>
+						</symbolicLink>
+					</link>
 				</attribute>
 			</attributes>
 		</attribute>
