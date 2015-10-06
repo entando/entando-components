@@ -478,7 +478,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 		<noscript>
 		<iframe src="http://api.recaptcha.net/noscript?k=<@wp.info key="systemParam" paramName="jpwebdynamicform_recaptcha_publickey" />"
 				height="300" width="500" frameborder="0"></iframe><br>
-		<@s.textarea name="recaptcha_challenge_field" rows=3 cols=40 />
+		<@s.textarea name="recaptcha_challenge_field" rows="3" cols="40" />
 		<@s.hidden name="recaptcha_response_field" value="manual_challenge"/>
 		</noscript>
 	</@s.if>
