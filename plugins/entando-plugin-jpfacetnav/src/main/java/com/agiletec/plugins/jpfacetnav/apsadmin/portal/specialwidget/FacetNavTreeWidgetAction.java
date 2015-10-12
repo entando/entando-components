@@ -37,7 +37,7 @@ import com.agiletec.plugins.jpfacetnav.apsadmin.portal.specialwidget.util.FacetN
 /**
  * @author E.Santoboni
  */
-public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction implements IFacetNavTreeWidgetAction, ITreeAction {
+public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction implements ITreeAction {
 	
 	@Override
 	public void validate() {
@@ -73,7 +73,10 @@ public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction impleme
 		}
 	}
 	
-	@Override
+	/**
+	 * Add a facet to the associated facet nodes
+	 * @return The code describing the result of the operation.
+	 */
 	public String joinFacet() {
 		try {
 			this.createValuedShowlet();
@@ -95,11 +98,11 @@ public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction impleme
 		}
 		return SUCCESS;
 	}
-
+	
 	/**
-	 * Remove facet
+	 * Remove a facet from the associated facet nodes
+	 * @return The code describing the result of the operation.
 	 */
-	@Override
 	public String removeFacet() {
 		try {
 			this.createValuedShowlet();
@@ -163,9 +166,9 @@ public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction impleme
 			this.createValuedShowlet();
 			String marker = this.getTreeNodeActionMarkerCode();
 			if (null != marker) {
-				if (null != marker && marker.equalsIgnoreCase(ACTION_MARKER_OPEN)) {
+				if (marker.equalsIgnoreCase(ACTION_MARKER_OPEN)) {
 					targets = this.getTreeHelper().checkTargetNodes(this.getTargetNode(), targets, this.getNodeGroupCodes());
-				} else if (null != marker && marker.equalsIgnoreCase(ACTION_MARKER_CLOSE)) {
+				} else if (marker.equalsIgnoreCase(ACTION_MARKER_CLOSE)) {
 					targets = this.getTreeHelper().checkTargetNodesOnClosing(this.getTargetNode(), targets, this.getNodeGroupCodes());
 				}
 			}

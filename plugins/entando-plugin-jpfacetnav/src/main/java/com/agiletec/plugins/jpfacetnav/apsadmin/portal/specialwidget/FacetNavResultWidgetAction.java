@@ -36,7 +36,7 @@ import com.agiletec.plugins.jpfacetnav.apsadmin.portal.specialwidget.util.FacetN
 /**
  * @author E.Santoboni
  */
-public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction implements IFacetNavResultWidgetAction {
+public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction {
 	
 	@Override
 	public void validate() {
@@ -60,7 +60,7 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction impleme
 			}
 		}
 	}
-
+	
 	@Override
 	public String init() {
 		String result = super.init();
@@ -74,17 +74,17 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction impleme
 		}
 		return result;
 	}
-
+	
 	/**
-	 * Join content type
+	 * Add a content type to the associated content types
+	 * @return The code describing the result of the operation.
 	 */
-	@Override
 	public String joinContentType() {
 		try {
 			this.createValuedShowlet();
 			List<String> contentTypes = this.getContentTypeCodes();
 			String contentTypeCode = this.getContentTypeCode();
-			if (contentTypeCode!=null && contentTypeCode.length()>0 && !contentTypes.contains(contentTypeCode) && this.getContentType(contentTypeCode)!=null) {
+			if (contentTypeCode != null && contentTypeCode.length()>0 && !contentTypes.contains(contentTypeCode) && this.getContentType(contentTypeCode)!=null) {
 				contentTypes.add(contentTypeCode);
 				String contentTypesFilter = FacetNavWidgetHelper.concatStrings(contentTypes, ",");
 				String configParamName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_WIDGET_PARAM_NAME;
@@ -97,11 +97,11 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction impleme
 		}
 		return SUCCESS;
 	}
-
+	
 	/**
-	 * Remove content type
+	 * Remove a content type from the associated content types
+	 * @return The code describing the result of the operation.
 	 */
-	@Override
 	public String removeContentType() {
 		try {
 			this.createValuedShowlet();
@@ -122,7 +122,7 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction impleme
 	}
 	
 	/**
-	 * Prepare action with the parameters contained in showlet.
+	 * Prepare action with the parameters contained into widget.
 	 */
 	protected void initSpecialParams() {
 		if (null != this.getWidget().getConfig()) {
@@ -133,11 +133,21 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction impleme
 	}
 	
 	/**
-	 * Returns showlet type parameter
+	 * Returns widget type parameter
 	 * @param paramName
-	 * @return com.agiletec.aps.system.services.page.Widget type parameter
+	 * @return the Widget type parameter
+	 * @deprecated use getWidgetTypeParameter(String)
 	 */
 	public WidgetTypeParameter getShowletTypeParameter(String paramName) {
+		return this.getWidgetTypeParameter(paramName);
+	}
+	
+	/**
+	 * Returns widget type parameter
+	 * @param paramName
+	 * @return the Widget type parameter
+	 */
+	public WidgetTypeParameter getWidgetTypeParameter(String paramName) {
 		List<WidgetTypeParameter> parameters = this.getWidget().getType().getTypeParameters();
 		for (WidgetTypeParameter param : parameters) {
 			if (param.getName().equals(paramName)) {
