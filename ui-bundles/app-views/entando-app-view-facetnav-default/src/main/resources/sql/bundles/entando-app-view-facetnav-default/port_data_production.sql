@@ -112,10 +112,10 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 				<#if (breadCrumb_index != 0)>
 					<#if (breadCrumb == item.requiredFacet)>
 						<span class="jpfacetfilter jpfacetnav_requiredFacet"><@wpfp.facetNodeTitle facetNodeCode="${breadCrumb}" /></span>
-						<@c.set var="currentNodeTitle"><@wpfp.facetNodeTitle facetNodeCode="${breadCrumb}" /></@c.set>
+                                                <#assign currentNodeTitle ><@wpfp.facetNodeTitle facetNodeCode="${breadCrumb}" /></#assign>
 					<#elseif (breadCrumb == item.facetRoot)>
 						<span class="jpfacetfilter jpfacetnav_facetRoot"><@wpfp.facetNodeTitle facetNodeCode="${item.facetRoot}" /></span>
-						<@c.set var="currentNodeTitle"><@wpfp.facetNodeTitle facetNodeCode="${item.facetRoot}" /></@c.set>
+                                                <#assign currentNodeTitle ><@wpfp.facetNodeTitle facetNodeCode="${item.facetRoot}" /></#assign>
 					<#else>
 						<a title="<@wp.i18n key="jpfacetnav_REMOVE_FILTER" />: <@wpfp.facetNodeTitle facetNodeCode="${breadCrumb}" />" class="jpfacetfilter" href="<@wp.url><@wpfp.urlPar name="selectedNode" ><@c.out value="${breadCrumb}" /></@wpfp.urlPar>
 						   <#list requiredFacets as requiredFacet>
@@ -123,12 +123,12 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 						   </#list>
 						   </@wp.url>"><@wpfp.facetNodeTitle facetNodeCode="${breadCrumb}" />
 						</a>
-						<@c.set var="currentNodeTitle"><@wpfp.facetNodeTitle facetNodeCode="${breadCrumb}" /></@c.set>
+                                                <#assign currentNodeTitle ><@wpfp.facetNodeTitle facetNodeCode="${breadCrumb}" /></#assign>
 					</#if>
 					<#if (item.breadCrumbs?size != (breadCrumb_index + 1))>&#32;/&#32;</#if>
 				</#if>
 			</#list>
-			<span class="noscreen">|</span>&#32;<a class="jpfacetnavfilterremove" title="<@wp.i18n key="jpfacetnav_REMOVE_FILTER" />:&#32;<@c.out value="${currentNodeTitle}" />" href="<@wp.url><#list requiredFacets as requiredFacet><@wpfp.urlPar name="facetNode_${requiredFacet_index + 1}" ><@c.out value="${requiredFacet}" /></@wpfp.urlPar></#list><#list item.breadCrumbs as breadCrumb2><@wpfp.urlPar name="facetNodeToRemove_${breadCrumb2_index + 1}" ><@c.out value="${breadCrumb2}" /></@wpfp.urlPar></#list></@wp.url>">
+			<span class="noscreen">|</span>&#32;<a class="jpfacetnavfilterremove" title="<@wp.i18n key="jpfacetnav_REMOVE_FILTER" />:&#32;${currentNodeTitle}" href="<@wp.url><#list requiredFacets as requiredFacet><@wpfp.urlPar name="facetNode_${requiredFacet_index + 1}" ><@c.out value="${requiredFacet}" /></@wpfp.urlPar></#list><#list item.breadCrumbs as breadCrumb2><@wpfp.urlPar name="facetNodeToRemove_${breadCrumb2_index + 1}" ><@c.out value="${breadCrumb2}" /></@wpfp.urlPar></#list></@wp.url>">
 			<img src="<@wp.resourceURL />plugins/jpfacetnav/static/img/edit-delete.png" alt="<@wp.i18n key="jpfacetnav_REMOVE_FILTER" />" /></a>
 		</li>
 		</#list>
