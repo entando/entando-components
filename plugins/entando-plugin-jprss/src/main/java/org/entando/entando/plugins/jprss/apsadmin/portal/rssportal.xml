@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    
+    <package name="jprss_do/jprss/Rss/Feed" namespace="/do/jprss/Rss/Feed" extends="entando-default">
+	
+        <result-types>
+            <result-type name="rss" class="org.entando.entando.plugins.jprss.apsadmin.portal.RomeResult"/>
+        </result-types>
+        
+        <action name="show" class="jprssPortalAction" method="show">
+            <result type="rss">
+                <!-- Required: the expression to find the SyndFeed object on the stack -->
+                <param name="feedName">syndFeed</param>
+                <!-- Optional: the encoding type -->
+                <param name="encoding">UTF-8</param>
+                <!-- Optional: mime type -->
+                <param name="mimeType">text/xml</param>
+            </result>
+        </action>
+        
+    </package>
+    
+</struts>

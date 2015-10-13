@@ -4,8 +4,9 @@
     "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-	
-	<!-- ### jprss ### -->
-    <include file="com/agiletec/plugins/jprss/apsadmin/rss/jprss.xml"/>
+    
+    <!-- ### jprss ### -->
+    <include file="org/entando/entando/plugins/jprss/apsadmin/config/rssconfig.xml" />
+    <include file="org/entando/entando/plugins/jprss/apsadmin/portal/rssportal.xml" />
     
 </struts>

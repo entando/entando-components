@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xmlns:context="http://www.springframework.org/schema/context"
-		xmlns:jee="http://www.springframework.org/schema/jee"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
-	
-	<bean id="jprssRssManager" 
-			class="com.agiletec.plugins.jprss.aps.system.services.rss.RssManager" 
-			parent="abstractService" >
-		<property name="rssDAO">
-			<bean class="com.agiletec.plugins.jprss.aps.system.services.rss.RssDAO">
-				<property name="dataSource" ref="servDataSource" />
-			</bean>
-		</property>
-		<property name="contentManager" ref="jacmsContentManager" />
-		<property name="pageManager" ref="PageManager" />
-		<property name="configManager" ref="BaseConfigManager" />
-		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
-		<property name="linkResolver" ref="jacmsLinkResolverManager" />
-		<property name="availableFeedTypes">
-			<map>
-				<entry key="rss_2.0" value="rss 2.0" />
-				<entry key="rss_1.0" value="rss 1.0" />
-				<entry key="atom_0.3" value="atom 0.3" />
-				<entry key="rss_0.94" value="rss 0.94" />
-				<entry key="rss_0.93" value="rss 0.93" />
-				<entry key="rss_0.92" value="rss 0.92" />
-				<entry key="rss_0.91" value="rss 0.91" />
-				<entry key="rss_0.90" value="rss 0.90" />
-			</map>
-		</property>
-	</bean>
-	
-	<bean id="jprssAttributeRolesLoader" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeRolesWrapper">
-		<property name="entityManagerNameDest"><value>jacmsContentManager</value></property>
-		<property name="defsFilePath"><value>/WEB-INF/plugins/jprss/rssAttributeRoles.xml</value></property>
-	</bean>
-	
+    
+    <bean id="jprssRssManager" 
+              class="org.entando.entando.plugins.jprss.aps.system.services.rss.RssManager" 
+              parent="abstractService" >
+        <property name="rssDAO">
+            <bean class="org.entando.entando.plugins.jprss.aps.system.services.rss.RssDAO">
+                <property name="dataSource" ref="servDataSource" />
+            </bean>
+        </property>
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="pageManager" ref="PageManager" />
+        <property name="configManager" ref="BaseConfigManager" />
+        <property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+        <property name="linkResolver" ref="jacmsLinkResolverManager" />
+        <property name="availableFeedTypes">
+            <map>
+                <entry key="rss_2.0" value="rss 2.0" />
+                <entry key="rss_1.0" value="rss 1.0" />
+                <entry key="atom_0.3" value="atom 0.3" />
+                <entry key="rss_0.94" value="rss 0.94" />
+                <entry key="rss_0.93" value="rss 0.93" />
+                <entry key="rss_0.92" value="rss 0.92" />
+                <entry key="rss_0.91" value="rss 0.91" />
+                <entry key="rss_0.90" value="rss 0.90" />
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="jprssAttributeRolesLoader" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeRolesWrapper">
+        <property name="entityManagerNameDest"><value>jacmsContentManager</value></property>
+        <property name="defsFilePath"><value>/WEB-INF/plugins/jprss/rssAttributeRoles.xml</value></property>
+    </bean>
+    
 </beans>

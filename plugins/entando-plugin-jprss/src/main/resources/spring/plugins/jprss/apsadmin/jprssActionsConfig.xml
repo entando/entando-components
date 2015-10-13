@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xmlns:context="http://www.springframework.org/schema/context"
-		xmlns:jee="http://www.springframework.org/schema/jee"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
-	
-	<bean id="jprssPortalAction" scope="prototype" 
-			class="com.agiletec.plugins.jprss.apsadmin.rss.portal.RssPortalAction" parent="abstractBaseAction">
-		<property name="rssManager" ref="jprssRssManager" />
-		<property name="configManager" ref="BaseConfigManager" />
-	</bean>
-	
-	<bean id="jprssPluginSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
-		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jprss/apsadmin/jsp/common/template/subMenu.jsp</value></property>
-	</bean>
-
-	<bean id="jprssAction" scope="prototype" 
-			class="com.agiletec.plugins.jprss.apsadmin.rss.RssAction" parent="abstractBaseAction">
-		<property name="rssManager" ref="jprssRssManager" />
-		<property name="categoryManager" ref="CategoryManager"/>
-		<property name="contentManager" ref="jacmsContentManager" />
-	</bean>
-	
-	<bean id="jprssFilterAction" scope="prototype" 
-			class="com.agiletec.plugins.jprss.apsadmin.rss.RssFilterAction" parent="abstractBaseAction">
-		<property name="contentManager" ref="jacmsContentManager" />
-	</bean>
-	
-	<bean id="jprssTextFilterAction" scope="prototype" 
-			class="com.agiletec.plugins.jprss.apsadmin.rss.attributeFilter.TextAttributeFilterAction" parent="jacmsContentListFilterAction" >
-	</bean>
-	<bean id="jprssNumberFilterAction" scope="prototype" 
-			class="com.agiletec.plugins.jprss.apsadmin.rss.attributeFilter.NumberAttributeFilterAction" parent="jacmsContentListFilterAction" >
-	</bean>
-	<bean id="jprssBooleanFilterAction" scope="prototype" 
-			class="com.agiletec.plugins.jprss.apsadmin.rss.attributeFilter.BooleanAttributeFilterAction" parent="jacmsContentListFilterAction" >
-	</bean>
-	<bean id="jprssDateFilterAction" scope="prototype" 
-			class="com.agiletec.plugins.jprss.apsadmin.rss.attributeFilter.DateAttributeFilterAction" parent="jacmsContentListFilterAction" >
-	</bean>
+    
+    <bean id="jprssPortalAction" scope="prototype" 
+              class="org.entando.entando.plugins.jprss.apsadmin.portal.RssPortalAction" parent="abstractBaseAction">
+        <property name="rssManager" ref="jprssRssManager" />
+        <property name="configManager" ref="BaseConfigManager" />
+    </bean>
+    
+    <bean id="jprssPluginSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+        <property name="subMenuFilePath"><value>/WEB-INF/plugins/jprss/apsadmin/jsp/common/template/subMenu.jsp</value></property>
+    </bean>
+    
+    <bean id="jprssAction" scope="prototype" 
+              class="org.entando.entando.plugins.jprss.apsadmin.config.RssAction" parent="abstractBaseAction">
+        <property name="rssManager" ref="jprssRssManager" />
+        <property name="categoryManager" ref="CategoryManager"/>
+        <property name="contentManager" ref="jacmsContentManager" />
+    </bean>
+    
+    <bean id="jprssFilterAction" scope="prototype" 
+              class="org.entando.entando.plugins.jprss.apsadmin.config.RssFilterAction" parent="abstractBaseAction">
+        <property name="contentManager" ref="jacmsContentManager" />
+    </bean>
+    
+    <bean id="jprssTextFilterAction" scope="prototype" 
+              class="org.entando.entando.plugins.jprss.apsadmin.config.filter.TextAttributeFilterAction" parent="jacmsContentListFilterAction" >
+    </bean>
+    <bean id="jprssNumberFilterAction" scope="prototype" 
+              class="org.entando.entando.plugins.jprss.apsadmin.config.filter.NumberAttributeFilterAction" parent="jacmsContentListFilterAction" >
+    </bean>
+    <bean id="jprssBooleanFilterAction" scope="prototype" 
+              class="org.entando.entando.plugins.jprss.apsadmin.config.filter.BooleanAttributeFilterAction" parent="jacmsContentListFilterAction" >
+    </bean>
+    <bean id="jprssDateFilterAction" scope="prototype" 
+              class="org.entando.entando.plugins.jprss.apsadmin.config.filter.DateAttributeFilterAction" parent="jacmsContentListFilterAction" >
+    </bean>
 	
 </beans>
