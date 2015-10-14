@@ -170,7 +170,7 @@ public class MailManager extends AbstractService implements IMailManager {
 			msg.saveChanges();
 			bus.send(msg);
 		} catch (Throwable t) {
-			throw new ApsSystemException("Errore in spedizione mail", t);
+			throw new ApsSystemException("Error sending mail", t);
 		} finally {
 			closeTransport(bus);
 		}
@@ -201,7 +201,7 @@ public class MailManager extends AbstractService implements IMailManager {
 			msg.saveChanges();
 			bus.send(msg);
 		} catch (Throwable t) {
-			throw new ApsSystemException("Errore in spedizione mail", t);
+			throw new ApsSystemException("Error sending mail", t);
 		} finally {
 			closeTransport(bus);
 		}
@@ -348,7 +348,7 @@ public class MailManager extends AbstractService implements IMailManager {
 				}
 				msg.setRecipients(recType, addresses);
 			} catch (MessagingException e) {
-				throw new RuntimeException("Errore in aggiunta recipients", e);
+				throw new RuntimeException("Error adding recipients", e);
 			}
 		}
 	}
@@ -363,7 +363,7 @@ public class MailManager extends AbstractService implements IMailManager {
 			try {
 				transport.close();
 			} catch (MessagingException e) {
-				throw new ApsSystemException("Errore in chiusura connessione", e);
+				throw new ApsSystemException("Error closing connection", e);
 			}
 		}
 	}
