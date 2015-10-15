@@ -229,42 +229,42 @@ name="%{#attributeTracer.getFormFieldName(#attribute)}"
 value="%{#dateAttributeValue}" maxlength="10" cssClass="text userprofile-date" />
   &#32;
 <#assign js_for_datepicker="jQuery(function($){
-		$.datepicker.regional[''''it''''] = {
-			closeText: ''''Chiudi'''',
-			prevText: ''''&#x3c;Prec'''',
-			nextText: ''''Succ&#x3e;'''',
-			currentText: ''''Oggi'''',
-			monthNames: [''''Gennaio'''',''''Febbraio'''',''''Marzo'''',''''Aprile'''',''''Maggio'''',''''Giugno'''',
-		''''Luglio'''',''''Agosto'''',''''Settembre'''',''''Ottobre'''',''''Novembre'''',''''Dicembre''''],
-			monthNamesShort:  [''''Gen'''',''''Feb'''',''''Mar'''',''''Apr'''',''''Mag'''',''''Giu'''',
-		''''Lug'''',''''Ago'''',''''Set'''',''''Ott'''',''''Nov'''',''''Dic''''],
-			dayNames: [''''Domenica'''',''''Luned&#236'''',''''Marted&#236'''',''''Mercoled&#236'''',''''Gioved&#236'''',''''Venerd&#236'''',''''Sabato''''],
-			dayNamesShort: [''''Dom'''',''''Lun'''',''''Mar'''',''''Mer'''',''''Gio'''',''''Ven'''',''''Sab''''],
-			dayNamesMin: [''''Do'''',''''Lu'''',''''Ma'''',''''Me'''',''''Gi'''',''''Ve'''',''''Sa''''],
-			weekHeader: ''''Sm'''',
-			dateFormat: ''''dd/mm/yy'''',
-			firstDay: 1,
-			isRTL: false,
-			showMonthAfterYear: false,
-			yearSuffix: ''''''''};
-	});
-	jQuery(function($) {
-		if (Modernizr.touch && Modernizr.inputtypes.date) {
-			$.each(	$(\"input.jpwebdynamicform-date\"), function(index, item) {
-				item.type = ''''date'''';
-			});
-		} else {
-			$.datepicker.setDefaults( $.datepicker.regional[ \"${currentLangVar}\" ] );
-			$(\"input.jpwebdynamicform-date\").datepicker({
-					changeMonth: true,
-					changeYear: true,
-					dateFormat: \"dd/mm/yy\"
-				});
-		}
-	});
-	">
+	$.datepicker.regional[''it''] = {
+		closeText: ''Chiudi'',
+		prevText: ''&#x3c;Prec'',
+		nextText: ''Succ&#x3e;'',
+		currentText: ''Oggi'',
+		monthNames: [''Gennaio'',''Febbraio'',''Marzo'',''Aprile'',''Maggio'',''Giugno'',
+			''Luglio'',''Agosto'',''Settembre'',''Ottobre'',''Novembre'',''Dicembre''],
+		monthNamesShort: [''Gen'',''Feb'',''Mar'',''Apr'',''Mag'',''Giu'',
+			''Lug'',''Ago'',''Set'',''Ott'',''Nov'',''Dic''],
+		dayNames: [''Domenica'',''Luned&#236'',''Marted&#236'',''Mercoled&#236'',''Gioved&#236'',''Venerd&#236'',''Sabato''],
+		dayNamesShort: [''Dom'',''Lun'',''Mar'',''Mer'',''Gio'',''Ven'',''Sab''],
+		dayNamesMin: [''Do'',''Lu'',''Ma'',''Me'',''Gi'',''Ve'',''Sa''],
+		weekHeader: ''Sm'',
+		dateFormat: ''dd/mm/yy'',
+		firstDay: 1,
+		isRTL: false,
+		showMonthAfterYear: false,
+		yearSuffix: ''''};
+});
+
+jQuery(function($){
+	if (Modernizr.touch && Modernizr.inputtypes.date) {
+		$.each(	$(''input.jpwebdynamicform-date''), function(index, item) {
+			item.type = ''date'';
+		});
+	} else {
+		$.datepicker.setDefaults( $.datepicker.regional[''${currentLangVar}''] );
+		$(''input.jpwebdynamicform-date'').datepicker({
+      			changeMonth: true,
+      			changeYear: true,
+      			dateFormat: ''dd/mm/yy''
+    		});
+	}
+});" >
 <@wp.headInfo type="JS" info="entando-misc-html5-essentials/modernizr-2.5.3-full.js" />
-<@wp.headInfo type="JS_EXT" info="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js" />
+<@wp.headInfo type="JS_EXT" info="http://code.jquery.com/ui/1.10.0/jquery-ui.min.js" />
 <@wp.headInfo type="CSS_EXT" info="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.min.css" />
 <@wp.headInfo type="JS_RAW" info="${js_for_datepicker}" />', 1);
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynform_is_front-EnumeratorAttribute', NULL, 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
@@ -477,9 +477,9 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 		<script type="text/javascript" src="http://api.recaptcha.net/challenge?k=<@wp.info key="systemParam" paramName="jpwebdynamicform_recaptcha_publickey" />"></script>
 		<noscript>
 		<iframe src="http://api.recaptcha.net/noscript?k=<@wp.info key="systemParam" paramName="jpwebdynamicform_recaptcha_publickey" />"
-				height="300" width="500" frameborder="0"></iframe><br>
-		<@s.textarea name="recaptcha_challenge_field" rows=3 cols=40 />
-		<@s.hidden name="recaptcha_response_field" value="manual_challenge"/>
+				height="300" width="500" frameborder="0"></iframe><br />
+<@s.textarea name="recaptcha_challenge_field" rows="3" cols="40" />
+<@s.hidden name="recaptcha_response_field" value="manual_challenge" />
 		</noscript>
 	</@s.if>
 	<p class="form-actions">
@@ -494,10 +494,10 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 <#assign wp=JspTaglibs["/aps-core"]>
 <#assign wpsf=JspTaglibs["/apsadmin-form"]>
 
-<@s.set name="titleKey">jpwebdynamicform_TITLE_<@s.property value="typeCode"/></@s.set>
-<@s.set name="subtitleKey">jpwebdynamicform_SUBTITLE_<@s.property value="typeCode"/></@s.set>
-<@s.set name="typeCodeKey" value="typeCode" />
-<@s.set name="myCurrentPage"><@wp.currentPage param="code"/></@s.set>
+<@s.set var="titleKey">jpwebdynamicform_TITLE_<@s.property value="typeCode"/></@s.set>
+<@s.set var="subtitleKey">jpwebdynamicform_SUBTITLE_<@s.property value="typeCode"/></@s.set>
+<@s.set var="typeCodeKey" value="typeCode" />
+<@s.set var="myCurrentPage"><@wp.currentPage param="code"/></@s.set>
 <h2 class="title-divider"><span><@wp.i18n key="${titleKey}" /></span>
 <small><@wp.i18n key="${subtitleKey}" /></small></h2>
 
@@ -526,9 +526,9 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=<@wp.info key="systemParam" paramName="jpwebdynamicform_recaptcha_publickey" />"></script>
 <noscript>
 <iframe src="http://api.recaptcha.net/noscript?k=<@wp.info key="systemParam" paramName="jpwebdynamicform_recaptcha_publickey" />"
- height="300" width="500" frameborder="0"></iframe><br>
- <@s.textarea name="recaptcha_challenge_field" rows="3" cols="40"/>
- <@s.hidden name="recaptcha_response_field" value="manual_challenge"/>
+ height="300" width="500" frameborder="0"></iframe><br />
+<@s.textarea name="recaptcha_challenge_field" rows="3" cols="40" />
+<@s.hidden name="recaptcha_response_field" value="manual_challenge" />
 </noscript>
 </@s.if>
 <p>

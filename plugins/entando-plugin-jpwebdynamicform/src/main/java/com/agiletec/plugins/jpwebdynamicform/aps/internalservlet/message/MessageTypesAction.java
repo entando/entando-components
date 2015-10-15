@@ -58,6 +58,11 @@ public class MessageTypesAction extends BaseAction {
 				if (null == labelGroup) {
 					this.addLabelGroups(labelKey, smallMessageType.getDescr());
 				}
+				String labelSubTitleKey = "jpwebdynamicform_SUBTITLE_" + smallMessageType.getCode();
+				ApsProperties labelSubTitleGroup = this.getI18nManager().getLabelGroup(labelSubTitleKey);
+				if (null == labelSubTitleGroup) {
+					this.addLabelGroups(labelSubTitleKey, smallMessageType.getDescr());
+				}
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "checkTypeLables");
