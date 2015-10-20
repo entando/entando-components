@@ -35,7 +35,7 @@ import org.slf4j.Logger;
  * Struts Action to manage account suspension, user disabled.
  * @author G.Cocco
  * */
-public class UserSuspensionAction extends UserRegBaseAction implements IUserSuspensionAction {
+public class UserSuspensionAction extends UserRegBaseAction {
 	
 	@Override
 	public void validate() {
@@ -58,7 +58,6 @@ public class UserSuspensionAction extends UserRegBaseAction implements IUserSusp
 		}
 	}
 	
-	@Override
 	public String initSuspension() {
 		Logger log = ApsSystemUtils.getLogger();
 		try {
@@ -83,7 +82,6 @@ public class UserSuspensionAction extends UserRegBaseAction implements IUserSusp
 		return SUCCESS;
 	}
 	
-	@Override
 	public String suspend() {
 		try {
 			UserDetails user = this.getCurrentUser();

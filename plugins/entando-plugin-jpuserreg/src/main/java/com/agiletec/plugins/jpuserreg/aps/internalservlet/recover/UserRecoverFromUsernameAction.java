@@ -31,9 +31,12 @@ import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.IUserRegManage
  * Struts Action for managing requests for password recover by username
  * @author G.Cocco
  * */
-public class UserRecoverFromUsernameAction extends BaseAction implements IUserRecoverFromUsernameAction {
+public class UserRecoverFromUsernameAction extends BaseAction {
 	
-	@Override
+	/**
+	 * Initialize functionality and redirect if user is already logged
+	 * @return The action result
+	 */
 	public String initRecover() {
 		UserDetails userDetails = this.getCurrentUser();
 		if (null != userDetails && !userDetails.getUsername().equals(SystemConstants.GUEST_USER_NAME)) {
@@ -43,9 +46,9 @@ public class UserRecoverFromUsernameAction extends BaseAction implements IUserRe
 	}
 	
 	/**
-	 * Password recover from username
-	 * */
-	@Override
+	 * Password recover from username.
+	 * @return The action result
+	 */
 	public String recoverFromUsername() {
 		try {
 			this.getUserRegManager().reactivationByUserName(this.getUsername());

@@ -27,13 +27,15 @@ import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.IUserRegManage
 
 /**
  * Struts Action to manage account activation
- * @author S.Puddu
- * @author E.Mezzano
- * @author G.Cocco
- * */
-public class UserActivationAction extends UserRegBaseAction implements IUserActivationAction {
+ * @author S.Puddu, E.Mezzano, G.Cocco
+ */
+public class UserActivationAction extends UserRegBaseAction {
 
-	@Override
+	/**
+	 * Initialize the funtionality and redirect user to portal homepage if he has 
+	 * activated already, or to an error page if token is consumed or wrong
+	 * @return The action result.
+	 */
 	public String initActivation() {
 		try {
 			Boolean alreadyActivated = 
@@ -52,8 +54,12 @@ public class UserActivationAction extends UserRegBaseAction implements IUserActi
 		}
 		return SUCCESS;
 	}
-
-	@Override
+	
+	/**
+	 * Active account with information provided, if token is valid.
+	 * Load also default roles and groups defined in the config.
+	 * @return The action result.
+	 */
 	public String activate() {
 		try {
 			String username = this.extractUsername();
@@ -68,9 +74,12 @@ public class UserActivationAction extends UserRegBaseAction implements IUserActi
 		this.getRequest().getSession().setAttribute(ACTIVATION_TOKEN_CHECK_PARAM_PREFIX + this.getToken(), true);
 		return SUCCESS;
 	}
-
 	
-	@Override
+	/**
+	 * Initialize the funtionality and redirect user to portal homepage if he has 
+	 * reactivated already, or to an error page if token is consumed or wrong
+	 * @return The action result.
+	 */
 	public String initReactivation() {
 		try {
 			Boolean alreadyActivated = 
@@ -90,7 +99,10 @@ public class UserActivationAction extends UserRegBaseAction implements IUserActi
 		return SUCCESS;
 	}
 	
-	@Override
+	/**
+	 * Reactive account with information provided, if token is valid.
+	 * @return The action result.
+	 */
 	public String reactivate() {
 		try {
 			String username = this.extractUsername();

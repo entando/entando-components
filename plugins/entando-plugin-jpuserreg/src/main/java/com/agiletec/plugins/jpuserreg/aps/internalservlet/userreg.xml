@@ -4,111 +4,192 @@
     "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-	
+    
     <package name="jpuserreg_do/jpuserreg/UserReg" namespace="/do/jpuserreg/UserReg" extends="entando-front-default">
     	
-    	<action name="listTypes" class="jpuserregProfileTypesAction" >
-            <result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/profile-choose.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        <action name="listTypes" class="jpuserregProfileTypesAction" >
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_profile_choose</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/profile-choose.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
         </action>
     	
-    	<action name="initRegistration" class="jpuserregUserRegistrationAction" method="createNew" >
+        <action name="initRegistration" class="jpuserregUserRegistrationAction" method="createNew" >
             <result name="input" type="chain">listTypes</result>
-            <result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/registerUser.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_register_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/registerUser.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
         </action>
-		
-    	<action name="entryReg" class="jpuserregUserRegistrationAction">
-           <result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/registerUser.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        
+        <action name="entryReg" class="jpuserregUserRegistrationAction">
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_register_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/registerUser.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeStack" />
         </action>
-		
-    	<action name="register" class="jpuserregUserRegistrationAction" method="save">
+        
+        <action name="register" class="jpuserregUserRegistrationAction" method="save">
             <result name="expired" type="chain">initRegistration</result>
-            <result name="input" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/registerUser.jsp</result>
-        	<result name="failure" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/registerUser.jsp</result>
-        	<result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/confirmedUserRegistration.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+            <result name="input" type="guiFragment">
+                <param name="code">jpuserreg_is_register_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/registerUser.jsp</param>
+            </result>
+            <result name="failure" type="guiFragment">
+                <param name="code">jpuserreg_is_register_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/registerUser.jsp</param>
+            </result>
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_confirmed_user_registration</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/confirmedUserRegistration.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeValidationStack" />
         </action>
     	
-    	<!-- ######## INIZIO GESTIONE ATTRIBUTI IN LISTA ######## -->
+        <!-- ######## List attributes - start ######## -->
         
         <action name="addListElement*" class="jpuserregListAttributeAction" method="addListElement">
-        	<result type="chain">entryReg</result>
-        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+            <result type="chain">entryReg</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" />
         </action>
         
         <action name="removeListElement*" class="jpuserregListAttributeAction" method="removeListElement">
-        	<result type="chain">entryReg</result>
-        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+            <result type="chain">entryReg</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" />
         </action>
         
         <action name="moveListElement*" class="jpuserregListAttributeAction" method="moveListElement">
-        	<result type="chain">entryReg</result>
-        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+            <result type="chain">entryReg</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" />
         </action>
         
-        <!-- ######## FINE GESTIONE ATTRIBUTI IN LISTA ######## -->
+        <!-- ######## List attributes - end ######## -->
         
         <action name="initActivation" class="jpuserregUserActivationAction" method="initActivation" >
-        	<result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/activateUser.jsp</result>
-        	<result name="activationError">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/activateUserError.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_activate_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/activateUser.jsp</param>
+            </result>
+            <result name="activationError" type="guiFragment">
+                <param name="code">jpuserreg_is_activate_user_error</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/activateUserError.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeStack" />
         </action>
         
         <action name="activate" class="jpuserregUserActivationAction" method="activate">
-            <result name="input" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/activateUser.jsp</result>
-        	<result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/confirmedUserActivation.jsp</result>
-        	<result name="activationError">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/activateUserError.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+            <result name="input" type="guiFragment">
+                <param name="code">jpuserreg_is_activate_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/activateUser.jsp</param>
+            </result>
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_confirmed_user_activation</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/confirmedUserActivation.jsp</param>
+            </result>
+            <result name="activationError" type="guiFragment">
+                <param name="code">jpuserreg_is_activate_user_error</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/activateUserError.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeValidationStack" />
         </action>
         
         <action name="initReactivation" class="jpuserregUserActivationAction" method="initReactivation" >
-        	<result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/reactivateUser.jsp</result>
-        	<result name="activationError">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/reactivateUserError.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_reactivate_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/reactivateUser.jsp</param>
+            </result>
+            <result name="activationError" type="guiFragment">
+                <param name="code">jpuserreg_is_reactivate_user_error</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/reactivateUserError.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeStack" />
         </action>
         
         <action name="reactivate" class="jpuserregUserActivationAction" method="reactivate">
-            <result name="input" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/reactivateUser.jsp</result>
-        	<result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/confirmedUserReactivation.jsp</result>
-        	<result name="activationError">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/reactivateUserError.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+            <result name="input" type="guiFragment">
+                <param name="code">jpuserreg_is_reactivate_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/reactivateUser.jsp</param>
+            </result>
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_confirmed_user_reactivation</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/confirmedUserReactivation.jsp</param>
+            </result>
+            <result name="activationError" type="guiFragment">
+                <param name="code">jpuserreg_is_reactivate_user_error</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/reactivateUserError.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeValidationStack" />
         </action>
-                
-      	<action name="initRecover" class="jpuserregUserRecoverFromUsernameAction" method="initRecover">
-      		<result name="loggedUser" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/error.jsp</result>
-            <result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/recoverUser.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        
+        <action name="initRecover" class="jpuserregUserRecoverFromUsernameAction" method="initRecover">
+            <result name="loggedUser" type="guiFragment">
+                <param name="code">jpuserreg_is_error</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/error.jsp</param>
+            </result>
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_recover_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/recoverUser.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeStack" />
         </action>
         
         <action name="recoverFromUsername" class="jpuserregUserRecoverFromUsernameAction" method="recoverFromUsername">
-            <result name="input" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/recoverUser.jsp</result>
-            <result name="failure" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/recoverUser.jsp</result>
-        	<result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/confirmedRecoverRequest.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+            <result name="input" type="guiFragment">
+                <param name="code">jpuserreg_is_recover_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/recoverUser.jsp</param>
+            </result>
+            <result name="failure" type="guiFragment">
+                <param name="code">jpuserreg_is_recover_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/recoverUser.jsp</param>
+            </result>
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_confirmed_recover_request</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/confirmedRecoverRequest.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeValidationStack" />
         </action>
         
         <action name="recoverFromEmail" class="jpuserregUserRecoverFromEmailAction" method="recoverFromEmail">
-            <result name="input" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/recoverUser.jsp</result>
-            <result name="failure" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/recoverUser.jsp</result>
-        	<result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/confirmedRecoverRequest.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+            <result name="input" type="guiFragment">
+                <param name="code">jpuserreg_is_recover_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/recoverUser.jsp</param>
+            </result>
+            <result name="failure" type="guiFragment">
+                <param name="code">jpuserreg_is_recover_user</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/recoverUser.jsp</param>
+            </result>
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_confirmed_recover_request</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/recover/confirmedRecoverRequest.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeValidationStack" />
         </action>
-                
+        
         <action name="initSuspension" class="jpuserregUserSuspensionAction" method="initSuspension" >
-        	<result type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/suspension/confirmSuspend.jsp</result>
-        	<result name="userreg_error" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/error.jsp</result>
-        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+            <result type="guiFragment">
+                <param name="code">jpuserreg_is_confirm_suspend</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/suspension/confirmSuspend.jsp</param>
+            </result>
+            <result name="userreg_error" type="guiFragment">
+                <param name="code">jpuserreg_is_error</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/error.jsp</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeStack" />
         </action>
         
         <action name="suspend" class="jpuserregUserSuspensionAction" method="suspend">
-        	<result name="input" type="dispatcher">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/suspension/confirmSuspend.jsp</result>
-        	<result type="chain">
-            	<param name="namespace">/do</param>
-    			<param name="actionName">logout</param>
+            <result name="input" type="guiFragment">
+                <param name="code">jpuserreg_is_confirm_suspend</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/suspension/confirmSuspend.jsp</param>
             </result>
-        	<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+            <result type="chain">
+                <param name="namespace">/do</param>
+                <param name="actionName">logout</param>
+            </result>
+            <interceptor-ref name="entandoFrontEndFreeValidationStack" />
         </action>
         
     </package>

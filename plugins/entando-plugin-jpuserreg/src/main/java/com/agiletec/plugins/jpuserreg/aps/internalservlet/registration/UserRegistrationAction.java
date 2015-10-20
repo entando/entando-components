@@ -45,12 +45,9 @@ import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 /**
  * Action to manage User Account Registration Requests
- *
- * @author S.Puddu
- * @author E.Mezzano
- * @author G.Cocco
- * */
-public class UserRegistrationAction extends AbstractApsEntityAction implements IUserRegistrationAction {
+ * @author S.Puddu, E.Mezzano, G.Cocco
+ */
+public class UserRegistrationAction extends AbstractApsEntityAction {
 	
 	@Override
 	public void validate() {
@@ -150,6 +147,7 @@ public class UserRegistrationAction extends AbstractApsEntityAction implements I
 	/**
 	 * It Adds user account and profile in to the system,
 	 * keeping disabled status until the end of registration process
+	 * @return The result code
 	 */
 	@Override
 	public String save() {
@@ -215,12 +213,6 @@ public class UserRegistrationAction extends AbstractApsEntityAction implements I
 		}
 	}
 	
-	/**
-	 * Verify if email already in use
-	 * @param email
-	 * @return
-	 * @throws ApsSystemException
-	 */
 	private boolean verifyEmailAlreadyInUse(String email) throws ApsSystemException {
 		try {
 			Collection<String> usernames = this.getUserRegManager().getUsernamesByEmail(email);
@@ -335,5 +327,7 @@ public class UserRegistrationAction extends AbstractApsEntityAction implements I
 	private IUserManager _userManager;
 	private IUserProfileManager _userProfileManager;
 	private II18nManager _i18nManager;
+	
+	public static final String SESSION_PARAM_NAME_REQ_PROFILE = "jpuserreg_userRegSessionParam";
 
 }

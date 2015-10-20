@@ -31,9 +31,12 @@ import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.IUserRegManage
  * Struts Action for managing requests for password recover by email
  * @author G.Cocco
  * */
-public class UserRecoverFromEmailAction extends BaseAction implements IUserRecoverFromEmailAction {
+public class UserRecoverFromEmailAction extends BaseAction {
 	
-	@Override
+	/**
+	 * Initialize functionality and redirect if user is already logged
+	 * @return The action result
+	 */
 	public String initRecover() {
 		UserDetails userDetails = this.getCurrentUser();
 		if (null != userDetails && !userDetails.getUsername().equals(SystemConstants.GUEST_USER_NAME)) {
@@ -43,9 +46,9 @@ public class UserRecoverFromEmailAction extends BaseAction implements IUserRecov
 	}
 	
 	/**
-	 * Password recover from email
-	 * */
-	@Override
+	 * Password recover from email.
+	 * @return The action result
+	 */
 	public String recoverFromEmail() {
 		try {
 			this.getUserRegManager().reactivationByEmail(this.getEmail());
