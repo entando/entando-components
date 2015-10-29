@@ -1,0 +1,9 @@
+<contentModel>
+  <id>10091</id>
+  <contentType>RSS</contentType>
+  <description>Lists - Default</description>
+  <shape><![CDATA[<article>
+  <h2>$content.Title.text</h2>
+<p class="text-right"><a class="btn" href="$content.contentLink">$i18n.getLabel("jprssaggregator_RSS_READ_MORE")</a></p>
+</article>]]></shape>
+</contentModel>

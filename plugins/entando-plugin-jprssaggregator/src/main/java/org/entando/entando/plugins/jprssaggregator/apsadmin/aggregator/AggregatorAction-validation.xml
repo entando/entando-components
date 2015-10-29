@@ -1,0 +1,23 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+<validators>
+    <field name="descr">
+        <field-validator type="requiredstring">
+            <message key="requiredstring" />
+        </field-validator>
+    </field>
+    <field name="link" >
+        <field-validator type="requiredstring">
+            <message key="requiredstring" />
+        </field-validator>
+        <field-validator type="url" short-circuit="true">
+            <message key="jprssaggregator.error.link.invalid" />
+        </field-validator>
+    </field>
+    <field name="delay">
+        <field-validator type="int">
+            <message key="requiredstring" />
+        </field-validator>
+    </field>
+</validators>

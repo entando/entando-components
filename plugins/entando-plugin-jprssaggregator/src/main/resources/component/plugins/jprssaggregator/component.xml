@@ -30,6 +30,20 @@ classpath:sql/plugins/jprssaggregator/serv_data_production.sql
 						method="POST" expected="202" printresponse="true" >
 					<contentBody content-type="application/xml" path="classpath:component/plugins/jprssaggregator/postprocess/RSS.xml" />
 				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jprssaggregator/postprocess/contentModel_10009.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jprssaggregator/postprocess/contentModel_10091.xml" />
+				</selfRestCall>
+				<!-- avoid loop dependency between Content and Content Models -->
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentType"
+						method="PUT" expected="200" printresponse="true" >
+						<contentBody content-type="application/xml" path="classpath:component/plugins/jprssaggregator/postprocess/RSS.xml" />
+				</selfRestCall>
+				<!--// avoid loop dependency between Content and Content Models -->
 			</postProcesses>
 		</environment>
 		<environment code="test">
@@ -46,6 +60,20 @@ classpath:sql/plugins/jprssaggregator/serv_data_test.sql
 						method="POST" expected="202" printresponse="true" >
 					<contentBody content-type="application/xml" path="classpath:component/plugins/jprssaggregator/postprocess/RSS.xml" />
 				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jprssaggregator/postprocess/contentModel_10009.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+						method="POST" expected="200" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/plugins/jprssaggregator/postprocess/contentModel_10091.xml" />
+				</selfRestCall>
+				<!-- avoid loop dependency between Content and Content Models -->
+				<selfRestCall langCode="en" namespace="jacms" resourceName="contentType"
+						method="PUT" expected="200" printresponse="true" >
+						<contentBody content-type="application/xml" path="classpath:component/plugins/jprssaggregator/postprocess/RSS.xml" />
+				</selfRestCall>
+				<!--// avoid loop dependency between Content and Content Models -->
 			</postProcesses>
 		</environment>
 	</installation>

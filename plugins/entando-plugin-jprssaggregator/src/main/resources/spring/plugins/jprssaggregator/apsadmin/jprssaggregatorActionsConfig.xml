@@ -7,31 +7,31 @@
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd"> 
 	
-	<bean id="jprssaggregatorSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
-		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/common/template/aggregatorSubMenu.jsp</value></property>
-	</bean>
-	
-	<bean id="jprssaggregatorAggregatorAction" scope="prototype"  parent="abstractBaseAction"
-			class="com.agiletec.plugins.jprssaggregator.apsadmin.aggregator.AggregatorAction">
-		<property name="aggregatorManager" ref="jprssaggregatorAggregatorManager" />
-		<property name="rssConverterManager" ref="jprssaggregatorRssConverterManager" />
-		<property name="categoryManager" ref="CategoryManager" />
-		<property name="treeHelper" ref="categoryActionHelper"/>
-		<property name="contentManager" ref="jacmsContentManager" />
-		<property name="delays">
-			<map>
-				<entry value="1_min" key="60" />
-				<entry value="30_min" key="1800" />
-				<entry value="1_hour" key="3600" />
-				<entry value="5_hours" key="18000" />
-				<entry value="12_hours" key="43200" />
-				<entry value="1_day" key="86400" />
-				<entry value="5_days" key="432000" />
-				<entry value="10_days" key="864000" />
-				<entry value="20_days" key="1728000" />
-				<entry value="30_days" key="2592000" />
-			</map>
-		</property>
-	</bean>
-	
+    <bean id="jprssaggregatorSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+        <property name="subMenuFilePath"><value>/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/common/template/aggregatorSubMenu.jsp</value></property>
+    </bean>
+    
+    <bean id="jprssaggregatorAggregatorAction" scope="prototype"  parent="abstractBaseAction"
+              class="org.entando.entando.plugins.jprssaggregator.apsadmin.aggregator.AggregatorAction">
+        <property name="aggregatorManager" ref="jprssaggregatorAggregatorManager" />
+        <property name="rssConverterManager" ref="jprssaggregatorRssConverterManager" />
+        <property name="categoryManager" ref="CategoryManager" />
+        <property name="treeHelper" ref="categoryActionHelper"/>
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="delays">
+            <map>
+                <entry value="1_min" key="60" />
+                <entry value="30_min" key="1800" />
+                <entry value="1_hour" key="3600" />
+                <entry value="5_hours" key="18000" />
+                <entry value="12_hours" key="43200" />
+                <entry value="1_day" key="86400" />
+                <entry value="5_days" key="432000" />
+                <entry value="10_days" key="864000" />
+                <entry value="20_days" key="1728000" />
+                <entry value="30_days" key="2592000" />
+            </map>
+        </property>
+    </bean>
+    
 </beans>

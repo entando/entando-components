@@ -24,7 +24,7 @@ package org.entando.entando.plugins.jprssaggregator.aps.system.init.servdb;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import java.math.BigInteger;
+
 import java.util.Date;
 
 /**

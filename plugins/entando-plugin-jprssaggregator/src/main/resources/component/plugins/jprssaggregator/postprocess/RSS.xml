@@ -1,33 +1,33 @@
 <contentType>
-	<defaultModelId>10009</defaultModelId>
-	<listModelId>10091</listModelId>
-	<typeCode>RSS</typeCode>
-	<typeDescription>RSS Content</typeDescription>
-	<attributes>
-		<attribute>
-			<name>Title</name>
-			<type>Text</type>
-			<searchable>true</searchable>
-			<indexable>true</indexable>
-		</attribute>
-		<attribute>
-			<name>TextBody</name>
-			<type>Hypertext</type>
-		</attribute>
-		<attribute>
-			<name>Link</name>
-			<type>Link</type>
-			<searchable>true</searchable>
-			<indexable>true</indexable>
-		</attribute>
-		<attribute>
-			<name>Source</name>
-			<type>Monotext</type>
-			<searchable>true</searchable>
-			<indexable>true</indexable>
-			<validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="dateAttributeValidationRules">
-				<required>true</required>
-			</validationRules>
-		</attribute>
-	</attributes>
+    <defaultModelId>10009</defaultModelId>
+    <listModelId>10091</listModelId>
+    <typeCode>RSS</typeCode>
+    <typeDescription>RSS Content</typeDescription>
+    <attributes>
+        <attribute>
+            <name>Title</name>
+            <type>Text</type>
+            <searchable>true</searchable>
+            <indexable>true</indexable>
+        </attribute>
+        <attribute>
+            <name>TextBody</name>
+            <type>Hypertext</type>
+        </attribute>
+        <attribute>
+            <name>Link</name>
+            <type>Link</type>
+            <searchable>true</searchable>
+            <indexable>true</indexable>
+        </attribute>
+        <attribute>
+            <name>Source</name>
+            <type>Monotext</type>
+            <searchable>true</searchable>
+            <indexable>true</indexable>
+            <validationRules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textAttributeValidationRules">
+                <required>true</required>
+            </validationRules>
+        </attribute>
+    </attributes>
 </contentType>

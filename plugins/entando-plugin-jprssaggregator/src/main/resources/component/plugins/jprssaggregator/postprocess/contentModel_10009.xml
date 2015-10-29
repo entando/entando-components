@@ -1,0 +1,20 @@
+<contentModel>
+  <id>10009</id>
+  <contentType>RSS</contentType>
+  <description>Full - Default</description>
+  <shape><![CDATA[<article>
+  <h1>$content.Title.text</h1>
+#if ( $content.TextBody.text != "" )
+$content.TextBody.text
+#end
+#if ( $content.TextBody.text != "" )
+$content.TextBody.text
+#end
+#if ( $content.Link.text != "" )
+<p><a class="btn btn-primary" href="$content.Link.destination">$content.Link.text</a></p>
+#end
+#if ( $content.Source.text != "" )
+<p>Source:&nbsp;$content.Source.text</p>
+#end
+</article>]]></shape>
+</contentModel>

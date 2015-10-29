@@ -23,3 +23,6 @@ INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('jprssaggregato
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('jprssaggregator_NULL_DESCR', 'it', 'Descrizione non disponibile');
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('jprssaggregator_NULL_DESCR', 'en', 'Description unavailable');
 
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('jprssaggregator_RSS_READ_MORE', 'en', 'View details');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('jprssaggregator_RSS_READ_MORE', 'it', 'Continua');
+
