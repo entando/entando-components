@@ -31,7 +31,6 @@ import com.agiletec.plugins.jpwebdynamicform.aps.system.services.Jpwebdynamicfor
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.Message;
 import com.agiletec.plugins.jpwebdynamicform.apsadmin.message.common.INewMessageAction;
 
-
 /**
  * Action class delegate to manage operations on List Attributes.<br />
  * This is an implementation for Message entities.

@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 /**
  * @author E.Santoboni
  */
-public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.ContentAction implements IContentAction {
+public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.ContentAction {
 	
 	@Override
 	protected String saveContent(boolean approve) {
@@ -52,7 +52,7 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 				currentContent.setLastEditor(this.getCurrentUser().getUsername());
 				if (approve) {
 					if (!Content.STATUS_READY.equals(currentContent.getStatus()) && !Content.STATUS_PUBLIC.equals(currentContent.getStatus())) {
-						String[] args = { currentContent.getId() , currentContent.getDescr()};
+						String[] args = { currentContent.getId() , currentContent.getDescription()};
 						this.addFieldError("status", this.getText("error.content.publish.notReadyStatus", args));
 						return INPUT;
 					}
@@ -63,7 +63,7 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 				String sessionParamName = ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker();
 				this.getRequest().getSession().removeAttribute(sessionParamName);
 				log.info("Salvato contenuto " + currentContent.getId() + 
-						" - Descrizione: '" + currentContent.getDescr() + "' - Utente: " + this.getCurrentUser().getUsername());
+						" - Descrizione: '" + currentContent.getDescription()+ "' - Utente: " + this.getCurrentUser().getUsername());
 			} else {
 				log.error("Tentativo Salvataggio/approvazione contenuto NULLO - Utente: " + this.getCurrentUser().getUsername());
 			}
@@ -74,7 +74,10 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 		return SUCCESS;
 	}
 	
-	@Override
+	/**
+	 * Esegue l'azione di salvataggio contenuto con passaggio allo step precedente.
+	 * @return Il codice del risultato dell'azione.
+	 */
 	public String previousStep() {
 		Logger log = ApsSystemUtils.getLogger();
 		try {
@@ -101,7 +104,10 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 		return SUCCESS;
 	}
 	
-	@Override
+	/**
+	 * Esegue l'azione di salvataggio contenuto con passaggio allo step successivo.
+	 * @return Il codice del risultato dell'azione.
+	 */
 	public String nextStep() {
 		Logger log = ApsSystemUtils.getLogger();
 		try {

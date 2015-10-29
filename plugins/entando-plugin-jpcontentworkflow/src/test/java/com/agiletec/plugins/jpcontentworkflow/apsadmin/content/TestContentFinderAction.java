@@ -19,114 +19,110 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpcontentworkflow.apsadmin.content;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import com.agiletec.plugins.jpcontentworkflow.apsadmin.ApsAdminPluginBaseTestCase;
-import com.agiletec.plugins.jpcontentworkflow.util.WorkflowTestHelper;
-
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.plugins.jacms.apsadmin.content.IContentFinderAction;
-import com.agiletec.plugins.jpcontentworkflow.aps.system.JpcontentworkflowSystemConstants;
-import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.ContentWorkflowManager;
-import com.opensymphony.xwork2.Action;
-
-/**
- * @author E.Santoboni
- */
-public class TestContentFinderAction extends ApsAdminPluginBaseTestCase {
-	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-	
-	public void testSearch_1() throws Throwable {
-		try {
-			this._helper.setWorkflowConfig();
-			Map<String, String> params = new HashMap<String, String>();
-			this.executeSearch("admin", params);
-			IContentFinderAction action = (IContentFinderAction) this.getAction();
-			//action = (IContentFinderAction) this.getAction();
-			List<String> contents = action.getContents();
-			assertEquals(24, contents.size());
-			this.executeSearch("editorCoach", params);
-			action = (IContentFinderAction) this.getAction();
-			contents = action.getContents();
-			String[] contentsId = { "ART112", "ART102", "ART104", "RAH101" };
-			assertEquals(contentsId.length, contents.size());
-			for (int i = 0; i < contentsId.length; i++) {
-				String contentId = contentsId[i];
-				assertTrue(contents.contains(contentId));
-			}
-		} catch (Throwable t) {
-			throw t;
-		} finally {
-			this._helper.resetWorkflowConfig();
-		}
-	}
-	
-	public void testSearch_2() throws Throwable {
-		try {
-			this._helper.setWorkflowConfig();
-			this._helper.setContentStates();
-			Map<String, String> params = new HashMap<String, String>();
-			
-			this.executeSearch("admin", params);
-			IContentFinderAction action = (IContentFinderAction) this.getAction();
-			action = (IContentFinderAction) this.getAction();
-			List<String> contents = action.getContents();
-			assertEquals(24, contents.size());
-			
-			this.executeSearch("editorCoach", params);
-			action = (IContentFinderAction) this.getAction();
-			contents = action.getContents();
-			String[] contentsId = { "ART102", "ART112" };
-			assertEquals(contentsId.length, contents.size());
-			for (int i = 0; i < contentsId.length; i++) {
-				String contentId = contentsId[i];
-				assertTrue(contents.contains(contentId));
-			}
-			
-			this.executeSearch("supervisorCoach", params);
-			action = (IContentFinderAction) this.getAction();
-			contents = action.getContents();
-			contentsId = new String[]{ "ART102", "ART111", "ART112", "RAH101" };
-			assertEquals(contentsId.length, contents.size());
-			for (int i = 0; i < contentsId.length; i++) {
-				String contentId = contentsId[i];
-				assertTrue(contents.contains(contentId));
-			}
-		} catch (Throwable t) {
-			throw t;
-		} finally {
-			this._helper.resetWorkflowConfig();
-			this._helper.resetContentStates();
-		}
-	}
-	
-	private void executeSearch(String currentUserName, Map<String, String> params) throws Throwable {
-		this.initAction("/do/jacms/Content", "search");
-		this.setUserOnSession(currentUserName);
-		this.addParameters(params);
-		String result = this.executeAction();
-		assertEquals(Action.SUCCESS, result);
-	}
-	
-	private void init() {
-		ContentWorkflowManager workflowManager = (ContentWorkflowManager) this.getService(JpcontentworkflowSystemConstants.CONTENT_WORKFLOW_MANAGER);
-		ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
-		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-		this._helper = new WorkflowTestHelper(workflowManager, configManager, dataSource);
-	}
-	
-	private WorkflowTestHelper _helper;
-	
+package com.agiletec.plugins.jpcontentworkflow.apsadmin.content;
+
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.plugins.jpcontentworkflow.aps.system.JpcontentworkflowSystemConstants;
+import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.ContentWorkflowManager;
+import com.agiletec.plugins.jpcontentworkflow.apsadmin.ApsAdminPluginBaseTestCase;
+import com.agiletec.plugins.jpcontentworkflow.util.WorkflowTestHelper;
+import com.opensymphony.xwork2.Action;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
+
+/**
+ * @author E.Santoboni
+ */
+public class TestContentFinderAction extends ApsAdminPluginBaseTestCase {
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		this.init();
+	}
+	
+	public void testSearch_1() throws Throwable {
+		try {
+			this._helper.setWorkflowConfig();
+			Map<String, String> params = new HashMap<String, String>();
+			this.executeSearch("admin", params);
+			ContentFinderAction action = (ContentFinderAction) this.getAction();
+			//action = (IContentFinderAction) this.getAction();
+			List<String> contents = action.getContents();
+			assertEquals(24, contents.size());
+			this.executeSearch("editorCoach", params);
+			action = (ContentFinderAction) this.getAction();
+			contents = action.getContents();
+			String[] contentsId = { "ART112", "ART102", "ART104", "RAH101" };
+			assertEquals(contentsId.length, contents.size());
+			for (int i = 0; i < contentsId.length; i++) {
+				String contentId = contentsId[i];
+				assertTrue(contents.contains(contentId));
+			}
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._helper.resetWorkflowConfig();
+		}
+	}
+	
+	public void testSearch_2() throws Throwable {
+		try {
+			this._helper.setWorkflowConfig();
+			this._helper.setContentStates();
+			Map<String, String> params = new HashMap<String, String>();
+			this.executeSearch("admin", params);
+			ContentFinderAction action = (ContentFinderAction) this.getAction();
+			action = (ContentFinderAction) this.getAction();
+			List<String> contents = action.getContents();
+			assertEquals(24, contents.size());
+			
+			this.executeSearch("editorCoach", params);
+			action = (ContentFinderAction) this.getAction();
+			contents = action.getContents();
+			String[] contentsId = { "ART102", "ART112" };
+			assertEquals(contentsId.length, contents.size());
+			for (int i = 0; i < contentsId.length; i++) {
+				String contentId = contentsId[i];
+				assertTrue(contents.contains(contentId));
+			}
+			
+			this.executeSearch("supervisorCoach", params);
+			action = (ContentFinderAction) this.getAction();
+			contents = action.getContents();
+			contentsId = new String[]{ "ART102", "ART111", "ART112", "RAH101" };
+			assertEquals(contentsId.length, contents.size());
+			for (int i = 0; i < contentsId.length; i++) {
+				String contentId = contentsId[i];
+				assertTrue(contents.contains(contentId));
+			}
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._helper.resetWorkflowConfig();
+			this._helper.resetContentStates();
+		}
+	}
+	
+	private void executeSearch(String currentUserName, Map<String, String> params) throws Throwable {
+		this.initAction("/do/jacms/Content", "search");
+		this.setUserOnSession(currentUserName);
+		this.addParameters(params);
+		String result = this.executeAction();
+		assertEquals(Action.SUCCESS, result);
+	}
+	
+	private void init() {
+		ContentWorkflowManager workflowManager = (ContentWorkflowManager) this.getService(JpcontentworkflowSystemConstants.CONTENT_WORKFLOW_MANAGER);
+		ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
+		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
+		this._helper = new WorkflowTestHelper(workflowManager, configManager, dataSource);
+	}
+	
+	private WorkflowTestHelper _helper;
+	
 }

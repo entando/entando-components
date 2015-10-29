@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * funzione per la redirezione alla pagina di partenza.
  * @author E.Santoboni
  */
-public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.ContentAction implements IContentAction, ServletResponseAware {
+public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.ContentAction implements ServletResponseAware {
 	
 	private static final Logger _logger = LoggerFactory.getLogger(ContentAction.class);
 	
@@ -87,8 +87,11 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 		}
 		return null;
 	}
-
-	@Override
+	
+	/**
+	 * Delete a content created from current user.
+	 * @return The result of the action.
+	 */
 	public String delete() {
 		Logger log = ApsSystemUtils.getLogger();
 		try {

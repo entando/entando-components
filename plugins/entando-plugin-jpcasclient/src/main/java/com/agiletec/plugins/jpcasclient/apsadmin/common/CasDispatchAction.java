@@ -23,9 +23,7 @@ package com.agiletec.plugins.jpcasclient.apsadmin.common;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
@@ -35,7 +33,6 @@ import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.controller.control.RequestAuthorizator;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.apsadmin.common.DispatchAction;
-import com.agiletec.apsadmin.common.IDispatchAction;
 import com.agiletec.plugins.jpcasclient.aps.system.common.AuthCommon;
 import com.agiletec.plugins.jpcasclient.aps.system.services.config.ICasClientConfigManager;
 import com.agiletec.plugins.jpcasclient.aps.system.services.user.CasAuthProviderManager;
@@ -45,11 +42,12 @@ import com.agiletec.plugins.jpcasclient.aps.system.services.user.CasAuthProvider
  * also from CAS sso contest.
  * @author G.Cocco
  */
-public class CasDispatchAction extends DispatchAction implements IDispatchAction, ServletRequestAware, ServletResponseAware {
+public class CasDispatchAction extends DispatchAction implements ServletRequestAware, ServletResponseAware {
 	
 	/**
 	 * This needs the property followServiceRedirects property to TRUE for the
 	 * LogoutController defined in cas-servlet.xml
+	 * @return The result code
 	 */
 	@Override
 	public String doLogout() {
@@ -88,20 +86,6 @@ public class CasDispatchAction extends DispatchAction implements IDispatchAction
 	}
 	public HttpServletResponse getServletResponse() {
 		return _httpServletResponse;
-	}
-	
-	@Override
-	public void setServletRequest(HttpServletRequest request) {
-		this._request = request;
-	}
-	@Override
-	protected HttpServletRequest getRequest() {
-		return _request;
-	}
-	
-	@Override
-	protected HttpSession getSession() {
-		return this.getRequest().getSession();
 	}
 	
 	protected IAuthorizationManager getAuthorizatorManager() {
@@ -169,7 +153,6 @@ public class CasDispatchAction extends DispatchAction implements IDispatchAction
 	private String _password;
 
 	private AuthCommon _authCommon;
-	private HttpServletRequest _request;
 	private IAuthorizationManager _authorizatorManager;
 	private CasAuthProviderManager _authenticationProvider;
 	private IUserManager _userManager;
