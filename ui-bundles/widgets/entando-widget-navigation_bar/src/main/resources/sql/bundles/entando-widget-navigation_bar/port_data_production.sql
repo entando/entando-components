@@ -44,7 +44,8 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 	</#if>
 </#if>
 
-</ul>', 1);
+</ul>
+<@wp.freemarkerTemplateParameter var="previousPage" valueName="" removeOnEndTag=true />', 1);
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-navigation_bar_include', NULL, NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 <#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
