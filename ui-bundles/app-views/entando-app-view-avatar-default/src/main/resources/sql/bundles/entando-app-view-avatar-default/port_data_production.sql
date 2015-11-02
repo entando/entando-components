@@ -1,7 +1,3 @@
-INSERT INTO sysconfig( version, item, descr, config)  VALUES ('production', 'jpavatar_config', 'jpavatar configuration', '<jpavatar>
-	<style>local</style>
-</jpavatar>');
-
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('jpavatar_avatar', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Avatar - Show the current user avatar</property>
