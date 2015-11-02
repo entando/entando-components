@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpavatar.apsadmin.tags;
+package org.entando.entando.plugins.jpavatar.apsadmin.tags;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -35,8 +35,14 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jpavatar.aps.system.JpAvatarSystemConstants;
 import com.agiletec.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
 
+/**
+ * Return the path of an avatar. 
+ * When the parameter "username" is not passed, the avatar will be related to the currrent user
+ * @author Entando
+ */
 public class AvatarTag extends TagSupport {
-
+	
+	@Override
 	public int doEndTag() throws JspException {
 		try {
 			IAvatarManager avatarManager = (IAvatarManager) ApsWebApplicationUtils.getBean(JpAvatarSystemConstants.AVATAR_MANAGER, pageContext);
@@ -77,12 +83,6 @@ public class AvatarTag extends TagSupport {
 		this.setAvatarStyleVar(null);
 	}
 
-	/**
-	 * String returned when no avatar is found
-	 * @param avatarManager
-	 * @return
-	 * @throws ApsSystemException 
-	 */
 	private String getNullAvatar(IAvatarManager avatarManager) throws ApsSystemException {
 		String nullAvatar = null;
 		if (null != this.getReturnDefaultAvatar() && this.getReturnDefaultAvatar().equalsIgnoreCase("true")) {

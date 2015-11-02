@@ -4,10 +4,11 @@
     "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-	
-	<!-- ### jpavatar ### -->
-	<include file="com/agiletec/plugins/jpavatar/apsadmin/avatar/config/avatarConfig.xml" />
-	<include file="com/agiletec/plugins/jpavatar/apsadmin/avatar/avatar.xml" />
-	<include file="com/agiletec/plugins/jpavatar/aps/internalservlet/actions/avatar/avatarFront.xml" />
-	
+    
+    <!-- ### jpavatar ### -->
+    <include file="org/entando/entando/plugins/jpavatar/apsadmin/config/avatarConfig.xml" />
+    <include file="org/entando/entando/plugins/jpavatar/apsadmin/avatar/avatar.xml" />
+    
+    <include file="com/agiletec/plugins/jpavatar/aps/internalservlet/actions/avatar/avatarFront.xml" />
+    
 </struts>

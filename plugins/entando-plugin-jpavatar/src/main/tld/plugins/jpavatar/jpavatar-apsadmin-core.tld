@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
-<description><![CDATA["jpavatar apsadmin core tag library"]]></description>
-  <display-name>"jpavatar apsadmin core tag library"</display-name>
-  <tlib-version>1.0</tlib-version>
-  <short-name>jpavatar</short-name>
-  <uri>/jpavatar-apsadmin-core</uri>
-    	
-	<tag>
-		<description>
-			Return the path of an avatar. When the parameter "username" is not passed, the avatar will be related to the currrent user
-		</description>
-		<name>avatar</name>
-		<tag-class>com.agiletec.plugins.jpavatar.apsadmin.tags.AvatarTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description><![CDATA[If true, when no avatar is found, returns the default avatar]]></description>
-			<name>returnDefaultAvatar</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[var name where the tag's result is stored]]></description>
-			<name>var</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[name of the user to retrieve the avatar]]></description>
-			<name>username</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[var name where the tag stores the current style (local or gravatar)]]></description>
-			<name>avatarStyleVar</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	
+    <description><![CDATA["jpavatar apsadmin core tag library"]]></description>
+    <display-name>"jpavatar apsadmin core tag library"</display-name>
+    <tlib-version>1.0</tlib-version>
+    <short-name>jpavatar</short-name>
+    <uri>/jpavatar-apsadmin-core</uri>
+    
+    <tag>
+        <description>
+            <![CDATA[Return the path of an avatar. When the parameter "username" is not passed, the avatar will be related to the currrent user]]>
+        </description>
+        <name>avatar</name>
+        <tag-class>org.entando.entando.plugins.jpavatar.apsadmin.tags.AvatarTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description><![CDATA[If true, when no avatar is found, returns the default avatar]]></description>
+            <name>returnDefaultAvatar</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description><![CDATA[var name where the tag's result is stored]]></description>
+            <name>var</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description><![CDATA[name of the user to retrieve the avatar]]></description>
+            <name>username</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description><![CDATA[var name where the tag stores the current style (local or gravatar)]]></description>
+            <name>avatarStyleVar</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    
 </taglib>

@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpavatar.apsadmin.avatar;
+package org.entando.entando.plugins.jpavatar.apsadmin.avatar;
 
 import java.io.File;
 import java.io.FileInputStream;

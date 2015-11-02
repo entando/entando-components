@@ -32,7 +32,7 @@ import com.agiletec.plugins.jpavatar.apsadmin.ApsAdminPluginBaseTestCase;
 import com.agiletec.plugins.jpavatar.aps.system.JpAvatarSystemConstants;
 import com.agiletec.plugins.jpavatar.aps.system.services.avatar.AvatarConfig;
 import com.agiletec.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
-import com.agiletec.plugins.jpavatar.apsadmin.avatar.AvatarAction;
+import org.entando.entando.plugins.jpavatar.apsadmin.avatar.AvatarAction;
 import com.opensymphony.xwork2.Action;
 
 public class TestAvatarAction extends ApsAdminPluginBaseTestCase {
