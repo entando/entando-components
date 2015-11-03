@@ -9,6 +9,6 @@
     <include file="org/entando/entando/plugins/jpavatar/apsadmin/config/avatarConfig.xml" />
     <include file="org/entando/entando/plugins/jpavatar/apsadmin/avatar/avatar.xml" />
     
-    <include file="com/agiletec/plugins/jpavatar/aps/internalservlet/actions/avatar/avatarFront.xml" />
+    <include file="org/entando/entando/plugins/jpavatar/aps/internalservlet/actions/avatar/avatarFront.xml" />
     
 </struts>

@@ -21,6 +21,8 @@
  */
 package com.agiletec.plugins.jpavatar.aps.system.services.avatar;
 
+import org.entando.entando.plugins.jpavatar.aps.system.services.avatar.AvatarConfig;
+import org.entando.entando.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
@@ -31,7 +33,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
-import com.agiletec.plugins.jpavatar.aps.system.JpAvatarSystemConstants;
+import org.entando.entando.plugins.jpavatar.aps.system.JpAvatarSystemConstants;
 
 public class TestAvatarManager extends ApsPluginBaseTestCase {
 

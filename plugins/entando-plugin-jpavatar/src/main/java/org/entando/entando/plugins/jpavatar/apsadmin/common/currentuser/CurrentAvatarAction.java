@@ -24,9 +24,8 @@ package org.entando.entando.plugins.jpavatar.apsadmin.common.currentuser;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.UserDetails;
 
-import org.entando.entando.plugins.jpavatar.apsadmin.common.UserAvatarAction;
-
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.entando.entando.plugins.jpavatar.apsadmin.common.UserAvatarAction;
 
 /**
  * @author E.Santoboni
@@ -47,45 +46,4 @@ public class CurrentAvatarAction extends UserAvatarAction {
 		return super.getCurrentUser().getUsername();
 	}
 	
-	/*
-	@Override
-	public String returnAvatarStream() {
-		AvatarConfig config = this.getAvatarManager().getConfig();
-		String stype = config.getStyle();
-		if (null == stype || AvatarConfig.STYLE_GRAVATAR.equals(stype)) {
-			return super.returnAvatarStream();
-		}
-		try {
-			UserDetails currentUser = super.getCurrentUser();
-			String url = this.getAvatarManager().getAvatarUrl(currentUser.getUsername());
-			MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-			this.setMimeType(mimeTypesMap.getContentType(url));
-			File avatar = this.getAvatarManager().getAvatarResource(currentUser.getUsername());
-			this.setInputStream(new FileInputStream(avatar));
-		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "returnAvatarStream");
-			return this.extractDefaultAvatarStream();
-        }
-		return SUCCESS;
-	}
-	
-	@Override
-	public String getMimeType() {
-		return this.mimeType;
-	}
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
-	}
-	
-	public IAvatarManager getAvatarManager() {
-		return _avatarManager;
-	}
-	public void setAvatarManager(IAvatarManager avatarManager) {
-		this._avatarManager = avatarManager;
-	}
-	
-	private String mimeType;
-	
-	private IAvatarManager _avatarManager;
-	*/
 }

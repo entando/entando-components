@@ -21,30 +21,38 @@
  */
 package org.entando.entando.plugins.jpavatar.apsadmin.common;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.plugins.jpavatar.aps.system.services.avatar.AvatarConfig;
-import com.agiletec.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
+import org.entando.entando.plugins.jpavatar.aps.system.services.avatar.AvatarConfig;
+import org.entando.entando.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author E.Santoboni
  */
 public class UserAvatarAction extends org.entando.entando.apsadmin.common.UserAvatarAction {
 	
+	private static final Logger _logger =  LoggerFactory.getLogger(UserAvatarAction.class);
+	
 	@Override
 	public String returnAvatarStream() {
 		AvatarConfig config = this.getAvatarManager().getConfig();
 		String stype = config.getStyle();
-		if (null == stype || AvatarConfig.STYLE_GRAVATAR.equals(stype)) {
+		if (null == stype || AvatarConfig.STYLE_DEFAULT.equals(stype)) {
 			return super.returnAvatarStream();
+		} else if (AvatarConfig.STYLE_GRAVATAR.equals(stype)) {
+			return super.extractGravatar();
 		}
 		try {
 			String url = this.getAvatarManager().getAvatarUrl(this.getUsername());
+			if (null == url) {
+				return this.extractDefaultAvatarStream();
+			}
 			MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
 			this.setMimeType(mimeTypesMap.getContentType(url));
 			File avatar = this.getAvatarManager().getAvatarResource(this.getUsername());
@@ -53,7 +61,7 @@ public class UserAvatarAction extends org.entando.entando.apsadmin.common.UserAv
 			}
 			this.setInputStream(new FileInputStream(avatar));
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "returnAvatarStream");
+			_logger.info("local avatar not available", t);
 			return this.extractDefaultAvatarStream();
         }
 		return SUCCESS;

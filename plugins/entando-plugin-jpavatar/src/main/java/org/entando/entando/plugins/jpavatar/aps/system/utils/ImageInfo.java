@@ -19,7 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpavatar.aps.system.utils;
+package org.entando.entando.plugins.jpavatar.aps.system.utils;
+
 /*
  * ImageInfo.java
  *

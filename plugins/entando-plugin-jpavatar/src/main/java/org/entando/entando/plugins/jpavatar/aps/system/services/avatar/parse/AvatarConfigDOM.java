@@ -19,11 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpavatar.aps.system.services.avatar.parse;
+package org.entando.entando.plugins.jpavatar.aps.system.services.avatar.parse;
+
+import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.plugins.jpavatar.aps.system.services.avatar.AvatarConfig;
 
 import java.io.StringReader;
 
-import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
@@ -31,20 +33,16 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.plugins.jpavatar.aps.system.services.avatar.AvatarConfig;
-
-
-/*
-<jpavatar>
-	<style>{AvatarConfig style constant}</style>
-</jpavatar>
+/**
+ * @author S.Puddu
  */
-
 public class AvatarConfigDOM {
-
+	
+	private static final Logger _logger = LoggerFactory.getLogger(AvatarConfigDOM.class);
+	
 	/**
 	 * Extract the service configuration from an xml.
 	 * @param xml The xml containing the configuration.
@@ -59,11 +57,9 @@ public class AvatarConfigDOM {
 		if (styleElem != null) {
 			style = styleElem.getText();
 		}
-		
 		if (StringUtils.isBlank(style) || !ArrayUtils.contains(AvatarConfig.STYLES, style)) {
 			style = AvatarConfig.STYLE_LOCAL;
 		}
-		
 		config.setStyle(style);
 		return config;
 	}
@@ -80,7 +76,7 @@ public class AvatarConfigDOM {
 		configElem.addContent(styleElement);
 		return configElem;
 	}
-
+	
 	/**
 	 * Create an xml containing the jpavatar configuration.
 	 * @param config The jpavatar configuration.
@@ -112,7 +108,7 @@ public class AvatarConfigDOM {
 			Document doc = builder.build(reader);
 			root = doc.getRootElement();
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error("Error parsing xml: " + t.getMessage());
+			_logger.error("Error parsing xml ", t);
 			throw new ApsSystemException("Error parsing xml", t);
 		}
 		return root;
@@ -121,5 +117,4 @@ public class AvatarConfigDOM {
 	private final String ROOT = "jpavatar";
 	private final String STYLE_ELEM = "style";
 	
-
 }

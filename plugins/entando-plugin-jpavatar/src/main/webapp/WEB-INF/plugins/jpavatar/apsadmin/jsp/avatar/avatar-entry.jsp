@@ -19,7 +19,7 @@
             <ul class="margin-base-vertical">
                 <s:iterator value="actionErrors">
                     <li><s:property escape="false" /></li>
-                    </s:iterator>
+                </s:iterator>
             </ul>
         </div>
     </s:if>
@@ -31,8 +31,8 @@
                 <s:iterator value="fieldErrors">
                     <s:iterator value="value">
                         <li><s:property escape="false" /></li>
-                        </s:iterator>
                     </s:iterator>
+                </s:iterator>
             </ul>
         </div>
     </s:if>
@@ -43,58 +43,46 @@
             <ul class="margin-base-vertical">
                 <s:iterator value="actionMessages">
                     <li><s:property/></li>
-                    </s:iterator>
+                </s:iterator>
             </ul>
         </div>
     </s:if>
-
+    
     <jpavatar:avatar var="currentAvatar" returnDefaultAvatar="true" avatarStyleVar="style" />
-
-    <c:choose>
-        <c:when test="${style == 'gravatar'}">
-            <p>
-                <s:text name="jpavatar.label.current.avatar" />
-            </p> 		
-            <img src="<c:out value="${currentAvatar}" />"/>
-        </c:when>
-        <c:when test="${style == 'local'}">
-            <p>
-                <s:text name="jpavatar.label.current.avatar" />
-            </p> 		
-            <img src="<c:out value="${currentAvatar}" />"/>
-            <s:if test="null == avatarResource">
-                <s:form cssClass="form-horizontal" action="save" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <label for="jpavatar_file"><s:text name="label.avatarImage" /></label> 
-                            <s:set var="fileTabIndex"><wpsa:counter /></s:set>
-                            <s:file name="avatar" tabindex="%{#fileTabIndex}"/>
-                        </div>
+    <p>
+        <s:text name="jpavatar.label.current.avatar" />
+    </p>
+    <img src="<s:url action="avatarStream" namespace="/do/currentuser/avatar"><s:param name="gravatarSize">34</s:param></s:url>"/>
+    <c:if test="${style == 'local'}">
+        <s:if test="null == avatarResource">
+            <s:form cssClass="form-horizontal" action="save" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label for="jpavatar_file"><s:text name="label.avatarImage" /></label> 
+                        <s:set var="fileTabIndex"><wpsa:counter /></s:set>
+                        <s:file name="avatar" tabindex="%{#fileTabIndex}"/>
                     </div>
-                    <div class="form-group">
-                        <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-                            <wpsf:submit type="button" cssClass="btn btn-primary btn-block">
-                                <s:text name="%{getText('label.ok')}" />
-                            </wpsf:submit>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
+                        <wpsf:submit type="button" cssClass="btn btn-primary btn-block">
+                            <s:text name="%{getText('label.ok')}" />
+                        </wpsf:submit>
                     </div>
-                </s:form>
-            </s:if>
-            <s:else>
-                <s:form action="bin" cssClass="form-horizontal">
-                    <div class="form-group">
-                        <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-                            <wpsf:submit type="button" cssClass="btn btn-primary btn-block">
-                                <s:text name="%{getText('label.remove')}" />
-                            </wpsf:submit>
-                        </div>
+                </div>
+            </s:form>
+        </s:if>
+        <s:else>
+            <s:form action="bin" cssClass="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
+                        <wpsf:submit type="button" cssClass="btn btn-primary btn-block">
+                            <s:text name="%{getText('label.remove')}" />
+                        </wpsf:submit>
                     </div>
-                </s:form>
-            </s:else>
-        </c:when>
-        <c:otherwise>
-            style <c:out value="${style}" />
-        </c:otherwise>
-    </c:choose>
+                </div>
+            </s:form>
+        </s:else>
+    </c:if>
 
 </div>

@@ -24,15 +24,19 @@ package org.entando.entando.plugins.jpavatar.apsadmin.avatar;
 import java.io.File;
 import java.io.FileInputStream;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
-import com.agiletec.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
-import com.agiletec.plugins.jpavatar.aps.system.utils.ImageInfo;
+import org.entando.entando.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
+import org.entando.entando.plugins.jpavatar.aps.system.utils.ImageInfo;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action designed to manage the avatar.
  */
 public class AvatarAction extends BaseAction {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(AvatarAction.class);
 
 	@Override
 	public void validate() {
@@ -74,7 +78,7 @@ public class AvatarAction extends BaseAction {
 					}
 				}
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "checkAvatar");
+				_logger.info("Error validating", t);
 				throw new RuntimeException("error in avatar validation for user " + this.getCurrentUser().getUsername(), t);
 			}
 		}
@@ -103,7 +107,7 @@ public class AvatarAction extends BaseAction {
 				avatarRes = aFile.getName();
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAvatarResource");
+			_logger.info("Error extracting avatar resource", t);
 			throw new RuntimeException("error in getAvatarRecource for " + this.getCurrentUser().getUsername(), t);
 		}
 		return avatarRes;
@@ -127,7 +131,7 @@ public class AvatarAction extends BaseAction {
 				this.getAvatarManager().saveAvatar(this.getCurrentUser().getUsername(), this.getAvatar(), this.getAvatarFileName());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.info("Error saving avatar", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -141,7 +145,7 @@ public class AvatarAction extends BaseAction {
 		try {
 			this.addActionMessage(this.getText("jpavatar.message.confirmDelete"));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "bin");
+			_logger.info("Error on trash avatar", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -155,7 +159,7 @@ public class AvatarAction extends BaseAction {
 		try {
 			this.getAvatarManager().removeAvatar(this.getCurrentUser().getUsername());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.info("Error on deleting avatar", t);
 			return FAILURE;
 		}
 		return SUCCESS;

@@ -21,19 +21,20 @@
  */
 package org.entando.entando.plugins.jpavatar.apsadmin.tags;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsWebApplicationUtils;
+import org.entando.entando.plugins.jpavatar.aps.system.JpAvatarSystemConstants;
+import org.entando.entando.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
-
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.ApsWebApplicationUtils;
-import com.agiletec.plugins.jpavatar.aps.system.JpAvatarSystemConstants;
-import com.agiletec.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Return the path of an avatar. 
@@ -42,13 +43,14 @@ import com.agiletec.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
  */
 public class AvatarTag extends TagSupport {
 	
+	private static final Logger _logger =  LoggerFactory.getLogger(AvatarTag.class);
+	
 	@Override
 	public int doEndTag() throws JspException {
 		try {
 			IAvatarManager avatarManager = (IAvatarManager) ApsWebApplicationUtils.getBean(JpAvatarSystemConstants.AVATAR_MANAGER, pageContext);
 			HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
 			UserDetails currentUser = (UserDetails) request.getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-
 			boolean isCurrentUserGuest = null == currentUser || currentUser.getUsername().trim().length() == 0 || currentUser.getUsername().equalsIgnoreCase(SystemConstants.GUEST_USER_NAME);
 			if (StringUtils.isBlank(this.getUsername()) && isCurrentUserGuest) {
 				this.doOut(this.getNullAvatar(avatarManager));
@@ -67,9 +69,9 @@ public class AvatarTag extends TagSupport {
 			if (StringUtils.isNotBlank(this.getAvatarStyleVar())) {
 				this.pageContext.getRequest().setAttribute(this.getAvatarStyleVar(), avatarManager.getConfig().getStyle());
 			}
-		} catch (Throwable e) {
-			ApsSystemUtils.logThrowable(e, this, "doEndTag");
-			throw new JspException("Error in AvatarTag", e);
+		} catch (Throwable t) {
+			_logger.info("Error on doEndTag", t);
+			throw new JspException("Error on AvatarTag", t);
 		}
 		return EVAL_PAGE;
 	}

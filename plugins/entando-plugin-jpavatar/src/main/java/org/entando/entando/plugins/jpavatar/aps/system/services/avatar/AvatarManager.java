@@ -19,7 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpavatar.aps.system.services.avatar;
+package org.entando.entando.plugins.jpavatar.aps.system.services.avatar;
+
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.user.UserDetails;
+import org.entando.entando.plugins.jpavatar.aps.system.JpAvatarSystemConstants;
+import org.entando.entando.plugins.jpavatar.aps.system.utils.MD5Util;
 
 import java.io.File;
 
@@ -30,25 +38,16 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.entando.entando.plugins.jpavatar.aps.system.services.avatar.parse.AvatarConfigDOM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.plugins.jpavatar.aps.system.JpAvatarSystemConstants;
-import com.agiletec.plugins.jpavatar.aps.system.services.avatar.parse.AvatarConfigDOM;
-import com.agiletec.plugins.jpavatar.aps.system.utils.MD5Util;
 
 /**
  * @author S.Puddu
  */
 @Aspect
 public class AvatarManager extends AbstractService implements IAvatarManager {
-
+	
 	private static final Logger _logger = LoggerFactory.getLogger(AvatarManager.class);
 	
 	@Override
@@ -177,10 +176,10 @@ public class AvatarManager extends AbstractService implements IAvatarManager {
 		try {
 			String path = this.createFullDiskPath(username.toLowerCase(), filename);
 			if (null == path) {
-				ApsSystemUtils.getLogger().warn("Impossible to save avatar for user " + username + " . Wrong filename: " + file.getName());
+				_logger.warn("Impossible to save avatar for user " + username + " . Wrong filename: " + file.getName());
 				return;
 			}
-			ApsSystemUtils.getLogger().trace("Saving avatar to position: " + path);
+			_logger.debug("Saving avatar to position: " + path);
 			File destFile = new File(path);
 			FileUtils.copyFile(file, destFile);
 		} catch (Throwable t) {

@@ -4,28 +4,31 @@
     "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-	
+    
     <package name="jpavatar_do/jpavatar/Avatar" namespace="/do/jpavatar/Avatar" extends="entando-default">
     	
-    	<action name="edit" class="jpavatarAvatarAction" method="edit">
+        <action name="edit" class="jpavatarAvatarAction" method="edit">
             <result type="tiles">jpavatar.admin.avatar.entry</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
         </action>
-    	<action name="save" class="jpavatarAvatarAction" method="save">
+        
+        <action name="save" class="jpavatarAvatarAction" method="save">
             <result name="input" type="tiles">jpavatar.admin.avatar.entry</result>
             <result name="success" type="tiles">jpavatar.admin.avatar.saveOk</result>
-        	<interceptor-ref name="apsFileUpload" />
-        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
+            <interceptor-ref name="apsFileUpload" />
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
         </action>
-    	<action name="bin" class="jpavatarAvatarAction" method="bin">
+        
+        <action name="bin" class="jpavatarAvatarAction" method="bin">
             <result type="tiles">jpavatar.admin.avatar.confirmDelete</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
         </action>
-    	<action name="delete" class="jpavatarAvatarAction" method="delete">
+        
+        <action name="delete" class="jpavatarAvatarAction" method="delete">
             <result type="chain">edit</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
         </action>
-
+        
     </package>
     
 </struts>

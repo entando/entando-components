@@ -29,6 +29,7 @@
     <bean id="jpavatarAbstractUserAvatarAction" 
               class="org.entando.entando.apsadmin.common.UserAvatarAction" 
               scope="prototype" parent="abstractBaseAction" abstract="true" >
+        <property name="configManager" ref="BaseConfigManager"/>
         <property name="userProfileManager" ref="UserProfileManager" />
         <property name="gravatarUrl"><value>http://www.gravatar.com/avatar/</value></property>
     </bean>

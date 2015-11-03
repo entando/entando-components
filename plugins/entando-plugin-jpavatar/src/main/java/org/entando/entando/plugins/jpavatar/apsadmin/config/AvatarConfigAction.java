@@ -21,20 +21,23 @@
  */
 package org.entando.entando.plugins.jpavatar.apsadmin.config;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
-import com.agiletec.plugins.jpavatar.aps.system.services.avatar.AvatarConfig;
-import com.agiletec.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
+import org.entando.entando.plugins.jpavatar.aps.system.services.avatar.AvatarConfig;
+import org.entando.entando.plugins.jpavatar.aps.system.services.avatar.IAvatarManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AvatarConfigAction extends BaseAction {
-
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(AvatarConfigAction.class);
+	
 	public String edit() {
 		try {
 			AvatarConfig config = this.getAvatarManager().getConfig();
 			this.setAvatarConfig(config);
-
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.info("Error editing configuration", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -46,12 +49,12 @@ public class AvatarConfigAction extends BaseAction {
 			this.getAvatarManager().updateConfig(config);
 			this.addActionMessage(this.getText("message.config.savedConfirm"));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.info("Error saving configuration", t);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
-
+	
 	public AvatarConfig getAvatarConfig() {
 		return _avatarConfig;
 	}
@@ -65,7 +68,8 @@ public class AvatarConfigAction extends BaseAction {
 	public void setAvatarManager(IAvatarManager avatarManager) {
 		this._avatarManager = avatarManager;
 	}
-
+	
 	private AvatarConfig _avatarConfig;
 	private IAvatarManager _avatarManager;
+	
 }

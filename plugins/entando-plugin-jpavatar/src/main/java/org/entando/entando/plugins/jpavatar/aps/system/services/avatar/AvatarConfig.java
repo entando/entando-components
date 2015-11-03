@@ -19,23 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpavatar.aps.system;
+package org.entando.entando.plugins.jpavatar.aps.system.services.avatar;
 
-public interface JpAvatarSystemConstants {
+public class AvatarConfig {
 	
-	/**
-	 * Name of the bean that manages the avatars
-	 */
-	public static final String AVATAR_MANAGER = "jpavatarAvatarManager";
+	public String getStyle() {
+		return _style;
+	}
+	public void setStyle(String style) {
+		this._style = style;
+	}
 	
-	/**
-	 * Filename that must be returned when no avatar is found. This file must exists and placed in the "avatarDiskFolder" directory
-	 */
-	public static final String DEFAULT_AVATAR_NAME = "avatar-default.png";
+	private String _style = STYLE_DEFAULT;
 	
-	/**
-	 * Config item stored into sysconfig table, *port db
-	 */
-	public static final String CONFIG_ITEM = "jpavatar_config";
+	public static final String STYLE_DEFAULT = "default";
+	public static final String STYLE_GRAVATAR = "gravatar";
+	public static final String STYLE_LOCAL = "local";
+	
+	public static final String[] STYLES = {STYLE_DEFAULT, STYLE_LOCAL, STYLE_GRAVATAR};
 	
 }
