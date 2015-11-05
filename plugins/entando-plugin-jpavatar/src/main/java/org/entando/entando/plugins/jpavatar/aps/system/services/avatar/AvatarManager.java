@@ -109,11 +109,7 @@ public class AvatarManager extends AbstractService implements IAvatarManager {
 				File avatarResource = this.getAvatarResource(username);
 				if (null != avatarResource) {
 					avatarFileName = avatarResource.getName();
-				}
-				if (StringUtils.isNotBlank(avatarFileName)) {
 					url = urlBuffer.toString() + "avatar" + sep + avatarFileName;
-				} else {
-					url = urlBuffer.toString() + JpAvatarSystemConstants.DEFAULT_AVATAR_NAME;
 				}
 			} else if (this.getConfig().getStyle().equalsIgnoreCase(AvatarConfig.STYLE_GRAVATAR)) {
 				url = this.getGravatarUrl() + this.getGravatarHash(username);
@@ -134,7 +130,7 @@ public class AvatarManager extends AbstractService implements IAvatarManager {
 				File dir = new File(basePath);
 				String[] files = dir.list(new PrefixFileFilter(username.toLowerCase() + "."));
 				if (null != files && files.length > 0) {
-					File resFile = new File(basePath + System.getProperty("file.separator") + files[0]);
+					File resFile = new File(basePath + File.separator + files[0]);
 					if (resFile.exists()) {
 						avatarFile = resFile;
 					}

@@ -4,26 +4,10 @@
 	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 
 <tiles-definitions>
-	
+    
     <definition extends="layout.default" name="jpavatar.admin.config.entry" >
-		<put-attribute name="title" value="jpavatar.title.config" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpavatar/apsadmin/jsp/config/jpavatar_config.jsp" />
-	</definition>
-
-    <definition extends="layout.default" name="jpavatar.admin.avatar.entry" >
-		<put-attribute name="title" value="jpavatar.title.editAvatar" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpavatar/apsadmin/jsp/avatar/avatar-entry.jsp" />
-	</definition>
-	
-    <definition extends="layout.default" name="jpavatar.admin.avatar.saveOk" >
-		<put-attribute name="title" value="jpavatar.title.editAvatar" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpavatar/apsadmin/jsp/avatar/avatar-entry-ok.jsp" />
-	</definition>
-	
-    <definition extends="layout.default" name="jpavatar.admin.avatar.confirmDelete" >
-		<put-attribute name="title" value="jpavatar.title.editAvatar" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpavatar/apsadmin/jsp/avatar/avatar-delete-confirm.jsp" />
-	</definition>
-
-	
+        <put-attribute name="title" value="jpavatar.title.config" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpavatar/apsadmin/jsp/config/jpavatar_config.jsp" />
+    </definition>
+    
 </tiles-definitions>

@@ -19,8 +19,8 @@
                     <s:iterator value="fieldErrors">
                         <s:iterator value="value">
                             <li><s:property escape="false" /></li>
-                            </s:iterator>
                         </s:iterator>
+                    </s:iterator>
                 </ul>
             </div>
         </s:if>
@@ -31,7 +31,7 @@
                 <ul class="margin-base-vertical">
                     <s:iterator value="actionErrors">
                         <li><s:property escape="false" /></li>
-                        </s:iterator>
+                    </s:iterator>
                 </ul>
             </div>
         </s:if>
@@ -42,7 +42,7 @@
                 <ul class="margin-base-vertical">
                     <s:iterator value="actionMessages">
                         <li><s:property escape="false" /></li>
-                        </s:iterator>
+                    </s:iterator>
                 </ul>
             </div>
         </s:if>

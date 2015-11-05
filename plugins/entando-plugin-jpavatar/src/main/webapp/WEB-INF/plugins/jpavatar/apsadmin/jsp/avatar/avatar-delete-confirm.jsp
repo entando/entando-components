@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
@@ -14,7 +15,7 @@
         <div class="alert alert-warning">
             <s:text name="jpavatar.label.confirm.delete" />&#32;
             <jpavatar:avatar var="currentAvatar" returnDefaultAvatar="true"  />
-            <img src="<c:out value="${currentAvatar}" />"/>
+            <c:if test="${null != currentAvatar}"><img src="<c:out value="${currentAvatar}" />"/></c:if>
             <div class="text-center margin-large-top">
                 <s:submit type="button" cssClass="btn btn-warning btn-lg" >
                     <span class="icon fa fa-times-circle"></span>&#32;
