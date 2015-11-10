@@ -12,7 +12,7 @@ Installation
 In order to install the MyPortalPlus, open the pom.xml file of your project and insert the following two dependencies:
 
 
-#First dependency is related to the bundle for the MyPortalPlus’ page model 
+First dependency is related to the bundle for the MyPortalPlus’ page model 
 
  <dependency>
         <groupId>org.entando.entando.bundles.pages</groupId>
@@ -21,7 +21,7 @@ In order to install the MyPortalPlus, open the pom.xml file of your project and 
         <type>war</type>
 </dependency>
 
-#Second dependency is related to the plugin for the MyPortalPlus’ business logic
+Second dependency is related to the plugin for the MyPortalPlus’ business logic
 
  <dependency>
        <groupId>org.entando.entando.plugins</groupId>
