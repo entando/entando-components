@@ -8,7 +8,13 @@
 		<version>${project.version}</version>
 	</artifact>
 	<dependencies>
-		<code>entando-page-myportalplus-basic</code>
+		<code>entando-misc-bootstrap</code>
+		<code>entando-misc-jquery-ui</code>
+		<code>entando-widget-language_choose</code>
+		<code>entando-widget-search_form</code>
+		<code>entando-widget-navigation_bar</code>
+		<code>entando-widget-login_form</code>
+		<code>entando-content-generic</code>
 	</dependencies>
 	<installation>
 		<tableMapping>
@@ -26,6 +32,16 @@ classpath:sql/plugins/jpmyportalplus/port_data_production.sql
 classpath:sql/plugins/jpmyportalplus/serv_data_production.sql
 				</datasource>
 			</defaultSqlResources>
+			<postProcesses>
+				<selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+						method="POST" expected="200" failonerror="false" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-page-bootstrap-hero/postprocess/i18n_COPYRIGHT.xml" />
+				</selfRestCall>
+				<selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+						method="POST" expected="200" failonerror="false" printresponse="true" >
+					<contentBody content-type="application/xml" path="classpath:component/bundles/entando-page-bootstrap-hero/postprocess/i18n_PORTAL_TITLE.xml" />
+				</selfRestCall>
+			</postProcesses>
 		</environment>
 		<environment code="test">
 			<defaultSqlResources>

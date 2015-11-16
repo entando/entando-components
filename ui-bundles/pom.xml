@@ -56,7 +56,6 @@
 		<module>content-types/entando-content-blogpost</module>
 		<module>themes/entando-page-bootstrap-hero</module>
 		<module>themes/entando-page-2columns-left</module>
-		<module>themes/entando-page-myportalplus-basic</module>
 		<module>app-views/entando-app-view-webdynamicform-default</module>
 		<module>app-views/entando-app-view-calendar-default</module>
 		<module>app-views/entando-app-view-rss-default</module>
