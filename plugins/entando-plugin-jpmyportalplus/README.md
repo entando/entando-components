@@ -11,22 +11,7 @@ MyPortalPlus is an App gives the possibility to add two new features to:
 
 **Installation**
 
-In order to install the MyPortalPlus, open the pom.xml file of your project and insert the following two dependencies:
-
-First dependency is related to the bundle for the MyPortalPlus’ page model. 
-
-
-``` 
-<dependency>
-        <groupId>org.entando.entando.bundles.pages</groupId>
-        <artifactId>entando-page-myportalplus-basic</artifactId>
-        <version>${entando.version}</version>
-        <type>war</type>
-</dependency>
-```
-
-
-Second dependency is related to the plugin for the MyPortalPlus’ business logic.
+In order to install the MyPortalPlus plugin, open the pom.xml file of your project and insert the following dependency:
 
 ``` 
 <dependency>
