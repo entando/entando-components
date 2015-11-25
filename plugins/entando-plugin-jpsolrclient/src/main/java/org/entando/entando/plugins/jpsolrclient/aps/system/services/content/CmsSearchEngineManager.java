@@ -98,7 +98,7 @@ public class CmsSearchEngineManager extends AbstractService
 				break;
 			}
 		} catch (Throwable t) {
-			_logger.error("Errore in notificazione evento", t);
+			_logger.error("Error notifing event", t);
 		}
 	}
 	
@@ -111,6 +111,11 @@ public class CmsSearchEngineManager extends AbstractService
 				this._publicContentChangedEventQueue.remove(0);
 			}
 		}
+	}
+	
+	@Override
+	public Thread startReloadContentsReferences(String subDirectory) throws ApsSystemException {
+		return this.startReloadContentsReferences();
 	}
 	
 	@Override
@@ -187,7 +192,7 @@ public class CmsSearchEngineManager extends AbstractService
 			Indexer indexer = new Indexer(this.getSolrPath(), this.getLangManager());
             indexer.delete(entityId);
         } catch (Throwable t) {
-        	_logger.error("error deeting content {} from index", entityId, t);
+        	_logger.error("error deleting content {} from index", entityId, t);
             throw new ApsSystemException("Error deleting new content", t);
         }
 	}
