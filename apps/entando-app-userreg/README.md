@@ -2,11 +2,12 @@
 
 Code: ```jpuserreg```
 
-
 **Description**
+
 User Registration App is an application that let users register themselves to the portal and later to sign in.
 
 **Installation**
+
 In order to install the User Registration App, you should to insert the following dependency in the pom.xml file of your project:
 
 ```
@@ -19,6 +20,7 @@ In order to install the User Registration App, you should to insert the followin
 ```
 
 **Configuration**
+
 In a nutshell, to configure this plugin you have to create a profile type and then configure the Widgets accordingly. 
 You have a number of administrative decisions to take and some email templates to prepare too.
 
