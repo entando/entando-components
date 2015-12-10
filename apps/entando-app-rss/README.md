@@ -4,9 +4,11 @@
 
 **Description**
 
+The ```jprss``` plugin allows to serve the portal contents through RSS channels.
+
 This plugin offers:
 
-	•	An backend interface used by the administrator to create and manage the contents served through RSS channel. 
+	•	An back-end interface used by the administrator to create and manage the contents served through RSS channel. 
 	This interface adheres strictly to the pre-existing back-end graphics and settings.
 	
 	•	The RSS Channels Widget for the front-end designed to serve the list of the links of the active channels. 
