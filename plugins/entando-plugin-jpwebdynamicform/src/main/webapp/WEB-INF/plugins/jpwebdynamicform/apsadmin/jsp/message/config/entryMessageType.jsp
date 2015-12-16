@@ -208,7 +208,7 @@
                                             <wpsa:actionSubParam name="recipientType" value="2" />
                                             <wpsa:actionSubParam name="address" value="%{#recipient}" />
                                         </wpsa:actionParam>
-                                        <wpsf:submit type="button" action="%{#actionName}"mtitle="%{getText('label.remove')}: %{#recipient}" cssClass="btn btn-default btn-xs badge">
+                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}: %{#recipient}" cssClass="btn btn-default btn-xs badge">
                                             <span class="icon fa fa-times"></span>
                                             <span class="sr-only">x</span>
                                         </wpsf:submit>
