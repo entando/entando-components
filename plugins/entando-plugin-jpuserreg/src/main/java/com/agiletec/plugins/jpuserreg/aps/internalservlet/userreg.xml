@@ -71,7 +71,7 @@
         <action name="initActivation" class="jpuserregUserActivationAction" method="initActivation" >
             <result type="guiFragment">
                 <param name="code">jpuserreg_is_activate_user</param>
-                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/registration/activateUser.jsp</param>
+                <param name="jspLocation">/WEB-INF/plugins/jpuserreg/aps/jsp/internalServlet/activation/activateUser.jsp</param>
             </result>
             <result name="activationError" type="guiFragment">
                 <param name="code">jpuserreg_is_activate_user_error</param>
