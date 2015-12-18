@@ -59,10 +59,9 @@ public class TestAvatarAction extends ApsAdminPluginBaseTestCase {
 		String result = this.executeAction();
 		assertEquals("apslogin", result);
 	}
-
+	
 	public void testBin() throws Throwable {
 		this.setAvatarStyle(AvatarConfig.STYLE_LOCAL);
-		
 		String result = this.executeBin();
 		assertEquals(Action.SUCCESS, result);
 		AvatarAction action = (AvatarAction) this.getAction();
@@ -73,7 +72,6 @@ public class TestAvatarAction extends ApsAdminPluginBaseTestCase {
 	
 	public void testDelete() throws Throwable {
 		this.setAvatarStyle(AvatarConfig.STYLE_LOCAL);
-		
 		File file = new File("target/test/entando_logo.jpg");
 		this._avatarManager.saveAvatar("admin", file, "entando_logo.jpg");
 		String filename = this._avatarManager.getAvatarUrl("admin");
@@ -81,7 +79,8 @@ public class TestAvatarAction extends ApsAdminPluginBaseTestCase {
 		String result = this.executeDelete();
 		assertEquals(Action.SUCCESS, result);
 		filename = this._avatarManager.getAvatarUrl("admin");
-		assertEquals("/Entando/resources/plugins/jpavatar/avatar-default.png", filename);
+		assertNull(filename);
+		//assertEquals("/Entando/resources/plugins/jpavatar/avatar-default.png", filename);
 		assertNull(this._avatarManager.getAvatarResource("admin"));		
 	}
 	

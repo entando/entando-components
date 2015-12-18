@@ -42,9 +42,9 @@ public class TestAvatarManager extends ApsPluginBaseTestCase {
 		super.setUp();
 		this.init();
 	}
+	
 	public void testSaveAvatar() throws Throwable {
 		this.setAvatarStyle(AvatarConfig.STYLE_LOCAL);
-		
 		File file = new File("target/test/entando_logo.jpg");
 		String username = "admin";
 		this._avatarManager.saveAvatar(username, file, "entando_logo.jpg");
@@ -56,19 +56,15 @@ public class TestAvatarManager extends ApsPluginBaseTestCase {
 
 	public void testGetAvatar() throws Throwable {
 		this.setAvatarStyle(AvatarConfig.STYLE_LOCAL);
-		
 		String username = "admin";
 		File file = new File("target/test/entando_logo.jpg");
 		this._avatarManager.saveAvatar(username, file, "entando_logo.jpg");
 		String filename = this._avatarManager.getAvatarUrl(username);
 		assertEquals("/Entando/resources/plugins/jpavatar/avatar/admin.jpg", filename);
-		
-
 	}
-
+	
 	public void testDeleteAvatar() throws Throwable {
 		this.setAvatarStyle(AvatarConfig.STYLE_LOCAL);
-		
 		String username = "admin";
 		File file = new File("target/test/entando_logo.jpg");
 		this._avatarManager.saveAvatar(username, file, "entando_logo.jpg");
@@ -76,13 +72,13 @@ public class TestAvatarManager extends ApsPluginBaseTestCase {
 		assertEquals("/Entando/resources/plugins/jpavatar/avatar/admin.jpg", filename);
 		this._avatarManager.removeAvatar(username);
 		filename = this._avatarManager.getAvatarUrl(username);
-		assertEquals("/Entando/resources/plugins/jpavatar/avatar-default.png", filename);
+		//assertEquals("/Entando/resources/plugins/jpavatar/avatar-default.png", filename);
+		assertNull(filename);
 		assertNull(this._avatarManager.getAvatarResource(username));
 	}
-
+	
 	public void testDeleteAOPAvatar() throws Throwable {
 		this.setAvatarStyle(AvatarConfig.STYLE_LOCAL);
-		
 		User user = new User();
 		String username = "jpavatarTestUser".toLowerCase();
 		user.setUsername(username);
@@ -95,10 +91,11 @@ public class TestAvatarManager extends ApsPluginBaseTestCase {
 		assertEquals("/Entando/resources/plugins/jpavatar/avatar/" + username +".jpg", filename);
 		this._userManager.removeUser(username);
 		filename = this._avatarManager.getAvatarUrl(username);
-		assertEquals("/Entando/resources/plugins/jpavatar/avatar-default.png", filename);
+		assertNull(filename);
+		//assertEquals("/Entando/resources/plugins/jpavatar/avatar-default.png", filename);
 		assertNull(this._avatarManager.getAvatarResource(username));	
 	}
-
+	
 	protected void setAvatarStyle(String style) throws ApsSystemException {
 		AvatarConfig config = _avatarManager.getConfig();
 		config.setStyle(style);
@@ -109,7 +106,6 @@ public class TestAvatarManager extends ApsPluginBaseTestCase {
 		_avatarManager = (IAvatarManager) this.getService(JpAvatarSystemConstants.AVATAR_MANAGER);
 		_userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
 	}
-
 	
 	@Override
 	protected void tearDown() throws Exception {
@@ -117,8 +113,8 @@ public class TestAvatarManager extends ApsPluginBaseTestCase {
 		FileUtils.cleanDirectory(new File(this._avatarManager.getAvatarDiskFolder() + "avatar"));
 		this._userManager.removeUser("jpavatarTestUser");
 	}
-
+	
 	private IAvatarManager _avatarManager;
 	private IUserManager _userManager;
-
+	
 }
