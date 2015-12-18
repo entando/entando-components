@@ -4,12 +4,11 @@
 
 **Description**
 
-Mail Plugin is a component that let users configure SMTP server and create new senders. 
-This plugin supports other Entando components as ```jpuserreg``` or ```jpnewsletter```.
+Mail Plugin is a component that let Entando users configure SMTP server and create new senders to send email messages.
 
 **Installation**
 
-In order to install the Mail plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the Mail Plugin, you should to insert the following dependency in the pom.xml file of your project:
 
 ```
 <dependency>
@@ -20,10 +19,13 @@ In order to install the Mail plugin, you should to insert the following dependen
 </dependency>
 ````
 
-
 **Configuration**
 
 From Entando’s back office, you have to:
 
-	1. configure the SMTP server 
-	2. manage sender users 
+ 1. create new **Sender**: you have to create a new Sender with a _Code_ and an _Email_. You can have a List of Senders; the Sender will be choosed on the base of its Code. 
+ 2. configure the **SMTP server**: you have to active the SMTP server, and then to set Host (mandatory), Port, Security Certification, Timeout parameter.
+ 
+Please leave Username and Password blank if the SMTP does not require authentication.
+ 
+ 
