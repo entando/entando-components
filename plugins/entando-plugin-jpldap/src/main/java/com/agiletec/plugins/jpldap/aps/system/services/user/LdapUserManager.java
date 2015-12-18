@@ -179,6 +179,7 @@ public class LdapUserManager extends UserManager implements ILdapUserManager {
 	public void removeUser(UserDetails user) throws ApsSystemException {
 		if (!isActive() || !isWriteUserEnable()) {
 			super.removeUser(user);
+			return;
 		}
 		try {
 			this.getLdapUserDAO().deleteUser(user);
@@ -192,6 +193,7 @@ public class LdapUserManager extends UserManager implements ILdapUserManager {
 	public void removeUser(String username) throws ApsSystemException {
 		if (!isActive() || !isWriteUserEnable()) {
 			super.removeUser(username);
+			return;
 		}
 		try {
 			this.getLdapUserDAO().deleteUser(username);
