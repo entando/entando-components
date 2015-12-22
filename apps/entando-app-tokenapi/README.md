@@ -8,7 +8,7 @@ _Token API_ is an Entando app that allows to authenticate Entando’s users thro
 
 **Installation**
 
-In order to install the Token API App, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the _Token API_ App, you should to insert the following dependency in the pom.xml file of your project:
 
 ```
 <dependency>
@@ -21,4 +21,4 @@ In order to install the Token API App, you should to insert the following depend
 
 **Configuration**
 
-In My profile page of Entando’s Back-Office, the personal Token will be showed.
+In _My profile_ page of Entando’s Back-Office, the personal Token will be showed.
