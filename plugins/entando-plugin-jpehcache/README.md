@@ -12,11 +12,11 @@ In order to install the _Ehcache Plugin_, you should to insert the following dep
 
 ```
    <dependency>
-			<groupId>org.entando.entando.plugins</groupId>
-			<artifactId>entando-plugin-jpehcache</artifactId>
-			<version>${entando.version}</version>
-			<type>war</type>
-		</dependency>
-````
+	<groupId>org.entando.entando.plugins</groupId>
+	<artifactId>entando-plugin-jpehcache</artifactId>
+	<version>${entando.version}</version>
+	<type>war</type>
+   </dependency>
+```
 
 
