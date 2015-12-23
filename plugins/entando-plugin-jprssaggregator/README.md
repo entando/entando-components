@@ -23,8 +23,8 @@ Though the plugin installation is not difficult at all, we are going to modify t
 In the portal administration you can create, modify or eliminate RSS sources.
 A new source is characterized by:
 
-	* Content Type that shows only all those content types suitable to be used by the RSS aggregator
-	* Description
-	* Url
-	* Refresh Delay
-	* Categories Management where you can optionally add the category whose retrieved contents
+	*Content Type that shows only all those content types suitable to be used by the RSS aggregator
+	*Description
+	*Url
+	*Refresh Delay
+	*Categories Management where you can optionally add the category whose retrieved contents
