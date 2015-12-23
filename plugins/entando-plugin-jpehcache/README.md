@@ -1,6 +1,6 @@
 **Ehcache Plugin**
 
-**Code**: ``jpehcache```
+**Code**: ```jpehcache```
 
 **Description**
 
