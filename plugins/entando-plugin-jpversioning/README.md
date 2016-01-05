@@ -30,7 +30,7 @@ Clicking on the content description you can access to the history of the selecte
 For each content we are given the possibility to manage various version by clicking on the description as well as some information, 
 such as the date of the modification the user which made the changes.
 
-Regarding the version number'rule, the content version is characterized from the pattern ```<major_number>.<minor_number>```, 
+Regarding the version number's rule, the content version is characterized from the pattern ```<major_number>.<minor_number>```, 
 a new version of the content always increases the minor number. The major number is incremented (and the minor number is set to zero) only when a content is published.
 
 You can also restore the content to the wanted version by clicking the arrow icon, or delete the record 
