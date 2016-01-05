@@ -30,7 +30,7 @@ Clicking on the content description you can access to the history of the selecte
 For each content we are given the possibility to manage various version by clicking on the description as well as some information, 
 such as the date of the modification the user which made the changes.
 
-Regarding of the version number'rule, the content version is characterized from the pattern ```<major_number>.<minor_number>```, 
+Regarding the version number'rule, the content version is characterized from the pattern ```<major_number>.<minor_number>```, 
 a new version of the content always increases the minor number. The major number is incremented (and the minor number is set to zero) only when a content is published.
 
 You can also restore the content to the wanted version by clicking the arrow icon, or delete the record 
@@ -40,5 +40,10 @@ Please note that the restore action when confirmed, loads only a previous versio
 You have to save your changes with the Save button to finalize the restore process. 
 Naturally the version replaced is tracked by the plugin.
 
+Regarding Resource (Attachments and Images) are traced only when deleted. That is, if you edit a resource and change the file or the description your changes are not saved.
+
+Resources are placed in a _recycle bin_ so that they can be later restored only when deleted.
+The _recycle bin_ can be access from the left menu _Plugins_ → _Versioning_ → _Images_ or _Attachments_.
+You can restore and delete permanently the resources using the arrow and the remove icons.
 
 
