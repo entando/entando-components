@@ -22,6 +22,7 @@ In order to install the Content Workflow Plugin, you should to insert the follow
 **Configuration**
 
 Using a suitable interface present in the administration area of your project, the Content Workflow Plugin allows to create and configure a custom workflow for each type of content defined within a portal.
+
 Through the Workflow configuration page (in the Back Office), you can configure the intermediate steps to manage approval of the contents and assign an user’s role to each step.
 
 Through the Notifier Configuration page (in the Back Office), you can notifier the content’s updates. 
