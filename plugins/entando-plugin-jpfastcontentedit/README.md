@@ -22,10 +22,10 @@ In order to install Fast Content Edit Plugin, you should to insert the following
 
 In the Widgets page of the Admin area of your project, you can see two widgets related to this plugin:
 
-1. Contents - Publish List of Editable Content
-2. Content Editing Form
+1. _Contents - Publish List of Editable Content_
+2. _Content Editing Form_
 
-You can publish the _Contents - Publish List of Editable Content_ Widget in a dedicated page 
+You can publish the _Contents-Publish List of Editable Content_ Widget in a dedicated page 
 in order to show the contents's list that you are already published.
 In an other page, you can publish the _Content Editing Form_ widget through which you can have forms to edit your published contents.
 
