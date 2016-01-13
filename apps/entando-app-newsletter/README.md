@@ -46,28 +46,28 @@ All of these menu are easily accessed via the _Plugins_ → _Newsletter_ menu:
 
 enables the administrator to:
 
-  * specify the content type eligible for delivery (and the relative content models);
-  * activate the scheduler and set the delivery time;
-  * associate the categories to a specific profile attribute;
-  * compose the HTML and plain text templates of the mail of the newsletter;
-  * compose the templates of the mail used for the subscription of the occasional user.
+   * specify the content type eligible for delivery (and the relative content models);
+   * activate the scheduler and set the delivery time;
+   * associate the categories to a specific profile attribute;
+   * compose the HTML and plain text templates of the mail of the newsletter;
+   * compose the templates of the mail used for the subscription of the occasional user.
 
 * The _Contents_ page
 
 enable the administrator to:
  
-  * decide which contents will be included in the next delivery.
+   * decide which contents will be included in the next delivery.
  
 * The _Delivery Queue_ page
 
 enable the administrator to:
 
-  * remove anytime contents from the delivery list anytime by clicking on the removal icon.
+   * remove anytime contents from the delivery list anytime by clicking on the removal icon.
   
 * The _Guest Subscribers_ page
 
-  * gives a list of the visitors who have subscribed the newsletter service. 
-  * allow the administrator to delete those users anytime from the list so removing them from the receivers: the removal, carried out by clicking on the remove icon, is permanent and cannot be undone.
+   * gives a list of the visitors who have subscribed the newsletter service. 
+   * allow the administrator to delete those users anytime from the list so removing them from the receivers: the removal, carried out by clicking on the remove icon, is permanent and cannot be undone.
 
 Finally, the administrator must choose the page where the Widget Newsletter - Subscription is placed; 
 then after clicking in the confirmation link received in the mail, the user receives confirmation from the _Newsletter – Subscription Confirmation_ Widget.
