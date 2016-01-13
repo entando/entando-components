@@ -23,8 +23,7 @@ In order to install the Action Logger App, you should to insert the following de
 
 **Configuration**
 
-You have to create a new user whose name and password are “newuser” and “mypassword”, respectively. 
+You have to create a new user whose name and password are _newuser_ and _mypassword_, respectively. 
 
 Access interface from Plugins section of the Menù -> Action Logger: you are presented with all the actions tracked.
-We see that the _admin_ created a new user named _newuser_. The careful reader might have noticed that though the _mypassword_ parameter 
-was not recorded, the password used for confirmation is clearly displayed, and this is not what we intended: adding the exclusion for the “_passwordConfirm_ parameter solves the problem.
+We see that the _admin_ created a new user named _newuser_. The careful reader might have noticed that though the _mypassword_ parameter was not recorded, the password used for confirmation is clearly displayed, and this is not what we intended: adding the exclusion for the “_passwordConfirm_ parameter solves the problem.
