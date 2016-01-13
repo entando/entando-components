@@ -33,7 +33,7 @@ In order to install the Newsletter App, you should to insert the following depen
 
 **Configuration**
 
-This plugin offers many management interfaces, you have the following pages:
+This plugin offers many management interfaces, you have the following sections:
 
 1. _Configure_;
 2. _Delivery Queue_;
@@ -42,7 +42,7 @@ This plugin offers many management interfaces, you have the following pages:
 
 All of these menu are easily accessed via the _Plugins_ → _Newsletter_ menu:
 
-* The _Configure_ page enables the administrator to:
+* The _Configure_ section enables the administrator to:
 
    * specify the content type eligible for delivery (and the relative content models);
    * activate the scheduler and set the delivery time;
@@ -50,15 +50,15 @@ All of these menu are easily accessed via the _Plugins_ → _Newsletter_ menu:
    * compose the HTML and plain text templates of the mail of the newsletter;
    * compose the templates of the mail used for the subscription of the occasional user.
 
-* The _Contents_ page enable the administrator to:
+* The _Contents_ section enable the administrator to:
  
    * decide which contents will be included in the next delivery.
  
-* The _Delivery Queue_ page enable the administrator to:
+* The _Delivery Queue_ section enable the administrator to:
 
    * remove anytime contents from the delivery list anytime by clicking on the removal icon.
   
-* The _Guest Subscribers_ page:
+* The _Guest Subscribers_ section:
 
    * gives a list of the visitors who have subscribed the newsletter service. 
    * allow the administrator to delete those users anytime from the list so removing them from the receivers: the removal, carried out by clicking on the remove icon, is permanent and cannot be undone.
