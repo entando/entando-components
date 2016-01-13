@@ -12,12 +12,14 @@ The administrator can also prevent some parameters (e.g. password) from being tr
 
 In order to install the Action Logger App, you should to insert the following dependency in the pom.xml file of your project:
 
+```
 <dependency>
       <groupId>org.entando.entando.plugins</groupId>
       <artifactId>entando-plugin-jpactionlogger</artifactId>
       <version>${entando.version}</version>
       <type>war</type>
  </dependency>
+```
 
 **Configuration**
 
