@@ -19,6 +19,7 @@
 	<bean id="widgetTypeAction" scope="prototype" 
 			class="com.agiletec.plugins.jpmyportalplus.apsadmin.portal.WidgetTypeAction" parent="abstractPortalAction">
 		<property name="guiFragmentManager" ref="GuiFragmentManager" />
+		<property name="configManager" ref="BaseConfigManager" />
 		<property name="myPortalConfigManager" ref="jpmyportalplusMyPortalConfigManager" />
 	</bean>
 	
