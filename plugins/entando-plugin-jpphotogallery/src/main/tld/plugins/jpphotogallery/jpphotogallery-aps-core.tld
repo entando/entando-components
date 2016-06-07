@@ -20,7 +20,7 @@
 		<attribute>
 			<name>max</name>
 			<required>no</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 			<description>
 				Numero massimo di valori per ogni gruppo di oggetti.
 			</description>
@@ -28,7 +28,7 @@
 		<attribute>
 			<name>listName</name>
       		<required>yes</required>
-      		<rtexprvalue>false</rtexprvalue>
+      		<rtexprvalue>true</rtexprvalue>
       		<description>
       			Nome della lista completa preso dalla request.
       		</description>
@@ -36,7 +36,7 @@
 		<attribute>
 			<name>objectName</name>
 			<required>yes</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 			<description>
 				Nome con il quale viene trattato l'oggetto corrente e che da l'accesso ai metodi:
 				getMax, getPrevItem, getNextItem, getCurrItem, 
