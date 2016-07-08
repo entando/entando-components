@@ -33,15 +33,21 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 
 public class AuthorAttribute extends MonoTextAttribute {
-
+	
 	private static final Logger _logger =  LoggerFactory.getLogger(AuthorAttribute.class);
+	
+	@Override
+	public Object getAttributePrototype() {
+		AuthorAttribute authorAttribute = (AuthorAttribute) super.getAttributePrototype();
+		authorAttribute.setUserProfileManager(this.getUserProfileManager());
+		return authorAttribute;
+	}
 	
 	public String getAuthorname() {
 		String username = super.getText();
 		String authorname = username;
 		try {
-			IUserProfileManager userProfileManager = (IUserProfileManager) this.getBeanFactory().getBean(SystemConstants.USER_PROFILE_MANAGER);
-			IUserProfile userProfile = userProfileManager.getProfile(username);
+			IUserProfile userProfile = this.getUserProfileManager().getProfile(username);
 			if (null != userProfile) {
 				String fullname = this.getProfileAttribute(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME, userProfile);
 				if (null != fullname) {
@@ -78,5 +84,14 @@ public class AuthorAttribute extends MonoTextAttribute {
 		}
 		return value;
 	}
+	
+	protected IUserProfileManager getUserProfileManager() {
+		return _userProfileManager;
+	}
+	public void setUserProfileManager(IUserProfileManager userProfileManager) {
+		this._userProfileManager = userProfileManager;
+	}
+	
+	private IUserProfileManager _userProfileManager;
 	
 }
