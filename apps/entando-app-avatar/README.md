@@ -30,7 +30,7 @@ The Avatar App is composed by two items:
 The Avatar item allows user to choose a profile’s image; you can find it in the section “My profile” of the Admin area.
 The Configuration item allows user to choose the configuration’s modality of the user’s avatar. User has three possibilities:
 
-1. Default system configuration allows to choose an image from
+1. Default system configuration allows to choose the user's default image 
 2. Local images allows to choose an image from local file system
 3. Gravatar allows to choose an image by Gravatar integrated in Entando. 
 
