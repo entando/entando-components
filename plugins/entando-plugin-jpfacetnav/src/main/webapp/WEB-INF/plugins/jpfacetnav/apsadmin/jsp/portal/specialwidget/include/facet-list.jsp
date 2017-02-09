@@ -31,7 +31,7 @@
         <s:set var="treeNodeExtraParamValue" value="1" />
         <s:set name="openTreeActionName" value="'openCloseFacetTreeNode'" />
         <s:set name="closeTreeActionName" value="'openCloseFacetTreeNode'" />
-        <s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-links.jsp" />
+        <s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-submits.jsp" />
       </s:elseif>
     </ul>
   <%-- Fieldset button --%>
