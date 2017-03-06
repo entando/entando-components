@@ -394,7 +394,6 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 <h1><@wp.i18n key="jpuserreg_PASSWORD_RECOVERY" /></h1>
 <div class="alert alert-block"><@wp.i18n key="jpuserreg_REACTIVATION_ERROR_MSG" /></div>', 1);
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpuserreg_loginUserReg', 'jpuserreg_loginUserReg', 'jpuserreg', NULL, '<#assign wp=JspTaglibs["/aps-core"]>
-<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
 <@wp.fragment code="login_form" escapeXml=false />
 <#if (Session.currentUser.username == "guest")>
     <@wp.pageWithWidget widgetTypeCode="jpuserreg_Registration" var="jpuserregRegistrationPageVar" listResult=false />

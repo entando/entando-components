@@ -78,8 +78,7 @@ INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('jpcalendar_EVE
 
 
 
-INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpcalendar_calendar', 'jpcalendar_calendar', 'jpcalendar', NULL, '<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
-<#assign cal=JspTaglibs["/jpcalendar-aps-core"]>
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpcalendar_calendar', 'jpcalendar_calendar', 'jpcalendar', NULL, '<#assign cal=JspTaglibs["/jpcalendar-aps-core"]>
 <#assign wp=JspTaglibs["/aps-core"]>
 
 <@cal.calendar groupName="jpcalendarCal" datePattern="yyyyMMdd" />
@@ -92,8 +91,8 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 		<form class="form-inline text-center" action="<@wp.url />" method="post">
 			<div class="input-prepend input-append">
 				<a href="<@wp.url>
-							<@wp.parameter name="month" ><@c.out value="${prevMonth}"/></@wp.parameter>
-							<@wp.parameter name="year" ><@c.out value="${prevYear}"/></@wp.parameter>
+							<@wp.parameter name="month">${prevMonth}</@wp.parameter>
+							<@wp.parameter name="year">${prevYear}</@wp.parameter>
 						</@wp.url>"
 					title="<@wp.i18n key="jpcalendar_MONTH_PREVIOUS" />"
 					class="add-on">
@@ -142,8 +141,8 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 					</option>
 				</select>
 				<a href="<@wp.url>
-							<@wp.parameter name="month" ><@c.out value="${nextMonth}"/></@wp.parameter>
-							<@wp.parameter name="year" ><@c.out value="${nextYear}"/></@wp.parameter>
+							<@wp.parameter name="month">${nextMonth}</@wp.parameter>
+							<@wp.parameter name="year">${nextYear}</@wp.parameter>
 						</@wp.url>" title="<@wp.i18n key="jpcalendar_MONTH_NEXT" />" class="add-on">
 						<span class="noscreen sr-only"><@wp.i18n key="jpcalendar_MONTH_NEXT" /></span>
 						<span class="icon icon-step-forward"></span>
@@ -212,8 +211,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 		</table>
 	</div>
 </div>', 1);
-INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpcalendar_dailyEvents', 'jpcalendar_dailyEvents', 'jpcalendar', NULL, '<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
-<#assign wp=JspTaglibs["/aps-core"]>
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpcalendar_dailyEvents', 'jpcalendar_dailyEvents', 'jpcalendar', NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 <#assign jacms=JspTaglibs["/jacms-aps-core"]>
 <#assign cal=JspTaglibs["/jpcalendar-aps-core"]>
 
@@ -241,5 +239,5 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 		</@wp.freemarkerTemplateParameter>
 	</@wp.pager>
 </#if>
-<@c.set var="contentList" scope="request" />', 1);
+<#assign contentList="">', 1);
 

@@ -4,8 +4,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <property key="it">Navigazione - Briciole di Pane</property>
 </properties>', NULL, NULL, NULL, NULL, 1, NULL);
 
-INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-navigation_breadcrumbs', 'entando-widget-navigation_breadcrumbs', NULL, NULL, '<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
-<#assign wp=JspTaglibs["/aps-core"]>
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-navigation_breadcrumbs', 'entando-widget-navigation_breadcrumbs', NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 
 <@wp.currentPage param="code" var="currentViewCode" />
 <p class="breadcrumb"><span class="noscreen"><@wp.i18n key="ESNB_YOU_ARE_HERE" />:</span>
