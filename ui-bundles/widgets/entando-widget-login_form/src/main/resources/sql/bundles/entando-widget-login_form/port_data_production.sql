@@ -5,7 +5,6 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 </properties>', NULL, NULL, NULL, NULL, 1, NULL);
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-login_form', 'entando-widget-login_form', NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
-<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
 <@wp.headInfo type="JS" info="entando-misc-jquery/jquery-1.10.0.min.js" />
 <@wp.headInfo type="JS" info="entando-misc-bootstrap/bootstrap.min.js" />
 
@@ -17,7 +16,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 	<#if (Session.currentUser != "guest")>
 			<div class="btn-group">
 				<button class="btn span2 text-left dropdown-toggle" data-toggle="dropdown">
-					<@c.out value="${Session.currentUser}" />
+					${Session.currentUser}
 					<span class="caret pull-right"></span>
 				</button>
 				<ul class="dropdown-menu pull-right well-small">

@@ -7,8 +7,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 	<action name="navigatorConfig" />
 </config>', NULL, NULL, NULL, 1, NULL);
 
-INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-navigation_bar', 'entando-widget-navigation_bar', NULL, NULL, '<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
-<#assign wp=JspTaglibs["/aps-core"]>
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-navigation_bar', 'entando-widget-navigation_bar', NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 
 <@wp.headInfo type="JS" info="entando-misc-jquery/jquery-1.10.0.min.js" />
 <@wp.headInfo type="JS" info="entando-misc-bootstrap/bootstrap.min.js" />
