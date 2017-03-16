@@ -124,7 +124,7 @@
         <div class="subsection-light">
 
             <wpsa:subset source="commentIds" count="10" objectName="groupComment" advanced="true" offset="5">
-                <s:set name="group" value="#groupComment" />
+                <s:set var="group" value="#groupComment" />
 
                 <div class="pager">
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />

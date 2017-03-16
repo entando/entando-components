@@ -30,7 +30,7 @@
 				</ul>
 			</s:if> 
 			
-			<s:set name="lang" value="defaultLang"></s:set>
+			<s:set var="lang" value="defaultLang"></s:set>
 			
 			<%-- START CICLO ATTRIBUTI --%>
 			<s:iterator value="contact.attributes" var="attribute">

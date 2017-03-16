@@ -19,7 +19,7 @@
 <s:set var="categoryTreeStyleVar" ><wp:info key="systemParam" paramName="treeStyle_category" /></s:set>
 
 <s:if test="#categoryTreeStyleVar == 'classic'">
-<s:set name="js_for_tab">
+<s:set var="js_for_tab">
 //for categories
 window.addEvent('domready', function(){
 	var catTree  = new Wood({
@@ -103,25 +103,25 @@ window.addEvent('domready', function(){
 <fieldset>
 <legend><wp:i18n key="jpfastcontentedit_CATEGORIES_MANAGEMENT" /></legend>
 <ul id="categoryTree">
-	<s:set name="inputFieldName" value="'categoryCode'" />
-	<s:set name="selectedTreeNode" value="categoryCode" />
-	<s:set name="liClassName" value="'category'" />
+	<s:set var="inputFieldName" value="'categoryCode'" />
+	<s:set var="selectedTreeNode" value="categoryCode" />
+	<s:set var="liClassName" value="'category'" />
 	<s:if test="#categoryTreeStyleVar == 'classic'">
-	<s:set name="currentRoot" value="categoryRoot" />
+	<s:set var="currentRoot" value="categoryRoot" />
 	<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
 	</s:if>
 	<s:elseif test="#categoryTreeStyleVar == 'request'">
-	<s:set name="currentRoot" value="showableTree" />
-	<s:set name="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
-	<s:set name="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
+	<s:set var="currentRoot" value="showableTree" />
+	<s:set var="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
+	<s:set var="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
 	<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-submits.jsp" />
 	</s:elseif>
 </ul>
 
 <div id="actions-container">
 	<p class="buttons">
-		<s:set name="labelSubmit"><wp:i18n key="jpfastcontentedit_JOIN" /></s:set>
-		<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/join-to-resource.png</s:set>
+		<s:set var="labelSubmit"><wp:i18n key="jpfastcontentedit_JOIN" /></s:set>
+		<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/join-to-resource.png</s:set>
 		<wpsf:submit useTabindexAutoIncrement="true" action="joinCategory" type="image" src="%{#iconImagePath}" value="%{#labelSubmit}" title="%{#labelSubmit}" />		
 	</p>
 </div>
@@ -135,15 +135,15 @@ window.addEvent('domready', function(){
 	<th class="icon"><abbr title="<wp:i18n key="jpfastcontentedit_REMOVE" />">&ndash;</abbr></th>
 </tr>
 <s:iterator value="categoryCodes" var="categoryCode">
-<s:set name="resourceCategory" value="%{getCategory(#categoryCode)}"></s:set>
+<s:set var="resourceCategory" value="%{getCategory(#categoryCode)}"></s:set>
 <tr>
 	<td><s:property value="#resourceCategory.getFullTitle(currentLang.code)"/></td>
 	<td class="centerText">
 		<wpsa:actionParam action="removeCategory" var="actionName" >
 			<wpsa:actionSubParam name="categoryCode" value="%{#resourceCategory.code}" />
 		</wpsa:actionParam>
-		<s:set name="labelSubmitRemove"><wp:i18n key="jpfastcontentedit_REMOVE" /></s:set>
-		<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL />plugins/jpfastcontentedit/static/img/delete.png</s:set>
+		<s:set var="labelSubmitRemove"><wp:i18n key="jpfastcontentedit_REMOVE" /></s:set>
+		<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL />plugins/jpfastcontentedit/static/img/delete.png</s:set>
 		<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconImagePath}" action="%{#actionName}" value="%{#labelSubmitRemove}" title="%{#labelSubmit}" />
 	</td>
 </tr>
@@ -154,7 +154,7 @@ window.addEvent('domready', function(){
 </fieldset>
 
 <p class="centerText">
-	<s:set name="labelSave"><wp:i18n key="jpfastcontentedit_SAVE" /></s:set>
+	<s:set var="labelSave"><wp:i18n key="jpfastcontentedit_SAVE" /></s:set>
 	<wpsf:submit useTabindexAutoIncrement="true" value="%{#labelSave}" cssClass="button" />
 </p>
 

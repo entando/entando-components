@@ -3,8 +3,8 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib prefix="webmail" uri="/webmail-core" %>
 
-<s:set name="currentFolder" value="currentFolder" />
-<s:set name="parentFolder" value="#currentFolder.parent" />
+<s:set var="currentFolder" value="currentFolder" />
+<s:set var="parentFolder" value="#currentFolder.parent" />
 <c:set var="startFolderPath">/ExtStr2/do/jpwebmail/Portal/WebMail/intro.action</c:set>
 
 <h3><wp:i18n key="jpwebmail_FOLDERS" /></h3>

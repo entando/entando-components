@@ -54,7 +54,7 @@
 					<th><s:text name="label.ownerGroup"/></th>
 				</tr>
 				<s:iterator var="id" value="trashedResources">
-					<s:set name="resourceItem" value="getTrashedResource(#id)" />
+					<s:set var="resourceItem" value="getTrashedResource(#id)" />
 					<tr>
 						<td><s:property value="#resourceItem.id" /></td>
 						<td><s:property value="#resourceItem.type" /></td>

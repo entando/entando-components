@@ -4,11 +4,11 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<s:set name="titleKey">jpwebdynamicform_TITLE_<s:property value="typeCode"/></s:set>
-<s:set name="subtitleKey">jpwebdynamicform_SUBTITLE_<s:property value="typeCode"/></s:set>
-<s:set name="typeCodeKey" value="typeCode" />
+<s:set var="titleKey">jpwebdynamicform_TITLE_<s:property value="typeCode"/></s:set>
+<s:set var="subtitleKey">jpwebdynamicform_SUBTITLE_<s:property value="typeCode"/></s:set>
+<s:set var="typeCodeKey" value="typeCode" />
 
-<s:set name="myCurrentPage"><wp:currentPage param="code"/></s:set>
+<s:set var="myCurrentPage"><wp:currentPage param="code"/></s:set>
 
 <h2 class="title-divider"><span><wp:i18n key="${titleKey}" /></span>
 <small><wp:i18n key="${subtitleKey}" /></small></h2>
@@ -46,7 +46,7 @@
 </s:if>
 
 <p>
-	<s:set name="labelSubmit"><wp:i18n key="jpwebdynamicform_INVIA" /></s:set>
+	<s:set var="labelSubmit"><wp:i18n key="jpwebdynamicform_INVIA" /></s:set>
 	<wpsf:submit useTabindexAutoIncrement="true" value="%{#labelSubmit}" cssClass="btn btn-inverse"/>
 </p>
 </form>

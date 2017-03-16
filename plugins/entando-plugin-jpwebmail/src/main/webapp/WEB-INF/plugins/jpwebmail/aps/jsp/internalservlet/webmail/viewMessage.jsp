@@ -50,23 +50,23 @@ window.addEvent('domready', function(){
 </div>
 
 <div class="colonna2">
-<s:set name="currentMessage" value="message" />
+<s:set var="currentMessage" value="message" />
 <h3><wp:i18n key="jpwebmail_MSG" />: <s:property value="#currentMessage.subject" /></h3>
 
 <s:include value="inc/inc_actions.jsp" />
 
 <!-- INIZIO BLOCCO OPZIONI  -->
 
-<s:set name="iconMsgReply"><wp:resourceURL />plugins/jpwebmail/static/img/mail-reply-sender.png</s:set>
-<s:set name="iconMsgReplyText"><wp:i18n key="jpwebmail_MSG_REPLY" /></s:set>
-<s:set name="iconMsgReplyAll"><wp:resourceURL />plugins/jpwebmail/static/img/mail-reply-all.png</s:set>
-<s:set name="iconMsgReplyAllText"><wp:i18n key="jpwebmail_MSG_REPLY_ALL" /></s:set>
-<s:set name="iconMsgForward"><wp:resourceURL />plugins/jpwebmail/static/img/mail-forward.png</s:set>
-<s:set name="iconMsgForwardText"><wp:i18n key="jpwebmail_MSG_FORWARD" /></s:set>
-<s:set name="iconMsgGoNext"><wp:resourceURL />plugins/jpwebmail/static/img/go-next.png</s:set>
-<s:set name="iconMsgGoNextText"><wp:i18n key="jpwebmail_MSG_GO_NEXT" /></s:set>
-<s:set name="iconMsgGoPrevious"><wp:resourceURL />plugins/jpwebmail/static/img/go-previous.png</s:set>
-<s:set name="iconMsgGoPreviousText"><wp:i18n key="jpwebmail_MSG_GO_PREVIOUS" /></s:set>
+<s:set var="iconMsgReply"><wp:resourceURL />plugins/jpwebmail/static/img/mail-reply-sender.png</s:set>
+<s:set var="iconMsgReplyText"><wp:i18n key="jpwebmail_MSG_REPLY" /></s:set>
+<s:set var="iconMsgReplyAll"><wp:resourceURL />plugins/jpwebmail/static/img/mail-reply-all.png</s:set>
+<s:set var="iconMsgReplyAllText"><wp:i18n key="jpwebmail_MSG_REPLY_ALL" /></s:set>
+<s:set var="iconMsgForward"><wp:resourceURL />plugins/jpwebmail/static/img/mail-forward.png</s:set>
+<s:set var="iconMsgForwardText"><wp:i18n key="jpwebmail_MSG_FORWARD" /></s:set>
+<s:set var="iconMsgGoNext"><wp:resourceURL />plugins/jpwebmail/static/img/go-next.png</s:set>
+<s:set var="iconMsgGoNextText"><wp:i18n key="jpwebmail_MSG_GO_NEXT" /></s:set>
+<s:set var="iconMsgGoPrevious"><wp:resourceURL />plugins/jpwebmail/static/img/go-previous.png</s:set>
+<s:set var="iconMsgGoPreviousText"><wp:i18n key="jpwebmail_MSG_GO_PREVIOUS" /></s:set>
 
 <p class="actionLink">
 <c:set var="messageReplyPath">/ExtStr2/do/jpwebmail/Portal/WebMail/reply.action&amp;messageIndex=<s:property value="messageIndex" />&amp;currentFolderName=<s:property value="currentFolderName" /></c:set>
@@ -118,7 +118,7 @@ window.addEvent('domready', function(){
 <s:property value="%{getContent(message)}"/>
 </pre>
 
-<s:set name="attachmentInfos" value="%{getAttachmentInfos(#currentMessage)}"></s:set>
+<s:set var="attachmentInfos" value="%{getAttachmentInfos(#currentMessage)}"></s:set>
 <s:if test="#attachmentInfos.size() > 0">
 	<h3><wp:i18n key="jpwebmail_MSG_ATTACHMENTS" /></h3>
 	<ol>

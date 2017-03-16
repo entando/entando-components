@@ -53,7 +53,7 @@
 				<td><s:property value="%{getText(contentVersion.status)}" /></td>
 			</tr>
 			<tr>
-				<s:set name="contentGroup" value="%{getGroup(content.getMainGroup())}" />
+				<s:set var="contentGroup" value="%{getGroup(content.getMainGroup())}" />
 				<th class="text-right"><s:text name="label.ownerGroup" /></th>
 				<td><s:property value="%{#contentGroup.descr}" /></td>
 			</tr>

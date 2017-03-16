@@ -80,7 +80,7 @@
         <fieldset class="col-xs-12">
             <legend><s:text name="jpwebform.label.steps.configuraton" /></legend>
             <s:iterator value="#stepsConfigVar.steps" var="stepVar" >
-                <s:set name="stepCode" value="#stepVar.code" />
+                <s:set var="stepCode" value="#stepVar.code" />
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <span><s:property value="#stepVar.code" /> (<s:text name="jpwebform.label.steps.gui.ready" />:&#32;<s:property value="%{#stepVar.builtGui ? getText('label.yes') : getText('label.no')}" />)</span>

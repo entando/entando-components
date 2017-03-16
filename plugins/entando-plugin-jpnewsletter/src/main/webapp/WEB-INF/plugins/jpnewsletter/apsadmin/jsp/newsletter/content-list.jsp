@@ -228,7 +228,7 @@
 		</tr>
 		<s:iterator var="contentId">
 		<s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
-		<s:set name="contentReport" value="%{getContentReport(#contentId)}" />
+		<s:set var="contentReport" value="%{getContentReport(#contentId)}" />
 		<tr>
 		<td class="text-center text-nowrap">
 			<div class="btn-group btn-group-xs">

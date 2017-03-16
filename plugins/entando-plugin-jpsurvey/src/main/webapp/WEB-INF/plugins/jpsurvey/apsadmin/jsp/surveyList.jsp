@@ -121,7 +121,7 @@
             </s:if>
             <s:else>
                 <wpsa:subset source="surveysIds" count="10" objectName="groupSurveyIds" advanced="true" offset="5">
-                    <s:set name="group" value="#groupSurveyIds" />
+                    <s:set var="group" value="#groupSurveyIds" />
                     <div class="pager">
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
@@ -135,7 +135,7 @@
                             <th class="text-center"><abbr title="<s:text name="jpsurvey_published" />">P</abbr></th>
                         </tr>
                         <s:iterator var="surveyId">
-                            <s:set name="survey" value="%{getSurvey(#surveyId)}" />
+                            <s:set var="survey" value="%{getSurvey(#surveyId)}" />
                             <%--LINK ALL'AZIONE DI EDIT, DIFFERENZIAMO PER TIPO DI SURVEY --%>
                             <tr>
                                 <td class="text-center">
@@ -196,15 +196,15 @@
                                 <td class="text-center"><code><s:date name="#survey.startDate" format="dd/MM/yyyy" /></code></td> 
                                         <s:if test="%{#survey.active}">
                                             <wpsa:set name="iconImage" id="iconImage">icon fa fa-check text-success</wpsa:set>
-                                    <s:set name="isOnlineStatus" value="%{getText('jpsurvey_published_yes')}" />
+                                    <s:set var="isOnlineStatus" value="%{getText('jpsurvey_published_yes')}" />
                                 </s:if>
                                 <s:elseif test="%{#survey.publishable}">
                                     <wpsa:set name="iconImage" id="iconImage">icon fa fa-pause text-warning</wpsa:set>
-                                    <s:set name="isOnlineStatus" value="%{getText('jpsurvey_published_not_but_ready')}" />
+                                    <s:set var="isOnlineStatus" value="%{getText('jpsurvey_published_not_but_ready')}" />
                                 </s:elseif>
                                 <s:else>
                                     <wpsa:set name="iconImage" id="iconImage">icon fa fa-pause text-adjust</wpsa:set>
-                                    <s:set name="isOnlineStatus" value="%{getText('jpsurvey_published_not_ready')}" />
+                                    <s:set var="isOnlineStatus" value="%{getText('jpsurvey_published_not_ready')}" />
                                 </s:else>
                                 <td class="text-right"><s:property value="#survey.questionsNumber"/></td>
                                 <td class="text-center"><span class="<s:property value="iconImage" />" alt="<s:property value="isOnlineStatus" />" title="<s:property value="isOnlineStatus" />" /></td>

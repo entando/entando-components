@@ -88,7 +88,7 @@
 			<div class="control-group">
 				<label class="control-label" for="categories"><s:text name="label.join" />&#32;<s:text name="label.category" /></label>
 				<div class="controls">
-					<s:set name="removeIcon" var="removeIcon"><wp:resourceURL/>administration/common/img/icons/list-remove.png</s:set>
+					<s:set var="removeIcon" var="removeIcon"><wp:resourceURL/>administration/common/img/icons/list-remove.png</s:set>
 					<s:set var="contentCategories" value="%{categoryCodes}" />
 					<s:if test="#contentCategories != null && #contentCategories.size() > 0">
 						<ul class="unstyled">

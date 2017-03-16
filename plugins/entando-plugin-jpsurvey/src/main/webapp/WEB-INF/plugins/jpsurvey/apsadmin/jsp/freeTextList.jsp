@@ -2,7 +2,7 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
-<s:set name="currentLang" value="%{getCurrentLang().code}" />
+<s:set var="currentLang" value="%{getCurrentLang().code}" />
 <h1 class="panel panel-default title-page">
     <span class="panel-body display-block">
         <a href="<s:url action="listSurveys" >

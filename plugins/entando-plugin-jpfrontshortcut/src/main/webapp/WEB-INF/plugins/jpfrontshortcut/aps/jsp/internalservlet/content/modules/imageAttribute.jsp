@@ -3,8 +3,8 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 
-<s:set name="currentResource" value="#attribute.resources[#lang.code]"></s:set>
-<s:set name="defaultResource" value="#attribute.resource"></s:set>
+<s:set var="currentResource" value="#attribute.resources[#lang.code]"></s:set>
+<s:set var="defaultResource" value="#attribute.resource"></s:set>
 
 <span class="noscreen"><s:text name="note.imageContent" /></span>
 <s:if test="#lang.default">

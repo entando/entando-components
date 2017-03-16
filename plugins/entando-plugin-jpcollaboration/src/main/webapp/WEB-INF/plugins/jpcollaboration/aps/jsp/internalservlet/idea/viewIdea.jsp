@@ -20,7 +20,7 @@
 		<jpcrwsrc:pageWithWidget var="ideaList_page" widgetTypeCode="jpcollaboration_ideaInstance" configParam="instanceCode" configValue="${instanceCodeVar}" listResult="false"/>
 		<wp:url page="${ideaList_page.code}" var="listPage"/>
 		<form action="${listPage}" method="post" class="form-inline display-inline">
-			<s:set name="labelList"><wp:i18n key="jpcollaboration_BACK_TO_LIST" escapeXml="false" /></s:set>
+			<s:set var="labelList"><wp:i18n key="jpcollaboration_BACK_TO_LIST" escapeXml="false" /></s:set>
 			<p><wpsf:submit value="%{#labelList}" cssClass="btn" /></p>
 		</form>
 		<%-- //back to list// --%>
@@ -89,7 +89,7 @@
 			</p>
 
 			<s:token name="listIdea" />
-			<s:set name="labelSubmit"><wp:i18n key="jpcollaboration_IDEA_LIKE_IT" escapeXml="false" /></s:set>
+			<s:set var="labelSubmit"><wp:i18n key="jpcollaboration_IDEA_LIKE_IT" escapeXml="false" /></s:set>
 			<wpsf:submit value="%{#labelSubmit}" cssClass="btn btn-small btn-success" />
 			<span class="badge badge-success" title="<s:property value="#idea.votePositive" /> <wp:i18n key="jpcollaboration_IDEA_VOTE_AGREE" />">&#32;<i class="icon-thumbs-up icon-white"></i>&#32;<s:property value="#idea.votePositive" /></span>
 
@@ -102,7 +102,7 @@
 			</p>
 
 			<s:token name="listIdea" />
-			<s:set name="labelSubmit"><wp:i18n key="jpcollaboration_IDEA_NOT_LIKE_IT" escapeXml="false" /></s:set>
+			<s:set var="labelSubmit"><wp:i18n key="jpcollaboration_IDEA_NOT_LIKE_IT" escapeXml="false" /></s:set>
 			<span class="badge badge-important" title="<s:property value="#idea.voteNegative" /> <wp:i18n key="jpcollaboration_IDEA_VOTE_DISAGREE" />">&#32;<s:property value="#idea.voteNegative" />&#32;<i class="icon-thumbs-down icon-white"></i></span>&#32;<wpsf:submit value="%{#labelSubmit}" cssClass="btn btn-small btn-danger" />
 		</form>
 
@@ -169,7 +169,7 @@
 						<wpsf:textarea id="ideaComment_comment" name="ideaComment.comment" cols="40" rows="5" cssClass="span6" />
 					</p>
 
-					<s:set name="labelSave"><wp:i18n key="jpcollaboration_SAVE_COMMENT" escapeXml="false" /></s:set>
+					<s:set var="labelSave"><wp:i18n key="jpcollaboration_SAVE_COMMENT" escapeXml="false" /></s:set>
 					<p><wpsf:submit value="%{#labelSave}" cssClass="btn" /></p>
 
 				</form>
@@ -200,7 +200,7 @@
 
 		<%-- //back to list// ${listPage} setted on top --%>
 		<form action="${listPage}" method="post" class="form-inline display-inline">
-			<s:set name="labelList"><wp:i18n key="jpcollaboration_BACK_TO_LIST" escapeXml="false" /></s:set>
+			<s:set var="labelList"><wp:i18n key="jpcollaboration_BACK_TO_LIST" escapeXml="false" /></s:set>
 			<p><wpsf:submit value="%{#labelList}" cssClass="btn" /></p>
 		</form>
 		<%-- //back to list// --%>

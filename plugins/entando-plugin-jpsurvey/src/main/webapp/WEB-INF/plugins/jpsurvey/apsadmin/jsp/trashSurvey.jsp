@@ -12,12 +12,12 @@
         </s:else>&#32;/&#32;
         <s:if test="survey.questionnaire">
             <s:text name="title.jpsurvey.trash.survey" />
-            <s:set name="surveyType" value="%{getText('message.jpsurvey.survey.type')}"/>
+            <s:set var="surveyType" value="%{getText('message.jpsurvey.survey.type')}"/>
         </s:if>
 
         <s:else>
             <s:text name="title.jpsurvey.trash.poll" />
-            <s:set name="surveyType" value="%{getText('message.jpsurvey.poll.type')}"/>
+            <s:set var="surveyType" value="%{getText('message.jpsurvey.poll.type')}"/>
         </s:else>
     </span>
 </h1>

@@ -53,7 +53,7 @@
 		</p>
 		<div class="subsection-light">
 			<wpfssa:subset source="contents" count="10" objectName="groupContent" advanced="true" offset="5">
-				<s:set name="group" value="#groupContent" />
+				<s:set var="group" value="#groupContent" />
 				<s:set var="pagerSubmitActionNameVar" value="'search'" />
 				<div class="archive-pager">
 					<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
@@ -61,7 +61,7 @@
 				</div>
 				<%--
 					<wpsa:subset source="contents" count="10" objectName="groupContent" advanced="true" offset="5">
-					<s:set name="group" value="#groupContent" />
+					<s:set var="group" value="#groupContent" />
 					<div class="pager">
 						<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
 						<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
@@ -83,7 +83,7 @@
 							<th><s:text name="label.lastEdit" /></th>
 						</tr>
 						<s:iterator var="contentId">
-							<s:set name="content" value="%{getContentVo(#contentId)}"></s:set>
+							<s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
 							<tr>
 								<td><input type="radio" name="contentId" id="contentId_<s:property value="#content.id"/>_<s:property value="#random" />" value="<s:property value="#content.id"/>" />
 								<label for="contentId_<s:property value="#content.id"/>_<s:property value="#random" />"><s:property value="#content.descr" /></label></td>

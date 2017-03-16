@@ -2,12 +2,12 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 
 <div class="compositeAttribute">
-<s:set name="masterCompositeAttributeTracer" value="#attributeTracer" />
-<s:set name="masterCompositeAttribute" value="#attribute" />
+<s:set var="masterCompositeAttributeTracer" value="#attributeTracer" />
+<s:set var="masterCompositeAttribute" value="#attribute" />
 <s:iterator value="#attribute.attributes" var="attribute">
 <div class="compositeAttribute-element">
-<s:set name="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)"></s:set>
-<s:set name="parentAttribute" value="#masterCompositeAttribute"></s:set>
+<s:set var="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)"></s:set>
+<s:set var="parentAttribute" value="#masterCompositeAttribute"></s:set>
 
 <s:if test="#attribute.type == 'Image' || #attribute.type == 'CheckBox' || #attribute.type == 'Boolean' || #attribute.type == 'ThreeState'">
 	<span class="important"><s:property value="#attribute.name" /><s:include value="/WEB-INF/apsadmin/jsp/entity/modules/include/attributeInfo.jsp" />:</span>
@@ -86,7 +86,7 @@
 		</s:elseif>
 </div>		
 </s:iterator>
-<s:set name="attributeTracer" value="#masterCompositeAttributeTracer" />
-<s:set name="attribute" value="#masterCompositeAttribute" />
-<s:set name="parentAttribute" value=""></s:set>
+<s:set var="attributeTracer" value="#masterCompositeAttributeTracer" />
+<s:set var="attribute" value="#masterCompositeAttribute" />
+<s:set var="parentAttribute" value=""></s:set>
 </div>

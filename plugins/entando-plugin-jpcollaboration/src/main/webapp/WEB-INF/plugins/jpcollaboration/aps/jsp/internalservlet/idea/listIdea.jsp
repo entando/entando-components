@@ -162,7 +162,7 @@
 				</p>
 
 				<s:token name="listIdea" />
-				<s:set name="labelSubmit"><wp:i18n key="jpcollaboration_IDEA_LIKE_IT" escapeXml="false" /></s:set>
+				<s:set var="labelSubmit"><wp:i18n key="jpcollaboration_IDEA_LIKE_IT" escapeXml="false" /></s:set>
 				<wpsf:submit value="%{#labelSubmit}" cssClass="btn btn-small btn-success" />
 				<span class="badge badge-success" title="<s:property value="#idea.votePositive" /> <wp:i18n key="jpcollaboration_IDEA_VOTE_AGREE" />">&#32;<i class="icon-thumbs-up icon-white"></i>&#32;<s:property value="#idea.votePositive" /></span>
 			</form>
@@ -179,7 +179,7 @@
 				</p>
 
 				<s:token name="listIdea" />
-				<s:set name="labelSubmit"><wp:i18n key="jpcollaboration_IDEA_NOT_LIKE_IT" escapeXml="false" /></s:set>
+				<s:set var="labelSubmit"><wp:i18n key="jpcollaboration_IDEA_NOT_LIKE_IT" escapeXml="false" /></s:set>
 				<span class="badge badge-important" title="<s:property value="#idea.voteNegative" /> <wp:i18n key="jpcollaboration_IDEA_VOTE_DISAGREE" />">&#32;<s:property value="#idea.voteNegative" />&#32;<i class="icon-thumbs-down icon-white"></i></span>&#32;<wpsf:submit value="%{#labelSubmit}" cssClass="btn btn-small btn-danger" />
 			</form>
 

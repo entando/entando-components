@@ -36,7 +36,7 @@
 				<wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/>
 			</s:iterator>
 		</p>
-		<s:set name="currentRoot" value="allowedTreeRootNode" />
+		<s:set var="currentRoot" value="allowedTreeRootNode" />
 		<p>
 			<label for="selectedNode_<s:property value="#random" />"><s:text name="title.pageTree" /></label><br />
 			<select name="selectedNode" id="selectedNode_<s:property value="#random" />">

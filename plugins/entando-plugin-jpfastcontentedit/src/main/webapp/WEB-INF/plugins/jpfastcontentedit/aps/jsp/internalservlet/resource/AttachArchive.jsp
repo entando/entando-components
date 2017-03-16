@@ -64,10 +64,10 @@
 			<label class="control-label"><wp:i18n key="jpfastcontentedit_CATEGORY" /></label>
 			<div class="controls">
 				<ul id="categoryTree" class="jpfastcontentedit-tree unstyled">
-					<s:set name="inputFieldName" value="'categoryCode'" />
-					<s:set name="selectedTreeNode" value="selectedNode" />
-					<s:set name="liClassName" value="'category'" />
-					<s:set name="currentRoot" value="categoryRoot" />
+					<s:set var="inputFieldName" value="'categoryCode'" />
+					<s:set var="selectedTreeNode" value="selectedNode" />
+					<s:set var="liClassName" value="'category'" />
+					<s:set var="currentRoot" value="categoryRoot" />
 					<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
 				</ul>
 			</div>
@@ -103,7 +103,7 @@
 			29:11
 		}" /><%-- #res.values resources --%>
 		<wpsa:subset source="resources" count="12" objectName="groupResource" advanced="true" offset="5">
-				<s:set name="group" value="#groupResource" />
+				<s:set var="group" value="#groupResource" />
 				<%--
 					<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
 					<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />

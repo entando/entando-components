@@ -68,18 +68,18 @@
 				<legend><s:text name="title.selectSourcePage" /></legend>
 				<div class="well">
 					<ul id="pageTree" class="fa-ul list-unstyled">
-					<s:set name="inputFieldName" value="'pageCodeParam'" />
-					<s:set name="selectedTreeNode" value="%{#showletConfig.get('pageCodeParam')}" />
-					<s:set name="liClassName" value="'page'" />
+					<s:set var="inputFieldName" value="'pageCodeParam'" />
+					<s:set var="selectedTreeNode" value="%{#showletConfig.get('pageCodeParam')}" />
+					<s:set var="liClassName" value="'page'" />
 					<s:set var="treeItemIconName" value="'fa-folder'" />
 					<s:if test="#pageTreeStyleVar == 'classic'">
-						<s:set name="currentRoot" value="allowedTreeRootNode" />
+						<s:set var="currentRoot" value="allowedTreeRootNode" />
 						<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
 					</s:if>
 					<s:elseif test="#pageTreeStyleVar == 'request'">
-						<s:set name="currentRoot" value="showableTree" />
-						<s:set name="openTreeActionName" value="'backToChoosePage'" />
-						<s:set name="closeTreeActionName" value="'backToChoosePage'" />
+						<s:set var="currentRoot" value="showableTree" />
+						<s:set var="openTreeActionName" value="'backToChoosePage'" />
+						<s:set var="closeTreeActionName" value="'backToChoosePage'" />
 						<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-submits.jsp" />
 					</s:elseif>
 					</ul>
@@ -116,7 +116,7 @@
 				<div class="input-group">
 					<strong><s:text name="label.selectedFrame" />:</strong><br />
 					<s:set var="targetFrame"  value="%{#showletConfig.get('frameIdParam')}" />
-					<s:set name="targetShowlet" value="#targetPage.getShowlets()[(#targetFrame - 0)]" />
+					<s:set var="targetShowlet" value="#targetPage.getShowlets()[(#targetFrame - 0)]" />
 					<s:property value="#targetFrame"/> &ndash;
 					<s:property value="#targetPage.getModel().getFrames()[(#targetFrame - 0)]"/> &ndash;
 					<s:if test="%{#targetShowlet != null}">

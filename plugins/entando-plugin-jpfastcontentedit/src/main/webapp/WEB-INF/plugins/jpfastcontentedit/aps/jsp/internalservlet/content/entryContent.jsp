@@ -76,8 +76,8 @@
 </c:set>
 <wp:headInfo type="JS_RAW" info="${javascript_attribute_code}" /> 
 
-<%-- <s:set name="removeIcon" var="removeIcon"><wp:resourceURL/>administration/common/img/icons/list-remove.png</s:set> --%>
-<s:set name="removeIcon" var="removeIcon"><wp:resourceURL/>icon icon-remove icon-white</s:set>
+<%-- <s:set var="removeIcon" var="removeIcon"><wp:resourceURL/>administration/common/img/icons/list-remove.png</s:set> --%>
+<s:set var="removeIcon" var="removeIcon"><wp:resourceURL/>icon icon-remove icon-white</s:set>
 
     <h1><wp:i18n key="jpfastcontentedit_FASTCONTENTEDIT_WIDGET_TITLE" /></h1>
 
@@ -122,7 +122,7 @@
             <div class="control-group">
                 <label class="control-label" for="mainGroup"><s:text name="label.ownerGroup" /></label>
                 <div class="controls">
-                    <s:set name="lockGroupSelect" value="%{content.id != null || content.mainGroup != null}" />
+                    <s:set var="lockGroupSelect" value="%{content.id != null || content.mainGroup != null}" />
                     <wpsf:select 
                         useTabindexAutoIncrement="true" 
                         name="mainGroup" 
@@ -221,8 +221,8 @@
         <%-- Lang Tabs --%>
 
         <%-- Langs Iterator --%>
-        <s:set name="contentType" value="content.typeCode" />
-        <s:set name="lang" value="defaultLang" />
+        <s:set var="contentType" value="content.typeCode" />
+        <s:set var="lang" value="defaultLang" />
         <s:iterator value="langs" var="lang">
             <div class="tab-pane form-horizontal" id="<s:property value="#lang.code" />_tab">
                 <h2 class="noscreen"><wp:i18n key="jpfastcontentedit_INTRO_${lang.code}"/></h2>

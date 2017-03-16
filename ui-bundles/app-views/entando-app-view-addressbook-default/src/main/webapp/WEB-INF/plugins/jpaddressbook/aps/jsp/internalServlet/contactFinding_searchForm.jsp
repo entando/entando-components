@@ -28,7 +28,7 @@
 			<s:set var="currentFieldLabel"><wp:i18n key="jpaddressbook_ATTR${userProfilePrototype.surnameAttributeName}" /></s:set> 
 			<p class="attribute"> 
 				<label for="<s:property value="%{#currentFieldId}"/>"><s:property value="#currentFieldLabel" /></label>:<br />
-				<s:set name="textInputFieldName" ><s:property value="#userProfilePrototype.surnameAttributeName" />_textFieldName</s:set>
+				<s:set var="textInputFieldName" ><s:property value="#userProfilePrototype.surnameAttributeName" />_textFieldName</s:set>
 				<wpsf:textfield useTabindexAutoIncrement="true" cssClass="text" id="%{#currentFieldId}" name="%{#textInputFieldName}" value="%{getSearchFormFieldValue(#textInputFieldName)}" />
 			</p>
 		</s:if>
@@ -38,7 +38,7 @@
 			<s:set var="currentFieldLabel"><wp:i18n key="jpaddressbook_ATTR${userProfilePrototype.firstNameAttributeName}" /></s:set> 
 			<p class="attribute"> 
 				<label for="<s:property value="%{#currentFieldId}"/>"><s:property value="#currentFieldLabel" /></label>:<br />
-				<s:set name="textInputFieldName" ><s:property value="#userProfilePrototype.firstNameAttributeName" />_textFieldName</s:set>
+				<s:set var="textInputFieldName" ><s:property value="#userProfilePrototype.firstNameAttributeName" />_textFieldName</s:set>
 				<wpsf:textfield useTabindexAutoIncrement="true" cssClass="text" id="%{#currentFieldId}" name="%{#textInputFieldName}" value="%{getSearchFormFieldValue(#textInputFieldName)}" />
 			</p>
 		</s:if>
@@ -48,7 +48,7 @@
 			<s:set var="currentFieldLabel"><wp:i18n key="jpaddressbook_ATTR${userProfilePrototype.mailAttributeName}" /></s:set> 
 			<p class="attribute">  
 				<label for="<s:property value="%{#currentFieldId}"/>"><s:property value="#currentFieldLabel" /></label>:<br />
-				<s:set name="textInputFieldName" ><s:property value="#userProfilePrototype.mailAttributeName" />_textFieldName</s:set>
+				<s:set var="textInputFieldName" ><s:property value="#userProfilePrototype.mailAttributeName" />_textFieldName</s:set>
 				<wpsf:textfield useTabindexAutoIncrement="true" cssClass="text" id="%{#currentFieldId}" name="%{#textInputFieldName}" value="%{getSearchFormFieldValue(#textInputFieldName)}" />
 			</p>
 		</s:if>  

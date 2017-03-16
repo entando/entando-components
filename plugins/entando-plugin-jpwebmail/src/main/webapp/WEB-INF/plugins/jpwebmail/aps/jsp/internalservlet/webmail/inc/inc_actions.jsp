@@ -3,12 +3,12 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 
-<s:set name="iconMsgNew"><wp:resourceURL />plugins/jpwebmail/static/img/mail-message-new.png</s:set>
-<s:set name="iconMsgNewText"><wp:i18n key="jpwebmail_MSG_NEW" /></s:set>
-<s:set name="iconMsgDelete"><wp:resourceURL />plugins/jpwebmail/static/img/mail-mark-junk.png</s:set>
-<s:set name="iconMsgDeleteText"><wp:i18n key="jpwebmail_MSG_DELETE" /></s:set>
-<s:set name="iconMsgMove"><wp:resourceURL />plugins/jpwebmail/static/img/mail-message-move.png</s:set>
-<s:set name="iconMsgMoveText"><wp:i18n key="jpwebmail_MSG_MOVE" /></s:set>
+<s:set var="iconMsgNew"><wp:resourceURL />plugins/jpwebmail/static/img/mail-message-new.png</s:set>
+<s:set var="iconMsgNewText"><wp:i18n key="jpwebmail_MSG_NEW" /></s:set>
+<s:set var="iconMsgDelete"><wp:resourceURL />plugins/jpwebmail/static/img/mail-mark-junk.png</s:set>
+<s:set var="iconMsgDeleteText"><wp:i18n key="jpwebmail_MSG_DELETE" /></s:set>
+<s:set var="iconMsgMove"><wp:resourceURL />plugins/jpwebmail/static/img/mail-message-move.png</s:set>
+<s:set var="iconMsgMoveText"><wp:i18n key="jpwebmail_MSG_MOVE" /></s:set>
 
 <p>
 	<wpsf:submit useTabindexAutoIncrement="true" action="newMessage" type="image" src="%{#iconMsgNew}" value="%{iconMsgNewText}" title="%{iconMsgNewText}" />

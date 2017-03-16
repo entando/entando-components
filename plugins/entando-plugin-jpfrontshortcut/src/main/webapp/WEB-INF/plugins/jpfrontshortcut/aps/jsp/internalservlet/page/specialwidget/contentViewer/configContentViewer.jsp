@@ -28,10 +28,10 @@
 					</ul>
 				</div>
 			</s:if>
-			<s:set name="showletParams" value="showlet.type.parameter" />
+			<s:set var="showletParams" value="showlet.type.parameter" />
 			<s:property value="#showletParams['contentId'].descr" />
 			<s:if test="showlet.config['contentId'] != null">
-				<s:set name="content" value="%{getContentVo(showlet.config['contentId'])}"></s:set>
+				<s:set var="content" value="%{getContentVo(showlet.config['contentId'])}"></s:set>
 				<p>
 					<s:text name="title.configContentViewer.settings" />&#32;
 					<s:property value="#content.descr" /> (<s:property value="#content.id" />)

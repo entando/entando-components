@@ -21,7 +21,7 @@
 </s:if>
 
 <wpsa:subset source="messages" count="10" objectName="groupMessages" advanced="true" offset="5">
-<s:set name="group" value="#groupMessages" />
+<s:set var="group" value="#groupMessages" />
 
 <h1>MESSAGGI</h1>
 <div class="paginazione">
@@ -52,7 +52,7 @@
 	</td>
 	<td>
 	<s:if test="%{isSentFolder()}">
-		<s:set name="recipientsTo" value="getTo(#message)"></s:set>
+		<s:set var="recipientsTo" value="getTo(#message)"></s:set>
 		<s:if test="#recipientsTo == null || #recipientsTo.length == 0">NESSUN DESTINATARIO</s:if>
 		<s:else>
 			<s:if test="#recipientsTo.length > 1">
@@ -65,12 +65,12 @@
 		</s:else>
 	</s:if>
 	<s:else>
-		<s:set name="getFromAddress" value="#message.from[0]"></s:set>
+		<s:set var="getFromAddress" value="#message.from[0]"></s:set>
 		<s:include value="inc/recipient.jsp" />
 	</s:else>
 	</td>
 	<td>
-		<s:set name="messageSubject" value="#message.subject"></s:set>
+		<s:set var="messageSubject" value="#message.subject"></s:set>
 		<a href="<s:url action="openMessage"><s:param name="messageIndex" value="#messagePosition" /><s:param name="currentFolderName" value="currentFolderName" /></s:url>"><s:if test="%{#messageSubject == null || ''.equals(#messageSubject)}">NESSUN OGGETTO</s:if><s:else><s:property value="#messageSubject" /></s:else></a>
 	</td>
 	<td class="centerText">

@@ -22,7 +22,7 @@ jpaddressbook_ITEM_REMOVE = Rimuovi dalla lista
 	<wpsa:actionSubParam name="elementIndex" value="%{#elementIndex}" />
 	<wpsa:actionSubParam name="movement" value="UP" />
 </wpsa:actionParam>
-<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/img/icons/go-up.png</s:set>
+<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/img/icons/go-up.png</s:set>
 <wpsf:submit useTabindexAutoIncrement="true" action="%{#actionName}" type="image" src="%{#iconImagePath}" 
 	value="%{label_moveup}" 
 	title="%{label_moveup_in_number}: %{#elementIndex}" />
@@ -33,7 +33,7 @@ jpaddressbook_ITEM_REMOVE = Rimuovi dalla lista
 	<wpsa:actionSubParam name="elementIndex" value="%{#elementIndex}" />
 	<wpsa:actionSubParam name="movement" value="DOWN" />
 </wpsa:actionParam>
-<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/img/icons/go-down.png</s:set>
+<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/img/icons/go-down.png</s:set>
 <wpsf:submit useTabindexAutoIncrement="true" action="%{#actionName}" type="image" src="%{#iconImagePath}" 
 	value="%{label_movedown}" 
 	title="%{label_movedown_in_number}: %{#elementIndex+2}" />
@@ -43,7 +43,7 @@ jpaddressbook_ITEM_REMOVE = Rimuovi dalla lista
 	<wpsa:actionSubParam name="listLangCode" value="%{#lang.code}" />
 	<wpsa:actionSubParam name="elementIndex" value="%{#elementIndex}" />
 </wpsa:actionParam>
-<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/img/icons/list-remove.png</s:set>
+<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/img/icons/list-remove.png</s:set>
 <wpsf:submit useTabindexAutoIncrement="true" action="%{#actionName}" type="image" src="%{#iconImagePath}" 
 	value="%{label_remove}" 
 	title="%{label_remove}" />  

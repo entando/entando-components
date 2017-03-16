@@ -24,7 +24,7 @@
 	</p>
 	<%-- Hits --%>
 	<s:if test="selectedTypes.contains('hits')">
-				<s:set name="hitsProducer" value="hitsTimeData"></s:set>
+				<s:set var="hitsProducer" value="hitsTimeData"></s:set>
     <s:if test="#hitsProducer != null">
         <s:set var="xaxisLabelVar" value="%{getText('label.axis.intervallo')}" scope="page" />
 				<s:set var="yaxisLabelVar" value="%{getText('label.axis.hits')}" scope="page" />
@@ -38,7 +38,7 @@
 		</s:if>
 	<%-- Top pages --%>
 	<s:if test="selectedTypes.contains('topPages')">
-			<s:set name="topPagesProducer" value="mostVisitedPagestimeData"></s:set>
+			<s:set var="topPagesProducer" value="mostVisitedPagestimeData"></s:set>
 			<s:if test="#topPagesProducer != null">
 							 <s:set var="xaxisLabelVar" value="%{getText('label.axis.pagecode')}" scope="page" />
 				<s:set var="yaxisLabelVar" value="%{getText('label.axis.hits')}" scope="page" />
@@ -52,7 +52,7 @@
 	</s:if>
 	<%-- TopContents --%>
 	<s:if test="selectedTypes.contains('topContents')">
-				<s:set name="topContentsProducer" value="topContentsDataset"></s:set>
+				<s:set var="topContentsProducer" value="topContentsDataset"></s:set>
 		<s:if test="#topContentsProducer != null">
 			<s:set var="xaxisLabelVar" value="%{getText('label.axis.content')}" scope="page" />
 			<s:set var="yaxisLabelVar" value="%{getText('label.axis.hits')}" scope="page" />

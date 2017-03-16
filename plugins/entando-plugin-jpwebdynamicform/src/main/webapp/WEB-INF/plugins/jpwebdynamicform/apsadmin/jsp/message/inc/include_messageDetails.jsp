@@ -12,10 +12,10 @@
         <td><code><s:date name="%{message.creationDate}" format="dd/MM/yyyy HH:mm" /></code></td>
     </tr>
     
-<s:set name="lang" value="defaultLang" />
+<s:set var="lang" value="defaultLang" />
 <s:iterator value="message.attributeList" var="attribute">
 <%-- INIZIALIZZAZIONE TRACCIATORE --%>
-<s:set name="attributeTracer" value="initAttributeTracer(#attribute, #lang)"></s:set>
+<s:set var="attributeTracer" value="initAttributeTracer(#attribute, #lang)"></s:set>
 <tr>
 	<th class="text-right"><s:property value="#attribute.name" /></th>
 	<td>

@@ -13,7 +13,7 @@
         <s:if test="references['jpsurveySurveyManagerUtilizers']">
             <s:set var="referencingSurveys" value="references['jpsurveySurveyManagerUtilizers']" />
             <wpsa:subset source="#referencingSurveys" count="10" objectName="surveysReferencesGroup" advanced="true" offset="5" pagerId="referencingSurveysId">
-                <s:set name="group" value="#surveysReferencesGroup" />
+                <s:set var="group" value="#surveysReferencesGroup" />
                 <div class="pager">
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />

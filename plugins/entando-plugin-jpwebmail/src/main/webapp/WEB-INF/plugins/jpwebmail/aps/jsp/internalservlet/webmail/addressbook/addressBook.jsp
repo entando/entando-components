@@ -29,8 +29,8 @@
 	<p class="actions">
 		<label for="searchLabel"><wp:i18n key="jpwebmail_SEARCH" />:</label>
 		<wpsf:textfield useTabindexAutoIncrement="true" name="text" id="searchLabel" cssClass="text" />
-		<s:set name="iconSearch"><wp:resourceURL />plugins/jpwebmail/static/img/system-search.png</s:set>
-		<s:set name="addressSearch"><wp:i18n key="jpwebmail_SEARCH" /></s:set>	
+		<s:set var="iconSearch"><wp:resourceURL />plugins/jpwebmail/static/img/system-search.png</s:set>
+		<s:set var="addressSearch"><wp:i18n key="jpwebmail_SEARCH" /></s:set>	
 		<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconSearch}" value="%{#addressSearch}" title="%{#addressSearch}" />
 	</p>
 </form>
@@ -47,7 +47,7 @@
 <c:choose>
 <c:when test="${not empty searchedReceivers}">
 	<wpsa:subset source="searchedReceivers" count="10" objectName="contacts" advanced="true" offset="5">
-	<s:set name="group" value="#contacts" />
+	<s:set var="group" value="#contacts" />
 	
 	<div class="pager"><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" /></div>
 	
@@ -60,8 +60,8 @@
 			</s:iterator>
 		</ul>
 		<div class="pager"><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" /></div>
-			<s:set name="iconAddressAdd"><wp:resourceURL />plugins/jpwebmail/static/img/list-add.png</s:set>
-			<s:set name="iconAddressAddText"><wp:i18n key="jpwebmail_ADDRESS_ADD" /></s:set>	
+			<s:set var="iconAddressAdd"><wp:resourceURL />plugins/jpwebmail/static/img/list-add.png</s:set>
+			<s:set var="iconAddressAddText"><wp:i18n key="jpwebmail_ADDRESS_ADD" /></s:set>	
 			
 			<p><wpsf:submit useTabindexAutoIncrement="true" action="addRecipients" type="image" src="%{#iconAddressAdd}" value="%{#iconAddressAddText}" title="%{#iconAddressAddText}" /></p>
 	</wpsa:subset>
@@ -83,15 +83,15 @@
 		
 		<s:iterator value="selectedReceivers" var="selectedReceiver" status="rowstatus">
 		<tr>
-		<s:set name="currentUser" value="%{getContact(#selectedReceiver)}"/>
+		<s:set var="currentUser" value="%{getContact(#selectedReceiver)}"/>
 		<td><s:property value="#currentUser.fullName" /></td>
 		<td><s:property value="#currentUser.emailAddress"/></td>
 		<td class="centerText">
 			<wpsa:actionParam action="removeRecipient" var="removeRecipientActionName" >
 				<wpsa:actionSubParam name="actualReceiver" value="%{#currentUser.username}" />
 			</wpsa:actionParam>
-			<s:set name="iconAddressRemove"><wp:resourceURL />plugins/jpwebmail/static/img/edit-delete.png</s:set>
-			<s:set name="iconAddressRemoveText"><wp:i18n key="jpwebmail_ADDRESS_REMOVE" /></s:set>	
+			<s:set var="iconAddressRemove"><wp:resourceURL />plugins/jpwebmail/static/img/edit-delete.png</s:set>
+			<s:set var="iconAddressRemoveText"><wp:i18n key="jpwebmail_ADDRESS_REMOVE" /></s:set>	
 			<wpsf:submit useTabindexAutoIncrement="true" action="%{#removeRecipientActionName}" type="image" src="%{#iconAddressRemove}" value="%{#iconAddressRemoveText}" title="%{#iconAddressRemoveText}: %{#currentUser.fullName} " />
 		</td>
 		</tr>
@@ -110,9 +110,9 @@
 	</s:iterator>
 </p>
 <p class="centerText">
-	<s:set name="cancelLabel"><wp:i18n key="jpwebmail_CANCEL" /></s:set>
+	<s:set var="cancelLabel"><wp:i18n key="jpwebmail_CANCEL" /></s:set>
 	<wpsf:submit useTabindexAutoIncrement="true" action="cancel" value="%{cancelLabel}" title="%{cancelLabel}" cssClass="buttonBorded" />
-	<s:set name="confirmLabel"><wp:i18n key="jpwebmail_CONFIRM" /></s:set>	
+	<s:set var="confirmLabel"><wp:i18n key="jpwebmail_CONFIRM" /></s:set>	
 	<wpsf:submit useTabindexAutoIncrement="true" action="joinRecipients" value="%{#confirmLabel}" title="%{#confirmLabel}" cssClass="buttonBorded" />
 </p>
 </form>

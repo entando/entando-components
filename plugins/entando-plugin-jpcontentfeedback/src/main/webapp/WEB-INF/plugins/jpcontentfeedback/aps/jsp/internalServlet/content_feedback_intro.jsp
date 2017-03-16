@@ -75,7 +75,7 @@
             <label class="radio" for="<s:property value="#currentId" />" title="<wp:i18n key="jpcontentfeedback_VOTE" />:&#32;<s:property value="#voteItem.key" />">
             <input type="radio" name="vote" id="<s:property value="#currentId" />" value="<s:property value="#voteItem.key" />" />&#32;<s:property value="#voteItem.value" /></label>
           </s:iterator>
-            <s:set name="labelSubmit"><wp:i18n key="jpcontentfeedback_VOTE" /></s:set>
+            <s:set var="labelSubmit"><wp:i18n key="jpcontentfeedback_VOTE" /></s:set>
             <wpsf:submit useTabindexAutoIncrement="true" value="%{#labelSubmit}" cssClass="btn" />
         </form>
       </c:if>
@@ -150,7 +150,7 @@
                       </p>
 
                         <s:set var="htmt_vode_id">votecomment_<c:out value="${comment.id}" /><c:out value="${comment.contentId}" /></s:set>
-                        <s:set name="labelSubmit"><wp:i18n key="jpcontentfeedback_SEND" /></s:set>
+                        <s:set var="labelSubmit"><wp:i18n key="jpcontentfeedback_SEND" /></s:set>
                         <label for="<s:property value="#htmt_vode_id" />"><wp:i18n key="jpcontentfeedback_LABEL_RATING" /></label>
                         <select name="vote" id="<s:property value="#htmt_vode_id" />" class="span1">
                           <s:iterator value="votes" var="voteItem">
@@ -266,7 +266,7 @@
               <wpsf:textarea useTabindexAutoIncrement="true" name="commentText" id="commentText" value="" cssClass="span6" cols="40" rows="3" />
             </p>
             <p>
-              <s:set name="labelSubmit"><wp:i18n key="jpcontentfeedback_SEND" /></s:set>
+              <s:set var="labelSubmit"><wp:i18n key="jpcontentfeedback_SEND" /></s:set>
               <wpsf:submit useTabindexAutoIncrement="true" value="%{#labelSubmit}" cssClass="btn btn-primary" />
             </p>
           </form>

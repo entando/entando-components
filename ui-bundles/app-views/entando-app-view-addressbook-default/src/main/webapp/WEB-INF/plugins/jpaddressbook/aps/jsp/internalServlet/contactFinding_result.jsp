@@ -12,23 +12,23 @@
 		<p class="noscreen">
 		<s:iterator var="attribute" value="#searcheableAttributes">
 			<s:if test="#attribute.textAttribute">
-				<s:set name="textInputFieldName" ><s:property value="#attribute.name" />_textFieldName</s:set>
+				<s:set var="textInputFieldName" ><s:property value="#attribute.name" />_textFieldName</s:set>
 				<wpsf:hidden name="%{#textInputFieldName}" value="%{getSearchFormFieldValue(#textInputFieldName)}" />
 			</s:if>
 			<s:elseif test="#attribute.type == 'Date'">
-				<s:set name="dateStartInputFieldName" ><s:property value="#attribute.name" />_dateStartFieldName</s:set>
-				<s:set name="dateEndInputFieldName" ><s:property value="#attribute.name" />_dateEndFieldName</s:set>
+				<s:set var="dateStartInputFieldName" ><s:property value="#attribute.name" />_dateStartFieldName</s:set>
+				<s:set var="dateEndInputFieldName" ><s:property value="#attribute.name" />_dateEndFieldName</s:set>
 				<wpsf:hidden name="%{#dateStartInputFieldName}" value="%{getSearchFormFieldValue(#dateStartInputFieldName)}" />
 				<wpsf:hidden name="%{#dateEndInputFieldName}" value="%{getSearchFormFieldValue(#dateEndInputFieldName)}" />
 			</s:elseif>
 			<s:elseif test="#attribute.type == 'Number'">
-				<s:set name="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
-				<s:set name="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
+				<s:set var="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
+				<s:set var="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
 				<wpsf:hidden name="%{#numberStartInputFieldName}" value="%{getSearchFormFieldValue(#numberStartInputFieldName)}" />
 				<wpsf:hidden name="%{#numberEndInputFieldName}" value="%{getSearchFormFieldValue(#numberEndInputFieldName)}" />
 			</s:elseif>
 			<s:elseif test="#attribute.type == 'Boolean' || #attribute.type == 'ThreeState'"> 
-				<s:set name="booleanInputFieldName" ><s:property value="#attribute.name" />_booleanFieldName</s:set>
+				<s:set var="booleanInputFieldName" ><s:property value="#attribute.name" />_booleanFieldName</s:set>
 				<wpsf:hidden name="%{#booleanInputFieldName}" value="%{getSearchFormFieldValue(#booleanInputFieldName)}" />
 			</s:elseif>
 		</s:iterator>
@@ -52,7 +52,7 @@
 		<s:else>
 	
 			<wpsa:subset source="#contactIds" count="5" objectName="groupContact" advanced="true" offset="5">
-				<s:set name="group" value="#groupContact" />
+				<s:set var="group" value="#groupContact" />
 				
 				<s:include value="/WEB-INF/plugins/jpaddressbook/aps/jsp/internalServlet/inc/pagerInfo.jsp" />
 				

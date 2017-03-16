@@ -2,7 +2,7 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
-<s:set name="currentAttachedFileVar" value="#attribute.attachedFile"></s:set>
+<s:set var="currentAttachedFileVar" value="#attribute.attachedFile"></s:set>
 <s:if test="#lang.default">
 <%-- Lingua di DEFAULT --%>
 	<s:if test="#currentAttachedFileVar != null">

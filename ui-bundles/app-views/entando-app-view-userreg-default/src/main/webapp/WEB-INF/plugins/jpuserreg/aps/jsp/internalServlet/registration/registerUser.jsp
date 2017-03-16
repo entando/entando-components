@@ -13,7 +13,7 @@
 			<ul>
 				<s:iterator value="fieldErrors">
 					<s:iterator value="value">
-						<s:set name="label" ><s:property/></s:set>
+						<s:set var="label" ><s:property/></s:set>
 						<li><s:property /></li>
 					</s:iterator>
 				</s:iterator>
@@ -25,14 +25,14 @@
 			<h2><wp:i18n key="ERRORS" /></h2>
 			<ul>
 				<s:iterator value="actionErrors">
-					<s:set name="label" ><s:property/></s:set>
+					<s:set var="label" ><s:property/></s:set>
 					<li><s:property /></li>
 				</s:iterator>
 			</ul>
 		</div>
 	</s:if>
 	
-	<s:set name="lang" value="defaultLang"></s:set>
+	<s:set var="lang" value="defaultLang"></s:set>
 	
 	<p class="noscreen" >
 		<wpsf:hidden name="profileTypeCode" />

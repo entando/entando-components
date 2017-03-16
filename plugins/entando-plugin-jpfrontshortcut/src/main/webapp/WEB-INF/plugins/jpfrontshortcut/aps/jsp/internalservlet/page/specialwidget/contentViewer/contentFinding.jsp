@@ -71,7 +71,7 @@
 				</div>
 			</fieldset>
 			<wpfssa:subset source="contents" count="10" objectName="groupContent" advanced="true" offset="5">
-				<s:set name="group" value="#groupContent" />
+				<s:set var="group" value="#groupContent" />
 				<s:set var="pagerSubmitActionNameVar" value="'searchContents'" />
 				<div class="archive-pager">
 					<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
@@ -234,7 +234,7 @@
 						</th>
 					</tr>
 					<s:iterator var="contentId">
-						<s:set name="content" value="%{getContentVo(#contentId)}"></s:set>
+						<s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
 						<tr>
 							<td>
 								<label class="radio" for="contentId_<s:property value="#content.id+#random"/>">

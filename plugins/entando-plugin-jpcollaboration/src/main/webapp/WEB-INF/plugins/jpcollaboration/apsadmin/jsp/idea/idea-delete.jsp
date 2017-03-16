@@ -28,16 +28,16 @@
     <tr>
 	<th class="text-right"><s:text name="label.state" /></th>
 		<s:if test="#idea.status == 3">
-			<s:set name="iconImage" id="iconImage">icon fa fa-check text-success</s:set>
-			<s:set name="isOnlineStatus" value="%{getText('label.yes')}" />
+			<s:set var="iconImage" id="iconImage">icon fa fa-check text-success</s:set>
+			<s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
 		</s:if>
 		<s:if test="#idea.status == 2">
-			<s:set name="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
-			<s:set name="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_to_approve.singular')}" />
+			<s:set var="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
+			<s:set var="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_to_approve.singular')}" />
 		</s:if>
 		<s:if test="#idea.status == 1">
-			<s:set name="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
-			<s:set name="isOnlineStatus" value="%{getText('label.no')}" />
+			<s:set var="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
+			<s:set var="isOnlineStatus" value="%{getText('label.no')}" />
 		</s:if>
                         <td><span class="<s:property value="iconImage" />" title="<s:property value="isOnlineStatus" />" /></td>
     </tr>            

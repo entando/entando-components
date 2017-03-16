@@ -29,7 +29,7 @@
 </s:if>
 
 <wpsa:subset source="messages" count="10" objectName="groupMessages" advanced="true" offset="5">
-<s:set name="group" value="#groupMessages" />
+<s:set var="group" value="#groupMessages" />
 
 <h3><wp:i18n key="jpwebmail_MESSAGES" /></h3>
 
@@ -54,7 +54,7 @@
 	<th><wp:i18n key="jpwebmail_MSG_DATE" /></th>
 </tr>
 <s:iterator var="message" status="count">
-<s:set name="messagePosition" value="#groupMessages.begin + #count.index" />
+<s:set var="messagePosition" value="#groupMessages.begin + #count.index" />
 <tr>
 	<td class="doubleItems"><input type="checkbox" <s:if test="selectedAllMessages">checked="checked"</s:if> name="messageIndexes" id="<s:property value="%{'message_' + #count.index}" />" value="<s:property value="#messagePosition" />" class="checkbox" /><label for="<s:property value="%{'message_' + #count.index}" />"><s:property value="#messagePosition + 1" /></label></td>
 	<td class="centerText messageStatus">
@@ -67,7 +67,7 @@
 	</td>
 	<td>
 	<s:if test="%{isSentFolder()}">
-		<s:set name="recipientsTo" value="getTo(#message)"></s:set>
+		<s:set var="recipientsTo" value="getTo(#message)"></s:set>
 		<s:if test="#recipientsTo == null || #recipientsTo.length == 0"><wp:i18n key="jpwebmail_NO_RECIPIENT" /></s:if>
 		<s:else>
 			<s:if test="#recipientsTo.length > 1">
@@ -80,18 +80,18 @@
 		</s:else>
 	</s:if>
 	<s:else>
-		<s:set name="getFromAddress" value="#message.from[0]"></s:set>
+		<s:set var="getFromAddress" value="#message.from[0]"></s:set>
 		<s:include value="inc/inc_recipient.jsp" />
 	</s:else>
 	</td>
 	<td>
-		<s:set name="messageSubject" value="#message.subject"></s:set>
+		<s:set var="messageSubject" value="#message.subject"></s:set>
 		<a href="<wp:action path="/ExtStr2/do/jpwebmail/Portal/WebMail/openMessage"><wp:parameter name="messageIndex"><s:property value="#messagePosition" /></wp:parameter><wp:parameter name="currentFolderName"><s:property value="currentFolderName" /></wp:parameter></wp:action>"><s:if test="%{#messageSubject == null || ''.equals(#messageSubject)}"><wp:i18n key="jpwebmail_MSG_SUBJECT_EMPTY" /></s:if><s:else><s:property value="#messageSubject" /></s:else></a>
 	</td>
 	<td class="centerText">
 		<s:bean name="java.util.Date" id="now"></s:bean>
-		<s:set name="today"><s:date name="now" format="yyyy-MM-dd" /></s:set>
-		<s:set name="messageDate"><s:date name="#message.receivedDate" format="yyyy-MM-dd" /></s:set>
+		<s:set var="today"><s:date name="now" format="yyyy-MM-dd" /></s:set>
+		<s:set var="messageDate"><s:date name="#message.receivedDate" format="yyyy-MM-dd" /></s:set>
 		<s:if test="%{#messageDate == #today}">
 			<s:date name="#message.receivedDate" format="HH:mm" />
 		</s:if>

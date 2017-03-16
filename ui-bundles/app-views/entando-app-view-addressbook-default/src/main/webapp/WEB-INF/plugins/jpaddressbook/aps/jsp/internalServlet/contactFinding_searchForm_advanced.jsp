@@ -30,19 +30,19 @@
 			<s:if test="#attribute.textAttribute">
 				<p class="attribute">
 					<label for="<s:property value="%{#currentFieldId}"/>"><s:property value="#currentFieldLabel" /></label>:<br />
-					<s:set name="textInputFieldName" ><s:property value="#attribute.name" />_textFieldName</s:set>
+					<s:set var="textInputFieldName" ><s:property value="#attribute.name" />_textFieldName</s:set>
 					<wpsf:textfield useTabindexAutoIncrement="true" cssClass="text" id="%{#currentFieldId}" name="%{#textInputFieldName}" value="%{getSearchFormFieldValue(#textInputFieldName)}" />
 				</p>
 			</s:if>
 			
 			<s:elseif test="#attribute.type == 'Date'">
-				<s:set name="dateStartInputFieldName"><s:property value="#attribute.name" />_dateStartFieldName</s:set>
+				<s:set var="dateStartInputFieldName"><s:property value="#attribute.name" />_dateStartFieldName</s:set>
 				<p class="attribute">
 					<label for="<s:property value="%{currentFieldId}"/>_startValue"><s:property value="#currentFieldLabel" />&#32;<wp:i18n key="jpaddressbook_ATTRIBUTE_START_VALUE" /></label>:<br />
 					<wpsf:textfield useTabindexAutoIncrement="true" cssClass="text" id="%{#currentFieldId+'_startValue'}" name="%{#dateStartInputFieldName}" value="%{getSearchFormFieldValue(#dateStartInputFieldName)}" /> dd/MM/yyyy
 				</p>
 	
-				<s:set name="dateEndInputFieldName"><s:property value="#attribute.name" />_dateEndFieldName</s:set>
+				<s:set var="dateEndInputFieldName"><s:property value="#attribute.name" />_dateEndFieldName</s:set>
 				<p class="attribute">
 					<label for="<s:property value="%{currentFieldId}"/>_endValue"><s:property value="#currentFieldLabel" />&#32;<wp:i18n key="jpaddressbook_ATTRIBUTE_END_VALUE" /></label><br />
 					<wpsf:textfield useTabindexAutoIncrement="true" cssClass="text" id="%{#currentFieldId+'_endValue'}" name="%{#dateEndInputFieldName}" value="%{getSearchFormFieldValue(#dateEndInputFieldName)}" />dd/MM/yyyy
@@ -50,12 +50,12 @@
 			</s:elseif>
 			
 			<s:elseif test="#attribute.type == 'Number'">
-				<s:set name="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
+				<s:set var="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
 				<p class="attribute">
 					<label for="<s:property value="%{currentFieldId}"/>_startValue"><s:property value="#currentFieldLabel" />&#32;<wp:i18n key="jpaddressbook_ATTRIBUTE_START_VALUE" /></label>:<br />
 					<wpsf:textfield useTabindexAutoIncrement="true" cssClass="text" id="%{#currentFieldId+'_startValue'}" name="%{#numberStartInputFieldName}" value="%{getSearchFormFieldValue(#numberStartInputFieldName)}" />
 				</p>
-				<s:set name="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
+				<s:set var="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
 				<p class="attribute">
 					<label for="<s:property value="%{currentFieldId}"/>_endValue"><s:property value="#currentFieldLabel" />&#32;<wp:i18n key="jpaddressbook_ATTRIBUTE_END_VALUE" /></label>:<br />
 					<wpsf:textfield useTabindexAutoIncrement="true" cssClass="text" id="%{#currentFieldId+'_endValue'}" name="%{#numberEndInputFieldName}" value="%{getSearchFormFieldValue(#numberEndInputFieldName)}" />
@@ -66,8 +66,8 @@
 				<p class="attribute">
 					<s:property value="#currentFieldLabel" />
 				</p>
-				<s:set name="booleanInputFieldName" ><s:property value="#attribute.name" />_booleanFieldName</s:set>
-				<s:set name="booleanInputFieldValue" ><s:property value="%{getSearchFormFieldValue(#booleanInputFieldName)}" /></s:set>
+				<s:set var="booleanInputFieldName" ><s:property value="#attribute.name" />_booleanFieldName</s:set>
+				<s:set var="booleanInputFieldValue" ><s:property value="%{getSearchFormFieldValue(#booleanInputFieldName)}" /></s:set>
 				<ul>
 					<li><wpsf:radio useTabindexAutoIncrement="true" id="none_%{#booleanInputFieldName}" name="%{#booleanInputFieldName}" value="" checked="%{!#booleanInputFieldValue.equals('true') && !#booleanInputFieldValue.equals('false')}" cssClass="radio" /><label for="none_<s:property value="#booleanInputFieldName" />" class="normal" ><wp:i18n key="jpaddressbook_ATTRIBUTE_BOTH_VALUE" /></label></li>
 					<li><wpsf:radio useTabindexAutoIncrement="true" id="true_%{#booleanInputFieldName}" name="%{#booleanInputFieldName}" value="true" checked="%{#booleanInputFieldValue == 'true'}" cssClass="radio" /><label for="true_<s:property value="#booleanInputFieldName" />" class="normal" ><wp:i18n key="jpaddressbook_ATTRIBUTE_YES_VALUE" /></label></li>

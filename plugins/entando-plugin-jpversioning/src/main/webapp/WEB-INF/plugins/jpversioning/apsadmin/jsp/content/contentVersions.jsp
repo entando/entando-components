@@ -4,7 +4,7 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <fieldset>
 	<legend><s:text name="jpversioning.label.history" /></legend>
-	<s:set name="contentVersionsList" value="%{contentVersions}"/>
+	<s:set var="contentVersionsList" value="%{contentVersions}"/>
 
 	<s:if test="%{#contentVersionsList == null || !#contentVersionsList.size() > 0}">
 		<p><s:text name="jpversioning.message.no.previous.revisions" /></p>
@@ -15,7 +15,7 @@
 				<wpsf:hidden name="contentId" value="%{content.id}" />
 			</p>
 
-			<s:set name="group" value="#groupContent" />
+			<s:set var="group" value="#groupContent" />
 			<div class="pager">
 				<p><s:text name="list.pagerIntro" />&#32;<s:property value="#group.size" />&#32;<s:text name="list.pagerOutro" /><br />
 				<s:text name="label.page" />: [<s:property value="#group.currItem" />/<s:property value="#group.maxItem" />].</p>
@@ -34,7 +34,7 @@
  				</tr>
 
 				<s:iterator var="versionId">
-				<s:set name="contentVersion" value="%{getContentVersion(#versionId)}" />
+				<s:set var="contentVersion" value="%{getContentVersion(#versionId)}" />
 				<tr>
 					<td class="text-center text-nowrap">
 						<div class="btn-group btn-group-xs">

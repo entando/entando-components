@@ -18,13 +18,13 @@
 		</p>
 		<p>
 		<label for="choosenShowlet"><wp:i18n key="jpmyportal_SHOWLET" /></label>:<br />
-		<s:set name="labelSubmit"><wp:i18n key="jpmyportal_CHOOSE" /></s:set>
+		<s:set var="labelSubmit"><wp:i18n key="jpmyportal_CHOOSE" /></s:set>
 		<wpsf:select name="choosenShowlet" id="choosenShowlet" headerKey="unassigned" list="customizableShowlets" listKey="code" listValue="%{getTitle(code, titles)}" />
 		<wpsf:submit action="selectFrame" value="%{#labelSubmit}" title="%{#labelSubmit}" cssClass="button" />
 		</p>
 	</form>
 	
-	<s:set name="defaultShowlet" value="%{getDefaultShowlet(currentPage, frameSource)}" />
+	<s:set var="defaultShowlet" value="%{getDefaultShowlet(currentPage, frameSource)}" />
 	
 	<s:if test="null != #defaultShowlet">
 		<form action="<wp:action path="/ExtStr2/do/Front/jpmyportal/MyPortal/resetFrame.action" />" method="post" >
@@ -33,7 +33,7 @@
 				<wpsf:hidden name="frameSource" />
 			</p>
 			
-			<s:set name="labelSubmit"><wp:i18n key="jpmyportal_CHOOSE" /></s:set>
+			<s:set var="labelSubmit"><wp:i18n key="jpmyportal_CHOOSE" /></s:set>
 			<p><wp:i18n key="jpmyportal_RESET_TO_DEFAULT" />:<br />
 			<em><s:property value="#defaultShowlet.type.descr" /></em>
 			<wpsf:submit action="resetFrame" value="%{#labelSubmit}" title="%{#labelSubmit}" cssClass="button" /></p>

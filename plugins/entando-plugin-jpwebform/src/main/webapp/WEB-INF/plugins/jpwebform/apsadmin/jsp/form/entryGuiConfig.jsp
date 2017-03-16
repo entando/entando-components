@@ -91,7 +91,7 @@
 			</s:iterator>
 			--%>
 			<s:iterator value="#stepsConfigVar.steps" var="stepVar" >
-				<s:set name="stepCode" value="#stepVar.code" />
+				<s:set var="stepCode" value="#stepVar.code" />
 				<fieldset>
 					<legend>
 						<span><s:property value="#stepVar.code" /> (<s:text name="jpwebform.label.steps.gui.ready" />:&#32;<s:property value="%{#stepVar.builtGui ? getText('label.yes') : getText('label.no')}" />)</span>

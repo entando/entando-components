@@ -63,7 +63,7 @@
 	</s:if>
 	
 	<wpsa:subset source="#contentIdsVar" count="10" objectName="groupContent" advanced="true" offset="5">
-	<s:set name="group" value="#groupContent" />
+	<s:set var="group" value="#groupContent" />
 	<div class="text-center">
 		<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
 		<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />

@@ -78,10 +78,10 @@
 		<fieldset>
 			<legend><wp:i18n key="jpfastcontentedit_PAGE_TREE" /></legend>
 			<ul id="pageTree" class="unstyled jpfastcontentedit-tree">
-				<s:set name="inputFieldName" value="'selectedNode'" />
-				<s:set name="selectedTreeNode" value="selectedNode" />
-				<s:set name="liClassName" value="'page'" />
-				<s:set name="currentRoot" value="treeRootNode" />
+				<s:set var="inputFieldName" value="'selectedNode'" />
+				<s:set var="selectedTreeNode" value="selectedNode" />
+				<s:set var="liClassName" value="'page'" />
+				<s:set var="currentRoot" value="treeRootNode" />
 				<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
 			</ul>
 		</fieldset>

@@ -53,7 +53,7 @@
 			<legend><s:text name="label.schedulerSettings" /></legend>
 			<div class="form-group">
 				<label for="hoursDelay"><s:text name="label.hoursDelay" /></label>
-				<s:set name="hoursDelayVar" value="%{hoursDelay}" scope="page" />
+				<s:set var="hoursDelayVar" value="%{hoursDelay}" scope="page" />
 				<select name="config.hoursDelay" id="hoursDelay" class="form-control">
 					<c:forEach begin="1" end="10" varStatus="status">
 						<option <c:if test="${(status.count*24) == hoursDelayVar}">selected="selected"</c:if>

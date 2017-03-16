@@ -2,12 +2,12 @@
 <s:if test="#attribute.getAttributeList(#lang.code).size() != 0">
 <ul>
 </s:if>
-<s:set name="masterListAttributeTracer" value="#attributeTracer" />
-<s:set name="masterListAttribute" value="#attribute" />
+<s:set var="masterListAttributeTracer" value="#attributeTracer" />
+<s:set var="masterListAttribute" value="#attribute" />
 <s:iterator value="#attribute.getAttributeList(#lang.code)" var="attribute" status="elementStatus">
-<s:set name="attributeTracer" value="#masterListAttributeTracer.getListElementTracer(#lang, #elementStatus.index)"></s:set>
+<s:set var="attributeTracer" value="#masterListAttributeTracer.getListElementTracer(#lang, #elementStatus.index)"></s:set>
 
-<s:set name="elementIndex" value="#elementStatus.index" />
+<s:set var="elementIndex" value="#elementStatus.index" />
 <li>
 	<label for="<s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" />"><s:property value="#elementStatus.index + 1" /></label> 
 	<s:if test="#attribute.type == 'Monotext'">
@@ -40,9 +40,9 @@
 </li>
 </s:iterator>
 
-<s:set name="attributeTracer" value="#masterListAttributeTracer" />
-<s:set name="attribute" value="#masterListAttribute" />
-<s:set name="elementIndex" value="" />
+<s:set var="attributeTracer" value="#masterListAttributeTracer" />
+<s:set var="attribute" value="#masterListAttribute" />
+<s:set var="elementIndex" value="" />
 <s:if test="#attribute.getAttributeList(#lang.code).size() != 0">
 </ul>
 </s:if>

@@ -22,8 +22,8 @@ Selezionare gli indirizzi da aggiungere nel campo&#32;
 
 <wpsf:textfield useTabindexAutoIncrement="true" name="text" id="text" cssClass="text" />
 
-<s:set name="iconSearch"><wp:resourceURL />plugins/jpwebmail/static/img/system-search.png</s:set>
-<s:set name="addressSearch"><wp:i18n key="jpwebmail_SEARCH" /></s:set>	
+<s:set var="iconSearch"><wp:resourceURL />plugins/jpwebmail/static/img/system-search.png</s:set>
+<s:set var="addressSearch"><wp:i18n key="jpwebmail_SEARCH" /></s:set>	
 <wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconSearch}" value="%{getText('label.search')}" title="%{#addressSearch}" />
 
 </s:form>
@@ -38,7 +38,7 @@ Selezionare gli indirizzi da aggiungere nel campo&#32;
 
 <s:if test="%{searchedReceivers.size() > 0}">
 	<wpsa:subset source="searchedReceivers" count="10" objectName="contacts" advanced="true" offset="5">
-	<s:set name="group" value="#contacts" />
+	<s:set var="group" value="#contacts" />
 
 	<div class="pager"><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /> 
 	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
@@ -60,7 +60,7 @@ Selezionare gli indirizzi da aggiungere nel campo&#32;
 
 
 <s:iterator value="selectedReceivers" var="selectedReceiver" status="rowstatus">
-	<s:set name="currentUser" value="%{getContact(#selectedReceiver)}"/>
+	<s:set var="currentUser" value="%{getContact(#selectedReceiver)}"/>
 	<s:property value="#currentUser.fullName" />&#32;&lt;<s:property value="#currentUser.emailAddress"/>&gt;
 	<wpsa:actionParam action="removeRecipient" var="removeRecipientActionName" >
 		<wpsa:actionSubParam name="actualReceiver" value="%{#currentUser.username}" />

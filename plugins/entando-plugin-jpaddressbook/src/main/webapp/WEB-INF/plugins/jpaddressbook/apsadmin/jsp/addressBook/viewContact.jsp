@@ -15,7 +15,7 @@
 	<%--<legend class="accordion_toggler"><s:text name="jpaddressbook.title.details" /></legend>--%>
 	<div class="panel panel-default">
 		<div class="panel-body">
-			<s:set name="lang" value="defaultLang" />
+			<s:set var="lang" value="defaultLang" />
 				<s:iterator value="contact.attributes" var="attribute" status="attributeListStatus"><%-- content.attributeList iterator --%>
 					<s:if test="#attribute.active">
 						<div class="form-group"><%-- form-group --%>

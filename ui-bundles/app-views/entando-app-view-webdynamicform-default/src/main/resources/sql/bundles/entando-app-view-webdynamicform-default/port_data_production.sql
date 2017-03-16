@@ -142,7 +142,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynform_is_front-CheckboxAttribute', NULL, 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
 <#assign wpsf=JspTaglibs["/apsadmin-form"]>
 <@s.if test="#lang.default">
-<@s.set name="checkedValueVar" value="%{#attribute.booleanValue != null && #attribute.booleanValue ==true}" />
+<@s.set var="checkedValueVar" value="%{#attribute.booleanValue != null && #attribute.booleanValue ==true}" />
 <@wpsf.checkbox useTabindexAutoIncrement=true 
 	name="%{#attributeTracer.getFormFieldName(#attribute)}" 
 	id="%{attribute_id}" value="#checkedValueVar" />
@@ -199,29 +199,29 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 <#assign wpsf=JspTaglibs["/apsadmin-form"]>
 
 <@s.set var="i18n_parent_attribute_name" value="#attribute.name" />
-<@s.set name="masterCompositeAttributeTracer" value="#attributeTracer" />
-<@s.set name="masterCompositeAttribute" value="#attribute" />
+<@s.set var="masterCompositeAttributeTracer" value="#attributeTracer" />
+<@s.set var="masterCompositeAttribute" value="#attribute" />
 
 <@s.iterator value="#attribute.attributes" var="attribute">
-	<@s.set name="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)" />
-	<@s.set name="parentAttribute" value="#masterCompositeAttribute" />
+	<@s.set var="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)" />
+	<@s.set var="parentAttribute" value="#masterCompositeAttribute" />
 	<@s.set var="i18n_attribute_name" value="%{''jpwebdynamicform_''+ #typeCodeKey +''_''+ #attribute.name}" scope="request" />
 	<@s.set var="attribute_id" value="%{''jpwebdynamicform_''+ #typeCodeKey +''_''+ #attributeTracer.getFormFieldName(#attribute)}" />
 	<@wp.fragment code="jpwebdynform_is_IteratorAttribute" escapeXml=false />
 </@s.iterator>
-<@s.set name="attributeTracer" value="#masterCompositeAttributeTracer" />
-<@s.set name="attribute" value="#masterCompositeAttribute" />
-<@s.set name="parentAttribute" value=""></@s.set>', 1);
+<@s.set var="attributeTracer" value="#masterCompositeAttributeTracer" />
+<@s.set var="attribute" value="#masterCompositeAttribute" />
+<@s.set var="parentAttribute" value=""></@s.set>', 1);
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynform_is_front-DateAttribute', NULL, 'jpwebdynamicform', NULL, '<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
 <#assign s=JspTaglibs["/struts-tags"]>
 <#assign wp=JspTaglibs["/aps-core"]>
 <#assign wpsf=JspTaglibs["/apsadmin-form"]>
 <#assign currentLangVar ><@wp.info key="currentLang" /></#assign>
 <@s.if test="#attribute.failedDateString == null">
-	<@s.set name="dateAttributeValue" value="#attribute.getFormattedDate(''dd/MM/yyyy'')" />
+	<@s.set var="dateAttributeValue" value="#attribute.getFormattedDate(''dd/MM/yyyy'')" />
 </@s.if>
 <@s.else>
-	<@s.set name="dateAttributeValue" value="#attribute.failedDateString" />
+	<@s.set var="dateAttributeValue" value="#attribute.failedDateString" />
 </@s.else>
 <@wpsf.textfield 
 useTabindexAutoIncrement=true id="%{attribute_id}" 
@@ -298,8 +298,8 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 <#assign wp=JspTaglibs["/aps-core"]>
 <#assign wpsf=JspTaglibs["/apsadmin-form"]>
 <@s.if test="#lang.default">
-<@s.if test="#attribute.failedNumberString == null"><@s.set name="numberAttributeValue" value="#attribute.value"></@s.set></@s.if>
-<@s.else><@s.set name="numberAttributeValue" value="#attribute.failedNumberString"></@s.set></@s.else>
+<@s.if test="#attribute.failedNumberString == null"><@s.set var="numberAttributeValue" value="#attribute.value"></@s.set></@s.if>
+<@s.else><@s.set var="numberAttributeValue" value="#attribute.failedNumberString"></@s.set></@s.else>
 <@wpsf.textfield useTabindexAutoIncrement=true id="%{#attribute_id}" name="%{#attributeTracer.getFormFieldName(#attribute)}" value="%{#numberAttributeValue}" maxlength="254" />
 </@s.if>', 1);
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('jpwebdynform_is_front-ThreeStateAttribute', NULL, 'jpwebdynamicform', NULL, '<#assign s=JspTaglibs["/struts-tags"]>
@@ -353,7 +353,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 		<div class="controls">
 			<select name="typeCode" tabindex="<@wpsa.counter/>" id="jpwebdynamicform_typecode" class="text">
 				<@s.iterator value="messageTypes" var="messageType" >
-					<@s.set name="optionDescr">jpwebdynamicform_TITLE_<@s.property value="#messageType.code"/></@s.set>
+					<@s.set var="optionDescr">jpwebdynamicform_TITLE_<@s.property value="#messageType.code"/></@s.set>
 					<option value="<@s.property value="#messageType.code"/>"><@wp.i18n key="${optionDescr}" /></option>
 				</@s.iterator>
 			</select>
@@ -532,7 +532,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 </noscript>
 </@s.if>
 <p>
-	<@s.set name="labelSubmit"><@wp.i18n key="jpwebdynamicform_INVIA" /></@s.set>
+	<@s.set var="labelSubmit"><@wp.i18n key="jpwebdynamicform_INVIA" /></@s.set>
 	<@wpsf.submit useTabindexAutoIncrement=true value="%{#labelSubmit}" cssClass="btn btn-inverse"/>
 </p>
 </form>', 1);

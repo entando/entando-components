@@ -10,7 +10,7 @@
 	<p class="contactdetailsIntro"><wp:i18n key="jpaddressbook_CONTACT_DETAILS" /></p>
 	
 	<%-- START CICLO ATTRIBUTI --%>
-	<s:set name="lang" value="defaultLang" /> 
+	<s:set var="lang" value="defaultLang" /> 
 	
 	<dl class="contactdetails"> 
 		<s:iterator value="contact.attributes" var="attribute"> 
@@ -153,7 +153,7 @@
 						<s:property value="%{#currentFieldLabel}" />
 					</dt>
 					<dd>
-						<s:set name="checkedValue" value="%{#attribute.booleanValue != null && #attribute.booleanValue ==true}" />
+						<s:set var="checkedValue" value="%{#attribute.booleanValue != null && #attribute.booleanValue ==true}" />
 						<s:if test="%{#checkedValue}"><wp:i18n key="jpaddressbook_ATTRIBUTE_YES_VALUE" /></s:if>
 						<s:else><wp:i18n key="jpaddressbook_ATTRIBUTE_NO_VALUE" /></s:else> 
 					</dd>

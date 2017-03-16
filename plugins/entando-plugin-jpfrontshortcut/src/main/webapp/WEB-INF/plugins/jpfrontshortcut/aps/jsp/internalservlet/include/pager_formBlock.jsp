@@ -127,7 +127,7 @@
 				 src="%{#goNext}" disabled="%{#group.maxItem == #group.currItem}" />
 	--%>
 	<s:if test="#group.advanced">
-		<s:set name="jumpForwardStep" value="#group.currItem + #group.offset" />
+		<s:set var="jumpForwardStep" value="#group.currItem + #group.offset" />
 		<s:set var="pagerIdValueVar" value="%{getText('label.jump') + '_' + #group.offset + '_' + getText('label.forward')}" />
 		<wpfssa:actionParam action="%{#pagerSubmitActionNameVar}" var="submitActionNameVar" >
 			<wpfssa:actionSubParam name="%{#pagerIdMarker + '_' + (#jumpForwardStep)}" value="%{#pagerIdValueVar}" />
@@ -136,7 +136,7 @@
 		<sj:submit id="%{#pagerIdValueVar}" type="image" targets="form-container" title="%{#pagerIdValueVar}" value="%{#pagerIdValueVar}" 
 				   button="true" href="%{#submitActionVar}" src="%{#jumpForward}" disabled="%{#group.maxItem == #group.endItemAnchor}" />
 		<%--
-		<s:set name="jumpForwardStep" value="#group.currItem + #group.offset" />
+		<s:set var="jumpForwardStep" value="#group.currItem + #group.offset" />
 		<wpsf:submit useTabindexAutoIncrement="true" type="image" name="%{#pagerIdMarker + '_' + (#jumpForwardStep)}" 
 					 value="%{getText('label.jump') + ' ' + #group.offset + ' ' + getText('label.forward')}" 
 					 title="%{getText('label.jump') + ' ' + #group.offset + ' ' + getText('label.forward')}" 

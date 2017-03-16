@@ -243,7 +243,7 @@
 
                                                 <div class="row panel-body">
                                                     <div class="col-xs-12 col-sm-3 col-lg-2 text-center">
-                                                        <s:set name="resource" value="%{loadResource(imageId)}" />
+                                                        <s:set var="resource" value="%{loadResource(imageId)}" />
                                                         <a class="pull-left" href="<s:property value="%{#resource.getImagePath(0)}" />" title="<s:property value="%{#resource.descr}" />" >
                                                             <img class="img-thumbnail" src="<s:property value="%{#resource.getImagePath(1)}"/>" alt="<s:property value="%{#resource.descr}" />" style="height:90px; max-width:130px" />
                                                         </a>

@@ -99,7 +99,7 @@
 	</s:if>
 
 <wpsa:subset source="comments" count="10" objectName="groupComment" advanced="true" offset="5">
-<s:set name="group" value="#groupComment" />
+<s:set var="group" value="#groupComment" />
 
 <div class="pager">
 	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
@@ -119,16 +119,16 @@
 		<tr>                  
 			<td class="text-center text-nowrap">
 				<s:if test="#comment.status == 3">
-					<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>plugins/collaboration/administration/img/status_ok.png</s:set>
-					<s:set name="isOnlineStatus" value="%{getText('label.yes')}" />
+					<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>plugins/collaboration/administration/img/status_ok.png</s:set>
+					<s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
 				</s:if>
 				<s:if test="#comment.status == 2">
-					<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>plugins/collaboration/administration/img/status_standby.png</s:set>
-					<s:set name="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_to_approve.singular')}" />
+					<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>plugins/collaboration/administration/img/status_standby.png</s:set>
+					<s:set var="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_to_approve.singular')}" />
 				</s:if>
 				<s:if test="#comment.status == 1">
-					<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>plugins/collaboration/administration/img/status_ko.png</s:set>
-					<s:set name="isOnlineStatus" value="%{getText('label.no')}" />
+					<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>plugins/collaboration/administration/img/status_ko.png</s:set>
+					<s:set var="isOnlineStatus" value="%{getText('label.no')}" />
 				</s:if>
                             <div class="btn-group btn-group-xs">
 				<s:iterator value="#statusMap" var="entry">

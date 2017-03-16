@@ -81,7 +81,7 @@
 				</p>
 
 				<wpsa:subset source="ideaInstancesId" count="10" objectName="groupIdeaInstances" advanced="true" offset="5">
-					<s:set name="group" value="#groupIdeaInstances" />
+					<s:set var="group" value="#groupIdeaInstances" />
 
 					<div class="pager">
 						<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
@@ -96,7 +96,7 @@
 						<th scope="col" class="text-center"><s:text name="label.createdat" /></th>
                                             </tr>
                                             <s:iterator var="code">
-                                            <s:set name="ideaInstance_var" value="%{getIdeaInstance(#code)}" />
+                                            <s:set var="ideaInstance_var" value="%{getIdeaInstance(#code)}" />
                                             <tr>
                                                 <td class="text-center text-nowrap">
                                                     <div class="btn-group btn-group-xs">

@@ -50,14 +50,14 @@
             </s:if>
 
 
-            <s:set name="showletParams" value="showlet.type.parameter" />
+            <s:set var="showletParams" value="showlet.type.parameter" />
                 <fieldset class="col-xs-12">
                     <legend><s:text name="title.configContentViewer.settings" /></legend>
 
             <s:property value="#showletParams['contentId'].descr" />
 
             <s:if test="showlet.config['contentId'] != null">
-                <s:set name="content" value="%{getContentVo(showlet.config['contentId'])}"></s:set>
+                <s:set var="content" value="%{getContentVo(showlet.config['contentId'])}"></s:set>
                 <div class="form-group">
                     <table class="table table-bordered">
                         <tr>

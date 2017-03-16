@@ -84,7 +84,7 @@
                                             <s:text name="jpsurvey_choice" />
                                         </s:else>
                                     </label>
-                                    <s:set name="localization" value="%{getChoices()[#localizedLang.code]}"/>
+                                    <s:set var="localization" value="%{getChoices()[#localizedLang.code]}"/>
                                     <wpsf:textarea cssClass="form-control" name="%{'choice-'+#localizedLang.code}" id="%{'choice-'+#localizedLang.code}" value="%{#localization}" cols="60" rows="3" />
                                 </div>
                             </div>

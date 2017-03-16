@@ -36,17 +36,17 @@
 		<s:iterator value="linkDestinations" var="typeId">
 			<s:if test="#typeId != 4">
 				<s:if test="#typeId == 1">
-					<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-url.png</s:set>
-					<s:set name="linkDestination" ><wp:i18n key="jpfastcontentedit_LINK_TO_URL"/></s:set>
+					<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-url.png</s:set>
+					<s:set var="linkDestination" ><wp:i18n key="jpfastcontentedit_LINK_TO_URL"/></s:set>
 				</s:if>
 				<s:if test="#typeId == 2">
-					<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-page.png</s:set>
-					<s:set name="linkDestination" ><wp:i18n key="jpfastcontentedit_LINK_TO_PAGE"/></s:set>
+					<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-page.png</s:set>
+					<s:set var="linkDestination" ><wp:i18n key="jpfastcontentedit_LINK_TO_PAGE"/></s:set>
 				</s:if>
 				
 				<s:if test="#typeId == 3">
-					<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-content.png</s:set>
-					<s:set name="linkDestination" ><wp:i18n key="jpfastcontentedit_LINK_TO_CONTENT"/></s:set>
+					<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-content.png</s:set>
+					<s:set var="linkDestination" ><wp:i18n key="jpfastcontentedit_LINK_TO_CONTENT"/></s:set>
 				</s:if>
 				<li>
 						<label class="radio" for="linkType_<s:property value="#typeId"/>">

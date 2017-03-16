@@ -20,7 +20,7 @@
 		</p>
 		<p>
 			<label for="category_<c:out value="${random}" />"><s:text name="label.category" />:</label><br />
-			<s:set name="currentRoot" value="categoryRoot" />
+			<s:set var="currentRoot" value="categoryRoot" />
 			<select name="categoryCode" id="category_<c:out value="${random}" />" >
 <s:include value="/WEB-INF/plugins/jpfrontshortcut/aps/jsp/internalservlet/content/resource/inc/category-selectItem.jsp" />
 			</select>
@@ -33,7 +33,7 @@
 	</p>
 
 	<wpfssa:subset source="resources" count="12" objectName="groupResource" advanced="true" offset="5">
-		<s:set name="group" value="#groupResource" />
+		<s:set var="group" value="#groupResource" />
 		<s:set var="pagerSubmitActionNameVar" value="'search'" />
 		
 		<div class="archive-pager">
@@ -42,8 +42,8 @@
 		</div>
 		<ul class="archive-list">
 			<s:iterator var="resourceid" status="archiveItemStatusVar">
-				<s:set name="resource" value="%{loadResource(#resourceid)}"></s:set>
-				<s:set name="resourceInstance" value="%{#resource.getInstance()}"></s:set>
+				<s:set var="resource" value="%{loadResource(#resourceid)}"></s:set>
+				<s:set var="resourceInstance" value="%{#resource.getInstance()}"></s:set>
 				<li class="archive-item n<s:property value="(#archiveItemStatusVar.count-1)%4" />">
 					<p>
 						<wpfssa:actionParam action="joinResource" var="joinResourceActionNameVar" >
