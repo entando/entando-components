@@ -13,7 +13,7 @@
 	<s:set name="lang" value="defaultLang" /> 
 	
 	<dl class="contactdetails"> 
-		<s:iterator value="contact.attributes" id="attribute"> 
+		<s:iterator value="contact.attributes" var="attribute"> 
 			<s:set var="currentFieldLabel"><wp:i18n key="jpaddressbook_ATTR${attribute.name}" /></s:set>
 			<s:if test="#attribute.active">
 				<%-- INIZIALIZZAZIONE TRACCIATORE --%>
@@ -174,7 +174,7 @@
 	
 	<%-- liste --%>
 	
-		<s:iterator value="contact.attributes" id="attribute">
+		<s:iterator value="contact.attributes" var="attribute">
 	
 				<s:if test="#attribute.type == 'Monolist'">
 					<%-- ############# ATTRIBUTO Monolist ############# --%>

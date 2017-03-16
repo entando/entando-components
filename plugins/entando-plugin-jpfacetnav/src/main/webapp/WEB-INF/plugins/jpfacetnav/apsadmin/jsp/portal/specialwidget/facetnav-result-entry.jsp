@@ -8,7 +8,7 @@
         <h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
         <ul class="margin-small-top">
           <s:iterator value="fieldErrors">
-          <s:iterator value="value"><li><s:property escape="false" /></li></s:iterator>
+          <s:iterator value="value"><li><s:property escapeHtml="false" /></li></s:iterator>
           </s:iterator>
       </ul>
     </div>

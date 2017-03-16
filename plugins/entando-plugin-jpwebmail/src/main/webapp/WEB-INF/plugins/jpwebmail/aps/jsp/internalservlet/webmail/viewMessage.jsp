@@ -122,7 +122,7 @@ window.addEvent('domready', function(){
 <s:if test="#attachmentInfos.size() > 0">
 	<h3><wp:i18n key="jpwebmail_MSG_ATTACHMENTS" /></h3>
 	<ol>
-	<s:iterator value="#attachmentInfos" id="attachment">
+	<s:iterator value="#attachmentInfos" var="attachment">
 		<c:set var="openAttachmentMessagePath"><wp:info key="systemParam" paramName="applicationBaseURL" />do/jpwebmail/Portal/WebMail/openAttachment.action?messageIndex=<s:property value="messageIndex" />&currentFolderName=<s:property value="currentFolderName" />&attachmentNumber=<s:property value="#attachment.number" />&subPartAttachmentNumber=<s:property value="#attachment.subPartNumber" /></c:set>	
 		<li><a href="<c:out value="${openAttachmentMessagePath}" />" ><s:property value="#attachment.fileName" /> (<s:property value="#attachment.size" /> bytes)</a></li>
 	</s:iterator>

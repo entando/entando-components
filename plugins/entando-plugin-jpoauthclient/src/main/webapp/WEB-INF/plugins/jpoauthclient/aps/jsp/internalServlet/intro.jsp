@@ -8,7 +8,7 @@
 <ul>
 	<s:iterator value="fieldErrors">
 		<s:iterator value="value">
-			<li><s:property escape="false" /></li>
+			<li><s:property escapeHtml="false" /></li>
 		</s:iterator>
 	</s:iterator>
 </ul>
@@ -18,7 +18,7 @@
 <h3><wp:i18n key="jpoauthclient_ACTION_ERROS" /></h3>
 <ul>
 	<s:iterator value="actionErrors">
-		<li><s:property escape="false" /></li>
+		<li><s:property escapeHtml="false" /></li>
 	</s:iterator>
 </ul>
 </div>

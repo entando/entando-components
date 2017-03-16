@@ -15,7 +15,7 @@
 <s:set name="masterListAttributeTracer" value="#attributeTracer" />
 <s:set name="masterListAttribute" value="#attribute" />	
 
-<s:iterator value="#attribute.attributes" id="attribute" status="elementStatus">
+<s:iterator value="#attribute.attributes" var="attribute" status="elementStatus">
 	<s:set name="attributeTracer" value="#masterListAttributeTracer.getMonoListElementTracer(#elementStatus.index)"></s:set>
 	<s:set name="elementIndex" value="#elementStatus.index" />
 	<s:set var="i18n_attribute_name">jpaddressbook_ATTR<s:property value="#attribute.name" /></s:set>

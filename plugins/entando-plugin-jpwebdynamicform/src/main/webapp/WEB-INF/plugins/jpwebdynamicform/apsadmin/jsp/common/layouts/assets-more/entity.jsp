@@ -37,7 +37,7 @@ window.addEvent('domready', function(){
 });
 
 //per attributo Date
-<s:iterator value="message.attributeList" id="attribute">
+<s:iterator value="message.attributeList" var="attribute">
 <%-- INIZIALIZZAZIONE TRACCIATORE --%>
 
 <wpsa:tracerFactory var="attributeTracer" lang="%{#lang.code}" />
@@ -53,7 +53,7 @@ window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTr
 <s:if test="#attribute.type == 'Monolist'">
 <s:set name="masterAttributeTracer" value="#attributeTracer" />
 <s:set name="masterAttribute" value="#attribute" />
-<s:iterator value="#attribute.attributes" id="attribute" status="elementStatus">
+<s:iterator value="#attribute.attributes" var="attribute" status="elementStatus">
 <s:set name="attributeTracer" value="#masterAttributeTracer.getMonoListElementTracer(#elementStatus.index)"></s:set>
 <s:set name="elementIndex" value="#elementStatus.index" />
 	<s:if test="#attribute.type == 'Date'">
@@ -73,9 +73,9 @@ window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTr
 
 //per attributo HypertextXXX
 <%--
-<s:iterator value="langs" id="lang">
+<s:iterator value="langs" var="lang">
 --%>
-	<s:iterator value="message.attributeList" id="attribute">
+	<s:iterator value="message.attributeList" var="attribute">
 	<%-- INIZIALIZZAZIONE TRACCIATORE --%>
 	<wpsa:tracerFactory var="attributeTracer" lang="%{#lang.code}" />
 
@@ -108,7 +108,7 @@ window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTr
 	<s:if test="#attribute.type == 'Monolist'">
 		<s:set name="masterAttributeTracer" value="#attributeTracer" />
 		<s:set name="masterAttribute" value="#attribute" />
-		<s:iterator value="#attribute.attributes" id="attribute" status="elementStatus">
+		<s:iterator value="#attribute.attributes" var="attribute" status="elementStatus">
 			<s:set name="attributeTracer" value="#masterAttributeTracer.getMonoListElementTracer(#elementStatus.index)"></s:set>
 			<s:set name="elementIndex" value="#elementStatus.index" />
 
@@ -116,7 +116,7 @@ window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTr
 			<s:if test="#attribute.type == 'Composite'">
 				<s:set name="masterCompositeAttributeTracer" value="#attributeTracer" />
 				<s:set name="masterCompositeAttribute" value="#attribute" />
-				<s:iterator value="#attribute.attributes" id="attribute">
+				<s:iterator value="#attribute.attributes" var="attribute">
 					<s:set name="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)"></s:set>
 					<s:set name="parentAttribute" value="#masterCompositeAttribute"></s:set>
 					<s:if test="#attribute.type == 'Hypertext'">

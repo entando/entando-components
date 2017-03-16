@@ -39,7 +39,7 @@
 			<ul>
 				<s:iterator value="fieldErrors">
 					<s:iterator value="value">
-						<li><s:property escape="false" /></li>
+						<li><s:property escapeHtml="false" /></li>
 					</s:iterator>
 				</s:iterator>
 			</ul>
@@ -77,20 +77,20 @@
 							<s:if test="#userProfilePrototype.surnameAttributeName == null && #userProfilePrototype.firstNameAttributeName == null && #userProfilePrototype.mailAttributeName == null">
 							<td>
 								<s:set var="viewContactActionPath"><wp:action path="/ExtStr2/do/jpaddressbook/Front/AddressBook/view.action" ><wp:parameter name="entityId"><s:property value="#contactId" /></wp:parameter></wp:action></s:set>
-								<a title="<wp:i18n key="jpaddressbook_VIEW_CONTACT" />" href="<s:property value="#viewContactActionPath" escape="false" />" tabindex="<wpsa:counter />"><s:property value="#contactId" /></a>
+								<a title="<wp:i18n key="jpaddressbook_VIEW_CONTACT" />" href="<s:property value="#viewContactActionPath" escapeHtml="false" />" tabindex="<wpsa:counter />"><s:property value="#contactId" /></a>
 							</td>
 							</s:if>
 							<%-- EVENTUALI COLONNE CONFIGURABILI IN BASE AL MODELLO DEL PROFILO --%>
 							<s:if test="#userProfilePrototype.surnameAttributeName != null">
 								<td>
 									<s:set var="editContactActionPath"><wp:action path="/ExtStr2/do/jpaddressbook/Front/AddressBook/view.action" ><wp:parameter name="entityId"><s:property value="#contactId" /></wp:parameter></wp:action></s:set>
-									<a title="<wp:i18n key="jpaddressbook_VIEW_CONTACT" />" href="<s:property value="#editContactActionPath" escape="false" />"><s:property value="#contact.getValue(#userProfilePrototype.surnameAttributeName)"/></a>
+									<a title="<wp:i18n key="jpaddressbook_VIEW_CONTACT" />" href="<s:property value="#editContactActionPath" escapeHtml="false" />"><s:property value="#contact.getValue(#userProfilePrototype.surnameAttributeName)"/></a>
 								</td>
 							</s:if>
 							<s:if test="#userProfilePrototype.firstNameAttributeName != null">
 								<td>
 									<s:set var="editContactActionPath"><wp:action path="/ExtStr2/do/jpaddressbook/Front/AddressBook/view.action" ><wp:parameter name="entityId"><s:property value="#contactId" /></wp:parameter></wp:action></s:set>
-									<a title="<wp:i18n key="jpaddressbook_VIEW_CONTACT" />" href="<s:property value="#editContactActionPath" escape="false" />"><s:property value="#contact.getValue(#userProfilePrototype.firstNameAttributeName)"/></a>
+									<a title="<wp:i18n key="jpaddressbook_VIEW_CONTACT" />" href="<s:property value="#editContactActionPath" escapeHtml="false" />"><s:property value="#contact.getValue(#userProfilePrototype.firstNameAttributeName)"/></a>
 								</td>
 							</s:if>
 							<s:if test="#userProfilePrototype.mailAttributeName != null">
@@ -102,10 +102,10 @@
 								<td>
 								<s:if test="#contact.owner.equals(#session.currentUser.username)">
 									<s:set var="editContactActionPath"><wp:action path="/ExtStr2/do/jpaddressbook/Front/AddressBook/edit.action" ><wp:parameter name="entityId"><s:property value="#contactId" /></wp:parameter></wp:action></s:set>
-									<a href="<s:property value="#editContactActionPath" escape="false" />" tabindex="<wpsa:counter />"><wp:i18n key="jpaddressbook_EDITACTION" /></a>
+									<a href="<s:property value="#editContactActionPath" escapeHtml="false" />" tabindex="<wpsa:counter />"><wp:i18n key="jpaddressbook_EDITACTION" /></a>
 									&#32;
 									<s:set var="trashContactActionPath"><wp:action path="/ExtStr2/do/jpaddressbook/Front/AddressBook/trash.action" ><wp:parameter name="entityId"><s:property value="#contactId" /></wp:parameter></wp:action></s:set>
-									<a href="<s:property value="#trashContactActionPath" escape="false" />" tabindex="<wpsa:counter />"><wp:i18n key="jpaddressbook_DELETEACTION" /></a>
+									<a href="<s:property value="#trashContactActionPath" escapeHtml="false" />" tabindex="<wpsa:counter />"><wp:i18n key="jpaddressbook_DELETEACTION" /></a>
 								</s:if>
 								<s:else>&#32;</s:else>
 								</td>

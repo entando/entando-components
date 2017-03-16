@@ -20,7 +20,7 @@
 
 	<p class="paginazione">
 		<wpsf:submit useTabindexAutoIncrement="true" name="%{'pagerItem_' + #group.prevItem}" value="%{#goPrevious}" disabled="%{1 == #group.currItem}" />	
-		<s:subset source="#group.items" ><s:iterator id="item"><wpsf:submit useTabindexAutoIncrement="true" name="%{'pagerItem_' + #item}" value="%{#item}" disabled="%{#item == #group.currItem}" /></s:iterator></s:subset>
+		<s:subset source="#group.items" ><s:iterator var="item"><wpsf:submit useTabindexAutoIncrement="true" name="%{'pagerItem_' + #item}" value="%{#item}" disabled="%{#item == #group.currItem}" /></s:iterator></s:subset>
 		<wpsf:submit useTabindexAutoIncrement="true" name="%{'pagerItem_' + #group.nextItem}" value="%{#goNext}" disabled="%{#group.maxItem == #group.currItem}" />
 	</p>
 	

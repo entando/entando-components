@@ -83,7 +83,7 @@
 <s:if test="#attachmentInfos.size() > 0">
 	<h3>ALLEGATI</h3>
 	<ol>
-	<s:iterator value="#attachmentInfos" id="attachment">
+	<s:iterator value="#attachmentInfos" var="attachment">
 		<li><a href="<s:url action="openAttachment"><s:param name="messageIndex" value="messageIndex" /><s:param name="currentFolderName" value="currentFolderName" /><s:param name="attachmentNumber" value="#attachment.number" /><s:param name="subPartAttachmentNumber" value="#attachment.subPartNumber" /></s:url>" ><s:property value="#attachment.fileName" /> (<s:property value="#attachment.size" /> bytes)</a></li>
 	</s:iterator>
 	</ol>

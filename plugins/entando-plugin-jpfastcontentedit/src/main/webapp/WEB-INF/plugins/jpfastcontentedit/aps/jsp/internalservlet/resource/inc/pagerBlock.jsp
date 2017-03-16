@@ -87,7 +87,7 @@
 			</s:if>
 		</s:if>	
 		<s:subset source="#group.items" count="#group.endItemAnchor-#group.beginItemAnchor+1" start="#group.beginItemAnchor-1">
-			<s:iterator id="item">
+			<s:iterator var="item">
 				<li>
 					<wpsf:submit 
 						cssClass="btn %{#item == #group.currItem? 'disabled' : ''}" 

@@ -49,7 +49,7 @@
 			<ul>
 			<s:iterator value="fieldErrors">
 				<s:iterator value="value">
-				<li><s:property escape="false" /></li>
+				<li><s:property escapeHtml="false" /></li>
 				</s:iterator>
 			</s:iterator>
 			</ul>
@@ -226,7 +226,7 @@
 
 				<s:if test="null != filtersProperties && filtersProperties.size()>0" >
 					<ol class="list-group">
-					<s:iterator value="filtersProperties" id="filter" status="rowstatus">
+					<s:iterator value="filtersProperties" var="filter" status="rowstatus">
 					<%--
 						<s:property value="#rowstatus.index+1"/>
 					--%>
@@ -395,7 +395,7 @@
 
 				<s:if test="null != userFiltersProperties && userFiltersProperties.size() > 0" >
 				<ol class="list-group">
-					<s:iterator value="userFiltersProperties" id="userFilter" status="rowstatus">
+					<s:iterator value="userFiltersProperties" var="userFilter" status="rowstatus">
 					<li class="list-group-item">
 						<s:text name="label.filterBy" />
 						<strong>

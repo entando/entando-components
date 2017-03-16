@@ -386,7 +386,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 			<ul class="unstyled">
 				<@s.iterator value="fieldErrors">
 					<@s.iterator value="value">
-						<li><@s.property escape=false /></li>
+						<li><@s.property escapeHtml=false /></li>
 					</@s.iterator>
 				</@s.iterator>
 			</ul>
@@ -397,7 +397,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 			<p><strong><@wp.i18n key="ERRORS"/></strong></p>
 			<ul class="unstyled">
 				<@s.iterator value="actionErrors">
-					<li><@s.property escape=false /></li>
+					<li><@s.property escapeHtml=false /></li>
 				</@s.iterator>
 			</ul>
 		</div>

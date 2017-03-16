@@ -39,7 +39,7 @@
             <h2 class="h4 margin-none"><s:text name="messages.confirm" /></h2>	
             <ul class="margin-base-vertical">
                 <s:iterator value="actionMessages">
-                    <li><s:property escape="false" /></li>
+                    <li><s:property escapeHtml="false" /></li>
                     </s:iterator>
             </ul>
         </div>
@@ -134,7 +134,7 @@
                             <th class="text-right"><s:text name="jpsurvey_questions_number" /></th>
                             <th class="text-center"><abbr title="<s:text name="jpsurvey_published" />">P</abbr></th>
                         </tr>
-                        <s:iterator id="surveyId">
+                        <s:iterator var="surveyId">
                             <s:set name="survey" value="%{getSurvey(#surveyId)}" />
                             <%--LINK ALL'AZIONE DI EDIT, DIFFERENZIAMO PER TIPO DI SURVEY --%>
                             <tr>

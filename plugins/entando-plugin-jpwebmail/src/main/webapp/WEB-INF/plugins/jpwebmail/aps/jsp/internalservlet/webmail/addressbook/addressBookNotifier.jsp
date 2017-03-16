@@ -8,7 +8,7 @@
 	<p><wp:i18n key="ERROR" /></p>
 <ul>
 	<s:iterator value="actionMessages">
-		<li><s:property escape="false" /></li>
+		<li><s:property escapeHtml="false" /></li>
 	</s:iterator>
 </ul>
 <s:if test="!hasActionErrors()">

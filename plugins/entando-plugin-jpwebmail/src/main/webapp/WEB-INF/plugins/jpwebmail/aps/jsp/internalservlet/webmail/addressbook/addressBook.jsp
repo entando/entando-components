@@ -7,7 +7,7 @@
 <form action="<wp:action path="/ExtStr2/do/jpwebmail/Portal/WebMail/searchRecipients.action" />" method="post" >
 	<p class="noscreen">
 	<wpsf:hidden name="actualRecipient" />
-	<s:iterator value="selectedReceivers" id="selectedReceiver" status="rowstatus">
+	<s:iterator value="selectedReceivers" var="selectedReceiver" status="rowstatus">
 		<wpsf:hidden name="selectedReceivers" value="%{#selectedReceiver}" id="selectedReceivers-%{#rowstatus.index}"/>
 	</s:iterator>
 	</p>
@@ -39,7 +39,7 @@
 <p class="noscreen">
 	<wpsf:hidden name="text" />
 	<wpsf:hidden name="actualRecipient" />
-	<s:iterator value="selectedReceivers" id="selectedReceiver" status="rowstatus">
+	<s:iterator value="selectedReceivers" var="selectedReceiver" status="rowstatus">
 		<wpsf:hidden name="selectedReceivers" value="%{#selectedReceiver}" id="selectedReceivers-%{#rowstatus.index}"/>
 	</s:iterator>
 </p>
@@ -53,7 +53,7 @@
 	
 	<p class="centerText"><wp:i18n key="jpwebmail_ADDRESS_LIST" /></p>
 		<ul>
-			<s:iterator id="contact" status="counter">
+			<s:iterator var="contact" status="counter">
 				<li>
 				<input type="checkbox" name="selectedReceivers"	id="selectedReceivers_<s:property value="#counter.index"/>" value="<s:property value="#contact.username"/>" /><label for="selectedReceivers_<s:property value="#counter.index"/>"><s:property value="#contact.fullName" />&#32;&lt;<s:property value="#contact.emailAddress"/>&gt;</label>
 				</li>
@@ -81,7 +81,7 @@
 		<th><abbr title="<wp:i18n key="jpwebmail_OPERATIONS" />">-</abbr></th>
 		</tr>
 		
-		<s:iterator value="selectedReceivers" id="selectedReceiver" status="rowstatus">
+		<s:iterator value="selectedReceivers" var="selectedReceiver" status="rowstatus">
 		<tr>
 		<s:set name="currentUser" value="%{getContact(#selectedReceiver)}"/>
 		<td><s:property value="#currentUser.fullName" /></td>
@@ -105,7 +105,7 @@
 <p class="noscreen">
 	<wpsf:hidden name="text" />
 	<wpsf:hidden name="actualRecipient" />
-	<s:iterator value="selectedReceivers" id="selectedReceiver" status="rowstatus">
+	<s:iterator value="selectedReceivers" var="selectedReceiver" status="rowstatus">
 		<wpsf:hidden name="selectedReceivers" value="%{#selectedReceiver}" id="selectedReceivers-%{#rowstatus.index}"/>
 	</s:iterator>
 </p>

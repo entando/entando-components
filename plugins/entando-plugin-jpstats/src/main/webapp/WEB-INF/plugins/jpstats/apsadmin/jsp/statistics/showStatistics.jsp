@@ -15,7 +15,7 @@
 								<h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
 								<ul class="unstyled margin-small-top">
 										<s:iterator value="fieldErrors">
-												<s:iterator value="value"><li><s:property escape="false" /></li></s:iterator>
+												<s:iterator value="value"><li><s:property escapeHtml="false" /></li></s:iterator>
 										</s:iterator>
 								</ul>
 						</div>
@@ -25,7 +25,7 @@
 									<button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
 								<h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
 								<ul class="unstyled margin-small-top">
-										<s:iterator value="actionErrors"><li><s:property  escape="false"/></li></s:iterator>
+										<s:iterator value="actionErrors"><li><s:property  escapeHtml="false"/></li></s:iterator>
 								</ul>
 						</div>
 				</s:if>

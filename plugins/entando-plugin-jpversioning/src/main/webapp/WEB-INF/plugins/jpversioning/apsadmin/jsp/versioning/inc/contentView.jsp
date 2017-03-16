@@ -23,7 +23,7 @@
 
 			<%-- START CICLO ATTRIBUTI --%>
 			<s:if test="%{content.attributeList.size() > 0}">
-				<s:iterator value="content.attributeList" id="attribute">
+				<s:iterator value="content.attributeList" var="attribute">
 					<div class="form-group">
 					<%-- INIZIALIZZAZIONE TRACCIATORE --%>
 					<s:set name="attributeTracer" value="initAttributeTracer(#attribute, #lang)" />

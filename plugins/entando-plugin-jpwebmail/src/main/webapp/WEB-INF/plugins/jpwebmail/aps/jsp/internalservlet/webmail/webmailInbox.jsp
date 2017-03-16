@@ -22,7 +22,7 @@
 <h3><wp:i18n key="ERROR" /></h3>
 	<ul>
 	<s:iterator value="actionErrors">
-		<li><s:property escape="true"/></li>
+		<li><s:property escapeHtml="true"/></li>
 	</s:iterator>
 	</ul>
 </div>
@@ -53,7 +53,7 @@
 	<th><wp:i18n key="jpwebmail_MSG_SUBJECT" /></th>
 	<th><wp:i18n key="jpwebmail_MSG_DATE" /></th>
 </tr>
-<s:iterator id="message" status="count">
+<s:iterator var="message" status="count">
 <s:set name="messagePosition" value="#groupMessages.begin + #count.index" />
 <tr>
 	<td class="doubleItems"><input type="checkbox" <s:if test="selectedAllMessages">checked="checked"</s:if> name="messageIndexes" id="<s:property value="%{'message_' + #count.index}" />" value="<s:property value="#messagePosition" />" class="checkbox" /><label for="<s:property value="%{'message_' + #count.index}" />"><s:property value="#messagePosition + 1" /></label></td>

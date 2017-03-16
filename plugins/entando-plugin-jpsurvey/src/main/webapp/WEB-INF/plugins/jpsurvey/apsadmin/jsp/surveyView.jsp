@@ -35,7 +35,7 @@
             <h2><s:text name="jpsurvey_question"/>&#32;<s:property value="#questionIndex.index + 1"/>. <s:property value="%{getLabel(#question.questions)}" /></h2>
             <h3><s:text name="jpsurvey_answers" />:</h3>
             <ol>	
-                <s:iterator id="choice" value="#question.choices" status="rowstatus" >
+                <s:iterator var="choice" value="#question.choices" status="rowstatus" >
                     <li>
                         <s:if test="#choice.freeText">
                             <s:set name="occurrence" value="#occurrences[#choice.id]" />
@@ -56,7 +56,7 @@
             </ol>
             <div class="graphic">
                 <dl class="graph">		
-                    <s:iterator id="choice" value="#question.choices" status="rowstatus" >
+                    <s:iterator var="choice" value="#question.choices" status="rowstatus" >
                         <s:if test="#choice.freeText">
                             <dt><s:text name="jpsurvey_freeText" /></dt>
                         </s:if>

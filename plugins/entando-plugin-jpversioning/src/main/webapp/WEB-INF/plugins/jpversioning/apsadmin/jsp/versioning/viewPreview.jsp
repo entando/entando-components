@@ -64,7 +64,7 @@
 					<span class="text-muted"><s:text name="noExtraGroup" /></span>
 				</s:if>
 				<s:if test="%{content.groups.size() > 0}">
-						<s:iterator value="content.groups" id="groupName">
+						<s:iterator value="content.groups" var="groupName">
 							<s:property value="%{getGroupsMap()[#groupName].getDescr()}"/>&#32;
 						</s:iterator>
 				</s:if>
@@ -78,7 +78,7 @@
 					</s:if>
 
 					<s:if test="%{content.categories.size() > 0}">
-							<s:iterator value="content.categories" id="contentCategory">
+							<s:iterator value="content.categories" var="contentCategory">
 								<s:property value="#contentCategory.defaultFullTitle"/>&#32;
 							</s:iterator>
 					</s:if>

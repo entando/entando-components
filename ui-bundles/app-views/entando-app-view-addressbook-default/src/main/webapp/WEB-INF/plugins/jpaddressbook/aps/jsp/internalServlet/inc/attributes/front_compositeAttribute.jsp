@@ -8,7 +8,7 @@
 
 <s:set name="masterCompositeAttributeTracer" value="#attributeTracer" />
 <s:set name="masterCompositeAttribute" value="#attribute" />
-<s:iterator value="#attribute.attributes" id="attribute">
+<s:iterator value="#attribute.attributes" var="attribute">
 	<s:set name="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)"></s:set>
 	<s:set name="parentAttribute" value="#masterCompositeAttribute"></s:set>
 	<s:set var="i18n_attribute_name">jpaddressbook_ATTR<s:property value="%{i18n_parent_attribute_name}" /><s:property value="#attribute.name" /></s:set>

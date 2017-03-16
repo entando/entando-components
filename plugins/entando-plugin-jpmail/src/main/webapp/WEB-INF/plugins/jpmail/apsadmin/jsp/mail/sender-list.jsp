@@ -20,7 +20,7 @@
             <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
             <ul class="margin-base-vertical">
                 <s:iterator value="actionErrors">
-                    <li><s:property escape="false" /></li>
+                    <li><s:property escapeHtml="false" /></li>
                     </s:iterator>
             </ul>
         </div>
@@ -36,7 +36,7 @@
                 <th><s:text name="code" /></th>
                 <th><s:text name="mail" /></th>
             </tr>
-            <s:iterator value="%{config.senders.entrySet()}" id="sender">
+            <s:iterator value="%{config.senders.entrySet()}" var="sender">
                 <tr>
                     <td class="text-center text-nowrap">
                         <div class="btn-group btn-group-xs">

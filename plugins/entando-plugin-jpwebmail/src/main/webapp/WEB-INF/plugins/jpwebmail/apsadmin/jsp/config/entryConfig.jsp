@@ -14,7 +14,7 @@
 				<h2 class="h4 margin-none"><s:text name="messages.error" /></h2>
 				<ul class="margin-base-top">
 					<s:iterator value="actionMessages">
-						<li><s:property escape="false" /></li>
+						<li><s:property escapeHtml="false" /></li>
 					</s:iterator>
 				</ul>
 			</div>
@@ -34,7 +34,7 @@
 				<ul class="collapse margin-small-top" id="content-field-messages">
 					<s:iterator value="fieldErrors" var="e">
 						<s:iterator value="#e.value">
-							<li><s:property escape="false" /></li>
+							<li><s:property escapeHtml="false" /></li>
 						</s:iterator>
 					</s:iterator>
 				</ul>

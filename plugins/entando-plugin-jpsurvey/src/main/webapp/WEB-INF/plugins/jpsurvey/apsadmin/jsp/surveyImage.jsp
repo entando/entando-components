@@ -118,7 +118,7 @@
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
                 </div>
 
-                <s:iterator id="resourceid">
+                <s:iterator var="resourceid">
                     <s:set name="resource" value="%{loadResource(#resourceid)}"></s:set>
                     <%-- http://www.maxdesign.com.au/presentation/definition/dl-image-gallery.htm --%>
 

@@ -19,7 +19,7 @@
 	<ul class="unstyled">
 		<s:iterator value="fieldErrors">
 			<s:iterator value="value">
-	            <li><s:property escape="false" /></li>
+	            <li><s:property escapeHtml="false" /></li>
 			</s:iterator>
 		</s:iterator>
 	</ul>
@@ -27,7 +27,7 @@
 </s:if>
 <fieldset><legend><s:text name="title.chooseLinkType" /></legend>
 <ul class="unstyled noBullet radiocheck">
-<s:iterator id="typeId" value="linkDestinations">
+<s:iterator var="typeId" value="linkDestinations">
 	<s:if test="#typeId != 4">
 		
 		<s:if test="#typeId == 1">

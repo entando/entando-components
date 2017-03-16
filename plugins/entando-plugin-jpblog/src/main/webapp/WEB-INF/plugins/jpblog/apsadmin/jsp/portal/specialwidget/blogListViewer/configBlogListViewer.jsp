@@ -35,7 +35,7 @@
                     <ul class="margin-base-vertical">
                         <s:iterator value="fieldErrors">
                             <s:iterator value="value">
-                                <li><s:property escape="false" /></li>
+                                <li><s:property escapeHtml="false" /></li>
                                 </s:iterator>
                             </s:iterator>
                     </ul>
@@ -269,7 +269,7 @@
                             <div class="collapse" id="extraOption">
 
                                 <p><s:text name="note.extraOption.intro" /></p>
-                                <s:iterator id="lang" value="langs">
+                                <s:iterator var="lang" value="langs">
                                     <div class="form-group">
                                         <label for="title_<s:property value="#lang.code" />">
                                             <code class="label label-info"><s:property value="#lang.code" /></code>

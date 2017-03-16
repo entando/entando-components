@@ -59,7 +59,7 @@ window.addEvent('domready', function(){
 <ul class="unstyled">
 <s:iterator value="fieldErrors">
 	<s:iterator value="value">
-	<li><s:property escape="false" /></li>
+	<li><s:property escapeHtml="false" /></li>
 	</s:iterator>
 </s:iterator>
 </ul>
@@ -68,7 +68,7 @@ window.addEvent('domready', function(){
 <p class="noscreen">
 	<wpsf:hidden name="strutsAction" />
 	<wpsf:hidden name="resourceTypeCode" />
-<s:iterator value="categoryCodes" id="categoryCode" status="rowstatus">
+<s:iterator value="categoryCodes" var="categoryCode" status="rowstatus">
 <input type="hidden" name="categoryCodes" value="<s:property value="#categoryCode" />" id="categoryCodes-<s:property value="#rowstatus.index" />"/>
 </s:iterator>
 	<wpsf:hidden name="resourceId" />
@@ -134,7 +134,7 @@ window.addEvent('domready', function(){
 	<th><wp:i18n key="jpfastcontentedit_RESOURCES_CATEGORY" /></th>
 	<th class="icon"><abbr title="<wp:i18n key="jpfastcontentedit_REMOVE" />">&ndash;</abbr></th>
 </tr>
-<s:iterator value="categoryCodes" id="categoryCode">
+<s:iterator value="categoryCodes" var="categoryCode">
 <s:set name="resourceCategory" value="%{getCategory(#categoryCode)}"></s:set>
 <tr>
 	<td><s:property value="#resourceCategory.getFullTitle(currentLang.code)"/></td>

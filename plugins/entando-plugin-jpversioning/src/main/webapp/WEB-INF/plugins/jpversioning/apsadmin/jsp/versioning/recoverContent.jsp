@@ -53,7 +53,7 @@
 					<th><s:text name="label.description"/></th>
 					<th><s:text name="label.ownerGroup"/></th>
 				</tr>
-				<s:iterator id="id" value="trashedResources">
+				<s:iterator var="id" value="trashedResources">
 					<s:set name="resourceItem" value="getTrashedResource(#id)" />
 					<tr>
 						<td><s:property value="#resourceItem.id" /></td>
@@ -76,7 +76,7 @@
 					<th><s:text name="versioning.resource.id"/></th>
 					<th><s:text name="label.messages"/></th>
 				</tr>
-				<s:iterator id="id" value="trashRemovedResources">
+				<s:iterator var="id" value="trashRemovedResources">
 					<tr>
 						<td><s:property value="#id" /></td>
 						<td><s:text name="message.versioning.trashRemovedResource" /></td>

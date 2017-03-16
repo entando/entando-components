@@ -20,7 +20,7 @@
                 <th><s:text name="jpsurvey_freeText_answers" /></th>
                 <th class="text-right"><s:text name="jpsurvey_freeText_occurences" /></th>		
             </tr>
-            <s:iterator id="currentFreeText" value="freeTextMap">
+            <s:iterator var="currentFreeText" value="freeTextMap">
                 <tr>
                     <td><s:property value="#currentFreeText.key" /></td>
                     <td class="text-right"><s:property value="#currentFreeText.value" /></td>

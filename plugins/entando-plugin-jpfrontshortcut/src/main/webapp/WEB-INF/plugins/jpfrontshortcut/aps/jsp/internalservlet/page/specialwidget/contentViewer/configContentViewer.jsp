@@ -22,7 +22,7 @@
 			<ul class="unstyled">
 						<s:iterator value="fieldErrors">
 							<s:iterator value="value">
-							<li><s:property escape="false" /></li>
+							<li><s:property escapeHtml="false" /></li>
 							</s:iterator>
 						</s:iterator>
 					</ul>
@@ -53,7 +53,7 @@
 				<s:if test="#showletTypeParameters.size()>2">
 					<fieldset>
 						<legend><s:text name="label.otherSettings" /></legend>
-						<s:iterator value="#showletTypeParameters" id="showletParam" >
+						<s:iterator value="#showletTypeParameters" var="showletParam" >
 							<s:if test="!#showletParam.name.equals('contentId') && !#showletParam.name.equals('modelId')">
 								<p>
 									<label for="fagianoParam_<s:property value="#showletParam.name" />"><s:property value="#showletParam.descr" />:</label><br />

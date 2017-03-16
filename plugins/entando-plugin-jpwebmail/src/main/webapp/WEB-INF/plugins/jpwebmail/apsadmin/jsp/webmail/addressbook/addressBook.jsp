@@ -6,7 +6,7 @@
 
 <s:form action="searchRecipients">
 	<wpsf:hidden name="actualRecipient" />
-<s:iterator value="selectedReceivers" id="selectedReceiver" status="rowstatus">
+<s:iterator value="selectedReceivers" var="selectedReceiver" status="rowstatus">
 	<wpsf:hidden name="selectedReceivers" value="%{#selectedReceiver}" id="selectedReceivers-%{#rowstatus.index}"/>
 </s:iterator>
 
@@ -32,7 +32,7 @@ Selezionare gli indirizzi da aggiungere nel campo&#32;
 
 <wpsf:hidden name="text" />
 <wpsf:hidden name="actualRecipient" />
-<s:iterator value="selectedReceivers" id="selectedReceiver" status="rowstatus">
+<s:iterator value="selectedReceivers" var="selectedReceiver" status="rowstatus">
 	<wpsf:hidden name="selectedReceivers" value="%{#selectedReceiver}" id="selectedReceivers-%{#rowstatus.index}"/>
 </s:iterator>
 
@@ -43,7 +43,7 @@ Selezionare gli indirizzi da aggiungere nel campo&#32;
 	<div class="pager"><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /> 
 	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
 	</div>
-	<s:iterator id="contact" status="rowstatus" >
+	<s:iterator var="contact" status="rowstatus" >
 		<input type="checkbox" name="selectedReceivers"	id="selectedReceivers_<s:property value="#counter.index"/>" value="<s:property value="#contact.username"/>" /><label for="selectedReceivers_<s:property value="#counter.index"/>"><s:property value="#contact.fullName" />&#32;&lt;<s:property value="#contact.emailAddress"/>&gt;</label>
 	<br />
 	</s:iterator>
@@ -59,7 +59,7 @@ Selezionare gli indirizzi da aggiungere nel campo&#32;
 <br />
 
 
-<s:iterator value="selectedReceivers" id="selectedReceiver" status="rowstatus">
+<s:iterator value="selectedReceivers" var="selectedReceiver" status="rowstatus">
 	<s:set name="currentUser" value="%{getContact(#selectedReceiver)}"/>
 	<s:property value="#currentUser.fullName" />&#32;&lt;<s:property value="#currentUser.emailAddress"/>&gt;
 	<wpsa:actionParam action="removeRecipient" var="removeRecipientActionName" >

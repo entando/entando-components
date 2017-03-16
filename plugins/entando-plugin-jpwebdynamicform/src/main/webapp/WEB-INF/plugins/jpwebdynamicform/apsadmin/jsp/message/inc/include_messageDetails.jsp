@@ -13,7 +13,7 @@
     </tr>
     
 <s:set name="lang" value="defaultLang" />
-<s:iterator value="message.attributeList" id="attribute">
+<s:iterator value="message.attributeList" var="attribute">
 <%-- INIZIALIZZAZIONE TRACCIATORE --%>
 <s:set name="attributeTracer" value="initAttributeTracer(#attribute, #lang)"></s:set>
 <tr>

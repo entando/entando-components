@@ -185,7 +185,7 @@
                         <h3><s:text name="message.title.ActionErrors" /></h3>
                         <ul>
                             <s:iterator value="actionErrors">
-                                <li><s:property escape="false" /></li>
+                                <li><s:property escapeHtml="false" /></li>
                                 </s:iterator>
                         </ul>
                     </div>

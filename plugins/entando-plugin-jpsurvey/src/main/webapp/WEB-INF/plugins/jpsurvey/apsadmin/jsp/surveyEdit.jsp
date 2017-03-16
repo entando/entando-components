@@ -54,7 +54,7 @@
             <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h3>	
                 <ul class="margin-base-vertical">
                     <s:iterator value="actionErrors">
-                        <li><s:property escape="false" /></li>
+                        <li><s:property escapeHtml="false" /></li>
                         </s:iterator>
                 </ul>
         </div>
@@ -188,7 +188,7 @@
 
 
 
-                    <s:iterator id="currentLang" value="langs">
+                    <s:iterator var="currentLang" value="langs">
                         <div id="<s:property value="#currentLang.code" />_tab" class="tab-pane">
 
                             <div class="contentAttributeBox">	

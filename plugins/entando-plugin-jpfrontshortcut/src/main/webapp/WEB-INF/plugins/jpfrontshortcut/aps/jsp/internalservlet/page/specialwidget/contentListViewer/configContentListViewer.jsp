@@ -23,7 +23,7 @@
 			<ul class="unstyled">
 			<s:iterator value="fieldErrors">
 				<s:iterator value="value">
-				<li><s:property escape="false" /></li>
+				<li><s:property escapeHtml="false" /></li>
 				</s:iterator>
 			</s:iterator>
 			</ul>
@@ -121,7 +121,7 @@
 		<th><s:text name="label.order" /></th>
 		<th class="icon" colspan="3"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th> 
 	</tr>
-	<s:iterator value="filtersProperties" id="filter" status="rowstatus">
+	<s:iterator value="filtersProperties" var="filter" status="rowstatus">
 	<tr>
 		<td class="rightText"><s:property value="#rowstatus.index+1"/></td>
 		<td>
@@ -261,7 +261,7 @@
 		<th><s:text name="name.filterDescription" /></th>
 		<th class="icon" colspan="3"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th> 
 	</tr>
-	<s:iterator value="userFiltersProperties" id="userFilter" status="rowstatus">
+	<s:iterator value="userFiltersProperties" var="userFilter" status="rowstatus">
 	<tr>
 		<td class="rightText"><s:property value="#rowstatus.index+1"/></td>
 		<td>

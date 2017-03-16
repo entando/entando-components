@@ -23,7 +23,7 @@
 <ul>
 <s:iterator value="fieldErrors">
 	<s:iterator value="value">
-	<li><s:property escape="false"/></li>
+	<li><s:property escapeHtml="false"/></li>
 	</s:iterator>
 </s:iterator>
 </ul>
@@ -81,7 +81,7 @@
 <s:if test="#attachmentInfos.size() > 0">
 	<h3><wp:i18n key="jpwebmail_MSG_ATTACHMENTS" /></h3>
 	<ol class="alignInput">
-	<s:iterator value="#attachmentInfos" id="attachment">
+	<s:iterator value="#attachmentInfos" var="attachment">
 		<wpsa:actionParam action="removeAttachment" var="removeAttachmentActionName" >
 			<wpsa:actionSubParam name="attachmentNumber" value="%{#attachment.number}" />
 		</wpsa:actionParam>

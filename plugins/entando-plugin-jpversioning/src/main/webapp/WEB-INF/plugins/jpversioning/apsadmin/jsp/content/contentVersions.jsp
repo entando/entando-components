@@ -33,7 +33,7 @@
 					<th><s:text name="jpversioning.label.username" /></th>
  				</tr>
 
-				<s:iterator id="versionId">
+				<s:iterator var="versionId">
 				<s:set name="contentVersion" value="%{getContentVersion(#versionId)}" />
 				<tr>
 					<td class="text-center text-nowrap">

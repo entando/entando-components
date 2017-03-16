@@ -34,7 +34,7 @@
                     <ul class="margin-base-vertical">
                         <s:iterator value="fieldErrors">
                             <s:iterator value="value">
-                                <li><s:property escape="false" /></li>
+                                <li><s:property escapeHtml="false" /></li>
                                 </s:iterator>
                             </s:iterator>
                     </ul>
@@ -180,7 +180,7 @@
                                             <th><s:text name="name.filterDescription" /></th>
                                             <th><s:text name="label.order" /></th>
                                         </tr>
-                                        <s:iterator value="filtersProperties" id="filter" status="rowstatus">
+                                        <s:iterator value="filtersProperties" var="filter" status="rowstatus">
                                             <tr>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-xs">
@@ -348,7 +348,7 @@
                                             <th class="text-right"><abbr title="<s:text name="label.number" />">N</abbr></th>
                                             <th><s:text name="name.filterDescription" /></th>
                                         </tr>
-                                        <s:iterator value="userFiltersProperties" id="userFilter" status="rowstatus">
+                                        <s:iterator value="userFiltersProperties" var="userFilter" status="rowstatus">
                                             <tr>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-xs">

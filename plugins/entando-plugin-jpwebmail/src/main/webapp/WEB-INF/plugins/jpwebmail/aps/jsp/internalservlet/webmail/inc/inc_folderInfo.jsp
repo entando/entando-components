@@ -25,7 +25,7 @@
 		<a href="<wp:action path="/ExtStr2/do/jpwebmail/Portal/WebMail/changeFolder" ><wp:parameter name="currentFolderName"><s:property value="#parentFolder.fullName" /></wp:parameter></wp:action>" title="<s:property value="#parentFolder.name" />&amp;currentFolderName=<s:property value="#parentFolder.fullName" />"><abbr title="<s:property value="#parentFolder.name" />">..</abbr></a>
 	</li>
 </s:if>
-<s:iterator value="currentChildrenFolders" id="folder">
+<s:iterator value="currentChildrenFolders" var="folder">
 	<li>
 		<s:if test="#folder.name.equals(#currentFolder.name)">
 		<c:set var="customPageTitleVar" ><wp:currentPage /> - <s:property value="#folder.name" /><s:if test="#folder.getUnreadMessageCount()"> (<s:property value="#folder.getUnreadMessageCount()" />)</s:if></c:set>

@@ -18,7 +18,7 @@
       </span>
   </div>
   <s:if test="%{contentTypeCodes.size()>0}">
-    <s:iterator value="contentTypeCodes" id="currentContentTypeCode" status="rowstatus">
+    <s:iterator value="contentTypeCodes" var="currentContentTypeCode" status="rowstatus">
       <wpsa:set name="currentFacet" value="%{getFacet(#currentFacetCode)}" />
       <span class="label label-default label-sm pull-left padding-small-top padding-small-bottom margin-small-right margin-small-bottom">
         <wpsa:set name="currentContentType" value="%{getContentType(#currentContentTypeCode)}" />

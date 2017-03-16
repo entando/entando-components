@@ -74,7 +74,7 @@
             </s:if>
         </p>
         <ul class="nav nav-tabs tab-togglers" id="tab-togglers">
-            <s:iterator value="langs" id="lang" status="langStatusVar">
+            <s:iterator value="langs" var="lang" status="langStatusVar">
                 <li <s:if test="#langStatusVar.first"> class="active" </s:if>>
                     <a data-toggle="tab" href="#<s:property value="#lang.code" />_tab"><s:property value="#lang.descr" /></a>
                 </li>
@@ -83,7 +83,7 @@
         <div class="panel panel-default" id="tab-container">
             <div class="panel-body">
                 <div class="tab-content">
-                    <s:iterator id="cyclingLang" value="langs" status="langStatusVar">
+                    <s:iterator var="cyclingLang" value="langs" status="langStatusVar">
                         <div id="<s:property value="#cyclingLang.code" />_tab" class="tab-pane <s:if test="#langStatusVar.first"> active </s:if>">
                             <p>
                                 <label for="question-<s:property value="#lang.code" />"><s:text name="jpsurvey_question" /></label>
@@ -131,7 +131,7 @@
                             </s:if>
                     </tr>
                     <%-- STAMPA LE OPZIONI DISPONIBILI STAMPATE NELLA LINGUA DEL BACKEND--%>
-                    <s:iterator id="currentChoice" value="question.choices" status="status">
+                    <s:iterator var="currentChoice" value="question.choices" status="status">
                         <tr>
                             <s:set name="currentStat" value="choiceStats[#currentChoice.id]" />
                             <s:if test="%{#currentChoice.freeText== false}">

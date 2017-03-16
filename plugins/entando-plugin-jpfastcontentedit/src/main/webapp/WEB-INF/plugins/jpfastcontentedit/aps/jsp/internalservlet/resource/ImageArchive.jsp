@@ -92,7 +92,7 @@
 				</div>
 			</div>
 			 
-			<s:iterator id="resourceid" status="status"> 
+			<s:iterator var="resourceid" status="status"> 
 				<s:set var="resource" value="%{loadResource(#resourceid)}" />
 					<s:if test="#status.count == 1 || #status.count == 7">
 						<div class="row-fluid">

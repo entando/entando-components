@@ -24,7 +24,7 @@
 			<ul class="unstyled">
 				<s:iterator value="fieldErrors">
 					<s:iterator value="value">
-						<li><s:property escape="false" /></li>
+						<li><s:property escapeHtml="false" /></li>
 					</s:iterator>
 				</s:iterator>
 			</ul>
@@ -40,7 +40,7 @@
 	<wpsf:hidden name="modelId" />
 	<wpsf:hidden name="maxElemForItem" />
 	<wpsf:hidden name="pageLink" value="%{#parameters['pageLink']}" />
-	<s:iterator id="lang" value="langs">
+	<s:iterator var="lang" value="langs">
 	<wpsf:hidden name="%{'linkDescr_' + #lang.code}" value="%{#parameters['linkDescr_' + #lang.code]}" />
 	<wpsf:hidden name="%{'title_' + #lang.code}" value="%{#parameters['title_' + #lang.code]}" />
 	</s:iterator>

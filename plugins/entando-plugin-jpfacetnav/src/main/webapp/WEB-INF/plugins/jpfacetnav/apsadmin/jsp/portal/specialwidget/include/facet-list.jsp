@@ -49,7 +49,7 @@
 </div>
 <%-- Area results' labels--%>
   <s:if test="%{facetRootCodes.size()>0}">
-    <s:iterator value="facetRootCodes" id="currentFacetCode" status="rowstatus">
+    <s:iterator value="facetRootCodes" var="currentFacetCode" status="rowstatus">
       <wpsa:set name="currentFacet" value="%{getFacet(#currentFacetCode)}" />
       <span class="label label-default label-sm pull-left padding-small-top padding-small-bottom margin-small-right margin-small-bottom">
         <span class="icon fa fa-tag"></span>&#32;
