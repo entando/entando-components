@@ -222,7 +222,7 @@
 <fieldset><legend class="accordion_toggler"><s:text name="title.extraOption" /></legend>
 <div class="accordion_element">
 <p><s:text name="note.extraOption.intro" /></p>
-	<s:iterator id="lang" value="langs">
+	<s:iterator var="lang" value="langs">
 		<p>
 			<label for="title_<s:property value="#lang.code" />"  class="basic-mint-label"><span class="monospace">(<s:property value="#lang.code" />)</span><s:text name="label.title" />:</label>
 			<wpsf:textfield useTabindexAutoIncrement="true" name="title_%{#lang.code}" id="title_%{#lang.code}" value="%{showlet.config.get('title_' + #lang.code)}" cssClass="text" />

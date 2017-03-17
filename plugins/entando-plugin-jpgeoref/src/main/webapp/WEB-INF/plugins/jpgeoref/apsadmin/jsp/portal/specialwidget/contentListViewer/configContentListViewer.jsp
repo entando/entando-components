@@ -288,7 +288,7 @@
                             </legend>
                             <div class="collapse" id="extraOption">
                                 <p><s:text name="note.extraOption.intro" /></p>
-                                <s:iterator id="lang" value="langs">
+                                <s:iterator var="lang" value="langs">
                                     <div class="form-group">
                                         <label for="title_<s:property value="#lang.code" />" >
                                             <code class="label label-info"><s:property value="#lang.code" /></code>

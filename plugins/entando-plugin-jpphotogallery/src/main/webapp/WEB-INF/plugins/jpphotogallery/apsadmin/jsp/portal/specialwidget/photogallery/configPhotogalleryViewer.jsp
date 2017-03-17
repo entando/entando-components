@@ -332,7 +332,7 @@
 			<legend data-toggle="collapse" data-target="#options-extra"><s:text name="title.extraOption" />&#32;<span class="icon fa fa-chevron-down"></span></legend>
 			<div class="collapse" id="options-extra">
 				<p><s:text name="note.extraOption.intro" /></p>
-					<s:iterator id="lang" value="langs">
+					<s:iterator var="lang" value="langs">
 						<div class="form-group">
 							<div class="col-xs-12">
 								<label for="title_<s:property value="#lang.code" />">

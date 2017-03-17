@@ -5,17 +5,17 @@
 <s:if test="#group.size > #group.max">
 	
 	<s:if test="%{1 == #group.currItem}">
-		<s:set id="goPrevious" name="goPrevious"><wp:i18n key="jpaddressbook_PREV" /></s:set>
+		<s:set var="goPrevious"><wp:i18n key="jpaddressbook_PREV" /></s:set>
 	</s:if>
 	<s:else>
-		<s:set id="goPrevious" name="goPrevious"><wp:i18n key="jpaddressbook_PREV" /></s:set>
+		<s:set var="goPrevious"><wp:i18n key="jpaddressbook_PREV" /></s:set>
 	</s:else>
 
 	<s:if test="%{#group.maxItem == #group.currItem}">
-		<s:set id="goNext" name="goNext"><wp:i18n key="jpaddressbook_PREV" /></s:set>
+		<s:set var="goNext"><wp:i18n key="jpaddressbook_PREV" /></s:set>
 	</s:if>
 	<s:else>    
-		<s:set id="goNext" name="goNext"><wp:i18n key="jpaddressbook_NEXT" /></s:set>
+		<s:set var="goNext"><wp:i18n key="jpaddressbook_NEXT" /></s:set>
 	</s:else>
 
 	<p class="paginazione">

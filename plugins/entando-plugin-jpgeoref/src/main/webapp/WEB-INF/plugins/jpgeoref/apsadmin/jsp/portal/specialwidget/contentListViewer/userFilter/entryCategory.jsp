@@ -49,7 +49,7 @@
                 <wpsf:hidden name="filters" />
                 <wpsf:hidden name="modelId" />
                 <wpsf:hidden name="pageLink" value="%{#parameters['pageLink']}" />
-                <s:iterator id="lang" value="langs">
+                <s:iterator var="lang" value="langs">
                     <wpsf:hidden name="%{'linkDescr_' + #lang.code}" value="%{#parameters['linkDescr_' + #lang.code]}" />
                     <wpsf:hidden name="%{'title_' + #lang.code}" value="%{#parameters['title_' + #lang.code]}" />
                 </s:iterator>
