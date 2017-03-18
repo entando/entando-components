@@ -52,7 +52,7 @@
 				<s:if test="strutsAction == 2">
 					<wpsf:hidden name="pageCode" />
 				</s:if>
-				<s:iterator value="extraGroups" id="groupName"><s:hidden name="extraGroups" value="%{#groupName}" /></s:iterator>
+				<s:iterator value="extraGroups" var="groupName"><s:hidden name="extraGroups" value="%{#groupName}" /></s:iterator>
 				<s:if test="strutsAction == 3">
 					<wpsf:hidden name="group" />
 					<wpsf:hidden name="model" />

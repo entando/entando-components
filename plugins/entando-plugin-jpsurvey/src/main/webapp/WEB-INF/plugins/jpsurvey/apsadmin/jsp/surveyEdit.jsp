@@ -108,7 +108,7 @@
         <ul class="nav nav-tabs tab-togglers" id="tab-togglers">
             <li class="sr-only"><a data-toggle="tab" href="#info_tab">Content Info</a></li>
             <li class="active"><a data-toggle="tab" href="#info">Info</a></li>
-                <s:iterator value="langs" id="lang">
+                <s:iterator value="langs" var="lang">
                 <li><a data-toggle="tab" href="#<s:property value="#lang.code" />_tab"><s:property value="#lang.descr" /></a></li>
                 </s:iterator>
         </ul>

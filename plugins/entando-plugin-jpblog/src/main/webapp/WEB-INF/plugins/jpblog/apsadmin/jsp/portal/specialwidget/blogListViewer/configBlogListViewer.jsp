@@ -332,7 +332,7 @@
                                             <th class="text-right"><abbr title="<s:text name="label.number" />">N</abbr></th>
                                             <th><s:text name="name.filterDescription" /></th>
                                         </tr>
-                                        <s:iterator value="userFiltersProperties" id="userFilter" status="rowstatus">
+                                        <s:iterator value="userFiltersProperties" var="userFilter" status="rowstatus">
                                             <tr>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-xs">
