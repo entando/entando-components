@@ -2,7 +2,7 @@
 <%@ taglib prefix="wp" uri="/aps-core" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<s:set name="surveyInfo" value="surveyInfo" />
+<s:set var="surveyInfo" value="surveyInfo" />
 <div class="jpsurvey submit-done alert alert-success">
 	<s:if test="#surveyInfo.questionnaire">
 		<wp:pageWithWidget var="archivePageVar" widgetTypeCode="jpsurvey_questionnaireList" />

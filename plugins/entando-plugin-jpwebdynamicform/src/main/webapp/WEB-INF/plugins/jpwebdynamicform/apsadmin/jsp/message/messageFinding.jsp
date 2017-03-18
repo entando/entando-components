@@ -16,7 +16,7 @@
             <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
             <ul class="margin-base-vertical">
                 <s:iterator value="actionErrors">
-                    <li><s:property escape="false" /></li>
+                    <li><s:property escapeHtml="false" /></li>
                     </s:iterator>
             </ul>
         </div>
@@ -88,19 +88,19 @@
                         <s:iterator var="attribute" value="#searcheableAttributes">
                             <s:set var="currentFieldId">entityFinding_<s:property value="#attribute.name" /></s:set>
                             <s:if test="#attribute.textAttribute">
-                                <s:set name="textInputFieldName" ><s:property value="#attribute.name" />_textFieldName</s:set>
+                                <s:set var="textInputFieldName" ><s:property value="#attribute.name" />_textFieldName</s:set>
                                     <div class="form-group">
                                         <label class="control-label col-sm-2 text-right" for="<s:property value="#currentFieldId" />"><s:property value="#attribute.name" /></label>
                                     <div class="col-sm-5">
-                                        <s:set name="textInputFieldName"><s:property value="#attribute.name" />_textFieldName</s:set>
+                                        <s:set var="textInputFieldName"><s:property value="#attribute.name" />_textFieldName</s:set>
                                         <wpsf:textfield id="%{#currentFieldId}" cssClass="form-control" name="%{#textInputFieldName}" value="%{getSearchFormFieldValue(#textInputFieldName)}" /><br />
                                     </div>
                                 </div>
                             </s:if>
 
                             <s:elseif test="#attribute.type == 'Date'">
-                                <s:set name="dateStartInputFieldName" ><s:property value="#attribute.name" />_dateStartFieldName</s:set>
-                                <s:set name="dateEndInputFieldName" ><s:property value="#attribute.name" />_dateEndFieldName</s:set>
+                                <s:set var="dateStartInputFieldName" ><s:property value="#attribute.name" />_dateStartFieldName</s:set>
+                                <s:set var="dateEndInputFieldName" ><s:property value="#attribute.name" />_dateEndFieldName</s:set>
                                     <div class="form-group">
                                         <label class="control-label col-sm-2 text-right" for="<s:property value="#currentFieldId" />_start_cal"><s:property value="#attribute.name" />&#32;<s:text name="Start"/></label>
                                     <div class="col-sm-5">
@@ -118,8 +118,8 @@
                             </s:elseif>
 
                             <s:elseif test="#attribute.type == 'Number'">
-                                <s:set name="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
-                                <s:set name="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
+                                <s:set var="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
+                                <s:set var="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
                                     <div class="form-group">
                                         <label class="control-label col-sm-2 text-right" for="<s:property value="#currentFieldId" />_start"><s:property value="#attribute.name" />&#32;<s:text name="Start"/></label>
                                     <div class="col-sm-5">
@@ -203,18 +203,18 @@
                 <wpsf:hidden name="answered"/>
                 <s:iterator var="attribute" value="#searcheableAttributes">
                     <s:if test="#attribute.textAttribute">
-                        <s:set name="textInputFieldName" ><s:property value="#attribute.name" />_textFieldName</s:set>
+                        <s:set var="textInputFieldName" ><s:property value="#attribute.name" />_textFieldName</s:set>
                         <wpsf:hidden name="%{#textInputFieldName}" value="%{getSearchFormFieldValue(#textInputFieldName)}" />
                     </s:if>
                     <s:elseif test="#attribute.type == 'Date'">
-                        <s:set name="dateStartInputFieldName" ><s:property value="#attribute.name" />_dateStartFieldName</s:set>
-                        <s:set name="dateEndInputFieldName" ><s:property value="#attribute.name" />_dateEndFieldName</s:set>
+                        <s:set var="dateStartInputFieldName" ><s:property value="#attribute.name" />_dateStartFieldName</s:set>
+                        <s:set var="dateEndInputFieldName" ><s:property value="#attribute.name" />_dateEndFieldName</s:set>
                         <wpsf:hidden name="%{#dateStartInputFieldName}" value="%{getSearchFormFieldValue(#dateStartInputFieldName)}" />
                         <wpsf:hidden name="%{#dateEndInputFieldName}" value="%{getSearchFormFieldValue(#dateEndInputFieldName)}" />
                     </s:elseif>
                     <s:elseif test="#attribute.type == 'Number'">
-                        <s:set name="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
-                        <s:set name="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
+                        <s:set var="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
+                        <s:set var="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
                         <wpsf:hidden name="%{#numberStartInputFieldName}" value="%{getSearchFormFieldValue(#numberStartInputFieldName)}" />
                         <wpsf:hidden name="%{#numberEndInputFieldName}" value="%{getSearchFormFieldValue(#numberEndInputFieldName)}" />
                     </s:elseif>
@@ -228,7 +228,7 @@
             </p>            
 
             <wpsa:subset source="#entityIds" count="15" objectName="entityGroup" advanced="true" offset="5">
-                <s:set name="group" value="#entityGroup" />
+                <s:set var="group" value="#entityGroup" />
 
                 <div class="pager">
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
@@ -243,8 +243,8 @@
                         <th class="text-center"><s:text name="label.status"/></th>
                     </tr>
                     <s:iterator var="messageId">
-                        <s:set name="message" value="%{getMessage(#messageId)}" />
-                        <s:set name="answers" value="%{getAnswers(#messageId)}" />
+                        <s:set var="message" value="%{getMessage(#messageId)}" />
+                        <s:set var="answers" value="%{getAnswers(#messageId)}" />
                         <tr>
                             <td class="text-center">
                                 <div class="btn-group btn-group-xs">
@@ -271,12 +271,12 @@
                             <td><s:property value="#message.id"/>&#32;&ndash;&#32;<s:property value="#message.typeDescr"/></td>
                             <td class="text-center"><code><s:date name="#message.creationDate" format="dd/MM/yyyy HH:mm"/></code></td>
                                     <s:if test="%{#answers.size()>0}">
-                                        <s:set name="iconImage" id="iconImage">icon fa fa-check text-success</s:set>
-                                <s:set name="thereIsAnswer" value="%{getText('label.answered')}" />
+                                        <s:set var="iconImage" id="iconImage">icon fa fa-check text-success</s:set>
+                                <s:set var="thereIsAnswer" value="%{getText('label.answered')}" />
                             </s:if>
                             <s:else>
-                                <s:set name="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
-                                <s:set name="thereIsAnswer" value="%{getText('label.waiting')}" />
+                                <s:set var="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
+                                <s:set var="thereIsAnswer" value="%{getText('label.waiting')}" />
                             </s:else>
                             <td class="text-center">
                                 <span class="<s:property value="iconImage" />"></span>

@@ -12,7 +12,7 @@
 --%>
 
 	<div class="form-group">
-		<s:set name="jpweatherforecast_paramName" value="%{'jpweatherforecast_username'}" />
+		<s:set var="jpweatherforecast_paramName" value="%{'jpweatherforecast_username'}" />
 		<label for="<s:property value="#jpweatherforecast_paramName"/>">
 			<s:text name="jpweatherforecast.hookpoint.configSystemParams.username" />
 		</label>

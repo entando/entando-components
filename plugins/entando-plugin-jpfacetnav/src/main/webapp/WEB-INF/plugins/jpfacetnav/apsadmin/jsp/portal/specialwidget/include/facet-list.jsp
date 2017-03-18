@@ -16,21 +16,21 @@
 <div class="well margin-base-vertical">
   <%-- Tree --%>
     <ul id="pageTree" class="fa-ul list-unstyled">
-      <s:set name="inputFieldName" value="'facetCode'" />
-      <s:set name="selectedTreeNode" value="%{facetCode}" />
-      <s:set name="selectedNode" value="%{facetCode}" />
-      <s:set name="liClassName" value="'page'" />
+      <s:set var="inputFieldName" value="'facetCode'" />
+      <s:set var="selectedTreeNode" value="%{facetCode}" />
+      <s:set var="selectedNode" value="%{facetCode}" />
+      <s:set var="liClassName" value="'page'" />
       <s:set var="treeItemIconName" value="'fa-folder'" />
       <s:if test="#facetTreeStyleVar == 'classic'">
-        <s:set name="currentRoot" value="facetRoot" />
+        <s:set var="currentRoot" value="facetRoot" />
         <s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
       </s:if>
       <s:elseif test="#facetTreeStyleVar == 'request'">
-        <s:set name="currentRoot" value="showableTree" />
+        <s:set var="currentRoot" value="showableTree" />
         <s:set var="treeNodeExtraParamName" value="'activeTab'" />
         <s:set var="treeNodeExtraParamValue" value="1" />
-        <s:set name="openTreeActionName" value="'openCloseFacetTreeNode'" />
-        <s:set name="closeTreeActionName" value="'openCloseFacetTreeNode'" />
+        <s:set var="openTreeActionName" value="'openCloseFacetTreeNode'" />
+        <s:set var="closeTreeActionName" value="'openCloseFacetTreeNode'" />
         <s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-submits.jsp" />
       </s:elseif>
     </ul>
@@ -49,7 +49,7 @@
 </div>
 <%-- Area results' labels--%>
   <s:if test="%{facetRootCodes.size()>0}">
-    <s:iterator value="facetRootCodes" id="currentFacetCode" status="rowstatus">
+    <s:iterator value="facetRootCodes" var="currentFacetCode" status="rowstatus">
       <wpsa:set name="currentFacet" value="%{getFacet(#currentFacetCode)}" />
       <span class="label label-default label-sm pull-left padding-small-top padding-small-bottom margin-small-right margin-small-bottom">
         <span class="icon fa fa-tag"></span>&#32;

@@ -19,7 +19,7 @@
 	<ul class="unstyled">
 		<s:iterator value="fieldErrors">
 			<s:iterator value="value">
-	            <li><s:property escape="false" /></li>
+	            <li><s:property escapeHtml="false" /></li>
 			</s:iterator>
 		</s:iterator>
 	</ul>
@@ -27,22 +27,22 @@
 </s:if>
 <fieldset><legend><s:text name="title.chooseLinkType" /></legend>
 <ul class="unstyled noBullet radiocheck">
-<s:iterator id="typeId" value="linkDestinations">
+<s:iterator var="typeId" value="linkDestinations">
 	<s:if test="#typeId != 4">
 		
 		<s:if test="#typeId == 1">
-			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-url.png</s:set>
-			<s:set name="linkDestination" value="%{getText('note.URLLinkTo')}" />
+			<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-url.png</s:set>
+			<s:set var="linkDestination" value="%{getText('note.URLLinkTo')}" />
 		</s:if>
 		
 		<s:if test="#typeId == 2">
-			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-page.png</s:set>
-			<s:set name="linkDestination" value="%{getText('note.pageLinkTo')}" />
+			<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-page.png</s:set>
+			<s:set var="linkDestination" value="%{getText('note.pageLinkTo')}" />
 		</s:if>
 		
 		<s:if test="#typeId == 3">
-			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-content.png</s:set>
-			<s:set name="linkDestination" value="%{getText('note.contentLinkTo')}" />
+			<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/22x22/link-content.png</s:set>
+			<s:set var="linkDestination" value="%{getText('note.contentLinkTo')}" />
 		</s:if>
 		
 		<li>

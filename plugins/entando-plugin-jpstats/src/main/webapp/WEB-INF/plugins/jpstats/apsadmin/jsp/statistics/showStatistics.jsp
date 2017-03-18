@@ -15,7 +15,7 @@
 								<h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
 								<ul class="unstyled margin-small-top">
 										<s:iterator value="fieldErrors">
-												<s:iterator value="value"><li><s:property escape="false" /></li></s:iterator>
+												<s:iterator value="value"><li><s:property escapeHtml="false" /></li></s:iterator>
 										</s:iterator>
 								</ul>
 						</div>
@@ -25,7 +25,7 @@
 									<button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
 								<h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
 								<ul class="unstyled margin-small-top">
-										<s:iterator value="actionErrors"><li><s:property  escape="false"/></li></s:iterator>
+										<s:iterator value="actionErrors"><li><s:property  escapeHtml="false"/></li></s:iterator>
 								</ul>
 						</div>
 				</s:if>
@@ -76,7 +76,7 @@
  </div>
 <%--
 <div>
-<s:set name="hitsProducer" value="hitsTimeData"></s:set>
+<s:set var="hitsProducer" value="hitsTimeData"></s:set>
 <s:if test="#hitsProducer != null">
 	<cewolf:chart id="hitsChart" type="verticalXYBar" xaxislabel="Intervallo" yaxislabel="Hits" showlegend="false">
 		<cewolf:colorpaint color="#FFFFFF" />
@@ -94,7 +94,7 @@
 
 <%--
 <div>
-<s:set name="topPagesProducer" value="mostVisitedPagestimeData"></s:set>
+<s:set var="topPagesProducer" value="mostVisitedPagestimeData"></s:set>
 <s:if test="#topPagesProducer != null">
 	<cewolf:chart id="topPagesChart" type="horizontalBar"
 			xaxislabel="pagecode" yaxislabel="Number of Visits"
@@ -114,7 +114,7 @@
 
 <%--
 <div>
-<s:set name="topContentsProducer" value="topContentsDataset"></s:set>
+<s:set var="topContentsProducer" value="topContentsDataset"></s:set>
 <s:if test="#topContentsProducer != null">
 	<cewolf:chart id="topContentsChart" type="horizontalBar"
 		xaxislabel="content" yaxislabel="hits"

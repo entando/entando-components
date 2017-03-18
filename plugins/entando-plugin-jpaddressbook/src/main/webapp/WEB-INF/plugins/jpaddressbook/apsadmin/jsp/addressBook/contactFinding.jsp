@@ -16,7 +16,7 @@
 			<ul class="unstyled margin-small-top">
 				<s:iterator value="fieldErrors">
 					<s:iterator value="value">
-						<li><s:property escape="false" /></li>
+						<li><s:property escapeHtml="false" /></li>
 					</s:iterator>
 				</s:iterator>
 			</ul>
@@ -32,14 +32,14 @@
 							<label for="<s:property value="currentFieldId" />">
 								<s:property value="#attribute.name" />
 							</label>
-							<s:set name="textInputFieldName"><s:property value="#attribute.name" />_textFieldName</s:set>
+							<s:set var="textInputFieldName"><s:property value="#attribute.name" />_textFieldName</s:set>
 							<wpsf:textfield id="%{#currentFieldId}" cssClass="form-control" name="%{#textInputFieldName}" value="%{getSerchFormValue(#textInputFieldName)}" /><br />
 						</div>
 					</div>
 				</s:if>
 				<s:elseif test="#attribute.type == 'Date'">
-					<s:set name="dateStartInputFieldName" ><s:property value="#attribute.name" />_dateStartFieldName</s:set>
-					<s:set name="dateEndInputFieldName" ><s:property value="#attribute.name" />_dateEndFieldName</s:set>
+					<s:set var="dateStartInputFieldName" ><s:property value="#attribute.name" />_dateStartFieldName</s:set>
+					<s:set var="dateEndInputFieldName" ><s:property value="#attribute.name" />_dateEndFieldName</s:set>
 					<div class="form-group">
 						<div class="col-xs-12">
 							<label for="<s:property value="currentFieldId" />_start_cal"><s:property value="#attribute.name" /><s:text name="jpaddressbook.label.search.dateStartvalue" /></label>
@@ -54,8 +54,8 @@
 					</div>
 				</s:elseif>
 				<s:elseif test="#attribute.type == 'Number'">
-					<s:set name="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
-					<s:set name="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
+					<s:set var="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
+					<s:set var="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
 					<div class="form-group">
 						<div class="col-xs-12">
 							<label for="<s:property value="currentFieldId" />_start"><s:property value="#attribute.name" />&#32;<s:text name="jpaddressbook.label.search.numberStartvalue" />:</label>
@@ -132,18 +132,18 @@
 			<p class="sr-only">
 				<s:iterator var="attribute" value="#searcheableAttributes">
 					<s:if test="#attribute.textAttribute">
-							<s:set name="textInputFieldName" ><s:property value="#attribute.name" />_textFieldName</s:set>
+							<s:set var="textInputFieldName" ><s:property value="#attribute.name" />_textFieldName</s:set>
 							<wpsf:hidden name="%{#textInputFieldName}" value="%{getSerchFormValue(#textInputFieldName)}" />
 					</s:if>
 					<s:elseif test="#attribute.type == 'Date'">
-							<s:set name="dateStartInputFieldName" ><s:property value="#attribute.name" />_dateStartFieldName</s:set>
-							<s:set name="dateEndInputFieldName" ><s:property value="#attribute.name" />_dateEndFieldName</s:set>
+							<s:set var="dateStartInputFieldName" ><s:property value="#attribute.name" />_dateStartFieldName</s:set>
+							<s:set var="dateEndInputFieldName" ><s:property value="#attribute.name" />_dateEndFieldName</s:set>
 							<wpsf:hidden name="%{#dateStartInputFieldName}" value="%{getSerchFormValue(#dateStartInputFieldName)}" />
 							<wpsf:hidden name="%{#dateEndInputFieldName}" value="%{getSerchFormValue(#dateEndInputFieldName)}" />
 					</s:elseif>
 					<s:elseif test="#attribute.type == 'Number'">
-							<s:set name="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
-							<s:set name="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
+							<s:set var="numberStartInputFieldName" ><s:property value="#attribute.name" />_numberStartFieldName</s:set>
+							<s:set var="numberEndInputFieldName" ><s:property value="#attribute.name" />_numberEndFieldName</s:set>
 							<wpsf:hidden name="%{#numberStartInputFieldName}" value="%{getSerchFormValue(#numberStartInputFieldName)}" />
 							<wpsf:hidden name="%{#numberEndInputFieldName}" value="%{getSerchFormValue(#numberEndInputFieldName)}" />
 					</s:elseif>
@@ -158,7 +158,7 @@
 			<s:set var="contactIds" value="searchResult" />
 			<%-- <s:if test="#contactIds.isEmpty()">no risultati </s:if> --%>
 			<wpsa:subset source="#contactIds" count="10" objectName="groupContact" advanced="true" offset="5">
-			<s:set name="group" value="#groupContact" />
+			<s:set var="group" value="#groupContact" />
 				<div class="pager">
 					<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
 					<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />

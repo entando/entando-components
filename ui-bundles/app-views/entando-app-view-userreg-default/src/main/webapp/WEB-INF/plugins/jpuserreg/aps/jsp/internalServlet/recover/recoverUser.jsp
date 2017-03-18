@@ -12,7 +12,7 @@
 		<ul>
 			<s:iterator value="fieldErrors">
 				<s:iterator value="value">
-					<s:set name="label">
+					<s:set var="label">
 						<s:property />
 					</s:set>
 					<li><s:property /></li>
@@ -26,7 +26,7 @@
 		<h2><wp:i18n key="ERRORS" /></h2>
 		<ul>
 			<s:iterator value="actionErrors">
-				<s:set name="label">
+				<s:set var="label">
 					<s:property />
 				</s:set>
 				<li><s:property /></li>

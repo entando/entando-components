@@ -97,7 +97,7 @@
 
 		<div class="span6">
 			<dl>
-			<s:iterator id="choice" value="#question.choices" status="rowstatus" >	
+			<s:iterator var="choice" value="#question.choices" status="rowstatus" >	
 				<s:set var="occurrence" value="#occurrences[#choice.id]" />
 				<s:set var="occurrence" value="%{#occurrence==null ? 0 : #occurrence}" />
 				<s:set var="roundedPercentage" value="%{getChoicePercentage(#occurrences, #choice.id)}" />

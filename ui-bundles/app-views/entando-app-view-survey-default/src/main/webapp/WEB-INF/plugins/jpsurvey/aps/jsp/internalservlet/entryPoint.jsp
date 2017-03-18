@@ -6,7 +6,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="jpsu" uri="/jpsurvey-aps-core" %>
 <% pageContext.setAttribute("newLine", "\n"); %>
-<s:set name="surveyInfo" value="surveyInfo" />
+<s:set var="surveyInfo" value="surveyInfo" />
 <div class="jpsurvey-detail">
 <h1><s:property value="%{getLabel(#surveyInfo.titles)}" /></h1>
 <dl class="dl-horizontal">
@@ -17,7 +17,7 @@
 	<dt><p><wp:i18n key="JPSURVEY_DESCRIPTION" /></p></dt>
 		<dd>
 			<%-- Image --%>
-			<s:set name="imageURL" value="%{getSurveyImageURL(surveyInfo.imageId,2)}" />
+			<s:set var="imageURL" value="%{getSurveyImageURL(surveyInfo.imageId,2)}" />
 			<s:if test="#imageURL != null && #imageURL != '' ">
 				<p>
 					<img 

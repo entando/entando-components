@@ -23,7 +23,7 @@
 <ul>
 <s:iterator value="fieldErrors">
 	<s:iterator value="value">
-	<li><s:property escape="false"/></li>
+	<li><s:property escapeHtml="false"/></li>
 	</s:iterator>
 </s:iterator>
 </ul>
@@ -42,8 +42,8 @@
 				<wpsa:actionSubParam name="actualRecipient" value="1" />
 			</wpsa:actionParam>
 			<br />
-			<s:set name="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
-			<s:set name="iconToText"><wp:i18n key="jpwebmail_MSG_TO_LABEL" /></s:set>	
+			<s:set var="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
+			<s:set var="iconToText"><wp:i18n key="jpwebmail_MSG_TO_LABEL" /></s:set>	
 			<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconTo}" action="%{#enterAddressBook}" value="%{#iconToText}" title="%{#iconToText}" />
 		</s:if>
 		</dd>
@@ -54,8 +54,8 @@
 				<wpsa:actionSubParam name="actualRecipient" value="2" />
 			</wpsa:actionParam>
 			<br />
-			<s:set name="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
-			<s:set name="iconToText"><wp:i18n key="jpwebmail_MSG_CC_LABEL" /></s:set>	
+			<s:set var="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
+			<s:set var="iconToText"><wp:i18n key="jpwebmail_MSG_CC_LABEL" /></s:set>	
 			<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconTo}" action="%{#enterAddressBook}" value="%{#iconToText}" title="%{#iconToText}" />
 		</s:if>
 		</dd>
@@ -66,8 +66,8 @@
 				<wpsa:actionSubParam name="actualRecipient" value="3" />
 			</wpsa:actionParam>
 			<br />
-			<s:set name="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
-			<s:set name="iconToText"><wp:i18n key="jpwebmail_MSG_BCC_LABEL" /></s:set>	
+			<s:set var="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
+			<s:set var="iconToText"><wp:i18n key="jpwebmail_MSG_BCC_LABEL" /></s:set>	
 			<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconTo}" action="%{#enterAddressBook}" value="%{#iconToText}" title="%{#iconToText}" />
 		</s:if>
 		</dd>
@@ -77,18 +77,18 @@
 		<dd><wpsf:textarea useTabindexAutoIncrement="true" name="content" id="content" value="%{getContent(message)}" rows="20" cols="50"></wpsf:textarea></dd>
 </dl>
 
-<s:set name="attachmentInfos" value="%{getAttachmentInfos(message)}"></s:set>
+<s:set var="attachmentInfos" value="%{getAttachmentInfos(message)}"></s:set>
 <s:if test="#attachmentInfos.size() > 0">
 	<h3><wp:i18n key="jpwebmail_MSG_ATTACHMENTS" /></h3>
 	<ol class="alignInput">
-	<s:iterator value="#attachmentInfos" id="attachment">
+	<s:iterator value="#attachmentInfos" var="attachment">
 		<wpsa:actionParam action="removeAttachment" var="removeAttachmentActionName" >
 			<wpsa:actionSubParam name="attachmentNumber" value="%{#attachment.number}" />
 		</wpsa:actionParam>
 		<li>
 		<s:property value="#attachment.fileName" /> -	
-		<s:set name="iconAttachRemove"><wp:resourceURL />plugins/jpwebmail/static/img/edit-delete.png</s:set>
-		<s:set name="iconAttachRemoveText"><wp:i18n key="jpwebmail_ATTACH_REMOVE" /></s:set>	
+		<s:set var="iconAttachRemove"><wp:resourceURL />plugins/jpwebmail/static/img/edit-delete.png</s:set>
+		<s:set var="iconAttachRemoveText"><wp:i18n key="jpwebmail_ATTACH_REMOVE" /></s:set>	
 		<wpsf:submit useTabindexAutoIncrement="true" action="%{#removeAttachmentActionName}" type="image" src="%{#iconAttachRemove}" value="%{#iconAttachRemoveText}" title="%{#iconAttachRemoveText}: %{#attachment.fileName}" />
 		</li>
 	</s:iterator>
@@ -98,14 +98,14 @@
 <p class="actions">
 	<label for="upload"><wp:i18n key="jpwebmail_MSG_ATTACH_NEW" />:</label><br />
 	<input type="file" name="upload" value="" id="upload" tabindex="<wpsa:counter />" />
-	<s:set name="iconMsgNewAttach"><wp:resourceURL />plugins/jpwebmail/static/img/mail-attachment.png</s:set>
-	<s:set name="iconMsgNewAttachText"><wp:i18n key="jpwebmail_MSG_ATTACH_THIS" /></s:set>
+	<s:set var="iconMsgNewAttach"><wp:resourceURL />plugins/jpwebmail/static/img/mail-attachment.png</s:set>
+	<s:set var="iconMsgNewAttachText"><wp:i18n key="jpwebmail_MSG_ATTACH_THIS" /></s:set>
 	<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconMsgNewAttach}" value="%{#iconMsgNewAttachText}" title="%{#iconMsgNewAttachText}" action="addAttachment" />
 </p>
 
 <p class="centerText">
-	<s:set name="iconMsgSend"><wp:resourceURL />plugins/jpwebmail/static/img/mail-send-receive.png</s:set>
-	<s:set name="iconMsgSendText"><wp:i18n key="jpwebmail_MSG_SEND" /></s:set>	
+	<s:set var="iconMsgSend"><wp:resourceURL />plugins/jpwebmail/static/img/mail-send-receive.png</s:set>
+	<s:set var="iconMsgSendText"><wp:i18n key="jpwebmail_MSG_SEND" /></s:set>	
 	<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconMsgSend}" action="send" value="%{#iconMsgSendText}" title="%{#iconMsgSendText}" />
 </p>
 

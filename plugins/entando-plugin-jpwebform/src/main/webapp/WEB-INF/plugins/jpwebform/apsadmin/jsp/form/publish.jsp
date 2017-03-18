@@ -22,7 +22,7 @@
             <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
             <ul class="margin-base-vertical">
                 <s:iterator value="actionErrors">
-                    <li><s:property escape="false" /></li>
+                    <li><s:property escapeHtml="false" /></li>
                     </s:iterator>
             </ul>
         </div>
@@ -34,7 +34,7 @@
             <ul class="margin-base-vertical">
                 <s:iterator value="fieldErrors">
                     <s:iterator value="value">
-                        <li><s:property escape="false" /></li>
+                        <li><s:property escapeHtml="false" /></li>
                         </s:iterator>
                     </s:iterator>
             </ul>
@@ -80,7 +80,7 @@
         <fieldset class="col-xs-12">
             <legend><s:text name="jpwebform.label.steps.configuraton" /></legend>
             <s:iterator value="#stepsConfigVar.steps" var="stepVar" >
-                <s:set name="stepCode" value="#stepVar.code" />
+                <s:set var="stepCode" value="#stepVar.code" />
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <span><s:property value="#stepVar.code" /> (<s:text name="jpwebform.label.steps.gui.ready" />:&#32;<s:property value="%{#stepVar.builtGui ? getText('label.yes') : getText('label.no')}" />)</span>

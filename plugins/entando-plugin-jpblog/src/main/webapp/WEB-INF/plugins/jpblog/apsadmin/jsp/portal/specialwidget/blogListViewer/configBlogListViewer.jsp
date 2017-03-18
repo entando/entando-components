@@ -35,7 +35,7 @@
                     <ul class="margin-base-vertical">
                         <s:iterator value="fieldErrors">
                             <s:iterator value="value">
-                                <li><s:property escape="false" /></li>
+                                <li><s:property escapeHtml="false" /></li>
                                 </s:iterator>
                             </s:iterator>
                     </ul>
@@ -104,7 +104,7 @@
                         <th class="icon"><abbr title="<s:text name="label.remove" />">&ndash;</abbr></th>
                 </tr>
                 <s:iterator value="categoryCodes" var="categoryCodeVar">
-                <s:set name="showletCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
+                <s:set var="showletCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
                 <tr>
                         <td><s:property value="#showletCategory.getFullTitle(currentLang.code)"/></td>
                         <td class="icon">
@@ -269,7 +269,7 @@
                             <div class="collapse" id="extraOption">
 
                                 <p><s:text name="note.extraOption.intro" /></p>
-                                <s:iterator id="lang" value="langs">
+                                <s:iterator var="lang" value="langs">
                                     <div class="form-group">
                                         <label for="title_<s:property value="#lang.code" />">
                                             <code class="label label-info"><s:property value="#lang.code" /></code>
@@ -371,7 +371,7 @@
                                                             <s:elseif test="#userFilter['key'] == 'category'">
                                                                 <s:text name="label.category" />
                                                                 <s:if test="null != #userFilter['categoryCode']">
-                                                                    <s:set name="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
+                                                                    <s:set var="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
                                                                     (<s:property value="#userFilterCategoryRoot.getFullTitle(currentLang.code)"/>)
                                                                 </s:if>
                                                             </s:elseif>

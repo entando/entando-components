@@ -15,7 +15,7 @@
 <ul>
 <s:iterator value="fieldErrors">
 	<s:iterator value="value">
-	<li><s:property escape="false"/></li>
+	<li><s:property escapeHtml="false"/></li>
 	</s:iterator>
 </s:iterator>
 </ul>
@@ -32,7 +32,7 @@
 			<wpsa:actionParam action="addressBook" var="enterAddressBook" >
 				<wpsa:actionSubParam name="actualRecipient" value="1" />
 			</wpsa:actionParam>
-			<s:set name="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
+			<s:set var="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
 			<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconTo}" action="%{#enterAddressBook}" value="A" title="A" />
 		</s:if>
 		</dd>
@@ -42,7 +42,7 @@
 			<wpsa:actionParam action="addressBook" var="enterAddressBook" >
 				<wpsa:actionSubParam name="actualRecipient" value="2" />
 			</wpsa:actionParam>
-			<s:set name="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
+			<s:set var="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
 			<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconTo}" action="%{#enterAddressBook}" value="CC" title="CC" />
 		</s:if>
 		</dd>
@@ -52,7 +52,7 @@
 			<wpsa:actionParam action="addressBook" var="enterAddressBook" >
 				<wpsa:actionSubParam name="actualRecipient" value="3" />
 			</wpsa:actionParam>
-			<s:set name="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
+			<s:set var="iconTo"><wp:resourceURL />plugins/jpwebmail/static/img/contact-new.png</s:set>
 			<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconTo}" action="%{#enterAddressBook}" value="CCN" title="CCN" />
 		</s:if>
 		</dd>
@@ -62,11 +62,11 @@
 		<dd><s:textarea name="content" id="content" value="%{getContent(message)}" rows="20" cols="50"></s:textarea></dd>
 </dl>
 
-<s:set name="attachmentInfos" value="%{getAttachmentInfos(message)}"></s:set>
+<s:set var="attachmentInfos" value="%{getAttachmentInfos(message)}"></s:set>
 <s:if test="#attachmentInfos.size() > 0">
 	<h3>ALLEGATI</h3>
 	<ol>
-	<s:iterator value="#attachmentInfos" id="attachment">
+	<s:iterator value="#attachmentInfos" var="attachment">
 		<wpsa:actionParam action="removeAttachment" var="removeAttachmentActionName" >
 			<wpsa:actionSubParam name="attachmentNumber" value="%{#attachment.number}" />
 		</wpsa:actionParam>
@@ -78,12 +78,12 @@
 <p class="actions">
 	<label for="upload"><wp:i18n key="WEBMAIL_MSG_ATTACH_NEW" />:</label><br />
 	<input type="file" name="upload" value="" id="upload" tabindex="<wpsa:counter />" />
-	<s:set name="iconMsgNewAttach"><wp:resourceURL />plugins/jpwebmail/static/img/mail-attachment.png</s:set>
+	<s:set var="iconMsgNewAttach"><wp:resourceURL />plugins/jpwebmail/static/img/mail-attachment.png</s:set>
 	<wpsf:submit useTabindexAutoIncrement="true" action="addAttachment" type="image" src="%{#iconMsgNewAttach}" value="ALLEGA" title="ALLEGA" />
 </p>
 
 <p class="centerText">
-	<s:set name="iconMsgSend"><wp:resourceURL />plugins/jpwebmail/static/img/mail-send-receive.png</s:set>
+	<s:set var="iconMsgSend"><wp:resourceURL />plugins/jpwebmail/static/img/mail-send-receive.png</s:set>
 	<wpsf:submit useTabindexAutoIncrement="true" type="image" src="%{#iconMsgSend}" action="send" value="INVIA" title="INVIA" />
 </p>
 

@@ -10,8 +10,8 @@
     </span>
 </h1>
 <div id="main">
-    <s:set name="id" value="message.id" />
-    <s:set name="typeDescr" value="message.typeDescr" />
+    <s:set var="id" value="message.id" />
+    <s:set var="typeDescr" value="message.typeDescr" />
 
     <s:if test="%{answers.size()==0}">
         <div class="panel panel-default">

@@ -3,7 +3,7 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-common.jsp" />
 
-<s:set name="lang" value="defaultLang"></s:set>
+<s:set var="lang" value="defaultLang"></s:set>
 
 <!-- per attributo Date -->
 <script type="text/javascript" src="<wp:resourceURL />administration/js/calendar_wiz.js"></script>
@@ -37,7 +37,7 @@ window.addEvent('domready', function(){
 });
 
 //per attributo Date
-<s:iterator value="message.attributeList" id="attribute">
+<s:iterator value="message.attributeList" var="attribute">
 <%-- INIZIALIZZAZIONE TRACCIATORE --%>
 
 <wpsa:tracerFactory var="attributeTracer" lang="%{#lang.code}" />
@@ -51,11 +51,11 @@ window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTr
 </s:if>
 
 <s:if test="#attribute.type == 'Monolist'">
-<s:set name="masterAttributeTracer" value="#attributeTracer" />
-<s:set name="masterAttribute" value="#attribute" />
-<s:iterator value="#attribute.attributes" id="attribute" status="elementStatus">
-<s:set name="attributeTracer" value="#masterAttributeTracer.getMonoListElementTracer(#elementStatus.index)"></s:set>
-<s:set name="elementIndex" value="#elementStatus.index" />
+<s:set var="masterAttributeTracer" value="#attributeTracer" />
+<s:set var="masterAttribute" value="#attribute" />
+<s:iterator value="#attribute.attributes" var="attribute" status="elementStatus">
+<s:set var="attributeTracer" value="#masterAttributeTracer.getMonoListElementTracer(#elementStatus.index)"></s:set>
+<s:set var="elementIndex" value="#elementStatus.index" />
 	<s:if test="#attribute.type == 'Date'">
 window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" /> = new Calendar({ <s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" />: 'd/m/Y' }, {
 		navigation: 1,
@@ -64,8 +64,8 @@ window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTr
 	});});
 	</s:if>
 </s:iterator>
-<s:set name="attributeTracer" value="#masterAttributeTracer" />
-<s:set name="attribute" value="#masterAttribute" />
+<s:set var="attributeTracer" value="#masterAttributeTracer" />
+<s:set var="attribute" value="#masterAttribute" />
 </s:if>
 
 </s:iterator>
@@ -73,9 +73,9 @@ window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTr
 
 //per attributo HypertextXXX
 <%--
-<s:iterator value="langs" id="lang">
+<s:iterator value="langs" var="lang">
 --%>
-	<s:iterator value="message.attributeList" id="attribute">
+	<s:iterator value="message.attributeList" var="attribute">
 	<%-- INIZIALIZZAZIONE TRACCIATORE --%>
 	<wpsa:tracerFactory var="attributeTracer" lang="%{#lang.code}" />
 
@@ -106,19 +106,19 @@ window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTr
 	</s:if>
 
 	<s:if test="#attribute.type == 'Monolist'">
-		<s:set name="masterAttributeTracer" value="#attributeTracer" />
-		<s:set name="masterAttribute" value="#attribute" />
-		<s:iterator value="#attribute.attributes" id="attribute" status="elementStatus">
-			<s:set name="attributeTracer" value="#masterAttributeTracer.getMonoListElementTracer(#elementStatus.index)"></s:set>
-			<s:set name="elementIndex" value="#elementStatus.index" />
+		<s:set var="masterAttributeTracer" value="#attributeTracer" />
+		<s:set var="masterAttribute" value="#attribute" />
+		<s:iterator value="#attribute.attributes" var="attribute" status="elementStatus">
+			<s:set var="attributeTracer" value="#masterAttributeTracer.getMonoListElementTracer(#elementStatus.index)"></s:set>
+			<s:set var="elementIndex" value="#elementStatus.index" />
 
 
 			<s:if test="#attribute.type == 'Composite'">
-				<s:set name="masterCompositeAttributeTracer" value="#attributeTracer" />
-				<s:set name="masterCompositeAttribute" value="#attribute" />
-				<s:iterator value="#attribute.attributes" id="attribute">
-					<s:set name="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)"></s:set>
-					<s:set name="parentAttribute" value="#masterCompositeAttribute"></s:set>
+				<s:set var="masterCompositeAttributeTracer" value="#attributeTracer" />
+				<s:set var="masterCompositeAttribute" value="#attribute" />
+				<s:iterator value="#attribute.attributes" var="attribute">
+					<s:set var="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)"></s:set>
+					<s:set var="parentAttribute" value="#masterCompositeAttribute"></s:set>
 					<s:if test="#attribute.type == 'Hypertext'">
 						<s:if test="htmlEditorCode == 'hoofed'">
 							window.addEvent('domready', function() {
@@ -145,9 +145,9 @@ window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTr
 						</s:else>
 					</s:if>
 				</s:iterator>
-				<s:set name="attributeTracer" value="#masterCompositeAttributeTracer" />
-				<s:set name="attribute" value="#masterCompositeAttribute" />
-				<s:set name="parentAttribute" value=""></s:set>
+				<s:set var="attributeTracer" value="#masterCompositeAttributeTracer" />
+				<s:set var="attribute" value="#masterCompositeAttribute" />
+				<s:set var="parentAttribute" value=""></s:set>
 			</s:if>
 
 
@@ -177,8 +177,8 @@ window.addEvent('domready', function() { myCal_<s:property value="%{#attributeTr
 				</s:else>
 			</s:if>
 		</s:iterator>
-		<s:set name="attributeTracer" value="#masterAttributeTracer" />
-		<s:set name="attribute" value="#masterAttribute" />
+		<s:set var="attributeTracer" value="#masterAttributeTracer" />
+		<s:set var="attribute" value="#masterAttribute" />
 	</s:if>
 	</s:iterator>
 <%--

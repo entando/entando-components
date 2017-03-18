@@ -28,7 +28,7 @@
                     <h4 class="margin-none"><s:text name="message.title.ActionErrors" /></h4>
                     <ul class="margin-base-vertical">
                         <s:iterator value="actionErrors">
-                            <li><s:property escape="false" /></li>
+                            <li><s:property escapeHtml="false" /></li>
                             </s:iterator>
                     </ul>
                 </div>
@@ -40,7 +40,7 @@
                     <ul class="margin-base-vertical">
                         <s:iterator value="fieldErrors">
                             <s:iterator value="value">
-                                <li><s:property escape="false" /></li>
+                                <li><s:property escapeHtml="false" /></li>
                                 </s:iterator>
                             </s:iterator>
                     </ul>

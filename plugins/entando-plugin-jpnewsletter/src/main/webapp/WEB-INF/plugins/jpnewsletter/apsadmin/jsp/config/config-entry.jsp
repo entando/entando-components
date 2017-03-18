@@ -17,7 +17,7 @@
 		<h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
 		<ul class="margin-base-top">
 		<s:iterator value="ActionErrors">
-			<li><s:property escape="false" /></li>
+			<li><s:property escapeHtml="false" /></li>
 		</s:iterator>
 		</ul>
 	</div>
@@ -30,7 +30,7 @@
 		<ul class="margin-base-top">
 		<s:iterator value="fieldErrors">
 			<s:iterator value="value">
-				<li><s:property escape="false" /></li>
+				<li><s:property escapeHtml="false" /></li>
 			</s:iterator>
 		</s:iterator>
 		</ul>
@@ -90,7 +90,7 @@
 					<th><s:text name="jpnewsletter.plainModel" /></th>
 					<th><s:text name="jpnewsletter.htmlModel" /></th>
 				</tr>
-				<s:iterator value="newsletterConfig.contentTypes.values()" id="contentTypeConfig" >
+				<s:iterator value="newsletterConfig.contentTypes.values()" var="contentTypeConfig" >
 				<tr>
 					<td class="text-center text-nowrap">
 						<div class="btn-group btn-group-xs">
@@ -201,7 +201,7 @@
 							<th><s:text name="jpnewsletter.code" /></th>
 							<th><s:text name="jpnewsletter.profileAttribute" /></th>
 						</tr>
-						<s:iterator value="#categoryMappingKeys" id="categoryMappingKey" >
+						<s:iterator value="#categoryMappingKeys" var="categoryMappingKey" >
 						<tr>
 							<td class="text-center text-nowrap">
 								<div class="btn-group btn-group-xs">

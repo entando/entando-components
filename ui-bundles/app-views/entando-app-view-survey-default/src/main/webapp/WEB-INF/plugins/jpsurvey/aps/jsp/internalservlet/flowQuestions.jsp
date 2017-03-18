@@ -5,8 +5,8 @@
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <% pageContext.setAttribute("newLine", "\n"); %> 
-<s:set name="surveyInfo" value="voterResponse.survey" />
-<s:set name="currentQuestion" value="currentQuestion" />
+<s:set var="surveyInfo" value="voterResponse.survey" />
+<s:set var="currentQuestion" value="currentQuestion" />
 <div class="jpsurvey flowquestion">
 	<form 
 		action="<wp:action path="/ExtStr2/do/jpsurvey/Front/Survey/saveResponse.action" />" 
@@ -21,7 +21,7 @@
 				<ul class="unstyled">
 					<s:iterator value="fieldErrors">
 						<s:iterator value="value">
-							<li><s:property escape="false" /></li>
+							<li><s:property escapeHtml="false" /></li>
 						</s:iterator>
 					</s:iterator>
 				</ul>

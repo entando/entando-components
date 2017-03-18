@@ -2,8 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="/aps-core" prefix="wp" %>
 
-<s:set name="currentFolder" value="currentFolder" />
-<s:set name="parentFolder" value="#currentFolder.parent" />
+<s:set var="currentFolder" value="currentFolder" />
+<s:set var="parentFolder" value="#currentFolder.parent" />
 
 <h3><s:text name="title.folders"/></h3>
 <p>

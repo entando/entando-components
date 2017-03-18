@@ -53,7 +53,7 @@
 					<th><s:text name="label.description" /></th>
 					<th><s:text name="name.widget" /></th>
 				</tr>
-				<s:iterator value="targetPage.showlets" id="showlet" status="rowstatus">
+				<s:iterator value="targetPage.showlets" var="showlet" status="rowstatus">
 					<s:set var="frames" value="targetPage.getModel().getFrames()" ></s:set>
 					<s:set var="showletType" value="#showlet.getType()" ></s:set>
 					<tr>

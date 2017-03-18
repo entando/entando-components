@@ -25,7 +25,7 @@
 
 		</div>
 
-		<s:set name="ideaInstance_var" value="%{getIdeaInstance(code)}" />
+		<s:set var="ideaInstance_var" value="%{getIdeaInstance(code)}" />
 		<s:if test="#ideaInstance_var.children.size > 0">
                     <div class="panel panel-default">
                         <div class="panel-heading">

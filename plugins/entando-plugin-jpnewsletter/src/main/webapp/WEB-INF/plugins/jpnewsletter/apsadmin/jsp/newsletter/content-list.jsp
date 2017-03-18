@@ -143,7 +143,7 @@
 	<h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
 	<ul class="margin-base-top">
 	<s:iterator value="ActionErrors">
-		<li><s:property escape="false" /></li>
+		<li><s:property escapeHtml="false" /></li>
 	</s:iterator>
 	</ul>
 </div>
@@ -154,7 +154,7 @@
 	<h2 class="h4 margin-none"><s:text name="messages.confirm" /></h2>
 	<ul class="margin-base-top">
 		<s:iterator value="actionMessages">
-			<li><s:property escape="false" /></li>
+			<li><s:property escapeHtml="false" /></li>
 		</s:iterator>
 	</ul>
 </div>
@@ -228,7 +228,7 @@
 		</tr>
 		<s:iterator var="contentId">
 		<s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
-		<s:set name="contentReport" value="%{getContentReport(#contentId)}" />
+		<s:set var="contentReport" value="%{getContentReport(#contentId)}" />
 		<tr>
 		<td class="text-center text-nowrap">
 			<div class="btn-group btn-group-xs">

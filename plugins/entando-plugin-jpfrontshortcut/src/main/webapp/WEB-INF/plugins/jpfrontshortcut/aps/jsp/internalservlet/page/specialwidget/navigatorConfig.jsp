@@ -16,7 +16,7 @@
 				<p><strong><s:text name="message.title.ActionErrors" /></strong></p>
 				<ul class="unstyled">
 					<s:iterator value="actionErrors">
-						<li><s:property escape="false" /></li>
+						<li><s:property escapeHtml="false" /></li>
 					</s:iterator>
 				</ul>
 			</div>
@@ -80,7 +80,7 @@
 								<wpsfcs:actionSubParam name="movement" value="UP" />
 							</wpsfcs:actionParam>
 							<s:url var="moveExpressionUpUrlVar" namespace="/do/jpfrontshortcut/Page/SpecialWidget/Navigator" action="%{moveExpressionUpActionVar}" />
-							<s:set name="iconImagePath" var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up.png</s:set>
+							<s:set var="iconImagePath" var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up.png</s:set>
 							<sj:submit cssClass="btn btn-small" targets="form-container" href="%{moveExpressionUpUrlVar}" indicator="indicator" type="image" src="%{#iconImagePath}" value="%{getText('label.moveUp')}" title="%{getText('label.moveUp')}" button="false" />
 						</td>
 						<td class="icon">
@@ -89,7 +89,7 @@
 								<wpsfcs:actionSubParam name="movement" value="DOWN" />
 							</wpsfcs:actionParam>
 							<s:url var="moveExpressionDownUrlVar" namespace="/do/jpfrontshortcut/Page/SpecialWidget/Navigator" action="%{moveExpressionDownActionVar}" />
-							<s:set name="iconImagePath" var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down.png</s:set>
+							<s:set var="iconImagePath" var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down.png</s:set>
 							<sj:submit cssClass="btn btn-small" targets="form-container" href="%{moveExpressionDownUrlVar}" indicator="indicator" type="image" src="%{#iconImagePath}" value="%{getText('label.moveDown')}" title="%{getText('label.moveDown')}" button="false" />
 						</td>
 						<td class="icon">
@@ -97,7 +97,7 @@
 								<wpsfcs:actionSubParam name="expressionIndex" value="%{#rowstatus.index}" />
 							</wpsfcs:actionParam>
 							<s:url var="removeExpressionUrlVar" namespace="/do/jpfrontshortcut/Page/SpecialWidget/Navigator" action="%{removeExpressionActionVar}" />
-							<s:set name="iconImagePath" var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete.png</s:set>
+							<s:set var="iconImagePath" var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete.png</s:set>
 							<sj:submit cssClass="btn btn-small" targets="form-container" href="%{removeExpressionUrlVar}" indicator="indicator" type="image" src="%{#iconImagePath}" value="%{getText('label.remove')}" title="%{getText('label.remove')}" button="false" />
 						</td>
 					</tr>

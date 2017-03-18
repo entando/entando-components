@@ -30,7 +30,7 @@
 				<ul class="unstyled collapse margin-small-top" id="content-error-messages">
 					<s:iterator value="fieldErrors">
 						<s:iterator value="value">
-							<li><%-- <s:property value="key" />&emsp;|--%><s:property escape="false" /></li>
+							<li><%-- <s:property value="key" />&emsp;|--%><s:property escapeHtml="false" /></li>
 						</s:iterator>
 					</s:iterator>
 				</ul>
@@ -42,7 +42,7 @@
 				<h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
 				<ul class="margin-base-top">
 					<s:iterator value="actionErrors">
-						<li><s:property escape="false" /></li>
+						<li><s:property escapeHtml="false" /></li>
 					</s:iterator>
 				</ul>
 			</div>
@@ -165,7 +165,7 @@
 					<s:set var="categoriesVar" value="categories" />
 					<label class="sr-only"><s:text name="title.contentCategories.list" /></label>
 					<s:if test="#categoriesVar != null && #categoriesVar.size() > 0">
-						<s:iterator value="#categoriesVar" id="contentCategory">
+						<s:iterator value="#categoriesVar" var="contentCategory">
 							<s:set var="contentCategory" value="%{getCategory(#contentCategory.key)}"></s:set>
 							<span class="label label-default label-sm pull-left padding-small-top padding-small-bottom margin-small-right margin-small-bottom">
 								<span class="icon fa fa-tag"></span>&#32;

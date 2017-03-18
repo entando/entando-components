@@ -23,7 +23,7 @@
 			<ul class="unstyled">
 			<s:iterator value="fieldErrors">
 				<s:iterator value="value">
-				<li><s:property escape="false" /></li>
+				<li><s:property escapeHtml="false" /></li>
 				</s:iterator>
 			</s:iterator>
 			</ul>
@@ -72,7 +72,7 @@
 				<th class="icon"><abbr title="<s:text name="label.remove" />">&ndash;</abbr></th>
 			</tr>
 			<s:iterator value="categoryCodes" var="categoryCodeVar">
-			<s:set name="showletCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
+			<s:set var="showletCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
 			<tr>
 				<td><s:property value="#showletCategory.getFullTitle(currentLang.code)"/></td>
 				<td class="icon">
@@ -80,7 +80,7 @@
 						<wpfssa:actionSubParam name="categoryCode" value="%{#categoryCodeVar}" />
 					</wpfssa:actionParam>
 					<s:url var="removeCategoryActionVar" namespace="/do/jpfrontshortcut/Page/SpecialWidget/ListViewer" action="%{#removeCategoryActionNameVar}" />
-					<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/22x22/delete.png</s:set>
+					<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/22x22/delete.png</s:set>
 					<sj:submit type="image" targets="form-container" value="%{getText('label.remove')}" button="true" 
 						href="%{#removeCategoryActionVar}" src="%{#iconImagePath}" title="%{getText('label.remove') + ': ' + #showletCategory.getFullTitle(currentLang.code)}" />
 				</td>
@@ -121,7 +121,7 @@
 		<th><s:text name="label.order" /></th>
 		<th class="icon" colspan="3"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th> 
 	</tr>
-	<s:iterator value="filtersProperties" id="filter" status="rowstatus">
+	<s:iterator value="filtersProperties" var="filter" status="rowstatus">
 	<tr>
 		<td class="rightText"><s:property value="#rowstatus.index+1"/></td>
 		<td>
@@ -186,7 +186,7 @@
 				<wpfssa:actionSubParam name="movement" value="UP" />
 			</wpfssa:actionParam>
 			<s:url var="moveFilterActionVar" namespace="/do/jpfrontshortcut/Page/SpecialWidget/ListViewer" action="%{#moveFilterActionNameVar}" />
-			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/go-up.png</s:set>
+			<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/go-up.png</s:set>
 			<sj:submit type="image" targets="form-container" value="%{getText('label.moveUp')}" button="true" 
 				href="%{#moveFilterActionVar}" src="%{#iconImagePath}" title="%{getText('label.moveUp')}" />
 		</td>
@@ -196,7 +196,7 @@
 				<wpfssa:actionSubParam name="movement" value="DOWN" />
 			</wpfssa:actionParam>
 			<s:url var="moveFilterActionVar" namespace="/do/jpfrontshortcut/Page/SpecialWidget/ListViewer" action="%{#moveFilterActionNameVar}" />
-			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/go-down.png</s:set>
+			<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/go-down.png</s:set>
 			<sj:submit type="image" targets="form-container" value="%{getText('label.moveDown')}" button="true" 
 				href="%{#moveFilterActionVar}" src="%{#iconImagePath}" title="%{getText('label.moveDown')}" />
 		</td>
@@ -205,7 +205,7 @@
 				<wpfssa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
 			</wpfssa:actionParam>
 			<s:url var="removeFilterActionVar" namespace="/do/jpfrontshortcut/Page/SpecialWidget/ListViewer" action="%{#removeFilterActionNameVar}" />
-			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/delete.png</s:set>
+			<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/delete.png</s:set>
 			<sj:submit type="image" targets="form-container" value="%{getText('label.remove')}" button="true" 
 				href="%{#removeFilterActionVar}" src="%{#iconImagePath}" title="%{getText('label.remove')}" />
 		</td>
@@ -222,7 +222,7 @@
 <fieldset><legend class="accordion_toggler"><s:text name="title.extraOption" /></legend>
 <div class="accordion_element">
 <p><s:text name="note.extraOption.intro" /></p>
-	<s:iterator id="lang" value="langs">
+	<s:iterator var="lang" value="langs">
 		<p>
 			<label for="title_<s:property value="#lang.code" />"  class="basic-mint-label"><span class="monospace">(<s:property value="#lang.code" />)</span><s:text name="label.title" />:</label>
 			<wpsf:textfield useTabindexAutoIncrement="true" name="title_%{#lang.code}" id="title_%{#lang.code}" value="%{showlet.config.get('title_' + #lang.code)}" cssClass="text" />
@@ -261,7 +261,7 @@
 		<th><s:text name="name.filterDescription" /></th>
 		<th class="icon" colspan="3"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th> 
 	</tr>
-	<s:iterator value="userFiltersProperties" id="userFilter" status="rowstatus">
+	<s:iterator value="userFiltersProperties" var="userFilter" status="rowstatus">
 	<tr>
 		<td class="rightText"><s:property value="#rowstatus.index+1"/></td>
 		<td>
@@ -274,7 +274,7 @@
 					<s:elseif test="#userFilter['key'] == 'category'">
 						<s:text name="label.category" />
 						<s:if test="null != #userFilter['categoryCode']">
-							<s:set name="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
+							<s:set var="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
 							(<s:property value="#userFilterCategoryRoot.getFullTitle(currentLang.code)"/>)
 						</s:if>
 					</s:elseif>
@@ -290,7 +290,7 @@
 				<wpfssa:actionSubParam name="movement" value="UP" />
 			</wpfssa:actionParam>
 			<s:url var="moveUserFilterActionVar" namespace="/do/jpfrontshortcut/Page/SpecialWidget/ListViewer" action="%{#moveUserFilterActionNameVar}" />
-			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/go-up.png</s:set>
+			<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/go-up.png</s:set>
 			<sj:submit type="image" targets="form-container" value="%{getText('label.moveUp')}" button="true" 
 				href="%{#moveUserFilterActionVar}" src="%{#iconImagePath}" title="%{getText('label.moveUp')}" />
 		</td>
@@ -300,7 +300,7 @@
 				<wpfssa:actionSubParam name="movement" value="DOWN" />
 			</wpfssa:actionParam>
 			<s:url var="moveUserFilterActionVar" namespace="/do/jpfrontshortcut/Page/SpecialWidget/ListViewer" action="%{#moveUserFilterActionNameVar}" />
-			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/go-down.png</s:set>
+			<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/go-down.png</s:set>
 			<sj:submit type="image" targets="form-container" value="%{getText('label.moveDown')}" button="true" 
 				href="%{#moveUserFilterActionVar}" src="%{#iconImagePath}" title="%{getText('label.moveDown')}" />
 		</td>
@@ -309,7 +309,7 @@
 				<wpfssa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
 			</wpfssa:actionParam>
 			<s:url var="removeUserFilterActionVar" namespace="/do/jpfrontshortcut/Page/SpecialWidget/ListViewer" action="%{#removeUserFilterActionNameVar}" />
-			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/delete.png</s:set>
+			<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/delete.png</s:set>
 			<sj:submit type="image" targets="form-container" value="%{getText('label.remove')}" button="true" 
 				href="%{#removeUserFilterActionVar}" src="%{#iconImagePath}" title="%{getText('label.remove')}" />
 		</td>

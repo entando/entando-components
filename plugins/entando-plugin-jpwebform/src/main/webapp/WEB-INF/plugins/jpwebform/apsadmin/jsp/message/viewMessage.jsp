@@ -9,8 +9,8 @@
     </span>
 </h1>
 
-<s:set name="id" value="message.id" />
-<s:set name="typeDescr" value="message.typeDescr" />
+<s:set var="id" value="message.id" />
+<s:set var="typeDescr" value="message.typeDescr" />
 <div id="main">
     <s:include value="inc/include_messageDetails.jsp" />
     <s:if test="%{answers.size()==0}">

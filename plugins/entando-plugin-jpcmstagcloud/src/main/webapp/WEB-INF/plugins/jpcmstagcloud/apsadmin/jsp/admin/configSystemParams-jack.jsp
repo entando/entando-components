@@ -6,7 +6,7 @@
 	<legend><s:text name="jpcmstagcloud.name" /></legend>
 <p>
 	<label for="maxMonthsSinceLastAccess" class="basic-mint-label"><s:text name="jpcmstagcloud.hookpoint.configSystemParams.categoryRoot" />:</label>
-	<s:set name="jpcmstagcloud_paramName" value="'jpcmstagcloud_categoryRoot'" />
+	<s:set var="jpcmstagcloud_paramName" value="'jpcmstagcloud_categoryRoot'" />
         <s:if test="null == systemParams.get(#jpcmstagcloud_paramName) || systemParams.get(#jpcmstagcloud_paramName).trim().length() == 0" >
             <s:set var="jpcmstagcloud_categoryRootValueVar" value="'jptagcloud_categoryRoot'" />
         </s:if>
@@ -16,7 +16,7 @@
 </p>
 <p>
 	<label for="maxMonthsSinceLastAccess" class="basic-mint-label"><s:text name="jpcmstagcloud.hookpoint.configSystemParams.delayDays" />:</label>
-	<s:set name="jpcmstagcloud_paramName" value="'jpcmstagcloud_delayDays'" />
+	<s:set var="jpcmstagcloud_paramName" value="'jpcmstagcloud_delayDays'" />
         <s:if test="null == systemParams.get(#jpcmstagcloud_paramName)" >
             <s:set var="jpcmstagcloud_delayDaysValueVar" value="'-1'" />
         </s:if>

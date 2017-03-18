@@ -103,7 +103,7 @@
 							$("[data-toggle=popover]").popover({
 								html: true,
 								placement: "top",
-								content: '<s:property value="fileInfo" escape="false" />'
+								content: '<s:property value="fileInfo" escapeHtml="false" />'
 							});
 						</script>
 

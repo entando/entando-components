@@ -2,7 +2,7 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
-<s:set name="currentLang" value="%{getCurrentLang().code}" />
+<s:set var="currentLang" value="%{getCurrentLang().code}" />
 <h1 class="panel panel-default title-page">
     <span class="panel-body display-block">
         <a href="<s:url action="listSurveys" >
@@ -20,7 +20,7 @@
                 <th><s:text name="jpsurvey_freeText_answers" /></th>
                 <th class="text-right"><s:text name="jpsurvey_freeText_occurences" /></th>		
             </tr>
-            <s:iterator id="currentFreeText" value="freeTextMap">
+            <s:iterator var="currentFreeText" value="freeTextMap">
                 <tr>
                     <td><s:property value="#currentFreeText.key" /></td>
                     <td class="text-right"><s:property value="#currentFreeText.value" /></td>

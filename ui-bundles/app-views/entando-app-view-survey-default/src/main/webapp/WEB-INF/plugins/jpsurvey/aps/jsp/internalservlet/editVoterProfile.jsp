@@ -5,7 +5,7 @@
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <% pageContext.setAttribute("newLine", "\n"); %> 
-<s:set name="surveyInfo" value="voterResponse.survey" />
+<s:set var="surveyInfo" value="voterResponse.survey" />
 <div class="jpsurvey-voter-profile">
 	<h1><s:property value="%{getLabel(#surveyInfo.titles)}" /></h1>
 	<dl class="dl-horizontal">
@@ -16,7 +16,7 @@
 		<dt><p><wp:i18n key="JPSURVEY_DESCRIPTION" /></p></dt>
 			<dd>
 				<%-- Image --%>
-				<s:set name="imageURL" value="%{getSurveyImageURL(surveyInfo.imageId,2)}" />
+				<s:set var="imageURL" value="%{getSurveyImageURL(surveyInfo.imageId,2)}" />
 				<s:if test="#imageURL != null && #imageURL != '' ">
 					<p>
 						<img 
@@ -42,7 +42,7 @@
 				<ul class="unstyled">
 					<s:iterator value="fieldErrors">
 						<s:iterator value="value">
-							<li><s:property escape="false" /></li>
+							<li><s:property escapeHtml="false" /></li>
 						</s:iterator>
 					</s:iterator>
 				</ul>

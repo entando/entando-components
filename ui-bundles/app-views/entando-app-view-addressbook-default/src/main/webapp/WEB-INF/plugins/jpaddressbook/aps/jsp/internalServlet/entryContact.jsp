@@ -24,16 +24,16 @@
 				<ul>
 					<s:iterator value="fieldErrors">
 						<s:iterator value="value">
-							<li><s:property escape="false" /></li>   
+							<li><s:property escapeHtml="false" /></li>   
 						</s:iterator>
 					</s:iterator>
 				</ul>
 			</s:if> 
 			
-			<s:set name="lang" value="defaultLang"></s:set>
+			<s:set var="lang" value="defaultLang"></s:set>
 			
 			<%-- START CICLO ATTRIBUTI --%>
-			<s:iterator value="contact.attributes" id="attribute">
+			<s:iterator value="contact.attributes" var="attribute">
 				<s:if test="#attribute.active">
 				<%-- INIZIALIZZAZIONE TRACCIATORE --%>
 				<wpsa:tracerFactory var="attributeTracer" lang="%{#lang.code}" />

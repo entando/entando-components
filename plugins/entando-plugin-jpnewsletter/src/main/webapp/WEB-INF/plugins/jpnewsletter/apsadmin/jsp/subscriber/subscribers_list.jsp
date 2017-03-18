@@ -63,7 +63,7 @@
 
 <s:if test="#subscribersVar != null && #subscribersVar.size() > 0">
 	<wpsa:subset source="#subscribersVar" count="10" objectName="groupSubscribers" advanced="true" offset="5">
-		<s:set name="group" value="#groupSubscribers" />
+		<s:set var="group" value="#groupSubscribers" />
 		<div class="text-center">
 			<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
 			<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />

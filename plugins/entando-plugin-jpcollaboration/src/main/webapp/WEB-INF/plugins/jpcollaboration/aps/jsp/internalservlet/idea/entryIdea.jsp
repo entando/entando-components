@@ -26,7 +26,7 @@
 					<p class="alert-heading"><wp:i18n key="ERRORS" /></p>
 					<ul>
 					<s:iterator value="actionErrors">
-						<li><s:property escape="false" /></li>
+						<li><s:property escapeHtml="false" /></li>
 					</s:iterator>
 					</ul>
 				</div>
@@ -49,7 +49,7 @@
 					<ul>
 						<s:iterator value="fieldErrors">
 							<s:iterator value="value">
-								<li><s:property escape="false" /></li>
+								<li><s:property escapeHtml="false" /></li>
 							</s:iterator>
 						</s:iterator>
 					</ul>
@@ -110,7 +110,7 @@
                         />
 
 
-		 <s:set name="labelJoin"><wp:i18n key="jpcollaboration_TAG_JOIN" /></s:set>
+		 <s:set var="labelJoin"><wp:i18n key="jpcollaboration_TAG_JOIN" /></s:set>
 					<wpsf:submit action="joinCategory" value="%{#labelJoin}" cssClass="btn btn-info" id="join_tag"/>
                         <script type="text/javascript">
                             //<![CDATA[//>
@@ -134,7 +134,7 @@
 
 							<wpsf:hidden name="tags" value="%{#currentCat.code}" />
 							<wpsa:actionParam action="removeCategory" var="removeTagAction"><wpsa:actionSubParam name="tag" value="%{#currentCat.code}" /></wpsa:actionParam>
-							<s:set name="labelRemove"><wp:i18n key="jpcollaboration_TAG_REMOVE" /></s:set>
+							<s:set var="labelRemove"><wp:i18n key="jpcollaboration_TAG_REMOVE" /></s:set>
 							<span class="label label-info">
 								<i class="icon-tags icon-white"></i>&nbsp;&nbsp;
 								<s:property value="#currentCat.title" />&#32;
@@ -151,7 +151,7 @@
 		</div>
 		</s:if>
 		<p class="text-center margin-medium-vertical">
-			<s:set name="labelSubmit"><wp:i18n key="jpcollaboration_SUBMIT_IDEA" /></s:set>
+			<s:set var="labelSubmit"><wp:i18n key="jpcollaboration_SUBMIT_IDEA" /></s:set>
 			<wpsf:submit  value="%{#labelSubmit}" cssClass="btn btn-primary btn-large" />
 		</p>
 	</form>

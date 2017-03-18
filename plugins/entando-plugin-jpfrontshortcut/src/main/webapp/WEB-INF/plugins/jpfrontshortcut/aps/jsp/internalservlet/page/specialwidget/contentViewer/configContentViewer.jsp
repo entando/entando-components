@@ -22,16 +22,16 @@
 			<ul class="unstyled">
 						<s:iterator value="fieldErrors">
 							<s:iterator value="value">
-							<li><s:property escape="false" /></li>
+							<li><s:property escapeHtml="false" /></li>
 							</s:iterator>
 						</s:iterator>
 					</ul>
 				</div>
 			</s:if>
-			<s:set name="showletParams" value="showlet.type.parameter" />
+			<s:set var="showletParams" value="showlet.type.parameter" />
 			<s:property value="#showletParams['contentId'].descr" />
 			<s:if test="showlet.config['contentId'] != null">
-				<s:set name="content" value="%{getContentVo(showlet.config['contentId'])}"></s:set>
+				<s:set var="content" value="%{getContentVo(showlet.config['contentId'])}"></s:set>
 				<p>
 					<s:text name="title.configContentViewer.settings" />&#32;
 					<s:property value="#content.descr" /> (<s:property value="#content.id" />)
@@ -53,7 +53,7 @@
 				<s:if test="#showletTypeParameters.size()>2">
 					<fieldset>
 						<legend><s:text name="label.otherSettings" /></legend>
-						<s:iterator value="#showletTypeParameters" id="showletParam" >
+						<s:iterator value="#showletTypeParameters" var="showletParam" >
 							<s:if test="!#showletParam.name.equals('contentId') && !#showletParam.name.equals('modelId')">
 								<p>
 									<label for="fagianoParam_<s:property value="#showletParam.name" />"><s:property value="#showletParam.descr" />:</label><br />

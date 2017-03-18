@@ -19,7 +19,7 @@
 					<ul class="margin-base-top">
 						<s:iterator value="fieldErrors">
 							<s:iterator value="value">
-								<li><s:property escape="false" /></li>
+								<li><s:property escapeHtml="false" /></li>
 							</s:iterator>
 						</s:iterator>
 					</ul>
@@ -31,7 +31,7 @@
 				<h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
 					<ul class="margin-base-top">
 						<s:iterator value="actionErrors">
-						<li><s:property escape="false"/></li>
+						<li><s:property escapeHtml="false"/></li>
 					</s:iterator>
 					</ul>
 			</div>
@@ -53,7 +53,7 @@
 			<legend><s:text name="label.schedulerSettings" /></legend>
 			<div class="form-group">
 				<label for="hoursDelay"><s:text name="label.hoursDelay" /></label>
-				<s:set name="hoursDelayVar" value="%{hoursDelay}" scope="page" />
+				<s:set var="hoursDelayVar" value="%{hoursDelay}" scope="page" />
 				<select name="config.hoursDelay" id="hoursDelay" class="form-control">
 					<c:forEach begin="1" end="10" varStatus="status">
 						<option <c:if test="${(status.count*24) == hoursDelayVar}">selected="selected"</c:if>

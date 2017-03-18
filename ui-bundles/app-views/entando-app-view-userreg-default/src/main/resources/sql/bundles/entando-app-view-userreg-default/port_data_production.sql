@@ -281,14 +281,14 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
         <div class="controls">
             <select name="profileTypeCode" tabindex="<@wpsa.counter />" id="profileTypeCode" class="text">
                 <@s.iterator value="profileTypes" var="profileType" >
-                    <@s.set name="optionDescr">jpuserreg_TITLE_<@s.property value="#profileType.typeCode"/></@s.set>
+                    <@s.set var="optionDescr">jpuserreg_TITLE_<@s.property value="#profileType.typeCode"/></@s.set>
                     <option value="<@s.property value="#profileType.typeCode"/>"><@wp.i18n key="${optionDescr}" /></option>
                 </@s.iterator>
             </select>
         </div>
     </div>
     <p class="form-actions">
-    <@s.set name="labelChoose"><@wp.i18n key="jpuserreg_CHOOSE_TYPE" /></@s.set>
+    <@s.set var="labelChoose"><@wp.i18n key="jpuserreg_CHOOSE_TYPE" /></@s.set>
     <@wpsf.submit useTabindexAutoIncrement=true value="%{#labelChoose}" cssClass="btn btn-primary"/>
     </p>
 </form>', 1);
@@ -303,7 +303,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
         <ul>
             <@s.iterator value="fieldErrors">
                 <@s.iterator value="value">
-                    <@s.set name="label" ><@s.property/></@s.set>
+                    <@s.set var="label" ><@s.property/></@s.set>
                     <li><@s.property /></li>
                 </@s.iterator>
             </@s.iterator>
@@ -315,7 +315,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
         <h2><@wp.i18n key="ERRORS" /></h2>
         <ul>
             <@s.iterator value="actionErrors">
-                <@s.set name="label" ><@s.property/></@s.set>
+                <@s.set var="label" ><@s.property/></@s.set>
                 <li><@s.property /></li>
             </@s.iterator>
         </ul>
@@ -344,7 +344,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
             <ul>
                 <@s.iterator value="fieldErrors">
                     <@s.iterator value="value">
-                        <@s.set name="label"><@s.property /></@s.set>
+                        <@s.set var="label"><@s.property /></@s.set>
                         <li><@s.property /></li>
                     </@s.iterator>
                 </@s.iterator>
@@ -356,7 +356,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
             <h2><@wp.i18n key="ERRORS" /></h2>
             <ul>
                 <@s.iterator value="actionErrors">
-                    <@s.set name="label"><@s.property /></@s.set>
+                    <@s.set var="label"><@s.property /></@s.set>
                     <li><@s.property /></li>
                 </@s.iterator>
             </ul>

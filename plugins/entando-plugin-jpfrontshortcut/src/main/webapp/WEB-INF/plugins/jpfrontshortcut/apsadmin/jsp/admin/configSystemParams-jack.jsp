@@ -5,7 +5,7 @@
 <fieldset class="col-xs-12">
     <legend><s:text name="jpfrontshortcut.name" /></legend>
     <div class="form-group">
-        <s:set name="jpfrontshortcut_paramName" value="'jpfrontshortcut_activePageFrontEndEditing'" />
+        <s:set var="jpfrontshortcut_paramName" value="'jpfrontshortcut_activePageFrontEndEditing'" />
         <div class="checkbox">
             <input type="checkbox" class="radiocheck" id="<s:property value="#jpfrontshortcut_paramName" />" name="<s:property value="#jpfrontshortcut_paramName" />" value="true" <s:if test="systemParams.get(#jpfrontshortcut_paramName)">checked="checked"</s:if> />
             <wpsf:hidden name="%{#jpfrontshortcut_paramName + externalParamMarker}" value="true" />
@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="form-group">
-        <s:set name="jpfrontshortcut_paramName" value="'jpfrontshortcut_activeFrameFrontEndEditing'" />
+        <s:set var="jpfrontshortcut_paramName" value="'jpfrontshortcut_activeFrameFrontEndEditing'" />
         <div class="checkbox">
             <input type="checkbox" class="radiocheck" id="<s:property value="#jpfrontshortcut_paramName" />" name="<s:property value="#jpfrontshortcut_paramName" />" value="true" <s:if test="systemParams.get(#jpfrontshortcut_paramName)">checked="checked"</s:if> />
             <wpsf:hidden name="%{#jpfrontshortcut_paramName + externalParamMarker}" value="true" />
@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="form-group">
-        <s:set name="jpfrontshortcut_paramName" value="'jpfrontshortcut_activeContentFrontEndEditing'" />
+        <s:set var="jpfrontshortcut_paramName" value="'jpfrontshortcut_activeContentFrontEndEditing'" />
         <div class="checkbox">
             <input type="checkbox" class="radiocheck" id="<s:property value="#jpfrontshortcut_paramName" />" name="<s:property value="#jpfrontshortcut_paramName" />" value="true" <s:if test="systemParams.get(#jpfrontshortcut_paramName)">checked="checked"</s:if> />
             <wpsf:hidden name="%{#jpfrontshortcut_paramName + externalParamMarker}" value="true" />

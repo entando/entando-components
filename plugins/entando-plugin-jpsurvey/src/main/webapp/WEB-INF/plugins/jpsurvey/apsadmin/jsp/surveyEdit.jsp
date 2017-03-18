@@ -54,7 +54,7 @@
             <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h3>	
                 <ul class="margin-base-vertical">
                     <s:iterator value="actionErrors">
-                        <li><s:property escape="false" /></li>
+                        <li><s:property escapeHtml="false" /></li>
                         </s:iterator>
                 </ul>
         </div>
@@ -188,7 +188,7 @@
 
 
 
-                    <s:iterator id="currentLang" value="langs">
+                    <s:iterator var="currentLang" value="langs">
                         <div id="<s:property value="#currentLang.code" />_tab" class="tab-pane">
 
                             <div class="contentAttributeBox">	
@@ -243,7 +243,7 @@
 
                                                 <div class="row panel-body">
                                                     <div class="col-xs-12 col-sm-3 col-lg-2 text-center">
-                                                        <s:set name="resource" value="%{loadResource(imageId)}" />
+                                                        <s:set var="resource" value="%{loadResource(imageId)}" />
                                                         <a class="pull-left" href="<s:property value="%{#resource.getImagePath(0)}" />" title="<s:property value="%{#resource.descr}" />" >
                                                             <img class="img-thumbnail" src="<s:property value="%{#resource.getImagePath(1)}"/>" alt="<s:property value="%{#resource.descr}" />" style="height:90px; max-width:130px" />
                                                         </a>

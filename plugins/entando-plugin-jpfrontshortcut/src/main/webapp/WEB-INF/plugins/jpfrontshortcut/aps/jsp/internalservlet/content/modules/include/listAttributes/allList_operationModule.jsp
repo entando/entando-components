@@ -15,7 +15,7 @@
 	<wpsa:actionSubParam name="elementIndex" value="%{#elementIndex}" />
 	<wpsa:actionSubParam name="movement" value="UP" />
 </wpsa:actionParam>
-<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
+<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
 <wpsf:submit useTabindexAutoIncrement="true" disabled="%{#operationButtonDisabled}" action="%{#actionName}" 
 type="image" src="%{#iconImagePath}" value="%{getText('label.moveUp')}" title="%{getText('label.moveInPositionNumber')}: %{#elementIndex}" />
 --%>
@@ -27,7 +27,7 @@ type="image" src="%{#iconImagePath}" value="%{getText('label.moveUp')}" title="%
 	<wpfssa:actionSubParam name="movement" value="UP" />
 </wpfssa:actionParam>
 <s:url var="moveListElementActionVar" action="%{#moveListElementActionNameVar}" />
-<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
+<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
 <sj:submit targets="form-container" value="%{getText('label.moveUp')}" button="true" type="image" src="%{#iconImagePath}" 
 		   title="%{getText('label.moveInPositionNumber')}: %{#elementIndex}" href="%{#moveListElementActionVar}" />
 
@@ -38,7 +38,7 @@ type="image" src="%{#iconImagePath}" value="%{getText('label.moveUp')}" title="%
 	<wpsa:actionSubParam name="elementIndex" value="%{#elementIndex}" />
 	<wpsa:actionSubParam name="movement" value="DOWN" />
 </wpsa:actionParam>
-<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
+<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
 <wpsf:submit useTabindexAutoIncrement="true" disabled="%{#operationButtonDisabled}" action="%{#actionName}" type="image" src="%{#iconImagePath}" value="%{getText('label.moveDown')}" title="%{getText('label.moveInPositionNumber')}: %{#elementIndex+2}" />
 --%>
 <wpfssa:actionParam action="moveListElement" var="moveListElementActionNameVar" >
@@ -48,7 +48,7 @@ type="image" src="%{#iconImagePath}" value="%{getText('label.moveUp')}" title="%
 	<wpfssa:actionSubParam name="movement" value="DOWN" />
 </wpfssa:actionParam>
 <s:url var="moveListElementActionVar" action="%{#moveListElementActionNameVar}" />
-<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
+<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
 <sj:submit targets="form-container" value="%{getText('label.moveDown')}" button="true" type="image" src="%{#iconImagePath}" 
 		   title="%{getText('label.moveInPositionNumber')}: %{#elementIndex}" href="%{#moveListElementActionVar}" />
 
@@ -58,7 +58,7 @@ type="image" src="%{#iconImagePath}" value="%{getText('label.moveUp')}" title="%
 	<wpsa:actionSubParam name="listLangCode" value="%{#lang.code}" />
 	<wpsa:actionSubParam name="elementIndex" value="%{#elementIndex}" />
 </wpsa:actionParam>
-<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
+<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
 <wpsf:submit useTabindexAutoIncrement="true" disabled="%{#operationButtonDisabled}" action="%{#actionName}" type="image" src="%{#iconImagePath}" value="%{getText('label.remove')}" title="%{getText('label.remove')}" />
 --%>
 
@@ -68,6 +68,6 @@ type="image" src="%{#iconImagePath}" value="%{getText('label.moveUp')}" title="%
 	<wpfssa:actionSubParam name="elementIndex" value="%{#elementIndex}" />
 </wpfssa:actionParam>
 <s:url var="removeListElementActionVar" action="%{#removeListElementActionNameVar}" />
-<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
+<s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete-disabled-<s:property value="%{#operationButtonDisabled}" />.png</s:set>
 <sj:submit targets="form-container" button="true" type="image" src="%{#iconImagePath}" 
 		   value="%{getText('label.remove')}" title="%{getText('label.remove')}" href="%{#removeListElementActionVar}" />

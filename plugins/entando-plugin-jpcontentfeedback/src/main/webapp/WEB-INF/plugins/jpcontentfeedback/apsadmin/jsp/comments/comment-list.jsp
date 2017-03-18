@@ -17,7 +17,7 @@
                 <h2 class="h4 margin-none"><s:text name="messages.confirm" /></h2>
                 <ul class="margin-base-vertical">
                     <s:iterator value="actionMessages">
-                        <li><s:property escape="false" /></li>
+                        <li><s:property escapeHtml="false" /></li>
                         </s:iterator>
                 </ul>
             </div>
@@ -29,7 +29,7 @@
                 <ul class="margin-base-vertical">
                     <s:iterator value="fieldErrors">
                         <s:iterator value="value">
-                            <li><s:property escape="false" /></li>
+                            <li><s:property escapeHtml="false" /></li>
                             </s:iterator>
                         </s:iterator>
                 </ul>
@@ -124,7 +124,7 @@
         <div class="subsection-light">
 
             <wpsa:subset source="commentIds" count="10" objectName="groupComment" advanced="true" offset="5">
-                <s:set name="group" value="#groupComment" />
+                <s:set var="group" value="#groupComment" />
 
                 <div class="pager">
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />

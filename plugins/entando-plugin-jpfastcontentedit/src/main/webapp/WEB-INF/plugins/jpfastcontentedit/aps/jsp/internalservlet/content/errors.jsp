@@ -6,7 +6,7 @@
 	<s:if test="hasActionErrors()">
 		<ul class="unstyled">
 		<s:iterator value="actionErrors">
-			<li><s:property escape="false" /></li>
+			<li><s:property escapeHtml="false" /></li>
 		</s:iterator>
 		</ul>
 	</s:if>

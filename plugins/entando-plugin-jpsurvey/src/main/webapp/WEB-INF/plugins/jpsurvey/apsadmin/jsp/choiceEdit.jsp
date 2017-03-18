@@ -72,7 +72,7 @@
         <div class="panel panel-default" id="tab-container">
             <div class="panel-body">
                 <div class="tab-content">
-                    <s:iterator id="localizedLang" value="langs" status="langStatusVar">
+                    <s:iterator var="localizedLang" value="langs" status="langStatusVar">
                         <div id="<s:property value="#localizedLang.code" />_tab" class="tab-pane <s:if test="#langStatusVar.first"> active </s:if>">
                                 <div class="form-group">
                                     <div class="col-xs-12">
@@ -84,7 +84,7 @@
                                             <s:text name="jpsurvey_choice" />
                                         </s:else>
                                     </label>
-                                    <s:set name="localization" value="%{getChoices()[#localizedLang.code]}"/>
+                                    <s:set var="localization" value="%{getChoices()[#localizedLang.code]}"/>
                                     <wpsf:textarea cssClass="form-control" name="%{'choice-'+#localizedLang.code}" id="%{'choice-'+#localizedLang.code}" value="%{#localization}" cols="60" rows="3" />
                                 </div>
                             </div>

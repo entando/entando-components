@@ -2,7 +2,7 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
-<s:set name="currentSurveyId" value="%{surveyId}" />
+<s:set var="currentSurveyId" value="%{surveyId}" />
 <h1 class="panel panel-default title-page">
     <span class="panel-body display-block">
         <s:if test="questionnaire">
@@ -19,7 +19,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <s:text name="note.survey.youwork" />:&#32;<s:property value="currentSurveyId.descr" /> 
-            <s:set name="defaultLanguage" value="defaultLangCode"/>
+            <s:set var="defaultLanguage" value="defaultLangCode"/>
             <code><s:property value="titles[#defaultLanguage]"/></code>
         </div>
     </div>
@@ -84,7 +84,7 @@
                                         </label>
                                         <s:if test="categoryRoot.children.size > 0">
                                             <ul class="treeToggler icons-ul" id="tree_root">
-                                                <s:set name="currentCategoryRoot" value="categoryRoot" />
+                                                <s:set var="currentCategoryRoot" value="categoryRoot" />
                                                 <s:include value="/WEB-INF/apsadmin/jsp/resource/categoryTreeBuilder.jsp" />
                                             </ul>
                                         </s:if>
@@ -111,15 +111,15 @@
             </p>
 
             <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
-                <s:set name="group" value="#groupResource" />
+                <s:set var="group" value="#groupResource" />
 
                 <div class="pager">
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
                 </div>
 
-                <s:iterator id="resourceid">
-                    <s:set name="resource" value="%{loadResource(#resourceid)}"></s:set>
+                <s:iterator var="resourceid">
+                    <s:set var="resource" value="%{loadResource(#resourceid)}"></s:set>
                     <%-- http://www.maxdesign.com.au/presentation/definition/dl-image-gallery.htm --%>
 
                     <div class="row">

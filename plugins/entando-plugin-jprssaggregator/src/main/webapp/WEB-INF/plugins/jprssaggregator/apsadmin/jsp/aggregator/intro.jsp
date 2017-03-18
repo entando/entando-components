@@ -14,7 +14,7 @@
 			(http://creativecommons.org/licenses/by-sa/3.0/)
 			Based on a work at www.komodomedia.com.
 		 -->
-		<s:property value="%{getText('jprssaggregator.intro.html')}" escape="false"/>
+		<s:property value="%{getText('jprssaggregator.intro.html')}" escapeHtml="false"/>
 	</div>
 </div>
 --%>

@@ -108,7 +108,7 @@
 							<s:set var="userCvsAuthorizationParamsVar" value="%{#userCvsAuthorizationVar.split(',')}" />
 							<tr>
 								<td class="text-center text-nowrap">
-									<s:set name="elementIndexVar" value="#elementStatus.index" />
+									<s:set var="elementIndexVar" value="#elementStatus.index" />
 									<div class="btn-group btn-group-xs">
 										<wpsa:actionParam action="removeAuthorization" var="actionName" >
 											<wpsa:actionSubParam name="csvAuthorization" value="%{#userCvsAuthorizationVar}" />
@@ -147,15 +147,15 @@
 			<table class="table table-bordered">
 				<tr>
                     <th class="text-right"><s:text name="jpuserreg.activationPageCode" /></th>
-					<td><s:property value="%{getText('jpuserreg.activationPageCode.help')}" escape="false" /></td>
+					<td><s:property value="%{getText('jpuserreg.activationPageCode.help')}" escapeHtml="false" /></td>
 				</tr>
 				<tr>
 					<th class="text-right"><s:text name="jpuserreg.label.subject" /></th>
-					<td><s:property value='%{getText("jpuserreg.label.activation.subject.help")}' escape="false" /></td>
+					<td><s:property value='%{getText("jpuserreg.label.activation.subject.help")}' escapeHtml="false" /></td>
 				</tr>
 				<tr>
 					<th class="text-right"><s:text name="jpuserreg.label.body" /></th>
-					<td><s:property value='%{getText("jpuserreg.label.activation.body.help")}' escape="false"  /></td> 
+					<td><s:property value='%{getText("jpuserreg.label.activation.body.help")}' escapeHtml="false"  /></td> 
 				</tr>
 			</table>
 			<div class="form-group">
@@ -189,15 +189,15 @@
 			<table class="table table-bordered">
 				<tr>
 					<th class="text-right"><s:text name="jpuserreg.reactivationPageCode" /></th>
-					<td><s:property value="%{getText('jpuserreg.reactivationPageCode.help')}" escape="false" /></td>
+					<td><s:property value="%{getText('jpuserreg.reactivationPageCode.help')}" escapeHtml="false" /></td>
 				</tr>
 				<tr>
 					<th class="text-right"><s:text name="jpuserreg.label.subject" /></th>
-					<td><s:property value='%{getText("jpuserreg.label.reactivation.subject.help")}' escape="false" /></td>
+					<td><s:property value='%{getText("jpuserreg.label.reactivation.subject.help")}' escapeHtml="false" /></td>
 				</tr>
 				<tr>
 					<th class="text-right"><s:text name="jpuserreg.label.body" /></th>
-					<td><s:property value='%{getText("jpuserreg.label.reactivation.body.help")}' escape="false"  /></td> 
+					<td><s:property value='%{getText("jpuserreg.label.reactivation.body.help")}' escapeHtml="false"  /></td> 
 				</tr>
 			</table>
 			<div class="form-group">

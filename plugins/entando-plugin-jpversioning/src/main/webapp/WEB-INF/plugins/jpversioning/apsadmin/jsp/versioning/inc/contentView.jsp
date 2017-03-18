@@ -23,10 +23,10 @@
 
 			<%-- START CICLO ATTRIBUTI --%>
 			<s:if test="%{content.attributeList.size() > 0}">
-				<s:iterator value="content.attributeList" id="attribute">
+				<s:iterator value="content.attributeList" var="attribute">
 					<div class="form-group">
 					<%-- INIZIALIZZAZIONE TRACCIATORE --%>
-					<s:set name="attributeTracer" value="initAttributeTracer(#attribute, #lang)" />
+					<s:set var="attributeTracer" value="initAttributeTracer(#attribute, #lang)" />
 					<label><s:property value="#attribute.name" /></label>
 						<div class="input-group">
 							<s:if test="#attribute.type == 'Monotext' || #attribute.type == 'Text' || #attribute.type == 'Longtext' || #attribute.type == 'Enumerator'">

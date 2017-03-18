@@ -6,18 +6,18 @@
     <span class="panel-body display-block">
         <s:if test="question.questionnaire">
             <a href="<s:url action="listSurveys" ><s:param name="questionnaire" value="question.questionnaire"></s:param></s:url>" title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpsurvey.survey.main" />"><s:text name="title.jpsurvey.survey.main" /></a>
-            <s:set name="titleSurveyQuestionnary" value="QUESTIONARIO_LABEL"/>
+            <s:set var="titleSurveyQuestionnary" value="QUESTIONARIO_LABEL"/>
         </s:if>
         <s:else>
             <a href="<s:url action="listSurveys" ><s:param name="questionnaire" value="question.questionnaire"></s:param></s:url>" title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpsurvey.poll.main" />"><s:text name="title.jpsurvey.poll.main" /></a>
-            <s:set name="titleSurveyQuestionnary" value="SONDAGGIO_LABEL"/>
+            <s:set var="titleSurveyQuestionnary" value="SONDAGGIO_LABEL"/>
         </s:else>&#32;/&#32;
         <s:if test="getStrutsAction() == 2">
             <s:text name="title.jpsurvey.question.edit" />
         </s:if>
         <s:if test="getStrutsAction() == 1">
             <s:text name="title.jpsurvey.question.new" />
-            <s:set name="isModifiable" value="true"/>
+            <s:set var="isModifiable" value="true"/>
         </s:if>
     </span>
 </h1>
@@ -74,7 +74,7 @@
             </s:if>
         </p>
         <ul class="nav nav-tabs tab-togglers" id="tab-togglers">
-            <s:iterator value="langs" id="lang" status="langStatusVar">
+            <s:iterator value="langs" var="lang" status="langStatusVar">
                 <li <s:if test="#langStatusVar.first"> class="active" </s:if>>
                     <a data-toggle="tab" href="#<s:property value="#lang.code" />_tab"><s:property value="#lang.descr" /></a>
                 </li>
@@ -83,11 +83,11 @@
         <div class="panel panel-default" id="tab-container">
             <div class="panel-body">
                 <div class="tab-content">
-                    <s:iterator id="cyclingLang" value="langs" status="langStatusVar">
+                    <s:iterator var="cyclingLang" value="langs" status="langStatusVar">
                         <div id="<s:property value="#cyclingLang.code" />_tab" class="tab-pane <s:if test="#langStatusVar.first"> active </s:if>">
                             <p>
                                 <label for="question-<s:property value="#lang.code" />"><s:text name="jpsurvey_question" /></label>
-                                <s:set name="localization" value="%{getQuestions()[#cyclingLang.code]}"/>
+                                <s:set var="localization" value="%{getQuestions()[#cyclingLang.code]}"/>
                                 <wpsf:textarea name="%{'question-'+#cyclingLang.code}" id="%{'question-'+#cyclingLang.code}" value="%{#localization}" cssClass="form-control" cols="60" rows="3" />
                             </p>
                         </div>
@@ -131,14 +131,14 @@
                             </s:if>
                     </tr>
                     <%-- STAMPA LE OPZIONI DISPONIBILI STAMPATE NELLA LINGUA DEL BACKEND--%>
-                    <s:iterator id="currentChoice" value="question.choices" status="status">
+                    <s:iterator var="currentChoice" value="question.choices" status="status">
                         <tr>
-                            <s:set name="currentStat" value="choiceStats[#currentChoice.id]" />
+                            <s:set var="currentStat" value="choiceStats[#currentChoice.id]" />
                             <s:if test="%{#currentChoice.freeText== false}">
-                                <s:set name="localizedString" value="%{getText('jpsurvey_freeText')}" />
+                                <s:set var="localizedString" value="%{getText('jpsurvey_freeText')}" />
                             </s:if>
                             <s:else> 
-                                <s:set name="localizedString" value="%{getText('jpsurvey_freeText')}" />
+                                <s:set var="localizedString" value="%{getText('jpsurvey_freeText')}" />
                             </s:else>
                             <%-- actions: up/down/delete --%>
                             <td class="text-center">
@@ -191,7 +191,7 @@
                                 <td>
                                     <!-- OTTIENE LA STRINGA LOCALIZZATA -->
                                     <%-- cancellare
-                                    <s:set name="localizedString" value="#currentChoice.choices[currentLang.code]" />
+                                    <s:set var="localizedString" value="#currentChoice.choices[currentLang.code]" />
                                     --%>
                                         <s:property value="%{getLabel(#currentChoice.choices)}"/>
                                     </a>

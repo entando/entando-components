@@ -85,7 +85,7 @@
                         <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
                             <ul class="margin-base-vertical">
 				<s:iterator value="ActionErrors">
-					<li><s:property escape="false" /></li>
+					<li><s:property escapeHtml="false" /></li>
 				</s:iterator>
                             </ul>
 		</div>
@@ -96,14 +96,14 @@
                         <h2 class="h4 margin-none"><s:text name="messages.confirm" /></h2>
                             <ul class="margin-base-vertical">
 				<s:iterator value="actionMessages">
-					<li><s:property escape="false" /></li>
+					<li><s:property escapeHtml="false" /></li>
 				</s:iterator>
                             </ul>
 		</div>
 		</s:if>
 
 	<wpsa:subset source="ideas" count="10" objectName="groupIdea" advanced="true" offset="5">
-	<s:set name="group" value="#groupIdea" />
+	<s:set var="group" value="#groupIdea" />
 
 	<div class="pager">
 		<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
@@ -189,16 +189,16 @@
 			</td>
 			<td class="text-center text-nowrap">
 				<s:if test="#idea.status == 3">
-					<s:set name="iconImage" id="iconImage">icon fa fa-check text-success</s:set>
-					<s:set name="isOnlineStatus" value="%{getText('label.yes')}" />
+					<s:set var="iconImage" id="iconImage">icon fa fa-check text-success</s:set>
+					<s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
 				</s:if>
 				<s:if test="#idea.status == 2">
-					<s:set name="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
-					<s:set name="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_to_approve.singular')}" />
+					<s:set var="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
+					<s:set var="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_to_approve.singular')}" />
 				</s:if>
 				<s:if test="#idea.status == 1">
-					<s:set name="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
-					<s:set name="isOnlineStatus" value="%{getText('label.no')}" />
+					<s:set var="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
+					<s:set var="isOnlineStatus" value="%{getText('label.no')}" />
 				</s:if>
                                 <span class="<s:property value="iconImage" />" title="<s:property value="isOnlineStatus" />"></span>
 			</td>

@@ -11,23 +11,23 @@
 	<wpsf:hidden name="messageIndexes" value="%{messageIndex}" />
 </p>
 
-<s:set name="currentMessage" value="message" />
+<s:set var="currentMessage" value="message" />
 <h3>MESSAGGIO: <s:property value="#currentMessage.subject" /></h3>
 
 <s:include value="inc/actions.jsp" />
 
 <!-- INIZIO BLOCCO OPZIONI  -->
 
-<s:set name="iconMsgReply"><wp:resourceURL />plugins/jpwebmail/static/img/mail-reply-sender.png</s:set>
-<s:set name="iconMsgReplyText">RISPONDI</s:set>
-<s:set name="iconMsgReplyAll"><wp:resourceURL />plugins/jpwebmail/static/img/mail-reply-all.png</s:set>
-<s:set name="iconMsgReplyAllText">RISPONDI A TUTTI</s:set>
-<s:set name="iconMsgForward"><wp:resourceURL />plugins/jpwebmail/static/img/mail-forward.png</s:set>
-<s:set name="iconMsgForwardText">INOLTRA</s:set>
-<s:set name="iconMsgGoNext"><wp:resourceURL />plugins/jpwebmail/static/img/go-next.png</s:set>
-<s:set name="iconMsgGoNextText">SUCCESSIVA</s:set>
-<s:set name="iconMsgGoPrevious"><wp:resourceURL />plugins/jpwebmail/static/img/go-previous.png</s:set>
-<s:set name="iconMsgGoPreviousText">PRECEDENTE</s:set>
+<s:set var="iconMsgReply"><wp:resourceURL />plugins/jpwebmail/static/img/mail-reply-sender.png</s:set>
+<s:set var="iconMsgReplyText">RISPONDI</s:set>
+<s:set var="iconMsgReplyAll"><wp:resourceURL />plugins/jpwebmail/static/img/mail-reply-all.png</s:set>
+<s:set var="iconMsgReplyAllText">RISPONDI A TUTTI</s:set>
+<s:set var="iconMsgForward"><wp:resourceURL />plugins/jpwebmail/static/img/mail-forward.png</s:set>
+<s:set var="iconMsgForwardText">INOLTRA</s:set>
+<s:set var="iconMsgGoNext"><wp:resourceURL />plugins/jpwebmail/static/img/go-next.png</s:set>
+<s:set var="iconMsgGoNextText">SUCCESSIVA</s:set>
+<s:set var="iconMsgGoPrevious"><wp:resourceURL />plugins/jpwebmail/static/img/go-previous.png</s:set>
+<s:set var="iconMsgGoPreviousText">PRECEDENTE</s:set>
 
 <p>
 <a href="<s:url action="reply"><s:param name="messageIndex" value="messageIndex" /><s:param name="currentFolderName" value="currentFolderName" /></s:url>" 
@@ -79,11 +79,11 @@
 <s:property value="%{getContent(message)}"/>
 </pre>
 
-<s:set name="attachmentInfos" value="%{getAttachmentInfos(#currentMessage)}"></s:set>
+<s:set var="attachmentInfos" value="%{getAttachmentInfos(#currentMessage)}"></s:set>
 <s:if test="#attachmentInfos.size() > 0">
 	<h3>ALLEGATI</h3>
 	<ol>
-	<s:iterator value="#attachmentInfos" id="attachment">
+	<s:iterator value="#attachmentInfos" var="attachment">
 		<li><a href="<s:url action="openAttachment"><s:param name="messageIndex" value="messageIndex" /><s:param name="currentFolderName" value="currentFolderName" /><s:param name="attachmentNumber" value="#attachment.number" /><s:param name="subPartAttachmentNumber" value="#attachment.subPartNumber" /></s:url>" ><s:property value="#attachment.fileName" /> (<s:property value="#attachment.size" /> bytes)</a></li>
 	</s:iterator>
 	</ol>

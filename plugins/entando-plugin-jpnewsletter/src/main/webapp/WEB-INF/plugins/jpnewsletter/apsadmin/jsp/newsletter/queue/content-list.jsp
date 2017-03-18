@@ -45,7 +45,7 @@
 		<h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
 		<ul class="margin-base-top">
 		<s:iterator value="ActionErrors">
-			<li><s:property escape="false" /></li>
+			<li><s:property escapeHtml="false" /></li>
 		</s:iterator>
 		</ul>
 	</div>
@@ -56,14 +56,14 @@
 		<h2 class="h4 margin-none"><s:text name="messages.confirm" /></h2>
 		<ul class="margin-base-top">
 			<s:iterator value="actionMessages">
-				<li><s:property escape="false" /></li>
+				<li><s:property escapeHtml="false" /></li>
 			</s:iterator>
 		</ul>
 	</div>
 	</s:if>
 	
 	<wpsa:subset source="#contentIdsVar" count="10" objectName="groupContent" advanced="true" offset="5">
-	<s:set name="group" value="#groupContent" />
+	<s:set var="group" value="#groupContent" />
 	<div class="text-center">
 		<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
 		<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />

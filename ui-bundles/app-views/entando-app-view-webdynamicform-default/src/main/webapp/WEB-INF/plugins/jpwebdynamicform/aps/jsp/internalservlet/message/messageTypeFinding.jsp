@@ -14,7 +14,7 @@
 			<div class="controls">
 				<select name="typeCode" tabindex="<wpsa:counter/>" id="jpwebdynamicform_typecode" class="text">
 					<s:iterator value="messageTypes" var="messageType" >
-						<s:set name="optionDescr">jpwebdynamicform_TITLE_<s:property value="#messageType.code"/></s:set>
+						<s:set var="optionDescr">jpwebdynamicform_TITLE_<s:property value="#messageType.code"/></s:set>
 						<option value="<s:property value="#messageType.code"/>"><wp:i18n key="${optionDescr}" /></option>
 					</s:iterator>
 				</select>

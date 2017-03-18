@@ -31,14 +31,14 @@
     </table>
     <s:iterator var="question" value="survey.questions" status="questionIndex">
         <div class="subsection-light">
-            <s:set name="occurrences" value="%{getQuestionStatistics(#question.id)}" />
+            <s:set var="occurrences" value="%{getQuestionStatistics(#question.id)}" />
             <h2><s:text name="jpsurvey_question"/>&#32;<s:property value="#questionIndex.index + 1"/>. <s:property value="%{getLabel(#question.questions)}" /></h2>
             <h3><s:text name="jpsurvey_answers" />:</h3>
             <ol>	
-                <s:iterator id="choice" value="#question.choices" status="rowstatus" >
+                <s:iterator var="choice" value="#question.choices" status="rowstatus" >
                     <li>
                         <s:if test="#choice.freeText">
-                            <s:set name="occurrence" value="#occurrences[#choice.id]" />
+                            <s:set var="occurrence" value="#occurrences[#choice.id]" />
                             <s:if test="%{#occurrence != null && #occurrence != ''}">
                                 <a href="<s:url action="freeTextListEntry"><s:param name="choiceId" value="#choice.id"/><s:param name="questionId" value="%{#question.id}"/><s:param name="surveyId" value="%{survey.id}"/><s:param name="questionnaire" value="questionnaire"/><s:param name="strutsAction" value="2"/></s:url>" title="<s:text name="label.view.freeText" />" >
                                     <s:text name="jpsurvey_freeText" />
@@ -56,15 +56,15 @@
             </ol>
             <div class="graphic">
                 <dl class="graph">		
-                    <s:iterator id="choice" value="#question.choices" status="rowstatus" >
+                    <s:iterator var="choice" value="#question.choices" status="rowstatus" >
                         <s:if test="#choice.freeText">
                             <dt><s:text name="jpsurvey_freeText" /></dt>
                         </s:if>
                         <s:else>
                             <dt><s:property value="%{getLabel(#choice.choices)}" /></dt>
                         </s:else>
-                        <s:set name="occurrence" value="#occurrences[#choice.id]" />
-                        <s:set name="roundedPercentage" value="%{getChoicePercentage(#occurrences, #choice.id)}" />
+                        <s:set var="occurrence" value="#occurrences[#choice.id]" />
+                        <s:set var="roundedPercentage" value="%{getChoicePercentage(#occurrences, #choice.id)}" />
 
                         <s:if test="#occurrence && (#roundedPercentage > 20)">
                             <dd>

@@ -1,10 +1,10 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 
-<s:set name="masterCompositeAttributeTracer" value="#attributeTracer" />
-<s:set name="masterCompositeAttribute" value="#attribute" />
+<s:set var="masterCompositeAttributeTracer" value="#attributeTracer" />
+<s:set var="masterCompositeAttribute" value="#attribute" />
 <s:iterator value="#attribute.attributes" var="attribute">
-<s:set name="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)"></s:set>
-<s:set name="parentAttribute" value="#masterCompositeAttribute"></s:set>
+<s:set var="attributeTracer" value="#masterCompositeAttributeTracer.getCompositeTracer(#masterCompositeAttribute)"></s:set>
+<s:set var="parentAttribute" value="#masterCompositeAttribute"></s:set>
 	<s:property value="#attribute.name"/>:&#32;
 	<s:if test="#attribute.type == 'Boolean' || #attribute.type == 'CheckBox'">
 		<s:include value="/WEB-INF/plugins/jpwebform/apsadmin/jsp/message/modules/view/booleanAttribute.jsp" />
@@ -27,6 +27,6 @@
 	</s:else>
 	<br />
 </s:iterator>
-<s:set name="attributeTracer" value="#masterCompositeAttributeTracer" />
-<s:set name="attribute" value="#masterCompositeAttribute" />
-<s:set name="parentAttribute"  value=""></s:set>
+<s:set var="attributeTracer" value="#masterCompositeAttributeTracer" />
+<s:set var="attribute" value="#masterCompositeAttribute" />
+<s:set var="parentAttribute"  value=""></s:set>

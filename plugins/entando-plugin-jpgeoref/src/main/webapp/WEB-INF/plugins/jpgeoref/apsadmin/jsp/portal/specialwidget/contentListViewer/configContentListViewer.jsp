@@ -34,7 +34,7 @@
                     <ul class="margin-base-vertical">
                         <s:iterator value="fieldErrors">
                             <s:iterator value="value">
-                                <li><s:property escape="false" /></li>
+                                <li><s:property escapeHtml="false" /></li>
                                 </s:iterator>
                             </s:iterator>
                     </ul>
@@ -113,7 +113,7 @@
                             <s:if test="null != categoryCodes && categoryCodes.size() > 0">
                                 <div class="clearfix margin-small-bottom">
                                     <s:iterator value="categoryCodes" var="categoryCodeVar">
-                                        <s:set name="showletCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
+                                        <s:set var="showletCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
 
                                             <span class="label label-default label-sm pull-left padding-small-top padding-small-bottom margin-small-right margin-small-bottom">
                                                 <span class="icon fa fa-tag"></span>&#32;
@@ -180,7 +180,7 @@
                                             <th><s:text name="name.filterDescription" /></th>
                                             <th><s:text name="label.order" /></th>
                                         </tr>
-                                        <s:iterator value="filtersProperties" id="filter" status="rowstatus">
+                                        <s:iterator value="filtersProperties" var="filter" status="rowstatus">
                                             <tr>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-xs">
@@ -189,7 +189,7 @@
                                                             <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
                                                             <wpsa:actionSubParam name="movement" value="UP" />
                                                         </wpsa:actionParam>
-                                                        <s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up.png</s:set>		
+                                                        <s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up.png</s:set>		
                                                         <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveUp')}" cssClass="btn btn-default">
                                                             <span class="icon fa fa-sort-desc"></span>
                                                         </wpsf:submit>
@@ -197,7 +197,7 @@
                                                             <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
                                                             <wpsa:actionSubParam name="movement" value="DOWN" />
                                                         </wpsa:actionParam>
-                                                        <s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down.png</s:set>
+                                                        <s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down.png</s:set>
                                                         <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveDown')}" cssClass="btn btn-default">
                                                             <span class="icon fa fa-sort-asc"></span>
                                                         </wpsf:submit>
@@ -207,7 +207,7 @@
                                                     </div>
                                                     <div class="btn-group btn-group-xs">
 
-                                                        <s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete.png</s:set>
+                                                        <s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete.png</s:set>
                                                         <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}" cssClass="btn btn-warning">
                                                             <span class="icon fa fa-times-circle-o"></span>
                                                         </wpsf:submit>
@@ -288,7 +288,7 @@
                             </legend>
                             <div class="collapse" id="extraOption">
                                 <p><s:text name="note.extraOption.intro" /></p>
-                                <s:iterator id="lang" value="langs">
+                                <s:iterator var="lang" value="langs">
                                     <div class="form-group">
                                         <label for="title_<s:property value="#lang.code" />" >
                                             <code class="label label-info"><s:property value="#lang.code" /></code>
@@ -348,7 +348,7 @@
                                             <th class="text-right"><abbr title="<s:text name="label.number" />">N</abbr></th>
                                             <th><s:text name="name.filterDescription" /></th>
                                         </tr>
-                                        <s:iterator value="userFiltersProperties" id="userFilter" status="rowstatus">
+                                        <s:iterator value="userFiltersProperties" var="userFilter" status="rowstatus">
                                             <tr>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-xs">
@@ -387,7 +387,7 @@
                                                             <s:elseif test="#userFilter['key'] == 'category'">
                                                                 <s:text name="label.category" />
                                                                 <s:if test="null != #userFilter['categoryCode']">
-                                                                    <s:set name="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
+                                                                    <s:set var="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
                                                                     (<s:property value="#userFilterCategoryRoot.getFullTitle(currentLang.code)"/>)
                                                                 </s:if>
                                                             </s:elseif>

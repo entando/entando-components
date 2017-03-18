@@ -14,14 +14,14 @@
 	<h3><s:text name="message.title.ActionErrors" /></h3>
 		<ul>
 			<s:iterator value="actionErrors">
-				<li><s:property escape="true" /></li>
+				<li><s:property escapeHtml="true" /></li>
 			</s:iterator>
 		</ul>
 	</div>
 </s:if>
 
 <wpsa:subset source="messages" count="10" objectName="groupMessages" advanced="true" offset="5">
-<s:set name="group" value="#groupMessages" />
+<s:set var="group" value="#groupMessages" />
 
 <h1>MESSAGGI</h1>
 <div class="paginazione">
@@ -38,7 +38,7 @@
 	<th>SUBJECT</th>
 	<th>DATA</th>	
 </tr>
-<s:iterator id="message" status="count">
+<s:iterator var="message" status="count">
 <wpsa:set name="messagePosition" value="#groupMessages.begin + #count.index" />
 <tr>
 	<td><input type="checkbox" <s:if test="selectedAllMessages">checked="checked"</s:if> name="messageIndexes" id="<s:property value="%{'message_' + #count.index}" />" value="<s:property value="#messagePosition" />" class="checkbox" /><label for="<s:property value="%{'message_' + #count.index}" />"><s:property value="#messagePosition + 1" /></label></td>
@@ -52,7 +52,7 @@
 	</td>
 	<td>
 	<s:if test="%{isSentFolder()}">
-		<s:set name="recipientsTo" value="getTo(#message)"></s:set>
+		<s:set var="recipientsTo" value="getTo(#message)"></s:set>
 		<s:if test="#recipientsTo == null || #recipientsTo.length == 0">NESSUN DESTINATARIO</s:if>
 		<s:else>
 			<s:if test="#recipientsTo.length > 1">
@@ -65,12 +65,12 @@
 		</s:else>
 	</s:if>
 	<s:else>
-		<s:set name="getFromAddress" value="#message.from[0]"></s:set>
+		<s:set var="getFromAddress" value="#message.from[0]"></s:set>
 		<s:include value="inc/recipient.jsp" />
 	</s:else>
 	</td>
 	<td>
-		<s:set name="messageSubject" value="#message.subject"></s:set>
+		<s:set var="messageSubject" value="#message.subject"></s:set>
 		<a href="<s:url action="openMessage"><s:param name="messageIndex" value="#messagePosition" /><s:param name="currentFolderName" value="currentFolderName" /></s:url>"><s:if test="%{#messageSubject == null || ''.equals(#messageSubject)}">NESSUN OGGETTO</s:if><s:else><s:property value="#messageSubject" /></s:else></a>
 	</td>
 	<td class="centerText">
