@@ -112,6 +112,7 @@
         <test.database.port.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestPort</test.database.port.url>
         <test.database.serv.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestServ</test.database.serv.url>
         -->
+
         <test.database.driver>org.apache.derby.jdbc.EmbeddedDriver</test.database.driver>
         <test.database.hostname>localhost</test.database.hostname>
         <test.database.port>1527</test.database.port>
