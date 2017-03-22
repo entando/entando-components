@@ -20,10 +20,9 @@
 				<interceptor-ref name="chain"/>
 				<interceptor-ref name="debugging"/>
 				<interceptor-ref name="checkbox"/>
-				<interceptor-ref name="apsActionParams"/>
 				<interceptor-ref name="jpfrontshortcutActionParams"/>
 				<interceptor-ref name="staticParams"/>
-				<interceptor-ref name="params"/>
+				<interceptor-ref name="apsParams"/>
 				<interceptor-ref name="conversionError"/>
 			</interceptor-stack>
             
