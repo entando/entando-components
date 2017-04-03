@@ -277,7 +277,7 @@ public class StandardFrontAction extends AbstractFrontAction implements IFrontAc
 				currentLanguage = this.getLangManager().getDefaultLang();
 			}
 			IPage currentPage = this.getCurrentPage();
-			String pathDestFirst = this.getUrlManager().createUrl(currentPage, currentLanguage, null);
+			String pathDestFirst = this.getUrlManager().createURL(currentPage, currentLanguage, null);
 			pathDest = this.getResponse().encodeURL(pathDestFirst);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getDestForwardPath", "Error on extracting destination forward Path");

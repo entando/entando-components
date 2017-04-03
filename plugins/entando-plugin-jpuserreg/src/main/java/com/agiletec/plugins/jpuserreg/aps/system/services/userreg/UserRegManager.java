@@ -302,7 +302,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 		if (null == page) {
 			page = this.getPageManager().getRoot();
 		}
-		return this.getUrlManager().createUrl(page, lang, params);
+		return this.getUrlManager().createURL(page, lang, params);
 	}
 	
 	protected String replaceParams(String defaultText, Map<String, String> params) {
