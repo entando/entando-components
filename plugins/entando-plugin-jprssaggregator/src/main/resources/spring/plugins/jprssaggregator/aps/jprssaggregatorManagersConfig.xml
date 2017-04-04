@@ -7,7 +7,7 @@
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd"> 
     
-    <bean id="jacmsLinkAttribute" class="org.entando.entando.plugins.jprssaggregator.aps.system.services.content.model.extraAttribute.SearchableLinkAttribute" >
+    <bean id="jprssaggregatorLinkAttribute" class="org.entando.entando.plugins.jprssaggregator.aps.system.services.content.model.extraAttribute.SearchableLinkAttribute" >
         <property name="type" value="Link" />
         <property name="handler" >
             <bean class="com.agiletec.plugins.jacms.aps.system.services.content.parse.extraAttribute.LinkAttributeHandler" />
@@ -15,6 +15,11 @@
         <property name="attributeManagerClassName" 
                   value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.LinkAttributeManager" />
     </bean>
+	
+	<bean id="jprssaggregatorLinkAttributeContentWrapper" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeWrapper" >
+		<property name="attribute" ref="jprssaggregatorLinkAttribute" />
+		<property name="entityManagerNameDest"><value>jacmsContentManager</value></property>
+	</bean>
     
     <bean id="jprssaggregatorAggregatorManager" parent="abstractService"
               class="org.entando.entando.plugins.jprssaggregator.aps.system.services.aggregator.AggregatorManager">
