@@ -53,25 +53,20 @@
         </plugins>
     </build>	
     <dependencies>
+		
         <dependency>
             <groupId>com.jgeppert.struts2.jquery</groupId>
-            <artifactId>struts2-jquery-plugin</artifactId>
+            <artifactId>struts2-jquery-grid-plugin</artifactId>
             <version>3.7.1</version>
+			<scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
                     <artifactId>velocity</artifactId>
                 </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.jgeppert.struts2.jquery</groupId>
-            <artifactId>struts2-jquery-grid-plugin</artifactId>
-            <version>3.7.1</version>
-            <exclusions>
                 <exclusion>
-                    <groupId>org.apache.velocity</groupId>
-                    <artifactId>velocity</artifactId>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -79,10 +74,15 @@
             <groupId>com.jgeppert.struts2.jquery</groupId>
             <artifactId>struts2-jquery-richtext-plugin</artifactId>
             <version>3.7.1</version>
+			<scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
                     <artifactId>velocity</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -90,10 +90,15 @@
             <groupId>com.jgeppert.struts2.jquery</groupId>
             <artifactId>struts2-jquery-tree-plugin</artifactId>
             <version>3.7.1</version>
+			<scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
                     <artifactId>velocity</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -101,10 +106,15 @@
             <groupId>com.jgeppert.struts2.jquery</groupId>
             <artifactId>struts2-jquery-mobile-plugin</artifactId>
             <version>3.7.1</version>
+			<scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
                     <artifactId>velocity</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -112,14 +122,14 @@
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>mailapi</artifactId>
-            <version>1.4.5</version>
+            <version>1.5.6</version>
         </dependency>
 		
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>smtp</artifactId>
-            <version>1.4.5</version>
-        </dependency>
+            <version>1.5.6</version>
+		</dependency>
 		
         <dependency>
             <groupId>org.subethamail</groupId>
@@ -131,8 +141,8 @@
                     <artifactId>slf4j-api</artifactId>
                     <groupId>org.slf4j</groupId>
                 </exclusion>
-            </exclusions>
+			</exclusions>
         </dependency>
-        
+		
     </dependencies>
 </project>
