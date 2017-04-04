@@ -69,18 +69,31 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ( 'test', 'jpmyporta
 	</widgets>
 </myportalConfig>' );
 
-INSERT INTO pages (code, parentcode, pos, modelcode, titles, groupcode, showinmenu, extraconfig) VALUES (
-'jpmyportalplus_testpage', 'homepage', 5, 'jpmyportalplus_pagemodel', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO pages (code, parentcode, pos, groupcode) VALUES ('jpmyportalplus_testpage', 'homepage', 5, 'free');
+
+INSERT INTO pages_metadata_online (code, titles, modelcode, showinmenu, extraconfig, updatedat) VALUES (
+'jpmyportalplus_testpage', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Test Page</property>
 <property key="it">Test Page</property>
-</properties>
-', 'free', 0, NULL);
+</properties>', 'jpmyportalplus_pagemodel', 0, NULL, '2017-02-17 13:06:24');
+
+INSERT INTO pages_metadata_draft (code, titles, modelcode, showinmenu, extraconfig, updatedat) VALUES (
+'jpmyportalplus_testpage', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Test Page</property>
+<property key="it">Test Page</property>
+</properties>', 'jpmyportalplus_pagemodel', 0, NULL, '2017-02-17 13:06:24');
 
 INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('jpmyportalplus_testpage', 0, 'login_form', NULL);
 INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('jpmyportalplus_testpage', 1, 'jpmyportalplus_sample_widget', NULL);
 INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('jpmyportalplus_testpage', 2, 'jpmyportalplus_void', NULL);
 INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('jpmyportalplus_testpage', 4, 'jpmyportalplus_test_widget_3', NULL);
+
+INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('jpmyportalplus_testpage', 0, 'login_form', NULL);
+INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('jpmyportalplus_testpage', 1, 'jpmyportalplus_sample_widget', NULL);
+INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('jpmyportalplus_testpage', 2, 'jpmyportalplus_void', NULL);
+INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('jpmyportalplus_testpage', 4, 'jpmyportalplus_test_widget_3', NULL);
 
 INSERT INTO jpmyportalplus_userpageconfig(username, pagecode, framepos, widgetcode, config, closed)
     VALUES ('editorCustomers', 'jpmyportalplus_testpage',
