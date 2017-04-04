@@ -38,12 +38,12 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for Entando Plugin Mail");
 		
+		suite.addTestSuite(TestSmtpConfigAction.class);
+		suite.addTestSuite(TestMailSenderConfigAction.class);
+		
 		suite.addTestSuite(TestEmailAddressValidator.class);
 		suite.addTestSuite(TestMailConfigDOM.class);
 		suite.addTestSuite(TestMailManager.class);
-		
-		suite.addTestSuite(TestSmtpConfigAction.class);
-		suite.addTestSuite(TestMailSenderConfigAction.class);
 		
 		return suite;
 	}
