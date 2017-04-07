@@ -86,7 +86,8 @@
         <module>entando-plugin-jpwebform</module>
         <module>entando-plugin-jpblog</module>
         -->
-    </modules>
+		<module>entando-plugin-jpcontentscheduler</module>
+  </modules>
     <properties>
         <!--
         <test.database.driver>org.postgresql.Driver</test.database.driver>
