@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.util;
+package org.entando.entando.plugins.jpcontentscheduler.aps.system.services;
 
 public class ContentThreadConstants {
 	
@@ -77,9 +77,6 @@ public class ContentThreadConstants {
     public static final String MOVE_ACTION = "move";
 	
 	public static final String ACTION_SUCCESS = "OK";
-	
-	// Nome dell'attributo per ricavare l'email dalla tabella degli utenti a database
-	public static final String EMAIL_ATTRIBUTE = "email";
 	
 	// valore per l'attributo types nell'xml di configurazione che indica "tutti i tipi di contenuto"
 	public static final String ALL_TYPES = "*";

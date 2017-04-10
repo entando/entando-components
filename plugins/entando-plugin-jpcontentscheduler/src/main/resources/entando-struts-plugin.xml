@@ -7,9 +7,6 @@
 	
 	<!-- ### entando-plugin-jpcontentscheduler ### -->
 	
-	<!-- EXAMPLE -->
-	<!-- 
-	<include file="org/entando/entando/plugins/aps/system/jpcontentscheduler.xml"/>
-	 -->
-   
+	<include file="org/entando/entando/plugins/jpcontentscheduler/apsadmin/config/config.xml" />
+	
 </struts>

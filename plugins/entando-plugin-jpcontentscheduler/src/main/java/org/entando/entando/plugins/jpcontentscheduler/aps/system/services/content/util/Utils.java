@@ -21,7 +21,7 @@
  */
 package org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.util;
 
-import java.text.DateFormat;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -91,7 +91,6 @@ public class Utils {
 		for (Iterator<ContentState> i = list.iterator(); i.hasNext();) {
 			ContentState currElem = i.next();
 			ans.append(currElem.getContentid()).append(" - ").append(currElem.getDesc()).append(" - ").append(currElem.getResult()).append("\n");
-
 		}
 		return ans;
 	}

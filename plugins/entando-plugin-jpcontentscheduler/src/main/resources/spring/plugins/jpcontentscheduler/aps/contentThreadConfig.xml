@@ -47,6 +47,9 @@
 	</bean>-->
 	<!-- Fine scheduler bean -->
     
+	
+	
+	
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="applicationContextSchedulerContextKey" value="applicationContext"/>
 		<property name="jobDetails">

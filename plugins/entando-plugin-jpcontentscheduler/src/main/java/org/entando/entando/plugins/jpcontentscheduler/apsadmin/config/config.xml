@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    
+    <package name="jpcontentscheduler_do/jpcontentscheduler/config" namespace="/do/jpcontentscheduler/config" extends="entando-default">
+    	
+        <action name="viewItem" class="jpcontentschedulerConfigAction" method="viewItem">
+            <result type="tiles">admin.jpcontentscheduler.viewItem</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="saveItem" class="jpcontentschedulerConfigAction" method="saveItem">
+            <result type="tiles">admin.jpcontentscheduler.viewItem</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+    </package>
+    
+</struts>

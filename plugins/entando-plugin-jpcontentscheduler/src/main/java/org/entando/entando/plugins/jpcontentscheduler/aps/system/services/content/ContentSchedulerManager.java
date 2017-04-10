@@ -32,7 +32,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
 
@@ -57,7 +57,7 @@ import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.conten
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentThreadConfig;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentTypeElem;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.parse.ContentThreadConfigDOM;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.util.ContentThreadConstants;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.util.Utils;
 import org.springframework.cache.annotation.CacheEvict;
 
@@ -105,6 +105,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	/**
 	 * Restituisce tutti i contenuti che hanno un attributo con nome key
 	 * Data_inizio e valore la data corrente
+	 * @throws com.agiletec.aps.system.exception.ApsSystemException
 	 */
 	@Override
 	public List<String> getContentId(String key) throws ApsSystemException {
@@ -239,7 +240,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 				} else {
 					UserProfile profile = (UserProfile) user.getProfile();
 					if (null != profile) {
-						MonoTextAttribute mailAttribute = (MonoTextAttribute) profile.getAttribute(ContentThreadConstants.EMAIL_ATTRIBUTE);
+						ITextAttribute mailAttribute = (ITextAttribute) profile.getAttributeByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL);
 						String[] email = new String[1];
 						if (null != mailAttribute && mailAttribute.getText().trim().length() > 0) {
 							email[0] = mailAttribute.getText();

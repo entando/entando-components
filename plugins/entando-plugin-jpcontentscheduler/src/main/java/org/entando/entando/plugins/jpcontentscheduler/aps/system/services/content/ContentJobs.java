@@ -36,7 +36,6 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
-import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -45,7 +44,7 @@ import java.util.List;
 import java.util.Map;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentState;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentSuspendMove;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.util.ContentThreadConstants;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.util.Utils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -71,11 +70,9 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 	
 	private ApplicationContext getApplicationContext(JobExecutionContext context)
 			throws Exception {
-		ApplicationContext appCtx = null;
-		appCtx = (ApplicationContext) context.getScheduler().getContext().get(APPLICATION_CONTEXT_KEY);
+		ApplicationContext appCtx = (ApplicationContext) context.getScheduler().getContext().get(APPLICATION_CONTEXT_KEY);
 		if (appCtx == null) {
-			throw new JobExecutionException(
-					ContentThreadConstants.APP_CTX_ERROR + "\"" + APPLICATION_CONTEXT_KEY + "\"");
+			throw new JobExecutionException(ContentThreadConstants.APP_CTX_ERROR + "\"" + APPLICATION_CONTEXT_KEY + "\"");
 		}
 		return appCtx;
 	}
@@ -86,7 +83,7 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 		this.setCategoryManager((ICategoryManager) appCtx.getBean("CategoryManager"));
 		this.setPageManager((IPageManager) appCtx.getBean("PageManager"));
 	}
-
+	
 	@Override
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 		try {
