@@ -65,21 +65,10 @@ Suspend: l attributo suspend è obbligatorio ed è necessario per definire l azi
 <user username="username1" contentType="SNT,DRT,tipo3...." />
 Se contentType="*" verranno inviate le notifiche per tutti i tipi di contenuti presenti nella configurazione
  -->
-  <!--
-   <user username="silvana.bastianello" contentType="*" />
-   <user username="marialuisa.ciminelli" contentType="*" />
-   <user username="lucia.costantini" contentType="*" />
-   <user username="maria.martorelli" contentType="*" />
- 
--->
-<user username="silvana.bastianello" contentType="*" />
-<user username="AnnalisaViali" contentType="*"/>
-<user username="PaoloCeccanti" contentType="*"/>
-<user username="luigi.graci" contentType="*"/>
-<user username="maria.martorelli" contentType="*" />
-<user username="uriele.coacci" contentType="*" />
+<user username="username1" contentType="*" />
+<user username="username2" contentType="EVN" />
+<user username="username3" contentType="*" />
 </users>
-
 
 <!-- template della mail di comunicazione-->
 <mail alsoHtml="false" senderCode="CODE1" mailAttrName="email" > 		

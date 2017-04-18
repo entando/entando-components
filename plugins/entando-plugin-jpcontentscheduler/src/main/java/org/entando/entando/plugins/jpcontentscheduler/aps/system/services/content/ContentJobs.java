@@ -60,12 +60,18 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 	private static final Logger _logger = LoggerFactory.getLogger(ContentJobs.class);
 	
 	private static final String APPLICATION_CONTEXT_KEY = "applicationContext";
-
-	private static ApplicationContext ctx;
+	
+	private IContentSchedulerManager _contentSchedulerManager;
+	private IContentManager _contentManager;
+	private ICategoryManager _categoryManager;
+	private IPageManager _pageManager;
+	private IContentModelManager _contentModelManager;
+	
+	private ApplicationContext _ctx;
 	
 	@Override
 	public void setApplicationContext(ApplicationContext ac) throws BeansException {
-		ctx = ac;
+		this._ctx = ac;
 	}
 	
 	private ApplicationContext getApplicationContext(JobExecutionContext context)
@@ -88,7 +94,16 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 		try {
 			ApplicationContext appCtx = getApplicationContext(context);
-			initBeans(appCtx);
+			this.initBeans(appCtx);
+			this.executeJob(appCtx);
+		} catch (Exception ex) {
+			_logger.error("error in executeInternal", ex);
+			throw new RuntimeException("Errore in inserimento/sospensione contenuti online", ex);
+		}
+	}
+	
+	public void executeJob(ApplicationContext appCtx) throws JobExecutionException {
+		try {
 			if (this.getContentSchedulerManager().getConfig().isActive()/* && isCurrentSiteAllowed()*/) {
 				Date startJobDate = new Date();
 				ApsSystemUtils.getLogger().info(ContentThreadConstants.START_TIME_LOG + Utils.printTimeStamp(startJobDate));
@@ -562,17 +577,11 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 		}
 	}
 	
-	private IContentSchedulerManager _contentSchedulerManager;
-	private IContentManager contentManager;
-	private ICategoryManager categoryManager;
-	private IPageManager pageManager;
-	private IContentModelManager contentModelManager;
-	
 	public IContentManager getContentManager() {
-		return contentManager;
+		return _contentManager;
 	}
 	public void setContentManager(IContentManager manager) {
-		contentManager = manager;
+		this._contentManager = manager;
 	}
 	
 	public IContentSchedulerManager getContentSchedulerManager() {
@@ -583,24 +592,24 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 	}
 	
 	public ICategoryManager getCategoryManager() {
-		return categoryManager;
+		return _categoryManager;
 	}
 	public void setCategoryManager(ICategoryManager categoryManager) {
-		this.categoryManager = categoryManager;
+		this._categoryManager = categoryManager;
 	}
 	
 	public IPageManager getPageManager() {
-		return pageManager;
+		return _pageManager;
 	}
 	public void setPageManager(IPageManager pageManager) {
-		this.pageManager = pageManager;
+		this._pageManager = pageManager;
 	}
 	
 	public IContentModelManager getContentModelManager() {
-		return contentModelManager;
+		return _contentModelManager;
 	}
 	public void setContentModelManager(IContentModelManager contentModelManager) {
-		this.contentModelManager = contentModelManager;
+		this._contentModelManager = contentModelManager;
 	}
 	
 }

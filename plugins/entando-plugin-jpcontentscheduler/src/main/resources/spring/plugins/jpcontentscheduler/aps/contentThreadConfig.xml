@@ -18,7 +18,7 @@
 		<property name="mailManager" ref="jpmailMailManager"/>
 	</bean>
 	
-	<!-- Scheduler Bean -->        
+	<!-- Scheduler Bean -->
 	<bean name="publishJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
 		<property name="jobClass" value="org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentJobs" />
 		<property name="jobDataAsMap">
@@ -38,7 +38,7 @@
 		<property name="jobDetail" ref="publishJob" />
 		<property name="cronExpression" value="0 30 2 * * ?" />
 	</bean>
-    
+	
 	<!-- Trigger per i test 
 	<bean id="publishCronTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
 		<property name="jobDetail" ref="publishJob" />
@@ -47,9 +47,6 @@
 	</bean>-->
 	<!-- Fine scheduler bean -->
     
-	
-	
-	
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="applicationContextSchedulerContextKey" value="applicationContext"/>
 		<property name="jobDetails">
