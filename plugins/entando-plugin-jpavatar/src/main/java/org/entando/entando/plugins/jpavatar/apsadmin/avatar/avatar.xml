@@ -8,7 +8,7 @@
     <package name="jpavatar_do/jpavatar/Avatar" namespace="/do/jpavatar/Avatar" extends="entando-default">
     	
         <action name="edit" class="jpavatarAvatarAction" method="edit">
-            <result type="dispatcher">/WEB-INF/plugins/jpavatar/apsadmin/jsp/config/jpavatar_config.jsp</result>
+            <result type="tiles">admin.common.profile.edit</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
         </action>
         
