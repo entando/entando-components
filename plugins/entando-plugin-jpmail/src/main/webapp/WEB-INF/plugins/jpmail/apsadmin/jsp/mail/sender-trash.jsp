@@ -23,7 +23,7 @@
 <br>
 
 <div class="text-center">
-    <s:form action="delete">
+    <s:form action="deleteSender">
         <p class="sr-only"><wpsf:hidden name="code"/></p>
         <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
         <p class="esclamation-underline"><s:text name="title.eMailManagement.sendersConfig.trashSender"/></p>

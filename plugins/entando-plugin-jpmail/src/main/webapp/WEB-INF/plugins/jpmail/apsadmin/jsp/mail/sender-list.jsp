@@ -9,6 +9,7 @@
     <li><s:text name="breadcrumb.jpmail"/></li>
     <li><s:text name="title.eMailManagement.sendersConfig"/></li>
 </ol>
+
 <div class="page-tabs-header">
     <div class="row">
         <div class="col-sm-12 col-md-6">
