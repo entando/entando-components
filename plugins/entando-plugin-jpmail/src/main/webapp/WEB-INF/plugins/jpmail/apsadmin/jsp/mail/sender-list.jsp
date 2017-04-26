@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-sm-12 col-md-6">
             <h1 class="page-title-container">
-                <s:text name="jpmail.admin.menu"/>
+                <s:text name="title.eMailManagement.sendersConfig"/>
                 <span class="pull-right">
                 <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
                    data-content="TO be inserted" data-placement="left" data-original-title="">
@@ -62,7 +62,7 @@
     </s:if>
     <s:else>
     <div class="table-responsive overflow-visible">
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover content-list no-mb">
             <thead>
                 <tr>
                     <th class="col-sm-5"><s:text name="code" /></th>
@@ -76,8 +76,8 @@
                 <tr>
                     <td><code><s:property value="#sender.key"/></code></td>
                     <td><s:property value="#sender.value" /></td>
-                    <td class=" table-view-pf-actions">
-                        <div class="dropdown pull-right dropdown-kebab-pf">
+                    <td class="text-center">
+                        <div class="dropdown dropdown-kebab-pf">
                             <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 <span class="fa fa-ellipsis-v"></span>
@@ -85,13 +85,13 @@
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
                                 <li>
                                     <a href="<s:url action="editSender" > <s:param name="code" value="#sender.key" /></s:url>"
-                                       title="<s:text name="label.remove" />">
+                                       title="<s:text name="label.edit" />">
                                         <s:text name="label.edit"/>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="<s:url action="trashSender" > <s:param name="code" value="#sender.key" /></s:url>"
-                                       title="<s:text name="label.remove" />">
+                                       title="<s:text name="label.delete" />">
                                         <s:text name="label.delete"/>
                                     </a>
                                 </li>
