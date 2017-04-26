@@ -24,13 +24,16 @@
                     </a>
                 </span>
             </h1>
+            <div class="text-right">
+                <s:text name="label.requiredFields" />
+            </div>
         </div>
     </div>
 </div>
 <br>
 
 <div id="main">
-    <s:form action="saveSender" >
+    <s:form action="saveSender" cssClass="form-horizontal">
         <s:if test="hasFieldErrors()">
             <div class="alert alert-danger alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
@@ -61,22 +64,54 @@
             <s:if test="%{strutsAction==2}" ><wpsf:hidden name="code"/></s:if>
         </p>
 
-        <fieldset class="col-xs-6">
-            <div class="form-group">
-                <label for="code"><s:text name="code" /></label>
-                <wpsf:textfield name="code" id="code" disabled="%{strutsAction==2}" cssClass="form-control" />
-            </div>
+        <%-- code --%>
+        <s:set var="fieldErrorsVar" value="%{fieldErrors['code']}" />
+        <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
+        <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
 
-            <div class="form-group">
-                <label for="mail"><s:text name="mail" /></label>
+        <div class="form-group<s:property value="#controlGroupErrorClass" />">
+            <label class="col-sm-2 control-label" for="code">
+                <s:text name="code" />
+                <i class="fa fa-asterisk required-icon"></i>
+            </label>
+            <div class="col-sm-10">
+                <wpsf:textfield name="code" id="code" cssClass="form-control" disabled="%{strutsAction==2}" />
+                <s:if test="#hasFieldErrorVar">
+				<span class="help-block text-danger">
+					<s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+				</span>
+                </s:if>
+            </div>
+        </div>
+
+        <%-- mail --%>
+        <s:set var="fieldErrorsVar" value="%{fieldErrors['mail']}" />
+        <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
+        <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
+
+        <div class="form-group<s:property value="#controlGroupErrorClass" />">
+            <label class="col-sm-2 control-label" for="mail">
+                <s:text name="mail" />
+                <i class="fa fa-asterisk required-icon"></i>
+            </label>
+            <div class="col-sm-10">
                 <wpsf:textfield name="mail" id="mail" cssClass="form-control" />
+                <s:if test="#hasFieldErrorVar">
+				<span class="help-block text-danger">
+					<s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+				</span>
+                </s:if>
             </div>
+        </div>
 
+        <div class="form-horizontal">
             <div class="form-group">
-                <wpsf:submit type="button" cssClass="btn btn-primary fixed" >
-                    <s:text name="%{getText('label.save')}"/>
-                </wpsf:submit>
+                <div class="col-sm-12 margin-small-vertical">
+                    <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
+                        <s:text name="label.save" />
+                    </wpsf:submit>
+                </div>
             </div>
-        </fieldset>
+        </div>
     </s:form>
 </div>
