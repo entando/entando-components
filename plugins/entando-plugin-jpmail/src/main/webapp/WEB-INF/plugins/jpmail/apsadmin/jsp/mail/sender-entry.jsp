@@ -60,7 +60,6 @@
                 <div class="form-group">
                     <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
 			<wpsf:submit type="button" cssClass="btn btn-primary btn-block" >
-                            <span class="icon fa fa-floppy-o"></span>&#32;
                             <s:text name="%{getText('label.save')}"/>
                         </wpsf:submit>
                     </div>

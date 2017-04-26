@@ -3,16 +3,47 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 
-<h1 class="panel panel-default title-page">
-    <span class="panel-body display-block">
-        <s:text name="title.eMailManagement" />&#32;/&#32;
-        <s:text name="title.eMailManagement.sendersConfig" />
-    </span>
-</h1>
-<div id="main">	
-    <p>
-        <a class="btn btn-default margin-base-bottom" href="<s:url action="newSender" />" ><span class="icon fa fa-plus-circle"> <s:text name="label.senders.new" /></span></a>
-    </p>
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="breadcrumb.integrations"/></li>
+    <li><s:text name="breadcrumb.uxcomponents"/></li>
+    <li><s:text name="breadcrumb.jpmail"/></li>
+    <li><s:text name="title.eMailManagement.sendersConfig"/></li>
+</ol>
+<div class="page-tabs-header">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <h1 class="page-title-container">
+                <s:text name="jpmail.admin.menu"/>
+                <span class="pull-right">
+                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+                   data-content="TO be inserted" data-placement="left" data-original-title="">
+                    <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                </a>
+                </span>
+            </h1>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
+                <li class="active">
+                    <a href="<s:url namespace="/do/jpmail/MailConfig" action="viewSenders" />"><s:text name="title.eMailManagement.sendersConfig"/></a>
+                </li>
+                <li>
+                    <a href="<s:url namespace="/do/jpmail/MailConfig" action="editSmtp" />"><s:text name="jpmail.admin.menu.smtp"/></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<br>
+
+<div id="main">
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="<s:url action="newSender" />" class="btn btn-primary pull-right" style="margin-bottom: 5px">
+                <s:text name="label.add"/>
+            </a>
+        </div>
+    </div>
 
     <s:if test="hasActionErrors()">
         <div class="alert alert-danger alert-dismissable">
@@ -21,7 +52,7 @@
             <ul class="margin-base-vertical">
                 <s:iterator value="actionErrors">
                     <li><s:property escapeHtml="false" /></li>
-                    </s:iterator>
+                </s:iterator>
             </ul>
         </div>
     </s:if>
@@ -30,34 +61,47 @@
         <p><s:text name="label.senders.none" /></p>
     </s:if>
     <s:else>
-        <table class="table table-bordered">
-            <tr>
-                <th class="text-center text-nowap col-xs-6 col-sm-3 col-md-3 col-lg-3 "><abbr title="<s:text name="label.remove" />">&ndash;</abbr></th>
-                <th><s:text name="code" /></th>
-                <th><s:text name="mail" /></th>
-            </tr>
+    <div class="table-responsive overflow-visible">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="col-sm-5"><s:text name="code" /></th>
+                    <th class="col-sm-6"><s:text name="mail" /></th>
+                    <th class="text-center col-sm-1"><s:text name="label.actions"/></th>
+                </tr>
+            </thead>
+
+            <tbody>
             <s:iterator value="%{config.senders.entrySet()}" var="sender">
                 <tr>
-                    <td class="text-center text-nowrap">
-                        <div class="btn-group btn-group-xs">
-                            <a class="btn btn-default" href="<s:url action="editSender" >
-                                   <s:param name="code" value="#sender.key" /></s:url>" 
-                               title="<s:text name="label.edit" />: <s:property value="#sender.value" />">
-                                <span class="icon fa fa-pencil-square-o"></span>                                                    
-                            </a>        
-                        </div>
-                        <div class="btn-group btn-group-xs">
-                            <a class="btn btn-warning" href="<s:url action="trashSender" >
-                                   <s:param name="code" value="#sender.key" /></s:url>" 
-                               title="<s:text name="label.remove" />: <s:property value="#sender.value" />">
-                                <span class="icon fa fa-times-circle-o"></span>
-                            </a>
-                        </div>        
-                    </td>
                     <td><code><s:property value="#sender.key"/></code></td>
                     <td><s:property value="#sender.value" /></td>
+                    <td class=" table-view-pf-actions">
+                        <div class="dropdown pull-right dropdown-kebab-pf">
+                            <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span class="fa fa-ellipsis-v"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
+                                <li>
+                                    <a href="<s:url action="editSender" > <s:param name="code" value="#sender.key" /></s:url>"
+                                       title="<s:text name="label.remove" />">
+                                        <s:text name="label.edit"/>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<s:url action="trashSender" > <s:param name="code" value="#sender.key" /></s:url>"
+                                       title="<s:text name="label.remove" />">
+                                        <s:text name="label.delete"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
                 </tr>
             </s:iterator>
+            </tbody>
         </table>
+    </div>
     </s:else>
 </div>

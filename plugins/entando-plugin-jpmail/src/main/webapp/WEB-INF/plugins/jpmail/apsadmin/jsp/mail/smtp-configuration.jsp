@@ -84,7 +84,6 @@
             <div class="form-group">
                 <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
                     <wpsf:submit name="save" type="button" action="saveSmtp" cssClass="btn btn-primary btn-block" onclick="overrideSubmit('saveSmtp')">
-                        <span class="icon fa fa-floppy-o"></span>&#32;
                         <s:text name="%{getText('label.save')}"/>
                     </wpsf:submit>    
                 </div>    
