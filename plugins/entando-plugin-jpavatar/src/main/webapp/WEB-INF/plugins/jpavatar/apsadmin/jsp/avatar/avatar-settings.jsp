@@ -31,7 +31,7 @@
         <div class="col-sm-6">
             <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
                 <li>
-                    <a href="<s:url namespace="/do/jpavatar/Config" action="management" />"><s:text name="title.avatar.management"/></a>
+                    <a href="<s:url namespace="/do/jpavatar/Config" action="management" />"><s:text name="title.avatarManagement"/></a>
                 </li>
                 <li class="active">
                     <a href="<s:url namespace="/do/jpavatar/Config" action="edit" />"><s:text name="title.avatar.settings"/></a>
@@ -42,8 +42,8 @@
 </div>
 <br>
 
-<div id="main">
-    <s:form cssClass="form-horizontal" namespace="/do/jpavatar/Avatar" action="saveConfig" method="post" enctype="multipart/form-data">
+    <s:form cssClass="form-hor<div id="main">
+izontal" namespace="/do/jpavatar/Avatar" action="saveConfig" method="post" enctype="multipart/form-data">
 
         <fieldset class="form-group">
             <div class="col-xs-2 control-label">

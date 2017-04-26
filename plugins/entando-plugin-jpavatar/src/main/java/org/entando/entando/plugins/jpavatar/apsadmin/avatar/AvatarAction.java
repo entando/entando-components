@@ -134,6 +134,7 @@ public class AvatarAction extends BaseAction {
 			_logger.info("Error saving avatar", t);
 			return FAILURE;
 		}
+		this.addActionMessage(this.getText("jpavatar.message.success"));
 		return SUCCESS;
 	}
 	
@@ -158,6 +159,7 @@ public class AvatarAction extends BaseAction {
 	public String delete() {
 		try {
 			this.getAvatarManager().removeAvatar(this.getCurrentUser().getUsername());
+			this.addActionMessage(this.getText("jpavatar.message.successDelete"));
 		} catch (Throwable t) {
 			_logger.info("Error on deleting avatar", t);
 			return FAILURE;
