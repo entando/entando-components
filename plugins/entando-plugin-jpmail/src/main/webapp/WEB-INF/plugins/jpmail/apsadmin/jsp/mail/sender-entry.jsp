@@ -30,7 +30,8 @@
         </div>
     </div>
 </div>
-<br>
+
+<br/>
 
 <div id="main">
     <s:form action="saveSender" cssClass="form-horizontal">

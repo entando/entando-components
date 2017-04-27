@@ -35,7 +35,8 @@
         </div>
     </div>
 </div>
-<br>
+
+<br/>
 
 <div id="main">
     <div class="row">
