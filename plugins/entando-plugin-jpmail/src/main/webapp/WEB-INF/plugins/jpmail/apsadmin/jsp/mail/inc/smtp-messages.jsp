@@ -24,13 +24,14 @@
     </div>
 </s:if>
 <s:if test="hasActionMessages()">
-    <div class="alert alert-info alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-        <h2 class="h4 margin-none"><s:text name="messages.confirm" /></h2>	
-        <ul class="margin-base-vertical">
-            <s:iterator value="actionMessages">
-                <li><s:property escapeHtml="false" /></li>
-            </s:iterator>
-        </ul>
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+            <span class="pficon pficon-close"></span>
+        </button>
+        <span class="pficon pficon-ok"></span>
+        <strong><s:text name="messages.confirm" /></strong>
+        <s:iterator value="actionMessages">
+            <span><s:property escapeHtml="false" /></span>
+        </s:iterator>
     </div>
 </s:if>
