@@ -91,10 +91,10 @@
                 </div>
                 <div class="col-xs-10 ">
                     <div class="btn-group" data-toggle="buttons">
-                        <%--<label class="btn btn-default <s:if test="%{null == avatarConfig.style || avatarConfig.style == 'default'}"> active</s:if>">--%>
-                            <%--<s:text name="label.avatarConfig.style.default"/>--%>
-                            <%--<wpsf:radio name="avatarConfig.style" value="default" id="default_avatarConfig_style" checked="%{null == avatarConfig.style || avatarConfig.style == 'default'}" cssClass="radiocheck" />--%>
-                        <%--</label>--%>
+                        <label class="btn btn-default <c:if test="${null == style || style == 'default'}"> active</c:if>">
+                            <s:text name="label.avatarConfig.style.default"/>
+                            <wpsf:radio name="avatarConfig.style" value="default" id="default_avatarConfig_style" checked="%{null == avatarConfig.style || avatarConfig.style == 'default'}" cssClass="radiocheck hidden" />
+                        </label>
                         <label class="btn btn-default <c:if test="${style == 'local'}"> active</c:if>">
                             <s:text name="label.avatarConfig.style.local"/>
                             <wpsf:radio name="avatarConfig.style" value="local" id="local_avatarConfig_style" checked="%{avatarConfig.style == 'local'}" cssClass="radiocheck hidden" />
