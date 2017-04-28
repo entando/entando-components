@@ -37,19 +37,17 @@ public interface IContentSchedulerManager {
 	
 	/**
 	 * Restituisce gli identificatori dei contenuti da pubblicare
-	 * @param key
 	 * @return
 	 * @throws ApsSystemException
 	 */
-	public List<String> getContentId(String key) throws ApsSystemException;
+	public List<String> getContentIdToPublish() throws ApsSystemException;
 	
 	/**
 	 * Restituisce una lista di identificatori dei contenuti da sospendere o spostare e l'azione da eseguire
-	 * @param key
 	 * @return
 	 * @throws ApsSystemException
 	 */
-	public List<ContentSuspendMove> getContentAttrDataFine(String key) throws ApsSystemException;
+	public List<ContentSuspendMove> getContentAttrDataFine() throws ApsSystemException;
 	
 	/**
 	 * Restituisce la configurazione del thread (gruppi, utenti, formato mail..)

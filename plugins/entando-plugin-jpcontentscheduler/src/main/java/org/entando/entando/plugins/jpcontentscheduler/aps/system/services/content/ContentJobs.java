@@ -106,19 +106,20 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 		try {
 			if (this.getContentSchedulerManager().getConfig().isActive()/* && isCurrentSiteAllowed()*/) {
 				Date startJobDate = new Date();
-				ApsSystemUtils.getLogger().info(ContentThreadConstants.START_TIME_LOG + Utils.printTimeStamp(startJobDate));
+				_logger.info(ContentThreadConstants.START_TIME_LOG + Utils.printTimeStamp(startJobDate));
 				List<ContentState> removedContents = new ArrayList<ContentState>();
 				List<ContentState> publishedContents = new ArrayList<ContentState>();
 				List<ContentState> moveContents = new ArrayList<ContentState>();
 				try {
-					publishContentsJob(publishedContents);
-					suspendOrMoveContentsJob(removedContents, moveContents, appCtx);
+					this.publishContentsJob(publishedContents);
+					//System.out.println("CONTENUTI DA PUBLICARE -> " + publishedContents);
+					this.suspendOrMoveContentsJob(removedContents, moveContents, appCtx);
 					try {
 						Collections.sort(publishedContents);
 						Collections.sort(removedContents);
 						Collections.sort(moveContents);
 						Date endJobDate = new Date();
-						ApsSystemUtils.getLogger().info(ContentThreadConstants.END_TIME_LOG + Utils.printTimeStamp(endJobDate));
+						_logger.info(ContentThreadConstants.END_TIME_LOG + Utils.printTimeStamp(endJobDate));
 						this.getContentSchedulerManager().sendMailWithResults(publishedContents, removedContents, moveContents, startJobDate, endJobDate);
 					} catch (Throwable t) {
 						throw new ApsSystemException(ContentThreadConstants.ERROR_ON_MAIL, t);
@@ -137,7 +138,8 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 	private void publishContentsJob(List<ContentState> publishedContents) throws ApsSystemException {
 		try {
 			//Restituisce gli id dei contenuti che hanno un attributo con nome key Data_inizio e valore la data corrente 
-			List<String> contentIds = this.getContentSchedulerManager().getContentId(ContentThreadConstants.PUBLISH_DATE_KEY);
+			List<String> contentIds = this.getContentSchedulerManager().getContentIdToPublish();
+			//System.out.println("CONTENUTI DA PUBLICARE ESTRATTI -> " + contentIds);
 			Iterator<String> iter = contentIds.iterator();
 			//Cicla di contenuti da pubblicare in data odierna
 			while (iter.hasNext()) {
@@ -145,31 +147,30 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 				try {
 					contentId = (String) iter.next();
 					Content contentToPublish = this.getContentManager().loadContent(contentId, false);
-
 					if (null == contentToPublish) {
 						publishedContents.add(new ContentState(contentId, "null", "null", ContentThreadConstants.PUBLISH_ACTION, ContentThreadConstants.NULL_CONTENT));
-						ApsSystemUtils.getLogger().info("Pubblicazione automatica non riuscita: " + contentId + " - " + ContentThreadConstants.NULL_CONTENT);
+						_logger.info("Pubblicazione automatica non riuscita: " + contentId + " - " + ContentThreadConstants.NULL_CONTENT);
 						continue;
 					}
 					if (contentToPublish.isOnLine()) {
 						publishedContents.add(new ContentState(contentToPublish.getId(), contentToPublish.getTypeCode(), contentToPublish.getDescription(), ContentThreadConstants.PUBLISH_ACTION, ContentThreadConstants.ISALREADYONLINE));
-						ApsSystemUtils.getLogger().info("Pubblicazione automatica non riuscita: " + contentToPublish.getId() + " - " + ContentThreadConstants.ISALREADYONLINE);
+						_logger.info("Pubblicazione automatica non riuscita: " + contentToPublish.getId() + " - " + ContentThreadConstants.ISALREADYONLINE);
 						continue;
 					}
 					if (!Content.STATUS_READY.equals(contentToPublish.getStatus())) {
 						publishedContents.add(new ContentState(contentToPublish.getId(), contentToPublish.getTypeCode(), contentToPublish.getDescription(), ContentThreadConstants.PUBLISH_ACTION, ContentThreadConstants.NOTREADYSTATUS));
-						ApsSystemUtils.getLogger().info("Pubblicazione automatica non riuscita: " + contentToPublish.getId() + " - " + ContentThreadConstants.NOTREADYSTATUS);
+						_logger.info("Pubblicazione automatica non riuscita: " + contentToPublish.getId() + " - " + ContentThreadConstants.NOTREADYSTATUS);
 						continue;
 					}
 					boolean validation = this.scanEntity(contentToPublish);
 					if (!validation) {
 						publishedContents.add(new ContentState(contentToPublish.getId(), contentToPublish.getTypeCode(), contentToPublish.getDescription(), ContentThreadConstants.PUBLISH_ACTION, ContentThreadConstants.CONTENTWITHERRORS));
-						ApsSystemUtils.getLogger().info("Pubblicazione automatica non riuscita: " + contentToPublish.getId() + " - " + ContentThreadConstants.CONTENTWITHERRORS);
+						_logger.info("Pubblicazione automatica non riuscita: " + contentToPublish.getId() + " - " + ContentThreadConstants.CONTENTWITHERRORS);
 						continue;
 					}
 					//pubblicazione on line del contenuto e modifica data di ultima modifica
 					this.getContentManager().insertOnLineContent(contentToPublish);
-					ApsSystemUtils.getLogger().info("Pubblicato automaticamente contenuto " + contentToPublish.getId());
+					_logger.info("Pubblicato automaticamente contenuto " + contentToPublish.getId());
 					publishedContents.add(new ContentState(contentToPublish.getId(), contentToPublish.getTypeCode(), contentToPublish.getDescription(), ContentThreadConstants.PUBLISH_ACTION, ContentThreadConstants.ACTION_SUCCESS));
 				} catch (Throwable t) {
 					ApsSystemUtils.logThrowable(t, this, ContentThreadConstants.UNEXPECTED_ERROR);
@@ -204,13 +205,10 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 	private void suspendOrMoveContentsJob(List<ContentState> removedContents, List<ContentState> moveContents, ApplicationContext appCtx) throws ApsSystemException {
 		try {
 			//Restituisce gli id dei contenuti che hanno un attributo con nome key Data_fine e valore la data corrente
-			List<ContentSuspendMove> content = this.getContentSchedulerManager().getContentAttrDataFine(ContentThreadConstants.SUSPEND_DATE_KEY);
-
+			List<ContentSuspendMove> content = this.getContentSchedulerManager().getContentAttrDataFine();
 			//Cicla per tipo di contenuto
 			for (ContentSuspendMove c : content) {
-
 				List<String> contentIds = c.getIdsContents();
-
 				//se suspend = true si effettua la depubblicazione
 				if (c.getSuspend() != null && c.getSuspend().equalsIgnoreCase("true")) {
 					Iterator<String> iter = contentIds.iterator();
@@ -219,36 +217,30 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 						try {
 							contentId = (String) iter.next();
 							Content contentToSuspend = this.getContentManager().loadContent(contentId, false);
-
 							if (null == contentToSuspend) {
 								removedContents.add(new ContentState(contentId, "null", "null", ContentThreadConstants.SUSPEND_ACTION, ContentThreadConstants.NULL_CONTENT));
 								ApsSystemUtils.getLogger().info("Sospensione automatica non riuscita: " + contentId + " - " + ContentThreadConstants.NULL_CONTENT);
 								continue;
 							}
-
 							if (!contentToSuspend.isOnLine()) {
 								removedContents.add(new ContentState(contentToSuspend.getId(), contentToSuspend.getTypeCode(), contentToSuspend.getDescription(), ContentThreadConstants.SUSPEND_ACTION, ContentThreadConstants.ISALREADYSUSPENDED));
 								ApsSystemUtils.getLogger().info("Sospensione automatica non riuscita: " + contentToSuspend.getId() + " - " + ContentThreadConstants.ISALREADYSUSPENDED);
 								continue;
 							}
-
 							//controllo se il contenuto è correlato a delle pagine
 							Map<String, List> references = Utils.getReferencingObjects(contentToSuspend, appCtx);
 							String operation = "suspend";
 							if (references.size() > 0) {
-
 								//se i vincoli sono la presenza del contenuto nelle pagine.
 								List<IPage> listaPagine = references.get("PageManagerUtilizers");
 								if (listaPagine != null && listaPagine.size() > 0) {
 									String fieldname = c.getFieldNameContentReplace();
 									String contenutoSostitutivo = null;
-
 									if (fieldname != null && !fieldname.isEmpty()) {
 										if (contentToSuspend.getAttributeMap().get(fieldname) != null) {
 											contenutoSostitutivo = contentToSuspend.getAttributeMap().get(fieldname).getValue().toString();
 										}
 									}
-
 									String fieldnameModel = c.getFieldNameModelContentReplace();
 									String modelContenutoSostitutivo = null;
 									if (fieldnameModel != null && !fieldnameModel.isEmpty()) {
@@ -256,7 +248,6 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 											modelContenutoSostitutivo = contentToSuspend.getAttributeMap().get(fieldnameModel).getValue().toString();
 										}
 									}
-
 									//Contenuto sostitutivo impostato nel caso in cui non sia presente il campo per il contenuto sostitutivo
 									String contSostIdRepl = c.getContentIdReplace();
 									String contSostModelRepl = c.getContentModelReplace();
@@ -268,7 +259,6 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 											ApsSystemUtils.getLogger().info("Errore nella Sospensione/Spostamento dei contenuti, manca l'attributo 'contentReplace' nella configurazione del plugin");
 										}
 									}
-
 									if (contenutoSostitutivo != null && !contenutoSostitutivo.isEmpty()) {
 										//Controlli sul contenuto sostitutivo
 										Content contentToReplace = this.getContentManager().loadContent(contenutoSostitutivo, false);
@@ -282,7 +272,6 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 											ApsSystemUtils.getLogger().info("Sospensione automatica non riuscita: " + contentToSuspend.getId() + " - " + ContentThreadConstants.ISNOTONLINE);
 											continue;
 										}
-
 										boolean contentModelExist = false;
 										if (modelContenutoSostitutivo != null) {
 											List<ContentModel> listcontentModel = this.getContentModelManager().getModelsForContentType(contentToReplace.getTypeCode());

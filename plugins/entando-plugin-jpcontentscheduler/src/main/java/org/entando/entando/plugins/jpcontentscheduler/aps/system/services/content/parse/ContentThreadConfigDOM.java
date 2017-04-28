@@ -416,7 +416,7 @@ public class ContentThreadConfigDOM {
 	private static final String GROUPS_ELEM = "groups";
 	private static final String GROUP_ELEM = "group";
 	private static final String GROUP_ID_ATTR = "id";
-	private static final String GROUP_CONTENTTYPE_ATTR = "contentType";
+	//private static final String GROUP_CONTENTTYPE_ATTR = "contentType";
 
 	private static final String CONTENTTYPES_ELEM = "contentTypes";
 	private static final String CONTENTTYPE_ELEM = "contentType";

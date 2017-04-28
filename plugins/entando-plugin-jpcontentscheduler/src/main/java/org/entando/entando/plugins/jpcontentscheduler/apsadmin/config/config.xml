@@ -19,4 +19,13 @@
         
     </package>
     
+    <package name="jpcontentscheduler_do/jpcontentscheduler/admin" namespace="/do/jpcontentscheduler/admin" extends="entando-default">
+    	
+        <action name="executeJob" class="jpcontentschedulerAdminAction" method="executeJob">
+            <result type="tiles">admin.jpcontentscheduler.viewItem</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+    </package>
+    
 </struts>

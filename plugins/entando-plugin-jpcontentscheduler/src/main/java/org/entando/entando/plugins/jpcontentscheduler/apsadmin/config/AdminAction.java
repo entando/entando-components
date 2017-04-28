@@ -22,7 +22,6 @@
 package org.entando.entando.plugins.jpcontentscheduler.apsadmin.config;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -31,7 +30,6 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.opensymphony.xwork2.Action;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentJobs;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.IContentSchedulerManager;
 import org.slf4j.Logger;
@@ -41,31 +39,9 @@ import org.springframework.context.ApplicationContext;
 /**
  * @author E.Santoboni
  */
-public class ConfigAction extends BaseAction {
+public class AdminAction extends BaseAction {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(ConfigAction.class);
-	
-	public String viewItem() {
-		try {
-			String config = this.getBaseConfigManager().getConfigItem(this.getItem());
-			this.setConfig(config);
-		} catch (Throwable t) {
-			_logger.error("Error in viewItem", t);
-			return FAILURE;
-		}
-		return Action.SUCCESS;
-	}
-	
-	public String saveItem() {
-		try {
-			this.getBaseConfigManager().updateConfigItem(this.getItem(), this.getConfig());
-			this.addActionMessage(this.getText("jpcontentscheduler.saveItem.success"));
-		} catch (Throwable t) {
-			_logger.error("Error saving item", t);
-			return FAILURE;
-		}
-		return Action.SUCCESS;
-	}
+	private static final Logger _logger =  LoggerFactory.getLogger(AdminAction.class);
 	
 	public String executeJob() {
 		try {
@@ -89,31 +65,5 @@ public class ConfigAction extends BaseAction {
 		}
 		return Action.SUCCESS;
 	}
-	
-	public void setItem(String item) {
-		this._item = item;
-	}
-	public String getItem() {
-		return _item;
-	}
-
-	public void setConfig(String config) {
-		this._config = config;
-	}
-	public String getConfig() {
-		return _config;
-	}
-	
-	public void setBaseConfigManager(ConfigInterface baseConfigManager) {
-		this._baseConfigManager = baseConfigManager;
-	}
-	public ConfigInterface getBaseConfigManager() {
-		return _baseConfigManager;
-	}
-	
-	private ConfigInterface _baseConfigManager;
-	
-	private String _item = ContentThreadConstants.CONTENTTHREAD_CONFIG_ITEM;
-	private String _config;
 	
 }

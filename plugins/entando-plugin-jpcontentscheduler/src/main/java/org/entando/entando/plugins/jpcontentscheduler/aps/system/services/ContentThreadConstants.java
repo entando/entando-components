@@ -23,12 +23,6 @@ package org.entando.entando.plugins.jpcontentscheduler.aps.system.services;
 
 public class ContentThreadConstants {
 	
-	// Attributo nell'xml dei contenuti che indica la data di pubblicazione
-	public static final String PUBLISH_DATE_KEY = "Data_inizio";
-	
-	// Attributo nell'xml dei contenuti che indica la data di sospensione
-	public static final String SUSPEND_DATE_KEY = "Data_fine";
-	
 	// Chiave a database nella tabella SYSCONFIG di japsport per recuperare
 	// la configurazione
 	public static final String CONTENTTHREAD_CONFIG_ITEM = "cthread_config";

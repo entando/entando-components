@@ -14,4 +14,8 @@
         <property name="baseConfigManager" ref="BaseConfigManager" />
     </bean>
     
+    <bean id="jpcontentschedulerAdminAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.AdminAction" 
+          scope="prototype" parent="abstractBaseAction" >
+    </bean>
+    
 </beans>

@@ -59,6 +59,8 @@ import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.conten
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.parse.ContentThreadConfigDOM;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.util.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 
 /**
@@ -66,6 +68,7 @@ import org.springframework.cache.annotation.CacheEvict;
  */
 public class ContentSchedulerManager extends AbstractService implements IContentSchedulerManager {
 	
+	private static final Logger _logger =  LoggerFactory.getLogger(ContentSchedulerManager.class);
 	private static final long serialVersionUID = 6880576602469119814L;
 
 	private IWorkContentSearcherDAO _workContentSearcherDAO;
@@ -81,7 +84,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	@Override
 	public void init() throws Exception {
 		this.loadConfigs();
-		ApsSystemUtils.getLogger().info(this.getClass().getName() + ": inizializzato");
+		_logger.info(this.getClass().getName() + ": inizializzato");
 	}
 
 	/**
@@ -108,32 +111,30 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	 * @throws com.agiletec.aps.system.exception.ApsSystemException
 	 */
 	@Override
-	public List<String> getContentId(String key) throws ApsSystemException {
+	public List<String> getContentIdToPublish() throws ApsSystemException {
 		List<String> ans = new ArrayList<String>();
 		try {
 			for (Iterator<ContentTypeElem> i = this.config.getTypesList().iterator(); i.hasNext();) {
 				ContentTypeElem elem = i.next();
-				String filterKey;
-				EntitySearchFilter[] filters = null;
-				// se la chiave passata è DATA_INIZIO - Pubblicazione dei contenuti
-				if (key.equals(ContentThreadConstants.PUBLISH_DATE_KEY)) {
-					filterKey = elem.getStartDateAttr();
+				String filterKey = elem.getStartDateAttr();
+				if (null != filterKey) {
 					Calendar cal = Calendar.getInstance();
-
-					cal.setTime(new Date());
+					//cal.setTime(new Date());
 					cal.set(Calendar.HOUR_OF_DAY, 0);
 					cal.set(Calendar.MINUTE, 0);
 					cal.set(Calendar.SECOND, 1);
 					Date start = cal.getTime();
-
-					// System.out.println(">>> data di start " + start);
-					filters = new EntitySearchFilter[]{new EntitySearchFilter(filterKey, true, start, new Date())};
+					cal.add(Calendar.DAY_OF_YEAR, 1);
+					Date end = cal.getTime();
+					//System.out.println("TIPO " + elem.getContentType() + " - >>> data di start " + start + " - >>> data di end " + end);
+					EntitySearchFilter[] filters = new EntitySearchFilter[]{new EntitySearchFilter(filterKey, true, start, end)};
+					List<String> retrieved = this.getWorkContentSearcherDAO().searchId(elem.getContentType(), filters);
+					//System.out.println("trovati "+retrieved.size()+" contenuti di tipo "+elem.getContentType());
+					ans.addAll(retrieved);
 				}
-				List<String> retrieved = this.getWorkContentSearcherDAO().searchId(elem.getContentType(), filters);
-				//System.out.println("trovati "+retrieved.size()+" contenuti di tipo "+elem.getContentType());
-				ans.addAll(retrieved);
 			}
 		} catch (Throwable t) {
+			_logger.error(ContentThreadConstants.GET_CONTENTIDS_ERROR, t);
 			throw new ApsSystemException(ContentThreadConstants.GET_CONTENTIDS_ERROR, t);
 		}
 		return ans;
@@ -142,17 +143,16 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	/**
 	 * Restituisce tutti i contenuti che hanno un attributo con nome key
 	 * Data_fine e valore la data corrente
+	 * @throws com.agiletec.aps.system.exception.ApsSystemException
 	 */
 	@Override
-	public List<ContentSuspendMove> getContentAttrDataFine(String key) throws ApsSystemException {
+	public List<ContentSuspendMove> getContentAttrDataFine() throws ApsSystemException {
 		List<ContentSuspendMove> ans = new ArrayList<ContentSuspendMove>();
 		try {
 			for (Iterator<ContentTypeElem> i = this.config.getTypesList().iterator(); i.hasNext();) {
 				ContentTypeElem elem = i.next();
-				String filterKey;
-				EntitySearchFilter[] filters = null;
-				if (key.equals(ContentThreadConstants.SUSPEND_DATE_KEY)) {
-					filterKey = elem.getEndDateAttro();
+				String filterKey = elem.getEndDateAttro();
+				if (null != filterKey) {
 					Date actualDate = new Date();
 					//Data fine compresa nella settimana
 					Calendar cal = Calendar.getInstance();
@@ -160,20 +160,20 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 					cal.add(Calendar.DATE, -7);
 					Date beginDate = cal.getTime();
 					//Date beginDate = sdf.parse("01/01/1970");
-
+					//System.out.println("TIPO " + elem.getContentType() + " - >>> data di end " + beginDate);
 					EntitySearchFilter blobFilter = new EntitySearchFilter(IContentManager.CONTENT_ONLINE_FILTER_KEY, false, null, false);
-					filters = new EntitySearchFilter[]{new EntitySearchFilter(filterKey, true, beginDate, new Date()), blobFilter};
+					EntitySearchFilter[] filters = new EntitySearchFilter[]{new EntitySearchFilter(filterKey, true, beginDate, new Date()), blobFilter};
+
+					List<String> retrieved = this.getWorkContentSearcherDAO().searchId(elem.getContentType(), filters);
+					//System.out.println("trovati "+retrieved.size()+" contenuti di tipo "+elem.getContentType());
+					ContentSuspendMove contSuspMov = new ContentSuspendMove(elem.getSuspend(), retrieved, elem.getContentType(), this.getConfig().getGlobalCat(), elem.getIdsCategories(), elem.getIdContentReplace(), elem.getModelIdContentReplace());
+					contSuspMov.setContentIdReplace(this.getConfig().getContentIdRepl());
+					contSuspMov.setContentModelReplace(this.getConfig().getContentModelRepl());
+					ans.add(contSuspMov);
 				}
-
-				List<String> retrieved = this.getWorkContentSearcherDAO().searchId(elem.getContentType(), filters);
-				//System.out.println("trovati "+retrieved.size()+" contenuti di tipo "+elem.getContentType());
-				ContentSuspendMove contSuspMov = new ContentSuspendMove(elem.getSuspend(), retrieved, elem.getContentType(), this.getConfig().getGlobalCat(), elem.getIdsCategories(), elem.getIdContentReplace(), elem.getModelIdContentReplace());
-				contSuspMov.setContentIdReplace(this.getConfig().getContentIdRepl());
-				contSuspMov.setContentModelReplace(this.getConfig().getContentModelRepl());
-				ans.add(contSuspMov);
 			}
-
 		} catch (Throwable t) {
+			_logger.error(ContentThreadConstants.GET_CONTENTIDS_ERROR, t);
 			throw new ApsSystemException(ContentThreadConstants.GET_CONTENTIDS_ERROR, t);
 		}
 		return ans;
