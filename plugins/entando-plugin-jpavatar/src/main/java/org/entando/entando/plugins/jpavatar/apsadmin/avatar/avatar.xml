@@ -8,13 +8,14 @@
     <package name="jpavatar_do/jpavatar/Avatar" namespace="/do/jpavatar/Avatar" extends="entando-default">
     	
         <action name="edit" class="jpavatarAvatarAction" method="edit">
-            <result type="dispatcher">/WEB-INF/plugins/jpavatar/apsadmin/jsp/config/jpavatar_config.jsp</result>
+            <result type="tiles">admin.common.profile.edit</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
         </action>
         
         <action name="save" class="jpavatarAvatarAction" method="save">
-            <result name="input" type="tiles">admin.common.profile.entry</result>
-            <result type="tiles">admin.common.profile.entry</result>
+            <result name="input" type="tiles">jpavatar.admin.config.entry</result>
+            <!--<result type="tiles">admin.common.profile.entry</result>            -->
+            <result type="tiles">jpavatar.admin.config.entry</result>
             <interceptor-ref name="apsFileUpload" />
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
         </action>
@@ -29,6 +30,7 @@
                 <param name="namespace">/do/CurrentUser</param>
                 <param name="actionName">editProfile</param>
             </result>
+            <result type="tiles">jpavatar.admin.config.entry</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
         </action>
         
