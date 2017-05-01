@@ -59,7 +59,7 @@
                 </label>
                 <div class="col-sm-10">
                     <div class="checkbox">
-                        <wpsf:checkbox name="active" id="active" />
+                        <wpsf:checkbox name="active" id="active" cssClass=" bootstrap-switch" />
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                 </label>
                 <div class="col-sm-10">
                     <div class="checkbox">
-                        <wpsf:checkbox name="debug" id="debug" />
+                        <wpsf:checkbox name="debug" id="debug" cssClass=" bootstrap-switch" />
                     </div>
                 </div>
             </div>
@@ -113,18 +113,18 @@
                 <div class="col-sm-10">
                     <s:set var="paramName" value="'smtpProtocol'" />
                     <div class="btn-group" data-toggle="buttons">
-                        <div class="radio">
+                        <label class="btn btn-default <s:if test="%{smtpProtocol == 0}"> active </s:if>">
+                            <wpsf:radio id="smtpstd" name="smtpProtocol" value="0" checked="%{smtpProtocol == 0}" />
                             <s:text name="label.smtp.standard"/>
-                            <wpsf:radio id="smtpstd" name="smtpProtocol" value="0" checked="%{smtpProtocol == 0}" cssClass="radio" />
-                        </div>
-                        <div class="radio">
+                        </label>
+                        <label class="btn btn-default <s:if test="%{smtpProtocol == 1}"> active </s:if>">
+                            <wpsf:radio id="smtpssl" name="smtpProtocol" value="1" checked="%{smtpProtocol == 1}" />
                             <s:text name="label.smtp.ssl"/>
-                            <wpsf:radio id="smtpssl" name="smtpProtocol" value="1" checked="%{smtpProtocol == 1}" cssClass="radio" />
-                        </div>
-                        <div class="radio">
+                        </label>
+                        <label class="btn btn-default <s:if test="%{smtpProtocol == 2}"> active </s:if>">
+                            <wpsf:radio id="smtptls" name="smtpProtocol" value="2" checked="%{smtpProtocol == 2}" />
                             <s:text name="label.smtp.tls"/>
-                            <wpsf:radio id="smtptls" name="smtpProtocol" value="2" checked="%{smtpProtocol == 2}" cssClass="radio" />
-                        </div>
+                        </label>
                     </div>
                 </div>
             </div>
