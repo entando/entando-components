@@ -24,7 +24,6 @@
     <div class="form-group-separator"></div>
 </div>
 <br>
-<br>
 
 <div id="main">
     <s:form action="save" class="form-horizontal">
