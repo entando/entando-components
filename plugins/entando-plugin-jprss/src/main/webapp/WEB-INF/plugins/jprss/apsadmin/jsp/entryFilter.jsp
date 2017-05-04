@@ -6,7 +6,7 @@
 	<span class="panel-body display-block">
 		<a href="<s:url action="viewTree" namespace="/do/Page" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageManagement" />">
 			<s:text name="title.pageManagement" /></a>&#32;/&#32;
-		<s:if test="strutsAction ==  1"><s:text name="jprss.title.addChannel" /></s:if>
+		<s:if test="strutsAction == 1"><s:text name="jprss.title.addChannel" /></s:if>
 		<s:if test="strutsAction == 2"><s:text name="jprss.title.editChannel" /></s:if>
 		&#32;/&#32;
 		<s:text name="jprss.title.manageFilter" />
