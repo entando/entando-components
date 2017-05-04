@@ -109,6 +109,7 @@
     </div>
 </s:if>
 <s:else>
+    <br/>
     <p><s:text name="note.channels.noChannels" /></p>
 </s:else>
 
@@ -122,7 +123,6 @@
 <s:if test="%{#contentTypesVar.size > 0}">
     <wp:ifauthorized permission="superuser" var="isSuperuser" />
     <s:set var="isSuperuserVar">${isSuperuser}</s:set>
-
     <div class="col-xs-12 no-padding">
         <div class="mt-20">
             <table class="table table-striped table-bordered table-hover content-list no-mb">
@@ -178,5 +178,6 @@
     </div>
 </s:if>
 <s:else>
+    <br/>
     <p><s:text name="no.contentypes" /></p>
 </s:else>
