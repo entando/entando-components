@@ -45,8 +45,9 @@
             <s:text name="label.jpmail.intro" />
         </div>
     </div>
+
     <div id="messages">
-        <s:include value="/WEB-INF/plugins/jpmail/apsadmin/jsp/mail/inc/smtp-messages.jsp" />
+        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>
 
     <s:form id="configurationForm" name="configurationForm" method="post" action="testSmtp" cssClass="form-horizontal">
