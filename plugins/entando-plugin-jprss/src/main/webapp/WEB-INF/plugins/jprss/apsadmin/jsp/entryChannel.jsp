@@ -76,8 +76,7 @@
             <div class="input-group">
                 <wpsf:select name="contentType" id="rss_chn_contenttype" list="availableContentTypes" cssClass="form-control" />
                 <span class="input-group-btn">
-					<wpsf:submit type="button" action="selectContentType" cssClass="btn btn-success">
-                        <span class="icon fa fa-check"></span>&#32;
+					<wpsf:submit type="button" action="selectContentType" cssClass="btn btn-primary">
                         <s:text name="label.confirm" />
                     </wpsf:submit>
 				</span>
