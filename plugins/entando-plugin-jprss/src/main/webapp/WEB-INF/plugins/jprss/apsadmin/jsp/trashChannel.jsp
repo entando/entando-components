@@ -25,7 +25,7 @@
                     <s:text name="%{getText('label.remove')}"/>
                 </wpsf:submit>
                 <p class="text-center margin-small-top">
-                    <s:text name="note.sendersConfig.trash.goBack" />&nbsp;
+                    <s:text name="note.channel.trash.goBack" />&nbsp;
                     <a class="btn btn-link" href="<s:url namespace="/do/jprss/Rss" action="list"/>">
                         <s:text name="jprss.title.rssManagement" />
                     </a>
