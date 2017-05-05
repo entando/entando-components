@@ -34,7 +34,7 @@
 
 <s:if test="%{#channelsVar.size > 0}" >
     <div class="mt-20">
-        <table class="table table-striped table-bordered table-hover content-list">
+        <table class="table table-striped table-bordered table-hover">
             <thead>
             <tr>
                 <th><s:text name="title" /></th>
@@ -51,7 +51,7 @@
                 <tr class="dl-horizontal dl-striped panel padding-base-top padding-base-bottom">
                     <td><s:property value="#channelVar.title" /></td>
                     <td><s:property value="#channelVar.description" /></td>
-                    <td class="col-sm-1">
+                    <td class="text-center">
                         <s:set var="rssMappingChannelVar" value="%{getContentMapping(#channelVar.contentType)}" ></s:set>
                         <s:if test="null == #rssMappingChannelVar">
                             <span class="icon fa fa-exclamation text-warning" title="<s:text name="label.status.invalid" />"> </span>
@@ -60,7 +60,7 @@
                             <span class="icon fa fa-check text-success" title="<s:text name="label.status.ok" />"> </span>
                         </s:else>
                     </td>
-                    <td class="col-sm-1">
+                    <td class="text-center">
                         <s:if test="#channelVar.active">
                             <span class="icon fa fa-check-square-o" title="<s:text name="label.yes" />"></span>
                         </s:if>
@@ -72,7 +72,7 @@
                         <s:property value="%{getSmallContentType(#channelVar.contentType).descr}" />
                     </td>
                     <td><s:property value="%{getAvailableFeedTypes()[#channelVar.feedType]}" /></td>
-                    <td class="col-sm-1 text-center">
+                    <td class="table-view-pf-actions text-center">
                         <div class="dropdown dropdown-kebab-pf">
                             <p class="sr-only"><s:text name="label.actions"/></p>
                             <span class="btn btn-menu-right dropdown-toggle" type="button"
@@ -82,21 +82,17 @@
                             </span>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li>
-                                        <%-- edit --%>
                                     <a href="<s:url action="edit"><s:param name="id" value="#channelVar.id"/></s:url>"
                                        title="<s:text name="label.edit" />: <s:property value="#channelVar.title" />"
                                        class="btn btn-default" >
-                                        <span class="sr-only"><s:text name="label.edit" />: <s:property value="#channelVar.title" /></span>
-                                        <span class="icon fa fa-pencil-square-o"></span>
+                                        <s:text name="label.edit" />
                                     </a>
                                 </li>
                                 <li>
-                                        <%-- remove --%>
                                     <a href="<s:url action="trash"><s:param name="id" value="#channelVar.id"/></s:url>"
                                        title="<s:text name="label.remove" />: <s:property value="#channelVar.title" />"
                                        class="btn btn-warning">
-                                        <span class="icon fa fa-times-circle-o"></span>&#32;
-                                        <span class="sr-only"><s:text name="label.alt.clear" /></span>
+                                        <s:text name="label.alt.clear" />
                                     </a>
                                 </li>
                             </ul>
@@ -107,7 +103,6 @@
             </tbody>
         </table>
     </div>
-    <br/>
 </s:if>
 <s:else>
     <br/>
@@ -126,12 +121,12 @@
     <s:set var="isSuperuserVar">${isSuperuser}</s:set>
     <div class="col-xs-12 no-padding">
         <div class="mt-20">
-            <table class="table table-striped table-bordered table-hover content-list">
+            <table class="table table-striped table-bordered table-hover">
                 <thead>
                 <tr>
                     <th><s:text name="contentType" /></th>
                     <th><s:text name="label.status.info" /></th>
-                    <th class="text-center" style="width: 20px"><s:text name="label.actions"/></th>
+                    <th class="text-center" style="width: 50px"><s:text name="label.actions"/></th>
                 </tr>
                 </thead>
                 <tbody>
