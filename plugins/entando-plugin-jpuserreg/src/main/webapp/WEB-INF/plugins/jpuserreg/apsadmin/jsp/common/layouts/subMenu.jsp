@@ -3,9 +3,11 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
 <wp:ifauthorized permission="superuser">
-    <li class="margin-large-bottom"><span class="h5"><s:text name="jpuserreg.menu.userregAdmin" /></span>
-        <ul class="nav nav-pills nav-stacked">
-            <li><a href="<s:url namespace="/do/jpuserreg/Config" action="edit" />" ><s:text name="jpuserreg.menu.config" /></a></li>
-        </ul>
-</li>
+    <li class="list-group-item">
+        <a href="<s:url namespace="/do/jpuserreg/Config" action="edit" />" id="menu_rss" >
+            <span class="list-group-item-value">
+                <s:text name="jpuserreg.menu.userregAdmin" />
+            </span>
+        </a>
+    </li>
 </wp:ifauthorized>
