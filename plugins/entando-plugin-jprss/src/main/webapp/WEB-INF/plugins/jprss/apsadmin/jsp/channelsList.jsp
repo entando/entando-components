@@ -34,30 +34,33 @@
 
 <s:if test="%{#channelsVar.size > 0}" >
     <div class="mt-20">
-        <table class="table table-striped table-bordered table-hover content-list no-mb">
+        <table class="table table-striped table-bordered table-hover content-list">
+            <thead>
             <tr>
                 <th><s:text name="title" /></th>
                 <th><s:text name="description" /></th>
-                <th><s:text name="status" /></th>
-                <th><s:text name="active" /></th>
-                <th><s:text name="contentType" /></th>
-                <th><s:text name="feedType" /></th>
-                <th class="text-center" style="width: 20px"><s:text name="label.actions"/></th>
+                <th style="width: 40px;"><s:text name="status" /></th>
+                <th style="width: 40px;"><s:text name="active" /></th>
+                <th style="width: 110px;"><s:text name="contentType" /></th>
+                <th style="width: 70px;"><s:text name="feedType" /></th>
+                <th class="text-center" style="width: 50px"><s:text name="label.actions"/></th>
             </tr>
+            </thead>
+            <tbody>
             <s:iterator value="#channelsVar" var="channelVar">
                 <tr class="dl-horizontal dl-striped panel padding-base-top padding-base-bottom">
-                    <td class="col-md-5"><s:property value="#channelVar.title" /></td>
-                    <td class="col-md-6"><s:property value="#channelVar.description" /></td>
-                    <td class="col-md-1">
+                    <td><s:property value="#channelVar.title" /></td>
+                    <td><s:property value="#channelVar.description" /></td>
+                    <td class="col-sm-1">
                         <s:set var="rssMappingChannelVar" value="%{getContentMapping(#channelVar.contentType)}" ></s:set>
                         <s:if test="null == #rssMappingChannelVar">
-                            <s:text name="label.status.invalid" />
+                            <span class="icon fa fa-exclamation text-warning" title="<s:text name="label.status.invalid" />"> </span>
                         </s:if>
                         <s:else>
-                            <s:text name="label.status.ok" />
+                            <span class="icon fa fa-check text-success" title="<s:text name="label.status.ok" />"> </span>
                         </s:else>
                     </td>
-                    <td class="icon">
+                    <td class="col-sm-1">
                         <s:if test="#channelVar.active">
                             <span class="icon fa fa-check-square-o" title="<s:text name="label.yes" />"></span>
                         </s:if>
@@ -65,11 +68,11 @@
                             <span class="icon fa fa-square-o" title="<s:text name="label.no" />"></span>
                         </s:else>
                     </td>
-                    <td class="col-md-6">
+                    <td>
                         <s:property value="%{getSmallContentType(#channelVar.contentType).descr}" />
                     </td>
-                    <td class="col-md-2"><s:property value="%{getAvailableFeedTypes()[#channelVar.feedType]}" /></td>
-                    <td class="col-md-1 text-center">
+                    <td><s:property value="%{getAvailableFeedTypes()[#channelVar.feedType]}" /></td>
+                    <td class="col-sm-1 text-center">
                         <div class="dropdown dropdown-kebab-pf">
                             <p class="sr-only"><s:text name="label.actions"/></p>
                             <span class="btn btn-menu-right dropdown-toggle" type="button"
@@ -101,8 +104,10 @@
                     </td>
                 </tr>
             </s:iterator>
+            </tbody>
         </table>
     </div>
+    <br/>
 </s:if>
 <s:else>
     <br/>
@@ -121,7 +126,7 @@
     <s:set var="isSuperuserVar">${isSuperuser}</s:set>
     <div class="col-xs-12 no-padding">
         <div class="mt-20">
-            <table class="table table-striped table-bordered table-hover content-list no-mb">
+            <table class="table table-striped table-bordered table-hover content-list">
                 <thead>
                 <tr>
                     <th><s:text name="contentType" /></th>
@@ -129,7 +134,6 @@
                     <th class="text-center" style="width: 20px"><s:text name="label.actions"/></th>
                 </tr>
                 </thead>
-
                 <tbody>
                 <s:iterator value="#contentTypesVar" var="contentTypeVar" status="counter">
                     <s:set var="entityAnchor" value="%{'entityCounter'+#counter.count}" />
