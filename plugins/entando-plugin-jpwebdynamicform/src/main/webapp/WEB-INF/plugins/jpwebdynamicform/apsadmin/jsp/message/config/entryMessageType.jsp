@@ -118,7 +118,7 @@
             </s:iterator>
         </p>
 
-        <fieldset class="col-xs-12">
+        <fieldset class="col-xs-12 form-horizontal">
             <legend><s:text name="webdynamicform" /></legend>
 
             <%--

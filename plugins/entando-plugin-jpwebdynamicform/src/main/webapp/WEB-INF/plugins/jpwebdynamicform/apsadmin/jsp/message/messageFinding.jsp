@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-sm-6">
             <h1 class="page-title-container">
-                <s:text name="title.messageManagement"/>
+                <s:text name="title.message.original"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
                        data-content="TO be inserted" data-placement="left" data-original-title="">
@@ -29,7 +29,7 @@
             <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
                 <li class="active">
                     <a href="<s:url action="list" namespace="/do/jpwebdynamicform/Message/Operator" />"><s:text
-                            name="breadcrumb.messageManagement"/></a>
+                            name="breadcrumb.messageList"/></a>
                 </li>
                 <li>
                     <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />"><s:text
