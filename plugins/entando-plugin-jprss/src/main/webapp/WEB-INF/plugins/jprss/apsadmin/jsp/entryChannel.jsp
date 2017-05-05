@@ -39,32 +39,11 @@
     <div class="form-group-separator"></div>
 </div>
 
-<s:form action="save" cssClass="form-horizontal">
-    <s:if test="hasFieldErrors()">
-        <div class="alert alert-danger alert-dismissable">
-            <button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-            <h3 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h3>
-            <ul>
-                <s:iterator value="fieldErrors">
-                    <s:iterator value="value">
-                        <li><s:property escapeHtml="false" /></li>
-                    </s:iterator>
-                </s:iterator>
-            </ul>
-        </div>
-    </s:if>
-    <s:if test="hasActionErrors()">
-        <div class="alert alert-danger alert-dismissable">
-            <button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-            <h3 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h3>
-            <ul>
-                <s:iterator value="actionErrors">
-                    <li><s:property/></li>
-                </s:iterator>
-            </ul>
-        </div>
-    </s:if>
+<div id="messages">
+    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
+</div>
 
+<s:form action="save" cssClass="form-horizontal">
     <p class="noscreen">
         <wpsf:hidden name="strutsAction" />
         <wpsf:hidden name="id" />
@@ -75,11 +54,11 @@
             <legend><s:text name="label.info" /></legend>
             <div class="input-group">
                 <wpsf:select name="contentType" id="rss_chn_contenttype" list="availableContentTypes" cssClass="form-control" />
-                <span class="input-group-btn">
-					<wpsf:submit type="button" action="selectContentType" cssClass="btn btn-primary">
+                <div class="input-group-btn">
+                    <wpsf:submit type="button" action="selectContentType" cssClass="btn btn-primary">
                         <s:text name="label.confirm" />
                     </wpsf:submit>
-				</span>
+                </div>
             </div>
         </fieldset>
     </s:if>
@@ -88,65 +67,95 @@
         <fieldset class="col-xs-12 margin-large-top">
             <legend><s:text name="label.info" /></legend>
             <div class="form-group">
-                <div class="col-xs-12">
-                    <label for="rss_chn_contenttype"><s:text name="contentType" /></label>
-                    <wpsf:textfield name="dummy_contentType"
-                                    id="dummy_rss_chn_contenttype" cssClass="form-control"
-                                    value="%{getSmallContentType(contentType).descr}" disabled="true" />
+                <div class="row">
+                    <label class="col-sm-2 control-label">
+                        <s:text name="contentType" />
+                    </label>
+                    <div class="col-sm-10">
+                        <wpsf:textfield name="dummy_contentType"
+                                        id="dummy_rss_chn_contenttype" cssClass="form-control"
+                                        value="%{getSmallContentType(contentType).descr}" disabled="true" />
+                    </div>
                 </div>
-            </div>
-            <p class="sr-only">
-                <wpsf:hidden name="contentType" />
-            </p>
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <label for="rss_chn_title"><s:text name="title" /></label>
-                    <wpsf:textfield name="title" id="rss_chn_title" cssClass="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <label for="rss_chn_description"><s:text name="description" /></label>
-                    <wpsf:textfield name="description" id="rss_chn_description" cssClass="form-control" />
-                </div>
-            </div>
 
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <wpsf:checkbox name="active" id="rss_chn_active" cssClass="radiocheck" />&#32;
-                    <label for="rss_chn_active"><s:text name="active" /></label>
-                </div>
-            </div>
+                <p class="sr-only">
+                    <wpsf:hidden name="contentType" />
+                </p>
 
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <label for="rss_chn_feedtype"><s:text name="feedType" /></label>
-                    <wpsf:select list="availableFeedTypes" name="feedType" id="rss_chn_feedtype" cssClass="form-control" />
+                <div class="row">
+                    <label class="col-sm-2 control-label">
+                        <s:text name="title" />
+                    </label>
+                    <div class="col-sm-10">
+                        <wpsf:textfield name="title" id="rss_chn_title" cssClass="form-control" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <label for="rss_chn_category"><s:text name="category" /></label>
-                    <wpsf:select id="rss_chn_category" headerKey="" headerValue="%{getText('jprss.label.selectCategory')}"
-                                 list="availableCategories" listKey="code" listValue="%{getShortFullTitle(currentLang.code)}" name="category" cssClass="form-control" />
+                <div class="row">
+                    <label class="col-sm-2 control-label">
+                        <s:text name="description" />
+                    </label>
+                    <div class="col-sm-10">
+                        <wpsf:textfield name="description" id="rss_chn_description" cssClass="form-control" />
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <label for="maxContentsSize"><s:text name="label.max.items" /></label>
-                    <wpsf:select name="maxContentsSize" id="maxContentsSize"
-                                 headerKey="" headerValue="%{getText('label.all')}" list="#{1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,15:15,20:20}" cssClass="form-control" />
+
+                <div class="row">
+                    <label class="col-sm-2 control-label">
+                        <s:text name="active" />
+                    </label>
+                    <div class="col-sm-10">
+                        <div class="checkbox">
+                            <wpsf:checkbox name="active" id="rss_chn_active" cssClass="bootstrap-switch" />&#32;
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-2 control-label">
+                        <s:text name="feedType" />
+                    </label>
+                    <div class="col-sm-10">
+                        <wpsf:select list="availableFeedTypes" name="feedType" id="rss_chn_feedtype" cssClass="form-control" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-2 control-label">
+                        <s:text name="category" />
+                    </label>
+                    <div class="col-sm-10">
+                        <wpsf:select id="rss_chn_category"
+                                     headerKey=""
+                                     headerValue="%{getText('jprss.label.selectCategory')}"
+                                     list="availableCategories"
+                                     listKey="code"
+                                     listValue="%{getShortFullTitle(currentLang.code)}"
+                                     name="category"
+                                     cssClass="form-control" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-2 control-label">
+                        <s:text name="label.max.items" />
+                    </label>
+                    <div class="col-sm-10">
+                        <wpsf:select id="maxContentsSize"
+                                     name="maxContentsSize"
+                                     headerKey=""
+                                     headerValue="%{getText('label.all')}"
+                                     list="#{1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,15:15,20:20}"
+                                     cssClass="form-control" />
+                    </div>
                 </div>
             </div>
         </fieldset>
 
         <fieldset>
             <legend><s:text name="jprss.label.filters" /></legend>
-
             <div class="form-group">
                 <div class="col-xs-12">
-                        <%-- <label for="filterKey"><s:text name="label.filter" /></label> --%>
                     <div class="input-group">
                         <wpsf:select name="filterKey" id="filterKey" list="allowedFilterTypes" listKey="key" listValue="value" cssClass="form-control" />
                         <span class="input-group-btn">
@@ -158,6 +167,7 @@
                     </div>
                 </div>
             </div>
+
             <p class="sr-only">
                 <wpsf:hidden name="filters" />
             </p>
@@ -165,9 +175,6 @@
             <s:if test="null != filtersProperties && filtersProperties.size()>0" >
                 <ol class="list-group">
                     <s:iterator value="filtersProperties" var="filter" status="rowstatus">
-                        <%--
-                            <s:property value="#rowstatus.index+1"/>
-                        --%>
                         <li class="list-group-item">
                             <s:text name="label.filterBy" /><strong>
                             <s:if test="#filter['key'] == 'created'">
@@ -259,9 +266,9 @@
             </s:if>
         </fieldset>
 
-        <div class="form-group">
-            <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-                <wpsf:submit type="button" cssClass="btn btn-primary btn-block">
+        <div class="col-xs-12">
+            <div class="form-group pull-right">
+                <wpsf:submit type="button" cssClass="btn btn-primary">
                     <s:text name="label.save" />
                 </wpsf:submit>
             </div>
@@ -269,4 +276,3 @@
 
     </s:else>
 </s:form>
-

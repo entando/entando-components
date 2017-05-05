@@ -26,22 +26,14 @@
     <div class="form-group-separator"></div>
 </div>
 
-<s:if test="hasActionErrors()">
-    <div class="alert alert-danger alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-        <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
-        <ul class="margin-base-vertical">
-            <s:iterator value="actionErrors">
-                <li><s:property escapeHtml="false" /></li>
-            </s:iterator>
-        </ul>
-    </div>
-</s:if>
+<div id="messages">
+    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
+</div>
 
 <s:set var="channelsVar" value="channels" />
 
 <s:if test="%{#channelsVar.size > 0}" >
-    <div class="table-responsive">
+    <div class="mt-20">
         <table class="table table-striped table-bordered table-hover content-list no-mb">
             <tr>
                 <th><s:text name="title" /></th>
@@ -50,13 +42,13 @@
                 <th><s:text name="active" /></th>
                 <th><s:text name="contentType" /></th>
                 <th><s:text name="feedType" /></th>
-                <th class="text-center padding-large-left padding-large-right col-xs-4 col-sm-3 col-md-2 col-lg-2"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
+                <th class="text-center" style="width: 20px"><s:text name="label.actions"/></th>
             </tr>
             <s:iterator value="#channelsVar" var="channelVar">
                 <tr class="dl-horizontal dl-striped panel padding-base-top padding-base-bottom">
                     <td class="col-md-5"><s:property value="#channelVar.title" /></td>
                     <td class="col-md-6"><s:property value="#channelVar.description" /></td>
-                    <td class="col-md-6">
+                    <td class="col-md-1">
                         <s:set var="rssMappingChannelVar" value="%{getContentMapping(#channelVar.contentType)}" ></s:set>
                         <s:if test="null == #rssMappingChannelVar">
                             <s:text name="label.status.invalid" />
@@ -66,13 +58,17 @@
                         </s:else>
                     </td>
                     <td class="icon">
-                        <s:if test="#channelVar.active"><s:text name="label.yes" /></s:if>
-                        <s:else><s:text name="label.no" /></s:else>
+                        <s:if test="#channelVar.active">
+                            <span class="icon fa fa-check-square-o" title="<s:text name="label.yes" />"></span>
+                        </s:if>
+                        <s:else>
+                            <span class="icon fa fa-square-o" title="<s:text name="label.no" />"></span>
+                        </s:else>
                     </td>
                     <td class="col-md-6">
                         <s:property value="%{getSmallContentType(#channelVar.contentType).descr}" />
                     </td>
-                    <td class="col-md-6"><s:property value="%{getAvailableFeedTypes()[#channelVar.feedType]}" /></td>
+                    <td class="col-md-2"><s:property value="%{getAvailableFeedTypes()[#channelVar.feedType]}" /></td>
                     <td class="col-md-1 text-center">
                         <div class="dropdown dropdown-kebab-pf">
                             <p class="sr-only"><s:text name="label.actions"/></p>

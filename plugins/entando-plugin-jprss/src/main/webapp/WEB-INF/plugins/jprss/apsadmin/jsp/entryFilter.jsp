@@ -42,6 +42,10 @@
     <div class="form-group-separator"></div>
 </div>
 
+<div id="messages">
+    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
+</div>
+
 <s:form>
     <p class="noscreen">
         <wpsf:hidden name="id" />
@@ -55,28 +59,6 @@
         <wpsf:hidden name="active" />
         <wpsf:hidden name="strutsAction" />
     </p>
-    <s:if test="hasFieldErrors()">
-        <div class="message message_error">
-            <h4><s:text name="message.title.FieldErrors" /></h4>
-            <ul>
-                <s:iterator value="fieldErrors">
-                    <s:iterator value="value">
-                        <li><s:property escapeHtml="false" /></li>
-                    </s:iterator>
-                </s:iterator>
-            </ul>
-        </div>
-    </s:if>
-    <s:if test="hasActionErrors()">
-        <div class="message message_error">
-            <h4><s:text name="message.title.ActionErrors" /></h4>
-            <ul>
-                <s:iterator value="actionErrors">
-                    <li><s:property escapeHtml="false" /></li>
-                </s:iterator>
-            </ul>
-        </div>
-    </s:if>
 
     <div class="panel-body">
     <s:if test="filterTypeId < 0">
@@ -383,10 +365,9 @@
 
         </div>
 
-        <div class="form-group">
-            <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-                <wpsf:submit action="%{#saveFilterActionName}" type="button" cssClass="btn btn-primary btn-block">
-                    <span class="icon fa fa-filter"></span>&#32;
+        <div class="col-xs-12">
+            <div class="form-group pull-right">
+                <wpsf:submit action="%{#saveFilterActionName}" type="button" cssClass="btn btn-primary">
                     <s:text name="label.save" />
                 </wpsf:submit>
             </div>

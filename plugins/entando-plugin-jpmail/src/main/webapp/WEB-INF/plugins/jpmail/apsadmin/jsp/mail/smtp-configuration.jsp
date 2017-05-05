@@ -12,9 +12,11 @@
             <s:text name="label.jpmail.intro" />
         </div>
     </div>
+
     <div id="messages">
         <s:include value="/WEB-INF/plugins/jpmail/apsadmin/jsp/mail/inc/smtp-messages.jsp" />
     </div>
+
     <s:form id="configurationForm" name="configurationForm" method="post" action="testSmtp">
 
         <fieldset class="col-xs-12">
