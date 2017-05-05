@@ -9,3 +9,5 @@ plugins/entando-plugin-*/derby.log
 .project
 .settings/
 
+.idea
+*.iml
