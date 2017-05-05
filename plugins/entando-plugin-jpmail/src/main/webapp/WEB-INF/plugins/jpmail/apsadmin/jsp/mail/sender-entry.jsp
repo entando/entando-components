@@ -4,11 +4,14 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
-    <li><s:text name="breadcrumb.integrations"/></li>
-    <li><s:text name="breadcrumb.uxcomponents"/></li>
     <li><s:text name="breadcrumb.jpmail"/></li>
-    <s:if test="%{strutsAction==1}" ><li><s:text name="title.eMailManagement.newSender" /></li></s:if>
-    <s:else><li><s:text name="title.eMailManagement.editSender" />:&nbsp;<s:property value="code"/></li></s:else>
+    <li><s:text name="title.eMailManagement.sendersConfig" /></li>
+    <s:if test="%{strutsAction==1}" >
+        <li class="page-title-container"><s:text name="title.eMailManagement.newSender" /></li>
+    </s:if>
+    <s:else>
+        <li class="page-title-container"><s:text name="title.eMailManagement.editSender" />:&nbsp;<s:property value="code"/></li>
+    </s:else>
 </ol>
 
 <div class="page-tabs-header">
@@ -35,30 +38,7 @@
 
 <div id="main">
     <s:form action="saveSender" cssClass="form-horizontal">
-        <s:if test="hasFieldErrors()">
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
-                <ul class="margin-base-vertical">
-                    <s:iterator value="fieldErrors">
-                        <s:iterator value="value">
-                            <li><s:property escapeHtml="false" /></li>
-                        </s:iterator>
-                    </s:iterator>
-                </ul>
-            </div>
-        </s:if>
-        <s:if test="hasActionErrors()">
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
-                <ul class="margin-base-vertical">
-                    <s:iterator value="actionErrors">
-                        <li><s:property escapeHtml="false" /></li>
-                    </s:iterator>
-                </ul>
-            </div>
-        </s:if>
+        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
 
         <p class="noscreen">
             <wpsf:hidden name="strutsAction"/>

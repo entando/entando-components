@@ -4,10 +4,8 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
-    <li><s:text name="breadcrumb.integrations"/></li>
-    <li><s:text name="breadcrumb.uxcomponents"/></li>
     <li><s:text name="breadcrumb.jpmail"/></li>
-    <li><s:text name="title.eMailManagement.sendersConfig"/></li>
+    <li class="page-title-container"><s:text name="title.eMailManagement.sendersConfig"/></li>
 </ol>
 
 <div class="page-tabs-header">
@@ -64,7 +62,7 @@
     </s:if>
     <s:else>
     <div class="table-responsive overflow-visible">
-        <table class="table table-striped table-bordered table-hover content-list no-mb">
+        <table class="table table-striped table-bordered table-hover no-mb">
             <thead>
                 <tr>
                     <th class="col-sm-5"><s:text name="code" /></th>
