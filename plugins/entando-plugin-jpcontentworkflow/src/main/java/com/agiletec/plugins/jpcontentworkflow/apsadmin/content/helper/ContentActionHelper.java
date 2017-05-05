@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.SelectItem;
@@ -131,9 +132,9 @@ public class ContentActionHelper extends com.agiletec.plugins.jacms.apsadmin.con
 				return false;
 			}
 			boolean allowedType = false;
-			List<SmallContentType> allowedContentTypes = this.getAllowedContentTypes(currentUser);
+			List<SmallEntityType> allowedContentTypes = this.getAllowedContentTypes(currentUser);
 			for (int i = 0; i < allowedContentTypes.size(); i++) {
-				SmallContentType smallContentType = allowedContentTypes.get(i);
+				SmallEntityType smallContentType = allowedContentTypes.get(i);
 				if (smallContentType.getCode().equals(content.getTypeCode())) {
 					allowedType = true;
 					break;
@@ -174,7 +175,7 @@ public class ContentActionHelper extends com.agiletec.plugins.jacms.apsadmin.con
 	}
 	
 	@Override
-	public List<SmallContentType> getAllowedContentTypes(UserDetails currentUser) {
+	public List<SmallEntityType> getAllowedContentTypes(UserDetails currentUser) {
 		try {
 			return this.getWorkflowManager().getManagingContentTypes(currentUser);
 		} catch (Throwable t) {
