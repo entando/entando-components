@@ -182,7 +182,7 @@
         <p><s:property value="jpuserreg.parameters.summary" /></p>
         <div class="form-group">
             <div class="col-sm-12 table-responsive">
-                <table class="table table-bordered table-hover content-list no-mb">
+                <table class="table table-bordered table-hover no-mb">
                     <tr>
                         <th class="text-right col-sm-2"><s:text name="jpuserreg.activationPageCode"/></th>
                         <td class="col-sm-10"><s:property value="%{getText('jpuserreg.activationPageCode.help')}"
@@ -250,7 +250,7 @@
         </p>
         <div class="form-group">
             <div class="col-sm-12 table-responsive">
-                <table class="table table-bordered table-hover content-list no-mb">
+                <table class="table table-bordered table-hover no-mb">
                     <tr>
                         <th class="text-right col-sm-2"><s:text name="jpuserreg.reactivationPageCode"/></th>
                         <td class="col-sm-10"><s:property value="%{getText('jpuserreg.reactivationPageCode.help')}" escapeHtml="false" /></td>

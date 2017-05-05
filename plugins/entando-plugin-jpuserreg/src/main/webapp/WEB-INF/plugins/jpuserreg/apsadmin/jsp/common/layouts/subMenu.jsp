@@ -4,7 +4,7 @@
 <%@ taglib prefix="wp" uri="/aps-core" %>
 <wp:ifauthorized permission="superuser">
     <li class="list-group-item">
-        <a href="<s:url namespace="/do/jpuserreg/Config" action="edit" />" id="menu_rss" >
+        <a href="<s:url namespace="/do/jpuserreg/Config" action="edit" />">
             <span class="list-group-item-value">
                 <s:text name="jpuserreg.menu.userregAdmin" />
             </span>
