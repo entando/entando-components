@@ -7,5 +7,5 @@
         <ul class="nav nav-pills nav-stacked">
             <li><a href="<s:url namespace="/do/jpuserreg/Config" action="edit" />" ><s:text name="jpuserreg.menu.config" /></a></li>
         </ul>
-</li>
+	</li>
 </wp:ifauthorized>
