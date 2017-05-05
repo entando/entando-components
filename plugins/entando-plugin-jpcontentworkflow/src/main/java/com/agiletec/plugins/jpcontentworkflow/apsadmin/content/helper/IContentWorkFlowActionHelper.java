@@ -21,6 +21,7 @@
  */
 package com.agiletec.plugins.jpcontentworkflow.apsadmin.content.helper;
 
+import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import java.util.List;
 
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -35,7 +36,7 @@ public interface IContentWorkFlowActionHelper {
 	
 	public List<WorkflowSearchFilter> getWorkflowSearchFilters(UserDetails user);
 	
-	public List<SmallContentType> getAllowedContentTypes(UserDetails currentUser);
+	public List<SmallEntityType> getAllowedContentTypes(UserDetails currentUser);
 	
 	public List<SelectItem> getAvalaibleStatus(UserDetails user, String contentTypeCode);
 	
