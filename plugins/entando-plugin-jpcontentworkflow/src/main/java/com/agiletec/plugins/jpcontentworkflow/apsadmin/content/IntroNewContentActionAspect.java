@@ -23,6 +23,7 @@ package com.agiletec.plugins.jpcontentworkflow.apsadmin.content;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -48,10 +49,10 @@ public class IntroNewContentActionAspect {
 	public void checkCreateNewContent(JoinPoint joinPoint) {
 		try {
 			IntroNewContentAction action = (IntroNewContentAction) joinPoint.getTarget();
-			List<SmallContentType> allowedContentTypes = this.getAllowedContentTypes();
+			List<SmallEntityType> allowedContentTypes = this.getAllowedContentTypes();
 			boolean check = false;
 			for (int i = 0; i < allowedContentTypes.size(); i++) {
-				SmallContentType contentType = allowedContentTypes.get(i);
+				SmallEntityType contentType = allowedContentTypes.get(i);
 				if (contentType.getCode().equals(action.getContentTypeCode())) {
 					check = true;
 					break;
@@ -75,13 +76,13 @@ public class IntroNewContentActionAspect {
 	*/
 	@AfterReturning(pointcut = "execution(* com.agiletec.plugins.jacms.apsadmin.content.IntroNewContentAction.getContentTypes())", returning = "contentTypes")
 	public void getAllowedContentTypes(Object contentTypes) {
-		List<SmallContentType> allowed = this.getAllowedContentTypes();
+		List<SmallEntityType> allowed = this.getAllowedContentTypes();
 		System.out.println("getAllowedContentTypes " + this);
-		((List<SmallContentType>)contentTypes).clear();
-		((List<SmallContentType>)contentTypes).addAll(allowed);
+		((List<SmallEntityType>)contentTypes).clear();
+		((List<SmallEntityType>)contentTypes).addAll(allowed);
 	}
 	
-	protected List<SmallContentType> getAllowedContentTypes() {
+	protected List<SmallEntityType> getAllowedContentTypes() {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		UserDetails currentUser = (UserDetails) request.getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 		return this.getContentActionHelper().getAllowedContentTypes(currentUser);
