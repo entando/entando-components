@@ -42,7 +42,7 @@
                 <th style="width: 40px;"><s:text name="status" /></th>
                 <th style="width: 40px;"><s:text name="active" /></th>
                 <th style="width: 110px;"><s:text name="contentType" /></th>
-                <th style="width: 70px;"><s:text name="feedType" /></th>
+                <th style="width: 80px;"><s:text name="feedType" /></th>
                 <th class="text-center" style="width: 50px"><s:text name="label.actions"/></th>
             </tr>
             </thead>

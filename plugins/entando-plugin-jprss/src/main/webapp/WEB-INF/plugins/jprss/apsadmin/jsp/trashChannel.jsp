@@ -12,9 +12,6 @@
             <s:text name="jprss.title.rssManagement" />
         </a>
     </li>
-    <li>
-        <s:text name="jprss.title.userManagement.channelTrash" />
-    </li>
 </ol>
 
 <h1 class="page-title-container">
@@ -33,12 +30,12 @@
 
 <div class="text-center">
     <s:form action="delete" namespace="/do/jprss/Rss" cssClass="form-horizontal">
-        <p class="sr-only"><wpsf:hidden name="code"/></p>
+        <p class="sr-only"><wpsf:hidden name="id"/></p>
         <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
-        <p class="esclamation-underline"><s:text name="title.eMailManagement.sendersConfig.trashSender"/></p>
+        <p class="esclamation-underline"><s:text name="jprss.title.channelTrash"/></p>
         <p>
             <s:text name="note.deleteChannel.areYouSure"/>&#32;
-            <s:property value="code" />
+            <s:property value="id" />
         </p>
         <div class="text-center margin-large-top">
             <wpsf:submit type="button" cssClass="btn btn-danger button-fixed-width">

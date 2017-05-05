@@ -43,14 +43,14 @@
     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
 </div>
 
-<s:form action="save" cssClass="form-horizontal">
+<s:form action="save">
     <p class="noscreen">
         <wpsf:hidden name="strutsAction" />
         <wpsf:hidden name="id" />
     </p>
 
     <s:if test="null == contentType || contentType==''">
-        <fieldset class="col-xs-12 margin-large-top">
+        <fieldset class="col-xs-12">
             <legend><s:text name="label.info" /></legend>
             <div class="input-group">
                 <wpsf:select name="contentType" id="rss_chn_contenttype" list="availableContentTypes" cssClass="form-control" />
@@ -64,7 +64,7 @@
     </s:if>
 
     <s:else>
-        <div class="row">
+        <div class="form-group">
             <legend><s:text name="jprss.label.filters" /></legend>
             <div class="form-group">
                 <div class="col-sm-3">
@@ -177,10 +177,12 @@
             </s:if>
         </div>
 
-        <div class="row">
+        <br/>
+
+        <div class="form-group">
             <legend><s:text name="label.info" /></legend>
             <div class="form-group">
-                <div class="row">
+                <div class="form-group">
                     <label class="col-sm-2 control-label">
                         <s:text name="contentType" />
                     </label>
@@ -195,7 +197,7 @@
                     <wpsf:hidden name="contentType" />
                 </p>
 
-                <div class="row">
+                <div class="form-group">
                     <label class="col-sm-2 control-label">
                         <s:text name="title" />
                     </label>
@@ -204,7 +206,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="form-group">
                     <label class="col-sm-2 control-label">
                         <s:text name="description" />
                     </label>
@@ -213,7 +215,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="form-group">
                     <label class="col-sm-2 control-label">
                         <s:text name="active" />
                     </label>
@@ -224,7 +226,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="form-group">
                     <label class="col-sm-2 control-label">
                         <s:text name="feedType" />
                     </label>
@@ -233,7 +235,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="form-group">
                     <label class="col-sm-2 control-label">
                         <s:text name="category" />
                     </label>
@@ -249,7 +251,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="form-group">
                     <label class="col-sm-2 control-label">
                         <s:text name="label.max.items" />
                     </label>
