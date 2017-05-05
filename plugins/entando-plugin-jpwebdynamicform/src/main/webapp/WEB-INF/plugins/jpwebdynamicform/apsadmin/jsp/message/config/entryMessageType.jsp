@@ -2,39 +2,105 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
-<h1 class="panel panel-default title-page">
-    <span class="panel-body display-block">
-        <s:text name="title.messageManagement" />&#32;/&#32;
-        <s:text name="title.messageManagement.configuration" />&#32;/&#32;
-        <s:text name="title.messagetype" />:&#32;<s:property value="%{messageType.descr}"/>
 
-    </span>
-</h1>
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li>
+        <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />"><s:text
+                name="breadcrumb.configuration"/></a>
+    </li>
+    <li class="page-title-container">
+        <s:text name="title.messagetype.configuration"/>
+    </li>
+</ol>
+<div class="page-tabs-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1  class="page-title-container">
+                <s:text name="title.messagetype.configuration"/>
+                <span class="pull-right">
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+                       data-content="TO be inserted" data-placement="left" data-original-title="">
+                        <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                    </a>
+                </span>
+            </h1>
+        </div>
+        <%--<div class="col-sm-6">--%>
+            <%--<ul class="nav nav-tabs nav-justified nav-tabs-pattern">--%>
+                <%--<li>--%>
+                    <%--<a href="<s:url action="list" namespace="/do/jpwebdynamicform/Message/Operator" />"><s:text--%>
+                            <%--name="breadcrumb.messageManagement"/></a>--%>
+                <%--</li>--%>
+                <%--<li>--%>
+                    <%--<a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />"><s:text--%>
+                            <%--name="breadcrumb.configuration"/></a>--%>
+                <%--</li>--%>
+                <%--<li class="active">--%>
+                    <%--<a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="edit" />"><s:text--%>
+                            <%--name="breadcrumb.messageType"/></a>--%>
+                <%--</li>--%>
+            <%--</ul>--%>
+        <%--</div>--%>
+    </div>
+</div>
+<br>
+
+
 <div id="main">
 
     <s:set var="removeAddressImage" ><wp:resourceURL />administration/common/img/icons/list-remove.png</s:set>
     <s:form action="save">
+        <%--<s:if test="hasFieldErrors()">--%>
+            <%--<div class="alert alert-danger alert-dismissable">--%>
+                <%--<button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>--%>
+                <%--<h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>--%>
+                <%--<ul class="margin-base-vertical">--%>
+                    <%--<s:iterator value="fieldErrors">--%>
+                        <%--<s:iterator value="value">--%>
+                            <%--<li><s:property escapeHtml="true" /></li>--%>
+                            <%--</s:iterator>--%>
+                        <%--</s:iterator>--%>
+                <%--</ul>--%>
+            <%--</div>--%>
+        <%--</s:if>--%>
+        <%--<s:if test="hasActionErrors()">--%>
+            <%--<div class="alert alert-danger alert-dismissable">--%>
+                <%--<button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>--%>
+                <%--<h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>--%>
+                <%--<ul class="margin-base-vertical">--%>
+                    <%--<s:iterator value="actionErrors">--%>
+                        <%--<li><s:property escapeHtml="true" /></li>--%>
+                        <%--</s:iterator>--%>
+                <%--</ul>--%>
+            <%--</div>--%>
+        <%--</s:if>--%>
+
+
         <s:if test="hasFieldErrors()">
             <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
-                <ul class="margin-base-vertical">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong><s:text name="message.title.FieldErrors" /></strong>.
+                <ul>
                     <s:iterator value="fieldErrors">
                         <s:iterator value="value">
-                            <li><s:property escapeHtml="true" /></li>
-                            </s:iterator>
+                            <li><s:property escapeHtml="false" /></li>
                         </s:iterator>
+                    </s:iterator>
                 </ul>
             </div>
         </s:if>
+
         <s:if test="hasActionErrors()">
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
+            <div class="alert alert-danger alert-dismissable fade in">
+                <button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
                 <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
-                <ul class="margin-base-vertical">
+                <ul>
                     <s:iterator value="actionErrors">
-                        <li><s:property escapeHtml="true" /></li>
-                        </s:iterator>
+                        <li><s:property escapeHtml="false" /></li>
+                    </s:iterator>
                 </ul>
             </div>
         </s:if>
@@ -80,48 +146,83 @@
                 <div class="panel-body"><s:text name="label.bodyModel.help" /></div>
             </div>   
  --%>                     
+            <%--<div class="form-group">--%>
+                <%--<div class="checkbox">--%>
+                    <%--<wpsf:checkbox id="jpwebdynamicform_store" name="store" cssClass="radiocheck" />&#32;--%>
+                    <%--<label for="jpwebdynamicform_store"><s:text name="label.local.message.store" /></label>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+
             <div class="form-group">
-                <div class="checkbox">
-                    <wpsf:checkbox id="jpwebdynamicform_store" name="store" cssClass="radiocheck" />&#32;
-                    <label for="jpwebdynamicform_store"><s:text name="label.local.message.store" /></label>
+                <label class="col-sm-2 control-label" for="jpwebdynamicform_store">
+                    <s:text name="label.local.message.store"/>
+                </label>
+                <div class="col-sm-10">
+                    <wpsf:checkbox id="jpwebdynamicform_store" data-toggle="toggle" name="store" cssClass="radiocheck bootstrap-switch"/>
+                    <%--<input type="checkbox" id="jpwebdynamicform_store"--%>
+                           <%--name="store" data-toggle="toggle" class="radiocheck bootstrap-switch"--%>
+                           <%--<s:if test="store">checked="checked"</s:if> />--%>
                 </div>
             </div>
+            <br/>
+            <br/>
 
             <div class="form-group">
-                <%-- Il mittente è quello di sistema che figurerà nelle mail agli operatori o all'utente
-                E' obbligatorio solo se mailAttrName o notifiable sono true --%>
-                <label for="jpwebdynamicform_sendercode"><s:text name="label.senderCode" /></label>
-                <wpsf:select id="jpwebdynamicform_sendercode" list="senders" name="senderCode" listKey="key" listValue="value" headerKey="" headerValue="%{getText('label.select')}" cssClass="form-control"/>
-                <span class="help-block"><s:text name="label.sender.help" /></span>
-            </div>
-
-            <div class="form-group">
-                <%-- L'attributo dell'entità che contiene l'indirizzo eMail dell'utente del portale.
-                Serve se si vuole consentire l'invio di eMail di risposta in back-end --%>
-                <label for="jpwebdynamicform_mailattribute">
-                    <s:text name="label.mailAttrName" />
+                    <%-- Il mittente è quello di sistema che figurerà nelle mail agli operatori o all'utente
+                    E' obbligatorio solo se mailAttrName o notifiable sono true --%>
+                <label class="col-sm-2 control-label" for="jpwebdynamicform_sendercode">
+                    <s:text name="label.senderCode"/>
                 </label>
-                <wpsf:select id="jpwebdynamicform_mailattribute" list="textAttributes" name="mailAttrName" listKey="name" listValue="name" headerKey="" headerValue="%{getText('label.select')}" cssClass="form-control" />
-                <span class="help-block"><s:text name="label.attribute.email.help" /></span>
+                <div class="col-sm-10">
+                    <wpsf:select id="jpwebdynamicform_sendercode" list="senders" name="senderCode" listKey="key"
+                                 listValue="value" headerKey="" headerValue="%{getText('label.select')}"
+                                 cssClass="form-control"/>
+                    <span class="help-block"><s:text name="label.sender.help"/></span>
+                </div>
             </div>
-
+            <br/>
+            <br/>
             <div class="form-group">
-                <label for="jpwebdynamicform_subjectmodel">
-                    <s:text name="label.subjectModel" />
+                    <%-- L'attributo dell'entità che contiene l'indirizzo eMail dell'utente del portale.
+                    Serve se si vuole consentire l'invio di eMail di risposta in back-end --%>
+                <label class="col-sm-2 control-label" for="jpwebdynamicform_mailattribute">
+                    <s:text name="label.mailAttrName"/>
                 </label>
-                <wpsf:textfield id="jpwebdynamicform_subjectmodel" name="subjectModel" cssClass="form-control" />
-                <span class="help-block"><s:text name="label.subjectModel.help"/></span>
+                <div class="col-sm-10">
+                    <wpsf:select id="jpwebdynamicform_mailattribute" list="textAttributes" name="mailAttrName"
+                                 listKey="name" listValue="name" headerKey="" headerValue="%{getText('label.select')}"
+                                 cssClass="form-control"/>
+                    <span class="help-block"><s:text name="label.attribute.email.help"/></span>
+                </div>
             </div>
-
+            <br/>
+            <br/>
             <div class="form-group">
-                <label for="jpwebdynamicform_bodymodel">
-                    <s:text name="label.bodyModel" />
+                <label class="col-sm-2 control-label" for="jpwebdynamicform_subjectmodel">
+                    <s:text name="label.subjectModel"/>
                 </label>
-                <wpsf:textarea name="bodyModel" rows="6" cols="60" cssClass="form-control" />
-                <span class="help-block"><s:text name="label.bodyModel.help" /></span>
+                <div class="col-sm-10">
+                    <wpsf:textfield id="jpwebdynamicform_subjectmodel" name="subjectModel" cssClass="form-control"/>
+                    <span class="help-block"><s:text name="label.subjectModel.help"/></span>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="jpwebdynamicform_bodymodel">
+                    <s:text name="label.bodyModel"/>
+                </label>
+                <div class="col-sm-10">
+                    <wpsf:textarea name="bodyModel" rows="6" cols="60" cssClass="form-control"/>
+                    <span class="help-block"><s:text name="label.bodyModel.help"/></span>
+                </div>
             </div>
         </fieldset>
 
+
+
+
+        <%--seconda parte--%>
         <fieldset class="col-xs-12">
             <legend><s:text name="automatic.notification.receipt" /></legend>
 
@@ -133,12 +234,23 @@
 
             <%-- Indica se si vuole far notificare vial mail il messaggio agli operatori
             Se true, influenzerà la validazione (obbligatorietà) degli altri campi. --%>
+            <%--<div class="form-group">--%>
+                <%--<div class="checkbox">--%>
+                    <%--<wpsf:checkbox id="jpwebdynamicform_notifiable" name="notifiable" />&#32;--%>
+                    <%--<label for="jpwebdynamicform_notifiable"><s:text name="label.automatic.notification.active" /></label>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+
             <div class="form-group">
-                <div class="checkbox">
-                    <wpsf:checkbox id="jpwebdynamicform_notifiable" name="notifiable" />&#32;
-                    <label for="jpwebdynamicform_notifiable"><s:text name="label.automatic.notification.active" /></label>
+                <label class="col-sm-2 control-label" for="jpwebdynamicform_notifiable">
+                    <s:text name="label.automatic.notification.active"/>
+                </label>
+                <div class="col-sm-10">
+                    <wpsf:checkbox id="jpwebdynamicform_notifiable" data-toggle="toggle" name="notifiable" cssClass="radiocheck bootstrap-switch"/>
                 </div>
             </div>
+            <br/>
+            <br/>
 
 <%--                
             <div class="panel panel-default">
@@ -272,32 +384,39 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <label for="jpwebdynamicform_addrectype"><s:text name="label.recipientType" /></label>
-                        <wpsf:select list="#{1: getText('label.recipient.to'), 2: getText('label.recipient.cc'), 3: getText('label.recipient.bcc')}" name="recipientType" id="jpwebdynamicform_addrectype" cssClass="form-control" />
+                        <label class="col-sm-2 control-label" for="jpwebdynamicform_addrectype"><s:text name="label.recipientType" /></label>
+                        <div class="col-sm-10">
+                            <wpsf:select list="#{1: getText('label.recipient.to'), 2: getText('label.recipient.cc'), 3: getText('label.recipient.bcc')}" name="recipientType" id="jpwebdynamicform_addrectype" cssClass="form-control" />
+                        </div>
                     </div>
+                    <br/>
+                    <br/>
                     <div class="form-group">
-                        <label for="jpwebdynamicform_addrecaddress"><s:text name="label.address" /></label>
-                        <wpsf:textfield cssClass="form-control" id="jpwebdynamicform_addrecaddress" name="address" />
+                        <label class="col-sm-2 control-label" for="jpwebdynamicform_addrecaddress"><s:text name="label.address" /></label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <wpsf:textfield cssClass="form-control" id="jpwebdynamicform_addrecaddress" name="address" />
+                                <span class="input-group-btn">
+                                    <wpsf:submit type="button" cssClass="btn btn-default" action="addAddress" >
+                                        <%--<span class="icon fa fa-plus-square"></span>&#32;--%>
+                                        <s:text name="%{getText('label.addAddress')}"/>
+                                    </wpsf:submit>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <wpsf:submit type="button" cssClass="btn btn-default" action="addAddress" >
-                            <span class="icon fa fa-plus-square"></span>&#32;
-                            <s:text name="%{getText('label.addAddress')}"/>
-                        </wpsf:submit>
-                    </div>
+                    <br/>
+                    <br/>
                 </div>
             </div>                    
         </fieldset>
 
-        <div class="form-horizontal">
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-                    <wpsf:submit type="button" cssClass="btn btn-primary btn-block">
-                        <span class="icon fa fa-floppy-o"></span>&#32;
-                        <s:text name="%{getText('label.save')}" />
-                    </wpsf:submit>
-                </div>
+        <div class="form-group pull-right">
+            <div class="btn-group">
+                <wpsf:submit type="button" cssClass="btn btn-primary ">
+                    <s:text name="label.save" />
+                </wpsf:submit>
             </div>
-        </div>	
+        </div>
     </s:form>
 </div>
