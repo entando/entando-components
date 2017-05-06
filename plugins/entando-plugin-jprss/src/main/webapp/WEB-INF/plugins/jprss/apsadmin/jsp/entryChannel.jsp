@@ -66,7 +66,7 @@
     <s:else>
         <div class="form-group">
             <legend><s:text name="jprss.label.filters" /></legend>
-            <div class="form-group">
+            <div class="row">
                 <div class="col-sm-3">
                     <div class="input-group">
                         <wpsf:select name="filterKey" id="filterKey" list="allowedFilterTypes" listKey="key" listValue="value" cssClass="form-control" />
@@ -160,13 +160,13 @@
                                         <span class="sr-only"><s:text name="label.moveDown" /></span>
                                         <span class="icon fa fa-sort-asc"></span>
                                     </wpsf:submit>
-                                </div>
-                                <div class="btn-group btn-group-sm">
+
                                     <wpsa:actionParam action="removeFilter" var="actionName" >
                                         <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
                                     </wpsa:actionParam>
-                                    <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}" cssClass="btn btn-warning">
-                                        <span class="icon fa fa-times-circle-o"></span>
+                                    <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}" cssClass="btn btn-primary">
+                                        <span class="sr-only"><s:text name="label.remove" /></span>
+                                        <span class="fa fa-trash-o fa-lg"></span>
                                     </wpsf:submit>
                                 </div>
                             </div>
@@ -177,6 +177,7 @@
             </s:if>
         </div>
 
+        <br/>
         <br/>
 
         <div class="form-group">

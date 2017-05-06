@@ -150,7 +150,7 @@
 
         <s:elseif test="filterTypeId==2">
             <%-- Number --%>
-            <s:text name="note.filterTypes.NumberAttribute" /><span>
+            <s:text name="note.filterTypes.NumberAttribute" /></span>
             </p>
             <fieldset class="margin-base-top"><legend><s:text name="label.settings"/></legend>
 	<div class="form-group">
@@ -200,7 +200,7 @@
 
         <s:elseif test="filterTypeId==3">
             <%-- Boolean --%>
-            <s:text name="note.filterTypes.BooleanAttribute" /><span>
+            <s:text name="note.filterTypes.BooleanAttribute" /></span>
             </p>
             <fieldset class="margin-base-top"><legend><s:text name="label.settings"/></legend>
 	<ul class="list-unstyled">
@@ -345,7 +345,6 @@
         <fieldset class="margin-base-top"><legend><s:text name="label.order" /></legend>
 		<div class="form-group">
 			<div class="btn-group col-sm-5" data-toggle="buttons">
-
 				<label class="btn btn-default active">
 					<input type="radio" name="order" checked="checked" value="" />&#32;
 					<s:text name="label.none" />
@@ -361,7 +360,13 @@
 		</div>
 	</fieldset>
 
-        <s:set var="saveFilterActionName"><s:if test="filterTypeId == 0">saveFilter</s:if><s:elseif test="filterTypeId == 1">saveTextFilter</s:elseif><s:elseif test="filterTypeId == 2">saveNumberFilter</s:elseif><s:elseif test="filterTypeId == 3">saveBooleanFilter</s:elseif><s:elseif test="filterTypeId == 4">saveDateFilter</s:elseif></s:set>
+        <s:set var="saveFilterActionName">
+            <s:if test="filterTypeId == 0">saveFilter</s:if>
+            <s:elseif test="filterTypeId == 1">saveTextFilter</s:elseif>
+            <s:elseif test="filterTypeId == 2">saveNumberFilter</s:elseif>
+            <s:elseif test="filterTypeId == 3">saveBooleanFilter</s:elseif>
+            <s:elseif test="filterTypeId == 4">saveDateFilter</s:elseif>
+        </s:set>
 
         </div>
 
