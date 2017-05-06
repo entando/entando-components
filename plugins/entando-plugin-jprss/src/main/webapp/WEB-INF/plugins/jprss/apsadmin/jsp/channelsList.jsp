@@ -72,8 +72,8 @@
                         <s:property value="%{getSmallContentType(#channelVar.contentType).descr}" />
                     </td>
                     <td><s:property value="%{getAvailableFeedTypes()[#channelVar.feedType]}" /></td>
-                    <td class="table-view-pf-actions text-center">
-                        <div class="dropdown dropdown-kebab-pf open">
+                    <td class="table-view-pf-actions">
+                        <div class="dropdown dropdown-kebab-pf">
                             <p class="sr-only"><s:text name="label.actions"/></p>
                             <span class="btn btn-menu-right dropdown-toggle" type="button"
                                   data-toggle="dropdown" aria-haspopup="true"

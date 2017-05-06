@@ -49,6 +49,10 @@
         <wpsf:hidden name="id" />
     </p>
 
+    <p>
+        <s:text name="note.channels.instructions" />
+    </p>
+
     <s:if test="null == contentType || contentType==''">
         <fieldset class="col-xs-12">
             <legend><s:text name="label.info" /></legend>
