@@ -73,7 +73,7 @@
                     </td>
                     <td><s:property value="%{getAvailableFeedTypes()[#channelVar.feedType]}" /></td>
                     <td class="table-view-pf-actions text-center">
-                        <div class="dropdown dropdown-kebab-pf">
+                        <div class="dropdown dropdown-kebab-pf open">
                             <p class="sr-only"><s:text name="label.actions"/></p>
                             <span class="btn btn-menu-right dropdown-toggle" type="button"
                                   data-toggle="dropdown" aria-haspopup="true"
@@ -83,16 +83,14 @@
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li>
                                     <a href="<s:url action="edit"><s:param name="id" value="#channelVar.id"/></s:url>"
-                                       title="<s:text name="label.edit" />: <s:property value="#channelVar.title" />"
-                                       class="btn btn-default" >
+                                       title="<s:text name="label.edit" />: <s:property value="#channelVar.title" />">
                                         <s:text name="label.edit" />
                                     </a>
                                 </li>
                                 <li>
                                     <a href="<s:url action="trash"><s:param name="id" value="#channelVar.id"/></s:url>"
-                                       title="<s:text name="label.remove" />: <s:property value="#channelVar.title" />"
-                                       class="btn btn-warning">
-                                        <s:text name="label.alt.clear" />
+                                       title="<s:text name="label.remove" />: <s:property value="#channelVar.title" />">
+                                        <s:text name="label.remove" />
                                     </a>
                                 </li>
                             </ul>

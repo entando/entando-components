@@ -177,9 +177,6 @@
             </s:if>
         </div>
 
-        <br/>
-        <br/>
-
         <div class="form-group">
             <legend><s:text name="label.info" /></legend>
             <div class="form-group">
