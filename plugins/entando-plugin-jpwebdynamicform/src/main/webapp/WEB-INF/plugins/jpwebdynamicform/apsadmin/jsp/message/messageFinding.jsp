@@ -330,102 +330,81 @@
 
                 <wpsa:subset source="#entityIds" count="15" objectName="entityGroup" advanced="true" offset="5">
                     <s:set var="group" value="#entityGroup"/>
-
-                    <div class="pager">
-                        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/>
-                        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
-                    </div>
-
-                    <table class="table table-bordered" id="messageListTable">
-                        <tr>
-                            <td class="text-center">
-                                <div class="btn-group btn-group-xs">
-                                    <a class="btn btn-default" href="<s:url action="newAnswer">
-                                           <s:param name="id" value="#message.id"/></s:url>" 
-                                       title="<s:text name="label.newAnswer.at" />: <s:property value="#message.id" />">
-                                        <span class="icon fa fa-envelope"></span>
-                                        <span class="sr-only"><s:text name="label.newAnswer" /></span>
-                                    </a>
-                                    <a class="btn btn-default" href="<s:url action="view">
-                                           <s:param name="id" value="#message.id"></s:param></s:url>" 
-                                       title="<s:text name="label.view"/>&#32;<s:property value="#message.id"/>">
-                                        <span class="icon fa fa-info"></span>
-                                    </a>
-                                </div>
-                                <div class="btn-group btn-group-xs">
-                                    <a class="btn btn-warning" href="<s:url action="trash"><s:param name="id" value="#message.id"/></s:url>" 
-                                       title="<s:text name="label.remove" />: <s:property value="#message.id" />">
-                                        <span class="icon fa fa-times-circle-o"></span>
-                                        <span class="sr-only"><s:text name="label.remove" /></span>                                        
-                                    </a>
-                                </div>
-                            </td>
-                            <td><s:property value="#message.id"/>&#32;&ndash;&#32;<s:property value="#message.typeDescr"/></td>
-                            <td class="text-center"><code><s:date name="#message.creationDate" format="dd/MM/yyyy HH:mm"/></code></td>
+                    <table class="table table-striped table-bordered table-hover content-list no-mb" id="messageListTable">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-6"><s:text name="label.request"/></th>
+                                <th class="col-xs-4 text-center"><s:text name="label.creationDate"/></th>
+                                <th class="col-xs-1 text-center"><s:text name="label.status"/></th>
+                                <th class="col-xs-1 text-center"><s:text name="label.actions" /></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <s:iterator var="messageId">
+                                <s:set var="message" value="%{getMessage(#messageId)}"/>
+                                <s:set var="answers" value="%{getAnswers(#messageId)}"/>
+                                <tr>
+                                    <td>
+                                        <s:property value="#message.id"/>&#32;&ndash;&#32;<s:property value="#message.typeDescr"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <s:date name="#message.creationDate" format="dd/MM/yyyy HH:mm"/>
+                                    </td>
                                     <s:if test="%{#answers.size()>0}">
                                         <s:set var="iconImage">icon fa fa-check text-success</s:set>
-                                <s:set var="thereIsAnswer" value="%{getText('label.answered')}" />
-                            </s:if>
-                            <s:else>
-                                <s:set var="iconImage">icon fa fa-pause text-warning</s:set>
-                                <s:set var="thereIsAnswer" value="%{getText('label.waiting')}" />
-                            </s:else>
-                            <td class="text-center">
-                                <span class="<s:property value="iconImage" />"></span>
-                                <span class="sr-only"><s:property value="thereIsAnswer" /></span>
-                            </td>
-                        </tr>
-                        <s:iterator var="messageId">
-                            <s:set var="message" value="%{getMessage(#messageId)}"/>
-                            <s:set var="answers" value="%{getAnswers(#messageId)}"/>
-                            <tr>
-                                <td class="text-center">
-                                    <div class="btn-group btn-group-xs">
-                                        <a class="btn btn-default" href="<s:url action="newAnswer">
-                                           <s:param name="id" value="#message.id"/></s:url>"
-                                           title="<s:text name="label.newAnswer.at" />: <s:property value="#message.id" />">
-                                            <span class="icon fa fa-envelope"></span>
-                                            <span class="sr-only"><s:text name="label.newAnswer"/></span>
-                                        </a>
-                                        <a class="btn btn-default" href="<s:url action="view">
-                                           <s:param name="id" value="#message.id"></s:param></s:url>"
-                                           title="<s:text name="label.view"/>&#32;<s:property value="#message.id"/>">
-                                            <span class="icon fa fa-info"></span>
-                                        </a>
-                                    </div>
-                                    <div class="btn-group btn-group-xs">
-                                        <a class="btn btn-warning"
-                                           href="<s:url action="trash"><s:param name="id" value="#message.id"/></s:url>"
-                                           title="<s:text name="label.remove" />: <s:property value="#message.id" />">
-                                            <span class="icon fa fa-times-circle-o"></span>
-                                            <span class="sr-only"><s:text name="label.remove"/></span>
-                                        </a>
-                                    </div>
-                                </td>
-                                <td><s:property value="#message.id"/>&#32;&ndash;&#32;<s:property
-                                        value="#message.typeDescr"/></td>
-                                <td class="text-center"><code><s:date name="#message.creationDate"
-                                                                      format="dd/MM/yyyy HH:mm"/></code></td>
-                                <s:if test="%{#answers.size()>0}">
-                                    <s:set var="iconImage">icon fa fa-check text-success</s:set>
-                                    <s:set var="thereIsAnswer" value="%{getText('label.answered')}"/>
-                                </s:if>
-                                <s:else>
-                                    <s:set var="iconImage">icon fa fa-pause text-warning</s:set>
-                                    <s:set var="thereIsAnswer" value="%{getText('label.waiting')}"/>
-                                </s:else>
-                                <td class="text-center">
-                                    <span class="<s:property value="iconImage" />"></span>
-                                    <span class="sr-only"><s:property value="thereIsAnswer"/></span>
-                                </td>
-                            </tr>
-                        </s:iterator>
+                                        <s:set var="thereIsAnswer" value="%{getText('label.answered')}"/>
+                                    </s:if>
+                                    <s:else>
+                                        <s:set var="iconImage">icon fa fa-pause text-warning</s:set>
+                                        <s:set var="thereIsAnswer" value="%{getText('label.waiting')}"/>
+                                    </s:else>
+                                    <td class="text-center">
+                                        <span class="<s:property value="iconImage" />"></span>
+                                        <span class="sr-only"><s:property value="thereIsAnswer"/></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown dropdown-kebab-pf">
+                                            <p class="sr-only"><s:text name="label.actions"/></p>
+                                            <span class="btn btn-menu-right dropdown-toggle" type="button"
+                                                  data-toggle="dropdown" aria-haspopup="true"
+                                                  aria-expanded="false">
+                                                                <span class="fa fa-ellipsis-v"></span>
+                                                            </span>
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li>
+                                                    <a href="<s:url action="newAnswer"><s:param name="id" value="#message.id"/></s:url>" title="<s:text name="label.newAnswer.at" />:&#32;<s:property value="#message.id" />">
+                                                        <s:text name="label.newAnswer" />
+                                                        <span class="sr-only"><s:text name="label.newAnswer"/></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="<s:url action="view"><s:param name="id" value="#message.id"></s:param></s:url>" title="<s:text name="label.view"/>&#32;<s:property value="#message.id"/>">
+                                                        <s:text name="label.view"/>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="<s:url action="trash"><s:param name="id" value="#message.id"/></s:url>" title="<s:text name="label.remove" />: <s:property value="#message.id" />">
+                                                        <s:text name="label.remove" />
+                                                        <span class="sr-only"><s:text name="label.remove"/></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </s:iterator>
+                        </tbody>
                     </table>
-
-                    <div class="pager">
-                        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
+                    <div class="content-view-pf-pagination table-view-pf-pagination clearfix">
+                        <div class="form-group">
+                                <span><s:include
+                                        value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
+                            <div class="mt-5">
+                                <s:include
+                                        value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                            </div>
+                        </div>
                     </div>
-
                 </wpsa:subset>
             </s:form>
         </s:else>
