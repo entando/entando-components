@@ -4,12 +4,12 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
-    <li><s:text name="jpavatar.admin.menu.integration"/></li>
+    <li><s:text name="jpwebdynamicform.menu.integration"/></li>
     <li>
-        <s:text name="jpavatar.admin.menu.uxcomponents"/>
+        <s:text name="jpwebdynamicform.menu.uxcomponents"/>
     </li>
     <li class="page-title-container">
-        <s:text name="breadcrumb.messageManagement"/>
+        <s:text name="jpwebdynamicform.name"/>
     </li>
 </ol>
 <div class="page-tabs-header">
