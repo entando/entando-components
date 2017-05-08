@@ -4,8 +4,8 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <table class="table table-bordered">
     <tr>
-        <th class="text-right"><s:text name="label.user" /></th>
-        <td><code><s:property value="%{message.username}" /></code></td>
+        <th class="text-right col-sm-2"><s:text name="label.user" /></th>
+        <td class="col-sm-10"><code><s:property value="%{message.username}" /></code></td>
     </tr>
     <tr>
         <th class="text-right"><s:text name="label.creationDate" /></th>

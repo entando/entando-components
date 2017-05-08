@@ -47,9 +47,9 @@
 
     <s:if test="%{messageTypes.size() > 0}">
         <div class="panel panel-default">
-            <span class="panel-body display-block">
-                <s:text name="messageTypes.intro" />
-            </span>
+            <div class="panel-body">
+                <s:text name="messageTypes.intro"/>
+            </div>
         </div>
 
         <s:form class="form-horizontal" action="edit">

@@ -29,6 +29,8 @@
 </div>
 <br>
 
+
+
 <div id="main">
     <s:set var="id" value="message.id" />
     <s:set var="typeDescr" value="message.typeDescr" />
@@ -47,6 +49,7 @@
                 <s:text name="title.messageManagement.details.info" />:&#32;<em><s:property value="#typeDescr"/></em>&#32;(<code><s:text name="%{#id}"/></code>)
             </div>
         </div>
+        
         <s:include value="inc/include_messageDetails.jsp" />
         <div class="panel panel-default">
             <div class="panel-heading">
