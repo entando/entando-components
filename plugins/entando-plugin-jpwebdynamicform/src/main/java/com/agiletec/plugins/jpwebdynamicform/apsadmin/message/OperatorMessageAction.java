@@ -70,8 +70,7 @@ public class OperatorMessageAction extends AbstractMessageAction implements IOpe
 			ApsSystemUtils.logThrowable(t, this, "newAnswer");
 			return FAILURE;
 		}
-//		return result;
-		return SUCCESS;
+		return result;
 	}
 	
 	@Override

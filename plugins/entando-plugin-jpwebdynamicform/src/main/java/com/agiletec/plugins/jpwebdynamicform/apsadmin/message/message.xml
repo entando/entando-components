@@ -39,7 +39,7 @@
         
     	<action name="newAnswer" class="jpwebdynamicformOperatorMessageAction" method="newAnswer" >
     		<result name="messageNotFound" type="chain">list</result>
-    		<!--<result name="input" type="chain">list</result>-->
+    		<result name="input" type="chain">list</result>
             <result type="tiles">admin.jpwebdynamicform.Message.entryAnswer</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param></interceptor-ref>
         </action>
