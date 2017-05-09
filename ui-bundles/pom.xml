@@ -67,7 +67,9 @@
         <module>app-views/entando-app-view-userreg-default</module>
         <!--
         <module>app-views/entando-app-view-addressbook-default</module>
+        -->
         <module>app-views/entando-app-view-newsletter-default</module>
+        <!--
         <module>app-views/entando-app-view-survey-default</module>
         -->
         <module>app-views/entando-app-view-avatar-default</module>
