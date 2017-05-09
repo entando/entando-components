@@ -30,7 +30,7 @@ public class IdeaInfoTag extends AbstractObjectInfoTag {
 	
 	@Override
 	protected Object getMasterObject(String keyValue) throws Throwable {
-		IIdeaManager ideaManager = (IIdeaManager) ApsWebApplicationUtils.getBean(JpCrowdSourcingSystemConstants.IDEA_MANAGER, this.pageContext);
+		IIdeaManager ideaManager = (IIdeaManager) ApsWebApplicationUtils.getBean(JpCrowdSourcingSystemConstants.IDEA_MANAGER, pageContext);
 		return ideaManager.getIdea(keyValue);
 	}
 	
