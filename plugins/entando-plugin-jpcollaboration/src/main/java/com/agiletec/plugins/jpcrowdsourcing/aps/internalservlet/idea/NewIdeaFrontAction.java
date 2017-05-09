@@ -108,7 +108,7 @@ public class NewIdeaFrontAction extends BaseAction implements INewIdeaFrontActio
 				Lang lang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 				Map<String, String> params = new HashMap<String, String>();
 				params.put("newIdea", "true");
-				String url = urlManager.createUrl(page, lang, params);
+				String url = urlManager.createURL(page, lang, params);
 				String encodedUrl = this.getResponse().encodeURL(url.toString());
 				this.setRedirectUrl(encodedUrl);
 				returnValue = "redirectPage";
