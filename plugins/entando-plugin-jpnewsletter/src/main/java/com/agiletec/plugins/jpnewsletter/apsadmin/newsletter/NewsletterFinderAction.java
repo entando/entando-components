@@ -28,6 +28,7 @@ import java.util.Set;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -137,11 +138,11 @@ public class NewsletterFinderAction extends ContentFinderAction {
 	}
 	
 	@Override
-	public List<SmallContentType> getContentTypes() {
-		List<SmallContentType> contentTypes = new ArrayList<SmallContentType>();
-		List<SmallContentType> systemContentTypes = super.getContentTypes();
+	public List<SmallEntityType> getContentTypes() {
+		List<SmallEntityType> contentTypes = new ArrayList<SmallEntityType>();
+		List<SmallEntityType> systemContentTypes = super.getContentTypes();
 		Collection<String> nwlContentTypes = this.getNewsletterManager().getNewsletterConfig().getContentTypes().keySet();
-		for (SmallContentType contentType : systemContentTypes) {
+		for (SmallEntityType contentType : systemContentTypes) {
 			if (nwlContentTypes.contains(contentType.getCode())) {
 				contentTypes.add(contentType);
 			}

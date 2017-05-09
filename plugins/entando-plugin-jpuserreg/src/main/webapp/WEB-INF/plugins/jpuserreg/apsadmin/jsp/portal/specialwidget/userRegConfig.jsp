@@ -98,14 +98,14 @@
                         </div>
                     </div>
 
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <div class="col-sm-12 margin-small-vertical">
-                                <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
-                                    <s:text name="%{getText('label.save')}"/>
-                                </wpsf:submit>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-12 margin-small-vertical">
+                        <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
+                            <s:text name="%{getText('label.save')}"/>
+                        </wpsf:submit>
                     </div>
                 </div>
             </div>
