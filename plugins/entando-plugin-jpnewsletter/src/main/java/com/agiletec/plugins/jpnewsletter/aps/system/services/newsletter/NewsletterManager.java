@@ -817,7 +817,7 @@ public class NewsletterManager extends AbstractService
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", token);
 		params.put("mailAddress", mailAddress);
-		return this.getUrlManager().createUrl(page, lang, params, false);
+		return this.getUrlManager().createURL(page, lang, params, false);
 	}
 	
 	protected String parseText(String defaultText, Map<String, String> params) {
@@ -928,7 +928,7 @@ public class NewsletterManager extends AbstractService
 		}
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("mailAddress", mailAddress);
-		return this.getUrlManager().createUrl(page, lang, params, false);
+		return this.getUrlManager().createURL(page, lang, params, false);
 	}
 	
 	protected boolean isSendingNewsletter() {
