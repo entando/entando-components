@@ -45,7 +45,7 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IIdeaManage
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.Idea;
 import com.agiletec.plugins.jpcrowdsourcing.apsadmin.portal.specialwidget.IdeaInstanceWidgetAction;
 
-public class ListIdeaFrontAction extends BaseAction implements IListIdeaFrontAction, ServletResponseAware {
+public class ListIdeaFrontAction extends BaseAction implements ServletResponseAware {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(ListIdeaFrontAction.class);
 	
@@ -65,8 +65,7 @@ public class ListIdeaFrontAction extends BaseAction implements IListIdeaFrontAct
 	public UserDetails getCurrentUser() {
 		return super.getCurrentUser();
 	}
-
-	@Override
+	
 	public String ideaLike() {
 		try {
 			IIdea idea = this.getIdeaManager().getIdea(this.getIdeaId());
@@ -92,8 +91,7 @@ public class ListIdeaFrontAction extends BaseAction implements IListIdeaFrontAct
 		}
 		return SUCCESS;
 	}
-
-	@Override
+	
 	public String ideaUnlike() {
 		try {
 			IIdea idea = this.getIdeaManager().getIdea(this.getIdeaId());
@@ -120,8 +118,7 @@ public class ListIdeaFrontAction extends BaseAction implements IListIdeaFrontAct
 		}
 		return SUCCESS;
 	}
-
-	@Override
+	
 	public List<String> getIdeas(Integer order) {
 		List<String> list = new ArrayList<String>();
 		try {
@@ -133,8 +130,7 @@ public class ListIdeaFrontAction extends BaseAction implements IListIdeaFrontAct
 		}
 		return list;
 	}
-
-	@Override
+	
 	public IIdea getIdea(String code) {
 		IIdea idea = null;
 		try {
@@ -223,7 +219,7 @@ public class ListIdeaFrontAction extends BaseAction implements IListIdeaFrontAct
 	public HttpServletResponse getServletResponse() {
 		return _servletResponse;
 	}
-	@Override
+	
 	public void setServletResponse(HttpServletResponse servletResponse) {
 		this._servletResponse = servletResponse;
 	}

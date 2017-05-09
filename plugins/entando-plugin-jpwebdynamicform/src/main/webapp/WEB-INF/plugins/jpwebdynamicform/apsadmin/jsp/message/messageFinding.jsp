@@ -271,11 +271,11 @@
                             <td><s:property value="#message.id"/>&#32;&ndash;&#32;<s:property value="#message.typeDescr"/></td>
                             <td class="text-center"><code><s:date name="#message.creationDate" format="dd/MM/yyyy HH:mm"/></code></td>
                                     <s:if test="%{#answers.size()>0}">
-                                        <s:set var="iconImage" id="iconImage">icon fa fa-check text-success</s:set>
+                                        <s:set var="iconImage">icon fa fa-check text-success</s:set>
                                 <s:set var="thereIsAnswer" value="%{getText('label.answered')}" />
                             </s:if>
                             <s:else>
-                                <s:set var="iconImage" id="iconImage">icon fa fa-pause text-warning</s:set>
+                                <s:set var="iconImage">icon fa fa-pause text-warning</s:set>
                                 <s:set var="thereIsAnswer" value="%{getText('label.waiting')}" />
                             </s:else>
                             <td class="text-center">
