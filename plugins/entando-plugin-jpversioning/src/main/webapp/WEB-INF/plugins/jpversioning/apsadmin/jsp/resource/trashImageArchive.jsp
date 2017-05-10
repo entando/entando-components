@@ -5,6 +5,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="breadcrumb.integrations"/></li>
+    <li><s:text name="breadcrumb.integrations.components"/></li>
     <li><s:text name="jpversioning.admin.menu"/></li>
     <li class="page-title-container"><s:text name="title.jpversioning.resources.images" /></li>
 </ol>
@@ -41,35 +43,24 @@
 <br/>
 
 <div id="main">
-    <s:form action="search" cssClass="form-horizontal">
-        <p class="sr-only"><wpsf:hidden name="resourceTypeCode" /></p>
-
-        <s:include value="inc/searchForm.jsp"/>
-    </s:form>
-
     <div class="subsection-light">
-        <s:form action="search">
+        <s:form action="search" cssClass="form-horizontal">
             <p class="sr-only">
-                <wpsf:hidden name="text" />
                 <wpsf:hidden name="resourceTypeCode" />
             </p>
+
+            <s:include value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/common/searchForm.jsp">
+                <s:param name="hasAdvancedFilters" value="false"/>
+            </s:include>
 
             <wpsa:subset source="trashedResources" count="10" objectName="groupResource" advanced="true" offset="5">
                 <s:set var="group" value="#groupResource" />
 
-                <div class="pager">
-                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
-                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
-                </div>
-
                 <div class="row">
-
                     <s:iterator var="resourceid">
                         <s:set var="resource" value="%{getTrashedResource(#resourceid)}" />
                         <div class="col-sm-4 col-md-3">
                             <div class="panel panel-default text-center">
-
-
                                 <s:set var="url0" >
                                     <s:url action="download" namespace="/do/jpversioning/Resource/Trash" >
                                         <s:param name="resourceId" value="#resourceid"/>
@@ -129,10 +120,14 @@
                     </s:iterator>
                 </div>
 
-                <div class="pager clear">
-                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+                <div class="content-view-pf-pagination clearfix">
+                    <div class="form-group">
+                        <span><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
+                        <div class="mt-5">
+                            <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                        </div>
+                    </div>
                 </div>
-
             </wpsa:subset>
         </s:form>
     </div>
