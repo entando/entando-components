@@ -7,20 +7,31 @@
 	<li class="page-title-container"><s:text
 			name="title.workflowNotifierManagement.config" /></li>
 </ol>
-<h1 class="page-title-container">
-	<div>
-		<s:text name="title.workflowNotifierManagement.config" />
-		<span class="pull-right"> <a tabindex="0" role="button"
-			data-toggle="popover" data-trigger="focus" data-html="true" title=""
-			data-content="TO be inserted" data-placement="left"
-			data-original-title=""> <i class="fa fa-question-circle-o"
-				aria-hidden="true"></i>
-		</a>
-		</span>
+<div class="page-tabs-header">
+	<div class="row">
+		<div class="col-sm-6">
+			<h1>
+				<s:text name="title.workflowNotifierManagement.config" />
+				<span class="pull-right"> <a tabindex="0" role="button"
+					data-toggle="popover" data-trigger="focus" data-html="true"
+					title="" data-content="TO be inserted" data-placement="left"
+					data-original-title=""> <i class="fa fa-question-circle-o"
+						aria-hidden="true"></i>
+				</a>
+				</span>
+			</h1>
+		</div>
+		<div class="col-sm-6">
+			<ul class="nav nav-tabs nav-justified nav-tabs-pattern">
+				<li><a
+					href="<s:url action="list" namespace="/do/jpcontentworkflow/Workflow" />"><s:text
+							name="jpcontentworkflow.menu.workflow" /></a></li>
+				<li class="active"><a
+					href="<s:url action="config" namespace="/do/jpcontentworkflow/Notifier" />"><s:text
+							name="jpcontentworkflow.menu.notifier" /></a></li>
+			</ul>
+		</div>
 	</div>
-</h1>
-<div class="text-right">
-	<div class="form-group-separator"></div>
 </div>
 <br>
 <div id="main">
