@@ -24,7 +24,7 @@
         <div class="col-sm-12 col-md-6">
             <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
                 <li class="active">
-                    <a href="<s:url namespace="/do/jpversioning/Content/Versioning" action="list" />"><s:text name="title.jpversioning.content"/></a>
+                    <a href="<s:url namespace="/do/jpversioning/Content/Versioning" action="list" />"><s:text name="jpversioning.menu.contentList"/></a>
                 </li>
                 <li>
                     <a href="<s:url action="list" namespace="/do/jpversioning/Resource/Trash"><s:param name="resourceTypeCode" >Image</s:param></s:url>" ><s:text name="jpversioning.menu.images" /></a>
@@ -40,50 +40,10 @@
 <br/>
 
 <div id="main">
-    <s:form class="form-horizontal" action="search">
-        <div class="form-group">
-            <label for="text" class="sr-only">
-                <s:text name="label.search.by"/>&#32;<s:text name="label.description"/>
-            </label>
-            <div class="input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-  	    	<span class="input-group-addon">
-  	        <!-- icon -->
-  	        <span class="icon fa fa-file-text-o fa-lg"
-                  title="<s:text name="label.search.by"/>&#32;<s:text name="label.description"/>">
-  	        </span>
-  	        </span>
+    <s:form action="search" class="form-horizontal">
 
-                <wpsf:textfield cssClass="form-control input-lg" name="descr" id="descr" placeholder="%{getText('label.description')}" title="%{getText('label.search.by')} %{getText('label.description')}"  />
+        <s:include value="inc/searchForm.jsp"/>
 
-                <!-- the search buttons -->
-                <span class="input-group-btn">
-  	          <!-- the main button -->
-  	          <wpsf:submit type="button" cssClass="btn btn-primary btn-lg" title="Search" >
-                  <span class="sr-only"><s:text name="label.search" /></span>
-                  <span class="icon fa fa-search"></span>
-              </wpsf:submit>
-                    <!-- the collapsible toggler -->
-  	          <button type="button" class="btn btn-primary btn-lg dropdown-toggle"
-                      data-toggle="collapse"
-                      data-target="#COLLAPSIBLE-CONTAINER-ID" title="Refine your search">
-  	              <span class="sr-only"><s:text name="title.searchFilters" /></span>
-  	              <span class="caret"></span>
-  	          </button>
-  	        </span>
-                </span><!-- end input-group-addon -->
-            </div><!-- input-group -->
-
-            <div class="input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div id="COLLAPSIBLE-CONTAINER-ID" class="collapse well collapse-input-group">
-                    <div class="form-group">
-                        <label for="contentType" class="control-label col-sm-2 text-right"><s:text name="label.type"/></label>
-                        <div class="col-sm-5 input-group">
-                            <wpsf:select name="contentType" id="contentType" list="contentTypes" listKey="code" listValue="descr" headerKey="" headerValue="%{getText('label.all')}" cssClass="form-control" ></wpsf:select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="subsection-light">
             <s:if test="%{null == latestVersions || latestVersions.size == 0 }">
                 <div class="alert alert-info">
