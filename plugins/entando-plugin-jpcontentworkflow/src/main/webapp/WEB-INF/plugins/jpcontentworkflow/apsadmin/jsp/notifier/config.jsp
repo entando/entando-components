@@ -1,126 +1,216 @@
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
-<%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
-<%@ taglib uri="/aps-core" prefix="wp" %>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib uri="/apsadmin-core" prefix="wpsa"%>
+<%@ taglib uri="/apsadmin-form" prefix="wpsf"%>
+<%@ taglib uri="/aps-core" prefix="wp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<h1 class="panel panel-default title-page">
-	<span class="panel-body display-block">
-		<s:text name="title.workflowManagement" />
-		&#32;/&#32;
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+	<li class="page-title-container"><s:text
+			name="title.workflowNotifierManagement.config" /></li>
+</ol>
+<h1 class="page-title-container">
+	<div>
 		<s:text name="title.workflowNotifierManagement.config" />
-	</span>
+		<span class="pull-right"> <a tabindex="0" role="button"
+			data-toggle="popover" data-trigger="focus" data-html="true" title=""
+			data-content="TO be inserted" data-placement="left"
+			data-original-title=""> <i class="fa fa-question-circle-o"
+				aria-hidden="true"></i>
+		</a>
+		</span>
+	</div>
 </h1>
+<div class="text-right">
+	<div class="form-group-separator"></div>
+</div>
+<br>
 <div id="main">
 	<s:form action="save" cssClass="">
 		<s:if test="hasFieldErrors()">
 			<div class="alert alert-danger alert-dismissable fade in">
-				<button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-				<h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
-					<ul class="margin-base-top">
-						<s:iterator value="fieldErrors">
-							<s:iterator value="value">
-								<li><s:property escapeHtml="false" /></li>
-							</s:iterator>
+				<button class="close" data-dismiss="alert">
+					<span class="icon fa fa-times"></span>
+				</button>
+				<span class="pficon pficon-error-circle-o"></span>
+				<s:text name="message.title.FieldErrors" />
+				<ul>
+					<s:iterator value="fieldErrors">
+						<s:iterator value="value">
+							<li><s:property escapeHtml="false" /></li>
 						</s:iterator>
-					</ul>
+					</s:iterator>
+				</ul>
 			</div>
 		</s:if>
 		<s:if test="hasActionErrors()">
 			<div class="alert alert-danger alert-dismissable fade in">
-				<button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-				<h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
-					<ul class="margin-base-top">
-						<s:iterator value="actionErrors">
-						<li><s:property escapeHtml="false"/></li>
+				<button class="close" data-dismiss="alert">
+					<span class="icon fa fa-times"></span>
+				</button>
+				<span class="pficon pficon-error-circle-o"></span>
+				<s:text name="message.title.FieldErrors" />
+				<ul>
+					<s:iterator value="actionErrors">
+						<li><s:property escapeHtml="false" /></li>
 					</s:iterator>
-					</ul>
+				</ul>
 			</div>
 		</s:if>
 
 		<fieldset class="col-xs-12">
-			<legend><s:text name="notifier.generalSettings" /></legend>
+			<legend>
+				<s:text name="notifier.generalSettings" />
+			</legend>
+			<div class="form-horizontal">
 				<div class="form-group">
-					<div class="checkbox">
-						<label for="active">
-							<wpsf:checkbox name="config.active" id="active" />&nbsp;
-							<s:text name="label.active" />
-						</label>
+					<div class="col-xs-12">
+						<label class="col-sm-2 control-label" for="active"><s:text
+								name="label.active" /></label>
+						<div class="col-sm-10">
+							<wpsf:checkbox name="config.active" id="active"
+								cssClass="bootstrap-switch" />
+						</div>
 					</div>
 				</div>
 		</fieldset>
 
 		<fieldset class="col-xs-12">
-			<legend><s:text name="label.schedulerSettings" /></legend>
-			<div class="form-group">
-				<label for="hoursDelay"><s:text name="label.hoursDelay" /></label>
-				<s:set var="hoursDelayVar" value="%{hoursDelay}" scope="page" />
-				<select name="config.hoursDelay" id="hoursDelay" class="form-control">
-					<c:forEach begin="1" end="10" varStatus="status">
-						<option <c:if test="${(status.count*24) == hoursDelayVar}">selected="selected"</c:if>
-							value="<c:out value="${status.count*24}" />" ><c:out value="${status.count*24}" /></option>
-					</c:forEach>
-				</select>
-			</div>
-			<div class="form-group">
-				<label for="jpcontentworkflownotifier_date_cal"><s:text name="label.startDate" /></label>
-				<wpsf:textfield name="startDate" id="jpcontentworkflownotifier_date_cal" cssClass="form-control datepicker" />
-				<span clasS="help-block">
-					<s:text name="label.startDatePattern" />
-				</span>
-			</div>
-			<div class="form-group row">
-				<div class="col-xs-12">
-					<label><s:text name="notifier.time"/></label>
+			<legend>
+				<s:text name="label.schedulerSettings" />
+			</legend>
+			<div class="form-horizontal">
+				<div class="form-group">
+					<div class="col-xs-12">
+						<label class="col-sm-2 control-label" for="hoursDelay"><s:text
+								name="label.hoursDelay" /></label>
+						<div class="col-sm-10">
+							<s:set var="hoursDelayVar" value="%{hoursDelay}" scope="page" />
+							<select name="config.hoursDelay" id="hoursDelay"
+								class="form-control">
+								<c:forEach begin="1" end="10" varStatus="status">
+									<option
+										<c:if test="${(status.count*24) == hoursDelayVar}">selected="selected"</c:if>
+										value="<c:out value="${status.count*24}" />"><c:out
+											value="${status.count*24}" /></option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
 				</div>
-				<div class="col-xs-3">
-					<label for="hour" class="sr-only">Hour</label>
-					<wpsf:select list="%{getCounterArray(0, 24)}" name="hour" id="hour" cssClass="form-control" />
+				<div class="form-group">
+					<div class="col-xs-12">
+						<label class="col-sm-2 control-label"
+							for="jpcontentworkflownotifier_date_cal"><s:text
+								name="label.startDate" /></label>
+						<div class="col-sm-10">
+							<wpsf:textfield name="startDate"
+								id="jpcontentworkflownotifier_date_cal"
+								cssClass="form-control datepicker" />
+							<span clasS="help-block"> <s:text
+									name="label.startDatePattern" />
+							</span>
+						</div>
+					</div>
 				</div>
-				<div class="col-xs-1 text-center" style="max-width: 0.5em; width: 0.5em;">:</div>
-				<div class="col-xs-3">
-					<label for="minute" class="sr-only">Minute</label>
-					<wpsf:select list="%{getCounterArray(0, 60)}" name="minute" id="minute" cssClass="form-control" />
+				<div class="form-group">
+					<div class="col-xs-12">
+						<label class="col-sm-2 control-label"><s:text
+								name="notifier.time" /></label>
+						<div class="col-sm-10">
+							<div class="col-xs-12">
+								<div class="col-xs-5">
+									<label for="hour" class="sr-only">Hour</label>
+									<wpsf:select list="%{getCounterArray(0, 24)}" name="hour"
+										id="hour" cssClass="form-control" />
+								</div>
+								<div class="col-xs-2 text-center">:</div>
+								<div class="col-xs-5">
+									<label for="minute" class="sr-only">Minute</label>
+									<wpsf:select list="%{getCounterArray(0, 60)}" name="minute"
+										id="minute" cssClass="form-control" />
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</fieldset>
 
 		<fieldset class="col-xs-12 margin-large-top">
-			<legend><s:text name="label.mailSettings" /></legend>
-			<div class="form-group">
-				<label for="senderCode"><s:text name="label.senderCode"/></label>
-				<wpsf:select name="config.senderCode" id="senderCode" list="senderCodes" cssClass="form-control" />
-			</div>
-			<div class="form-group">
+			<legend>
+				<s:text name="label.mailSettings" />
+			</legend>
+			<div class="form-horizontal">
 				<div class="form-group">
-					<div class="checkbox">
-						<label for="html">
-							<wpsf:checkbox name="config.html" id="html" />&nbsp;
-							<s:text name="label.html" />
-						</label>
+					<div class="col-xs-12">
+						<label class="col-sm-2 control-label" for="senderCode"><s:text
+								name="label.senderCode" /></label>
+						<div class="col-sm-10">
+							<wpsf:select name="config.senderCode" id="senderCode"
+								list="senderCodes" cssClass="form-control" />
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="form-group">
-				<label for="subject"><s:text name="label.subject" /></label>
-				<wpsf:textfield name="config.subject" id="subject" cssClass="form-control"/>
-			</div>
-			<div class="form-group">
-				<label for="jpcontentworkflow_header"><s:text name="label.header" /></label>
-				<wpsf:textarea name="config.header" id="jpcontentworkflow_header" cols="50" rows="10" cssClass="form-control"/>
-			</div>
-			<div class="form-group">
-				<label for="jpcontentworkflow_template"><s:text name="label.template" /></label>
-				<wpsf:textarea name="config.template" id="jpcontentworkflow_template" cols="50" rows="10" cssClass="form-control"/>
-			</div>
-			<div class="form-group">
-				<label for="jpcontentworkflow_footer"><s:text name="label.footer" /></label>
-				<wpsf:textarea name="config.footer" id="jpcontentworkflow_footer" cols="50" rows="10" cssClass="form-control"/>
+				<div class="form-group">
+					<div class="col-xs-12">
+						<label class="col-sm-2 control-label" for="html"><s:text
+								name="label.html" /></label>
+						<div class="col-sm-10">
+							<wpsf:checkbox name="config.html" id="html"
+								cssClass="bootstrap-switch" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-12">
+						<label class="col-sm-2 control-label" for="subject"><s:text
+								name="label.subject" /></label>
+						<div class="col-sm-10">
+							<wpsf:textfield name="config.subject" id="subject"
+								cssClass="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-12">
+						<label class="col-sm-2 control-label"
+							for="jpcontentworkflow_header"><s:text
+								name="label.header" /></label>
+						<div class="col-sm-10">
+							<wpsf:textarea name="config.header" id="jpcontentworkflow_header"
+								cols="50" rows="10" cssClass="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-12">
+						<label class="col-sm-2 control-label"
+							for="jpcontentworkflow_template"><s:text
+								name="label.template" /></label>
+						<div class="col-sm-10">
+							<wpsf:textarea name="config.template"
+								id="jpcontentworkflow_template" cols="50" rows="10"
+								cssClass="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-12">
+						<label class="col-sm-2 control-label"
+							for="jpcontentworkflow_footer"><s:text
+								name="label.footer" /></label>
+						<div class="col-sm-10">
+							<wpsf:textarea name="config.footer" id="jpcontentworkflow_footer"
+								cols="50" rows="10" cssClass="form-control" />
+						</div>
+					</div>
+				</div>
 			</div>
 		</fieldset>
 		<div class="form-horizontal">
 			<div class="form-group">
-				<div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-					<wpsf:submit type="button" cssClass="btn btn-primary btn-block">
+				<div
+					class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical pull-right">
+					<wpsf:submit type="button" cssClass="btn btn-primary pull-right">
 						<s:text name="label.save" />
 					</wpsf:submit>
 				</div>
