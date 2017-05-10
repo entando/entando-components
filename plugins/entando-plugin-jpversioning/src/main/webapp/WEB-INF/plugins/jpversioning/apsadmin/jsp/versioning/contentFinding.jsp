@@ -58,16 +58,16 @@
             <s:else>
                 <wpsa:subset source="latestVersions" count="10" objectName="groupContent" advanced="true" offset="5">
                     <s:set var="group" value="#groupContent" />
-                    <div class="table-responsive">
+                    <div class="col-xs-12 no-padding">
                         <table class="table table-striped table-bordered table-hover no-mb">
                             <thead>
                             <tr>
                                 <th><s:text name="jpversioning.label.description" /></th>
-                                <th><s:text name="jpversioning.label.id" /></th>
-                                <th><s:text name="jpversioning.label.contentType" /></th>
-                                <th><s:text name="jpversioning.label.username" /></th>
-                                <th><s:text name="jpversioning.label.lastVersion" /></th>
-                                <th><abbr title="<s:text name="name.onLine" />">P</abbr></th>
+                                <th class="text-center"><s:text name="jpversioning.label.id" /></th>
+                                <th class="text-center"><s:text name="jpversioning.label.contentType" /></th>
+                                <th class="text-center"><s:text name="jpversioning.label.username" /></th>
+                                <th class="text-center"><s:text name="jpversioning.label.lastVersion" /></th>
+                                <th class="text-center"><s:text name="status" /></th>
                                 <th class="text-center col-sm-1"><s:text name="label.actions"/></th>
                             </tr>
                             </thead>
@@ -103,8 +103,8 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
                                                 <li>
-                                                    <a href="<s:url action="history" ><s:param name="contentId" value="#contentVersion.contentId" /><s:param name="versionId" value="#contentVersion.id" /></s:url>"
-                                                       title="<s:text name="jpversioning.label.detailOf" />&#32;<s:property value="#contentVersion.descr" />"><s:property value="#contentVersion.descr" />
+                                                    <a href="<s:url action="history" ><s:param name="contentId" value="#contentVersion.contentId" /><s:param name="versionId" value="#contentVersion.id" /></s:url>">
+                                                        <s:property value="#contentVersion.descr" />
                                                     </a>
                                                 </li>
                                             </ul>
