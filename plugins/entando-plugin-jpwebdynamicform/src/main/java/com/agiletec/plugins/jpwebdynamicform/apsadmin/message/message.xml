@@ -12,7 +12,7 @@
     	<action name="list" class="jpwebdynamicformMessageFinderAction" >
             <result type="tiles">admin.jpwebdynamicform.Message.list</result>
         	<interceptor-ref name="entandoDefaultStack">
-        		<!--<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>-->
+        		<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
         		<param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param>
         	</interceptor-ref>
         </action>

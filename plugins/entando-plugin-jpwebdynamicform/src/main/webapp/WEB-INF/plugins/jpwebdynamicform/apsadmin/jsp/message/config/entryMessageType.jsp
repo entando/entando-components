@@ -4,6 +4,10 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="jpwebdynamicform.menu.integration"/></li>
+    <li>
+        <s:text name="jpwebdynamicform.menu.uxcomponents"/>
+    </li>
     <li>
         <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />"><s:text
                 name="breadcrumb.configuration"/></a>
@@ -25,22 +29,6 @@
                 </span>
             </h1>
         </div>
-        <%--<div class="col-sm-6">--%>
-            <%--<ul class="nav nav-tabs nav-justified nav-tabs-pattern">--%>
-                <%--<li>--%>
-                    <%--<a href="<s:url action="list" namespace="/do/jpwebdynamicform/Message/Operator" />"><s:text--%>
-                            <%--name="breadcrumb.messageManagement"/></a>--%>
-                <%--</li>--%>
-                <%--<li>--%>
-                    <%--<a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />"><s:text--%>
-                            <%--name="breadcrumb.configuration"/></a>--%>
-                <%--</li>--%>
-                <%--<li class="active">--%>
-                    <%--<a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="edit" />"><s:text--%>
-                            <%--name="breadcrumb.messageType"/></a>--%>
-                <%--</li>--%>
-            <%--</ul>--%>
-        <%--</div>--%>
     </div>
 </div>
 <br>
@@ -50,32 +38,6 @@
 
     <s:set var="removeAddressImage" ><wp:resourceURL />administration/common/img/icons/list-remove.png</s:set>
     <s:form action="save">
-        <%--<s:if test="hasFieldErrors()">--%>
-            <%--<div class="alert alert-danger alert-dismissable">--%>
-                <%--<button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>--%>
-                <%--<h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>--%>
-                <%--<ul class="margin-base-vertical">--%>
-                    <%--<s:iterator value="fieldErrors">--%>
-                        <%--<s:iterator value="value">--%>
-                            <%--<li><s:property escapeHtml="true" /></li>--%>
-                            <%--</s:iterator>--%>
-                        <%--</s:iterator>--%>
-                <%--</ul>--%>
-            <%--</div>--%>
-        <%--</s:if>--%>
-        <%--<s:if test="hasActionErrors()">--%>
-            <%--<div class="alert alert-danger alert-dismissable">--%>
-                <%--<button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>--%>
-                <%--<h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>--%>
-                <%--<ul class="margin-base-vertical">--%>
-                    <%--<s:iterator value="actionErrors">--%>
-                        <%--<li><s:property escapeHtml="true" /></li>--%>
-                        <%--</s:iterator>--%>
-                <%--</ul>--%>
-            <%--</div>--%>
-        <%--</s:if>--%>
-
-
         <s:if test="hasFieldErrors()">
             <div class="alert alert-danger alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
@@ -159,9 +121,6 @@
                 </label>
                 <div class="col-sm-10">
                     <wpsf:checkbox id="jpwebdynamicform_store" data-toggle="toggle" name="store" cssClass="radiocheck bootstrap-switch"/>
-                    <%--<input type="checkbox" id="jpwebdynamicform_store"--%>
-                           <%--name="store" data-toggle="toggle" class="radiocheck bootstrap-switch"--%>
-                           <%--<s:if test="store">checked="checked"</s:if> />--%>
                 </div>
             </div>
             <br/>
@@ -209,7 +168,7 @@
             <br/>
             <br/>
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="jpwebdynamicform_bodymodel">
+                <label class="col-sm-2 control-label" for="bodyModel">
                     <s:text name="label.bodyModel"/>
                 </label>
                 <div class="col-sm-10">
