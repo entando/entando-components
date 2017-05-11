@@ -28,7 +28,7 @@
                     <caption class="sr-only"><span><s:text name="title.jpversioning.versionList" /></span></caption>
                     <thead>
                     <tr>
-                        <th class="text-center"><abbr title="<s:text name="jpversioning.version.full" />"><s:text name="jpversioning.version.short" /></abbr></th>
+                        <th class="text-center"><s:text name="jpversioning.version.full" /></th>
                         <th><s:text name="jpversioning.label.description" /></th>
                         <th class="text-center"><s:text name="jpversioning.label.lastVersion" /></th>
                         <th class="text-center"><s:text name="jpversioning.label.username" /></th>

@@ -6,12 +6,12 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations"/></li>
     <li><s:text name="breadcrumb.integrations.components"/></li>
+    <li><s:text name="jpversioning.admin.menu" /></li>
     <li>
         <a href="<s:url action="list" namespace="do/jpversioning/Content/Versioning" />"
            title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpversioning.content" />">
-            <s:text name="jpversioning.admin.menu" /></a>
+            <s:text name="title.jpversioning.content" /></a>
     </li>
-    <li><s:text name="title.jpversioning.content" /></li>
     <li class="page-title-container"><s:text name="jpversioning.label.detail" /></li>
 </ol>
 
@@ -55,7 +55,7 @@
             <thead>
             <tr>
                 <th><s:text name="label.description" /></th>
-                <th class="text-center"><s:text name="jpversioning.label.version.date" /></th>
+                <th class="text-center col-sm-2"><s:text name="jpversioning.label.version.date" /></th>
                 <th class="text-center"><s:text name="jpversioning.label.author" /></th>
                 <th class="text-center"><s:text name="jpversioning.label.version" /></th>
                 <th class="text-center"><s:text name="jpversioning.label.status" /></th>
@@ -67,7 +67,7 @@
             <tbody>
             <tr>
                 <td><s:property value="contentVersion.descr" /></td>
-                <td class="text-center"><code><s:date name="contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></code></td>
+                <td class="text-center col-sm-2"><code><s:date name="contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></code></td>
                 <td class="text-center"><code><s:property value="%{contentVersion.username}" /></code></td>
                 <td class="text-center"><s:property value="contentVersion.version" /></td>
                 <td class="text-center"><s:property value="%{getText(contentVersion.status)}" /></td>
