@@ -32,7 +32,7 @@
 </div>
 
 <div id="main">
-    <p class="sr-only"><s:text name="note.workingOn" />:&#32;<em class="important"><s:property value="content.descr"/></em> (<s:property value="content.typeDescr"/>)</p>
+    <p class="sr-only"><s:text name="note.workingOn" />:&#32;<em class="important"><s:property value="contentVersion.descr"/></em> (<s:property value="contentVersion.typeDescr"/>)</p>
     <h3 class="sr-only"><s:text name="title.quickMenu" /></h3>
     <ul class="sr-only">
         <li><a href="#jpcontentinspection_metadata"><abbr title="<s:text name="metadata.full" />"><s:text name="metadata" /></abbr></a></li>
@@ -54,53 +54,56 @@
             <s:set var="contentGroup" value="%{getGroup(content.getMainGroup())}" />
             <thead>
             <tr>
-                <th><s:text name="label.description" /></th>
-                <th class="text-center col-sm-2"><s:text name="jpversioning.label.version.date" /></th>
-                <th class="text-center col-sm-1"><s:text name="jpversioning.label.author" /></th>
-                <th class="text-center col-sm-1"><s:text name="jpversioning.label.version" /></th>
-                <th class="text-center col-sm-1"><s:text name="jpversioning.label.status" /></th>
-                <th class="text-center col-sm-2"><s:text name="label.ownerGroup" /></th>
-                <th class="text-center col-sm-2"><s:text name="label.viewgroups" /></th>
-                <th class="text-center col-sm-2"><s:text name="label.categories" /></th>
+                <th class="text-nowrap"><s:text name="label.description" /></th>
+                <th class="text-center text-nowrap"><s:text name="jpversioning.label.version.date" /></th>
+                <th class="text-center text-nowrap"><s:text name="jpversioning.label.author" /></th>
+                <th class="text-center text-nowrap"><s:text name="jpversioning.label.version" /></th>
+                <th class="text-center text-nowrap"><s:text name="jpversioning.label.status" /></th>
+                <th class="text-center text-nowrap"><s:text name="label.ownerGroup" /></th>
+                <th class="text-center text-nowrap"><s:text name="label.viewgroups" /></th>
+                <th class="text-center text-nowrap"><s:text name="label.categories" /></th>
             </tr>
             </thead>
             <tbody>
             <tr>
                 <td><s:property value="%{contentVersion.descr}" /></td>
-                <td class="text-center"><code><s:date name="%{contentVersion.versionDate}" format="dd/MM/yyyy HH:mm" /></code></td>
+                <td class="text-center col-sm-2"><code><s:date name="%{contentVersion.versionDate}" format="dd/MM/yyyy HH:mm" /></code></td>
                 <td class="text-center"><code><s:property value="%{contentVersion.username}" /></code></td>
-                <td class="text-center text-nowrap"><code><s:property value="%{contentVersion.version}" />&#32;(<s:date name="%{contentVersion.versionDate}" format="dd/MM/yyyy" />)</code></td>
-                <s:if test="(%{contentVersion.status} == 'PUBLIC')">
-                    <s:set var="iconName">check</s:set>
-                    <s:set var="textVariant">success</s:set>
-                    <s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
-                </s:if>
-                <s:if test="(%{contentVersion.status} != 'PUBLIC')">
-                    <s:set var="iconName">pause</s:set>
-                    <s:set var="textVariant">warning</s:set>
-                    <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
-                </s:if>
-                <td class="text-center">
+                <td class="text-center col-sm-2">
+                    <code><s:property value="%{contentVersion.version}" />&#32;(<s:date name="%{contentVersion.versionDate}" format="dd/MM/yyyy" />)</code>
+                </td>
+                <td class="text-center col-sm-1">
+                    <s:if test="(#contentVersion.status == 'PUBLIC')">
+                        <s:set var="iconName">check</s:set>
+                        <s:set var="textVariant">success</s:set>
+                        <s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
+                    </s:if>
+                    <s:if test="(#contentVersion.status != 'PUBLIC')">
+                        <s:set var="iconName">pause</s:set>
+                        <s:set var="textVariant">warning</s:set>
+                        <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
+                    </s:if>
                     <span class="icon fa fa-<s:property value="iconName" /> text-<s:property value="textVariant" />" title="<s:property value="isOnlineStatus" />"></span>
                     <span class="sr-only"><s:property value="isOnlineStatus" /></span>
                 </td>
                 <td class="text-center"><s:property value="%{#contentGroup.descr}" /></td>
                 <td class="text-center">
                     <s:if test="%{content.groups.size() <= 0}">
-                    <span class="text-muted"><s:text name="noExtraGroup" /></span>
+                        <span class="text-muted"><s:text name="noExtraGroup" /></span>
                     </s:if>
                     <s:if test="%{content.groups.size() > 0}">
-                    <s:iterator value="content.groups" var="groupName">
-                        <s:property value="%{getGroupsMap()[#groupName].getDescr()}"/>&#32;
-                    </s:iterator>
+                        <s:iterator value="content.groups" var="groupName">
+                            <s:property value="%{getGroupsMap()[#groupName].getDescr()}"/>&#32;
+                        </s:iterator>
                     </s:if>
+                </td>
                 <td class="text-center">
                     <s:if test="%{content.categories.size() <=  0}">
                         <span class="text-muted"><s:text name="category.no.category" /></span>
                     </s:if>
                     <s:if test="%{content.categories.size() > 0}">
                         <s:iterator value="content.categories" var="contentCategory">
-                            <s:property value="#contentCategory.defaultFullTitle"/>&#32;
+                            <s:property value="#content.defaultFullTitle"/>&#32;
                         </s:iterator>
                     </s:if>
                 </td>

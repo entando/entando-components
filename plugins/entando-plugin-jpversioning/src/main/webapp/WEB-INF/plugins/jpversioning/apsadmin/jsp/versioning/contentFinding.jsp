@@ -62,13 +62,13 @@
                         <table class="table table-striped table-bordered table-hover no-mb">
                             <thead>
                             <tr>
-                                <th><s:text name="jpversioning.label.description" /></th>
-                                <th class="text-center"><s:text name="jpversioning.label.id" /></th>
-                                <th class="text-center col-sm-2"><s:text name="jpversioning.label.contentType" /></th>
-                                <th class="text-center col-sm-2"><s:text name="jpversioning.label.username" /></th>
-                                <th class="text-center col-sm-2"><s:text name="jpversioning.label.lastVersion" /></th>
-                                <th class="text-center col-sm-1"><s:text name="label.state" /></th>
-                                <th class="text-center col-sm-1"><s:text name="label.actions"/></th>
+                                <th class="text-nowrap"><s:text name="jpversioning.label.description" /></th>
+                                <th class="text-center text-nowrap"><s:text name="jpversioning.label.id" /></th>
+                                <th class="text-center text-nowrap"><s:text name="jpversioning.label.contentType" /></th>
+                                <th class="text-center text-nowrap"><s:text name="jpversioning.label.username" /></th>
+                                <th class="text-center text-nowrap"><s:text name="jpversioning.label.lastVersion" /></th>
+                                <th class="text-center text-nowrap"><s:text name="label.state" /></th>
+                                <th class="text-center text-nowrap"><s:text name="label.actions"/></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -80,17 +80,17 @@
                                     <td><s:property value="%{getSmallContentType(#contentVersion.contentType).descr}" /></td>
                                     <td class="text-center"><s:property value="#contentVersion.username" /></td>
                                     <td class="text-center text-nowrap"><code><s:property value="#contentVersion.version" />&#32;(<s:date name="#contentVersion.versionDate" format="dd/MM/yyyy" />)</code></td>
-                                    <s:if test="(#contentVersion.status == 'PUBLIC')">
-                                        <s:set var="iconName">check</s:set>
-                                        <s:set var="textVariant">success</s:set>
-                                        <s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
-                                    </s:if>
-                                    <s:if test="(#contentVersion.status != 'PUBLIC')">
-                                        <s:set var="iconName">pause</s:set>
-                                        <s:set var="textVariant">warning</s:set>
-                                        <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
-                                    </s:if>
                                     <td class="text-center">
+                                        <s:if test="(#contentVersion.status == 'PUBLIC')">
+                                            <s:set var="iconName">check</s:set>
+                                            <s:set var="textVariant">success</s:set>
+                                            <s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
+                                        </s:if>
+                                        <s:if test="(#contentVersion.status != 'PUBLIC')">
+                                            <s:set var="iconName">pause</s:set>
+                                            <s:set var="textVariant">warning</s:set>
+                                            <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
+                                        </s:if>
                                         <span class="icon fa fa-<s:property value="iconName" /> text-<s:property value="textVariant" />" title="<s:property value="isOnlineStatus" />"></span>
                                         <span class="sr-only"><s:property value="isOnlineStatus" /></span>
                                     </td>

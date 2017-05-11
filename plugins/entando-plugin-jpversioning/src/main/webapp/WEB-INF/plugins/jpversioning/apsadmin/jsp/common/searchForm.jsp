@@ -3,7 +3,7 @@
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 
 <div class="searchPanel form-group">
-    <label for="text" class="sr-only">
+    <label for="descr" class="sr-only">
         <s:text name="label.search.by"/>&#32;<s:text name="label.description"/>
     </label>
 
@@ -12,8 +12,8 @@
         <div class="form-group">
             <s:form action="search" cssClass="search-pf has-button">
                 <div class="col-sm-12 has-clear">
-                    <wpsf:textfield id="text"
-                                    name="text"
+                    <wpsf:textfield id="descr"
+                                    name="descr"
                                     cssClass="form-control input-lg"
                                     title="%{getText('label.search.by')+' '+getText('label.description')}"
                                     placeholder="%{getText('label.search.label')}"/>
