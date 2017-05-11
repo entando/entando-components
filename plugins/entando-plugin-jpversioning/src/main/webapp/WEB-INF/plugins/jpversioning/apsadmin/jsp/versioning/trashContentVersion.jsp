@@ -38,7 +38,7 @@
             <s:hidden name="backId" />
         </p>
         <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
-        <p class="esclamation-underline"><s:text name="title.eMailManagement.sendersConfig.trashSender"/></p>
+        <p class="esclamation-underline"><s:text name="title.versioning.delete.confirm"/></p>
         <p>
             <s:text name="message.jpversioning.confirmDelete" />&#32;<code>
             <s:property value="%{#contentVersion.version}"/>&#32;
