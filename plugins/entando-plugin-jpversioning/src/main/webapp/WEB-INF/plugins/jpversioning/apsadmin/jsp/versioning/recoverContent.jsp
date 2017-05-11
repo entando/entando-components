@@ -31,86 +31,86 @@
 <br/>
 
 <div id="main">
-	<table class="table table-bordered">
-		<tr>
-			<th class="text-right">
-				<s:text name="jpversioning.label.id" />
-			</th>
-			<td><s:property value="contentVersion.contentId" /></td>
-		</tr>
-		<tr>
-			<th class="text-right">
-				<s:text name="jpversioning.label.description" />
-			</th>
-			<td><s:property value="contentVersion.descr" /></td>
-		</tr>
-		<tr>
-			<th class="text-right">
-				<s:text name="jpversioning.label.lastVersion" />
-			</th>
-			<td><s:date name="contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></td>
-		</tr>
-		<tr>
-			<th class="text-right">
-				<s:text name="jpversioning.label.version" />
-			</th>
-			<td><s:property value="contentVersion.version" /></td>
-		</tr>
-	</table>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th class="text-center"><s:text name="jpversioning.label.id" /></th>
+            <th><s:text name="jpversioning.label.description" /></th>
+            <th class="text-center"><s:text name="jpversioning.label.lastVersion" /></th>
+            <th class="text-center"><s:text name="jpversioning.label.version" /></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="text-center"><s:property value="contentVersion.contentId" /></td>
+            <td><s:property value="contentVersion.descr" /></td>
+            <td class="text-center"><s:date name="contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></td>
+            <td class="text-center"><s:property value="contentVersion.version" /></td>
+        </tr>
+        </tbody>
+    </table>
 
-		<s:if test="%{trashedResources == null || trashedResources.size() == 0 }"></s:if>
-		<s:else>
-			<table class="generic">
-				<caption><span><s:text name="title.versioning.resource.image.trashed" /></span></caption>
-				<tr>
-					<th><s:text name="versioning.resource.id"/></th>
-					<th><s:text name="label.type"/></th>
-					<th><s:text name="label.description"/></th>
-					<th><s:text name="label.ownerGroup"/></th>
-				</tr>
-				<s:iterator var="id" value="trashedResources">
-					<s:set var="resourceItem" value="getTrashedResource(#id)" />
-					<tr>
-						<td><s:property value="#resourceItem.id" /></td>
-						<td><s:property value="#resourceItem.type" /></td>
-						<td><s:property value="#resourceItem.descr" /></td>
-						<td><s:property value="#resourceItem.mainGroup" /></td>
-					</tr>
-				</s:iterator>
-			</table>
-		</s:else>
+    <s:if test="%{trashedResources == null || trashedResources.size() == 0 }"></s:if>
+    <s:else>
+        <table class="generic">
+            <caption><span><s:text name="title.versioning.resource.image.trashed" /></span></caption>
+            <thead>
+            <tr>
+                <th class="text-center"><s:text name="versioning.resource.id"/></th>
+                <th class="text-center"><s:text name="label.type"/></th>
+                <th><s:text name="label.description"/></th>
+                <th class="text-center"><s:text name="label.ownerGroup"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            <s:iterator var="id" value="trashedResources">
+                <s:set var="resourceItem" value="getTrashedResource(#id)" />
+                <tr>
+                    <td class="text-center"><s:property value="#resourceItem.id" /></td>
+                    <td><s:property value="#resourceItem.type" /></td>
+                    <td class="text-center"><s:property value="#resourceItem.descr" /></td>
+                    <td class="text-center"><s:property value="#resourceItem.mainGroup" /></td>
+                </tr>
+            </s:iterator>
+            </tbody>
+        </table>
+    </s:else>
 
-		<s:if test="%{trashRemovedResources == null || trashRemovedResources.size() == 0 }"></s:if>
-		<s:else>
-			<table class="generic">
-				<caption><span><s:text name="title.versioning.resource.attach.trashed" /></span></caption>
-				<tr>
-					<th><s:text name="versioning.resource.id"/></th>
-					<th><s:text name="label.messages"/></th>
-				</tr>
-				<s:iterator var="id" value="trashRemovedResources">
-					<tr>
-						<td><s:property value="#id" /></td>
-						<td><s:text name="message.versioning.trashRemovedResource" /></td>
-					</tr>
-				</s:iterator>
-			</table>
-		</s:else>
-	<div class="subsection-light">
-		<s:form action="recover" >
-			<p class="sr-only">
-				<wpsf:hidden name="versionId" />
-				<wpsf:hidden name="contentId" />
-				<wpsf:hidden name="contentOnSessionMarker" />
-			</p>
-			<div class="alert alert-info">
-				<s:text name="jpversioning.confirmRestore.info" />
-			</div>
-			<div class="text-center margin-large-top">
-				<wpsf:submit type="button" cssClass="btn btn-primary btn-lg" >
-					<s:text name="label.confirm" />
-				</wpsf:submit>
-			</div>
-		</s:form>
-	</div>
+    <s:if test="%{trashRemovedResources == null || trashRemovedResources.size() == 0 }"></s:if>
+    <s:else>
+        <table class="generic">
+            <caption><span><s:text name="title.versioning.resource.attach.trashed" /></span></caption>
+            <thead>
+            <tr>
+                <th class="text-center"><s:text name="versioning.resource.id"/></th>
+                <th><s:text name="label.messages"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            <s:iterator var="id" value="trashRemovedResources">
+                <tr>
+                    <td class="text-center"><s:property value="#id" /></td>
+                    <td><s:text name="message.versioning.trashRemovedResource" /></td>
+                </tr>
+            </s:iterator>
+            </tbody>
+        </table>
+    </s:else>
+    <div class="subsection-light">
+        <s:form action="recover" >
+            <p class="sr-only">
+                <wpsf:hidden name="versionId" />
+                <wpsf:hidden name="contentId" />
+                <wpsf:hidden name="contentOnSessionMarker" />
+            </p>
+            <div class="alert alert-info">
+                <s:text name="jpversioning.confirmRestore.info" />
+            </div>
+            <div class="text-center margin-large-top">
+                <wpsf:submit type="button" cssClass="btn btn-primary btn-lg" >
+                    <s:text name="label.confirm" />
+                </wpsf:submit>
+            </div>
+        </s:form>
+    </div>
 </div>

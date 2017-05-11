@@ -45,7 +45,7 @@
                             <td class="text-center text-nowrap">
                                 <code><s:date name="#contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></code>
                             </td>
-                            <td><s:property value="#contentVersion.username" /></td>
+                            <td class="text-center"><s:property value="#contentVersion.username" /></td>
                             <td class="text-center">
                                 <div class="dropdown dropdown-kebab-pf">
                                     <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight"
