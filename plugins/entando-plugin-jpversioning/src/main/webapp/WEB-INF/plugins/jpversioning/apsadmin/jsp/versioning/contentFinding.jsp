@@ -67,7 +67,7 @@
                                 <th class="text-center"><s:text name="jpversioning.label.contentType" /></th>
                                 <th class="text-center"><s:text name="jpversioning.label.username" /></th>
                                 <th class="text-center"><s:text name="jpversioning.label.lastVersion" /></th>
-                                <th class="text-center"><s:text name="status" /></th>
+                                <th class="text-center"><s:text name="label.state" /></th>
                                 <th class="text-center col-sm-1"><s:text name="label.actions"/></th>
                             </tr>
                             </thead>
@@ -104,7 +104,7 @@
                                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
                                                 <li>
                                                     <a href="<s:url action="history" ><s:param name="contentId" value="#contentVersion.contentId" /><s:param name="versionId" value="#contentVersion.id" /></s:url>">
-                                                        <s:property value="#contentVersion.descr" />
+                                                        <s:text name="label.view" />
                                                     </a>
                                                 </li>
                                             </ul>
