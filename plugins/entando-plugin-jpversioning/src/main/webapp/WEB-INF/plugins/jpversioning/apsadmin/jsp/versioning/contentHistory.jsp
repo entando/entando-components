@@ -83,7 +83,6 @@
                         <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
                     </s:if>
                     <td class="text-center">
-                            <%--<s:property value="#contentVersion.status" />--%>
                         <span class="icon fa fa-<s:property value="iconName" /> text-<s:property value="textVariant" />" title="<s:property value="isOnlineStatus" />"></span>
                         <span class="sr-only"><s:property value="isOnlineStatus" /></span>
                     </td>

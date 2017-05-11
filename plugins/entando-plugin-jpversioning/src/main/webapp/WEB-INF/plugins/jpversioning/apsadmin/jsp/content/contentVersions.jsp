@@ -26,17 +26,28 @@
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <caption class="sr-only"><span><s:text name="title.jpversioning.versionList" /></span></caption>
+                    <thead>
                     <tr>
-                        <th class="text-center padding-large-left padding-large-right"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
-                        <th  class="text-center"><abbr title="<s:text name="jpversioning.version.full" />"><s:text name="jpversioning.version.short" /></abbr></th>
-                        <th class="text-center"><s:text name="jpversioning.label.description" /></th>
+                        <th class="text-center"><abbr title="<s:text name="jpversioning.version.full" />"><s:text name="jpversioning.version.short" /></abbr></th>
+                        <th><s:text name="jpversioning.label.description" /></th>
                         <th class="text-center"><s:text name="jpversioning.label.lastVersion" /></th>
-                        <th><s:text name="jpversioning.label.username" /></th>
+                        <th class="text-center"><s:text name="jpversioning.label.username" /></th>
+                        <th class="text-center"><s:text name="label.actions" /></th>
                     </tr>
+                    </thead>
 
+                    <tbody>
                     <s:iterator var="versionId">
                         <s:set var="contentVersion" value="%{getContentVersion(#versionId)}" />
                         <tr>
+                            <td class="text-center text-nowrap"><code><s:property value="#contentVersion.version" /></code></td>
+                            <td><s:property value="#contentVersion.descr" /></td>
+                            <td class="text-center text-nowrap">
+                                <code>
+                                    <s:date name="#contentVersion.versionDate" format="dd/MM/yyyy HH:mm" />
+                                </code>
+                            </td>
+                            <td><s:property value="#contentVersion.username" /></td>
                             <td class="text-center text-nowrap">
                                 <div class="btn-group btn-group-xs">
                                         <%-- edit --%>
@@ -57,16 +68,9 @@
                                         <span class="icon fa fa-reply"></span>
                                     </a>
                             </td>
-                            <td class="text-center text-nowrap"><code><s:property value="#contentVersion.version" /></code></td>
-                            <td><s:property value="#contentVersion.descr" /></td>
-                            <td class="text-center text-nowrap">
-                                <code>
-                                    <s:date name="#contentVersion.versionDate" format="dd/MM/yyyy HH:mm" />
-                                </code>
-                            </td>
-                            <td><s:property value="#contentVersion.username" /></td>
                         </tr>
                     </s:iterator>
+                    </tbody>
                 </table>
             </div>
             <div class="pager">
