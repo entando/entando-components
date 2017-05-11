@@ -106,8 +106,8 @@
             <div class="alert alert-info">
                 <s:text name="jpversioning.confirmRestore.info" />
             </div>
-            <div class="text-center margin-large-top">
-                <wpsf:submit type="button" cssClass="btn btn-primary btn-lg" >
+            <div class="text-center margin-large-top pull-right">
+                <wpsf:submit type="button" cssClass="btn btn-primary" >
                     <s:text name="label.confirm" />
                 </wpsf:submit>
             </div>
