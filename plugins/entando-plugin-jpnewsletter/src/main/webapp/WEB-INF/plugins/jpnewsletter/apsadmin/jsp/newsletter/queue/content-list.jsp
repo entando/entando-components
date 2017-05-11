@@ -5,7 +5,7 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
 	<li><s:text name="jpnewsletter.integrations"/></li>
 	<li><s:text name="jpnewsletter.components"/></li>
-	<li><s:text name="jpnewsletter.title.newsletterManagement"/></li>
+	<li><s:text name="jpnewsletter.admin.menu"/></li>
 	<li class="page-title-container">
 		<s:text name="jpnewsletter.title.newsletterQueue" />
 	</li>

@@ -6,7 +6,7 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="jpnewsletter.integrations"/></li>
     <li><s:text name="jpnewsletter.components"/></li>
-    <li><s:text name="jpnewsletter.title.newsletterManagement"/></li>
+    <li><s:text name="jpnewsletter.admin.menu"/></li>
     <li class="page-title-container">
         <s:text name="jpnewsletter.title.newsletterConfig"/>
     </li>
@@ -56,30 +56,7 @@
 
 <div id="main">
     <s:form class="form-horizontal">
-        <s:if test="hasActionErrors()">
-            <div class="alert alert-danger alert-dismissable fade in margin-base-top">
-                <button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors"/></h2>
-                <ul class="margin-base-top">
-                    <s:iterator value="ActionErrors">
-                        <li><s:property escapeHtml="false"/></li>
-                    </s:iterator>
-                </ul>
-            </div>
-        </s:if>
-        <s:if test="hasFieldErrors()">
-            <div class="alert alert-danger alert-dismissable fade in margin-base-top">
-                <button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="message.title.FieldErrors"/></h2>
-                <ul class="margin-base-top">
-                    <s:iterator value="fieldErrors">
-                        <s:iterator value="value">
-                            <li><s:property escapeHtml="false"/></li>
-                        </s:iterator>
-                    </s:iterator>
-                </ul>
-            </div>
-        </s:if>
+        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
 
         <fieldset class="margin-large-top">
             <legend>
@@ -105,39 +82,49 @@
                     </a>
                 </label>
                 <div class="col-sm-10">
-                    <s:set var="startSchedulerDateValue">
-                        <s:if test="null != newsletterConfig.startScheduler">
-                            <s:date name="newsletterConfig.startScheduler" format="dd/MM/yyyy"/>
-                        </s:if>
-                    </s:set>
-                    <wpsf:textfield id="jpnewsletter_day_cal" name="newsletterConfig.startScheduler"
-                                    value="%{#startSchedulerDateValue}" maxlength="254" cssClass="text"/>
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-xs-3">
 
-            <%--TODO (Ask Marcello)--%>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <label for="jpnewsletter_hour"><s:text name="jpnewsletter.hour"/>:</label>
-                    <wpsf:select id="jpnewsletter_hour" name="startSchedulerHour"
-                                 list="#{0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:12,13:13,14:14,15:15,16:16,17:17,18:18,19:19,20:20,21:21,22:22,23:23}"
-                                 cssClass="text width4em"/>
-                    <label for="jpnewsletter_min"><s:text name="jpnewsletter.minute"/>:</label>
-                    <wpsf:select id="jpnewsletter_min" name="startSchedulerMinute"
-                                 list="#{0:00,5:05,10:10,15:15,20:20,25:25,30:30,35:35,40:40,45:45,50:50,55:55}"
-                                 cssClass="text width4em"/>
-                    <label for="jpnewsletter_delay"><s:text name="jpnewsletter.delay"/>:</label>
-                    <wpsf:select id="jpnewsletter_delay" name="newsletterConfig.hoursDelay" list="#{
-                        24: getText('delay.Oneday'),
-                        48: getText('delay.Two.days'),
-                        96: getText('delay.Four.days'),
-                        168: getText('delay.One.Week'),
-                        336: getText('delay.Two.weeks'),
-                        672: getText('delay.Four.weeks')
-                    }" cssClass="text width6em"/>
+                            <s:set var="startSchedulerDateValue">
+                                <s:if test="null != newsletterConfig.startScheduler">
+                                    <s:date name="newsletterConfig.startScheduler" format="dd/MM/yyyy"/>
+                                    <%--<s:set var="newsletterConfig.startScheduler" value="#attribute.getFormattedDate('dd/MM/yyyy')" />--%>
+                                </s:if>
+                            </s:set>
+                            <div class="input-group date" data-provide="datepicker">
+                                <wpsf:textfield id="jpnewsletter_day_cal" name="newsletterConfig.startScheduler" value="%{#startSchedulerDateValue}" maxlength="254" cssClass="form-control" data-date-format="dd/mm/yyyy"/>
+                                <div class="input-group-addon">
+                                    <span class="fa fa-th"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-3">
+                            <wpsf:select id="jpnewsletter_hour" name="startSchedulerHour"
+                                         list="#{0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:12,13:13,14:14,15:15,16:16,17:17,18:18,19:19,20:20,21:21,22:22,23:23}"
+                                         cssClass="form-control"/>
+                            <span for="jpnewsletter_hour" class="help help-block"><s:text name="jpnewsletter.hour"/></span>
+                        </div>
+                        <div class="col-xs-3">
+                            <wpsf:select id="jpnewsletter_min" name="startSchedulerMinute"
+                                         list="#{0:00,5:05,10:10,15:15,20:20,25:25,30:30,35:35,40:40,45:45,50:50,55:55}"
+                                         cssClass="form-control"/>
+                            <span for="jpnewsletter_min" class="help help-block"><s:text name="jpnewsletter.minute"/></span>
+                        </div>
+                        <div class="col-xs-3">
+                            <wpsf:select id="jpnewsletter_delay" name="newsletterConfig.hoursDelay" list="#{
+                                    24: getText('delay.Oneday'),
+                                    48: getText('delay.Two.days'),
+                                    96: getText('delay.Four.days'),
+                                    168: getText('delay.One.Week'),
+                                    336: getText('delay.Two.weeks'),
+                                    672: getText('delay.Four.weeks')
+                                }" cssClass="form-control"/>
+                            <span for="jpnewsletter_delay" class="help help-block"><s:text name="jpnewsletter.delay"/></span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <%--DONE--%>
 
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="jpnewsletter_addcontenttype">
@@ -518,3 +505,12 @@
     </s:form>
 </div>
 <br>
+
+
+<script>
+    $(function () {
+        var picked = $(".datepicker").datepicker({
+            format: "dd/mm/yyyy"
+        });
+    });
+</script>
