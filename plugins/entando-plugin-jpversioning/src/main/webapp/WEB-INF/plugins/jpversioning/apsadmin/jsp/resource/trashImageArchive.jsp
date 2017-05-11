@@ -75,78 +75,75 @@
                     </div>
                 </div>
             </div>
+        </s:form>
 
+        <div class="list-group list-view-pf list-view-pf-view">
             <wpsa:subset source="trashedResources" count="10" objectName="groupResource" advanced="true" offset="5">
-                <s:set var="group" value="#groupResource" />
-                <div class="row">
-                    <s:iterator var="resourceid">
-                        <s:set var="resource" value="%{getTrashedResource(#resourceid)}" />
-                        <div class="col-sm-4 col-md-3">
-                            <div class="panel panel-default text-center">
-                                <s:set var="url0" >
-                                    <s:url action="download" namespace="/do/jpversioning/Resource/Trash" >
-                                        <s:param name="resourceId" value="#resourceid"/>
-                                        <s:param name="size" value="0"/>
-                                        <s:param name="langCode" value=""/>
-                                    </s:url>
-                                </s:set>
+            <s:set var="group" value="#groupResource" />
 
-                                <s:set var="url1" >
-                                    <s:url action="download" namespace="/do/jpversioning/Resource/Trash" >
-                                        <s:param name="resourceId" value="#resourceid"/>
-                                        <s:param name="size" value="1"/>
-                                        <s:param name="langCode" value=""/>
-                                    </s:url>
-                                </s:set>
+            <s:iterator var="resourceid">
+                <s:set var="resource" value="%{getTrashedResource(#resourceid)}" />
+                <div class="list-group-item">
+                    <s:set var="url0" >
+                        <s:url action="download" namespace="/do/jpversioning/Resource/Trash" >
+                            <s:param name="resourceId" value="#resourceid"/>
+                            <s:param name="size" value="0"/>
+                            <s:param name="langCode" value=""/>
+                        </s:url>
+                    </s:set>
 
-                                <div class="panel-heading text-right padding-small-vertical padding-small-right">
-                                    <a href="<s:url action="remove" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>" class="icon fa fa-times-circle text-warning">
-                                        <span class="sr-only">Delete</span>
-                                    </a>
-                                </div>
+                    <s:set var="url1" >
+                        <s:url action="download" namespace="/do/jpversioning/Resource/Trash" >
+                            <s:param name="resourceId" value="#resourceid"/>
+                            <s:param name="size" value="1"/>
+                            <s:param name="langCode" value=""/>
+                        </s:url>
+                    </s:set>
 
-                                <div>
-                                        <%-- Dimension forced for img thumbnail --%>
-                                    <img src="<c:out value="${url1}" escapeXml="false"/>" alt=" " style="height:90px;max-width:130px" class="margin-small-top" />
-                                </div>
+                    <div class="list-view-pf-left col-o" style="width: 130px">
+                        <img src="<c:out value="${url1}" escapeXml="false"/>" class="img-responsive center-block"/>
+                    </div>
 
-                                <div class="btn-group margin-small-vertical">
-                                    <a href="<s:url action="restore" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>" title="<s:text name="jpversioning.label.restore" />"
-                                       class="btn btn-default"
-                                       title="<s:text name="jpversioning.label.restore" />: <s:property value="#resource.descr" />">
-                                        <span class="icon fa fa-reply"></span>&#32;
-                                        <s:text name="jpversioning.label.restore" />
-                                    </a>
-
-                                    <button type="button" class="btn btn-info" data-toggle="popover">
-                                        <span class="icon fa fa-info"></span>
-                                        <span class="sr-only"><s:text name="label.info" /></span>
-                                    </button>
-                                </div>
-
-                                <s:set var="fileInfo"><s:property value="#resource.descr" /></s:set>
-                                <script>
-                                    $("[data-toggle=popover]").popover({
-                                        html: true,
-                                        placement: "top",
-                                        content: '<s:property value="fileInfo" escapeHtml="false" />'
-                                    });
-                                </script>
+                    <div class="list-view-pf-body">
+                        <div class="list-view-pf">
+                            <div class="list-group-item-heading" style="font-size: 16px">
+                                <s:property value="#resource.descr" />
                             </div>
                         </div>
-
-                    </s:iterator>
-                </div>
-
-                <div class="content-view-pf-pagination clearfix">
-                    <div class="form-group">
-                        <span><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
-                        <div class="mt-5">
-                            <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                        <div class="list-view-pf-actions">
+                            <div class="dropdown pull-right dropdown-kebab-pf">
+                                <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span class="fa fa-ellipsis-v"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right"
+                                    aria-labelledby="dropdownKebabRight">
+                                    <li>
+                                        <a href="<s:url action="restore" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>"
+                                           title="<s:text name="jpversioning.label.restore" />">
+                                            <s:text name="jpversioning.label.restore" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="<s:url action="remove" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>">
+                                            <s:text name="label.delete"/>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </wpsa:subset>
-        </s:form>
+            </s:iterator>
+        </div>
+        <div class="content-view-pf-pagination clearfix">
+            <div class="form-group">
+                <span><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
+                <div class="mt-5">
+                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                </div>
+            </div>
+        </div>
+        </wpsa:subset>
     </div>
 </div>
