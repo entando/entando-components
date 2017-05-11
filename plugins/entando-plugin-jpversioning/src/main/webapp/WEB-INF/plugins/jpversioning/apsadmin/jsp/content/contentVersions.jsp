@@ -35,7 +35,6 @@
                         <th class="text-center"><s:text name="label.actions" /></th>
                     </tr>
                     </thead>
-
                     <tbody>
                     <s:iterator var="versionId">
                         <s:set var="contentVersion" value="%{getContentVersion(#versionId)}" />
