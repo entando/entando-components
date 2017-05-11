@@ -80,7 +80,6 @@
         <div class="list-group list-view-pf list-view-pf-view">
             <wpsa:subset source="trashedResources" count="10" objectName="groupResource" advanced="true" offset="5">
             <s:set var="group" value="#groupResource" />
-
             <s:iterator var="resourceid">
                 <s:set var="resource" value="%{getTrashedResource(#resourceid)}" />
                 <div class="list-group-item">
