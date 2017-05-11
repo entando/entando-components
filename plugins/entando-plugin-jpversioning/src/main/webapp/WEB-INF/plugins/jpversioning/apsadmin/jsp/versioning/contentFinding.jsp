@@ -78,7 +78,7 @@
                                     <td><s:property value="#contentVersion.descr" /></td>
                                     <td class="text-center text-nowrap"><code><s:property value="#contentVersion.contentId" /></code></td>
                                     <td><s:property value="%{getSmallContentType(#contentVersion.contentType).descr}" /></td>
-                                    <td><s:property value="#contentVersion.username" /></td>
+                                    <td class="text-center"><s:property value="#contentVersion.username" /></td>
                                     <td class="text-center text-nowrap"><code><s:property value="#contentVersion.version" />&#32;(<s:date name="#contentVersion.versionDate" format="dd/MM/yyyy" />)</code></td>
 
                                     <s:if test="(#contentVersion.status == 'PUBLIC')">
