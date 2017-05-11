@@ -19,12 +19,12 @@
             <s:set var="group" value="#groupContent" />
             <div class="pager">
                 <p><s:text name="list.pagerIntro" />&#32;<s:property value="#group.size" />&#32;<s:text name="list.pagerOutro" /><br />
-                    <s:text name="label.page" />: [<s:property value="#group.currItem" />/<s:property value="#group.maxItem" />].</p>
+                    <s:text name="label.page" />: [<s:property value="#group.currItem" />/<s:property value="#group.maxItem" />]</p>
                 <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-bordered">
+            <div class="col-xs-12 no-padding">
+                <table class="table table-striped table-bordered table-hover no-mb">
                     <caption class="sr-only"><span><s:text name="title.jpversioning.versionList" /></span></caption>
                     <thead>
                     <tr>
@@ -43,30 +43,39 @@
                             <td class="text-center text-nowrap"><code><s:property value="#contentVersion.version" /></code></td>
                             <td><s:property value="#contentVersion.descr" /></td>
                             <td class="text-center text-nowrap">
-                                <code>
-                                    <s:date name="#contentVersion.versionDate" format="dd/MM/yyyy HH:mm" />
-                                </code>
+                                <code><s:date name="#contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></code>
                             </td>
                             <td><s:property value="#contentVersion.username" /></td>
-                            <td class="text-center text-nowrap">
-                                <div class="btn-group btn-group-xs">
-                                        <%-- edit --%>
-                                    <a class="btn btn-default" href="<s:url action="preview" namespace="/do/jpversioning/Content/Versioning">
-							   <s:param name="versionId" value="#contentVersion.id" />
-							   <s:param name="contentId" value="%{content.id}" />
-							   <s:param name="fromEdit" value="true" />
-							   <s:param name="contentOnSessionMarker" value="contentOnSessionMarker" /></s:url>" >
-                                        <span class="sr-only"><s:text name="label.edit" />&#32;<s:property value="#model.description" /></span>
-                                        <span class="icon fa fa-info"></span>
-                                    </a>
-                                    <a class="btn btn-default" href="<s:url action="entryRecover" namespace="/do/jpversioning/Content/Versioning" >
-							   <s:param name="versionId" value="#contentVersion.id" />
-							   <s:param name="contentId" value="%{content.id}" />
-							   <s:param name="fromEdit" value="true" />
-							   <s:param name="contentOnSessionMarker" value="contentOnSessionMarker" /></s:url>" title="<s:text name="jpversioning.label.restore" />:&#32;<s:property value="#contentVersion.version" />" >
-                                        <span class="sr-only"><s:text name="label.edit" />&#32;<s:property value="#model.description" /></span>
-                                        <span class="icon fa fa-reply"></span>
-                                    </a>
+                            <td class="text-center">
+                                <div class="dropdown dropdown-kebab-pf">
+                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <span class="fa fa-ellipsis-v"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
+                                        <li>
+                                            <a href="<s:url action="history" ><s:param name="contentId" value="#contentVersion.contentId" /><s:param name="versionId" value="#contentVersion.id" /></s:url>">
+                                                <s:text name="label.view" />
+                                            </a>
+                                            <a href="<s:url action="preview" namespace="/do/jpversioning/Content/Versioning">
+                                               <s:param name="versionId" value="#contentVersion.id" />
+                                               <s:param name="contentId" value="%{content.id}" />
+                                               <s:param name="fromEdit" value="true" />
+                                               <s:param name="contentOnSessionMarker" value="contentOnSessionMarker" /></s:url>" >
+                                                <s:text name="label.edit" />
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<s:url action="entryRecover" namespace="/do/jpversioning/Content/Versioning" >
+                                               <s:param name="versionId" value="#contentVersion.id" />
+                                               <s:param name="contentId" value="%{content.id}" />
+                                               <s:param name="fromEdit" value="true" />
+                                               <s:param name="contentOnSessionMarker" value="contentOnSessionMarker" /></s:url>">
+                                                <s:text name="jpversioning.label.restore" />
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                     </s:iterator>
