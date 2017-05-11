@@ -92,39 +92,64 @@
                         </s:url>
                     </s:set>
 
-                    <div class="row">
-                        <div class="col-lg-12">
-
-                            <div class="text-right no-margin">
-                                <a href="<s:url action="remove" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>" title="<s:text name="label.remove" />: <s:property value="#resource.descr" /> "><span class="icon fa fa-times-circle text-warning"></span></a>
-                            </div>
-                            <a href="<s:url action="restore" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>" title="<s:text name="jpversioning.label.restore" />" ><span class="icon fa fa-reply"></span></a>
-
-                            <s:set var="fileDescr" value="#resource.descr" />
-                            <s:if test='%{#fileDescr.length()>90}'>
-                                <s:set var="fileDescr" value='%{#fileDescr.substring(0,30)+"..."+#fileDescr.substring(#fileDescr.length()-30)}' />
-                                <abbr title="<s:property value="#resource.descr" />">
-                                    <s:property value="#fileDescr" /></abbr>
-                            </s:if>
-                            <s:else>
-                                <s:property value="#resource.descr" />
-                            </s:else>
-                            <s:set var="fileName" value="#resourceInstance.fileName" />
-                            <a href="<c:out value="${url}" escapeXml="false"/>" title="<s:text name="label.download" />">
-                                <s:if test='%{#fileName.length()>25}'>
-                                    <s:set var="fileName" value='%{#fileName.substring(0,10)+"..."+#fileName.substring(#fileName.length()-10)}' />
-                                    <code class="margin-small-bottom"><abbr title="<s:property value="#resourceInstance.fileName" />"><s:property value="#fileName" /></abbr></code>
+                    <div class="list-view-pf-body">
+                        <div class="list-view-pf-description">
+                            <div class="list-group-item-heading">
+                                <s:set var="fileDescr" value="#resource.descr" />
+                                <s:if test='%{#fileDescr.length()>90}'>
+                                    <s:set var="fileDescr" value='%{#fileDescr.substring(0,30)+"..."+#fileDescr.substring(#fileDescr.length()-30)}' />
+                                    <abbr title="<s:property value="#resource.descr" />">
+                                        <s:property value="#fileDescr" /></abbr>
                                 </s:if>
                                 <s:else>
-                                    <code><s:property value="#fileName" /></code>
+                                    <s:property value="#resource.descr" />
                                 </s:else>
-                            </a>
-                            <span class="badge">
-						<s:property value="%{#resourceInstance.fileLength.replaceAll(' ', '&nbsp;')}"
-                                    escapeXml="false"
-                                    escapeHtml="false"
-                                    escapeJavaScript="false" />
-						</span>
+                                <s:set var="fileName" value="#resourceInstance.fileName" />
+                            </div>
+                        </div>
+                        <div class="list-view-pf-additional-info">
+                            <div class="list-view-pf-additional-info-item">
+                                <span class="badge">
+                                    <s:property value="%{#resourceInstance.fileLength.replaceAll(' ', '&nbsp;')}"
+                                                escapeXml="false"
+                                                escapeHtml="false"
+                                                escapeJavaScript="false" />
+                                        </span>
+                            </div>
+                            <div class="list-view-pf-additional-info-item">
+                                <a href="<c:out value="${url}" escapeXml="false"/>" title="<s:text name="label.download" />">
+                                    <s:if test='%{#fileName.length()>25}'>
+                                        <s:set var="fileName" value='%{#fileName.substring(0,10)+"..."+#fileName.substring(#fileName.length()-10)}' />
+                                        <code class="margin-small-bottom"><abbr title="<s:property value="#resourceInstance.fileName" />"><s:property value="#fileName" /></abbr></code>
+                                    </s:if>
+                                    <s:else>
+                                        <code><s:property value="#fileName" /></code>
+                                    </s:else>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="list-view-pf-actions">
+                        <div class="dropdown pull-right dropdown-kebab-pf">
+                            <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span class="fa fa-ellipsis-v"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right"
+                                aria-labelledby="dropdownKebabRight">
+                                <li>
+                                    <a href="<s:url action="restore" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>"
+                                       title="<s:text name="jpversioning.label.restore" />">
+                                        <s:text name="jpversioning.label.restore" />
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<s:url action="remove" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>">
+                                        <s:text name="label.delete"/>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

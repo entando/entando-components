@@ -104,7 +104,7 @@
                     </div>
 
                     <div class="list-view-pf-body">
-                        <div class="list-view-pf">
+                        <div class="list-view-pf-description">
                             <div class="list-group-item-heading" style="font-size: 16px">
                                 <s:property value="#resource.descr" />
                             </div>
