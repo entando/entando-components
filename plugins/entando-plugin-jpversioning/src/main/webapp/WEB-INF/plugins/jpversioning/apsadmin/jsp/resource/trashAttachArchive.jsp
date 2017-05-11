@@ -30,10 +30,10 @@
                     <a href="<s:url namespace="/do/jpversioning/Content/Versioning" action="list" />"><s:text name="jpversioning.menu.contentList"/></a>
                 </li>
                 <li>
-                    <a href="<s:url action="list" namespace="/do/jpversioning/Resource/Trash"><s:param name="resourceTypeCode">Image</s:param></s:url>" ><s:text name="jpversioning.menu.images" /></a>
+                    <a href="<s:url action="list" namespace="/do/jpversioning/Resource/Trash"><s:param name="resourceTypeCode" >Image</s:param></s:url>" ><s:text name="jpversioning.menu.images" /></a>
                 </li>
                 <li class="active">
-                    <a href="<s:url action="list" namespace="/do/jpversioning/Resource/Trash"><s:param name="resourceTypeCode">Attach</s:param></s:url>" ><s:text name="jpversioning.menu.attaches" /></a>
+                    <a href="<s:url action="list" namespace="/do/jpversioning/Resource/Trash"><s:param name="resourceTypeCode" >Attach</s:param></s:url>" ><s:text name="jpversioning.menu.attaches" /></a>
                 </li>
             </ul>
         </div>
@@ -49,9 +49,32 @@
                 <wpsf:hidden name="resourceTypeCode" />
             </p>
 
-            <s:include value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/common/searchForm.jsp">
-                <s:param name="hasAdvancedFilters" value="false"/>
-            </s:include>
+            <div class="searchPanel form-group">
+                <label for="descr" class="sr-only">
+                    <s:text name="label.search.by"/>&#32;<s:text name="label.description"/>
+                </label>
+
+                <div class="well col-md-offset-3 col-md-6">
+                    <p class="search-label col-sm-12"><s:text name="label.search.label"/></p>
+                    <div class="form-group">
+                        <div class="col-sm-12 has-clear">
+                            <wpsf:textfield id="text"
+                                            name="text"
+                                            cssClass="form-control input-lg"
+                                            title="%{getText('label.search.by')+' '+getText('label.description')}"
+                                            placeholder="%{getText('label.search.label')}"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
+                                <span class="sr-only"><s:text name="label.search" /></span>
+                                <s:text name="label.search" />
+                            </wpsf:submit>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <wpsa:subset source="trashedResources" count="10" objectName="groupResource" advanced="true" offset="5">
                 <s:set var="group" value="#groupResource" />
@@ -116,6 +139,7 @@
                     </div>
                 </div>
             </wpsa:subset>
+
         </s:form>
     </div>
 </div>

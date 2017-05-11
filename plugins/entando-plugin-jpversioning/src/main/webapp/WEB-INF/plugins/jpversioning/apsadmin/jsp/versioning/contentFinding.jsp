@@ -44,9 +44,62 @@
 <div id="main">
     <s:form action="search" class="form-horizontal">
 
-        <s:include value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/common/searchForm.jsp">
-            <s:param name="hasAdvancedFilters" value="true"/>
-        </s:include>
+        <div class="searchPanel form-group">
+            <label for="descr" class="sr-only">
+                <s:text name="label.search.by"/>&#32;<s:text name="label.description"/>
+            </label>
+
+            <div class="well col-md-offset-3 col-md-6">
+                <p class="search-label col-sm-12"><s:text name="label.search.label"/></p>
+                <div class="form-group">
+                    <div class="col-sm-12 has-clear">
+                        <wpsf:textfield id="descr"
+                                        name="descr"
+                                        cssClass="form-control input-lg"
+                                        title="%{getText('label.search.by')+' '+getText('label.description')}"
+                                        placeholder="%{getText('label.search.label')}"/>
+                    </div>
+                </div>
+                <div class="panel-group" id="accordion-markup" >
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="padding:0 0 10px;">
+                            <p class="panel-title active" style="text-align: end">
+                                <a data-toggle="collapse" data-parent="#accordion-markup" href="#collapseOne">
+                                    <s:text name="label.search.advanced" />
+                                </a>
+                            </p>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                    <%-- Type --%>
+                                <div class="form-group">
+                                    <label for="contentType" class="control-label col-sm-2" ><s:text name="label.type" /></label>
+                                    <div class="col-sm-9" >
+                                        <wpsf:select name="contentType"
+                                                     id="contentType"
+                                                     list="contentTypes"
+                                                     listKey="code"
+                                                     listValue="descr"
+                                                     headerKey=""
+                                                     headerValue="%{getText('label.all')}"
+                                                     cssClass="form-control" >
+                                        </wpsf:select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
+                            <span class="sr-only"><s:text name="label.search" /></span>
+                            <s:text name="label.search" />
+                        </wpsf:submit>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="subsection-light">
             <s:if test="%{null == latestVersions || latestVersions.size == 0 }">
