@@ -55,7 +55,6 @@
 
             <wpsa:subset source="trashedResources" count="10" objectName="groupResource" advanced="true" offset="5">
                 <s:set var="group" value="#groupResource" />
-
                 <div class="row">
                     <s:iterator var="resourceid">
                         <s:set var="resource" value="%{getTrashedResource(#resourceid)}" />
@@ -102,10 +101,7 @@
                                     </button>
                                 </div>
 
-                                <s:set var="fileInfo">
-                                    <s:property value="#resource.descr" />
-                                </s:set>
-
+                                <s:set var="fileInfo"><s:property value="#resource.descr" /></s:set>
                                 <script>
                                     $("[data-toggle=popover]").popover({
                                         html: true,
@@ -113,10 +109,8 @@
                                         content: '<s:property value="fileInfo" escapeHtml="false" />'
                                     });
                                 </script>
-
                             </div>
                         </div>
-
                     </s:iterator>
                 </div>
 

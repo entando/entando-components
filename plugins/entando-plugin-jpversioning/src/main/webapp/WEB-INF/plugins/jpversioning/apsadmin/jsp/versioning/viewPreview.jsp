@@ -66,11 +66,24 @@
             </thead>
             <tbody>
             <tr>
-                <td><s:property value="contentVersion.descr" /></td>
-                <td class="text-center"><code><s:date name="contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></code></td>
+                <td><s:property value="%{contentVersion.descr}" /></td>
+                <td class="text-center"><code><s:date name="%{contentVersion.versionDate}" format="dd/MM/yyyy HH:mm" /></code></td>
                 <td class="text-center"><code><s:property value="%{contentVersion.username}" /></code></td>
-                <td class="text-center"><s:property value="contentVersion.version" /></td>
-                <td class="text-center"><s:property value="%{getText(contentVersion.status)}" /></td>
+                <td class="text-center text-nowrap"><code><s:property value="%{contentVersion.version}" />&#32;(<s:date name="%{contentVersion.versionDate}" format="dd/MM/yyyy" />)</code></td>
+                <s:if test="(%{contentVersion.status} == 'PUBLIC')">
+                    <s:set var="iconName">check</s:set>
+                    <s:set var="textVariant">success</s:set>
+                    <s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
+                </s:if>
+                <s:if test="(%{contentVersion.status} != 'PUBLIC')">
+                    <s:set var="iconName">pause</s:set>
+                    <s:set var="textVariant">warning</s:set>
+                    <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
+                </s:if>
+                <td class="text-center">
+                    <span class="icon fa fa-<s:property value="iconName" /> text-<s:property value="textVariant" />" title="<s:property value="isOnlineStatus" />"></span>
+                    <span class="sr-only"><s:property value="isOnlineStatus" /></span>
+                </td>
                 <td class="text-center"><s:property value="%{#contentGroup.descr}" /></td>
                 <td class="text-center">
                     <s:if test="%{content.groups.size() <= 0}">
@@ -81,7 +94,7 @@
                         <s:property value="%{getGroupsMap()[#groupName].getDescr()}"/>&#32;
                     </s:iterator>
                     </s:if>
-                <td class="text-center col-sm-2">
+                <td class="text-center">
                     <s:if test="%{content.categories.size() <=  0}">
                         <span class="text-muted"><s:text name="category.no.category" /></span>
                     </s:if>
