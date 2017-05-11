@@ -46,7 +46,7 @@
 <br>
 
 <div id="main">
-    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
+    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp"/>
 
     <s:form action="search" cssClass="form-horizontal" role="search">
         <div class="searchPanel form-group">
@@ -55,17 +55,17 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="entityTypeCode"
                            class="control-label col-sm-2 text-right"> <s:text
-                            name="label.type" />
+                            name="label.type"/>
                     </label>
                     <div class="col-sm-9 input-group"
                          style="padding: 0 20px 0 20px">
                         <wpsf:select cssClass="form-control" name="entityTypeCode"
                                      id="entityTypeCode" list="entityPrototypes" listKey="typeCode"
                                      listValue="typeDescr" headerKey=""
-                                     headerValue="%{getText('label.all')}" />
+                                     headerValue="%{getText('label.all')}"/>
                         <div class="input-group-btn">
                             <wpsf:submit cssClass="btn btn-default"
-                                         value="%{getText('label.set')}" />
+                                         value="%{getText('label.set')}"/>
                         </div>
                     </div>
                 </div>
@@ -86,8 +86,7 @@
                                     <label for="jpwebdynamicform_from_cal"
                                            class="control-label col-sm-2 text-right"><s:text name="label.from"/></label>
                                     <div class="col-sm-5">
-                                        <wpsf:textfield name="from" id="jpwebdynamicform_from_cal"
-                                                        cssClass="form-control"/>
+                                        <wpsf:textfield name="from" id="jpwebdynamicform_from_cal" cssClass="form-control"/>
                                     </div>
                                 </div>
 
@@ -128,7 +127,8 @@
                                                        for="<s:property value="#currentFieldId" />"><s:property
                                                         value="#attribute.name"/></label>
                                                 <div class="col-sm-5">
-                                                    <s:set var="textInputFieldName"><s:property value="#attribute.name"/>_textFieldName</s:set>
+                                                    <s:set var="textInputFieldName"><s:property
+                                                            value="#attribute.name"/>_textFieldName</s:set>
                                                     <wpsf:textfield id="%{#currentFieldId}" cssClass="form-control"
                                                                     name="%{#textInputFieldName}"
                                                                     value="%{getSearchFormFieldValue(#textInputFieldName)}"/><br/>
@@ -146,7 +146,8 @@
                                                         value="#attribute.name"/>&#32;<s:text name="Start"/></label>
                                                 <div class="col-sm-5">
                                                     <wpsf:textfield id="%{#currentFieldId}_dateStartFieldName_cal"
-                                                                    cssClass="form-control datepicker" name="%{#dateStartInputFieldName}"
+                                                                    cssClass="form-control datepicker"
+                                                                    name="%{#dateStartInputFieldName}"
                                                                     value="%{getSearchFormFieldValue(#dateStartInputFieldName)}"/>
                                                     <span class="help-block">dd/MM/yyyy</span>
                                                 </div>
@@ -156,7 +157,8 @@
                                                        for="<s:property value="#currentFieldId" />_end_cal"><s:property
                                                         value="#attribute.name"/>&#32;<s:text name="End"/></label>
                                                 <div class="col-sm-5">
-                                                    <wpsf:textfield id="%{#currentFieldId}_end_cal" cssClass="form-control datepicker"
+                                                    <wpsf:textfield id="%{#currentFieldId}_end_cal"
+                                                                    cssClass="form-control datepicker"
                                                                     name="%{#dateEndInputFieldName}"
                                                                     value="%{getSearchFormFieldValue(#dateEndInputFieldName)}"/>
                                                     <span class="help-block">dd/MM/yyyy</span>
@@ -171,17 +173,20 @@
                                                     value="#attribute.name"/>_numberEndFieldName</s:set>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2 text-right"
-                                                       for="<s:property value="#currentFieldId" />_start"><s:property value="#attribute.name"/>&#32;<s:text
+                                                       for="<s:property value="#currentFieldId" />_start"><s:property
+                                                        value="#attribute.name"/>&#32;<s:text
                                                         name="Start"/></label>
                                                 <div class="col-sm-5">
-                                                    <wpsf:textfield id="%{#currentFieldId}_start" cssClass="form-control"
+                                                    <wpsf:textfield id="%{#currentFieldId}_start"
+                                                                    cssClass="form-control"
                                                                     name="%{#numberStartInputFieldName}"
                                                                     value="%{getSearchFormFieldValue(#numberStartInputFieldName)}"/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2 text-right"
-                                                       for="<s:property value="#currentFieldId" />_end"><s:property value="#attribute.name"/>&#32;<s:text
+                                                       for="<s:property value="#currentFieldId" />_end"><s:property
+                                                        value="#attribute.name"/>&#32;<s:text
                                                         name="End"/></label>
                                                 <div class="col-sm-5">
                                                     <wpsf:textfield id="%{#currentFieldId}_end" cssClass="form-control"
@@ -194,10 +199,12 @@
                                         <s:elseif test="#attribute.type == 'Boolean'">
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2 text-right"
-                                                       for="<s:property value="#currentFieldId"/>"><s:property value="#attribute.name"/></label>&nbsp;
+                                                       for="<s:property value="#currentFieldId"/>"><s:property
+                                                        value="#attribute.name"/></label>&nbsp;
                                                 <div class="col-sm-5">
                                                     <div class="checkbox">
-                                                        <wpsf:checkbox name="%{#attribute.name}" id="%{#currentFieldId}"/>
+                                                        <wpsf:checkbox name="%{#attribute.name}"
+                                                                       id="%{#currentFieldId}"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -205,23 +212,31 @@
 
                                         <s:elseif test="#attribute.type == 'ThreeState'">
                                             <div class="form-group">
-                                                <label class="control-label col-sm-2 text-right"><s:property value="#attribute.name"/></label>
+                                                <label class="control-label col-sm-2 text-right"><s:property
+                                                        value="#attribute.name"/></label>
                                                 <div class="col-sm-5">
-                                                    <label for="none_<s:property value="%{#currentFieldId}" />" class="radio-inline">
-                                                        <wpsf:radio name="%{#attribute.name}" id="none_%{#currentFieldId}" value=""
-                                                                    checked="%{#attribute.booleanValue == null}" type="radio"/>
+                                                    <label for="none_<s:property value="%{#currentFieldId}" />"
+                                                           class="radio-inline">
+                                                        <wpsf:radio name="%{#attribute.name}"
+                                                                    id="none_%{#currentFieldId}" value=""
+                                                                    checked="%{#attribute.booleanValue == null}"
+                                                                    type="radio"/>
                                                         <s:text name="label.bothYesAndNo"/>
                                                     </label>
 
-                                                    <label for="true_<s:property value="%{#currentFieldId}" />" class="radio-inline">
-                                                        <wpsf:radio name="%{#attribute.name}" id="true_%{#currentFieldId}" value="true"
+                                                    <label for="true_<s:property value="%{#currentFieldId}" />"
+                                                           class="radio-inline">
+                                                        <wpsf:radio name="%{#attribute.name}"
+                                                                    id="true_%{#currentFieldId}" value="true"
                                                                     checked="%{#attribute.booleanValue != null && #attribute.booleanValue == true}"
                                                                     type="radio"/>
                                                         <s:text name="label.yes"/>
                                                     </label>
-                                                    <label for="false_<s:property value="%{#currentFieldId}" />" class="radio-inline">
+                                                    <label for="false_<s:property value="%{#currentFieldId}" />"
+                                                           class="radio-inline">
                                                         <s:text name="label.no"/>
-                                                        <wpsf:radio name="%{#attribute.name}" id="false_%{#currentFieldId}" value="false"
+                                                        <wpsf:radio name="%{#attribute.name}"
+                                                                    id="false_%{#currentFieldId}" value="false"
                                                                     checked="%{#attribute.booleanValue != null && #attribute.booleanValue == false}"
                                                                     type="radio"/>
                                                     </label>
@@ -306,7 +321,7 @@
                             <th class="col-xs-6"><s:text name="label.request"/></th>
                             <th class="col-xs-4 text-center"><s:text name="label.creationDate"/></th>
                             <th class="col-xs-1 text-center"><s:text name="label.status"/></th>
-                            <th class="col-xs-1 text-center"><s:text name="label.actions" /></th>
+                            <th class="col-xs-1 text-center"><s:text name="label.actions"/></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -315,7 +330,8 @@
                             <s:set var="answers" value="%{getAnswers(#messageId)}"/>
                             <tr>
                                 <td>
-                                    <s:property value="#message.id"/>&#32;&ndash;&#32;<s:property value="#message.typeDescr"/>
+                                    <s:property value="#message.id"/>&#32;&ndash;&#32;<s:property
+                                        value="#message.typeDescr"/>
                                 </td>
                                 <td class="text-center">
                                     <s:date name="#message.creationDate" format="dd/MM/yyyy HH:mm"/>
@@ -342,19 +358,22 @@
                                                             </span>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                             <li>
-                                                <a href="<s:url action="newAnswer"><s:param name="id" value="#message.id"/></s:url>" title="<s:text name="label.newAnswer.at" />:&#32;<s:property value="#message.id" />">
-                                                    <s:text name="label.newAnswer" />
+                                                <a href="<s:url action="newAnswer"><s:param name="id" value="#message.id"/></s:url>"
+                                                   title="<s:text name="label.newAnswer.at" />:&#32;<s:property value="#message.id" />">
+                                                    <s:text name="label.newAnswer"/>
                                                     <span class="sr-only"><s:text name="label.newAnswer"/></span>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="<s:url action="view"><s:param name="id" value="#message.id"></s:param></s:url>" title="<s:text name="label.view"/>&#32;<s:property value="#message.id"/>">
+                                                <a href="<s:url action="view"><s:param name="id" value="#message.id"></s:param></s:url>"
+                                                   title="<s:text name="label.view"/>&#32;<s:property value="#message.id"/>">
                                                     <s:text name="label.view"/>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="<s:url action="trash"><s:param name="id" value="#message.id"/></s:url>" title="<s:text name="label.remove" />: <s:property value="#message.id" />">
-                                                    <s:text name="label.remove" />
+                                                <a href="<s:url action="trash"><s:param name="id" value="#message.id"/></s:url>"
+                                                   title="<s:text name="label.remove" />: <s:property value="#message.id" />">
+                                                    <s:text name="label.remove"/>
                                                     <span class="sr-only"><s:text name="label.remove"/></span>
                                                 </a>
                                             </li>
@@ -368,10 +387,10 @@
                     <div class="content-view-pf-pagination table-view-pf-pagination clearfix">
                         <div class="form-group">
                                 <span><s:include
-                                        value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
+                                        value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/></span>
                             <div class="mt-5">
                                 <s:include
-                                        value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                                        value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp"/>
                             </div>
                         </div>
                     </div>
