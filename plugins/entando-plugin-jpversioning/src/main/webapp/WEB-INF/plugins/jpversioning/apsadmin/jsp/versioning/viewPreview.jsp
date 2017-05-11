@@ -56,9 +56,9 @@
             <tr>
                 <th><s:text name="label.description" /></th>
                 <th class="text-center col-sm-2"><s:text name="jpversioning.label.version.date" /></th>
-                <th class="text-center col-sm-2"><s:text name="jpversioning.label.author" /></th>
-                <th class="text-center col-sm-2"><s:text name="jpversioning.label.version" /></th>
-                <th class="text-center col-sm-2"><s:text name="jpversioning.label.status" /></th>
+                <th class="text-center col-sm-1"><s:text name="jpversioning.label.author" /></th>
+                <th class="text-center col-sm-1"><s:text name="jpversioning.label.version" /></th>
+                <th class="text-center col-sm-1"><s:text name="jpversioning.label.status" /></th>
                 <th class="text-center col-sm-2"><s:text name="label.ownerGroup" /></th>
                 <th class="text-center col-sm-2"><s:text name="label.viewgroups" /></th>
                 <th class="text-center col-sm-2"><s:text name="label.categories" /></th>
@@ -67,12 +67,12 @@
             <tbody>
             <tr>
                 <td><s:property value="contentVersion.descr" /></td>
-                <td class="text-center col-sm-2"><code><s:date name="contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></code></td>
-                <td class="text-center col-sm-2"><code><s:property value="%{contentVersion.username}" /></code></td>
-                <td class="text-center col-sm-2"><s:property value="contentVersion.version" /></td>
-                <td class="text-center col-sm-2"><s:property value="%{getText(contentVersion.status)}" /></td>
-                <td class="text-center col-sm-2"><s:property value="%{#contentGroup.descr}" /></td>
-                <td class="text-center col-sm-2">
+                <td class="text-center"><code><s:date name="contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></code></td>
+                <td class="text-center"><code><s:property value="%{contentVersion.username}" /></code></td>
+                <td class="text-center"><s:property value="contentVersion.version" /></td>
+                <td class="text-center"><s:property value="%{getText(contentVersion.status)}" /></td>
+                <td class="text-center"><s:property value="%{#contentGroup.descr}" /></td>
+                <td class="text-center">
                     <s:if test="%{content.groups.size() <= 0}">
                     <span class="text-muted"><s:text name="noExtraGroup" /></span>
                     </s:if>

@@ -49,9 +49,9 @@
                 <wpsf:hidden name="resourceTypeCode" />
             </p>
 
-            <%--<s:include value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/common/searchForm.jsp">--%>
-                <%--<s:param name="hasAdvancedFilters" value="false"/>--%>
-            <%--</s:include>--%>
+            <s:include value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/common/searchForm.jsp">
+                <s:param name="hasAdvancedFilters" value="false"/>
+            </s:include>
 
             <wpsa:subset source="trashedResources" count="10" objectName="groupResource" advanced="true" offset="5">
                 <s:set var="group" value="#groupResource" />
