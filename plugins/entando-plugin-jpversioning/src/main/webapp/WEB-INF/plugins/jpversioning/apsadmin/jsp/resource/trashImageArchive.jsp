@@ -43,7 +43,7 @@
 <br/>
 
 <div id="main">
-    <div class="subsection-light">
+    <div class="container-fluid subsection-light">
         <s:form action="search" cssClass="form-horizontal">
             <p class="sr-only">
                 <wpsf:hidden name="resourceTypeCode" />
@@ -110,27 +110,28 @@
                                 <s:property value="#resource.descr" />
                             </div>
                         </div>
-                        <div class="list-view-pf-actions">
-                            <div class="dropdown pull-right dropdown-kebab-pf">
-                                <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span class="fa fa-ellipsis-v"></span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right"
-                                    aria-labelledby="dropdownKebabRight">
-                                    <li>
-                                        <a href="<s:url action="restore" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>"
-                                           title="<s:text name="jpversioning.label.restore" />">
-                                            <s:text name="jpversioning.label.restore" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<s:url action="remove" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>">
-                                            <s:text name="label.delete"/>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                    </div>
+
+                    <div class="list-view-pf-actions">
+                        <div class="dropdown pull-right dropdown-kebab-pf">
+                            <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span class="fa fa-ellipsis-v"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right"
+                                aria-labelledby="dropdownKebabRight">
+                                <li>
+                                    <a href="<s:url action="restore" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>"
+                                       title="<s:text name="jpversioning.label.restore" />">
+                                        <s:text name="jpversioning.label.restore" />
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<s:url action="remove" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>">
+                                        <s:text name="label.delete"/>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
