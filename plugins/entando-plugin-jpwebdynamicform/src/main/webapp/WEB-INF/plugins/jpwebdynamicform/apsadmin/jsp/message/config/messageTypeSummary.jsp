@@ -1,34 +1,69 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
-<h1 class="panel panel-default title-page">
-    <span class="panel-body display-block">
-        <s:text name="title.messageManagement" />&#32;/&#32;
-        <s:text name="title.messageManagement.configuration" />&#32;/&#32;
-        <s:text name="label.messageTypes" />
-    </span>
-</h1>
+
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="jpwebdynamicform.menu.integration"/></li>
+    <li>
+        <s:text name="jpwebdynamicform.menu.uxcomponents"/>
+    </li>
+    <li class="page-title-container">
+        <s:text name="breadcrumb.configuration"/>
+    </li>
+</ol>
+<div class="page-tabs-header">
+    <div class="row">
+        <div class="col-sm-6">
+            <h1 class="page-title-container">
+                <s:text name="title.message.original"/>
+                <span class="pull-right">
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+                       data-content="TO be inserted" data-placement="left" data-original-title="">
+                        <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                    </a>
+                </span>
+            </h1>
+        </div>
+        <div class="col-sm-6">
+            <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
+                <li>
+                    <a href="<s:url action="list" namespace="/do/jpwebdynamicform/Message/Operator" />"><s:text
+                            name="breadcrumb.messageList"/></a>
+                </li>
+                <li class="active">
+                    <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />"><s:text
+                            name="breadcrumb.configuration"/></a>
+                </li>
+                <li>
+                    <a href="<s:url namespace="/do/Entity" action="initViewEntityTypes"><s:param name="entityManagerName">jpwebdynamicformMessageManager</s:param></s:url>"><s:text
+                            name="breadcrumb.messageType"/></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<br>
+
 <div id="main">
 
     <s:if test="%{messageTypes.size() > 0}">
         <div class="panel panel-default">
-            <span class="panel-body display-block">
-                <s:text name="messageTypes.intro" />
-            </span>
+            <div class="panel-body">
+                <s:text name="messageTypes.intro"/>
+            </div>
         </div>
 
-        <s:form action="edit">
-            <fieldset class="col-xs-12">
-                <legend><s:text name="label.info" /></legend>
-                <div class="form-group">
-                    <label for="jpwebdynamicform_message_type"><s:text name="label.messageType" /></label>
+        <s:form class="form-horizontal" action="edit">
+            <%--<legend><s:text name="label.info" /></legend>--%>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="jpwebdynamicform_message_type"><s:text name="label.messageType" /></label>
+                <div class="col-sm-10">
                     <wpsf:select id="jpwebdynamicform_message_type" name="typeCode" list="%{messageTypes}" listKey="code" listValue="descr" cssClass="form-control"/>
                 </div>
-            </fieldset>
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-                        <wpsf:submit type="button" cssClass="btn btn-default btn-block">
-                            <span class="icon fa fa-play-circle-o"></span>&#32;
+            </div>
+            <div class="form-group pull-right">
+                <div class="col-xs-12">
+                    <div class="btn-group">
+                        <wpsf:submit type="button" cssClass="btn btn-primary ">
                             <s:text name="%{getText('label.continue')}" />
                         </wpsf:submit>
                     </div>
