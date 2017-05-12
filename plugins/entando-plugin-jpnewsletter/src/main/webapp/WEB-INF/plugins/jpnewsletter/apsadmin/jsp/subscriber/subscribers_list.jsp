@@ -61,24 +61,28 @@
     <s:form action="search" cssClass="form-horizontal" role="search">
         <div class="searchPanel form-group">
             <div class="well col-md-offset-3 col-md-6">
-                <p class="search-label col-sm-12"><s:text name="label.search.by"/>&#32;<s:text name="label.description"/></p>
+                <p class="search-label col-sm-12"><s:text name="label.search.by"/>&#32;<s:text
+                        name="label.description"/></p>
                 <label for="search_mail_add" class="sr-only">
                     <s:text name="label.search.by"/>&#32;<s:text name="jpnewsletter.label.search.mailaddress"/>
                 </label>
                 <div class="form-group">
                     <s:form action="search" cssClass="search-pf has-button">
                         <div class="col-sm-12 has-clear">
-                            <wpsf:textfield name="insertedMailAddress" id="search_mail_add" cssClass="form-control input-lg" placeholder="%{getText('label.email')}" title="%{getText('label.search.by')} %{getText('jpnewsletter.label.search.mailaddress')}"/>
+                            <wpsf:textfield name="insertedMailAddress" id="search_mail_add"
+                                            cssClass="form-control input-lg" placeholder="%{getText('label.email')}"
+                                            title="%{getText('label.search.by')} %{getText('jpnewsletter.label.search.mailaddress')}"/>
                         </div>
                     </s:form>
                 </div>
 
-                <div class="panel-group" id="accordion-markup" >
+                <div class="panel-group" id="accordion-markup">
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding:0 0 10px;">
                             <p class="panel-title active" style="text-align: end">
-                                <a data-toggle="collapse" data-parent="#accordion-markup" href="#collapseSubscriberSearch">
-                                    <s:text name="label.search.advanced" />
+                                <a data-toggle="collapse" data-parent="#accordion-markup"
+                                   href="#collapseSubscriberSearch">
+                                    <s:text name="label.search.advanced"/>
                                 </a>
                             </p>
                         </div>
@@ -121,14 +125,13 @@
                 <div class="col-sm-12">
                     <div class="form-group">
                         <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
-                            <s:text name="label.search" />
+                            <s:text name="label.search"/>
                         </wpsf:submit>
                     </div>
                 </div>
             </div>
         </div>
     </s:form>
-
 
 
     <%--TODO--%>
@@ -139,34 +142,26 @@
         <s:if test="#subscribersVar != null && #subscribersVar.size() > 0">
             <wpsa:subset source="#subscribersVar" count="10" objectName="groupSubscribers" advanced="true" offset="5">
                 <s:set var="group" value="#groupSubscribers"/>
-                <div class="text-center">
+                <%--<div class="text-center">
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/>
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
-                </div>
+                </div>--%>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered table-hover no-mb">
+                        <thead>
                         <tr>
-                            <th class="text-center padding-large-left padding-large-right col-xs-4 col-sm-3 col-md-2 col-lg-2">
-                                <abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
                             <th><s:text name="label.email"/></th>
                             <th><s:text name="label.subscribtionDate"/></th>
                             <th><abbr title="<s:text name="label.state.active.full" />"><s:text
                                     name="label.state.active.short"/></abbr></th>
+                            <th class="text-center padding-large-left padding-large-right col-xs-2">
+                                <s:text name="label.actions"/>">
+                            </th>
                         </tr>
+                        </thead>
+                        <tbody>
                         <s:iterator value="#subscribersVar" var="subscriber">
                             <tr>
-                                <td class="text-center text-nowrap">
-                                    <s:url var="removeActionVar" action="trash"><s:param name="mailAddress"
-                                                                                         value="#subscriber.mailAddress"/></s:url>
-                                    <div class="btn-group btn-group-xs">
-                                        <a class="btn btn-warning"
-                                           href="<s:property value="#removeActionVar" escapeHtml="false" />"
-                                           title="<s:text name="label.remove" />:&#32;<s:property value="#subscriber.mailAddress" />">
-                                            <span class="sr-only"><s:text name="label.alt.clear"/></span>
-                                            <span class="icon fa fa-times-circle-o"></span>&#32;
-                                        </a>
-                                    </div>
-                                </td>
                                 <td><code><s:property value="#subscriber.mailAddress"/></code></td>
                                 <td><s:date name="#subscriber.subscriptionDate" format="dd/MM/yyyy"/></td>
                                 <td>
@@ -184,12 +179,33 @@
                                     <span class="<s:property value="#statusIconClassVar" />"
                                           title="<s:property value='%{getText("label.state.active."+#newsletterUserStatus)}' />"></span>
                                 </td>
+                                <td class="text-center text-nowrap">
+                                    <s:url var="removeActionVar" action="trash">
+                                        <s:param name="mailAddress" value="#subscriber.mailAddress"/>
+                                    </s:url>
+                                    <div class="btn-group btn-group-xs">
+                                        <a class="btn btn-warning"
+                                           href="<s:property value="#removeActionVar" escapeHtml="false" />"
+                                           title="<s:text name="label.remove" />:&#32;<s:property value="#subscriber.mailAddress" />">
+                                            <span class="sr-only"><s:text name="label.alt.clear"/></span>
+                                            <span class="icon fa fa-times-circle-o"></span>&#32;
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         </s:iterator>
+                        </tbody>
                     </table>
                 </div>
-                <div class="text-center">
-                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
+                <div class="content-view-pf-pagination clearfix">
+                    <div class="form-group">
+                        <span>
+                            <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/>
+                        </span>
+                        <div class="mt-5">
+                            <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp"/>
+                        </div>
+                    </div>
                 </div>
             </wpsa:subset>
         </s:if>

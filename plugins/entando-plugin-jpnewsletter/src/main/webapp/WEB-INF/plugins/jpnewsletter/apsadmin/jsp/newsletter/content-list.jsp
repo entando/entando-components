@@ -80,12 +80,13 @@
                     </div>
                 </div>
 
-                <div class="panel-group" id="accordion-markup" >
+                <div class="panel-group" id="accordion-markup">
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding:0 0 10px;">
                             <p class="panel-title active" style="text-align: end">
-                                <a data-toggle="collapse" data-parent="#accordion-markup" href="#collapseContentsSearch">
-                                    <s:text name="label.search.advanced" />
+                                <a data-toggle="collapse" data-parent="#accordion-markup"
+                                   href="#collapseContentsSearch">
+                                    <s:text name="label.search.advanced"/>
                                 </a>
                             </p>
                         </div>
@@ -105,12 +106,15 @@
                                     <label for="inQueue" class="control-label col-sm-2 "><s:text
                                             name="label.state"/>:</label>
                                     <div class="col-sm-10">
-                                        <select name="inQueue" id="inQueue" class="form-control" tabindex="<wpsa:counter />">
+                                        <select name="inQueue" id="inQueue" class="form-control"
+                                                tabindex="<wpsa:counter />">
                                             <option value=""><s:text name="label.all"/></option>
-                                            <option value="1" <s:if test="inQueue==\"1\"">selected="selected" </s:if>><s:text
-                                                    name="jpnewsletter.label.inQueue"/></option>
-                                            <option value="2" <s:if test="inQueue==\"2\"">selected="selected" </s:if>><s:text
-                                                    name="jpnewsletter.label.notInQueue"/></option>
+                                            <option value="1" <s:if test="inQueue==\"1\"">selected="selected" </s:if>>
+                                                <s:text
+                                                        name="jpnewsletter.label.inQueue"/></option>
+                                            <option value="2" <s:if test="inQueue==\"2\"">selected="selected" </s:if>>
+                                                <s:text
+                                                        name="jpnewsletter.label.notInQueue"/></option>
                                         </select>
                                     </div>
                                 </div>
@@ -120,10 +124,12 @@
                                     <div class="col-sm-10">
                                         <select name="sent" id="sent" class="form-control" tabindex="<wpsa:counter />">
                                             <option value=""><s:text name="label.all"/></option>
-                                            <option value="1" <s:if test="sent==\"1\"">selected="selected" </s:if>><s:text
-                                                    name="jpnewsletter.label.sent.yes"/></option>
-                                            <option value="2" <s:if test="sent==\"2\"">selected="selected" </s:if>><s:text
-                                                    name="jpnewsletter.label.sent.no"/></option>
+                                            <option value="1" <s:if test="sent==\"1\"">selected="selected" </s:if>>
+                                                <s:text
+                                                        name="jpnewsletter.label.sent.yes"/></option>
+                                            <option value="2" <s:if test="sent==\"2\"">selected="selected" </s:if>>
+                                                <s:text
+                                                        name="jpnewsletter.label.sent.no"/></option>
                                         </select>
                                     </div>
                                 </div>
@@ -136,7 +142,7 @@
                     <div class="form-group">
                         <wpsf:submit action="search" type="button" cssClass="btn btn-primary pull-right"
                                      title="%{getText('label.search')}">
-                            <s:text name="label.search" />
+                            <s:text name="label.search"/>
                         </wpsf:submit>
                     </div>
                 </div>
@@ -196,28 +202,7 @@
                 <wpsf:hidden name="lastOrder"/>
             </p>
 
-            <s:if test="hasActionErrors()">
-                <div class="alert alert-danger alert-dismissable fade in margin-base-top">
-                    <button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                    <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors"/></h2>
-                    <ul class="margin-base-top">
-                        <s:iterator value="ActionErrors">
-                            <li><s:property escapeHtml="false"/></li>
-                        </s:iterator>
-                    </ul>
-                </div>
-            </s:if>
-            <s:if test="hasActionMessages()">
-                <div class="alert alert-success alert-dismissable fade in">
-                    <button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                    <h2 class="h4 margin-none"><s:text name="messages.confirm"/></h2>
-                    <ul class="margin-base-top">
-                        <s:iterator value="actionMessages">
-                            <li><s:property escapeHtml="false"/></li>
-                        </s:iterator>
-                    </ul>
-                </div>
-            </s:if>
+            <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp"/>
 
             <s:set var="contentIdsVar" value="contents"/>
 
