@@ -72,19 +72,15 @@
                     <td><s:property value="#contentVersion.descr" /></td>
                     <td class="text-center col-sm-2"><code><s:date name="#contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></code> </td>
                     <td class="text-center"><s:property value="#contentVersion.username" /></td>
-                    <s:if test="(#contentVersion.status == 'PUBLIC')">
-                        <s:set var="iconName">check</s:set>
-                        <s:set var="textVariant">success</s:set>
-                        <s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
-                    </s:if>
-                    <s:if test="(#contentVersion.status != 'PUBLIC')">
-                        <s:set var="iconName">pause</s:set>
-                        <s:set var="textVariant">warning</s:set>
-                        <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
-                    </s:if>
                     <td class="text-center">
-                        <span class="icon fa fa-<s:property value="iconName" /> text-<s:property value="textVariant" />" title="<s:property value="isOnlineStatus" />"></span>
-                        <span class="sr-only"><s:property value="isOnlineStatus" /></span>
+                        <s:if test="(#contentVersion.status == 'PUBLIC')">
+                            <s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
+                            <span class="fa fa-circle green" aria-hidden="true" title="${isOnlineStatus}"></span>
+                        </s:if>
+                        <s:if test="(#contentVersion.status != 'PUBLIC')">
+                            <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
+                            <span class="fa fa-circle yellow" aria-hidden="true" title="${isOnlineStatus}"></span>
+                        </s:if>
                     </td>
                     <td class="text-center">
                         <div class="dropdown dropdown-kebab-pf">

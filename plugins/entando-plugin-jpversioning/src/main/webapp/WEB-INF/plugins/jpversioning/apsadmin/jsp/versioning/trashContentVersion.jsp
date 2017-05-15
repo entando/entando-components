@@ -44,15 +44,24 @@
             <s:property value="%{#contentVersion.version}"/>&#32;
             <s:property value="#contentVersion.contentId" /></code>?
         </p>
+        <%--<div class="text-center margin-large-top">--%>
+            <%--<wpsf:submit type="button" cssClass="btn btn-danger button-fixed-width">--%>
+                <%--<s:text name="label.remove"/>--%>
+            <%--</wpsf:submit>--%>
+        <%--</div>--%>
+        <%--<div class="text-center margin-large-top">--%>
+            <%--<a class="btn btn-default" href="<s:url action="list" namespace="do/jpversioning/Content/Versioning" />"--%>
+               <%--title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpversioning.content" />">--%>
+                <%--<s:text name="title.jpversioning.content" /></a>--%>
+        <%--</div>--%>
         <div class="text-center margin-large-top">
+            <a class="btn btn-default button-fixed-width"
+               href="<s:url action="list" namespace="do/jpversioning/Content/Versioning"/>  ">
+                <s:text name="label.back"/>
+            </a>
             <wpsf:submit type="button" cssClass="btn btn-danger button-fixed-width">
                 <s:text name="label.remove"/>
             </wpsf:submit>
-        </div>
-        <div class="text-center margin-large-top">
-            <a class="btn btn-default" href="<s:url action="list" namespace="do/jpversioning/Content/Versioning" />"
-               title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpversioning.content" />">
-                <s:text name="title.jpversioning.content" /></a>
         </div>
     </s:form>
 </div>
