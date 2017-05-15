@@ -9,28 +9,38 @@
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/resource/trashImageArchive.jsp" />
 	</definition>
-	
+
 	<definition extends="main.layout" name="admin.jpversioning.resource.trash.Attach.list">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/resource/trashAttachArchive.jsp" />
 	</definition>
-	
+
 	<definition extends="main.layout" name="admin.jpversioning.content.versioning.list">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/versioning/contentFinding.jsp" />
 	</definition>
-	
+
 	<definition extends="main.layout" name="admin.jpversioning.content.versioning.history">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/versioning/contentHistory.jsp" />
 	</definition>
-	
+
 	<definition extends="main.layout" name="admin.jpversioning.content.versioning.trash">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/versioning/trashContentVersion.jsp" />
 	</definition>
-	
-	<definition extends="main.layout" name="admin.jpversioning.content.versioning.viewPreview">
+
+	<definition extends="main.layout" name="admin.jpversioning.resource.trash.Image.trash">
+		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/resource/trashResource.jsp" />
+	</definition>
+
+    <definition extends="main.layout" name="admin.jpversioning.resource.trash.Attach.trash">
+        <put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/resource/trashResource.jsp" />
+    </definition>
+
+    <definition extends="main.layout" name="admin.jpversioning.content.versioning.viewPreview">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/versioning/viewPreview.jsp" />
 		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/common/template/extraresources/viewPreview.jsp" />

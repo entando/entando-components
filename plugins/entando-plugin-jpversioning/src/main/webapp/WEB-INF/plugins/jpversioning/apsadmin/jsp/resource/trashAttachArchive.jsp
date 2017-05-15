@@ -145,7 +145,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<s:url action="remove" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>">
+                                    <a href="<s:url action="trash" ><s:param name="resourceId" value="%{#resourceid}" /><s:param name="resourceTypeCode" value="%{resourceTypeCode}" /></s:url>">
                                         <s:text name="label.delete"/>
                                     </a>
                                 </li>

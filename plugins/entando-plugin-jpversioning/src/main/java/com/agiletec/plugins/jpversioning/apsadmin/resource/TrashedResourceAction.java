@@ -102,6 +102,13 @@ public class TrashedResourceAction extends ResourceFinderAction implements ITras
 		return SUCCESS;
 	}
 
+// TODO
+//	IN PROGRESS
+	public String trash() {
+		String resourceId = this.getResourceId();
+		return SUCCESS;
+	}
+
 	@Override
 	public String remove(){
 		try {
