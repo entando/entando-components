@@ -89,23 +89,28 @@
 
             <wpsa:subset source="#contentIdsVar" count="10" objectName="groupContent" advanced="true" offset="5">
                 <s:set var="group" value="#groupContent"/>
-                <div class="text-center">
-                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/>
-                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
-                </div>
+
+
+
 
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="contentListTable">
+                    <table class="table table-striped table-bordered table-hover no-mb" id="contentListTable">
                         <caption class="sr-only"><s:text name="title.contentList"/></caption>
-                        <tr>
-                            <th class="text-center padding-large-left padding-large-right"><abbr
-                                    title="<s:text name="label.actions" />">&ndash;</abbr></th>
-                            <th><s:text name="label.description"/></th>
-                            <th><s:text name="label.code"/></th>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th><s:text name="label.description"/></th>
+                                <th><s:text name="label.code"/></th>
+                                <th class="text-center col-sm-1">
+                                    <s:text name="label.actions" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         <s:iterator var="contentId">
                             <s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
                             <tr>
+                                <td><label><s:property value="#content.descr"/></label></td>
+                                <td><code><s:property value="#content.id"/></code></td>
                                 <td class="text-center text-nowrap">
                                     <div class="btn-group btn-group-xs">
                                         <a class="btn btn-warning" title="<s:text name="label.remove" />"
@@ -115,14 +120,13 @@
                                         </a>
                                     </div>
                                 </td>
-                                <td><label><s:property value="#content.descr"/></label></td>
-                                <td><code><s:property value="#content.id"/></code></td>
                             </tr>
                         </s:iterator>
+                        </tbody>
                     </table>
                 </div>
-
                 <div class="text-center">
+                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/>
                     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
                 </div>
 

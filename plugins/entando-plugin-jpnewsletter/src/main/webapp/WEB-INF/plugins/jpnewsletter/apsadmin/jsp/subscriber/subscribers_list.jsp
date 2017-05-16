@@ -133,8 +133,6 @@
         </div>
     </s:form>
 
-
-    <%--TODO--%>
     <div class="subsection-light">
 
         <s:set var="subscribersVar" value="subscribers"/>
@@ -142,10 +140,6 @@
         <s:if test="#subscribersVar != null && #subscribersVar.size() > 0">
             <wpsa:subset source="#subscribersVar" count="10" objectName="groupSubscribers" advanced="true" offset="5">
                 <s:set var="group" value="#groupSubscribers"/>
-                <%--<div class="text-center">
-                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/>
-                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
-                </div>--%>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover no-mb">
                         <thead>
@@ -154,7 +148,7 @@
                             <th><s:text name="label.subscribtionDate"/></th>
                             <th><abbr title="<s:text name="label.state.active.full" />"><s:text
                                     name="label.state.active.short"/></abbr></th>
-                            <th class="text-center padding-large-left padding-large-right col-xs-2">
+                            <th class="text-center col-xs-2">
                                 <s:text name="label.actions"/>">
                             </th>
                         </tr>
@@ -179,16 +173,15 @@
                                     <span class="<s:property value="#statusIconClassVar" />"
                                           title="<s:property value='%{getText("label.state.active."+#newsletterUserStatus)}' />"></span>
                                 </td>
-                                <td class="text-center text-nowrap">
+                                <td class="text-center">
                                     <s:url var="removeActionVar" action="trash">
                                         <s:param name="mailAddress" value="#subscriber.mailAddress"/>
                                     </s:url>
                                     <div class="btn-group btn-group-xs">
-                                        <a class="btn btn-warning"
-                                           href="<s:property value="#removeActionVar" escapeHtml="false" />"
+                                        <a href="<s:property value="#removeActionVar" escapeHtml="false" />"
                                            title="<s:text name="label.remove" />:&#32;<s:property value="#subscriber.mailAddress" />">
                                             <span class="sr-only"><s:text name="label.alt.clear"/></span>
-                                            <span class="icon fa fa-times-circle-o"></span>&#32;
+                                            <span class="fa fa-trash-o fa-lg"></span>
                                         </a>
                                     </div>
                                 </td>

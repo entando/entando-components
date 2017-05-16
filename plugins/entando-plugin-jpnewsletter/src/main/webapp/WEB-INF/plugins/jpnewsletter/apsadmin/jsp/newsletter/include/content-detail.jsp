@@ -13,7 +13,7 @@
 <s:else>
 <p><s:text name="Message.newsletter.sent" />&#32;<s:date name="%{#contentReport.sendDate}" format="dd/MM/yyyy" />.</p>
 	
-<table class="table table-bordered">
+<table class="table table-striped table-bordered table-hover no-mb">
 	<tr>
 		<th class="text-right"><s:text name="jpnewsletter.label.subject" /></th>
 		<td><s:property value="%{#contentReport.subject}"/></td>
@@ -37,17 +37,21 @@
 <hr />
 
 <s:if test="%{#contentReport.recipients != null && #contentReport.recipients.size() > 0}">
-	<table class="table table-bordered">
-		<tr>
-			<th><s:text name="label.username"/></th>
-			<th><s:text name="label.eMail"/></th>
-		</tr>
-		<s:iterator value="%{#contentReport.recipients.entrySet()}" var="recipient">
-		<tr>
-			<td><code><s:property value="#recipient.key"/></code></td>
-			<td><s:property value="#recipient.value"/></td>
-		</tr>
-		</s:iterator>
+	<table class="table table-striped table-bordered table-hover no-mb">
+		<thead>
+			<tr>
+                <th><s:text name="label.username"/></th>
+                <th><s:text name="label.eMail"/></th>
+            </tr>
+		</thead>
+		<tbody>
+			<s:iterator value="%{#contentReport.recipients.entrySet()}" var="recipient">
+			<tr>
+				<td><code><s:property value="#recipient.key"/></code></td>
+				<td><s:property value="#recipient.value"/></td>
+			</tr>
+			</s:iterator>
+		</tbody>
 	</table>
 </s:if>
 </s:else>
