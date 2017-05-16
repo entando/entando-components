@@ -25,18 +25,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.struts2.dispatcher.ServletActionRedirectResult;
-import org.apache.struts2.dispatcher.ServletRedirectResult;
+import org.apache.struts2.result.ServletActionRedirectResult;
+import org.apache.struts2.result.ServletRedirectResult;
+
 
 import com.agiletec.apsadmin.system.dispatcher.FrontServletActionRedirectResult;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 
 /**
  * @author  http://glindholm.wordpress.com/2008/07/02/preserving-messages-across-a-redirect-in-struts-2/
- * 
+ *
  * An Interceptor to preserve an actions ValidationAware messages across a
  * redirect result.
  *
@@ -49,7 +50,7 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
  * fieldErrors they are stored in the session. Before the next action executes
  * it will check if there are any messages stored in the session and add them to
  * the next action.
- * 
+ *
  * The action you are redirecting towards will need to configure a result with name="input" as the added messages will trigger the "workflow" interceptor to return a result of "input"
  *
  */
