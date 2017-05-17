@@ -51,8 +51,15 @@
                         <fieldset class="col-xs-12">
                             <legend><s:text name="title.contentInfo" /></legend>
                             <div class="form-group">
-                                <label for="contentType"><s:text name="label.type"/></label>
-                                <wpsf:select name="contentType" id="contentType" list="contentTypes" listKey="code" listValue="descr" cssClass="form-control" />
+                                <label class="col-sm-2 control-label" for="contentType">
+                                    <s:text name="label.type" />
+                                </label>
+                                <wpsf:select name="contentType"
+                                             id="contentType"
+                                             list="contentTypes"
+                                             listKey="code"
+                                             listValue="descr"
+                                             cssClass="form-control" />
                             </div>
                         </fieldset>
                     </s:elseif>
@@ -61,9 +68,18 @@
                         <fieldset class="col-xs-12">
                             <legend><s:text name="title.contentInfo" /></legend>
                             <div class="form-group">
-                                <label for="contentType"><s:text name="label.type"/>:</label>
+                                <label class="col-sm-2 control-label" for="contentType">
+                                    <s:text name="label.type" />
+                                </label>
                                 <div class="input-group">
-                                    <wpsf:select name="contentType" id="contentType" list="contentTypes" listKey="code" listValue="descr" disabled="true" value="%{getShowlet().getConfig().get('contentType')}" cssClass="form-control" />
+                                    <wpsf:select name="contentType"
+                                                 id="contentType"
+                                                 list="contentTypes"
+                                                 listKey="code"
+                                                 listValue="descr"
+                                                 disabled="true"
+                                                 value="%{getShowlet().getConfig().get('contentType')}"
+                                                 cssClass="form-control" />
                                     <div class="input-group-btn">
                                         <wpsf:submit type="button" action="changeContentType" cssClass="btn btn-primary">
                                             <s:text name="%{getText('label.change')}"/>

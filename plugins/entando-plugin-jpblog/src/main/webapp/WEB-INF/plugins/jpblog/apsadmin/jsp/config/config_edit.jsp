@@ -41,7 +41,14 @@
                         <s:text name="label.categories" />
                     </label>
                     <div class="col-sm-10 input-group">
-                        <wpsf:select name="catCode" id="category" list="systemCategories" listKey="code" listValue="getShortFullTitle(currentLang.code)" headerKey="" headerValue="%{getText('label.all')}" cssClass="form-control" />
+                        <wpsf:select name="catCode"
+                                     id="category"
+                                     list="systemCategories"
+                                     listKey="code"
+                                     listValue="getShortFullTitle(currentLang.code)"
+                                     headerKey=""
+                                     headerValue="%{getText('label.all')}"
+                                     cssClass="form-control" />
                         <div class="input-group-btn">
                             <wpsf:submit type="button" action="addCategory" cssClass="btn btn-primary">
                                 <span class="icon fa fa-plus"></span>&#32;

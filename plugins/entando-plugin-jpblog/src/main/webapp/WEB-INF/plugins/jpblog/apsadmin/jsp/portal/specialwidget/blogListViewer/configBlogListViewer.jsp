@@ -47,7 +47,9 @@
                         <fieldset class="col-xs-12">
                             <legend><s:text name="title.contentInfo" /></legend>
                             <div class="form-group">
-                                <label for="contentType"><s:text name="label.type"/></label>
+                                <label class="col-sm-2 control-label" for="contentType">
+                                    <s:text name="label.type" />
+                                </label>
                                 <div class="input-group">
                                     <wpsf:select name="contentType"
                                                  id="contentType"
@@ -56,8 +58,7 @@
                                                  listValue="descr"
                                                  cssClass="form-control" />
                                     <div class="input-group-btn">
-                                        <wpsf:submit type="button" action="configListViewer" cssClass="btn btn-default">
-                                            <span class="icon fa fa-play-circle-o"></span>&#32;
+                                        <wpsf:submit type="button" action="configListViewer" cssClass="btn btn-primary">
                                             <s:text name="%{getText('label.continue')}"/>
                                         </wpsf:submit>
                                     </div>
@@ -68,11 +69,20 @@
                     <s:else>
                         <fieldset class="col-xs-12"><legend><s:text name="title.contentInfo" /></legend>
                             <div class="form-group">
-                                <label for="contentType"><s:text name="label.type"/></label>
+                                <label class="col-sm-2 control-label" for="contentType">
+                                    <s:text name="label.type" />
+                                </label>
                                 <div class="input-group">
-                                    <wpsf:select name="contentType" id="contentType" list="contentTypes" listKey="code" listValue="descr" disabled="true" value="%{getShowlet().getConfig().get('contentType')}" cssClass="form-control" />
+                                    <wpsf:select name="contentType"
+                                                 id="contentType"
+                                                 list="contentTypes"
+                                                 listKey="code"
+                                                 listValue="descr"
+                                                 disabled="true"
+                                                 value="%{getShowlet().getConfig().get('contentType')}"
+                                                 cssClass="form-control" />
                                     <div class="input-group-btn">
-                                        <wpsf:submit type="button" action="changeContentType" cssClass="btn btn-info">
+                                        <wpsf:submit type="button" action="changeContentType" cssClass="btn btn-primary">
                                             <s:text name="%{getText('label.change')}"/>
                                         </wpsf:submit>
                                     </div>
@@ -94,13 +104,19 @@
                             </legend>
                             <div class="collapse" id="filterOptions">
                                 <div class="form-group">
-                                    <label for="filterKey"><s:text name="label.filter" /></label>
+                                    <label class="col-sm-2 control-label" for="filterKey">
+                                        <s:text name="label.filter" />
+                                    </label>
                                     <div class="input-group">
-                                        <wpsf:select name="filterKey" id="filterKey" list="allowedFilterTypes" listKey="key" listValue="value" cssClass="form-control" />
+                                        <wpsf:select name="filterKey"
+                                                     id="filterKey"
+                                                     list="allowedFilterTypes"
+                                                     listKey="key"
+                                                     listValue="value"
+                                                     cssClass="form-control" />
                                         <div class="input-group-btn">
                                                 <%-- blogSetFilterType setta in sessione parametri priam di chiamare setFilterType --%>
-                                            <wpsf:submit type="button" action="blogSetFilterType" cssClass="btn btn-info">
-                                                <span class="icon fa fa-plus"></span>&#32;
+                                            <wpsf:submit type="button" action="blogSetFilterType" cssClass="btn btn-primary">
                                                 <s:text name="%{getText('label.add')}"/>
                                             </wpsf:submit>
                                         </div>
@@ -113,40 +129,17 @@
 
                                 <s:if test="null != filtersProperties && filtersProperties.size()>0" >
                                     <table class="table table-bordered">
+                                        <thead>
                                         <tr>
-                                            <th class="text-center"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
                                             <th class="text-right"><abbr title="<s:text name="label.number" />">N</abbr></th>
                                             <th><s:text name="name.filterDescription" /></th>
                                             <th><s:text name="label.order" /></th>
+                                            <th class="text-center" style="width: 50px"><s:text name="label.actions"/></th>
                                         </tr>
+                                        </thead>
+                                        <tbody>
                                         <s:iterator value="filtersProperties" id="filter" status="rowstatus">
                                             <tr>
-                                                <td class="text-center">
-                                                    <div class="btn-group btn-group-xs">
-                                                        <wpsa:actionParam action="moveFilter" var="actionName" >
-                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
-                                                            <wpsa:actionSubParam name="movement" value="UP" />
-                                                        </wpsa:actionParam>
-                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveUp')}" cssClass="btn btn-default">
-                                                            <span class="icon fa fa-sort-desc"></span>
-                                                        </wpsf:submit>
-                                                        <wpsa:actionParam action="moveFilter" var="actionName" >
-                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
-                                                            <wpsa:actionSubParam name="movement" value="DOWN" />
-                                                        </wpsa:actionParam>
-                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveDown')}" cssClass="btn btn-default">
-                                                            <span class="icon fa fa-sort-asc"></span>
-                                                        </wpsf:submit>
-                                                    </div>
-                                                    <div class="btn-group btn-group-xs">
-                                                        <wpsa:actionParam action="removeFilter" var="actionName" >
-                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
-                                                        </wpsa:actionParam>
-                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}" cssClass="btn btn-warning">
-                                                            <span class="icon fa fa-times-circle-o"></span>
-                                                        </wpsf:submit>
-                                                    </div>
-                                                </td>
                                                 <td class="text-right"><s:property value="#rowstatus.index+1"/></td>
                                                 <td>
                                                     <s:text name="label.filterBy" /><strong>
@@ -204,8 +197,35 @@
                                                     <s:if test="#filter['order'] == 'ASC'"><s:text name="label.order.ascendant" /></s:if>
                                                     <s:if test="#filter['order'] == 'DESC'"><s:text name="label.order.descendant" /></s:if>
                                                 </td>
+                                                <td class="text-center">
+                                                    <div class="btn-group btn-group-xs">
+                                                        <wpsa:actionParam action="moveFilter" var="actionName" >
+                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+                                                            <wpsa:actionSubParam name="movement" value="UP" />
+                                                        </wpsa:actionParam>
+                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveUp')}" cssClass="btn btn-default">
+                                                            <span class="icon fa fa-sort-desc"></span>
+                                                        </wpsf:submit>
+                                                        <wpsa:actionParam action="moveFilter" var="actionName" >
+                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+                                                            <wpsa:actionSubParam name="movement" value="DOWN" />
+                                                        </wpsa:actionParam>
+                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveDown')}" cssClass="btn btn-default">
+                                                            <span class="icon fa fa-sort-asc"></span>
+                                                        </wpsf:submit>
+                                                    </div>
+                                                    <div class="btn-group btn-group-xs">
+                                                        <wpsa:actionParam action="removeFilter" var="actionName" >
+                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+                                                        </wpsa:actionParam>
+                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}" cssClass="btn btn-warning">
+                                                            <span class="icon fa fa-times-circle-o"></span>
+                                                        </wpsf:submit>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </s:iterator>
+                                        </tbody>
                                     </table>
                                 </s:if>
                                 <s:else>
@@ -233,7 +253,9 @@
                                 </s:iterator>
 
                                 <div class="form-group">
-                                    <label for="pageLink"><s:text name="label.link.page" />:</label>
+                                    <label class="col-sm-2 control-label" for="pageLink">
+                                        <s:text name="label.link.page" />
+                                    </label>
                                     <wpsf:select list="pages"
                                                  name="pageLink"
                                                  id="pageLink"
@@ -265,12 +287,18 @@
                             </legend>
                             <div class="collapse" id="filtersSearch">
                                 <div class="form-group">
-                                    <label for="userFilterKey"><s:text name="label.filter" /></label>
+                                    <label class="col-sm-2 control-label" for="userFilterKey">
+                                        <s:text name="label.filter" />
+                                    </label>
                                     <div class="input-group">
-                                        <wpsf:select name="userFilterKey" id="userFilterKey" list="allowedUserFilterTypes" listKey="key" listValue="value" cssClass="form-control" />
+                                        <wpsf:select name="userFilterKey"
+                                                     id="userFilterKey"
+                                                     list="allowedUserFilterTypes"
+                                                     listKey="key"
+                                                     listValue="value"
+                                                     cssClass="form-control" />
                                         <div class="input-group-btn">
-                                            <wpsf:submit type="button" action="addUserFilter" cssClass="btn btn-info">
-                                                <span class="icon fa fa-plus"></span>&#32;
+                                            <wpsf:submit type="button" action="addUserFilter" cssClass="btn btn-primary">
                                                 <s:text name="%{getText('label.add')}"></s:text>
                                             </wpsf:submit>
                                         </div>
@@ -283,13 +311,37 @@
 
                                 <s:if test="null != userFiltersProperties && userFiltersProperties.size() > 0" >
                                     <table class="table table-bordered">
+                                        <thead>
                                         <tr>
-                                            <th class="text-center"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
                                             <th class="text-right"><abbr title="<s:text name="label.number" />">N</abbr></th>
                                             <th><s:text name="name.filterDescription" /></th>
+                                            <th class="text-center" style="width: 50px"><s:text name="label.actions"/></th>
                                         </tr>
+                                        </thead>
+                                        <tbody>
                                         <s:iterator value="userFiltersProperties" var="userFilter" status="rowstatus">
                                             <tr>
+                                                <td class="text-right"><s:property value="#rowstatus.index+1"/></td>
+                                                <td>
+                                                    <s:text name="label.filterBy" />
+                                                    <strong>
+                                                        <s:if test="#userFilter['attributeFilter'] == 'false'">
+                                                            <s:if test="#userFilter['key'] == 'fulltext'">
+                                                                <s:text name="label.fulltext" />
+                                                            </s:if>
+                                                            <s:elseif test="#userFilter['key'] == 'category'">
+                                                                <s:text name="label.category" />
+                                                                <s:if test="null != #userFilter['categoryCode']">
+                                                                    <s:set var="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
+                                                                    (<s:property value="#userFilterCategoryRoot.getFullTitle(currentLang.code)"/>)
+                                                                </s:if>
+                                                            </s:elseif>
+                                                        </s:if>
+                                                        <s:elseif test="#userFilter['attributeFilter'] == 'true'">
+                                                            <s:property value="#userFilter['key']" />
+                                                        </s:elseif>
+                                                    </strong>
+                                                </td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-xs">
                                                         <wpsa:actionParam action="moveUserFilter" var="actionName" >
@@ -316,29 +368,9 @@
                                                         </wpsf:submit>
                                                     </div>
                                                 </td>
-                                                <td class="text-right"><s:property value="#rowstatus.index+1"/></td>
-                                                <td>
-                                                    <s:text name="label.filterBy" />
-                                                    <strong>
-                                                        <s:if test="#userFilter['attributeFilter'] == 'false'">
-                                                            <s:if test="#userFilter['key'] == 'fulltext'">
-                                                                <s:text name="label.fulltext" />
-                                                            </s:if>
-                                                            <s:elseif test="#userFilter['key'] == 'category'">
-                                                                <s:text name="label.category" />
-                                                                <s:if test="null != #userFilter['categoryCode']">
-                                                                    <s:set var="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
-                                                                    (<s:property value="#userFilterCategoryRoot.getFullTitle(currentLang.code)"/>)
-                                                                </s:if>
-                                                            </s:elseif>
-                                                        </s:if>
-                                                        <s:elseif test="#userFilter['attributeFilter'] == 'true'">
-                                                            <s:property value="#userFilter['key']" />
-                                                        </s:elseif>
-                                                    </strong>
-                                                </td>
                                             </tr>
                                         </s:iterator>
+                                        </tbody>
                                     </table>
                                 </s:if>
                                 <s:else>
@@ -353,20 +385,14 @@
                                 <span class="icon fa fa-chevron-down"></span>
                             </legend>
                             <div class="collapse" id="publishingOptions">
-                                    <%--
-                                    ref issue/70/blog-post-list-must-accept-modelid
-                                    <p>
-                                            <label for="modelId" class="basic-mint-label"><s:text name="label.contentModel" />:</label>
-                                            <wpsf:select useTabindexAutoIncrement="true" name="modelId" id="modelId" value="%{getShowlet().getConfig().get('modelId')}"
-                                                    list="%{getModelsForContentType(showlet.config['contentType'])}" headerKey="" headerValue="%{getText('label.default')}" listKey="id" listValue="description" cssClass="text" />
-                                    </p>
-                                    --%>
                                 <p class="noscreen">
                                     <wpsf:hidden name="maxElemForItem" value="1" />
                                 </p>
 
                                 <div class="form-group">
-                                    <label for="maxElements"><s:text name="label.maxElements" /></label>
+                                    <label class="col-sm-2 control-label" for="maxElements">
+                                        <s:text name="label.maxElements" />
+                                    </label>
                                     <wpsf:select name="maxElements"
                                                  id="maxElements"
                                                  value="%{getShowlet().getConfig().get('maxElements')}"
