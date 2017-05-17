@@ -1,15 +1,32 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
-<h1 class="panel panel-default title-page">
-	<span class="panel-body display-block">
-		<a href="<s:url action="viewTree" namespace="/do/Page" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageManagement" />">
-			<s:text name="title.pageManagement" /></a>&#32;/&#32;
-		<a href="<s:url action="configure" namespace="/do/Page">
-					<s:param name="pageCode"><s:property value="currentPage.code"/></s:param>
-				</s:url>" title="<s:text name="note.goToSomewhere" />: <s:text name="title.configPage" />"><s:text name="title.configPage" /></a>&#32;/&#32;
-		<s:text name="name.widget" />
-	</span>
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+	<li><s:text name="title.pageDesigner"/></li>
+	<li>
+		<a href="<s:url action="viewTree" namespace="/do/Page" />">
+			<s:text name="title.pageManagement" />
+		</a>
+	</li>
+	<li class="page-title-container">
+		<s:text name="title.configPage" />
+	</li>
+</ol>
+<h1 class="page-title-container">
+	<div>
+		<s:text name="title.configPage" />
+		<span class="pull-right">
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+			   data-content="TO be inserted" data-placement="left" data-original-title="">
+                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+            </a>
+        </span>
+	</div>
 </h1>
+<div class="text-right">
+	<div class="form-group-separator"></div>
+</div>
+<br>
+
 
 <div id="main" role="main">
 
@@ -40,17 +57,19 @@
 			</p>
 
 			<s:if test="hasFieldErrors()">
-			<div class="alert alert-danger alert-dismissable">
-				<button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-				<h3 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h3>
-				<ul>
-				<s:iterator value="fieldErrors">
-					<s:iterator value="value">
-					<li><s:property escapeHtml="false" /></li>
-					</s:iterator>
-				</s:iterator>
-				</ul>
-			</div>
+				<div class="alert alert-danger alert-dismissable">
+					<button type="button" class="close" data-dismiss="alert">
+						<span class="icon fa fa-times"></span>
+					</button>
+					<h4 class="margin-none"><s:text name="message.title.FieldErrors"/></h4>
+					<ul class="margin-base-vertical">
+						<s:iterator value="fieldErrors">
+							<s:iterator value="value">
+								<li><s:property escapeHtml="false"/></li>
+							</s:iterator>
+						</s:iterator>
+					</ul>
+				</div>
 			</s:if>
 
 			<p class="sr-only">
@@ -164,22 +183,25 @@
 			</p>
 			<fieldset class="margin-base-top"><legend><s:text name="label.settings"/></legend>
 			<div class="form-group">
-				<div class="col-xs-12">
-					<label for="filterOptionId"><s:text name="label.option"/></label>
-				<s:if test="filterOptionId<=-1">
+				<label class="col-xs-2 control-label" for="filterOptionId">
+					<s:text name="label.option"/>
+				</label>
+				<div class="col-xs-10">
 					<div class="input-group">
-				</s:if>
-					<wpsf:select name="filterOptionId" id="filterOptionId" list="#{3:getText('label.presenceOptionFilter'),4:getText('label.absenceOptionFilter'),1:getText('label.valueOptionFilter'),2:getText('label.rangeOptionFilter')}" disabled="filterOptionId>-1" cssClass="form-control" />
-					<s:if test="filterOptionId>-1"><wpsf:hidden name="filterOptionId" /></s:if>
-					<s:else>
-						<div class="input-group-btn">
-							<wpsf:submit action="setFilterOption" value="%{getText('label.continue')}" cssClass="btn btn-info" />
-						</div>
+						<%--<s:if test="filterOptionId<=-1">--%>
+							<%--<div class="input-group">--%>
+						<%--</s:if>--%>
+						<wpsf:select name="filterOptionId" id="filterOptionId" list="#{3:getText('label.presenceOptionFilter'),4:getText('label.absenceOptionFilter'),1:getText('label.valueOptionFilter'),2:getText('label.rangeOptionFilter')}" disabled="filterOptionId>-1" cssClass="form-control" />
+						<s:if test="filterOptionId>-1"><wpsf:hidden name="filterOptionId" /></s:if>
+						<s:else>
+							<div class="input-group-btn">
+								<wpsf:submit action="setFilterOption" value="%{getText('label.continue')}" cssClass="btn btn-info" />
+							</div>
+						<%--</div>--%>
+						</s:else>
 					</div>
-					</s:else>
 				</div>
 			</div>
-
 			<s:if test="filterOptionId==1">
 			<div class="form-group">
 				<div class="col-xs-12">
@@ -379,10 +401,9 @@
 	</div>
 
 	<div class="form-group">
-		<div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-			<wpsf:submit action="%{#saveFilterActionName}" type="button" cssClass="btn btn-primary btn-block">
-				<span class="icon fa fa-filter"></span>&#32;
-				<s:text name="label.save" />
+		<div class="col-sm-12">
+			<wpsf:submit action="%{#saveFilterActionName}" type="button" cssClass="btn btn-primary pull-right">
+				<s:text name="label.save"/>
 			</wpsf:submit>
 		</div>
 	</div>
