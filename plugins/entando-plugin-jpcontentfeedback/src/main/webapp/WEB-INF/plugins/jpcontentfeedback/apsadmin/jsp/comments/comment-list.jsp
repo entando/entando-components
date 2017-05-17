@@ -43,7 +43,6 @@
 </div>
 <br>
 
-
 <div id="main">
 
     <s:form action="search" cssClass="form-horizontal">
@@ -120,51 +119,63 @@
         </div>
         <hr>
 
-        <%--TODO--%>
-
         <div class="subsection-light">
 
             <wpsa:subset source="commentIds" count="10" objectName="groupComment" advanced="true" offset="5">
                 <s:set var="group" value="#groupComment"/>
-
-
                 <s:set var="lista" value="commentIds"/>
                 <s:if test="!#lista.empty">
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered table-hover no-mb">
+                        <thead>
                         <tr>
                             <th><s:text name="jpcontentfeedback.author"/></th>
                             <th class="text-center"><s:text name="jpcontentfeedback.date.creation"/></th>
                             <th><s:text name="jpcontentfeedback.status"/></th>
-                            <th class="text-center"><s:text name="label.actions"/></th>
+                            <th class="text-center col-xs-1"><s:text name="label.actions"/></th>
                         </tr>
+                        </thead>
+                        <tbody>
                         <s:iterator var="commentoId">
                             <tr>
                                 <s:set var="commento" value="%{getComment(#commentoId)}"/>
                                 <td><code><s:property value="#commento.username"/></code></td>
-                                <td class="text-center"><code><s:date name="#commento.creationDate"
-                                                                      format="dd/MM/yyyy HH:mm"/></code></td>
-                                <td><s:text name="%{'jpcontentfeedback.label.' + #commento.status}"/></td>
                                 <td class="text-center">
-                                    <div class="btn-group btn-group-xs">
-                                        <a class="btn btn-default"
-                                           title="<s:text name="label.edit" />:&#32;<s:date name="#commento.creationDate" format="dd/MM/yyyy HH:mm" />"
-                                           href="<s:url action="view"><s:param name="selectedComment" value="#commentoId" /></s:url>">
-                                            <span class="icon fa fa-pencil-square-o"></span>
-                                            <span class="sr-only"><s:text name="label.edit"/>: <s:property
-                                                    value="#ideaInstance_var.code"/></span>
-                                        </a>
-                                    </div>
-                                    <div class="btn-group btn-group-xs margin-small-left">
-                                        <a class="btn btn-warning btn-xs"
-                                           href="<s:url action="trash"><s:param name="selectedComment" value="#commentoId" /></s:url>"
-                                           title="<s:text name="label.remove" />:&#32;<s:date name="#commento.creationDate" format="dd/MM/yyyy HH:mm" />">
-                                            <span class="sr-only"></span>
-                                            <span class="icon fa fa-times-circle-o"></span>
-                                        </a>
+                                    <code><s:date name="#commento.creationDate" format="dd/MM/yyyy HH:mm"/></code>
+                                </td>
+                                <td><s:text name="%{'jpcontentfeedback.label.' + #commento.status}"/></td>
+
+                                <td class="text-center">
+                                    <div class="dropdown dropdown-kebab-pf">
+                                        <p class="sr-only"><s:text name="label.actions"/></p>
+                                        <span class="btn btn-menu-right dropdown-toggle" type="button"
+                                              data-toggle="dropdown" aria-haspopup="true"
+                                              aria-expanded="false">
+                                                        <span class="fa fa-ellipsis-v"></span>
+                                                    </span>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <a class="btn btn-default"
+                                                   title="<s:text name="label.edit" />:&#32;<s:date name="#commento.creationDate" format="dd/MM/yyyy HH:mm" />"
+                                                   href="<s:url action="view"><s:param name="selectedComment" value="#commentoId" /></s:url>">
+                                                    <span class="sr-only">
+                                                        <s:text name="label.edit"/>: <s:property
+                                                            value="#ideaInstance_var.code"/>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="btn btn-warning btn-xs"
+                                                   href="<s:url action="trash"><s:param name="selectedComment" value="#commentoId" /></s:url>"
+                                                   title="<s:text name="label.remove" />:&#32;<s:date name="#commento.creationDate" format="dd/MM/yyyy HH:mm" />">
+                                                    <s:text name="label.remove"/>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>
                         </s:iterator>
+                        </tbody>
                     </table>
                     <div class="pager">
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/>
