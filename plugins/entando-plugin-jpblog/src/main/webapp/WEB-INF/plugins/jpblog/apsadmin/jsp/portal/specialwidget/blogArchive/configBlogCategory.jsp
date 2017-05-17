@@ -2,6 +2,7 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
+
 <h1 class="panel panel-default title-page">
     <span class="panel-body display-block">
         <a href="<s:url action="viewTree" namespace="/do/Page" />" 
@@ -13,6 +14,10 @@
 </h1>
 
 <div id="main">
+
+    <div id="messages">
+        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
+    </div>
 
     <s:set var="breadcrumbs_pivotPageCode" value="pageCode" />
     <s:include value="/WEB-INF/apsadmin/jsp/portal/include/pageInfo_breadcrumbs.jsp" />
@@ -27,20 +32,6 @@
                 <wpsf:hidden name="frame" />
                 <wpsf:hidden name="widgetTypeCode" value="%{showlet.type.code}" />
             </p>
-
-            <s:if test="hasFieldErrors()">
-                <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                    <h4 class="margin-none"><s:text name="message.title.FieldErrors" /></h4>
-                    <ul class="margin-base-vertical">
-                        <s:iterator value="fieldErrors">
-                            <s:iterator value="value">
-                                <li><s:property escapeHtml="false" /></li>
-                                </s:iterator>
-                            </s:iterator>
-                    </ul>
-                </div>
-            </s:if>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -70,7 +61,7 @@
                                 <div class="input-group">
                                     <wpsf:select name="contentType" id="contentType" list="contentTypes" listKey="code" listValue="descr" disabled="true" value="%{getShowlet().getConfig().get('contentType')}" cssClass="form-control" />
                                     <div class="input-group-btn">
-                                        <wpsf:submit type="button" action="changeContentType" cssClass="btn btn-default">
+                                        <wpsf:submit type="button" action="changeContentType" cssClass="btn btn-primary">
                                             <s:text name="%{getText('label.change')}"/>
                                         </wpsf:submit>
                                     </div>
@@ -82,10 +73,9 @@
             </div>
             <s:if test="showlet.config['contentType'] == null">
                 <div class="form-horizontal">
-                    <div class="form-group">
+                    <div class="form-group pull-right">
                         <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-                            <wpsf:submit action="configListViewer" type="button" cssClass="btn btn-primary btn-block">
-                                <span class="icon fa fa-floppy-o"></span>&#32;
+                            <wpsf:submit action="configListViewer" type="button" cssClass="btn btn-primary">
                                 <s:text name="%{getText('label.save')}" />
                             </wpsf:submit>
                         </div>

@@ -9,6 +9,24 @@
     <li><s:text name="admin.jpblog.title.config"/></li>
 </ol>
 
+<h1 class="page-title-container">
+    <s:text name="admin.jpblog.title.config" />
+    <span class="pull-right">
+        <a tabindex="0" role="button"
+           data-toggle="popover" data-trigger="focus" data-html="true" title=""
+           data-content="TO be inserted" data-placement="left"
+           data-original-title="">
+            <span class="fa fa-question-circle-o" aria-hidden="true"></span>
+	    </a>
+	</span>
+</h1>
+
+<div class="text-right">
+    <div class="form-group-separator"></div>
+</div>
+
+<br>
+
 <div id="main">
 
     <div id="messages">
@@ -39,12 +57,13 @@
                 <s:iterator value="categories" var="category">
                     <s:if test="#category!='categories'">
                         <div class="label label-default label-tag label-sm">
+                            <span class="icon fa fa-tag" />
                             <s:property value="#category"/>&#32;
                             <wpsf:hidden name="categories" value="%{#category}"/>
                             <wpsa:actionParam action="removeCategory" var="removeCategoryAction">
                                 <wpsa:actionSubParam name="catCode" value="%{#category}" />
                             </wpsa:actionParam>
-                            <wpsf:submit type="button" title="%{getText('label.remove') +' ' + #category}" action="%{#removeCategoryAction}" cssClass="btn btn-tag">
+                            <wpsf:submit type="button" title="%{getText('label.remove') +' ' + #category}" action="%{#removeCategoryAction}" cssClass="btn btn-tag btn-link">
                                 <span class="icon fa fa-times"></span>
                                 <span class="sr-only">x</span>
                             </wpsf:submit>
