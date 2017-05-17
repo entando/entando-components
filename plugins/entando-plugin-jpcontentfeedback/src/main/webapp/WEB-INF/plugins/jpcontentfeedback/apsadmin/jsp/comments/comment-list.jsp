@@ -106,8 +106,8 @@
                     </div>
                 </div>
 
-                <div class="col-sm-12">
-                    <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-12">
                         <wpsf:submit type="button" cssClass="btn btn-primary pull-right"
                                      title="%{getText('label.search')}">
                             <span class="sr-only"><s:text name="%{getText('label.search')}"/></span>
@@ -154,18 +154,13 @@
                                                     </span>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                             <li>
-                                                <a class="btn btn-default"
-                                                   title="<s:text name="label.edit" />:&#32;<s:date name="#commento.creationDate" format="dd/MM/yyyy HH:mm" />"
+                                                <a title="<s:text name="label.edit" />:&#32;<s:date name="#commento.creationDate" format="dd/MM/yyyy HH:mm" />"
                                                    href="<s:url action="view"><s:param name="selectedComment" value="#commentoId" /></s:url>">
-                                                    <span class="sr-only">
-                                                        <s:text name="label.edit"/>: <s:property
-                                                            value="#ideaInstance_var.code"/>
-                                                    </span>
+                                                    <s:text name="label.edit"/>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="btn btn-warning btn-xs"
-                                                   href="<s:url action="trash"><s:param name="selectedComment" value="#commentoId" /></s:url>"
+                                                <a href="<s:url action="trash"><s:param name="selectedComment" value="#commentoId" /></s:url>"
                                                    title="<s:text name="label.remove" />:&#32;<s:date name="#commento.creationDate" format="dd/MM/yyyy HH:mm" />">
                                                     <s:text name="label.remove"/>
                                                 </a>

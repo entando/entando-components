@@ -31,17 +31,11 @@
         </span>
     </h1>
 </div>
-<div class="text-right">
-    <div class="form-group-separator"></div>
-</div>
 <br>
-
-
-
 
 <div id="main">
 
-    <div class="col-sm-12 table-responsive">
+    <div class="table-responsive">
         <table class="table table-bordered table-hover no-mb">
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.author"/></th>
@@ -86,10 +80,10 @@
             <legend><s:text name="label.info" /></legend>
             <s:set var="listStatus" value="%{getAllStatus()}" />
             <div class="form-group">
-                <label class="col-sm-3 control-label" for="status">
+                <label class="col-sm-2 control-label" for="status">
                     <s:text name="jpcontentfeedback.status" />
                 </label>
-                <div class="col-sm-9">
+                <div class="col-sm-10">
                     <wpsf:select  list="listStatus" name="status" id="status"  listKey="key" listValue="value" value="#commentVar.status" cssClass="form-control"/>
                 </div>
             </div>

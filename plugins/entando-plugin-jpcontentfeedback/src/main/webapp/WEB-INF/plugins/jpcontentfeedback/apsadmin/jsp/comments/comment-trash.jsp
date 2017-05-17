@@ -17,12 +17,12 @@
             <s:text name="jpcontentfeedback.title.comment.list"/>
         </a>
     </li>
-    <li class="page-title-container"><s:text name="jpcontentfeedback.label.delete.comment.confirm"/></li>
+    <li class="page-title-container"><s:text name="jpcontentfeedback.label.delete.comment"/></li>
 </ol>
 
 <div class="page-tabs-header">
     <h1>
-        <s:text name="jpcontentfeedback.label.delete.comment.confirm"/>
+        <s:text name="jpcontentfeedback.label.delete.comment"/>
         <span class="pull-right">
         <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
            data-content="TO be inserted" data-placement="left" data-original-title="">
@@ -31,14 +31,10 @@
         </span>
     </h1>
 </div>
-<div class="text-right">
-    <div class="form-group-separator"></div>
-</div>
 <br>
 
-
 <div id="main">
-    <div class="col-sm-12 table-responsive">
+    <div class="table-responsive">
         <table class="table table-bordered table-hover no-mb">
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.author"/></th>
@@ -84,22 +80,19 @@
 
             <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
             <p class="esclamation-underline"><s:text name="label.delete"/></p>
-            <p>
+            <p class="esclamation-underline-text">
                 <s:text name="jpcontentfeedback.label.delete.comment.confirm"/>
             </p>
-            <div class="btn btn-danger button-fixed-width">
-                <s:submit type="button">
+
+            <div class="text-center margin-large-top">
+                <a class="btn btn-default button-fixed-width"
+                   href="<s:url action="list"/>">
+                    <s:text name="label.back"/>
+                </a>
+                <s:submit type="button" cssClass="btn btn-danger button-fixed-width">
                     <s:text name="label.delete"/>
                 </s:submit>
             </div>
-            <div class="text-center margin-large-top">
-                <a class="btn btn-default button-fixed-width" href="<s:url action="list"/>">
-                    <s:text name="label.back" />
-                </a>
-            </div>
-
         </s:form>
     </div>
-
-
 </div>
