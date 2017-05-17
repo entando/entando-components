@@ -26,10 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 public class ContentThreadConfig {
-	
+
 	public boolean isActive() {
 		return _active;
 	}
+
 	public void setActive(boolean active) {
 		this._active = active;
 	}
@@ -37,6 +38,7 @@ public class ContentThreadConfig {
 	public String getGlobalCat() {
 		return _globalCat;
 	}
+
 	public void setGlobalCat(String _globalCat) {
 		this._globalCat = _globalCat;
 	}
@@ -44,6 +46,7 @@ public class ContentThreadConfig {
 	public String getContentIdRepl() {
 		return contentIdRepl;
 	}
+
 	public void setContentIdRepl(String contentIdRepl) {
 		this.contentIdRepl = contentIdRepl;
 	}
@@ -51,6 +54,7 @@ public class ContentThreadConfig {
 	public String getContentModelRepl() {
 		return contentModelRepl;
 	}
+
 	public void setContentModelRepl(String contentModelRepl) {
 		this.contentModelRepl = contentModelRepl;
 	}
@@ -58,6 +62,7 @@ public class ContentThreadConfig {
 	public String getSenderCode() {
 		return _senderCode;
 	}
+
 	public void setSenderCode(String senderCode) {
 		this._senderCode = senderCode;
 	}
@@ -65,6 +70,7 @@ public class ContentThreadConfig {
 	public String getMailAttrName() {
 		return _mailAttrName;
 	}
+
 	public void setMailAttrName(String mailAttrName) {
 		this._mailAttrName = mailAttrName;
 	}
@@ -80,20 +86,23 @@ public class ContentThreadConfig {
 	public String getSubject() {
 		return _subject;
 	}
+
 	public void setSubject(String subject) {
 		this._subject = subject;
 	}
-	
+
 	public String getHtmlHeader() {
 		return _htmlHeader;
 	}
+
 	public void setHtmlHeader(String htmlHeader) {
 		this._htmlHeader = htmlHeader;
 	}
-	
+
 	public String getHtmlFooter() {
 		return _htmlFooter;
 	}
+
 	public void setHtmlFooter(String htmlFooter) {
 		this._htmlFooter = htmlFooter;
 	}
@@ -101,6 +110,7 @@ public class ContentThreadConfig {
 	public String getHtmlSeparator() {
 		return _htmlSeparator;
 	}
+
 	public void setHtmlSeparator(String htmlSeparator) {
 		this._htmlSeparator = htmlSeparator;
 	}
@@ -108,6 +118,7 @@ public class ContentThreadConfig {
 	public String getHtmlHeaderMove() {
 		return _htmlHeaderMove;
 	}
+
 	public void setHtmlHeaderMove(String _htmlHeaderMove) {
 		this._htmlHeaderMove = _htmlHeaderMove;
 	}
@@ -115,6 +126,7 @@ public class ContentThreadConfig {
 	public String getHtmlFooterMove() {
 		return _htmlFooterMove;
 	}
+
 	public void setHtmlFooterMove(String _htmlFooterMove) {
 		this._htmlFooterMove = _htmlFooterMove;
 	}
@@ -122,6 +134,7 @@ public class ContentThreadConfig {
 	public String getHtmlSeparatorMove() {
 		return _htmlSeparatorMove;
 	}
+
 	public void setHtmlSeparatorMove(String _htmlSeparatorMove) {
 		this._htmlSeparatorMove = _htmlSeparatorMove;
 	}
@@ -129,6 +142,7 @@ public class ContentThreadConfig {
 	public String getTextHeaderMove() {
 		return _textHeaderMove;
 	}
+
 	public void setTextHeaderMove(String _textHeaderMove) {
 		this._textHeaderMove = _textHeaderMove;
 	}
@@ -136,6 +150,7 @@ public class ContentThreadConfig {
 	public String getTextFooterMove() {
 		return _textFooterMove;
 	}
+
 	public void setTextFooterMove(String _textFooterMove) {
 		this._textFooterMove = _textFooterMove;
 	}
@@ -143,17 +158,20 @@ public class ContentThreadConfig {
 	public String getTextSeparatorMove() {
 		return _textSeparatorMove;
 	}
+
 	public void setTextSeparatorMove(String _textSeparatorMove) {
 		this._textSeparatorMove = _textSeparatorMove;
 	}
-	
+
 	public String getTextHeader() {
 		return _textHeader;
 	}
-	
+
 	/**
 	 * Imposta l'header della mail in testo semplice.
-	 * @param textHeader L'header della mail in testo semplice.
+	 * 
+	 * @param textHeader
+	 *            L'header della mail in testo semplice.
 	 */
 	public void setTextHeader(String textHeader) {
 		this._textHeader = textHeader;
@@ -161,6 +179,7 @@ public class ContentThreadConfig {
 
 	/**
 	 * Restituisce il footer della mail in testo semplice.
+	 * 
 	 * @return Il footer della mail in testo semplice.
 	 */
 	public String getTextFooter() {
@@ -169,7 +188,9 @@ public class ContentThreadConfig {
 
 	/**
 	 * Imposta il footer della mail in testo semplice.
-	 * @param textFooter Il footer della mail in testo semplice.
+	 * 
+	 * @param textFooter
+	 *            Il footer della mail in testo semplice.
 	 */
 	public void setTextFooter(String textFooter) {
 		this._textFooter = textFooter;
@@ -178,10 +199,11 @@ public class ContentThreadConfig {
 	public String getTextSeparator() {
 		return _textSeparator;
 	}
+
 	public void setTextSeparator(String textSeparator) {
 		this._textSeparator = textSeparator;
 	}
-	
+
 	/**
 	 * Imposta il codice dell'istanza abilitata all'invio del job di
 	 * pubblicazione/sospensione automatica
@@ -191,7 +213,7 @@ public class ContentThreadConfig {
 	public void setSitecode(String sitecode) {
 		this._sitecode = sitecode;
 	}
-	
+
 	/**
 	 * Restituisce il codice dell'istanza abilitata all'invio del job di
 	 * pubblicazione/sospensione automatica
@@ -205,6 +227,7 @@ public class ContentThreadConfig {
 	public Map<String, List<String>> getGroupsContentType() {
 		return groupsContentType;
 	}
+
 	public void setGroupsContentType(Map<String, List<String>> groupsContentType) {
 		this.groupsContentType = groupsContentType;
 	}
@@ -212,6 +235,7 @@ public class ContentThreadConfig {
 	public Map<String, List<String>> getUsersContentType() {
 		return usersContentType;
 	}
+
 	public void setUsersContentType(Map<String, List<String>> usersContentType) {
 		this.usersContentType = usersContentType;
 	}
@@ -219,6 +243,7 @@ public class ContentThreadConfig {
 	public List<ContentTypeElem> getTypesList() {
 		return _typesList;
 	}
+
 	public void setTypesList(List<ContentTypeElem> list) {
 		_typesList = list;
 	}
@@ -226,18 +251,18 @@ public class ContentThreadConfig {
 	// scheduler
 	private boolean _active = false;
 
-	//cat globale
+	// cat globale
 	private String _globalCat;
 
-	//contenuto sostitutivo
+	// contenuto sostitutivo
 	private String contentIdRepl;
 	private String contentModelRepl;
-	
-	//gruppi
+
+	// gruppi
 	Map<String, List<String>> groupsContentType;
-	//utenti
+	// utenti
 	Map<String, List<String>> usersContentType;
-	
+
 	// mail config
 	private String _senderCode;
 	private String _mailAttrName;
@@ -260,10 +285,10 @@ public class ContentThreadConfig {
 	private String _textHeaderMove = "";
 	private String _textFooterMove = "";
 	private String _textSeparatorMove = "";
-	
+
 	private String _sitecode;
-	
+
 	// tipi di contenuto da utilizzare
 	private List<ContentTypeElem> _typesList = new ArrayList<ContentTypeElem>();
-	
+
 }

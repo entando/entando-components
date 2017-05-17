@@ -21,6 +21,12 @@
  */
 package org.entando.entando.plugins.jpcontentscheduler.apsadmin.config;
 
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentJobs;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.IContentSchedulerManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.page.IPageManager;
@@ -30,28 +36,27 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.opensymphony.xwork2.Action;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentJobs;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.IContentSchedulerManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 
 /**
  * @author E.Santoboni
  */
 public class AdminAction extends BaseAction {
-	
-	private static final Logger _logger =  LoggerFactory.getLogger(AdminAction.class);
-	
+
+	private static final Logger _logger = LoggerFactory.getLogger(AdminAction.class);
+
 	public String executeJob() {
 		try {
 			ContentJobs contentJobs = new ContentJobs();
-			//this._contentJobs.setApplicationContext(apx);
-			ICategoryManager categoryManager = (ICategoryManager) ApsWebApplicationUtils.getBean(SystemConstants.CATEGORY_MANAGER, this.getRequest());
-			IContentSchedulerManager contentSchedulerManager = (IContentSchedulerManager) ApsWebApplicationUtils.getBean("jpcontentschedulerContentSchedulerManager", this.getRequest());
-			IContentManager contentManager = (IContentManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MANAGER, this.getRequest());
+			// this._contentJobs.setApplicationContext(apx);
+			ICategoryManager categoryManager = (ICategoryManager) ApsWebApplicationUtils.getBean(SystemConstants.CATEGORY_MANAGER,
+					this.getRequest());
+			IContentSchedulerManager contentSchedulerManager = (IContentSchedulerManager) ApsWebApplicationUtils
+					.getBean("jpcontentschedulerContentSchedulerManager", this.getRequest());
+			IContentManager contentManager = (IContentManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MANAGER,
+					this.getRequest());
 			IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.getRequest());
-			IContentModelManager contentModelManager = (IContentModelManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MODEL_MANAGER, this.getRequest());
+			IContentModelManager contentModelManager = (IContentModelManager) ApsWebApplicationUtils
+					.getBean(JacmsSystemConstants.CONTENT_MODEL_MANAGER, this.getRequest());
 			contentJobs.setCategoryManager(categoryManager);
 			contentJobs.setContentManager(contentManager);
 			contentJobs.setContentModelManager(contentModelManager);
@@ -65,5 +70,5 @@ public class AdminAction extends BaseAction {
 		}
 		return Action.SUCCESS;
 	}
-	
+
 }
