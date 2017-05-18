@@ -3,15 +3,39 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 
-<h1 class="panel panel-default title-page">
-    <span class="panel-body display-block">
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li class="page-title-container"><s:text name="title.pageDesigner" /></li>
+    <li>
         <a href="<s:url action="viewTree" namespace="/do/Page" />"
            title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageManagement" />">
             <s:text name="title.pageManagement" />
-        </a>&#32;/&#32;
-        <s:text name="title.configPage" />
+        </a>
+    </li>
+    <li><s:text name="jpblog.admin.menu" /></li>
+</ol>
+
+<h1 class="page-title-container">
+    <s:text name="jpblog.config" />
+    <span class="pull-right">
+        <a tabindex="0"
+           role="button"
+           data-toggle="popover"
+           data-trigger="focus"
+           data-html="true"
+           title=""
+           data-content="TO be inserted"
+           data-placement="left"
+           data-original-title="">
+            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+        </a>
     </span>
 </h1>
+
+<div class="text-right">
+    <div class="form-group-separator"></div>
+</div>
+
+<br>
 
 <div id="main">
 
@@ -37,10 +61,13 @@
                     <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp" />
                 </div>
                 <div class="panel-body">
-                    <h2 class="h5 margin-small-vertical">
-                        <span class="icon fa fa-puzzle-piece" title="Widget"></span>
-                        <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}" />
-                    </h2>
+                    <legend>
+                        <span class="control-label label-group-name">
+                            <span class="icon fa fa-puzzle-piece" title="Widget"></span>
+                            <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}" />
+                        </span>
+                    </legend>
+
                     <s:if test="contentTypes.isEmpty()">
                         <div class="alert alert-info">
                             <s:text name="jpblog.error.noContentTypeAvailable" />
@@ -48,30 +75,31 @@
                     </s:if>
                     <s:elseif test="showlet.config['contentType'] == null">
                         <%-- SELEZIONE DEL TIPO DI CONTENUTO --%>
-                        <fieldset class="col-xs-12">
+                        <div class="col-xs-12">
                             <legend><s:text name="title.contentInfo" /></legend>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="contentType">
                                     <s:text name="label.type" />
                                 </label>
-                                <wpsf:select name="contentType"
-                                             id="contentType"
-                                             list="contentTypes"
-                                             listKey="code"
-                                             listValue="descr"
-                                             cssClass="form-control" />
+                                <div class="col-sm-10 input-group">
+                                    <wpsf:select name="contentType"
+                                                 id="contentType"
+                                                 list="contentTypes"
+                                                 listKey="code"
+                                                 listValue="descr"
+                                                 cssClass="form-control" />
+                                </div>
                             </div>
-                        </fieldset>
+                        </div>
                     </s:elseif>
                     <s:else>
-
-                        <fieldset class="col-xs-12">
+                        <div class="col-xs-12">
                             <legend><s:text name="title.contentInfo" /></legend>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="contentType">
                                     <s:text name="label.type" />
                                 </label>
-                                <div class="input-group">
+                                <div class="col-sm-10 input-group">
                                     <wpsf:select name="contentType"
                                                  id="contentType"
                                                  list="contentTypes"
@@ -87,7 +115,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </fieldset>
+                        </div>
                     </s:else>
                 </div>
             </div>
@@ -101,7 +129,7 @@
                         </div>
                     </div>
                 </div>
-            </s:if>                    
+            </s:if>
         </s:form>
     </div>
 </div>

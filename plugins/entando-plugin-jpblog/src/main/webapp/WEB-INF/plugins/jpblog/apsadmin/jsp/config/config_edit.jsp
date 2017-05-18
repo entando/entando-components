@@ -64,7 +64,7 @@
                 <s:iterator value="categories" var="category">
                     <s:if test="#category!='categories'">
                         <div class="label label-default label-tag label-sm">
-                            <span class="icon fa fa-tag" />
+                            <span class="icon" />
                             <s:property value="#category"/>&#32;
                             <wpsf:hidden name="categories" value="%{#category}"/>
                             <wpsa:actionParam action="removeCategory" var="removeCategoryAction">

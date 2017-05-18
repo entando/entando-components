@@ -3,15 +3,39 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 
-<h1 class="panel panel-default title-page">
-    <span class="panel-body display-block">
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li class="page-title-container"><s:text name="title.pageDesigner" /></li>
+    <li>
         <a href="<s:url action="viewTree" namespace="/do/Page" />"
            title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageManagement" />">
             <s:text name="title.pageManagement" />
-        </a>&#32;/&#32;
-        <s:text name="title.configPage" />
+        </a>
+    </li>
+    <li><s:text name="jpblog.admin.menu" /></li>
+</ol>
+
+<h1 class="page-title-container">
+    <s:text name="jpblog.config" />
+    <span class="pull-right">
+        <a tabindex="0"
+           role="button"
+           data-toggle="popover"
+           data-trigger="focus"
+           data-html="true"
+           title=""
+           data-content="TO be inserted"
+           data-placement="left"
+           data-original-title="">
+            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+        </a>
     </span>
 </h1>
+
+<div class="text-right">
+    <div class="form-group-separator"></div>
+</div>
+
+<br>
 
 <div id="main">
 
@@ -38,19 +62,21 @@
                     <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp" />
                 </div>
                 <div class="panel-body">
-                    <h2 class="h5 margin-small-vertical">
-                        <span class="icon fa fa-puzzle-piece" title="Widget"></span>
-                        <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}" />
-                    </h2>
+                    <legend>
+                        <span class="control-label label-group-name">
+                            <span class="icon fa fa-puzzle-piece" title="Widget"></span>
+                            <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}" />
+                        </span>
+                    </legend>
                     <s:if test="showlet.config['contentType'] == null">
                         <%-- SELEZIONE DEL TIPO DI CONTENUTO --%>
-                        <fieldset class="col-xs-12">
+                        <div class="col-xs-12">
                             <legend><s:text name="title.contentInfo" /></legend>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="contentType">
                                     <s:text name="label.type" />
                                 </label>
-                                <div class="input-group">
+                                <div class="col-sm-10 input-group">
                                     <wpsf:select name="contentType"
                                                  id="contentType"
                                                  list="contentTypes"
@@ -64,15 +90,16 @@
                                     </div>
                                 </div>
                             </div>
-                        </fieldset>
+                        </div>
                     </s:if>
                     <s:else>
-                        <fieldset class="col-xs-12"><legend><s:text name="title.contentInfo" /></legend>
+                        <div class="col-xs-12">
+                            <legend><s:text name="title.contentInfo" /></legend>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="contentType">
                                     <s:text name="label.type" />
                                 </label>
-                                <div class="input-group">
+                                <div class="col-sm-10 input-group">
                                     <wpsf:select name="contentType"
                                                  id="contentType"
                                                  list="contentTypes"
@@ -95,9 +122,9 @@
                                     <input type="hidden" name="categoryCodes" value="<s:property value="#categoryCodeVar" />" id="categoryCodes-<s:property value="#rowstatus.index" />"/>
                                 </s:iterator>
                             </p>
-                        </fieldset>
+                        </div>
 
-                        <fieldset class="col-xs-12">
+                        <div class="col-xs-12">
                             <legend data-toggle="collapse" data-target="#filterOptions">
                                 <s:text name="title.filterOptions"/>
                                 <span class="icon fa fa-chevron-down"></span>
@@ -107,7 +134,7 @@
                                     <label class="col-sm-2 control-label" for="filterKey">
                                         <s:text name="label.filter" />
                                     </label>
-                                    <div class="input-group">
+                                    <div class="col-sm-10 input-group">
                                         <wpsf:select name="filterKey"
                                                      id="filterKey"
                                                      list="allowedFilterTypes"
@@ -232,10 +259,10 @@
                                     <div class="alert alert-info"><s:text name="note.filters.none" /></div>
                                 </s:else>
                             </div>
-                        </fieldset>
+                        </div>
 
                         <%-- TITLES --%>
-                        <fieldset class="col-xs-12">
+                        <div class="col-xs-12">
                             <legend data-toggle="collapse" data-target="#extraOption">
                                 <s:text name="title.extraOption"/>
                                 <span class="icon fa fa-chevron-down"></span>
@@ -256,15 +283,17 @@
                                     <label class="col-sm-2 control-label" for="pageLink">
                                         <s:text name="label.link.page" />
                                     </label>
-                                    <wpsf:select list="pages"
-                                                 name="pageLink"
-                                                 id="pageLink"
-                                                 listKey="code"
-                                                 listValue="getShortFullTitle(currentLang.code)"
-                                                 value="%{showlet.config.get('pageLink')}"
-                                                 headerKey=""
-                                                 headerValue="- %{getText('label.select')} -"
-                                                 cssClass="form-control"/>
+                                    <div class="col-sm-10 input-group">
+                                        <wpsf:select list="pages"
+                                                     name="pageLink"
+                                                     id="pageLink"
+                                                     listKey="code"
+                                                     listValue="getShortFullTitle(currentLang.code)"
+                                                     value="%{showlet.config.get('pageLink')}"
+                                                     headerKey=""
+                                                     headerValue="- %{getText('label.select')} -"
+                                                     cssClass="form-control"/>
+                                    </div>
                                 </div>
 
                                 <s:iterator var="lang" value="langs">
@@ -277,10 +306,10 @@
                                     </div>
                                 </s:iterator>
                             </div>
-                        </fieldset>
+                        </div>
 
                         <%-- USER FILTERS - START BLOCK --%>
-                        <fieldset class="col-xs-12">
+                        <div class="col-xs-12">
                             <legend data-toggle="collapse" data-target="#filtersSearch">
                                 <s:text name="title.filters.search"/>
                                 <span class="icon fa fa-chevron-down"></span>
@@ -290,7 +319,7 @@
                                     <label class="col-sm-2 control-label" for="userFilterKey">
                                         <s:text name="label.filter" />
                                     </label>
-                                    <div class="input-group">
+                                    <div class="col-sm-10 input-group">
                                         <wpsf:select name="userFilterKey"
                                                      id="userFilterKey"
                                                      list="allowedUserFilterTypes"
@@ -377,9 +406,9 @@
                                     <div class="alert alert-info"><s:text name="note.filters.none" /></div>
                                 </s:else>
                             </div>
-                        </fieldset>
+                        </div>
                         <%-- USER FILTERS - END BLOCK --%>
-                        <fieldset class="col-xs-12">
+                        <div class="col-xs-12">
                             <legend data-toggle="collapse" data-target="#publishingOptions">
                                 <s:text name="title.publishingOptions"/>
                                 <span class="icon fa fa-chevron-down"></span>
@@ -393,18 +422,20 @@
                                     <label class="col-sm-2 control-label" for="maxElements">
                                         <s:text name="label.maxElements" />
                                     </label>
-                                    <wpsf:select name="maxElements"
-                                                 id="maxElements"
-                                                 value="%{getShowlet().getConfig().get('maxElements')}"
-                                                 headerKey=""
-                                                 headerValue="%{getText('label.all')}"
-                                                 list="#{1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,15:15,20:20}"
-                                                 cssClass="form-control" />
+                                    <div class="col-sm-10 input-group">
+                                        <wpsf:select name="maxElements"
+                                                     id="maxElements"
+                                                     value="%{getShowlet().getConfig().get('maxElements')}"
+                                                     headerKey=""
+                                                     headerValue="%{getText('label.all')}"
+                                                     list="#{1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,15:15,20:20}"
+                                                     cssClass="form-control" />
+                                    </div>
                                 </div>
                             </div>
-                        </fieldset>
+                        </div>
 
-                        <fieldset class="margin-more-top">
+                        <div class="margin-more-top">
                             <legend data-toggle="collapse" data-target="#jpcontentfeedback">
                                 <s:text name="jpcontentfeedback.title.configuration"/>
                                 <span class="icon fa fa-chevron-down"></span>
@@ -433,7 +464,7 @@
                                     </label>
                                 </div>
                             </div>
-                        </fieldset>
+                        </div>
                     </s:else>
                 </div>
             </div>
