@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -131,10 +132,10 @@ public class ContentWorkflowManager extends AbstractService implements IContentW
 	public List<WorkflowSearchFilter> getWorkflowSearchFilters(UserDetails user) throws ApsSystemException {
 		List<WorkflowSearchFilter> filters = new ArrayList<WorkflowSearchFilter>();
 		try {
-			List<SmallContentType> contentTypes = this.getManagingContentTypes(user);
+			List<SmallEntityType> contentTypes = this.getManagingContentTypes(user);
 			boolean isSupervisor = this.getAuthorizationManager().isAuthOnPermission(user, Permission.CONTENT_SUPERVISOR);
 			for (int i = 0; i < contentTypes.size(); i++) {
-				SmallContentType type = contentTypes.get(i);
+				SmallEntityType type = contentTypes.get(i);
 				Workflow workflow = this.getWorkflow(type.getCode());
 				WorkflowSearchFilter filter = new WorkflowSearchFilter();
 				filter.setTypeCode(type.getCode());
@@ -170,12 +171,12 @@ public class ContentWorkflowManager extends AbstractService implements IContentW
 	}
 	
 	@Override
-	public List<SmallContentType> getManagingContentTypes(UserDetails user) throws ApsSystemException {
-		List<SmallContentType> types = new ArrayList<SmallContentType>();
+	public List<SmallEntityType> getManagingContentTypes(UserDetails user) throws ApsSystemException {
+		List<SmallEntityType> types = new ArrayList<SmallEntityType>();
 		try {
-			List<SmallContentType> contentTypes = this.getContentManager().getSmallContentTypes();
+			List<SmallEntityType> contentTypes = this.getContentManager().getSmallEntityTypes();
 			for (int i = 0; i < contentTypes.size(); i++) {
-				SmallContentType contentType = contentTypes.get(i);
+				SmallEntityType contentType = contentTypes.get(i);
 				Workflow workflow = this.getWorkflow(contentType.getCode());
 				if (null != workflow && null != workflow.getRole()) {
 					String roleName = workflow.getRole();

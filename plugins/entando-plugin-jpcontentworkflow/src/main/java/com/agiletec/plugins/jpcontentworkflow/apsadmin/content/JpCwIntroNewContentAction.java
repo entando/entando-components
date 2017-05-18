@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
@@ -70,8 +71,18 @@ public class JpCwIntroNewContentAction extends com.agiletec.plugins.jacms.apsadm
 	}
 	
 	@Override
+	@Deprecated
 	public List<SmallContentType> getContentTypes() {
-		return ((IContentWorkFlowActionHelper) this.getContentActionHelper()).getAllowedContentTypes(this.getCurrentUser());
+		List<SmallContentType> cts = new ArrayList<SmallContentType>();
+		List<SmallEntityType> types = ((IContentWorkFlowActionHelper) this.getContentActionHelper()).getAllowedContentTypes(this.getCurrentUser());
+		for (int i = 0; i < types.size(); i++) {
+			SmallEntityType set = types.get(i);
+			SmallContentType ct = new SmallContentType();
+			ct.setCode(set.getCode());
+			ct.setDescr(set.getDescription());
+			cts.add(ct);
+		}
+		return cts;
 	}
 	
 	@Override

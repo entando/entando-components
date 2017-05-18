@@ -21,6 +21,7 @@
  */
 package com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow;
 
+import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +83,6 @@ public interface IContentWorkflowManager {
 	
 	public List<WorkflowSearchFilter> getWorkflowSearchFilters(UserDetails currentUser) throws ApsSystemException;
 	
-	public List<SmallContentType> getManagingContentTypes(UserDetails currentUser) throws ApsSystemException;
+	public List<SmallEntityType> getManagingContentTypes(UserDetails currentUser) throws ApsSystemException;
 	
 }

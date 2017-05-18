@@ -55,7 +55,6 @@
 		<!--
         <module>entando-plugin-jpfastcontentedit</module>
         <module>entando-plugin-jpgeoref</module>
-        <module>entando-plugin-jpwebmail</module>
         <module>entando-plugin-jpphotogallery</module>
         -->
         <module>entando-plugin-jprssaggregator</module>
@@ -82,11 +81,24 @@
         <module>entando-plugin-jpweatherforecast</module>
         <module>entando-plugin-jpfileattribute</module>
         <module>entando-plugin-jpmailgun</module>
+		-->
         <module>entando-plugin-jpcollaboration</module>
+		<!--
         <module>entando-plugin-jpwebform</module>
         <module>entando-plugin-jpblog</module>
         -->
     </modules>
+    <profiles>
+    	<profile>
+            <id>java8</id>
+           	<activation>
+            	<jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+            	<javadoc.opts>-Xdoclint:none</javadoc.opts>
+        	</properties>
+    	</profile>
+    </profiles>
     <properties>
         <!--
         <test.database.driver>org.postgresql.Driver</test.database.driver>
@@ -133,8 +145,7 @@
                             <goal>jar</goal>
                         </goals>
 						<configuration>
-							<additionalparam>-Xdoclint:none</additionalparam>
-							<failOnError>false</failOnError>
+							<additionalparam>${javadoc.opts}</additionalparam>
 						</configuration>
                     </execution>
                 </executions>

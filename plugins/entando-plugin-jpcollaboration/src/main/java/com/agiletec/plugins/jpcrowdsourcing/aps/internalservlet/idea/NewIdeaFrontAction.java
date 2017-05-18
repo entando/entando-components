@@ -59,12 +59,10 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.Ide
 import com.agiletec.plugins.jpcrowdsourcing.apsadmin.portal.specialwidget.IdeaInstanceWidgetAction;
 import com.agiletec.plugins.jpcrowdsourcing.apsadmin.util.SmallCategory;
 
-
-public class NewIdeaFrontAction extends BaseAction implements INewIdeaFrontAction, ServletResponseAware {
+public class NewIdeaFrontAction extends BaseAction implements ServletResponseAware {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(NewIdeaFrontAction.class);
-
-	@Override
+	
 	public String entryIdea() {
 		try {
 			this.resetFileds();
@@ -87,8 +85,7 @@ public class NewIdeaFrontAction extends BaseAction implements INewIdeaFrontActio
 		this.setIdea(new Idea());
 		this.setTags(new HashSet<String>());
 	}
-
-	@Override
+	
 	public String saveIdea() {
 		String returnValue = null;
 		try {
@@ -108,7 +105,7 @@ public class NewIdeaFrontAction extends BaseAction implements INewIdeaFrontActio
 				Lang lang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 				Map<String, String> params = new HashMap<String, String>();
 				params.put("newIdea", "true");
-				String url = urlManager.createUrl(page, lang, params);
+				String url = urlManager.createURL(page, lang, params);
 				String encodedUrl = this.getResponse().encodeURL(url.toString());
 				this.setRedirectUrl(encodedUrl);
 				returnValue = "redirectPage";
@@ -157,8 +154,7 @@ public class NewIdeaFrontAction extends BaseAction implements INewIdeaFrontActio
 		}
 		return code;
 	}
-
-	@Override
+	
 	public String joinCategory() {
 		try {
 			String code = "";
@@ -190,8 +186,7 @@ public class NewIdeaFrontAction extends BaseAction implements INewIdeaFrontActio
 		}
 		return SUCCESS;
 	}
-
-	@Override
+	
 	public String removeCategory() {
 		try {
 			this.getTags().remove(this.getTag());
@@ -363,7 +358,7 @@ public class NewIdeaFrontAction extends BaseAction implements INewIdeaFrontActio
 	protected HttpServletResponse getResponse() {
 		return _response;
 	}
-	@Override
+	
 	public void setServletResponse(HttpServletResponse response) {
 		this._response = response;
 	}

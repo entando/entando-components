@@ -27,6 +27,7 @@ import java.util.List;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -141,7 +142,7 @@ public class ContentFinderAction extends com.agiletec.plugins.jacms.apsadmin.con
 	}
 	
 	@Override
-	public List<SmallContentType> getContentTypes() {
+	public List<SmallEntityType> getContentTypes() {
 		return ((IContentWorkFlowActionHelper) this.getContentActionHelper()).getAllowedContentTypes(this.getCurrentUser());
 	}
 	
