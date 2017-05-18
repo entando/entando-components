@@ -4,14 +4,14 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
-    <li class="page-title-container"><s:text name="title.pageDesigner" /></li>
+    <li><s:text name="title.pageDesigner" /></li>
     <li>
         <a href="<s:url action="viewTree" namespace="/do/Page" />"
            title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageManagement" />">
             <s:text name="title.pageManagement" />
         </a>
     </li>
-    <li><s:text name="jpblog.admin.menu" /></li>
+    <li class="page-title-container"><s:text name="jpblog.admin.menu" /></li>
 </ol>
 
 <h1 class="page-title-container">
