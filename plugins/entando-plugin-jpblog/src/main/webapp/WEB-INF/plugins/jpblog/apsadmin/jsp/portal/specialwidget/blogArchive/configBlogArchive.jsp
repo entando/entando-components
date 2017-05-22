@@ -23,7 +23,7 @@
            data-trigger="focus"
            data-html="true"
            title=""
-           data-content="TO be inserted"
+           data-content="<s:text name="jpblog.config.archive.help" />"
            data-placement="left"
            data-original-title="">
             <i class="fa fa-question-circle-o" aria-hidden="true"></i>
