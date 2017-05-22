@@ -28,9 +28,9 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * @author E.Santoboni
  */
 public interface IContentSchedulerDAO extends IContentDAO {
-	
+
 	public void publishContent(Content content);
-	
+
 	public void unpublishOnLineContent(Content content);
-	
+
 }

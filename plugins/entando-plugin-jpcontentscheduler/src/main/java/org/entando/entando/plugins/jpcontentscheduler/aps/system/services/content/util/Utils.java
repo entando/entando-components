@@ -21,7 +21,6 @@
  */
 package org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.util;
 
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,17 +29,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentState;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentThreadConfig;
 import org.springframework.context.ApplicationContext;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentState;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentThreadConfig;
 
 public class Utils {
-	
+
 	/**
 	 * restituisce la data nel formato dell'xml dei contenuti
 	 *
@@ -51,17 +51,19 @@ public class Utils {
 		SimpleDateFormat format = new SimpleDateFormat(ContentThreadConstants.DATE_PATTERN);
 		return format.format(date);
 	}
-	
+
 	public static String printTimeStamp(Date date) {
 		SimpleDateFormat format = new SimpleDateFormat(ContentThreadConstants.PRINT_DATE_PATTERN);
 		return format.format(date);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static Map<String, List> getReferencingObjects(Content content, ApplicationContext appCtx) throws ApsSystemException {
+	public static Map<String, List> getReferencingObjects(Content content, ApplicationContext appCtx)
+			throws ApsSystemException {
 		Map<String, List> references = new HashMap<String, List>();
 		try {
-			//String[] defNames = ApsWebApplicationUtils.getWebApplicationContext(request).getBeanNamesForType(ContentUtilizer.class);
+			// String[] defNames =
+			// ApsWebApplicationUtils.getWebApplicationContext(request).getBeanNamesForType(ContentUtilizer.class);
 			String[] defNames = appCtx.getBeanNamesForType(ContentUtilizer.class);
 			for (int i = 0; i < defNames.length; i++) {
 				Object service = null;
@@ -84,37 +86,40 @@ public class Utils {
 		}
 		return references;
 	}
-	
+
 	private static StringBuilder fromListToString(List<ContentState> list) {
 		StringBuilder ans = new StringBuilder("");
 		ans.append("\n\nContenuti pubblicati:\n");
 		for (Iterator<ContentState> i = list.iterator(); i.hasNext();) {
 			ContentState currElem = i.next();
-			ans.append(currElem.getContentid()).append(" - ").append(currElem.getDesc()).append(" - ").append(currElem.getResult()).append("\n");
+			ans.append(currElem.getContentid()).append(" - ").append(currElem.getDesc()).append(" - ")
+					.append(currElem.getResult()).append("\n");
 		}
 		return ans;
 	}
-	
+
 	private static StringBuilder fromListToStringSuspendContent(List<ContentState> list) {
 		StringBuilder ans = new StringBuilder("");
 		ans.append("\n\nContenuti sospesi:\n");
 		for (Iterator<ContentState> i = list.iterator(); i.hasNext();) {
 			ContentState currElem = i.next();
-			ans.append(currElem.getContentid()).append(" - ").append(currElem.getDesc()).append(" - ").append(currElem.getResult()).append("\n");
+			ans.append(currElem.getContentid()).append(" - ").append(currElem.getDesc()).append(" - ")
+					.append(currElem.getResult()).append("\n");
 		}
 		return ans;
 	}
-	
+
 	private static StringBuilder fromListToStringMoveContent(List<ContentState> list) {
 		StringBuilder ans = new StringBuilder("");
 		ans = ans.append("\n\nContenuti spostati in archivio online:\n");
 		for (Iterator<ContentState> i = list.iterator(); i.hasNext();) {
 			ContentState currElem = i.next();
-			ans.append(currElem.getContentid()).append(" - ").append(currElem.getDesc()).append(" - ").append(currElem.getResult()).append("\n");
+			ans.append(currElem.getContentid()).append(" - ").append(currElem.getDesc()).append(" - ")
+					.append(currElem.getResult()).append("\n");
 		}
 		return ans;
 	}
-	
+
 	private static StringBuilder fromListToHtmlString(List<ContentState> list, String applicationBaseURL) {
 		StringBuilder ans = new StringBuilder("");
 		if (list != null && list.size() > 0) {
@@ -127,8 +132,10 @@ public class Utils {
 			} else {
 				ans.append("<li style=\"color:#B8311B\">");
 			}
-			ans.append("<a href=\"").append(applicationBaseURL).append("/do/Content/edit.action?contentId=").append(currElem.getContentid()).append("\">");
-			ans.append(currElem.getContentid()).append("</a> :: ").append("&nbsp;-&nbsp;").append(currElem.getDesc()).append(" :: ").append(currElem.getResult()).append("</li>");
+			ans.append("<a href=\"").append(applicationBaseURL).append("/do/Content/edit.action?contentId=")
+					.append(currElem.getContentid()).append("\">");
+			ans.append(currElem.getContentid()).append("</a> :: ").append("&nbsp;-&nbsp;").append(currElem.getDesc())
+					.append(" :: ").append(currElem.getResult()).append("</li>");
 			if (!i.hasNext()) {
 				ans.append("</ul>");
 			}
@@ -136,8 +143,9 @@ public class Utils {
 		return ans;
 	}
 
-	public static String prepareMailHtml(List<ContentState> contentPList,
-			List<ContentState> contentSList, List<ContentState> contentMList, ContentThreadConfig config, Date startJobDate, Date endJobDate, String applicationBaseUrl) {
+	public static String prepareMailHtml(List<ContentState> contentPList, List<ContentState> contentSList,
+			List<ContentState> contentMList, ContentThreadConfig config, Date startJobDate, Date endJobDate,
+			String applicationBaseUrl) {
 		StringBuilder ans = new StringBuilder("");
 		ans.append(config.getHtmlHeader());
 		if (contentPList != null && contentPList.size() > 0) {
@@ -152,12 +160,13 @@ public class Utils {
 			StringBuilder moved = fromListToHtmlString(contentMList, applicationBaseUrl);
 			ans.append(config.getHtmlSeparatorMove()).append(moved);
 		}
-		ans.append("<p>Inizio Job: " + Utils.printTimeStamp(startJobDate) + "<br />").append("Fine Job: " + Utils.printTimeStamp(endJobDate) + "</p>").append(config.getHtmlFooter());
+		ans.append("<p>Inizio Job: " + Utils.printTimeStamp(startJobDate) + "<br />")
+				.append("Fine Job: " + Utils.printTimeStamp(endJobDate) + "</p>").append(config.getHtmlFooter());
 		return ans.toString();
 	}
-	
-	public static String prepareMailText(List<ContentState> contentPList,
-			List<ContentState> contentSList, List<ContentState> contentMList, ContentThreadConfig config, Date startJobDate, Date endJobDate) {
+
+	public static String prepareMailText(List<ContentState> contentPList, List<ContentState> contentSList,
+			List<ContentState> contentMList, ContentThreadConfig config, Date startJobDate, Date endJobDate) {
 		StringBuilder ans = new StringBuilder("");
 		ans.append(config.getTextHeader());
 		if (contentPList != null && contentPList.size() > 0) {
@@ -172,20 +181,21 @@ public class Utils {
 			StringBuilder moved = fromListToStringMoveContent(contentMList);
 			ans.append(config.getTextSeparator()).append(moved);
 		}
-		ans.append("\n\nInizio Job: " + Utils.printTimeStamp(startJobDate) + "\n").append("Fine Job: " + Utils.printTimeStamp(endJobDate) + "\n\n").append(config.getTextFooter());
+		ans.append("\n\nInizio Job: " + Utils.printTimeStamp(startJobDate) + "\n")
+				.append("Fine Job: " + Utils.printTimeStamp(endJobDate) + "\n\n").append(config.getTextFooter());
 		return ans.toString();
 	}
-	
+
 	public static Date getYesterdayDate() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -1);
 		return cal.getTime();
 	}
-	
+
 	public static Date getTomorrowDate() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, +1);
 		return cal.getTime();
 	}
-	
+
 }

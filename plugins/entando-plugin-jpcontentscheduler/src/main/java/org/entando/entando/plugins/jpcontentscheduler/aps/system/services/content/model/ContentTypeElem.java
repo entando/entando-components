@@ -24,82 +24,83 @@ package org.entando.entando.plugins.jpcontentscheduler.aps.system.services.conte
 import java.io.Serializable;
 import java.util.List;
 
-public class ContentTypeElem implements Serializable{
-	
+public class ContentTypeElem implements Serializable {
+
 	private static final long serialVersionUID = 6825571071130570645L;
 
-        public ContentTypeElem(String contentType, String startDateAttr, String endDateAttro, String idContentReplace, String suspend, List<String> idsCategories,String modelIdContentReplace) {
-            this.contentType = contentType;
-            this.startDateAttr = startDateAttr;
-            this.endDateAttro = endDateAttro;
-            this.idContentReplace = idContentReplace;
-            this.suspend = suspend;
-            this.idsCategories = idsCategories;
-            this.modelIdContentReplace = modelIdContentReplace;
-        }
-		
-	
+	public ContentTypeElem(String contentType, String startDateAttr, String endDateAttro, String idContentReplace,
+			String suspend, List<String> idsCategories, String modelIdContentReplace) {
+		this.contentType = contentType;
+		this.startDateAttr = startDateAttr;
+		this.endDateAttro = endDateAttro;
+		this.idContentReplace = idContentReplace;
+		this.suspend = suspend;
+		this.idsCategories = idsCategories;
+		this.modelIdContentReplace = modelIdContentReplace;
+	}
+
 	public String getContentType() {
 		return contentType;
 	}
+
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
+
 	public String getStartDateAttr() {
 		return startDateAttr;
 	}
+
 	public void setStartDateAttr(String startDateAttr) {
 		this.startDateAttr = startDateAttr;
 	}
+
 	public String getEndDateAttro() {
 		return endDateAttro;
 	}
+
 	public void setEndDateAttro(String endDateAttro) {
 		this.endDateAttro = endDateAttro;
 	}
 
-        public String getIdContentReplace() {
-            return idContentReplace;
-        }
+	public String getIdContentReplace() {
+		return idContentReplace;
+	}
 
-        public void setIdContentReplace(String idContentReplace) {
-            this.idContentReplace = idContentReplace;
-        }
-        
-        public String getSuspend() {
-            return suspend;
-        }
+	public void setIdContentReplace(String idContentReplace) {
+		this.idContentReplace = idContentReplace;
+	}
 
-        public void setSuspend(String suspend) {
-            this.suspend = suspend;
-        }      
+	public String getSuspend() {
+		return suspend;
+	}
 
-        public List<String> getIdsCategories() {
-            return idsCategories;
-        }
+	public void setSuspend(String suspend) {
+		this.suspend = suspend;
+	}
 
-        public void setIdsCategories(List<String> idsCategories) {
-            this.idsCategories = idsCategories;
-        }
+	public List<String> getIdsCategories() {
+		return idsCategories;
+	}
 
-        public String getModelIdContentReplace() {
-            return modelIdContentReplace;
-        }
+	public void setIdsCategories(List<String> idsCategories) {
+		this.idsCategories = idsCategories;
+	}
 
-        public void setModelIdContentReplace(String modelIdContentReplace) {
-            this.modelIdContentReplace = modelIdContentReplace;
-        }
-                
-        
-        
+	public String getModelIdContentReplace() {
+		return modelIdContentReplace;
+	}
+
+	public void setModelIdContentReplace(String modelIdContentReplace) {
+		this.modelIdContentReplace = modelIdContentReplace;
+	}
+
 	private String contentType;
 	private String startDateAttr;
 	private String endDateAttro;
-        private String idContentReplace;
-        private String modelIdContentReplace;
-        private String suspend;
-        private List<String> idsCategories;
-	
-	
-	
+	private String idContentReplace;
+	private String modelIdContentReplace;
+	private String suspend;
+	private List<String> idsCategories;
+
 }

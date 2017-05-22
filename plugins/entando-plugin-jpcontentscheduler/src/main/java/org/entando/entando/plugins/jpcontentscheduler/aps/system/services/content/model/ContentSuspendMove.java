@@ -24,7 +24,7 @@ package org.entando.entando.plugins.jpcontentscheduler.aps.system.services.conte
 import java.util.List;
 
 public class ContentSuspendMove {
-	
+
 	private String _suspend;
 	private List<String> _idsContents;
 	private String _typeContent;
@@ -34,10 +34,12 @@ public class ContentSuspendMove {
 	private String fieldNameModelContentReplace;
 	private String contentIdReplace;
 	private String contentModelReplace;
-	
-	public ContentSuspendMove() {}
-	
-	public ContentSuspendMove(String suspend, List<String> idsContents, String typeContent, String globalCat, List<String> catType, String fieldNameContentReplace, String fieldNameModelContentReplace) {
+
+	public ContentSuspendMove() {
+	}
+
+	public ContentSuspendMove(String suspend, List<String> idsContents, String typeContent, String globalCat,
+			List<String> catType, String fieldNameContentReplace, String fieldNameModelContentReplace) {
 		this._suspend = suspend;
 		this._idsContents = idsContents;
 		this._typeContent = typeContent;
@@ -50,6 +52,7 @@ public class ContentSuspendMove {
 	public String getSuspend() {
 		return _suspend;
 	}
+
 	public void setSuspend(String suspend) {
 		this._suspend = suspend;
 	}
@@ -57,6 +60,7 @@ public class ContentSuspendMove {
 	public List<String> getIdsContents() {
 		return _idsContents;
 	}
+
 	public void setIdsContents(List<String> idsContents) {
 		this._idsContents = idsContents;
 	}
@@ -64,6 +68,7 @@ public class ContentSuspendMove {
 	public String getTypeContent() {
 		return _typeContent;
 	}
+
 	public void setTypeContent(String typeContent) {
 		this._typeContent = typeContent;
 	}
@@ -71,6 +76,7 @@ public class ContentSuspendMove {
 	public String getGlobalCat() {
 		return _globalCat;
 	}
+
 	public void setGlobalCat(String globalCat) {
 		this._globalCat = globalCat;
 	}
@@ -78,6 +84,7 @@ public class ContentSuspendMove {
 	public List<String> getCatType() {
 		return catType;
 	}
+
 	public void setCatType(List<String> catType) {
 		this.catType = catType;
 	}
@@ -85,6 +92,7 @@ public class ContentSuspendMove {
 	public String getFieldNameContentReplace() {
 		return fieldNameContentReplace;
 	}
+
 	public void setFieldNameContentReplace(String fieldNameContentReplace) {
 		this.fieldNameContentReplace = fieldNameContentReplace;
 	}
@@ -92,6 +100,7 @@ public class ContentSuspendMove {
 	public String getContentIdReplace() {
 		return contentIdReplace;
 	}
+
 	public void setContentIdReplace(String contentIdReplace) {
 		this.contentIdReplace = contentIdReplace;
 	}
@@ -99,6 +108,7 @@ public class ContentSuspendMove {
 	public String getContentModelReplace() {
 		return contentModelReplace;
 	}
+
 	public void setContentModelReplace(String contentModelReplace) {
 		this.contentModelReplace = contentModelReplace;
 	}
@@ -106,8 +116,9 @@ public class ContentSuspendMove {
 	public String getFieldNameModelContentReplace() {
 		return fieldNameModelContentReplace;
 	}
+
 	public void setFieldNameModelContentReplace(String fieldNameModelContentReplace) {
 		this.fieldNameModelContentReplace = fieldNameModelContentReplace;
 	}
-	
+
 }

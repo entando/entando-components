@@ -26,7 +26,7 @@ import java.io.Serializable;
 public class ContentState implements Comparable<ContentState>, Serializable {
 
 	private static final long serialVersionUID = -1124975021255290835L;
-	
+
 	private String _contentid;
 	private String _type;
 	private String _desciption;
@@ -36,6 +36,7 @@ public class ContentState implements Comparable<ContentState>, Serializable {
 	public String getAction() {
 		return _action;
 	}
+
 	public void setAction(String action) {
 		this._action = action;
 	}
@@ -43,6 +44,7 @@ public class ContentState implements Comparable<ContentState>, Serializable {
 	public String getResult() {
 		return _result;
 	}
+
 	public void setResult(String result) {
 		this._result = result;
 	}
@@ -50,6 +52,7 @@ public class ContentState implements Comparable<ContentState>, Serializable {
 	public String getContentid() {
 		return _contentid;
 	}
+
 	public void setContentid(String contentid) {
 		this._contentid = contentid;
 	}
@@ -57,6 +60,7 @@ public class ContentState implements Comparable<ContentState>, Serializable {
 	public String getType() {
 		return _type;
 	}
+
 	public void setTypeid(String type) {
 		this._type = type;
 	}
@@ -64,10 +68,11 @@ public class ContentState implements Comparable<ContentState>, Serializable {
 	public String getDesc() {
 		return _desciption;
 	}
+
 	public void setDesc(String desciption) {
 		this._desciption = desciption;
 	}
-	
+
 	public ContentState(String contentid, String type, String desciption, String action, String result) {
 		this._contentid = contentid;
 		this._type = type;
@@ -75,10 +80,10 @@ public class ContentState implements Comparable<ContentState>, Serializable {
 		this._action = action;
 		this._result = result;
 	}
-	
+
 	@Override
 	public int compareTo(ContentState o) {
 		return this._contentid.compareTo(o._contentid);
 	}
-	
+
 }

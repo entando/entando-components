@@ -22,22 +22,22 @@
 package org.entando.entando.plugins.jpcontentscheduler;
 
 import org.entando.entando.plugins.jpcontentscheduler.aps.TestApsSample;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.TestContentJobs;
 import org.entando.entando.plugins.jpcontentscheduler.apsadmin.TestApsAdminSample;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.TestContentJobs;
 
 public class AllTests {
-	
+
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for Content scheduler plugin");
-		
+
 		suite.addTestSuite(TestContentJobs.class);
 		suite.addTestSuite(TestApsSample.class);
 		suite.addTestSuite(TestApsAdminSample.class);
-		
+
 		return suite;
 	}
-	
+
 }

@@ -21,6 +21,13 @@
  */
 package org.entando.entando.plugins.jpcontentscheduler.apsadmin.config;
 
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentJobs;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.IContentSchedulerManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
@@ -31,20 +38,14 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.opensymphony.xwork2.Action;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentJobs;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.IContentSchedulerManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 
 /**
  * @author E.Santoboni
  */
 public class ConfigAction extends BaseAction {
-	
-	private static final Logger _logger =  LoggerFactory.getLogger(ConfigAction.class);
-	
+
+	private static final Logger _logger = LoggerFactory.getLogger(ConfigAction.class);
+
 	public String viewItem() {
 		try {
 			String config = this.getBaseConfigManager().getConfigItem(this.getItem());
@@ -55,7 +56,7 @@ public class ConfigAction extends BaseAction {
 		}
 		return Action.SUCCESS;
 	}
-	
+
 	public String saveItem() {
 		try {
 			this.getBaseConfigManager().updateConfigItem(this.getItem(), this.getConfig());
@@ -66,16 +67,20 @@ public class ConfigAction extends BaseAction {
 		}
 		return Action.SUCCESS;
 	}
-	
+
 	public String executeJob() {
 		try {
 			ContentJobs contentJobs = new ContentJobs();
-			//this._contentJobs.setApplicationContext(apx);
-			ICategoryManager categoryManager = (ICategoryManager) ApsWebApplicationUtils.getBean(SystemConstants.CATEGORY_MANAGER, this.getRequest());
-			IContentSchedulerManager contentSchedulerManager = (IContentSchedulerManager) ApsWebApplicationUtils.getBean("jpcontentschedulerContentSchedulerManager", this.getRequest());
-			IContentManager contentManager = (IContentManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MANAGER, this.getRequest());
+			// this._contentJobs.setApplicationContext(apx);
+			ICategoryManager categoryManager = (ICategoryManager) ApsWebApplicationUtils.getBean(SystemConstants.CATEGORY_MANAGER,
+					this.getRequest());
+			IContentSchedulerManager contentSchedulerManager = (IContentSchedulerManager) ApsWebApplicationUtils
+					.getBean("jpcontentschedulerContentSchedulerManager", this.getRequest());
+			IContentManager contentManager = (IContentManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MANAGER,
+					this.getRequest());
 			IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.getRequest());
-			IContentModelManager contentModelManager = (IContentModelManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MODEL_MANAGER, this.getRequest());
+			IContentModelManager contentModelManager = (IContentModelManager) ApsWebApplicationUtils
+					.getBean(JacmsSystemConstants.CONTENT_MODEL_MANAGER, this.getRequest());
 			contentJobs.setCategoryManager(categoryManager);
 			contentJobs.setContentManager(contentManager);
 			contentJobs.setContentModelManager(contentModelManager);
@@ -89,10 +94,11 @@ public class ConfigAction extends BaseAction {
 		}
 		return Action.SUCCESS;
 	}
-	
+
 	public void setItem(String item) {
 		this._item = item;
 	}
+
 	public String getItem() {
 		return _item;
 	}
@@ -100,20 +106,22 @@ public class ConfigAction extends BaseAction {
 	public void setConfig(String config) {
 		this._config = config;
 	}
+
 	public String getConfig() {
 		return _config;
 	}
-	
+
 	public void setBaseConfigManager(ConfigInterface baseConfigManager) {
 		this._baseConfigManager = baseConfigManager;
 	}
+
 	public ConfigInterface getBaseConfigManager() {
 		return _baseConfigManager;
 	}
-	
+
 	private ConfigInterface _baseConfigManager;
-	
+
 	private String _item = ContentThreadConstants.CONTENTTHREAD_CONFIG_ITEM;
 	private String _config;
-	
+
 }

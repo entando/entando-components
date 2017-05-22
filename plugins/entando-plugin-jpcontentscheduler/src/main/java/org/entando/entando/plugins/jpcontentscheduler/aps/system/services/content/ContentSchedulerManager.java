@@ -22,11 +22,26 @@
 package org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentState;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentSuspendMove;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentThreadConfig;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentTypeElem;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.parse.ContentThreadConfigDOM;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.util.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -35,40 +50,24 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
-
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
-
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
-
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.IWorkContentSearcherDAO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jpmail.aps.services.mail.IMailManager;
-import java.util.Calendar;
-import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
-import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
-import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentState;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentSuspendMove;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentThreadConfig;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentTypeElem;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.parse.ContentThreadConfigDOM;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.util.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CacheEvict;
 
 /**
- * Classe che implementa i servizi da necessari al thread di pubblicazione/sospenzione automatica
+ * Classe che implementa i servizi da necessari al thread di
+ * pubblicazione/sospenzione automatica
  */
 public class ContentSchedulerManager extends AbstractService implements IContentSchedulerManager {
-	
-	private static final Logger _logger =  LoggerFactory.getLogger(ContentSchedulerManager.class);
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentSchedulerManager.class);
 	private static final long serialVersionUID = 6880576602469119814L;
 
 	private IWorkContentSearcherDAO _workContentSearcherDAO;
@@ -108,6 +107,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	/**
 	 * Restituisce tutti i contenuti che hanno un attributo con nome key
 	 * Data_inizio e valore la data corrente
+	 * 
 	 * @throws com.agiletec.aps.system.exception.ApsSystemException
 	 */
 	@Override
@@ -119,17 +119,15 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 				String filterKey = elem.getStartDateAttr();
 				if (null != filterKey) {
 					Calendar cal = Calendar.getInstance();
-					//cal.setTime(new Date());
+					// cal.setTime(new Date());
 					cal.set(Calendar.HOUR_OF_DAY, 0);
 					cal.set(Calendar.MINUTE, 0);
 					cal.set(Calendar.SECOND, 1);
 					Date start = cal.getTime();
 					cal.add(Calendar.DAY_OF_YEAR, 1);
 					Date end = cal.getTime();
-					//System.out.println("TIPO " + elem.getContentType() + " - >>> data di start " + start + " - >>> data di end " + end);
-					EntitySearchFilter[] filters = new EntitySearchFilter[]{new EntitySearchFilter(filterKey, true, start, end)};
+					EntitySearchFilter[] filters = new EntitySearchFilter[] { new EntitySearchFilter(filterKey, true, start, end) };
 					List<String> retrieved = this.getWorkContentSearcherDAO().searchId(elem.getContentType(), filters);
-					//System.out.println("trovati "+retrieved.size()+" contenuti di tipo "+elem.getContentType());
 					ans.addAll(retrieved);
 				}
 			}
@@ -143,6 +141,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	/**
 	 * Restituisce tutti i contenuti che hanno un attributo con nome key
 	 * Data_fine e valore la data corrente
+	 * 
 	 * @throws com.agiletec.aps.system.exception.ApsSystemException
 	 */
 	@Override
@@ -154,19 +153,18 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 				String filterKey = elem.getEndDateAttro();
 				if (null != filterKey) {
 					Date actualDate = new Date();
-					//Data fine compresa nella settimana
+					// Data fine compresa nella settimana
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(actualDate);
 					cal.add(Calendar.DATE, -7);
 					Date beginDate = cal.getTime();
-					//Date beginDate = sdf.parse("01/01/1970");
-					//System.out.println("TIPO " + elem.getContentType() + " - >>> data di end " + beginDate);
 					EntitySearchFilter blobFilter = new EntitySearchFilter(IContentManager.CONTENT_ONLINE_FILTER_KEY, false, null, false);
-					EntitySearchFilter[] filters = new EntitySearchFilter[]{new EntitySearchFilter(filterKey, true, beginDate, new Date()), blobFilter};
-
+					EntitySearchFilter[] filters = new EntitySearchFilter[] {
+							new EntitySearchFilter(filterKey, true, beginDate, new Date()), blobFilter };
 					List<String> retrieved = this.getWorkContentSearcherDAO().searchId(elem.getContentType(), filters);
-					//System.out.println("trovati "+retrieved.size()+" contenuti di tipo "+elem.getContentType());
-					ContentSuspendMove contSuspMov = new ContentSuspendMove(elem.getSuspend(), retrieved, elem.getContentType(), this.getConfig().getGlobalCat(), elem.getIdsCategories(), elem.getIdContentReplace(), elem.getModelIdContentReplace());
+					ContentSuspendMove contSuspMov = new ContentSuspendMove(elem.getSuspend(), retrieved, elem.getContentType(),
+							this.getConfig().getGlobalCat(), elem.getIdsCategories(), elem.getIdContentReplace(),
+							elem.getModelIdContentReplace());
 					contSuspMov.setContentIdReplace(this.getConfig().getContentIdRepl());
 					contSuspMov.setContentModelReplace(this.getConfig().getContentModelRepl());
 					ans.add(contSuspMov);
@@ -187,32 +185,13 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	 * @throws ApsSystemException
 	 */
 	@Override
-	public void sendMailWithResults(List<ContentState> publishedContents, List<ContentState> suspendedContents, List<ContentState> movedContents, Date startJobDate, Date endJobDate) throws ApsSystemException {
-		//TODO send to groups
-		//sendToGroups(publishedContents, suspendedContents);
+	public void sendMailWithResults(List<ContentState> publishedContents, List<ContentState> suspendedContents,
+			List<ContentState> movedContents, Date startJobDate, Date endJobDate) throws ApsSystemException {
+		// TODO send to groups
+		// sendToGroups(publishedContents, suspendedContents);
 		sendToUsers(publishedContents, suspendedContents, movedContents, startJobDate, endJobDate);
 	}
 
-	/*
-	@SuppressWarnings("unused")
-	private void sendToGroups(List<ContentState> publishedContents, List<ContentState> suspendedContents, List<ContentState> movedContents, Date startJobDate, Date endJobDate) throws ApsSystemException{
-		Map<String, List<String>> mapGroups = this.getConfig().getGroupsContentType();
-		Set<String> keys =  mapGroups.keySet();
-		for (Iterator<String> i = keys.iterator(); i.hasNext();){
-			String key = i.next();
-			List<UserDetails> userList = getAuthorizedUsers(key);
-			if (userList !=null && userList.size()>0){
-				List<String> typesList = mapGroups.get(key);
-				List<ContentState> contentPList = contentOfTypes(publishedContents, typesList);
-				List<ContentState> contentSList = contentOfTypes(suspendedContents, typesList);
-                                List<ContentState> contentMList = contentOfTypes(movedContents, typesList);
-                                			
-				String mailBody = Utils.prepareMailText(contentPList, contentSList, contentMList, this.getConfig(), startJobDate, endJobDate);
-				mailManager.sendMail(mailBody, config.getSubject(), (String[])userList.toArray(), null, null, config.getSenderCode(),IMailManager.CONTENTTYPE_TEXT_HTML);
-			}
-		}
-	}
-	 */
 	/**
 	 * Spedisco agli utenti specificati nella configurazione
 	 *
@@ -222,7 +201,8 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	 * @param endJobDate
 	 * @throws ApsSystemException
 	 */
-	private void sendToUsers(List<ContentState> publishedContents, List<ContentState> suspendedContents, List<ContentState> moveContents, Date startJobDate, Date endJobDate) throws ApsSystemException {
+	private void sendToUsers(List<ContentState> publishedContents, List<ContentState> suspendedContents, List<ContentState> moveContents,
+			Date startJobDate, Date endJobDate) throws ApsSystemException {
 		Map<String, List<String>> mapUsers = this.getConfig().getUsersContentType();
 		Set<String> keys = mapUsers.keySet();
 		for (Iterator<String> i = keys.iterator(); i.hasNext();) {
@@ -240,24 +220,29 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 				} else {
 					UserProfile profile = (UserProfile) user.getProfile();
 					if (null != profile) {
-						ITextAttribute mailAttribute = (ITextAttribute) profile.getAttributeByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL);
+						ITextAttribute mailAttribute = (ITextAttribute) profile
+								.getAttributeByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL);
 						String[] email = new String[1];
 						if (null != mailAttribute && mailAttribute.getText().trim().length() > 0) {
 							email[0] = mailAttribute.getText();
-							String simpleText = Utils.prepareMailText(contentPList, contentSList, contentMList, this.getConfig(), startJobDate, endJobDate);
+							String simpleText = Utils.prepareMailText(contentPList, contentSList, contentMList, this.getConfig(),
+									startJobDate, endJobDate);
 							if (this.getConfig().isAlsoHtml()) {
 								String applBaseUrl = this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL);
-								String htmlText = Utils.prepareMailHtml(contentPList, contentSList, contentMList, this.getConfig(), startJobDate, endJobDate, applBaseUrl);
-								boolean issent = this.getMailManager().sendMixedMail(simpleText, htmlText, config.getSubject(), null, email, null, null, config.getSenderCode());
-								//System.out.println("***MAIL html");
+								String htmlText = Utils.prepareMailHtml(contentPList, contentSList, contentMList, this.getConfig(),
+										startJobDate, endJobDate, applBaseUrl);
+								boolean issent = this.getMailManager().sendMixedMail(simpleText, htmlText, config.getSubject(), null, email,
+										null, null, config.getSenderCode());
+								// System.out.println("***MAIL html");
 								if (issent) {
 									ApsSystemUtils.getLogger().info(ContentThreadConstants.MAIL_SENT + key);
 								} else {
 									ApsSystemUtils.getLogger().error(ContentThreadConstants.SEND_ERROR + key);
 								}
 							} else {
-								//System.out.println("***MAIL simple");
-								boolean issent = this.getMailManager().sendMail(simpleText, config.getSubject(), email, null, null, config.getSenderCode());
+								// System.out.println("***MAIL simple");
+								boolean issent = this.getMailManager().sendMail(simpleText, config.getSubject(), email, null, null,
+										config.getSenderCode());
 								if (issent) {
 									ApsSystemUtils.getLogger().info(ContentThreadConstants.MAIL_SENT + key);
 								} else {
@@ -310,7 +295,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	 */
 	public IApsAuthority getApsAuthority(String groupName) {
 		IApsAuthority authority = null;
-		//this.getAuthorizatorManager().getAuthority(groupName);
+		// this.getAuthorizatorManager().getAuthority(groupName);
 		return authority;
 	}
 
@@ -321,7 +306,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	 * @return
 	 */
 	public List<UserDetails> getAuthorizedUsers(String groupName) {
-		//IApsAuthority auth = this.getApsAuthority(groupName);
+		// IApsAuthority auth = this.getApsAuthority(groupName);
 		List<UserDetails> users = null;
 		try {
 			List<String> usernames = this.getAuthorizationManager().getUsersByGroup(groupName, false);
@@ -333,15 +318,16 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 				}
 			}
 
-			return users; //this.getAuthorizatorManager().getUsersByAuthority(auth);
+			return users; // this.getAuthorizatorManager().getUsersByAuthority(auth);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getUserAuthorizated");
 			throw new RuntimeException("Errore in ricerca utenti autorizzati", t);
 		}
 	}
-	
+
 	/**
 	 * Return the desired system parameter
+	 * 
 	 * @param paramName
 	 * @return
 	 */
@@ -353,22 +339,25 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 			Map<String, String> systemParams = SystemParamsUtils.getParams(xmlParams);
 			param = systemParams.get(paramName);
 		} catch (Throwable t) {
-			//_logger.error("error getting the system parameter " + paramName, t);
+			// _logger.error("error getting the system parameter " + paramName,
+			// t);
 			ApsSystemUtils.logThrowable(t, this, "error getting the system parameter " + paramName);
 		}
 		return param;
 	}
-	
+
 	protected IContentSchedulerDAO getContentSchedulerDAO() {
 		return _contentSchedulerDAO;
 	}
+
 	public void setContentSchedulerDAO(IContentSchedulerDAO contentSchedulerDAO) {
 		this._contentSchedulerDAO = contentSchedulerDAO;
 	}
-	
+
 	public IUserManager getUserManager() {
 		return _userManager;
 	}
+
 	public void setUserManager(IUserManager userManager) {
 		this._userManager = userManager;
 	}
@@ -376,6 +365,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	protected IWorkContentSearcherDAO getWorkContentSearcherDAO() {
 		return _workContentSearcherDAO;
 	}
+
 	public void setWorkContentSearcherDAO(IWorkContentSearcherDAO workContentSearcherDAO) {
 		this._workContentSearcherDAO = workContentSearcherDAO;
 	}
@@ -383,14 +373,16 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	public IMailManager getMailManager() {
 		return _mailManager;
 	}
+
 	public void setMailManager(IMailManager mailManager) {
 		this._mailManager = mailManager;
 	}
-	
+
 	@Override
 	public ContentThreadConfig getConfig() {
 		return config;
 	}
+
 	public void setConfig(ContentThreadConfig config) {
 		this.config = config;
 	}
@@ -398,13 +390,15 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	public ConfigInterface getConfigManager() {
 		return configManager;
 	}
+
 	public void setConfigManager(ConfigInterface configManager) {
 		this.configManager = configManager;
 	}
-	
+
 	public IAuthorizationManager getAuthorizationManager() {
 		return _authorizationManager;
 	}
+
 	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
 		this._authorizationManager = authorizationManager;
 	}
@@ -445,15 +439,16 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	 * Unpublish a content, preventing it from being displayed in the portal.
 	 * Obviously the content itself is not deleted.
 	 *
-	 * @param content the content to unpublish.
-	 * @param updateLastModified .
-	 * @throws ApsSystemException in case of error
+	 * @param content
+	 * the content to unpublish.
+	 * @param updateLastModified
+	 * .
+	 * @throws ApsSystemException
+	 * in case of error
 	 */
 	@Override
-	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
-			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
-	@CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
-			groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
+	@CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
 	public void removeOnLineContent(Content content, boolean updateLastModified) throws ApsSystemException {
 		try {
 			if (updateLastModified) {
@@ -464,7 +459,8 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 				content.setStatus(Content.STATUS_READY);
 			}
 			this.getContentSchedulerDAO().unpublishOnLineContent(content);
-			//this.notifyPublicContentChanging(content, PublicContentChangedEvent.REMOVE_OPERATION_CODE);
+			// this.notifyPublicContentChanging(content,
+			// PublicContentChangedEvent.REMOVE_OPERATION_CODE);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "removeOnLineContent");
 			throw new ApsSystemException("Error while removing onLine content", t);
