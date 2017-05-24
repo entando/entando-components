@@ -241,13 +241,18 @@
                                        </s:url>"
 																title="<s:text name="note.joinThisToThat" />: TITOLO_SONDAGGIO_CORRENTE"><s:text
 																		name="label.join" /></a></li>
-															<li><a data-toggle="popover"
-																data-title="<s:property value="#resource.descr" />"
-																data-original-title="" title=""> <span
-																	class="sr-only">Info</span>
-															</a></li>
 														</ul>
 													</div>
+
+												</div>
+
+												<div class="card-pf-top-element">
+													<img data-toggle="popover"
+														data-title="<s:property value="#resource.descr" />"
+														data-original-title="" title=""
+														src="<s:property value="%{#resource.getImagePath(1)}"/>"
+														alt=" " style="height: 90px; max-width: 130px"
+														class="img-responsive center-block" />
 													<script>
 														$(
 																"[data-toggle=popover]")
@@ -260,14 +265,6 @@
                                         </div>'
 																		});
 													</script>
-												</div>
-
-												<div class="card-pf-top-element">
-													<%-- Dimension forced for img thumbnail --%>
-													<img
-														src="<s:property value="%{#resource.getImagePath(1)}"/>"
-														alt=" " style="height: 90px; max-width: 130px"
-														class="img-responsive center-block" />
 												</div>
 												<h2 class="card-pf-title text-center">
 													<s:set var="fileNameVar" value="#resource.masterFileName" />
@@ -340,9 +337,6 @@
 									</s:url>
 
 									<div class="list-group-item">
-										<%--<div class="list-view-pf-checkbox">
-                                        <input type="checkbox">
-                                    </div>--%>
 										<div class="list-view-pf-actions">
 											<div class="dropdown pull-right dropdown-kebab-pf">
 												<button class="btn btn-link dropdown-toggle" type="button"
@@ -351,31 +345,36 @@
 													<span class="fa fa-ellipsis-v"></span>
 												</button>
 												<ul class="dropdown-menu dropdown-menu-right"
-													aria-labelledby="dropdownKebabRight2">
-													<li><s:if test="!onEditContent">
-															<a
-																href="<s:property value="URLedit" escapeHtml="false" />"
-																title="<s:text name="label.edit" />: <s:property value="#resource.descr" />">
-																<s:text name="label.edit" />
-															</a>
-														</s:if> <s:else>
-															<a
-																href="<s:property value="URLuse" escapeHtml="false" />"
-																title="<s:text name="note.joinThisToThat" />: <s:property value="content.descr" />">
-																<s:text name="label.use" />
-															</a>
-														</s:else></li>
+													aria-labelledby="dropdownKebabRight1">
 													<li><a
-														href="<s:property value="URLtrash" escapeHtml="false" />"><s:text
-																name="label.delete" /></a></li>
+														href="<s:url action="joinImage" namespace="/do/jpsurvey/Survey">
+                                           <s:param name="resourceId" value="%{#resourceid}" />
+                                           <s:param name="surveyId" value="surveyId" />
+                                           <s:param name="questionnaire" value="questionnaire" />
+                                       </s:url>"
+														title="<s:text name="note.joinThisToThat" />: TITOLO_SONDAGGIO_CORRENTE"><s:text
+																name="label.join" /></a></li>
 												</ul>
 											</div>
 										</div>
 										<div class="list-view-pf-main-info">
 											<div class="list-view-pf-left col-o" style="width: 130px">
-												<img
+												<img data-toggle="popover"
+													data-title="<s:property value="#resource.descr" />"
+													data-original-title="" title=""
 													src="<s:property value="%{#resource.getImagePath(1)}"/>"
 													alt=" " class="img-responsive center-block" />
+												<script>
+													$("[data-toggle=popover]")
+															.popover(
+																	{
+																		html : true,
+																		placement : "top",
+																		content : '<div class="list-group margin-small-top">\n\
+                                        <a href="<s:property value="%{#resource.getImagePath(1)}"/>" class="list-group-item text-center">View full size</a>\n\
+                                        </div>'
+																	});
+												</script>
 											</div>
 											<div class="list-view-pf-body">
 												<div class="list-view-pf">
