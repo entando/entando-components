@@ -1,5 +1,6 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
+
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="title.pageDesigner"/></li>
     <li>
@@ -16,7 +17,7 @@
         <s:text name="title.configPage"/>
         <span class="pull-right">
             <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-               data-content="TO be inserted" data-placement="left" data-original-title="">
+               data-content="<s:text name="title.configPage.help"/>" data-placement="left" data-original-title="">
                 <i class="fa fa-question-circle-o" aria-hidden="true"></i>
             </a>
         </span>
@@ -33,8 +34,9 @@
     <s:set var="breadcrumbs_pivotPageCode" value="pageCode"/>
     <s:include value="/WEB-INF/apsadmin/jsp/portal/include/pageInfo_breadcrumbs.jsp"/>
 
-    <s:action namespace="/do/Page" name="printPageDetails" executeResult="true" ignoreContextParams="true"><s:param
-            name="selectedNode" value="pageCode"></s:param></s:action>
+    <s:action namespace="/do/Page" name="printPageDetails" executeResult="true" ignoreContextParams="true">
+		<s:param name="selectedNode" value="pageCode"></s:param>
+	</s:action>
 
     <s:form namespace="/do/jpphotogallery/Page/SpecialWidget/Photogallery" cssClass="form-horizontal">
         <div class="panel panel-default">
