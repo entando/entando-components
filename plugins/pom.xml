@@ -59,8 +59,8 @@
         -->
         <module>entando-plugin-jprssaggregator</module>
         <module>entando-plugin-jpwidgetutils</module>
-        <!--
         <module>entando-plugin-jpversioning</module>
+        <!--
         <module>entando-plugin-jpstats</module>
         <module>entando-plugin-jpcontentworkflow</module>
         <module>entando-plugin-jpcontentfeedback</module>

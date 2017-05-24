@@ -29,6 +29,11 @@
             <result type="tiles">admin.jpversioning.resource.trash.${resourceTypeCode}.list</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
         </action>
+
+		<action name="trash" class="jpversioningTrashedResourceAction" method="trash">
+			<result type="tiles">admin.jpversioning.resource.trash.${resourceTypeCode}.trash</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
+		</action>
         
         <action name="remove" class="jpversioningTrashedResourceAction" method="remove">
             <result type="redirectAction">
