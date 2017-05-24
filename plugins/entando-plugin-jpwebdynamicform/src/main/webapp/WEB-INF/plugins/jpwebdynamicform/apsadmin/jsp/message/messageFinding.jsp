@@ -28,16 +28,19 @@
         <div class="col-sm-6">
             <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
                 <li class="active">
-                    <a href="<s:url action="list" namespace="/do/jpwebdynamicform/Message/Operator" />"><s:text
-                            name="breadcrumb.messageList"/></a>
+                    <a href="<s:url action="list" namespace="/do/jpwebdynamicform/Message/Operator" />">
+                        <s:text name="breadcrumb.messageList"/>
+                    </a>
                 </li>
                 <li>
-                    <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />"><s:text
-                            name="breadcrumb.configuration"/></a>
+                    <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />">
+                        <s:text name="breadcrumb.configuration"/>
+                    </a>
                 </li>
                 <li>
-                    <a href="<s:url namespace="/do/Entity" action="initViewEntityTypes"><s:param name="entityManagerName">jpwebdynamicformMessageManager</s:param></s:url>"><s:text
-                            name="breadcrumb.messageType"/></a>
+                    <a href="<s:url namespace="/do/jpwebdynamicform/Entity" action="viewEntityTypes"><s:param name="entityManagerName">jpwebdynamicformMessageManager</s:param></s:url>">
+                        <s:text name="breadcrumb.messageType"/>
+                    </a>
                 </li>
             </ul>
         </div>

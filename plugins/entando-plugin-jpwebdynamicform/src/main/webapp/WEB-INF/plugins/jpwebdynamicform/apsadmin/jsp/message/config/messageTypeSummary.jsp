@@ -34,7 +34,7 @@
                             name="breadcrumb.configuration"/></a>
                 </li>
                 <li>
-                    <a href="<s:url namespace="/do/Entity" action="initViewEntityTypes"><s:param name="entityManagerName">jpwebdynamicformMessageManager</s:param></s:url>"><s:text
+                    <a href="<s:url namespace="/do/jpwebdynamicform/Entity" action="viewEntityTypes"><s:param name="entityManagerName">jpwebdynamicformMessageManager</s:param></s:url>"><s:text
                             name="breadcrumb.messageType"/></a>
                 </li>
             </ul>
