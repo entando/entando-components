@@ -48,8 +48,8 @@
         <!--
         <module>entando-plugin-jpaddressbook</module>
         <module>entando-plugin-jpnewsletter</module>
+	-->
         <module>entando-plugin-jpsurvey</module>
-        -->
         <module>entando-plugin-jpavatar</module>
         <module>entando-plugin-jpactionlogger</module>
 		<!--
@@ -63,7 +63,9 @@
         <module>entando-plugin-jpversioning</module>
         <module>entando-plugin-jpstats</module>
         <module>entando-plugin-jpcontentworkflow</module>
+        -->
         <module>entando-plugin-jpcontentfeedback</module>
+        <!--
         <module>entando-plugin-jpcmstagcloud</module>
         -->
         <module>entando-plugin-jpmyportalplus</module>
