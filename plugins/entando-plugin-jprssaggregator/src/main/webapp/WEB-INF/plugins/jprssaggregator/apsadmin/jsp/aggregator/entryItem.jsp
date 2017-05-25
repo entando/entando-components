@@ -4,9 +4,9 @@
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
-	<li><s:text name="jpavatar.admin.menu.integration"/></li>
+	<li><s:text name="breadcrumb.integrations"/></li>
 	<li>
-		<s:text name="jpavatar.admin.menu.uxcomponents"/>
+		<s:text name="breadcrumb.integrations.components"/>
 	</li>
 	<li>
 		<a href="<s:url namespace="/do/jprssaggregator/Aggregator" action="list" />">
@@ -174,9 +174,6 @@
 
 						<s:set var="inputFieldName" value="'categoryCode'" />
 						<s:set var="selectedTreeNode" value="selectedNode" />
-
-							<%--<s:set var="inputFieldName" value="%{'parentCategoryCode'}" />--%>
-							<%--<s:set var="selectedTreeNode" value="%{parentCategoryCode}" />--%>
 						<s:set var="selectedPage" value="%{getCategory(selectedTreeNode)}" />
 						<s:set var="currentRoot" value="categoryRoot" />
 						<s:set var="isPosition" value="false" />
