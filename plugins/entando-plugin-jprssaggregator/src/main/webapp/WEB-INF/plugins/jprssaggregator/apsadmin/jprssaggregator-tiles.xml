@@ -21,7 +21,7 @@
     <definition extends="main.layout" name="jprssaggregator.aggregator.entryItem">
 		<put-attribute name="title" value="jprssaggregator.title.rssAggregator.rssManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/aggregator/entryItem.jsp" />
-		<put-attribute name="extraResources" value="/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/common/template/extraResources/extraResources.jsp" />
+		<!--<put-attribute name="extraResources" value="/WEB-INF/plugins/jprssaggregator/apsadmin/jsp/common/template/extraResources/extraResources.jsp" />-->
 	</definition>
 	
     <definition extends="main.layout" name="jprssaggregator.aggregator.confirmRemove">
