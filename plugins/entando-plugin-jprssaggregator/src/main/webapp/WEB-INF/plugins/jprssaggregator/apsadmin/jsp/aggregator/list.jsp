@@ -20,7 +20,7 @@
                 <s:text name="jprssaggregator.title.rssAggregator.rssManagement"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="TO be inserted" data-placement="left" data-original-title="">
+                       data-content="jprssaggregator.title.rssAggregator.rssManagement.help" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
