@@ -17,7 +17,7 @@
                 <s:text name="title.message.original"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="TO be inserted" data-placement="left" data-original-title="">
+                       data-content="<s:text name="jpwebdynamicform.menu.configuration.help"/>" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -34,7 +34,7 @@
                             name="breadcrumb.configuration"/></a>
                 </li>
                 <li>
-                    <a href="<s:url namespace="/do/Entity" action="initViewEntityTypes"><s:param name="entityManagerName">jpwebdynamicformMessageManager</s:param></s:url>"><s:text
+                    <a href="<s:url namespace="/do/jpwebdynamicform/Entity" action="viewEntityTypes"><s:param name="entityManagerName">jpwebdynamicformMessageManager</s:param></s:url>"><s:text
                             name="breadcrumb.messageType"/></a>
                 </li>
             </ul>

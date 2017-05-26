@@ -19,7 +19,7 @@
                 <s:text name="title.message.original"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="TO be inserted" data-placement="left" data-original-title="">
+                       data-content="<s:text name="jpwebdynamicform.menu.messages.help"/>" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -28,16 +28,19 @@
         <div class="col-sm-6">
             <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
                 <li class="active">
-                    <a href="<s:url action="list" namespace="/do/jpwebdynamicform/Message/Operator" />"><s:text
-                            name="breadcrumb.messageList"/></a>
+                    <a href="<s:url action="list" namespace="/do/jpwebdynamicform/Message/Operator" />">
+                        <s:text name="breadcrumb.messageList"/>
+                    </a>
                 </li>
                 <li>
-                    <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />"><s:text
-                            name="breadcrumb.configuration"/></a>
+                    <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />">
+                        <s:text name="breadcrumb.configuration"/>
+                    </a>
                 </li>
                 <li>
-                    <a href="<s:url namespace="/do/Entity" action="initViewEntityTypes"><s:param name="entityManagerName">jpwebdynamicformMessageManager</s:param></s:url>"><s:text
-                            name="breadcrumb.messageType"/></a>
+                    <a href="<s:url namespace="/do/jpwebdynamicform/Entity" action="viewEntityTypes"><s:param name="entityManagerName">jpwebdynamicformMessageManager</s:param></s:url>">
+                        <s:text name="breadcrumb.messageType"/>
+                    </a>
                 </li>
             </ul>
         </div>
