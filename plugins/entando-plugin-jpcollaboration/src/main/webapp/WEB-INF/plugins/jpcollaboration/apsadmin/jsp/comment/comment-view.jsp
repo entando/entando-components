@@ -3,8 +3,46 @@
 <%@ taglib prefix="wpsa" uri="/apsadmin-core" %>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 <%@ taglib prefix="jpcrowdsourcing" uri="/jpcrowdsourcing-apsadmin-core" %>
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="jpcrowdsourcing.admin.title"/></li>
+    <li><s:text name="jpcrowdsourcing.title.comments"/></li>
+    <li class="page-title-container">
+        <s:text name="jpcrowdsourcing.title.comments.view" />
+    </li>
+</ol>
+<div class="page-tabs-header">
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>
+                <s:text name="jpcrowdsourcing.title.comments.view" />
+                <span class="pull-right">
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+                       data-content="TO be inserted" data-placement="left" data-original-title="">
+                        <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+				    </a>
+				</span>
+            </h1>
+        </div>
+        <div class="col-sm-6">
+            <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
+                <li><a
+                        href="<s:url action="list" namespace="/do/collaboration/IdeaInstance" />"><s:text
+                        name="jpcrowdsourcing.ideaInstance.list"/></a></li>
+                <li><a
+                        href="<s:url action="list" namespace="/do/collaboration/Idea" />"><s:text
+                        name="jpcrowdsourcing.idea.list"/></a></li>
+                <li class="active"><a
+                        href="<s:url action="list" namespace="/do/collaboration/Idea/Comment" />"><s:text
+                        name="jpcrowdsourcing.comment.list"/></a></li>
+                <li><a
+                        href="<s:url action="entryConfig" namespace="/do/collaboration/Config" />"><s:text
+                        name="jpcrowdsourcing.config"/></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
-<h1 class="panel panel-default title-page"><span class="panel-body display-block"><s:text name="jpcrowdsourcing.admin.title" />&#32;/&#32;<s:text name="jpcrowdsourcing.title.comments.view" /></span></h1>
+
 <div id="main">
     <h2 class="margin-more-bottom"></h2>
 
@@ -24,27 +62,42 @@
         <s:set var="comment" value="%{getComment(commentId)}" />
         <jpcrowdsourcing:idea key="%{#comment.ideaId}" var="idea"/>
 
-        <table class="table table-bordered">
-            <tr>
-                <th class="text-right"><s:text name="jpcrowdsourcing.label.author" /></th>
-                <td><code><s:property value="#comment.username"/></code></td>        
-            </tr>
-            <tr>
-                <th class="text-right"><s:text name="jpcrowdsourcing.label.description" /></th>	
-                <td><s:property value="#comment.comment"/></td>        
-            </tr>
-            <tr>
-                <th class="text-right"><s:text name="jpcrowdsourcing.label.date" /></th>
-                <td><code><s:date name="#comment.creationDate"/></code></td>
-            </tr>
-            <tr>
-                <th class="text-right"><s:text name="label.state" /></th>
-                <s:if test="#comment.status == 3"><s:set var="iconImage">icon fa fa-check text-success</s:set><s:set var="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_approved.singular')}" /></s:if>
-                <s:if test="#comment.status == 2"><s:set var="iconImage">icon fa fa-adjust</s:set><s:set var="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_to_approve.singular')}" /></s:if>
-                <s:if test="#comment.status == 1"><s:set var="iconImage">icon fa fa-pause text-warning</s:set><s:set var="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_not_approved.singular')}" /></s:if>
-                <td><span title="<s:property value="isOnlineStatus"/>" class="<s:property value="iconImage"/>"></span></td>
-            </tr>
-        </table>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover no-mb">
+                <tr>
+                    <th class="text-right col-sm-2"><s:text name="jpcrowdsourcing.label.author" /></th>
+                    <td class="col-sm-10"><code><s:property value="#comment.username"/></code></td>
+                </tr>
+                <tr>
+                    <th class="text-right col-sm-2"><s:text name="jpcrowdsourcing.label.description" /></th>
+                    <td class="col-sm-10"><s:property value="#comment.comment"/></td>
+                </tr>
+                <tr>
+                    <th class="text-right col-sm-2"><s:text name="jpcrowdsourcing.label.date" /></th>
+                    <td class="col-sm-10"><code><s:date name="#comment.creationDate"/></code></td>
+                </tr>
+                <tr>
+                    <th class="text-right col-sm-2"><s:text name="label.state" /></th>
+                    <s:if test="#comment.status == 3">
+                        <s:set var="iconImage">icon fa fa-check text-success</s:set>
+                        <s:set var="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_approved.singular')}" />
+                    </s:if>
+                    <s:if test="#comment.status == 2">
+                        <s:set var="iconImage">icon fa fa-adjust</s:set>
+                        <s:set var="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_to_approve.singular')}" />
+                    </s:if>
+                    <s:if test="#comment.status == 1">
+                        <s:set var="iconImage">icon fa fa-pause text-warning</s:set>
+                        <s:set var="isOnlineStatus" value="%{getText('jpcrowdsourcing.label.status_not_approved.singular')}" />
+                    </s:if>
+                    <td class="col-sm-10">
+                        <span title="<s:property value="isOnlineStatus"/>" class="<s:property value="iconImage"/>"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
         <s:iterator value="#statusMap" var="entry">
             <s:if test="#comment.status != #entry.key">
                 <s:url action="changeStatus" var="changeStatusAction">
@@ -66,7 +119,8 @@
         <p class="centerText">
             <a class="<s:property value="btnClass"/>" href="<s:property value="#changeStatusAction" escapeHtml="false" />" >
                 <span class="<s:property value="btnIcon"/>"></span>&#32;
-                <s:property value="#label" /></a>
+                <s:property value="#label" />
+            </a>
         </p>
 
         <div class="panel panel-default">
