@@ -1,109 +1,160 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-    "http://struts.apache.org/dtds/struts-2.5.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
 
-    <package name="jpwebdynamicform_do/jpwebdynamicform/Message/Operator" namespace="/do/jpwebdynamicform/Message/Operator" extends="entando-default">
-    	
-    	<!-- ######### INIT OPERATIONS FOR MESSAGES LIST INTERFACE ######### -->
-    	
-    	<action name="list" class="jpwebdynamicformMessageFinderAction" >
+    <package name="jpwebdynamicform_do/jpwebdynamicform/Message/Operator"
+             namespace="/do/jpwebdynamicform/Message/Operator" extends="entando-default">
+
+        <!-- ######### INIT OPERATIONS FOR MESSAGES LIST INTERFACE ######### -->
+
+        <action name="list" class="jpwebdynamicformMessageFinderAction">
             <result type="tiles">admin.jpwebdynamicform.Message.list</result>
-        	<interceptor-ref name="entandoDefaultStack">
-        		<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-        		<param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param>
-        	</interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+                <param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param>
+            </interceptor-ref>
         </action>
-        
-    	<action name="search" class="jpwebdynamicformMessageFinderAction" >
+
+        <action name="search" class="jpwebdynamicformMessageFinderAction">
             <result type="tiles">admin.jpwebdynamicform.Message.list</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param>
+            </interceptor-ref>
         </action>
-		
-		<action name="changeEntityType" class="jpwebdynamicformMessageFinderAction" >
-			<result type="redirectAction">search</result>
-			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param></interceptor-ref>
-		</action>
-		
+
+        <action name="changeEntityType" class="jpwebdynamicformMessageFinderAction">
+            <result type="redirectAction">search</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param>
+            </interceptor-ref>
+        </action>
+
         <!-- ######### END OPERATIONS FOR MESSAGES LIST INTERFACE ######### -->
-        
-    	<!-- ######### INIT OPERATIONS FOR MESSAGE VIEWING/ANSWERING INTERFACE ######### -->
-    	
-    	<action name="view" class="jpwebdynamicformOperatorMessageAction" method="view" >
-    		<result name="messageNotFound" type="chain">list</result>
+
+        <!-- ######### INIT OPERATIONS FOR MESSAGE VIEWING/ANSWERING INTERFACE ######### -->
+
+        <action name="view" class="jpwebdynamicformOperatorMessageAction" method="view">
+            <result name="messageNotFound" type="chain">list</result>
             <result type="tiles">admin.jpwebdynamicform.Message.view</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param>
+            </interceptor-ref>
         </action>
-        
-    	<action name="newAnswer" class="jpwebdynamicformOperatorMessageAction" method="newAnswer" >
-    		<result name="messageNotFound" type="chain">list</result>
-    		<result name="input" type="chain">list</result>
+
+        <action name="newAnswer" class="jpwebdynamicformOperatorMessageAction" method="newAnswer">
+            <result name="messageNotFound" type="chain">list</result>
+            <result name="input" type="chain">list</result>
             <result type="tiles">admin.jpwebdynamicform.Message.entryAnswer</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param>
+            </interceptor-ref>
         </action>
-        
-    	<action name="sendAnswer" class="jpwebdynamicformOperatorMessageAction" method="answer" >
-    		<result name="messageNotFound" type="chain">list</result>
+
+        <action name="sendAnswer" class="jpwebdynamicformOperatorMessageAction" method="answer">
+            <result name="messageNotFound" type="chain">list</result>
             <result name="input" type="tiles">admin.jpwebdynamicform.Message.entryAnswer</result>
             <result type="redirectAction">list</result>
-        	<!-- <interceptor-ref name="fileUpload"><param name="maximumSize">5242880</param></interceptor-ref> --><!-- maximun Size = 5 Mb -->
-        	<interceptor-ref name="apsFileUpload" />
-			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param></interceptor-ref>
+            <!-- <interceptor-ref name="fileUpload"><param name="maximumSize">5242880</param></interceptor-ref> --><!-- maximun Size = 5 Mb -->
+            <interceptor-ref name="apsFileUpload"/>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param>
+            </interceptor-ref>
         </action>
 
-    	<action name="trash" class="jpwebdynamicformOperatorMessageAction" method="trash" >
-    		<result name="messageNotFound" type="chain">list</result>
+        <action name="trash" class="jpwebdynamicformOperatorMessageAction" method="trash">
+            <result name="messageNotFound" type="chain">list</result>
             <result type="tiles">admin.jpwebdynamicform.Message.trash</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param>
+            </interceptor-ref>
         </action>
 
-    	<action name="delete" class="jpwebdynamicformOperatorMessageAction" method="delete" >
-    		<result name="messageNotFound" type="chain">list</result>
+        <action name="delete" class="jpwebdynamicformOperatorMessageAction" method="delete">
+            <result name="messageNotFound" type="chain">list</result>
             <result type="redirectAction">list</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">jpwebdynamicform_manageForms</param>
+            </interceptor-ref>
         </action>
 
-    	<!-- ######### END OPERATIONS FOR MESSAGE VIEWING/ANSWERING INTERFACE ######### -->
+        <!-- ######### END OPERATIONS FOR MESSAGE VIEWING/ANSWERING INTERFACE ######### -->
 
     </package>
 
-    <package name="jpwebdynamicform_do/jpwebdynamicform/Message/Config" namespace="/do/jpwebdynamicform/Message/Config" extends="entando-default">
+    <package name="jpwebdynamicform_do/jpwebdynamicform/Message/Config" namespace="/do/jpwebdynamicform/Message/Config"
+             extends="entando-default">
 
-    	<!-- ######### INIT OPERATIONS FOR MESSAGES TYPES CONFIGURATION ######### -->
+        <!-- ######### INIT OPERATIONS FOR MESSAGES TYPES CONFIGURATION ######### -->
 
-    	<action name="list" class="jpwebdynamicformNotifierConfigAction" >
+        <action name="list" class="jpwebdynamicformNotifierConfigAction">
             <result type="tiles">admin.jpwebdynamicform.Message.Config.list</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
-    	<action name="edit" class="jpwebdynamicformNotifierConfigAction" method="edit" >
+        <action name="edit" class="jpwebdynamicformNotifierConfigAction" method="edit">
             <result name="wrongType" type="tiles">admin.jpwebdynamicform.Message.Config.edit</result>
             <result type="tiles">admin.jpwebdynamicform.Message.Config.edit</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
-    	<action name="addAddress" class="jpwebdynamicformNotifierConfigAction" method="addAddress" >
+        <action name="addAddress" class="jpwebdynamicformNotifierConfigAction" method="addAddress">
             <result name="input" type="tiles">admin.jpwebdynamicform.Message.Config.edit</result>
             <result type="tiles">admin.jpwebdynamicform.Message.Config.edit</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
-    	<action name="removeAddress*" class="jpwebdynamicformNotifierConfigAction" method="removeAddress" >
+        <action name="removeAddress*" class="jpwebdynamicformNotifierConfigAction" method="removeAddress">
             <result type="tiles">admin.jpwebdynamicform.Message.Config.edit</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
-		
-    	<action name="save" class="jpwebdynamicformNotifierConfigAction" method="save" >
+
+        <action name="save" class="jpwebdynamicformNotifierConfigAction" method="save">
             <result name="wrongType" type="chain">admin.jpwebdynamicform.Message.Config.edit</result>
             <result name="input" type="tiles">admin.jpwebdynamicform.Message.Config.edit</result>
             <result type="redirect">list</result>
-        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
-    	<!-- ######### END OPERATIONS FOR MESSAGES TYPES CONFIGURATION ######### -->
+        <!-- ######### END OPERATIONS FOR MESSAGES TYPES CONFIGURATION ######### -->
 
+    </package>
+
+    <package name="jpwebdynamicform_do/jpwebdynamicform/Entity" namespace="/do/jpwebdynamicform/Entity" extends="entando-default">
+
+        <action name="initViewEntityTypes" class="entityTypesAction">
+            <result name="input" type="chain">viewManagers</result>
+            <result type="chain">
+                <param name="namespace">/do${entityTypeManagementNamespacePrefix}/Entity</param>
+                <param name="actionName">viewEntityTypes</param>
+            </result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+
+        <!-- you have to rewrite this action to manage custom entity types -->
+        <action name="viewEntityTypes" class="entityTypesAction">
+            <result name="input" type="chain">viewManagers</result>
+            <result type="tiles">admin.jpwebdynamicform.entityManagement.viewEntityTypes</result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
     </package>
 
 </struts>

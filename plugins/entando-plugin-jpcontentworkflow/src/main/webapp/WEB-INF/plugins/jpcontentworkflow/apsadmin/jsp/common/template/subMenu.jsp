@@ -7,9 +7,4 @@
 			<span class="list-group-item-value"><s:text
 					name="jpcontentworkflow.menu.workflow" /></span>
 	</a></li>
-	<li class="list-group-item"><a
-		href="<s:url action="config" namespace="/do/jpcontentworkflow/Notifier" />">
-			<span class="list-group-item-value"><s:text
-					name="jpcontentworkflow.menu.notifier" /></span>
-	</a></li>
 </wp:ifauthorized>

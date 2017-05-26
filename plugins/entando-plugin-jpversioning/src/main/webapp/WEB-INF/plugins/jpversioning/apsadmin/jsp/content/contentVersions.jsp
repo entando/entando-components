@@ -81,6 +81,7 @@
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
                     </div>
                 </div>
+
             </div>
         </wpsa:subset>
     </s:else>
