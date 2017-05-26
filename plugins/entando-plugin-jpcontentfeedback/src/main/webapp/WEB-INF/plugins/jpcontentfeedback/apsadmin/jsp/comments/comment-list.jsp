@@ -1,8 +1,3 @@
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="wp" uri="/aps-core" %>
-<%@ taglib prefix="wpsa" uri="/apsadmin-core" %>
-<%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
-
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations"/></li>
     <li><s:text name="breadcrumb.integrations.components"/></li>
@@ -16,10 +11,11 @@
             <h1>
                 <s:text name="jpcontentfeedback.title.commentsManager"/>
                 <span class="pull-right">
-                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                   data-content="TO be inserted" data-placement="left" data-original-title="">
-                    <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </a>
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+                       data-content="<s:text name="jpcontentfeedback.title.commentsManager.help"/>" data-placement="left" data-original-title="">
+                        <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                    </a>
+
                 </span>
             </h1>
         </div>

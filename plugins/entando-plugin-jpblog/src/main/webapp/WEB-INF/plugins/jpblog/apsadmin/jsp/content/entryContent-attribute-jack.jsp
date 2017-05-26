@@ -9,14 +9,13 @@
         <wp:userProfileAttribute username="${username}" attributeRoleName="userprofile:surname" var="profileSurname"/>
         <c:set var="hasProfileAuthorAttrs" value="${not empty profileName || not empty profileSurname}" />
     </c:if>
-    <%-- <span class="important"><s:property value="#attribute.name" /><s:include value="/WEB-INF/apsadmin/jsp/entity/modules/include/attributeInfo.jsp" /></span> --%>
     <label for="author">
         <s:property value="#attribute.name" />
     </label>
-    <s:include value="/WEB-INF/apsadmin/jsp/entity/modules/include/attributeInfo.jsp" />        
+    <s:include value="/WEB-INF/apsadmin/jsp/entity/modules/include/attributeInfo.jsp" />
     <c:choose>
         <c:when test="${hasProfileAuthorAttrs}">
-            <s:set var="author">	
+            <s:set var="author">
                 <c:out value="${profileName} ${profileSurname}" />
             </s:set>
         </c:when>
