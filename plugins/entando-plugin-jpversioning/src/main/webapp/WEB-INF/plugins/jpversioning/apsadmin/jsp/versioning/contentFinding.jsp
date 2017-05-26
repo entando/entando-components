@@ -52,19 +52,9 @@
             <div class="well col-md-offset-3 col-md-6 form-horizontal">
                 <p class="search-label col-sm-12"><s:text name="label.search.label"/></p>
                 <div class="form-group">
-<<<<<<< HEAD
                     <label class="col-sm-2 control-label"><s:text name="jpversioning.label.description" /></label>
                     <div class="col-sm-10 has-clear">
                         <wpsf:textfield id="descr" name="descr" cssClass="form-control input-lg" title="%{getText('label.search.by')+' '+getText('jpversioning.label.description')}" placeholder="%{getText('jpversioning.label.description')}"/>
-=======
-                    <label for="contentType" class="control-label col-sm-3"><s:text name="jpversioning.label.description"/></label>
-                    <div class="col-sm-9 has-clear">
-                        <wpsf:textfield id="descr"
-                                        name="descr"
-                                        cssClass="form-control"
-                                        title="%{getText('label.search.by')+' '+getText('label.description')}"
-                                        placeholder="%{getText('label.search.label')}"/>
->>>>>>> 255d8530299615e36a74b07eeda966594b863f94
                     </div>
                 </div>
                 <div class="form-group">
