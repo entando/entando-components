@@ -35,21 +35,30 @@
 			<h1>
 				<s:if test="survey.questionnaire">
 					<s:text name="title.jpsurvey.trash.survey" />
+					<span class="pull-right"> <a tabindex="0" role="button"
+						data-toggle="popover" data-trigger="focus" data-html="true"
+						title=""
+						data-content="<s:text name="title.jpsurvey.trash.survey.help" />"
+						data-placement="left" data-original-title=""> <i
+							class="fa fa-question-circle-o" aria-hidden="true"></i>
+					</a>
+					</span>
 					<s:set var="surveyType"
 						value="%{getText('message.jpsurvey.survey.type')}" />
 				</s:if>
 				<s:else>
 					<s:text name="title.jpsurvey.trash.poll" />
+					<span class="pull-right"> <a tabindex="0" role="button"
+						data-toggle="popover" data-trigger="focus" data-html="true"
+						title=""
+						data-content="<s:text name="title.jpsurvey.trash.poll.help" />"
+						data-placement="left" data-original-title=""> <i
+							class="fa fa-question-circle-o" aria-hidden="true"></i>
+					</a>
+					</span>
 					<s:set var="surveyType"
 						value="%{getText('message.jpsurvey.poll.type')}" />
 				</s:else>
-				<span class="pull-right"> <a tabindex="0" role="button"
-					data-toggle="popover" data-trigger="focus" data-html="true"
-					title="" data-content="TO be inserted" data-placement="left"
-					data-original-title=""> <i class="fa fa-question-circle-o"
-						aria-hidden="true"></i>
-				</a>
-				</span>
 			</h1>
 		</div>
 		<wp:ifauthorized permission="superuser">

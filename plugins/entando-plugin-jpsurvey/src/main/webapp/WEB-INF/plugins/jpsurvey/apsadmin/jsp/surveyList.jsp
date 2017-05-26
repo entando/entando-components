@@ -20,17 +20,26 @@
 			<h1>
 				<s:if test="questionnaire">
 					<s:text name="title.jpsurvey.survey.main" />
+					<span class="pull-right"> <a tabindex="0" role="button"
+						data-toggle="popover" data-trigger="focus" data-html="true"
+						title=""
+						data-content="<s:text name="title.jpsurvey.survey.main.help" />"
+						data-placement="left" data-original-title=""> <i
+							class="fa fa-question-circle-o" aria-hidden="true"></i>
+					</a>
+					</span>
 				</s:if>
 				<s:else>
 					<s:text name="title.jpsurvey.poll.main" />
+					<span class="pull-right"> <a tabindex="0" role="button"
+						data-toggle="popover" data-trigger="focus" data-html="true"
+						title=""
+						data-content="<s:text name="title.jpsurvey.poll.main.help" />"
+						data-placement="left" data-original-title=""> <i
+							class="fa fa-question-circle-o" aria-hidden="true"></i>
+					</a>
+					</span>
 				</s:else>
-				<span class="pull-right"> <a tabindex="0" role="button"
-					data-toggle="popover" data-trigger="focus" data-html="true"
-					title="" data-content="TO be inserted" data-placement="left"
-					data-original-title=""> <i class="fa fa-question-circle-o"
-						aria-hidden="true"></i>
-				</a>
-				</span>
 			</h1>
 		</div>
 		<wp:ifauthorized permission="superuser">

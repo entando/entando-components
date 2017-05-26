@@ -30,9 +30,10 @@
 				<s:text name="title.jpsurvey.trash.question" />
 				<span class="pull-right"> <a tabindex="0" role="button"
 					data-toggle="popover" data-trigger="focus" data-html="true"
-					title="" data-content="TO be inserted" data-placement="left"
-					data-original-title=""> <i class="fa fa-question-circle-o"
-						aria-hidden="true"></i>
+					title=""
+					data-content="<s:text name="title.jpsurvey.trash.question.help" />"
+					data-placement="left" data-original-title=""> <i
+						class="fa fa-question-circle-o" aria-hidden="true"></i>
 				</a>
 				</span>
 			</h1>
