@@ -26,17 +26,26 @@
 			<h1>
 				<s:if test="strutsAction ==  1">
 					<s:text name="jpcrowdsourcing.title.ideaInstance.add" />
+					<span class="pull-right"> <a tabindex="0" role="button"
+						data-toggle="popover" data-trigger="focus" data-html="true"
+						title=""
+						data-content="<s:text name="jpcrowdsourcing.title.ideaInstance.add.help" />"
+						data-placement="left" data-original-title=""> <i
+							class="fa fa-question-circle-o" aria-hidden="true"></i>
+					</a>
+					</span>
 				</s:if>
 				<s:if test="strutsAction ==  2">
 					<s:text name="jpcrowdsourcing.title.ideaInstance.edit" />
+					<span class="pull-right"> <a tabindex="0" role="button"
+						data-toggle="popover" data-trigger="focus" data-html="true"
+						title=""
+						data-content="<s:text name="jpcrowdsourcing.title.ideaInstance.edit.help" />"
+						data-placement="left" data-original-title=""> <i
+							class="fa fa-question-circle-o" aria-hidden="true"></i>
+					</a>
+					</span>
 				</s:if>
-				<span class="pull-right"> <a tabindex="0" role="button"
-					data-toggle="popover" data-trigger="focus" data-html="true"
-					title="" data-content="TO be inserted" data-placement="left"
-					data-original-title=""> <i class="fa fa-question-circle-o"
-						aria-hidden="true"></i>
-				</a>
-				</span>
 			</h1>
 		</div>
 		<wp:ifauthorized permission="superuser">
