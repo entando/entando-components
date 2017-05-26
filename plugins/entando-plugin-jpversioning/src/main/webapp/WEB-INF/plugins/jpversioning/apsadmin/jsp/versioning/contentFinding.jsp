@@ -49,44 +49,55 @@
                 <s:text name="label.search.by"/>&#32;<s:text name="label.description"/>
             </label>
 
-            <div class="well col-md-offset-3 col-md-6">
+            <div class="well col-md-offset-3 col-md-6 form-horizontal">
                 <p class="search-label col-sm-12"><s:text name="label.search.label"/></p>
                 <div class="form-group">
+<<<<<<< HEAD
                     <label class="col-sm-2 control-label"><s:text name="jpversioning.label.description" /></label>
                     <div class="col-sm-10 has-clear">
                         <wpsf:textfield id="descr" name="descr" cssClass="form-control input-lg" title="%{getText('label.search.by')+' '+getText('jpversioning.label.description')}" placeholder="%{getText('jpversioning.label.description')}"/>
+=======
+                    <label for="contentType" class="control-label col-sm-3"><s:text name="jpversioning.label.description"/></label>
+                    <div class="col-sm-9 has-clear">
+                        <wpsf:textfield id="descr"
+                                        name="descr"
+                                        cssClass="form-control"
+                                        title="%{getText('label.search.by')+' '+getText('label.description')}"
+                                        placeholder="%{getText('label.search.label')}"/>
+>>>>>>> 255d8530299615e36a74b07eeda966594b863f94
                     </div>
                 </div>
-                <div class="panel-group" id="accordion-markup" >
-                    <div class="panel panel-default">
-                        <div class="panel-heading" style="padding:0 0 10px;">
-                            <p class="panel-title active" style="text-align: end">
-                                <a data-toggle="collapse" data-parent="#accordion-markup" href="#collapseOne">
-                                    <s:text name="label.search.advanced" />
-                                </a>
-                            </p>
-                        </div>
-                        <div id="collapseOne" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                    <%-- Type --%>
-                                <div class="form-group">
-                                    <label for="contentType" class="control-label col-sm-2" ><s:text name="label.type" /></label>
-                                    <div class="col-sm-9" >
-                                        <wpsf:select name="contentType"
-                                                     id="contentType"
-                                                     list="contentTypes"
-                                                     listKey="code"
-                                                     listValue="descr"
-                                                     headerKey=""
-                                                     headerValue="%{getText('label.all')}"
-                                                     cssClass="form-control" >
-                                        </wpsf:select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="form-group">
+                    <label for="contentType" class="control-label col-sm-3" ><s:text name="label.type" /></label>
+                    <div class="col-sm-9" >
+                        <wpsf:select name="contentType"
+                                     id="contentType"
+                                     list="contentTypes"
+                                     listKey="code"
+                                     listValue="descr"
+                                     headerKey=""
+                                     headerValue="%{getText('label.all')}"
+                                     cssClass="form-control" >
+                        </wpsf:select>
                     </div>
                 </div>
+                <%--<div class="panel-group" id="accordion-markup" >--%>
+                    <%--<div class="panel panel-default">--%>
+                        <%--<div class="panel-heading" style="padding:0 0 10px;">--%>
+                            <%--<p class="panel-title active" style="text-align: end">--%>
+                                <%--<a data-toggle="collapse" data-parent="#accordion-markup" href="#collapseOne">--%>
+                                    <%--<s:text name="label.search.advanced" />--%>
+                                <%--</a>--%>
+                            <%--</p>--%>
+                        <%--</div>--%>
+                        <%--<div id="collapseOne" class="panel-collapse collapse">--%>
+                            <%--<div class="panel-body">--%>
+                                    <%--&lt;%&ndash; Type &ndash;%&gt;--%>
+                                <%----%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
                 <div class="col-sm-12">
                     <div class="form-group">
                         <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
@@ -141,17 +152,13 @@
                                     <td class="text-center text-nowrap"><code><s:property value="#contentVersion.version" />&#32;(<s:date name="#contentVersion.versionDate" format="dd/MM/yyyy" />)</code></td>
                                     <td class="text-center">
                                         <s:if test="(#contentVersion.status == 'PUBLIC')">
-                                            <s:set var="iconName">check</s:set>
-                                            <s:set var="textVariant">success</s:set>
                                             <s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
+                                            <span class="fa fa-circle green" aria-hidden="true" title="${isOnlineStatus}"></span>
                                         </s:if>
                                         <s:if test="(#contentVersion.status != 'PUBLIC')">
-                                            <s:set var="iconName">pause</s:set>
-                                            <s:set var="textVariant">warning</s:set>
                                             <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
+                                            <span class="fa fa-circle yellow" aria-hidden="true" title="${isOnlineStatus}"></span>
                                         </s:if>
-                                        <span class="icon fa fa-<s:property value="iconName" /> text-<s:property value="textVariant" />" title="<s:property value="isOnlineStatus" />"></span>
-                                        <span class="sr-only"><s:property value="isOnlineStatus" /></span>
                                     </td>
                                     <td class="table-view-pf-actions text-center">
                                         <div class="dropdown dropdown-kebab-pf">
