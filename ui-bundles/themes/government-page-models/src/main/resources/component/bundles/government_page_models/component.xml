@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>government_page_models</code>
+	<description>Page: Governament template Homepage, Default widgets and resources included.</description>
+    <dependencies>
+        <code>entando-widget-language_choose</code>
+        <code>entando-widget-search_form</code>
+        <code>entando-widget-navigation_bar</code>
+        <code>entando-widget-navigation_menu</code>
+        <code>entando-widget-login_form</code>
+        <code>entando-widget-navigation_breadcrumbs</code>
+        <code>entando-content-generic</code>
+        <code>entando-content-news</code>
+        <code>entando-content-download</code>
+    </dependencies>
+	<installation>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/bundles/government_page_models/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/bundles/government_page_models/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+            <postProcesses>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="PUT" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10001.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="PUT" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10002.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="PUT" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10003.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="PUT" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10011.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="PUT" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10012.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="PUT" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10013.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="POST" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10014.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="POST" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10015.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="POST" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10016.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="POST" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10017.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="POST" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10018.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="PUT" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10021.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="POST" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10022.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="POST" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10023.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="PUT" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10031.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="contentModel"
+                        method="POST" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10032.xml" />
+                </selfRestCall>
+            </postProcesses>
+		</environment>
+	</installation>
+</component>
