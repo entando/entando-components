@@ -88,6 +88,111 @@ classpath:sql/bundles/government_page_models/serv_data_production.sql
                         method="POST" expected="200" printresponse="true" >
                     <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/contentModel_10032.xml" />
                 </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="image"
+                        method="POST" expected="200" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/image1.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="content"
+                        method="POST" expected="200" printresponse="true" >
+                    <query>
+                        <parameter name="insertOnLine" value="true" />
+                    </query>
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/content1.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="content"
+                        method="POST" expected="200" printresponse="true" >
+                    <query>
+                        <parameter name="insertOnLine" value="true" />
+                    </query>
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/content2.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="jacms" resourceName="content"
+                        method="POST" expected="200" printresponse="true" >
+                    <query>
+                        <parameter name="insertOnLine" value="true" />
+                    </query>
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/content3.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_COPYRIGHT.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_TITLE.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_DESCRIPTION.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_FOOTER_LINK_LEGAL_NOTICES.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_FOOTER_LINK_PRIVACY.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_FOOTER_LINKS_TITLE.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_HEADER_HEADERMENU_IMGALT.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_HEADER_HEADERMENU_SEARCH.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_HEADER_HEADERMENU_SOCIAL_FB.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_HEADER_HEADERMENU_SOCIAL_LK.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_HEADER_HEADERMENU_SOCIAL_TW.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_HEADER_HEADERMENU_SOCIAL.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_HEADER_PREHEADER_LOGIN_USER.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_HEADER_PREHEADER_LOGIN.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_SKIPLINK_GOCONTENT.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_SKIPLINK_GOFOOTER.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_SKIPLINK_GONAVIGATION.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_HEADER_PREHEADER_LOGIN_PASS.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_LANG_IT.xml" />
+                </selfRestCall>
+                <selfRestCall langCode="en" namespace="core" resourceName="i18nlabel"
+                        method="POST" expected="200" failonerror="false" printresponse="true" >
+                    <contentBody content-type="application/xml" path="classpath:component/bundles/government_page_models/postprocess/i18n_PORTAL_LANG_EN.xml" />
+                </selfRestCall>
             </postProcesses>
 		</environment>
 	</installation>

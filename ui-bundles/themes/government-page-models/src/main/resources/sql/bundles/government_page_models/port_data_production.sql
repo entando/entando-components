@@ -1,15 +1,14 @@
--- Pagemodels
 INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('entando_page_home_government', 'Governament Template Homepage', '<?xml version="1.0" encoding="UTF-8"?>
 <frames>
     <frame pos="0">
         <descr>Login form</descr>
         <sketch x1="0" y1="0" x2="11" y2="0" />
-        <defaultWidget code="login_form" />
+        <defaultWidget code="government_login_form" />
     </frame>
     <frame pos="1">
         <descr>Change language</descr>
         <sketch x1="0" y1="1" x2="3" y2="1" />
-        <defaultWidget code="entando-widget-language_choose" />
+        <defaultWidget code="government_widget_language_choose" />
     </frame>
     <frame pos="2">
         <descr>Burger menu</descr>
@@ -19,7 +18,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
     <frame pos="3">
         <descr>Search Form</descr>
         <sketch x1="8" y1="1" x2="11" y2="1" />
-        <defaultWidget code="entando-widget-search_form" />
+        <defaultWidget code="government_widget_search_form" />
     </frame>
     <frame pos="4">
         <descr>Horizontal menu</descr>
@@ -27,7 +26,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
         <defaultWidget code="content_viewer">
             <properties>
                 <property key="modelId">10011</property>
-                <property key="contentId">CNG66</property>
+                <property key="contentId">CNG10</property>
             </properties>
         </defaultWidget>
     </frame>
@@ -89,7 +88,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
         <defaultWidget code="content_viewer">
             <properties>
                 <property key="modelId">10001</property>
-                <property key="contentId">CNG46</property>
+                <property key="contentId">CNG11</property>
             </properties>
         </defaultWidget>
     </frame>
@@ -99,7 +98,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
         <defaultWidget code="content_viewer">
             <properties>
                 <property key="modelId">10001</property>
-                <property key="contentId">CNG49</property>
+                <property key="contentId">CNG12</property>
             </properties>
         </defaultWidget>
     </frame>
@@ -452,12 +451,12 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
     <frame pos="0">
         <descr>Login form</descr>
         <sketch x1="0" y1="0" x2="11" y2="0" />
-        <defaultWidget code="login_form" />
+        <defaultWidget code="government_login_form" />
     </frame>
     <frame pos="1">
         <descr>Change language</descr>
         <sketch x1="0" y1="1" x2="3" y2="1" />
-        <defaultWidget code="entando-widget-language_choose" />
+        <defaultWidget code="government_widget_language_choose" />
     </frame>
     <frame pos="2">
         <descr>Burger menu</descr>
@@ -467,14 +466,14 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
     <frame pos="3">
         <descr>Search Form</descr>
         <sketch x1="8" y1="1" x2="11" y2="1" />
-        <defaultWidget code="entando-widget-search_form" />
+        <defaultWidget code="government_widget_search_form" />
     </frame>
     <frame pos="4">
         <descr>Horizontal menu</descr>
         <sketch x1="0" y1="2" x2="11" y2="2" />
         <defaultWidget code="content_viewer">
             <properties>
-                <property key="contentId">CNG66</property>
+                <property key="contentId">CNG10</property>
                 <property key="modelId">10011</property>
             </properties>
         </defaultWidget>
@@ -542,7 +541,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
         <defaultWidget code="content_viewer">
             <properties>
                 <property key="modelId">10001</property>
-                <property key="contentId">CNG46</property>
+                <property key="contentId">CNG11</property>
             </properties>
         </defaultWidget>
     </frame>
@@ -552,7 +551,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
         <defaultWidget code="content_viewer">
             <properties>
                 <property key="modelId">10001</property>
-                <property key="contentId">CNG49</property>
+                <property key="contentId">CNG12</property>
             </properties>
         </defaultWidget>
     </frame>
@@ -911,12 +910,12 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
     <frame pos="0">
         <descr>Login form</descr>
         <sketch x1="0" y1="0" x2="11" y2="0" />
-        <defaultWidget code="login_form" />
+        <defaultWidget code="government_login_form" />
     </frame>
     <frame pos="1">
         <descr>Change language</descr>
         <sketch x1="0" y1="1" x2="3" y2="1" />
-        <defaultWidget code="entando-widget-language_choose" />
+        <defaultWidget code="government_widget_language_choose" />
     </frame>
     <frame pos="2">
         <descr>Burger menu</descr>
@@ -926,7 +925,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
     <frame pos="3">
         <descr>Search Form</descr>
         <sketch x1="8" y1="1" x2="11" y2="1" />
-        <defaultWidget code="entando-widget-search_form" />
+        <defaultWidget code="government_widget_search_form" />
     </frame>
     <frame pos="4">
         <descr>Horizontal menu</descr>
@@ -934,7 +933,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
         <defaultWidget code="content_viewer">
             <properties>
                 <property key="modelId">10011</property>
-                <property key="contentId">CNG66</property>
+                <property key="contentId">CNG10</property>
             </properties>
         </defaultWidget>
     </frame>
@@ -1000,7 +999,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
         <sketch x1="0" y1="15" x2="3" y2="15" />
         <defaultWidget code="content_viewer">
             <properties>
-                <property key="contentId">CNG46</property>
+                <property key="contentId">CNG11</property>
                 <property key="modelId">10001</property>
             </properties>
         </defaultWidget>
@@ -1010,7 +1009,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
         <sketch x1="4" y1="15" x2="7" y2="15" />
         <defaultWidget code="content_viewer">
             <properties>
-                <property key="contentId">CNG49</property>
+                <property key="contentId">CNG12</property>
                 <property key="modelId">10001</property>
             </properties>
         </defaultWidget>
@@ -1351,9 +1350,8 @@ INSERT INTO pagemodels (code, descr, frames, plugincode,templategui) VALUES ('en
     </body>
 </html>');
 
-
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('government_widget_burger_menu', '<?xml version="1.0" encoding="UTF-8"?>
-<properties><property key="en">Burger menu</property><property key="it">Burger menu</property></properties>
+<properties><property key="en">Government - Burger menu</property><property key="it">Government - Burger menu</property></properties>
 ', NULL, NULL, 'entando-widget-navigation_bar', '<?xml version="1.0" encoding="UTF-8"?>
 <properties><property key="navSpec">code(homepage).subtree(2)</property></properties>
 ', 0, 'free');
@@ -1367,6 +1365,25 @@ INSERT INTO widgetcatalog (code,titles,parameters,plugincode,parenttypecode,defa
 </config>',NULL,'entando-widget-navigation_breadcrumbs','<?xml version="1.0" encoding="UTF-8"?>
 <properties><property key="navSpec">current.path</property></properties>
 ',0,'free');
+
+INSERT INTO widgetcatalog (code,titles,parameters,plugincode,parenttypecode,defaultconfig,locked,maingroup) VALUES ('government_widget_language_choose','<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Government - Choose a Language</property>
+<property key="it">Government - Seleziona una Lingua</property>
+</properties>',NULL,NULL,NULL,NULL,1,'free');
+
+INSERT INTO widgetcatalog (code,titles,parameters,plugincode,parenttypecode,defaultconfig,locked,maingroup) VALUES ('government_widget_search_form','<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Government - Search Form</property>
+<property key="it">Government - Form di ricerca</property>
+</properties>',NULL,NULL,NULL,NULL,1,'free');
+
+INSERT INTO widgetcatalog (code,titles,parameters,plugincode,parenttypecode,defaultconfig,locked,maingroup) VALUES ('government_login_form','<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Government - Login Form</property>
+<property key="it">Government - Form di Login</property>
+</properties>',NULL,NULL,NULL,NULL,1,'free');
+
 
 INSERT INTO guifragment (code,widgettypecode,plugincode,gui,defaultgui,locked) VALUES ('government_widget_breadcrumbs','government_widget_breadcrumbs',NULL,NULL,'<#assign wp=JspTaglibs["/aps-core"]>
 <#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
@@ -1424,80 +1441,63 @@ INSERT INTO guifragment (code,widgettypecode,plugincode,gui,defaultgui,locked) V
     </div>
 </section>',1);
 
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_PREHEADER_LOGIN', 'en', 'Login');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_PREHEADER_LOGIN', 'it', 'Accedi');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_PREHEADER_LOGIN_USER', 'en', 'Username');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_PREHEADER_LOGIN_USER', 'it', 'Username');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_FOOTER_LINK_LEGAL_NOTICES', 'en', 'Legal notices');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_FOOTER_LINK_LEGAL_NOTICES', 'it', 'Note legali');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_FOOTER_LINK_PRIVACY', 'en', 'Privacy');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_FOOTER_LINK_PRIVACY', 'it', 'Privacy');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_FOOTER_LINKS_TITLE', 'en', 'Section Links footer');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_FOOTER_LINKS_TITLE', 'it', 'Sezione Links footer');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_SOCIAL', 'en', 'Follow us:');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_SOCIAL', 'it', 'Seguici su:');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_SOCIAL_FB', 'en', 'Follow us on Facebook');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_SOCIAL_FB', 'it', 'Seguici su Facebook');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_SOCIAL_TW', 'en', 'Follow us on Twitter');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_SOCIAL_TW', 'it', 'Seguici su Twitter');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_SOCIAL_LK', 'en', 'Follow us on LinkedIn');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_SOCIAL_LK', 'it', 'Seguici su LinkedIn');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_IMGALT', 'en', 'Logo of Academy');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_IMGALT', 'it', 'Logo dell''Accademia');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_DESCRIPTION', 'en', 'User Experience Academy');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_DESCRIPTION', 'it', 'User Experience Academy');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_SEARCH', 'en', 'Search');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_HEADER_HEADERMENU_SEARCH', 'it', 'Cerca');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_SKIPLINK_GOCONTENT', 'en', 'Skip to Content');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_SKIPLINK_GOCONTENT', 'it', 'Vai al contenuto');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_SKIPLINK_GONAVIGATION', 'en', 'Go to site navigation');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_SKIPLINK_GONAVIGATION', 'it', 'Vai alla navigazione del sito');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_SKIPLINK_GOFOOTER', 'en', 'Go to Footer');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_SKIPLINK_GOFOOTER', 'it', 'Vai al Footer');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_COPYRIGHT', 'en', 'Copyright®');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PORTAL_COPYRIGHT', 'it', 'Copyright®');
+INSERT INTO guifragment (code,widgettypecode,plugincode,gui,defaultgui,locked) VALUES ('government_widget_search_form','government_widget_search_form',NULL,NULL,'<#assign wp=JspTaglibs["/aps-core"]>
+<!-- search -->
+<@wp.pageWithWidget var="searchResultPageVar" widgetTypeCode="search_result" listResult=false />
+<div class="search clearfix">
+    <form action="<#if (searchResultPageVar??) ><@wp.url page="${searchResultPageVar.code}" /></#if>" method="post">
+        <div class="input-group">
+            <label for="cm_search" class="hidden"><@wp.i18n key="PORTAL_HEADER_HEADERMENU_SEARCH" /></label>
+            <input type="text" class="form-control squared" placeholder="<@wp.i18n key="PORTAL_HEADER_HEADERMENU_SEARCH" />" name="search" id="cm_search" />
+            <span class="input-group-btn">
+                <button class="btn btn-default btn-search pull-right bg-darkblue" type="submit">
+                    <img src="<@wp.imgURL/>search.svg" alt="<@wp.i18n key="PORTAL_HEADER_HEADERMENU_SEARCH" />">
+                </button>
+            </span>
+        </div>
+    </form>
+</div>
+<!-- search -->
+<!-- mobile search -->
+<div class="p_searchMobile clearfix">
+    <span class="input-group-btn">
+        <button class="btn btn-default btn-search pull-right bg-darkblue" data-target="#searchMobile" data-toggle="collapse" type="button">
+            <img src="<@wp.imgURL/>search.svg" alt="<@wp.i18n key="PORTAL_HEADER_HEADERMENU_SEARCH" />">
+        </button>
+    </span>
+</div>
+<!-- mobile search -->',1);
 
+INSERT INTO guifragment (code,widgettypecode,plugincode,gui,defaultgui,locked) VALUES ('government_widget_language_choose','government_widget_language_choose',NULL,NULL,'<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
+<#assign wp=JspTaglibs["/aps-core"]>
 
-INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor, firsteditor) VALUES ('CNG66', 'CNG', 'Header with menu - Homepage', 'PUBLIC', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="CNG66" typecode="CNG" typedescr="Generic Content"><descr>Header with menu - Homepage</descr><groups mainGroup="free"><group name="administrators" /></groups><categories /><attributes><attribute name="Title" attributetype="Text"><text lang="en">Header with menu - Homepage</text></attribute><attribute name="Abstract" attributetype="Hypertext" /><attribute name="MainBody" attributetype="Hypertext" /><attribute name="Picture" attributetype="Image"><resource resourcetype="Image" id="70" lang="en" /><text lang="en">Header image home</text></attribute><attribute name="Caption" attributetype="Text" /><list name="Links" attributetype="Monolist" nestedtype="Link"><attribute name="Links" attributetype="Link"><link type="page"><pagedest>about_the_school</pagedest></link><text lang="en">About the school</text></attribute><attribute name="Links" attributetype="Link"><link type="page"><pagedest>documentation</pagedest></link><text lang="en">Documentation</text></attribute><attribute name="Links" attributetype="Link"><link type="page"><pagedest>contact_us</pagedest></link><text lang="en">Contact us</text></attribute></list><list name="Attaches" attributetype="Monolist" nestedtype="Attach" /><attribute name="Video" attributetype="Link" /></attributes><status>PUBLIC</status><version>6.0</version><firstEditor>admin</firstEditor><lastEditor>admin</lastEditor><created>20170515171941</created><lastModified>20170523164810</lastModified></content>
-', '20170515171941', '20170523164810', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="CNG66" typecode="CNG" typedescr="Generic Content"><descr>Header with menu - Homepage</descr><groups mainGroup="free"><group name="administrators" /></groups><categories /><attributes><attribute name="Title" attributetype="Text"><text lang="en">Header with menu - Homepage</text></attribute><attribute name="Abstract" attributetype="Hypertext" /><attribute name="MainBody" attributetype="Hypertext" /><attribute name="Picture" attributetype="Image"><resource resourcetype="Image" id="70" lang="en" /><text lang="en">Header image home</text></attribute><attribute name="Caption" attributetype="Text" /><list name="Links" attributetype="Monolist" nestedtype="Link"><attribute name="Links" attributetype="Link"><link type="page"><pagedest>about_the_school</pagedest></link><text lang="en">About the school</text></attribute><attribute name="Links" attributetype="Link"><link type="page"><pagedest>documentation</pagedest></link><text lang="en">Documentation</text></attribute><attribute name="Links" attributetype="Link"><link type="page"><pagedest>contact_us</pagedest></link><text lang="en">Contact us</text></attribute></list><list name="Attaches" attributetype="Monolist" nestedtype="Attach" /><attribute name="Video" attributetype="Link" /></attributes><status>PUBLIC</status><version>6.0</version><firstEditor>admin</firstEditor><lastEditor>admin</lastEditor><created>20170515171941</created><lastModified>20170523164810</lastModified></content>
-', 'free', '6.0', 'admin', 'admin');
-INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor, firsteditor) VALUES ('CNG46', 'CNG', 'Footer - Text', 'PUBLIC', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="CNG46" typecode="CNG" typedescr="Generic Content"><descr>Footer - Text</descr><groups mainGroup="free" /><categories /><attributes><attribute name="Title" attributetype="Text"><text lang="en">Footer - Text</text></attribute><attribute name="Abstract" attributetype="Hypertext" /><attribute name="MainBody" attributetype="Hypertext"><hypertext lang="en"><![CDATA[<p>
-    The User Experience Academy<br />
-    is a public institute and<br />
-    member of the EUA (European<br />
-    University Association).<br />
-    &nbsp;</p>
-<p>
-    <strong>&quot;Crap UX means a crap<br />
-    digital experience&quot;</strong></p>
-]]></hypertext></attribute><attribute name="Picture" attributetype="Image" /><attribute name="Caption" attributetype="Text" /><list name="Links" attributetype="Monolist" nestedtype="Link" /><list name="Attaches" attributetype="Monolist" nestedtype="Attach" /><attribute name="Video" attributetype="Link" /></attributes><status>PUBLIC</status><version>6.0</version><firstEditor>admin</firstEditor><lastEditor>admin</lastEditor><created>20170515162524</created><lastModified>20170523164824</lastModified></content>
-', '20170515162524', '20170523164824', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="CNG46" typecode="CNG" typedescr="Generic Content"><descr>Footer - Text</descr><groups mainGroup="free" /><categories /><attributes><attribute name="Title" attributetype="Text"><text lang="en">Footer - Text</text></attribute><attribute name="Abstract" attributetype="Hypertext" /><attribute name="MainBody" attributetype="Hypertext"><hypertext lang="en"><![CDATA[<p>
-    The User Experience Academy<br />
-    is a public institute and<br />
-    member of the EUA (European<br />
-    University Association).<br />
-    &nbsp;</p>
-<p>
-    <strong>&quot;Crap UX means a crap<br />
-    digital experience&quot;</strong></p>
-]]></hypertext></attribute><attribute name="Picture" attributetype="Image" /><attribute name="Caption" attributetype="Text" /><list name="Links" attributetype="Monolist" nestedtype="Link" /><list name="Attaches" attributetype="Monolist" nestedtype="Attach" /><attribute name="Video" attributetype="Link" /></attributes><status>PUBLIC</status><version>6.0</version><firstEditor>admin</firstEditor><lastEditor>admin</lastEditor><created>20170515162524</created><lastModified>20170523164824</lastModified></content>
-', 'free', '6.0', 'admin', 'admin');
+<@wp.info key="langs" var="langsVar" />
+<@wp.info key="currentLang" var="currentLangVar" />
+<@wp.freemarkerTemplateParameter var="langsListVar" valueName="langsVar" removeOnEndTag=true >
+    <#list langsListVar as curLangVar>
+        <li
+        <#if (curLangVar.code == currentLangVar)>class="active"</#if>>
+        <a href="<@wp.url lang="${curLangVar.code}" paramRepeat=true />">
+            <@wp.i18n key="PORTAL_LANG_${curLangVar.code}" />
+        </a>
+        </li>
+    </#list>
+</@wp.freemarkerTemplateParameter>',1);
 
-INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor, firsteditor) VALUES ('CNG49', 'CNG', 'Footer - Contacts', 'PUBLIC', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="CNG49" typecode="CNG" typedescr="Generic Content"><descr>Footer - Contacts</descr><groups mainGroup="free"><group name="free" /></groups><categories /><attributes><attribute name="Title" attributetype="Text"><text lang="en">Footer - Contacts</text></attribute><attribute name="Abstract" attributetype="Hypertext" /><attribute name="MainBody" attributetype="Hypertext"><hypertext lang="en"><![CDATA[<p>
-    User Experience Academy<br />
-    Via del Mare, 99<br />
-    09122 Cagliari (Italy)</p>
-]]></hypertext></attribute><attribute name="Picture" attributetype="Image" /><attribute name="Caption" attributetype="Text" /><list name="Links" attributetype="Monolist" nestedtype="Link" /><list name="Attaches" attributetype="Monolist" nestedtype="Attach" /><attribute name="Video" attributetype="Link" /></attributes><status>PUBLIC</status><version>4.0</version><firstEditor>admin</firstEditor><lastEditor>admin</lastEditor><created>20170515163110</created><lastModified>20170523160652</lastModified></content>
-', '20170515163110', '20170523160652', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="CNG49" typecode="CNG" typedescr="Generic Content"><descr>Footer - Contacts</descr><groups mainGroup="free"><group name="free" /></groups><categories /><attributes><attribute name="Title" attributetype="Text"><text lang="en">Footer - Contacts</text></attribute><attribute name="Abstract" attributetype="Hypertext" /><attribute name="MainBody" attributetype="Hypertext"><hypertext lang="en"><![CDATA[<p>
-    User Experience Academy<br />
-    Via del Mare, 99<br />
-    09122 Cagliari (Italy)</p>
-]]></hypertext></attribute><attribute name="Picture" attributetype="Image" /><attribute name="Caption" attributetype="Text" /><list name="Links" attributetype="Monolist" nestedtype="Link" /><list name="Attaches" attributetype="Monolist" nestedtype="Attach" /><attribute name="Video" attributetype="Link" /></attributes><status>PUBLIC</status><version>4.0</version><firstEditor>admin</firstEditor><lastEditor>admin</lastEditor><created>20170515163110</created><lastModified>20170523160652</lastModified></content>
-', 'free', '4.0', 'admin', 'admin');
+INSERT INTO guifragment (code,widgettypecode,plugincode,gui,defaultgui,locked) VALUES ('government_login_form','government_login_form',NULL,NULL,'<#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
+<#assign wp=JspTaglibs["/aps-core"]>
+<#if (Session.currentUser.username != "guest") >
+    <a href="<@wp.info key="systemParam" paramName="applicationBaseURL" />do/logout.action"><@wp.i18n key="ESLF_SIGNOUT" /></a>
+<#else>
+<button type="button" class="btn btn-primary btn-lg bg-white" data-toggle="modal" data-target="#accessModal">
+    <span><@wp.i18n key="PORTAL_HEADER_PREHEADER_LOGIN"/></span>
+</button>
 
+<!-- Modal -->
+<#if (wrongAccountCredential?? && wrongAccountCredential == true) || (accountExpired?? && accountExpired == true) >
+<#assign js_login="<script>$( document ).ready(function() {
+    $(''#accessModal'').modal(''show'');
+});</script>" >
+<@wp.headInfo type="JS_GOVERNMENT_BTM_INC" info="${js_login}" />
+</#if>
+</#if>',1);

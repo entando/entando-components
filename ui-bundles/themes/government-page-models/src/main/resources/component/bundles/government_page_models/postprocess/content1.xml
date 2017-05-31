@@ -1,0 +1,58 @@
+<content>
+	<description>Header with menu - Homepage</description>
+	<typeCode>CNG</typeCode>
+	<typeDescription>Generic Content</typeDescription>
+	<mainGroup>free</mainGroup>
+	<attributes>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbTextAttribute">
+			<name>Title</name>
+			<type>Text</type>
+			<value>Header with menu - Homepage</value>
+			<roles>
+				<role>jacms:title</role>
+			</roles>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbResourceAttribute">
+			<name>Picture</name>
+			<type>Image</type>
+			<resource>
+				<text>Header image home</text>
+				<path>/test-image-rest/resources/cms/images/gov-image-1_d0.jpg</path>
+				<resourceId>govimgone</resourceId>
+				<restResourcePath>http://localhost:8080/test-image-rest/api/rs/en/jacms/image?id=govimgone</restResourcePath>
+			</resource>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbListAttribute">
+			<name>Links</name>
+			<type>Monolist</type>
+			<attributes>
+				<attribute xsi:type="jaxbLinkAttribute">
+					<name>Links</name>
+					<type>Link</type>
+					<link>
+						<text>About the school</text>
+						<url>https://www.entando.com</url>
+						<symbolicLink>
+							<symbolicDestination>#!U;https://www.entando.com!#</symbolicDestination>
+						</symbolicLink>
+					</link>
+                    <link>
+                        <text>Documentation</text>
+                        <url>https://www.entando.com</url>
+                        <symbolicLink>
+                            <symbolicDestination>#!U;https://www.entando.com!#</symbolicDestination>
+                        </symbolicLink>
+                    </link>
+                    <link>
+                        <text>Contact us</text>
+                        <url>https://www.entando.com</url>
+                        <symbolicLink>
+                            <symbolicDestination>#!U;https://www.entando.com!#</symbolicDestination>
+                        </symbolicLink>
+                    </link>
+				</attribute>
+			</attributes>
+		</attribute>
+	</attributes>
+	<lastEditor>admin</lastEditor>
+</content>

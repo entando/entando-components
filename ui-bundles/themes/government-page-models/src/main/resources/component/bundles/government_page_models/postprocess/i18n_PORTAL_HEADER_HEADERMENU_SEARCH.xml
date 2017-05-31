@@ -1,0 +1,13 @@
+<i18nLabel>
+  <key>PORTAL_HEADER_HEADERMENU_SEARCH</key>
+  <labels>
+    <label>
+      <langCode>en</langCode>
+      <value><![CDATA[Search]]></value>
+    </label>
+    <label>
+      <langCode>it</langCode>
+      <value><![CDATA[Cerca]]></value>
+    </label>
+  </labels>
+</i18nLabel>
