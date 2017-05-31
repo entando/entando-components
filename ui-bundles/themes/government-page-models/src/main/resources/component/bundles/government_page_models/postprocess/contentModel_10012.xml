@@ -1,0 +1,29 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10012</id>
+  <contentType>CNG</contentType>
+  <description>Header Menu</description>
+  <shape><![CDATA[<div class="header-menu">
+ #if ( $content.Links.size() != 0 )
+ <section class="hidden-xs bg-darkgrey" id="sub_nav">
+    <h3 class="sr-only">Submenu</h3>
+    <div class="container">
+    <div class="row">
+        <div class="col-lg-offset-1 col-lg-10">
+        <ul class="sub_nav clearfix">
+          #foreach ($item in $content.Links)
+            <li><a href="$item.destination" title="$i18n.getLabel("PORTAL_GOTO") $item.text">$item.text</a></li>
+          #end
+        </ul>
+        </div>
+       </div>
+    </div>
+ </section>
+  #end
+</div>]]></shape>
+</contentModel>

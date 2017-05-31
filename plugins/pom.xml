@@ -39,12 +39,10 @@
         <module>entando-plugin-jpfacetnav</module>
         <module>entando-plugin-jpmail</module>
         <module>entando-plugin-jpwebdynamicform</module>
-        <module>entando-plugin-jprss</module>
-        <!--
+        <!-- <module>entando-plugin-jprss</module> -->
         <module>entando-plugin-jpcalendar</module>
-        -->
         <module>entando-plugin-jpldap</module>
-        <module>entando-plugin-jpuserreg</module>
+        <!-- <module>entando-plugin-jpuserreg</module> -->
         <!--
         <module>entando-plugin-jpaddressbook</module>
         <module>entando-plugin-jpnewsletter</module>
@@ -55,22 +53,20 @@
 		<!--
         <module>entando-plugin-jpfastcontentedit</module>
         <module>entando-plugin-jpgeoref</module>
-        <module>entando-plugin-jpphotogallery</module>
         -->
+        <module>entando-plugin-jpphotogallery</module>
         <module>entando-plugin-jprssaggregator</module>
-        <module>entando-plugin-jpwidgetutils</module>
-        <!--
+        <!-- <module>entando-plugin-jpwidgetutils</module> -->
         <module>entando-plugin-jpversioning</module>
+        <!--
         <module>entando-plugin-jpstats</module>
         <module>entando-plugin-jpcontentworkflow</module>
         -->
         <module>entando-plugin-jpcontentfeedback</module>
-        <!--
-        <module>entando-plugin-jpcmstagcloud</module>
-        -->
-        <module>entando-plugin-jpmyportalplus</module>
+        <!-- <module>entando-plugin-jpcmstagcloud</module> -->
+        <!-- <module>entando-plugin-jpmyportalplus</module> -->
         <module>entando-plugin-jptokenapi</module>
-        <!--
+	<!--
         <module>entando-plugin-jpfrontshortcut</module>
         -->
         <module>entando-plugin-jpehcache</module>

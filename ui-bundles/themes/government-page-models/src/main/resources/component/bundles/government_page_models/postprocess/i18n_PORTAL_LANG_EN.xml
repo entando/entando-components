@@ -1,0 +1,13 @@
+<i18nLabel>
+  <key>PORTAL_LANG_EN</key>
+  <labels>
+    <label>
+      <langCode>en</langCode>
+      <value><![CDATA[EN]]></value>
+    </label>
+    <label>
+      <langCode>it</langCode>
+      <value><![CDATA[EN]]></value>
+    </label>
+  </labels>
+</i18nLabel>

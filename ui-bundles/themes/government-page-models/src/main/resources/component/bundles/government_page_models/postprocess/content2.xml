@@ -1,0 +1,23 @@
+<content>
+	<description>Footer - Text</description>
+	<typeCode>CNG</typeCode>
+	<typeDescription>Generic Content</typeDescription>
+	<mainGroup>free</mainGroup>
+	<attributes>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbTextAttribute">
+			<name>Title</name>
+			<type>Text</type>
+			<value>Footer - Text</value>
+			<roles>
+				<role>jacms:title</role>
+			</roles>
+		</attribute>
+		<attribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="jaxbHypertextAttribute">
+			<name>MainBody</name>
+			<type>Hypertext</type>
+            <htmlValue><![CDATA[<p> The User Experience Academy<br /> is a public institute and<br /> member of the EUA
+             (European<br /> University Association).<br /> &nbsp;</p>]]></htmlValue>
+        </attribute>
+	</attributes>
+	<lastEditor>admin</lastEditor>
+</content>

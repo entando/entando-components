@@ -1,0 +1,13 @@
+<i18nLabel>
+  <key>PORTAL_HEADER_HEADERMENU_IMGALT</key>
+  <labels>
+    <label>
+      <langCode>en</langCode>
+      <value><![CDATA[Logo of Academy]]></value>
+    </label>
+    <label>
+      <langCode>it</langCode>
+      <value><![CDATA[Logo dell&apos;Accademia]]></value>
+    </label>
+  </labels>
+</i18nLabel>

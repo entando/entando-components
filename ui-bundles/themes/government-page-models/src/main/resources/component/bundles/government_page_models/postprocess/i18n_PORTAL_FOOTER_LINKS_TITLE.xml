@@ -1,0 +1,13 @@
+<i18nLabel>
+  <key>PORTAL_FOOTER_LINKS_TITLE</key>
+  <labels>
+    <label>
+      <langCode>en</langCode>
+      <value><![CDATA[Section Links footer]]></value>
+    </label>
+    <label>
+      <langCode>it</langCode>
+      <value><![CDATA[Sezione Links footer]]></value>
+    </label>
+  </labels>
+</i18nLabel>
