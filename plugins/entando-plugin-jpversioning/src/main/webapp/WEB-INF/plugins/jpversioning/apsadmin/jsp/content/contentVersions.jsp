@@ -74,15 +74,14 @@
                     </tbody>
                 </table>
             </div>
-            <div class="pager">
-                <p><s:text name="list.pagerIntro"/>&#32;<s:property value="#group.size"/>&#32;<s:text
-                        name="list.pagerOutro"/><br/>
-                    <s:text name="label.page"/>: [<s:property value="#group.currItem"/>/<s:property
-                            value="#group.maxItem"/>]</p>
-                <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
-            </div>
-            <div class="pager">
-                <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
+            <div class="content-view-pf-pagination clearfix">
+                <div class="form-group">
+                    <span><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
+                    <div class="mt-5">
+                        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                    </div>
+                </div>
+
             </div>
         </wpsa:subset>
     </s:else>

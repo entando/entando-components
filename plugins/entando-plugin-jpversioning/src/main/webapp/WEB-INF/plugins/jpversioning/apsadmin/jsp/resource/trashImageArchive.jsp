@@ -18,7 +18,7 @@
                 <s:text name="jpversioning.admin.menu"/>
                 <span class="pull-right">
                 <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                   data-content="<s:text name="jpversioning.resources.images.help"/>" data-placement="left" data-original-title="">
+                   data-content="<s:text name="jpversioning.admin.help"/>" data-placement="left" data-original-title="">
                     <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                 </a>
                 </span>
@@ -63,12 +63,9 @@
                 <div class="well col-md-offset-3 col-md-6">
                     <p class="search-label col-sm-12"><s:text name="label.search.label"/></p>
                     <div class="form-group">
-                        <div class="col-sm-12 has-clear">
-                            <wpsf:textfield id="text"
-                                            name="text"
-                                            cssClass="form-control input-lg"
-                                            title="%{getText('label.search.by')+' '+getText('label.description')}"
-                                            placeholder="%{getText('label.search.label')}"/>
+                        <label class="col-sm-2 control-label"><s:text name="jpversioning.label.description" /></label>
+                        <div class="col-sm-10 has-clear">
+                            <wpsf:textfield id="text" name="text" cssClass="form-control input-lg" title="%{getText('label.search.by')+' '+getText('label.description')}" placeholder="%{getText('jpversioning.label.description')}"/>
                         </div>
                     </div>
                     <div class="col-sm-12">

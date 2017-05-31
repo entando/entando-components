@@ -24,7 +24,7 @@
                 <s:text name="jpversioning.admin.menu"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="<s:text name="jpversioning.content.history.help"/>" data-placement="left" data-original-title="">
+                       data-content="<s:text name="jpversioning.admin.help"/>" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -56,11 +56,11 @@
             <thead>
             <tr>
                 <th class="text-center"><s:text name="jpversioning.version.full" /></th>
-                <th><s:text name="jpversioning.label.description" /></th>
-                <th class="text-center"><s:text name="jpversioning.label.lastVersion" /></th>
+                <th style="width: 240px"><s:text name="jpversioning.label.description" /></th>
+                <th class="text-center col-sm-1"><s:text name="jpversioning.label.lastVersion" /></th>
                 <th class="text-center"><s:text name="jpversioning.label.username" /></th>
                 <th class="text-center"><s:text name="label.state" /></th>
-                <th class="text-center"><s:text name="label.actions" /></th>
+                <th class="text-center col-sm-1"><s:text name="label.actions" /></th>
             </tr>
             </thead>
 
@@ -69,7 +69,16 @@
                 <s:set var="contentVersion" value="%{getContentVersion(#id)}" />
                 <tr>
                     <td class="text-center col-sm-2"><code><s:property value="#contentVersion.version" /></code></td>
-                    <td><s:property value="#contentVersion.descr" /></td>
+                    <td>
+                        <s:set var="fileNameVar" value="#contentVersion.descr"/>
+                        <s:if test='%{#fileNameVar.length()>43}'>
+                            <s:set var="fileNameVar" value='%{#fileNameVar.substring(0,40)+"..."}'/>
+                            <s:property value="#fileNameVar"/>
+                        </s:if>
+                        <s:else>
+                            <s:property value="#fileNameVar"/>
+                        </s:else>
+                    </td>
                     <td class="text-center col-sm-2"><code><s:date name="#contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></code> </td>
                     <td class="text-center"><s:property value="#contentVersion.username" /></td>
                     <td class="text-center">

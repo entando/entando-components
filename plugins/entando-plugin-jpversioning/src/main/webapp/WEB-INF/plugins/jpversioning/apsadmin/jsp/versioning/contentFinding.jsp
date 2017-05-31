@@ -17,7 +17,7 @@
                 <s:text name="jpversioning.admin.menu"/>
                 <span class="pull-right">
                 <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                   data-content="<s:text name="jpversioning.content.finding.help"/>" data-placement="left" data-original-title="">
+                   data-content="<s:text name="jpversioning.admin.help"/>" data-placement="left" data-original-title="">
                     <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                 </a>
                 </span>
@@ -52,13 +52,9 @@
             <div class="well col-md-offset-3 col-md-6 form-horizontal">
                 <p class="search-label col-sm-12"><s:text name="label.search.label"/></p>
                 <div class="form-group">
-                    <label for="contentType" class="control-label col-sm-3"><s:text name="jpversioning.label.description"/></label>
-                    <div class="col-sm-9 has-clear">
-                        <wpsf:textfield id="descr"
-                                        name="descr"
-                                        cssClass="form-control"
-                                        title="%{getText('label.search.by')+' '+getText('label.description')}"
-                                        placeholder="%{getText('label.search.label')}"/>
+                    <label class="col-sm-2 control-label"><s:text name="jpversioning.label.description" /></label>
+                    <div class="col-sm-10 has-clear">
+                        <wpsf:textfield id="descr" name="descr" cssClass="form-control input-lg" title="%{getText('label.search.by')+' '+getText('jpversioning.label.description')}" placeholder="%{getText('jpversioning.label.description')}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -117,20 +113,29 @@
                         <table class="table table-striped table-bordered table-hover no-mb">
                             <thead>
                             <tr>
-                                <th class="text-nowrap"><s:text name="jpversioning.label.description" /></th>
-                                <th class="text-center text-nowrap"><s:text name="jpversioning.label.id" /></th>
-                                <th class="text-center text-nowrap"><s:text name="jpversioning.label.contentType" /></th>
-                                <th class="text-center text-nowrap"><s:text name="jpversioning.label.username" /></th>
-                                <th class="text-center text-nowrap"><s:text name="jpversioning.label.lastVersion" /></th>
-                                <th class="text-center text-nowrap"><s:text name="label.state" /></th>
-                                <th class="text-center text-nowrap"><s:text name="label.actions"/></th>
+                                <th class="text-nowrap" style="width: 240px"><s:text name="jpversioning.label.description" /></th>
+                                <th class="text-center col-sm-1"><s:text name="jpversioning.label.id" /></th>
+                                <th class="text-center"><s:text name="jpversioning.label.contentType" /></th>
+                                <th class="text-center"><s:text name="jpversioning.label.username" /></th>
+                                <th class="text-center col-sm-2"><s:text name="jpversioning.label.lastVersion" /></th>
+                                <th class="text-center col-sm-1"><s:text name="label.state" /></th>
+                                <th class="text-center col-sm-1"><s:text name="label.actions"/></th>
                             </tr>
                             </thead>
                             <tbody>
                             <s:iterator var="id">
                                 <s:set var="contentVersion" value="%{getContentVersion(#id)}" />
                                 <tr>
-                                    <td><s:property value="#contentVersion.descr" /></td>
+                                    <td>
+                                        <s:set var="fileNameVar" value="#contentVersion.descr"/>
+                                        <s:if test='%{#fileNameVar.length()>43}'>
+                                            <s:set var="fileNameVar" value='%{#fileNameVar.substring(0,40)+"..."}'/>
+                                            <s:property value="#fileNameVar"/>
+                                        </s:if>
+                                        <s:else>
+                                            <s:property value="#fileNameVar"/>
+                                        </s:else>
+                                    </td>
                                     <td class="text-center text-nowrap"><code><s:property value="#contentVersion.contentId" /></code></td>
                                     <td><s:property value="%{getSmallContentType(#contentVersion.contentType).descr}" /></td>
                                     <td class="text-center"><s:property value="#contentVersion.username" /></td>
@@ -145,12 +150,12 @@
                                             <span class="fa fa-circle yellow" aria-hidden="true" title="${isOnlineStatus}"></span>
                                         </s:if>
                                     </td>
-                                    <td class="text-center">
+                                    <td class="table-view-pf-actions text-center">
                                         <div class="dropdown dropdown-kebab-pf">
-                                            <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <p class="sr-only"><s:text name="label.actions"/></p>
+                                            <span class="btn btn-menu-right dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <span class="fa fa-ellipsis-v"></span>
-                                            </button>
+                                            </span>
                                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
                                                 <li>
                                                     <a href="<s:url action="history" ><s:param name="contentId" value="#contentVersion.contentId" /><s:param name="versionId" value="#contentVersion.id" /></s:url>">
