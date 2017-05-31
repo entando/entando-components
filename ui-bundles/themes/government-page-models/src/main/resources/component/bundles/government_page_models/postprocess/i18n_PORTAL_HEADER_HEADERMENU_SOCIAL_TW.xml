@@ -1,0 +1,13 @@
+<i18nLabel>
+  <key>PORTAL_HEADER_HEADERMENU_SOCIAL_TW</key>
+  <labels>
+    <label>
+      <langCode>en</langCode>
+      <value><![CDATA[Follow us on Twitter]]></value>
+    </label>
+    <label>
+      <langCode>it</langCode>
+      <value><![CDATA[Seguici su Twitter]]></value>
+    </label>
+  </labels>
+</i18nLabel>

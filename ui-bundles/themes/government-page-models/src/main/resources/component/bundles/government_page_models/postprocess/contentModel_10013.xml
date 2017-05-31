@@ -1,0 +1,30 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10013</id>
+  <contentType>CNG</contentType>
+  <description>In evidence - Homepage</description>
+  <shape><![CDATA[<div class="in-evidence bg-lightgrey">
+        <div class="container">
+        #if ( $content.Picture.getImagePath("0") != "" )
+            <div class="img-in-evidence clearfix" style="background-image: url($content.Picture.getImagePath("0"))"></div>
+            #if ( $content.Caption.text != "" )
+            <figcaption class="text-center"><p class="margin-medium-all">$content.Caption.text</p></figcaption>
+            #end
+        #end
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="txt-in-evidence">
+                $content.Abstract.text
+                <h2>$content.Title.text</h2>
+              $content.MainBody.text
+            </div>
+          </div>
+                </div>
+        </div>
+</div>]]></shape>
+</contentModel>
