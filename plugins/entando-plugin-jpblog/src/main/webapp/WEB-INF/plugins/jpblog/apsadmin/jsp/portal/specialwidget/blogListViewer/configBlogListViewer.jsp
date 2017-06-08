@@ -142,7 +142,7 @@
                                                      listValue="value"
                                                      cssClass="form-control" />
                                         <div class="input-group-btn">
-                                                <%-- blogSetFilterType setta in sessione parametri priam di chiamare setFilterType --%>
+                                            <%-- blogSetFilterType setta in sessione parametri priam di chiamare setFilterType --%>
                                             <wpsf:submit type="button" action="blogSetFilterType" cssClass="btn btn-primary">
                                                 <s:text name="%{getText('label.add')}"/>
                                             </wpsf:submit>
@@ -157,101 +157,101 @@
                                 <s:if test="null != filtersProperties && filtersProperties.size()>0" >
                                     <table class="table table-bordered">
                                         <thead>
-                                        <tr>
-                                            <th class="text-right"><abbr title="<s:text name="label.number" />">N</abbr></th>
-                                            <th><s:text name="name.filterDescription" /></th>
-                                            <th><s:text name="label.order" /></th>
-                                            <th class="text-center" style="width: 50px"><s:text name="label.actions"/></th>
-                                        </tr>
+                                            <tr>
+                                                <th class="text-right"><abbr title="<s:text name="label.number" />">N</abbr></th>
+                                                <th><s:text name="name.filterDescription" /></th>
+                                                <th><s:text name="label.order" /></th>
+                                                <th class="text-center" style="width: 50px"><s:text name="label.actions"/></th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <s:iterator value="filtersProperties" id="filter" status="rowstatus">
-                                            <tr>
-                                                <td class="text-right"><s:property value="#rowstatus.index+1"/></td>
-                                                <td>
-                                                    <s:text name="label.filterBy" /><strong>
-                                                    <s:if test="#filter['key'] == 'created'">
-                                                        <s:text name="label.creationDate" />
-                                                    </s:if>
-                                                    <s:elseif test="#filter['key'] == 'modified'">
-                                                        <s:text name="label.lastModifyDate" />
-                                                    </s:elseif>
-                                                    <s:else>
-                                                        <s:property value="#filter['key']" />
-                                                    </s:else>
-                                                </strong><s:if test="(#filter['start'] != null) || (#filter['end'] != null) || (#filter['value'] != null)">,
-                                                    <s:if test="#filter['start'] != null">
-                                                        <s:text name="label.filterFrom" /><strong>
-                                                        <s:if test="#filter['start'] == 'today'">
-                                                            <s:text name="label.today" />
+                                            <s:iterator value="filtersProperties" var="filter" status="rowstatus">
+                                                <tr>
+                                                    <td class="text-right"><s:property value="#rowstatus.index+1"/></td>
+                                                    <td>
+                                                        <s:text name="label.filterBy" /><strong>
+                                                            <s:if test="#filter['key'] == 'created'">
+                                                                <s:text name="label.creationDate" />
+                                                            </s:if>
+                                                            <s:elseif test="#filter['key'] == 'modified'">
+                                                                <s:text name="label.lastModifyDate" />
+                                                            </s:elseif>
+                                                            <s:else>
+                                                                <s:property value="#filter['key']" />
+                                                            </s:else>
+                                                        </strong><s:if test="(#filter['start'] != null) || (#filter['end'] != null) || (#filter['value'] != null)">,
+                                                            <s:if test="#filter['start'] != null">
+                                                                <s:text name="label.filterFrom" /><strong>
+                                                                    <s:if test="#filter['start'] == 'today'">
+                                                                        <s:text name="label.today" />
+                                                                    </s:if>
+                                                                    <s:else>
+                                                                        <s:property value="#filter['start']" />
+                                                                    </s:else>
+                                                                </strong>
+                                                                <s:if test="#filter['startDateDelay'] != null" >
+                                                                    <s:text name="label.filterValueDateDelay" />:<strong> <s:property value="#filter['startDateDelay']" /></strong>&nbsp;<s:text name="label.filterDateDelay.gg" />&nbsp;
+                                                                </s:if>
+                                                            </s:if>
+                                                            <s:if test="#filter['end'] != null">
+                                                                <s:text name="label.filterTo" /><strong>
+                                                                    <s:if test="#filter['end'] == 'today'">
+                                                                        <s:text name="label.today" />
+                                                                    </s:if>
+                                                                    <s:else>
+                                                                        <s:property value="#filter['end']" />
+                                                                    </s:else>
+                                                                </strong>
+                                                                <s:if test="#filter['endDateDelay'] != null" >
+                                                                    <s:text name="label.filterValueDateDelay" />:<strong> <s:property value="#filter['endDateDelay']" /></strong>&nbsp;<s:text name="label.filterDateDelay.gg" />
+                                                                </s:if>
+                                                            </s:if>
+                                                            <s:if test="#filter['value'] != null">
+                                                                <s:text name="label.filterValue" />:<strong> <s:property value="#filter['value']" /></strong>
+                                                                <s:if test="#filter['likeOption'] == 'true'">
+                                                                    <em>(<s:text name="label.filterValue.isLike" />)</em>
+                                                                </s:if>
+                                                            </s:if>
+                                                            <s:if test="#filter['valueDateDelay'] != null" >
+                                                                <s:text name="label.filterValueDateDelay" />:<strong> <s:property value="#filter['valueDateDelay']" /></strong>&nbsp;<s:text name="label.filterDateDelay.gg" />
+                                                            </s:if>
                                                         </s:if>
-                                                        <s:else>
-                                                            <s:property value="#filter['start']" />
-                                                        </s:else>
-                                                    </strong>
-                                                        <s:if test="#filter['startDateDelay'] != null" >
-                                                            <s:text name="label.filterValueDateDelay" />:<strong> <s:property value="#filter['startDateDelay']" /></strong>&nbsp;<s:text name="label.filterDateDelay.gg" />&nbsp;
+                                                        <s:if test="#filter['nullValue'] != null" >
+                                                            &nbsp;<s:text name="label.filterNoValue" />
                                                         </s:if>
-                                                    </s:if>
-                                                    <s:if test="#filter['end'] != null">
-                                                        <s:text name="label.filterTo" /><strong>
-                                                        <s:if test="#filter['end'] == 'today'">
-                                                            <s:text name="label.today" />
-                                                        </s:if>
-                                                        <s:else>
-                                                            <s:property value="#filter['end']" />
-                                                        </s:else>
-                                                    </strong>
-                                                        <s:if test="#filter['endDateDelay'] != null" >
-                                                            <s:text name="label.filterValueDateDelay" />:<strong> <s:property value="#filter['endDateDelay']" /></strong>&nbsp;<s:text name="label.filterDateDelay.gg" />
-                                                        </s:if>
-                                                    </s:if>
-                                                    <s:if test="#filter['value'] != null">
-                                                        <s:text name="label.filterValue" />:<strong> <s:property value="#filter['value']" /></strong>
-                                                        <s:if test="#filter['likeOption'] == 'true'">
-                                                            <em>(<s:text name="label.filterValue.isLike" />)</em>
-                                                        </s:if>
-                                                    </s:if>
-                                                    <s:if test="#filter['valueDateDelay'] != null" >
-                                                        <s:text name="label.filterValueDateDelay" />:<strong> <s:property value="#filter['valueDateDelay']" /></strong>&nbsp;<s:text name="label.filterDateDelay.gg" />
-                                                    </s:if>
-                                                </s:if>
-                                                    <s:if test="#filter['nullValue'] != null" >
-                                                        &nbsp;<s:text name="label.filterNoValue" />
-                                                    </s:if>
-                                                </td>
-                                                <td>
-                                                    <s:if test="#filter['order'] == 'ASC'"><s:text name="label.order.ascendant" /></s:if>
-                                                    <s:if test="#filter['order'] == 'DESC'"><s:text name="label.order.descendant" /></s:if>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="btn-group btn-group-xs">
-                                                        <wpsa:actionParam action="moveFilter" var="actionName" >
-                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
-                                                            <wpsa:actionSubParam name="movement" value="UP" />
-                                                        </wpsa:actionParam>
-                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveUp')}" cssClass="btn btn-default">
-                                                            <span class="icon fa fa-sort-desc"></span>
-                                                        </wpsf:submit>
-                                                        <wpsa:actionParam action="moveFilter" var="actionName" >
-                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
-                                                            <wpsa:actionSubParam name="movement" value="DOWN" />
-                                                        </wpsa:actionParam>
-                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveDown')}" cssClass="btn btn-default">
-                                                            <span class="icon fa fa-sort-asc"></span>
-                                                        </wpsf:submit>
-                                                    </div>
-                                                    <div class="btn-group btn-group-xs">
-                                                        <wpsa:actionParam action="removeFilter" var="actionName" >
-                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
-                                                        </wpsa:actionParam>
-                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}" cssClass="btn btn-warning">
-                                                            <span class="icon fa fa-times-circle-o"></span>
-                                                        </wpsf:submit>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </s:iterator>
+                                                    </td>
+                                                    <td>
+                                                        <s:if test="#filter['order'] == 'ASC'"><s:text name="label.order.ascendant" /></s:if>
+                                                        <s:if test="#filter['order'] == 'DESC'"><s:text name="label.order.descendant" /></s:if>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="btn-group btn-group-xs">
+                                                            <wpsa:actionParam action="moveFilter" var="actionName" >
+                                                                <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+                                                                <wpsa:actionSubParam name="movement" value="UP" />
+                                                            </wpsa:actionParam>
+                                                            <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveUp')}" cssClass="btn btn-default">
+                                                                <span class="icon fa fa-sort-desc"></span>
+                                                            </wpsf:submit>
+                                                            <wpsa:actionParam action="moveFilter" var="actionName" >
+                                                                <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+                                                                <wpsa:actionSubParam name="movement" value="DOWN" />
+                                                            </wpsa:actionParam>
+                                                            <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveDown')}" cssClass="btn btn-default">
+                                                                <span class="icon fa fa-sort-asc"></span>
+                                                            </wpsf:submit>
+                                                        </div>
+                                                        <div class="btn-group btn-group-xs">
+                                                            <wpsa:actionParam action="removeFilter" var="actionName" >
+                                                                <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+                                                            </wpsa:actionParam>
+                                                            <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}" cssClass="btn btn-warning">
+                                                                <span class="icon fa fa-times-circle-o"></span>
+                                                            </wpsf:submit>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </s:iterator>
                                         </tbody>
                                     </table>
                                 </s:if>
@@ -341,64 +341,64 @@
                                 <s:if test="null != userFiltersProperties && userFiltersProperties.size() > 0" >
                                     <table class="table table-bordered">
                                         <thead>
-                                        <tr>
-                                            <th class="text-right"><abbr title="<s:text name="label.number" />">N</abbr></th>
-                                            <th><s:text name="name.filterDescription" /></th>
-                                            <th class="text-center" style="width: 50px"><s:text name="label.actions"/></th>
-                                        </tr>
+                                            <tr>
+                                                <th class="text-right"><abbr title="<s:text name="label.number" />">N</abbr></th>
+                                                <th><s:text name="name.filterDescription" /></th>
+                                                <th class="text-center" style="width: 50px"><s:text name="label.actions"/></th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <s:iterator value="userFiltersProperties" var="userFilter" status="rowstatus">
-                                            <tr>
-                                                <td class="text-right"><s:property value="#rowstatus.index+1"/></td>
-                                                <td>
-                                                    <s:text name="label.filterBy" />
-                                                    <strong>
-                                                        <s:if test="#userFilter['attributeFilter'] == 'false'">
-                                                            <s:if test="#userFilter['key'] == 'fulltext'">
-                                                                <s:text name="label.fulltext" />
-                                                            </s:if>
-                                                            <s:elseif test="#userFilter['key'] == 'category'">
-                                                                <s:text name="label.category" />
-                                                                <s:if test="null != #userFilter['categoryCode']">
-                                                                    <s:set var="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
-                                                                    (<s:property value="#userFilterCategoryRoot.getFullTitle(currentLang.code)"/>)
+                                            <s:iterator value="userFiltersProperties" var="userFilter" status="rowstatus">
+                                                <tr>
+                                                    <td class="text-right"><s:property value="#rowstatus.index+1"/></td>
+                                                    <td>
+                                                        <s:text name="label.filterBy" />
+                                                        <strong>
+                                                            <s:if test="#userFilter['attributeFilter'] == 'false'">
+                                                                <s:if test="#userFilter['key'] == 'fulltext'">
+                                                                    <s:text name="label.fulltext" />
                                                                 </s:if>
+                                                                <s:elseif test="#userFilter['key'] == 'category'">
+                                                                    <s:text name="label.category" />
+                                                                    <s:if test="null != #userFilter['categoryCode']">
+                                                                        <s:set var="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
+                                                                        (<s:property value="#userFilterCategoryRoot.getFullTitle(currentLang.code)"/>)
+                                                                    </s:if>
+                                                                </s:elseif>
+                                                            </s:if>
+                                                            <s:elseif test="#userFilter['attributeFilter'] == 'true'">
+                                                                <s:property value="#userFilter['key']" />
                                                             </s:elseif>
-                                                        </s:if>
-                                                        <s:elseif test="#userFilter['attributeFilter'] == 'true'">
-                                                            <s:property value="#userFilter['key']" />
-                                                        </s:elseif>
-                                                    </strong>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="btn-group btn-group-xs">
-                                                        <wpsa:actionParam action="moveUserFilter" var="actionName" >
-                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
-                                                            <wpsa:actionSubParam name="movement" value="UP" />
-                                                        </wpsa:actionParam>
-                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveUp')}" cssClass="btn btn-default">
-                                                            <span class="icon fa fa-sort-desc"></span>
-                                                        </wpsf:submit>
-                                                        <wpsa:actionParam action="moveUserFilter" var="actionName" >
-                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
-                                                            <wpsa:actionSubParam name="movement" value="DOWN" />
-                                                        </wpsa:actionParam>
-                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveDown')}" cssClass="btn btn-default">
-                                                            <span class="icon fa fa-sort-asc"></span>
-                                                        </wpsf:submit>
-                                                    </div>
-                                                    <div class="btn-group btn-group-xs">
-                                                        <wpsa:actionParam action="removeUserFilter" var="actionName" >
-                                                            <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
-                                                        </wpsa:actionParam>
-                                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}" cssClass="btn btn-warning">
-                                                            <span class="icon fa fa-times-circle-o"></span>
-                                                        </wpsf:submit>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </s:iterator>
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="btn-group btn-group-xs">
+                                                            <wpsa:actionParam action="moveUserFilter" var="actionName" >
+                                                                <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+                                                                <wpsa:actionSubParam name="movement" value="UP" />
+                                                            </wpsa:actionParam>
+                                                            <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveUp')}" cssClass="btn btn-default">
+                                                                <span class="icon fa fa-sort-desc"></span>
+                                                            </wpsf:submit>
+                                                            <wpsa:actionParam action="moveUserFilter" var="actionName" >
+                                                                <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+                                                                <wpsa:actionSubParam name="movement" value="DOWN" />
+                                                            </wpsa:actionParam>
+                                                            <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveDown')}" cssClass="btn btn-default">
+                                                                <span class="icon fa fa-sort-asc"></span>
+                                                            </wpsf:submit>
+                                                        </div>
+                                                        <div class="btn-group btn-group-xs">
+                                                            <wpsa:actionParam action="removeUserFilter" var="actionName" >
+                                                                <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+                                                            </wpsa:actionParam>
+                                                            <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}" cssClass="btn btn-warning">
+                                                                <span class="icon fa fa-times-circle-o"></span>
+                                                            </wpsf:submit>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </s:iterator>
                                         </tbody>
                                     </table>
                                 </s:if>
