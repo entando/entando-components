@@ -56,20 +56,18 @@
             <div class="well col-md-offset-3 col-md-6">
                 <p class="search-label col-sm-12"><s:text name="label.search.message.type"/></p>
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="entityTypeCode"
-                           class="control-label col-sm-2 text-right"> <s:text
-                            name="label.type"/>
+                    <label class="control-label col-sm-2 text-right" for="entityTypeCode">
+                        <s:text name="label.type"/>
                     </label>
-                    <div class="col-sm-9 input-group"
-                         style="padding: 0 20px 0 20px">
+                    <div class="col-sm-9 input-group input-20px-leftRight">
                         <wpsf:select cssClass="form-control" name="entityTypeCode"
                                      id="entityTypeCode" list="entityPrototypes" listKey="typeCode"
                                      listValue="typeDescr" headerKey=""
                                      headerValue="%{getText('label.all')}"/>
-                        <div class="input-group-btn">
-                            <wpsf:submit cssClass="btn btn-default"
-                                         value="%{getText('label.set')}"/>
-                        </div>
+                                     
+                        <span class="input-group-btn">
+                            <wpsf:submit cssClass="btn btn-primary" value="%{getText('label.set')}"/>
+                        </span>
                     </div>
                 </div>
                 <div class="panel-group" id="accordion-markup">
@@ -88,7 +86,7 @@
                                 <div class="form-group">
                                     <label for="jpwebdynamicform_from_cal"
                                            class="control-label col-sm-2 text-right"><s:text name="label.from"/></label>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-9">
                                         <wpsf:textfield name="from" id="jpwebdynamicform_from_cal" cssClass="form-control"/>
                                     </div>
                                 </div>
@@ -97,7 +95,7 @@
                                 <div class="form-group">
                                     <label for="jpwebdynamicform_to_cal"
                                            class="control-label col-sm-2 text-right"><s:text name="label.to"/></label>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-9">
                                         <wpsf:textfield name="to" id="jpwebdynamicform_to_cal" cssClass="form-control"/>
                                     </div>
                                 </div>
@@ -107,7 +105,7 @@
                                     <label for="jpwebdynamicform_status"
                                            class="control-label col-sm-2 text-right"><s:text
                                             name="label.status"/></label>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-9">
                                         <select name="answered" id="jpwebdynamicform_status" class="form-control">
                                             <option value=""><s:text name="label.all"/></option>
                                             <option value="0" <s:if test="%{answered==0}">selected="selected" </s:if>>
@@ -118,18 +116,19 @@
                                     </div>
                                 </div>
 
+                                <!-- Filter by attribute -->
                                 <s:set var="searcheableAttributes" value="searcheableAttributes"/>
                                 <s:if test="null != #searcheableAttributes && #searcheableAttributes.size() > 0">
                                     <p class="noscreen"><wpsf:hidden name="entityTypeCode"/></p>
                                     <s:iterator var="attribute" value="#searcheableAttributes">
                                         <s:set var="currentFieldId">entityFinding_<s:property value="#attribute.name"/></s:set>
-                                        <s:if test="#attribute.textAttribute">
+                                        <s:if test="#attribute.type == 'Text' || #attribute.type == 'Longtext' || #attribute.type == 'Monotext'">
                                             <s:set var="textInputFieldName"><s:property value="#attribute.name"/>_textFieldName</s:set>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2 text-right"
                                                        for="<s:property value="#currentFieldId" />"><s:property
                                                         value="#attribute.name"/></label>
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-9">
                                                     <s:set var="textInputFieldName"><s:property
                                                             value="#attribute.name"/>_textFieldName</s:set>
                                                     <wpsf:textfield id="%{#currentFieldId}" cssClass="form-control"
@@ -138,6 +137,41 @@
                                                 </div>
                                             </div>
                                         </s:if>
+                                        <s:elseif test="#attribute.type == 'Enumerator'">
+                                            <s:set var="enumeratorFieldName"><s:property value="#attribute.name"/>_enumeratorFieldName</s:set>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2 text-right" 
+                                                       for="${currentFieldId}">
+                                                       <s:property value="#attribute.name"/>
+                                                </label>
+                                                <div class="col-sm-9">
+                                                <wpsf:select name="%{#enumeratorFieldName}" 
+                                                    id="%{#currentFieldId}" 
+                                                    headerKey="" 
+                                                    headerValue="%{getText('label.none')}" 
+                                                    list="#attribute.items" 
+                                                    value="%{getSearchFormFieldValue(#enumeratorFieldName)}" 
+                                                    cssClass="form-control" />
+                                                </div>
+                                            </div>
+                                        </s:elseif>
+
+                                        <s:elseif test="#attribute.type == 'EnumeratorMap'">
+                                            <s:set var="enumeratorMapFieldName"><s:property value="#attribute.name"/>_enumeratorMapFieldName</s:set>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2 text-right" 
+                                                       for="${currentFieldId}">
+                                                       <s:property value="#attribute.name"/>
+                                                </label>
+                                                <div class="col-sm-9">
+                                                    <wpsf:select name="%{#enumeratorMapFieldName}" 
+                                                        id="%{#currentFieldId}" 
+                                                         headerKey="" headerValue="%{getText('label.none')}" 
+                                                         list="#attribute.mapItems" listKey="key" listValue="value" 
+                                                         value="%{#attribute.getText()}" cssClass="form-control" />
+                                                </div>
+                                            </div>
+                                        </s:elseif>
 
                                         <s:elseif test="#attribute.type == 'Date'">
                                             <s:set var="dateStartInputFieldName"><s:property
@@ -147,7 +181,7 @@
                                                 <label class="control-label col-sm-2 text-right"
                                                        for="<s:property value="#currentFieldId" />_start_cal"><s:property
                                                         value="#attribute.name"/>&#32;<s:text name="Start"/></label>
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-9">
                                                     <wpsf:textfield id="%{#currentFieldId}_dateStartFieldName_cal"
                                                                     cssClass="form-control datepicker"
                                                                     name="%{#dateStartInputFieldName}"
@@ -159,7 +193,7 @@
                                                 <label class="control-label col-sm-2 text-right"
                                                        for="<s:property value="#currentFieldId" />_end_cal"><s:property
                                                         value="#attribute.name"/>&#32;<s:text name="End"/></label>
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-9">
                                                     <wpsf:textfield id="%{#currentFieldId}_end_cal"
                                                                     cssClass="form-control datepicker"
                                                                     name="%{#dateEndInputFieldName}"
@@ -179,7 +213,7 @@
                                                        for="<s:property value="#currentFieldId" />_start"><s:property
                                                         value="#attribute.name"/>&#32;<s:text
                                                         name="Start"/></label>
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-9">
                                                     <wpsf:textfield id="%{#currentFieldId}_start"
                                                                     cssClass="form-control"
                                                                     name="%{#numberStartInputFieldName}"
@@ -191,7 +225,7 @@
                                                        for="<s:property value="#currentFieldId" />_end"><s:property
                                                         value="#attribute.name"/>&#32;<s:text
                                                         name="End"/></label>
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-9">
                                                     <wpsf:textfield id="%{#currentFieldId}_end" cssClass="form-control"
                                                                     name="%{#numberEndInputFieldName}"
                                                                     value="%{getSearchFormFieldValue(#numberEndInputFieldName)}"/>
@@ -204,11 +238,9 @@
                                                 <label class="control-label col-sm-2 text-right"
                                                        for="<s:property value="#currentFieldId"/>"><s:property
                                                         value="#attribute.name"/></label>&nbsp;
-                                                <div class="col-sm-5">
-                                                    <div class="checkbox">
+                                                <div class="col-sm-9">
                                                         <wpsf:checkbox name="%{#attribute.name}"
                                                                        id="%{#currentFieldId}"/>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </s:elseif>
@@ -217,7 +249,7 @@
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2 text-right"><s:property
                                                         value="#attribute.name"/></label>
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-9">
                                                     <label for="none_<s:property value="%{#currentFieldId}" />"
                                                            class="radio-inline">
                                                         <wpsf:radio name="%{#attribute.name}"
@@ -237,11 +269,11 @@
                                                     </label>
                                                     <label for="false_<s:property value="%{#currentFieldId}" />"
                                                            class="radio-inline">
-                                                        <s:text name="label.no"/>
                                                         <wpsf:radio name="%{#attribute.name}"
                                                                     id="false_%{#currentFieldId}" value="false"
                                                                     checked="%{#attribute.booleanValue != null && #attribute.booleanValue == false}"
                                                                     type="radio"/>
+                                                        <s:text name="label.no"/>
                                                     </label>
                                                 </div>
                                             </div>
@@ -273,7 +305,10 @@
     <div class="subsection-light">
         <s:set var="entityIds" value="searchResult"/>
         <s:if test="%{#entityIds.size()==0}">
-            <div class="alert alert-info"><s:text name="note.message.list.none"/></div>
+        <div class="alert alert-info">
+            <span class="pficon pficon-info"></span>
+                <s:text name="note.message.list.none"/>
+            </div>
         </s:if>
         <s:else>
             <s:form action="search">

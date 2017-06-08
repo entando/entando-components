@@ -333,12 +333,14 @@
                 </div>
             </div>
         </fieldset>
-
-        <div class="form-group pull-right">
-            <div class="btn-group">
-                <wpsf:submit type="button" cssClass="btn btn-primary ">
-                    <s:text name="label.save"/>
-                </wpsf:submit>
+        
+        <div class="col-xs-12">
+            <div class="form-group pull-right">
+                <div class="btn-group">
+                    <wpsf:submit type="button" cssClass="btn btn-primary ">
+                        <s:text name="label.save"/>
+                    </wpsf:submit>
+                </div>
             </div>
         </div>
     </s:form>
