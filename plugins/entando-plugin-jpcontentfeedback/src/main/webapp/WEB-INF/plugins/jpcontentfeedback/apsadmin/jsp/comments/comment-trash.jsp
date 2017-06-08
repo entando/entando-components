@@ -23,12 +23,6 @@
 <div class="page-tabs-header">
     <h1>
         <s:text name="jpcontentfeedback.label.delete.comment"/>
-        <span class="pull-right">
-        <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-           data-content="<s:text name="jpcontentfeedback.label.delete.comment.help"/>" data-placement="left" data-original-title="">
-            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-        </a>
-        </span>
     </h1>
 </div>
 <br>
