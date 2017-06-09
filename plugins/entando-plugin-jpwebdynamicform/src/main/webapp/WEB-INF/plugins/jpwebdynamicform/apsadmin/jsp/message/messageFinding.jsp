@@ -119,7 +119,6 @@
                                 <!-- Filter by attribute -->
                                 <s:set var="searcheableAttributes" value="searcheableAttributes"/>
                                 <s:if test="null != #searcheableAttributes && #searcheableAttributes.size() > 0">
-                                    <p class="noscreen"><wpsf:hidden name="entityTypeCode"/></p>
                                     <s:iterator var="attribute" value="#searcheableAttributes">
                                         <s:set var="currentFieldId">entityFinding_<s:property value="#attribute.name"/></s:set>
                                         <s:if test="#attribute.type == 'Text' || #attribute.type == 'Longtext' || #attribute.type == 'Monotext'">
@@ -138,7 +137,7 @@
                                             </div>
                                         </s:if>
                                         <s:elseif test="#attribute.type == 'Enumerator'">
-                                            <s:set var="enumeratorFieldName"><s:property value="#attribute.name"/>_enumeratorFieldName</s:set>
+                                            <s:set var="enumeratorFieldName"><s:property value="#attribute.name"/>_textFieldName</s:set>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2 text-right" 
                                                        for="${currentFieldId}">
@@ -157,7 +156,7 @@
                                         </s:elseif>
 
                                         <s:elseif test="#attribute.type == 'EnumeratorMap'">
-                                            <s:set var="enumeratorMapFieldName"><s:property value="#attribute.name"/>_enumeratorMapFieldName</s:set>
+                                            <s:set var="enumeratorMapFieldName"><s:property value="#attribute.name"/>_textFieldName</s:set>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2 text-right" 
                                                        for="${currentFieldId}">
@@ -168,7 +167,7 @@
                                                         id="%{#currentFieldId}" 
                                                          headerKey="" headerValue="%{getText('label.none')}" 
                                                          list="#attribute.mapItems" listKey="key" listValue="value" 
-                                                         value="%{#attribute.getText()}" cssClass="form-control" />
+                                                         value="%{getSearchFormFieldValue(#enumeratorMapFieldName)}" cssClass="form-control" />
                                                 </div>
                                             </div>
                                         </s:elseif>
@@ -234,13 +233,20 @@
                                         </s:elseif>
 
                                         <s:elseif test="#attribute.type == 'Boolean'">
+                                            <s:set var="booleanInputFieldName" >
+                                                <s:property value="#attribute.name" />_booleanFieldName
+                                            </s:set>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2 text-right"
                                                        for="<s:property value="#currentFieldId"/>"><s:property
                                                         value="#attribute.name"/></label>&nbsp;
                                                 <div class="col-sm-9">
-                                                        <wpsf:checkbox name="%{#attribute.name}"
-                                                                       id="%{#currentFieldId}"/>
+                                                        <s:if test="%{getSearchFormFieldValue(#booleanInputFieldName) != null}">
+                                                            <wpsf:checkbox name="%{#booleanInputFieldName}" id="%{#currentFieldId}" checked="true" />
+                                                        </s:if>
+                                                        <s:else>
+                                                            <wpsf:checkbox name="%{#booleanInputFieldName}" id="%{#currentFieldId}" />
+                                                        </s:else>
                                                 </div>
                                             </div>
                                         </s:elseif>
@@ -254,16 +260,15 @@
                                                            class="radio-inline">
                                                         <wpsf:radio name="%{#attribute.name}"
                                                                     id="none_%{#currentFieldId}" value=""
-                                                                    checked="%{#attribute.booleanValue == null}"
+                                                                    checked="%{getSearchFormFieldValue(#attribute.name) == null}"
                                                                     type="radio"/>
                                                         <s:text name="label.bothYesAndNo"/>
                                                     </label>
-
                                                     <label for="true_<s:property value="%{#currentFieldId}" />"
                                                            class="radio-inline">
                                                         <wpsf:radio name="%{#attribute.name}"
                                                                     id="true_%{#currentFieldId}" value="true"
-                                                                    checked="%{#attribute.booleanValue != null && #attribute.booleanValue == true}"
+                                                                    checked="%{(getSearchFormFieldValue(#attribute.name) != null) && (getSearchFormFieldValue(#attribute.name) == 'true')}"
                                                                     type="radio"/>
                                                         <s:text name="label.yes"/>
                                                     </label>
@@ -271,7 +276,7 @@
                                                            class="radio-inline">
                                                         <wpsf:radio name="%{#attribute.name}"
                                                                     id="false_%{#currentFieldId}" value="false"
-                                                                    checked="%{#attribute.booleanValue != null && #attribute.booleanValue == false}"
+                                                                    checked="%{(getSearchFormFieldValue(#attribute.name) != null) && (getSearchFormFieldValue(#attribute.name) == 'false')}"
                                                                     type="radio"/>
                                                         <s:text name="label.no"/>
                                                     </label>
