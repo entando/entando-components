@@ -281,11 +281,11 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 	}
 	
 	public List<IPage> getConfirmSubscriptionPages() throws Throwable {
-		return this.getPageManager().getWidgetUtilizers(JpnewsletterSystemConstants.SUBSCRIPTION_CONFIRM_WIDGET_CODE);
+		return this.getPageManager().getOnlineWidgetUtilizers(JpnewsletterSystemConstants.SUBSCRIPTION_CONFIRM_WIDGET_CODE);
 	}
 	
 	public List<IPage> getConfirmUnsubscriptionPages() throws Throwable {
-		return this.getPageManager().getWidgetUtilizers(JpnewsletterSystemConstants.UNSUBSCRIPTION_CONFIRM_WIDGET_CODE);
+		return this.getPageManager().getOnlineWidgetUtilizers(JpnewsletterSystemConstants.UNSUBSCRIPTION_CONFIRM_WIDGET_CODE);
 	}
 	/*
 	public List<IPage> getPages() {

@@ -806,7 +806,7 @@ public class NewsletterManager extends AbstractService
 	protected String createLink(String mailAddress, String token) {
 		NewsletterConfig config = this.getConfig();
 		String pageCode = config.getSubscriptionPageCode();
-		IPage page = this.getPageManager().getPage(pageCode);
+		IPage page = this.getPageManager().getOnlinePage(pageCode);
 		Lang lang = this.getLangManager().getDefaultLang();
 		if (null == page || null == lang) {
 			if (null == page) {
@@ -918,7 +918,7 @@ public class NewsletterManager extends AbstractService
 	protected String createUnsubscriptionLink(String mailAddress) {
 		NewsletterConfig config = this.getConfig();
 		String pageCode = config.getUnsubscriptionPageCode();
-		IPage page = this.getPageManager().getPage(pageCode);
+		IPage page = this.getPageManager().getOnlinePage(pageCode);
 		Lang lang = this.getLangManager().getDefaultLang();
 		if (null == page || null == lang) {
 			if (null == page) {
