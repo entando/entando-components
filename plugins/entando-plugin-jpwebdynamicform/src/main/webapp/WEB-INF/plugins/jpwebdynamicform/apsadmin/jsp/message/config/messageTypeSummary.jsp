@@ -72,6 +72,9 @@
         </s:form>
     </s:if>
     <s:else>
-        <div class="alert alert-info"><s:text name="no.messageType.to.configure" /></div>
+        <div class="alert alert-info">
+            <span class="pficon pficon-info"></span>
+                <s:text name="no.messageType.to.configure" />
+            </div>
     </s:else>
 </div>
