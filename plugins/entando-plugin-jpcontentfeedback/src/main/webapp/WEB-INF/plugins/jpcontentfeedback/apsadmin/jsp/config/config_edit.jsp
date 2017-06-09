@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-sm-6">
             <h1>
-                <s:text name="jpcontentfeedback.title.commentsManager"/>
+                <s:text name="title.contentfeedbackSettings"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
                        data-content="<s:text name="jpcontentfeedback.title.commentsManager.help"/>" data-placement="left" data-original-title="">
@@ -60,11 +60,11 @@
                 <div class="col-sm-9">
                     <input type="checkbox" class="radiocheck bootstrap-switch" id="jpcontentfeedback_comment"
                            name="config.comment" data-toggle="toggle" value="true" <s:if
-                            test="config.comment"> checked="checked"</s:if>/>
+                               test="config.comment"> checked="checked"</s:if>/>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label" for="jpcontentfeedback_anonymousComment">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="jpcontentfeedback_anonymousComment">
                     <s:text name="jpcontentfeedback.label.anonymousComments"/>
                     <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
                        data-placement="top" data-content="<s:text name="jpcontentfeedback.note.anonymousComments"/>"
@@ -75,11 +75,11 @@
                 <div class="col-sm-9">
                     <input type="checkbox" class="radiocheck bootstrap-switch" id="jpcontentfeedback_anonymousComment"
                            name="config.anonymousComment" data-toggle="toggle" value="true" <s:if
-                            test="config.anonymousComment"> checked="checked"</s:if>/>
+                               test="config.anonymousComment"> checked="checked"</s:if>/>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label" for="jpcontentfeedback_moderatedComment">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="jpcontentfeedback_moderatedComment">
                     <s:text name="jpcontentfeedback.label.commentsModeration"/>
                     <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
                        data-placement="top" data-content="<s:text name="jpcontentfeedback.note.commentsModeration"/>"
@@ -90,23 +90,23 @@
                 <div class="col-sm-9">
                     <input type="checkbox" class="radiocheck bootstrap-switch" id="jpcontentfeedback_moderatedComment"
                            name="config.moderatedComment" data-toggle="toggle" value="true" <s:if
-                            test="config.moderatedComment"> checked="checked"</s:if>/>
+                               test="config.moderatedComment"> checked="checked"</s:if>/>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label" for="jpcontentfeedback_moderatedComment">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="jpcontentfeedback_moderatedComment">
                     <s:text name="jpcontentfeedback.label.commentsRating"/>
                 </label>
                 <div class="col-sm-9">
                     <input type="checkbox" class="radiocheck bootstrap-switch" id="jpcontentfeedback_rateComment"
                            name="config.rateComment" data-toggle="toggle" value="true" <s:if
-                            test="config.rateComment"> checked="checked"</s:if>/>
+                               test="config.rateComment"> checked="checked"</s:if>/>
+                    </div>
                 </div>
-            </div>
-        </fieldset>
+            </fieldset>
 
-        <fieldset class="margin-large-top">
-            <legend>
+            <fieldset class="margin-large-top">
+                <legend>
                 <s:text name="jpcontentfeedback.contents"/>
             </legend>
 
@@ -117,12 +117,12 @@
                 <div class="col-sm-9">
                     <input type="checkbox" class="radiocheck bootstrap-switch" id="jpcontentfeedback_rateContent"
                            name="config.rateContent" data-toggle="toggle" value="true" <s:if
-                            test="config.rateContent"> checked="checked"</s:if>/>
+                               test="config.rateContent"> checked="checked"</s:if>/>
+                    </div>
                 </div>
-            </div>
-        </fieldset>
-        <div class="form-group">
-            <div class="col-xs-12">
+            </fieldset>
+            <div class="form-group">
+                <div class="col-xs-12">
                 <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
                     <s:text name="%{getText('label.save')}"/>
                 </wpsf:submit>
