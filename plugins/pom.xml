@@ -42,7 +42,7 @@
         <!-- <module>entando-plugin-jprss</module> -->
         <module>entando-plugin-jpcalendar</module>
         <module>entando-plugin-jpldap</module>
-        <!-- <module>entando-plugin-jpuserreg</module> -->
+        <module>entando-plugin-jpuserreg</module>
         <!--
         <module>entando-plugin-jpaddressbook</module>
         <module>entando-plugin-jpnewsletter</module>
