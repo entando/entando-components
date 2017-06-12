@@ -71,6 +71,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Manager for operations of user account registration.
+ *
  * @author S.Puddu
  * @author E.Mezzano
  * @author G.Cocco
@@ -79,7 +80,7 @@ import org.slf4j.LoggerFactory;
 public class UserRegManager extends AbstractService implements IUserRegManager {
 
 	private static final Logger _logger = LoggerFactory.getLogger(UserRegManager.class);
-	
+
 	@Override
 	public void init() throws Exception {
 		try {
@@ -110,6 +111,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 	public IUserRegConfig getUserRegConfig() {
 		return this.getConfig().clone();
 	}
+
 	@Override
 	public void saveUserRegConfig(IUserRegConfig config) throws ApsSystemException {
 		try {
@@ -121,16 +123,18 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 			throw new ApsSystemException("Errore in fase di aggiornamento configurazione user reg", t);
 		}
 	}
+
 	protected IUserRegConfig getConfig() {
 		return _userRegConfig;
 	}
+
 	protected void setUserRegConfig(IUserRegConfig regProfileConfig) {
 		this._userRegConfig = regProfileConfig;
-		this.setTokenValidityInMillis(regProfileConfig.getTokenValidityMinutes()*60000L);
+		this.setTokenValidityInMillis(regProfileConfig.getTokenValidityMinutes() * 60000L);
 	}
 
 	@AfterReturning(
-			pointcut="execution(* com.agiletec.aps.system.services.user.IUserManager.removeUser(..)) && args(key)")
+			pointcut = "execution(* com.agiletec.aps.system.services.user.IUserManager.removeUser(..)) && args(key)")
 	public void deleteUser(Object key) {
 		String username = null;
 		if (key instanceof String) {
@@ -147,7 +151,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 			}
 		}
 	}
-	
+
 	@Override
 	public void regAccount(IUserProfile userProfile) throws ApsSystemException {
 		try {
@@ -187,14 +191,14 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 			IUserManager userManager = this.getUserManager();
 			this.clearOldAccountRequests();
 			AbstractUser user = (AbstractUser) userManager.getUser(username);
-			if(user instanceof User){
- 				((User) user).setLastPasswordChange(new Date());
+			if (user instanceof User) {
+				((User) user).setLastPasswordChange(new Date());
 				((User) user).setDisabled(false);
 			}
 			this.addDefaultAuthorities(user);
 			user.setPassword(password);
 			userManager.updateUser(user);
-			if(user instanceof User){
+			if (user instanceof User) {
 				userManager.changePassword(username, password);// Per salvare password non in chiaro
 			}
 			this.getUserRegDAO().removeConsumedToken(token);
@@ -224,7 +228,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 
 	@Override
 	public void clearOldAccountRequests() throws ApsSystemException {
-		long time = new Date().getTime()-this.getTokenValidityInMillis();
+		long time = new Date().getTime() - this.getTokenValidityInMillis();
 		Date expiration = new Date(time);
 		this.getUserRegDAO().clearOldTokens(expiration);
 		List<String> usernames = this.getUserRegDAO().oldAccountsNotActivated(expiration);
@@ -241,7 +245,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 	public void deactivateUser(UserDetails user) throws ApsSystemException {
 		try {
 			if (user instanceof User) {
-				((User)user).setDisabled(true);
+				((User) user).setDisabled(true);
 				this.getUserManager().updateUser(user);
 			}
 		} catch (Throwable t) {
@@ -251,7 +255,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 	}
 
 	@Override
-	public String getUsernameFromToken(String token){
+	public String getUsernameFromToken(String token) {
 		return this.getUserRegDAO().getUsernameFromToken(token);
 	}
 
@@ -264,10 +268,10 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 			while (prototypes.hasNext()) {
 				IApsEntity prototype = prototypes.next();
 				AttributeInterface eMailAttr = prototype.getAttributeByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL);
-				if (eMailAttr!=null) {
+				if (eMailAttr != null) {
 					EntitySearchFilter[] filters = {
-							new EntitySearchFilter(IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY, false, prototype.getTypeCode(), false),
-							new EntitySearchFilter(eMailAttr.getName(), true, email, false) };
+						new EntitySearchFilter(IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY, false, prototype.getTypeCode(), false),
+						new EntitySearchFilter(eMailAttr.getName(), true, email, false)};
 					usernames.addAll(profileManager.searchId(filters));
 				}
 			}
@@ -293,18 +297,18 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 			throw new ApsSystemException("Error in request for Account Reactivation", t);
 		}
 	}
-	
+
 	protected String createLink(String pageCode, String userName, String token, String langcode) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", token);
 		Lang lang = this.getLangManager().getLang(langcode);
-		IPage page = this.getPageManager().getPage(pageCode);
+		IPage page = this.getPageManager().getOnlinePage(pageCode);
 		if (null == page) {
-			page = this.getPageManager().getRoot();
+			page = this.getPageManager().getOnlineRoot();
 		}
 		return this.getUrlManager().createURL(page, lang, params);
 	}
-	
+
 	protected String replaceParams(String defaultText, Map<String, String> params) {
 		String body = defaultText;
 		StringBuffer strBuff = null;
@@ -324,7 +328,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 		}
 		return body;
 	}
-	
+
 	protected String createToken(String userName) throws NoSuchAlgorithmException {
 		Random random = new Random();
 		StringBuilder salt = new StringBuilder();
@@ -338,18 +342,18 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 		String token = ShaEncoder.encodePassword(userName, salt.toString());
 		return token;
 	}
-	
+
 	protected Map<String, String> prepareMailParams(IUserProfile profile, String token, String pageCode) {
 		Map<String, String> params = new HashMap<String, String>();
-		
+
 		String name = this.getFieldValue(profile, SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FIRST_NAME);
-		params.put("name", name!=null ? name : "");
+		params.put("name", name != null ? name : "");
 		String surname = this.getFieldValue(profile, SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_SURNAME);
-		params.put("surname", surname!=null ? surname : "");
-		
+		params.put("surname", surname != null ? surname : "");
+
 		String fullname = this.getFieldValue(profile, SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME);
-		params.put("fullname", fullname!=null ? fullname : "");
-		
+		params.put("fullname", fullname != null ? fullname : "");
+
 		String username = profile.getUsername();
 		params.put("userName", username);
 		params.put("username", username);
@@ -360,11 +364,11 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 
 		return params;
 	}
-	
+
 	private String getLangForLinkCreation(IUserProfile profile) {
 		ILangManager langManager = this.getLangManager();
 		String langCode = this.getFieldValue(profile, JpUserRegSystemConstants.ATTRIBUTE_ROLE_LANGUAGE);
-		if (null == langCode || langCode.length() == 0 || langManager.getLang(langCode)==null) {
+		if (null == langCode || langCode.length() == 0 || langManager.getLang(langCode) == null) {
 			langCode = langManager.getDefaultLang().getCode();
 		}
 		return langCode;
@@ -373,7 +377,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 	private String getFieldValue(IApsEntity entity, String roleName) {
 		String value = null;
 		AttributeInterface attribute = entity.getAttributeByRole(roleName);
-		if (attribute!=null) {
+		if (attribute != null) {
 			if (attribute instanceof MonoTextAttribute) {
 				value = ((MonoTextAttribute) attribute).getText();
 			} else if (attribute instanceof TextAttribute) {
@@ -399,11 +403,11 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 
 	protected void sendAlert(Map<String, Template> templates, Map<String, String> params, IUserProfile profile) throws ApsSystemException {
 		IUserRegConfig config = this.getConfig();
-		
-		String[] eMail = { this.getFieldValue(profile, SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL) };
+
+		String[] eMail = {this.getFieldValue(profile, SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL)};
 		Template template = null;
 		String langCode = this.getFieldValue(profile, JpUserRegSystemConstants.ATTRIBUTE_ROLE_LANGUAGE);
-		if (langCode!=null) {
+		if (langCode != null) {
 			template = templates.get(langCode);
 		}
 		if (template == null) {
@@ -413,7 +417,7 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 		String text = this.replaceParams(template.getBody(), params);
 		this.getMailManager().sendMail(text, subject, eMail, null, null, config.getEMailSenderCode());
 	}
-	
+
 	private void addDefaultAuthorities(AbstractUser user) throws ApsSystemException {
 		Set<String> csvs = this.getConfig().getDefaultCsvAuthorizations();
 		if (null != csvs) {
@@ -427,73 +431,83 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 			}
 		}
 	}
-	
+
 	protected void setTokenValidityInMillis(long tokenValidityInMillis) {
 		this._tokenValidityInMillis = tokenValidityInMillis;
 	}
+
 	protected long getTokenValidityInMillis() {
 		return _tokenValidityInMillis;
 	}
-	
+
 	protected IUserManager getUserManager() {
 		return _userManager;
 	}
+
 	public void setUserManager(IUserManager userManager) {
 		this._userManager = userManager;
 	}
-	
+
 	protected IURLManager getUrlManager() {
 		return _urlManager;
 	}
+
 	public void setUrlManager(IURLManager urlManager) {
 		this._urlManager = urlManager;
 	}
-	
+
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
+
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
-	
+
 	protected IUserProfileManager getUserProfileManager() {
 		return _userProfileManager;
 	}
+
 	public void setUserProfileManager(IUserProfileManager userProfileManager) {
 		this._userProfileManager = userProfileManager;
 	}
-	
+
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
+
 	public void setConfigManager(ConfigInterface baseConfigManager) {
 		this._configManager = baseConfigManager;
 	}
-	
+
 	protected ILangManager getLangManager() {
 		return _langManager;
 	}
+
 	public void setLangManager(ILangManager langManager) {
 		this._langManager = langManager;
 	}
-	
+
 	protected IMailManager getMailManager() {
 		return _mailManager;
 	}
+
 	public void setMailManager(IMailManager mailManager) {
 		this._mailManager = mailManager;
 	}
-	
+
 	protected IAuthorizationManager getAuthorizationManager() {
 		return _authorizationManager;
 	}
+
 	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
 		this._authorizationManager = authorizationManager;
 	}
-	
+
 	protected IUserRegDAO getUserRegDAO() {
 		return _userRegDAO;
 	}
+
 	public void setUserRegDAO(IUserRegDAO activationTocketDAO) {
 		this._userRegDAO = activationTocketDAO;
 	}
@@ -510,5 +524,5 @@ public class UserRegManager extends AbstractService implements IUserRegManager {
 	private ConfigInterface _configManager;
 	private IAuthorizationManager _authorizationManager;
 	private IUserRegDAO _userRegDAO;
-	
+
 }
