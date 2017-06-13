@@ -47,7 +47,7 @@ import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
  * @author E.Santoboni
  */
 public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
-	
+
 	public String edit() {
 		try {
 			NewsletterConfig config = this.getNewsletterManager().getNewsletterConfig();
@@ -59,11 +59,11 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public String entryConfig() {
 		try {
 			NewsletterConfig config = this.getNewsletterConfig();
-			if (config==null) {
+			if (config == null) {
 				config = this.getNewsletterManager().getNewsletterConfig();
 				this.setNewsletterConfig(config);
 			}
@@ -74,7 +74,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public String addCategoryMapping() {
 		this.updateConfigOnSession();
 		try {
@@ -92,7 +92,9 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 			} else if (mappedCategories.contains(category)) {
 				this.addFieldError("categoryCode", this.getText("error.category.already.used"));
 			}
-			if (this.hasFieldErrors()) return INPUT;
+			if (this.hasFieldErrors()) {
+				return INPUT;
+			}
 			NewsletterConfig config = this.getNewsletterConfig();
 			config.getSubscriptions().put(category, attribute);
 		} catch (Throwable t) {
@@ -125,7 +127,9 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 			if (null != this.getNewsletterConfig().getContentType(this.getContentTypeCode())) {
 				this.addFieldError("contentTypeCode", this.getText("error.contenttype.already.used"));
 			}
-			if (this.hasFieldErrors()) return INPUT;
+			if (this.hasFieldErrors()) {
+				return INPUT;
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addContentType");
 			return FAILURE;
@@ -193,15 +197,15 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 			throw new RuntimeException(t);
 		}
 	}
-	
+
 	public List<Category> getCategories() {
 		return this.getCategoryManager().getCategoriesList();
 	}
-	
+
 	public IUserProfile getDefaultProfile() {
 		return this.getProfileManager().getDefaultProfileType();
 	}
-	
+
 	public List<AttributeInterface> getBooleanProfileAttributes() {
 		List<AttributeInterface> attributes = new ArrayList<AttributeInterface>();
 		List<AttributeInterface> profileAttributes = this.getDefaultProfile().getAttributeList();
@@ -223,17 +227,23 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 	}
 
 	public Boolean getActiveService() {
-		if (null == this._activeService) return false;
+		if (null == this._activeService) {
+			return false;
+		}
 		return _activeService;
 	}
+
 	public void setActiveService(Boolean activeService) {
 		this._activeService = activeService;
 	}
 
 	public Boolean getAlsoHtml() {
-		if (null == this._alsoHtml) return false;
+		if (null == this._alsoHtml) {
+			return false;
+		}
 		return _alsoHtml;
 	}
+
 	public void setAlsoHtml(Boolean alsoHtml) {
 		_alsoHtml = alsoHtml;
 	}
@@ -241,6 +251,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 	public String getCategoryCode() {
 		return _categoryCode;
 	}
+
 	public void setCategoryCode(String categoryCode) {
 		this._categoryCode = categoryCode;
 	}
@@ -248,6 +259,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 	public String getAttributeName() {
 		return _attributeName;
 	}
+
 	public void setAttributeName(String attributeName) {
 		this._attributeName = attributeName;
 	}
@@ -258,6 +270,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 		}
 		return _startSchedulerHour;
 	}
+
 	public void setStartSchedulerHour(Integer startSchedulerHour) {
 		this._startSchedulerHour = startSchedulerHour;
 	}
@@ -279,14 +292,15 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 		startScheduler.setTime(config.getStartScheduler());
 		return startScheduler.get(field);
 	}
-	
+
 	public List<IPage> getConfirmSubscriptionPages() throws Throwable {
-		return this.getPageManager().getWidgetUtilizers(JpnewsletterSystemConstants.SUBSCRIPTION_CONFIRM_WIDGET_CODE);
+		return this.getPageManager().getOnlineWidgetUtilizers(JpnewsletterSystemConstants.SUBSCRIPTION_CONFIRM_WIDGET_CODE);
 	}
-	
+
 	public List<IPage> getConfirmUnsubscriptionPages() throws Throwable {
-		return this.getPageManager().getWidgetUtilizers(JpnewsletterSystemConstants.UNSUBSCRIPTION_CONFIRM_WIDGET_CODE);
+		return this.getPageManager().getOnlineWidgetUtilizers(JpnewsletterSystemConstants.UNSUBSCRIPTION_CONFIRM_WIDGET_CODE);
 	}
+
 	/*
 	public List<IPage> getPages() {
 		if (this._pages==null) {
@@ -296,7 +310,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 		}
 		return this._pages;
 	}
-	
+
 	protected void addPages(IPage page, List<IPage> pages) {
 		pages.add(page);
 		IPage[] children = page.getChildren();
@@ -304,31 +318,35 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 			this.addPages(children[i], pages);
 		}
 	}
-	*/
+	 */
 	public String getContentTypeCode() {
 		return _contentTypeCode;
 	}
+
 	public void setContentTypeCode(String contentTypeCode) {
 		this._contentTypeCode = contentTypeCode;
 	}
-	
+
 	protected ICategoryManager getCategoryManager() {
 		return _categoryManager;
 	}
+
 	public void setCategoryManager(ICategoryManager categoryManager) {
 		this._categoryManager = categoryManager;
 	}
-	
+
 	protected IUserProfileManager getProfileManager() {
 		return _profileManager;
 	}
+
 	public void setProfileManager(IUserProfileManager profileManager) {
 		this._profileManager = profileManager;
 	}
-	
+
 	protected IMailManager getMailManager() {
 		return _mailManager;
 	}
+
 	public void setMailManager(IMailManager mailManager) {
 		this._mailManager = mailManager;
 	}
@@ -336,6 +354,7 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
+
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
