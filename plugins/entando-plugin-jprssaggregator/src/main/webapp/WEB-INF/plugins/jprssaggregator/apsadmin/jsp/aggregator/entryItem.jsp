@@ -34,7 +34,7 @@
                 </s:elseif>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="jprssaggregator.title.rssAggregator.addedit.help" data-placement="left" data-original-title="">
+                       data-content="<s:text name="rssAggregator.help"/>" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
