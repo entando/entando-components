@@ -6,6 +6,9 @@
     <li>
         <s:text name="jpwebdynamicform.menu.uxcomponents"/>
     </li>
+	<li>
+		<s:text name="jpwebdynamicform.name"/>
+	</li>
     <li class="page-title-container">
         <s:text name="breadcrumb.configuration"/>
     </li>

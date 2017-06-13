@@ -8,6 +8,10 @@
     <li>
         <s:text name="jpwebdynamicform.menu.uxcomponents"/>
     </li>
+	<li>
+		<s:text name="jpwebdynamicform.name"/>
+	</li>
+	
     <li>
         <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />">
             <s:text name="breadcrumb.configuration"/>
