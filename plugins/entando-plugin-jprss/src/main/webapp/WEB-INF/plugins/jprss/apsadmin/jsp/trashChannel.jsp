@@ -12,10 +12,11 @@
             <s:text name="jprss.title.rssManagement" />
         </a>
     </li>
+    <li><s:text name="label.delete"/></li>
 </ol>
 
 <h1 class="page-title-container">
-    <s:text name="note.deleteChannel.areYouSure"/>
+    <s:text name="label.delete"/>
     <span class="pull-right">
         <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
            data-content="<s:text name="jprss.title.rssManagement.help" />" data-placement="left" data-original-title="">
@@ -32,20 +33,18 @@
     <s:form action="delete" namespace="/do/jprss/Rss" cssClass="form-horizontal">
         <p class="sr-only"><wpsf:hidden name="id"/></p>
         <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
-        <p class="esclamation-underline"><s:text name="jprss.title.channelTrash"/></p>
-        <p>
-            <s:text name="note.deleteChannel.areYouSure"/>&#32;
-            <s:property value="id" />
+        <p class="esclamation-underline"><s:text name="note.deleteChannel.areYouSure"/></p>
+        <p class="esclamation-underline-text">
+            <s:property value="id" />?
         </p>
         <div class="text-center margin-large-top">
+            <a class="btn btn-default"
+               href="<s:url namespace="/do/jprss/Rss" action="list"/>"/> <s:text name="label.back" />
+            </a>
             <wpsf:submit type="button" cssClass="btn btn-danger button-fixed-width">
                 <s:text name="label.delete"/>
             </wpsf:submit>
         </div>
-        <div class="text-center margin-large-top">
-            <a class="btn btn-default"
-               href="<s:url namespace="/do/jprss/Rss" action="list"/>"/> <s:text name="jprss.title.rssManagement" />
-            </a>
-        </div>
+
     </s:form>
 </div>

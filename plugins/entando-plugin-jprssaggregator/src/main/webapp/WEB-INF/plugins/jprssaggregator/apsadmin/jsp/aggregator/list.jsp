@@ -5,7 +5,9 @@
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
-    <li><s:text name="breadcrumb.integrations"/></li>
+    <li>
+        <s:text name="breadcrumb.integrations"/>
+    </li>
     <li>
         <s:text name="breadcrumb.integrations.components"/>
     </li>
@@ -31,37 +33,35 @@
 <br>
 
 <div id="main">
-
     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp"/>
-    <a href="<s:url action="new" namespace="/do/jprssaggregator/Aggregator"/>"
-       class="btn btn-primary pull-right" style="margin-bottom: 5px">
+    <a href="<s:url action="new" namespace="/do/jprssaggregator/Aggregator"/>" class="btn btn-primary pull-right mb-5">
         <s:text name="label.add"/>
     </a>
     <table class="table table-striped table-bordered">
         <p class="sr-only"><s:text name="jprssaggregator.title.rssAggregator.list" /></p>
         <thead>
             <tr>
-                <th class="text-center"><s:text name="jprssaggregator.rssAggregator.description"/></th>
-                <th class="text-center"><s:text name="jprssaggregator.rssAggregator.delay"/></th>
-                <th class="text-center"><s:text name="jprssaggregator.rssAggregator.updated"/></th>
-                <th class="text-center"><s:text name="jprssaggregator.rssAggregator.actions"/></th>
+                <th class="table-w-50"><s:text name="jprssaggregator.rssAggregator.description"/></th>
+                <th class=""><s:text name="jprssaggregator.rssAggregator.delay"/></th>
+                <th class=""><s:text name="jprssaggregator.rssAggregator.updated"/></th>
+                <th class="text-center table-w-5"><s:text name="jprssaggregator.rssAggregator.actions"/></th>
             </tr>
         </thead>
         <tbody>
             <s:set var="aggregatorItems" value="aggregatorItems"/>
             <s:iterator value="aggregatorItems" var="item">
                 <tr>
-                    <td class="text-center">
+                    <td>
                         <s:property value="#item.descr"/>
                         <a title="<s:property value="#item.link" />" href="<s:property value="#item.link" />">
                             <span class="icon fa fa-globe"></span>
                         </a>
                     </td>
-                    <td class="text-center">
-                        <% /*FIXME fare in modo che il valore delay del singolo canale sia compatibile con le chiavi della mappa "delays"*/ %>
+                    <td>
+                        <% /*FIXME fare in modo che il valore delay del singolo canale sia compatibile con le chiavi della mappa "delays"*/%>
                         <s:property value="%{delays.get(#item.delay.intValue())}"/>
                     </td>
-                    <td class="text-center">
+                    <td>
                         <s:date name="#item.lastUpdate" nice="true" format="dd/MM/yyyy HH:mm:ss"/>
                     </td>
                     <td class="table-view-pf-actions text-center">
@@ -73,24 +73,22 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li>
-                                    <a
-                                            href="<s:url action="edit"><s:param name="code" value="#item.code"/></s:url>"
-                                            title="<s:text name="label.edit" />:&#32;<s:property value="#item.descr" />">
+                                    <a href="<s:url action="edit"><s:param name="code" value="#item.code"/></s:url>"
+                                       title="<s:text name="label.edit" />:&#32;<s:property value="#item.descr" />">
                                         <span><s:text name="label.edit"/></span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a
-                                            href="<s:url action="syncronize"><s:param name="code" value="#item.code"/></s:url>"
-                                            title="<s:text name="label.rssSync" />:&#32;<s:property value="#item.descr" />">
+                                    <a href="<s:url action="syncronize"><s:param name="code" value="#item.code"/></s:url>"
+                                       title="<s:text name="label.rssSync" />:&#32;<s:property value="#item.descr" />">
                                         <span><s:text name="label.rssSync"/></span>
                                     </a>
                                 </li>
-                                <li><a
-                                        href="<s:url action="delete"><s:param name="code" value="#item.code"/></s:url>"
-                                        title="<s:text name="label.remove" />:&#32;<s:property value="#item.descr" />">
-                                    <span><s:text name="label.remove"/></span>
-                                </a>
+                                <li>
+                                    <a href="<s:url action="delete"><s:param name="code" value="#item.code"/></s:url>"
+                                       title="<s:text name="label.remove" />:&#32;<s:property value="#item.descr" />">
+                                        <span><s:text name="label.remove"/></span>
+                                    </a>
                                 </li>
                             </ul>
                         </div>
