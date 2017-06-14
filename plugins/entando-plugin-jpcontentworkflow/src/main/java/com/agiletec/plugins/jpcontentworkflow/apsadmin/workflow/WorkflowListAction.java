@@ -40,7 +40,8 @@ public class WorkflowListAction extends AbstractWorkflowAction {
 			List<SmallContentType> types = this.getContentTypes();
 			for (int i = 0; i < types.size(); i++) {
 				SmallContentType smallContentType = types.get(i);
-				String roleName = this.getRequest().getParameter(smallContentType.getCode() + "_authority");
+				String roleNameParam = this.getRequest().getParameter(smallContentType.getCode() + "_authority");
+				String roleName = (null != this.getRoleManager().getRole(roleNameParam)) ? roleNameParam : null;
 				this.getWorkflowManager().updateRole(smallContentType.getCode(), roleName);
 			}
 			this.addActionMessage(this.getText("jpcontentworkflow.config.updated"));
