@@ -3,29 +3,49 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
 
-<h1 class="panel panel-default title-page">
-	<span class="panel-body display-block">
-		<a href="<s:url namespace="/do/jprss/Rss" action="list" />"><s:text name="jprss.title.rssManagement" /></a>
-		&#32;/&#32;
-		<s:text name="jprss.title.userManagement.channelTrash" />
-	</span>
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="breadcrumb.integrations"/></li>
+    <li><s:text name="breadcrumb.integrations.components"/></li>
+    <li>
+        <a href="<s:url action="list" namespace="/do/jprss/Rss" />"
+           title="<s:text name="note.goToSomewhere" />: <s:text name="jprss.title.rssManagement" />">
+            <s:text name="jprss.title.rssManagement" />
+        </a>
+    </li>
+</ol>
+
+<h1 class="page-title-container">
+    <s:text name="note.deleteChannel.areYouSure"/>
+    <span class="pull-right">
+        <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+           data-content="<s:text name="jprss.title.rssManagement.help" />" data-placement="left" data-original-title="">
+            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+        </a>
+    </span>
 </h1>
-<s:form action="delete" namespace="/do/jprss/Rss">
-	<p class="sr-only">
-		<wpsf:hidden name="id" />
-	</p>
-	<div class="alert alert-warning">
-		<p>
-			<s:text name="note.deleteChannel.areYouSure" />&#32;
-			<code><s:property value="title"/></code>?
-		</p>
-		<div class="text-center margin-large-top">
-			<wpsf:submit type="button" cssClass="btn btn-warning btn-lg">
-			    <span class="icon fa fa-times-circle"></span>&#32;
-				<s:text name="label.confirm" />
-			</wpsf:submit>
-			<a class="btn btn-link" href="<s:url namespace="/do/jprss/Rss" action="list" />">
-			<s:text name="note.goToSomewhere" />:&#32;<s:text name="jprss.title.rssManagement" /></a>
-		</div>
-	</div>
-</s:form>
+<div class="text-right">
+    <div class="form-group-separator"></div>
+</div>
+<br>
+
+<div class="text-center">
+    <s:form action="delete" namespace="/do/jprss/Rss" cssClass="form-horizontal">
+        <p class="sr-only"><wpsf:hidden name="id"/></p>
+        <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
+        <p class="esclamation-underline"><s:text name="jprss.title.channelTrash"/></p>
+        <p>
+            <s:text name="note.deleteChannel.areYouSure"/>&#32;
+            <s:property value="id" />
+        </p>
+        <div class="text-center margin-large-top">
+            <wpsf:submit type="button" cssClass="btn btn-danger button-fixed-width">
+                <s:text name="label.delete"/>
+            </wpsf:submit>
+        </div>
+        <div class="text-center margin-large-top">
+            <a class="btn btn-default"
+               href="<s:url namespace="/do/jprss/Rss" action="list"/>"/> <s:text name="jprss.title.rssManagement" />
+            </a>
+        </div>
+    </s:form>
+</div>

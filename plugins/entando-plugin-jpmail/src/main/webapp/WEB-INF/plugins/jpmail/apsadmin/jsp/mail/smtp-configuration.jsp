@@ -48,7 +48,7 @@
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>
 
-    <s:form id="configurationForm" name="configurationForm" method="post" action="testSmtp" cssClass="form-horizontal">
+    <s:form id="configurationForm" name="configurationForm" method="post" action="testSmtp">
         <legend><s:text name="legend.generalSettings" /></legend>
         <div class="form-group">
             <label class="col-sm-2 control-label">

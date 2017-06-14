@@ -212,7 +212,6 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 			ContentRecordVO currentContent = this.getContentManager().loadContentVO(id);
 			RssContentMapping mapping = (RssContentMapping) this.getContentMapping().get(currentContent.getTypeCode());
 			if (null == mapping) {
-
 				_logger.error("Null content mapping by existed channel for content type {}", currentContent.getTypeCode());
 				continue;
 			}
@@ -268,8 +267,8 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 		SymbolicLink symbolicLink = new SymbolicLink();
 		StringBuilder destination = new StringBuilder(feedLink);
 		String viewPageCode = content.getViewPage();
-		if (null == viewPageCode || null == this.getPageManager().getPage(viewPageCode)) {
-			viewPageCode = this.getPageManager().getRoot().getCode();
+		if (null == viewPageCode || null == this.getPageManager().getDraftPage(viewPageCode)) {
+			viewPageCode = this.getPageManager().getDraftRoot().getCode();
 		}
 		destination.append(viewPageCode).append(".page").append("?contentId=").append(content.getId());
 		symbolicLink.setDestinationToUrl(destination.toString());
