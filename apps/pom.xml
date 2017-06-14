@@ -32,25 +32,21 @@
 	</organization>
 	<modules>
 		<module>entando-app-webdynamicform</module>
-                <!--
-		<module>entando-app-calendar</module>
-                -->
-		<module>entando-app-rss</module>
+		<!--<module>entando-app-calendar</module>-->
+		<!-- <module>entando-app-rss</module> -->
 		<module>entando-app-facetnav</module>
-		<!-- <module>entando-app-userreg</module> -->
-                <!--
-		<module>entando-app-addressbook</module>
-		<module>entando-app-newsletter</module>
-		<module>entando-app-survey</module>
-                -->
+		<module>entando-app-userreg</module>
+		<!--
+<module>entando-app-addressbook</module>
+<module>entando-app-newsletter</module>
+<module>entando-app-survey</module>
+		-->
 		<!--<module>entando-app-avatar</module>-->
-                <!--
-		<module>entando-app-cmstagcloud</module>
-                -->
+		<!--
+<module>entando-app-cmstagcloud</module>
+		-->
 		<module>entando-app-tokenapi</module>
-                <!--
 		<module>entando-app-blog</module>
-                -->
 	</modules>
 	<properties>
 		<spring.version>4.1.6.RELEASE</spring.version>

@@ -8,6 +8,10 @@
     <li>
         <s:text name="jpwebdynamicform.menu.uxcomponents"/>
     </li>
+	<li>
+		<s:text name="jpwebdynamicform.name"/>
+	</li>
+	
     <li>
         <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />">
             <s:text name="breadcrumb.configuration"/>
@@ -57,9 +61,12 @@
         </s:if>
 
         <s:if test="hasActionErrors()">
-            <div class="alert alert-danger alert-dismissable fade in">
-                <button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors"/></h2>
+            <div class="alert alert-danger alert-dismissable">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                  <span class="pficon pficon-close"></span>
+              </button>
+              <span class="pficon pficon-error-circle-o"></span>
+                <strong><s:text name="message.title.ActionErrors"/></strong>
                 <ul>
                     <s:iterator value="actionErrors">
                         <li><s:property escapeHtml="false"/></li>
@@ -184,12 +191,16 @@
                             <s:text name="label.recipientsTo"/>
                         </div>
                         <s:if test="%{recipientsTo == null || recipientsTo.size() == 0}">
-                            <div class="alert alert-info"><s:text name="label.no.configured.recipients"/></div>
+                            <div class="alert alert-info">
+                              <span class="pficon pficon-info"></span>
+                              <s:text name="label.no.configured.recipients"/>
+                            </div>
                         </s:if>
                         <s:else>
-                            <div class="clearfix">
+                             <ul class="list-inline mt-5">
                                 <s:iterator value="recipientsTo" var="recipient">
-                                    <span class="label label-default label-sm pull-left padding-small-top padding-small-bottom margin-small-right margin-small-bottom">
+                                  <li>
+                                    <span class="label label-info">
                                         <abbr title="<s:property value="#recipient"/>">
                                             <s:property value="#recipient"/>
                                         </abbr>&#32;
@@ -202,13 +213,14 @@
                                                 type="button"
                                                 action="%{#actionName}"
                                                 title="%{getText('label.remove')}: %{#recipient}"
-                                                cssClass="btn btn-default btn-xs badge">
-                                            <span class="icon fa fa-times"></span>
-                                            <span class="sr-only">x</span>
+                                                cssClass="btn btn-link">
+                                                <span class="pficon pficon-close white"></span>
+                                    						<span class="sr-only">x</span>
                                         </wpsf:submit>
                                     </span>
+                                  </li>
                                 </s:iterator>
-                            </div>
+                            </ul>
                         </s:else>
                     </div>
 
@@ -217,12 +229,16 @@
                             <s:text name="label.recipientsCc"/>
                         </div>
                         <s:if test="%{recipientsCc == null || recipientsCc.size() == 0}">
-                            <div class="alert alert-info"><s:text name="label.no.configured.recipients"/></div>
+                          <div class="alert alert-info">
+                            <span class="pficon pficon-info"></span>
+                            <s:text name="label.no.configured.recipients"/>
+                          </div>
                         </s:if>
                         <s:else>
-                            <div class="clearfix">
+                            <ul class="list-inline mt-5">
                                 <s:iterator value="recipientsCc" var="recipient">
-                                    <span class="label label-default label-sm pull-left padding-small-top padding-small-bottom margin-small-right margin-small-bottom">
+                                  <li>
+                                    <span class="label label-info">
                                         <abbr title="<s:property value="#recipient"/>">
                                             <s:property value="#recipient"/>
                                         </abbr>&#32;
@@ -232,13 +248,14 @@
                                         </wpsa:actionParam>
                                         <wpsf:submit type="button" action="%{#actionName}"
                                                      title="%{getText('label.remove')}: %{#recipient}"
-                                                     cssClass="btn btn-default btn-xs badge">
-                                            <span class="icon fa fa-times"></span>
+                                                     cssClass="btn btn-link">
+                                            <span class="pficon pficon-close white"></span>
                                             <span class="sr-only">x</span>
                                         </wpsf:submit>
                                     </span>
+                                  </li>
                                 </s:iterator>
-                            </div>
+                            </ul>
                         </s:else>
                     </div>
 
@@ -247,12 +264,16 @@
                             <s:text name="label.recipientsBcc"/>
                         </div>
                         <s:if test="%{recipientsBcc == null || recipientsBcc.size() == 0}">
-                            <div class="alert alert-info"><s:text name="label.no.configured.recipients"/></div>
+                          <div class="alert alert-info">
+                            <span class="pficon pficon-info"></span>
+                            <s:text name="label.no.configured.recipients"/>
+                          </div>
                         </s:if>
                         <s:else>
-                            <div class="clearfix">
+                            <ul class="list-inline mt-5">
                                 <s:iterator value="recipientsBcc" var="recipient">
-                                    <span class="label label-default label-sm pull-left padding-small-top padding-small-bottom margin-small-right margin-small-bottom">
+                                  <li>
+                                    <span class="label label-info">
                                         <abbr title="<s:property value="#recipient"/>">
                                             <s:property value="#recipient"/>
                                         </abbr>&#32;
@@ -264,13 +285,14 @@
                                                 type="button"
                                                 action="%{#actionName}"
                                                 title="%{getText('label.remove')}: %{#recipient}"
-                                                cssClass="btn btn-default btn-xs badge">
-                                            <span class="icon fa fa-times"></span>
+                                                cssClass="btn btn-link">
+                                            <span class="pficon pficon-close white"></span>
                                             <span class="sr-only">x</span>
                                         </wpsf:submit>
                                     </span>
+                                  </li>
                                 </s:iterator>
-                            </div>
+                            </ul>
                         </s:else>
                     </div>
                 </div>
@@ -315,12 +337,14 @@
                 </div>
             </div>
         </fieldset>
-
-        <div class="form-group pull-right">
-            <div class="btn-group">
-                <wpsf:submit type="button" cssClass="btn btn-primary ">
-                    <s:text name="label.save"/>
-                </wpsf:submit>
+        
+        <div class="col-xs-12">
+            <div class="form-group pull-right">
+                <div class="btn-group">
+                    <wpsf:submit type="button" cssClass="btn btn-primary ">
+                        <s:text name="label.save"/>
+                    </wpsf:submit>
+                </div>
             </div>
         </div>
     </s:form>
