@@ -20,7 +20,7 @@
             <s:text name="jprss.title.editChannel" />
         </s:if>
     </li>
-    <li>
+    <li class="page-title-container">
         <s:text name="jprss.title.manageFilter" />
     </li>
 </ol>
