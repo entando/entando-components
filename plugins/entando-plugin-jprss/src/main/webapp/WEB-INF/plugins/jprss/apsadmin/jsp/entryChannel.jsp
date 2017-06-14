@@ -12,7 +12,7 @@
             <s:text name="jprss.title.rssManagement" />
         </a>
     </li>
-    <li>
+    <li class="page-title-container">
         <s:if test="strutsAction ==  1">
             <s:text name="label.add" />
         </s:if>
