@@ -53,7 +53,7 @@ public class WidgetReplicatorTag extends TagSupport {
 			Widget currentWidget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			String pageCode = currentWidget.getConfig().getProperty("pageCodeParam");
 			IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.pageContext);
-			IPage targetPage = pageManager.getPage(pageCode);
+			IPage targetPage = pageManager.getOnlinePage(pageCode);
 			if (null != targetPage) {
 				String frameIdString = currentWidget.getConfig().getProperty("frameIdParam");
 				int frameId = Integer.parseInt(frameIdString);
