@@ -47,9 +47,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UserRegConfigAction extends BaseAction {
-	
-	private static final Logger _logger =  LoggerFactory.getLogger(UserRegConfigAction.class);
-	
+
+	private static final Logger _logger = LoggerFactory.getLogger(UserRegConfigAction.class);
+
 	@Override
 	public void validate() {
 		super.validate();
@@ -69,21 +69,21 @@ public class UserRegConfigAction extends BaseAction {
 		while (langs.hasNext()) {
 			Lang lang = langs.next();
 			Template template = templates.get(lang.getCode());
-			if (template==null) {
-				this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.notValued", new String[] { this.getText(fieldName), lang.getDescr() }));
+			if (template == null) {
+				this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.notValued", new String[]{this.getText(fieldName), lang.getDescr()}));
 			} else {
 				String subject = template.getSubject();
-				if (subject==null || subject.trim().length()==0) {
-					this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.subject.notValued", new String[] { this.getText(fieldName), lang.getDescr() }));
+				if (subject == null || subject.trim().length() == 0) {
+					this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.subject.notValued", new String[]{this.getText(fieldName), lang.getDescr()}));
 				}
 				String body = template.getBody();
-				if (body == null || body.trim().length()==0) {
-					this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.body.notValued", new String[] { this.getText(fieldName), lang.getDescr() }));
+				if (body == null || body.trim().length() == 0) {
+					this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.body.notValued", new String[]{this.getText(fieldName), lang.getDescr()}));
 				}
 			}
 		}
 	}
-	
+
 	private void checkAuthorities() {
 		Collection<String> csvs = this.getConfig().getDefaultCsvAuthorizations();
 		if (csvs != null) {
@@ -93,30 +93,30 @@ public class UserRegConfigAction extends BaseAction {
 				String[] params = csv.split(",");
 				String groupName = (params.length > 0) ? params[0] : null;
 				String roleName = (params.length > 1) ? params[1] : null;
-				if (null == groupName 
-						|| null == getGroupManager().getGroup(groupName) 
+				if (null == groupName
+						|| null == getGroupManager().getGroup(groupName)
 						|| (roleName != null && null == this.getRoleManager().getRole(roleName))) {
-					this.addFieldError("config.defaultCsvAuthorizations", this.getText("jpuserreg.errors.authority.invalid", new String[] { groupName, roleName }));
+					this.addFieldError("config.defaultCsvAuthorizations", this.getText("jpuserreg.errors.authority.invalid", new String[]{groupName, roleName}));
 				}
 			}
 		}
 	}
-	
+
 	public boolean checkPage(String pageCode) {
-		return this.getPageManager().getPage(pageCode)!=null;
+		return this.getPageManager().getOnlinePage(pageCode) != null;
 	}
-	
+
 	public boolean checkSenderCode() {
 		boolean existsSender = false;
 		try {
 			String senderCode = this.getConfig().getEMailSenderCode();
-			existsSender = null!=this.getMailManager().getMailConfig().getSender(senderCode);
+			existsSender = null != this.getMailManager().getMailConfig().getSender(senderCode);
 		} catch (Throwable t) {
 			_logger.error("Error loading mail configuration", t);
 		}
 		return existsSender;
 	}
-	
+
 	public String edit() {
 		try {
 			IUserRegConfig config = this.getUserRegManager().getUserRegConfig();
@@ -127,7 +127,7 @@ public class UserRegConfigAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public String save() {
 		try {
 			this.getUserRegManager().saveUserRegConfig(this.getConfig());
@@ -137,7 +137,7 @@ public class UserRegConfigAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public String addAuthorization() {
 		try {
 			String groupName = this.getGroupName();
@@ -156,7 +156,7 @@ public class UserRegConfigAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public String removeAuthorization() {
 		try {
 			Collection<String> csvs = this.getConfig().getDefaultCsvAuthorizations();
@@ -169,7 +169,7 @@ public class UserRegConfigAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public List<SelectItem> getMailSenders() {
 		try {
 			Map<String, String> senders = this.getMailManager().getMailConfig().getSenders();
@@ -186,25 +186,27 @@ public class UserRegConfigAction extends BaseAction {
 			throw new RuntimeException("Error in getMailSenders", t);
 		}
 	}
-	
+
 	public List<Role> getSystemRoles() {
 		return this.getRoleManager().getRoles();
 	}
+
 	public Role getRole(String roleName) {
 		return this.getRoleManager().getRole(roleName);
 	}
-	
+
 	public List<Group> getSystemGroups() {
 		return this.getGroupManager().getGroups();
 	}
+
 	public Group getGroup(String groupName) {
 		return this.getGroupManager().getGroup(groupName);
 	}
-	
+
 	public List<IPage> getPages() {
-		if (this._pages==null) {
+		if (this._pages == null) {
 			this._pages = new ArrayList<IPage>();
-			IPage root = this.getPageManager().getRoot();
+			IPage root = this.getPageManager().getOnlineRoot();
 			this.addPages(root, this._pages);
 		}
 		return this._pages;
@@ -213,23 +215,23 @@ public class UserRegConfigAction extends BaseAction {
 	protected void addPages(IPage page, List<IPage> pages) {
 		pages.add(page);
 		IPage[] children = page.getChildren();
-		for (int i=0; i<children.length; i++) {
+		for (int i = 0; i < children.length; i++) {
 			this.addPages(children[i], pages);
 		}
 	}
-	
+
 	public List<IPage> getActivationPages() throws ApsSystemException {
 		return this.getSystemPages(this.getActivationWidgetCode());
 	}
-	
+
 	public List<IPage> getReactivationPages() throws ApsSystemException {
 		return this.getSystemPages(this.getReactivationWidgetCode());
 	}
-	
+
 	protected List<IPage> getSystemPages(String widgetCode) throws ApsSystemException {
 		List<IPage> pages = null;
 		try {
-			pages = this.getPageManager().getWidgetUtilizers(widgetCode);
+			pages = this.getPageManager().getOnlineWidgetUtilizers(widgetCode);
 		} catch (Exception e) {
 			_logger.error("Error in getSystemPages", e);
 			pages = new ArrayList<IPage>();
@@ -240,24 +242,27 @@ public class UserRegConfigAction extends BaseAction {
 	public List<Lang> getLangs() {
 		return this.getLangManager().getLangs();
 	}
-	
+
 	protected String getActivationWidgetCode() {
 		return _activationWidgetCode;
 	}
+
 	public void setActivationWidgetCode(String activationWidgetCode) {
 		this._activationWidgetCode = activationWidgetCode;
 	}
-	
+
 	protected String getReactivationWidgetCode() {
 		return _reactivationWidgetCode;
 	}
+
 	public void setReactivationWidgetCode(String reactivationWidgetCode) {
 		this._reactivationWidgetCode = reactivationWidgetCode;
 	}
-	
+
 	public IUserRegConfig getConfig() {
 		return _config;
 	}
+
 	public void setConfig(IUserRegConfig config) {
 		this._config = config;
 	}
@@ -265,6 +270,7 @@ public class UserRegConfigAction extends BaseAction {
 	public String getGroupName() {
 		return _groupName;
 	}
+
 	public void setGroupName(String groupName) {
 		this._groupName = groupName;
 	}
@@ -272,20 +278,23 @@ public class UserRegConfigAction extends BaseAction {
 	public String getRoleName() {
 		return _roleName;
 	}
+
 	public void setRoleName(String roleName) {
 		this._roleName = roleName;
 	}
-	
+
 	public String getCsvAuthorization() {
 		return _csvAuthorization;
 	}
+
 	public void setCsvAuthorization(String csvAuthorization) {
 		this._csvAuthorization = csvAuthorization;
 	}
-	
+
 	protected IUserRegManager getUserRegManager() {
 		return _userRegManager;
 	}
+
 	public void setUserRegManager(IUserRegManager userRegManager) {
 		this._userRegManager = userRegManager;
 	}
@@ -293,6 +302,7 @@ public class UserRegConfigAction extends BaseAction {
 	protected IMailManager getMailManager() {
 		return _mailManager;
 	}
+
 	public void setMailManager(IMailManager mailManager) {
 		this._mailManager = mailManager;
 	}
@@ -300,6 +310,7 @@ public class UserRegConfigAction extends BaseAction {
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
+
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
@@ -307,6 +318,7 @@ public class UserRegConfigAction extends BaseAction {
 	protected IGroupManager getGroupManager() {
 		return _groupManager;
 	}
+
 	public void setGroupManager(IGroupManager groupManager) {
 		this._groupManager = groupManager;
 	}
@@ -314,13 +326,14 @@ public class UserRegConfigAction extends BaseAction {
 	protected IRoleManager getRoleManager() {
 		return _roleManager;
 	}
+
 	public void setRoleManager(IRoleManager roleManager) {
 		this._roleManager = roleManager;
 	}
-	
+
 	private String _activationWidgetCode = "jpuserreg_Activation";
 	private String _reactivationWidgetCode = "jpuserreg_Reactivation";
-	
+
 	private IUserRegConfig _config = new UserRegConfig();
 	private String _groupName;
 	private String _roleName;

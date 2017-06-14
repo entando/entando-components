@@ -5,6 +5,10 @@
         <s:text name="jpwebdynamicform.menu.uxcomponents"/>
     </li>
     <li>
+		<s:text name="jpwebdynamicform.name"/>
+	</li>
+	
+    <li>
         <a href="<s:url action="list" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.messageManagement" />">
             <s:text name="title.messageManagement" />
         </a>
