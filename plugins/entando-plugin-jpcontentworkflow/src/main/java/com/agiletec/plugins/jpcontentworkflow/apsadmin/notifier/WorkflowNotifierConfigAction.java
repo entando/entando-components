@@ -37,9 +37,8 @@ import com.agiletec.plugins.jpmail.aps.services.mail.IMailManager;
 /**
  * @author E.Santoboni
  */
-public class WorkflowNotifierConfigAction extends BaseAction implements IWorkflowNotifierConfigAction {
-	
-	@Override
+public class WorkflowNotifierConfigAction extends BaseAction {
+
 	public String config() {
 		try {
 			NotifierConfig notifierConfig = this.getNotifierManager().getNotifierConfig();
@@ -50,8 +49,7 @@ public class WorkflowNotifierConfigAction extends BaseAction implements IWorkflo
 		}
 		return SUCCESS;
 	}
-	
-	@Override
+
 	public String save() {
 		try {
 			NotifierConfig notifierConfig = this.getUpdatedConfig();
@@ -62,39 +60,39 @@ public class WorkflowNotifierConfigAction extends BaseAction implements IWorkflo
 		}
 		return SUCCESS;
 	}
-	
+
 	protected NotifierConfig getUpdatedConfig() throws ApsSystemException, ParseException {
 		NotifierConfig notifierConfig = this.getConfig();
-		
+
 		Date startDate = DateConverter.parseDate(this.getStartDate(), DATE_FORMAT);
-		long time = startDate.getTime() + this.getHour()*3600000l + this.getMinute()*60000l;
+		long time = startDate.getTime() + this.getHour() * 3600000l + this.getMinute() * 60000l;
 		startDate.setTime(time);
 		notifierConfig.setStartScheduler(startDate);
-		
+
 		return notifierConfig;
 	}
-	
+
 	protected void valueFormForEdit(NotifierConfig notifierConfig) {
 		this.setConfig(notifierConfig);
-		
+
 		Calendar start = Calendar.getInstance();
 		start.setTime(notifierConfig.getStartScheduler());
 		this.setStartDate(DateConverter.getFormattedDate(notifierConfig.getStartScheduler(), DATE_FORMAT));
 		this.setHour(start.get(Calendar.HOUR_OF_DAY));
 		this.setMinute(start.get(Calendar.MINUTE));
 	}
-	
+
 	public int[] getCounterArray(int startValue, int length) {
 		int[] counter = {};
-		if (length>0) {
+		if (length > 0) {
 			counter = new int[length];
-			for (int i=0; i<length; i++) {
+			for (int i = 0; i < length; i++) {
 				counter[i] = startValue++;
 			}
 		}
 		return counter;
 	}
-	
+
 	public Map<String, String> getSenderCodes() {
 		try {
 			return this.getMailManager().getMailConfig().getSenders();
@@ -103,57 +101,63 @@ public class WorkflowNotifierConfigAction extends BaseAction implements IWorkflo
 			throw new RuntimeException("Error loading mail sender codes", t);
 		}
 	}
-	
+
 	public NotifierConfig getConfig() {
 		return _config;
 	}
+
 	public void setConfig(NotifierConfig config) {
 		this._config = config;
 	}
-	
+
 	public String getStartDate() {
 		return _startDate;
 	}
+
 	public void setStartDate(String startDate) {
 		this._startDate = startDate;
 	}
-	
+
 	public int getHour() {
 		return _hour;
 	}
+
 	public void setHour(int hour) {
 		this._hour = hour;
 	}
-	
+
 	public int getMinute() {
 		return _minute;
 	}
+
 	public void setMinute(int minute) {
 		this._minute = minute;
 	}
-	
+
 	protected IWorkflowNotifierManager getNotifierManager() {
 		return _notifierManager;
 	}
+
 	public void setNotifierManager(IWorkflowNotifierManager notifierManager) {
 		this._notifierManager = notifierManager;
 	}
-	
+
 	protected IMailManager getMailManager() {
 		return _mailManager;
 	}
+
 	public void setMailManager(IMailManager mailManager) {
 		this._mailManager = mailManager;
 	}
-	
+
 	private NotifierConfig _config = new NotifierConfig();
-	
+
 	private String _startDate;
 	private int _hour;
 	private int _minute;
-	
+
 	private IWorkflowNotifierManager _notifierManager;
 	private IMailManager _mailManager;
 	private static final String DATE_FORMAT = "dd/MM/yyyy";
-	
+
 }

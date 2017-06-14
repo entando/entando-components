@@ -25,25 +25,43 @@ import java.util.List;
 
 import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
-public class WorkflowListAction extends AbstractWorkflowAction implements IWorkflowListAction {
-	
-	@Override
+public class WorkflowListAction extends AbstractWorkflowAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(WorkflowListAction.class);
+
+	public String saveRoles() {
+		try {
+			List<SmallContentType> types = this.getContentTypes();
+			for (int i = 0; i < types.size(); i++) {
+				SmallContentType smallContentType = types.get(i);
+				String roleName = this.getRequest().getParameter(smallContentType.getCode() + "_authority");
+				this.getWorkflowManager().updateRole(smallContentType.getCode(), roleName);
+			}
+			this.addActionMessage(this.getText("jpcontentworkflow.config.updated"));
+		} catch (Throwable t) {
+			_logger.error("error in saveRoles", t);
+			return FAILURE;
+		}
+		return SUCCESS;
+	}
+
 	public List<SmallContentType> getContentTypes() {
 		return this.getContentManager().getSmallContentTypes();
 	}
-	
-	@Override
+
 	public Role getRole(String typeCode) {
 		Role role = null;
 		String roleName = this.getWorkflowManager().getRole(typeCode);
-		if (roleName!=null) {
+		if (roleName != null) {
 			role = this.getRoleManager().getRole(roleName);
 		}
 		return role;
 	}
-	
+
 }
