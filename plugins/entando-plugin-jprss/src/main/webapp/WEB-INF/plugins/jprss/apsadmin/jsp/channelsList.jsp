@@ -6,7 +6,7 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations"/></li>
     <li><s:text name="breadcrumb.integrations.components"/></li>
-    <li><s:text name="jprss.title.rssManagement" /></li>
+    <li class="page-title-container"><s:text name="jprss.title.rssManagement" /></li>
 </ol>
 
 <h1 class="page-title-container">
