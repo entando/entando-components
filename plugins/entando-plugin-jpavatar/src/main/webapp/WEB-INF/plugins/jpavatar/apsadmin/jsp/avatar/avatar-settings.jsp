@@ -11,6 +11,9 @@
         <s:text name="jpavatar.admin.menu.uxcomponents"/>
     </li>
     <li class="page-title-container">
+        <s:text name="title.avatarManagement"/>
+    </li>
+    <li class="page-title-container">
         <s:text name="title.avatar.settings"/>
     </li>
 </ol>
