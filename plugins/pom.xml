@@ -60,8 +60,8 @@
 		<module>entando-plugin-jpversioning</module>
 		<!--
 		<module>entando-plugin-jpstats</module>
-		<module>entando-plugin-jpcontentworkflow</module>
 		-->
+		<module>entando-plugin-jpcontentworkflow</module>
 		<module>entando-plugin-jpcontentfeedback</module>
 		<!-- <module>entando-plugin-jpcmstagcloud</module> -->
 		<!-- <module>entando-plugin-jpmyportalplus</module> -->
@@ -81,9 +81,7 @@
 			<module>entando-plugin-jpmailgun</module>
 		-->
 		<!-- <module>entando-plugin-jpcollaboration</module> -->
-		<!--
-<module>entando-plugin-jpwebform</module>
-		-->
+		<!-- <module>entando-plugin-jpwebform</module> -->
 		<module>entando-plugin-jpblog</module>
 	</modules>
 	<profiles>
