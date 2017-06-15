@@ -6,7 +6,7 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations"/></li>
     <li><s:text name="breadcrumb.integrations.components"/></li>
-    <li><s:text name="admin.jpblog.title.config"/></li>
+    <li class="page-title-container"><s:text name="admin.jpblog.title.config"/></li>
 </ol>
 
 <h1 class="page-title-container">
@@ -17,8 +17,8 @@
            data-content="<s:text name="admin.jpblog.title.config.help" />" data-placement="left"
            data-original-title="">
             <span class="fa fa-question-circle-o" aria-hidden="true"></span>
-	    </a>
-	</span>
+        </a>
+    </span>
 </h1>
 
 <div class="text-right">
