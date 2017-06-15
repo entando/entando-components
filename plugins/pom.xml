@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.entando.entando.components</groupId>
 		<artifactId>entando-components</artifactId>
@@ -39,15 +39,15 @@
 		<module>entando-plugin-jpfacetnav</module>
 		<module>entando-plugin-jpmail</module>
 		<module>entando-plugin-jpwebdynamicform</module>
-		<!-- <module>entando-plugin-jprss</module> -->
+		<module>entando-plugin-jprss</module>
 		<module>entando-plugin-jpcalendar</module>
 		<module>entando-plugin-jpldap</module>
 		<module>entando-plugin-jpuserreg</module>
 		<!--
 		<module>entando-plugin-jpaddressbook</module>
-		<module>entando-plugin-jpnewsletter</module>
+		<module>entando-plugin-jpnewsletter</module>		-->
 		<module>entando-plugin-jpsurvey</module>
-		-->
+
 		<module>entando-plugin-jpavatar</module>
 		<module>entando-plugin-jpactionlogger</module>
 		<!--
