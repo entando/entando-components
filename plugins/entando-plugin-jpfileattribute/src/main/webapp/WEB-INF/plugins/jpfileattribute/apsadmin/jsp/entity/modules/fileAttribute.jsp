@@ -12,6 +12,7 @@
 			<s:param name="parentAttributeName" value="%{#parentAttribute.name}" />
 			<s:param name="attributeName" value="%{#attribute.name}" />
 			<s:param name="elementIndex" value="%{#elementIndex}" />
+			<s:param name="contentOnSessionMarker" value="contentOnSessionMarker" />
 		</s:url>"><img class="noborder" src="<wp:resourceURL/>administration/common/img/icons/resourceTypes/22x22/<s:property value="%{getIconFile(#currentAttachedFileVar.filename)}"/>" alt="<s:property value="%{#currentAttachedFileVar.filename}"/>" title="<s:property value="%{#currentAttachedFileVar.filename}"/>" /></a>
 		<s:property value="#currentAttachedFileVar.filename" />
 		<s:if test="!(#attributeTracer.monoListElement) || ((#attributeTracer.monoListElement) && (#attributeTracer.compositeElement))">
@@ -19,6 +20,7 @@
 				<wpsa:actionSubParam name="parentAttributeName" value="%{#parentAttribute.name}" />
 				<wpsa:actionSubParam name="attributeName" value="%{#attribute.name}" />
 				<wpsa:actionSubParam name="elementIndex" value="%{#elementIndex}" />
+				<wpsa:actionSubParam name="contentOnSessionMarker" value="%{#contentOnSessionMarker}" />
 			</wpsa:actionParam>
 			<s:set var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete.png</s:set>
 			<wpsf:submit useTabindexAutoIncrement="true" type="image" action="%{#removeFileResourceActionName}" 
@@ -30,6 +32,7 @@
 			<wpsa:actionSubParam name="parentAttributeName" value="%{#parentAttribute.name}" />
 			<wpsa:actionSubParam name="attributeName" value="%{#attribute.name}" />
 			<wpsa:actionSubParam name="elementIndex" value="%{#elementIndex}" />
+			<wpsa:actionSubParam name="contentOnSessionMarker" value="%{#contentOnSessionMarker}" />
 		</wpsa:actionParam>
 		<s:set var="iconImagePath" ><wp:resourceURL/>administration/common/img/icons/22x22/attachment.png</s:set>
 		<wpsf:submit useTabindexAutoIncrement="true" type="image" action="%{#loadFileResourceActionName}" 
