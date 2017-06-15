@@ -21,36 +21,35 @@
  */
 package org.entando.entando.plugins.jpfileattribute.apsadmin.content;
 
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.services.lang.Lang;
-
-import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
-import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
-
 import javax.servlet.http.HttpSession;
 
 import org.entando.entando.plugins.jpfileattribute.apsadmin.entity.attribute.FileAttributeAction;
 import org.entando.entando.plugins.jpfileattribute.apsadmin.entity.attribute.FileAttributeActionHelper;
 
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
+
 /**
  * @author E.Santoboni
  */
 public class CmsFileAttributeAction extends FileAttributeAction {
-	
+
 	public String backToEntryContent() {
 		String anchorDest = buildEntryContentAnchorDest();
 		this.setEntryContentAnchorDest(anchorDest);
 		FileAttributeActionHelper.removeSessionParams(this.getRequest().getSession());
 		return SUCCESS;
 	}
-	
+
 	@Override
 	protected void buildEntryEntityAnchorDest() {
 		String anchorDest = buildEntryContentAnchorDest();
 		this.setEntryContentAnchorDest(anchorDest);
 	}
-	
+
 	private String buildEntryContentAnchorDest() {
 		HttpSession session = this.getRequest().getSession();
 		StringBuilder buffer = new StringBuilder("contentedit_");
@@ -59,7 +58,7 @@ public class CmsFileAttributeAction extends FileAttributeAction {
 		buffer.append("_").append(session.getAttribute(FileAttributeActionHelper.ATTRIBUTE_NAME_SESSION_PARAM));
 		return buffer.toString();
 	}
-	
+
 	public String getEntryContentAnchorDestFromRemove() {
 		StringBuilder buffer = new StringBuilder("contentedit_");
 		Lang defaultLang = this.getLangManager().getDefaultLang();
@@ -72,33 +71,34 @@ public class CmsFileAttributeAction extends FileAttributeAction {
 		}
 		return buffer.toString();
 	}
-	
+
 	@Override
 	protected void updateEntity() {
 		this.getContentActionHelper().updateEntity(this.getContent(), this.getRequest());
 	}
-	
+
 	@Override
 	protected IApsEntity getEntity() {
 		return this.getContent();
 	}
-	
+
 	/**
 	 * Restituisce il contenuto in sesione.
-	 * @return Il contenuto in sesione.
+	 * 
+	 * @return Il contenuto in sessione.
 	 */
 	public Content getContent() {
-		return (Content) this.getRequest().getSession()
-				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
+		return (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
-	
+
 	public String getContentOnSessionMarker() {
 		return _contentOnSessionMarker;
 	}
+
 	public void setContentOnSessionMarker(String contentOnSessionMarker) {
 		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
-	
+
 	public String getEntryContentAnchorDest() {
 		if (null == this._entryContentAnchorDest) {
 			String anchorDest = buildEntryContentAnchorDest();
@@ -106,21 +106,23 @@ public class CmsFileAttributeAction extends FileAttributeAction {
 		}
 		return _entryContentAnchorDest;
 	}
+
 	protected void setEntryContentAnchorDest(String entryContentAnchorDest) {
 		this._entryContentAnchorDest = entryContentAnchorDest;
 	}
-	
+
 	protected IContentActionHelper getContentActionHelper() {
 		return _contentActionHelper;
 	}
+
 	public void setContentActionHelper(IContentActionHelper contentActionHelper) {
 		this._contentActionHelper = contentActionHelper;
 	}
-	
+
 	private String _contentOnSessionMarker;
-	
+
 	private String _entryContentAnchorDest;
-	
+
 	private IContentActionHelper _contentActionHelper;
-	
+
 }
