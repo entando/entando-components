@@ -13,7 +13,7 @@
                 <s:text name="title.workflowManagement"/>
                 <span class="pull-right">
 					<a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="TO be inserted" data-placement="left" data-original-title="">
+                       data-content="<s:text name="jpcontentworkflow.title.general.help" />" data-placement="left" data-original-title="">
 						<i class="fa fa-question-circle-o" aria-hidden="true"></i>
 					</a>
 				</span>
@@ -40,11 +40,7 @@
 	<s:form action="saveRoles" cssClass="form-horizontal">
 
 		<s:if test="hasActionMessages()">
-			<div class="alert alert-danger alert-dismissable">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-					<span class="pficon pficon-close"></span>
-				</button>
-				<span class="pficon pficon-error-circle-o"></span>
+			<div class="alert alert-success fade in">
 				<strong><s:text name="messages.confirm" /></strong>
 				<ul class="margin-base-top">
 					<s:iterator value="actionMessages">
