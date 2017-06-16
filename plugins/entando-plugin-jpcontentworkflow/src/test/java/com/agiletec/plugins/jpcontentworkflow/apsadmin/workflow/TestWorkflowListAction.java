@@ -32,27 +32,56 @@ import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.JpcontentworkflowSystemConstants;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.ContentWorkflowManager;
-import com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.WorkflowListAction;
 import com.opensymphony.xwork2.Action;
 
 /**
  * @author E.Santoboni
  */
 public class TestWorkflowListAction extends ApsAdminPluginBaseTestCase {
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.init();
 		this._helper.setWorkflowConfig();
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception {
 		this._helper.resetWorkflowConfig();
 		super.tearDown();
 	}
-	
+
+	public void testSaveRoles() throws Throwable {
+		String result = this.executeList("admin");
+		assertEquals(Action.SUCCESS, result);
+		WorkflowListAction action = (WorkflowListAction) this.getAction();
+		assertNull(action.getRole("ART"));
+		String roleNameForEnv = action.getRole("EVN").getName();
+		assertEquals("pageManager", roleNameForEnv);
+
+		result = this.executeSaveRole("admin", "EVN", "supervisor");
+		assertEquals(Action.SUCCESS, result);
+		action = (WorkflowListAction) this.getAction();
+		assertEquals(1, action.getActionMessages().size());
+		String newRoleNameForEnv = action.getRole("EVN").getName();
+		assertEquals("supervisor", newRoleNameForEnv);
+
+		result = this.executeSaveRole("admin", "EVN", "pageManager");
+		assertEquals(Action.SUCCESS, result);
+		action = (WorkflowListAction) this.getAction();
+		assertEquals(1, action.getActionMessages().size());
+		String restoredRoleNameForEnv = action.getRole("EVN").getName();
+		assertEquals("pageManager", restoredRoleNameForEnv);
+	}
+
+	protected String executeSaveRole(String currentUserName, String typeCode, String role) throws Throwable {
+		this.setUserOnSession(currentUserName);
+		this.initAction("/do/jpcontentworkflow/Workflow", "saveRoles");
+		this.addParameter(typeCode + "_authority", role);
+		return this.executeAction();
+	}
+
 	public void testListForAdminUser() throws Throwable {
 		String result = this.executeList("admin");
 		assertEquals(Action.SUCCESS, result);
@@ -62,25 +91,25 @@ public class TestWorkflowListAction extends ApsAdminPluginBaseTestCase {
 		assertNull(action.getRole("ART"));
 		assertEquals("pageManager", action.getRole("EVN").getName());
 	}
-	
+
 	public void testListForNotAllowedUser() throws Throwable {
 		String result = this.executeList("editorCustomers");
 		assertEquals(BaseAction.USER_NOT_ALLOWED, result);
 	}
-	
+
 	protected String executeList(String currentUserName) throws Throwable {
 		this.initAction("/do/jpcontentworkflow/Workflow", "list");
 		this.setUserOnSession(currentUserName);
 		String result = this.executeAction();
 		return result;
 	}
-	
+
 	private void init() {
 		ContentWorkflowManager workflowManager = (ContentWorkflowManager) this.getService(JpcontentworkflowSystemConstants.CONTENT_WORKFLOW_MANAGER);
 		ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
 		this._helper = new WorkflowTestHelper(workflowManager, configManager);
 	}
-	
+
 	private WorkflowTestHelper _helper;
-	
+
 }
