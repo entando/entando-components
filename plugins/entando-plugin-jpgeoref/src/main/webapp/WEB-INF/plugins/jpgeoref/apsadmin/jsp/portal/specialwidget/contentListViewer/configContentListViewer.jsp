@@ -10,9 +10,7 @@
         <s:text name="title.configPage" />
     </span>
 </h1>
-
 <div id="main">
-
     <s:set var="breadcrumbs_pivotPageCode" value="pageCode" />
     <s:include value="/WEB-INF/apsadmin/jsp/portal/include/pageInfo_breadcrumbs.jsp" />
 
@@ -49,10 +47,8 @@
                     <h2 class="h5 margin-small-vertical">
                         <span class="icon fa fa-puzzle-piece" title="Widget"></span>
                         <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}" />
-                    </h2>
-                    <%--<s:set var="contentTypes" value="contentTypes" />--%>
-                    
-                    <s:if test="#contentTypesVar.isEmpty()">
+                    </h2>                    
+                    <s:if test="contentTypes.isEmpty()">
                         <div class="alert alert-info">
                             <s:text name="jpgeoref.error.noContentTypeAvailable" />
                         </div>
@@ -189,7 +185,7 @@
                                                             <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
                                                             <wpsa:actionSubParam name="movement" value="UP" />
                                                         </wpsa:actionParam>
-                                                        <s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up.png</s:set>		
+                                                        <s:set var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up.png</s:set>		
                                                         <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveUp')}" cssClass="btn btn-default">
                                                             <span class="icon fa fa-sort-desc"></span>
                                                         </wpsf:submit>
@@ -197,7 +193,7 @@
                                                             <wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
                                                             <wpsa:actionSubParam name="movement" value="DOWN" />
                                                         </wpsa:actionParam>
-                                                        <s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down.png</s:set>
+                                                        <s:set var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down.png</s:set>
                                                         <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.moveDown')}" cssClass="btn btn-default">
                                                             <span class="icon fa fa-sort-asc"></span>
                                                         </wpsf:submit>
@@ -207,7 +203,7 @@
                                                     </div>
                                                     <div class="btn-group btn-group-xs">
 
-                                                        <s:set var="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete.png</s:set>
+                                                        <s:set var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete.png</s:set>
                                                         <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove')}" cssClass="btn btn-warning">
                                                             <span class="icon fa fa-times-circle-o"></span>
                                                         </wpsf:submit>
@@ -433,7 +429,7 @@
             </s:else>
                     </div>
                 </div>
-            <s:if test="showlet.config['contentType'] != null && !#contentTypesVar.isEmpty()">
+            <s:if test="showlet.config['contentType'] != null">
                 <div class="form-horizontal">
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
@@ -448,3 +444,4 @@
         </s:form>
     </div>
 </div>
+
