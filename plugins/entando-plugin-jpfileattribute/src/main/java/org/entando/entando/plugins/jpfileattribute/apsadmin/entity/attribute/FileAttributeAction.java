@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpfileattribute.aps.system.entity.model.FileAttribute;
 import org.entando.entando.plugins.jpfileattribute.aps.system.file.AttachedFile;
 import org.entando.entando.plugins.jpfileattribute.aps.system.file.IFilePersistenceManager;

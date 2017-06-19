@@ -21,26 +21,28 @@
  */
 package org.entando.entando.plugins.jpfileattribute.apsadmin.entity.attribute;
 
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
-import java.util.List;
 
 import org.entando.entando.plugins.jpfileattribute.aps.system.entity.model.FileAttribute;
 import org.entando.entando.plugins.jpfileattribute.aps.system.file.AttachedFile;
 
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
+
 /**
- * Classe helper base per le action delegata 
- * alla gestione delle operazione sugli attributi risorsa.
+ * Classe helper base per le action delegata alla gestione delle operazione
+ * sugli attributi risorsa.
+ * 
  * @author E.Santoboni
  */
 public abstract class FileAttributeActionHelper {
-	
+
 	public static void initSessionParams(FileAttributeAction action, HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		if (null != action.getParentAttributeName()) {
@@ -49,14 +51,15 @@ public abstract class FileAttributeActionHelper {
 		} else {
 			session.setAttribute(ATTRIBUTE_NAME_SESSION_PARAM, action.getAttributeName());
 		}
-		if (action.getElementIndex()>=0) {
+		if (action.getElementIndex() >= 0) {
 			session.setAttribute(LIST_ELEMENT_INDEX_SESSION_PARAM, new Integer(action.getElementIndex()));
 		}
 	}
-	
+
 	/**
-	 * Associa la risorsa all'attributo del contenuto o all'elemento dell'attributo lista
-	 * o all'elemento dell'attributo Composito (sia semplice che in lista).
+	 * Associa la risorsa all'attributo del contenuto o all'elemento
+	 * dell'attributo lista o all'elemento dell'attributo Composito (sia
+	 * semplice che in lista).
 	 */
 	public static void joinResource(IApsEntity currentEntity, AttachedFile file, HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -66,10 +69,11 @@ public abstract class FileAttributeActionHelper {
 		joinResource(attribute, file, request);
 		removeSessionParams(session);
 	}
-	
+
 	/**
-	 * Associa la risorsa all'attributo del contenuto o all'elemento dell'attributo lista
-	 * o all'elemento dell'attributo Composito (sia semplice che in lista).
+	 * Associa la risorsa all'attributo del contenuto o all'elemento
+	 * dell'attributo lista o all'elemento dell'attributo Composito (sia
+	 * semplice che in lista).
 	 */
 	private static void joinResource(AttributeInterface attribute, AttachedFile file, HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -96,13 +100,13 @@ public abstract class FileAttributeActionHelper {
 			joinResource(attributeElement, file, request);
 		}
 	}
-	
+
 	public static void removeSessionParams(HttpSession session) {
 		session.removeAttribute(ATTRIBUTE_NAME_SESSION_PARAM);
 		session.removeAttribute(LIST_ELEMENT_INDEX_SESSION_PARAM);
 		session.removeAttribute(INCLUDED_ELEMENT_NAME_SESSION_PARAM);
 	}
-	
+
 	public static void removeResource(IApsEntity entity, HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		String attributeName = (String) session.getAttribute(ATTRIBUTE_NAME_SESSION_PARAM);
@@ -110,7 +114,7 @@ public abstract class FileAttributeActionHelper {
 		removeResource(attribute, request);
 		removeSessionParams(session);
 	}
-	
+
 	private static void removeResource(AttributeInterface attribute, HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		if (attribute instanceof CompositeAttribute) {
@@ -126,9 +130,9 @@ public abstract class FileAttributeActionHelper {
 			removeResource(attributeElement, request);
 		}
 	}
-	
+
 	public static final String ATTRIBUTE_NAME_SESSION_PARAM = "fileAttribute_contentAttributeName";
 	public static final String LIST_ELEMENT_INDEX_SESSION_PARAM = "fileAttribute_listElementIndex";
 	public static final String INCLUDED_ELEMENT_NAME_SESSION_PARAM = "fileAttribute_includedElementName";
-	
+
 }
