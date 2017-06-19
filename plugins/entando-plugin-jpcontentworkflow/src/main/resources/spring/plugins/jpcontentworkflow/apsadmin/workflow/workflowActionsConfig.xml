@@ -22,11 +22,6 @@
 			parent="jpcontentworkflowAbstractWorkflowAction" >
 	</bean>
 	
-	<bean id="jpcontentworkflowWorkflowAction" scope="prototype" 
-			class="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.WorkflowAction" 
-			parent="jpcontentworkflowAbstractWorkflowAction" >
-	</bean>
-	
 	<bean id="jpcontentworkflowWorkflowStepAction" scope="prototype" 
 			class="com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.WorkflowStepAction" 
 			parent="jpcontentworkflowAbstractWorkflowAction" >
