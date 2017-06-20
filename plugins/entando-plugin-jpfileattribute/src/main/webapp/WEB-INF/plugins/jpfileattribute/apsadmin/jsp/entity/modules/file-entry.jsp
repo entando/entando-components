@@ -5,8 +5,7 @@
 <%@ taglib prefix="jacms" uri="/jacms-apsadmin-core" %>
 
 <s:set var="targetNS" value="%{'/do/jacms/Content'}" />
-<!--<h1><s:text name="jacms.menu.contentAdmin" /><s:include value="/WEB-INF/apsadmin/jsp/common/inc/operations-context-general.jsp" /></h1>-->
-
+<s:url action="results" namespace="/do/jacms/Content" var="contentListURL"/>
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.app" /></li>
     <li><s:text name="breadcrumb.jacms" /></li>
@@ -36,15 +35,10 @@
             <s:text name="title.contentEditing" />
         </legend>
         <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/include/snippet-content.jsp" />
-        <h3 class="margin-bit-bottom">
-            <s:text name="jpfileattribute.title.uploadFile" />
-        </h3>
     </div>
 
     <s:form action="save" method="post" enctype="multipart/form-data" cssClass="form-horizontal">
-
         <wpsf:hidden name="contentOnSessionMarker" />
-
         <s:if test="hasFieldErrors()">
             <div class="col-xs-12">
                 <div class="alert alert-danger alert-dismissable">
@@ -66,7 +60,7 @@
 
         <div class="col-xs-12">
             <fieldset>
-                <legend><s:text name="label.info" /></legend>
+                <legend><s:text name="jpfileattribute.title.uploadFile" /></legend>
                 <label for="upload" class="basic-mint-label">
                     <s:text name="label.file" />:
                 </label>
@@ -76,10 +70,8 @@
         <div class="col-xs-12">
             <div class="pull-right">
                 <wpsf:submit useTabindexAutoIncrement="true" value="%{getText('label.save')}" cssClass="btn btn-primary" />
-                <wpsf:submit useTabindexAutoIncrement="true" action="backToEntryContent" value="%{getText('label.cancel')}" cssClass="btn btn-warning" />
+                <wpsf:submit useTabindexAutoIncrement="true" action="backToEntryContent" value="%{getText('label.delete')}" cssClass="btn btn-danger" />
             </div>
         </div>
-
     </s:form>
-
 </div>
