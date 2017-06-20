@@ -36,7 +36,6 @@
                         <wpsa:set name="currentFacet" value="%{getFacet(#currentFacetCode)}" />
                         <li>
                             <span class="label label-tag">
-                                <span class="icon fa fa-tag"></span>
                                 <wpsa:set name="currentContentType" value="%{getContentType(#currentContentTypeCode)}" />
                                 <abbr title="<s:property value="#currentContentType.descr"/>">
                                     <s:property value="#currentContentType.descr" />
