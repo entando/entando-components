@@ -99,18 +99,13 @@
 
             <wpsa:subset source="#contentIdsVar" count="10" objectName="groupContent" advanced="true" offset="5">
                 <s:set var="group" value="#groupContent"/>
-
-
-
-
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover no-mb" id="contentListTable">
-                        <caption class="sr-only"><s:text name="title.contentList"/></caption>
                         <thead>
                             <tr>
                                 <th><s:text name="label.description"/></th>
-                                <th><s:text name="label.code"/></th>
-                                <th class="text-center col-sm-1">
+                                <th class="table-w-10"><s:text name="label.code"/></th>
+                                <th class="table-w-10 text-center">
                                     <s:text name="label.actions" />
                                 </th>
                             </tr>
@@ -119,13 +114,13 @@
                         <s:iterator var="contentId">
                             <s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
                             <tr>
-                                <td><label><s:property value="#content.descr"/></label></td>
-                                <td><code><s:property value="#content.id"/></code></td>
-                                <td class="text-center text-nowrap">
+                                <td><s:property value="#content.descr"/></td>
+                                <td><s:property value="#content.id"/></td>
+                                <td class="text-center">
                                     <div class="btn-group btn-group-xs">
-                                        <a class="btn btn-warning" title="<s:text name="label.remove" />"
+                                        <a title="<s:text name="label.remove" />"
                                            href="<s:url action="removeFromQueue" ><s:param name="contentId" value="#content.id" /></s:url>">
-                                            <span class="icon fa fa-times-circle-o"></span>
+                                            <span class="fa fa-trash-o fa-lg"></span>
                                             <span class="sr-only"><s:text name="label.remove"/></span>
                                         </a>
                                     </div>
@@ -135,21 +130,25 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="text-center">
-                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/>
-                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
+                <div class="content-view-pf-pagination clearfix">
+                    <div class="form-group">
+                        <span>
+                            <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/>
+                        </span>
+                        <div class="mt-5">
+                            <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp"/>
+                        </div>
+                    </div>
                 </div>
-
             </wpsa:subset>
 
             <s:if test="newsletterConfig.active">
-                <p class="margin-large-top btn-group btn-group-sm">
-                    <a class="btn btn-default"
+                <div class="col-xs-12 mt-20 no-padding">
+                    <a class="btn btn-primary pull-right"
                        href="<s:url action="send" />">
-                        <span class="icon fa fa-arrow-right"></span>&#32;
                         <s:text name="jpnewsletter.label.sendNow"/>
                     </a>
-                </p>
+                </div>
             </s:if>
         </s:form>
     </s:if>

@@ -157,42 +157,6 @@
                 </div>
             </div>
         </div>
-
-        <%--
-        <!-- Search additions -->
-        <p class="help-block text-right">
-            <button type="button" data-toggle="collapse" data-target="#search-configure-results" class="btn btn-link">
-                <s:text name="title.searchResultOptions"/>&#32;<span class="icon-chevron-down"></span>
-            </button>
-        </p>
-        <div id="search-configure-results" class="collapse">
-            <div class="form-group col-sm-12">
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default" for="viewCode">
-                        <wpsf:checkbox name="viewCode" id="viewCode"/>&#32;
-                        <s:text name="label.code"/>
-                    </label>
-                    <label class="btn btn-default">
-                        <wpsf:checkbox name="viewTypeDescr" id="viewTypeDescr"/>&#32;
-                        <s:text name="name.contentType"/>
-                    </label>
-                    <label class="btn btn-default">
-                        <wpsf:checkbox name="viewGroup" id="viewGroup"/>&#32;
-                        <s:text name="label.group"/>
-                    </label>
-                    <label class="btn btn-default">
-                        <wpsf:checkbox name="viewCreationDate" id="viewCreationDate"/>&#32;
-                        <s:text name="label.creationDate"/>
-                    </label>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <wpsf:submit action="search" type="button" cssClass="btn btn-primary pull-right">
-                    <s:text name="label.search"/>
-                </wpsf:submit>
-            </div>
-        </div>
-        --%>
     </s:form>
     
     <!-- Result list -->
@@ -213,6 +177,7 @@
             </p>
 
             <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp"/>
+            
             <s:set var="contentIdsVar" value="contents"/>
             <wpsa:subset source="#contentIdsVar" count="10" objectName="groupContent" advanced="true" offset="5">
                 <s:set var="group" value="#groupContent"/>
@@ -336,16 +301,24 @@
                                               title="<s:property value="#statusVar" />"></span>
                                         <span class="sr-only"><s:property value="#statusVar"/></span>
                                     </td>
-                                    <td class="text-center text-nowrap">
-                                        <div class="btn-group btn-group-xs">
-                                            <a class="btn btn-default"
-                                               title="Newsletter&nbsp;<s:text name="jpnewsletter.label.detailOf" />: <s:property value="#content.description" />"
-                                               href="<s:url action="entry" ><s:param name="contentId" value="#content.id" /></s:url>">
-                                                <span class="icon fa fa-fw fa-info"></span>
-                                                <span class="sr-only">Newsletter&nbsp;<s:text
-                                                        name="jpnewsletter.label.detailOf"/>: <s:property
-                                                        value="#content.description"/></span>
-                                            </a>
+                                    
+                                    <td class="table-view-pf-actions text-center">
+                                        <div class="dropdown dropdown-kebab-pf">
+                                            <button class="btn btn-menu-right dropdown-toggle" type="button" data-toggle="dropdown">
+                                                <span class="fa fa-ellipsis-v"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li>
+                                                    <a title="Newsletter&nbsp;<s:text name="jpnewsletter.label.detailOf" />: <s:property value="#content.description" />"
+                                                       href="<s:url action="entry" ><s:param name="contentId" value="#content.id" /></s:url>">
+                                                        <s:text name="label.detail" />
+                                                        <span class="sr-only">Newsletter&nbsp;<s:text
+                                                            name="jpnewsletter.label.detailOf"/>: <s:property
+                                                            value="#content.description"/>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </td>
                                 </tr>
@@ -366,14 +339,11 @@
                         
                     </div>
 
-                    <div class="row margin-none margin-large-top">
-                        <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-                            <wpsf:submit action="addToQueue" type="button" cssClass="btn btn-success btn-block"
-                                         title="%{getText('jpnewsletter.label.insertInQueue')}">
-                                <span class="icon fa fa-check"></span>&#32;
-                                <s:text name="jpnewsletter.label.insertInQueue"/>
-                            </wpsf:submit>
-                        </div>
+                    <div class="col-xs-12 mt-20 no-padding">
+                        <wpsf:submit action="addToQueue" type="button" cssClass="btn btn-primary pull-right"
+                                     title="%{getText('jpnewsletter.label.insertInQueue')}">
+                            <s:text name="jpnewsletter.label.insertInQueue"/>
+                        </wpsf:submit>
                     </div>
                 </s:if>
             </wpsa:subset>
