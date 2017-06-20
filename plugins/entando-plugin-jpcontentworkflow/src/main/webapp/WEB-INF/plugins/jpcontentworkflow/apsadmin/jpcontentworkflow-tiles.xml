@@ -11,11 +11,6 @@
 		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/workflow/workflowList.jsp" />
 	</definition>
 	
-	<definition extends="main.layout" name="admin.jpcontentworkflow.workflow.entryRole">
-		<put-attribute name="title" value="title.workflowManagement" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/workflow/entryRole.jsp" />
-	</definition>
-	
 	<definition extends="main.layout" name="admin.jpcontentworkflow.workflow.entrySteps">
 		<put-attribute name="title" value="title.workflowManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/workflow/entrySteps.jsp" />

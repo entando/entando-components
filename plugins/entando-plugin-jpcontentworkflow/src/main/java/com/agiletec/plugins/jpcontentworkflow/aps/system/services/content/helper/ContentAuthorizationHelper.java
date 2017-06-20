@@ -32,15 +32,17 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.IContentWorkflowManager;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.Step;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.Workflow;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Return informations of content authorization
+ *
  * @author E.Santoboni
  */
 public class ContentAuthorizationHelper extends com.agiletec.plugins.jacms.aps.system.services.content.helper.ContentAuthorizationHelper {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ContentAuthorizationHelper.class);
-	
+
 	@Override
 	public boolean isAuthToEdit(UserDetails user, Content content) throws ApsSystemException {
 		boolean isAllowed = false;
@@ -53,7 +55,7 @@ public class ContentAuthorizationHelper extends com.agiletec.plugins.jacms.aps.s
 				String typeCode = content.getTypeCode();
 				Workflow workflow = this.getContentWorkflowManager().getWorkflow(typeCode);
 				String requiredRole = workflow.getRole();
-				if (requiredRole != null && !this.getAuthorizationManager().isAuthOnRole(user, requiredRole)) {
+				if (!StringUtils.isEmpty(requiredRole) && !this.getAuthorizationManager().isAuthOnRole(user, requiredRole)) {
 					return false;
 				}
 				String status = content.getStatus();
@@ -76,26 +78,27 @@ public class ContentAuthorizationHelper extends com.agiletec.plugins.jacms.aps.s
 		}
 		return isAllowed;
 	}
-	
+
 	@Override
 	public boolean isAuthToEdit(UserDetails user, PublicContentAuthorizationInfo info) throws ApsSystemException {
 		Content content = this.getContentManager().loadContent(info.getContentId(), true);
 		return super.isAuthToEdit(user, content);
 	}
-	
+
 	@Override
 	public boolean isAuthToEdit(UserDetails user, String contentId, boolean publicVersion) throws ApsSystemException {
 		Content content = this.getContentManager().loadContent(contentId, publicVersion);
 		return super.isAuthToEdit(user, content);
 	}
-	
+
 	protected IContentWorkflowManager getContentWorkflowManager() {
 		return _contentWorkflowManager;
 	}
+
 	public void setContentWorkflowManager(IContentWorkflowManager contentWorkflowManager) {
 		this._contentWorkflowManager = contentWorkflowManager;
 	}
-	
+
 	private IContentWorkflowManager _contentWorkflowManager;
-	
+
 }

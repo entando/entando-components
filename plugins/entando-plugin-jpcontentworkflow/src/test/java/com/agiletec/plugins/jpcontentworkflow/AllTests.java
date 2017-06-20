@@ -33,7 +33,6 @@ import com.agiletec.plugins.jpcontentworkflow.apsadmin.content.TestContentAction
 import com.agiletec.plugins.jpcontentworkflow.apsadmin.content.TestContentFinderAction;
 import com.agiletec.plugins.jpcontentworkflow.apsadmin.content.TestIntroNewContentAction;
 import com.agiletec.plugins.jpcontentworkflow.apsadmin.notifier.TestWorkflowNotifierConfigAction;
-import com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowAction;
 import com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowListAction;
 import com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowStepAction;
 
@@ -41,30 +40,29 @@ import com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow.TestWorkflowStep
  * @author E.Santoboni
  */
 public class AllTests {
-	
+
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for jpcontentworkflow");
-		
+
 		suite.addTestSuite(TestWorkflowNotifierDOM.class);
 		suite.addTestSuite(TestWorkflowNotifierDAO.class);
 		suite.addTestSuite(TestWorkflowNotifierManager.class);
-		
+
 		suite.addTestSuite(TestContentSearcherDAO.class);
 		suite.addTestSuite(TestContentManager.class);
-		
+
 		suite.addTestSuite(TestContentWorkflowManager.class);
-		
+
 		suite.addTestSuite(TestWorkflowNotifierConfigAction.class);
-		
+
 		suite.addTestSuite(TestWorkflowListAction.class);
-		suite.addTestSuite(TestWorkflowAction.class);
 		suite.addTestSuite(TestWorkflowStepAction.class);
-		
+
 		suite.addTestSuite(TestContentAction.class);
 		suite.addTestSuite(TestContentFinderAction.class);
 		suite.addTestSuite(TestIntroNewContentAction.class);
-		
+
 		return suite;
 	}
-	
+
 }
