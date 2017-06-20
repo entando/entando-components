@@ -21,6 +21,20 @@
  */
 package org.entando.entando.plugins.jprss.aps.system.services.rss;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.entando.entando.plugins.jprss.aps.system.services.JpRssSystemConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.event.EntityTypesChangingEvent;
@@ -42,7 +56,6 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContent
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.FilterUtils;
 import com.agiletec.plugins.jacms.aps.system.services.linkresolver.ILinkResolverManager;
-import org.entando.entando.plugins.jprss.aps.system.services.JpRssSystemConstants;
 import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndContentImpl;
 import com.rometools.rome.feed.synd.SyndEntry;
@@ -50,27 +63,15 @@ import com.rometools.rome.feed.synd.SyndEntryImpl;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.feed.synd.SyndFeedImpl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Manager that handles the RSS Channels
+ * 
  * @author S.Puddu - E.Santoboni
  */
 public class RssManager extends AbstractService implements IRssManager, EntityTypesChangingObserver {
-	
+
 	private static final Logger _logger = LoggerFactory.getLogger(RssManager.class);
-	
+
 	@Override
 	public void init() throws Exception {
 		try {
@@ -80,7 +81,7 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 			_logger.error("{} Manager: Error on initialization", this.getClass().getName(), t);
 		}
 	}
-	
+
 	@Override
 	public void updateFromEntityTypesChanging(EntityTypesChangingEvent event) {
 		if (!event.getEntityManagerName().equals(JacmsSystemConstants.CONTENT_MANAGER)) {
@@ -105,7 +106,8 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 					RssContentMapping mapping = new RssContentMapping();
 					mapping.setContentType(contentType.getTypeCode());
 					mapping.setTitleAttributeName(attributeTitle.getName());
-					AttributeInterface attributeDescr = contentType.getAttributeByRole(JpRssSystemConstants.ATTRIBUTE_ROLE_RSS_CONTENT_DESCRIPTION);
+					AttributeInterface attributeDescr = contentType.getAttributeByRole(
+							JpRssSystemConstants.ATTRIBUTE_ROLE_RSS_CONTENT_DESCRIPTION);
 					if (null != attributeDescr) {
 						mapping.setDescriptionAttributeName(attributeDescr.getName());
 					}
@@ -188,9 +190,10 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 		}
 		return entitySearchFilters;
 	}
-	
+
 	@Override
-	public SyndFeed getSyndFeed(Channel channel, String lang, String feedLink, HttpServletRequest req, HttpServletResponse resp) throws ApsSystemException {
+	public SyndFeed getSyndFeed(Channel channel, String lang, String feedLink, HttpServletRequest req, HttpServletResponse resp)
+			throws ApsSystemException {
 		SyndFeed feed = null;
 		if (null == feed) {
 			feed = new SyndFeedImpl();
@@ -203,8 +206,9 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 		}
 		return feed;
 	}
-	
-	private List<SyndEntry> getEntries(List<String> contentsId, String lang, String feedLink, HttpServletRequest req, HttpServletResponse resp) throws ApsSystemException {
+
+	private List<SyndEntry> getEntries(List<String> contentsId, String lang, String feedLink, HttpServletRequest req,
+			HttpServletResponse resp) throws ApsSystemException {
 		List<SyndEntry> entries = new ArrayList<SyndEntry>();
 		Iterator<String> idIterator = contentsId.iterator();
 		while (idIterator.hasNext()) {
@@ -212,7 +216,6 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 			ContentRecordVO currentContent = this.getContentManager().loadContentVO(id);
 			RssContentMapping mapping = (RssContentMapping) this.getContentMapping().get(currentContent.getTypeCode());
 			if (null == mapping) {
-
 				_logger.error("Null content mapping by existed channel for content type {}", currentContent.getTypeCode());
 				continue;
 			}
@@ -221,7 +224,8 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 		return entries;
 	}
 
-	private SyndEntry createEntry(ContentRecordVO contentVO, String langCode, String feedLink, HttpServletRequest req, HttpServletResponse resp) throws ApsSystemException {
+	private SyndEntry createEntry(ContentRecordVO contentVO, String langCode, String feedLink, HttpServletRequest req,
+			HttpServletResponse resp) throws ApsSystemException {
 		SyndEntry entry = new SyndEntryImpl();
 		RssContentMapping mapping = this.getContentMapping().get(contentVO.getTypeCode());
 		try {
@@ -268,8 +272,8 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 		SymbolicLink symbolicLink = new SymbolicLink();
 		StringBuilder destination = new StringBuilder(feedLink);
 		String viewPageCode = content.getViewPage();
-		if (null == viewPageCode || null == this.getPageManager().getPage(viewPageCode)) {
-			viewPageCode = this.getPageManager().getRoot().getCode();
+		if (null == viewPageCode || null == this.getPageManager().getOnlinePage(viewPageCode)) {
+			viewPageCode = this.getPageManager().getOnlineRoot().getCode();
 		}
 		destination.append(viewPageCode).append(".page").append("?contentId=").append(content.getId());
 		symbolicLink.setDestinationToUrl(destination.toString());
@@ -319,16 +323,18 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 		}
 		try {
 			EntitySearchFilter[] searchFilters = this.getEntitySearchFilter(channel, langCode);//this.getEntitySearchFilterDOM().getFilters(channel.getContentType(), channel.getFilters());
-			EntitySearchFilter filterToAdd = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, channel.getContentType(), false);
+			EntitySearchFilter filterToAdd = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, channel
+					.getContentType(), false);
 			EntitySearchFilter[] entitySearchFilters = addFilter(searchFilters, filterToAdd);
 
 			String[] categories = null;
 			if (null != channel.getCategory() && channel.getCategory().trim().length() > 0) {
-				categories = new String[]{channel.getCategory()};
+				categories = new String[] { channel.getCategory() };
 			}
 			Collection<String> userGroupCodes = new ArrayList<String>();
 			userGroupCodes.add(Group.FREE_GROUP_NAME);
-			List<String> contentsId = this.getContentManager().loadPublicContentsId(channel.getContentType(), categories, entitySearchFilters, userGroupCodes);
+			List<String> contentsId = this.getContentManager().loadPublicContentsId(channel.getContentType(), categories,
+					entitySearchFilters, userGroupCodes);
 
 			if (channel.getMaxContentsSize() > 0 && contentsId.size() > channel.getMaxContentsSize()) {
 				return contentsId.subList(0, channel.getMaxContentsSize());
@@ -345,6 +351,7 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 	public Map<String, String> getAvailableFeedTypes() {
 		return _availableFeedTypes;
 	}
+
 	public void setAvailableFeedTypes(Map<String, String> availableFeedTypes) {
 		this._availableFeedTypes = availableFeedTypes;
 	}
@@ -352,6 +359,7 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 	protected Map<String, RssContentMapping> getContentMapping() {
 		return _contentMapping;
 	}
+
 	protected void setContentMapping(Map<String, RssContentMapping> contentMapping) {
 		this._contentMapping = contentMapping;
 	}
@@ -359,6 +367,7 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
+
 	public void setConfigManager(ConfigInterface configManager) {
 		this._configManager = configManager;
 	}
@@ -366,6 +375,7 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 	protected ILinkResolverManager getLinkResolver() {
 		return _linkResolver;
 	}
+
 	public void setLinkResolver(ILinkResolverManager linkResolver) {
 		this._linkResolver = linkResolver;
 	}
@@ -373,6 +383,7 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 	protected IContentManager getContentManager() {
 		return _contentManager;
 	}
+
 	public void setContentManager(IContentManager contentManager) {
 		this._contentManager = contentManager;
 	}
@@ -380,6 +391,7 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
+
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
@@ -387,6 +399,7 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 	protected IRssDAO getRssDAO() {
 		return _rssDAO;
 	}
+
 	public void setRssDAO(IRssDAO rssDAO) {
 		this._rssDAO = rssDAO;
 	}
@@ -394,6 +407,7 @@ public class RssManager extends AbstractService implements IRssManager, EntityTy
 	protected IKeyGeneratorManager getKeyGeneratorManager() {
 		return _keyGeneratorManager;
 	}
+
 	public void setKeyGeneratorManager(IKeyGeneratorManager keyGeneratorManager) {
 		this._keyGeneratorManager = keyGeneratorManager;
 	}

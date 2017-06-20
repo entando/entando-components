@@ -38,63 +38,36 @@ import javax.sql.DataSource;
  * @author E.Santoboni
  */
 public class TestContentFinderAction extends ApsAdminPluginBaseTestCase {
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.init();
 	}
-	
-	public void testSearch_1() throws Throwable {
-		try {
-			this._helper.setWorkflowConfig();
-			Map<String, String> params = new HashMap<String, String>();
-			this.executeSearch("admin", params);
-			ContentFinderAction action = (ContentFinderAction) this.getAction();
-			//action = (IContentFinderAction) this.getAction();
-			List<String> contents = action.getContents();
-			assertEquals(24, contents.size());
-			this.executeSearch("editorCoach", params);
-			action = (ContentFinderAction) this.getAction();
-			contents = action.getContents();
-			String[] contentsId = { "ART112", "ART102", "ART104", "RAH101" };
-			assertEquals(contentsId.length, contents.size());
-			for (int i = 0; i < contentsId.length; i++) {
-				String contentId = contentsId[i];
-				assertTrue(contents.contains(contentId));
-			}
-		} catch (Throwable t) {
-			throw t;
-		} finally {
-			this._helper.resetWorkflowConfig();
-		}
-	}
-	
-	public void testSearch_2() throws Throwable {
+
+	public void testSearch() throws Throwable {
 		try {
 			this._helper.setWorkflowConfig();
 			this._helper.setContentStates();
-			Map<String, String> params = new HashMap<String, String>();
+			Map<String, String> params = new HashMap<>();
 			this.executeSearch("admin", params);
 			ContentFinderAction action = (ContentFinderAction) this.getAction();
-			action = (ContentFinderAction) this.getAction();
 			List<String> contents = action.getContents();
-			assertEquals(24, contents.size());
-			
+			assertEquals(25, contents.size());
 			this.executeSearch("editorCoach", params);
 			action = (ContentFinderAction) this.getAction();
 			contents = action.getContents();
-			String[] contentsId = { "ART102", "ART112" };
+			String[] contentsId = {"ART102", "ART112"};
 			assertEquals(contentsId.length, contents.size());
 			for (int i = 0; i < contentsId.length; i++) {
 				String contentId = contentsId[i];
 				assertTrue(contents.contains(contentId));
 			}
-			
+
 			this.executeSearch("supervisorCoach", params);
 			action = (ContentFinderAction) this.getAction();
 			contents = action.getContents();
-			contentsId = new String[]{ "ART102", "ART111", "ART112", "RAH101" };
+			contentsId = new String[]{"ART102", "ART111", "ART112", "RAH101"};
 			assertEquals(contentsId.length, contents.size());
 			for (int i = 0; i < contentsId.length; i++) {
 				String contentId = contentsId[i];
@@ -107,7 +80,7 @@ public class TestContentFinderAction extends ApsAdminPluginBaseTestCase {
 			this._helper.resetContentStates();
 		}
 	}
-	
+
 	private void executeSearch(String currentUserName, Map<String, String> params) throws Throwable {
 		this.initAction("/do/jacms/Content", "search");
 		this.setUserOnSession(currentUserName);
@@ -115,14 +88,14 @@ public class TestContentFinderAction extends ApsAdminPluginBaseTestCase {
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 	}
-	
+
 	private void init() {
 		ContentWorkflowManager workflowManager = (ContentWorkflowManager) this.getService(JpcontentworkflowSystemConstants.CONTENT_WORKFLOW_MANAGER);
 		ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
 		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
 		this._helper = new WorkflowTestHelper(workflowManager, configManager, dataSource);
 	}
-	
+
 	private WorkflowTestHelper _helper;
-	
+
 }

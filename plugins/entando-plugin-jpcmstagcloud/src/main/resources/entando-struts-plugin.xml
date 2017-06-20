@@ -4,7 +4,7 @@
     "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-	
-	<!-- ### entando-plugin-jpcmstagcloud ### -->
-	
+
+	<include file="com/agiletec/plugins/jpcmstagcloud/apsadmin/tagcloudAdmin.xml"/>
+
 </struts>

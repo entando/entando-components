@@ -5,9 +5,14 @@
 
 <tiles-definitions>
 	
-	<definition extends="main.layout" name="admin.User.entry">
+	<!--<definition extends="main.layout" name="admin.User.entry">
         <put-attribute name="title" value="title.userManagement" />
         <put-attribute name="body" value="/WEB-INF/plugins/jpldap/apsadmin/jsp/user/entryUser.jsp" />
+    </definition>-->
+
+    <definition extends="layout.default" name="admin.jpldap.Configuration.edit">
+        <put-attribute name="title" value="title.userManagement" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpldap/apsadmin/jsp/user/ldapConfig.jsp" />
     </definition>
 	
 </tiles-definitions>

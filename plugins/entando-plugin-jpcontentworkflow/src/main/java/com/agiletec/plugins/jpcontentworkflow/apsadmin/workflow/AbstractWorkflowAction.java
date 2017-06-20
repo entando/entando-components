@@ -22,14 +22,25 @@
 package com.agiletec.plugins.jpcontentworkflow.apsadmin.workflow;
 
 import com.agiletec.aps.system.services.role.IRoleManager;
+import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.IContentWorkflowManager;
+import java.util.Collections;
+import java.util.List;
+import org.apache.commons.beanutils.BeanComparator;
 
 /**
  * @author E.Santoboni
  */
 public abstract class AbstractWorkflowAction extends BaseAction {
+	
+	public List<Role> getRoles() {
+		List<Role> roles = this.getRoleManager().getRoles();
+		BeanComparator c = new BeanComparator("description");
+		Collections.sort(roles, c);
+		return roles;
+	}
 	
 	protected IContentManager getContentManager() {
 		return _contentManager;

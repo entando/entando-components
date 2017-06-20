@@ -1,0 +1,27 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10015</id>
+  <contentType>CNG</contentType>
+  <description>Title + Text + Picture</description>
+  <shape><![CDATA[<article class="full-imgsx">
+<h3>$content.Title.text</h3>
+<div class="col-md-6 no-padding">
+$content.MainBody.text
+</div>
+<div class="col-md-6 no-padding">
+   #if ( $content.Picture.getImagePath("0") != "" )
+    <figure>
+      <img src="$content.Picture.getImagePath("0")" alt="$content.Picture.text" class="img-responsive" />
+      #if ( $content.Caption.text != "" )
+      <figcaption class="text-center"><p class="margin-medium-all">$content.Caption.text</p></figcaption>
+      #end
+    </figure>
+   #end
+</div>
+</article>]]></shape>
+</contentModel>

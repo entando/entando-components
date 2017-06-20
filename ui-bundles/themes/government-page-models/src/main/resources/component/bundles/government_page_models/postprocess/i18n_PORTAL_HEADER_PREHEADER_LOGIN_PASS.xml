@@ -1,0 +1,13 @@
+<i18nLabel>
+  <key>PORTAL_HEADER_PREHEADER_LOGIN_PASS</key>
+  <labels>
+    <label>
+      <langCode>en</langCode>
+      <value><![CDATA[Password]]></value>
+    </label>
+    <label>
+      <langCode>it</langCode>
+      <value><![CDATA[Password]]></value>
+    </label>
+  </labels>
+</i18nLabel>

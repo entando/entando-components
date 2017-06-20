@@ -1,0 +1,36 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10022</id>
+  <contentType>NWS</contentType>
+  <description>News in evidence</description>
+  <shape><![CDATA[<div class="bg-lightgrey box-evidence">
+    <div class="container">
+        <div class="row">
+      <article>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mb-20">
+                <h3>$i18n.getLabel("PORTAL_NEWS_TITLE")</h3>
+              <p class="date">$content.Date.getFormattedDate("dd MMMM yyyy")</p>
+              <h4>$content.Title.text</h4>
+              $content.Abstract.text
+              <a class="button-link" href="$content.getContentOnPageLink("new")" title="$content.Title.text">$i18n.getLabel("PORTAL_NEWS_SEEMORE")</a>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+             #if ( $content.Picture.getImagePath("0") != "" )
+                    <figure>
+                  <img src="$content.Picture.getImagePath("0")" alt="$content.Picture.text" class="img-responsive" />
+                  #if ( $content.Caption.text != "" )
+                    <figcaption class="hidden"><p class="margin-medium-all">$content.Caption.text</p></figcaption>
+                  #end
+                    </figure>
+             #end
+          </div>
+          </article>
+      </div>
+  </div>
+</div>]]></shape>
+</contentModel>

@@ -5,100 +5,88 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="jacmswpsa" uri="/jacms-apsadmin-core" %>
 
-<s:set var="commentVar" value="comment" />
-<jacmswpsa:content contentId="%{#commentVar.contentId}" var="contentVar" />
-<h1 class="panel panel-default title-page">
-    <span class="panel-body display-block">
-        <a href="<s:url action="list" />"><s:text name="jpcontentfeedback.title.commentsManager" /></a>
-        &#32;/&#32;<s:text name="jpcontentfeedback.label.delete.comment.confirm" />
-    </span>
-</h1>
+<s:set var="commentVar" value="comment"/>
+<jacmswpsa:content contentId="%{#commentVar.contentId}" var="contentVar"/>
+
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="breadcrumb.integrations"/></li>
+    <li><s:text name="breadcrumb.integrations.components"/></li>
+    <li><s:text name="jpcontentfeedback.title.commentsManager"/></li>
+    <li>
+        <a href="<s:url action="list" namespace="/do/jpcontentfeedback/Comments" />">
+            <s:text name="jpcontentfeedback.title.comment.list"/>
+        </a>
+    </li>
+    <li class="page-title-container"><s:text name="jpcontentfeedback.label.delete.comment"/></li>
+</ol>
+
+<div class="page-tabs-header">
+    <h1>
+        <s:text name="jpcontentfeedback.label.delete.comment"/>
+    </h1>
+</div>
+<br>
+
 <div id="main">
-
-    <table class="table table-bordered">
-        <tr>
-            <th class="text-right"><s:text name="jpcontentfeedback.author" /></th>
-            <td><code><s:property value="#commentVar.username"/></code></td>          
-        </tr>
-        <tr>           
-            <th class="text-right"><s:text name="jpcontentfeedback.date.creation" /></th>
-            <td><code><s:date name="#commentVar.creationDate" format="dd/MM/yyyy HH:mm" /></code></td>
-        </tr>
-        <tr>           
-            <th class="text-right"><s:text name="jpcontentfeedback.comment" /></th>
-            <td><s:property value="#commentVar.comment"/></td>
-        </tr>
-        <tr>          
-            <th class="text-right"><s:text name="jpcontentfeedback.status" /></th>
-            <td><s:property value="getAllStatus().get(#commentVar.status)" /></td>
-        </tr>
-        <tr>           
-            <th class="text-right"><s:text name="jpcontentfeedback.content.id" /></th>
-            <td><code><s:property value="#commentVar.contentId" /></code></td>
-        </tr>
-        <tr>            
-            <th class="text-right"><s:text name="jpcontentfeedback.content.description" /></th>
-            <td><s:property value="#contentVar.descr" /></td>
-        </tr>
-        <tr>          
-            <th class="text-right"><s:text name="jpcontentfeedback.content.type" /></th>
-            <td><s:property value="#contentVar.typeDescr" /> (<s:property value="#contentVar.typeCode" />)</td>
-        </tr>
-    </table>
-
-    <s:form action="delete">
-
-        <s:if test="hasActionMessages()">
-            <div class="alert alert-info alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="messages.confirm" /></h2>
-                <ul class="margin-base-vertical">
-                    <s:iterator value="actionMessages">
-                        <li><s:property escapeHtml="false" /></li>
-                        </s:iterator>
-                </ul>
-            </div>
-        </s:if>
-        <s:if test="hasFieldErrors()">
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
-                <ul class="margin-base-vertical">
-                    <s:iterator value="fieldErrors">
-                        <s:iterator value="value">
-                            <li><s:property escapeHtml="false" /></li>
-                            </s:iterator>
-                        </s:iterator>
-                </ul>
-            </div>
-        </s:if>
-        <s:if test="hasActionErrors()">
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
-                <ul class="margin-base-vertical">
-                    <s:iterator value="actionErrors">
-                        <li><s:property/></li>
-                        </s:iterator>
-                </ul>
-            </div>
-        </s:if>
-        
-    <div class="alert alert-warning">
-            <wpsf:hidden name="selectedComment" />
-            <wpsf:hidden name="strutsAction" />
-        <s:text name="jpcontentfeedback.label.delete.comment.confirm" />
-        <div class="text-center margin-large-top">
-            <s:submit type="button" cssClass="btn btn-warning btn-lg" >
-                <span class="icon fa fa-times-circle"></span>&#32;
-                <s:text name="%{getText('label.remove')}" />
-            </s:submit>
-        </div>    
-        <p class="text-center margin-small-top">
-            <a class="btn btn-link" href="<s:url action="list"/>">
-                <s:text name="%{getText('label.back')}"/>
-            </a>
-        </p>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover no-mb">
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.author"/></th>
+                <td class="col-sm-10"><code><s:property value="#commentVar.username"/></code></td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.date.creation"/></th>
+                <td class="col-sm-10">
+                    <code><s:date name="#commentVar.creationDate" format="dd/MM/yyyy HH:mm"/></code>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.comment"/></th>
+                <td class="col-sm-10"><s:property value="#commentVar.comment"/></td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.status"/></th>
+                <td class="col-sm-10"><s:property value="getAllStatus().get(#commentVar.status)"/></td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.id"/></th>
+                <td class="col-sm-10"><code><s:property value="#commentVar.contentId"/></code></td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.description"/></th>
+                <td class="col-sm-10"><s:property value="#contentVar.descr"/></td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.type"/></th>
+                <td class="col-sm-10">
+                    <s:property value="#contentVar.typeDescr"/> (<s:property value="#contentVar.typeCode"/>)
+                </td>
+            </tr>
+        </table>
     </div>
-    </s:form>
+
+    <div class="text-center">
+        <s:form action="delete">
+            <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp"/>
+
+            <wpsf:hidden name="selectedComment"/>
+            <wpsf:hidden name="strutsAction"/>
+
+            <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
+            <p class="esclamation-underline"><s:text name="label.delete"/></p>
+            <p class="esclamation-underline-text">
+                <s:text name="jpcontentfeedback.label.delete.comment.confirm"/>
+            </p>
+
+            <div class="text-center margin-large-top">
+                <a class="btn btn-default button-fixed-width"
+                   href="<s:url action="list"/>">
+                    <s:text name="label.back"/>
+                </a>
+                <s:submit type="button" cssClass="btn btn-danger button-fixed-width">
+                    <s:text name="label.delete"/>
+                </s:submit>
+            </div>
+        </s:form>
+    </div>
 </div>

@@ -3,12 +3,20 @@
 <%@ taglib prefix="wpta" uri="/jptokenapi-core" %>
 
 <wpta:myToken var="myTokenVar" />
-<h2 class="margin-more-bottom"><s:text name="title.jptokenapi.myToken" /></h2>
-<fieldset><legend><s:text name="label.jptokenapi.myToken" /></legend>
-<p>
-	<c:choose>
-		<c:when test="${null != myTokenVar}"><code><c:out value="${myTokenVar}"/></code></c:when>
-		<c:otherwise><s:text name="jptokenapi.nullToken" /></c:otherwise>
-	</c:choose>
-</p>
-</fieldset>
+
+<legend><s:text name="title.jptokenapi.myToken" /></legend>
+
+<div class="row form-horizontal">
+    <label class="col-sm-2 control-label">
+        <s:text name="label.jptokenapi.myToken" />
+    </label>
+    <div class="col-sm-10">
+        <c:choose>
+            <c:when test="${null != myTokenVar}"><code><c:out value="${myTokenVar}"/></code></c:when>
+            <c:otherwise><s:text name="jptokenapi.nullToken" /></c:otherwise>
+        </c:choose>
+    </div>
+</div>
+
+<br>
+<br>

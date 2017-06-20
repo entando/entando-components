@@ -46,9 +46,18 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.parse.Crowd
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.IIdeaInstanceManager;
 
 public class IdeaManager extends AbstractService implements IIdeaManager, CategoryUtilizer {
-
+	
 	private static final Logger _logger =  LoggerFactory.getLogger(IdeaManager.class);
-
+	public static final String DEFAULT_CATEGORY_ROOT = "jpcollaboration_categoryRoot";
+	
+	private IKeyGeneratorManager _keyGeneratorManager;
+	private String _categoryRoot;
+	private IIdeaDAO _ideaDAO;
+	private ICategoryManager _categoryManager;
+	private ConfigInterface _configManager;
+	private IIdeaInstanceManager _ideaInstanceManager;
+	private CrowdSourcingConfig _config;
+	
 	@Override
 	public void init() throws Exception {
 		this.checkCategoryRoot();
@@ -236,9 +245,18 @@ public class IdeaManager extends AbstractService implements IIdeaManager, Catego
 		}
 		return list;
 	}
-
-
-
+	
+	@Override
+	public void reloadCategoryReferences(String categoryCode) throws ApsSystemException {
+		// nothing to do
+	}
+	
+	@Override
+	public List getCategoryUtilizersForReloadReferences(String categoryCode) throws ApsSystemException {
+		return new ArrayList();// nothing to do
+	}
+	
+	
 	public void setCategoryRoot(String categoryRoot) {
 		this._categoryRoot = categoryRoot;
 	}
@@ -290,14 +308,5 @@ public class IdeaManager extends AbstractService implements IIdeaManager, Catego
 	public void setIdeaInstanceManager(IIdeaInstanceManager ideaInstanceManager) {
 		this._ideaInstanceManager = ideaInstanceManager;
 	}
-
-	private IKeyGeneratorManager _keyGeneratorManager;
-	private String _categoryRoot;
-	private IIdeaDAO _ideaDAO;
-	private ICategoryManager _categoryManager;
-	private ConfigInterface _configManager;
-	private IIdeaInstanceManager _ideaInstanceManager;
-	private CrowdSourcingConfig _config;
-	public static final String DEFAULT_CATEGORY_ROOT = "jpcollaboration_categoryRoot";
-
+	
 }

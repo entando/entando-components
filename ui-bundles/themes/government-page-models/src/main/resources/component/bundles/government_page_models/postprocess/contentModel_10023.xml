@@ -1,0 +1,18 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10023</id>
+  <contentType>NWS</contentType>
+  <description>List Default - Search</description>
+  <shape><![CDATA[<article class="src-list">
+    <p class="date">$content.Date.getFormattedDate("dd MMMM yyyy")</p>
+    <h4><a href="$content.getContentOnPageLink("new")" title="$content.Title.text">$content.Title.text</a></h4>
+   #if ( $content.Abstract.text != "" )
+     $content.Abstract.text
+   #end
+</article>]]></shape>
+</contentModel>

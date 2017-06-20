@@ -85,11 +85,11 @@ import org.slf4j.LoggerFactory;
 /**
  * @author E.Santoboni, A.Turrini, E.Mezzano
  */
-public class NewsletterManager extends AbstractService 
+public class NewsletterManager extends AbstractService
 		implements INewsletterManager, MailSendersUtilizer, INewsletterSchedulerManager {
-	
+
 	private static final Logger _logger = LoggerFactory.getLogger(NewsletterManager.class);
-	
+
 	@Override
 	public void init() throws Exception {
 		try {
@@ -100,26 +100,26 @@ public class NewsletterManager extends AbstractService
 			_logger.error("{} Manager: Error on initialization", this.getClass().getName(), t);
 		}
 	}
-	
+
 	@Override
 	public void refresh() throws Throwable {
 		synchronized (this) {
 			super.refresh();
 		}
 	}
-	
+
 	@Override
 	protected void release() {
 		this._scheduler.cancel();
 		this._scheduler = null;
 	}
-	
+
 	@Override
 	public void destroy() {
 		this._scheduler.cancel();
 		this._scheduler = null;
 	}
-	
+
 	protected void loadConfigs() throws ApsSystemException {
 		try {
 			ConfigInterface configManager = this.getConfigManager();
@@ -134,24 +134,24 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error loading config", t);
 		}
 	}
-	
+
 	@Override
 	public void startScheduler() throws ApsSystemException {
 		NewsletterConfig config = this.getConfig();
 		Date start = config.getNextTaskTime();
 		this._scheduler = new Scheduler(this, start, config.getHoursDelay());
 	}
-	
+
 	@Override
 	public void stopScheduler() throws ApsSystemException {
 		this.release();
 	}
-	
+
 	@Override
 	public NewsletterConfig getNewsletterConfig() {
 		return this._config.clone();
 	}
-	
+
 	@Override
 	public void updateNewsletterConfig(NewsletterConfig config) throws ApsSystemException {
 		try {
@@ -164,7 +164,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error updating configuration", t);
 		}
 	}
-	
+
 	@Override
 	public void addContentToQueue(String contentId) throws ApsSystemException {
 		try {
@@ -174,7 +174,7 @@ public class NewsletterManager extends AbstractService
 			// Do not throws exceptions
 		}
 	}
-	
+
 	@Override
 	public void removeContentFromQueue(String contentId) throws ApsSystemException {
 		try {
@@ -184,7 +184,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error removing content from queue", t);
 		}
 	}
-	
+
 	@Override
 	public List<String> getContentQueue() throws ApsSystemException {
 		try {
@@ -194,7 +194,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Errore in caricamento coda contenuti newsLetter", t);
 		}
 	}
-	
+
 	@Override
 	public boolean existsContentReport(String contentId) throws ApsSystemException {
 		try {
@@ -204,7 +204,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error verifying content report existence", t);
 		}
 	}
-	
+
 	@Override
 	public List<String> getSentContentIds() throws ApsSystemException {
 		try {
@@ -214,7 +214,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error loading sent contents ids", t);
 		}
 	}
-	
+
 	@Override
 	public NewsletterContentReportVO getContentReport(String contentId) throws ApsSystemException {
 		try {
@@ -224,16 +224,16 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error loading content report", t);
 		}
 	}
-	
+
 	@Override
 	public void sendNewsletter() throws ApsSystemException {
-		if (!this.isSendingNewsletter() && this.getContentQueue().size()>0) {
+		if (!this.isSendingNewsletter() && this.getContentQueue().size() > 0) {
 			NewsletterSenderThread sender = new NewsletterSenderThread(this);
 			sender.setName(JpnewsletterSystemConstants.NEWSLETTER_SENDER_THREAD_NAME);
 			sender.start();
 		}
 	}
-	
+
 	protected void sendNewsletterFromThread() throws ApsSystemException {
 		synchronized (this) {
 			if (this.isSendingNewsletter()) {
@@ -243,8 +243,10 @@ public class NewsletterManager extends AbstractService
 			}
 		}
 		try {
-			_logger.info("Newletter: delivery process initiated"); 
-			if (!this.getConfig().isActive()) return;
+			_logger.info("Newletter: delivery process initiated");
+			if (!this.getConfig().isActive()) {
+				return;
+			}
 			List<String> contentIds = this.getContentQueue();
 			if (contentIds.size() > 0) {
 				List<Content> contents = new ArrayList<Content>(contentIds.size());
@@ -264,14 +266,14 @@ public class NewsletterManager extends AbstractService
 			} else {
 				_logger.info("Newletter: no contents found for delivery");
 			}
-			_logger.info("Newletter: delivery process completed"); 
+			_logger.info("Newletter: delivery process completed");
 		} catch (Throwable t) {
 			_logger.error("Newletter: delivery process ended abnormally", t);
 		} finally {
 			this.setSendingNewsletter(false);
 		}
 	}
-	
+
 	@Override
 	public String buildMailBody(Content content, boolean html) throws ApsSystemException {
 		String mailBody = null;
@@ -286,7 +288,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return mailBody;
 	}
-	
+
 	protected void sendNewsletterToUsers(List<Content> contents) throws ApsSystemException {
 		try {
 			Map<String, List<String>> profileAttributes = this.prepareProfileAttributesForContents(contents);
@@ -311,9 +313,11 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error sending Newsletter To Users ", t);
 		}
 	}
-	
+
 	protected void addNewsletterReport(NewsletterReport newsletterReport) throws ApsSystemException {
-		if (null == newsletterReport) return;
+		if (null == newsletterReport) {
+			return;
+		}
 		try {
 			IKeyGeneratorManager keyGeneratorManager = this.getKeyGeneratorManager();
 			newsletterReport.setId(keyGeneratorManager.getUniqueKeyCurrentValue());
@@ -325,11 +329,11 @@ public class NewsletterManager extends AbstractService
 			_logger.error("Error adding newsletter report : id {}", newsletterReport.getId(), t);
 		}
 	}
-	
+
 	private Map<String, List<String>> prepareProfileAttributesForContents(List<Content> contents) {
 		Map<String, List<String>> profileAttributes = new HashMap<String, List<String>>();
 		Properties subscriptions = this.getConfig().getSubscriptions();
-		for (int i=0; i<contents.size(); i++) {
+		for (int i = 0; i < contents.size(); i++) {
 			Content content = contents.get(i);
 			List<String> contentProfileAttributes = this.extractProfileAttributesForContent(content, subscriptions);
 			if (contentProfileAttributes != null && contentProfileAttributes.size() > 0) {
@@ -338,7 +342,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return profileAttributes;
 	}
-	
+
 	protected NewsletterReport prepareNewsletterReport(List<Content> contents) {
 		NewsletterConfig config = this.getConfig();
 		NewsletterReport newsletterReport = new NewsletterReport();
@@ -367,8 +371,8 @@ public class NewsletterManager extends AbstractService
 		}
 		return newsletterReport;
 	}
-	
-	private void sendNewsletterToUser(String username, List<Content> contents, 
+
+	private void sendNewsletterToUser(String username, List<Content> contents,
 			Map<String, List<String>> profileAttributes, NewsletterReport newsletterReport) {
 		NewsletterConfig config = this.getConfig();
 		try {
@@ -378,7 +382,7 @@ public class NewsletterManager extends AbstractService
 				if (eMail != null && eMail.length() > 0) {
 					List<Content> userContents = this.extractContentsForUser(profile, eMail, contents, profileAttributes, newsletterReport);
 					if (userContents.size() > 0) {
-						String[] emailAddresses = { eMail };
+						String[] emailAddresses = {eMail};
 						String simpleText = this.prepareMailBody(userContents, newsletterReport, false);
 						if (config.isAlsoHtml()) {
 							String htmlText = this.prepareMailBody(userContents, newsletterReport, true);
@@ -393,14 +397,14 @@ public class NewsletterManager extends AbstractService
 			_logger.error("Error on 'sendNewsletterToUser' method", t);
 		}
 	}
-	
+
 	protected String prepareMailBody(List<Content> userContents, NewsletterReport newsletterReport, boolean isHtml) {
 		StringBuffer body = this.prepareMailCommonBody(userContents, newsletterReport, isHtml);
 		NewsletterConfig config = this.getConfig();
 		body.append(isHtml ? config.getHtmlFooter() : config.getTextFooter());
 		return body.toString();
 	}
-	
+
 	protected StringBuffer prepareMailCommonBody(List<Content> userContents, NewsletterReport newsletterReport, boolean isHtml) {
 		NewsletterConfig config = this.getConfig();
 		StringBuffer body = new StringBuffer(isHtml ? config.getHtmlHeader() : config.getTextHeader());
@@ -420,7 +424,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return body;
 	}
-	
+
 	private String buildMailBody(Content content, long modelId, boolean html) throws ApsSystemException {
 		NewsletterConfig config = this.getConfig();
 		String header = html ? config.getHtmlHeader() : config.getTextHeader();
@@ -434,7 +438,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return mailBody;
 	}
-	
+
 	private Set<String> extractUsernames() throws ApsSystemException {
 		NewsletterConfig config = this.getConfig();
 		Set<String> usernames = new HashSet<String>();
@@ -467,8 +471,8 @@ public class NewsletterManager extends AbstractService
 		}
 		return usernames;
 	}
-	
-	private List<Content> extractContentsForUser(IUserProfile profile, String eMail, List<Content> contents, 
+
+	private List<Content> extractContentsForUser(IUserProfile profile, String eMail, List<Content> contents,
 			Map<String, List<String>> profileAttributes, NewsletterReport newsletterReport) throws ApsSystemException {
 		NewsletterConfig config = this.getConfig();
 		List<Content> userContents = new ArrayList<Content>();
@@ -482,7 +486,7 @@ public class NewsletterManager extends AbstractService
 			}
 			List<String> groupNames = this.extractUserGroupNames(/*user*/username);
 			boolean isGroupAdmin = groupNames.contains(Group.ADMINS_GROUP_NAME);
-			for (int i=0; i<contents.size(); i++) {
+			for (int i = 0; i < contents.size(); i++) {
 				Content content = contents.get(i);
 				String contentId = content.getId();
 				List<String> contentProfileAttributes = profileAttributes.get(contentId);
@@ -491,7 +495,7 @@ public class NewsletterManager extends AbstractService
 					if (allContents) {
 						userContents.add(content);
 						contentReport.addRecipient(username, eMail);
-					} else if (contentProfileAttributes!=null && contentProfileAttributes.size() > 0) {
+					} else if (contentProfileAttributes != null && contentProfileAttributes.size() > 0) {
 						for (String profileAttrName : contentProfileAttributes) {
 							Boolean value = (Boolean) profile.getValue(profileAttrName);
 							if (value != null && value) {
@@ -506,7 +510,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return userContents;
 	}
-	
+
 	private List<String> extractProfileAttributesForContent(Content content, Properties subscriptions) {
 		Collection<String> categories = this.extractCategoryCodes(content);
 		List<String> profileAttributes = new ArrayList<String>();
@@ -518,7 +522,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return profileAttributes;
 	}
-	
+
 	private String prepareMailBodyContentPart(Content content, String defaultLang, boolean isHtml) {
 		NewsletterContentType contentType = this.getConfig().getContentTypes().get(content.getTypeCode());
 		int modelId = isHtml ? contentType.getHtmlModel() : contentType.getSimpleTextModel();
@@ -529,7 +533,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return mailContentBody;
 	}
-	
+
 	private List<String> extractUserGroupNames(String username) throws ApsSystemException {
 		List<Authorization> authorizations = this.getAuthorizationManager().getUserAuthorizations(username);
 		List<String> groupNames = new ArrayList<String>();
@@ -546,7 +550,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return groupNames;
 	}
-	
+
 	private boolean checkUserAllowedOnContent(List<String> userGroups, Content content) {
 		String mainGroup = content.getMainGroup();
 		boolean allowed = false;
@@ -562,7 +566,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return allowed;
 	}
-	
+
 	private Set<String> extractCategoryCodes(Content content) {
 		Set<String> categoryCodes = new HashSet<String>();
 		Iterator<Category> categoryIter = content.getCategories().iterator();
@@ -572,7 +576,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return categoryCodes;
 	}
-	
+
 	private void addCategoryCode(Category category, Set<String> codes) {
 		codes.add(category.getCode());
 		Category parentCategory = (Category) category.getParent();
@@ -580,19 +584,19 @@ public class NewsletterManager extends AbstractService
 			this.addCategoryCode(parentCategory, codes);
 		}
 	}
-	
+
 	@Override
-	public List<String> loadNewsletterContentIds(EntitySearchFilter[] filters, 
+	public List<String> loadNewsletterContentIds(EntitySearchFilter[] filters,
 			Collection<String> userGroupCodes, NewsletterSearchBean searchBean) throws ApsSystemException {
 		List<String> contentsId = null;
 		try {
 			NewsletterConfig config = this.getConfig();
 			String[] contentTypes = config.getContentTypesArray();
-			if (contentTypes==null || contentTypes.length==0) {
+			if (contentTypes == null || contentTypes.length == 0) {
 				contentsId = new ArrayList<String>();
 			} else {
 				String[] categories = (null != config.getAllContentsAttributeName()) ? null : config.getCategoriesArray();
-				contentsId = this.getNewsletterSearcherDAO().loadNewsletterContentsId(contentTypes, 
+				contentsId = this.getNewsletterSearcherDAO().loadNewsletterContentsId(contentTypes,
 						categories, filters, userGroupCodes);
 				Boolean inQueue = searchBean.getInQueue();
 				if (inQueue != null) {
@@ -618,9 +622,9 @@ public class NewsletterManager extends AbstractService
 		}
 		return contentsId;
 	}
-	
+
 	private List<String> exceptContentIds(List<String> contentIds, List<String> exceptedContentIds) {
-		if (exceptedContentIds.size()>0 && contentIds.size()>0) {
+		if (exceptedContentIds.size() > 0 && contentIds.size() > 0) {
 			for (String contentId : exceptedContentIds) {
 				contentIds.remove(contentId);
 				if (contentIds.isEmpty()) {
@@ -630,10 +634,10 @@ public class NewsletterManager extends AbstractService
 		}
 		return contentIds;
 	}
-	
+
 	protected List<String> intersectContentIds(List<String> contentIds, List<String> intersectedContentIds) {
 		List<String> intersection = new ArrayList<String>();
-		if (intersectedContentIds.size()>0 && contentIds.size()>0) {
+		if (intersectedContentIds.size() > 0 && contentIds.size() > 0) {
 			for (String contentId : intersectedContentIds) {
 				if (contentIds.remove(contentId)) {
 					intersection.add(contentId);
@@ -642,8 +646,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return intersection;
 	}
-	
-	
+
 	@Override
 	public List<Subscriber> loadSubscribers() throws ApsSystemException {
 		List<Subscriber> subscribers = new ArrayList<Subscriber>();
@@ -655,7 +658,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return subscribers;
 	}
-	
+
 	@Override
 	public List<Subscriber> searchSubscribers(String mailAddress, Boolean active) throws ApsSystemException {
 		List<Subscriber> subscribers = new ArrayList<Subscriber>();
@@ -667,7 +670,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return subscribers;
 	}
-	
+
 	@Override
 	public Subscriber loadSubscriber(String mailAddress) throws ApsSystemException {
 		try {
@@ -679,7 +682,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error loading subscriber " + mailAddress, t);
 		}
 	}
-	
+
 	@Override
 	public void addSubscriber(String mailAddress) throws ApsSystemException {
 		try {
@@ -695,7 +698,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error adding subscriber", t);
 		}
 	}
-	
+
 	@Override
 	public void resetSubscriber(String mailAddress) throws ApsSystemException {
 		try {
@@ -711,7 +714,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error reseting subscriber", t);
 		}
 	}
-	
+
 	@Override
 	public void deleteSubscriber(String mailAddress) throws ApsSystemException {
 		try {
@@ -721,7 +724,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error deleting subscriber", t);
 		}
 	}
-	
+
 	@Override
 	public void activateSubscriber(String mailAddress, String token) throws ApsSystemException {
 		try {
@@ -732,7 +735,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error activating subscriber", t);
 		}
 	}
-	
+
 	@Override
 	public String getAddressFromToken(String token) throws ApsSystemException {
 		try {
@@ -743,7 +746,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error loading address from token", t);
 		}
 	}
-	
+
 	@Override
 	public void cleanOldSubscribers() throws ApsSystemException {
 		int days = this.getConfig().getSubscriptionTokenValidityDays();
@@ -751,7 +754,7 @@ public class NewsletterManager extends AbstractService
 		Date expiration = new Date(time);
 		this.getNewsletterDAO().cleanOldSubscribers(expiration);
 	}
-	
+
 	@Override
 	public Boolean isAlreadyAnUser(String mailAddress) throws ApsSystemException {
 		try {
@@ -777,7 +780,7 @@ public class NewsletterManager extends AbstractService
 		}
 		return false;//(null != usernames && usernames.size() > 0);
 	}
-	
+
 	protected String createToken(String word) throws NoSuchAlgorithmException {
 		Random random = new Random();
 		StringBuilder salt = new StringBuilder();
@@ -791,7 +794,7 @@ public class NewsletterManager extends AbstractService
 		String token = ShaEncoder.encodeWord(word, salt.toString());
 		return token;
 	}
-	
+
 	protected void sendSubscriptionMail(String mailAddress, String token) throws ApsSystemException {
 		try {
 			EmailSenderThread thread = new EmailSenderThread(mailAddress, token, this);
@@ -802,11 +805,11 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Sending email", t);
 		}
 	}
-	
+
 	protected String createLink(String mailAddress, String token) {
 		NewsletterConfig config = this.getConfig();
 		String pageCode = config.getSubscriptionPageCode();
-		IPage page = this.getPageManager().getPage(pageCode);
+		IPage page = this.getPageManager().getOnlinePage(pageCode);
 		Lang lang = this.getLangManager().getDefaultLang();
 		if (null == page || null == lang) {
 			if (null == page) {
@@ -817,9 +820,9 @@ public class NewsletterManager extends AbstractService
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", token);
 		params.put("mailAddress", mailAddress);
-		return this.getUrlManager().createUrl(page, lang, params, false);
+		return this.getUrlManager().createURL(page, lang, params, false);
 	}
-	
+
 	protected String parseText(String defaultText, Map<String, String> params) {
 		String body = defaultText;
 		for (Entry<String, String> pairs : params.entrySet()) {
@@ -833,18 +836,18 @@ public class NewsletterManager extends AbstractService
 		}
 		return body;
 	}
-	
+
 	protected void sendSubscriptionFormThread(String mailAddress, String token) throws ApsSystemException {
 		try {
 			NewsletterConfig config = this.getConfig();
 			String senderCode = config.getSenderCode();
 			String subject = config.getSubscriptionSubject();
-			if (subject!=null) {
+			if (subject != null) {
 				Map<String, String> bodyParams = new HashMap<String, String>();
 				String link = this.createLink(mailAddress, token);
 				bodyParams.put("subscribeLink", link);
 				String textBody = this.parseText(config.getSubscriptionTextBody(), bodyParams);
-				String[] recipientsTo = new String[] { mailAddress };
+				String[] recipientsTo = new String[]{mailAddress};
 				if (config.isAlsoHtml()) {
 					String htmlBody = this.parseText(config.getSubscriptionHtmlBody(), bodyParams);
 					this.getMailManager().sendMixedMail(textBody, htmlBody, subject, null, recipientsTo, null, null, senderCode);
@@ -859,7 +862,7 @@ public class NewsletterManager extends AbstractService
 			throw new ApsSystemException("Error sending email for subscription confirmation request to address " + mailAddress, t);
 		}
 	}
-	
+
 	private void sendNewsletterToSubscribers(List<Content> contents, NewsletterReport newsletterReport) throws ApsSystemException {
 		List<Content> contentsToSubscribers = new ArrayList<Content>();
 		for (int i = 0; i < contents.size(); i++) {
@@ -870,24 +873,28 @@ public class NewsletterManager extends AbstractService
 		}
 		this.sendContentsToSubscribers(contentsToSubscribers, newsletterReport);
 	}
-	
+
 	private boolean isContentToSend(Content content) {
-		if (null == content) return false;
+		if (null == content) {
+			return false;
+		}
 		String mainGroup = content.getMainGroup();
-		if (null != mainGroup && Group.FREE_GROUP_NAME.equals(mainGroup)) return true;
+		if (null != mainGroup && Group.FREE_GROUP_NAME.equals(mainGroup)) {
+			return true;
+		}
 		Set<String> groups = content.getGroups();
 		if (null != groups && groups.contains(Group.FREE_GROUP_NAME)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	private void sendContentsToSubscribers(List<Content> contents, NewsletterReport newsletterReport) throws ApsSystemException {
 		List<Subscriber> subscribers = this.searchSubscribers(null, Boolean.TRUE);
 		NewsletterConfig config = this.getConfig();
 		for (Subscriber subscriber : subscribers) {
 			String mailAddress = subscriber.getMailAddress();
-			String[] emailAddresses = { mailAddress };
+			String[] emailAddresses = {mailAddress};
 			String simpleText = this.prepareSubscribersMailBody(contents, newsletterReport, false, mailAddress);
 			if (config.isAlsoHtml()) {
 				String htmlText = this.prepareSubscribersMailBody(contents, newsletterReport, true, mailAddress);
@@ -897,11 +904,11 @@ public class NewsletterManager extends AbstractService
 			}
 		}
 	}
-	
+
 	private String prepareSubscribersMailBody(List<Content> userContents, NewsletterReport newsletterReport, boolean isHtml, String mailAddress) {
 		NewsletterConfig config = this.getConfig();
 		String unsubscriptionLink = isHtml ? config.getSubscribersHtmlFooter() : config.getSubscribersTextFooter();
-		if (unsubscriptionLink!=null) {
+		if (unsubscriptionLink != null) {
 			StringBuffer body = this.prepareMailCommonBody(userContents, newsletterReport, isHtml);
 			String link = this.createUnsubscriptionLink(mailAddress);
 			Map<String, String> footerParams = new HashMap<String, String>();
@@ -914,11 +921,11 @@ public class NewsletterManager extends AbstractService
 			return this.prepareMailBody(userContents, newsletterReport, isHtml);
 		}
 	}
-	
+
 	protected String createUnsubscriptionLink(String mailAddress) {
 		NewsletterConfig config = this.getConfig();
 		String pageCode = config.getUnsubscriptionPageCode();
-		IPage page = this.getPageManager().getPage(pageCode);
+		IPage page = this.getPageManager().getOnlinePage(pageCode);
 		Lang lang = this.getLangManager().getDefaultLang();
 		if (null == page || null == lang) {
 			if (null == page) {
@@ -928,129 +935,145 @@ public class NewsletterManager extends AbstractService
 		}
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("mailAddress", mailAddress);
-		return this.getUrlManager().createUrl(page, lang, params, false);
+		return this.getUrlManager().createURL(page, lang, params, false);
 	}
-	
+
 	protected boolean isSendingNewsletter() {
 		return _sendingNewsletter;
 	}
+
 	protected void setSendingNewsletter(boolean sendingNewsletter) {
 		this._sendingNewsletter = sendingNewsletter;
 	}
-	
+
 	protected NewsletterConfig getConfig() {
 		return this._config;
 	}
+
 	protected void setConfig(NewsletterConfig config) {
 		this._config = config;
 	}
-	
+
 	@Override
 	public String[] getSenderCodes() {
-		return new String[] { this.getConfig().getSenderCode() };
+		return new String[]{this.getConfig().getSenderCode()};
 	}
-	
+
 	protected IMailManager getMailManager() {
 		return _mailManager;
 	}
+
 	public void setMailManager(IMailManager mailManager) {
 		this._mailManager = mailManager;
 	}
-	
+
 	protected IUserManager getUserManager() {
 		return _userManager;
 	}
+
 	public void setUserManager(IUserManager userManager) {
 		this._userManager = userManager;
 	}
-	
+
 	protected IContentManager getContentManager() {
 		return _contentManager;
 	}
+
 	public void setContentManager(IContentManager contentManager) {
 		this._contentManager = contentManager;
 	}
-	
+
 	protected IAuthorizationManager getAuthorizationManager() {
 		return _authorizationManager;
 	}
+
 	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
 		this._authorizationManager = authorizationManager;
 	}
-	
+
 	protected IURLManager getUrlManager() {
 		return _urlManager;
 	}
+
 	public void setUrlManager(IURLManager urlManager) {
 		this._urlManager = urlManager;
 	}
-	
+
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
+
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
-	
+
 	protected IUserProfileManager getProfileManager() {
 		return _profileManager;
 	}
+
 	public void setProfileManager(IUserProfileManager profileManager) {
 		this._profileManager = profileManager;
 	}
-	
+
 	protected ILinkResolverManager getLinkResolver() {
 		return _linkResolver;
 	}
+
 	public void setLinkResolver(ILinkResolverManager linkResolver) {
 		this._linkResolver = linkResolver;
 	}
-	
+
 	protected ILangManager getLangManager() {
 		return _langManager;
 	}
+
 	public void setLangManager(ILangManager langManager) {
 		this._langManager = langManager;
 	}
-	
+
 	protected IContentRenderer getContentRenderer() {
 		return _contentRenderer;
 	}
+
 	public void setContentRenderer(IContentRenderer renderer) {
 		this._contentRenderer = renderer;
 	}
-	
+
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
+
 	public void setConfigManager(ConfigInterface configManager) {
 		this._configManager = configManager;
 	}
-	
+
 	protected IKeyGeneratorManager getKeyGeneratorManager() {
 		return _keyGeneratorManager;
 	}
+
 	public void setKeyGeneratorManager(IKeyGeneratorManager keyGeneratorManager) {
 		this._keyGeneratorManager = keyGeneratorManager;
 	}
-	
+
 	protected INewsletterDAO getNewsletterDAO() {
 		return _newsletterDAO;
 	}
+
 	public void setNewsletterDAO(INewsletterDAO newsletterDAO) {
 		this._newsletterDAO = newsletterDAO;
 	}
-	
+
 	protected INewsletterSearcherDAO getNewsletterSearcherDAO() {
 		return _newsletterSearcherDAO;
 	}
+
 	public void setNewsletterSearcherDAO(INewsletterSearcherDAO newsletterSearcherDAO) {
 		this._newsletterSearcherDAO = newsletterSearcherDAO;
 	}
-	
+
 	private NewsletterConfig _config;
 	private boolean _sendingNewsletter = false;
-	
+
 	private IMailManager _mailManager;
 	private IUserProfileManager _profileManager;
 	private IUserManager _userManager;
@@ -1065,7 +1088,7 @@ public class NewsletterManager extends AbstractService
 	private INewsletterDAO _newsletterDAO;
 	private INewsletterSearcherDAO _newsletterSearcherDAO;
 	private IKeyGeneratorManager _keyGeneratorManager;
-	
+
 	private TimerTask _scheduler;
-	
+
 }

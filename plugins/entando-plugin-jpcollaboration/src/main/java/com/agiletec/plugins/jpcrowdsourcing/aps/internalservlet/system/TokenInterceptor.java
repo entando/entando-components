@@ -25,13 +25,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 public class TokenInterceptor extends org.apache.struts2.interceptor.TokenInterceptor {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(TokenInterceptor.class);
-
+	
 	@Override
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
@@ -52,9 +52,8 @@ public class TokenInterceptor extends org.apache.struts2.interceptor.TokenInterc
         		_logger.debug("TokenInterceptor without message for class {}", invocation.getAction().getClass().getName());
         	}
         } else {
-            log.warn(errorMessage);
+            _logger.warn(errorMessage);
         }
-
         return INVALID_TOKEN_CODE;
     }
 

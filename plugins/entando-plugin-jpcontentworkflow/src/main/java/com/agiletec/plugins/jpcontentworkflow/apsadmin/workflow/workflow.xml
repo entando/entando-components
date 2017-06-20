@@ -14,14 +14,9 @@
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
     	
-    	<action name="editRole" class="jpcontentworkflowWorkflowAction" method="edit">
-            <result type="tiles">admin.jpcontentworkflow.workflow.entryRole</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
-        </action>
-    	
-    	<action name="saveRole" class="jpcontentworkflowWorkflowAction" method="save">
-            <result name="input" type="tiles">admin.jpcontentworkflow.workflow.entryRole</result>
-            <result type="redirectAction">list</result>
+    	<action name="saveRoles" class="jpcontentworkflowWorkflowListAction" method="saveRoles">
+            <result name="input" type="tiles">admin.jpcontentworkflow.workflow.list</result>
+            <result type="tiles">admin.jpcontentworkflow.workflow.list</result>
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
     	
