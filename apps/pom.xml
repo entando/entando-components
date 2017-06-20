@@ -1,57 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.entando.entando.components</groupId>
-		<artifactId>entando-components</artifactId>
-		<version>4.3.0-SNAPSHOT</version>
-	</parent>
-	<groupId>org.entando.entando.apps</groupId>
-	<artifactId>entando-apps-parent</artifactId>
-	<packaging>pom</packaging>
-	<name>Entando: APPS</name>
-	<description>APPS for Entando: an agile, modern and user-centric open source Portal platform.</description>
-	<url>http://www.entando.com/</url>
-	<licenses>
-		<license>
-			<name>MIT LICENSE</name>
-			<url>http://opensource.org/licenses/MIT</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	<developers>
-		<developer>
-			<id>e.santoboni</id>
-			<name>Eugenio Santoboni</name>
-			<email>eugenio.santoboni@gmail.com</email>
-		</developer>
-	</developers>
-	<organization>
-		<name>Entando Inc.</name>
-		<url>http://www.entando.com/</url>
-	</organization>
-	<modules>
-		<module>entando-app-webdynamicform</module>
-		<!--<module>entando-app-calendar</module>-->
-		<!-- <module>entando-app-rss</module> -->
-		<module>entando-app-facetnav</module>
-		<module>entando-app-userreg</module>
-		<!--
-<module>entando-app-addressbook</module>
-<module>entando-app-newsletter</module>		-->
-		<module>entando-app-survey</module>
 
-		<!--<module>entando-app-avatar</module>-->
-		<!--
-<module>entando-app-cmstagcloud</module>
-		-->
-		<module>entando-app-tokenapi</module>
-		<module>entando-app-blog</module>
-	</modules>
-	<properties>
-		<spring.version>4.1.6.RELEASE</spring.version>
-		<struts2.version>2.3.16.3</struts2.version>
-		<cxf.version>2.7.14</cxf.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.entando.entando.components</groupId>
+        <artifactId>entando-components</artifactId>
+        <version>4.3.0-SNAPSHOT</version>
+    </parent>
+    <groupId>org.entando.entando.apps</groupId>
+    <artifactId>entando-apps-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>Entando: APPS</name>
+    <description>APPS for Entando: an agile, modern and user-centric open source Portal platform.</description>
+    <url>http://www.entando.com/</url>
+    <licenses>
+        <license>
+            <name>MIT LICENSE</name>
+            <url>http://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>e.santoboni</id>
+            <name>Eugenio Santoboni</name>
+            <email>eugenio.santoboni@gmail.com</email>
+        </developer>
+    </developers>
+    <organization>
+        <name>Entando Inc.</name>
+        <url>http://www.entando.com/</url>
+    </organization>
+    <modules>
+        <module>entando-app-webdynamicform</module>
+        <!--
+        -->
+        <!-- <module>entando-app-rss</module> -->
+        <!--<module>entando-app-facetnav</module>-->
+        <!--<module>entando-app-userreg</module>-->
+        <!--
+<module>entando-app-calendar</module>
+     <module>entando-app-addressbook</module>
+     <module>entando-app-newsletter</module>
+     <module>entando-app-survey</module>
+        <module>entando-app-avatar</module>
+        -->
+        <module>entando-app-cmstagcloud</module>		
+        <!--<module>entando-app-tokenapi</module>-->
+        <!--<module>entando-app-blog</module>-->
+    </modules>
+    <properties>
+        <spring.version>4.1.6.RELEASE</spring.version>
+        <struts2.version>2.3.16.3</struts2.version>
+        <cxf.version>2.7.14</cxf.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>

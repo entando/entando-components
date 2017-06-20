@@ -1,61 +1,96 @@
 .jpcmstagcloud .cloud_list {
-	padding: 0;
-	margin: 1em;
-	list-style-type: none;
-	display: block;
-	line-height: 2em;
+    padding: 0;
+    margin:  0 0 10px -10px ;
+    list-style-type: none;
+    display: block;
+    line-height: 2em;
+
 }
 
 .jpcmstagcloud .cloud_list li {
-	display: inline;
+    display: inline;
 }
 
 .jpcmstagcloud .cloud_list a.tag1 {
-	font-size: 0.7em;
-	font-weight: 100;
+    font-size: 0.7em;
+    font-weight: 100;
 }
 
 .jpcmstagcloud .cloud_list a.tag2 {
-	font-size: 0.8em;
-	font-weight: 200;
+    font-size: 0.8em;
+    font-weight: 200;
 }
 
 .jpcmstagcloud .cloud_list a.tag3 {
-	font-size: 0.9em;
-	font-weight: 300;
+    font-size: 0.9em;
+    font-weight: 300;
 }
 
 .jpcmstagcloud .cloud_list a.tag4 {
-	font-size: 1.0em;
-	font-weight: 400;
+    font-size: 1.0em;
+    font-weight: 400;
 }
 
 .jpcmstagcloud .cloud_list a.tag5 {
-	font-size: 1.2em;
-	font-weight: 500;
+    font-size: 1.2em;
+    font-weight: 500;
 }
 
 .jpcmstagcloud .cloud_list a.tag6 {
-	font-size: 1.4em;
-	font-weight: 600;
+    font-size: 1.4em;
+    font-weight: 600;
 }
 
 .jpcmstagcloud .cloud_list a.tag7 {
-	font-size: 1.6em;
-	font-weight: 700;
+    font-size: 1.6em;
+    font-weight: 700;
 }
 
 .jpcmstagcloud .cloud_list a.tag8 {
-	font-size: 1.8em;
-	font-weight: 800;
+    font-size: 1.8em;
+    font-weight: 800;
 }
 
 .jpcmstagcloud .cloud_list a.tag9 {
-	font-size: 2.2em;
-	font-weight: 900;
+    font-size: 2.2em;
+    font-weight: 900;
 }
 
 .jpcmstagcloud .cloud_list a.tag10 {
-	font-size: 2.5em;
-	font-weight: 900;
+    font-size: 2.5em;
+    font-weight: 900;
+}
+.cloud_list .badge, .badge2, article p .label {
+    display: inline-block;
+    padding: 4px 9px;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    line-height: 14px;
+    color: #ffffff;
+    vertical-align: baseline;
+    white-space: nowrap;
+    text-shadow:none !important;
+    background-color: #0088ce !important;
+    font-family: Rambla, Verdana, serif !important;
+    border-radius:3px !important;
+    transition: all 0.4s ease;
+}
+.cloud_list .badge:hover {
+    color:  #0088ce !important;
+    background-color: #fff !important;
+
+}
+.text-decoration-none{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+li h2, li article a{
+    font-weight:bold;
+    padding:3px;
+    background-color:#0088ce;
+    color:#fff !important;
+}
+li article a.btn{
+    color:#585858 !important;
 }
