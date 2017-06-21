@@ -4,24 +4,27 @@
     "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-	
+
     <package name="jpcasclient_do/jpcasclient/MailConfig" namespace="/do/jpcasclient/config" extends="entando-default">
-    	
-    	<!-- ######### Start ######### -->
-    	
-    	<action name="edit" class="jpcasclientConfigAction" method="edit">
+
+        <!-- ######### Start ######### -->
+
+        <action name="edit" class="jpcasclientConfigAction" method="edit">
             <result type="tiles">admin.jpcasclient.config.entryConfig</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
-        
-    	<action name="save" class="jpcasclientConfigAction" method="save">
-            <result name="input" type="tiles">admin.jpcasclient.config.entryConfig</result>
-        	<result type="tiles">admin.jpcasclient.config.saveConfirmed</result>
-        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+
+        <action name="save" class="jpcasclientConfigAction" method="save">
+            <result type="tiles">admin.jpcasclient.config.entryConfig</result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
-        
-    	<!-- ######### End ######### -->
-        
+
+        <!-- ######### End ######### -->
+
     </package>
-    
+
 </struts>
