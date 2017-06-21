@@ -8,7 +8,7 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="jpavatar.admin.menu.integration"/></li>
     <li>
-        <s:text name="jpavatar.admin.menu.uxcomponents"/>
+        <s:text name="breadcrumb.integrations.components"/>
     </li>
     <li class="page-title-container">
         <s:text name="title.avatarManagement"/>
@@ -21,11 +21,10 @@
     <div class="row">
         <div class="col-sm-6">
             <h1>
-                <%-- DA CAPIRE --%>
                 <s:text name="title.avatar.settings"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="TO be inserted" data-placement="left" data-original-title="">
+                       data-content="<s:text name="title.avatarManagement.help" />" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -44,9 +43,8 @@
     </div>
 </div>
 <br>
-
-    <s:form cssClass="form-hor<div id="main">
-izontal" namespace="/do/jpavatar/Avatar" action="saveConfig" method="post" enctype="multipart/form-data">
+<div class="col-xs-12">
+    <s:form cssClass="form-horizontal" namespace="/do/jpavatar/Avatar" action="saveConfig" method="post" enctype="multipart/form-data">
 
         <fieldset class="form-group">
             <div class="col-xs-2 control-label">
@@ -55,17 +53,17 @@ izontal" namespace="/do/jpavatar/Avatar" action="saveConfig" method="post" encty
             <div class="col-xs-10 ">
                 <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-default <c:if test="${style == 'local'}"> active </c:if>">
-                        <input type="radio" class="radiocheck"
-                               name="avatarConfig.style" id="local_avatarConfig_style" value="local" />
-                               <%--<s:if test="systemParams['hypertextEditor'] == 'none'">checked="checked"</s:if> />--%>
-                               <c:if test="${style == 'local'}"> checked="checked" </c:if>
+                            <input type="radio" class="radiocheck"
+                                   name="avatarConfig.style" id="local_avatarConfig_style" value="local" />
+                        <%--<s:if test="systemParams['hypertextEditor'] == 'none'">checked="checked"</s:if> />--%>
+                        <c:if test="${style == 'local'}"> checked="checked" </c:if>
                         <s:text name="label.avatarConfig.style.local"/>
                     </label>
                     <label class="btn btn-default <c:if test="${style == 'gravatar'}"> active </c:if>">
-                        <input type="radio" class="radiocheck"
-                               name="avatarConfig.style" id="local_avatarConfig_style" value="local" />
-                               <%--<s:if test="systemParams['hypertextEditor'] == 'fckeditor'">checked="checked"</s:if> />--%>
-                                <c:if test="${style == 'gravatar'}"> checked="checked" </c:if>
+                            <input type="radio" class="radiocheck"
+                                   name="avatarConfig.style" id="local_avatarConfig_style" value="local" />
+                        <%--<s:if test="systemParams['hypertextEditor'] == 'fckeditor'">checked="checked"</s:if> />--%>
+                        <c:if test="${style == 'gravatar'}"> checked="checked" </c:if>
                         <s:text name="label.avatarConfig.style.gravatar"/>
                     </label>
                 </div>
@@ -81,6 +79,4 @@ izontal" namespace="/do/jpavatar/Avatar" action="saveConfig" method="post" encty
             </div>
         </div>
     </s:form>
-</div>
-
 </div>
