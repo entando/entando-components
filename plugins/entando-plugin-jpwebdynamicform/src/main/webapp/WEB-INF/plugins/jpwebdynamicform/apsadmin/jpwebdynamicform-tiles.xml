@@ -22,23 +22,23 @@
     <!-- ********* START Messages Management Area ********* -->
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.list">
-        <put-attribute name="title" value="admin.jpwebdynamicform.title.messageManagement"/>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
         <put-attribute name="extraResources" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/common/layouts/assets-more/calendar.jsp"/>
         <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/messageFinding.jsp"/>
     </definition>
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.view">
-        <put-attribute name="title" value="admin.jpwebdynamicform.title.messageManagement"/>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
         <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/viewMessage.jsp"/>
     </definition>
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.entryAnswer">
-        <put-attribute name="title" value="admin.jpwebdynamicform.title.messageManagement"/>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
         <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/entryAnswer.jsp"/>
     </definition>
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.trash">
-        <put-attribute name="title" value="admin.jpwebdynamicform.title.messageManagement"/>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
         <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/trashMessage.jsp"/>
     </definition>
 
@@ -52,7 +52,7 @@
     <!-- ********* Entity Management ********* -->
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.entityManagement.viewEntityTypes">
-        <put-attribute name="title" value="title.entityManagement" />
+        <put-attribute name="title" value="jpwebdynamicform.name" />
         <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/entity-message-list.jsp" />
     </definition>
 

@@ -87,7 +87,7 @@ public class MessageManager extends ApsEntityManager implements IMessageManager,
 			IApsEntity type = types.get(i);
 			SmallMessageType smallMessageType = new SmallMessageType();
 			smallMessageType.setCode(type.getTypeCode());
-			smallMessageType.setDescr(type.getTypeDescr());
+			smallMessageType.setDescr(type.getTypeDescription());
 			smallMessageTypes.put(smallMessageType.getCode(), smallMessageType);
 		}
 		this.setSmallMessageTypesMap(smallMessageTypes);
