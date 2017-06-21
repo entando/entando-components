@@ -5,9 +5,11 @@
 
 <wp:ifauthorized permission="superuser">
 	
-	<li role="presentation">
+	<li class="list-group-item">
 		<a role="menuitem"  href="<s:url action="list" namespace="/do/jpactionlogger/ActionLogger" />">
-			<s:text name="menu.jpactionlogger.actionLogger.list" />
+			<span class="list-group-item-value">
+				<s:text name="menu.jpactionlogger.actionLogger.list" />
+			</span>
 		</a>
 	</li>
 </wp:ifauthorized>
