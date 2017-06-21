@@ -117,73 +117,73 @@
 <s:if test="%{#contentTypesVar.size > 0}">
     <wp:ifauthorized permission="superuser" var="isSuperuser" />
     <s:set var="isSuperuserVar">${isSuperuser}</s:set>
-        <div class="col-xs-12 no-padding">
-            <div class="mt-20">
-                <table class="table table-striped table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>
-                            <s:text name="contentType" />
-                        </th>
+
+        <div class="mt-20">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
                         <th>
-                            <s:text name="label.status.info" />
-                        </th>
-                        <th class="table-w-5 text-center">
-                            <s:text name="label.actions"/>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <s:iterator value="#contentTypesVar" var="contentTypeVar" status="counter">
-                        <s:set var="entityAnchor" value="%{'entityCounter'+#counter.count}" />
-                        <tr class="dl-horizontal dl-striped panel padding-base-top padding-base-bottom">
-                            <td class="col-md-5">
-                                <s:property value="#contentTypeVar.typeDescr" />&#32;<code><s:property value="#contentTypeVar.typeCode" /></code>
-                            </td>
-                            <td class="col-md-6">
-                                <s:set var="rssMappingVar" value="%{getContentMapping(#contentTypeVar.typeCode)}" />
-                                <s:if test="null == #rssMappingVar">
-                                    <s:text name="contenttype.not.configurable" />
+                        <s:text name="contentType" />
+                    </th>
+                    <th>
+                        <s:text name="label.status.info" />
+                    </th>
+                    <th class="table-w-5 text-center">
+                        <s:text name="label.actions"/>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <s:iterator value="#contentTypesVar" var="contentTypeVar" status="counter">
+                    <s:set var="entityAnchor" value="%{'entityCounter'+#counter.count}" />
+                    <tr class="dl-horizontal dl-striped panel padding-base-top padding-base-bottom">
+                        <td class="col-md-5">
+                            <s:property value="#contentTypeVar.typeDescr" />&#32;<code><s:property value="#contentTypeVar.typeCode" /></code>
+                        </td>
+                        <td class="col-md-6">
+                            <s:set var="rssMappingVar" value="%{getContentMapping(#contentTypeVar.typeCode)}" />
+                            <s:if test="null == #rssMappingVar">
+                                <s:text name="contenttype.not.configurable" />
+                            </s:if>
+                            <s:else>
+                                <s:text name="title" />:&#32;<code><s:property value="#rssMappingVar.titleAttributeName" /></code>
+                                <s:if test="null != #rssMappingVar.descriptionAttributeName">,
+                                    <s:text name="description" />:&#32;<code><s:property value="#rssMappingVar.descriptionAttributeName" /></code>
                                 </s:if>
-                                <s:else>
-                                    <s:text name="title" />:&#32;<code><s:property value="#rssMappingVar.titleAttributeName" /></code>
-                                    <s:if test="null != #rssMappingVar.descriptionAttributeName">,
-                                        <s:text name="description" />:&#32;<code><s:property value="#rssMappingVar.descriptionAttributeName" /></code>
-                                    </s:if>
-                                </s:else>
-                            </td>
-                            <td class="text-center table-view-pf-actions">
-                                <div class="dropdown dropdown-kebab-pf">
-                                    <p class="sr-only"><s:text name="label.actions"/></p>
-                                    <span class="btn btn-menu-right dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="fa fa-ellipsis-v"></span>
-                                    </span>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li>
-                                            <s:if test="#isSuperuserVar == 'true'">
-                                                <a id="<s:property value="#entityAnchor" />"
-                                                   href="<s:url namespace="/do/Entity" action="initEditEntityType">
-                                                       <s:param name="entityManagerName">jacmsContentManager</s:param>
-                                                       <s:param name="entityTypeCode"><s:property value="#contentTypeVar.typeCode" /></s:param>
-                                                   </s:url>"
-                                                   title="<s:text name="label.edit" />: <s:property value="#contentTypeVar.typeDescr" />">
-                                                    <span class="sr-only"><s:text name="label.edit" />&#32;<s:property value="#contentTypeVar.typeDescr" /></span>
-                                                    <s:text name="label.edit" />
-                                                </a>
-                                            </s:if>
-                                            <s:else>
-                                                &ndash;
-                                            </s:else>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                    </s:iterator>
-                </tbody>
-            </table>
-        </div>
+                            </s:else>
+                        </td>
+                        <td class="text-center table-view-pf-actions">
+                            <div class="dropdown dropdown-kebab-pf">
+                                <p class="sr-only"><s:text name="label.actions"/></p>
+                                <span class="btn btn-menu-right dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="fa fa-ellipsis-v"></span>
+                                </span>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li>
+                                        <s:if test="#isSuperuserVar == 'true'">
+                                            <a id="<s:property value="#entityAnchor" />"
+                                               href="<s:url namespace="/do/Entity" action="initEditEntityType">
+                                                   <s:param name="entityManagerName">jacmsContentManager</s:param>
+                                                   <s:param name="entityTypeCode"><s:property value="#contentTypeVar.typeCode" /></s:param>
+                                               </s:url>"
+                                               title="<s:text name="label.edit" />: <s:property value="#contentTypeVar.typeDescr" />">
+                                                <span class="sr-only"><s:text name="label.edit" />&#32;<s:property value="#contentTypeVar.typeDescr" /></span>
+                                                <s:text name="label.edit" />
+                                            </a>
+                                        </s:if>
+                                        <s:else>
+                                            &ndash;
+                                        </s:else>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </s:iterator>
+            </tbody>
+        </table>
     </div>
+
 </s:if>
 <s:else>
     <br/>
