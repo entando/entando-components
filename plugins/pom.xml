@@ -76,6 +76,7 @@
 		-->
 		<module>entando-plugin-jpfileattribute</module>
 		<!-- <module>entando-plugin-jpcollaboration</module> -->
+		<module>entando-plugin-jpcontentscheduler</module>
 		<!--
 <module>entando-plugin-jpwebform</module>
 		-->

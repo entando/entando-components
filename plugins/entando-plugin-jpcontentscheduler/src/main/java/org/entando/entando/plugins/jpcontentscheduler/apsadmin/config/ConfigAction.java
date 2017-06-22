@@ -24,6 +24,7 @@ package org.entando.entando.plugins.jpcontentscheduler.apsadmin.config;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentJobs;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.IContentSchedulerManager;
+import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentThreadConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -46,10 +47,16 @@ public class ConfigAction extends BaseAction {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ConfigAction.class);
 
+	private static final String THREAD_CONFIG_SESSION_PARAM = "threadConfig";
+
 	public String viewItem() {
 		try {
 			String config = this.getBaseConfigManager().getConfigItem(this.getItem());
 			this.setConfig(config);
+
+			ContentThreadConfig threadConfig = this.getContentSchedulerManager().getConfig();
+			this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM, threadConfig);
+
 		} catch (Throwable t) {
 			_logger.error("Error in viewItem", t);
 			return FAILURE;
@@ -72,15 +79,12 @@ public class ConfigAction extends BaseAction {
 		try {
 			ContentJobs contentJobs = new ContentJobs();
 			// this._contentJobs.setApplicationContext(apx);
-			ICategoryManager categoryManager = (ICategoryManager) ApsWebApplicationUtils.getBean(SystemConstants.CATEGORY_MANAGER,
+			ICategoryManager categoryManager = (ICategoryManager) ApsWebApplicationUtils.getBean(SystemConstants.CATEGORY_MANAGER, this.getRequest());
+			IContentSchedulerManager contentSchedulerManager = (IContentSchedulerManager) ApsWebApplicationUtils.getBean("jpcontentschedulerContentSchedulerManager",
 					this.getRequest());
-			IContentSchedulerManager contentSchedulerManager = (IContentSchedulerManager) ApsWebApplicationUtils
-					.getBean("jpcontentschedulerContentSchedulerManager", this.getRequest());
-			IContentManager contentManager = (IContentManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MANAGER,
-					this.getRequest());
+			IContentManager contentManager = (IContentManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MANAGER, this.getRequest());
 			IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.getRequest());
-			IContentModelManager contentModelManager = (IContentModelManager) ApsWebApplicationUtils
-					.getBean(JacmsSystemConstants.CONTENT_MODEL_MANAGER, this.getRequest());
+			IContentModelManager contentModelManager = (IContentModelManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MODEL_MANAGER, this.getRequest());
 			contentJobs.setCategoryManager(categoryManager);
 			contentJobs.setContentManager(contentManager);
 			contentJobs.setContentModelManager(contentModelManager);
@@ -119,7 +123,20 @@ public class ConfigAction extends BaseAction {
 		return _baseConfigManager;
 	}
 
+	public ContentThreadConfig getThreadConfig() {
+		return (ContentThreadConfig) this.getRequest().getSession().getAttribute(THREAD_CONFIG_SESSION_PARAM);
+	}
+
+	public IContentSchedulerManager getContentSchedulerManager() {
+		return _contentSchedulerManager;
+	}
+
+	public void setContentSchedulerManager(IContentSchedulerManager contentSchedulerManager) {
+		this._contentSchedulerManager = contentSchedulerManager;
+	}
+
 	private ConfigInterface _baseConfigManager;
+	private IContentSchedulerManager _contentSchedulerManager;
 
 	private String _item = ContentThreadConstants.CONTENTTHREAD_CONFIG_ITEM;
 	private String _config;

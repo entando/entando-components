@@ -54,10 +54,10 @@ public class ContentThreadConfigDOM {
 	 * Estrae la configurazione
 	 *
 	 * @param xml
-	 *            The xml containing the configuration.
+	 * The xml containing the configuration.
 	 * @return The contentthread configuration.
 	 * @throws ApsSystemException
-	 *             In case of parsing errors.
+	 * In case of parsing errors.
 	 */
 	public ContentThreadConfig extractConfig(String xml) throws ApsSystemException {
 		ContentThreadConfig config = new ContentThreadConfig();
@@ -81,9 +81,9 @@ public class ContentThreadConfigDOM {
 	 * {@link NewsletterConfig}
 	 *
 	 * @param root
-	 *            l'elemento contentThreadConfig
+	 * l'elemento contentThreadConfig
 	 * @param contentThreadConfig
-	 *            l'oggetto contenitore della configurazione
+	 * l'oggetto contenitore della configurazione
 	 */
 	private void setSitecode(Element root, ContentThreadConfig contentThreadConfig) {
 		Attribute sitecodeAttr = root.getAttribute("sitecode");
@@ -97,10 +97,10 @@ public class ContentThreadConfigDOM {
 	 * Create an xml containing the newsletter configuration.
 	 *
 	 * @param config
-	 *            The contentThread configuration.
+	 * The contentThread configuration.
 	 * @return The xml containing the configuration.
 	 * @throws ApsSystemException
-	 *             In case of errors.
+	 * In case of errors.
 	 */
 	public String createConfigXml(ContentThreadConfig config) throws ApsSystemException {
 		Element root = this.createConfigElement(config);
@@ -152,8 +152,7 @@ public class ContentThreadConfigDOM {
 		Iterator i = usersList.iterator();
 		while (i.hasNext()) {
 			Element currElem = (Element) i.next();
-			config.getUsersContentType().put(currElem.getAttributeValue(USER_USERNAME_ATTR),
-					getContentTypes(currElem.getAttributeValue(USER_CONTENTTYPE_ATTR)));
+			config.getUsersContentType().put(currElem.getAttributeValue(USER_USERNAME_ATTR), getContentTypes(currElem.getAttributeValue(USER_CONTENTTYPE_ATTR)));
 		}
 	}
 
@@ -186,17 +185,19 @@ public class ContentThreadConfigDOM {
 					fieldNameModelIdContentReplace = currElem.getAttributeValue(MODEL_ID_CONTENT_REPLACE_ATTR);
 				}
 				String suspend = null;
-				if (currElem.getAttributeValue(SUSPEND_ATTR) != null
-						&& (currElem.getAttributeValue(SUSPEND_ATTR).equalsIgnoreCase("true")
-								|| currElem.getAttributeValue(SUSPEND_ATTR).equalsIgnoreCase("false"))) {
+				if (currElem.getAttributeValue(SUSPEND_ATTR) != null && (currElem.getAttributeValue(SUSPEND_ATTR).equalsIgnoreCase("true") || currElem.getAttributeValue(
+						SUSPEND_ATTR).equalsIgnoreCase("false"))) {
 					suspend = currElem.getAttributeValue(SUSPEND_ATTR);
 				} else {
 					suspend = "";
 				}
-				config.getTypesList()
-						.add(new ContentTypeElem(currElem.getAttributeValue(TYPE_ATTR),
-								currElem.getAttributeValue(START_DATE_ATTR), currElem.getAttributeValue(END_DATE_ATTR),
-								fieldNameIdContentReplace, suspend, listCats, fieldNameModelIdContentReplace));
+				config.getTypesList().add(new ContentTypeElem(currElem.getAttributeValue(TYPE_ATTR),
+						currElem.getAttributeValue(START_DATE_ATTR),
+						currElem.getAttributeValue(END_DATE_ATTR),
+						fieldNameIdContentReplace,
+						suspend,
+						listCats,
+						fieldNameModelIdContentReplace));
 				listCats = null;
 			}
 		}
@@ -206,10 +207,9 @@ public class ContentThreadConfigDOM {
 	 * Estrae la parte di configurazione relativa alla mail.
 	 * 
 	 * @param root
-	 *            L'elemento radice contenente il sottoelemento relativo alle
-	 *            mail.
+	 * L'elemento radice contenente il sottoelemento relativo alle mail.
 	 * @param config
-	 *            La configurazione del servizio contentThread.
+	 * La configurazione del servizio contentThread.
 	 */
 	private void extractMailConfig(Element root, ContentThreadConfig config) {
 		Element mailElem = root.getChild(MAIL_ELEM);
@@ -246,7 +246,7 @@ public class ContentThreadConfigDOM {
 	 * Crea l'elemento della configurazione del servizio di contentThread.
 	 * 
 	 * @param config
-	 *            La configurazione del servizio contentThread.
+	 * La configurazione del servizio contentThread.
 	 * @return L'elemento della configurazione del servizio di contentThread.
 	 */
 	private Element createConfigElement(ContentThreadConfig config) {
@@ -331,18 +331,18 @@ public class ContentThreadConfigDOM {
 		for (Iterator<ContentTypeElem> i = ctsList.iterator(); i.hasNext();) {
 			ContentTypeElem elem = i.next();
 			Element ctElem = new Element(CONTENTTYPE_ELEM);
-			ctElem.setAttribute(TYPE_ATTR, elem.getContentType());
-			ctElem.setAttribute(START_DATE_ATTR, elem.getStartDateAttr());
-			ctElem.setAttribute(END_DATE_ATTR, elem.getEndDateAttro());
-			ctElem.setAttribute(ID_CONTENT_REPLACE_ATTR, elem.getIdContentReplace());
-			ctElem.setAttribute(MODEL_ID_CONTENT_REPLACE_ATTR, elem.getModelIdContentReplace());
-			ctElem.setAttribute(SUSPEND_ATTR, elem.getSuspend());
+			this.safeSetAttr(ctElem, TYPE_ATTR, elem.getContentType());
+			this.safeSetAttr(ctElem, START_DATE_ATTR, elem.getStartDateAttr());
+			this.safeSetAttr(ctElem, END_DATE_ATTR, elem.getEndDateAttro());
+			this.safeSetAttr(ctElem, ID_CONTENT_REPLACE_ATTR, elem.getIdContentReplace());
+			this.safeSetAttr(ctElem, MODEL_ID_CONTENT_REPLACE_ATTR, elem.getModelIdContentReplace());
+			this.safeSetAttr(ctElem, SUSPEND_ATTR, elem.getSuspend());
 
 			List<String> catList = elem.getIdsCategories();
 			for (Iterator<String> i2 = catList.iterator(); i2.hasNext();) {
 				String cat = i2.next();
 				Element catElem = new Element(CATEGORY_ELEM);
-				catElem.setAttribute(CODE_ATTR, cat);
+				this.safeSetAttr(ctElem, CODE_ATTR, cat);
 				ctElem.addContent(catElem);
 			}
 			ctsElement.addContent(ctElem);
@@ -350,11 +350,17 @@ public class ContentThreadConfigDOM {
 		return ctsElement;
 	}
 
+	private void safeSetAttr(Element element, String attrName, String attrValue) {
+		if (null != attrValue) {
+			element.setAttribute(attrName, attrValue);
+		}
+	}
+
 	/**
 	 * Crea l'elemento della configurazione relativa alle mail.
 	 * 
 	 * @param config
-	 *            La configurazione del servizio contentThread.
+	 * La configurazione del servizio contentThread.
 	 * @return L'elemento di configurazione relativo alle mail.
 	 */
 	private Element createMailElement(ContentThreadConfig config) {
@@ -398,10 +404,10 @@ public class ContentThreadConfigDOM {
 	 * Returns the Xml element from a given text.
 	 * 
 	 * @param xmlText
-	 *            The text containing an Xml.
+	 * The text containing an Xml.
 	 * @return The Xml element from a given text.
 	 * @throws ApsSystemException
-	 *             In case of parsing exceptions.
+	 * In case of parsing exceptions.
 	 */
 	private Element getRootElement(String xmlText) throws ApsSystemException {
 		SAXBuilder builder = new SAXBuilder();
