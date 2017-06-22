@@ -80,7 +80,7 @@
 		<dependency>
 			<groupId>com.jgeppert.struts2.jquery</groupId>
 			<artifactId>struts2-jquery-plugin</artifactId>
-			<version>3.7.1</version>
+			<version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
@@ -95,7 +95,7 @@
 		<dependency>
 			<groupId>com.jgeppert.struts2.jquery</groupId>
 			<artifactId>struts2-jquery-grid-plugin</artifactId>
-			<version>3.7.1</version>
+			<version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
@@ -110,7 +110,7 @@
 		<dependency>
 			<groupId>com.jgeppert.struts2.jquery</groupId>
 			<artifactId>struts2-jquery-richtext-plugin</artifactId>
-			<version>3.7.1</version>
+			<version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
@@ -125,7 +125,7 @@
 		<dependency>
 			<groupId>com.jgeppert.struts2.jquery</groupId>
 			<artifactId>struts2-jquery-tree-plugin</artifactId>
-			<version>3.7.1</version>
+			<version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
@@ -140,7 +140,7 @@
 		<dependency>
 			<groupId>com.jgeppert.struts2.jquery</groupId>
 			<artifactId>struts2-jquery-mobile-plugin</artifactId>
-			<version>3.7.1</version>
+			<version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
