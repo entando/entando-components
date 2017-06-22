@@ -4,18 +4,18 @@
     "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-    
+
     <package name="jpcontentscheduler_do/jpcontentscheduler/config" namespace="/do/jpcontentscheduler/config" extends="entando-default">
-    	
+
         <action name="viewItem" class="jpcontentschedulerConfigAction" method="viewItem">
             <result type="tiles">admin.jpcontentscheduler.viewItem</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
-        <action name="viewEmail" class="jpcontentschedulerConfigAction" method="viewEamil">
+        <action name="viewEmail" class="jpcontentschedulerConfigAction" method="viewEmail">
             <result type="tiles">admin.jpcontentscheduler.viewEmail</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
-        
+
         <!-- USERS -->
         <action name="viewUsers" class="jpcontentschedulerConfigUsersAction" method="viewUsers">
             <result type="tiles">admin.jpcontentscheduler.viewUsers</result>
