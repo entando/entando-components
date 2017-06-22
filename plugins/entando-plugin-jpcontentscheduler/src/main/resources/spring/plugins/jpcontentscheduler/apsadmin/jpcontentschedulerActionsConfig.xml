@@ -12,7 +12,17 @@
     <bean id="jpcontentschedulerConfigAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ConfigAction" 
           scope="prototype" parent="abstractBaseAction" >
         <property name="baseConfigManager" ref="BaseConfigManager" />
+        <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
     </bean>
+    
+    <bean id="jpcontentschedulerConfigUsersAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ContentThreadConfigUsersAction" 
+          scope="prototype" parent="abstractBaseAction" >
+        <property name="baseConfigManager" ref="BaseConfigManager" />
+        <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
+        <property name="contentManager" ref="jacmsContentManager" />
+    </bean>
+    
+    
     
     <bean id="jpcontentschedulerAdminAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.AdminAction" 
           scope="prototype" parent="abstractBaseAction" >
