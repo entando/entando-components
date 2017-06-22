@@ -54,11 +54,40 @@ public class ConfigAction extends BaseAction {
 			String config = this.getBaseConfigManager().getConfigItem(this.getItem());
 			this.setConfig(config);
 
-			ContentThreadConfig threadConfig = this.getContentSchedulerManager().getConfig();
-			this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM, threadConfig);
+			setConfigOnSession();
 
 		} catch (Throwable t) {
 			_logger.error("Error in viewItem", t);
+			return FAILURE;
+		}
+		return Action.SUCCESS;
+	}
+
+	public String viewUsers() {
+		try {
+			this.setConfigOnSession();
+		} catch (Throwable t) {
+			_logger.error("Error in viewUsers", t);
+			return FAILURE;
+		}
+		return Action.SUCCESS;
+	}
+
+	public String viewGroups() {
+		try {
+			this.setConfigOnSession();
+		} catch (Throwable t) {
+			_logger.error("Error in viewGroups", t);
+			return FAILURE;
+		}
+		return Action.SUCCESS;
+	}
+
+	public String viewContentTypes() {
+		try {
+			this.setConfigOnSession();
+		} catch (Throwable t) {
+			_logger.error("Error in viewContentTypes", t);
 			return FAILURE;
 		}
 		return Action.SUCCESS;
@@ -97,6 +126,11 @@ public class ConfigAction extends BaseAction {
 			return FAILURE;
 		}
 		return Action.SUCCESS;
+	}
+
+	private void setConfigOnSession() {
+		ContentThreadConfig threadConfig = this.getContentSchedulerManager().getConfig();
+		this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM, threadConfig);
 	}
 
 	public void setItem(String item) {

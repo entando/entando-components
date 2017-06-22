@@ -12,6 +12,22 @@
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
         
+        <action name="viewUsers" class="jpcontentschedulerConfigAction" method="viewUsers">
+            <result type="tiles">admin.jpcontentscheduler.viewUsers</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="viewGroups" class="jpcontentschedulerConfigAction" method="viewGroups">
+            <result type="tiles">admin.jpcontentscheduler.viewGroups</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <action name="viewContentTypes" class="jpcontentschedulerConfigAction" method="contentTypes">
+            <result type="tiles">admin.jpcontentscheduler.contentTypes</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        
         <action name="saveItem" class="jpcontentschedulerConfigAction" method="saveItem">
             <result type="tiles">admin.jpcontentscheduler.viewItem</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
