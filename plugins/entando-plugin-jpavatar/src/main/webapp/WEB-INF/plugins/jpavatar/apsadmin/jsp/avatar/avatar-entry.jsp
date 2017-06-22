@@ -8,7 +8,7 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="jpavatar.admin.menu.integration"/></li>
     <li>
-        <s:text name="jpavatar.admin.menu.uxcomponents"/>
+        <s:text name="breadcrumb.integrations.components"/>
     </li>
     <li class="page-title-container">
         <s:text name="title.avatarManagement"/>
@@ -18,11 +18,10 @@
     <div class="row">
         <div class="col-sm-6">
             <h1>
-                <%-- DA CAPIRE --%>
                 <s:text name="title.avatarManagement"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="TO be inserted" data-placement="left" data-original-title="">
+                       data-content="<s:text name="title.avatarManagement.help" />" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -50,25 +49,28 @@
                 <span class="pficon pficon-close"></span>
             </button>
             <span class="pficon pficon-error-circle-o"></span>
-            <strong><s:text name="message.title.FieldErrors" /></strong>.
+            <strong><s:text name="message.title.FieldErrors" /></strong>
             <ul>
                 <s:iterator value="fieldErrors">
                     <s:iterator value="value">
                         <li><s:property escapeHtml="false" /></li>
+                        </s:iterator>
                     </s:iterator>
-                </s:iterator>
             </ul>
         </div>
     </s:if>
 
     <s:if test="hasActionErrors()">
-        <div class="alert alert-danger alert-dismissable fade in">
-            <button class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-            <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                <span class="pficon pficon-close"></span>
+            </button>
+            <span class="pficon pficon-error-circle-o"></span>
+            <strong><s:text name="message.title.ActionErrors" /></strong>
             <ul>
                 <s:iterator value="actionErrors">
                     <li><s:property escapeHtml="false" /></li>
-                </s:iterator>
+                    </s:iterator>
             </ul>
         </div>
     </s:if>
@@ -85,40 +87,44 @@
             </s:iterator>
         </div>
     </s:if>
+    <div class="col-xs-12">
+        <jpavatar:avatar var="currentAvatar" returnDefaultAvatar="true" avatarStyleVar="style" />
 
-    <jpavatar:avatar var="currentAvatar" returnDefaultAvatar="true" avatarStyleVar="style" />
-    <p><s:text name="jpavatar.label.current.avatar" /></p>
-    <img src="<s:url action="avatarStream" namespace="/do/currentuser/avatar"><s:param name="gravatarSize">34</s:param></s:url>"/>
-    <c:if test="${style == 'local'}">
-        <c:choose>
-            <c:when test="${null == currentAvatar}">
-                <s:form cssClass="form-horizontal" namespace="/do/jpavatar/Avatar" action="save" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <label for="jpavatar_file"><s:text name="label.avatarImage" /></label>
-                            <s:file name="avatar" />
+        <h3>
+            <s:text name="jpavatar.label.current.avatar" />
+        </h3>
+        <img src="<s:url action="avatarStream" namespace="/do/currentuser/avatar"><s:param name="gravatarSize">34</s:param></s:url>"/>
+        <c:if test="${style == 'local'}">
+            <c:choose>
+                <c:when test="${null == currentAvatar}">
+                    <s:form cssClass="form-horizontal" namespace="/do/jpavatar/Avatar" action="save" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <label for="jpavatar_file"><s:text name="label.avatarImage" /></label>
+                                <s:file name="avatar" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
-                                <s:text name="label.save" />
-                            </wpsf:submit>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
+                                    <s:text name="label.save" />
+                                </wpsf:submit>
+                            </div>
                         </div>
-                    </div>
-                </s:form>
-            </c:when>
-            <c:otherwise>
-                <s:form namespace="/do/jpavatar/Avatar" action="bin" cssClass="form-horizontal">
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
-                                <s:text name="%{getText('label.remove')}" />
-                            </wpsf:submit>
+                    </s:form>
+                </c:when>
+                <c:otherwise>
+                    <s:form namespace="/do/jpavatar/Avatar" action="bin" cssClass="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
+                                    <s:text name="%{getText('label.remove')}" />
+                                </wpsf:submit>
+                            </div>
                         </div>
-                    </div>
-                </s:form>
-            </c:otherwise>
-        </c:choose>
-    </c:if>
+                    </s:form>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
+    </div>
 </div>

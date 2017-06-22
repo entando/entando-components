@@ -26,19 +26,19 @@ import junit.framework.TestSuite;
 
 import com.agiletec.plugins.jpcasclient.aps.system.services.auth.TestCasClientUtils;
 import com.agiletec.plugins.jpcasclient.aps.system.services.config.parse.TestConfigDOM;
+import com.agiletec.plugins.jpcasclient.aps.system.services.controller.control.TestCasClientAuthenticatorControlService;
 
 public class AllTests {
-	
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for jpcasclient");
-		System.out.println("Test for jpcasclient");
-		
-//		suite.addTestSuite(TestCasClientUtils.class);
-		
-		suite.addTestSuite(TestConfigDOM.class);
 
-		
-		return suite;
-	}
-	
+    public static Test suite() {
+        TestSuite suite = new TestSuite("Test for jpcasclient");
+        System.out.println("Test for jpcasclient");
+
+        suite.addTestSuite(TestCasClientUtils.class);
+        suite.addTestSuite(TestCasClientAuthenticatorControlService.class);
+        suite.addTestSuite(TestConfigDOM.class);
+
+        return suite;
+    }
+
 }
