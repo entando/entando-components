@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentThreadConfig;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentTypeElem;
 import org.jdom.Attribute;
@@ -86,7 +87,7 @@ public class ContentThreadConfigDOM {
 	 * l'oggetto contenitore della configurazione
 	 */
 	private void setSitecode(Element root, ContentThreadConfig contentThreadConfig) {
-		Attribute sitecodeAttr = root.getAttribute("sitecode");
+		Attribute sitecodeAttr = root.getAttribute(SITECODE);
 		if (null != sitecodeAttr && sitecodeAttr.getValue().trim().length() > 0) {
 			String sitecode = sitecodeAttr.getValue();
 			contentThreadConfig.setSitecode(sitecode);
@@ -251,6 +252,7 @@ public class ContentThreadConfigDOM {
 	 */
 	private Element createConfigElement(ContentThreadConfig config) {
 		Element configElem = new Element(ROOT);
+		configElem.setAttribute(SITECODE, config.getSitecode());
 
 		Element schedulerElem = this.createSchedulerElement(config);
 		configElem.addContent(schedulerElem);
@@ -258,8 +260,11 @@ public class ContentThreadConfigDOM {
 		Element globalCatElem = this.createGlobalCatElement(config);
 		configElem.addContent(globalCatElem);
 
-		Element groupsElem = this.createGroupsElement(config);
-		configElem.addContent(groupsElem);
+		Element contentReplaceElem = this.createContentReplaceElement(config);
+		configElem.addContent(contentReplaceElem);
+
+		// Element groupsElem = this.createGroupsElement(config);
+		// configElem.addContent(groupsElem);
 
 		Element usersElem = this.createUsersElement(config);
 		configElem.addContent(usersElem);
@@ -285,16 +290,29 @@ public class ContentThreadConfigDOM {
 		return gloabalCatElement;
 	}
 
-	private String setContentTypes(List<String> list) {
-		StringBuilder ans = new StringBuilder("");
-		for (Iterator<String> i = list.iterator(); i.hasNext();) {
-			String curr = i.next();
-			ans.append(curr);
-			if (i.hasNext()) {
-				ans.append(",");
-			}
+	//	private String setContentTypes(List<String> list) {
+	//		StringBuilder ans = new StringBuilder("");
+	//		for (Iterator<String> i = list.iterator(); i.hasNext();) {
+	//			String curr = i.next();
+	//			ans.append(curr);
+	//			if (i.hasNext()) {
+	//				ans.append(",");
+	//			}
+	//		}
+	//		return ans.toString();
+	//	}
+
+	private Element createContentReplaceElement(ContentThreadConfig config) {
+		Element contentReplaceElement = new Element(CONTENTREPL_ELEM);
+		String contentId = config.getContentIdRepl();
+		if (StringUtils.isNotBlank(contentId)) {
+			contentReplaceElement.setAttribute(CONTENTREPL_CODE_ATTR, contentId);
 		}
-		return ans.toString();
+		String modelId = config.getContentModelRepl();
+		if (StringUtils.isNotBlank(modelId)) {
+			contentReplaceElement.setAttribute(CONTENTREPL_MODEL_ATTR, modelId);
+		}
+		return contentReplaceElement;
 	}
 
 	private Element createGroupsElement(ContentThreadConfig config) {
@@ -303,9 +321,10 @@ public class ContentThreadConfigDOM {
 		Set<String> keys = groupsMap.keySet();
 		for (Iterator<String> i = keys.iterator(); i.hasNext();) {
 			String key = i.next();
-			String value = setContentTypes(groupsMap.get(key));
+			//String contentTypes = StringUtils.join(groupsMap.get(key), ",");
 			Element groupElem = new Element(GROUP_ELEM);
-			groupElem.setAttribute(GROUP_ID_ATTR, value);
+			groupElem.setAttribute(GROUP_ID_ATTR, key);
+
 			groupsElement.addContent(groupElem);
 		}
 		return groupsElement;
@@ -317,9 +336,11 @@ public class ContentThreadConfigDOM {
 		Set<String> keys = usersMap.keySet();
 		for (Iterator<String> i = keys.iterator(); i.hasNext();) {
 			String key = i.next();
-			String value = setContentTypes(usersMap.get(key));
+			String contentTypes = StringUtils.join(usersMap.get(key), ",");
+
 			Element userElem = new Element(USER_ELEM);
-			userElem.setAttribute(USER_USERNAME_ATTR, value);
+			userElem.setAttribute(USER_USERNAME_ATTR, key);
+			userElem.setAttribute(USER_CONTENTTYPE_ATTR, contentTypes);
 			usersElement.addContent(userElem);
 		}
 		return usersElement;
@@ -374,6 +395,8 @@ public class ContentThreadConfigDOM {
 		subject.addContent(new CDATA(config.getSubject()));
 		mailElem.addContent(subject);
 
+		//
+
 		Element htmlHeader = new Element(MAIL_HTML_HEADER_CHILD);
 		htmlHeader.addContent(new CDATA(config.getHtmlHeader()));
 		mailElem.addContent(htmlHeader);
@@ -386,6 +409,8 @@ public class ContentThreadConfigDOM {
 		htmlSeparator.addContent(new CDATA(config.getHtmlSeparator()));
 		mailElem.addContent(htmlSeparator);
 
+		//
+
 		Element textHeader = new Element(MAIL_TEXT_HEADER_CHILD);
 		textHeader.addContent(new CDATA(config.getTextHeader()));
 		mailElem.addContent(textHeader);
@@ -397,6 +422,35 @@ public class ContentThreadConfigDOM {
 		Element textSeparator = new Element(MAIL_TEXT_SEPARATOR_CHILD);
 		textSeparator.addContent(new CDATA(config.getTextSeparator()));
 		mailElem.addContent(textSeparator);
+
+		//
+
+		Element htmlHeaderM = new Element(MAIL_HTML_HEADER_CHILD_MOVE);
+		htmlHeaderM.addContent(new CDATA(config.getHtmlHeaderMove()));
+		mailElem.addContent(htmlHeaderM);
+
+		Element htmlFooterM = new Element(MAIL_HTML_FOOTER_CHILD_MOVE);
+		htmlFooterM.addContent(new CDATA(config.getHtmlFooterMove()));
+		mailElem.addContent(htmlFooterM);
+
+		Element htmlSeparatorM = new Element(MAIL_HTML_SEPARATOR_CHILD_MOVE);
+		htmlSeparatorM.addContent(new CDATA(config.getHtmlSeparatorMove()));
+		mailElem.addContent(htmlSeparatorM);
+
+		//
+
+		Element textHeaderM = new Element(MAIL_TEXT_HEADER_CHILD_MOVE);
+		textHeaderM.addContent(new CDATA(config.getTextHeaderMove()));
+		mailElem.addContent(textHeaderM);
+
+		Element textFooterM = new Element(MAIL_TEXT_FOOTER_CHILD_MOVE);
+		textFooterM.addContent(new CDATA(config.getTextFooterMove()));
+		mailElem.addContent(textFooterM);
+
+		Element textSeparatorM = new Element(MAIL_TEXT_SEPARATOR_CHILD_MOVE);
+		textSeparatorM.addContent(new CDATA(config.getTextSeparatorMove()));
+		mailElem.addContent(textSeparatorM);
+
 		return mailElem;
 	}
 
@@ -428,6 +482,7 @@ public class ContentThreadConfigDOM {
 	}
 
 	private static final String ROOT = "contentThreadconfig";
+	private static final String SITECODE = "sitecode";
 
 	private static final String SCHEDULER_ELEM = "scheduler";
 	private static final String SCHEDULER_ACTIVE_ATTR = "active";

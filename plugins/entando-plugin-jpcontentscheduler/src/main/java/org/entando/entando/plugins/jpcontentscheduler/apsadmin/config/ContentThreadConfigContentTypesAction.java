@@ -24,11 +24,9 @@ package org.entando.entando.plugins.jpcontentscheduler.apsadmin.config;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.IContentSchedulerManager;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentThreadConfig;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentTypeElem;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.parse.ContentThreadConfigDOM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,8 +120,9 @@ public class ContentThreadConfigContentTypesAction extends BaseAction {
 		try {
 			ContentThreadConfig config = this.getContentSchedulerManager().getConfig();
 			config.setTypesList(this.getTypes());
-			String xml = new ContentThreadConfigDOM().createConfigXml(config);
-			this.getBaseConfigManager().updateConfigItem(ContentThreadConstants.CONTENTTHREAD_CONFIG_ITEM, xml);
+
+			this.getContentSchedulerManager().updateConfig(config);
+
 			this.addActionMessage(this.getText("jpcontentscheduler.saveItem.success"));
 		} catch (Throwable t) {
 			_logger.error("Error saving ContentTypeItem", t);

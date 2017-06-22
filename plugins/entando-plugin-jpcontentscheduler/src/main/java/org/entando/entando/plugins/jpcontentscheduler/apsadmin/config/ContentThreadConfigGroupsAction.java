@@ -26,10 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.IContentSchedulerManager;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentThreadConfig;
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.parse.ContentThreadConfigDOM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,8 +163,9 @@ public class ContentThreadConfigGroupsAction extends BaseAction {
 		try {
 			ContentThreadConfig config = this.getContentSchedulerManager().getConfig();
 			config.setGroupsContentType(this.getGroupsContentType());
-			String xml = new ContentThreadConfigDOM().createConfigXml(config);
-			this.getBaseConfigManager().updateConfigItem(ContentThreadConstants.CONTENTTHREAD_CONFIG_ITEM, xml);
+
+			this.getContentSchedulerManager().updateConfig(config);
+
 			this.addActionMessage(this.getText("jpcontentscheduler.saveItem.success"));
 		} catch (Throwable t) {
 			_logger.error("Error saving item", t);

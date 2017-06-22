@@ -61,8 +61,10 @@ public interface IContentSchedulerManager {
 	 */
 	public ContentThreadConfig getConfig();
 
-	public void sendMailWithResults(List<ContentState> publishedContents, List<ContentState> suspendedContents, List<ContentState> moveContents,
-			Date startJobDate, Date endJobDate) throws ApsSystemException;
+	public void updateConfig(ContentThreadConfig config) throws ApsSystemException;
+
+	public void sendMailWithResults(List<ContentState> publishedContents, List<ContentState> suspendedContents, List<ContentState> moveContents, Date startJobDate, Date endJobDate)
+			throws ApsSystemException;
 
 	/**
 	 * Return the desired system parameter

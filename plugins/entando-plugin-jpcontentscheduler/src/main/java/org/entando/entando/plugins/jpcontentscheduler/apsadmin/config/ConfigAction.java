@@ -105,7 +105,17 @@ public class ConfigAction extends BaseAction {
 
 	public String saveItem() {
 		try {
-			this.getBaseConfigManager().updateConfigItem(this.getItem(), this.getConfig());
+
+			ContentThreadConfig config = this.getContentSchedulerManager().getConfig();
+
+			config.setActive(this.getThreadConfig().isActive());
+			config.setGlobalCat(this.getThreadConfig().getGlobalCat());
+			config.setSitecode(this.getThreadConfig().getSitecode());
+			config.setContentIdRepl(this.getThreadConfig().getContentIdRepl());
+			config.setContentModelRepl(this.getThreadConfig().getContentModelRepl());
+
+			this.getContentSchedulerManager().updateConfig(config);
+
 			this.addActionMessage(this.getText("jpcontentscheduler.saveItem.success"));
 		} catch (Throwable t) {
 			_logger.error("Error saving item", t);
