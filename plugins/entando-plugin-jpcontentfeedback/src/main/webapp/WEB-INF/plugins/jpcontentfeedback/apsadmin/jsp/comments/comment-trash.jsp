@@ -27,8 +27,8 @@
 </div>
 <br>
 
-<div id="main">
-    <div class="table-responsive">
+<div>
+    <div class="col-xs-12">
         <table class="table table-bordered table-hover no-mb">
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.author"/></th>
