@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.opensymphony.xwork2.Action;
@@ -42,12 +44,12 @@ import com.opensymphony.xwork2.Action;
 /**
  * @author E.Santoboni
  */
-public class ContentThreadConfigUsersAction extends BaseAction {
+public class ContentThreadConfigGroupsAction extends BaseAction {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ContentThreadConfigUsersAction.class);
+	private static final Logger _logger = LoggerFactory.getLogger(ContentThreadConfigGroupsAction.class);
 
 	//private static final String THREAD_CONFIG_SESSION_PARAM = "threadConfig";
-	private static final String THREAD_CONFIG_SESSION_PARAM_USERS_CONTENT_TYPE = "threadConfigUsersContentType";
+	private static final String THREAD_CONFIG_SESSION_PARAM_GROUPS = "threadConfigGroups";
 
 	private static final String ALL_TYPES = "*";
 
@@ -56,12 +58,12 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 	 * 
 	 * @return
 	 */
-	public String viewUsers() {
+	public String viewGroups() {
 		try {
 			this.setConfigItemOnSession();
 
 		} catch (Throwable t) {
-			_logger.error("Error in viewUsers", t);
+			_logger.error("Error in viewGroups", t);
 			return FAILURE;
 		}
 		return Action.SUCCESS;
@@ -70,22 +72,22 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 	public String addContentType() {
 		try {
 
-			Map<String, List<String>> config = this.getUsersContentType();
+			Map<String, List<String>> config = this.getGroupsContentType();
 			boolean hasErrors = this.validateAdd();
 			if (this.hasErrors()) {
 				return INPUT;
 			}
 			if (!hasErrors) {
 
-				if (!config.containsKey(this.getUsername())) {
-					config.put(this.getUsername(), new ArrayList<String>());
+				if (!config.containsKey(this.getGroupName())) {
+					config.put(this.getGroupName(), new ArrayList<String>());
 				}
-				if (!config.get(this.getUsername()).contains(this.getContentType())) {
+				if (!config.get(this.getGroupName()).contains(this.getContentType())) {
 					if (this.getContentType().equals(ALL_TYPES)) {
-						config.get(this.getUsername()).clear();
+						config.get(this.getGroupName()).clear();
 					}
 
-					config.get(this.getUsername()).add(this.getContentType());
+					config.get(this.getGroupName()).add(this.getContentType());
 				}
 				this.setConfigItemOnSession(config);
 			}
@@ -99,18 +101,18 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 
 	public String removeContentType() {
 		try {
-			Map<String, List<String>> config = this.getUsersContentType();
+			Map<String, List<String>> config = this.getGroupsContentType();
 			boolean isValidInput = this.validateAdd();
 			if (this.hasErrors()) {
 				return INPUT;
 			}
 			if (isValidInput) {
 
-				if (!config.containsKey(this.getUsername())) {
+				if (!config.containsKey(this.getGroupName())) {
 					return Action.SUCCESS;
 				}
-				if (config.get(this.getUsername()).contains(this.getContentType())) {
-					config.get(this.getUsername()).remove(this.getContentType());
+				if (config.get(this.getGroupName()).contains(this.getContentType())) {
+					config.get(this.getGroupName()).remove(this.getContentType());
 				}
 				this.setConfigItemOnSession(config);
 			}
@@ -122,20 +124,20 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 		return Action.SUCCESS;
 	}
 
-	public String removeUser() {
+	public String removeGroup() {
 		try {
-			Map<String, List<String>> config = this.getUsersContentType();
+			Map<String, List<String>> config = this.getGroupsContentType();
 			boolean isValidInput = this.validateAdd();
 			if (this.hasErrors()) {
 				return INPUT;
 			}
 			if (isValidInput) {
 
-				if (!config.containsKey(this.getUsername())) {
+				if (!config.containsKey(this.getGroupName())) {
 					return Action.SUCCESS;
 				}
-				if (config.get(this.getUsername()).contains(this.getContentType())) {
-					config.get(this.getUsername()).remove(this.getContentType());
+				if (config.get(this.getGroupName()).contains(this.getContentType())) {
+					config.get(this.getGroupName()).remove(this.getContentType());
 				}
 				this.setConfigItemOnSession(config);
 			}
@@ -148,7 +150,7 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 	}
 
 	private boolean validateAdd() {
-		if (StringUtils.isBlank(this.getUsername())) {
+		if (StringUtils.isBlank(this.getGroupName())) {
 			return false;
 		}
 
@@ -159,10 +161,10 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 		return true;
 	}
 
-	public String saveUsersItem() {
+	public String saveGroupsItem() {
 		try {
 			ContentThreadConfig config = this.getContentSchedulerManager().getConfig();
-			config.setUsersContentType(this.getUsersContentType());
+			config.setGroupsContentType(this.getGroupsContentType());
 			String xml = new ContentThreadConfigDOM().createConfigXml(config);
 			this.getBaseConfigManager().updateConfigItem(ContentThreadConstants.CONTENTTHREAD_CONFIG_ITEM, xml);
 			this.addActionMessage(this.getText("jpcontentscheduler.saveItem.success"));
@@ -174,22 +176,27 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 	}
 
 	private Map<String, List<String>> setConfigItemOnSession() {
-		Map<String, List<String>> usersContentType = this.getContentSchedulerManager().getConfig().getUsersContentType();
-		this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM_USERS_CONTENT_TYPE, usersContentType);
-		return usersContentType;
+		Map<String, List<String>> groupsContentType = this.getContentSchedulerManager().getConfig().getGroupsContentType();
+		this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM_GROUPS, groupsContentType);
+		return groupsContentType;
 	}
 
-	private void setConfigItemOnSession(Map<String, List<String>> config) {
-		this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM_USERS_CONTENT_TYPE, config);
-	}
-
-	public Map<String, List<String>> getUsersContentType() {
-		return (Map<String, List<String>>) this.getRequest().getSession().getAttribute(THREAD_CONFIG_SESSION_PARAM_USERS_CONTENT_TYPE);
+	public List<Group> getGroups() {
+		List<Group> groups = this.getGroupManager().getGroups();
+		return groups;
 	}
 
 	public List<SmallEntityType> getContentTypes() {
 		List<SmallEntityType> smallContentTypes = this.getContentManager().getSmallEntityTypes();
 		return smallContentTypes;
+	}
+
+	public Map<String, List<String>> getGroupsContentType() {
+		return (Map<String, List<String>>) this.getRequest().getSession().getAttribute(THREAD_CONFIG_SESSION_PARAM_GROUPS);
+	}
+
+	private void setConfigItemOnSession(Map<String, List<String>> config) {
+		this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM_GROUPS, config);
 	}
 
 	public void setBaseConfigManager(ConfigInterface baseConfigManager) {
@@ -216,12 +223,12 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 		this.contentManager = contentManager;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getGroupName() {
+		return groupName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 	public String getContentType() {
@@ -232,10 +239,19 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 		this.contentType = contentType;
 	}
 
+	public IGroupManager getGroupManager() {
+		return groupManager;
+	}
+
+	public void setGroupManager(IGroupManager groupManager) {
+		this.groupManager = groupManager;
+	}
+
 	private ConfigInterface _baseConfigManager;
 	private IContentSchedulerManager _contentSchedulerManager;
 	private IContentManager contentManager;
-	private String username;
+	private IGroupManager groupManager;
+	private String groupName;
 	private String contentType;
 
 }

@@ -22,6 +22,14 @@
         <property name="contentManager" ref="jacmsContentManager" />
     </bean>
     
+    <bean id="jpcontentschedulerConfigGroupsAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ContentThreadConfigGroupsAction" 
+          scope="prototype" parent="abstractBaseAction" >
+        <property name="baseConfigManager" ref="BaseConfigManager" />
+        <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="groupManager" ref="GroupManager" />
+    </bean>
+    
     
     
     <bean id="jpcontentschedulerAdminAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.AdminAction" 
