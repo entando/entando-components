@@ -58,17 +58,17 @@
 		<module>entando-plugin-jpcontentworkflow</module>
 		-->
 		<module>entando-plugin-jpcontentfeedback</module>
-		<!-- <module>entando-plugin-jpcmstagcloud</module> -->
+		<module>entando-plugin-jpcmstagcloud</module>
 		<!-- <module>entando-plugin-jpmyportalplus</module> -->
 		<module>entando-plugin-jptokenapi</module>
 		<!--
 		<module>entando-plugin-jpfrontshortcut</module>
 		-->
 		<module>entando-plugin-jpehcache</module>
+		<module>entando-plugin-jpcasclient</module>
 		<!--
 			<module>entando-plugin-jps3awsclient</module>
 			<module>entando-plugin-jpsolrclient</module>
-			<module>entando-plugin-jpcasclient</module>
 			<module>entando-plugin-jpcomponentinstaller</module>
 			<module>entando-plugin-jpoauthclient</module>
 			<module>entando-plugin-jpweatherforecast</module>
