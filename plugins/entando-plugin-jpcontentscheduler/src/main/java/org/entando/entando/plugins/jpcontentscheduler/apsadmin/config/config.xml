@@ -11,6 +11,10 @@
             <result type="tiles">admin.jpcontentscheduler.viewItem</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
+        <action name="viewEmail" class="jpcontentschedulerConfigAction" method="viewEamil">
+            <result type="tiles">admin.jpcontentscheduler.viewEmail</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
         
         <!-- USERS -->
         <action name="viewUsers" class="jpcontentschedulerConfigUsersAction" method="viewUsers">

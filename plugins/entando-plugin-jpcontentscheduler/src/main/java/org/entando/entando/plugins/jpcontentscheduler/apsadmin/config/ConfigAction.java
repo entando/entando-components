@@ -93,6 +93,16 @@ public class ConfigAction extends BaseAction {
 		return Action.SUCCESS;
 	}
 
+	public String viewEmail() {
+		try {
+			this.setConfigOnSession();
+		} catch (Throwable t) {
+			_logger.error("Error in viewEmail", t);
+			return FAILURE;
+		}
+		return Action.SUCCESS;
+	}
+
 	public String saveItem() {
 		try {
 			this.getBaseConfigManager().updateConfigItem(this.getItem(), this.getConfig());
