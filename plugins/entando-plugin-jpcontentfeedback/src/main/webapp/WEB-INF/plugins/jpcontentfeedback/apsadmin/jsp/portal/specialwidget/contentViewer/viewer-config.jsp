@@ -68,8 +68,8 @@
                                 <s:iterator value="fieldErrors">
                                     <s:iterator value="value">
                                         <li><s:property escapeHtml="false"/></li>
+                                        </s:iterator>
                                     </s:iterator>
-                                </s:iterator>
                             </ul>
                         </div>
                     </s:if>
@@ -83,13 +83,13 @@
 
                             <s:set var="content" value="%{getContentVo(showlet.config['contentId'])}"></s:set>
 
-                            <div class="form-group">
-                                <div class="col-sm-12 table-responsive">
-                                    <table class="table table-bordered table-hover no-mb">
-                                        <tr>
-                                            <th class="text-right col-sm-2"><s:text name="label.code"/></th>
+                                <div class="form-group">
+                                    <div class="col-sm-12 table-responsive">
+                                        <table class="table table-bordered table-hover no-mb">
+                                            <tr>
+                                                <th class="text-right col-sm-2"><s:text name="label.code"/></th>
                                             <td class="col-sm-10">
-                                                <code><s:property value="#content.id"/></code>
+                                                <s:property value="#content.id"/>
                                             </td>
                                         </tr>
                                         <tr>

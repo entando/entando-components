@@ -6,8 +6,7 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations"/></li>
     <li><s:text name="breadcrumb.integrations.components"/></li>
-    <li><s:text name="jpcontentfeedback.title.commentsManager"/></li>
-    <li class="page-title-container"><s:text name="title.contentfeedbackSettings"/></li>
+    <li class="page-title-container"><s:text name="title.contentfeedbackManagement"/></li>
 </ol>
 
 <div class="page-tabs-header">
