@@ -28,7 +28,15 @@
 
 <div class="mb-20">
     <s:form action="updateSystemParams">
-
+        <s:if test="hasActionMessages()">
+            <div class="alert alert-success">
+                <span class="pficon pficon-ok"></span>
+                <strong><s:text name="messages.confirm" /></strong>
+                <s:iterator value="actionMessages">
+                    <li><s:property escapeHtml="false" /></li>
+                    </s:iterator>
+            </div>
+        </s:if>
         <fieldset class="form-horizontal">
             <div class="col-xs-12">
                 <div class="form-group">
