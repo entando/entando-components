@@ -27,43 +27,46 @@ import com.agiletec.plugins.jpcasclient.aps.system.services.config.CasClientConf
 import com.agiletec.plugins.jpcasclient.aps.system.services.config.ICasClientConfigManager;
 
 public class ConfigAction extends BaseAction {
-	
-	public String edit() {
-		try {
-			CasClientConfig config = this.getCasClientConfigManager().getClientConfig();
-			this.setConfig(config);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-	
-	public String save() {
-		try {
-			this.getCasClientConfigManager().updateConfig(this.getConfig());
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-	
-	public CasClientConfig getConfig() {
-		return _config;
-	}
-	public void setConfig(CasClientConfig config) {
-		this._config = config;
-	}
-	
-	public ICasClientConfigManager getCasClientConfigManager() {
-		return _casClientConfigManager;
-	}
-	public void setCasClientConfigManager(ICasClientConfigManager casClientConfigManager) {
-		this._casClientConfigManager = casClientConfigManager;
-	}
-	
-	private CasClientConfig _config;
-	private ICasClientConfigManager _casClientConfigManager;
-	
+
+    public String edit() {
+        try {
+            CasClientConfig config = this.getCasClientConfigManager().getClientConfig();
+            this.setConfig(config);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "edit");
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+
+    public String save() {
+        try {
+            this.getCasClientConfigManager().updateConfig(this.getConfig());
+            this.addActionMessage(this.getText("jpcasclient.label.casclientConfig.confirm"));
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "save");
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+
+    public CasClientConfig getConfig() {
+        return _config;
+    }
+
+    public void setConfig(CasClientConfig config) {
+        this._config = config;
+    }
+
+    public ICasClientConfigManager getCasClientConfigManager() {
+        return _casClientConfigManager;
+    }
+
+    public void setCasClientConfigManager(ICasClientConfigManager casClientConfigManager) {
+        this._casClientConfigManager = casClientConfigManager;
+    }
+
+    private CasClientConfig _config;
+    private ICasClientConfigManager _casClientConfigManager;
+
 }
