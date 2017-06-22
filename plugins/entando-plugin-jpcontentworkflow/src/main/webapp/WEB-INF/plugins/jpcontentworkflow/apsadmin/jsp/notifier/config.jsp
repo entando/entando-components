@@ -4,6 +4,9 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="breadcrumb.integrations"/></li>
+    <li><s:text name="breadcrumb.integrations.components"/></li>
+    <li><s:text name="jpcontentworkflow.menu.workflowAdmin"/></li>
     <li class="page-title-container">
         <s:text name="title.workflowNotifierManagement.config"/>
     </li>
@@ -12,13 +15,13 @@
     <div class="row">
         <div class="col-sm-6">
             <h1>
-                <s:text name="title.workflowNotifierManagement.config"/>
+                <s:text name="jpcontentworkflow.menu.workflowAdmin"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
                        data-content="<s:text name="jpcontentworkflow.title.general.help" />" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-				    </a>
-				</span>
+                    </a>
+                </span>
             </h1>
         </div>
         <div class="col-sm-6">
@@ -38,7 +41,7 @@
     </div>
 </div>
 <br>
-<div id="main">
+<div>
     <s:form action="save" cssClass="">
         <s:if test="hasFieldErrors()">
             <div class="alert alert-danger alert-dismissable fade in">
@@ -51,8 +54,8 @@
                     <s:iterator value="fieldErrors">
                         <s:iterator value="value">
                             <li><s:property escapeHtml="false"/></li>
+                            </s:iterator>
                         </s:iterator>
-                    </s:iterator>
                 </ul>
             </div>
         </s:if>
@@ -66,7 +69,7 @@
                 <ul>
                     <s:iterator value="actionErrors">
                         <li><s:property escapeHtml="false"/></li>
-                    </s:iterator>
+                        </s:iterator>
                 </ul>
             </div>
         </s:if>
@@ -104,8 +107,8 @@
                             <select name="config.hoursDelay" id="hoursDelay" class="form-control">
                                 <c:forEach begin="1" end="10" varStatus="status">
                                     <option
-                                            <c:if test="${(status.count*24) == hoursDelayVar}">selected="selected"</c:if>
-                                            value="<c:out value="${status.count*24}" />">
+                                        <c:if test="${(status.count*24) == hoursDelayVar}">selected="selected"</c:if>
+                                        value="<c:out value="${status.count*24}" />">
                                         <c:out value="${status.count*24}"/>
                                     </option>
                                 </c:forEach>
@@ -119,11 +122,7 @@
                             <s:text name="label.startDate"/>
                         </label>
                         <div class="col-sm-10">
-                            <wpsf:textfield name="startDate" id="jpcontentworkflownotifier_date_cal"
-                                            cssClass="form-control datepicker"/>
-                            <span clasS="help-block">
-                                <s:text name="label.startDatePattern"/>
-							</span>
+                            <wpsf:textfield name="startDate" id="jpcontentworkflownotifier_date_cal" placeholder="dd/mm/yyyy" cssClass="form-control datepicker"/>
                         </div>
                     </div>
                 </div>
@@ -132,27 +131,25 @@
                         <label class="col-sm-2 control-label">
                             <s:text name="notifier.time"/>
                         </label>
-                        <div class="col-sm-10">
-                            <div class="col-xs-12">
-                                <div class="col-xs-5">
-                                    <label for="hour" class="sr-only">Hour</label>
-                                    <wpsf:select list="%{getCounterArray(0, 24)}" name="hour" id="hour"
-                                                 cssClass="form-control"/>
-                                </div>
-                                <div class="col-xs-2 text-center">:</div>
-                                <div class="col-xs-5">
-                                    <label for="minute" class="sr-only">Minute</label>
-                                    <wpsf:select list="%{getCounterArray(0, 60)}" name="minute" id="minute"
-                                                 cssClass="form-control"/>
-                                </div>
-                            </div>
+                        <div class="col-sm-3" style="display: inline-flex;">
+                            <span>
+                                <label for="hour" class="sr-only">Hour</label>
+                                <wpsf:select list="%{getCounterArray(0, 24)}" name="hour" id="hour" cssClass="form-control"/>
+                            </span>
+                            <span>
+                                &nbsp;:&nbsp;
+                            </span>
+                            <span>
+                                <label for="minute" class="sr-only">Minute</label>
+                                <wpsf:select list="%{getCounterArray(0, 60)}" name="minute" id="minute" cssClass="form-control"/>
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
         </fieldset>
 
-        <fieldset class="col-xs-12 margin-large-top">
+        <fieldset class="col-xs-12">
             <legend>
                 <s:text name="label.mailSettings"/>
             </legend>
@@ -223,9 +220,9 @@
                 </div>
             </div>
         </fieldset>
-        <div class="form-horizontal">
+        <div class="col-xs-12 mb-20">
             <div class="form-group">
-                <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical pull-right">
+                <div class="col-xs-12">
                     <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
                         <s:text name="label.save"/>
                     </wpsf:submit>
