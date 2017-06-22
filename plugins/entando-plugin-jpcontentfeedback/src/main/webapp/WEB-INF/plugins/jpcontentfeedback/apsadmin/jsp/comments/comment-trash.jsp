@@ -32,12 +32,12 @@
         <table class="table table-bordered table-hover no-mb">
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.author"/></th>
-                <td class="col-sm-10"><code><s:property value="#commentVar.username"/></code></td>
+                <td class="col-sm-10"><s:property value="#commentVar.username"/></td>
             </tr>
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.date.creation"/></th>
                 <td class="col-sm-10">
-                    <code><s:date name="#commentVar.creationDate" format="dd/MM/yyyy HH:mm"/></code>
+                    <s:date name="#commentVar.creationDate" format="dd/MM/yyyy HH:mm"/>
                 </td>
             </tr>
             <tr>
@@ -50,7 +50,7 @@
             </tr>
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.id"/></th>
-                <td class="col-sm-10"><code><s:property value="#commentVar.contentId"/></code></td>
+                <td class="col-sm-10"><s:property value="#commentVar.contentId"/></td>
             </tr>
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.description"/></th>
