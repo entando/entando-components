@@ -10,8 +10,11 @@
             <s:text name="title.pageManagement" />
         </a>
     </li>
-    <li class="page-title-container">
+    <li>
         <s:text name="title.configPage" />
+    </li>
+    <li class="page-title-container">
+        <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}"/>
     </li>
 </ol>
 <h1 class="page-title-container">
@@ -19,7 +22,7 @@
         <s:text name="title.configPage" />
         <span class="pull-right">
             <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-               data-content="TO be inserted" data-placement="left" data-original-title="">
+               data-content="<s:text name="jpuserreg.menu.userregAdmin.help"/>" data-placement="left" data-original-title="">
                 <i class="fa fa-question-circle-o" aria-hidden="true"></i>
             </a>
         </span>
@@ -53,7 +56,7 @@
                     <ul class="margin-base-vertical">
                         <s:iterator value="actionErrors">
                             <li><s:property escapeHtml="false"/></li>
-                        </s:iterator>
+                            </s:iterator>
                     </ul>
                 </div>
             </s:if>
@@ -66,8 +69,8 @@
                         <s:iterator value="fieldErrors">
                             <s:iterator value="value">
                                 <li><s:property escapeHtml="false"/></li>
+                                </s:iterator>
                             </s:iterator>
-                        </s:iterator>
                     </ul>
                 </div>
             </s:if>
