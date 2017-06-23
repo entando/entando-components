@@ -76,10 +76,10 @@
         <div class="form-group">
             <label class="col-sm-2 control-label"><s:text name="jpcontentscheduler.label.username"/></label>
             <div class="col-sm-10">
-                <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.username']}" />
+                <s:set var="fieldErrorsVar" value="%{fieldErrors['username']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-                <wpsf:textfield name="username" id="threadConfig_username" placeholder="%{getText('jpcontentscheduler.label.username')}" cssClass="form-control" value="%{#username}"/>
+                <wpsf:textfield name="username" id="username" placeholder="%{getText('jpcontentscheduler.label.username')}" cssClass="form-control" value="%{#username}"/>
                 <s:if test="#hasFieldErrorVar">
                         <span class="help-block text-danger">
                             <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
@@ -154,9 +154,13 @@
                     </ul>
                 </s:if>
                 <s:else>
-                    <div class="alert alert-info mt-20">
-                        <span class="pficon pficon-info"></span>
-                        <s:text name="jpcontentscheduler.contentTypes.empty"/>
+                    <div class="row">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="alert alert-info">
+                              <span class="pficon pficon-info"></span>
+                              <s:text name="jpcontentscheduler.contentTypes.empty"/>
+                            </div>
+                        </div>
                     </div>
                 </s:else>
                 
@@ -166,7 +170,7 @@
         <div class="form-group">
             <div class="col-xs-12">
                 <div class="pull-right">
-                    <wpsf:submit name="save" type="button" action="#" cssClass="btn btn-primary" >
+                    <wpsf:submit name="save" type="button" action="saveUsersContentType" cssClass="btn btn-primary" >
                         <s:text name="%{getText('label.save')}"/>
                     </wpsf:submit>
                 </div>
