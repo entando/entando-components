@@ -21,7 +21,6 @@
  */
 package org.entando.entando.plugins.jpcontentscheduler.apsadmin.config;
 
-import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.ContentThreadConstants;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentJobs;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.IContentSchedulerManager;
 import org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.model.ContentThreadConfig;
@@ -51,10 +50,13 @@ public class ConfigAction extends BaseAction {
 
 	public String viewItem() {
 		try {
-			String config = this.getBaseConfigManager().getConfigItem(this.getItem());
-			this.setConfig(config);
+			ContentThreadConfig threadConfig = this.getContentSchedulerManager().getConfig();
 
-			setConfigOnSession();
+			this.setSiteCode(threadConfig.getSitecode());
+			this.setActive(threadConfig.isActive());
+			this.setGlobalCat(threadConfig.getGlobalCat());
+			this.setContentIdRepl(threadConfig.getContentIdRepl());
+			this.setContentModelRepl(threadConfig.getContentIdRepl());
 
 		} catch (Throwable t) {
 			_logger.error("Error in viewItem", t);
@@ -105,7 +107,17 @@ public class ConfigAction extends BaseAction {
 
 	public String saveItem() {
 		try {
-			this.getBaseConfigManager().updateConfigItem(this.getItem(), this.getConfig());
+
+			ContentThreadConfig config = this.getContentSchedulerManager().getConfig();
+
+			config.setActive(this.isActive());
+			config.setGlobalCat(this.getGlobalCat());
+			config.setSitecode(this.getSiteCode());
+			config.setContentIdRepl(this.getContentIdRepl());
+			config.setContentModelRepl(this.getContentModelRepl());
+
+			this.getContentSchedulerManager().updateConfig(config);
+
 			this.addActionMessage(this.getText("jpcontentscheduler.saveItem.success"));
 		} catch (Throwable t) {
 			_logger.error("Error saving item", t);
@@ -143,22 +155,6 @@ public class ConfigAction extends BaseAction {
 		this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM, threadConfig);
 	}
 
-	public void setItem(String item) {
-		this._item = item;
-	}
-
-	public String getItem() {
-		return _item;
-	}
-
-	public void setConfig(String config) {
-		this._config = config;
-	}
-
-	public String getConfig() {
-		return _config;
-	}
-
 	public void setBaseConfigManager(ConfigInterface baseConfigManager) {
 		this._baseConfigManager = baseConfigManager;
 	}
@@ -179,10 +175,53 @@ public class ConfigAction extends BaseAction {
 		this._contentSchedulerManager = contentSchedulerManager;
 	}
 
+	public String getSiteCode() {
+		return siteCode;
+	}
+
+	public void setSiteCode(String siteCode) {
+		this.siteCode = siteCode;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public String getGlobalCat() {
+		return globalCat;
+	}
+
+	public void setGlobalCat(String globalCat) {
+		this.globalCat = globalCat;
+	}
+
+	public String getContentIdRepl() {
+		return contentIdRepl;
+	}
+
+	public void setContentIdRepl(String contentIdRepl) {
+		this.contentIdRepl = contentIdRepl;
+	}
+
+	public String getContentModelRepl() {
+		return contentModelRepl;
+	}
+
+	public void setContentModelRepl(String contentModelRepl) {
+		this.contentModelRepl = contentModelRepl;
+	}
+
 	private ConfigInterface _baseConfigManager;
 	private IContentSchedulerManager _contentSchedulerManager;
 
-	private String _item = ContentThreadConstants.CONTENTTHREAD_CONFIG_ITEM;
-	private String _config;
+	private String siteCode;
+	private boolean active;
+	private String globalCat;
+	private String contentIdRepl;
+	private String contentModelRepl;
 
 }

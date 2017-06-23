@@ -104,6 +104,19 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 		}
 	}
 
+	@Override
+	public void updateConfig(ContentThreadConfig config) throws ApsSystemException {
+		try {
+			String xml = new ContentThreadConfigDOM().createConfigXml(config);
+			this.getConfigManager().updateConfigItem(ContentThreadConstants.CONTENTTHREAD_CONFIG_ITEM, xml);
+			this.setConfig(config);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "loadConfigs");
+			throw new ApsSystemException("error updating configuration", t);
+		}
+
+	}
+
 	/**
 	 * Restituisce tutti i contenuti che hanno un attributo con nome key
 	 * Data_inizio e valore la data corrente
@@ -159,11 +172,14 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 					cal.add(Calendar.DATE, -7);
 					Date beginDate = cal.getTime();
 					EntitySearchFilter blobFilter = new EntitySearchFilter(IContentManager.CONTENT_ONLINE_FILTER_KEY, false, null, false);
-					EntitySearchFilter[] filters = new EntitySearchFilter[] {
-							new EntitySearchFilter(filterKey, true, beginDate, new Date()), blobFilter };
+					EntitySearchFilter[] filters = new EntitySearchFilter[] { new EntitySearchFilter(filterKey, true, beginDate, new Date()), blobFilter };
 					List<String> retrieved = this.getWorkContentSearcherDAO().searchId(elem.getContentType(), filters);
-					ContentSuspendMove contSuspMov = new ContentSuspendMove(elem.getSuspend(), retrieved, elem.getContentType(),
-							this.getConfig().getGlobalCat(), elem.getIdsCategories(), elem.getIdContentReplace(),
+					ContentSuspendMove contSuspMov = new ContentSuspendMove(elem.getSuspend(),
+							retrieved,
+							elem.getContentType(),
+							this.getConfig().getGlobalCat(),
+							elem.getIdsCategories(),
+							elem.getIdContentReplace(),
 							elem.getModelIdContentReplace());
 					contSuspMov.setContentIdReplace(this.getConfig().getContentIdRepl());
 					contSuspMov.setContentModelReplace(this.getConfig().getContentModelRepl());
@@ -185,8 +201,8 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	 * @throws ApsSystemException
 	 */
 	@Override
-	public void sendMailWithResults(List<ContentState> publishedContents, List<ContentState> suspendedContents,
-			List<ContentState> movedContents, Date startJobDate, Date endJobDate) throws ApsSystemException {
+	public void sendMailWithResults(List<ContentState> publishedContents, List<ContentState> suspendedContents, List<ContentState> movedContents, Date startJobDate,
+			Date endJobDate) throws ApsSystemException {
 		// TODO send to groups
 		// sendToGroups(publishedContents, suspendedContents);
 		sendToUsers(publishedContents, suspendedContents, movedContents, startJobDate, endJobDate);
@@ -201,8 +217,8 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	 * @param endJobDate
 	 * @throws ApsSystemException
 	 */
-	private void sendToUsers(List<ContentState> publishedContents, List<ContentState> suspendedContents, List<ContentState> moveContents,
-			Date startJobDate, Date endJobDate) throws ApsSystemException {
+	private void sendToUsers(List<ContentState> publishedContents, List<ContentState> suspendedContents, List<ContentState> moveContents, Date startJobDate, Date endJobDate)
+			throws ApsSystemException {
 		Map<String, List<String>> mapUsers = this.getConfig().getUsersContentType();
 		Set<String> keys = mapUsers.keySet();
 		for (Iterator<String> i = keys.iterator(); i.hasNext();) {
@@ -211,8 +227,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 			List<ContentState> contentPList = contentOfTypes(publishedContents, typesList);
 			List<ContentState> contentSList = contentOfTypes(suspendedContents, typesList);
 			List<ContentState> contentMList = contentOfTypes(moveContents, typesList);
-			if ((contentPList != null && contentPList.size() > 0) || (contentSList != null && contentSList.size() > 0)
-					|| (contentMList != null && contentMList.size() > 0)) {
+			if ((contentPList != null && contentPList.size() > 0) || (contentSList != null && contentSList.size() > 0) || (contentMList != null && contentMList.size() > 0)) {
 				UserDetails user = this.getUserManager().getUser(key);
 				if (user == null) {
 					ApsSystemUtils.getLogger().error(ContentThreadConstants.USER_IS_NULL + key);
@@ -220,19 +235,15 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 				} else {
 					UserProfile profile = (UserProfile) user.getProfile();
 					if (null != profile) {
-						ITextAttribute mailAttribute = (ITextAttribute) profile
-								.getAttributeByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL);
+						ITextAttribute mailAttribute = (ITextAttribute) profile.getAttributeByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL);
 						String[] email = new String[1];
 						if (null != mailAttribute && mailAttribute.getText().trim().length() > 0) {
 							email[0] = mailAttribute.getText();
-							String simpleText = Utils.prepareMailText(contentPList, contentSList, contentMList, this.getConfig(),
-									startJobDate, endJobDate);
+							String simpleText = Utils.prepareMailText(contentPList, contentSList, contentMList, this.getConfig(), startJobDate, endJobDate);
 							if (this.getConfig().isAlsoHtml()) {
 								String applBaseUrl = this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL);
-								String htmlText = Utils.prepareMailHtml(contentPList, contentSList, contentMList, this.getConfig(),
-										startJobDate, endJobDate, applBaseUrl);
-								boolean issent = this.getMailManager().sendMixedMail(simpleText, htmlText, config.getSubject(), null, email,
-										null, null, config.getSenderCode());
+								String htmlText = Utils.prepareMailHtml(contentPList, contentSList, contentMList, this.getConfig(), startJobDate, endJobDate, applBaseUrl);
+								boolean issent = this.getMailManager().sendMixedMail(simpleText, htmlText, config.getSubject(), null, email, null, null, config.getSenderCode());
 								// System.out.println("***MAIL html");
 								if (issent) {
 									ApsSystemUtils.getLogger().info(ContentThreadConstants.MAIL_SENT + key);
@@ -241,8 +252,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 								}
 							} else {
 								// System.out.println("***MAIL simple");
-								boolean issent = this.getMailManager().sendMail(simpleText, config.getSubject(), email, null, null,
-										config.getSenderCode());
+								boolean issent = this.getMailManager().sendMail(simpleText, config.getSubject(), email, null, null, config.getSenderCode());
 								if (issent) {
 									ApsSystemUtils.getLogger().info(ContentThreadConstants.MAIL_SENT + key);
 								} else {
