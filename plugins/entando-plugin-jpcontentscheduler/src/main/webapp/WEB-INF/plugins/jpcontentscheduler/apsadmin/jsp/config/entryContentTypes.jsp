@@ -87,7 +87,7 @@
                 <s:text name="jpcontentscheduler.label.startDateAttribute" />
             </label>
             <div class="col-sm-10">
-                <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.startAttr']}" />
+                <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.startDateAttr']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <wpsf:textfield name="contentTypeElem.startDateAttr" id="contentTypeElem_startAttr"
@@ -108,7 +108,7 @@
                 <s:text name="jpcontentscheduler.label.endDateAttribute" />
             </label>
             <div class="col-sm-10">
-                <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.endAttro']}" />
+                <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.endDateAttro']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <wpsf:textfield name="contentTypeElem.endDateAttro" id="contentTypeElem_endAttro"
@@ -243,6 +243,7 @@
                                         <s:property value="#contentTypeCategory.getShortFullTitle(currentLang.code)" />
                                     </abbr>
                                     &#32;
+                                    <wpsf:hidden name="categoryCodes" value="%{#contentTypeCategory.code}"/>
                                     <wpsa:actionParam action="removeCategory" var="actionName">
                                         <wpsa:actionSubParam name="categoryCode" value="%{#contentTypeCategory.code}" />
                                     </wpsa:actionParam>
