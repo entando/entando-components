@@ -15,7 +15,7 @@
 </ol>
 <h1 class="page-title-container">
     <s:text name="title.actionLogger.management" />
-    <span class="pull-right"> 
+    <span class="pull-right">
         <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title="" data-content="<s:text name="title.actionLogger.management.help" />"
            data-placement="left" data-original-title="">
             <i class="fa fa-question-circle-o" aria-hidden="true"></i>
@@ -84,7 +84,7 @@
                                         <s:text name="actionName" />
                                     </label>
                                     <div class="col-sm-9">
-                                        <wpsf:textfield useTabindexAutoIncrement="true"cssClass="form-control "  id="jpactionlogger_actionName" name="actionName" />
+                                        <wpsf:textfield useTabindexAutoIncrement="true" cssClass="form-control "  id="jpactionlogger_actionName" name="actionName" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -190,7 +190,7 @@
                                                         </c:if>
                                                     </c:forEach>
                                                 </div>
-                                                <a class="cursor-pointer" data-toggle="collapse" data-target="#parameter-item-<c:out value='${logRecord.id}'/>" title="All parameters"> 
+                                                <a class="cursor-pointer" data-toggle="collapse" data-target="#parameter-item-<c:out value='${logRecord.id}'/>" title="All parameters">
                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                 </a>
                                             </c:if>
@@ -203,7 +203,7 @@
                                            <s:date name="#logRecord.actionDate" format="dd/MM/yyyy HH:mm:ss" />">
                                             <span class="fa fa-trash-o fa-lg">
                                             </span>
-                                            &#32; 
+                                            &#32;
                                             <span class="sr-only"><s:text name="label.alt.clear" /></span>
                                         </a>
                                     </div>
