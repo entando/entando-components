@@ -67,6 +67,11 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 		return Action.SUCCESS;
 	}
 
+	public String entry() {
+		
+		return Action.SUCCESS;
+	}
+	
 	public String addContentType() {
 		try {
 

@@ -27,24 +27,19 @@
         </div>
         <div class="col-sm-8">
             <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
-                <li class="active">
+                <li>
                     <a href="<s:url action="viewItem"/>">
                         <s:text name="jpcontentscheduler.admin.general"/>
                     </a>
                 </li>
-                <li>
-                    <a href="<s:url action="viewItem"/>">
+                <li class="active">
+                    <a href="<s:url action="viewEmail"/>">
                         <s:text name="jpcontentscheduler.admin.mail"/>
                     </a>
                 </li>
                 <li>
                     <a href="<s:url action="viewUsers"/>">
                         <s:text name="jpcontentscheduler.admin.users"/>
-                    </a>
-                </li>
-                <li>
-                    <a href="<s:url action="viewGroups"/>">
-                        <s:text name="jpcontentscheduler.admin.groups"/>
                     </a>
                 </li>
                 <li>
