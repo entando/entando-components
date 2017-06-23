@@ -71,7 +71,7 @@
 </s:else>
 
 
-<s:form id="configurationForm" name="configurationForm" method="post" action="#" cssClass="form-horizontal">
+<s:form id="configurationForm" name="configurationForm" method="post" action="#" cssClass="form-horizontal" accept-charset="utf-8">
         <legend><s:text name="legend.User" /></legend>
         <div class="form-group">
             <label class="col-sm-2 control-label"><s:text name="jpcontentscheduler.label.username"/></label>
@@ -118,8 +118,9 @@
                                 <li>
                                     <span class="label label-tag">
                                         <s:text name="jpcontentscheduler.label.contentTypes.all"/>
-                                        <wpsa:actionParam action="removeContentType" var="actionName">
-                                            <wpsa:actionSubParam name="contentTypeCode" value="%{#currentContentTypeCode}" />
+                                        <wpsa:actionParam action="removeUserContentType" var="actionName">
+                                            <wpsa:actionSubParam name="contentType" value="%{#currentContentTypeCode}" />
+                                            <wpsa:actionSubParam name="username" value="%{username}" />
                                         </wpsa:actionParam>
                                         <wpsf:submit type="button" action="%{#actionName}"
                                             title="%{getText('label.remove')"
@@ -138,8 +139,9 @@
                                             <s:property value="#currentContentTypeCode" />
                                         </abbr>
                                         &#32; &#32;
-                                        <wpsa:actionParam action="removeContentType" var="actionName">
-                                            <wpsa:actionSubParam name="contentTypeCode" value="%{#currentContentTypeCode}" />
+                                        <wpsa:actionParam action="removeUserContentType" var="actionName">
+                                            <wpsa:actionSubParam name="contentType" value="%{#currentContentTypeCode}" />
+                                            <wpsa:actionSubParam name="username" value="%{username}" />
                                         </wpsa:actionParam>
                                         <wpsf:submit type="button" action="%{#actionName}"
                                             title="%{getText('label.remove') + ' ' + #currentContentTypeCode.defaultFullTitle}"

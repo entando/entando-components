@@ -136,7 +136,7 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 			Map<String, List<String>> config = this.getUsersContentType();
 			String selectedUser = this.getRequest().getParameter("user");
 			this.setUsername(selectedUser);
-			boolean isValidInput = this.validateAdd();
+			boolean isValidInput = this.validateRemoveUser();
 			if (this.hasErrors()) {
 				return INPUT;
 			}
@@ -145,9 +145,7 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 				if (!config.containsKey(this.getUsername())) {
 					return Action.SUCCESS;
 				}
-				if (config.get(this.getUsername()).contains(this.getContentType())) {
-					config.get(this.getUsername()).remove(this.getContentType());
-				}
+				config.remove(this.getUsername());
 				this.setConfigItemOnSession(config);
 			}
 
@@ -170,6 +168,15 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 
 		if (StringUtils.isBlank(this.getContentType())) {
 			this.addFieldError("contentType", this.getText("requiredstringByArg", this.getText("contentType")));
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean validateRemoveUser() throws ApsSystemException {
+		if (StringUtils.isBlank(this.getUsername())) {
+			this.addFieldError("username", this.getText("requiredstringByArg", this.getText("username")));
 			return false;
 		}
 
