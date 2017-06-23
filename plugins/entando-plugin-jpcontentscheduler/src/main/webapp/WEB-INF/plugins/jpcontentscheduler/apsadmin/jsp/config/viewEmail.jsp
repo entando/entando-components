@@ -59,7 +59,7 @@
         <legend><s:text name="legend.mail" /></legend>
         <div class="form-group">
             <label class="col-sm-2 control-label">
-                <s:text name="label.alsoHtml" />
+                <s:text name="label.threadConfig.alsoHtml" />
             </label>
             <div class="col-sm-10">
                 <div class="checkbox">
@@ -73,7 +73,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="senderCode">
-                <s:text name="label.senderCode" />
+                <s:text name="label.threadConfig.senderCode" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -91,7 +91,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="mailAttrName">
-                <s:text name="label.mailAttrName" />
+                <s:text name="label.threadConfig.mailAttrName" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -110,7 +110,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="subject">
-                <s:text name="label.subject" />
+                <s:text name="label.threadConfig.subject" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -129,7 +129,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="htmlHeader">
-                <s:text name="label.htmlHeader" />
+                <s:text name="label.threadConfig.htmlHeader" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -147,7 +147,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="htmlFooter">
-                <s:text name="label.htmlFooter" />
+                <s:text name="label.threadConfig.htmlFooter" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -165,7 +165,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="htmlSeparator">
-                <s:text name="label.htmlSeparator" />
+                <s:text name="label.threadConfig.htmlSeparator" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -183,7 +183,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="htmlHeaderMove">
-                <s:text name="label.htmlHeaderMove" />
+                <s:text name="label.threadConfig.htmlHeaderMove" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -201,7 +201,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="htmlFooterMove">
-                <s:text name="label.htmlFooterMove" />
+                <s:text name="label.threadConfig.htmlFooterMove" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -219,7 +219,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="htmlSeparatorMove">
-                <s:text name="label.htmlSeparatorMove" />
+                <s:text name="label.threadConfig.htmlSeparatorMove" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -238,7 +238,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="textHeader">
-                <s:text name="label.textHeader" />
+                <s:text name="label.threadConfig.textHeader" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -256,7 +256,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="textFooter">
-                <s:text name="label.textFooter" />
+                <s:text name="label.threadConfig.textFooter" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -274,7 +274,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="textSeparator">
-                <s:text name="label.textSeparator" />
+                <s:text name="label.threadConfig.textSeparator" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -292,7 +292,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="textHeaderMove">
-                <s:text name="label.textHeaderMove" />
+                <s:text name="label.threadConfig.textHeaderMove" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -310,7 +310,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="textFooterMove">
-                <s:text name="label.textFooterMove" />
+                <s:text name="label.threadConfig.textFooterMove" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -328,7 +328,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="textSeparatorMove">
-                <s:text name="label.textSeparatorMove" />
+                <s:text name="label.threadConfig.textSeparatorMove" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
