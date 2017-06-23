@@ -140,7 +140,7 @@
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>
 
-    <s:form id="configurationForm" name="configurationForm" method="post" action="#" cssClass="form-horizontal">
+    <s:form id="configurationForm" name="configurationForm" method="post" action="saveItem" cssClass="form-horizontal">
         <legend><s:text name="legend.contentThreadconfigSettings" /></legend>
         
         <div class="form-group">
@@ -149,22 +149,22 @@
             </label>
             <div class="col-sm-10">
                 <div class="checkbox">
-                    <wpsf:checkbox name="threadConfig.active" id="threadConfig_active" cssClass=" bootstrap-switch" />
+                    <wpsf:checkbox name="active" id="active" cssClass=" bootstrap-switch" />
                 </div>
             </div>
         </div>
 
-        <%-- threadConfig.siteCode --%>
-        <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.siteCode']}" />
+        <%-- siteCode --%>
+        <s:set var="fieldErrorsVar" value="%{fieldErrors['siteCode']}" />
         <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
-            <label class="col-sm-2 control-label" for="threadConfig_siteCode">
-                <s:text name="label.threadConfig.siteCode" />
+            <label class="col-sm-2 control-label" for="siteCode">
+                <s:text name="label.siteCode" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
-                <wpsf:textfield name="threadConfig.siteCode" id="threadConfig_siteCode" cssClass="form-control" />
+                <wpsf:textfield name="siteCode" id="siteCode" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                         <span class="help-block text-danger">
                             <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
@@ -173,17 +173,17 @@
             </div>
         </div>
 
-        <%-- threadConfig.globalCat --%>
-        <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.globalCat']}" />
+        <%-- globalCat --%>
+        <s:set var="fieldErrorsVar" value="%{fieldErrors['globalCat']}" />
         <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
-            <label class="col-sm-2 control-label" for="threadConfig_globalCat">
-                <s:text name="label.threadConfig.globalCat" />
+            <label class="col-sm-2 control-label" for="globalCat">
+                <s:text name="label.globalCat" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
-                <wpsf:textfield name="threadConfig.globalCat" id="threadConfig_globalCat" cssClass="form-control" />
+                <wpsf:textfield name="globalCat" id="globalCat" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                         <span class="help-block text-danger">
                             <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
@@ -194,17 +194,17 @@
 
 
 		<legend><s:text name="legend.content.replace" /></legend>
-        <%-- threadConfig.contentIdRepl --%>
-        <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.contentIdRepl']}" />
+        <%-- contentIdRepl --%>
+        <s:set var="fieldErrorsVar" value="%{fieldErrors['contentIdRepl']}" />
         <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
-            <label class="col-sm-2 control-label" for="threadConfig_contentIdRepl">
-                <s:text name="label.threadConfig.contentIdRepl" />
+            <label class="col-sm-2 control-label" for="contentIdRepl">
+                <s:text name="label.contentIdRepl" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
-                <wpsf:textfield name="threadConfig.contentIdRepl" id="threadConfig_contentIdRepl" cssClass="form-control" />
+                <wpsf:textfield name="contentIdRepl" id="contentIdRepl" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                         <span class="help-block text-danger">
                             <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
@@ -212,17 +212,17 @@
                 </s:if>
             </div>
         </div>
-        <%-- threadConfig.contentModelRepl --%>
-        <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.contentModelRepl']}" />
+        <%-- contentModelRepl --%>
+        <s:set var="fieldErrorsVar" value="%{fieldErrors['contentModelRepl']}" />
         <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
-            <label class="col-sm-2 control-label" for="threadConfig_contentModelRepl">
-                <s:text name="label.threadConfig.contentModelRepl" />
+            <label class="col-sm-2 control-label" for="contentModelRepl">
+                <s:text name="label.contentModelRepl" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
-                <wpsf:textfield name="threadConfig.contentModelRepl" id="threadConfig_contentModelRepl" cssClass="form-control" />
+                <wpsf:textfield name="contentModelRepl" id="contentModelRepl" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                         <span class="help-block text-danger">
                             <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
@@ -231,16 +231,11 @@
             </div>
         </div>
 
-        <%-- TODO: in attesa di refactor
-        <s:include value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/_users.jsp" />
-        <s:include value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/_groups.jsp" />
-        <s:include value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/_contentTypes.jsp" />
-         --%>
 
         <div class="form-group">
             <div class="col-xs-12">
                 <div class="pull-right">
-                    <wpsf:submit name="save" type="button" action="#" cssClass="btn btn-primary" >
+                    <wpsf:submit name="save" type="button" action="saveItem" cssClass="btn btn-primary" >
                         <s:text name="%{getText('label.save')}"/>
                     </wpsf:submit>
                 </div>
@@ -249,8 +244,3 @@
 
 </s:form>
 
-
-<s:property value="threadConfig"/>
-
-</div>
-<h1>AAAAAAAAAAAAAAAAA</h1>
