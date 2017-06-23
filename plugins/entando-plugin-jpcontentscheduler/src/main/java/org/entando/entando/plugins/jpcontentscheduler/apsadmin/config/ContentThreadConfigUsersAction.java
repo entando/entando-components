@@ -32,7 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.opensymphony.xwork2.Action;
@@ -66,19 +68,19 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 	}
 
 	public String entry() {
-		
+
 		return Action.SUCCESS;
 	}
-	
+
 	public String addContentType() {
 		try {
 
 			Map<String, List<String>> config = this.getUsersContentType();
-			boolean hasErrors = this.validateAdd();
+			boolean isValidInput = this.validateAdd();
 			if (this.hasErrors()) {
 				return INPUT;
 			}
-			if (!hasErrors) {
+			if (isValidInput) {
 
 				if (!config.containsKey(this.getUsername())) {
 					config.put(this.getUsername(), new ArrayList<String>());
@@ -150,12 +152,18 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 		return Action.SUCCESS;
 	}
 
-	private boolean validateAdd() {
+	private boolean validateAdd() throws ApsSystemException {
 		if (StringUtils.isBlank(this.getUsername())) {
+			this.addFieldError("username", this.getText("requiredstring"));
+			return false;
+		}
+		if (null == this.getUserManager().getUser(this.getUsername())) {
+			this.addFieldError("username", this.getText("username.notFound"));
 			return false;
 		}
 
 		if (StringUtils.isBlank(this.getContentType())) {
+			this.addFieldError("contentType", this.getText("requiredstring"));
 			return false;
 		}
 
@@ -236,8 +244,17 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 		this.contentType = contentType;
 	}
 
+	public IUserManager getUserManager() {
+		return _userManager;
+	}
+
+	public void setUserManager(IUserManager userManager) {
+		this._userManager = userManager;
+	}
+
 	private ConfigInterface _baseConfigManager;
 	private IContentSchedulerManager _contentSchedulerManager;
+	private IUserManager _userManager;
 	private IContentManager contentManager;
 	private String username;
 	private String contentType;

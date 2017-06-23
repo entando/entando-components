@@ -79,7 +79,7 @@
                 <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.username']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-                <wpsf:textfield name="threadConfig.username" id="threadConfig_username" placeholder="%{getText('jpcontentscheduler.label.username')}" cssClass="form-control" value="%{#username}"/>
+                <wpsf:textfield name="username" id="threadConfig_username" placeholder="%{getText('jpcontentscheduler.label.username')}" cssClass="form-control" value="%{#username}"/>
                 <s:if test="#hasFieldErrorVar">
                         <span class="help-block text-danger">
                             <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
@@ -94,7 +94,7 @@
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <div class="input-group">
-                    <wpsf:select name="threadConfig.contentTypes" id="threadConfig_contentTypes" list="%{getContentTypes()}" 
+                    <wpsf:select name="contentType" id="threadConfig_contentTypes" list="%{getContentTypes()}" 
                         listKey="code" listValue="description" headerKey="*" headerValue="%{getText('label.all')}" cssClass="form-control" readonly="%{isAllTypeSelected}"/>
                     <span class="input-group-btn">
                         <wpsf:submit type="button" action="addUserContentType" cssClass="btn btn-primary %{(#isAllTypeSelected)?'disabled':''}">
@@ -173,3 +173,4 @@
             </div>
         </div>
 </s:form>
+</div>
