@@ -69,6 +69,10 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 
 	public String entry() {
 
+		String selectedUser = this.getRequest().getParameter("user");
+		if (StringUtils.isNotBlank(selectedUser)) {
+			this.setUsername(selectedUser);
+		}
 		return Action.SUCCESS;
 	}
 
@@ -130,6 +134,8 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 	public String removeUser() {
 		try {
 			Map<String, List<String>> config = this.getUsersContentType();
+			String selectedUser = this.getRequest().getParameter("user");
+			this.setUsername(selectedUser);
 			boolean isValidInput = this.validateAdd();
 			if (this.hasErrors()) {
 				return INPUT;
@@ -154,7 +160,7 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 
 	private boolean validateAdd() throws ApsSystemException {
 		if (StringUtils.isBlank(this.getUsername())) {
-			this.addFieldError("username", this.getText("requiredstring"));
+			this.addFieldError("username", this.getText("requiredstringByArg", this.getText("username")));
 			return false;
 		}
 		if (null == this.getUserManager().getUser(this.getUsername())) {
@@ -163,7 +169,7 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 		}
 
 		if (StringUtils.isBlank(this.getContentType())) {
-			this.addFieldError("contentType", this.getText("requiredstring"));
+			this.addFieldError("contentType", this.getText("requiredstringByArg", this.getText("contentType")));
 			return false;
 		}
 

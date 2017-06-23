@@ -97,12 +97,12 @@
                                                 </span>
                                                 <ul class="dropdown-menu dropdown-menu-right">
                                                     <li>
-                                                        <a href="<s:url action="editUser"><s:param name="username" value="#user.key" /></s:url>">
+                                                        <a href="<s:url action="editUser"><s:param name="user" value="#user.key" /></s:url>">
                                                             <s:text name="label.edit"/>
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="<s:url action="removeUser"><s:param name="username" value="#user.key" /></s:url>">
+                                                        <a href="<s:url action="removeUser"><s:param name="user" value="#user.key" /></s:url>">
                                                             <s:text name="label.remove"/>
                                                         </a>
                                                     </li>
@@ -125,6 +125,15 @@
                             </div>
                         </div>
                          --%>
+				<div class="form-group">
+					<div class="col-xs-12">
+						<div class="pull-right">
+							<wpsf:submit name="save" type="button" action="saveUsersItem" cssClass="btn btn-primary" >
+							<s:text name="%{getText('label.save')}"/>
+							</wpsf:submit>
+						</div>
+					</div>
+				</div>
             </s:form>
         </div>
     </div>
