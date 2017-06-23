@@ -87,14 +87,30 @@
         </action>
 
         <!-- CONTENT_TYPES -->
-        <action name="addContentTypes" class="jpcontentschedulerConfigUsersAction" method="entry">
+        <action name="addContentTypes" class="jpcontentschedulerConfigContentTypesAction" method="entryContentType">
+            <result type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
+            <result name="input" type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="editContentTypes" class="jpcontentschedulerConfigContentTypesAction" method="entryContentType">
             <result type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
-        <action name="editContentTypes" class="jpcontentschedulerConfigUsersAction" method="entry">
+
+        <!-- Join categories -->
+        <action name="openCloseCategoryTreeNodeOnEntryResource*" class="jpcontentschedulerConfigContentTypesAction" method="buildTree">
             <result type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
-            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
         </action>
+        <action name="joinCategory*" class="jpcontentschedulerConfigContentTypesAction" method="joinCategory">
+            <result type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
+        </action>
+        <action name="removeCategory*" class="jpcontentschedulerConfigContentTypesAction" method="removeCategory">
+            <result type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
+        </action>
+
         <action name="viewContentTypes" class="jpcontentschedulerConfigContentTypesAction" method="viewContentTypes">
             <result type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>

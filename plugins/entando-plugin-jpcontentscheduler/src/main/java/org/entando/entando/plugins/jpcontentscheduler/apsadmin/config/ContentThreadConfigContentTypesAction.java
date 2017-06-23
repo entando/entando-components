@@ -21,6 +21,7 @@
  */
 package org.entando.entando.plugins.jpcontentscheduler.apsadmin.config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,18 +33,20 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.apsadmin.system.BaseAction;
+import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.apsadmin.system.AbstractTreeAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.opensymphony.xwork2.Action;
 
 /**
  * @author E.Santoboni
  */
-public class ContentThreadConfigContentTypesAction extends BaseAction {
+public class ContentThreadConfigContentTypesAction extends AbstractTreeAction {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ContentThreadConfigContentTypesAction.class);
 
-	//private static final String THREAD_CONFIG_SESSION_PARAM = "threadConfig";
+	// private static final String THREAD_CONFIG_SESSION_PARAM = "threadConfig";
 	private static final String THREAD_CONFIG_SESSION_PARAM_CONTENT_TYPES = "threadConfigContentTypes";
 
 	private static final String ALL_TYPES = "*";
@@ -65,9 +68,7 @@ public class ContentThreadConfigContentTypesAction extends BaseAction {
 	}
 
 	public String entryContentType() {
-
 		return Action.SUCCESS;
-
 	}
 
 	public String addContentType() {
@@ -137,6 +138,53 @@ public class ContentThreadConfigContentTypesAction extends BaseAction {
 		return Action.SUCCESS;
 	}
 
+	public String joinCategory() {
+		return this.joinRemoveCategory(true, this.getCategoryCode());
+	}
+
+	/**
+	 * Executes the specific action in order to remove the association between a
+	 * category and the resource on edit.
+	 * 
+	 * @return The result code.
+	 */
+	public String removeCategory() {
+		return this.joinRemoveCategory(false, this.getCategoryCode());
+	}
+
+	private String joinRemoveCategory(boolean isJoin, String categoryCode) {
+		try {
+			Category category = this.getCategory(categoryCode);
+			if (category == null)
+				return SUCCESS;
+			List<String> categories = this.getCategoryCodes();
+			if (isJoin) {
+				if (!categories.contains(categoryCode)) {
+					categories.add(categoryCode);
+				}
+			} else {
+				categories.remove(categoryCode);
+			}
+		} catch (Throwable t) {
+			_logger.error("error in joinRemoveCategory", t);
+			return FAILURE;
+		}
+		return SUCCESS;
+	}
+
+	public Category getCategory(String categoryCode) {
+		return this.getCategoryManager().getCategory(categoryCode);
+	}
+
+	/**
+	 * Restutuisce la root delle categorie.
+	 * 
+	 * @return La root delle categorie.
+	 */
+	public Category getCategoryRoot() {
+		return this.getCategoryManager().getRoot();
+	}
+
 	private List<ContentTypeElem> setConfigItemOnSession() {
 		List<ContentTypeElem> types = this.getContentSchedulerManager().getConfig().getTypesList();
 		this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM_CONTENT_TYPES, types);
@@ -180,6 +228,14 @@ public class ContentThreadConfigContentTypesAction extends BaseAction {
 		this.contentManager = contentManager;
 	}
 
+	public ICategoryManager getCategoryManager() {
+		return _categoryManager;
+	}
+
+	public void setCategoryManager(ICategoryManager categoryManager) {
+		this._categoryManager = categoryManager;
+	}
+
 	public String getContentType() {
 		return contentType;
 	}
@@ -196,11 +252,29 @@ public class ContentThreadConfigContentTypesAction extends BaseAction {
 		this.contentTypeElem = contentTypeElem;
 	}
 
+	public String getCategoryCode() {
+		return _categoryCode;
+	}
+
+	public void setCategoryCode(String categoryCode) {
+		this._categoryCode = categoryCode;
+	}
+
+	public List<String> getCategoryCodes() {
+		return _categoryCodes;
+	}
+
+	public void setCategoryCodes(List<String> categoryCodes) {
+		this._categoryCodes = categoryCodes;
+	}
+
+	private List<String> _categoryCodes = new ArrayList<String>();
 	private ConfigInterface _baseConfigManager;
 	private IContentSchedulerManager _contentSchedulerManager;
 	private IContentManager contentManager;
+	private ICategoryManager _categoryManager;
 	private String contentType;
 
 	private ContentTypeElem contentTypeElem;
-
+	private String _categoryCode;
 }

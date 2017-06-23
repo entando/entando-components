@@ -174,6 +174,92 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Categories -->
+        <s:set var="categoryTreeStyleVar">
+            <wp:info key="systemParam" paramName="treeStyle_category" />
+        </s:set>
+        <fieldset class="margin-base-vertical" id="category-content-block">
+        <div class="form-group<s:property value="controlGroupErrorClassVar" />">
+            <div class="col-xs-2 control-label">
+                <label>
+                    <s:text name="title.categoriesManagement" />
+                </label>
+            </div>
+            <div class="col-xs-10">
+                <s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp" />
+                <table id="categoryTree" class="table table-bordered table-hover table-treegrid ${categoryTreeStyleVar}">
+                    <thead>
+                        <tr>
+                            <th>
+                                <s:text name="label.category.tree" />
+                                <s:if test="#categoryTreeStyleVar == 'classic'">
+                                    <button type="button" class="btn-no-button expand-button" id="expandAll">
+                                        <i class="fa fa-plus-square-o treeInteractionButtons" aria-hidden="true"></i>
+                                        &#32;
+                                        <s:text name="label.category.expandAll" />
+                                    </button>
+                                    <button type="button" class="btn-no-button" id="collapseAll">
+                                        <i class="fa fa-minus-square-o treeInteractionButtons" aria-hidden="true"></i>
+                                        &#32;
+                                        <s:text name="label.category.collapseAll" />
+                                    </button>
+                                </s:if>
+                            </th>
+                            <th class="text-center table-w-10">
+                                <s:text name="label.category.join" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <s:set var="selectedTreeNode" value="selectedNode" />
+                        <s:set var="inputFieldName" value="'categoryCode'" />
+                        <s:set var="selectedTreeNode" value="categoryCode" />
+                        <s:set var="liClassName" value="'category'" />
+                        <s:set var="treeItemIconName" value="'fa-folder'" />
+                        <s:if test="#categoryTreeStyleVar == 'classic'">
+                            <s:set var="currentRoot" value="%{categoryRoot}" />
+                            <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp" />
+                        </s:if>
+                        <s:elseif test="#categoryTreeStyleVar == 'request'">
+                            <s:set var="currentRoot" value="showableTree" />
+                            <s:set var="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
+                            <s:set var="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
+                            <s:include
+                                value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilder-request-categories.jsp" />
+                        </s:elseif>
+                    </tbody>
+                </table>
+                <s:if test="categoryCodes != null && categoryCodes.size() > 0">
+                    <ul class="list-inline mt-20">
+                        <s:iterator value="categoryCodes" var="categoryCode">
+                            <s:set var="contentTypeCategory" value="%{getCategory(#categoryCode)}"></s:set>
+                            <li>
+                                <span class="label label-info">
+                                    <span class="icon fa fa-tag"></span>
+                                    &#32;
+                                    <abbr title="<s:property value="#contentTypeCategory.getFullTitle(currentLang.code)"/>">
+                                        <s:property value="#contentTypeCategory.getShortFullTitle(currentLang.code)" />
+                                    </abbr>
+                                    &#32;
+                                    <wpsa:actionParam action="removeCategory" var="actionName">
+                                        <wpsa:actionSubParam name="categoryCode" value="%{#contentTypeCategory.code}" />
+                                    </wpsa:actionParam>
+                                    <wpsf:submit type="button" action="%{#actionName}"
+                                        title="%{getText('label.remove') + ' ' + #contentTypeCategory.defaultFullTitle}"
+                                        cssClass="btn btn-link">
+                                        <span class="pficon pficon-close white"></span>
+                                        <span class="sr-only">x</span>
+                                    </wpsf:submit>
+                                </span>
+                            </li>
+                        </s:iterator>
+                    </ul>
+                </s:if>
+            </div>
+        </div>
+    </fieldset>
+        
         <div class="form-group">
             <div class="col-xs-12">
                 <div class="pull-right">
