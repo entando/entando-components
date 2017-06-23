@@ -55,6 +55,11 @@
 
 
 <div id="main" role="main">
+
+    <div id="messages">
+        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
+    </div>
+    
     <s:form id="configurationForm" name="configurationForm" method="post" action="saveEmail" cssClass="form-horizontal">
         <legend><s:text name="legend.mail" /></legend>
         <div class="form-group">
@@ -344,7 +349,7 @@
         <div class="form-group">
             <div class="col-xs-12">
                 <div class="pull-right">
-                    <wpsf:submit name="save" type="button" action="#" cssClass="btn btn-primary" >
+                    <wpsf:submit name="save" type="button" action="saveEmail" cssClass="btn btn-primary" >
                         <s:text name="%{getText('label.save')}"/>
                     </wpsf:submit>
                 </div>
