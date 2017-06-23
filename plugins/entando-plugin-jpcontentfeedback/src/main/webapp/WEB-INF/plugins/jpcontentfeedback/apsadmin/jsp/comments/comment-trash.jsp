@@ -11,7 +11,6 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations"/></li>
     <li><s:text name="breadcrumb.integrations.components"/></li>
-    <li><s:text name="jpcontentfeedback.title.commentsManager"/></li>
     <li>
         <a href="<s:url action="list" namespace="/do/jpcontentfeedback/Comments" />">
             <s:text name="jpcontentfeedback.title.comment.list"/>
@@ -27,17 +26,17 @@
 </div>
 <br>
 
-<div id="main">
-    <div class="table-responsive">
+<div>
+    <div class="col-xs-12">
         <table class="table table-bordered table-hover no-mb">
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.author"/></th>
-                <td class="col-sm-10"><code><s:property value="#commentVar.username"/></code></td>
+                <td class="col-sm-10"><s:property value="#commentVar.username"/></td>
             </tr>
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.date.creation"/></th>
                 <td class="col-sm-10">
-                    <code><s:date name="#commentVar.creationDate" format="dd/MM/yyyy HH:mm"/></code>
+                    <s:date name="#commentVar.creationDate" format="dd/MM/yyyy HH:mm"/>
                 </td>
             </tr>
             <tr>
@@ -50,7 +49,7 @@
             </tr>
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.id"/></th>
-                <td class="col-sm-10"><code><s:property value="#commentVar.contentId"/></code></td>
+                <td class="col-sm-10"><s:property value="#commentVar.contentId"/></td>
             </tr>
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.description"/></th>
@@ -75,7 +74,7 @@
             <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
             <p class="esclamation-underline"><s:text name="label.delete"/></p>
             <p class="esclamation-underline-text">
-                <s:text name="jpcontentfeedback.label.delete.comment.confirm"/>
+                <s:text name="jpcontentfeedback.label.delete.comment.confirm"/>?
             </p>
 
             <div class="text-center margin-large-top">
