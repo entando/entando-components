@@ -11,10 +11,20 @@
             <result type="tiles">admin.jpcontentscheduler.viewItem</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
-        <action name="viewEmail" class="jpcontentschedulerConfigAction" method="viewEmail">
+
+        <!-- EMAIL -->
+        <action name="viewEmail" class="jpcontentschedulerEmailAction" method="viewEmail">
             <result type="tiles">admin.jpcontentscheduler.viewEmail</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
+        
+        <action name="saveEmail" class="jpcontentschedulerEmailAction" method="saveItem">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewEmail</result>
+            <result type="tiles">admin.jpcontentscheduler.viewEmail</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+
 
         <!-- USERS -->
         <action name="addUser" class="jpcontentschedulerConfigUsersAction" method="entry">

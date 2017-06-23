@@ -14,6 +14,13 @@
         <property name="baseConfigManager" ref="BaseConfigManager" />
         <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
     </bean>
+
+    <bean id="jpcontentschedulerEmailAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ContentThreadConfigEmailAction" 
+          scope="prototype" parent="abstractBaseAction" >
+        <property name="baseConfigManager" ref="BaseConfigManager" />
+        <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
+    </bean>
+    
     
     <bean id="jpcontentschedulerConfigUsersAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ContentThreadConfigUsersAction" 
           scope="prototype" parent="abstractBaseAction" >
