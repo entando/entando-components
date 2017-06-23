@@ -160,7 +160,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="threadConfig_siteCode">
-                <s:text name="label.threadConfig.globalCat" />
+                <s:text name="label.threadConfig.siteCode" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
