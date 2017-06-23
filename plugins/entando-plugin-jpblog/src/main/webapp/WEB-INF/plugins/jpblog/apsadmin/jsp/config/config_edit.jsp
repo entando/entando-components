@@ -12,9 +12,7 @@
 <h1 class="page-title-container">
     <s:text name="admin.jpblog.title.config" />
     <span class="pull-right">
-        <a tabindex="0" role="button"
-           data-toggle="popover" data-trigger="focus" data-html="true" title=""
-           data-content="<s:text name="admin.jpblog.title.config.help" />" data-placement="left"
+        <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title="" data-content="<s:text name="admin.jpblog.title.config.help" />" data-placement="left"
            data-original-title="">
             <span class="fa fa-question-circle-o" aria-hidden="true"></span>
         </a>
@@ -24,11 +22,9 @@
 <div class="text-right">
     <div class="form-group-separator"></div>
 </div>
-
 <br>
 
-<div id="main">
-
+<div class="col-xs-12">
     <div id="messages">
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>

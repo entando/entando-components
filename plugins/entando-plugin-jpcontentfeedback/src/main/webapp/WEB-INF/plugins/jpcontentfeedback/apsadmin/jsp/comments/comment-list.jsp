@@ -6,8 +6,8 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations"/></li>
     <li><s:text name="breadcrumb.integrations.components"/></li>
-    <li><s:text name="jpcontentfeedback.title.commentsManager"/></li>
-    <li class="page-title-container"><s:text name="jpcontentfeedback.title.comment.list"/></li>
+    <li><s:text name="jpcontentfeedback.title.comment.list"/></li>
+    <li class="page-title-container"><s:text name="jpcontentfeedback.admin.menu.contentFeedback"/></li>
 </ol>
 
 <div class="page-tabs-header">
@@ -85,7 +85,6 @@
         </s:if>
 
         <div class="form-group">
-
             <div class="col-xs-12  ">
                 <div class="well col-md-offset-3 col-md-6  ">
                     <p class="search-label"><s:text name="jpcontentfeedback.label.search"/></p>
@@ -97,10 +96,7 @@
                             </label>
                             <div class="col-sm-9">
                                 <s:set var="allStatus" value="%{getAllStatus()}"/>
-                                <wpsf:select cssClass="form-control input-lg"
-                                             list="#allStatus" name="status" id="status"
-                                             listKey="key" listValue="value" headerKey=""
-                                             headerValue="%{getText('label.all')}"/>
+                                <wpsf:select cssClass="form-control " list="#allStatus" name="status" id="status"  listKey="key" listValue="value" headerKey="" headerValue="%{getText('label.all')}"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -114,32 +110,32 @@
                     </s:form>
                 </div>
             </div>
-
             <br>
             <br>
-
             <div class="input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div id="search-advanced" class="collapse well collapse-input-group">
-
                     <div class="form-group">
-                        <label class="control-label col-sm-2 text-right" for="comment" class=""><s:text
-                                name="jpcontentfeedback.comment"/></label>
+                        <label class="control-label col-sm-2 text-right" for="comment" class="">
+                            <s:text name="jpcontentfeedback.comment"/>
+                        </label>
                         <div class="col-sm-5" id="content_list-changeContentType">
                             <wpsf:textfield name="text" id="comment" cssClass="form-control"/>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="author" class="control-label col-sm-2 text-right"><s:text
-                                name="jpcontentfeedback.author"/></label>
+                        <label for="author" class="control-label col-sm-2 text-right">
+                            <s:text name="jpcontentfeedback.author"/>
+                        </label>
                         <div class="col-sm-5" id="content_list-changeContentType">
                             <wpsf:textfield name="author" id="author" cssClass="form-control"/>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="from_cal" class="control-label col-sm-2 text-right"><s:text
-                                name="jpcontentfeedback.date.from"/></label>
+                        <label for="from_cal" class="control-label col-sm-2 text-right">
+                            <s:text name="jpcontentfeedback.date.from"/>
+                        </label>
                         <div class="col-sm-5" id="content_list-changeContentType">
                             <wpsf:textfield name="from" id="from_cal" value="%{from}"
                                             cssClass="form-control datepicker"/>
@@ -148,14 +144,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="to_cal" class="control-label col-sm-2 text-right"><s:text
-                                name="jpcontentfeedback.date.to"/></label>
+                        <label for="to_cal" class="control-label col-sm-2 text-right">
+                            <s:text name="jpcontentfeedback.date.to"/></label>
                         <div class="col-sm-5" id="content_list-changeContentType">
                             <wpsf:textfield name="to" id="to_cal" value="%{to}" cssClass="form-control datepicker"/>
                             <span class="help-block">dd/MM/yyyy</span>
                         </div>
                     </div>
-
 
                     <div class="form-group">
                         <div class="col-sm-5 col-sm-offset-2">
@@ -185,9 +180,9 @@
                         <s:iterator var="commentoId">
                             <tr>
                                 <s:set var="commento" value="%{getComment(#commentoId)}"/>
-                                <td><code><s:property value="#commento.username"/></code></td>
-                                <td class="text-center"><code><s:date name="#commento.creationDate"
-                                        format="dd/MM/yyyy HH:mm"/></code></td>
+                                <td><s:property value="#commento.username"/></td>
+                                <td class="text-center"><s:date name="#commento.creationDate"
+                                        format="dd/MM/yyyy HH:mm"/></td>
                                 <td><s:text name="%{'jpcontentfeedback.label.' + #commento.status}"/></td>
                                 <td class="table-view-pf-actions text-center">
                                     <div class="dropdown dropdown-kebab-pf">

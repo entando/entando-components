@@ -5,7 +5,7 @@
     </span>
 </h1>
 <div id="main">
-	<div class="alert alert-success">
-		<s:text name="jpuserreg.note.configuration.saved" />
-	</div>
+    <div class="alert alert-success">
+        <s:text name="jpuserreg.note.configuration.saved" />
+    </div>
 </div>

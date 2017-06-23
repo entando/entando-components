@@ -10,6 +10,7 @@
     <li>
         <s:text name="breadcrumb.integrations.components"/>
     </li>
+    <li><s:text name="jpavatar.title.avatar" /></li>
     <li class="page-title-container">
         <s:text name="title.avatarManagement"/>
     </li>
@@ -18,7 +19,7 @@
     <div class="row">
         <div class="col-sm-6">
             <h1>
-                <s:text name="title.avatarManagement"/>
+                <s:text name="jpavatar.title.avatar" />
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
                        data-content="<s:text name="title.avatarManagement.help" />" data-placement="left" data-original-title="">

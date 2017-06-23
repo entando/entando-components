@@ -135,47 +135,43 @@
                         </s:if>
                         <s:else>
                             <dt>
-                                <s:property value="%{getLabel(#choice.choices)}" />
+                                <span class="noscreen"><s:text
+                                        name="jpsurvey.answer.number" />
+                                </span>&#32;
+                                <em class="leftEm"><s:property
+                                        value="#rowstatus.index + 1" />
+                                </em>&#32;
+                                <span class="noscreen"><s:text
+                                        name="jpsurvey.obtained" />
+                                </span>&#32;
                             </dt>
                         </s:else>
                         <s:set var="occurrence" value="#occurrences[#choice.id]" />
                         <s:set var="roundedPercentage"
                                value="%{getChoicePercentage(#occurrences, #choice.id)}" />
 
-                        <s:if test="#occurrence && (#roundedPercentage > 20)">
-                            <dd>
-                                <span
-                                    class="p<s:text name="format.roundedPercentage"><s:param name="value" value="#roundedPercentage"/></s:text>">
-                                    <span class="noscreen"><s:text
-                                            name="jpsurvey.answer.number" /></span>&#32;<em class="leftEm"><s:property
-                                            value="#rowstatus.index + 1" /></em>&#32;<span class="noscreen"><s:text
-                                            name="jpsurvey.obtained" /></span>&#32;<em class="rightEm"><s:property
-                                            value="#occurrence" />&#32;<s:text name="jpsurvey.votes" /></em>
-                                </span>
-                            </dd>
-                        </s:if>
-                        <s:elseif test="#occurrence && (#roundedPercentage < 20)">
-                            <dd>
-                                <span
-                                    class="p<s:text name="format.roundedPercentage"><s:param name="value" value="#roundedPercentage"/></s:text>">
-                                    <span class="noscreen"><s:text
-                                            name="jpsurvey.answer.number" /></span>&#32;<em class="leftEm"><s:property
-                                            value="#rowstatus.index + 1" /></em>&#32;<span class="noscreen"><s:text
-                                            name="jpsurvey.obtained" /></span>
-                                </span>&#32;<em class="rightEmZero"><s:property
-                                        value="#occurrence" />&#32;<s:text name="jpsurvey.votes" /></em>
-                            </dd>
-                        </s:elseif>
-                        <s:else>
-                            <dd>
-                                <span class="p0"><span class="noscreen"><s:text
-                                            name="jpsurvey.answer.number" /></span>&#32;<em class="leftEm"><s:property
-                                            value="#rowstatus.index + 1" /></em></span>&#32;<span class="noscreen"><s:text
-                                        name="jpsurvey.obtained" /></span>&#32;<em class="rightEmZero">0
+                        <dd>
+                            <span  style="color:#FFF;"
+                                class="p<s:text name="format.roundedPercentage"><s:param name="value" value="#roundedPercentage"/></s:text>">
+                                
+                                 <s:if test="%{#roundedPercentage != null && #roundedPercentage != ''}">
+                                     <s:text name="format.roundedPercentage"><s:param name="value" value="#roundedPercentage"/></s:text>%
+                                     
+                                 </s:if>
+                                <s:else> 0%
+                                </s:else>    
+                                
+                                
+                            </span>
+                                <em class="rightEm">
+                                <s:if test="%{#occurrence != null && #occurrence != ''}">
+                                    <s:property  value="#occurrence" />
+                                </s:if>
+                                <s:else>0</s:else>
                                     &#32;<s:text name="jpsurvey.votes" />
                                 </em>
-                            </dd>
-                        </s:else>
+                        </dd>
+                        
                     </s:iterator>
                 </dl>
             </div>

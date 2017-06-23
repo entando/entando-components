@@ -11,23 +11,24 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations"/></li>
     <li><s:text name="breadcrumb.integrations.components"/></li>
-    <li><s:text name="jpcontentfeedback.title.commentsManager"/></li>
     <li>
         <a href="<s:url action="list" namespace="/do/jpcontentfeedback/Comments" />">
             <s:text name="jpcontentfeedback.title.comment.list"/>
         </a>
     </li>
-    <li class="page-title-container"><s:text name="jpcontentfeedback.title.comment.detail" /></li>
+    <li class="page-title-container">
+        <s:text name="jpcontentfeedback.title.comment.detail" />
+    </li>
 </ol>
 
 <div class="page-tabs-header">
     <h1>
         <s:text name="jpcontentfeedback.title.comment.detail" />
         <span class="pull-right">
-        <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-           data-content="<s:text name="jpcontentfeedback.title.comment.detail.help" />" data-placement="left" data-original-title="">
-            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-        </a>
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+               data-content="<s:text name="jpcontentfeedback.title.comment.detail.help" />" data-placement="left" data-original-title="">
+                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+            </a>
         </span>
     </h1>
 </div>
@@ -39,12 +40,12 @@
         <table class="table table-bordered table-hover no-mb">
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.author"/></th>
-                <td class="col-sm-10"><code><s:property value="#commentVar.username"/></code></td>
+                <td class="col-sm-10"><s:property value="#commentVar.username"/></td>
             </tr>
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.date.creation"/></th>
                 <td class="col-sm-10">
-                    <code><s:date name="#commentVar.creationDate" format="dd/MM/yyyy HH:mm"/></code>
+                    <s:date name="#commentVar.creationDate" format="dd/MM/yyyy HH:mm"/>
                 </td>
             </tr>
             <tr>
@@ -57,7 +58,7 @@
             </tr>
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.id"/></th>
-                <td class="col-sm-10"><code><s:property value="#commentVar.contentId"/></code></td>
+                <td class="col-sm-10"><s:property value="#commentVar.contentId"/></td>
             </tr>
             <tr>
                 <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.description"/></th>

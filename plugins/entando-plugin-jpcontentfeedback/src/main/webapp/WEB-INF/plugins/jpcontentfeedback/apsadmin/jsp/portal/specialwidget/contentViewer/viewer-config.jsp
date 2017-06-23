@@ -8,8 +8,11 @@
             <s:text name="title.pageManagement"/>
         </a>
     </li>
-    <li class="page-title-container">
+    <li>
         <s:text name="title.configPage"/>
+    </li>
+    <li class="page-title-container">
+        <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}"/>
     </li>
 </ol>
 <h1 class="page-title-container">
@@ -17,7 +20,7 @@
         <s:text name="title.configPage"/>
         <span class="pull-right">
             <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-               data-content="jpcontentfeedback.title.configPage.help" data-placement="left" data-original-title="">
+               data-content="<s:text name="jpcontentfeedback.title.commentsManager.help"/>" data-placement="left" data-original-title="">
                 <i class="fa fa-question-circle-o" aria-hidden="true"></i>
             </a>
         </span>
@@ -68,8 +71,8 @@
                                 <s:iterator value="fieldErrors">
                                     <s:iterator value="value">
                                         <li><s:property escapeHtml="false"/></li>
+                                        </s:iterator>
                                     </s:iterator>
-                                </s:iterator>
                             </ul>
                         </div>
                     </s:if>
@@ -83,13 +86,13 @@
 
                             <s:set var="content" value="%{getContentVo(showlet.config['contentId'])}"></s:set>
 
-                            <div class="form-group">
-                                <div class="col-sm-12 table-responsive">
-                                    <table class="table table-bordered table-hover no-mb">
-                                        <tr>
-                                            <th class="text-right col-sm-2"><s:text name="label.code"/></th>
+                                <div class="form-group">
+                                    <div class="col-sm-12 table-responsive">
+                                        <table class="table table-bordered table-hover no-mb">
+                                            <tr>
+                                                <th class="text-right col-sm-2"><s:text name="label.code"/></th>
                                             <td class="col-sm-10">
-                                                <code><s:property value="#content.id"/></code>
+                                                <s:property value="#content.id"/>
                                             </td>
                                         </tr>
                                         <tr>
