@@ -68,6 +68,23 @@ public class ContentThreadConfigContentTypesAction extends AbstractTreeAction {
 	}
 
 	public String entryContentType() {
+
+		String contentTypeParam = this.getRequest().getParameter("contentType");
+		if (StringUtils.isNotBlank(contentTypeParam)) {
+			List<ContentTypeElem> types = this.getTypes();
+			ContentTypeElem elem = null;
+			for (ContentTypeElem contentTypeElem : types) {
+				if (contentTypeElem.getContentType().equalsIgnoreCase(this.getContentType())) {
+					if (contentTypeElem.getContentType().equalsIgnoreCase(contentTypeParam)) {
+						elem = contentTypeElem;
+						break;
+					}
+
+				}
+			}
+			contentTypeElem = elem;
+		}
+
 		return Action.SUCCESS;
 	}
 
@@ -79,7 +96,7 @@ public class ContentThreadConfigContentTypesAction extends AbstractTreeAction {
 
 			ContentTypeElem existingElem = null;
 			for (ContentTypeElem contentTypeElem : config) {
-				if (contentTypeElem.getContentType().equalsIgnoreCase(this.getContentType())) {
+				if (contentTypeElem.getContentType().equalsIgnoreCase(elem.getContentType())) {
 					existingElem = contentTypeElem;
 					break;
 				}
@@ -187,7 +204,11 @@ public class ContentThreadConfigContentTypesAction extends AbstractTreeAction {
 
 	private List<ContentTypeElem> setConfigItemOnSession() {
 		List<ContentTypeElem> types = this.getContentSchedulerManager().getConfig().getTypesList();
-		this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM_CONTENT_TYPES, types);
+		List<ContentTypeElem> types2 = new ArrayList<>();
+		for (ContentTypeElem contentTypeElem : types) {
+			types2.add(contentTypeElem);
+		}
+		this.getRequest().getSession().setAttribute(THREAD_CONFIG_SESSION_PARAM_CONTENT_TYPES, types2);
 		return types;
 	}
 
