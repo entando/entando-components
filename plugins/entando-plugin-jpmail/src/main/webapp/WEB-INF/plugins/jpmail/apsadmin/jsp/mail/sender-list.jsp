@@ -4,7 +4,9 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
-    <li><s:text name="breadcrumb.jpmail"/></li>
+    <li><s:text name="breadcrumb.integrations"/></li>
+    <li><s:text name="breadcrumb.integrations.components"/></li>
+    <li><s:text name="jpmail.admin.menu" /></li>
     <li class="page-title-container"><s:text name="title.eMailManagement.sendersConfig"/></li>
 </ol>
 
@@ -12,12 +14,12 @@
     <div class="row">
         <div class="col-sm-12 col-md-6">
             <h1 class="page-title-container">
-                <s:text name="title.eMailManagement.sendersConfig"/>
+                <s:text name="jpmail.admin.menu" />
                 <span class="pull-right">
-                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                   data-content="TO be inserted" data-placement="left" data-original-title="">
-                    <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </a>
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+                       data-content="<s:text name="title.eMailManagement.help"/> data-placement="left" data-original-title="">
+                       <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                    </a>
                 </span>
             </h1>
         </div>
@@ -36,7 +38,7 @@
 
 <br/>
 
-<div id="main">
+<div class="mb-20">
     <div class="row">
         <div class="col-sm-12">
             <a href="<s:url action="newSender" />" class="btn btn-primary pull-right" style="margin-bottom: 5px">
@@ -52,7 +54,7 @@
             <ul class="margin-base-vertical">
                 <s:iterator value="actionErrors">
                     <li><s:property escapeHtml="false" /></li>
-                </s:iterator>
+                    </s:iterator>
             </ul>
         </div>
     </s:if>
@@ -61,47 +63,46 @@
         <p><s:text name="label.senders.none" /></p>
     </s:if>
     <s:else>
-    <div class="table-responsive overflow-visible">
-        <table class="table table-striped table-bordered table-hover no-mb">
-            <thead>
-                <tr>
-                    <th class="col-sm-5"><s:text name="code" /></th>
-                    <th class="col-sm-6"><s:text name="mail" /></th>
-                    <th class="text-center col-sm-1"><s:text name="label.actions"/></th>
-                </tr>
-            </thead>
+        <div class="table-responsive overflow-visible">
+            <table class="table table-striped table-bordered table-hover no-mb">
+                <thead>
+                    <tr>
+                        <th class="col-sm-5"><s:text name="code" /></th>
+                        <th class="col-sm-6"><s:text name="mail" /></th>
+                        <th class="text-center table-w-5"><s:text name="label.actions"/></th>
+                    </tr>
+                </thead>
 
-            <tbody>
-            <s:iterator value="%{config.senders.entrySet()}" var="sender">
-                <tr>
-                    <td><code><s:property value="#sender.key"/></code></td>
-                    <td><s:property value="#sender.value" /></td>
-                    <td class="text-center">
-                        <div class="dropdown dropdown-kebab-pf">
-                            <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <span class="fa fa-ellipsis-v"></span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
-                                <li>
-                                    <a href="<s:url action="editSender" > <s:param name="code" value="#sender.key" /></s:url>"
-                                       title="<s:text name="label.edit" />">
-                                        <s:text name="label.edit"/>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="<s:url action="trashSender" > <s:param name="code" value="#sender.key" /></s:url>"
-                                       title="<s:text name="label.delete" />">
-                                        <s:text name="label.delete"/>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            </s:iterator>
-            </tbody>
-        </table>
-    </div>
+                <tbody>
+                    <s:iterator value="%{config.senders.entrySet()}" var="sender">
+                        <tr>
+                            <td><s:property value="#sender.key"/></td>
+                            <td><s:property value="#sender.value" /></td>
+                            <td class="text-center table-view-pf-actions">
+                                <div class="dropdown dropdown-kebab-pf">
+                                    <button class="btn btn-menu-right dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="fa fa-ellipsis-v"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><li>
+                                            <a href="<s:url action="editSender" > <s:param name="code" value="#sender.key" /></s:url>"
+                                               title="<s:text name="label.edit" />">
+                                                <s:text name="label.edit"/>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<s:url action="trashSender" > <s:param name="code" value="#sender.key" /></s:url>"
+                                               title="<s:text name="label.delete" />">
+                                                <s:text name="label.delete"/>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </s:iterator>
+                </tbody>
+            </table>
+        </div>
     </s:else>
 </div>

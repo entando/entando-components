@@ -5,20 +5,22 @@
 <%@ taglib prefix="sj" uri="/struts-jquery-tags"%>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="breadcrumb.integrations"/></li>
+    <li><s:text name="breadcrumb.integrations.components"/></li>
     <li><s:text name="breadcrumb.jpmail"/></li>
-    <li class="page-title-container"><s:text name="breadcrumb.smtpConfig" /></li>
+    <li class="page-title-container"><s:text name="jpmail.admin.menu.smtp"/></li>
 </ol>
 
 <div class="page-tabs-header">
     <div class="row">
         <div class="col-sm-12 col-md-6">
             <h1 class="page-title-container">
-                <s:text name="jpmail.admin.menu.smtp"/>
+                <s:text name="jpmail.admin.menu" />
                 <span class="pull-right">
-                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                   data-content="TO be inserted" data-placement="left" data-original-title="">
-                    <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </a>
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+                       data-content="<s:text name="title.eMailManagement.help"/>" data-placement="left" data-original-title="">
+                        <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                    </a>
                 </span>
             </h1>
         </div>
@@ -34,10 +36,8 @@
         </div>
     </div>
 </div>
-
 <br/>
-
-<div id="main">
+<div class="mb-20">
     <div class="panel panel-default">
         <div class="panel-body">
             <s:text name="label.jpmail.intro" />
@@ -73,7 +73,7 @@
         </div>
 
         <legend><s:text name="legend.connection" /></legend>
-            <%-- smtpHost --%>
+        <%-- smtpHost --%>
         <s:set var="fieldErrorsVar" value="%{fieldErrors['smtpHost']}" />
         <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
@@ -85,8 +85,8 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="smtpHost" id="smtpHost" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -156,8 +156,8 @@
         <div class="form-group">
             <div class="col-xs-12">
                 <div class="pull-right">
-                    <sj:submit parentTheme="simple" formIds="configurationForm" value="%{getText('label.testConnection')}" targets="messages" cssClass="btn btn-default"/>
-                    <wpsf:submit name="testMail"  value="%{getText('label.sendEmail')}" action="testMail" cssClass="btn btn-default" onclick="overrideSubmit('testMail')"/>
+                    <sj:submit parentTheme="simple" formIds="configurationForm" value="%{getText('label.testConnection')}" targets="messages" cssClass="btn btn-success"/>
+                    <wpsf:submit name="testMail"  value="%{getText('label.sendEmail')}" action="testMail" cssClass="btn btn-success" onclick="overrideSubmit('testMail')"/>
                     <wpsf:submit name="save" type="button" action="saveSmtp" cssClass="btn btn-primary" onclick="overrideSubmit('saveSmtp')">
                         <s:text name="%{getText('label.save')}"/>
                     </wpsf:submit>
