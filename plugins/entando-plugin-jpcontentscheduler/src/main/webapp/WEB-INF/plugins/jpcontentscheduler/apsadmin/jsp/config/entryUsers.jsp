@@ -154,13 +154,9 @@
                     </ul>
                 </s:if>
                 <s:else>
-                    <div class="row">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="alert alert-info">
-                              <span class="pficon pficon-info"></span>
-                              <s:text name="jpcontentscheduler.contentTypes.empty"/>
-                            </div>
-                        </div>
+                    <div class="alert alert-info mt-20">
+                        <span class="pficon pficon-info"></span>
+                        <s:text name="jpcontentscheduler.contentTypes.empty"/>
                     </div>
                 </s:else>
                 

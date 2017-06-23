@@ -65,7 +65,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <a class="btn btn-primary margin-base-bottom pull-right" href="<s:url action="addContentType" />">
+            <a class="btn btn-primary margin-base-bottom pull-right" href="<s:url action="addContentTypes" />">
                 <s:text name="label.add" />
             </a>
         </div>
@@ -144,7 +144,7 @@
                                         </span>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                             <li>
-                                                <a href="<s:url action="editContentType"><s:param name="contentType" value="%{#element.contentType}"/></s:url>">
+                                                <a href="<s:url action="editContentTypes"><s:param name="contentType" value="%{#element.contentType}"/></s:url>">
                                                     <s:text name="label.edit" />
                                                 </a>
                                             </li>

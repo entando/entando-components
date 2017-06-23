@@ -43,11 +43,6 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<s:url action="viewGroups"/>">
-                        <s:text name="jpcontentscheduler.admin.groups"/>
-                    </a>
-                </li>
-                <li>
                     <a href="<s:url action="viewContentTypes"/>">
                         <s:text name="jpcontentscheduler.admin.contentTypes"/>
                     </a>
