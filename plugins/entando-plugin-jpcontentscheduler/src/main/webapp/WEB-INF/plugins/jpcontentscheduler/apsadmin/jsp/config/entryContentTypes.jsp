@@ -2,6 +2,7 @@
 <%@ taglib prefix="wp" uri="/aps-core"%>
 <%@ taglib prefix="wpsa" uri="/apsadmin-core"%>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form"%>
+
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li>
         <s:text name="jpcontentscheduler.integrations" />
@@ -62,7 +63,7 @@
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>
     
-    <s:form id="configurationForm" name="configurationForm" method="post" action="addContentTypes" cssClass="form-horizontal">
+    <s:form id="configurationForm" name="configurationForm" method="post" action="addContentType" cssClass="form-horizontal">
         <legend>
             <s:text name="jpcontentscheduler.label.addContentType" />
         </legend>
@@ -72,10 +73,10 @@
                 <s:text name="jpcontentscheduler.label.contentType" />
             </label>
             <div class="col-sm-10">
-                <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.contentTypes']}" />
+                <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.contentType']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-                <wpsf:select name="threadConfig.contentTypes" id="threadConfig_contentTypes"
+                <wpsf:select name="contentTypeElem.contentType" id="contentTypeElem_contentType"
                     list="%{getContentTypes()}" listKey="code" listValue="description" headerKey=""
                     headerValue="%{getText('note.choose')}" cssClass="form-control" />
             </div>
@@ -86,10 +87,10 @@
                 <s:text name="jpcontentscheduler.label.startDateAttribute" />
             </label>
             <div class="col-sm-10">
-                <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.startAttr']}" />
+                <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.startAttr']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-                <wpsf:textfield name="threadConfig.startAttr" id="threadConfig_startAttr"
+                <wpsf:textfield name="contentTypeElem.startAttr" id="contentTypeElem_startAttr"
                     placeholder="%{getText('jpcontentscheduler.label.startDateAttribute')}" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
@@ -107,10 +108,10 @@
                 <s:text name="jpcontentscheduler.label.endDateAttribute" />
             </label>
             <div class="col-sm-10">
-                <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.idContentReplace']}" />
+                <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.endAttro']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-                <wpsf:textfield name="threadConfig.idContentReplace" id="threadConfig_idContentReplace"
+                <wpsf:textfield name="contentTypeElem.endAttro" id="contentTypeElem_endAttro"
                     placeholder="%{getText('jpcontentscheduler.label.endDateAttribute')}" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
@@ -128,10 +129,10 @@
                 <s:text name="jpcontentscheduler.label.contentReplaceId" />
             </label>
             <div class="col-sm-10">
-                <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.idContentReplace']}" />
+                <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.idContentReplace']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-                <wpsf:textfield name="threadConfig.idContentReplace" id="threadConfig_idContentReplace"
+                <wpsf:textfield name="contentTypeElem.idContentReplace" id="contentTypeElem_idContentReplace"
                     placeholder="%{getText('jpcontentscheduler.label.contentReplaceId')}" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
@@ -149,10 +150,10 @@
                 <s:text name="jpcontentscheduler.label.contentReplaceModelId" />
             </label>
             <div class="col-sm-10">
-                <s:set var="fieldErrorsVar" value="%{fieldErrors['threadConfig.modelIdContentReplace']}" />
+                <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.modelIdContentReplace']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-                <wpsf:textfield name="threadConfig.modelIdContentReplace" id="threadConfig_modelIdContentReplace"
+                <wpsf:textfield name="contentTypeElem.modelIdContentReplace" id="contentTypeElem_modelIdContentReplace"
                     placeholder="%{getText('jpcontentscheduler.label.contentReplaceModelId')}" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
@@ -170,7 +171,7 @@
             </label>
             <div class="col-sm-10">
                 <div class="checkbox">
-                    <wpsf:checkbox name="active" id="active" cssClass=" bootstrap-switch" />
+                    <wpsf:checkbox name="contentTypeElem.suspend" id="contentTypeElem_suspend" cssClass=" bootstrap-switch" />
                 </div>
             </div>
         </div>
@@ -218,7 +219,7 @@
                         <s:set var="liClassName" value="'category'" />
                         <s:set var="treeItemIconName" value="'fa-folder'" />
                         <s:if test="#categoryTreeStyleVar == 'classic'">
-                            <s:set var="currentRoot" value="%{categoryRoot}" />
+                            <s:set var="currentRoot" value="categoryRoot" />
                             <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp" />
                         </s:if>
                         <s:elseif test="#categoryTreeStyleVar == 'request'">
@@ -263,7 +264,7 @@
         <div class="form-group">
             <div class="col-xs-12">
                 <div class="pull-right">
-                    <wpsf:submit name="save" type="button" action="#" cssClass="btn btn-primary">
+                    <wpsf:submit name="save" type="button" cssClass="btn btn-primary">
                         <s:text name="%{getText('label.save')}" />
                     </wpsf:submit>
                 </div>
