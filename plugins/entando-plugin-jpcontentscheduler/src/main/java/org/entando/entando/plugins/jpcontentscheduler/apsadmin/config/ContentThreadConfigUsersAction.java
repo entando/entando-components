@@ -109,7 +109,7 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 	public String removeContentType() {
 		try {
 			Map<String, List<String>> config = this.getUsersContentType();
-			boolean isValidInput = this.validateAdd();
+			boolean isValidInput = this.validateRemoveContentType();
 			if (this.hasErrors()) {
 				return INPUT;
 			}
@@ -166,6 +166,19 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 			return false;
 		}
 
+		if (StringUtils.isBlank(this.getContentType())) {
+			this.addFieldError("contentType", this.getText("requiredstringByArg", this.getText("contentType")));
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean validateRemoveContentType() throws ApsSystemException {
+		if (StringUtils.isBlank(this.getUsername())) {
+			this.addFieldError("username", this.getText("requiredstringByArg", this.getText("username")));
+			return false;
+		}
 		if (StringUtils.isBlank(this.getContentType())) {
 			this.addFieldError("contentType", this.getText("requiredstringByArg", this.getText("contentType")));
 			return false;

@@ -90,7 +90,7 @@
                 <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.startAttr']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-                <wpsf:textfield name="contentTypeElem.startAttr" id="contentTypeElem_startAttr"
+                <wpsf:textfield name="contentTypeElem.startDateAttr" id="contentTypeElem_startAttr"
                     placeholder="%{getText('jpcontentscheduler.label.startDateAttribute')}" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
@@ -111,7 +111,7 @@
                 <s:set var="fieldErrorsVar" value="%{fieldErrors['contentTypeElem.endAttro']}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-                <wpsf:textfield name="contentTypeElem.endAttro" id="contentTypeElem_endAttro"
+                <wpsf:textfield name="contentTypeElem.endDateAttro" id="contentTypeElem_endAttro"
                     placeholder="%{getText('jpcontentscheduler.label.endDateAttribute')}" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
