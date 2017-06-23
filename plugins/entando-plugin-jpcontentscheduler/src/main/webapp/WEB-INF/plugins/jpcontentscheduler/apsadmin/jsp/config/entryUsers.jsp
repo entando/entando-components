@@ -59,11 +59,11 @@
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>
 
-<s:set var="isAllTypeSelected" value="%{false}"/>
+<s:set var="isAllTypeSelected" value="false"/>
 <s:if test="%{null != username}">
     <s:set var="username" value="username"/>
     <s:if test="%{getUsersContentType()[#username].get(0).equalsIgnoreCase('*')}">
-        <s:set var="isAllTypeSelected" value="%{true}"/>
+        <s:set var="isAllTypeSelected" value="true"/>
     </s:if>
 </s:if>
 <s:else>
@@ -95,9 +95,9 @@
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <div class="input-group">
                     <wpsf:select name="contentType" id="threadConfig_contentTypes" list="%{getContentTypes()}" 
-                        listKey="code" listValue="description" headerKey="*" headerValue="%{getText('label.all')}" cssClass="form-control" readonly="%{isAllTypeSelected}"/>
+                        listKey="code" listValue="description" headerKey="*" headerValue="%{getText('label.all')}" cssClass="form-control" disabled="%{#isAllTypeSelected}"/>
                     <span class="input-group-btn">
-                        <wpsf:submit type="button" action="addUserContentType" cssClass="btn btn-primary %{(#isAllTypeSelected)?'disabled':''}">
+                        <wpsf:submit type="button" action="addUserContentType" cssClass="btn btn-primary" disabled="%{#isAllTypeSelected}">
                             <s:text name="label.add"/>
                         </wpsf:submit>
                     </span>
@@ -158,13 +158,9 @@
                     </ul>
                 </s:if>
                 <s:else>
-                    <div class="row">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="alert alert-info">
-                              <span class="pficon pficon-info"></span>
-                              <s:text name="jpcontentscheduler.contentTypes.empty"/>
-                            </div>
-                        </div>
+                    <div class="alert alert-info mt-20">
+                        <span class="pficon pficon-info"></span>
+                        <s:text name="jpcontentscheduler.contentTypes.empty"/>
                     </div>
                 </s:else>
                 
