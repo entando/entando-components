@@ -1,5 +1,7 @@
 /*
- * Copyright 2015-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ * The MIT License
+ *
+ * Copyright 2017 Entando Inc..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,26 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpcasclient;
+package com.agiletec.plugins.jpldap.apsadmin;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import com.agiletec.apsadmin.admin.BaseAdminAction;
 
-import com.agiletec.plugins.jpcasclient.aps.system.services.auth.TestCasClientUtils;
-import com.agiletec.plugins.jpcasclient.aps.system.services.config.parse.TestConfigDOM;
-import com.agiletec.plugins.jpcasclient.aps.system.services.controller.control.TestCasClientAuthenticatorControlService;
+/**
+ *
+ * @author paco
+ */
+public class LdapConfigAction extends BaseAdminAction {
 
-public class AllTests {
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite("Test for jpcasclient");
-        System.out.println("Test for jpcasclient");
-
-        suite.addTestSuite(TestCasClientUtils.class);
-        suite.addTestSuite(TestCasClientAuthenticatorControlService.class);
-        suite.addTestSuite(TestConfigDOM.class);
-
-        return suite;
+    @Override
+    public String updateSystemParams() {
+        return super.updateSystemParams(true);
     }
 
 }

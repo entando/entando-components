@@ -7,14 +7,18 @@
 
     <package name="core_do/TagcloudAdmin" namespace="/do/TagcloudAdmin" extends="entando-default">
 
-        <action name="configSystemParams" class="baseAdminAction" method="configSystemParams">
+        <action name="configSystemParams" class="jpcmstagcloudConfigSystemParams" method="configSystemParams">
             <result type="tiles">admin.jpcmstagcloud.Configuration.edit</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
-        <action name="updateSystemParams" class="baseAdminAction" method="updateSystemParams">
+        <action name="updateSystemParams" class="jpcmstagcloudConfigSystemParams" method="updateSystemParams">
             <result type="tiles">admin.jpcmstagcloud.Configuration.edit</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
     </package>
