@@ -11,7 +11,6 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations"/></li>
     <li><s:text name="breadcrumb.integrations.components"/></li>
-    <li><s:text name="jpcontentfeedback.title.commentsManager"/></li>
     <li>
         <a href="<s:url action="list" namespace="/do/jpcontentfeedback/Comments" />">
             <s:text name="jpcontentfeedback.title.comment.list"/>
