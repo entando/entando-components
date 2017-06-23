@@ -54,7 +54,7 @@
   </definition>
 
    <definition extends="layout.default" name="admin.jpcrowdsourcing.idea.entry">
-   	<put-attribute name="extraResources" value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/categoryTree.jsp" />
+   	<put-attribute name="extraResources" value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp" />
 	<put-attribute name="title" value="jpcrowdsourcing.title.ideas" />
 	<put-attribute name="body" value="/WEB-INF/plugins/jpcollaboration/apsadmin/jsp/idea/idea-entry.jsp" />
   </definition>
