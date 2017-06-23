@@ -155,7 +155,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="siteCode">
-                <s:text name="label.siteCode" />
+                <s:text name="label.threadConfig.siteCode" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -174,7 +174,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="globalCat">
-                <s:text name="label.globalCat" />
+                <s:text name="label.threadConfig.globalCat" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -195,7 +195,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="contentIdRepl">
-                <s:text name="label.contentIdRepl" />
+                <s:text name="label.threadConfig.contentIdRepl" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
@@ -213,7 +213,7 @@
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="contentModelRepl">
-                <s:text name="label.contentModelRepl" />
+                <s:text name="label.threadConfig.contentModelRepl" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
