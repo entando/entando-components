@@ -23,6 +23,7 @@
 	
     <definition extends="main.layout" name="admin.jpnewsletter.Newsletter.list">
 		<put-attribute name="title" value="jpnewsletter.title.newsletterManagement" />
+		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/common/template/extraresources/newsletterContentList.jsp" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/newsletter/content-list.jsp" />
 	</definition>
 	

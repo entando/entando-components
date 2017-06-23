@@ -8,7 +8,10 @@
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="jpavatar.admin.menu.integration"/></li>
     <li>
-        <s:text name="jpavatar.admin.menu.uxcomponents"/>
+        <s:text name="breadcrumb.integrations.components"/>
+    </li>
+    <li>
+        <s:text name="title.avatarManagement"/>
     </li>
     <li class="page-title-container">
         <s:text name="title.avatar.settings"/>
@@ -18,11 +21,10 @@
     <div class="row">
         <div class="col-sm-6">
             <h1>
-                <%-- DA CAPIRE --%>
                 <s:text name="title.avatar.settings"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="TO be inserted" data-placement="left" data-original-title="">
+                       data-content="<s:text name="title.avatarManagement.help" />" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -53,8 +55,8 @@
                     <s:iterator value="fieldErrors">
                         <s:iterator value="value">
                             <li><s:property escapeHtml="false" /></li>
+                            </s:iterator>
                         </s:iterator>
-                    </s:iterator>
                 </ul>
             </div>
         </s:if>
@@ -65,7 +67,7 @@
                 <ul class="margin-base-vertical">
                     <s:iterator value="actionErrors">
                         <li><s:property escapeHtml="false" /></li>
-                    </s:iterator>
+                        </s:iterator>
                 </ul>
             </div>
         </s:if>
@@ -76,12 +78,11 @@
                 <ul class="margin-base-vertical">
                     <s:iterator value="actionMessages">
                         <li><s:property escapeHtml="false" /></li>
-                    </s:iterator>
+                        </s:iterator>
                 </ul>
             </div>
         </s:if>
         <fieldset class="main">
-            <%--<legend><s:text name="legend.config" /></legend>--%>
             <div class="form-group">
                 <span class="important"><s:property value="SYTLE" /></span>
             </div>

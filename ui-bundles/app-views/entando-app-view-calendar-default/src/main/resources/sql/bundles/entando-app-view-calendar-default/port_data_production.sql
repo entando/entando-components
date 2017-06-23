@@ -215,7 +215,9 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 <#assign jacms=JspTaglibs["/jacms-aps-core"]>
 <#assign cal=JspTaglibs["/jpcalendar-aps-core"]>
 
-<#assign selectedDateParam = RequestParameters.selectedDate >
+<#if RequestParameters.selectedDate ??>
+   <#assign selectedDateParam = RequestParameters.selectedDate >
+</#if>
 
 <h1>
 	<@wp.i18n key="jpcalendar_EVENTS_TITLE" />

@@ -4,7 +4,9 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
-    <li><s:text name="title.pageDesigner" /></li>
+    <li>
+        <s:text name="title.pageDesigner" />
+    </li>
     <li>
         <a href="<s:url action="viewTree" namespace="/do/Page" />"
            title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageManagement" />">
@@ -17,15 +19,7 @@
 <h1 class="page-title-container">
     <s:text name="jpblog.config" />
     <span class="pull-right">
-        <a tabindex="0"
-           role="button"
-           data-toggle="popover"
-           data-trigger="focus"
-           data-html="true"
-           title=""
-           data-content="<s:text name="jpblog.config.list.help" />"
-           data-placement="left"
-           data-original-title="">
+        <a tabindex="0" role="button"  data-toggle="popover" data-trigger="focus" data-html="true" title="" data-content="<s:text name="jpblog.config.list.help" />" data-placement="left" data-original-title="">
             <i class="fa fa-question-circle-o" aria-hidden="true"></i>
         </a>
     </span>
@@ -34,11 +28,8 @@
 <div class="text-right">
     <div class="form-group-separator"></div>
 </div>
-
 <br>
-
-<div id="main">
-
+<div>
     <div id="messages">
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>
@@ -423,12 +414,8 @@
                                         <s:text name="label.maxElements" />
                                     </label>
                                     <div class="col-sm-10 input-group">
-                                        <wpsf:select name="maxElements"
-                                                     id="maxElements"
-                                                     value="%{getShowlet().getConfig().get('maxElements')}"
-                                                     headerKey=""
-                                                     headerValue="%{getText('label.all')}"
-                                                     list="#{1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,15:15,20:20}"
+                                        <wpsf:select name="maxElements"  id="maxElements" value="%{getShowlet().getConfig().get('maxElements')}"
+                                                     headerKey="" headerValue="%{getText('label.all')}" list="#{1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,15:15,20:20}"
                                                      cssClass="form-control" />
                                     </div>
                                 </div>
