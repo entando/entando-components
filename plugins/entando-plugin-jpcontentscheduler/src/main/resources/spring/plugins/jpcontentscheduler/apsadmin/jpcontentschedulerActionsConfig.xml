@@ -27,7 +27,7 @@
         <property name="baseConfigManager" ref="BaseConfigManager" />
         <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
         <property name="contentManager" ref="jacmsContentManager" />
-        <property name="userManager" ref="UserManaer" />
+        <property name="userManager" ref="UserManager" />
     </bean>
     
     <bean id="jpcontentschedulerConfigGroupsAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ContentThreadConfigGroupsAction" 
