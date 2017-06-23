@@ -28,8 +28,12 @@ public class ContentTypeElem implements Serializable {
 
 	private static final long serialVersionUID = 6825571071130570645L;
 
-	public ContentTypeElem(String contentType, String startDateAttr, String endDateAttro, String idContentReplace,
-			String suspend, List<String> idsCategories, String modelIdContentReplace) {
+	public ContentTypeElem() {
+
+	}
+
+	public ContentTypeElem(String contentType, String startDateAttr, String endDateAttro, String idContentReplace, String suspend, List<String> idsCategories,
+			String modelIdContentReplace) {
 		this.contentType = contentType;
 		this.startDateAttr = startDateAttr;
 		this.endDateAttro = endDateAttro;
