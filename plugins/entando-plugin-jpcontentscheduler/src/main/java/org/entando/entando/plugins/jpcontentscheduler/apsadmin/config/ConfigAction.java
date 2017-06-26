@@ -56,7 +56,7 @@ public class ConfigAction extends BaseAction {
 			this.setActive(threadConfig.isActive());
 			this.setGlobalCat(threadConfig.getGlobalCat());
 			this.setContentIdRepl(threadConfig.getContentIdRepl());
-			this.setContentModelRepl(threadConfig.getContentIdRepl());
+			this.setContentModelRepl(threadConfig.getContentModelRepl());
 
 		} catch (Throwable t) {
 			_logger.error("Error in viewItem", t);
