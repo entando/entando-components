@@ -8,9 +8,9 @@
     <li>
         <s:text name="jpwebdynamicform.menu.uxcomponents"/>
     </li>
-	<li>
-		<s:text name="jpwebdynamicform.name"/>
-	</li>
+    <li>
+        <s:text name="jpwebdynamicform.name"/>
+    </li>
     <li class="page-title-container">
         <s:text name="%{'title.' + entityManagerName + '.management'}"/>
     </li>
@@ -44,6 +44,10 @@
                     <a href="<s:url namespace="/do/jpwebdynamicform/Entity" action="viewEntityTypes"><s:param name="entityManagerName">jpwebdynamicformMessageManager</s:param></s:url>">
                         <s:text name="%{'title.' + entityManagerName + '.management'}"/>
                     </a>
+                </li>
+                <li>
+                    <a href="<s:url namespace="/do/jpwebdynamicform/Config" action="systemParams"></s:url>"><s:text
+                            name="breadcrumb.capcha"/></a>
                 </li>
             </ul>
         </div>
