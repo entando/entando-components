@@ -8,7 +8,7 @@
     <li><s:text name="jpcontentscheduler.components"/></li>
     <li><s:text name="jpcontentscheduler.admin.menu"/></li>
     <li class="page-title-container">
-        <s:text name="title.contentList"/>
+        <s:text name="jpcontentscheduler.admin.general"/>
     </li>
 </ol>
 <div class="page-tabs-header">

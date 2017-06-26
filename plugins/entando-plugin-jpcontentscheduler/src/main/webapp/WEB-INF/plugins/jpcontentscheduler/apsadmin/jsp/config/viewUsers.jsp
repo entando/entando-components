@@ -8,7 +8,7 @@
     <li><s:text name="jpcontentscheduler.components"/></li>
     <li><s:text name="jpcontentscheduler.admin.menu"/></li>
     <li class="page-title-container">
-        <s:text name="title.contentList"/>
+        <s:text name="jpcontentscheduler.admin.users"/>
     </li>
 </ol>
 <div class="page-tabs-header">
@@ -69,7 +69,7 @@
             <s:form id="configurationForm" name="configurationForm" method="post" action="#" cssClass="form-horizontal">
                 <s:set var="#users" value="%{getUsersContentType()}"/>
 
-                        <table class="table table-striped table-bordered table-hover no-mb">
+                        <table class="table table-striped table-bordered table-hover mb-20">
                             <thead>
                                 <tr>
                                     <th><s:text name="jpcontentscheduler.label.username"/></th>

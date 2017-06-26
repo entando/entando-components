@@ -67,6 +67,11 @@
         <legend>
             <s:text name="jpcontentscheduler.label.addContentType" />
         </legend>
+        
+        <p class="sr-only">
+            <wpsf:hidden name="idsCategories"/>
+        </p>
+        
         <!-- Content Type -->
         <div class="form-group">
             <label class="col-sm-2 control-label">
