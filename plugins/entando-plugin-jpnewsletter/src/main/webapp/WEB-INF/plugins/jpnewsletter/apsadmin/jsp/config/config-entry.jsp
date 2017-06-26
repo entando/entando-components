@@ -18,7 +18,7 @@
                 <s:text name="jpnewsletter.admin.menu"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="jpnewsletter.section.help" data-placement="left" data-original-title="">
+                       data-content="<s:text name="jpnewsletter.section.help" />" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -44,7 +44,7 @@
                 <wp:ifauthorized permission="jpnewsletter_config">
                     <li class="active">
                         <a href="<s:url action="edit" namespace="/do/jpnewsletter/Newsletter/Config" />">
-                            <s:text name="jpnewsletter.admin.config"/>
+                            <s:text name="jpnewsletter.title.newsletterConfig"/>
                         </a>
                     </li>
                 </wp:ifauthorized>
@@ -95,9 +95,7 @@
                                 <wpsf:textfield id="jpnewsletter_day_cal" name="newsletterConfig.startScheduler"
                                                 value="%{#startSchedulerDateValue}" maxlength="254"
                                                 cssClass="form-control" data-date-format="dd/mm/yyyy"/>
-                                <div class="input-group-addon">
-                                    <span class="fa fa-th"></span>
-                                </div>
+
                             </div>
 
                         </div>
@@ -117,13 +115,13 @@
                         </div>
                         <div class="col-xs-3">
                             <wpsf:select id="jpnewsletter_delay" name="newsletterConfig.hoursDelay" list="#{
-                                    24: getText('delay.Oneday'),
-                                    48: getText('delay.Two.days'),
-                                    96: getText('delay.Four.days'),
-                                    168: getText('delay.One.Week'),
-                                    336: getText('delay.Two.weeks'),
-                                    672: getText('delay.Four.weeks')
-                                }" cssClass="form-control"/>
+                                         24: getText('delay.Oneday'),
+                                             48: getText('delay.Two.days'),
+                                             96: getText('delay.Four.days'),
+                                             168: getText('delay.One.Week'),
+                                             336: getText('delay.Two.weeks'),
+                                             672: getText('delay.Four.weeks')
+                                         }" cssClass="form-control"/>
                             <span for="jpnewsletter_delay" class="help help-block"><s:text
                                     name="jpnewsletter.delay"/></span>
                         </div>
@@ -141,10 +139,10 @@
                                      listKey="code"
                                      listValue="descr" cssClass="form-control"/>
                         <span class="input-group-btn">
-                        <wpsf:submit type="button" action="addContentType" cssClass="btn btn-primary">
-                            <s:text name="label.add"/>
-                        </wpsf:submit>
-                    </span>
+                            <wpsf:submit type="button" action="addContentType" cssClass="btn btn-primary">
+                                <s:text name="label.add"/>
+                            </wpsf:submit>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -155,49 +153,49 @@
 
                         <table class="table table-striped table-bordered table-hover no-mb">
                             <thead>
-                            <tr>
-                                <th><s:text name="jpnewsletter.contentType"/></th>
-                                <th><s:text name="jpnewsletter.plainModel"/></th>
-                                <th><s:text name="jpnewsletter.htmlModel"/></th>
-                                <th class="text-center col-xs-1">
-                                    <s:text name="label.actions"/>
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th><s:text name="jpnewsletter.contentType"/></th>
+                                    <th><s:text name="jpnewsletter.plainModel"/></th>
+                                    <th><s:text name="jpnewsletter.htmlModel"/></th>
+                                    <th class="text-center col-xs-1">
+                                        <s:text name="label.actions"/>
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <s:iterator value="newsletterConfig.contentTypes.values()" var="contentTypeConfig">
-                                <tr>
-                                    <td>
-                                        <s:property
+                                <s:iterator value="newsletterConfig.contentTypes.values()" var="contentTypeConfig">
+                                    <tr>
+                                        <td>
+                                            <s:property
                                                 value="getSmallContentType(#contentTypeConfig.contentTypeCode).descr"/>
-                                    </td>
-                                    <td>
-                                        <s:property
+                                        </td>
+                                        <td>
+                                            <s:property
                                                 value="getContentModel(#contentTypeConfig.simpleTextModel).description"/>
-                                    </td>
-                                    <td>
-                                        <s:set var="htmlModelVar"
-                                               value="%{getContentModel(#contentTypeConfig.htmlModel).description}"/>
-                                        <s:if test="null != #htmlModelVar">
-                                            <s:property value="#htmlModelVar"/>
-                                        </s:if>
-                                        <s:else>&ndash;</s:else>
-                                    </td>
-                                    <td class="text-center text-nowrap">
-                                        <div class="btn-group btn-group-xs">
-                                            <wpsa:actionParam action="removeContentType" var="actionName">
-                                                <wpsa:actionSubParam name="contentTypeCode"
-                                                                     value="%{#contentTypeConfig.contentTypeCode}"/>
-                                            </wpsa:actionParam>
-                                            <wpsf:submit type="button" action="%{#actionName}"
-                                                         title="%{getText('label.remove')}: %{getSmallContentType(#contentTypeConfig.contentTypeCode).descr}"
-                                                         cssClass="btn btn-sm btn-link">
-                                                <span class="icon fa fa-trash-o fa-lg"></span>
-                                            </wpsf:submit>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </s:iterator>
+                                        </td>
+                                        <td>
+                                            <s:set var="htmlModelVar"
+                                                   value="%{getContentModel(#contentTypeConfig.htmlModel).description}"/>
+                                            <s:if test="null != #htmlModelVar">
+                                                <s:property value="#htmlModelVar"/>
+                                            </s:if>
+                                            <s:else>&ndash;</s:else>
+                                            </td>
+                                            <td class="text-center text-nowrap">
+                                                <div class="btn-group btn-group-xs">
+                                                <wpsa:actionParam action="removeContentType" var="actionName">
+                                                    <wpsa:actionSubParam name="contentTypeCode"
+                                                                         value="%{#contentTypeConfig.contentTypeCode}"/>
+                                                </wpsa:actionParam>
+                                                <wpsf:submit type="button" action="%{#actionName}"
+                                                             title="%{getText('label.remove')}: %{getSmallContentType(#contentTypeConfig.contentTypeCode).descr}"
+                                                             cssClass="btn btn-sm btn-link">
+                                                    <span class="icon fa fa-trash-o fa-lg"></span>
+                                                </wpsf:submit>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </s:iterator>
                             </tbody>
                         </table>
                     </div>
@@ -207,8 +205,8 @@
                 <div class="row">
                     <div class="col-sm-offset-2 col-sm-10">
                         <div class="alert alert-info">
-                          <span class="pficon pficon-info"></span>
-                          <s:text name="jpnewsletter.contentTypes.empty"/>
+                            <span class="pficon pficon-info"></span>
+                            <s:text name="jpnewsletter.contentTypes.empty"/>
                         </div>
                     </div>
                 </div>
@@ -223,11 +221,11 @@
 
             <div class="collapse" id="mail-configuration">
 
-               <div class="row">
+                <div class="row">
                     <div class="col-sm-offset-2 col-sm-10">
                         <div class="alert alert-info">
-                          <span class="pficon pficon-info"></span>
-                          <s:text name="jpnewsletter.config.help"/>
+                            <span class="pficon pficon-info"></span>
+                            <s:text name="jpnewsletter.config.help"/>
                         </div>
                     </div>
                 </div>
@@ -300,7 +298,7 @@
 
         <!-- Subscription -->
         <fieldset class="margin-large-top">
-        
+
             <legend data-toggle="collapse" data-target="#subscription">
                 <s:text name="jpnewsletter.title.signup"/>&#32;<span class="icon fa fa-chevron-down"></span>
             </legend>
@@ -309,7 +307,7 @@
                     <span class="pficon pficon-info"></span>
                     <s:text name="jpnewsletter.subscription.help" />
                 </div>
-                
+
                 <!-- Users -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -323,16 +321,16 @@
                             <label class="col-sm-2 control-label" for="jpnewsletter_subscription_attr">
                                 <s:text name="jpnewsletter.mapping.subscription.preference" />
                                 <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus"
-                                    data-html="true" title="" data-placement="top"
-                                    data-content="<s:text name="jpnewsletter.subscription.help1"/>"
-                                    data-original-title="">
+                                   data-html="true" title="" data-placement="top"
+                                   data-content="<s:text name="jpnewsletter.subscription.help1"/>"
+                                   data-original-title="">
                                     <span class="fa fa-info-circle"></span>
                                 </a>
                             </label>
                             <div class="col-sm-10">
                                 <wpsf:select id="jpnewsletter_subscription_attr"
-                                    name="newsletterConfig.allContentsAttributeName" list="#booleanProfileAttributesVar"
-                                    listKey="name" listValue="name" cssClass="form-control" />
+                                             name="newsletterConfig.allContentsAttributeName" list="#booleanProfileAttributesVar"
+                                             listKey="name" listValue="name" cssClass="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -340,8 +338,8 @@
                                 <s:text name="jpnewsletter.config.categories" />
                                 &#32;
                                 <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus"
-                                    data-html="true" title="" data-placement="top"
-                                    data-content="Open this section to create tematic newsletter" data-original-title="">
+                                   data-html="true" title="" data-placement="top"
+                                   data-content="Open this section to create tematic newsletter" data-original-title="">
                                     <span class="fa fa-info-circle"></span>
                                 </a>
                             </label>
@@ -349,16 +347,16 @@
                                 <div class="row">
                                     <div class="col-xs-5">
                                         <wpsf:select id="jpnewsletter_catlist" name="categoryCode" list="categories"
-                                            listKey="code" listValue="getFullTitle(currentLang.code)"
-                                            cssClass="form-control" />
+                                                     listKey="code" listValue="getFullTitle(currentLang.code)"
+                                                     cssClass="form-control" />
                                         <span for="jpnewsletter_hour" class="help help-block">
                                             <s:text name="jpnewsletter.category" />
                                         </span>
                                     </div>
                                     <div class="col-xs-5">
                                         <wpsf:select id="jpnewsletter_catattr" name="attributeName"
-                                            list="booleanProfileAttributes" listKey="name" listValue="name"
-                                            cssClass="form-control" />
+                                                     list="booleanProfileAttributes" listKey="name" listValue="name"
+                                                     cssClass="form-control" />
                                         <span for="jpnewsletter_hour" class="help help-block">
                                             <s:text name="jpnewsletter.category.profileAttribute" />
                                         </span>
@@ -366,7 +364,7 @@
                                     <div class="col-xs-2">
                                         <span class="text-left">
                                             <wpsf:submit type="button" action="addCategoryMapping"
-                                                cssClass="btn btn-primary">
+                                                         cssClass="btn btn-primary">
                                                 <s:text name="label.add"></s:text>
                                             </wpsf:submit>
                                         </span>
@@ -412,13 +410,13 @@
                                                     <td class="text-center text-nowrap">
                                                         <div class="btn-group btn-group-xs">
                                                             <wpsa:actionParam action="removeCategoryMapping"
-                                                                var="actionName">
+                                                                              var="actionName">
                                                                 <wpsa:actionSubParam name="categoryCode"
-                                                                    value="%{#categoryMappingKey}" />
+                                                                                     value="%{#categoryMappingKey}" />
                                                             </wpsa:actionParam>
                                                             <wpsf:submit type="button" action="%{#actionName}"
-                                                                title="%{getText('label.remove')}"
-                                                                cssClass="btn btn-sm btn-link">
+                                                                         title="%{getText('label.remove')}"
+                                                                         cssClass="btn btn-sm btn-link">
                                                                 <span class="icon fa fa-trash-o fa-lg"></span>
                                                             </wpsf:submit>
                                                         </div>
@@ -442,7 +440,7 @@
                         </s:else>
                     </div>
                 </div>
-                
+
                 <!-- Guests -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -460,10 +458,10 @@
                             </label>
                             <div class="col-sm-10">
                                 <wpsf:select list="confirmSubscriptionPages"
-                                    name="newsletterConfig.subscriptionPageCode"
-                                    id="newsletterConfig_subscriptionPageCode" listKey="code"
-                                    listValue="getShortFullTitle(currentLang.code)" headerKey=""
-                                    headerValue="%{getText('label.none')}" cssClass="form-control" />
+                                             name="newsletterConfig.subscriptionPageCode"
+                                             id="newsletterConfig_subscriptionPageCode" listKey="code"
+                                             listValue="getShortFullTitle(currentLang.code)" headerKey=""
+                                             headerValue="%{getText('label.none')}" cssClass="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -472,8 +470,8 @@
                             </label>
                             <div class="col-sm-10">
                                 <wpsf:select id="jpnewsletter.subscriptors_confirm_tokenValidity"
-                                    name="newsletterConfig.subscriptionTokenValidityDays"
-                                    list="#{1:1,2:2,5:5,10:10,15:15,20:20}" cssClass="form-control" />
+                                             name="newsletterConfig.subscriptionTokenValidityDays"
+                                             list="#{1:1,2:2,5:5,10:10,15:15,20:20}" cssClass="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -482,39 +480,39 @@
                             </label>
                             <div class="col-sm-10">
                                 <wpsf:textfield id="jpnewsletter.subscriptors_confirm_subject"
-                                    name="newsletterConfig.subscriptionSubject" cssClass="form-control" />
+                                                name="newsletterConfig.subscriptionSubject" cssClass="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="jpnewsletter_subscription_confirm_body_text">
                                 <s:text name="jpnewsletter.email.body.text" />
                                 <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus"
-                                    data-html="true" title="" data-placement="top"
-                                    data-content="<s:text name="jpnewsletter.subscription.link.help"/>"
-                                    data-original-title="">
+                                   data-html="true" title="" data-placement="top"
+                                   data-content="<s:text name="jpnewsletter.subscription.link.help"/>"
+                                   data-original-title="">
                                     <span class="fa fa-info-circle"></span>
                                 </a>
                             </label>
                             <div class="col-sm-10">
                                 <wpsf:textarea id="jpnewsletter_subscription_confirm_body_text"
-                                    name="newsletterConfig.subscriptionTextBody" cols="50" rows="4"
-                                    cssClass="form-control" />
+                                               name="newsletterConfig.subscriptionTextBody" cols="50" rows="4"
+                                               cssClass="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="jpnewsletter_subscription_confirm_body_html">
                                 <s:text name="jpnewsletter.email.body.html" />
                                 <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus"
-                                    data-html="true" title="" data-placement="top"
-                                    data-content="<s:text name="jpnewsletter.subscription.link.help"/>"
-                                    data-original-title="">
+                                   data-html="true" title="" data-placement="top"
+                                   data-content="<s:text name="jpnewsletter.subscription.link.help"/>"
+                                   data-original-title="">
                                     <span class="fa fa-info-circle"></span>
                                 </a>
                             </label>
                             <div class="col-sm-10">
                                 <wpsf:textarea id="jpnewsletter_subscription_confirm_body_html"
-                                    name="newsletterConfig.subscriptionHtmlBody" cols="50" rows="4"
-                                    cssClass="form-control" />
+                                               name="newsletterConfig.subscriptionHtmlBody" cols="50" rows="4"
+                                               cssClass="form-control" />
                             </div>
                         </div>
                         <legend>
@@ -526,42 +524,42 @@
                             </label>
                             <div class="col-sm-10">
                                 <wpsf:select list="confirmUnsubscriptionPages"
-                                    name="newsletterConfig.unsubscriptionPageCode"
-                                    id="newsletterConfig_unsubscriptionPageCode" listKey="code"
-                                    listValue="getShortFullTitle(currentLang.code)" headerKey=""
-                                    headerValue="%{getText('label.none')}" cssClass="form-control" />
+                                             name="newsletterConfig.unsubscriptionPageCode"
+                                             id="newsletterConfig_unsubscriptionPageCode" listKey="code"
+                                             listValue="getShortFullTitle(currentLang.code)" headerKey=""
+                                             headerValue="%{getText('label.none')}" cssClass="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="jpnewsletter_subscribers_label_footer_text">
                                 <s:text name="jpnewsletter.email.textfooter" />
                                 <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus"
-                                    data-html="true" title="" data-placement="top"
-                                    data-content="<s:text name="jpnewsletter.cancellation.link.help"/>"
-                                    data-original-title="">
+                                   data-html="true" title="" data-placement="top"
+                                   data-content="<s:text name="jpnewsletter.cancellation.link.help"/>"
+                                   data-original-title="">
                                     <span class="fa fa-info-circle"></span>
                                 </a>
                             </label>
                             <div class="col-sm-10">
                                 <wpsf:textarea id="jpnewsletter_subscribers_label_footer_text"
-                                    name="newsletterConfig.subscribersTextFooter" cols="50" rows="3"
-                                    cssClass="form-control" />
+                                               name="newsletterConfig.subscribersTextFooter" cols="50" rows="3"
+                                               cssClass="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="jpnewsletter_subscribers_label_footer_html">
                                 <s:text name="jpnewsletter.email.htmlfooter" />
                                 <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus"
-                                    data-html="true" title="" data-placement="top"
-                                    data-content="<s:text name="jpnewsletter.cancellation.link.help"/>"
-                                    data-original-title="">
+                                   data-html="true" title="" data-placement="top"
+                                   data-content="<s:text name="jpnewsletter.cancellation.link.help"/>"
+                                   data-original-title="">
                                     <span class="fa fa-info-circle"></span>
                                 </a>
                             </label>
                             <div class="col-sm-10">
                                 <wpsf:textarea id="jpnewsletter_subscribers_label_footer_html"
-                                    name="newsletterConfig.subscribersHtmlFooter" cols="50" rows="3"
-                                    cssClass="form-control" />
+                                               name="newsletterConfig.subscribersHtmlFooter" cols="50" rows="3"
+                                               cssClass="form-control" />
                             </div>
                         </div>
                     </div>

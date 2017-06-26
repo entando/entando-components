@@ -8,7 +8,7 @@
     <li><s:text name="jpnewsletter.components"/></li>
     <li><s:text name="jpnewsletter.admin.menu"/></li>
     <li class="page-title-container">
-        <s:text name="jpnewsletter.title.newsletterQueue"/>
+        <s:text name="jpnewsletter.admin.queue"/>
     </li>
 </ol>
 <div class="page-tabs-header">
@@ -18,7 +18,7 @@
                 <s:text name="jpnewsletter.admin.menu"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="jpnewsletter.section.help" data-placement="left" data-original-title="">
+                       data-content="<s:text name="jpnewsletter.section.help" />" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -111,22 +111,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                        <s:iterator var="contentId">
-                            <s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
-                            <tr>
-                                <td><s:property value="#content.descr"/></td>
-                                <td><s:property value="#content.id"/></td>
-                                <td class="text-center">
-                                    <div class="btn-group btn-group-xs">
-                                        <a title="<s:text name="label.remove" />"
-                                           href="<s:url action="removeFromQueue" ><s:param name="contentId" value="#content.id" /></s:url>">
-                                            <span class="fa fa-trash-o fa-lg"></span>
-                                            <span class="sr-only"><s:text name="label.remove"/></span>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </s:iterator>
+                            <s:iterator var="contentId">
+                                <s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
+                                    <tr>
+                                        <td><s:property value="#content.descr"/></td>
+                                    <td><s:property value="#content.id"/></td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-xs">
+                                            <a title="<s:text name="label.remove" />"
+                                               href="<s:url action="removeFromQueue" ><s:param name="contentId" value="#content.id" /></s:url>">
+                                                   <span class="fa fa-trash-o fa-lg"></span>
+                                                   <span class="sr-only"><s:text name="label.remove"/></span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </s:iterator>
                         </tbody>
                     </table>
                 </div>
