@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <package name="jpwebdynamicform_do/jpwebdynamicform/Config"
+             namespace="/do/jpwebdynamicform/Config" extends="entando-default">
+
+        <action name="systemParams" class="jpwebdynamicformConfigAction" method="configSystemParams">
+            <result type="tiles">admin.jpwebdynamicform.Config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+            <interceptor-ref name="redirectMessage" />
+        </action>
+
+        <action name="updateSystemParams" class="jpwebdynamicformConfigAction" method="updateSystemParams">
+            <result type="redirectAction">systemParams</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+            <interceptor-ref name="redirectMessage" />
+        </action>
+
+    </package>
+</struts>
