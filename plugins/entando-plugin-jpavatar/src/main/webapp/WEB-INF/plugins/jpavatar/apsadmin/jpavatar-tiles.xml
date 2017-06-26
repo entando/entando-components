@@ -11,7 +11,7 @@
     </definition>
 
     <definition extends="layout.default" name="jpavatar.admin.config.edit" >
-        <put-attribute name="title" value="title.avatar.settings" />
+        <put-attribute name="title" value="title.avatarManagement" />
         <put-attribute name="body" value="/WEB-INF/plugins/jpavatar/apsadmin/jsp/config/jpavatar_config.jsp" />
     </definition>
 
