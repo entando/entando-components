@@ -1,4 +1,4 @@
-<%@ taglib prefix="s" uri="/struts-tags"%>
+b prefix="s" uri="/struts-tags"%>
 <%@ taglib uri="/aps-core" prefix="wp"%>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf"%>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa"%>
@@ -113,3 +113,4 @@
         </s:else>
     </s:form>
 </div>
+
