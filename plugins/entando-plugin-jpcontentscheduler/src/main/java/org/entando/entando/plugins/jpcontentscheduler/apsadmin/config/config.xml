@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <package name="jpcontentscheduler_do/jpcontentscheduler/config" namespace="/do/jpcontentscheduler/config" extends="entando-default">
+
+        <action name="viewItem" class="jpcontentschedulerConfigAction" method="viewItem">
+            <result type="tiles">admin.jpcontentscheduler.viewItem</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <!-- EMAIL -->
+        <action name="viewEmail" class="jpcontentschedulerEmailAction" method="viewEmail">
+            <result type="tiles">admin.jpcontentscheduler.viewEmail</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <action name="saveEmail" class="jpcontentschedulerEmailAction" method="saveItem">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewEmail</result>
+            <result type="tiles">admin.jpcontentscheduler.viewEmail</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+
+
+        <!-- USERS -->
+        <action name="viewUsers" class="jpcontentschedulerConfigUsersAction" method="viewUsers">
+            <result type="tiles">admin.jpcontentscheduler.viewUsers</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <action name="addUser" class="jpcontentschedulerConfigUsersAction" method="entry">
+            <result type="tiles">admin.jpcontentscheduler.entryUser</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="editUser" class="jpcontentschedulerConfigUsersAction" method="entry">
+            <result type="tiles">admin.jpcontentscheduler.entryUser</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <action name="addUserContentType*" class="jpcontentschedulerConfigUsersAction" method="addContentType">
+            <result name="input" type="tiles">admin.jpcontentscheduler.entryUser</result>
+            <result type="tiles">admin.jpcontentscheduler.entryUser</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="removeUserContentType*" class="jpcontentschedulerConfigUsersAction" method="removeContentType">
+            <result name="input" type="tiles">admin.jpcontentscheduler.entryUser</result>
+            <result type="tiles">admin.jpcontentscheduler.entryUser</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="saveUsersContentType" class="jpcontentschedulerConfigUsersAction">
+            <result type="chain">viewUsers</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <action name="removeUser" class="jpcontentschedulerConfigUsersAction" method="removeUser">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewUsers</result>
+            <result type="tiles">admin.jpcontentscheduler.viewUsers</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="saveUsersItem" class="jpcontentschedulerConfigUsersAction" method="saveUsersItem">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewUsers</result>
+            <result type="tiles">admin.jpcontentscheduler.viewUsers</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <!-- GROUPS -->
+        <action name="viewGroups" class="jpcontentschedulerConfigGroupsAction" method="viewGroups">
+            <result type="tiles">admin.jpcontentscheduler.viewGroups</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="addGroupContentType" class="jpcontentschedulerConfigGroupsAction" method="addContentType">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewGroups</result>
+            <result type="tiles">admin.jpcontentscheduler.viewGroups</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="removeGroupContentType" class="jpcontentschedulerConfigGroupsAction" method="removeContentType">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewGroups</result>
+            <result type="tiles">admin.jpcontentscheduler.viewGroups</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="removeGroup" class="jpcontentschedulerConfigGroupsAction" method="removeGroup">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewGroups</result>
+            <result type="tiles">admin.jpcontentscheduler.viewGroups</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="saveGroupsItem" class="jpcontentschedulerConfigGroupsAction" method="saveGroupsItem">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewGroups</result>
+            <result type="tiles">admin.jpcontentscheduler.viewGroups</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <!-- CONTENT_TYPES -->
+        
+        <action name="viewContentTypes" class="jpcontentschedulerConfigContentTypesAction" method="viewContentTypes">
+            <result type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="addContentTypes" class="jpcontentschedulerConfigContentTypesAction" method="entryContentType">
+            <result type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="editContentTypes" class="jpcontentschedulerConfigContentTypesAction" method="entryContentType">
+            <result name="input" type="chain">viewContentTypes</result>
+            <result type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <action name="addContentType" class="jpcontentschedulerConfigContentTypesAction" method="addContentType">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
+            <result type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="removeContentType" class="jpcontentschedulerConfigContentTypesAction" method="removeContentType">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
+            <result type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+       <action name="openCloseCategoryTreeNodeOnEntryResource*" class="jpcontentschedulerConfigContentTypesAction" method="buildTree">
+            <result type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
+        </action>
+
+        <action name="joinCategory*" class="jpcontentschedulerConfigContentTypesAction" method="joinCategory">
+            <result type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
+        </action>
+
+        <action name="removeCategory*" class="jpcontentschedulerConfigContentTypesAction" method="removeCategory">
+            <result type="tiles">admin.jpcontentscheduler.entryContentTypes</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
+        </action>
+
+        <action name="saveContentTypeItem" class="jpcontentschedulerConfigGroupsAction" method="saveContentTypeItem">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
+            <result type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+
+        <action name="saveItem" class="jpcontentschedulerConfigAction" method="saveItem">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewItem</result>
+            <result type="tiles">admin.jpcontentscheduler.viewItem</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+    </package>
+
+    <package name="jpcontentscheduler_do/jpcontentscheduler/admin" namespace="/do/jpcontentscheduler/admin" extends="entando-default">
+
+        <action name="executeJob" class="jpcontentschedulerAdminAction" method="executeJob">
+            <result type="tiles">admin.jpcontentscheduler.viewItem</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+    </package>
+
+</struts>
