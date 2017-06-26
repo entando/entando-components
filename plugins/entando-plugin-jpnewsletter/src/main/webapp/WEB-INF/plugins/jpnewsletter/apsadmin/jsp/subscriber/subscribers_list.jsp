@@ -19,7 +19,7 @@
                 <s:text name="jpnewsletter.admin.menu"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="jpnewsletter.section.help" data-placement="left" data-original-title="">
+                       data-content="<s:text name="jpnewsletter.section.help" />" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -66,15 +66,15 @@
                 <p class="search-label">
                     <s:text name="label.search"/>
                 </p>
-                
+
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="text">
                         <s:text name="label.email"/>
                     </label>
                     <div class="col-sm-10">
                         <wpsf:textfield name="insertedMailAddress" id="search_mail_add"
-                            cssClass="form-control" placeholder="%{getText('label.email')}"
-                            title="%{getText('label.search.by')} %{getText('jpnewsletter.label.search.mailaddress')}"/>
+                                        cssClass="form-control" placeholder="%{getText('label.email')}"
+                                        title="%{getText('label.search.by')} %{getText('jpnewsletter.label.search.mailaddress')}"/>
                     </div>
                 </div>
 
@@ -131,53 +131,53 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover no-mb">
                         <thead>
-                        <tr>
-                            <th><s:text name="label.email"/></th>
-                            <th class="text-center table-w-10">
-                                <s:text name="label.subscribtionDate"/>
-                            </th>
-                            <th class="text-center table-w-10">
-                                <s:text name="label.state"/>
-                            </th>
-                            <th class="text-center table-w-10">
-                                <s:text name="label.actions"/>
-                            </th>
-                        </tr>
+                            <tr>
+                                <th><s:text name="label.email"/></th>
+                                <th class="text-center table-w-10">
+                                    <s:text name="label.subscribtionDate"/>
+                                </th>
+                                <th class="text-center table-w-10">
+                                    <s:text name="label.state"/>
+                                </th>
+                                <th class="text-center table-w-10">
+                                    <s:text name="label.actions"/>
+                                </th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <s:iterator value="#subscribersVar" var="subscriber">
-                            <tr>
-                                <td><s:property value="#subscriber.mailAddress"/></td>
-                                <td class="text-center"><s:date name="#subscriber.subscriptionDate" format="dd/MM/yyyy"/></td>
-                                <td class="text-center">
-                                    <s:if test="#subscriber.active == 1">
-                                        <s:set var="statusIconClassVar" value="%{'icon fa fa-check text-success'}"/>
-                                        <s:set var="newsletterUserStatus">true</s:set>
-                                        <s:set var="statusTextVar" value="%{getText('note.userStatus.active')}"/>
-                                    </s:if>
-                                    <s:else>
-                                        <s:set var="statusIconClassVar" value="%{'icon fa fa-pause text-warning'}"/>
-                                        <s:set var="newsletterUserStatus">false</s:set>
-                                        <s:set var="statusTextVar" value="%{getText('note.userStatus.notActive')}"/>
-                                    </s:else>
-                                    <span class="<s:property value="#statusIconClassVar" />">
-                                          <s:property value="#statusTextVar"/>
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <s:url var="removeActionVar" action="trash">
-                                        <s:param name="mailAddress" value="#subscriber.mailAddress"/>
-                                    </s:url>
-                                    <div class="btn-group btn-group-xs">
-                                        <a href="<s:property value="#removeActionVar" escapeHtml="false" />"
-                                           title="<s:text name="label.remove" />:&#32;<s:property value="#subscriber.mailAddress" />">
-                                            <span class="sr-only"><s:text name="label.alt.clear"/></span>
-                                            <span class="fa fa-trash-o fa-lg"></span>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </s:iterator>
+                            <s:iterator value="#subscribersVar" var="subscriber">
+                                <tr>
+                                    <td><s:property value="#subscriber.mailAddress"/></td>
+                                    <td class="text-center"><s:date name="#subscriber.subscriptionDate" format="dd/MM/yyyy"/></td>
+                                    <td class="text-center">
+                                        <s:if test="#subscriber.active == 1">
+                                            <s:set var="statusIconClassVar" value="%{'icon fa fa-check text-success'}"/>
+                                            <s:set var="newsletterUserStatus">true</s:set>
+                                            <s:set var="statusTextVar" value="%{getText('note.userStatus.active')}"/>
+                                        </s:if>
+                                        <s:else>
+                                            <s:set var="statusIconClassVar" value="%{'icon fa fa-pause text-warning'}"/>
+                                            <s:set var="newsletterUserStatus">false</s:set>
+                                            <s:set var="statusTextVar" value="%{getText('note.userStatus.notActive')}"/>
+                                        </s:else>
+                                        <span class="<s:property value="#statusIconClassVar" />">
+                                            <s:property value="#statusTextVar"/>
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <s:url var="removeActionVar" action="trash">
+                                            <s:param name="mailAddress" value="#subscriber.mailAddress"/>
+                                        </s:url>
+                                        <div class="btn-group btn-group-xs">
+                                            <a href="<s:property value="#removeActionVar" escapeHtml="false" />"
+                                               title="<s:text name="label.remove" />:&#32;<s:property value="#subscriber.mailAddress" />">
+                                                <span class="sr-only"><s:text name="label.alt.clear"/></span>
+                                                <span class="fa fa-trash-o fa-lg"></span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </s:iterator>
                         </tbody>
                     </table>
                 </div>

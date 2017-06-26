@@ -39,9 +39,9 @@
         <!--
          <module>entando-app-calendar</module>
          <module>entando-app-addressbook</module>
-         <module>entando-app-newsletter</module>        
+            
 	    -->
-
+<module>entando-app-newsletter</module>     
         <module>entando-app-survey</module>
         <module>entando-app-avatar</module>
         <module>entando-app-cmstagcloud</module>		
