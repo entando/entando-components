@@ -213,8 +213,13 @@
                     </tbody>
                 </table>
             </div>
-            <div class="pager">
-                <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+            <div class="content-view-pf-pagination clearfix">
+                <div class="form-group">
+                    <span><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
+                    <div class="mt-5">
+                        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                    </div>
+                </div>
             </div>
         </wpsa:subset>
     </s:form>
