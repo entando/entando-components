@@ -5,7 +5,7 @@
     <li class="list-group-item">
         <a href="<s:url action="list" namespace="/do/jpcontentworkflow/Workflow" />">
             <span class="list-group-item-value">
-                <s:text name="jpcontentworkflow.menu.workflow" /></span>
+                <s:text name="jpcontentworkflow.menu.workflowAdmin" /></span>
         </a>
     </li>
 </wp:ifauthorized>
