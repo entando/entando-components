@@ -1,6 +1,10 @@
-## jpcontentscheduler
+**Content Scheduler Plugin**
 
-This plugin is used to manage contents temporal windows based on the content's dates.
+**Code**: ```jpcontentscheduler```
+
+**Description**
+
+The _Content Scheduler_ plugin is used to manage contents temporal windows based on the content's dates.
 
 It is possible to set up rules that:
 
@@ -8,6 +12,26 @@ It is possible to set up rules that:
  - will unpublish the expired content
  - will automatically publish the content
  - will send email notifications to a list of users
+ 
+ 
+ 
+**Installation**
+
+In order to install the _Content Scheduler_ plugin, you should to insert the following dependency in the pom.xml file of your project:
+
+```
+     
+<dependency>
+    <groupId>org.entando.entando.plugins</groupId>
+    <artifactId>entando-plugin-jpcontentscheduler</artifactId>
+    <version>${entando.version}</version>
+    <type>war</type>
+</dependency>
+
+```
+
+
+
 
 
 ### General Settings:
