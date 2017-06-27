@@ -65,7 +65,7 @@
                         <s:text name="label.type" />:
                     </label>
                     <div class="col-sm-10">
-                        <wpsf:select name="contentType" id="contentType" list="contentTypes" listKey="code" listValue="descr" disabled="true" cssClass="form-control" />
+                        <wpsf:select name="contentType" id="contentType" list="contentTypes" listKey="code" listValue="description" disabled="true" cssClass="form-control" />
                     </div>
                 </div>
                 <p class="noscreen">
