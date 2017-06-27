@@ -8,25 +8,26 @@
     <li><s:text name="breadcrumb.integrations.components"/></li>
     <li><s:text name="title.surveyList" /></li>
         <s:if test="questionnaire">
-        <li class="page-title-container"><s:text
-                name="title.jpsurvey.survey.main" /></li>
-        </s:if>
-        <s:else>
-        <li class="page-title-container"><s:text
-                name="title.jpsurvey.poll.main" /></li>
-        </s:else>
+        <li class="page-title-container">
+            <s:text  name="title.jpsurvey.survey.main" />
+        </li>
+    </s:if>
+    <s:else>
+        <li class="page-title-container">
+            <s:text name="title.jpsurvey.poll.main" />
+        </li>
+    </s:else>
 </ol>
 <div class="page-tabs-header">
     <div class="row">
         <div class="col-sm-6">
             <h1>
                 <s:text name="title.surveyList" />
-                <span class="pull-right"> <a tabindex="0" role="button"
-                                             data-toggle="popover" data-trigger="focus" data-html="true"
-                                             title=""
-                                             data-content="<s:text name="title.jpsurvey.survey.main.help" />"
-                                             data-placement="left" data-original-title=""> <i
-                            class="fa fa-question-circle-o" aria-hidden="true"></i>
+                <span class="pull-right">
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
+                       title="" data-content="<s:text name="title.jpsurvey.survey.main.help" />"
+                       data-placement="left" data-original-title="">
+                        <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
             </h1>
@@ -35,29 +36,33 @@
             <div class="col-sm-6">
                 <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
                     <s:if test="questionnaire">
-                        <li class="active"><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.questionnaires" />
-                            </a></li>
-                        </s:if>
-                        <s:else>
-                        <li><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.questionnaires" />
-                            </a></li>
-                        </s:else>
-                        <s:if test="questionnaire">
-                        <li><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.polls" />
-                            </a></li>
-                        </s:if>
-                        <s:else>
-                        <li class="active"><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.polls" />
-                            </a></li>
-                        </s:else>
+                        <li class="active">
+                            <a href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
+                                <s:text  name="title.jpsurvey.survey.main" />
+                            </a>
+                        </li>
+                    </s:if>
+                    <s:else>
+                        <li>
+                            <a href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
+                                <s:text  name="title.jpsurvey.survey.main" />
+                            </a>
+                        </li>
+                    </s:else>
+                    <s:if test="questionnaire">
+                        <li>
+                            <a href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
+                                <s:text name="title.jpsurvey.poll.main" />
+                            </a>
+                        </li>
+                    </s:if>
+                    <s:else>
+                        <li class="active">
+                            <a href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
+                                <s:text name="title.jpsurvey.poll.main" />
+                            </a>
+                        </li>
+                    </s:else>
                 </ul>
             </div>
         </wp:ifauthorized>
@@ -145,24 +150,35 @@
                 <table class="table table-striped table-bordered table-hover no-mb">
                     <thead>
                         <tr>
-                            <th class="text-center"><s:text name="jpsurvey_title" /></th>
-                            <th class="text-center"><s:text name="jpsurvey_start_date" /></th>
-                            <th class="text-center"><s:text
-                                    name="jpsurvey_questions_number" /></th>
-                            <th class="text-center"><s:text name="jpsurvey_published" /></th>
-                            <th class="text-center"><s:text name="jpsurvey_actions" /></th>
+                            <th class="table-w-30">
+                                <s:text name="jpsurvey_title" />
+                            </th>
+                            <th class="table-w-15">
+                                <s:text name="jpsurvey_start_date" />
+                            </th>
+                            <th class="text-center table-w-5">
+                                <s:text name="jpsurvey_questions_number" />
+                            </th>
+                            <th class="text-center table-w-5">
+                                <s:text name="jpsurvey_published" />
+                            </th>
+                            <th class="text-center table-w-5">
+                                <s:text name="label.actions" />
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <s:iterator var="surveyId">
                             <s:set var="survey" value="%{getSurvey(#surveyId)}" />
-                            <tr class="text-center">
-                                <td><s:property value="%{getLabel(#survey.titles)}" /></td>
-                                <td><code>
-                                        <s:date name="#survey.startDate" format="dd/MM/yyyy" />
-                                    </code></td>
-                                    <s:if test="%{#survey.active}">
-                                        <wpsa:set name="iconImage" id="iconImage">icon fa fa-check text-success</wpsa:set>
+                            <tr>
+                                <td>
+                                    <s:property value="%{getLabel(#survey.titles)}" />
+                                </td>
+                                <td class="text-center">
+                                    <s:date name="#survey.startDate" format="dd/MM/yyyy" />
+                                </td>
+                                <s:if test="%{#survey.active}">
+                                    <wpsa:set name="iconImage" id="iconImage">icon fa fa-check text-success</wpsa:set>
                                     <s:set var="isOnlineStatus"
                                            value="%{getText('jpsurvey_published_yes')}" />
                                 </s:if>
@@ -176,11 +192,16 @@
                                     <s:set var="isOnlineStatus"
                                            value="%{getText('jpsurvey_published_not_ready')}" />
                                 </s:else>
-                                <td><s:property value="#survey.questionsNumber" /></td>
-                                <td><span class="<s:property value="iconImage" />"
+                                <td class="text-center">
+                                    <s:property value="#survey.questionsNumber" />
+                                </td>
+                                <td class="text-center">
+                                    <span class="<s:property value="iconImage" />"
                                           alt="<s:property value="isOnlineStatus" />"
-                                          title="<s:property value="isOnlineStatus" />"></span></td>
-                                <td class="table-view-pf-actions">
+                                          title="<s:property value="isOnlineStatus" />">
+                                    </span>
+                                </td>
+                                <td class="table-view-pf-actions text-center">
                                     <div class="dropdown dropdown-kebab-pf">
                                         <button class="btn btn-menu-right dropdown-toggle"
                                                 type="button" data-toggle="dropdown" aria-haspopup="true"

@@ -22,70 +22,29 @@
     <li class="page-title-container"><s:text
             name="title.jpsurvey.trash.choice" /></li>
 </ol>
-<div class="page-tabs-header">
-    <div class="row">
-        <div class="col-sm-6">
-            <h1>
-                <s:text name="title.jpsurvey.trash.choice" />
-                <span class="pull-right"> <a tabindex="0" role="button"
-                                             data-toggle="popover" data-trigger="focus" data-html="true"
-                                             title=""
-                                             data-content="<s:text name="title.jpsurvey.trash.choice.help" />"
-                                             data-placement="left" data-original-title=""> <i
-                            class="fa fa-question-circle-o" aria-hidden="true"></i>
-                    </a>
-                </span>
-            </h1>
-        </div>
-        <wp:ifauthorized permission="superuser">
-            <div class="col-sm-6">
-                <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
-                    <s:if test="questionnaire">
-                        <li class="active"><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.questionnaires" />
-                            </a></li>
-                        </s:if>
-                        <s:else>
-                        <li><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.questionnaires" />
-                            </a></li>
-                        </s:else>
-                        <s:if test="questionnaire">
-                        <li><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.polls" />
-                            </a></li>
-                        </s:if>
-                        <s:else>
-                        <li class="active"><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.polls" />
-                            </a></li>
-                        </s:else>
-                </ul>
-            </div>
-        </wp:ifauthorized>
-    </div>
+
+<h1>
+    <s:text name="title.jpsurvey.trash.choice" />
+</h1>
+<div class="text-right">
+    <div class="form-group-separator"></div>
 </div>
 <br>
-<div class="text-center">
-    <s:text name="label.workingOn" />
-    :&#32; <em><s:property value="%{getLabel(choice.surveyTitles)}" /></em>
 
-    <s:form action="deleteChoice" class="form-horizontal">
+<s:text name="label.workingOn" />
+:&#32; <em><s:property value="%{getLabel(choice.surveyTitles)}" /></em>
+
+<div class="text-center">
+    <s:form action="deleteChoice" cssClass="form-horizontal">
         <p class="noscreen">
             <s:hidden name="questionId" value="%{choice.questionId}" />
             <s:hidden name="choiceId" />
         </p>
         <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
         <p class="esclamation-underline">
-            <s:text name="label.delete" />
+            <s:text name="jpsurvey_delete_confirm" />
         </p>
         <p class="esclamation-underline-text">
-            <s:text name="jpsurvey_delete_confirm" />
-            &#32;
             <s:if test="!choice.freeText">
                 <s:text name="jpsurvey_the_answer" />:&#32;
                 <em class="important"><s:property
@@ -99,7 +58,7 @@
             &#32; <em><s:property value="%{getLabel(choice.questions)}" /></em>?&#32;
         </p>
         <div class="text-center margin-large-top">
-            <a class="btn btn-default button-fixed-width"
+            <a class="btn btn-default"
                href="<s:url action="editQuestion" namespace="/do/jpsurvey/Survey"><s:param name="questionId" value="choice.questionId" /></s:url>">
                 <s:text name="title.jpsurvey.question.edit" />
             </a>

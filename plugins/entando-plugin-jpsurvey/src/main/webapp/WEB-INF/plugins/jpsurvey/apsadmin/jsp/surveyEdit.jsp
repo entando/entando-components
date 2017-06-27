@@ -3,42 +3,50 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa"%>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf"%>
 
-<ol class="breadcrumb page-tabs-header breadcrumb-position">
+<ol class="breadcrumb page-tabs-header breadcrumb-position">sasdsad
     <li><s:text name="breadcrumb.integrations"/></li>
     <li><s:text name="breadcrumb.integrations.components"/></li>
     <li><s:text name="title.surveyList" /></li>
         <s:if test="questionnaire">
-        <li><a
-                href="<s:url action="listSurveys" ><s:param name="questionnaire" value="true"></s:param></s:url>"
-                title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpsurvey.survey.main" />"><s:text
-                    name="title.jpsurvey.survey.main" /></a></li>
-            </s:if>
-            <s:else>
-        <li><a
-                href="<s:url action="listSurveys" ><s:param name="questionnaire" value="survey.questionnaire"></s:param></s:url>"
-                title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpsurvey.poll.main" />"><s:text
-                    name="title.jpsurvey.poll.main" /></a></li>
-            </s:else>
-            <s:if test="getStrutsAction() == 1">
-                <s:if test="questionnaire">
-            <li class="page-title-container"><s:text
-                    name="title.jpsurvey.survey.new" /></li>
-            </s:if>
-            <s:else>
-            <li class="page-title-container"><s:text
-                    name="title.jpsurvey.poll.new" /></li>
-            </s:else>
+        <li>
+            <a href="<s:url action="listSurveys" ><s:param name="questionnaire" value="true"></s:param></s:url>"
+               title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpsurvey.survey.main" />">
+                <s:text name="title.jpsurvey.survey.main" />
+            </a>
+        </li>
+    </s:if>
+    <s:else>
+        <li>
+            <a href="<s:url action="listSurveys" ><s:param name="questionnaire" value="survey.questionnaire"></s:param></s:url>"
+               title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpsurvey.poll.main" />"><s:text
+                    name="title.jpsurvey.poll.main" />
+            </a>
+        </li>
+    </s:else>
+    <s:if test="getStrutsAction() == 1">
+        <s:if test="questionnaire">
+            <li class="page-title-container">
+                <s:text name="title.jpsurvey.survey.new" />
+            </li>
         </s:if>
-        <s:if test="getStrutsAction() == 2">
-            <s:if test="questionnaire">
-            <li class="page-title-container"><s:text
-                    name="title.jpsurvey.survey.edit" /></li>
-            </s:if>
-            <s:else>
-            <li class="page-title-container"><s:text
-                    name="title.jpsurvey.poll.edit" /></li>
-            </s:else>
+        <s:else>
+            <li class="page-title-container">
+                <s:text name="title.jpsurvey.poll.new" />
+            </li>
+        </s:else>
+    </s:if>
+    <s:if test="getStrutsAction() == 2">
+        <s:if test="questionnaire">
+            <li class="page-title-container">
+                <s:text  name="title.jpsurvey.survey.edit" />
+            </li>
         </s:if>
+        <s:else>
+            <li class="page-title-container">
+                <s:text  name="title.jpsurvey.poll.edit" />
+            </li>
+        </s:else>
+    </s:if>
 </ol>
 <div class="page-tabs-header">
     <div class="row">
@@ -47,23 +55,20 @@
                 <s:if test="getStrutsAction() == 1">
                     <s:if test="questionnaire">
                         <s:text name="title.jpsurvey.survey.new" />
-                        <span class="pull-right"> <a tabindex="0" role="button"
-                                                     data-toggle="popover" data-trigger="focus" data-html="true"
-                                                     title=""
-                                                     data-content="<s:text name="title.jpsurvey.survey.new.help" />"
-                                                     data-placement="left" data-original-title=""> <i
-                                    class="fa fa-question-circle-o" aria-hidden="true"></i>
+                        <span class="pull-right">
+                            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
+                               title="" data-content="<s:text name="title.jpsurvey.survey.new.help" />"
+                               data-placement="left" data-original-title="">
+                                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                             </a>
                         </span>
                     </s:if>
                     <s:else>
                         <s:text name="title.jpsurvey.poll.new" />
-                        <span class="pull-right"> <a tabindex="0" role="button"
-                                                     data-toggle="popover" data-trigger="focus" data-html="true"
-                                                     title=""
-                                                     data-content="<s:text name="title.jpsurvey.poll.new.help" />"
-                                                     data-placement="left" data-original-title=""> <i
-                                    class="fa fa-question-circle-o" aria-hidden="true"></i>
+                        <span class="pull-right">
+                            <a tabindex="0" role="button"  data-toggle="popover" data-trigger="focus" data-html="true" title=""  data-content="<s:text name="title.jpsurvey.poll.new.help" />"
+                               data-placement="left" data-original-title="">
+                                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                             </a>
                         </span>
                     </s:else>
@@ -71,23 +76,19 @@
                 <s:if test="getStrutsAction() == 2">
                     <s:if test="questionnaire">
                         <s:text name="title.jpsurvey.survey.edit" />
-                        <span class="pull-right"> <a tabindex="0" role="button"
-                                                     data-toggle="popover" data-trigger="focus" data-html="true"
-                                                     title=""
-                                                     data-content="<s:text name="title.jpsurvey.survey.edit.help" />"
-                                                     data-placement="left" data-original-title=""> <i
-                                    class="fa fa-question-circle-o" aria-hidden="true"></i>
+                        <span class="pull-right">
+                            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"  data-content="<s:text name="title.jpsurvey.survey.edit.help" />" data-placement="left" data-original-title="">
+                                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                             </a>
                         </span>
                     </s:if>
                     <s:else>
                         <s:text name="title.jpsurvey.poll.edit" />
-                        <span class="pull-right"> <a tabindex="0" role="button"
-                                                     data-toggle="popover" data-trigger="focus" data-html="true"
-                                                     title=""
-                                                     data-content="<s:text name="title.jpsurvey.poll.edit.help" />"
-                                                     data-placement="left" data-original-title=""> <i
-                                    class="fa fa-question-circle-o" aria-hidden="true"></i>
+                        <span class="pull-right">
+                            <a tabindex="0" role="button"  data-toggle="popover" data-trigger="focus" data-html="true"  title=""
+                               data-content="<s:text name="title.jpsurvey.poll.edit.help" />"
+                               data-placement="left" data-original-title="">
+                                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                             </a>
                         </span>
                     </s:else>
@@ -98,29 +99,33 @@
             <div class="col-sm-6">
                 <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
                     <s:if test="questionnaire">
-                        <li class="active"><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
+                        <li class="active">
+                            <a href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
                                 <s:text name="jpsurvey.label.questionnaires" />
-                            </a></li>
-                        </s:if>
-                        <s:else>
-                        <li><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
+                            </a>
+                        </li>
+                    </s:if>
+                    <s:else>
+                        <li>
+                            <a href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
                                 <s:text name="jpsurvey.label.questionnaires" />
-                            </a></li>
-                        </s:else>
-                        <s:if test="questionnaire">
-                        <li><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
+                            </a>
+                        </li>
+                    </s:else>
+                    <s:if test="questionnaire">
+                        <li>
+                            <a  href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
                                 <s:text name="jpsurvey.label.polls" />
-                            </a></li>
-                        </s:if>
-                        <s:else>
-                        <li class="active"><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
+                            </a>
+                        </li>
+                    </s:if>
+                    <s:else>
+                        <li class="active">
+                            <a href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
                                 <s:text name="jpsurvey.label.polls" />
-                            </a></li>
-                        </s:else>
+                            </a>
+                        </li>
+                    </s:else>
                 </ul>
             </div>
         </wp:ifauthorized>
@@ -137,10 +142,10 @@
                 <s:if test="surveyId != null">
                     <p>
                         <s:text name="label.workingOn" />
-                        : <em><s:property value="%{getLabel(survey.titles)}" /></em>.
+                        : 
+                        <em><s:property value="%{getLabel(survey.titles)}" /></em>.
                     </p>
                 </s:if>
-
                 <s:if test="questionnaire">
                     <s:text name="title.jpsurvey.survey.edit.intro" />
                 </s:if>
@@ -148,11 +153,10 @@
                     <s:text name="title.jpsurvey.poll.edit.intro" />
                 </s:else>
             </div>
-
         </div>
     </s:if>
 
-    <s:form cssClass="tab-container">
+    <s:form cssClass="form-horizontal">
         <p class="noscreen">
             <s:if test="surveyId != null">
                 <s:hidden name="questionnaire" value="%{survey.questionnaire}" />
@@ -173,15 +177,23 @@
         </s:if>
 
         <ul class="nav nav-tabs tab-togglers" id="tab-togglers">
-            <li class="sr-only"><a data-toggle="tab" href="#info_tab"><s:text
-                        name="title.contentInfo" /></a></li>
-            <li class="active"><a data-toggle="tab" href="#info"><s:text
-                        name="label.info" /></a></li>
-                    <s:iterator value="langs" var="lang">
-                <li><a data-toggle="tab"
-                       href="#<s:property value="#lang.code" />_tab"><s:property
-                            value="#lang.descr" /></a></li>
-                    </s:iterator>
+            <li class="sr-only">
+                <a data-toggle="tab" href="#info_tab">
+                    <s:text name="title.contentInfo" />
+                </a>
+            </li>
+            <li class="active">
+                <a data-toggle="tab" href="#info">
+                    <s:text name="label.info" />
+                </a>
+            </li>
+            <s:iterator value="langs" var="lang">
+                <li>
+                    <a data-toggle="tab" href="#<s:property value="#lang.code" />_tab"><s:property
+                            value="#lang.descr" />
+                    </a>
+                </li>
+            </s:iterator>
         </ul>
         <div class="panel" id="tab-container">
             <div class="panel-body">
@@ -197,31 +209,31 @@
                             </p>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="startDate_cal"><s:text
-                                        name="jpsurvey_start_date" /></label>
+                                <label class="col-sm-2 control-label" for="startDate_cal">
+                                    <s:text name="jpsurvey_start_date" />
+                                </label>
                                 <div class="col-sm-10">
-                                    <wpsf:textfield name="startDate" id="startDate_cal"
-                                                    cssClass="form-control datepicker" placeholder="dd/MM/yyyy" />
+                                    <wpsf:textfield name="startDate" id="startDate_cal" cssClass="form-control datepicker" placeholder="dd/MM/yyyy" />
                                 </div>
                                 <br>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="endDate_cal"><s:text
-                                        name="jpsurvey_end_date" /></label>
+                                <label class="col-sm-2 control-label" for="endDate_cal">
+                                    <s:text name="jpsurvey_end_date" />
+                                </label>
                                 <div class="col-sm-10">
-                                    <wpsf:textfield name="endDate" id="endDate_cal"
-                                                    cssClass="form-control datepicker" placeholder="dd/MM/yyyy" />
+                                    <wpsf:textfield name="endDate" id="endDate_cal" cssClass="form-control datepicker" placeholder="dd/MM/yyyy" />
                                 </div>
                                 <br>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="groupName"><s:text
-                                        name="jpsurvey_group" /></label>
+                                <label class="col-sm-2 control-label" for="groupName">
+                                    <s:text   name="jpsurvey_group" />
+                                </label>
                                 <div class="col-sm-10">
-                                    <wpsf:select name="groupName" id="groupName" list="groups"
-                                                 listKey="name" listValue="descr" cssClass="form-control" />
+                                    <wpsf:select name="groupName" id="groupName" list="groups"  listKey="name" listValue="descr" cssClass="form-control" />
                                 </div>
                                 <br>
                             </div>
@@ -231,33 +243,36 @@
 
                             <s:else>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="publicPartialResult"><s:text
-                                            name="jpsurvey_publicPartialResult" /></label>
+                                    <label class="col-sm-2 control-label" for="publicPartialResult">
+                                        <s:text  name="jpsurvey_publicPartialResult" />
+                                    </label>
                                     <div class="col-sm-10">
-                                        <select class="form-control" name="publicPartialResult"
-                                                id="publicPartialResult" tabindex="<wpsa:counter />">
-                                            <option value="1"
-                                                    <s:if test="%{publicPartialResult > 0}">selected="selected"</s:if>><s:text
-                                                    name="jpsurvey_isPublicPartialResult" /></option>
-                                            <option value="0"
-                                                    <s:if test="%{publicPartialResult == null || publicPartialResult == 0}">selected="selected"</s:if>><s:text
-                                                    name="jpsurvey_notPublicPartialResult" /></option>
+                                        <select class="form-control" name="publicPartialResult" id="publicPartialResult" tabindex="<wpsa:counter />">
+                                            <option value="1" <s:if test="%{publicPartialResult > 0}">selected="selected"</s:if>>
+                                                <s:text  name="jpsurvey_isPublicPartialResult" />
+                                            </option>
+                                            <option value="0" <s:if test="%{publicPartialResult == null || publicPartialResult == 0}">selected="selected"</s:if>>
+                                                <s:text  name="jpsurvey_notPublicPartialResult" />
+                                            </option>
                                         </select>
                                     </div>
                                     <br>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="publicResult"><s:text
-                                            name="jpsurvey_publicResult" /></label>
+                                    <label class="col-sm-2 control-label" for="publicResult">
+                                        <s:text
+                                            name="jpsurvey_publicResult" />
+                                    </label>
                                     <div class="col-sm-10">
                                         <select class="form-control" name="publicResult"
                                                 id="publicResult" tabindex="<wpsa:counter />">
-                                            <option value="1"
-                                                    <s:if test="%{publicResult > 0}">selected="selected"</s:if>><s:text
-                                                    name="jpsurvey_isPublicResult" /></option>
+                                            <option value="1" <s:if test="%{publicResult > 0}">selected="selected"</s:if>>
+                                                <s:text name="jpsurvey_isPublicResult" />
+                                            </option>
                                             <option value="0"
-                                                    <s:if test="%{publicResult == null || publicResult == 0}">selected="selected"</s:if>><s:text
-                                                    name="jpsurvey_notPublicResult" /></option>
+                                                    <s:if test="%{publicResult == null || publicResult == 0}">selected="selected"</s:if>>
+                                                <s:text name="jpsurvey_notPublicResult" />
+                                            </option>
                                         </select>
                                     </div>
                                     <br>
@@ -322,15 +337,13 @@
                             <div class="contentAttributeBox">
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"
-                                           for="title-<s:property value="#currentLang.code"/>"> <code
-                                            class="label label-info">
+                                           for="title-<s:property value="#currentLang.code"/>">
+                                        <span class="label label-info">
                                             <s:property value="#currentLang.code" />
-                                        </code> <s:text name="jpsurvey_title" />
+                                        </span>&nbsp;<s:text name="jpsurvey_title" />
                                     </label>
                                     <div class="col-sm-10">
-                                        <wpsf:textfield name="%{'title-'+#currentLang.code}"
-                                                        id="%{'title-'+#currentLang.code}"
-                                                        value="%{titles[#currentLang.code]}" cssClass="form-control" />
+                                        <wpsf:textfield name="%{'title-'+#currentLang.code}"  id="%{'title-'+#currentLang.code}" value="%{titles[#currentLang.code]}" cssClass="form-control" />
                                     </div>
                                     <br>
                                 </div>
@@ -340,15 +353,12 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"
                                            for="description-<s:property value="%{#currentLang.code}"/>">
-                                        <code class="label label-info">
+                                        <span class="label label-info">
                                             <s:property value="%{#currentLang.code}" />
-                                        </code> <s:text name="jpsurvey_description" />
+                                        </span>&nbsp;<s:text name="jpsurvey_description" />
                                     </label>
                                     <div class="col-sm-10">
-                                        <wpsf:textarea name="%{'description-'+#currentLang.code}"
-                                                       id="%{'description-'+#currentLang.code}" cols="45" rows="6"
-                                                       value="%{descriptions[#currentLang.code]}"
-                                                       cssClass="form-control" />
+                                        <wpsf:textarea name="%{'description-'+#currentLang.code}" id="%{'description-'+#currentLang.code}" cols="45" rows="6" value="%{descriptions[#currentLang.code]}"  cssClass="form-control" />
                                     </div>
                                     <br>
                                 </div>
@@ -366,9 +376,7 @@
                                                     <wpsa:actionSubParam name="resourceTypeCode" value="Image" />
                                                 </wpsa:actionParam>
                                             <div class="col-sm-10">
-                                                <wpsf:submit type="button" action="%{#associateImageAction}"
-                                                             cssClass="btn btn-default"
-                                                             title="%{getText('label.choose')}">
+                                                <wpsf:submit type="button" action="%{#associateImageAction}" cssClass="btn btn-default" title="%{getText('label.choose')}">
                                                     <span class="icon fa fa-picture-o"></span>
                                                     &#32;
                                                     <s:text name="%{getText('jpsurvey_new_image')}" />
@@ -379,48 +387,38 @@
 
                                     <s:else>
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label"
-                                                   for="imageDescription-<s:property value="%{#currentLang.code}"/>"><s:text
-                                                    name="jpsurvey_imageDescription" /></label>
+                                            <label class="col-sm-2 control-label"for="imageDescription-<s:property value="%{#currentLang.code}"/>">
+                                                <s:text name="jpsurvey_imageDescription" />
+                                            </label>
 
                                             <div class="col-sm-10">
                                                 <div class="panel panel-default margin-small-top">
                                                     <div class="panel-heading text-right">
-                                                        <wpsf:submit type="button" action="removeSurveyImage"
-                                                                     cssClass="btn btn-warning btn-xs"
-                                                                     title="%{getText('jpsurvey_remove_image')}">
+                                                        <wpsf:submit type="button" action="removeSurveyImage" cssClass="btn btn-warning btn-xs" title="%{getText('jpsurvey_remove_image')}">
                                                             <span class="icon fa fa-eraser"></span>
                                                             &#32;
                                                             <s:text name="%{getText('jpsurvey_remove_image')}" />
                                                         </wpsf:submit>
-
                                                     </div>
 
                                                     <div class="row panel-body">
                                                         <div class="col-xs-12 col-sm-3 col-lg-2 text-center">
                                                             <s:set var="resource" value="%{loadResource(imageId)}" />
-                                                            <a class="pull-left"
-                                                               href="<s:property value="%{#resource.getImagePath(0)}" />"
-                                                               title="<s:property value="%{#resource.descr}" />"> <img
-                                                                    class="img-thumbnail"
-                                                                    src="<s:property value="%{#resource.getImagePath(1)}"/>"
-                                                                    alt="<s:property value="%{#resource.descr}" />"
-                                                                    style="height: 90px; max-width: 130px" />
+                                                            <a class="pull-left" href="<s:property value="%{#resource.getImagePath(0)}" />"
+                                                               title="<s:property value="%{#resource.descr}" />"> 
+                                                                <img class="img-thumbnail" src="<s:property value="%{#resource.getImagePath(1)}"/>" alt="<s:property value="%{#resource.descr}" />"
+                                                                     style="height: 90px; max-width: 130px" />
                                                             </a>
                                                         </div>
 
-                                                        <div
-                                                            class="col-xs-12 col-sm-9 col-lg-10 form-horizontal margin-large-top">
+                                                        <div class="col-xs-12 col-sm-9 col-lg-10 form-horizontal margin-large-top">
                                                             <div class="form-group">
                                                                 <div class="col-xs-12">
                                                                     <div class="input-group">
-                                                                        <span class="input-group-addon"><span
-                                                                                class="icon fa fa-picture-o"></span></span>
-                                                                            <wpsf:textfield
-                                                                                name="%{'imageDescription-'+#currentLang.code}"
-                                                                                id="%{'imageDescription-'+#currentLang.code}"
-                                                                                value="%{imageDescriptions[#currentLang.code]}"
-                                                                                cssClass="form-control" />
+                                                                        <span class="input-group-addon">
+                                                                            <span class="icon fa fa-picture-o"></span>
+                                                                        </span>
+                                                                        <wpsf:textfield  name="%{'imageDescription-'+#currentLang.code}" id="%{'imageDescription-'+#currentLang.code}" value="%{imageDescriptions[#currentLang.code]}" cssClass="form-control" />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -444,13 +442,10 @@
                     <s:text name="jpsurvey_questions_list" />
                 </legend>
                 <s:if test="%{surveyId != null}">
-                    <div class="form-group">
-                        <wpsf:submit type="button" action="addQuestion" value=""
-                                     cssClass="btn btn-primary pull-right">
-                            <s:text name="%{getText('jpsurvey_new_questions')}" />
-                        </wpsf:submit>
-                        <br>
-                    </div>
+                    <wpsf:submit type="button" action="addQuestion" value="" cssClass="btn btn-primary pull-right">
+                        <s:text name="label.add" />
+                    </wpsf:submit>
+                    <br><br>
                 </s:if>
                 <s:if test="survey.questions.isEmpty">
                     <div class="alert alert-info">
@@ -462,62 +457,71 @@
                     <table class="table table-striped table-bordered table-hover no-mb">
                         <thead>
                             <tr>
-                                <th class="text-center"><s:text
-                                        name="jpsurvey_questionsTable_questions" /></th>
-                                <th class="text-center"><s:text
-                                        name="jpsurvey_questionsTable_occurences" /></th>
-                                <th class="text-center"><s:text
-                                        name="jpsurvey_questionsTable_answers_number" /></th>
-                                <th class="text-center"><s:text
-                                        name="jpsurvey_questionsTable_actions" /></th>
+                                <th class="table-w-30">
+                                    <s:text name="jpsurvey_questionsTable_questions" />
+                                </th>
+                                <th class="text-center table-w-10">
+                                    <s:text  name="jpsurvey_questionsTable_occurences" />
+                                </th>
+                                <th class="text-center table-w-10">
+                                    <s:text  name="jpsurvey_questionsTable_answers_number" />
+                                </th>
+                                <th class="text-center table-w-5">
+                                    <s:text name="label.actions" />
+                                </th>
                             </tr>
                         </thead>
                         <s:set var="currentSurveyQuestions" value="survey.questions" />
                         <tbody>
-                            <s:iterator var="currentQuestion" value="#currentSurveyQuestions"
-                                        status="status">
-                                <tr class="text-center">
-                                    <td><s:property
-                                            value="%{getLabel(#currentQuestion.questions)}" /></td>
-                                    <td><s:property
-                                            value="%{getResponseOccurences(#currentQuestion.id)}" /></td>
-                                    <td><s:property value="#currentQuestion.AnswersNumber" /></td>
+                            <s:iterator var="currentQuestion" value="#currentSurveyQuestions" status="status">
+                                <tr>
+                                    <td>
+                                        <s:property value="%{getLabel(#currentQuestion.questions)}" />
+                                    </td>
+                                    <td class="text-center">
+                                        <s:property value="%{getResponseOccurences(#currentQuestion.id)}" />
+                                    </td>
+                                    <td class="text-center">
+                                        <s:property value="#currentQuestion.AnswersNumber" />
+                                    </td>
                                     <td class="table-view-pf-actions">
-                                        <button class="btn btn-menu-right dropdown-toggle"
-                                                type="button" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                        <button class="btn btn-menu-right dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <span class="fa fa-ellipsis-v"></span>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a
-                                                    href="<s:url action="editQuestion">
-                                                        <s:param name="surveyId" value="surveyId"/>
-                                                        <s:param name="questionId" value="#currentQuestion.id"/>
-                                                        <s:param name="strutsAction" value="2"/></s:url>"
-                                                    title="<s:text name="label.edit" />: <s:property value="%{getLabel(#currentQuestion.questions)}"/>">
+                                            <li>
+                                                <a href="<s:url action="editQuestion">
+                                                       <s:param name="surveyId" value="surveyId"/>
+                                                       <s:param name="questionId" value="#currentQuestion.id"/>
+                                                       <s:param name="strutsAction" value="2"/></s:url>"
+                                                   title="<s:text name="label.edit" />: <s:property value="%{getLabel(#currentQuestion.questions)}"/>">
                                                     <s:text name="label.edit" />
-                                                </a></li>
-                                            <li><a
-                                                    href="<s:url action="moveQuestionUp">
-                                                        <s:param name="surveyId" value="surveyId"/>
-                                                        <s:param name="questionId" value="#currentQuestion.id"/></s:url>"
-                                                    title="<s:text name="label.moveUp" />: <s:property value="%{getLabel(#currentQuestion.questions)}"/>">
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="<s:url action="moveQuestionUp">
+                                                       <s:param name="surveyId" value="surveyId"/>
+                                                       <s:param name="questionId" value="#currentQuestion.id"/></s:url>"
+                                                   title="<s:text name="label.moveUp" />: <s:property value="%{getLabel(#currentQuestion.questions)}"/>">
                                                     <s:text name="label.moveUp" />
-                                                </a></li>
-                                            <li><a
-                                                    href="<s:url action="moveQuestionDown">
-                                                        <s:param name="surveyId" value="surveyId"/>
-                                                        <s:param name="questionId" value="#currentQuestion.id"/></s:url>"
-                                                    title="<s:text name="label.moveDown" />: <s:property value="%{getLabel(#currentQuestion.questions)}"/>">
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="<s:url action="moveQuestionDown">
+                                                       <s:param name="surveyId" value="surveyId"/>
+                                                       <s:param name="questionId" value="#currentQuestion.id"/></s:url>"
+                                                   title="<s:text name="label.moveDown" />: <s:property value="%{getLabel(#currentQuestion.questions)}"/>">
                                                     <s:text name="label.moveDown" />
-                                                </a></li>
-                                            <li><a
-                                                    href="<s:url action="trashQuestion">
-                                                        <s:param name="surveyId" value="surveyId"/>
-                                                        <s:param name="questionId" value="#currentQuestion.id"/></s:url>"
-                                                    title="<s:text name="label.remove" />: <s:property value="%{getLabel(#currentQuestion.questions)}"/>">
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="<s:url action="trashQuestion">
+                                                       <s:param name="surveyId" value="surveyId"/>
+                                                       <s:param name="questionId" value="#currentQuestion.id"/></s:url>"
+                                                   title="<s:text name="label.remove" />: <s:property value="%{getLabel(#currentQuestion.questions)}"/>">
                                                     <s:text name="label.remove" />
-                                                </a></li>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </td>
                                 </tr>
