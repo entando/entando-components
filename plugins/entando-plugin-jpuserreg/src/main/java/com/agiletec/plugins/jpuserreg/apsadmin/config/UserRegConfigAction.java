@@ -27,6 +27,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
@@ -42,9 +45,6 @@ import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.IUserRegManage
 import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.model.IUserRegConfig;
 import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.model.Template;
 import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.model.UserRegConfig;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class UserRegConfigAction extends BaseAction {
 
@@ -70,15 +70,22 @@ public class UserRegConfigAction extends BaseAction {
 			Lang lang = langs.next();
 			Template template = templates.get(lang.getCode());
 			if (template == null) {
-				this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.notValued", new String[]{this.getText(fieldName), lang.getDescr()}));
+				this.addFieldError(fieldName,
+						this.getText("jpuserreg.errors.templates.notValued", new String[] { this.getText(fieldName), lang.getDescr() }));
 			} else {
 				String subject = template.getSubject();
 				if (subject == null || subject.trim().length() == 0) {
-					this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.subject.notValued", new String[]{this.getText(fieldName), lang.getDescr()}));
+					this.addFieldError(
+							fieldName,
+							this.getText("jpuserreg.errors.templates.subject.notValued",
+									new String[] { this.getText(fieldName), lang.getDescr() }));
 				}
 				String body = template.getBody();
 				if (body == null || body.trim().length() == 0) {
-					this.addFieldError(fieldName, this.getText("jpuserreg.errors.templates.body.notValued", new String[]{this.getText(fieldName), lang.getDescr()}));
+					this.addFieldError(
+							fieldName,
+							this.getText("jpuserreg.errors.templates.body.notValued",
+									new String[] { this.getText(fieldName), lang.getDescr() }));
 				}
 			}
 		}
@@ -93,10 +100,10 @@ public class UserRegConfigAction extends BaseAction {
 				String[] params = csv.split(",");
 				String groupName = (params.length > 0) ? params[0] : null;
 				String roleName = (params.length > 1) ? params[1] : null;
-				if (null == groupName
-						|| null == getGroupManager().getGroup(groupName)
+				if (null == groupName || null == getGroupManager().getGroup(groupName)
 						|| (roleName != null && null == this.getRoleManager().getRole(roleName))) {
-					this.addFieldError("config.defaultCsvAuthorizations", this.getText("jpuserreg.errors.authority.invalid", new String[]{groupName, roleName}));
+					this.addFieldError("config.defaultCsvAuthorizations",
+							this.getText("jpuserreg.errors.authority.invalid", new String[] { groupName, roleName }));
 				}
 			}
 		}
