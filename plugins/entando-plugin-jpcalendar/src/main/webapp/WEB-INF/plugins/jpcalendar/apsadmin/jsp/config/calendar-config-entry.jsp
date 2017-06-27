@@ -41,7 +41,7 @@
                         <s:text name="label.type" />
                     </label>
                     <div class="col-sm-10">
-                        <wpsf:select name="contentType" id="contentType" list="contentTypes" listKey="code" listValue="descr" cssClass="form-control" />
+                        <wpsf:select name="contentType" id="contentType" list="contentTypes" listKey="code" listValue="description" cssClass="form-control" />
                     </div>
                 </div>
                 <div class="form-group">
