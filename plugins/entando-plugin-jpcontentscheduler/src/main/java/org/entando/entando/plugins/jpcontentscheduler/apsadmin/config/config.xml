@@ -51,7 +51,8 @@
             <result type="tiles">admin.jpcontentscheduler.entryUser</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
-        <action name="saveUsersContentType" class="jpcontentschedulerConfigUsersAction">
+        <action name="saveUsersContentType" class="jpcontentschedulerConfigUsersAction" method="saveUsersContentType">
+            <result name="input" type="tiles">admin.jpcontentscheduler.entryUser</result>
             <result type="chain">viewUsers</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>

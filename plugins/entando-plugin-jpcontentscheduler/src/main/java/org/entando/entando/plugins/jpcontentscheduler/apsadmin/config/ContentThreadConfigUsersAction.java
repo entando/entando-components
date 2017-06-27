@@ -131,6 +131,27 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 		return Action.SUCCESS;
 	}
 
+	public String saveUsersContentType() {
+		try {
+			String selectedUser = this.getRequest().getParameter("user");
+			if (StringUtils.isBlank(selectedUser)) {
+				selectedUser = this.getUsername();
+			}
+
+			Map<String, List<String>> config = this.getUsersContentType();
+
+			if (null == config.get(username) || config.get(selectedUser).isEmpty()) {
+				this.addActionError(this.getText("jpcontentscheduler.error.contentTypes.empty"));
+				return INPUT;
+			}
+
+		} catch (Throwable t) {
+			_logger.error("Error in saveUsersContentType", t);
+			return FAILURE;
+		}
+		return Action.SUCCESS;
+	}
+
 	public String removeUser() {
 		try {
 			Map<String, List<String>> config = this.getUsersContentType();
