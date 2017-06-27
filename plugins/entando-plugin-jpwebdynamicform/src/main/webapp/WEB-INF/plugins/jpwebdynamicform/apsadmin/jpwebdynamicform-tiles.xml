@@ -56,4 +56,9 @@
         <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/entity-message-list.jsp" />
     </definition>
 
+
+    <definition extends="layout.default" name="admin.jpwebdynamicform.Config">
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/config/webDynamicFormSysConfig.jsp"/>
+    </definition>
 </tiles-definitions>

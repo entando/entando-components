@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <bean id="jpcontentschedulerSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+        <property name="subMenuFilePath"><value>/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/common/template/subMenu.jsp</value></property>
+    </bean>
+
+    <bean id="jpcontentschedulerConfigAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ConfigAction"
+          scope="prototype" parent="abstractBaseAction" >
+        <property name="baseConfigManager" ref="BaseConfigManager" />
+        <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
+    </bean>
+
+    <bean id="jpcontentschedulerEmailAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ContentThreadConfigEmailAction"
+          scope="prototype" parent="abstractBaseAction" >
+        <property name="baseConfigManager" ref="BaseConfigManager" />
+        <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
+    </bean>
+
+
+    <bean id="jpcontentschedulerConfigUsersAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ContentThreadConfigUsersAction"
+          scope="prototype" parent="abstractBaseAction" >
+        <property name="baseConfigManager" ref="BaseConfigManager" />
+        <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="userManager" ref="UserManager" />
+    </bean>
+
+    <bean id="jpcontentschedulerConfigGroupsAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ContentThreadConfigGroupsAction"
+          scope="prototype" parent="abstractBaseAction" >
+        <property name="baseConfigManager" ref="BaseConfigManager" />
+        <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="groupManager" ref="GroupManager" />
+    </bean>
+
+    <bean id="jpcontentschedulerConfigContentTypesAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.ContentThreadConfigContentTypesAction"
+          scope="prototype" parent="abstractBaseAction" >
+        <property name="baseConfigManager" ref="BaseConfigManager" />
+        <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="categoryManager" ref="CategoryManager" />
+    </bean>
+
+
+
+
+    <bean id="jpcontentschedulerAdminAction" class="org.entando.entando.plugins.jpcontentscheduler.apsadmin.config.AdminAction"
+          scope="prototype" parent="abstractBaseAction" >
+    </bean>
+
+</beans>

@@ -8,9 +8,9 @@
     <li>
         <s:text name="jpwebdynamicform.menu.uxcomponents"/>
     </li>
-	<li>
-		<s:text name="jpwebdynamicform.name"/>
-	</li>
+    <li>
+        <s:text name="jpwebdynamicform.name"/>
+    </li>
 
     <li class="page-title-container">
         <s:text name="breadcrumb.messageList"/>
@@ -46,6 +46,10 @@
                         <s:text name="breadcrumb.messageType"/>
                     </a>
                 </li>
+                <li>
+                    <a href="<s:url namespace="/do/jpwebdynamicform/Config" action="systemParams"></s:url>"><s:text
+                            name="breadcrumb.capcha"/></a>
+                </li>
             </ul>
         </div>
     </div>
@@ -68,7 +72,7 @@
                                      id="entityTypeCode" list="entityPrototypes" listKey="typeCode"
                                      listValue="typeDescr" headerKey=""
                                      headerValue="%{getText('label.all')}"/>
-                                     
+
                         <span class="input-group-btn">
                             <wpsf:submit cssClass="btn btn-primary" value="%{getText('label.set')}"/>
                         </span>
@@ -83,10 +87,10 @@
                                 </a>
                             </p>
                         </div>
-                            <%--Ricerca avanzata--%>
+                        <%--Ricerca avanzata--%>
                         <div id="collapseOne" class="panel-collapse collapse">
                             <div class="panel-body">
-                                    <%-- from --%>
+                                <%-- from --%>
                                 <div class="form-group">
                                     <label for="jpwebdynamicform_from_cal"
                                            class="control-label col-sm-2 text-right"><s:text name="label.from"/></label>
@@ -95,7 +99,7 @@
                                     </div>
                                 </div>
 
-                                    <%-- to --%>
+                                <%-- to --%>
                                 <div class="form-group">
                                     <label for="jpwebdynamicform_to_cal"
                                            class="control-label col-sm-2 text-right"><s:text name="label.to"/></label>
@@ -104,7 +108,7 @@
                                     </div>
                                 </div>
 
-                                    <%-- status --%>
+                                <%-- status --%>
                                 <div class="form-group">
                                     <label for="jpwebdynamicform_status"
                                            class="control-label col-sm-2 text-right"><s:text
@@ -127,9 +131,9 @@
                                         <s:set var="currentFieldId">entityFinding_<s:property value="#attribute.name"/></s:set>
                                         <s:if test="#attribute.type == 'Text' || #attribute.type == 'Longtext' || #attribute.type == 'Monotext'">
                                             <s:set var="textInputFieldName"><s:property value="#attribute.name"/>_textFieldName</s:set>
-                                            <div class="form-group">
-                                                <label class="control-label col-sm-2 text-right"
-                                                       for="<s:property value="#currentFieldId" />"><s:property
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-2 text-right"
+                                                           for="<s:property value="#currentFieldId" />"><s:property
                                                         value="#attribute.name"/></label>
                                                 <div class="col-sm-9">
                                                     <s:set var="textInputFieldName"><s:property
@@ -142,36 +146,36 @@
                                         </s:if>
                                         <s:elseif test="#attribute.type == 'Enumerator'">
                                             <s:set var="enumeratorFieldName"><s:property value="#attribute.name"/>_textFieldName</s:set>
-                                            <div class="form-group">
-                                                <label class="control-label col-sm-2 text-right" 
-                                                       for="${currentFieldId}">
-                                                       <s:property value="#attribute.name"/>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-2 text-right"
+                                                           for="${currentFieldId}">
+                                                    <s:property value="#attribute.name"/>
                                                 </label>
                                                 <div class="col-sm-9">
-                                                <wpsf:select name="%{#enumeratorFieldName}" 
-                                                    id="%{#currentFieldId}" 
-                                                    headerKey="" 
-                                                    headerValue="%{getText('label.none')}" 
-                                                    list="#attribute.items" 
-                                                    value="%{getSearchFormFieldValue(#enumeratorFieldName)}" 
-                                                    cssClass="form-control" />
+                                                    <wpsf:select name="%{#enumeratorFieldName}"
+                                                                 id="%{#currentFieldId}"
+                                                                 headerKey=""
+                                                                 headerValue="%{getText('label.none')}"
+                                                                 list="#attribute.items"
+                                                                 value="%{getSearchFormFieldValue(#enumeratorFieldName)}"
+                                                                 cssClass="form-control" />
                                                 </div>
                                             </div>
                                         </s:elseif>
 
                                         <s:elseif test="#attribute.type == 'EnumeratorMap'">
                                             <s:set var="enumeratorMapFieldName"><s:property value="#attribute.name"/>_textFieldName</s:set>
-                                            <div class="form-group">
-                                                <label class="control-label col-sm-2 text-right" 
-                                                       for="${currentFieldId}">
-                                                       <s:property value="#attribute.name"/>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-2 text-right"
+                                                           for="${currentFieldId}">
+                                                    <s:property value="#attribute.name"/>
                                                 </label>
                                                 <div class="col-sm-9">
-                                                    <wpsf:select name="%{#enumeratorMapFieldName}" 
-                                                        id="%{#currentFieldId}" 
-                                                         headerKey="" headerValue="%{getText('label.none')}" 
-                                                         list="#attribute.mapItems" listKey="key" listValue="value" 
-                                                         value="%{getSearchFormFieldValue(#enumeratorMapFieldName)}" cssClass="form-control" />
+                                                    <wpsf:select name="%{#enumeratorMapFieldName}"
+                                                                 id="%{#currentFieldId}"
+                                                                 headerKey="" headerValue="%{getText('label.none')}"
+                                                                 list="#attribute.mapItems" listKey="key" listValue="value"
+                                                                 value="%{getSearchFormFieldValue(#enumeratorMapFieldName)}" cssClass="form-control" />
                                                 </div>
                                             </div>
                                         </s:elseif>
@@ -180,9 +184,9 @@
                                             <s:set var="dateStartInputFieldName"><s:property
                                                     value="#attribute.name"/>_dateStartFieldName</s:set>
                                             <s:set var="dateEndInputFieldName"><s:property value="#attribute.name"/>_dateEndFieldName</s:set>
-                                            <div class="form-group">
-                                                <label class="control-label col-sm-2 text-right"
-                                                       for="<s:property value="#currentFieldId" />_start_cal"><s:property
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-2 text-right"
+                                                           for="<s:property value="#currentFieldId" />_start_cal"><s:property
                                                         value="#attribute.name"/>&#32;<s:text name="Start"/></label>
                                                 <div class="col-sm-9">
                                                     <wpsf:textfield id="%{#currentFieldId}_dateStartFieldName_cal"
@@ -211,9 +215,9 @@
                                                     value="#attribute.name"/>_numberStartFieldName</s:set>
                                             <s:set var="numberEndInputFieldName"><s:property
                                                     value="#attribute.name"/>_numberEndFieldName</s:set>
-                                            <div class="form-group">
-                                                <label class="control-label col-sm-2 text-right"
-                                                       for="<s:property value="#currentFieldId" />_start"><s:property
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-2 text-right"
+                                                           for="<s:property value="#currentFieldId" />_start"><s:property
                                                         value="#attribute.name"/>&#32;<s:text
                                                         name="Start"/></label>
                                                 <div class="col-sm-9">
@@ -245,12 +249,12 @@
                                                        for="<s:property value="#currentFieldId"/>"><s:property
                                                         value="#attribute.name"/></label>&nbsp;
                                                 <div class="col-sm-9">
-                                                        <s:if test="%{getSearchFormFieldValue(#booleanInputFieldName) != null}">
-                                                            <wpsf:checkbox name="%{#booleanInputFieldName}" id="%{#currentFieldId}" checked="true" />
-                                                        </s:if>
-                                                        <s:else>
-                                                            <wpsf:checkbox name="%{#booleanInputFieldName}" id="%{#currentFieldId}" />
-                                                        </s:else>
+                                                    <s:if test="%{getSearchFormFieldValue(#booleanInputFieldName) != null}">
+                                                        <wpsf:checkbox name="%{#booleanInputFieldName}" id="%{#currentFieldId}" checked="true" />
+                                                    </s:if>
+                                                    <s:else>
+                                                        <wpsf:checkbox name="%{#booleanInputFieldName}" id="%{#currentFieldId}" />
+                                                    </s:else>
                                                 </div>
                                             </div>
                                         </s:elseif>
@@ -314,8 +318,8 @@
     <div class="subsection-light">
         <s:set var="entityIds" value="searchResult"/>
         <s:if test="%{#entityIds.size()==0}">
-        <div class="alert alert-info">
-            <span class="pficon pficon-info"></span>
+            <div class="alert alert-info">
+                <span class="pficon pficon-info"></span>
                 <s:text name="note.message.list.none"/>
             </div>
         </s:if>
@@ -364,80 +368,80 @@
                     <s:set var="group" value="#entityGroup"/>
                     <table class="table table-striped table-bordered table-hover no-mb" id="messageListTable">
                         <thead>
-                        <tr>
-                            <th class="col-xs-6"><s:text name="label.request"/></th>
-                            <th class="col-xs-4 text-center"><s:text name="label.creationDate"/></th>
-                            <th class="col-xs-1 text-center"><s:text name="label.status"/></th>
-                            <th class="col-xs-1 text-center"><s:text name="label.actions"/></th>
-                        </tr>
+                            <tr>
+                                <th class="col-xs-6"><s:text name="label.request"/></th>
+                                <th class="col-xs-4 text-center"><s:text name="label.creationDate"/></th>
+                                <th class="col-xs-1 text-center"><s:text name="label.status"/></th>
+                                <th class="col-xs-1 text-center"><s:text name="label.actions"/></th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <s:iterator var="messageId">
-                            <s:set var="message" value="%{getMessage(#messageId)}"/>
-                            <s:set var="answers" value="%{getAnswers(#messageId)}"/>
-                            <tr>
-                                <td>
-                                    <s:property value="#message.id"/>&#32;&ndash;&#32;<s:property
-                                        value="#message.typeDescr"/>
-                                </td>
-                                <td class="text-center">
-                                    <s:date name="#message.creationDate" format="dd/MM/yyyy HH:mm"/>
-                                </td>
-                                <s:if test="%{#answers.size()>0}">
-                                    <s:set var="iconImage">icon fa fa-check text-success</s:set>
-                                    <s:set var="thereIsAnswer" value="%{getText('label.answered')}"/>
-                                </s:if>
-                                <s:else>
-                                    <s:set var="iconImage">icon fa fa-pause text-warning</s:set>
-                                    <s:set var="thereIsAnswer" value="%{getText('label.waiting')}"/>
-                                </s:else>
-                                <td class="text-center">
-                                    <span class="<s:property value="iconImage" />"></span>
-                                    <span class="sr-only"><s:property value="thereIsAnswer"/></span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="dropdown dropdown-kebab-pf">
-                                        <p class="sr-only"><s:text name="label.actions"/></p>
-                                        <span class="btn btn-menu-right dropdown-toggle" type="button"
-                                              data-toggle="dropdown" aria-haspopup="true"
-                                              aria-expanded="false">
-                                                                <span class="fa fa-ellipsis-v"></span>
-                                                            </span>
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li>
-                                                <a href="<s:url action="newAnswer"><s:param name="id" value="#message.id"/></s:url>"
-                                                   title="<s:text name="label.newAnswer.at" />:&#32;<s:property value="#message.id" />">
-                                                    <s:text name="label.newAnswer"/>
-                                                    <span class="sr-only"><s:text name="label.newAnswer"/></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="<s:url action="view"><s:param name="id" value="#message.id"></s:param></s:url>"
-                                                   title="<s:text name="label.view"/>&#32;<s:property value="#message.id"/>">
-                                                    <s:text name="label.view"/>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="<s:url action="trash"><s:param name="id" value="#message.id"/></s:url>"
-                                                   title="<s:text name="label.remove" />: <s:property value="#message.id" />">
-                                                    <s:text name="label.remove"/>
-                                                    <span class="sr-only"><s:text name="label.remove"/></span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        </s:iterator>
+                            <s:iterator var="messageId">
+                                <s:set var="message" value="%{getMessage(#messageId)}"/>
+                                <s:set var="answers" value="%{getAnswers(#messageId)}"/>
+                                <tr>
+                                    <td>
+                                        <s:property value="#message.id"/>&#32;&ndash;&#32;<s:property
+                                            value="#message.typeDescr"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <s:date name="#message.creationDate" format="dd/MM/yyyy HH:mm"/>
+                                    </td>
+                                    <s:if test="%{#answers.size()>0}">
+                                        <s:set var="iconImage">icon fa fa-check text-success</s:set>
+                                        <s:set var="thereIsAnswer" value="%{getText('label.answered')}"/>
+                                    </s:if>
+                                    <s:else>
+                                        <s:set var="iconImage">icon fa fa-pause text-warning</s:set>
+                                        <s:set var="thereIsAnswer" value="%{getText('label.waiting')}"/>
+                                    </s:else>
+                                    <td class="text-center">
+                                        <span class="<s:property value="iconImage" />"></span>
+                                        <span class="sr-only"><s:property value="thereIsAnswer"/></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown dropdown-kebab-pf">
+                                            <p class="sr-only"><s:text name="label.actions"/></p>
+                                            <span class="btn btn-menu-right dropdown-toggle" type="button"
+                                                  data-toggle="dropdown" aria-haspopup="true"
+                                                  aria-expanded="false">
+                                                <span class="fa fa-ellipsis-v"></span>
+                                            </span>
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li>
+                                                    <a href="<s:url action="newAnswer"><s:param name="id" value="#message.id"/></s:url>"
+                                                       title="<s:text name="label.newAnswer.at" />:&#32;<s:property value="#message.id" />">
+                                                        <s:text name="label.newAnswer"/>
+                                                        <span class="sr-only"><s:text name="label.newAnswer"/></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="<s:url action="view"><s:param name="id" value="#message.id"></s:param></s:url>"
+                                                       title="<s:text name="label.view"/>&#32;<s:property value="#message.id"/>">
+                                                        <s:text name="label.view"/>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="<s:url action="trash"><s:param name="id" value="#message.id"/></s:url>"
+                                                       title="<s:text name="label.remove" />: <s:property value="#message.id" />">
+                                                        <s:text name="label.remove"/>
+                                                        <span class="sr-only"><s:text name="label.remove"/></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </s:iterator>
                         </tbody>
                     </table>
                     <div class="content-view-pf-pagination table-view-pf-pagination clearfix">
                         <div class="form-group">
-                                <span><s:include
-                                        value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/></span>
+                            <span><s:include
+                                    value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/></span>
                             <div class="mt-5">
                                 <s:include
-                                        value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp"/>
+                                    value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp"/>
                             </div>
                         </div>
                     </div>

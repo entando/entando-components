@@ -16,7 +16,7 @@
                 <s:text name="jpnewsletter.admin.menu"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="jpnewsletter.section.help" data-placement="left" data-original-title="">
+                       data-content="<s:text name="jpnewsletter.section.help" />" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -54,7 +54,7 @@
 
 <div id="main">
     <div class="alert alert-success">
-      <span class="pficon pficon-ok"></span>
-      <s:text name="jpnewsletter.note.message.savedConfirmation"/>
+        <span class="pficon pficon-ok"></span>
+        <s:text name="jpnewsletter.note.message.savedConfirmation"/>
     </div>
 </div>

@@ -8,10 +8,10 @@
     <li>
         <s:text name="jpwebdynamicform.menu.uxcomponents"/>
     </li>
-	<li>
-		<s:text name="jpwebdynamicform.name"/>
-	</li>
-	
+    <li>
+        <s:text name="jpwebdynamicform.name"/>
+    </li>
+
     <li>
         <a href="<s:url namespace="/do/jpwebdynamicform/Message/Config" action="list" />">
             <s:text name="breadcrumb.configuration"/>
@@ -54,23 +54,23 @@
                     <s:iterator value="fieldErrors">
                         <s:iterator value="value">
                             <li><s:property escapeHtml="false"/></li>
+                            </s:iterator>
                         </s:iterator>
-                    </s:iterator>
                 </ul>
             </div>
         </s:if>
 
         <s:if test="hasActionErrors()">
             <div class="alert alert-danger alert-dismissable">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                  <span class="pficon pficon-close"></span>
-              </button>
-              <span class="pficon pficon-error-circle-o"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <span class="pficon pficon-error-circle-o"></span>
                 <strong><s:text name="message.title.ActionErrors"/></strong>
                 <ul>
                     <s:iterator value="actionErrors">
                         <li><s:property escapeHtml="false"/></li>
-                    </s:iterator>
+                        </s:iterator>
                 </ul>
             </div>
         </s:if>
@@ -103,8 +103,8 @@
             <br/>
 
             <div class="form-group">
-                    <%-- Il mittente è quello di sistema che figurerà nelle mail agli operatori o all'utente
-                    E' obbligatorio solo se mailAttrName o notifiable sono true --%>
+                <%-- Il mittente è quello di sistema che figurerà nelle mail agli operatori o all'utente
+                E' obbligatorio solo se mailAttrName o notifiable sono true --%>
                 <label class="col-sm-2 control-label" for="jpwebdynamicform_sendercode">
                     <s:text name="label.senderCode"/>
                 </label>
@@ -118,8 +118,8 @@
             <br/>
             <br/>
             <div class="form-group">
-                    <%-- L'attributo dell'entità che contiene l'indirizzo eMail dell'utente del portale.
-                    Serve se si vuole consentire l'invio di eMail di risposta in back-end --%>
+                <%-- L'attributo dell'entità che contiene l'indirizzo eMail dell'utente del portale.
+                Serve se si vuole consentire l'invio di eMail di risposta in back-end --%>
                 <label class="col-sm-2 control-label" for="jpwebdynamicform_mailattribute">
                     <s:text name="label.mailAttrName"/>
                 </label>
@@ -192,33 +192,33 @@
                         </div>
                         <s:if test="%{recipientsTo == null || recipientsTo.size() == 0}">
                             <div class="alert alert-info">
-                              <span class="pficon pficon-info"></span>
-                              <s:text name="label.no.configured.recipients"/>
+                                <span class="pficon pficon-info"></span>
+                                <s:text name="label.no.configured.recipients"/>
                             </div>
                         </s:if>
                         <s:else>
-                             <ul class="list-inline mt-5">
+                            <ul class="list-inline mt-5">
                                 <s:iterator value="recipientsTo" var="recipient">
-                                  <li>
-                                    <span class="label label-info">
-                                        <abbr title="<s:property value="#recipient"/>">
-                                            <s:property value="#recipient"/>
-                                        </abbr>&#32;
-                                        <wpsa:actionParam action="removeAddress" var="actionName">
-                                            <wpsa:actionSubParam name="recipientType" value="1"/>
-                                            <wpsa:actionSubParam name="address" value="%{#recipient}"/>
-                                        </wpsa:actionParam>
+                                    <li>
+                                        <span class="label label-info">
+                                            <abbr title="<s:property value="#recipient"/>">
+                                                <s:property value="#recipient"/>
+                                            </abbr>&#32;
+                                            <wpsa:actionParam action="removeAddress" var="actionName">
+                                                <wpsa:actionSubParam name="recipientType" value="1"/>
+                                                <wpsa:actionSubParam name="address" value="%{#recipient}"/>
+                                            </wpsa:actionParam>
 
-                                        <wpsf:submit
+                                            <wpsf:submit
                                                 type="button"
                                                 action="%{#actionName}"
                                                 title="%{getText('label.remove')}: %{#recipient}"
                                                 cssClass="btn btn-link">
                                                 <span class="pficon pficon-close white"></span>
-                                    						<span class="sr-only">x</span>
-                                        </wpsf:submit>
-                                    </span>
-                                  </li>
+                                                <span class="sr-only">x</span>
+                                            </wpsf:submit>
+                                        </span>
+                                    </li>
                                 </s:iterator>
                             </ul>
                         </s:else>
@@ -229,31 +229,31 @@
                             <s:text name="label.recipientsCc"/>
                         </div>
                         <s:if test="%{recipientsCc == null || recipientsCc.size() == 0}">
-                          <div class="alert alert-info">
-                            <span class="pficon pficon-info"></span>
-                            <s:text name="label.no.configured.recipients"/>
-                          </div>
+                            <div class="alert alert-info">
+                                <span class="pficon pficon-info"></span>
+                                <s:text name="label.no.configured.recipients"/>
+                            </div>
                         </s:if>
                         <s:else>
                             <ul class="list-inline mt-5">
                                 <s:iterator value="recipientsCc" var="recipient">
-                                  <li>
-                                    <span class="label label-info">
-                                        <abbr title="<s:property value="#recipient"/>">
-                                            <s:property value="#recipient"/>
-                                        </abbr>&#32;
-                                        <wpsa:actionParam action="removeAddress" var="actionName">
-                                            <wpsa:actionSubParam name="recipientType" value="2"/>
-                                            <wpsa:actionSubParam name="address" value="%{#recipient}"/>
-                                        </wpsa:actionParam>
-                                        <wpsf:submit type="button" action="%{#actionName}"
-                                                     title="%{getText('label.remove')}: %{#recipient}"
-                                                     cssClass="btn btn-link">
-                                            <span class="pficon pficon-close white"></span>
-                                            <span class="sr-only">x</span>
-                                        </wpsf:submit>
-                                    </span>
-                                  </li>
+                                    <li>
+                                        <span class="label label-info">
+                                            <abbr title="<s:property value="#recipient"/>">
+                                                <s:property value="#recipient"/>
+                                            </abbr>&#32;
+                                            <wpsa:actionParam action="removeAddress" var="actionName">
+                                                <wpsa:actionSubParam name="recipientType" value="2"/>
+                                                <wpsa:actionSubParam name="address" value="%{#recipient}"/>
+                                            </wpsa:actionParam>
+                                            <wpsf:submit type="button" action="%{#actionName}"
+                                                         title="%{getText('label.remove')}: %{#recipient}"
+                                                         cssClass="btn btn-link">
+                                                <span class="pficon pficon-close white"></span>
+                                                <span class="sr-only">x</span>
+                                            </wpsf:submit>
+                                        </span>
+                                    </li>
                                 </s:iterator>
                             </ul>
                         </s:else>
@@ -264,33 +264,33 @@
                             <s:text name="label.recipientsBcc"/>
                         </div>
                         <s:if test="%{recipientsBcc == null || recipientsBcc.size() == 0}">
-                          <div class="alert alert-info">
-                            <span class="pficon pficon-info"></span>
-                            <s:text name="label.no.configured.recipients"/>
-                          </div>
+                            <div class="alert alert-info">
+                                <span class="pficon pficon-info"></span>
+                                <s:text name="label.no.configured.recipients"/>
+                            </div>
                         </s:if>
                         <s:else>
                             <ul class="list-inline mt-5">
                                 <s:iterator value="recipientsBcc" var="recipient">
-                                  <li>
-                                    <span class="label label-info">
-                                        <abbr title="<s:property value="#recipient"/>">
-                                            <s:property value="#recipient"/>
-                                        </abbr>&#32;
-                                        <wpsa:actionParam action="removeAddress" var="actionName">
-                                            <wpsa:actionSubParam name="recipientType" value="3"/>
-                                            <wpsa:actionSubParam name="address" value="%{#recipient}"/>
-                                        </wpsa:actionParam>
-                                        <wpsf:submit
+                                    <li>
+                                        <span class="label label-info">
+                                            <abbr title="<s:property value="#recipient"/>">
+                                                <s:property value="#recipient"/>
+                                            </abbr>&#32;
+                                            <wpsa:actionParam action="removeAddress" var="actionName">
+                                                <wpsa:actionSubParam name="recipientType" value="3"/>
+                                                <wpsa:actionSubParam name="address" value="%{#recipient}"/>
+                                            </wpsa:actionParam>
+                                            <wpsf:submit
                                                 type="button"
                                                 action="%{#actionName}"
                                                 title="%{getText('label.remove')}: %{#recipient}"
                                                 cssClass="btn btn-link">
-                                            <span class="pficon pficon-close white"></span>
-                                            <span class="sr-only">x</span>
-                                        </wpsf:submit>
-                                    </span>
-                                  </li>
+                                                <span class="pficon pficon-close white"></span>
+                                                <span class="sr-only">x</span>
+                                            </wpsf:submit>
+                                        </span>
+                                    </li>
                                 </s:iterator>
                             </ul>
                         </s:else>
@@ -310,8 +310,8 @@
                                 name="label.recipientType"/></label>
                         <div class="col-sm-10">
                             <wpsf:select
-                                    list="#{1: getText('label.recipient.to'), 2: getText('label.recipient.cc'), 3: getText('label.recipient.bcc')}"
-                                    name="recipientType" id="jpwebdynamicform_addrectype" cssClass="form-control"/>
+                                list="#{1: getText('label.recipient.to'), 2: getText('label.recipient.cc'), 3: getText('label.recipient.bcc')}"
+                                name="recipientType" id="jpwebdynamicform_addrectype" cssClass="form-control"/>
                         </div>
                     </div>
                     <br/>
@@ -337,7 +337,7 @@
                 </div>
             </div>
         </fieldset>
-        
+
         <div class="col-xs-12">
             <div class="form-group pull-right">
                 <div class="btn-group">
