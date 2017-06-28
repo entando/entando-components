@@ -3,14 +3,14 @@
         "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
 
 <validators>
-	
+
     <field name="config.tokenValidityMinutes">
         <field-validator type="int">
             <message key="requiredstring"/>
         </field-validator>
     </field>
-    
-    <field name="config.eMailSenderCode">
+
+    <field name="config.senderCode">
         <field-validator type="requiredstring" short-circuit="true" >
             <message key="requiredstring"/>
         </field-validator>
@@ -19,7 +19,7 @@
             <message key="requiredstring" />
         </field-validator>
     </field>
-    
+
     <field name="config.activationPageCode">
         <field-validator type="requiredstring" short-circuit="true" >
             <message key="requiredstring"/>
@@ -29,7 +29,7 @@
 			<message key="requiredstring" />
         </field-validator>
     </field>
-    
+
     <field name="config.reactivationPageCode">
         <field-validator type="requiredstring" short-circuit="true" >
             <message key="requiredstring"/>
@@ -39,5 +39,5 @@
             <message key="requiredstring" />
         </field-validator>
     </field>
-    
+
 </validators>
