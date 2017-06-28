@@ -23,7 +23,7 @@
                 <s:text name="jpnewsletter.admin.menu"/>
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-content="jpnewsletter.section.help" data-placement="left" data-original-title="">
+                       data-content="<s:text name="jpnewsletter.section.help"/>" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -58,5 +58,6 @@
     </div>
 </div>
 <br>
-
-<s:include value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/newsletter/include/content-detail.jsp"/>
+<div id="main" role="main">
+    <s:include value="/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/newsletter/include/content-detail.jsp"/>
+</div>
