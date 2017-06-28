@@ -66,8 +66,6 @@ The Entando components project, based on Apache Maven, is organized in two modul
 
 To create a new Entando component, for example a new Plugin, you have to use the Entando archetype for plugin: https://github.com/entando/entando-archetypes.
 
-```entando-components``` depends strictly on ```entando-core``` and ```entando-archetypes```.
-
 Entando core and Entando archetypes are Open Source projects; more information about them can be found respectively in 
 https://github.com/entando/entando-core and 
 https://github.com/entando/entando-archetypes.
