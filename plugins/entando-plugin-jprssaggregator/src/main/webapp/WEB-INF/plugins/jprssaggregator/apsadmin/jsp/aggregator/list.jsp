@@ -12,7 +12,7 @@
         <s:text name="breadcrumb.integrations.components"/>
     </li>
     <li class="page-title-container">
-        <s:text name="jprssaggregator.title.rssAggregator.rssManagement"/>
+        <s:text name="jprssaggregator.title.rssAggregator"/>
     </li>
 </ol>
 <div class="page-tabs-header">
