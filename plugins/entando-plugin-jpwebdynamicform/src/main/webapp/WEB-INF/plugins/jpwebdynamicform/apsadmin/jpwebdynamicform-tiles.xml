@@ -8,12 +8,12 @@
     <!-- ********* START Message Notifier Config Management Area ********* -->
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.Config.list">
-        <put-attribute name="title" value="admin.jpwebdynamicform.title.messageTypes.notifierConfig"/>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
         <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/config/messageTypeSummary.jsp"/>
     </definition>
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.Config.edit">
-        <put-attribute name="title" value="admin.jpwebdynamicform.title.messageTypes.notifierConfig"/>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
         <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/config/entryMessageType.jsp"/>
     </definition>
 
@@ -45,7 +45,7 @@
     <!-- ********* END Messages Management Area ********* -->
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Page.Widget.Webdynamicform.config">
-        <put-attribute name="title" value="title.pageManagement"/>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
         <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/portal/specialwidget/webDynamicFormConfig.jsp"/>
     </definition>
 
