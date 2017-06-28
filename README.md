@@ -9,11 +9,60 @@ The Entando components are:
 
 * **Plugins** extend functionality of engine, and admin-console components.
 
-The Entando components project, based on Apache Maven, is organized in three modules including all Entando extensions ready to use just now:
+The Entando components project, based on Apache Maven, is organized in two modules including all Entando extensions ready to use just now:
 
-1. ```plugins``` module, including all Plugins.
+1. ```plugins``` module, including all Plugins. The following is a list of plugins released with ```entando-core``` version 4.3.1:
 
-2. ```ui-bundles``` module, including all Bundles.
+    * Action Logger
+    * Avatar
+    * Blog
+    * Calendar
+    * Content Feedback
+    * Content Scheduler
+    * Content Versioning
+    * CAS Client
+    * Ehcache Connector
+    * Email Sender
+    * Faceted Navigation
+    * File Attribute
+    * LDAP Connector
+    * Newsletter
+    * Photogallery
+    * RSS
+    * RSS Aggregator
+    * Survey
+    * Tag Cloud
+    * Token API
+    * User Registration
+    * Web Dynamic Form
+
+2. ```ui-bundles``` module, including all Bundles. The following is a list of main bundles released with ```entando-core``` version 4.3.1:
+
+    * Content type - Generic Content
+    * Content type - News
+    * Content type - Download card
+    * Content type - Generic government Resolution
+    * Content type - Generic government Announcement
+    * Content type - Blog Post Content
+    * Page model - Twitter Bootstrap Hero unit (full width layout)
+    * Page model - Classic 2 columns layout
+    * Plugin default view - Avatar
+    * Plugin default view - Blog
+    * Plugin default view - Faceted Navigation
+    * Plugin default view - Newsletter
+    * Plugin default view - RSS
+    * Plugin default view - Survey-Questionnaire
+    * Plugin default view - Tag Cloud
+    * Plugin default view - Token API
+    * Plugin default view - User Registration
+    * Plugin default view - Web dynamic form
+    * Widget type - Choose a Language
+    * Widget type - Classic breadcrumbs ("You are here") bar
+    * Widget type - Classic vertical navigation menu
+    * Widget type - Horizontal navigation menu
+    * Widget type - Login form
+    * Widget type - Search form
+    * Widget type - Social media shortcuts buttons
 
 To create a new Entando component, for example a new Plugin, you have to use the Entando archetype for plugin: https://github.com/entando/entando-archetypes.
 
