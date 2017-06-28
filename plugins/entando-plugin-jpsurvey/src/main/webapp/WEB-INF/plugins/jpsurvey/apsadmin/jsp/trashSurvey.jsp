@@ -7,97 +7,53 @@
     <li><s:text name="breadcrumb.integrations.components"/></li>
     <li><s:text name="title.surveyList" /></li>
         <s:if test="survey.questionnaire">
-        <li><a
-                href="<s:url action="listSurveys" ><s:param name="questionnaire" value="survey.questionnaire"></s:param></s:url>"
-                title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpsurvey.survey.main" />"><s:text
-                    name="title.jpsurvey.survey.main" /></a></li>
-            </s:if>
-            <s:else>
-        <li><a
-                href="<s:url action="listSurveys" ><s:param name="questionnaire" value="survey.questionnaire"></s:param></s:url>"
-                title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpsurvey.poll.main" />"><s:text
-                    name="title.jpsurvey.poll.main" /></a></li>
-            </s:else>
-            <s:if test="survey.questionnaire">
-        <li class="page-title-container"><s:text
-                name="title.jpsurvey.trash.survey" /></li>
-            <s:set var="surveyType"
-                   value="%{getText('message.jpsurvey.survey.type')}" />
-        </s:if>
-        <s:else>
-        <li class="page-title-container"><s:text
-                name="title.jpsurvey.trash.poll" /></li>
-            <s:set var="surveyType"
-                   value="%{getText('message.jpsurvey.poll.type')}" />
-        </s:else>
+        <li>
+            <a href="<s:url action="listSurveys" ><s:param name="questionnaire" value="survey.questionnaire"></s:param></s:url>"
+               title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpsurvey.survey.main" />"><s:text
+                    name="title.jpsurvey.survey.main" />
+            </a>
+        </li>
+    </s:if>
+    <s:else>
+        <li>
+            <a href="<s:url action="listSurveys" ><s:param name="questionnaire" value="survey.questionnaire"></s:param></s:url>"
+               title="<s:text name="note.goToSomewhere" />: <s:text name="title.jpsurvey.poll.main" />"><s:text
+                    name="title.jpsurvey.poll.main" />
+            </a>
+        </li>
+    </s:else>
+    <s:if test="survey.questionnaire">
+        <li class="page-title-container">
+            <s:text name="title.jpsurvey.trash.survey" />
+        </li>
+        <s:set var="surveyType"
+               value="%{getText('message.jpsurvey.survey.type')}" />
+    </s:if>
+    <s:else>
+        <li class="page-title-container">
+            <s:text name="title.jpsurvey.trash.poll" />
+        </li>
+        <s:set var="surveyType" value="%{getText('message.jpsurvey.poll.type')}" />
+    </s:else>
 </ol>
-<div class="page-tabs-header">
-    <div class="row">
-        <div class="col-sm-6">
-            <h1>
-                <s:if test="survey.questionnaire">
-                    <s:text name="title.jpsurvey.trash.survey" />
-                    <span class="pull-right"> <a tabindex="0" role="button"
-                                                 data-toggle="popover" data-trigger="focus" data-html="true"
-                                                 title=""
-                                                 data-content="<s:text name="title.jpsurvey.trash.survey.help" />"
-                                                 data-placement="left" data-original-title=""> <i
-                                class="fa fa-question-circle-o" aria-hidden="true"></i>
-                        </a>
-                    </span>
-                    <s:set var="surveyType"
-                           value="%{getText('message.jpsurvey.survey.type')}" />
-                </s:if>
-                <s:else>
-                    <s:text name="title.jpsurvey.trash.poll" />
-                    <span class="pull-right"> <a tabindex="0" role="button"
-                                                 data-toggle="popover" data-trigger="focus" data-html="true"
-                                                 title=""
-                                                 data-content="<s:text name="title.jpsurvey.trash.poll.help" />"
-                                                 data-placement="left" data-original-title=""> <i
-                                class="fa fa-question-circle-o" aria-hidden="true"></i>
-                        </a>
-                    </span>
-                    <s:set var="surveyType"
-                           value="%{getText('message.jpsurvey.poll.type')}" />
-                </s:else>
-            </h1>
-        </div>
-        <wp:ifauthorized permission="superuser">
-            <div class="col-sm-6">
-                <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
-                    <s:if test="questionnaire">
-                        <li class="active"><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.questionnaires" />
-                            </a></li>
-                        </s:if>
-                        <s:else>
-                        <li><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="true"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.questionnaires" />
-                            </a></li>
-                        </s:else>
-                        <s:if test="questionnaire">
-                        <li><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.polls" />
-                            </a></li>
-                        </s:if>
-                        <s:else>
-                        <li class="active"><a
-                                href="<s:url action="listSurveys" namespace="/do/jpsurvey/Survey" ><s:param name="questionnaire" value="false"></s:param></s:url>">
-                                <s:text name="jpsurvey.label.polls" />
-                            </a></li>
-                        </s:else>
-                </ul>
-            </div>
-        </wp:ifauthorized>
-    </div>
+
+<h1>
+    <s:if test="survey.questionnaire">
+        <s:text name="title.jpsurvey.trash.survey" />
+        <s:set var="surveyType" value="%{getText('message.jpsurvey.survey.type')}" />
+    </s:if>
+    <s:else>
+        <s:text name="title.jpsurvey.trash.poll" />
+        <s:set var="surveyType" value="%{getText('message.jpsurvey.poll.type')}" />
+    </s:else>
+</h1>
+<div class="text-right">
+    <div class="form-group-separator"></div>
 </div>
 <br>
+
 <div class="text-center">
-    <s:form>
+    <s:form cssClass="form-horizontal">
         <p class="noscreen">
             <s:hidden name="questionnaire" value="%{survey.questionnaire}" />
             <s:hidden name="surveyId" />
