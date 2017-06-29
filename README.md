@@ -34,7 +34,7 @@ https://github.com/entando/entando-archetypes.
 
 For latest updated news, please visit the company websites: http://www.entando.com.
 
-For any support request, please use [Twitter] (https://twitter.com/Entando).
+For any support request, please use [Twitter](https://twitter.com/Entando).
 
 Enjoy!
 
