@@ -10,7 +10,7 @@ The administrator can also prevent some parameters (e.g. password) from being tr
 
 **Installation**
 
-In order to install the Action Logger App, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the Action Logger plugin, you should to insert the following dependency in the pom.xml file of your project:
 
 ```
 <dependency>
@@ -21,7 +21,7 @@ In order to install the Action Logger App, you should to insert the following de
  </dependency>
 ```
 
-**Configuration**
+**How to use**
 
 You have to create a new user whose name and password are _newuser_ and _mypassword_, respectively. 
 
