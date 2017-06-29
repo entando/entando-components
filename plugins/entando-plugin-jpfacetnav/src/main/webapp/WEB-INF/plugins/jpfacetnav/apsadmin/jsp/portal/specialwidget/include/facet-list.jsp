@@ -38,7 +38,7 @@
                     <thead>
                         <tr>
                             <th>
-                                <s:text name="label.categoriesTree" />
+                                <s:text name="label.category.tree" />
                                 <s:if test="#categoryTreeStyleVar == 'classic'">
                                     <button type="button" class="btn-no-button expand-button" id="expandAll">
                                         <span class="fa fa-plus-square-o treeInteractionButtons" aria-hidden="true"></span>

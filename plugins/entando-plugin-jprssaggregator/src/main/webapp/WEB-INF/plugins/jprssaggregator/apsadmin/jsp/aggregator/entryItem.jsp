@@ -10,7 +10,7 @@
     </li>
     <li>
         <a href="<s:url namespace="/do/jprssaggregator/Aggregator" action="list" />">
-            <s:text name="jprssaggregator.title.rssAggregator.rssManagement"/>
+            <s:text name="jprssaggregator.title.rssAggregator"/>
         </a>
     </li>
     <li class="page-title-container">

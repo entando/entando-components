@@ -25,40 +25,50 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Interface for container of plugin config 
+ * Interface for container of plugin config
  * */
 public interface IUserRegConfig {
-	
+
 	public IUserRegConfig clone();
-	
+
 	public long getTokenValidityMinutes();
-	
+
 	public void setTokenValidityMinutes(long tokenValidityMinutes);
-	
+
+	@Deprecated
 	public String getEMailSenderCode();
-	
+
+	@Deprecated
 	public void setEMailSenderCode(String mailSenderCode);
-	
+
+	public String getSenderCode();
+
+	public void setSenderCode(String mailSenderCode);
+
 	public String getActivationPageCode();
-	
+
 	public void setActivationPageCode(String activationPageCode);
-	
+
 	public String getReactivationPageCode();
-	
+
 	public void setReactivationPageCode(String reactivationPageCode);
-	
+
 	public void addDefaultCsvAuthorization(String csv);
-	
+
 	public void setDefaultCsvAuthorizations(Set<String> authorizations);
-	
+
 	public Set<String> getDefaultCsvAuthorizations();
-	
+
 	public Map<String, Template> getActivationTemplates();
+
 	public void setActivationTemplates(Map<String, Template> activationTemplates);
+
 	public void addActivationTemplate(String langCode, Template template);
-	
+
 	public Map<String, Template> getReactivationTemplates();
+
 	public void setReactivationTemplates(Map<String, Template> reactivationTemplates);
+
 	public void addReactivationTemplate(String langCode, Template template);
-	
+
 }
