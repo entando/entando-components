@@ -75,9 +75,9 @@ https://github.com/entando/entando-archetypes.
 
 For latest updated news, please visit the company websites: http://www.entando.com.
 
-Entando Components is released under version 2.1 of the [MIT license][https://opensource.org/licenses/MIT].
+Entando Components is released under version 2.1 of the [MIT license](https://opensource.org/licenses/MIT).
 
-For any support request, please use [Twitter] (https://twitter.com/Entando).
+For any support request, please use [Twitter](https://twitter.com/Entando).
 
 Enjoy!
 
