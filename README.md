@@ -16,25 +16,26 @@ The Entando components project, based on Apache Maven, is organized in two modul
     * Action Logger
     * Avatar
     * Blog
+    * CAS Client
     * Calendar
+    * Cms Tag Cloud
+	* Collaboration
     * Content Feedback
     * Content Scheduler
     * Content Versioning
-    * CAS Client
-    * Ehcache Connector
+    * Content Workflow
     * Email Sender
     * Faceted Navigation
-    * File Attribute
+	* Georeferenced Content
     * LDAP Connector
     * Newsletter
-    * Photogallery
     * RSS
     * RSS Aggregator
     * Survey
-    * Tag Cloud
     * Token API
     * User Registration
     * Web Dynamic Form
+	* Widget Utils
 
 2. ```ui-bundles``` module, including all Bundles. The following is a list of main bundles released with ```entando-core``` version 4.3.1:
 
@@ -48,6 +49,8 @@ The Entando components project, based on Apache Maven, is organized in two modul
     * Page model - Classic 2 columns layout
     * Plugin default view - Avatar
     * Plugin default view - Blog
+    * Plugin default view - Calendar
+    * Plugin default view - Cms Tag Cloud
     * Plugin default view - Faceted Navigation
     * Plugin default view - Newsletter
     * Plugin default view - RSS
