@@ -1,4 +1,4 @@
-**Action Logger Plugin**
+**Action Logger**
 
 **Code**: ```jpactionlogger```
 
