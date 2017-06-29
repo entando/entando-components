@@ -1,4 +1,4 @@
-**Content Workflow Plugin**
+**Content Workflow**
 
 **Code**: ```jpcontentworkflow```
 
