@@ -4,6 +4,8 @@
 It provides all functionality of specific software elements, called **Entando components** or **Entando extensions**, 
 useful to extend the standard Entando platform features and/or use them to improve custom applications. 
 
+**Entando** is the lightest, open source Digital Experience Platform (DXP) for Modern Applications. Entando harmonizes customer experience across the omnichannel (UX convergence) applying the techniques of modern software practices to enterprise applications (modern applications). Entando can be used to modernize UI/UX layers on top of existing applications or to build new generation applications aligned to UI/UX best practices, across different industries and use cases.
+
 The Entando components are: 
 
 * **Bundles** extend functionality of portal-ui component and/or views’ functionality of the other Entando components.
