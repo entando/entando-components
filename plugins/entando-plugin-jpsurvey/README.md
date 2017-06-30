@@ -1,4 +1,4 @@
-**Survey Plugin**
+**Survey**
 
 **Code**: ```jpsurvey```
 
@@ -8,15 +8,9 @@ The _Survey_ plugin lets administrator create and manage Survey and Questionnair
 
 **Installation**
 
-In order to install the _Survey_ App, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the _Survey_ plugin, you should to insert the following dependency in the pom.xml file of your project:
 
 ```
-<dependency>
-    <groupId>org.entando.entando.apps</groupId>
-    <artifactId>entando-app-survey</artifactId>
-    <version>${entando.version}</version>
-    <type>war</type>
-</dependency>
         
 <dependency>
     <groupId>org.entando.entando.plugins</groupId>
@@ -28,5 +22,6 @@ In order to install the _Survey_ App, you should to insert the following depende
 ```
 
 **Configuration**
+
 In Integrations, Components you can create and manage Survey and Questionnaire.
 
