@@ -1,4 +1,4 @@
-**Web Dinamic Form**
+**Web Dynamic Form**
 
 **Code**: ```jpwebdynamicform```
 
