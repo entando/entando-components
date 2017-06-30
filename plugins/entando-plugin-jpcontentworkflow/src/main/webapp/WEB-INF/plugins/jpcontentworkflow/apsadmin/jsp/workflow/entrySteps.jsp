@@ -126,7 +126,7 @@
                                             <li>
                                                 <wpsa:actionParam action="moveStep" var="actionName">
                                                     <wpsa:actionSubParam name="movement" value="UP" />
-                                                    <wpsa:actionSubParam name="elementIndex"value="%{#rowstatus.index}" />
+                                                    <wpsa:actionSubParam name="elementIndex" value="%{#rowstatus.index}" />
                                                 </wpsa:actionParam>
                                                 <wpsf:submit action="%{#actionName}"  cssClass="btn btn-default %{(#rowstatus.first) ? ' disabled ' : '' }" type="button" title="%{getText('label.moveUp')+': '+#step.code}">
                                                     <span><s:text name="label.moveUp" /></span>
