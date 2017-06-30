@@ -153,7 +153,8 @@ public class ContentThreadConfigDOM {
 		Iterator i = usersList.iterator();
 		while (i.hasNext()) {
 			Element currElem = (Element) i.next();
-			config.getUsersContentType().put(currElem.getAttributeValue(USER_USERNAME_ATTR), getContentTypes(currElem.getAttributeValue(USER_CONTENTTYPE_ATTR)));
+			config.getUsersContentType().put(currElem.getAttributeValue(USER_USERNAME_ATTR),
+					getContentTypes(currElem.getAttributeValue(USER_CONTENTTYPE_ATTR)));
 		}
 	}
 
@@ -186,19 +187,17 @@ public class ContentThreadConfigDOM {
 					fieldNameModelIdContentReplace = currElem.getAttributeValue(MODEL_ID_CONTENT_REPLACE_ATTR);
 				}
 				String suspend = null;
-				if (currElem.getAttributeValue(SUSPEND_ATTR) != null && (currElem.getAttributeValue(SUSPEND_ATTR).equalsIgnoreCase("true") || currElem.getAttributeValue(
-						SUSPEND_ATTR).equalsIgnoreCase("false"))) {
+				if (currElem.getAttributeValue(SUSPEND_ATTR) != null
+						&& (currElem.getAttributeValue(SUSPEND_ATTR).equalsIgnoreCase("true") || currElem.getAttributeValue(SUSPEND_ATTR)
+								.equalsIgnoreCase("false"))) {
 					suspend = currElem.getAttributeValue(SUSPEND_ATTR);
 				} else {
 					suspend = "";
 				}
-				config.getTypesList().add(new ContentTypeElem(currElem.getAttributeValue(TYPE_ATTR),
-						currElem.getAttributeValue(START_DATE_ATTR),
-						currElem.getAttributeValue(END_DATE_ATTR),
-						fieldNameIdContentReplace,
-						suspend,
-						listCats,
-						fieldNameModelIdContentReplace));
+				config.getTypesList().add(
+						new ContentTypeElem(currElem.getAttributeValue(TYPE_ATTR), currElem.getAttributeValue(START_DATE_ATTR), currElem
+								.getAttributeValue(END_DATE_ATTR), fieldNameIdContentReplace, suspend, listCats,
+								fieldNameModelIdContentReplace));
 				listCats = null;
 			}
 		}
@@ -290,17 +289,17 @@ public class ContentThreadConfigDOM {
 		return gloabalCatElement;
 	}
 
-	//	private String setContentTypes(List<String> list) {
-	//		StringBuilder ans = new StringBuilder("");
-	//		for (Iterator<String> i = list.iterator(); i.hasNext();) {
-	//			String curr = i.next();
-	//			ans.append(curr);
-	//			if (i.hasNext()) {
-	//				ans.append(",");
-	//			}
-	//		}
-	//		return ans.toString();
-	//	}
+	// private String setContentTypes(List<String> list) {
+	// StringBuilder ans = new StringBuilder("");
+	// for (Iterator<String> i = list.iterator(); i.hasNext();) {
+	// String curr = i.next();
+	// ans.append(curr);
+	// if (i.hasNext()) {
+	// ans.append(",");
+	// }
+	// }
+	// return ans.toString();
+	// }
 
 	private Element createContentReplaceElement(ContentThreadConfig config) {
 		Element contentReplaceElement = new Element(CONTENTREPL_ELEM);
@@ -321,7 +320,7 @@ public class ContentThreadConfigDOM {
 		Set<String> keys = groupsMap.keySet();
 		for (Iterator<String> i = keys.iterator(); i.hasNext();) {
 			String key = i.next();
-			//String contentTypes = StringUtils.join(groupsMap.get(key), ",");
+			// String contentTypes = StringUtils.join(groupsMap.get(key), ",");
 			Element groupElem = new Element(GROUP_ELEM);
 			groupElem.setAttribute(GROUP_ID_ATTR, key);
 
@@ -360,11 +359,13 @@ public class ContentThreadConfigDOM {
 			this.safeSetAttr(ctElem, SUSPEND_ATTR, elem.getSuspend());
 
 			List<String> catList = elem.getIdsCategories();
-			for (Iterator<String> i2 = catList.iterator(); i2.hasNext();) {
-				String cat = i2.next();
-				Element catElem = new Element(CATEGORY_ELEM);
-				this.safeSetAttr(ctElem, CODE_ATTR, cat);
-				ctElem.addContent(catElem);
+			if (null != catList) {
+				for (Iterator<String> i2 = catList.iterator(); i2.hasNext();) {
+					String cat = i2.next();
+					Element catElem = new Element(CATEGORY_ELEM);
+					this.safeSetAttr(ctElem, CODE_ATTR, cat);
+					ctElem.addContent(catElem);
+				}
 			}
 			ctsElement.addContent(ctElem);
 		}

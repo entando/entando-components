@@ -3,24 +3,24 @@
         "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
 
 <validators>
-	
+
 	<field name="contentTypeElem.contentType">
 		<field-validator type="required" short-circuit="true">
-			<message key="requiredstring"/>
+			<message key="jpcontentscheduler.contentType.required"/>
 		</field-validator>
 	</field>
-	
+
 	<field name="contentTypeElem.startDateAttr">
 		<field-validator type="requiredstring">
-			<message key="requiredstring"/>
+			<message key="jpcontentscheduler.startDateAttr.required"/>
 		</field-validator>
 	</field>
+
 	<field name="contentTypeElem.endDateAttro">
 		<field-validator type="requiredstring">
-			<message key="requiredstring"/>
+			<message key="jpcontentscheduler.endDateAttro.required"/>
 		</field-validator>
 	</field>
-	
 
 </validators>
 

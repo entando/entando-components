@@ -171,7 +171,7 @@
             <div class="col-xs-12">
                 <div class="pull-right">
                     <wpsf:submit name="save" type="button" action="saveUsersContentType" cssClass="btn btn-primary" >
-                        <s:text name="%{getText('label.save')}"/>
+                        <s:text name="%{getText('label.add')}"/>
                     </wpsf:submit>
                 </div>
             </div>

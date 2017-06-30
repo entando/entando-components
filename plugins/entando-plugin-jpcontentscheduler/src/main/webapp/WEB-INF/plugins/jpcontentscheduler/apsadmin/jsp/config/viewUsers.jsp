@@ -66,7 +66,7 @@
     </div>
     <div class="row mt-5">
         <div class="col-xs-12">
-            <s:form id="configurationForm" name="configurationForm" method="post" action="#" cssClass="form-horizontal">
+            <s:form id="configurationForm" name="configurationForm" method="post" action="saveUsersItem" cssClass="form-horizontal">
                 <s:set var="#users" value="%{getUsersContentType()}"/>
 
                         <table class="table table-striped table-bordered table-hover mb-20">
@@ -128,7 +128,7 @@
 				<div class="form-group">
 					<div class="col-xs-12">
 						<div class="pull-right">
-							<wpsf:submit name="save" type="button" action="saveUsersItem" cssClass="btn btn-primary" >
+							<wpsf:submit name="save" type="button" cssClass="btn btn-primary" >
 							<s:text name="%{getText('label.save')}"/>
 							</wpsf:submit>
 						</div>

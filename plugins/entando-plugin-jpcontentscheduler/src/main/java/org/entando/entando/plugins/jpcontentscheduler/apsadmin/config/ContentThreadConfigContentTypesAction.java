@@ -93,7 +93,7 @@ public class ContentThreadConfigContentTypesAction extends AbstractTreeAction {
 
 			List<ContentTypeElem> config = this.getTypes();
 			ContentTypeElem elem = this.getContentTypeElem();
-
+			elem.setIdsCategories(this.getCategoryCodes());
 			ContentTypeElem existingElem = null;
 			for (ContentTypeElem contentTypeElem : config) {
 				if (contentTypeElem.getContentType().equalsIgnoreCase(elem.getContentType())) {
