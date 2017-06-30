@@ -102,7 +102,7 @@
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="<s:url action="removeUser"><s:param name="user" value="#user.key" /></s:url>">
+                                                        <a href="<s:url action="trashUser"><s:param name="user" value="#user.key" /></s:url>">
                                                             <s:text name="label.remove"/>
                                                         </a>
                                                     </li>

@@ -46,7 +46,7 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ContentThreadConfigUsersAction.class);
 
-	//private static final String THREAD_CONFIG_SESSION_PARAM = "threadConfig";
+	// private static final String THREAD_CONFIG_SESSION_PARAM = "threadConfig";
 	private static final String THREAD_CONFIG_SESSION_PARAM_USERS_CONTENT_TYPE = "threadConfigUsersContentType";
 
 	private static final String ALL_TYPES = "*";
@@ -152,11 +152,29 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 		return Action.SUCCESS;
 	}
 
-	public String removeUser() {
+	public String trashUser() {
 		try {
+
 			Map<String, List<String>> config = this.getUsersContentType();
 			String selectedUser = this.getRequest().getParameter("user");
 			this.setUsername(selectedUser);
+			boolean isValidInput = this.validateRemoveUser();
+			if (this.hasErrors() || !config.containsKey(this.getUsername()) || !isValidInput) {
+				String[] args = { selectedUser };
+				this.addActionError(this.getText("jpcontentscheduler.removeUser.error", args));
+				return INPUT;
+			}
+
+		} catch (Throwable t) {
+			_logger.error("error in trash", t);
+			return FAILURE;
+		}
+		return SUCCESS;
+	}
+
+	public String removeUser() {
+		try {
+			Map<String, List<String>> config = this.getUsersContentType();
 			boolean isValidInput = this.validateRemoveUser();
 			if (this.hasErrors()) {
 				return INPUT;
@@ -168,6 +186,8 @@ public class ContentThreadConfigUsersAction extends BaseAction {
 				}
 				config.remove(this.getUsername());
 				this.setConfigItemOnSession(config);
+
+				this.addActionMessage(this.getText("jpcontentscheduler.removeContentType.success"));
 			}
 
 		} catch (Throwable t) {
