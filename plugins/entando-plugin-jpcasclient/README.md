@@ -1,4 +1,4 @@
-#CAS Client Plugin
+# CAS Client
 
 **_Installation and configuration of the Entando jpcasclient plugin_**
 
@@ -28,8 +28,6 @@ In order to take maximum advantage from the present guide, it is necessary to ha
 
 Moreover, it's necessary to have read the Plugin Pattern for the installation procedure and an explanation of the standard directory layout.
 
-top
-
 Overview
 
 The CAS Client plugin provides authentication against an external CAS authentication server (a quickstart tutorial can be found here). The authentication process is changed in that after the user has been validated by the CAS server the Entando user with the same username will be loaded (along with his permissions) otherwise it will be created on the fly with no permissions. This behaviour is different from the previous version of the plugin which required the same user to exist in both the CAS server and the Endando portal (however passwords were not required to match).
@@ -58,6 +56,7 @@ As always when it comes down to install new things, stop your servlet container 
 
 Open the src/main/config/web.xml and add the following filter declarations:
 
+```
        <!-- CAS logout // start -->
         <filter>
             <filter-name>CAS Single Sign Out Filter</filter-name>
@@ -70,19 +69,22 @@ Open the src/main/config/web.xml and add the following filter declarations:
             <url-pattern>/*</url-pattern>
         </filter-mapping>
         <!-- CAS logout // end -->
+```
+
 Open the pom.xml of your project: locate the <dependencies> tag toward the end of the file, after the <build> tag; if the dependencies tag does not exist just create a new one just after the closure of the build tag.
 
 Add the following snippet inside the dependencies:
 
+```
     <dependency>
         <groupId>org.entando.entando.plugins</groupId>
         <artifactId>entando-plugin-jpcasclient</artifactId>
         <version>${entando.version}</version><!-- version. Don't remove this comment. -->
         <type>war</type>
     </dependency>
-You are done! You can verify the correct installation of the plugin going to the administration area and checking for the new item in the Plugins menu.
+```
 
-top
+You are done! You can verify the correct installation of the plugin going to the administration area and checking for the new item in the Plugins menu.
 
 Installation in a production environment
 
@@ -102,7 +104,6 @@ create the directory myportal/WEB-INF/plugins/ if it does not exist. Copy the co
 
 copy the content of resources/plugins directory of the WAR package to myportal/resources/plugins/ directory
 
-top
 
 Configuration
 
@@ -148,4 +149,3 @@ The administration area login page has a link to the CAS server login page, as s
 
 The login process is as follows: the Login with CAS widget has a link to the CAS server: at this point users are required to enter their CAS credentials. Upon a successful login users are redirected back to the Entando portal with a welcome message and some login information: in this respect the widget behaves the same of the standard login widget.
 
-top

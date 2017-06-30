@@ -1,4 +1,8 @@
-## jpcontentscheduler
+## Content scheduler
+
+**Code**: ```jpcontentscheduler```
+
+## Description
 
 This plugin is used to manage contents temporal windows based on the content's dates.
 
@@ -9,6 +13,20 @@ It is possible to set up rules that:
  - will automatically publish the content
  - will send email notifications to a list of users
 
+### Installation
+
+Open the pom.xml of your project: locate the tag toward the end of the file, after the tag; if the dependencies tag does not exist just create a new one just after the closure of the build tag.
+
+Add the following snippet inside the dependencies:
+
+```  
+<dependency>
+    <groupId>org.entando.entando.plugins</groupId>
+    <artifactId>entando-plugin-jpcontentscheduler</artifactId>
+    <version>${entando.version}</version>
+    <type>war</type>
+</dependency>
+``` 
 
 ### General Settings:
 
