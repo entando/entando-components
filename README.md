@@ -3,6 +3,8 @@
 ```entando-components``` is one of the mainstays of the **Entando Platform**. 
 It provides all functionality of specific software elements, called **Entando components** or **Entando extensions**, useful to extend the standard Entando platform features and/or use them to improve custom applications. 
 
+**Entando** is the lightest, open source Digital Experience Platform (DXP) for Modern Applications. Entando harmonizes customer experience across the omnichannel (UX convergence) applying the techniques of modern software practices to enterprise applications (modern applications). Entando can be used to modernize UI/UX layers on top of existing applications or to build new generation applications aligned to UI/UX best practices, across different industries and use cases.
+
 The Entando components are: 
 
 * **Bundles** extend functionality of portal-ui component and/or views’ functionality of the other Entando components.
@@ -75,7 +77,7 @@ https://github.com/entando/entando-archetypes.
 
 For latest updated news, please visit the company websites: http://www.entando.com.
 
-Entando Components is released under version 2.1 of the [MIT license](https://opensource.org/licenses/MIT).
+Entando Components is released under [MIT license](https://opensource.org/licenses/MIT) v2.1.
 
 For any support request, please use [Twitter](https://twitter.com/Entando).
 
