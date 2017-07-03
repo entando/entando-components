@@ -5,7 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <s:set var="targetNS" value="%{'/do/collaboration/IdeaInstance'}" />
-<ol class="breadcrumb page-tabs-header breadcrumb-position">
+<ol class="breadcrumb page-tabs-header breadcrumb-position"> 
     <li>
         <s:text name="breadcrumb.integrations" />
     </li>
@@ -26,8 +26,8 @@
                 <s:text name="jpcrowdsourcing.admin.title" />
                 <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                        data-content="<s:text name="jpcrowdsourcing.title.ideaInstanceManagement.help" />"
-                        data-placement="left" data-original-title="">
+                       data-content="<s:text name="jpcrowdsourcing.title.ideaInstanceManagement.help" />"
+                       data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -87,14 +87,14 @@
                     </label>
                     <div class="col-sm-9">
                         <wpsf:select name="groupName" id="groupName" list="systemGroups" listKey="name"
-                            listValue="descr" cssClass="form-control" headerKey=""
-                            headerValue="%{getText('label.all')}" />
+                                     listValue="descr" cssClass="form-control" headerKey=""
+                                     headerValue="%{getText('label.all')}" />
                     </div>
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-2">
                         <wpsf:submit action="search" type="button" cssClass="btn btn-primary pull-right"
-                            title="%{getText('label.search')}">
+                                     title="%{getText('label.search')}">
                             <s:text name="label.search"/>
                         </wpsf:submit>
                     </div>
@@ -112,90 +112,90 @@
                     <s:hidden name="groupName" />
                 </p>
                 <s:if test="%{ideaInstancesId.size() > 0}">
-                <wpsa:subset source="ideaInstancesId" count="10" objectName="groupIdeaInstances" advanced="true"
-                    offset="5">
-                    <s:set var="group" value="#groupIdeaInstances" />
-                    <table class="table table-striped table-bordered table-hover no-mb">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <s:text name="label.code" />
-                                </th>
-                                <th class="text-center table-w-10">
-                                    <s:text name="label.idea.count" />
-                                </th>
-                                <th class="text-center table-w-10">
-                                    <s:text name="label.createdat" />
-                                </th>
-                                <th class="text-center table-w-5">
-                                    <s:text name="label.actions" />
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <s:iterator var="code">
-                                <s:set var="ideaInstance_var" value="%{getIdeaInstance(#code)}" />
+                    <wpsa:subset source="ideaInstancesId" count="10" objectName="groupIdeaInstances" advanced="true"
+                                 offset="5">
+                        <s:set var="group" value="#groupIdeaInstances" />
+                        <table class="table table-striped table-bordered table-hover no-mb">
+                            <thead>
                                 <tr>
-                                    <td><s:property value="#ideaInstance_var.code" /></td>
-                                    <td class="text-center">
-                                        <s:property value="#ideaInstance_var.children.size" />
-                                    </td>
-                                    <td class="text-center"><s:date name="#ideaInstance_var.createdat" format="dd/MM/yyyy HH:mm" /></td>
-                                    <td class="table-view-pf-actions text-center">
-                                        <div class="dropdown dropdown-kebab-pf">
-                                            <button class="btn btn-menu-right dropdown-toggle" type="button"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="fa fa-ellipsis-v"></span>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li>
-                                                    <a
-                                                        title="<s:text name="label.edit" />: <s:property value="#ideaInstance_var.code" />"
-                                                        href="<s:url action="edit"><s:param name="code" value="#ideaInstance_var.code"/></s:url>">
-                                                        <s:text name="label.edit" />
-                                                    </a>
-                                                </li>
-                                                <s:if test="%{#ideaInstance_var.children.size > 0}">
-                                                <li>
-                                                    <s:url action="list" namespace="/do/collaboration/Idea"
-                                                        var="link_to_idea_list">
-                                                        <s:param name="ideaInstance" value="#ideaInstance_var.code" />
-                                                    </s:url>
-                                                    <a href="<s:property value="#link_to_idea_list"/>">
-                                                        <s:text name="jpcrowdsourcing.ideaInstance.ideaList" />
-                                                    </a>
-                                                </li>
-                                                </s:if>
-                                                <li>
-                                                    <a
-                                                        href="<s:url action="trash"><s:param name="code" value="#ideaInstance_var.code"></s:param></s:url>"
-                                                        title="<s:text name="label.remove" />: <s:property value="#ideaInstance_var.code"/>">
-                                                        <s:text name="label.remove" />
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
+                                    <th>
+                                        <s:text name="label.code" />
+                                    </th>
+                                    <th class="text-center table-w-10">
+                                        <s:text name="label.idea.count" />
+                                    </th>
+                                    <th class="text-center table-w-10">
+                                        <s:text name="label.createdat" />
+                                    </th>
+                                    <th class="text-center table-w-5">
+                                        <s:text name="label.actions" />
+                                    </th>
                                 </tr>
-                            </s:iterator>
-                        </tbody>
-                    </table>
-                    <div class="content-view-pf-pagination table-view-pf-pagination clearfix mb-20">
-                        <div class="form-group">
-                            <span><s:include
-                                    value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
-                            <div class="mt-5">
-                                <s:include
-                                    value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                            </thead>
+                            <tbody>
+                                <s:iterator var="code">
+                                    <s:set var="ideaInstance_var" value="%{getIdeaInstance(#code)}" />
+                                    <tr>
+                                        <td><s:property value="#ideaInstance_var.code" /></td>
+                                        <td class="text-center">
+                                            <s:property value="#ideaInstance_var.children.size" />
+                                        </td>
+                                        <td class="text-center"><s:date name="#ideaInstance_var.createdat" format="dd/MM/yyyy HH:mm" /></td>
+                                        <td class="table-view-pf-actions text-center">
+                                            <div class="dropdown dropdown-kebab-pf">
+                                                <button class="btn btn-menu-right dropdown-toggle" type="button"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="fa fa-ellipsis-v"></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li>
+                                                        <a
+                                                            title="<s:text name="label.edit" />: <s:property value="#ideaInstance_var.code" />"
+                                                            href="<s:url action="edit"><s:param name="code" value="#ideaInstance_var.code"/></s:url>">
+                                                            <s:text name="label.edit" />
+                                                        </a>
+                                                    </li>
+                                                    <s:if test="%{#ideaInstance_var.children.size > 0}">
+                                                        <li>
+                                                            <s:url action="list" namespace="/do/collaboration/Idea"
+                                                                   var="link_to_idea_list">
+                                                                <s:param name="ideaInstance" value="#ideaInstance_var.code" />
+                                                            </s:url>
+                                                            <a href="<s:property value="#link_to_idea_list"/>">
+                                                                <s:text name="jpcrowdsourcing.ideaInstance.ideaList" />
+                                                            </a>
+                                                        </li>
+                                                    </s:if>
+                                                    <li>
+                                                        <a
+                                                            href="<s:url action="trash"><s:param name="code" value="#ideaInstance_var.code"></s:param></s:url>"
+                                                            title="<s:text name="label.remove" />: <s:property value="#ideaInstance_var.code"/>">
+                                                            <s:text name="label.remove" />
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </s:iterator>
+                            </tbody>
+                        </table>
+                        <div class="content-view-pf-pagination table-view-pf-pagination clearfix mb-20">
+                            <div class="form-group">
+                                <span><s:include
+                                        value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
+                                <div class="mt-5">
+                                    <s:include
+                                        value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </wpsa:subset>
+                    </wpsa:subset>
                 </s:if>
                 <s:else>
                     <div class="alert alert-info">
-                      <span class="pficon pficon-info"></span>
-                      <s:text name="jpcrowdsourcing.label.ideaInstance.noInstances"/>
+                        <span class="pficon pficon-info"></span>
+                        <s:text name="jpcrowdsourcing.label.ideaInstance.noInstances"/>
                     </div>
                 </s:else>
             </div>

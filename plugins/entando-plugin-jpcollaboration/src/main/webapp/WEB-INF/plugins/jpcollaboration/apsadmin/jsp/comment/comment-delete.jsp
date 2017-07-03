@@ -20,48 +20,17 @@
         <s:text name="jpcrowdsourcing.title.comments.delete" />
     </li>
 </ol>
-<div class="page-tabs-header">
-    <div class="row">
-        <div class="col-sm-6">
-            <h1 class="page-title-container">
-                <s:text name="jpcrowdsourcing.admin.title" />
-                <span class="pull-right">
-                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                        data-content="<s:text name="jpcrowdsourcing.title.comments.delete.help"/>" data-placement="left"
-                        data-original-title="">
-                        <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                    </a>
-                </span>
-            </h1>
-        </div>
-        <div class="col-sm-6">
-            <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
-                <li>
-                    <a href="<s:url action="list" namespace="/do/collaboration/IdeaInstance" />">
-                        <s:text name="jpcrowdsourcing.ideaInstance.list" />
-                    </a>
-                </li>
-                <li>
-                    <a href="<s:url action="list" namespace="/do/collaboration/Idea" />">
-                        <s:text name="jpcrowdsourcing.idea.list" />
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="<s:url action="list" namespace="/do/collaboration/Idea/Comment" />">
-                        <s:text name="jpcrowdsourcing.comment.list" />
-                    </a>
-                </li>
-                <li>
-                    <a href="<s:url action="entryConfig" namespace="/do/collaboration/Config" />">
-                        <s:text name="jpcrowdsourcing.config" />
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+
+<h1 class="page-title-container">
+    <s:text name="jpcrowdsourcing.admin.title" />
+</h1>
+
+<div class="text-right">
+    <div class="form-group-separator"></div>
 </div>
 
-<div id="main" role="main">
+
+<div class="mb-20">
     <s:form action="delete">
         <p class="noscreen">
             <wpsf:hidden name="strutsAction" value="%{strutsAction}" />
@@ -109,7 +78,7 @@
             <p class="esclamation-underline">
                 <s:text name="label.delete" />
             </p>
-            <p>
+            <p class="esclamation-underline-text">
                 <s:text name="jpcrowdsourcing.note.areYouSureDelete" />
             </p>
             <a class="btn btn-default button-fixed-width" href="<s:url action="list" />">
