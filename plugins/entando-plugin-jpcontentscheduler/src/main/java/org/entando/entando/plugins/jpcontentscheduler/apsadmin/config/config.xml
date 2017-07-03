@@ -56,7 +56,11 @@
             <result type="chain">viewUsers</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
-
+        <action name="trashUser" class="jpcontentschedulerConfigUsersAction" method="trashUser">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewUsers</result>
+            <result type="tiles">admin.jpcontentscheduler.trashUsers</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
         <action name="removeUser" class="jpcontentschedulerConfigUsersAction" method="removeUser">
             <result name="input" type="tiles">admin.jpcontentscheduler.viewUsers</result>
             <result type="tiles">admin.jpcontentscheduler.viewUsers</result>
@@ -140,6 +144,12 @@
         <action name="saveContentTypeItem" class="jpcontentschedulerConfigContentTypesAction" method="saveContentTypeItem">
             <result name="input" type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
             <result type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <action name="trashContentType" class="jpcontentschedulerConfigContentTypesAction" method="trashContentType">
+            <result name="input" type="tiles">admin.jpcontentscheduler.viewContentTypes</result>
+            <result type="tiles">admin.jpcontentscheduler.trashContentTypes</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
 

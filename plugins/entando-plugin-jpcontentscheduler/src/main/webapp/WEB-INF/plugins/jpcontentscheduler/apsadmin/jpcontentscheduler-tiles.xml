@@ -23,7 +23,10 @@
         <put-attribute name="title" value="jpcontentscheduler.title.management" />
         <put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/entryUsers.jsp" />
     </definition>
-
+    <definition extends="main.layout" name="admin.jpcontentscheduler.trashUsers">
+        <put-attribute name="title" value="jpcontentscheduler.title.management" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/trashUsers.jsp" />
+    </definition>
 
 	<definition extends="main.layout" name="admin.jpcontentscheduler.viewGroups">
 		<put-attribute name="title" value="jpcontentscheduler.title.management" />
@@ -33,6 +36,10 @@
     <definition extends="main.layout" name="admin.jpcontentscheduler.entryContentTypes">
         <put-attribute name="title" value="jpcontentscheduler.title.management" />
         <put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/entryContentTypes.jsp" />
+    </definition>
+    <definition extends="main.layout" name="admin.jpcontentscheduler.trashContentTypes">
+        <put-attribute name="title" value="jpcontentscheduler.title.management" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/trashContentTypes.jsp" />
     </definition>
 	<definition extends="main.layout" name="admin.jpcontentscheduler.viewContentTypes">
 		<put-attribute name="title" value="jpcontentscheduler.title.management" />

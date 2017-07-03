@@ -149,7 +149,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="<s:url action="removeContentType"><s:param name="contentType" value="%{#element.contentType}"/></s:url>">
+                                                <a href="<s:url action="trashContentType"><s:param name="contentType" value="%{#element.contentType}"/></s:url>">
                                                     <s:text name="label.remove" />
                                                 </a>
                                             </li>

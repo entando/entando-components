@@ -116,6 +116,31 @@ public class ContentThreadConfigContentTypesAction extends AbstractTreeAction {
 		return Action.SUCCESS;
 	}
 
+	public String trashContentType() {
+		try {
+
+			List<ContentTypeElem> config = this.getTypes();
+			String contentType = this.getContentType();
+			boolean existsContentType = false;
+			for (ContentTypeElem contentTypeElem : config) {
+				if (contentTypeElem.getContentType().equalsIgnoreCase(contentType)) {
+					existsContentType = true;
+					break;
+				}
+			}
+			if (!existsContentType) {
+				String[] args = { contentType };
+				this.addActionError(this.getText("jpcontentscheduler.removeContentType.error", args));
+				return INPUT;
+			}
+
+		} catch (Throwable t) {
+			_logger.error("error in trash", t);
+			return FAILURE;
+		}
+		return SUCCESS;
+	}
+
 	public String removeContentType() {
 		try {
 			List<ContentTypeElem> config = this.getTypes();
@@ -133,6 +158,8 @@ public class ContentThreadConfigContentTypesAction extends AbstractTreeAction {
 				}
 			}
 			this.setConfigItemOnSession(config);
+
+			this.addActionMessage(this.getText("jpcontentscheduler.removeContentType.success"));
 		} catch (Throwable t) {
 			_logger.error("Error in removeContentType", t);
 			return FAILURE;
