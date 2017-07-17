@@ -6,7 +6,7 @@
 <c:set var="random"><%= java.lang.Math.round(java.lang.Math.random()*10000) %></c:set>
 <wp:headInfo type="CSS" info="widgets/jacms/content_viewer_list.css" />
 <wp:info key="currentLang" var="currentLang" />
-<wp:headInfo type="JS_EXT" info="//maps.googleapis.com/maps/api/js?v=3&amp;sensor=false&language=${currentLang}" />
+<wp:headInfo type="JS_EXT" info="//maps.googleapis.com/maps/api/js?language=${currentLang}" />
 <wp:currentWidget param="config" configParam="listModelId" var="listModelId" />
 <gwp:geoRoute listName="contentList" />
 <gwp:geoRenderList

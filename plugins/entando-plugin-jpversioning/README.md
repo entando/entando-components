@@ -1,4 +1,4 @@
-**Versioning Plugin**
+**Versioning**
 
 **Code**: ```jpversioning```
 

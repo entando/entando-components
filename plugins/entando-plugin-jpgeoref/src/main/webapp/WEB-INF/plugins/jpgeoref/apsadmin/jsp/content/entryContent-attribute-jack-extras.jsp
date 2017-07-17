@@ -9,7 +9,7 @@
 		var loadGMaps = function() {
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
-			script.src = 'http://maps.googleapis.com/maps/api/js?sensor=false&callback='+ 'jpgeoref_init_maps' + '&language=<s:property value="locale" />' ;
+			script.src = 'http://maps.googleapis.com/maps/api/js?callback='+ 'jpgeoref_init_maps' + '&language=<s:property value="locale" />' ;
 			document.body.appendChild(script);
 		};
 		window.jpgeoref_init_maps = function() {

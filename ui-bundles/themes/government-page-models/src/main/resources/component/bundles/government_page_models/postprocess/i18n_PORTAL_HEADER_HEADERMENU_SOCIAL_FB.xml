@@ -1,0 +1,13 @@
+<i18nLabel>
+  <key>PORTAL_HEADER_HEADERMENU_SOCIAL_FB</key>
+  <labels>
+    <label>
+      <langCode>en</langCode>
+      <value><![CDATA[Follow us on Facebook]]></value>
+    </label>
+    <label>
+      <langCode>it</langCode>
+      <value><![CDATA[Seguici su Facebook]]></value>
+    </label>
+  </labels>
+</i18nLabel>

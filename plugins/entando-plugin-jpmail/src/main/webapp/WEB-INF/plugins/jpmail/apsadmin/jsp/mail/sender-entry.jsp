@@ -3,68 +3,97 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 
-<h1 class="panel panel-default title-page">
-    <span class="panel-body display-block">
-        <s:text name="title.eMailManagement" />&#32;/&#32;
-        <s:if test="%{strutsAction==1}" ><s:text name="title.eMailManagement.newSender" /></s:if>
-        <s:else><s:text name="title.eMailManagement.editSender" />:&nbsp;<s:property value="code"/></s:else>
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="breadcrumb.integrations"/></li>
+    <li><s:text name="breadcrumb.integrations.components"/></li>
+    <li><s:text name="breadcrumb.jpmail"/></li>
+    <li> <a href="<s:url namespace="/do/jpmail/MailConfig" action="viewSenders" />"><s:text name="title.eMailManagement.sendersConfig"/></a></li>
+        <s:if test="%{strutsAction==1}" >
+        <li class="page-title-container"><s:text name="title.eMailManagement.newSender" /></li>
+        </s:if>
+        <s:else>
+        <li class="page-title-container"><s:text name="title.eMailManagement.editSender" />:&nbsp;<s:property value="code"/></li>
+        </s:else>
+</ol>
+
+<h1 class="page-title-container">
+    <s:if test="%{strutsAction==1}">
+        <s:text name="title.eMailManagement.newSender" />
+    </s:if>
+    <s:else>
+        <s:text name="title.eMailManagement.editSender" />
+    </s:else>
+    <span class="pull-right">
+        <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+           data-content="<s:text name="title.eMailManagement.help"/>" data-placement="left" data-original-title="">
+            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+        </a>
     </span>
 </h1>
-    
-<div id="main">
-    
-	<s:form action="saveSender" >
-		<s:if test="hasFieldErrors()">
-                    <div class="alert alert-danger alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                            <h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
-				<ul class="margin-base-vertical">
-					<s:iterator value="fieldErrors">
-						<s:iterator value="value">
-							<li><s:property escapeHtml="false" /></li>
-						</s:iterator>
-					</s:iterator>
-				</ul>
-			</div>
-		</s:if>
-		<s:if test="hasActionErrors()">
-                    <div class="alert alert-danger alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                            <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
-				<ul class="margin-base-vertical">
-					<s:iterator value="actionErrors">
-						<li><s:property escapeHtml="false" /></li>
-					</s:iterator>
-				</ul>
-                    </div>
-		</s:if>
-		
-		<p class="noscreen">	
-			<wpsf:hidden name="strutsAction"/>
-			<s:if test="%{strutsAction==2}" ><wpsf:hidden name="code"/></s:if>
-		</p>
-		
-		<fieldset class="col-xs-12"> 
-			<legend><s:text name="label.info" /></legend> 
-			<div class="form-group">
-				<label for="code"><s:text name="code" /></label>
-				<wpsf:textfield name="code" id="code" disabled="%{strutsAction==2}" cssClass="form-control" />
-			</div>
-			<div class="form-group">
-				<label for="mail"><s:text name="mail" /></label>
-				<wpsf:textfield name="mail" id="mail" cssClass="form-control" />
-			</div>
-		</fieldset>
-		
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-			<wpsf:submit type="button" cssClass="btn btn-primary btn-block" >
-                            <span class="icon fa fa-floppy-o"></span>&#32;
-                            <s:text name="%{getText('label.save')}"/>
-                        </wpsf:submit>
-                    </div>
+
+
+<div class="text-right">
+    <div class="form-group-separator"><s:text name="label.requiredFields" /></div>
+</div>
+<br/>
+
+<div class="mb-20">
+    <s:form action="saveSender" cssClass="form-horizontal">
+        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
+
+        <p class="noscreen">
+            <wpsf:hidden name="strutsAction"/>
+            <s:if test="%{strutsAction==2}" ><wpsf:hidden name="code"/></s:if>
+            </p>
+
+        <%-- code --%>
+        <s:set var="fieldErrorsVar" value="%{fieldErrors['code']}" />
+        <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
+        <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
+
+        <div class="form-group<s:property value="#controlGroupErrorClass" />">
+            <label class="col-sm-2 control-label" for="code">
+                <s:text name="code" />
+                <i class="fa fa-asterisk required-icon"></i>
+            </label>
+            <div class="col-sm-10">
+                <wpsf:textfield name="code" id="code" cssClass="form-control" disabled="%{strutsAction==2}" />
+                <s:if test="#hasFieldErrorVar">
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                        </span>
+                </s:if>
+            </div>
+        </div>
+
+        <%-- mail --%>
+        <s:set var="fieldErrorsVar" value="%{fieldErrors['mail']}" />
+        <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
+        <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
+
+        <div class="form-group<s:property value="#controlGroupErrorClass" />">
+            <label class="col-sm-2 control-label" for="mail">
+                <s:text name="mail" />
+                <i class="fa fa-asterisk required-icon"></i>
+            </label>
+            <div class="col-sm-10">
+                <wpsf:textfield name="mail" id="mail" cssClass="form-control" />
+                <s:if test="#hasFieldErrorVar">
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                        </span>
+                </s:if>
+            </div>
+        </div>
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-12 margin-small-vertical">
+                    <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
+                        <s:text name="label.save" />
+                    </wpsf:submit>
                 </div>
             </div>
-	</s:form>	
+        </div>
+    </s:form>
 </div>

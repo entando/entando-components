@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>entando-bundles-parent</artifactId>
 		<groupId>org.entando.entando.bundles</groupId>
-		<version>4.2.1-SNAPSHOT</version>
+		<version>4.3.2-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>entando-content-generic</artifactId>

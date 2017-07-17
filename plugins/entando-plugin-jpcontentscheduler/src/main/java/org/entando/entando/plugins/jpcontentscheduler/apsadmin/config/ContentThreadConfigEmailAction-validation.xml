@@ -1,0 +1,22 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+
+	<field name="senderCode">
+		<field-validator type="required" short-circuit="true">
+			<message key="jpcontentscheduler.senderCode.required"/>
+		</field-validator>
+	</field>
+
+	<field name="mailAttrName">
+		<field-validator type="requiredstring">
+			<message key="jpcontentscheduler.mailAttrName.required"/>
+		</field-validator>
+	</field>
+
+
+
+</validators>
+

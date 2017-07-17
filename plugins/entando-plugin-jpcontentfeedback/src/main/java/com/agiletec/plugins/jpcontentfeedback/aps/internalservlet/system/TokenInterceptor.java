@@ -22,7 +22,7 @@
 package com.agiletec.plugins.jpcontentfeedback.aps.internalservlet.system;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
@@ -58,7 +58,8 @@ public class TokenInterceptor extends org.apache.struts2.interceptor.TokenInterc
 				//nothing to do
         	}
         } else {
-            log.warn(errorMessage);
+//            log.warn(errorMessage);
+			System.out.println(errorMessage);
         }
         return INVALID_TOKEN_CODE;
     }

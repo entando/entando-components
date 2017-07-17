@@ -8,99 +8,93 @@
 <s:set var="commentVar" value="comment" />
 <jacmswpsa:content contentId="%{#commentVar.contentId}" var="contentVar" />
 
-<h1 class="panel panel-default title-page">
-    <span class="panel-body display-block">
-        <a href="<s:url action="list" />"><s:text name="jpcontentfeedback.title.commentsManager" /></a>
-        &#32;/&#32;<s:text name="jpcontentfeedback.title.comment.detail" />
-    </span>
-</h1>
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="breadcrumb.integrations"/></li>
+    <li><s:text name="breadcrumb.integrations.components"/></li>
+    <li>
+        <a href="<s:url action="list" namespace="/do/jpcontentfeedback/Comments" />">
+            <s:text name="jpcontentfeedback.title.comment.list"/>
+        </a>
+    </li>
+    <li class="page-title-container">
+        <s:text name="jpcontentfeedback.title.comment.detail" />
+    </li>
+</ol>
+
+<div class="page-tabs-header">
+    <h1>
+        <s:text name="jpcontentfeedback.title.comment.detail" />
+        <span class="pull-right">
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+               data-content="<s:text name="jpcontentfeedback.title.comment.detail.help" />" data-placement="left" data-original-title="">
+                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+            </a>
+        </span>
+    </h1>
+</div>
+<br>
+
 <div id="main">
 
-    <table class="table table-bordered">
-        <tr>
-            <th class="text-right"><s:text name="jpcontentfeedback.author" /></th>
-            <td><code><s:property value="#commentVar.username"/></code></td>
-        </tr>
-        <tr>
-            <th class="text-right"><s:text name="jpcontentfeedback.date.creation" /></th>
-            <td><code><s:date name="#commentVar.creationDate" format="dd/MM/yyyy HH:mm" /></code></td>
-        </tr>
-        <tr>
-            <th class="text-right"><s:text name="jpcontentfeedback.comment" /></th>
-            <td><s:property value="#commentVar.comment"/></td>
-        </tr>
-        <tr>
-            <th class="text-right"><s:text name="jpcontentfeedback.status" /></th>
-            <td><s:property value="getAllStatus().get(#commentVar.status)" /></td>
-        </tr>
-        <tr>
-            <th class="text-right"><s:text name="jpcontentfeedback.content.id" /></th>
-            <td><code><s:property value="#commentVar.contentId" /></code></td>
-        </tr>
-        <tr>
-            <th class="text-right"><s:text name="jpcontentfeedback.content.description" /></th>
-            <td><s:property value="#contentVar.descr" /></td>
-        </tr>
-        <tr>
-            <th class="text-right"><s:text name="jpcontentfeedback.content.type" /></th>
-            <td><s:property value="#contentVar.typeDescr" /> (<s:property value="#contentVar.typeCode" />)</td>
-        </tr>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover no-mb">
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.author"/></th>
+                <td class="col-sm-10"><s:property value="#commentVar.username"/></td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.date.creation"/></th>
+                <td class="col-sm-10">
+                    <s:date name="#commentVar.creationDate" format="dd/MM/yyyy HH:mm"/>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.comment"/></th>
+                <td class="col-sm-10"><s:property value="#commentVar.comment"/></td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.status"/></th>
+                <td class="col-sm-10"><s:property value="getAllStatus().get(#commentVar.status)"/></td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.id"/></th>
+                <td class="col-sm-10"><s:property value="#commentVar.contentId"/></td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.description"/></th>
+                <td class="col-sm-10"><s:property value="#contentVar.descr"/></td>
+            </tr>
+            <tr>
+                <th class="text-right col-sm-2"><s:text name="jpcontentfeedback.content.type"/></th>
+                <td class="col-sm-10">
+                    <s:property value="#contentVar.typeDescr"/> (<s:property value="#contentVar.typeCode"/>)
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <s:form action="updateStatus">
 
-        <s:if test="hasActionMessages()">
-            <div class="alert alert-info alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="messages.confirm" /></h2>
-                <ul class="margin-base-vertical">
-                    <s:iterator value="actionMessages">
-                        <li><s:property escapeHtml="false" /></li>
-                        </s:iterator>
-                </ul>
-            </div>
-        </s:if>
-        <s:if test="hasFieldErrors()">
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
-                <ul class="margin-base-vertical">
-                    <s:iterator value="fieldErrors">
-                        <s:iterator value="value">
-                            <li><s:property escapeHtml="false" /></li>
-                            </s:iterator>
-                        </s:iterator>
-                </ul>
-            </div>
-        </s:if>
-        <s:if test="hasActionErrors()">
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
-                <ul class="margin-base-vertical">
-                    <s:iterator value="actionErrors">
-                        <li><s:property/></li>
-                        </s:iterator>
-                </ul>
-            </div>
-        </s:if>
+        <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
 
-        <fieldset class="col-xs-12">
+        <fieldset class="form-horizontal">
             <legend><s:text name="label.info" /></legend>
             <s:set var="listStatus" value="%{getAllStatus()}" />
             <div class="form-group">
-                <label for="status"><s:text name="jpcontentfeedback.status" /></label>
-                <wpsf:select  list="listStatus"  
-                              name="status" id="status"  listKey="key" 
-                              listValue="value" value="#commentVar.status" 
-                              cssClass="form-control"/>
+                <label class="col-sm-2 control-label" for="status">
+                    <s:text name="jpcontentfeedback.status" />
+                </label>
+                <div class="col-sm-10">
+                    <wpsf:select  list="listStatus" name="status" id="status"  listKey="key" listValue="value" value="#commentVar.status" cssClass="form-control"/>
+                </div>
             </div>
         </fieldset>
+
         <div class="form-horizontal">
             <div class="form-group">
-                <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
+                <div class="col-xs-12">
                     <wpsf:hidden name="selectedComment" />
-                    <wpsf:submit type="button" cssClass="btn btn-primary btn-block"> 
+                    <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
                         <s:text name="%{getText('jpcontentfeedback.label.update')}"/>
                     </wpsf:submit>
                 </div>

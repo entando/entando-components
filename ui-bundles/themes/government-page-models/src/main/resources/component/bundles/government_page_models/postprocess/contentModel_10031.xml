@@ -1,0 +1,16 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10031</id>
+  <contentType>DLD</contentType>
+  <description>Lists - Default</description>
+  <shape><![CDATA[<article class="dwl-list">
+<h4>$content.Title.text</h4>
+$content.ShortDescr.text
+ <a class="button-link" href="$content.File.attachPath">$content.File.text</a>
+</article>]]></shape>
+</contentModel>

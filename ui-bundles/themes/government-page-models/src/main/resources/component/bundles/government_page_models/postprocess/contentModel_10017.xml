@@ -1,0 +1,38 @@
+<!--
+  keep the 10000 set for the bundles
+  change the x to something suitable and unused
+  set the last column to NULL if your Content Model doesn't need any stylesheet at all
+  You'll want to provide at least one Default Content Model, and one Content Model for lists
+-->
+<contentModel>
+  <id>10017</id>
+  <contentType>CNG</contentType>
+  <description>Full - Default</description>
+  <shape><![CDATA[<article>
+<h3>$content.Title.text</h3>
+<div class="main-body">
+    $content.MainBody.text
+</div>
+#if ($content.Video.destination != "")
+        <div class="article-video">
+            <figure>
+           <div class="video">
+                <iframe width="100%" height="500" src="$content.Video.destination" frameborder="0" allowfullscreen></iframe>
+           </div>
+           <figcaption class="hidden">
+             <span>$content.Video.text</span>
+           </figcaption>
+                </figure>
+        </div>
+#end
+
+#if ($content.Links.size()>0)
+ <ul>
+ #foreach ($item in $content.Links)
+ <li class="blocks-link"><a href="$item.destination">$item.text</a></li>
+ #end
+ </ul>
+#end
+
+</article>]]></shape>
+</contentModel>

@@ -56,6 +56,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.apache.commons.lang3.StringUtils;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -76,18 +77,18 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		this.openScheduler();
 		_logger.debug("{}: ready", this.getClass().getName());
 	}
-	
+
 	@Override
 	public void release() {
 		this.closeScheduler();
 	}
-	
+
 	@Override
 	public void destroy() {
 		this.release();
 		super.destroy();
 	}
-	
+
 	protected void loadConfigs() throws ApsSystemException {
 		try {
 			ConfigInterface configManager = this.getConfigManager();
@@ -102,7 +103,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			throw new ApsSystemException("Error loading configs", t);
 		}
 	}
-	
+
 	@Around("execution(* com.agiletec.plugins.jacms.aps.system.services.content.IContentManager.saveContent(..)) && args(content,..)")
 	public void listenContentSaving(ProceedingJoinPoint pjp, Object content) {
 		try {
@@ -128,9 +129,11 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 	public NotifierConfig getNotifierConfig() {
 		return _notifierConfig.clone();
 	}
+
 	protected NotifierConfig getWorkflowNotifierConfig() {
 		return _notifierConfig;
 	}
+
 	protected void setNotifierConfig(NotifierConfig notifierConfig) {
 		this._notifierConfig = notifierConfig;
 	}
@@ -166,7 +169,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			}
 		}
 	}
-	
+
 	protected void openScheduler() {
 		this.closeScheduler();
 		NotifierConfig notifierConfig = this.getWorkflowNotifierConfig();
@@ -189,7 +192,9 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 	}
 
 	protected void closeScheduler() {
-		if (this._mailSenderScheduler != null) this._mailSenderScheduler.cancel();
+		if (this._mailSenderScheduler != null) {
+			this._mailSenderScheduler.cancel();
+		}
 		this._mailSenderScheduler = null;
 	}
 
@@ -198,7 +203,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		try {
 			Map<String, List<ContentStatusChangedEventInfo>> statusChangedInfos = this.getNotifierDAO().getEventsToNotify();
 			_logger.trace("Found {} events to notify", statusChangedInfos.size());
-			if (statusChangedInfos.size()>0) {
+			if (statusChangedInfos.size() > 0) {
 				Map<String, List<ContentStatusChangedEventInfo>> contentsForUsers = this.prepareContentsForUsers(statusChangedInfos);
 				Iterator<String> iter = contentsForUsers.keySet().iterator();
 				while (iter.hasNext()) {
@@ -225,7 +230,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			String mailAddress = this.getMailAddress(username);
 			if (null == mailAddress) {
 				return;
-			} 
+			}
 			String[] mailAddresses = {mailAddress};
 			Map<String, String> params = this.prepareParams(username);
 			String subject = this.replaceParams(notifierConfig.getSubject(), params);
@@ -233,11 +238,11 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			String senderCode = notifierConfig.getSenderCode();
 			String contentType = (notifierConfig.isHtml()) ? IMailManager.CONTENTTYPE_TEXT_HTML : IMailManager.CONTENTTYPE_TEXT_PLAIN;
 			this.getMailManager().sendMail(text, subject, mailAddresses, null, null, senderCode, contentType);
-		} catch(Throwable t) {
+		} catch (Throwable t) {
 			_logger.error("Error sending mail to user {}", username, t);
 		}
 	}
-	
+
 	protected String getMailAddress(String username) throws Throwable {
 		String email = null;
 		IUserProfileManager profileManager = (IUserProfileManager) super.getBeanFactory().getBean(SystemConstants.USER_PROFILE_MANAGER);
@@ -250,13 +255,13 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		}
 		return email;
 	}
-	
+
 	protected Map<String, String> prepareParams(String username) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("user", username);
 		return params;
 	}
-	
+
 	protected void addContentParams(Map<String, String> params, ContentStatusChangedEventInfo contentInfo) {
 		params.put("type", contentInfo.getContentTypeCode());
 		params.put("contentId", contentInfo.getContentId());
@@ -279,7 +284,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		text.append(footer);
 		return text.toString();
 	}
-	
+
 	protected String replaceParams(String defaultText, Map<String, String> params) {
 		String body = defaultText;
 		Iterator<Entry<String, String>> it = params.entrySet().iterator();
@@ -290,8 +295,8 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		}
 		return body;
 	}
-	
-	protected Map<String, List<ContentStatusChangedEventInfo>> prepareContentsForUsers (
+
+	protected Map<String, List<ContentStatusChangedEventInfo>> prepareContentsForUsers(
 			Map<String, List<ContentStatusChangedEventInfo>> statusChangedInfos) throws ApsSystemException {
 		Map<String, List<ContentStatusChangedEventInfo>> contentsForUsers = new HashMap<String, List<ContentStatusChangedEventInfo>>();
 		List<String> editors = new ArrayList<String>();
@@ -307,7 +312,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		}
 		return contentsForUsers;
 	}
-	
+
 	protected void findContentOperators(List<String> editors, List<String> supervisors) throws ApsSystemException {
 		List<Role> rolesWithSupervisor = this.getRoleManager().getRolesWithPermission(Permission.CONTENT_SUPERVISOR);
 		List<String> roleNamesWithSupervisor = this.getRolesNames(rolesWithSupervisor);
@@ -337,7 +342,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			}
 		}
 	}
-	
+
 	private List<String> getRolesNames(List<Role> roles) {
 		List<String> names = new ArrayList<String>();
 		if (null == roles) {
@@ -352,8 +357,8 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		}
 		return names;
 	}
-	
-	protected void prepareUsersForContentType(Map<String, List<ContentStatusChangedEventInfo>> contentsForUsers, 
+
+	protected void prepareUsersForContentType(Map<String, List<ContentStatusChangedEventInfo>> contentsForUsers,
 			String typeCode, List<ContentStatusChangedEventInfo> infosForContentType, List<String> editors, List<String> supervisors) throws ApsSystemException {
 		Workflow workflow = this.getWorkflowManager().getWorkflow(typeCode);
 		String contentTypeRole = workflow.getRole();
@@ -364,11 +369,11 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		List<String> usersForStep = null;
 		String previousStepRole = null;
 		for (ContentStatusChangedEventInfo contentInfo : infosForContentType) {
-			String currentStep = contentInfo.getStatus();
-			Step step = workflow.getStep(currentStep);
-			String currentStepRole = step!=null ? step.getRole() : null;
-			boolean needsSupervisor = Content.STATUS_READY.equals(currentStep);
-			if (previousStepRole==null || !previousStepRole.equals(currentStepRole)) {
+			String currentStatus = contentInfo.getStatus();
+			Step step = workflow.getStep(currentStatus);
+			String currentStepRole = (step != null && !StringUtils.isEmpty(step.getRole())) ? step.getRole() : null;
+			boolean needsSupervisor = Content.STATUS_READY.equals(currentStatus);
+			if (previousStepRole == null || !previousStepRole.equals(currentStepRole)) {
 				previousStepRole = currentStepRole;
 				if (needsSupervisor) {
 					usersForStep = supervisors;
@@ -385,7 +390,7 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 	protected List<String> filterUsersForRole(String roleName, List<String> users) throws ApsSystemException {
 		List<String> usersForContentType = null;
 		try {
-			if (users.isEmpty() || roleName == null || roleName.length()==0) {
+			if (users.isEmpty() || roleName == null || roleName.length() == 0) {
 				usersForContentType = users;
 			} else {
 				usersForContentType = new ArrayList<String>();
@@ -406,10 +411,10 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		}
 		return usersForContentType;
 	}
-	
+
 	protected List<String> filterUsersForGroup(String groupName, List<String> usernames) throws ApsSystemException {
 		List<String> usersForContentType = null;
-		if (usernames.isEmpty() || groupName == null || groupName.length()==0) {
+		if (usernames.isEmpty() || groupName == null || groupName.length() == 0) {
 			usersForContentType = usernames;
 		} else {
 			usersForContentType = new ArrayList<String>();
@@ -426,10 +431,10 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 		}
 		return usersForContentType;
 	}
-	
-	protected void addContentForUsers(ContentStatusChangedEventInfo contentInfo, List<String> allowedUsers, 
+
+	protected void addContentForUsers(ContentStatusChangedEventInfo contentInfo, List<String> allowedUsers,
 			Map<String, List<ContentStatusChangedEventInfo>> contentsForUsers) {
-		if (null == contentsForUsers || contentsForUsers.isEmpty()) {
+		if (null == contentsForUsers || null == allowedUsers) {
 			return;
 		}
 		for (int i = 0; i < allowedUsers.size(); i++) {
@@ -442,70 +447,79 @@ public class WorkflowNotifierManager extends AbstractService implements IWorkflo
 			infos.add(contentInfo);
 		}
 	}
-	
+
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
+
 	public void setConfigManager(ConfigInterface configManager) {
 		this._configManager = configManager;
 	}
-	
+
 	protected IUserManager getUserManager() {
 		return _userManager;
 	}
+
 	public void setUserManager(IUserManager userManager) {
 		this._userManager = userManager;
 	}
-	
+
 	protected IAuthenticationProviderManager getAuthProvider() {
 		return _authProvider;
 	}
+
 	public void setAuthProvider(IAuthenticationProviderManager authProvider) {
 		this._authProvider = authProvider;
 	}
-	
+
 	protected IAuthorizationManager getAuthorizationManager() {
 		return _authorizationManager;
 	}
+
 	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
 		this._authorizationManager = authorizationManager;
 	}
-	
+
 	protected IRoleManager getRoleManager() {
 		return _roleManager;
 	}
+
 	public void setRoleManager(IRoleManager roleManager) {
 		this._roleManager = roleManager;
 	}
-	
+
 	protected IContentWorkflowManager getWorkflowManager() {
 		return _workflowManager;
 	}
+
 	public void setWorkflowManager(IContentWorkflowManager workflowManager) {
 		this._workflowManager = workflowManager;
 	}
-	
+
 	protected IMailManager getMailManager() {
 		return _mailManager;
 	}
+
 	public void setMailManager(IMailManager mailManager) {
 		this._mailManager = mailManager;
 	}
-	
+
 	protected IContentManager getContentManager() {
 		return _contentManager;
 	}
+
 	public void setContentManager(IContentManager contentManager) {
 		this._contentManager = contentManager;
 	}
-	
+
 	protected IWorkflowNotifierDAO getNotifierDAO() {
 		return _notifierDAO;
 	}
+
 	public void setNotifierDAO(IWorkflowNotifierDAO notifierDAO) {
 		this._notifierDAO = notifierDAO;
 	}
-	
+
 	private NotifierConfig _notifierConfig;
 	protected Scheduler _mailSenderScheduler;
 

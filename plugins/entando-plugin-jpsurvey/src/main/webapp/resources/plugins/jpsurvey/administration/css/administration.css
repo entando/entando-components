@@ -14,16 +14,27 @@
 	padding: 0;
 }
 
+  .graph dt,  .graph dd {
+	float: left;
+}
+
+
+
  div.graphic {
 	background-image: url("../../administration/img/icons/bg_stat.png");
 	background-repeat: no-repeat;
-	background-position: 0% 0%;
+	background-position: 170px 0%;
 	padding: 33px 0 33px 7px;
 	margin-bottom: 50px;
 }
 
+div.graphic span.noscreen {
+    margin-right: 5px;
+    background-image: none;
+}
+
  dl.graph dt {
-	display: none;
+	clear: both;
 }
 
  dl.graph dd {
@@ -40,12 +51,14 @@
 	float: left;
 }
 	
- dl.graph span em.leftEm {
-	margin-left: -20px;
+ dl.graph em.leftEm {
+	margin-right: 5px;
 	position: relative;
 	height: 29px;
 	color: #555555;
 	float: left;
+    padding-top: 5px;
+    
 }
 
  dl.graph em.rightEm {
@@ -53,11 +66,13 @@
 	border-left: 1px solid #cdc7d1;
 	border-bottom: 1px solid #555555;
 	border-right: 1px solid #555555;
-	background-color: #ffffff;
+	background-color: #23a8e0;;
 	margin-right: 5px;
 	margin-top: 2px;
 	font-family: monospace;
 	padding: 0 4px 2px 4px;
+    position: fixed;
+    color:#fff;
 }
 
  dl.graph em.rightEmZero {
@@ -77,7 +92,9 @@
 	background-image: url("../../administration/img/icons/colonna.gif");
 	background-repeat: repeat-x;
 	background-position: 0 0;
-	border-top: 1px solid #555555;
+    text-align: center;
+    padding-top: 5px;
+	
 }
 
 /* percentuali */

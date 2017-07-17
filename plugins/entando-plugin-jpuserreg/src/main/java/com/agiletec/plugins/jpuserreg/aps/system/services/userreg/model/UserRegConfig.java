@@ -25,18 +25,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
- * Container of plugin config 
+ * Container of plugin config
  * 
  * @author S.Puddu
  * @author E.Mezzano
  * @author G.Cocco
  */
 public class UserRegConfig implements IUserRegConfig, Cloneable {
-	
+
 	@Override
 	public UserRegConfig clone() {
 		UserRegConfig config = new UserRegConfig();
@@ -57,95 +57,116 @@ public class UserRegConfig implements IUserRegConfig, Cloneable {
 		}
 		return config;
 	}
-	
+
 	@Override
 	public long getTokenValidityMinutes() {
 		return _tokenValidityMinutes;
 	}
+
 	@Override
 	public void setTokenValidityMinutes(long tokenValidityMinutes) {
 		this._tokenValidityMinutes = tokenValidityMinutes;
 	}
-	
+
 	@Override
+	@Deprecated
 	public String getEMailSenderCode() {
-		return _eMailSenderCode;
+		return senderCode;
 	}
+
 	@Override
+	@Deprecated
 	public void setEMailSenderCode(String mailSenderCode) {
-		_eMailSenderCode = mailSenderCode;
+		this.setSenderCode(mailSenderCode);
 	}
-	
+
 	@Override
 	public String getActivationPageCode() {
 		return _activationPageCode;
 	}
+
 	@Override
 	public void setActivationPageCode(String activationPageCode) {
 		this._activationPageCode = activationPageCode;
 	}
-	
+
 	@Override
 	public String getReactivationPageCode() {
 		return _reactivationPageCode;
 	}
+
 	@Override
 	public void setReactivationPageCode(String reactivationPageCode) {
 		this._reactivationPageCode = reactivationPageCode;
 	}
-	
+
 	@Override
 	public void addDefaultCsvAuthorization(String csv) {
-		if (null == csv) return;
+		if (null == csv)
+			return;
 		if (null == this.getDefaultCsvAuthorizations()) {
 			this.setDefaultCsvAuthorizations(new HashSet<String>());
 		}
 		this.getDefaultCsvAuthorizations().add(csv);
 	}
-	
+
 	@Override
 	public Set<String> getDefaultCsvAuthorizations() {
 		return _defaultCsvAuthorizations;
 	}
+
 	@Override
 	public void setDefaultCsvAuthorizations(Set<String> defaultCsvAuthorizations) {
 		this._defaultCsvAuthorizations = defaultCsvAuthorizations;
 	}
-	
+
 	@Override
 	public Map<String, Template> getActivationTemplates() {
 		return _activationTemplates;
 	}
+
 	@Override
 	public void setActivationTemplates(Map<String, Template> activationTemplates) {
 		this._activationTemplates = activationTemplates;
 	}
+
 	@Override
 	public void addActivationTemplate(String langCode, Template template) {
 		this._activationTemplates.put(langCode, template);
 	}
-	
+
 	@Override
 	public Map<String, Template> getReactivationTemplates() {
 		return _reactivationTemplates;
 	}
+
 	@Override
 	public void setReactivationTemplates(Map<String, Template> reactivationTemplates) {
 		this._reactivationTemplates = reactivationTemplates;
 	}
+
 	@Override
 	public void addReactivationTemplate(String langCode, Template template) {
 		this._reactivationTemplates.put(langCode, template);
 	}
-	
+
+	public String getSenderCode() {
+		return senderCode;
+	}
+
+	public void setSenderCode(String senderCode) {
+		this.senderCode = senderCode;
+	}
+
 	private long _tokenValidityMinutes;
 	private String _eMailSenderCode;
 	private String _activationPageCode;
 	private String _reactivationPageCode;
-	
+	private String senderCode;
+
 	private Set<String> _defaultCsvAuthorizations = new HashSet<String>();
-	
+
 	private Map<String, Template> _activationTemplates = new HashMap<String, Template>();
 	private Map<String, Template> _reactivationTemplates = new HashMap<String, Template>();
-	
+
 }

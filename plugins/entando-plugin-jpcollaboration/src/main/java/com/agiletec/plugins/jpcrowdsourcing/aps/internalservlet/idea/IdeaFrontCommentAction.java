@@ -38,11 +38,10 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IIdea;
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IIdeaManager;
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.Idea;
 
-public class IdeaFrontCommentAction extends BaseAction implements IIdeaFrontCommentAction {
+public class IdeaFrontCommentAction extends BaseAction {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(IdeaFrontCommentAction.class);
 	
-	@Override
 	public IIdea getIdea(String code) {
 		IIdea idea = null;
 		try {
@@ -54,8 +53,7 @@ public class IdeaFrontCommentAction extends BaseAction implements IIdeaFrontComm
 		}
 		return idea;
 	}
-
-	@Override
+	
 	public IIdeaComment getComment(int id) {
 		IIdeaComment comment = null;
 		try {
@@ -67,8 +65,7 @@ public class IdeaFrontCommentAction extends BaseAction implements IIdeaFrontComm
 		}
 		return comment;
 	}
-
-	@Override
+	
 	public String saveComment() {
 		try {
 			IdeaComment ideaComment = (IdeaComment) this.getIdeaComment();
@@ -85,8 +82,7 @@ public class IdeaFrontCommentAction extends BaseAction implements IIdeaFrontComm
 		}
 		return SUCCESS;
 	}
-
-	@Override
+	
 	public String entryComment() {
 		try {
 			this.setIdeaComment(null);

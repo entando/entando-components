@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<definition extends="main.layout" name="admin.jpcontentscheduler.viewItem">
+		<put-attribute name="title" value="jpcontentscheduler.title.management" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/viewItem.jsp" />
+	</definition>
+
+    <definition extends="main.layout" name="admin.jpcontentscheduler.viewEmail">
+        <put-attribute name="title" value="jpcontentscheduler.title.management" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/viewEmail.jsp" />
+    </definition>
+
+	<definition extends="main.layout" name="admin.jpcontentscheduler.viewUsers">
+		<put-attribute name="title" value="jpcontentscheduler.title.management" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/viewUsers.jsp" />
+	</definition>
+    <definition extends="main.layout" name="admin.jpcontentscheduler.entryUser">
+        <put-attribute name="title" value="jpcontentscheduler.title.management" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/entryUsers.jsp" />
+    </definition>
+    <definition extends="main.layout" name="admin.jpcontentscheduler.trashUsers">
+        <put-attribute name="title" value="jpcontentscheduler.title.management" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/trashUsers.jsp" />
+    </definition>
+
+	<definition extends="main.layout" name="admin.jpcontentscheduler.viewGroups">
+		<put-attribute name="title" value="jpcontentscheduler.title.management" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/viewGroups.jsp" />
+	</definition>
+
+    <definition extends="main.layout" name="admin.jpcontentscheduler.entryContentTypes">
+        <put-attribute name="title" value="jpcontentscheduler.title.management" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/entryContentTypes.jsp" />
+    </definition>
+    <definition extends="main.layout" name="admin.jpcontentscheduler.trashContentTypes">
+        <put-attribute name="title" value="jpcontentscheduler.title.management" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/trashContentTypes.jsp" />
+    </definition>
+	<definition extends="main.layout" name="admin.jpcontentscheduler.viewContentTypes">
+		<put-attribute name="title" value="jpcontentscheduler.title.management" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpcontentscheduler/apsadmin/jsp/config/viewContentTypes.jsp" />
+	</definition>
+
+</tiles-definitions>

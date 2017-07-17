@@ -1,52 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE tiles-definitions PUBLIC
-	"-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
-	"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
 
     <!-- ********* START Message Notifier Config Management Area ********* -->
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.Config.list">
-		<put-attribute name="title" value="admin.jpwebdynamicform.title.messageTypes.notifierConfig" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/config/messageTypeSummary.jsp" />
-	</definition>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/config/messageTypeSummary.jsp"/>
+    </definition>
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.Config.edit">
-		<put-attribute name="title" value="admin.jpwebdynamicform.title.messageTypes.notifierConfig" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/config/entryMessageType.jsp" />
-	</definition>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/config/entryMessageType.jsp"/>
+    </definition>
 
     <!-- ********* END Message Notifier Config Management Area ********* -->
 
     <!-- ********* START Messages Management Area ********* -->
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.list">
-		<put-attribute name="title" value="admin.jpwebdynamicform.title.messageManagement" />
-		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/common/layouts/assets-more/calendar.jsp" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/messageFinding.jsp" />
-	</definition>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
+        <put-attribute name="extraResources" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/common/layouts/assets-more/calendar.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/messageFinding.jsp"/>
+    </definition>
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.view">
-		<put-attribute name="title" value="admin.jpwebdynamicform.title.messageManagement" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/viewMessage.jsp" />
-	</definition>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/viewMessage.jsp"/>
+    </definition>
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.entryAnswer">
-		<put-attribute name="title" value="admin.jpwebdynamicform.title.messageManagement" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/entryAnswer.jsp" />
-	</definition>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/entryAnswer.jsp"/>
+    </definition>
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Message.trash">
-		<put-attribute name="title" value="admin.jpwebdynamicform.title.messageManagement" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/trashMessage.jsp" />
-	</definition>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/trashMessage.jsp"/>
+    </definition>
 
     <!-- ********* END Messages Management Area ********* -->
 
     <definition extends="layout.default" name="admin.jpwebdynamicform.Page.Widget.Webdynamicform.config">
-		<put-attribute name="title" value="title.pageManagement" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/portal/specialwidget/webDynamicFormConfig.jsp" />
-	</definition>
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/portal/specialwidget/webDynamicFormConfig.jsp"/>
+    </definition>
 
+    <!-- ********* Entity Management ********* -->
+
+    <definition extends="layout.default" name="admin.jpwebdynamicform.entityManagement.viewEntityTypes">
+        <put-attribute name="title" value="jpwebdynamicform.name" />
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/message/entity-message-list.jsp" />
+    </definition>
+
+
+    <definition extends="layout.default" name="admin.jpwebdynamicform.Config">
+        <put-attribute name="title" value="jpwebdynamicform.name"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpwebdynamicform/apsadmin/jsp/config/webDynamicFormSysConfig.jsp"/>
+    </definition>
 </tiles-definitions>

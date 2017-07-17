@@ -2,15 +2,33 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib uri="/aps-core" prefix="wp" %>
-<h1 class="panel panel-default title-page">
-    <span class="panel-body display-block">
-        <a href="<s:url action="viewTree" namespace="/do/Page" />" 
-           title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageManagement" />">
+
+<ol class="breadcrumb page-tabs-header breadcrumb-position">
+    <li><s:text name="title.pageDesigner"/></li>
+    <li>
+        <a href="<s:url action="viewTree" namespace="/do/Page" />">
             <s:text name="title.pageManagement" />
-        </a>&#32;/&#32;
+        </a>
+    </li>
+    <li class="page-title-container">
         <s:text name="title.configPage" />
-    </span>
+    </li>
+</ol>
+<h1 class="page-title-container">
+    <div>
+        <s:text name="title.configPage" />
+        <span class="pull-right">
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+               data-content="<s:text name="jpwebdynamicform.configuration.help"/>" data-placement="left" data-original-title="">
+                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+            </a>
+        </span>
+    </div>
 </h1>
+<div class="text-right">
+    <div class="form-group-separator"></div>
+</div>
+<br>
 
 <div id="main">
 
@@ -26,25 +44,27 @@
         <s:form action="saveConfig" namespace="/do/jpwebdynamicform/Page/SpecialWidget/Webdynamicform" cssClass="form-horizontal">
             <s:if test="hasActionErrors()">
                 <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                    <h4 class="margin-none"><s:text name="message.title.ActionErrors" /></h4>
+                    <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span>
+                    </button>
+                    <h4 class="margin-none"><s:text name="message.title.ActionErrors"/></h4>
                     <ul class="margin-base-vertical">
                         <s:iterator value="actionErrors">
-                            <li><s:property escapeHtml="false" /></li>
-                            </s:iterator>
+                            <li><s:property escapeHtml="false"/></li>
+                        </s:iterator>
                     </ul>
                 </div>
             </s:if>
             <s:if test="hasFieldErrors()">
                 <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
-                    <h4 class="margin-none"><s:text name="message.title.FieldErrors" /></h4>
+                    <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span>
+                    </button>
+                    <h4 class="margin-none"><s:text name="message.title.FieldErrors"/></h4>
                     <ul class="margin-base-vertical">
                         <s:iterator value="fieldErrors">
                             <s:iterator value="value">
-                                <li><s:property escapeHtml="false" /></li>
-                                </s:iterator>
+                                <li><s:property escapeHtml="false"/></li>
                             </s:iterator>
+                        </s:iterator>
                     </ul>
                 </div>
             </s:if>
@@ -54,38 +74,45 @@
                 <wpsf:hidden name="frame" />
                 <wpsf:hidden name="widgetTypeCode" value="%{showlet.type.code}" />
             </p>
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp" />
                 </div>
                 <div class="panel-body">
-                    <h2 class="h5 margin-small-vertical">
-                        <span class="icon fa fa-puzzle-piece" title="Widget"></span>
-                        <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}" />
-                    </h2>
+                    <legend>
+                        <span class="control-label label-group-name">
+                            <span class="icon fa fa-puzzle-piece" title="Widget"></span>
+                            <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}"/>
+                        </span>
+                    </legend>
                     <div class="form-group">
-                        <div class="col-xs-12">
-
-                            <label for="jpwebdynamicform_typecode"><s:text name="label.typeCode"/></label>
+                        <label class="col-sm-2 control-label" for="jpwebdynamicform_typecode">
+                            <s:text name="label.typeCode"/>
+                        </label>
+                        <div class="col-sm-10">
                             <wpsf:select id="jpwebdynamicform_typecode" name="typeCode" list="messageTypes" listKey="code" listValue="descr" cssClass="form-control"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-xs-12">
-                            <label for="jpwebdynamicform_formProtectionType"><s:text name="label.formProtectionType"/></label>
+                        <label class="col-sm-2 control-label" for="jpwebdynamicform_formProtectionType">
+                            <s:text name="label.formProtectionType"/>
+                        </label>
+                        <div class="col-sm-10">
                             <wpsf:select id="jpwebdynamicform_formProtectionType"  name="formProtectionType" list="formProtectionTypeSelectItems" listKey="key" listValue="value" cssClass="form-control"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">
-                            <wpsf:submit type="button" cssClass="btn btn-primary btn-block">
-                                <span class="icon fa fa-floppy-o"></span>&#32;
-                                <s:text name="%{getText('label.save')}"/>
-                            </wpsf:submit>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-12 margin-small-vertical">
+                        <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
+                            <s:text name="%{getText('label.save')}"/>
+                        </wpsf:submit>
+                    </div>
+                </div>
+            </div>
+        </s:form>
     </div>
-</s:form>
+</div>

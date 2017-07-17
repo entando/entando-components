@@ -7,11 +7,15 @@
     
     <package name="jpavatar_do/jpavatar/Config" namespace="/do/jpavatar/Config" extends="entando-default">
     	
-        <action name="edit" class="jpavatarAvatarConfigAction" method="edit">
+        <action name="management" class="jpavatarAvatarAction">
             <result type="tiles">jpavatar.admin.config.entry</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
-        <action name="save" class="jpavatarAvatarConfigAction" method="save">
+        <action name="edit" class="jpavatarAvatarAction">
+            <result type="tiles">jpavatar.admin.config.edit</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        <action name="saveConfig" class="jpavatarAvatarConfigAction" method="save">
             <result name="input" type="tiles">jpavatar.admin.config.entry</result>
             <result name="success" type="tiles">jpavatar.admin.config.entry</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
