@@ -4,7 +4,7 @@
 	<parent>
         <artifactId>entando-plugins-parent</artifactId>
 		<groupId>org.entando.entando.plugins</groupId>
-		<version>4.3.1</version>
+		<version>4.3.2-SNAPSHOT</version>
     </parent>
 	<artifactId>entando-plugin-jpfastcontentedit</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>
@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>org.entando.entando.bundles.misc</groupId>
 			<artifactId>entando-misc-bootstrap</artifactId>
-			<version>4.3.1</version>
+			<version>4.3.2-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
 	</dependencies>        	
