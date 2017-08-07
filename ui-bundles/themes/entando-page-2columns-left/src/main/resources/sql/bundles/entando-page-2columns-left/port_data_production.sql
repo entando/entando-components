@@ -162,8 +162,11 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
         <!--[if lt IE 9]>
             <script src="<@wp.resourceURL />static/js/entando-misc-html5-essentials/html5shiv.js"></script>
         <![endif]-->
+        
         <@wp.fragment code="models-lesscss-active" escapeXml=false />
         <@wp.fragment code="models-common-utils" escapeXml=false />
+        <@c.import url="/WEB-INF/aps/jsp/models/inc/content_inline_editing.jsp" />
+                                                                              
     </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
