@@ -1,98 +1,75 @@
 INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('entando-page-inspinia', 'Inspinia - BPM layout', '<frames>
 	<frame pos="0">
-		<descr>Navbar 1</descr>
-		<defaultWidget code="entando-widget-language_choose" />
+		<descr>Sidebar 1</descr>
+		<sketch x1="0" x2="1" y1="0" y2="0" />
 	</frame>
 	<frame pos="1">
-		<descr>Navbar 2</descr>
-		<defaultWidget code="entando-widget-navigation_bar">
-			<properties>
-				<property key="navSpec">code(homepage)</property>
-			</properties>
-		</defaultWidget>
+		<descr>Header</descr>
+		<sketch x1="2" x2="11" y1="0" y2="0" />
 	</frame>
 	<frame pos="2">
-		<descr>Navbar 3</descr>
-		<defaultWidget code="entando-widget-search_form" />
+		<descr>Sidebar 2</descr>
+		<sketch x1="0" x2="1" y1="1" y2="1" />
 	</frame>
 	<frame pos="3">
-		<descr>Navbar 4</descr>
-		<defaultWidget code="entando-widget-login_form" />
+		<descr>Content Left 1</descr>
+		<sketch x1="2" x2="4" y1="1" y2="1" />
 	</frame>
 	<frame pos="4">
-		<descr>Toolbar 1</descr>
+		<descr>Content Central 1</descr>
+		<sketch x1="5" x2="8" y1="1" y2="1" />
 	</frame>
 	<frame pos="5">
-		<descr>Hero Unit</descr>
+		<descr>Content Right 1</descr>
+		<sketch x1="9" x2="11" y1="1" y2="1" />
 	</frame>
 	<frame pos="6">
-		<descr>Toolbar 2</descr>
+		<descr>Sidebar 3</descr>
+		<sketch x1="0" x2="1" y1="2" y2="2" />
 	</frame>
-	<frame pos="7" main="true">
-		<descr>Top Story</descr>
+	<frame pos="7">
+		<descr>Content Left 2</descr>
+		<sketch x1="2" x2="4" y1="2" y2="2" />
 	</frame>
 	<frame pos="8">
-		<descr>Box 1</descr>
+		<descr>Content Central 2</descr>
+		<sketch x1="5" x2="8" y1="2" y2="2" />
 	</frame>
 	<frame pos="9">
-		<descr>Box 2</descr>
+		<descr>Content Right 2</descr>
+		<sketch x1="9" x2="11" y1="2" y2="2" />
 	</frame>
 	<frame pos="10">
-		<descr>Box 3</descr>
+		<descr>Sidebar 4</descr>
+		<sketch x1="0" x2="1" y1="3" y2="3" />
 	</frame>
 	<frame pos="11">
-		<descr>Side 1</descr>
+		<descr>Content Full 1</descr>
+		<sketch x1="2" x2="11" y1="3" y2="3" />
 	</frame>
 	<frame pos="12">
-		<descr>Side 2</descr>
+		<descr>Sidebar 5</descr>
+		<sketch x1="0" x2="1" y1="4" y2="4" />
 	</frame>
 	<frame pos="13">
-		<descr>Side 3</descr>
+		<descr>Content Full 2</descr>
+		<sketch x1="2" x2="11" y1="4" y2="4" />
+	</frame>	
+	<frame pos="13">
+		<descr>Sidebar 6</descr>
+		<sketch x1="0" x2="1" y1="5" y2="5" />
 	</frame>
 	<frame pos="14">
-		<descr>Side 4</descr>
+		<descr>Content Left 3</descr>
+		<sketch x1="2" x2="4" y1="5" y2="5" />
 	</frame>
 	<frame pos="15">
-		<descr>Content 1</descr>
+		<descr>Content Central 3</descr>
+		<sketch x1="5" x2="8" y1="5" y2="5" />
 	</frame>
 	<frame pos="16">
-		<descr>Content 2</descr>
-	</frame>
-	<frame pos="17">
-		<descr>Content 3</descr>
-	</frame>
-	<frame pos="18">
-		<descr>Content 4</descr>
-	</frame>
-	<frame pos="19">
-		<descr>Content 5</descr>
-	</frame>
-	<frame pos="20">
-		<descr>Side 5</descr>
-	</frame>
-	<frame pos="21">
-		<descr>Side 6</descr>
-	</frame>
-	<frame pos="22">
-		<descr>Side 7</descr>
-	</frame>
-	<frame pos="23">
-		<descr>Side 8</descr>
-	</frame>
-	<frame pos="24">
-		<descr>Footer 1</descr>
-	</frame>
-	<frame pos="25">
-		<descr>Footer 2</descr>
-	</frame>
-	<frame pos="26">
-		<descr>Footer 3</descr>
-	</frame>
-	<frame pos="27">
-		<descr>Footer 4</descr>
-	</frame>
-	<frame pos="28">
-		<descr>Footer 5</descr>
+		<descr>Content Right 3</descr>
+		<sketch x1="9" x2="11" y1="5" y2="5" />
 	</frame>
 </frames>', NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 <#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
