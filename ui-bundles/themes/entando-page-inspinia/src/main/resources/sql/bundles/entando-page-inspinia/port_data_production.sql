@@ -55,19 +55,19 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		<descr>Content Full 2</descr>
 		<sketch x1="2" x2="11" y1="4" y2="4" />
 	</frame>	
-	<frame pos="13">
+	<frame pos="14">
 		<descr>Sidebar 6</descr>
 		<sketch x1="0" x2="1" y1="5" y2="5" />
 	</frame>
-	<frame pos="14">
+	<frame pos="15">
 		<descr>Content Left 3</descr>
 		<sketch x1="2" x2="4" y1="5" y2="5" />
 	</frame>
-	<frame pos="15">
+	<frame pos="16">
 		<descr>Content Central 3</descr>
 		<sketch x1="5" x2="8" y1="5" y2="5" />
 	</frame>
-	<frame pos="16">
+	<frame pos="17">
 		<descr>Content Right 3</descr>
 		<sketch x1="9" x2="11" y1="5" y2="5" />
 	</frame>
@@ -174,28 +174,28 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
             </div>
             <div class="row">
                 <div class="span12">
-                    <@wp.show frame=18 />
+                    
                 </div>
             </div>
             <div class="row">
                 <div class="span12">
-                    <@wp.show frame=19 />
+                    
                 </div>
             </div>
             <div class="row">
                 <div class="span6">
-                    <@wp.show frame=20 />
+                    
                 </div>
                 <div class="span6">
-                    <@wp.show frame=21 />
+                    
                 </div>
             </div>
             <div class="row">
                 <div class="span6">
-                    <@wp.show frame=22 />
+                    
                 </div>
                 <div class="span6">
-                    <@wp.show frame=23 />
+                    
                 </div>
             </div>
         </div>
@@ -203,19 +203,18 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
             <div class="container">
                 <div class="row margin-medium-bottom">
                     <div class="span12">
-                        <@wp.show frame=24 />
-                        <@wp.show frame=25 />
+                        
                     </div>
                 </div>
                 <div class="row margin-medium-bottom">
                     <div class="span4">
-                        <@wp.show frame=26 />
+                       
                     </div>
                     <div class="span4">
-                        <@wp.show frame=27 />
+                        
                     </div>
                     <div class="span4">
-                        <@wp.show frame=28 />
+                        
                     </div>
                 </div>
                 <div class="row">
