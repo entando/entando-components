@@ -36,11 +36,11 @@
     </organization>
     <description>Bundles for Entando: providing small, useful bundles for Entando since 2013.</description>
     <modules>
-<!--        <module>misc/entando-misc-less</module>
+        <!--        <module>misc/entando-misc-less</module>
         <module>misc/entando-misc-jquery</module>
         <module>misc/entando-misc-jquery-ui</module>
-        <module>misc/entando-misc-html5-essentials</module>-->
-        <!--<module>misc/entando-misc-bootstrap</module>-->
+        <module>misc/entando-misc-html5-essentials</module>
+        <module>misc/entando-misc-bootstrap</module>-->
         <module>misc/entando-misc-inspinia</module>
 <!--        <module>widgets/entando-widget-navigation_bar</module>
         <module>widgets/entando-widget-navigation_menu</module>
