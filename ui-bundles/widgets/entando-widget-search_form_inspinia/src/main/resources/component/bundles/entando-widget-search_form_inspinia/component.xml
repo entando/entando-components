@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-widget-search_form_inspinia</code>
+	<description>Widget: Search Form</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
+	<dependencies>
+		<code>jacms</code>
+	</dependencies>
+	<installation>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/bundles/entando-widget-search_form_inspinia/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/bundles/entando-widget-search_form_inspinia/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+</component>
