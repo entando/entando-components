@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>entando-widget-login_form_inspinia</code>
+	<description>Widget: Sign In Form</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
+	<installation>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/bundles/entando-widget-login_form_inspinia/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/bundles/entando-widget-login_form_inspinia/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+</component>
