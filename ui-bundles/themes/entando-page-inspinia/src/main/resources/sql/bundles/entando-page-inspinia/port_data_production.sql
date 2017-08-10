@@ -43,7 +43,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
         <descr>Sidebar 4</descr>
         <sketch x1="0" y1="3" x2="1" y2="3" />
     </frame>
-    <frame pos="11" main=true>
+    <frame pos="11" main="true">
         <descr>Content Full 1</descr>
         <sketch x1="2" y1="3" x2="11" y2="3" />
     </frame>
