@@ -7,16 +7,21 @@
 		<version>4.3.2-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
-	<artifactId>entando-widget-language_choose</artifactId>
+	<artifactId>entando-widget-language_choose_inspinia</artifactId>
 	<groupId>org.entando.entando.bundles.widgets</groupId>
 	<packaging>war</packaging>
-	<name>Entando Bundle: entando-widget-language_choose</name>
+	<name>Entando Bundle: entando-widget-language_choose_inspinia</name>
 	<description>A drop-down menu sporting all the languages configured in your application.</description>
 	<developers>
 		<developer>
-			<id>w.ghelfi</id>
-			<name>William Ghelfi</name>
-			<email>william@williamghelfi.com</email>
+			<id>d.minnai</id>
+			<name>Davide Minnai</name>
+			<email>d.minnai@entando.com</email>
+		</developer>
+                <developer>
+			<id>a.scalici</id>
+			<name>Alessio Scalici</name>
+			<email>a.scalici@entando.com</email>
 		</developer>
 	</developers>
 	<url>http://www.entando.com/</url>
@@ -57,11 +62,11 @@
 		</plugins>
 	</build>
 	<dependencies>
-		<dependency>
-			<groupId>org.entando.entando.bundles.misc</groupId>
-			<artifactId>entando-misc-bootstrap</artifactId>
-			<version>4.3.2-SNAPSHOT</version>
-			<type>war</type>
-		</dependency>
+            <!--		<dependency>
+                    <groupId>org.entando.entando.bundles.misc</groupId>
+                    <artifactId>entando-misc-bootstrap</artifactId>
+                    <version>4.3.2-SNAPSHOT</version>
+                    <type>war</type>
+            </dependency>-->
 	</dependencies>
 </project>
