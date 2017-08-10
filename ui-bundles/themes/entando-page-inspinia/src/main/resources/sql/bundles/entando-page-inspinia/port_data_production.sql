@@ -157,7 +157,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
                     </div>
                     <ul class="nav navbar-top-links navbar-right">
                         <li class="dropdown">
-                            <wp:show frame="1" />
+                            <@wp.show frame="1" />
                     </ul>
                 </nav>
             </div>
