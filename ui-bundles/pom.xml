@@ -44,6 +44,7 @@
         <module>misc/entando-misc-inspinia</module>
         <module>themes/entando-page-inspinia</module>
         <module>widgets/entando-widget-language_choose_inspinia</module>
+        <module>widgets/entando-widget-navigation_bar_inspinia</module>
 <!--        <module>widgets/entando-widget-navigation_bar</module>
         <module>widgets/entando-widget-navigation_menu</module>
         <module>widgets/entando-widget-navigation_breadcrumbs</module>

@@ -82,7 +82,7 @@
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
-            <artifactId>entando-widget-navigation_bar</artifactId>
+            <artifactId>entando-widget-navigation_bar_inspinia</artifactId>
             <version>4.3.2-SNAPSHOT</version>
             <type>war</type>
         </dependency>
