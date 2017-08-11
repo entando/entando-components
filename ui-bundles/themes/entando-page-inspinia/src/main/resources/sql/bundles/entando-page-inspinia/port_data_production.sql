@@ -140,11 +140,11 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
                             <#if (accountExpired?? && accountExpired == true) || (wrongAccountCredential?? && wrongAccountCredential == true)>open</#if>
                             <#if (Session.currentUser != "guest")>
                             <span>
-                                <img alt="image" class="" src="<wp:imgURL />entando-logo.png">
+                                <img alt="image" class="" src="<@wp.imgURL />entando-logo.png">
                             </span>
                             <#else>
                             <span>
-                                <img alt="image" class="" src="<wp:imgURL />entando-logo-1.png">
+                                <img alt="image" class="" src="<@wp.imgURL />entando-logo-1.png">
                             </span>
                             </#if>
                             <br>
