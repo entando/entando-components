@@ -20,3 +20,8 @@
         <c:forEach begin="${0}" end="${previousLevel -1}"></ul></li></c:forEach>
     </c:if>
 </c:if>
+<style>
+.mini-navbar .navbar-page-title-full { display: none; }
+.navbar-page-title-abbr { display: none; }
+.mini-navbar .navbar-page-title-abbr { display: block!important; }
+</style>

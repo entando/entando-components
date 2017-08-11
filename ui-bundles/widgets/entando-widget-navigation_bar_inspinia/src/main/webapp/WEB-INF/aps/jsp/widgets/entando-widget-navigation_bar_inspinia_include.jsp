@@ -15,7 +15,12 @@
 <!-- [ <c:out value="${previousLevel}" /> ]-->
 <c:out value="${homeIcon}" escapeXml="false" />
 <!-- <i class="fa fa-th-large"></i> -->
-<span class="nav-label"><c:out value="${previousPage.title}" /></span>
+<span class="nav-label">
+
+<span class="navbar-page-title-full"><c:out value="${previousPage.title}" /></span>
+<span class="navbar-page-title-abbr"><c:out value="${previousPage.title.substring(0,2)}" /></span>
+
+</span>
 <c:if test="${!previousPage.voidPage}">
 </a>
 </c:if>
