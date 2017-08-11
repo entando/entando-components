@@ -46,7 +46,8 @@
         <module>widgets/entando-widget-language_choose_inspinia</module>
         <module>widgets/entando-widget-navigation_bar_inspinia</module>
         <module>widgets/entando-widget-login_form_inspinia</module>
-<!--        <module>widgets/entando-widget-navigation_bar</module>
+        <module>widgets/entando-widget-search_form_inspinia</module>
+        <!--        <module>widgets/entando-widget-navigation_bar</module>
         <module>widgets/entando-widget-navigation_menu</module>
         <module>widgets/entando-widget-navigation_breadcrumbs</module>
         <module>widgets/entando-widget-language_choose</module>
@@ -67,7 +68,7 @@
         <module>app-views/entando-app-view-userreg-default</module>-->
         
         <!-- <module>app-views/entando-app-view-addressbook-default</module> -->
-<!--        <module>app-views/entando-app-view-calendar-default</module>
+        <!--        <module>app-views/entando-app-view-calendar-default</module>
         <module>app-views/entando-app-view-survey-default</module>
         <module>app-views/entando-app-view-newsletter-default</module>
         <module>app-views/entando-app-view-avatar-default</module>
