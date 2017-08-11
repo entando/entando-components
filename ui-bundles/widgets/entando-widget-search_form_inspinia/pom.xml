@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<<<<<<< HEAD
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.entando.entando.bundles</groupId>
@@ -67,4 +68,73 @@
 			</plugin>
 		</plugins>
 	</build>
+=======
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.entando.entando.bundles</groupId>
+        <artifactId>entando-bundles-parent</artifactId>
+        <version>4.3.2-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <artifactId>entando-widget-search_form_inspinia</artifactId>
+    <groupId>org.entando.entando.bundles.widgets</groupId>
+    <packaging>war</packaging>
+    <name>Entando Bundle: entando-widget-search_form_inspinia</name>
+    <description>
+        A search form, suited for the top bar.
+
+        Comes pre-configured and ready to work with such a page:
+        - code: `search_result`
+        - Widget in main position: `Search - Search Result` (`search_result.jsp`)
+    </description>
+    <developers>
+        <developer>
+            <id>d.minnai</id>
+            <name>Davide Minnai</name>
+            <email>d.minnai@entando.com</email>
+        </developer>
+        <developer>
+            <id>a.scalici</id>
+            <name>Alessio Scalici</name>
+            <email>a.scalici@entando.com</email>
+        </developer>
+    </developers>
+    <url>http://www.entando.com/</url>
+    <properties>
+        <project.parent.build.directory>../../target</project.parent.build.directory>
+        <project.parent.basedir>../..</project.parent.basedir>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.3</version><!--$NO-MVN-MAN-VER$ -->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.0-beta-1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>2.2.1</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>1.6</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+>>>>>>> 6a8c1e106dfd9d73fd1706c240445558a6eae78f
 </project>

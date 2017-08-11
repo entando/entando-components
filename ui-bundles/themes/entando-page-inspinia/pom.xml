@@ -76,7 +76,7 @@
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
-            <artifactId>entando-widget-search_form</artifactId>
+            <artifactId>entando-widget-search_form_inspinia</artifactId>
             <version>4.3.2-SNAPSHOT</version>
             <type>war</type>
         </dependency>
@@ -88,7 +88,7 @@
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
-            <artifactId>entando-widget-login_form</artifactId>
+            <artifactId>entando-widget-login_form_inspinia</artifactId>
             <version>4.3.2-SNAPSHOT</version>
             <type>war</type>
         </dependency>
