@@ -47,11 +47,7 @@
         <module>widgets/entando-widget-navigation_bar_inspinia</module>
         <module>widgets/entando-widget-login_form_inspinia</module>
         <module>widgets/entando-widget-search_form_inspinia</module>
-<<<<<<< HEAD
-<!--        <module>widgets/entando-widget-navigation_bar</module>
-=======
         <!--        <module>widgets/entando-widget-navigation_bar</module>
->>>>>>> 6a8c1e106dfd9d73fd1706c240445558a6eae78f
         <module>widgets/entando-widget-navigation_menu</module>
         <module>widgets/entando-widget-navigation_breadcrumbs</module>
         <module>widgets/entando-widget-language_choose</module>
