@@ -7,7 +7,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-search_result_inspinia', 'entando-widget-search_result_inspinia', NULL, NULL, '<#assign jacms=JspTaglibs["/jacms-aps-core"]>
 <#assign wp=JspTaglibs["/aps-core"]>
 <h1><@wp.i18n key="SEARCH_RESULTS" /></h1>
-<#if (RequestParameters.search?? && RequestParameters.search!='')>
+<#if (RequestParameters.search?? && RequestParameters.search!='''')>
 <@jacms.searcher listName="contentListResult" />
 </#if>
 <p><@wp.i18n key="SEARCHED_FOR" />: <em><strong><#if (RequestParameters.search??)>${RequestParameters.search}</#if></strong></em></p>
