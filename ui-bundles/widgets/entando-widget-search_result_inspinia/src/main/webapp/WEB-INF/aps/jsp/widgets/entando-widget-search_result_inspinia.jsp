@@ -1,7 +1,7 @@
 <%@ taglib prefix="jacms" uri="/jacms-aps-core" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<h1><wp:i18n key="SEARCH_RESULTS" /></h1>
+<h4><wp:i18n key="SEARCH_RESULTS" /></h4>
 <jacms:searcher listName="result" />
 <p><wp:i18n key="SEARCHED_FOR" />: <em><strong><c:out value="${search}" /></strong></em></p>
 <c:choose>
