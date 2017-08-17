@@ -14,12 +14,6 @@
                 </button>
                 <ul class="dropdown-menu pull-right well-small">
                     <li class="padding-medium-vertical">
-                        <%--
-                        <div class="divider"></div>
-                        <p>
-                                <a href="<wp:url page="profile" />"><span class="icon-user"></span> <wp:i18n key="userprofile_EDITPROFILE_TITLE" /></a>
-                        </p>
-                        --%>
                     <wp:ifauthorized permission="enterBackend">
                         <p>
                             <a href="<wp:info key="systemParam" paramName="applicationBaseURL" />do/main.action?request_locale=<wp:info key="currentLang" />&amp;backend_client_gui=advanced"><span class="icon-wrench"></span> <wp:i18n key="ESLF_ADMINISTRATION" /></a>
@@ -58,7 +52,6 @@
                                 <wp:i18n key="ESLF_USER_STATUS_CREDENTIALS_INVALID" />
                             </div>
                         </c:if>
-
                         <input type="text" name="username" class="input-large" placeholder="<wp:i18n key="ESLF_USERNAME" />">
                                <input type="password" name="password" class="input-large" placeholder="<wp:i18n key="ESLF_PASSWORD" />">
                                <p class="text-right">
