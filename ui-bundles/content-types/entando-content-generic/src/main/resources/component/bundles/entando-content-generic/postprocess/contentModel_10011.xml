@@ -8,11 +8,14 @@
   <id>10011</id>
   <contentType>CNG</contentType>
   <description>Lists - Default</description>
-  <shape><![CDATA[<article>
-  <h2>$content.Title.text</h2>
+  <shape><![CDATA[<div class="search-result">
+  <h3><a href="$content.contentLink">$content.Title.text</a></h3>
+  <a class="search-link" href="$content.contentLink">$content.contentLink</a>
 #if ( $content.Abstract.text != "" )
-  $content.Abstract.text
+  <p>
+    $content.Abstract.text
+  </p>
 #end
-<p class="text-right"><a class="btn" href="$content.contentLink">$i18n.getLabel("CNG_READ_MORE")</a></p>
-</article>]]></shape>
+</div>
+<div class="hr-line-dashed"></div>]]></shape>
 </contentModel>
