@@ -44,7 +44,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
     </a>
     <ul class="dropdown-menu">
         <li>
-            <form class="m-t" method="POST">
+            <form class="m-t" style="padding:10px;" method="POST">
                 <#if (accountExpired?? && accountExpired == true)>
                 <div class="alert alert-error">
                     <button class="close" data-dismiss="alert">x</button>
