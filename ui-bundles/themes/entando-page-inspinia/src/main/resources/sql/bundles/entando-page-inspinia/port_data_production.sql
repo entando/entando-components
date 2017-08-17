@@ -161,6 +161,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
                     <@wp.show frame=14 />
                     <@wp.show frame=16 />
                     <@wp.show frame=18 />
+
                 </ul>
             </div>
         </nav>
@@ -224,6 +225,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
                         <div class="row">
                             <div class="col-lg-12">
                                 <@wp.show frame=15 />
+
                             </div>
                         </div>
                         <div class="row">
