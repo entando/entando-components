@@ -48,6 +48,8 @@
         <module>widgets/entando-widget-login_form_inspinia</module>
         <module>widgets/entando-widget-search_form_inspinia</module>
         <module>widgets/entando-widget-search_result_inspinia</module>
+        
+        <module>content-types/entando-content-generic</module>
         <!--        <module>widgets/entando-widget-navigation_bar</module>
         <module>widgets/entando-widget-navigation_menu</module>
         <module>widgets/entando-widget-navigation_breadcrumbs</module>
