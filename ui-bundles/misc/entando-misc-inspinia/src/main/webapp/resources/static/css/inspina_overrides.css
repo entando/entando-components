@@ -8560,3 +8560,14 @@ body.md-skin {
     margin: 0;
   }
 }
+
+body.mini-navbar .navbar-default .nav > li > a {
+    font-size: 13px;
+    margin-left: -7px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+body.mini-navbar .navbar-default .nav > li.active > a {
+    margin-left: -17px;
+}

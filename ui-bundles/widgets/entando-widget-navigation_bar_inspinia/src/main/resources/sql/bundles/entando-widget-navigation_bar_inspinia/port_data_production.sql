@@ -9,9 +9,6 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-navigation_bar_inspinia', 'entando-widget-navigation_bar_inspinia', NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 
-<@wp.headInfo type="JS" info="entando-misc-jquery/jquery-1.10.0.min.js" />
-<@wp.headInfo type="JS" info="entando-misc-bootstrap/bootstrap.min.js" />
-
 <@wp.currentPage param="code" var="currentPageCode" />
 <@wp.freemarkerTemplateParameter var="currentPageCode" valueName="currentPageCode" />
 
@@ -43,14 +40,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 	</#if>
 </#if>
 
-<@wp.freemarkerTemplateParameter var="previousPage" valueName="" removeOnEndTag=true />
-
-<style>
-.mini-navbar .navbar-page-title-full { display: none; }
-.navbar-page-title-abbr { display: none; }
-.mini-navbar .navbar-page-title-abbr { display: block!important; }
-</style>
-', 1);
+<@wp.freemarkerTemplateParameter var="previousPage" valueName="" removeOnEndTag=true />', 1);
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-navigation_bar_inspinia_include', NULL, NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 <#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]>
@@ -106,8 +96,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 	<a href="${aURL}"  ${aClassAndData} >
 				<!-- [ ${previousLevel} ] -->
 				${homeIcon}
-				<span class="navbar-page-title-full">${previousPage.title} </span>
-       				<span class="navbar-page-title-abbr">${previousPage.title?substring(0,2)}</span>
+				${previousPage.title}
 				${caret}
 	</a>
 

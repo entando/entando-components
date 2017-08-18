@@ -17,8 +17,7 @@
 <!-- <i class="fa fa-th-large"></i> -->
 <span class="nav-label">
 
-<span class="navbar-page-title-full"><c:out value="${previousPage.title}" /></span>
-<span class="navbar-page-title-abbr"><c:out value="${previousPage.title.substring(0,2)}" /></span>
+<c:out value="${previousPage.title}" />
 
 </span>
 <c:if test="${!previousPage.voidPage}">
