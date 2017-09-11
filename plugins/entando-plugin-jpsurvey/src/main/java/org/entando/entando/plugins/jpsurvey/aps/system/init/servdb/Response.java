@@ -32,51 +32,58 @@ import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
  */
 @DatabaseTable(tableName = Response.TABLE_NAME)
 public class Response implements ExtendedColumnDefinition {
-	
-	public Response() {}
-	
-	@DatabaseField(foreign = true, columnName = "voterid", 
-			canBeNull = false)
-	private Voter _voter;
-	
-	@DatabaseField(foreign = true, columnName = "questionid", 
-			canBeNull = false)
-	private Question _question;
-	
-	@DatabaseField(foreign = true, columnName = "choiceid", 
-			canBeNull = false)
-	private Choice _choice;
-	
-	@DatabaseField(columnName = "freetext", 
-			dataType = DataType.STRING, 
-			width = 250)
-	private String _freeText;
-	
-	@Override
-	public String[] extensions(IDatabaseManager.DatabaseType type) {
-		String tableName = TABLE_NAME;
-		String voterTableName = Voter.TABLE_NAME;
-		String questionTableName = Question.TABLE_NAME;
-		String choiceTableName = Choice.TABLE_NAME;
-		if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
-			tableName = "`" + tableName + "`";
-			voterTableName = "`" + voterTableName + "`";
-			questionTableName = "`" + questionTableName + "`";
-			choiceTableName = "`" + choiceTableName + "`";
-		}
-		return new String[]{"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_chid_fkey FOREIGN KEY (choiceid) "
-				+ "REFERENCES " + choiceTableName + " (id)", 
-			"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_vtid_fkey FOREIGN KEY (voterid) "
-				+ "REFERENCES " + voterTableName + " (id)", 
-			"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_qid_fkey FOREIGN KEY (questionid) "
-				+ "REFERENCES " + questionTableName + " (id)"};
-	}
-	
-	public static final String TABLE_NAME = "jpsurvey_responses";
-	
+
+    public Response() {
+    }
+
+    @DatabaseField(columnName = "id",
+            dataType = DataType.INTEGER,
+            canBeNull = false,
+            generatedId = true)
+    private int _id;
+
+    @DatabaseField(foreign = true, columnName = "voterid",
+            canBeNull = false)
+    private Voter _voter;
+
+    @DatabaseField(foreign = true, columnName = "questionid",
+            canBeNull = false)
+    private Question _question;
+
+    @DatabaseField(foreign = true, columnName = "choiceid",
+            canBeNull = false)
+    private Choice _choice;
+
+    @DatabaseField(columnName = "freetext",
+            dataType = DataType.STRING,
+            width = 250)
+    private String _freeText;
+
+    @Override
+    public String[] extensions(IDatabaseManager.DatabaseType type) {
+        String tableName = TABLE_NAME;
+        String voterTableName = Voter.TABLE_NAME;
+        String questionTableName = Question.TABLE_NAME;
+        String choiceTableName = Choice.TABLE_NAME;
+        if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
+            tableName = "`" + tableName + "`";
+            voterTableName = "`" + voterTableName + "`";
+            questionTableName = "`" + questionTableName + "`";
+            choiceTableName = "`" + choiceTableName + "`";
+        }
+        return new String[]{"ALTER TABLE " + tableName + " "
+            + "ADD CONSTRAINT " + TABLE_NAME + "_chid_fkey FOREIGN KEY (choiceid) "
+            + "REFERENCES " + choiceTableName + " (id)",
+            "ALTER TABLE " + tableName + " "
+            + "ADD CONSTRAINT " + TABLE_NAME + "_vtid_fkey FOREIGN KEY (voterid) "
+            + "REFERENCES " + voterTableName + " (id)",
+            "ALTER TABLE " + tableName + " "
+            + "ADD CONSTRAINT " + TABLE_NAME + "_qid_fkey FOREIGN KEY (questionid) "
+            + "REFERENCES " + questionTableName + " (id)"};
+    }
+
+    public static final String TABLE_NAME = "jpsurvey_responses";
+
 }
 /*
 CREATE TABLE jpsurvey_responses
