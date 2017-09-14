@@ -4,6 +4,7 @@
 <div class="text-center">
     <div class="title-box-icon">
         <h2 class="title-mortgage">Mortgage Process</h2>
+
         <div class="progress-dots">
             <div class="progress-dots-row">
                 <div class="progress-dots-step">

@@ -9,7 +9,7 @@
     </artifact>
     <dependencies>
         <!--<code>entando-misc-bootstrap</code>-->
-        <code>entando-misc-inspinia</code>
+        <code>entando-misc-light</code>
         <code>entando-widget-language_choose</code>
         <code>entando-widget-search_form</code>
         <code>entando-widget-navigation_bar</code>
