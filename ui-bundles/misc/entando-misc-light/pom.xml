@@ -2,26 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.entando.entando.bundles</groupId>
         <artifactId>entando-bundles-parent</artifactId>
+        <groupId>org.entando.entando.bundles</groupId>
         <version>4.3.2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>entando-widget-language_choose_inspinia</artifactId>
-    <groupId>org.entando.entando.bundles.widgets</groupId>
+    <artifactId>entando-misc-light</artifactId>
+    <groupId>org.entando.entando.bundles.misc</groupId>
     <packaging>war</packaging>
-    <name>Entando Bundle: entando-widget-language_choose_inspinia</name>
-    <description>A drop-down menu sporting all the languages configured in your application.</description>
+    <name>Entando Bundle: entando-misc-light</name>
+    <description>Twitter Bootstrap 3.6, with full sources, integrated with light layout sporting a default Entando theme.</description>
     <developers>
         <developer>
             <id>d.minnai</id>
             <name>Davide Minnai</name>
             <email>d.minnai@entando.com</email>
-        </developer>
-        <developer>
-            <id>a.scalici</id>
-            <name>Alessio Scalici</name>
-            <email>a.scalici@entando.com</email>
         </developer>
     </developers>
     <url>http://www.entando.com/</url>
@@ -62,5 +57,17 @@
         </plugins>
     </build>
     <dependencies>
+        <!--        <dependency>
+            <groupId>org.entando.entando.bundles.misc</groupId>
+            <artifactId>entando-misc-html5-essentials</artifactId>
+            <version>4.3.2-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.entando.entando.bundles.misc</groupId>
+            <artifactId>entando-misc-jquery</artifactId>
+            <version>4.3.2-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>-->
     </dependencies>
 </project>

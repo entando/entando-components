@@ -7,21 +7,16 @@
         <version>4.3.2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>entando-widget-language_choose_inspinia</artifactId>
+    <artifactId>entando-widget-3-step-mortgage</artifactId>
     <groupId>org.entando.entando.bundles.widgets</groupId>
     <packaging>war</packaging>
-    <name>Entando Bundle: entando-widget-language_choose_inspinia</name>
-    <description>A drop-down menu sporting all the languages configured in your application.</description>
+    <name>Entando Bundle: entando-widget-3-step-mortgage</name>
+    <description>A 3 step demo mortgage banner.</description>
     <developers>
         <developer>
             <id>d.minnai</id>
             <name>Davide Minnai</name>
             <email>d.minnai@entando.com</email>
-        </developer>
-        <developer>
-            <id>a.scalici</id>
-            <name>Alessio Scalici</name>
-            <email>a.scalici@entando.com</email>
         </developer>
     </developers>
     <url>http://www.entando.com/</url>
