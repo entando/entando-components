@@ -36,26 +36,26 @@
     </organization>
     <description>Bundles for Entando: providing small, useful bundles for Entando since 2013.</description>
     <modules>
-        <!--        <module>misc/entando-misc-less</module>
+        <module>misc/entando-misc-less</module>
         <module>misc/entando-misc-jquery</module>
         <module>misc/entando-misc-jquery-ui</module>
         <module>misc/entando-misc-html5-essentials</module>
-        <module>misc/entando-misc-bootstrap</module>-->
+        <module>misc/entando-misc-bootstrap</module>
         <module>misc/entando-misc-inspinia</module>
         <module>themes/entando-page-inspinia</module>
-        <!--        <module>widgets/entando-widget-language_choose_inspinia</module>
+        <module>widgets/entando-widget-language_choose_inspinia</module>
         <module>widgets/entando-widget-navigation_bar_inspinia</module>
         <module>widgets/entando-widget-login_form_inspinia</module>
         <module>widgets/entando-widget-search_form_inspinia</module>
-        <module>widgets/entando-widget-search_result_inspinia</module>-->
+        <module>widgets/entando-widget-search_result_inspinia</module>
         <module>misc/entando-misc-light</module>
         <module>themes/entando-page-light</module>
         <module>widgets/entando-widget-3-step-mortgage</module>
         <module>content-types/entando-content-generic</module>
+         <module>widgets/entando-widget-language_choose</module>
         <!--        <module>widgets/entando-widget-navigation_bar</module>
         <module>widgets/entando-widget-navigation_menu</module>
         <module>widgets/entando-widget-navigation_breadcrumbs</module>
-        <module>widgets/entando-widget-language_choose</module>
         <module>widgets/entando-widget-search_form</module>
         <module>widgets/entando-widget-login_form</module>
         <module>widgets/entando-widget-sharewith</module>
@@ -67,7 +67,6 @@
         <module>content-types/entando-content-blogpost</module>
         <module>themes/entando-page-bootstrap-hero</module>
         <module>themes/entando-page-2columns-left</module>
-        <module>themes/entando-page-inspinia</module>
        <module>app-views/entando-app-view-webdynamicform-default</module>
         <module>app-views/entando-app-view-rss-default</module>
         <module>app-views/entando-app-view-facetnav-default</module>
