@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
-	<code>entando-widget-language_choose</code>
-	<description>Widget: Choose Language</description>
-	<artifact>
-		<artifactId>${project.artifactId}</artifactId>
-		<groupId>${project.groupId}</groupId>
-		<version>${project.version}</version>
-	</artifact>
-	<dependencies>
-		<code>entando-misc-bootstrap</code>
-	</dependencies>
-	<installation>
-		<environment code="production">
-			<defaultSqlResources>
-				<datasource name="portDataSource">
-classpath:sql/bundles/entando-widget-language_choose/port_data_production.sql
-				</datasource>
-				<datasource name="servDataSource">
-classpath:sql/bundles/entando-widget-language_choose/serv_data_production.sql
-				</datasource>
-			</defaultSqlResources>
-		</environment>
-	</installation>
+    <code>entando-widget-language_choose</code>
+    <description>Widget: Choose Language</description>
+    <artifact>
+        <artifactId>${project.artifactId}</artifactId>
+        <groupId>${project.groupId}</groupId>
+        <version>${project.version}</version>
+    </artifact>
+    <dependencies>
+        <code>entando-misc-bootstrap</code>
+    </dependencies>
+    <installation>
+        <environment code="production">
+            <defaultSqlResources>
+                <datasource name="portDataSource">
+                    classpath:sql/bundles/entando-widget-language_choose/port_data_production.sql
+                </datasource>
+                <datasource name="servDataSource">
+                    classpath:sql/bundles/entando-widget-language_choose/serv_data_production.sql
+                </datasource>
+            </defaultSqlResources>
+        </environment>
+    </installation>
 </component>
