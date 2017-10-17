@@ -53,25 +53,25 @@
         <module>widgets/entando-widget-3-step-mortgage</module>
         <module>content-types/entando-content-generic</module>
         <module>widgets/entando-widget-language_choose</module>
-        <!-- <module>widgets/entando-widget-navigation_bar</module>
+		<module>themes/entando-page-bootstrap-hero</module>
+		<module>widgets/entando-widget-search_form</module>
+		 <module>widgets/entando-widget-login_form</module>
+		 <module>widgets/entando-widget-navigation_bar</module>
+        <!-- 
         <module>widgets/entando-widget-navigation_menu</module>
         <module>widgets/entando-widget-navigation_breadcrumbs</module>
-        <module>widgets/entando-widget-search_form</module>
-        <module>widgets/entando-widget-login_form</module>
         <module>widgets/entando-widget-sharewith</module>
         <module>content-types/entando-content-generic</module>
         <module>content-types/entando-content-news</module>
         <module>content-types/entando-content-download</module>
         <module>content-types/entando-content-resolution</module>
         <module>content-types/entando-content-announcement</module>
-        <module>content-types/entando-content-blogpost</module>
-        <module>themes/entando-page-bootstrap-hero</module>
+        <module>content-types/entando-content-blogpost</module>       
         <module>themes/entando-page-2columns-left</module>
        <module>app-views/entando-app-view-webdynamicform-default</module>
         <module>app-views/entando-app-view-rss-default</module>
         <module>app-views/entando-app-view-facetnav-default</module>
         <module>app-views/entando-app-view-userreg-default</module>-->
-        
         <!-- <module>app-views/entando-app-view-addressbook-default</module> -->
         <!--        <module>app-views/entando-app-view-calendar-default</module>
         <module>app-views/entando-app-view-survey-default</module>
