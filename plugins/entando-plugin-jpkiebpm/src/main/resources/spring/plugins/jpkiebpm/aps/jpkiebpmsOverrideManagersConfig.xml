@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+
+	<bean id="jpkiebpmFormOverrideDAO" class="org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverrideDAO">
+		<property name="dataSource" ref="servDataSource" />
+	</bean>
+
+	<bean id="jpkiebpmFormOverrideManager" class="org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverrideManager"
+		parent="abstractService">
+		<property name="kieFormOverrideDAO" ref="jpkiebpmFormOverrideDAO" />
+	</bean>
+
+</beans>

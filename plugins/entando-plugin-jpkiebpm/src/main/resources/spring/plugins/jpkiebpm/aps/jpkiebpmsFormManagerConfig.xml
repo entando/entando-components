@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+The MIT License
+
+Copyright 2017 Entando Inc..
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <bean id="jpkiebpmsManager"
+          class="org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager"
+          parent="abstractService">
+        <property name="configManager" ref="BaseConfigManager"/>
+        <property name="overrideManager" ref="jpkiebpmFormOverrideManager"/>
+    </bean>
+
+    <bean id="jpkiebpmsApiManager"
+          class="org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.KieApiManager"
+          parent="abstractService">
+        <property name="langManager" ref="LangManager"/>
+        <property name="i18nManager" ref="I18nManager"/>
+        <property name="kieFormManager" ref="jpkiebpmsManager"/>
+        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
+        <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
+    </bean>
+
+    <bean id="jpkiebpmApiTaskInterface"
+          class="org.entando.entando.plugins.jpkiebpm.aps.system.services.api.ApiTaskInterface"
+          parent="jpkiebpmsApiManager" scope="prototype">
+        <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
+    </bean>
+
+    <bean id="jpkiebpmBpmWidgetInfoDAO"
+          class="org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfoDAO">
+        <property name="dataSource" ref="servDataSource"/>
+    </bean>
+
+    <bean id="jpkiebpmBpmWidgetInfoManager"
+          class="org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfoManager"
+          parent="abstractService">
+        <property name="keyGeneratorManager" ref="KeyGeneratorManager"/>
+        <property name="bpmWidgetInfoDAO" ref="jpkiebpmBpmWidgetInfoDAO"/>
+    </bean>
+
+    <bean id="PageManager" class="com.agiletec.aps.system.services.page.KiePageManager"
+          parent="abstractService" >
+        <property name="pageDAO" >
+            <bean class="com.agiletec.aps.system.services.page.PageDAO">
+                <property name="dataSource" ref="portDataSource" />
+                <property name="widgetTypeManager" ref="WidgetTypeManager" />
+                <property name="pageModelManager" ref="PageModelManager" />
+            </bean>
+        </property>
+        <property name="dataObjectModelManager" ref="DataObjectModelManager" />
+    </bean>
+
+</beans>

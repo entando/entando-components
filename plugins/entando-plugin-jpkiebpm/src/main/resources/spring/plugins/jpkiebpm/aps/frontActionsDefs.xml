@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	
+    <bean id="jpkieBpmFormFrontAction"
+          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmFormAction"
+          parent="abstractBaseAction" scope="prototype" >
+        <property name="formManager" ref="jpkiebpmsManager" />
+        <property name="i18nManager" ref="I18nManager" />
+    </bean>
+	
+    <bean id="jpkieBpmDataTypeFormFrontAction"
+          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmTypeFormAction"
+          parent="abstractBaseAction" scope="prototype" >
+        <property name="dataObjectManager" ref="DataObjectManager" />
+        <property name="dataObjectDispenser" ref="DataObjectDispenserManager" />
+        <property name="formManager" ref="jpkiebpmsManager" />
+		<property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
+        <property name="i18nManager" ref="I18nManager" />
+    </bean>
+	
+	
+<!--
+    <bean id="jpkiebpmBpmFormWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmFormWidgetAction"
+          parent="simpleWidgetAction" scope="prototype" >
+        <property name="formManager" ref="jpkiebpmsManager" />
+    </bean>
+
+    <bean id="jpkiebpmBpmDatatableWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmDatatableWidgetAction"
+          parent="simpleWidgetAction" scope="prototype" >
+        <property name="formManager" ref="jpkiebpmsManager" />
+
+		</bean>
+	-->
+
+</beans>

@@ -1,0 +1,4 @@
+<div class="ui-dform-div form-group">
+	<label id="JPKIE_%s" for="jpkieformparam_%s" class="control-label editLabel ui-dform-label editable editable-click">$i18n.getLabel("JPKIE_%s")</label>
+	<input type="%s" id="jpkieformparam_%s" name="$data.%s.type:%s" labelkey="JPKIE_%s" class="form-control ui-widget ui-dform-number" aria-required="true" value="%s" >
+</div>

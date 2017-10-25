@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>entando-plugins-enterprise</artifactId>
+        <groupId>org.entando.entando.plugins</groupId>
+        <version>4.3.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>entando-plugin-jpkiebpm</artifactId>
+    <groupId>org.entando.entando.plugins</groupId>
+    <packaging>war</packaging>
+    <name>Entando Plugin: Entando Redhat BPM connector</name>
+    <description>Connector to gather data from forms exposed by KIE-BPM</description>
+    <developers>
+        <developer>
+            <id>myUsername</id>
+            <name>John J. Doe</name>
+            <email>me@myself.com</email>
+        </developer>
+    </developers>
+    <url>http://www.entando.com/</url>
+
+    <properties>
+        <json.version>20170516</json.version>
+    </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.3</version><!--$NO-MVN-MAN-VER$ -->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.0-beta-1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>2.2.1</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>1.6</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+
+        <!-- Plugin REST API -->
+        <dependency>
+            <groupId>org.entando.entando.plugins</groupId>
+            <artifactId>entando-plugin-jprestapi</artifactId>
+            <version>4.3.2-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.entando.entando.plugins</groupId>
+            <artifactId>entando-plugin-jprestapi</artifactId>
+            <version>4.3.2-SNAPSHOT</version>
+            <type>jar</type>
+            <classifier>classes</classifier>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.entando.entando.plugins</groupId>
+            <artifactId>entando-plugin-jprestapi</artifactId>
+            <version>4.3.2-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>test</scope>
+            <classifier>tests</classifier>
+        </dependency>
+
+    </dependencies>
+
+
+</project>

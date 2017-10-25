@@ -1,0 +1,21 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+    <field name="hostName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    <field name="schema">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    <field name="port">
+        <field-validator type="required" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+</validators>

@@ -1,0 +1,123 @@
+<apiMethodDefinitions>
+    <resource name="bpmForm" namespace="jpkiebpm">
+        <description>Red Hat Bpm Form</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a bpm form</description>
+            <springBean name="jpkiebpmsApiManager" method="getBpmForm"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieProcessFormApiResponse</responseClass>
+            <parameters>
+                <parameter key="configId" required="true">
+                    <description>The confguration id of jpkiebpm_widgetinfo</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true">
+            <description>Post Form data into JBPM Server</description>
+            <springBean name="jpkiebpmsApiManager" method="postBpmForm"/>
+            <expectedType>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputForm</expectedType>
+        </method>
+    </resource>
+
+    <resource name="tasks" namespace="jpkiebpm">
+        <description>The rapresentation of a task list</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a task list</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="getTasks"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response.TaskListResponse</responseClass>
+            <parameters>
+                <parameter key="configId" required="true">
+                    <description>The confguration id of jpkiebpm_widgetinfo</description>
+                </parameter>
+                <parameter key="page" required="false">
+                    <description>The page of the list</description>
+                </parameter>
+                <parameter key="pageSize" required="false">
+                    <description>The size of the page list</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+
+
+    <resource name="taskDetail" namespace="jpkiebpm">
+        <description>Red Hat Bpm Task Detail</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return task detail</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="getTaskDetail"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieTaskDetailApiResponse</responseClass>
+            <parameters>
+                <parameter key="containerId" required="true">
+                    <description>The container id</description>
+                </parameter>
+                <parameter key="taskId" required="true">
+                    <description>The task Id</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+
+
+    <resource name="taskForm" namespace="jpkiebpm">
+        <description>Red Hat Bpm Task Form</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a bpm form</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="getTaskForm"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieProcessFormApiResponse</responseClass>
+            <parameters>
+                <parameter key="containerId" required="true">
+                    <description>The container id</description>
+                </parameter>
+                <parameter key="taskId" required="true">
+                    <description>The task Id</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true">
+            <description>Post handler Form task</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="postTaskForm"/>
+            <expectedType>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputFormTask</expectedType>
+        </method>
+    </resource>
+
+    <resource name="processInstances" namespace="jpkiebpm">
+        <description>Red Hat Bpm process instances list</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return the list of the process instances given a process id</description>
+            <springBean name="jpkiebpmsApiManager" method="getProcessInstancesList"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.process.KieProcessInstanceListApiResponse</responseClass>
+            <parameters>
+                <parameter key="processId" required="true">
+                    <description>The process Id</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+
+
+    <!-- ************** DIAGRAM ************** -->
+
+    <resource name="diagram" namespace="jpkiebpm">
+        <description>The representation of the process</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a process diagram</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="getDiagram"/>
+            <responseClass>org.entando.entando.aps.system.services.api.model.StringApiResponse</responseClass>
+            <parameters>
+                <parameter key="configId" required="true">
+                    <description>The confguration id of jpkiebpm_widgetinfo</description>
+                </parameter>
+                <parameter key="processInstanceId" required="true">
+                    <description>Process instance id</description>
+                </parameter>
+
+            </parameters>
+        </method>
+    </resource>
+
+</apiMethodDefinitions>
