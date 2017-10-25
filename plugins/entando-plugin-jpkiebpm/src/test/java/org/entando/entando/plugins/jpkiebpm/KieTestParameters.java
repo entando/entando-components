@@ -29,16 +29,16 @@ package org.entando.entando.plugins.jpkiebpm;
  */
 public interface KieTestParameters {
 
-    public final static Boolean TEST_ENABLED = true;
+    public final static Boolean TEST_ENABLED = false;
 
     // THE VALUES BELOW MUST EXIST ON THE BPM !!!
     public final static String USERNAME = "bpmsAdmin";
     public final static String PASSWORD = "bpmsuite1!";
 
-    public final static String HOSTNAME = "entando-jbpms.sorint.it";
+    public final static String HOSTNAME = "194.187.252.124";
     public final static String SCHEMA = "http";
     public final static String WEBAPP = "kie-server";
-    public final static Integer PORT = 80;
+    public final static Integer PORT = 8080;
 
     public final static String TARGET_PROCESS_ID = "com.redhat.bpms.examples.mortgage.MortgageApplication";
     public final static String TARGET_CONTAINER_ID = "com.redhat.bpms.examples:mortgage:1";
