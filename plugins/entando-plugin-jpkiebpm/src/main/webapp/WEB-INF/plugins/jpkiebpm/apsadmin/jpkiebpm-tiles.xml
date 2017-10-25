@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmForm.config">
+        <put-attribute name="title" value="kiebpm"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmFormConfig.jsp"/>
+    </definition>
+
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmDatatable.config">
+        <put-attribute name="title" value="kiebpm Datatable"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmDatatableConfig.jsp"/>
+    </definition>
+
+    <definition extends="layout.default" name="admin.jpkiebpm.config.entry">
+        <put-attribute name="title" value="kiebpm"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/config/config-entry.jsp"/>
+    </definition>
+
+
+    <definition extends="layout.default" name="admin.jpkiebpm.formoverride.list">
+        <put-attribute name="title" value="kiebpm"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/formoverride/list.jsp"/>
+    </definition>
+
+    <definition extends="layout.default" name="admin.jpkiebpm.formoverride.entry">
+        <put-attribute name="title" value="kiebpm"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/formoverride/entry.jsp"/>
+    </definition>
+
+    <definition extends="layout.default" name="admin.jpkiebpm.formoverride.trash">
+        <put-attribute name="title" value="kiebpm"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/formoverride/trash.jsp"/>
+    </definition>
+
+
+</tiles-definitions>

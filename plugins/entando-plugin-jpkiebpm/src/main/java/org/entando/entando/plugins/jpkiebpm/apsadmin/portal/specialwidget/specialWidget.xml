@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget" namespace="/do/Page/SpecialWidget"
+             extends="core_do/Page/SpecialWidget">
+
+        <action name="jpkiebpmBpmFormWidgetViewerConfig" class="jpkiebpmBpmFormWidgetAction" method="init">
+                <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+
+
+        <action name="jpkiebpmBpmDatatableWidgetViewerConfig" class="jpkiebpmBpmDatatableWidgetAction" method="init">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+
+    </package>
+
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmFormViewer" namespace="/do/bpm/Page/SpecialWidget/BpmFormViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+
+    	<action name="chooseForm*" class="jpkiebpmBpmFormWidgetAction" method="chooseForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+    	<action name="changeForm*" class="jpkiebpmBpmFormWidgetAction" method="changeForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <action name="save" class="jpkiebpmBpmFormWidgetAction" method="save">
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+
+    </package>
+
+
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmDatatableViewer" namespace="/do/bpm/Page/SpecialWidget/BpmDatatableViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+
+        <action name="chooseForm*" class="jpkiebpmBpmDatatableWidgetAction" method="chooseForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <action name="changeForm*" class="jpkiebpmBpmDatatableWidgetAction" method="changeForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+        <action name="save" class="jpkiebpmBpmDatatableWidgetAction" method="save">
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+
+    </package>
+
+
+</struts>

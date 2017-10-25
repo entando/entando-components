@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <bean id="jpkiebpmSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer">
+        <property name="subMenuFilePath">
+            <value>/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/common/layouts/subMenu.jsp</value>
+        </property>
+    </bean>
+
+    <bean id="jpkiebpmBpmFormWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmFormWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
+        <property name="formManager" ref="jpkiebpmsManager"/>
+        <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
+        <property name="dataObjectManager" ref="DataObjectManager"/>
+        <property name="dataObjectModelManager" ref="DataObjectModelManager"/>
+        <property name="i18nManager" ref="I18nManager"/>
+    </bean>
+
+    <bean id="jpkiebpmBpmDatatableWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmDatatableWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
+        <property name="formManager" ref="jpkiebpmsManager"/>
+        <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
+        <property name="groupManager" ref="GroupManager"/>
+    </bean>
+
+    <bean id="jpkiebpmConfigAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.config.KieBpmConfigAction"
+          parent="abstractBaseAction" scope="prototype">
+        <property name="formManager" ref="jpkiebpmsManager"/>
+    </bean>
+
+    <bean id="jpkiebpmFormOverrideAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.form.override.KieFormOverrideAction"
+          parent="abstractBaseAction" scope="prototype">
+        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
+        <property name="kieFormManager" ref="jpkiebpmsManager"/>
+        <property name="pageManager" ref="PageManager"/>
+    </bean>
+
+    <bean id="jpkiebpmFormOverrideFinderAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.form.override.KieFormOverrideFinderAction"
+          parent="abstractBaseAction" scope="prototype">
+        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
+        <property name="kieFormManager" ref="jpkiebpmsManager"/>
+    </bean>
+
+
+
+</beans>

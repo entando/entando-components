@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+    <package name="jpkiebpm_do/jpkiebpm/form/override" namespace="/do/jpkiebpm/form/override" extends="entando-default">
+
+		<action name="list" class="jpkiebpmFormOverrideFinderAction" >
+            <result type="tiles">admin.jpkiebpm.formoverride.list</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+		
+		
+		<action name="search" class="jpkiebpmFormOverrideFinderAction" >
+            <result type="tiles">admin.jpkiebpm.formoverride.list</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <!-- # - - - - # -->
+
+    	<action name="trash" class="jpkiebpmFormOverrideAction" method="trashModel">
+            <result type="tiles">admin.jpkiebpm.formoverride.trash</result>
+            <result name="input" type="chain">list</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+    	<action name="delete" class="jpkiebpmFormOverrideAction" method="deleteModel">
+            <result type="chain">list</result>
+            <result name="input" type="tiles">admin.jpkiebpm.formoverride.trash</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+		
+        <!-- # - - - - # -->
+
+    	<action name="new" class="jpkiebpmFormOverrideAction" method="newModel">
+            <result type="tiles">admin.jpkiebpm.formoverride.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+    	<action name="edit" class="jpkiebpmFormOverrideAction" method="editModel">
+            <result type="tiles">admin.jpkiebpm.formoverride.entry</result>
+            <result name="input" type="chain">list</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+    	<action name="chooseForm" class="jpkiebpmFormOverrideAction" method="chooseForm">
+            <result type="tiles">admin.jpkiebpm.formoverride.entry</result>
+            <result name="input" type="chain">list</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+    	<action name="changeForm" class="jpkiebpmFormOverrideAction" method="changeForm">
+            <result type="tiles">admin.jpkiebpm.formoverride.entry</result>
+            <result name="input" type="chain">list</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+    	<action name="chooseField" class="jpkiebpmFormOverrideAction" method="chooseField">
+            <result type="tiles">admin.jpkiebpm.formoverride.entry</result>
+            <result name="input" type="tiles">admin.jpkiebpm.formoverride.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+    	<action name="changeField" class="jpkiebpmFormOverrideAction" method="changeField">
+            <result type="tiles">admin.jpkiebpm.formoverride.entry</result>
+            <result name="input" type="chain">list</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+    	<action name="save" class="jpkiebpmFormOverrideAction" method="saveModel">
+            <result name="input" type="tiles">admin.jpkiebpm.config.entry</result>
+            <result type="redirectAction">edit</result>
+        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
+    </package>
+    
+</struts>
