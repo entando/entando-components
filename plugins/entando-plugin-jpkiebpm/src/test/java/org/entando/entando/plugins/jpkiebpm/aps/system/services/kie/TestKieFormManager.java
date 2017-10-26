@@ -235,6 +235,9 @@ public class TestKieFormManager extends ApsPluginBaseTestCase implements KieTest
         KieBpmConfig current = _formManager.getConfig();
 
         try {
+            if (!TEST_ENABLED) {
+                return;
+            }
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // invoke the manager
