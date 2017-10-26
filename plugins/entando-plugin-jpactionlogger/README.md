@@ -10,7 +10,7 @@ The administrator can also prevent some parameters (e.g. password) from being tr
 
 **Installation**
 
-In order to install the Action Logger plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the Action Logger plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```
 <dependency>

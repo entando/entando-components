@@ -8,7 +8,7 @@ The Faceted Navigation plugin enables faceted navigation of the portal contents 
 
 **Installation**
 
-In order to install the Faceted Navigation plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the Faceted Navigation plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```  
 <dependency>

@@ -8,7 +8,7 @@ Avatar is a plugin that allows to registered users to manage in the Back Office 
 
 **Installation**
 
-In order to install the Avatar plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the Avatar plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```
 <dependency>

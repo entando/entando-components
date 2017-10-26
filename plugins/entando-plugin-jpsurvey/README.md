@@ -8,7 +8,7 @@ The _Survey_ plugin lets administrator create and manage Survey and Questionnair
 
 **Installation**
 
-In order to install the _Survey_ plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the _Survey_ plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```
         

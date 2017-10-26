@@ -8,7 +8,7 @@ Fast Content Edit Plugin allows administrator to edit contents directly from the
 
 **Installation**
 
-In order to install Fast Content Edit Plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install Fast Content Edit Plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ````
 <dependency>

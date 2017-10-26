@@ -11,7 +11,7 @@ Though the plugin installation is not difficult at all, we are going to modify t
 
 **Installation**
 
-In order to install the Versioning Plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the Versioning Plugin, you must insert the following dependency in the pom.xml file of your project:
 ```
 <dependency>
     <groupId>org.entando.entando.plugins</groupId>

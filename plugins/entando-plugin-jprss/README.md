@@ -8,7 +8,7 @@ The jprss plugin allows to serve the portal contents through RSS channels.
 
 **Installation**
 
-In order to install the RSS plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the RSS plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```  
 <dependency>

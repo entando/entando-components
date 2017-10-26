@@ -8,7 +8,7 @@ The LDAP plugin lets Entando to authenticate users from LDAP server and increase
 
 **Installation**
 
-In order to install the LDAP Plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the LDAP Plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```
 <dependency>
