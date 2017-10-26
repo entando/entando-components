@@ -81,6 +81,8 @@
           <module>entando-plugin-jpwebform</module>
 		-->
 		<module>entando-plugin-jpblog</module>
+		<module>entando-plugin-jprestapi</module>
+		<module>entando-plugin-jpkiebpm</module>
     </modules>
     <profiles>
         <profile>

@@ -8,7 +8,7 @@ Mail Plugin is a component that let Entando users configure SMTP server and crea
 
 **Installation**
 
-In order to install the Mail Plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the Mail Plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```
 <dependency>

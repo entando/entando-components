@@ -8,7 +8,7 @@ The _Georef_ plugin lets administrator add geographic reference to contents.
 
 **Installation**
 
-In order to install the Georef App, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the Georef App, you must insert the following dependency in the pom.xml file of your project:
 
 ```
 <dependency>

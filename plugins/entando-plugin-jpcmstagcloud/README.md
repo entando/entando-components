@@ -8,7 +8,7 @@ The CMS Tag Cloud plugin adds a tag-cloud in the portal which contains the categ
 
 **Installation**
 
-In order to install the CMS Tag Cloud plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the CMS Tag Cloud plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```  
 <dependency>

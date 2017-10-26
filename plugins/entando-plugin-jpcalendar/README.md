@@ -8,7 +8,7 @@ The _Calendar_ plugin lets users to share activities, events, and news through a
 
 **Installation**
 
-In order to install the _Calendar_ plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the _Calendar_ plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```  
 <dependency>

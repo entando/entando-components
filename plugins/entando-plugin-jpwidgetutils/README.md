@@ -8,7 +8,7 @@ The _Widgetutils_ plugin is a specialized iFrame widget that allows posting of a
 
 **Installation**
 
-In order to install the _Widgetutils_ plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the _Widgetutils_ plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```
 <dependency>

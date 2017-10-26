@@ -8,7 +8,7 @@ The _Ehcache Plugin_ enables the use of EHCache as system library.
 
 **Installation**
 
-In order to install the _Ehcache Plugin_, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the _Ehcache Plugin_, you must insert the following dependency in the pom.xml file of your project:
 
 ```
  <dependency>

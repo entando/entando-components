@@ -25,6 +25,9 @@ package org.entando.entando.plugins.jpkiebpm;
 
 /**
  *
+ * These test, even if try to be as agnostic of the process as possible, are
+ * tailored to the mortgage demo of Red Hat
+ *
  * @author Entando
  */
 public interface KieTestParameters {
@@ -35,7 +38,7 @@ public interface KieTestParameters {
     public final static String USERNAME = "bpmsAdmin";
     public final static String PASSWORD = "bpmsuite1!";
 
-    public final static String HOSTNAME = "194.187.252.124";
+    public final static String HOSTNAME = "localhost";
     public final static String SCHEMA = "http";
     public final static String WEBAPP = "kie-server";
     public final static Integer PORT = 8080;

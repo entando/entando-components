@@ -8,7 +8,7 @@ The Content Workflow Plugin let administrators create a precise process to follo
 
 **Installation**
 
-In order to install the Content Workflow Plugin, you should to insert the following dependency in the pom.xml file of your project:
+In order to install the Content Workflow Plugin, you must insert the following dependency in the pom.xml file of your project:
 
 ```
 <dependency>
