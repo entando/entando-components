@@ -56,6 +56,17 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+					<include>**/*.xsd</include>
+                    <include>**/*.txt</include>
+				</includes>
+			</resource>
+        </resources>
     </build>
 
     <dependencies>
