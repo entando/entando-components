@@ -1,9 +1,11 @@
 nb-configuration.xml
+nbactions.xml
 target
 derby.log
 plugins/entando-plugin-*/target/
 plugins/entando-plugin-*/nb-configuration.xml
 plugins/entando-plugin-*/derby.log
+plugins/entando-plugin-*/nbactions.xml
 
 .classpath
 .project

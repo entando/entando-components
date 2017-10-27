@@ -62,7 +62,7 @@
 		<test.database.password>agile</test.database.password>
 		<test.database.port.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testPort;create=true</test.database.port.url>
 		<test.database.serv.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testServ;create=true</test.database.serv.url>
-		
+
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<struts2.version>2.5.10.1</struts2.version>
 		<cxf.version>2.7.14</cxf.version>
@@ -98,6 +98,7 @@
 					<include>**/*.properties</include>
 					<include>**/*.xml</include>
 					<include>**/*.xsd</include>
+                    <include>**/*.txt</include>
 				</includes>
 			</resource>
 			<resource>
@@ -222,7 +223,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>

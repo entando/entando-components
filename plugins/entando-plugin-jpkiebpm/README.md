@@ -4,7 +4,7 @@
 
 **Description**
 
-This plugin connects to the KIE server to display the form and human tasks of a process of choice. It is also possible
+This plugin connects to a given KIE server to display the form and human tasks of a process of choice. It is also possible
 display the schema of the process as a image.
 Plase note that this plugin does not exchange data directly with the BPM; everything happens through the KIE server.
 
@@ -21,5 +21,5 @@ In order to install the KIE BPM plugin, you must insert the following dependency
 </dependency>
 ```
 
-The project *must* be generated with the (Inspinia archetype)[https://github.com/entando/entando-archetypes]
+The project *must* be generated with the [Inspinia archetype](https://github.com/entando/entando-archetypes)
 
