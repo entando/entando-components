@@ -2,12 +2,12 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jpki
 '<?xml version="1.0" encoding="UTF-8"?>
 <kieBpmConfig>
    <active>false</active>
-   <username>USERNAME</username>
-   <password>PASSWORD</password>
-   <hostname>HOSTNAME</hostname>
+   <username></username>
+   <password></password>
+   <hostname></hostname>
    <schema>http</schema>
    <port>8080</port>
-   <webapp>kie</webapp>
+   <webapp>kie-server</webapp>
 </kieBpmConfig>');
 
 INSERT INTO widgetcatalog VALUES ('bpm-datatype-form', '<?xml version="1.0" encoding="UTF-8"?>
