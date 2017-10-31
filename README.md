@@ -21,14 +21,14 @@ The Entando components project, based on Apache Maven, is organized in two modul
     * CAS Client
     * Calendar
     * Cms Tag Cloud
-	* Collaboration
+    * Collaboration
     * Content Feedback
     * Content Scheduler
     * Content Versioning
     * Content Workflow
     * Email Sender
     * Faceted Navigation
-	* Georeferenced Content
+    * Georeferenced Content
     * LDAP Connector
     * Newsletter
     * RSS
@@ -37,7 +37,7 @@ The Entando components project, based on Apache Maven, is organized in two modul
     * Token API
     * User Registration
     * Web Dynamic Form
-	* Widget Utils
+    * Widget Utils
 
 2. ```ui-bundles``` module, including all Bundles. The following is a list of main bundles released with ```entando-core``` version 4.3.2-SNAPSHOT:
 
@@ -72,14 +72,11 @@ The Entando components project, based on Apache Maven, is organized in two modul
 To create a new Entando component, for example a new Plugin, you have to use the Entando archetype for plugin: https://github.com/entando/entando-archetypes.
 
 Entando core and Entando archetypes are Open Source projects; more information about them can be found respectively in 
-https://github.com/entando/entando-core and 
-https://github.com/entando/entando-archetypes.
+https://github.com/entando/entando-core and https://github.com/entando/entando-archetypes.
 
 For latest updated news, please visit the company websites: http://www.entando.com.
 
 Entando Components is released under [MIT license](https://opensource.org/licenses/MIT) v2.1.
-
-For any support request, please use [Twitter](https://twitter.com/Entando).
 
 Enjoy!
 
