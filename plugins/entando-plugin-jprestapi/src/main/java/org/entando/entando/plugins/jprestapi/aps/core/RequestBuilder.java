@@ -48,19 +48,9 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class RequestBuilder implements IRequestBuilder {
 
-    protected Endpoint _endpopoint;
-    protected IAuthenticationCredentials _credentials;
-    protected Map<String, String> _headers = new HashMap<String, String>();
-    protected Map<String, String> _requestParams = new HashMap<String, String>();
-    protected boolean _execute = true;
-    protected boolean _hasRoot = false;
-    protected boolean _isJson = true;
-    protected boolean _debug = false;
-    protected List<String> _path = new ArrayList<String>();
-    protected DefaultHttpClient _httpClient;
-    protected String _payload;
-    protected IRestInvocation _intercept;
     private static final Logger logger = LoggerFactory.getLogger(RequestBuilder.class);
+
+
     /**
      * Common request seup. This method is invoked before every request.
      *
@@ -71,6 +61,8 @@ public abstract class RequestBuilder implements IRequestBuilder {
     /**
      * Common client setup. This method is invoked before every request when no
      * authentication is required
+     *
+     * @return
      */
     protected DefaultHttpClient setupClient() {
         return new DefaultHttpClient();
@@ -80,12 +72,24 @@ public abstract class RequestBuilder implements IRequestBuilder {
      * Common autenticathed client setup. This method is invoked before every request
      * whenever the endpoint requires authentication.
      *
-     * @return
      * @note For backward compatibility this method invokes the default
      * 'setuClient' method
+     *
+     * @return
      */
     protected DefaultHttpClient setupAuthenticationClient() {
         return setupClient();
+    }
+
+
+    /**
+     * This method gets invoked when no timeout has been specified for
+     * the single connection
+     *
+     * @param client
+     */
+    protected void setupOverallConnectionTimeout(DefaultHttpClient client) {
+        // do nothing by default
     }
 
     @Override
@@ -145,6 +149,14 @@ public abstract class RequestBuilder implements IRequestBuilder {
         if (null != path
                 && !"".equals(path.trim())) {
             _path.add(path.trim());
+        }
+        return this;
+    }
+
+    @Override
+    public RequestBuilder setTimeout(Integer timeout) {
+        if (null != timeout) {
+            _timeout = timeout;
         }
         return this;
     }
@@ -281,14 +293,25 @@ public abstract class RequestBuilder implements IRequestBuilder {
     }
 
     /**
+     * Setup desired timeout value; if none present call
+     * setupOverallConnectionTimeout()
+     */
+    protected void setupConnectionTimeout() {
+        if (null != _timeout) {
+            _httpClient.getParams()
+                    .setIntParameter("http.connection.timeout", _timeout);
+        } else {
+            setupOverallConnectionTimeout(_httpClient);
+        }
+    }
+
+    /**
      * Close the connection to the client
      *
      * @throws Throwable
      */
     protected void close() throws Throwable {
-        if (null != _httpClient) {
-
-        }
+        _verb.releaseConnection();
     }
 
     /**
@@ -298,51 +321,51 @@ public abstract class RequestBuilder implements IRequestBuilder {
      * @throws Throwable
      */
     protected HttpResponse executeRequest() throws Throwable {
-        HttpRequestBase verb = null;
         HttpResponse response = null;
 
         _httpClient = _endpopoint.isAuthenticate() ? setupAuthenticationClient()
                 : setupClient();
         if (null != _endpopoint) {
+            setupConnectionTimeout();
             if (null != _endpopoint.getVerb()) {
                 String endpoint = _endpopoint.getUrl();
 
                 switch (_endpopoint.getVerb()) {
                     case POST:
-                        verb = new HttpPost(endpoint);
-                        appendPayload(verb);
+                        _verb = new HttpPost(endpoint);
+                        appendPayload(_verb);
                         break;
                     case PUT:
-                        verb = new HttpPut(endpoint);
-                        appendPayload(verb);
+                        _verb = new HttpPut(endpoint);
+                        appendPayload(_verb);
                         break;
                     case DELETE:
-                        verb = new HttpDelete(endpoint);
+                        _verb = new HttpDelete(endpoint);
                         break;
                     case GET:
                     default:
-                        verb = new HttpGet(endpoint);
+                        _verb = new HttpGet(endpoint);
                         break;
                 }
             }
         }
         // headers
-        injectHeaders(verb);
+        injectHeaders(_verb);
         // append custom path
-        appendPath(verb);
+        appendPath(_verb);
         // other parameters
-        injectParameters(verb);
+        injectParameters(_verb);
         // finally
-        if (null != verb) {
-            verb.releaseConnection();
+        if (null != _verb) {
+            _verb.releaseConnection();
         }
         // track request
-        trackRequest(verb);
+        trackRequest(_verb);
         if (_debug) {
-            logger.info("request line: {}",verb.getRequestLine());
+            logger.info("request line: {}", _verb.getRequestLine());
         }
         if (_execute) {
-            response = _httpClient.execute(verb);
+            response = _httpClient.execute(_verb);
             // track response
             trackResponse(response);
         }
@@ -394,7 +417,7 @@ public abstract class RequestBuilder implements IRequestBuilder {
                 ss = new StreamSource(ris);
             } else {
                 String responseBody = IOUtils.toString(ris, "UTF-8");
-                logger.info("returned body:\n{}",responseBody);
+                logger.info("returned body:\n{}", responseBody);
                 ss = new StreamSource(new java.io.StringReader(responseBody));
             }
             if (null != expected && null != ris) {
@@ -417,7 +440,7 @@ public abstract class RequestBuilder implements IRequestBuilder {
 
             responseBody = IOUtils.toString(ris, "UTF-8");
             if (_debug) {
-                logger.info("returned body: {}",responseBody);
+                logger.info("returned body:\n{}", responseBody);
             }
             // finally
             close();
@@ -425,5 +448,23 @@ public abstract class RequestBuilder implements IRequestBuilder {
         return responseBody;
     }
 
+    // common objects for
+    protected DefaultHttpClient _httpClient;
+    protected HttpRequestBase _verb;
 
+    // Objects of the builder pattern
+    protected Endpoint _endpopoint;
+    protected IAuthenticationCredentials _credentials;
+    protected Map<String, String> _headers = new HashMap<String, String>();
+    protected Map<String, String> _requestParams = new HashMap<String, String>();
+    protected boolean _execute = true;
+    protected boolean _hasRoot = false;
+    protected boolean _isJson = true;
+    protected boolean _debug = false;
+    protected List<String> _path = new ArrayList<String>();
+    protected String _payload;
+    protected IRestInvocation _intercept;
+    protected Integer _timeout;
+
+    public final static String PARAM_TIMEOUT = "http.connection.timeout";
 }
