@@ -12,5 +12,5 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 </div>
 </form>', 1);
 
-INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESSF_SEARCH', 'en', 'Search for something ...');
-INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESSF_SEARCH', 'it', 'Cerca qualcosa ...');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESSF_SEARCH_I', 'en', 'Search for something ...');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESSF_SEARCH_I', 'it', 'Cerca qualcosa ...');
