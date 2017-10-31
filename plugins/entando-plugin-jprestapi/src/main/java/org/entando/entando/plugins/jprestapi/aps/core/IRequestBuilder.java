@@ -107,4 +107,12 @@ interface IRequestBuilder {
    */
   public String doRequest() throws Throwable;
 
+
+  /**
+   * Impose timeout on connection
+   *
+   * @param timeout
+   * @return
+   */
+  public RequestBuilder setTimeout(Integer timeout);
 }
