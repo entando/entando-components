@@ -8,6 +8,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jpki
    <schema>http</schema>
    <port>8080</port>
    <webapp>kie</webapp>
+   <timeout>300</timeout>
 </kieBpmConfig>');
 
 INSERT INTO widgetcatalog VALUES ('bpm-datatype-form', '<?xml version="1.0" encoding="UTF-8"?>

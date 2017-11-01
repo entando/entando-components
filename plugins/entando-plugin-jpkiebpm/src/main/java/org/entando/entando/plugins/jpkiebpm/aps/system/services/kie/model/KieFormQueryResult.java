@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Entando
  */
+@Deprecated
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KieFormQueryResult {

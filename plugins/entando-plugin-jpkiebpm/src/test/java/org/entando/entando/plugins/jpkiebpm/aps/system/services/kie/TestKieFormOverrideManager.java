@@ -13,9 +13,9 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import org.entando.entando.plugins.jpkiebpm.aps.ApsPluginBaseTestCase;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormManager.createDefaultOverrideForTest;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormManager.createOverrideListForTests;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormManager.createPlaceholderOverrideForTest;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortageDemoTest.createDefaultOverrideForTest;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortageDemoTest.createOverrideListForTests;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortageDemoTest.createPlaceholderOverrideForTest;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DropDownOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.IBpmOverride;
@@ -40,7 +40,7 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
         // do nothing
     }
 
-    public void testInsertReload() throws ApsSystemException {
+    public void testInsertReload() throws ApsSystemException, Throwable {
         KieFormOverride kfo
                 = new KieFormOverride();
         String containerId = "containerId";
@@ -57,13 +57,14 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
             kfo.setOverrides(ol);
             kfo.setProcessId(processId);
 
+            Thread.sleep(500);
             _overrideManager.addKieFormOverride(kfo);
             assertFalse(kfo.getId() == 0);
             KieFormOverride ver = _overrideManager.getKieFormOverride(kfo.getId());
             assertNotNull(ver);
             assertNotSame(kfo, ver);
             assertEquals(containerId, ver.getContainerId());
-            assertTrue(now.equals(ver.getDate())); // date updated on every update
+            assertTrue(now.before(ver.getDate())); // date updated on every update
             assertEquals(formField, ver.getField());
             assertEquals(processId, ver.getProcessId());
             assertNotNull(ver.getOverrides());
@@ -93,6 +94,8 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
                         || value.equals(VAL2)
                 );
             }
+        } catch (Throwable t) {
+            throw t;
         } finally {
             _overrideManager.deleteKieFormOverride(kfo.getId());
         }

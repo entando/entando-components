@@ -327,9 +327,9 @@ public class FormToBpmHelper {
                 || null == json) {
             return;
         }
-        if (null != form.getForms()
-                && !form.getForms().isEmpty()) {
-            for (KieProcessFormQueryResult subForm : form.getForms()) {
+        if (null != form.getNestedForms()
+                && !form.getNestedForms().isEmpty()) {
+            for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
                 JSONObject subJson = new JSONObject();
 
                 modelForm2Json(subForm, input, subJson);
@@ -377,9 +377,9 @@ public class FormToBpmHelper {
                 || null == input) {
             return;
         }
-        if (null != form.getForms()
-                && !form.getForms().isEmpty()) {
-            for (KieProcessFormQueryResult subForm : form.getForms()) {
+        if (null != form.getNestedForms()
+                && !form.getNestedForms().isEmpty()) {
+            for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
                 JSONObject subJson = new JSONObject();
 
                 modelForm2Json(subForm, data, input, subJson);

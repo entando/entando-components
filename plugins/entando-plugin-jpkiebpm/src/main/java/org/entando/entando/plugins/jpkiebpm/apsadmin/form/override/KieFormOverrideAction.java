@@ -259,8 +259,8 @@ public class KieFormOverrideAction extends BaseAction {
 			for (KieProcessFormField kieProcessFormField : form.getFields()) {
 				fileds.add(kieProcessFormField);
 			}
-			if (null != form.getForms()) {
-				for (KieProcessFormQueryResult subForm : form.getForms()) {
+			if (null != form.getNestedForms()) {
+				for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
 					this.addFileds(subForm, fileds);
 				}
 			}

@@ -25,13 +25,12 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.HEADER_VALUE_JSON;
 import org.entando.entando.plugins.jprestapi.aps.core.RequestBuilder;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.RequestHelper;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.HEADER_KEY_ACCEPT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -39,14 +38,17 @@ import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConsta
  */
 public class KieRequestBuilder extends RequestBuilder {
 
+    private static final Logger _logger = LoggerFactory.getLogger(KieRequestBuilder.class);
+
+
     public KieRequestBuilder(KieClient client) {
-        this._client = client;
+        this._configClient = client;
     }
 
     @Override
     protected void setupRequest(HttpRequestBase verb) throws Throwable {
         // process evaluation URL
-        RequestHelper.addBaseUrl(verb, _client.getBaseUrl());
+        RequestHelper.addBaseUrl(verb, _configClient.getBaseUrl());
         // headers are set on single mothod basis
     }
 
@@ -62,8 +64,8 @@ public class KieRequestBuilder extends RequestBuilder {
         DefaultHttpClient httpclient = new DefaultHttpClient();
 
         // basic authentication
-        String username = _client.getCredentials().getUsername();
-        String password = _client.getCredentials().getPassword();
+        String username = _configClient.getCredentials().getUsername();
+        String password = _configClient.getCredentials().getPassword();
         UsernamePasswordCredentials authCredentials = new UsernamePasswordCredentials(username, password);
 
         // TODO restrict host and scope!
@@ -72,6 +74,14 @@ public class KieRequestBuilder extends RequestBuilder {
         return httpclient;
     }
 
+    @Override
+    protected void setupOverallConnectionTimeout(DefaultHttpClient client) {
+        if (null != _configClient.getTimeoutMsec()) {
+            client.getParams().setIntParameter(PARAM_TIMEOUT,
+                    _configClient.getTimeoutMsec());
+        }
+    }
 
-    private final KieClient _client;
+
+    private final KieClient _configClient;
 }

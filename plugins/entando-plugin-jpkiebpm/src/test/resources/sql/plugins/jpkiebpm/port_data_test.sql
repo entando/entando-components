@@ -8,4 +8,5 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_c
    <schema>https</schema>
    <port>443</port>
    <webapp>kie</webapp>
+    <timeout>2677</timeout>
 </kieBpmConfig>');

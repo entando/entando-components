@@ -58,6 +58,8 @@ public interface KieBpmSystemConstants {
 	public final static String API_GET_DATA_HUMAN_TASK = "API_GET_DATA_HUMAN_TASK";
 	public final static String API_GET_DATA_HUMAN_TASK_DETAIL = "API_GET_DATA_HUMAN_TASK_DETAIL";
 	public final static String API_PUT_HUMAN_TASK = "API_PUT_HUMAN_TASK";
+    public final static String API_POST_SIGNAL = "API_POST_SIGNAL";
+
 
 	public static final String WIDGET_PARAM_DATA_TYPE_CODE = "dataTypeCode";
 	public static final String WIDGET_PARAM_DATA_UX_ID = "dataUxId";

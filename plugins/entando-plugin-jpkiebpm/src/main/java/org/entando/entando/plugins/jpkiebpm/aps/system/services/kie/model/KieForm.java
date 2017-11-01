@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Entando
  */
+// FIXME get rid of this if possible!!!!
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KieForm {

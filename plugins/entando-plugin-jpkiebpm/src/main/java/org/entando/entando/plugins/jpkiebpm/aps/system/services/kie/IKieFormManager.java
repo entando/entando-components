@@ -85,6 +85,7 @@ public interface IKieFormManager {
 	/**
 	 * Get the list of human task
 	 *
+     * @param groups
 	 * @param page
 	 * @param pageSize
 	 * @return
@@ -150,12 +151,13 @@ public interface IKieFormManager {
 	/**
 	 *
 	 * @param containerId
+     * @param processId
 	 * @param taskId
 	 * @param input
 	 * @return
 	 * @throws ApsSystemException
 	 */
-	public String completeHumanFormTask(final String containerId, final long taskId, final Map<String, String> input) throws ApsSystemException;
+	public String completeHumanFormTask(final String containerId, final String processId, final long taskId, final Map<String, String> input) throws ApsSystemException;
 
 	/**
 	 *
@@ -168,10 +170,40 @@ public interface IKieFormManager {
 	 * @return
 	 * @throws ApsSystemException
 	 */
-	String completeHumanFormTask(final String containerId, final long taskId, final KieProcessFormQueryResult form, final JSONObject task, final Map<String, Object> input)
+	public String completeHumanFormTask(final String containerId, final long taskId, final KieProcessFormQueryResult form, final JSONObject task, final Map<String, Object> input)
 			throws ApsSystemException;
 
+    /**
+     * Get a specific human task
+     * FIXME check whether there is already a specific call for this
+     *
+     *
+     * @param processId
+     * @return
+     * @throws ApsSystemException
+     */
 	KieTask getHumanTask(String processId) throws ApsSystemException;
 
+    /**
+     * @Deprecated
+     *
+     * @param containerId
+     * @param taskId
+     * @return
+     * @throws ApsSystemException
+     */
 	KieTaskDetail getTaskDetail(final String containerId, final Long taskId) throws ApsSystemException;
+
+    /**
+     *
+     *
+     * @param containerId
+     * @param processId
+     * @param signal
+     * @param accountId
+     * @param opt
+     * @return
+     * @throws ApsSystemException
+     */
+    public boolean sendSignal(final String containerId, final String processId, final String signal, String accountId, Map<String, String> opt) throws ApsSystemException;
 }

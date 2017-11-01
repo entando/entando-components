@@ -242,7 +242,7 @@ public class ApiTaskInterface extends KieApiManager {
             input.put(field.getName().replace(KieApiField.FIELD_NAME_PREFIX, ""), field.getValue());
         }
 
-        final String result = this.getKieFormManager().completeHumanFormTask(containerId, Long.valueOf(taskId), input);
+        final String result = this.getKieFormManager().completeHumanFormTask(containerId, "com.redhat.bpms.examples.mortgage.MortgageApplication", Long.valueOf(taskId), input);
         logger.info("Result {} ", result);
 
     }

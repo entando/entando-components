@@ -133,8 +133,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             for (KieProcessFormField field : form.getFields()) {
                 this.addAttributeToEntityType(entityType, field);
             }
-            if (null != form.getForms()) {
-                for (KieProcessFormQueryResult subForm : form.getForms()) {
+            if (null != form.getNestedForms()) {
+                for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
                     this.addAttributesToEntityType(entityType, subForm);
                 }
             }
@@ -347,8 +347,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             for (KieProcessFormField kieProcessFormField : form.getFields()) {
                 fileds.add(kieProcessFormField);
             }
-            if (null != form.getForms()) {
-                for (KieProcessFormQueryResult subForm : form.getForms()) {
+            if (null != form.getNestedForms()) {
+                for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
                     this.addFileds(subForm, fileds);
                 }
             }

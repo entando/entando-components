@@ -116,8 +116,8 @@ public class BpmToFormHelper {
         if (null == form) {
             return map;
         }
-        if (null != form.getForms()) {
-            for (KieProcessFormQueryResult subForm : form.getForms()) {
+        if (null != form.getNestedForms()) {
+            for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
                 map = getParamersMap(map, subForm);
             }
         }
@@ -183,9 +183,9 @@ public class BpmToFormHelper {
         if (null == form) {
             return result;
         }
-        if (null != form.getForms()
+        if (null != form.getNestedForms()
                 && null == result) {
-            for (KieProcessFormQueryResult subForm : form.getForms()) {
+            for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
                 result = getFormField(result, subForm, name);
             }
         }
@@ -256,8 +256,8 @@ public class BpmToFormHelper {
      * @throws Throwable
      */
     public static void collectHumanTaskdata(final KieProcessFormQueryResult form, Map<String, String> result) throws Throwable {
-        if (null != form.getForms()) {
-            for (KieProcessFormQueryResult innerForm : form.getForms()) {
+        if (null != form.getNestedForms()) {
+            for (KieProcessFormQueryResult innerForm : form.getNestedForms()) {
                 collectHumanTaskdata(innerForm, result);
             }
         }
@@ -300,9 +300,9 @@ public class BpmToFormHelper {
                 || null == data) {
             return;
         }
-        if (null != form.getForms()
-                && !form.getForms().isEmpty()) {
-            for (KieProcessFormQueryResult subForm : form.getForms()) {
+        if (null != form.getNestedForms()
+                && !form.getNestedForms().isEmpty()) {
+            for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
                 getHumanTaskFormData(subForm, data, result);
             }
         }

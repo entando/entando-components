@@ -166,8 +166,8 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             for (final KieProcessFormField field : form.getFields()) {
                 processField(field, langCode);
             }
-            if (null != form.getForms()) {
-                for (KieProcessFormQueryResult subForm : form.getForms()) {
+            if (null != form.getNestedForms()) {
+                for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
                     this.setLabels(subForm, langCode);
                 }
             }

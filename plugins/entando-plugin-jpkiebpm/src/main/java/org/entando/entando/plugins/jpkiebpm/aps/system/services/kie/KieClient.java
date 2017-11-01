@@ -100,10 +100,19 @@ public class KieClient extends IClient {
         this._webapp = webapp;
     }
 
+    public Integer getTimeoutMsec() {
+        return _timeoutMsec;
+    }
+
+    public void setTimeoutMsec(Integer timeoutMsec) {
+        this._timeoutMsec = timeoutMsec;
+    }
+
     private KIEAuthenticationCredentials _credentials;
     private String _hostname;
     private String _schema = DEFAULT_SCHEMA;
     private int _port = DEFAULT_POSRT;
     private String _webapp;
+    private Integer _timeoutMsec;
 
 }
