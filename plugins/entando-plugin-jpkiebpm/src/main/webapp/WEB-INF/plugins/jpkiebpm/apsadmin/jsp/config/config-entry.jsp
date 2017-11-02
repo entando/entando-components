@@ -122,6 +122,14 @@
                     <wpsf:textfield name="password" id="password" cssClass="form-control" />
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-xs-2 control-label ">
+                    <label for="password"><s:text name="label.timeout" /></label>
+                </div>
+                <div class="col-xs-10 ">
+                    <wpsf:textfield name="timeout" id="timeout" cssClass="form-control" />
+                </div>
+            </div>
         </fieldset>
         <div class="col-xs-12">
             <wpsf:submit name="save" type="button" action="save" cssClass="btn btn-primary pull-right">
