@@ -1,6 +1,6 @@
 package org.entando.entando.plugins.jpkiebpm;
 
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortageDemoTest;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortgageDemoTest;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestBpmToFormHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestFormToBpmHelper;

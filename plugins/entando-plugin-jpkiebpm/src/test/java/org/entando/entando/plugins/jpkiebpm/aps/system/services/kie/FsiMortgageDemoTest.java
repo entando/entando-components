@@ -23,8 +23,16 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TEST_ENABLED;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.TestKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 
 /**
  *
@@ -58,15 +66,36 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             String containerId = makeSureContainerListExists();
             Long processId = makeSureProcessInstancesListExists();
 
-            System.out.println(">>> cId " + containerId);
-            System.out.println(">>> pId " + processId);
-
 
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
 
             boolean delivered = _formManager.sendSignal(containerId, String.valueOf(processId), SIGNAL, "\"ddoyle\"", null);
             assertTrue(delivered);
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            _formManager.updateConfig(current);
+        }
+    }
+
+    public void testHumanTaskList() throws Throwable {
+        KieBpmConfig current = _formManager.getConfig();
+        Map<String, String> opt = new HashMap<String, String>();
+
+        opt.put("user", "ddoyle");
+
+        try {
+            // update configuration to reflect test configuration
+            _formManager.updateConfig(getConfigForTests());
+            // invoke the manager
+            List<KieTask> list = _formManager.getHumanTaskList("", 0, 10, opt);
+            assertNotNull(list);
+            if (TEST_ENABLED) {
+                assertFalse(list.isEmpty());
+            } else {
+                assertTrue(list.isEmpty());
+            }
         } catch (Throwable t) {
             throw t;
         } finally {

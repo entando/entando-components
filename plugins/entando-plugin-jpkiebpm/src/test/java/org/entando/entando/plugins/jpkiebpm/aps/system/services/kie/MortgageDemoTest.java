@@ -53,7 +53,7 @@ import org.json.JSONObject;
  *
  * @author Entando
  */
-public class MortageDemoTest extends ApsPluginBaseTestCase implements KieTestParameters {
+public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestParameters {
 
     @Override
     public void setUp() throws Exception {
@@ -78,11 +78,14 @@ public class MortageDemoTest extends ApsPluginBaseTestCase implements KieTestPar
     public void testHumanTaskList() throws Throwable {
         KieBpmConfig current = _formManager.getConfig();
 
+        if (!TEST_ENABLED) {
+            return;
+        }
         try {
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // invoke the manager
-            List<KieTask> list = _formManager.getHumanTaskList("", 1, 10);
+            List<KieTask> list = _formManager.getHumanTaskList("", 1, 10, null);
             assertNotNull(list);
             if (TEST_ENABLED) {
                 assertFalse(list.isEmpty());
@@ -99,10 +102,10 @@ public class MortageDemoTest extends ApsPluginBaseTestCase implements KieTestPar
     public void testGetProcInstDiagramImage() throws Throwable {
         KieBpmConfig current = _formManager.getConfig();
 
+        if (!TEST_ENABLED) {
+            return;
+        }
         try {
-            if (!TEST_ENABLED) {
-                return;
-            }
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // invoke the manager
@@ -119,14 +122,14 @@ public class MortageDemoTest extends ApsPluginBaseTestCase implements KieTestPar
     public void testGetTaskForm() throws Throwable {
         KieBpmConfig current = _formManager.getConfig();
 
+        if (!TEST_ENABLED) {
+            return;
+        }
         try {
-            if (!TEST_ENABLED) {
-                return;
-            }
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // invoke the manager
-            List<KieTask> tasks = _formManager.getHumanTaskList("", 1, 10);
+            List<KieTask> tasks = _formManager.getHumanTaskList("", 1, 10, null);
             assertNotNull(tasks);
             assertFalse(tasks.isEmpty());
             KieTask task = tasks.get(0);
@@ -174,10 +177,11 @@ public class MortageDemoTest extends ApsPluginBaseTestCase implements KieTestPar
         KieBpmConfig current = _formManager.getConfig();
         KieFormOverride kfo1 = new KieFormOverride();
         KieFormOverride kfo2 = new KieFormOverride();
+
+        if (!TEST_ENABLED) {
+            return;
+        }
         try {
-            if (!TEST_ENABLED) {
-                return;
-            }
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             Date now = new Date();
@@ -288,7 +292,7 @@ public class MortageDemoTest extends ApsPluginBaseTestCase implements KieTestPar
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // invoke the manager
-            List<KieTask> tasks = _formManager.getHumanTaskList(null, 1, 10);
+            List<KieTask> tasks = _formManager.getHumanTaskList(null, 1, 10, null);
             assertNotNull(tasks);
             assertFalse(tasks.isEmpty());
             KieTask task = tasks.get(0);
@@ -378,7 +382,7 @@ public class MortageDemoTest extends ApsPluginBaseTestCase implements KieTestPar
             String processId = _formManager.startProcessSubmittingForm(TARGET_CONTAINER_ID, TARGET_PROCESS_ID, input);
             if (TEST_ENABLED) {
                 assertNotNull(processId);
-                //                System.out.println("Process created: " + processId);
+//                System.out.println("Process created: " + processId);
             } else {
                 assertNull(processId);
             }

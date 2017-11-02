@@ -182,7 +182,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public List<KieTask> getHumanTaskList(String groups, int page, int pageSize) throws ApsSystemException {
+    public List<KieTask> getHumanTaskList(String groups, int page, int pageSize, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
         List<KieTask> list = new ArrayList<>();
 
@@ -190,6 +190,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return list;
         }
         try {
+            // WTF?!?!?
             if (pageSize == 0) {
                 pageSize = 2000;
             }
@@ -203,6 +204,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieTaskQueryResult result = (KieTaskQueryResult) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
+                    .setRequestParams(opt)
                     .setDebug(true)
                     .doRequest(KieTaskQueryResult.class);
             // unfold returned object to get the payload
@@ -488,7 +490,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public KieTask getHumanTask(String processId) throws ApsSystemException {
         KieTask task = null;
         //TODO pagination
-        List<KieTask> tasks = this.getHumanTaskList(null, 0, 5000);
+        List<KieTask> tasks = this.getHumanTaskList(null, 0, 5000, null);
         if (null != tasks && !tasks.isEmpty()) {
             for (KieTask elem : tasks) {
                 if (elem.getProcessInstanceId().equals(Long.valueOf(processId))) {
