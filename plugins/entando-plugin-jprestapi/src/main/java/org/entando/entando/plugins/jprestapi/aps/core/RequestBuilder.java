@@ -438,9 +438,15 @@ public abstract class RequestBuilder implements IRequestBuilder {
         if (_execute) {
             InputStream ris = checkResponse(response);
 
-            responseBody = IOUtils.toString(ris, "UTF-8");
-            if (_debug) {
-                logger.info("returned body:\n{}", responseBody);
+            if (null != ris) {
+                responseBody = IOUtils.toString(ris, "UTF-8");
+                if (_debug) {
+                    logger.info("returned body:\n{}", responseBody);
+                }
+            } else if (_debug) {
+                logger.info("no payload returned by the server");
+            } else {
+                // no operation
             }
             // finally
             close();
