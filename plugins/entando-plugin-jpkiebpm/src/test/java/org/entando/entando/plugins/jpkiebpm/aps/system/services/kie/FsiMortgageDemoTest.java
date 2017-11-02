@@ -65,8 +65,6 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
         try {
             String containerId = makeSureContainerListExists();
             Long processId = makeSureProcessInstancesListExists();
-
-
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
 
@@ -96,6 +94,24 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             } else {
                 assertTrue(list.isEmpty());
             }
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            _formManager.updateConfig(current);
+        }
+    }
+
+    public void testProcessDelete() throws Throwable {
+        KieBpmConfig current = _formManager.getConfig();
+
+        try {
+            String containerId = makeSureContainerListExists();
+            Long processId = makeSureProcessInstancesListExists();
+            // update configuration to reflect test configuration
+            _formManager.updateConfig(getConfigForTests());
+            
+            // test
+            _formManager.deleteProcess(containerId, String.valueOf(processId), null);
         } catch (Throwable t) {
             throw t;
         } finally {

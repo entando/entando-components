@@ -66,6 +66,7 @@ public class KieEndpointDictionary {
         endpoints.put(API_GET_DATA_HUMAN_TASK_DETAIL, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/tasks/%s?withAssignments=true", HttpStatus.SC_OK, true));
         endpoints.put(API_PUT_HUMAN_TASK, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/tasks/%s/states/completed?auto-progress=true", HttpStatus.SC_CREATED, true));
         endpoints.put(API_POST_SIGNAL, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/containers/%s/processes/instances/%s/signal/%s", HttpStatus.SC_OK, true));
+        endpoints.put(API_DELETE_PROCESS, new Endpoint(IEndpoint.httpVerb.DELETE, "/services/rest/server/containers/%s/processes/instances/%s", HttpStatus.SC_NO_CONTENT, true));
 
     }
 
