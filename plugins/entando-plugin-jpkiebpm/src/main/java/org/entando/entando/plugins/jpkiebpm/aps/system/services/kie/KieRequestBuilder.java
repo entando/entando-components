@@ -20,7 +20,7 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
-*/
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import org.apache.http.auth.AuthScope;
@@ -69,9 +69,9 @@ public class KieRequestBuilder extends RequestBuilder {
         // TODO restrict host and scope!
         AuthScope authScope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT);
         httpclient.getCredentialsProvider().setCredentials(authScope, authCredentials);
+        httpclient.getParams().setIntParameter("http.connection.timeout", 500);
         return httpclient;
     }
-
 
     private final KieClient _client;
 }
