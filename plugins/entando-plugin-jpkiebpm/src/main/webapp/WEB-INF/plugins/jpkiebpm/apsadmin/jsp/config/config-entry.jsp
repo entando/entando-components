@@ -53,7 +53,36 @@
 <div class="mb-20">
 
     <s:form id="configurationForm" name="configurationForm" method="post" action="save" cssClass="form-horizontal">
-
+        <s:if test="hasActionErrors()">
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong><s:text name="message.title.ActionErrors" /></strong>
+                <ul class="margin-base-top">
+                    <s:iterator value="actionErrors">
+                        <li><s:property escapeHtml="false" /></li>
+                        </s:iterator>
+                </ul>
+            </div>
+        </s:if>
+        <s:if test="hasActionMessages()">
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <span class="pficon pficon-ok"></span>
+                <strong><s:text name="messages.confirm" /></strong>
+                <ul class="margin-base-top">
+                    <s:iterator value="actionMessages">
+                        <li>
+                            <s:property escapeHtml="false" />
+                        </li>
+                    </s:iterator>
+                </ul>
+            </div>
+        </s:if>
         <fieldset class="col-xs-12">
             <legend>
                 <s:text name="legend.generalSettings" />
@@ -78,7 +107,7 @@
                     <label for="hostName"><s:text name="label.hostName" /></label>
                 </div>
                 <div class="col-xs-10 ">
-                    <wpsf:textfield name="hostName" id="hostName" cssClass="form-control" />
+                    <wpsf:textfield name="hostName" id="hostName" cssClass="form-control" placeholder="hostName"/>
                 </div>
             </div>
             <div class="form-group">
@@ -111,7 +140,7 @@
                     <label for="userName"><s:text name="label.userName" /></label>
                 </div>
                 <div class="col-xs-10 ">
-                    <wpsf:textfield name="userName" id="userName" cssClass="form-control" />
+                    <wpsf:textfield name="userName" id="userName" cssClass="form-control"  placeholder="userName"/>
                 </div>
             </div>
             <div class="form-group">
@@ -119,7 +148,7 @@
                     <label for="password"><s:text name="label.password" /></label>
                 </div>
                 <div class="col-xs-10 ">
-                    <wpsf:textfield name="password" id="password" cssClass="form-control" />
+                    <wpsf:textfield name="password" id="password" cssClass="form-control" type="password" placeholder="password" />
                 </div>
             </div>
         </fieldset>

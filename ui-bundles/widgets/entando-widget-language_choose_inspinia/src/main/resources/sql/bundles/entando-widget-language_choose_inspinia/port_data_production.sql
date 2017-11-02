@@ -39,11 +39,11 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
     </@wp.freemarkerTemplateParameter>
 </ul>', 1);
 
-INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANGUAGE', 'en', 'Language');
-INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANGUAGE', 'it', 'Lingua');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANGUAGE_I', 'en', 'Language');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANGUAGE_I', 'it', 'Lingua');
 
-INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANG_it', 'en', 'Italiano');
-INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANG_it', 'it', 'Italiano');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANG_it_I', 'en', 'Italiano');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANG_it_I', 'it', 'Italiano');
 
-INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANG_en', 'en', 'English');
-INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANG_en', 'it', 'English');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANG_en_I', 'en', 'English');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ESLC_LANG_en_I', 'it', 'English');

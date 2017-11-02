@@ -68,6 +68,7 @@ public class KieEndpointDictionary {
         endpoints.put(API_POST_SIGNAL, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/containers/%s/processes/instances/%s/signal/%s", HttpStatus.SC_OK, true));
         endpoints.put(API_DELETE_PROCESS, new Endpoint(IEndpoint.httpVerb.DELETE, "/services/rest/server/containers/%s/processes/instances/%s", HttpStatus.SC_NO_CONTENT, true));
 
+        endpoints.put(API_GET_ALL_PROCESS_INSTANCES_LIST, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/queries/processes/instances", HttpStatus.SC_OK));
     }
 
     public static HashMap<String, Endpoint> create() {
