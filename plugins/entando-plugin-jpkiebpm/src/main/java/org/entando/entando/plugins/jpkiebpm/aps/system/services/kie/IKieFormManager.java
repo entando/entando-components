@@ -206,4 +206,25 @@ public interface IKieFormManager {
      * @throws ApsSystemException
      */
     public boolean sendSignal(final String containerId, final String processId, final String signal, String accountId, Map<String, String> opt) throws ApsSystemException;
+
+
+    /**
+     *
+     * @param containerId
+     * @param processId
+     * @param opt
+     * @throws ApsSystemException
+     */
+    public void deleteProcess(final String containerId, final String processId, Map<String, String> opt) throws ApsSystemException;
+
+
+    /**
+     *
+     * @param page
+     * @param pageSize
+     * @param opt
+     * @return
+     * @throws ApsSystemException
+     */
+    public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException;
 }

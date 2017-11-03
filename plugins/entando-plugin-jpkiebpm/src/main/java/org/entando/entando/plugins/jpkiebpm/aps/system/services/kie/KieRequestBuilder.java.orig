@@ -20,7 +20,7 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
-*/
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import org.apache.http.auth.AuthScope;
@@ -37,7 +37,9 @@ import org.slf4j.LoggerFactory;
  * @author Entando
  */
 public class KieRequestBuilder extends RequestBuilder {
+
     private static final Logger _logger = LoggerFactory.getLogger(KieRequestBuilder.class);
+
 
     public KieRequestBuilder(KieClient client) {
         this._configClient = client;
@@ -69,9 +71,11 @@ public class KieRequestBuilder extends RequestBuilder {
         // TODO restrict host and scope!
         AuthScope authScope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT);
         httpclient.getCredentialsProvider().setCredentials(authScope, authCredentials);
+        httpclient.getParams().setIntParameter("http.connection.timeout", 500);
         return httpclient;
     }
 
+<<<<<<< HEAD
     @Override
     protected void setupOverallConnectionTimeout(DefaultHttpClient client) {
         if (null != _configClient.getTimeoutMsec()) {
@@ -82,4 +86,7 @@ public class KieRequestBuilder extends RequestBuilder {
 
 
     private final KieClient _configClient;
+=======
+    private final KieClient _client;
+>>>>>>> master
 }

@@ -35,8 +35,6 @@ import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.HOSTNAME;
 import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.PASSWORD;
 import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.PORT;
 import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.SCHEMA;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TARGET_CONTAINER_ID;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TARGET_PROCESS_ID;
 import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TEST_ENABLED;
 import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TIMEOUT;
 import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.USERNAME;
@@ -248,6 +246,26 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
             } else {
                 assertNull(form);
             }
+        } finally {
+            _formManager.updateConfig(current);
+        }
+    }
+
+    public void testGetAllProcessInstancesList() throws Throwable {
+        KieBpmConfig current = _formManager.getConfig();
+
+        if (!TEST_ENABLED) {
+            return;
+        }
+        try {
+            // update configuration to reflect test configuration
+            _formManager.updateConfig(getConfigForTests());
+
+            List<KieProcessInstance> list = _formManager.getAllProcessInstancesList(0, 10, null);
+            assertNotNull(list);
+            assertFalse(list.isEmpty());
+        } catch (Throwable t) {
+            throw t;
         } finally {
             _formManager.updateConfig(current);
         }

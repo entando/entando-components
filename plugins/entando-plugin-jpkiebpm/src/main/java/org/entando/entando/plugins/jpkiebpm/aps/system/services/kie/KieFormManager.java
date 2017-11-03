@@ -508,7 +508,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .resolveParams(containerId, processId, signal);
             // generate client from the current configuration
             KieClient client = getCurrentClient();
-            // perform query
+            // add header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
             // perform query
@@ -522,6 +522,71 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return true;
         } catch (Throwable t) {
             throw new ApsSystemException("Error delivering signal", t);
+        }
+    }
+
+    /**
+     * Delete the desired process
+     *
+     * @param containerId
+     * @param processId
+     * @param opt
+     * @throws ApsSystemException
+     */
+    @Override
+    public void deleteProcess(final String containerId, final String processId, Map<String, String> opt) throws ApsSystemException {
+
+        if (!this.getConfig().getActive()
+                || StringUtils.isBlank(containerId)
+                || StringUtils.isBlank(processId)) {
+            return;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_DELETE_PROCESS)
+                    .resolveParams(containerId, processId);
+            // generate client from the current configuration
+            KieClient client = getCurrentClient();
+            // do request
+            String res = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setRequestParams(opt)
+                    .setDebug(true)
+                    .doRequest();
+        } catch (Throwable t) {
+            throw  new ApsSystemException("Error deleting process", t);
+        }
+    }
+
+
+    public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException {
+        Map<String, String> headersMap = new HashMap<String, String>();
+        List<KieProcessInstance> list = new ArrayList<KieProcessInstance>();
+
+        if (!this.getConfig().getActive()) {
+            return null;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create()
+                    .get(API_GET_ALL_PROCESS_INSTANCES_LIST);
+            // generate client from the current configuration
+            KieClient client = getCurrentClient();
+            // perform query
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            // perform query
+            KieProcessInstancesQueryResult result = (KieProcessInstancesQueryResult) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setDebug(true)
+                    .doRequest(KieProcessInstancesQueryResult.class);
+            // unfold returned object to get the payload
+            if (null != result && null != result.getInstances() && !result.getInstances().isEmpty()) {
+                list = result.getInstances();
+            }
+            return list;
+        } catch (Throwable t) {
+            throw  new ApsSystemException("Error getting the instances of all processes", t);
         }
     }
 

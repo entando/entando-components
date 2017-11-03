@@ -4,20 +4,25 @@
     "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-	
+
     <package name="jpkiebpm_do/jpkiebpm/Config" namespace="/do/jpkiebpm/Config" extends="entando-default">
 
-    	<action name="edit" class="jpkiebpmConfigAction" method="edit">
+        <action name="edit" class="jpkiebpmConfigAction" method="edit">
             <result type="tiles">admin.jpkiebpm.config.entry</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
-        
-    	<action name="save" class="jpkiebpmConfigAction" method="save">
+
+        <action name="save" class="jpkiebpmConfigAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.config.entry</result>
-            <result type="redirectAction">edit</result>
-        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <result type="chain">edit</result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
     </package>
-    
+
 </struts>
