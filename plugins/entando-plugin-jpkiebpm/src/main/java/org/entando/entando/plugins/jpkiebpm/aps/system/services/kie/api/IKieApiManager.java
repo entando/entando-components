@@ -28,6 +28,7 @@ import java.util.Properties;
 
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputForm;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
 
@@ -40,4 +41,6 @@ public interface IKieApiManager {
     List<KieProcessInstance> getProcessInstancesList(Properties properties) throws Throwable;
 
     void postSignal(KieApiSignal signal) throws Throwable;
+
+    void startNewProcess(KieApiProcessStart process) throws Throwable;
 }

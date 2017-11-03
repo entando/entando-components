@@ -44,6 +44,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
 
 /**
  * @author Entando
@@ -386,6 +388,86 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
+    public String startNewProcess(KieApiProcessStart process, Map<String, Object> input) throws ApsSystemException {
+        Map<String, String> headersMap = new HashMap<>();
+        String result = null;
+
+        if (!_config.getActive() || StringUtils.isBlank(process.getContainerId())
+                || StringUtils.isBlank(process.getProcessId()) || StringUtils.isBlank(process.getCorrelation())) {
+            return null;
+        }
+        try {
+            // generate payload
+            String payload = this.createPayloadFromObj(process);
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_POST_PROCESS_START)
+                    .resolveParams(process.getContainerId(), process.getProcessId(), process.getCorrelation());
+            // generate client from the current configuration
+            KieClient client = getCurrentClient();
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            // perform query
+            result = new KieRequestBuilder(client).setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setPayload(payload)
+                    .setDebug(true)
+                    //.setTestMode(true)
+                    .doRequest();
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error starting the process", t);
+        }
+        return result;
+    }
+
+    private String createPayloadFromObj(KieApiProcessStart process) {
+        JSONObject json = new JSONObject("{\n"
+                + "   \"client\":{\n"
+                + "      \"com.redhat.bpms.demo.fsi.onboarding.model.Client\":{\n"
+                + "         \"id\":null,\n"
+                + "         \"name\":\"Giovanni\",\n"
+                + "         \"country\":\"IT\",\n"
+                + "         \"type\":\"BIG_BUSINESS\",\n"
+                + "         \"bic\":\"998899888\",\n"
+                + "         \"relatedParties\":[\n"
+                + "            {\n"
+                + "               \"com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty\":{\n"
+                + "                  \"id\":null,\n"
+                + "                  \"relationship\":\"Consultant\",\n"
+                + "                  \"party\":{\n"
+                + "                     \"com.redhat.bpms.demo.fsi.onboarding.model.Party\":{\n"
+                + "                        \"id\":null,\n"
+                + "                        \"name\":\"Paco\",\n"
+                + "                        \"surname\":\"Add\",\n"
+                + "                        \"dateOfBirth\":1506590295001,\n"
+                + "                        \"ssn\":\"987654321\",\n"
+                + "                        \"email\": \"p.addeo@entando.com\"\n"
+                + "                     }\n"
+                + "                  }\n"
+                + "               }\n"
+                + "            }\n"
+                + "         ]\n"
+                + "      }\n"
+                + "   },\n"
+                + "   \"accountManager\": \"prakash\"\n"
+                + "}");
+        JSONObject party = json.getJSONArray("relatedParties").getJSONObject(0);
+        JsonHelper.replaceKey(party, "name", process.getPname());
+        JsonHelper.replaceKey(party, "surname", process.getPsurname());
+        JsonHelper.replaceKey(party, "dateOfBirth", process.getPdateOfBirth());
+        JsonHelper.replaceKey(party, "ssn", process.getPssn());
+        JsonHelper.replaceKey(party, "email", process.getPemail());
+        JsonHelper.replaceKey(party, "relationship", process.getPrelationship());
+        JsonHelper.replaceKey(json, "name", process.getCname());
+        JsonHelper.replaceKey(json, "country", process.getCountry());
+        JsonHelper.replaceKey(json, "type", process.getType());
+        JsonHelper.replaceKey(json, "bic", process.getBic());
+        JsonHelper.replaceKey(json, "accountManager", process.getAccountManager());
+        json.getJSONArray("relatedParties").put(0, party);
+        return json.toString();
+    }
+
+    @Override
     // FIXME use the new routines to generate the payload
     public String startProcessSubmittingForm(KieProcessFormQueryResult form, String containerId, String processId, Map<String, Object> input) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
@@ -554,10 +636,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setDebug(true)
                     .doRequest();
         } catch (Throwable t) {
-            throw  new ApsSystemException("Error deleting process", t);
+            throw new ApsSystemException("Error deleting process", t);
         }
     }
-
 
     public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<String, String>();
@@ -586,7 +667,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             }
             return list;
         } catch (Throwable t) {
-            throw  new ApsSystemException("Error getting the instances of all processes", t);
+            throw new ApsSystemException("Error getting the instances of all processes", t);
         }
     }
 
