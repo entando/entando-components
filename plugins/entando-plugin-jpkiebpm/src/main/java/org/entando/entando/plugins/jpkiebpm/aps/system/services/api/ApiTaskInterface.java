@@ -72,6 +72,10 @@ public class ApiTaskInterface extends KieApiManager {
         } catch (NumberFormatException e) {
             throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
         }
+        // WTF?!?!?
+        if (pageSize == 0) {
+            pageSize = 2000;
+        }
         List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", page, pageSize, null);
         for (KieTask task : rawList) {
             if (id == task.getId()) {
@@ -84,7 +88,6 @@ public class ApiTaskInterface extends KieApiManager {
         }
         return resTask;
     }
-
 
     public String getDiagram(Properties properties) {
         final String configId = properties.getProperty("configId");
@@ -184,7 +187,7 @@ public class ApiTaskInterface extends KieApiManager {
     private void setElementList(final ApsProperties config, final JAXBTaskList taskList) throws ApsSystemException {
         final String groups = "groups=" + config.getProperty("groups").replace(" ", "").replace(",", "&groups=");
         final List<JAXBTask> list = new ArrayList<>();
-        final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(groups, 0, 0, null);
+        final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(groups, 0, 2000, null);
         for (final KieTask task : rawList) {
             list.add(new JAXBTask(task));
         }
@@ -201,7 +204,6 @@ public class ApiTaskInterface extends KieApiManager {
         }
         return taskDetail;
     }
-
 
     public KieApiForm getTaskForm(Properties properties) throws Throwable {
         String containerId = properties.getProperty("containerId");

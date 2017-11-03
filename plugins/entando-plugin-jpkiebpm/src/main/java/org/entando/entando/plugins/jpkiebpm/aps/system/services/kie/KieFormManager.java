@@ -43,7 +43,6 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 
-
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 
 /**
@@ -190,10 +189,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return list;
         }
         try {
-            // WTF?!?!?
-            if (pageSize == 0) {
-                pageSize = 2000;
-            }
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_HUMAN_TASK_LIST).resolveParams(page, pageSize);
             // generate client from the current configuration
@@ -216,7 +211,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return list;
     }
-
 
     @Override
     @Deprecated
@@ -246,7 +240,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return new KieTaskDetail();
     }
-
 
     @Override
     public String getProcInstDiagramImage(String containerId, String processId) throws ApsSystemException {
@@ -323,7 +316,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return json;
     }
-
 
     @Override
     // This uses XML unmarshaling
@@ -416,8 +408,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-//                  .setDebug(true)
-//                  .setTestMode(true)
+                    //                  .setDebug(true)
+                    //                  .setTestMode(true)
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
@@ -484,7 +476,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return result;
     }
-
 
     @Override
     public KieTask getHumanTask(String processId) throws ApsSystemException {
