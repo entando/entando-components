@@ -194,7 +194,7 @@ public class ApiTaskInterface extends KieApiManager {
     public KieTaskDetail getTaskDetail(Properties properties) throws Throwable {
         String containerId = properties.getProperty("containerId");
         String taskIdString = properties.getProperty("taskId");
-        KieTaskDetail taskDetail = this.getKieFormManager().getTaskDetail(containerId, Long.valueOf(taskIdString));
+        KieTaskDetail taskDetail = this.getKieFormManager().getTaskDetail(containerId, Long.valueOf(taskIdString), null);
         if (null == taskDetail) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);

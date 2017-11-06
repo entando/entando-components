@@ -272,6 +272,7 @@ public class BpmToFormHelper {
      * Generate the name of the field expected to be found in the JSON of the
      * form
      *
+     * FIXME use the path to generate name and nesting level
      * @param name
      * @param id
      * @return

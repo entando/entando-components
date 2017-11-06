@@ -1,26 +1,26 @@
 /*
- * The MIT License
- *
- * Copyright 2017 Entando Inc..
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+* The MIT License
+*
+* Copyright 2017 Entando Inc..
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*/
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import java.util.ArrayList;
@@ -219,32 +219,39 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
 
     @Override
-    @Deprecated
-    public KieTaskDetail getTaskDetail(final String containerId, final Long taskId) throws ApsSystemException {
+    // NOTE: we are using JSON
+    public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
         if (!_config.getActive()) {
             return new KieTaskDetail();
         }
         try {
+            // FIXME not used in the mortgage demo!!!
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
 
             // process endpoint first
-            Endpoint ep = KieEndpointDictionary.create().get(API_GET_DATA_HUMAN_TASK_DETAIL).resolveParams(containerId, taskId);
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_DATA_HUMAN_TASK_DETAIL)
+                    .resolveParams(containerId, taskId);
             // generate client from the current configuration
             KieClient client = getCurrentClient();
             // perform query
             KieTaskDetail result = (KieTaskDetail) new KieRequestBuilder(client)
                     .setEndpoint(ep)
-                    .setUnmarshalOptions(false, false)
+//                    .setUnmarshalOptions(false, false)
+                    .setHeaders(headersMap)
+                    .setRequestParams(opt)
                     .setDebug(true)
                     .doRequest(KieTaskDetail.class);
             // unfold returned object to get the payload
             if (null != result) {
+                System.out.println("SANTORINI");
                 return result;
             }
         } catch (Throwable t) {
             throw new ApsSystemException("Error getting the list of human tasks", t);
         }
-        return new KieTaskDetail();
+        return null;
     }
 
 
@@ -425,6 +432,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
+    @Deprecated
     @Override
     public String completeHumanFormTask(final String containerId, final String processId, final long taskId,
             final Map<String, String> input) throws ApsSystemException {
@@ -455,6 +463,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
+    @Deprecated
     @Override
     public String completeHumanFormTask(final String containerId, final long taskId, final KieProcessFormQueryResult form, final JSONObject task, final Map<String, Object> input)
             throws ApsSystemException {
@@ -567,7 +576,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
     }
 
-
+    @Override
     public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<String, String>();
         List<KieProcessInstance> list = new ArrayList<KieProcessInstance>();
@@ -597,6 +606,72 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         } catch (Throwable t) {
             throw  new ApsSystemException("Error getting the instances of all processes", t);
         }
+    }
+
+    @Override
+    public String submitHumanFormTask(final String containerId, final String taskId, final TASK_STATES state, Map<String, String> opt, String payload) throws Throwable {
+        Map<String, String> headersMap = new HashMap<String, String>();
+        String result = null;
+
+        if (!this.getConfig().getActive()
+                || StringUtils.isBlank(taskId)
+                || StringUtils.isBlank(containerId)
+                || StringUtils.isBlank(payload)
+                || null == state) {
+            return null;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_PUT_HUMAN_TASK_STATE)
+                    .resolveParams(containerId, taskId, state.getValue());
+            // generate client from the current configuration
+            KieClient client = getCurrentClient();
+            // header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            // perform query
+            result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setRequestParams(opt)
+                    .setPayload(payload)
+                    .setDebug(true)
+                    .doRequest();
+        } catch (Throwable t) {
+            throw new ApsSystemException("error submitting human task with state: " + state.getValue(), t);
+        }
+        return result;
+    }
+
+    @Override
+    public String setTaskState(final String containerId, final String taskId, final TASK_STATES state, Map<String, String> opt) throws Throwable {
+        Map<String, String> headersMap = new HashMap<String, String>();
+        String result = null;
+
+        if (!this.getConfig().getActive()
+                || StringUtils.isBlank(taskId)
+                || StringUtils.isBlank(containerId)
+                || null == state) {
+            return null;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_PUT_SET_TASK_STATE)
+                    .resolveParams(containerId, taskId, state.getValue());
+            // generate client from the current configuration
+            KieClient client = getCurrentClient();
+            // header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            // perform query
+            result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setRequestParams(opt)
+                    .setDebug(true)
+                    .doRequest();
+        } catch (Throwable t) {
+            throw new ApsSystemException("error submitting human task with state: " + state.getValue(), t);
+        }
+        return result;
     }
 
     /**
@@ -645,4 +720,30 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     private ConfigInterface _configManager;
     private IKieFormOverrideManager _overrideManager;
 
+    public enum TASK_STATES {
+        ACTIVATED("activated"),
+        CLAIMED("claimed"),
+        STARTED("started"),
+        STOPPED("stopped"),
+        COMPLETED("completed"),
+        DELEGATED("delegated"),
+        EXITED("exited"),
+        FAILED("failed"),
+        FORWARDED("forwarded"),
+        RELEASED("released"),
+        RESUMED("resumed"),
+        SKIPPED("skipped"),
+        SUSPENDED("suspended"),
+        NOMINATED("nominated");
+
+        TASK_STATES(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
+
+        private String value;
+    }
 }

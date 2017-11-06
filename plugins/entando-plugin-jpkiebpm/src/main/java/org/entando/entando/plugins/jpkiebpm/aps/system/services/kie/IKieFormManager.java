@@ -149,7 +149,7 @@ public interface IKieFormManager {
 	public JSONObject getTaskFormData(String containerId, long taskId) throws ApsSystemException;
 
 	/**
-	 *
+	 * @Deprecated
 	 * @param containerId
      * @param processId
 	 * @param taskId
@@ -161,7 +161,7 @@ public interface IKieFormManager {
 
 	/**
 	 *
-	 *
+	 * @Deprecated
 	 * @param containerId
 	 * @param taskId
 	 * @param form
@@ -185,6 +185,7 @@ public interface IKieFormManager {
 	KieTask getHumanTask(String processId) throws ApsSystemException;
 
     /**
+     * @param opt
      * @Deprecated
      *
      * @param containerId
@@ -192,7 +193,7 @@ public interface IKieFormManager {
      * @return
      * @throws ApsSystemException
      */
-	KieTaskDetail getTaskDetail(final String containerId, final Long taskId) throws ApsSystemException;
+	KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException;
 
     /**
      *
@@ -227,4 +228,29 @@ public interface IKieFormManager {
      * @throws ApsSystemException
      */
     public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException;
+
+    /**
+     *
+     * @param containerId
+     * @param taskId
+     * @param state
+     * @param opt
+     * @param payload
+     * @return
+     * @throws Throwable
+     */
+    public String submitHumanFormTask(final String containerId, final String taskId, final KieFormManager.TASK_STATES state, Map<String, String> opt, String payload) throws Throwable;
+
+    /**
+     *
+     *
+     * @param containerId
+     * @param taskId
+     * @param state
+     * @param opt
+     * @return
+     * @throws Throwable
+     */
+    public String setTaskState(final String containerId, final String taskId, final KieFormManager.TASK_STATES state, Map<String, String> opt) throws Throwable;
+
 }

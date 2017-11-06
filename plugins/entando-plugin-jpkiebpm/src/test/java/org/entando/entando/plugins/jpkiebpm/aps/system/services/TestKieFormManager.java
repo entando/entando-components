@@ -23,6 +23,7 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services;
 
+import java.util.HashMap;
 import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -43,6 +44,8 @@ import org.entando.entando.plugins.jpkiebpm.aps.ApsPluginBaseTestCase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KIEAuthenticationCredentials;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieClient;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
@@ -235,17 +238,12 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
             // invoke the manager
             KieProcessFormQueryResult form = _formManager
                     .getProcessForm(containerId, processId);
-            if (TEST_ENABLED) {
-                assertNotNull(form);
-                assertNotNull(form.getNestedForms());
-                assertNotNull(form.getFields());
-                assertNotNull(form.getHolders());
-                assertFalse(form.getNestedForms().isEmpty());
-                assertFalse(form.getFields().isEmpty());
-                assertFalse(form.getHolders().isEmpty());
-            } else {
-                assertNull(form);
-            }
+            assertNotNull(form);
+
+            String mah = FormToBpmHelper.generateFormJson(form,
+                    new HashMap<String, Object>(), containerId, processId);
+            System.out.println(">>> " + mah);
+
         } finally {
             _formManager.updateConfig(current);
         }

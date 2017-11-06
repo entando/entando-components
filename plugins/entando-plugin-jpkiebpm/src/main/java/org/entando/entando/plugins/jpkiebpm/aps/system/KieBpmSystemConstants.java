@@ -61,6 +61,8 @@ public interface KieBpmSystemConstants {
     public final static String API_POST_SIGNAL = "API_POST_SIGNAL";
     public final static String API_DELETE_PROCESS = "API_DELETE_PROCESS";
     public final static String API_GET_ALL_PROCESS_INSTANCES_LIST = "API_GET_ALL_PROCESS_INSTANCES_LIST";
+    public final static String API_PUT_HUMAN_TASK_STATE = "API_PUT_HUMAN_TASK_STATE";
+    public final static String API_PUT_SET_TASK_STATE = "API_PUT_SET_TASK_STATE";
 
 
 	public static final String WIDGET_PARAM_DATA_TYPE_CODE = "dataTypeCode";
