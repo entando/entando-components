@@ -212,7 +212,6 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
 
     @Override
     public void startNewProcess(KieApiProcessStart process) throws Throwable {
-        logger.info("con: {}, proc: {}, coll: {}", process.getContainerId(), process.getProcessId(), process.getCorrelation());
         this.getKieFormManager().startNewProcess(process, null);
     }
 

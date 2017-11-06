@@ -399,6 +399,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         try {
             // generate payload
             String payload = this.createPayloadFromObj(process);
+            _logger.info("PAYLOAD CREATED: {}", payload);
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_POST_PROCESS_START)
                     .resolveParams(process.getContainerId(), process.getProcessId(), process.getCorrelation());
@@ -421,50 +422,57 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     private String createPayloadFromObj(KieApiProcessStart process) {
-        JSONObject json = new JSONObject("{\n"
-                + "   \"client\":{\n"
-                + "      \"com.redhat.bpms.demo.fsi.onboarding.model.Client\":{\n"
-                + "         \"id\":null,\n"
-                + "         \"name\":\"Giovanni\",\n"
-                + "         \"country\":\"IT\",\n"
-                + "         \"type\":\"BIG_BUSINESS\",\n"
-                + "         \"bic\":\"998899888\",\n"
-                + "         \"relatedParties\":[\n"
-                + "            {\n"
-                + "               \"com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty\":{\n"
-                + "                  \"id\":null,\n"
-                + "                  \"relationship\":\"Consultant\",\n"
-                + "                  \"party\":{\n"
-                + "                     \"com.redhat.bpms.demo.fsi.onboarding.model.Party\":{\n"
-                + "                        \"id\":null,\n"
-                + "                        \"name\":\"Paco\",\n"
-                + "                        \"surname\":\"Add\",\n"
-                + "                        \"dateOfBirth\":1506590295001,\n"
-                + "                        \"ssn\":\"987654321\",\n"
-                + "                        \"email\": \"p.addeo@entando.com\"\n"
-                + "                     }\n"
-                + "                  }\n"
-                + "               }\n"
-                + "            }\n"
-                + "         ]\n"
-                + "      }\n"
-                + "   },\n"
-                + "   \"accountManager\": \"prakash\"\n"
-                + "}");
-        JSONObject party = json.getJSONArray("relatedParties").getJSONObject(0);
-        JsonHelper.replaceKey(party, "name", process.getPname());
-        JsonHelper.replaceKey(party, "surname", process.getPsurname());
-        JsonHelper.replaceKey(party, "dateOfBirth", process.getPdateOfBirth());
-        JsonHelper.replaceKey(party, "ssn", process.getPssn());
-        JsonHelper.replaceKey(party, "email", process.getPemail());
-        JsonHelper.replaceKey(party, "relationship", process.getPrelationship());
-        JsonHelper.replaceKey(json, "name", process.getCname());
-        JsonHelper.replaceKey(json, "country", process.getCountry());
-        JsonHelper.replaceKey(json, "type", process.getType());
-        JsonHelper.replaceKey(json, "bic", process.getBic());
-        JsonHelper.replaceKey(json, "accountManager", process.getAccountManager());
-        json.getJSONArray("relatedParties").put(0, party);
-        return json.toString();
+        try {
+            JSONObject json = new JSONObject("{\n"
+                    + "   \"client\":{\n"
+                    + "      \"com.redhat.bpms.demo.fsi.onboarding.model.Client\":{\n"
+                    + "         \"id\":null,\n"
+                    + "         \"name\":\"Giovanni\",\n"
+                    + "         \"country\":\"IT\",\n"
+                    + "         \"type\":\"BIG_BUSINESS\",\n"
+                    + "         \"bic\":\"998899888\",\n"
+                    + "         \"relatedParties\":[\n"
+                    + "            {\n"
+                    + "               \"com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty\":{\n"
+                    + "                  \"id\":null,\n"
+                    + "                  \"relationship\":\"Consultant\",\n"
+                    + "                  \"party\":{\n"
+                    + "                     \"com.redhat.bpms.demo.fsi.onboarding.model.Party\":{\n"
+                    + "                        \"id\":null,\n"
+                    + "                        \"name\":\"Paco\",\n"
+                    + "                        \"surname\":\"Add\",\n"
+                    + "                        \"dateOfBirth\":1506590295001,\n"
+                    + "                        \"ssn\":\"987654321\",\n"
+                    + "                        \"email\": \"p.addeo@entando.com\"\n"
+                    + "                     }\n"
+                    + "                  }\n"
+                    + "               }\n"
+                    + "            }\n"
+                    + "         ]\n"
+                    + "      }\n"
+                    + "   },\n"
+                    + "   \"accountManager\": \"prakash\"\n"
+                    + "}");
+            JSONObject client = json.getJSONObject("client").getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
+            JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0);
+            JsonHelper.replaceKey(party, "name", process.getPname());
+            JsonHelper.replaceKey(party, "surname", process.getPsurname());
+            JsonHelper.replaceKey(party, "dateOfBirth", process.getPdateOfBirth());
+            JsonHelper.replaceKey(party, "ssn", process.getPssn());
+            JsonHelper.replaceKey(party, "email", process.getPemail());
+            JsonHelper.replaceKey(party, "relationship", process.getPrelationship());
+            JsonHelper.replaceKey(client, "name", process.getCname());
+            JsonHelper.replaceKey(client, "country", process.getCountry());
+            JsonHelper.replaceKey(client, "type", process.getType());
+            JsonHelper.replaceKey(client, "bic", process.getBic());
+            JsonHelper.replaceKey(json, "accountManager", process.getAccountManager());
+            client.getJSONArray("relatedParties").put(0, party);
+            json.getJSONObject("client").put("com.redhat.bpms.demo.fsi.onboarding.model.Client", client);
+            return json.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
