@@ -266,6 +266,4 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
     private IKieFormManager _formManager;
 
 
-
-
 }

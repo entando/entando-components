@@ -21,26 +21,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api;
+package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form;
 
-import java.util.List;
-import java.util.Properties;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
+/**
+ *
+ * @author paddeo
+ */
+@XmlRootElement(name = "signalObj")
+@XmlType(propOrder = {"accountId", "containerId", "processId", "signal"})
+public class KieApiSignal {
 
-public interface IKieApiManager {
+    public String getAccountId() {
+        return accountId;
+    }
 
-    KieApiForm getBpmForm(Properties properties) throws Throwable;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
-    void postBpmForm(KieApiInputForm form) throws Throwable;
+    public String getContainerId() {
+        return containerId;
+    }
 
-    List<KieProcessInstance> getProcessInstancesList(Properties properties) throws Throwable;
+    public void setContainerId(String containerId) {
+        this.containerId = containerId;
+    }
 
-    void postSignal(KieApiSignal signal) throws Throwable;
+    public String getProcessId() {
+        return processId;
+    }
 
-    void startNewProcess(KieApiProcessStart process) throws Throwable;
+    public void setProcessId(String processId) {
+        this.processId = processId;
+    }
+
+    public String getSignal() {
+        return signal;
+    }
+
+    public void setSignal(String signal) {
+        this.signal = signal;
+    }
+
+    private String accountId;
+    private String containerId;
+    private String processId;
+    private String signal;
 }

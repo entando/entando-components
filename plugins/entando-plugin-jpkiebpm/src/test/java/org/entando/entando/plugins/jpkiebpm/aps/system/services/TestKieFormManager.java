@@ -242,7 +242,6 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
 
             String mah = FormToBpmHelper.generateFormJson(form,
                     new HashMap<String, Object>(), containerId, processId);
-            System.out.println(">>> " + mah);
 
         } finally {
             _formManager.updateConfig(current);

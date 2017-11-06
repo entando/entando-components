@@ -30,6 +30,8 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.json.JSONObject;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager.TASK_STATES;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 
 /**
  *
@@ -129,6 +131,16 @@ public interface IKieFormManager {
 	public String startProcessSubmittingForm(KieProcessFormQueryResult form, String containerId, String processId, Map<String, Object> input) throws ApsSystemException;
 
 	/**
+     * Submit a form and start the related process
+     *
+     * @param process
+     * @param input
+     * @return
+     * @throws ApsSystemException
+     */
+    public String startNewProcess(KieApiProcessStart process, Map<String, Object> input) throws ApsSystemException;
+
+    /**
 	 * Get the process diagram
 	 *
 	 * @param containerId
@@ -149,7 +161,7 @@ public interface IKieFormManager {
 	public JSONObject getTaskFormData(String containerId, long taskId) throws ApsSystemException;
 
 	/**
-	 * @Deprecated
+	 *
 	 * @param containerId
      * @param processId
 	 * @param taskId
@@ -161,7 +173,7 @@ public interface IKieFormManager {
 
 	/**
 	 *
-	 * @Deprecated
+	 *
 	 * @param containerId
 	 * @param taskId
 	 * @param form
@@ -184,16 +196,15 @@ public interface IKieFormManager {
      */
 	KieTask getHumanTask(String processId) throws ApsSystemException;
 
-    /**
-     * @param opt
-     * @Deprecated
-     *
-     * @param containerId
-     * @param taskId
-     * @return
-     * @throws ApsSystemException
-     */
-	KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException;
+   /**
+    * 
+    * @param containerId
+    * @param taskId
+    * @param opt
+    * @return
+    * @throws ApsSystemException
+    */
+    public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException;
 
     /**
      *
@@ -229,6 +240,7 @@ public interface IKieFormManager {
      */
     public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException;
 
+
     /**
      *
      * @param containerId
@@ -239,10 +251,10 @@ public interface IKieFormManager {
      * @return
      * @throws Throwable
      */
-    public String submitHumanFormTask(final String containerId, final String taskId, final KieFormManager.TASK_STATES state, Map<String, String> opt, String payload) throws Throwable;
+    public String submitHumanFormTask(final String containerId, final String taskId, final TASK_STATES state, Map<String, String> opt, String payload) throws Throwable;
+
 
     /**
-     *
      *
      * @param containerId
      * @param taskId
@@ -251,6 +263,5 @@ public interface IKieFormManager {
      * @return
      * @throws Throwable
      */
-    public String setTaskState(final String containerId, final String taskId, final KieFormManager.TASK_STATES state, Map<String, String> opt) throws Throwable;
-
+    public String setTaskState(final String containerId, final String taskId, final TASK_STATES state, Map<String, String> opt) throws Throwable;
 }

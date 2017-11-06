@@ -98,6 +98,25 @@
         </method>
     </resource>
 
+    <resource name="sendSignal" namespace="jpkiebpm">
+        <description>Red Hat Bpm Signal</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="POST" active="true">
+            <description>Post Signal to Kie Bpm</description>
+            <springBean name="jpkiebpmsApiManager" method="postSignal"/>
+            <expectedType>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal</expectedType>
+        </method>
+    </resource>
+
+    <resource name="startNewProcess" namespace="jpkiebpm">
+        <description>Red Hat Bpm Start New Process</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="POST" active="true">
+            <description>Post New Process to Kie Bpm</description>
+            <springBean name="jpkiebpmsApiManager" method="startNewProcess"/>
+            <expectedType>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart</expectedType>
+        </method>
+    </resource>
 
     <!-- ************** DIAGRAM ************** -->
 
