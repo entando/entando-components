@@ -90,7 +90,7 @@ public class BpmDatatableWidgetAction extends BpmFormWidgetAction {
     }
 
     private void loadFieldIntoDatatableFromBpm() throws ApsSystemException {
-        List<KieTask> task = formManager.getHumanTaskList(null, 0, 1);
+        List<KieTask> task = formManager.getHumanTaskList(null, 0, 1, null);
 
         if (!task.isEmpty()) {
 

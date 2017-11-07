@@ -64,23 +64,23 @@
                                     </s:iterator>
                                 </s:iterator>
                         </ul>
-                    </div>                    
+                    </div>
                 </s:if>
 
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}" />
 
-                <div class="form-horizontal">        
+                <div class="form-horizontal">
                     <div class="form-group">
                         <label class="control-label col-xs-2" for="processPath">
                             <s:text name="Process"/>
                         </label>
                         <div class="col-xs-5">
                             <s:if test="!#isProcessPathSetted">
-                                <s:select list="process" id="processPath" name="processPath"  listKey="%{packageName +'.'+processName + '@' + containerId}" listValue="%{processName + ' @ ' + containerId}">
+                                <s:select list="process" id="processPath" name="processPath"  listKey="%{processId + '@' + containerId}" listValue="%{processName + ' @ ' + containerId}">
                                 </s:select>
                             </s:if>
                             <s:else>
-                                <s:select disabled="true" list="process" id="processPath" name="processPath"  listKey="%{packageName +'.'+processName + '@' + containerId}" listValue="%{processName + ' @ ' + containerId}">
+                                <s:select disabled="true" list="process" id="processPath" name="processPath"  listKey="%{processId + '@' + containerId}" listValue="%{processName + ' @ ' + containerId}">
                                 </s:select>
                                 <s:hidden name="processPath" />
 
@@ -126,7 +126,7 @@
                                         <s:property value="#override.defaultValue"/>
                                     </s:if>
                                     <br>
-                                    <s:elseif test="#override.type.equals('placeHolderOverride')">						
+                                    <s:elseif test="#override.type.equals('placeHolderOverride')">
                                         <b><s:text name="placeHolderOverride" /></b>  &nbsp; &nbsp;
                                         <s:property value="#override.placeHolder"/>
                                     </s:elseif>
@@ -140,8 +140,8 @@
                         </s:iterator>
 
 
-                    </s:if> 					
-                </div> 
+                    </s:if>
+                </div>
             </div>
         </div>
         <div class="form-horizontal">
@@ -152,8 +152,8 @@
                         <s:text name="%{getText('label.save')}"/>
                     </wpsf:submit>
                 </div>
-            </div>  
-        </div>                         
+            </div>
+        </div>
     </s:form>
 </div>
 

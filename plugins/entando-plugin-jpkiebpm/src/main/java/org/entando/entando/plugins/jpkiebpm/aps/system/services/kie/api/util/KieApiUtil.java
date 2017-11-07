@@ -55,8 +55,8 @@ public class KieApiUtil {
             mainForm.addFields(fields);
         }
 
-        if (null != processForm.getForms()) {
-            for (KieProcessFormQueryResult subForm : processForm.getForms()) {
+        if (null != processForm.getNestedForms()) {
+            for (KieProcessFormQueryResult subForm : processForm.getNestedForms()) {
                 addFields(mainForm, subForm, ii18nManager, langCode, overrideMap);
             }
 

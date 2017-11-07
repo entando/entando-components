@@ -38,12 +38,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KieProcessFormQueryResult {
 
-     public List<KieProcessFormQueryResult> getForms() {
-        return forms;
+     public List<KieProcessFormQueryResult> getNestedForms() {
+        return nestedForms;
     }
 
-    public void setForms(List<KieProcessFormQueryResult> forms) {
-        this.forms = forms;
+    public void setNestedForms(List<KieProcessFormQueryResult> nestedForms) {
+        this.nestedForms = nestedForms;
     }
 
     public Long getId() {
@@ -85,7 +85,7 @@ public class KieProcessFormQueryResult {
     private List<KieProcessProperty> properties;
 
     @XmlElement(name="form")
-    private List<KieProcessFormQueryResult> forms;
+    private List<KieProcessFormQueryResult> nestedForms;
 
     @XmlElement(name="field")
     private List<KieProcessFormField> fields;

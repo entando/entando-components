@@ -1,16 +1,16 @@
 /*
- * Copyright 2016-Present Entando Inc. (http://www.entando.com) All rights reserved.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- */
+* Copyright 2016-Present Entando Inc. (http://www.entando.com) All rights reserved.
+*
+* This library is free software; you can redistribute it and/or modify it under
+* the terms of the GNU Lesser General Public License as published by the Free
+* Software Foundation; either version 2.1 of the License, or (at your option)
+* any later version.
+*
+* This library is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+* FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+* details.
+*/
 package org.entando.entando.plugins.jprestapi.aps.core;
 
 import antlr.StringUtils;
@@ -49,8 +49,6 @@ import org.slf4j.LoggerFactory;
 public abstract class RequestBuilder implements IRequestBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestBuilder.class);
-
-
     /**
      * Common request seup. This method is invoked before every request.
      *
@@ -80,7 +78,6 @@ public abstract class RequestBuilder implements IRequestBuilder {
     protected DefaultHttpClient setupAuthenticationClient() {
         return setupClient();
     }
-
 
     /**
      * This method gets invoked when no timeout has been specified for
@@ -417,7 +414,7 @@ public abstract class RequestBuilder implements IRequestBuilder {
                 ss = new StreamSource(ris);
             } else {
                 String responseBody = IOUtils.toString(ris, "UTF-8");
-                logger.info("returned body:\n{}", responseBody);
+                logger.info("returned body:\n{}",responseBody);
                 ss = new StreamSource(new java.io.StringReader(responseBody));
             }
             if (null != expected && null != ris) {
@@ -446,7 +443,7 @@ public abstract class RequestBuilder implements IRequestBuilder {
             } else if (_debug) {
                 logger.info("no payload returned by the server");
             } else {
-                // no operation
+                // do nothing
             }
             // finally
             close();
@@ -454,7 +451,7 @@ public abstract class RequestBuilder implements IRequestBuilder {
         return responseBody;
     }
 
-    // common objects for
+
     protected DefaultHttpClient _httpClient;
     protected HttpRequestBase _verb;
 

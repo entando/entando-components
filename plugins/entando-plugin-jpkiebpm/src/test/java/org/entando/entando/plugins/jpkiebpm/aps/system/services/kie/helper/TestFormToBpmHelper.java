@@ -237,7 +237,6 @@ public class TestFormToBpmHelper extends TestCase {
         assertTrue(json.has("taskOutputApplication"));
         json = json.getJSONObject("taskOutputApplication");
         assertTrue(json.has("com.redhat.bpms.examples.mortgage.Application"));
-        System.out.println(">>> " + payload);
     }
 
     private Map<String, Object> createValiDPayloadForTest() {
