@@ -59,6 +59,26 @@
         </method>
     </resource>
 
+    <resource name="taskInputOutput" namespace="jpkiebpm">
+        <description>Red Hat Bpm Task Detail</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return task detail</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="getTaskInputOutput"/>
+            <responseClass>org.json.JSONObject</responseClass>
+            <parameters>
+                <parameter key="containerId" required="true">
+                    <description>The container id</description>
+                </parameter>
+                <parameter key="taskId" required="true">
+                    <description>The task Id</description>
+                </parameter>
+                <parameter key="user" required="false">
+                    <description>The owner</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
 
     <resource name="taskForm" namespace="jpkiebpm">
         <description>Red Hat Bpm Task Form</description>

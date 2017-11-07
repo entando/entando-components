@@ -297,7 +297,7 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             assertFalse(tasks.isEmpty());
             KieTask task = tasks.get(0);
             // get the data form related to the first task
-            JSONObject result = _formManager.getTaskFormData(task.getContainerId(), task.getId());
+            JSONObject result = _formManager.getTaskFormData(task.getContainerId(), task.getId(), null);
             assertNotNull(result);
         } finally {
             _formManager.updateConfig(current);
@@ -333,7 +333,7 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             //                    .getProcessForm(task.getContainerId(), task.getProcessDefinitionId());
             //            assertNotNull(answerProto);
             // get task data
-            JSONObject task_data = _formManager.getTaskFormData(task.getContainerId(), task.getId());
+            JSONObject task_data = _formManager.getTaskFormData(task.getContainerId(), task.getId(), null);
 
             KieProcessFormQueryResult form = _formManager.getTaskForm(task.getContainerId(), task.getId());
             /*

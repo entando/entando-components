@@ -43,7 +43,6 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 
-
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
@@ -192,10 +191,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return list;
         }
         try {
-
-            if (pageSize == 0) {
-                pageSize = 2000;
-            }
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_HUMAN_TASK_LIST).resolveParams(page, pageSize);
             // generate client from the current configuration
@@ -218,7 +213,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return list;
     }
-
 
     @Override
     public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException {
@@ -244,7 +238,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .doRequest(KieTaskDetail.class);
             // unfold returned object to get the payload
             if (null != result) {
-                System.out.println("SANTORINI");
                 return result;
             }
         } catch (Throwable t) {
@@ -252,7 +245,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return null;
     }
-
 
     @Override
     public String getProcInstDiagramImage(String containerId, String processId) throws ApsSystemException {
@@ -303,7 +295,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public JSONObject getTaskFormData(String containerId, long taskId) throws ApsSystemException {
+    public JSONObject getTaskFormData(String containerId, long taskId, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
         JSONObject json = null;
 
@@ -320,6 +312,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             String data = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
+                    .setRequestParams(opt)
                     .setDebug(true)
                     .doRequest();
             json = new JSONObject(data);
@@ -329,7 +322,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return json;
     }
-
 
     @Override
     // This uses XML unmarshaling
@@ -435,51 +427,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     private String createPayloadFromObj(KieApiProcessStart process) {
         try {
-            JSONObject json = new JSONObject("{\n"
-                    + "   \"client\":{\n"
-                    + "      \"com.redhat.bpms.demo.fsi.onboarding.model.Client\":{\n"
-                    + "         \"id\":null,\n"
-                    + "         \"name\":\"Giovanni\",\n"
-                    + "         \"country\":\"IT\",\n"
-                    + "         \"type\":\"BIG_BUSINESS\",\n"
-                    + "         \"bic\":\"998899888\",\n"
-                    + "         \"relatedParties\":[\n"
-                    + "            {\n"
-                    + "               \"com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty\":{\n"
-                    + "                  \"id\":null,\n"
-                    + "                  \"relationship\":\"Consultant\",\n"
-                    + "                  \"party\":{\n"
-                    + "                     \"com.redhat.bpms.demo.fsi.onboarding.model.Party\":{\n"
-                    + "                        \"id\":null,\n"
-                    + "                        \"name\":\"Paco\",\n"
-                    + "                        \"surname\":\"Add\",\n"
-                    + "                        \"dateOfBirth\":1506590295001,\n"
-                    + "                        \"ssn\":\"987654321\",\n"
-                    + "                        \"email\": \"p.addeo@entando.com\"\n"
-                    + "                     }\n"
-                    + "                  }\n"
-                    + "               }\n"
-                    + "            }\n"
-                    + "         ]\n"
-                    + "      }\n"
-                    + "   },\n"
-                    + "   \"accountManager\": \"prakash\"\n"
-                    + "}");
-            JSONObject client = json.getJSONObject("client").getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
-            JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0);
-            JsonHelper.replaceKey(party, "name", process.getPname());
-            JsonHelper.replaceKey(party, "surname", process.getPsurname());
-            JsonHelper.replaceKey(party, "dateOfBirth", process.getPdateOfBirth());
-            JsonHelper.replaceKey(party, "ssn", process.getPssn());
-            JsonHelper.replaceKey(party, "email", process.getPemail());
-            JsonHelper.replaceKey(party, "relationship", process.getPrelationship());
-            JsonHelper.replaceKey(client, "name", process.getCname());
-            JsonHelper.replaceKey(client, "country", process.getCountry());
-            JsonHelper.replaceKey(client, "type", process.getType());
-            JsonHelper.replaceKey(client, "bic", process.getBic());
-            JsonHelper.replaceKey(json, "accountManager", process.getAccountManager());
-            client.getJSONArray("relatedParties").put(0, party);
-            json.getJSONObject("client").put("com.redhat.bpms.demo.fsi.onboarding.model.Client", client);
+            JSONObject json = JsonHelper.getJsonForBpm();
+            json = JsonHelper.replaceValuesFromProcess(json, process);
             return json.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -510,8 +459,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-//                  .setDebug(true)
-//                  .setTestMode(true)
+                    //                  .setDebug(true)
+                    //                  .setTestMode(true)
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
@@ -528,7 +477,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             // get human task definition
             KieProcessFormQueryResult form = getTaskForm(containerId, taskId);
             // load related data
-            JSONObject taskData = getTaskFormData(containerId, taskId);
+            JSONObject taskData = getTaskFormData(containerId, taskId, null);
             final KieProcessFormQueryResult formProcess = getProcessForm(containerId, processId);
             final Map<String, Object> inputValidated = FormToBpmHelper.validateForm(formProcess, input);
             final Map<String, Object> map = new HashMap<>();
@@ -579,7 +528,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return result;
     }
-
 
     @Override
     public KieTask getHumanTask(String processId) throws ApsSystemException {
@@ -658,10 +606,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setDebug(true)
                     .doRequest();
         } catch (Throwable t) {
-            throw  new ApsSystemException("Error deleting process", t);
+            throw new ApsSystemException("Error deleting process", t);
         }
     }
-
 
     @Override
     public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException {
@@ -691,7 +638,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             }
             return list;
         } catch (Throwable t) {
-            throw  new ApsSystemException("Error getting the instances of all processes", t);
+            throw new ApsSystemException("Error getting the instances of all processes", t);
         }
     }
 
@@ -806,7 +753,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     private KieBpmConfig _config;
     private ConfigInterface _configManager;
     private IKieFormOverrideManager _overrideManager;
-
 
     public enum TASK_STATES {
         ACTIVATED("activated"),

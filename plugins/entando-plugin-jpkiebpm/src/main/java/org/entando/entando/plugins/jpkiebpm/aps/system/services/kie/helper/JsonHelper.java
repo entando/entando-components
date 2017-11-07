@@ -20,9 +20,10 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
-*/
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -55,21 +56,21 @@ public class JsonHelper {
                 || keys.length == 0) {
             return null;
         }
-        for (String id:keys) {
+        for (String id : keys) {
             Object obj = json.get(id);
 
             if (obj instanceof JSONObject) {
-                Object res = findKey((JSONObject)obj, key);
+                Object res = findKey((JSONObject) obj, key);
 
                 if (null != res) {
                     return res;
                 }
             } else if (obj instanceof JSONArray) {
-                for (int i = 0; i < ((JSONArray)obj).length(); i++) {
-                    Object elem = ((JSONArray)obj).get(i);
+                for (int i = 0; i < ((JSONArray) obj).length(); i++) {
+                    Object elem = ((JSONArray) obj).get(i);
 
                     if (elem instanceof JSONObject) {
-                        Object res = findKey((JSONObject)elem, key);
+                        Object res = findKey((JSONObject) elem, key);
 
                         if (null != res) {
                             return res;
@@ -109,19 +110,19 @@ public class JsonHelper {
                 || keys.length == 0) {
             return false;
         }
-        for (String id:keys) {
+        for (String id : keys) {
             Object obj = json.get(id);
 
             if (obj instanceof JSONObject) {
-                if (replaceKey((JSONObject)obj, key, value)) {
+                if (replaceKey((JSONObject) obj, key, value)) {
                     return true;
                 }
             } else if (obj instanceof JSONArray) {
-                for (int i = 0; i < ((JSONArray)obj).length(); i++) {
-                    Object elem = ((JSONArray)obj).get(i);
+                for (int i = 0; i < ((JSONArray) obj).length(); i++) {
+                    Object elem = ((JSONArray) obj).get(i);
 
                     if (elem instanceof JSONObject) {
-                        res = replaceKey((JSONObject)elem, key, value);
+                        res = replaceKey((JSONObject) elem, key, value);
                     }
                 }
             } else {
@@ -131,4 +132,55 @@ public class JsonHelper {
         return res;
     }
 
+    public static JSONObject getJsonForBpm() {
+        return new JSONObject("{\n"
+                + "   \"client\":{\n"
+                + "      \"com.redhat.bpms.demo.fsi.onboarding.model.Client\":{\n"
+                + "         \"id\":null,\n"
+                + "         \"name\":\"Giovanni\",\n"
+                + "         \"country\":\"IT\",\n"
+                + "         \"type\":\"BIG_BUSINESS\",\n"
+                + "         \"bic\":\"998899888\",\n"
+                + "         \"relatedParties\":[\n"
+                + "            {\n"
+                + "               \"com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty\":{\n"
+                + "                  \"id\":null,\n"
+                + "                  \"relationship\":\"Consultant\",\n"
+                + "                  \"party\":{\n"
+                + "                     \"com.redhat.bpms.demo.fsi.onboarding.model.Party\":{\n"
+                + "                        \"id\":null,\n"
+                + "                        \"name\":\"Paco\",\n"
+                + "                        \"surname\":\"Add\",\n"
+                + "                        \"dateOfBirth\":1506590295001,\n"
+                + "                        \"ssn\":\"987654321\",\n"
+                + "                        \"email\": \"p.addeo@entando.com\"\n"
+                + "                     }\n"
+                + "                  }\n"
+                + "               }\n"
+                + "            }\n"
+                + "         ]\n"
+                + "      }\n"
+                + "   },\n"
+                + "   \"accountManager\": \"prakash\"\n"
+                + "}");
+    }
+
+    public static JSONObject replaceValuesFromProcess(JSONObject json, KieApiProcessStart process) {
+        JSONObject client = json.getJSONObject("client").getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
+        JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0);
+        JsonHelper.replaceKey(party, "name", process.getPname());
+        JsonHelper.replaceKey(party, "surname", process.getPsurname());
+        JsonHelper.replaceKey(party, "dateOfBirth", process.getPdateOfBirth());
+        JsonHelper.replaceKey(party, "ssn", process.getPssn());
+        JsonHelper.replaceKey(party, "email", process.getPemail());
+        JsonHelper.replaceKey(party, "relationship", process.getPrelationship());
+        JsonHelper.replaceKey(client, "name", process.getCname());
+        JsonHelper.replaceKey(client, "country", process.getCountry());
+        JsonHelper.replaceKey(client, "type", process.getType());
+        JsonHelper.replaceKey(client, "bic", process.getBic());
+        JsonHelper.replaceKey(json, "accountManager", process.getAccountManager());
+        client.getJSONArray("relatedParties").put(0, party);
+        json.getJSONObject("client").put("com.redhat.bpms.demo.fsi.onboarding.model.Client", client);
+        return json;
+    }
 }

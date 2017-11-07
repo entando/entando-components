@@ -132,6 +132,10 @@ public class KieApiUtil {
         return KieApiForm.LABEL_PREFIX + field.getName().substring(0, field.getName().indexOf("_"));
     }
 
+    public static String getI18nFormLabelProperty(String name) {
+        return KieApiForm.LABEL_PREFIX + name;
+    }
+
     public static String getI18nTitleLabelProperty(String containerId) {
         return KieApiForm.LABEL_TITLE_PREFIX + containerId;
     }
@@ -168,7 +172,7 @@ public class KieApiUtil {
         return retVal;
     }
 
-    protected static String getFieldProperty(List<KieProcessProperty> props, String property) {
+    public static String getFieldProperty(List<KieProcessProperty> props, String property) {
         if (null != props && StringUtils.isNotBlank(property)) {
             for (KieProcessProperty prop : props) {
                 if (prop.getName().equals(property)) {
