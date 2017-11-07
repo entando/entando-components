@@ -15,6 +15,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.Kie
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
 
 /**
  *
@@ -30,10 +31,10 @@ public class DataUXBuilder {
         this.valueMapping.put("InputTextInteger", "$data.%s.number");
     }
 
-    public String createDataUx(KieProcessFormQueryResult kpfr, String containerId, String processId) throws Exception {
+    public String createDataUx(KieProcessFormQueryResult kpfr, String containerId, String processId, String title) throws Exception {
         StringBuilder builder = new StringBuilder();
         String header = this.extractTemplate("modelHeader.txt");
-        builder.append(String.format(header, containerId, containerId, processId, containerId));
+        builder.append(String.format(header, title, title, processId, containerId));
         /*
 		List<KieProcessProperty> formProperties = kpfr.getProperties();
 		System.out.println("------------------");
@@ -53,7 +54,18 @@ public class DataUXBuilder {
     private void addFormFields(KieProcessFormQueryResult kpfr, StringBuilder builder) throws Exception {
         String sectionHeader = this.extractTemplate("sectionHeader.txt");
         if (kpfr.getFields().size() > 0) {
-            String formName = KieApiUtil.getFormNameFromField(kpfr.getFields().get(0));
+            String formName = null;
+            if (kpfr.getFields().get(0).getName().contains("_")) {
+                formName = KieApiUtil.getFormNameFromField(kpfr.getFields().get(0));
+            } else {
+                if (KieApiUtil.getFieldProperty(kpfr.getProperties(), "name").contains(".")) {
+                    formName = KieApiUtil.getFieldProperty(kpfr.getProperties(), "name")
+                            .substring(0, KieApiUtil.getFieldProperty(kpfr.getProperties(), "name").indexOf("."));
+
+                } else {
+                    formName = KieApiUtil.getFieldProperty(kpfr.getProperties(), "name");
+                }
+            }
             sectionHeader = String.format(sectionHeader, formName);
         }
         builder.append(sectionHeader);
