@@ -45,6 +45,7 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoPayloadHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
 
 /**
@@ -401,8 +402,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return null;
         }
         try {
-            // generate payload
-            String payload = this.createPayloadFromObj(process);
+            // generate payload FIXME this should be dynamic
+            String payload = FSIDemoPayloadHelper.createStartProcessPayload(process);
             _logger.info("PAYLOAD CREATED: {}", payload);
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_POST_PROCESS_START)
@@ -423,17 +424,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             throw new ApsSystemException("Error starting the process", t);
         }
         return result;
-    }
-
-    private String createPayloadFromObj(KieApiProcessStart process) {
-        try {
-            JSONObject json = JsonHelper.getJsonForBpm();
-            json = JsonHelper.replaceValuesFromProcess(json, process);
-            return json.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override
@@ -459,8 +449,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-                    //                  .setDebug(true)
-                    //                  .setTestMode(true)
+//                  .setDebug(true)
+//                  .setTestMode(true)
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
