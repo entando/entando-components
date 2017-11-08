@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import org.json.JSONObject;
 
 /**
  * @author E.Santoboni
@@ -72,7 +73,7 @@ public class ApiTaskInterface extends KieApiManager {
         } catch (NumberFormatException e) {
             throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
         }
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", page, pageSize);
+        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", page, pageSize, null);
         for (KieTask task : rawList) {
             if (id == task.getId()) {
                 resTask = new JAXBTask(task);
@@ -84,7 +85,6 @@ public class ApiTaskInterface extends KieApiManager {
         }
         return resTask;
     }
-
 
     public String getDiagram(Properties properties) {
         final String configId = properties.getProperty("configId");
@@ -184,7 +184,7 @@ public class ApiTaskInterface extends KieApiManager {
     private void setElementList(final ApsProperties config, final JAXBTaskList taskList) throws ApsSystemException {
         final String groups = "groups=" + config.getProperty("groups").replace(" ", "").replace(",", "&groups=");
         final List<JAXBTask> list = new ArrayList<>();
-        final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(groups, 0, 0);
+        final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(groups, 0, 2000, null);
         for (final KieTask task : rawList) {
             list.add(new JAXBTask(task));
         }
@@ -194,14 +194,19 @@ public class ApiTaskInterface extends KieApiManager {
     public KieTaskDetail getTaskDetail(Properties properties) throws Throwable {
         String containerId = properties.getProperty("containerId");
         String taskIdString = properties.getProperty("taskId");
-        KieTaskDetail taskDetail = this.getKieFormManager().getTaskDetail(containerId, Long.valueOf(taskIdString));
+        String user = properties.getProperty("user");
+        Map<String, String> opt = null;
+        if (StringUtils.isNotBlank(user)) {
+            opt = new HashMap<>();
+            opt.put("user", user);
+        }
+        KieTaskDetail taskDetail = this.getKieFormManager().getTaskDetail(containerId, Long.valueOf(taskIdString), opt);
         if (null == taskDetail) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
         }
         return taskDetail;
     }
-
 
     public KieApiForm getTaskForm(Properties properties) throws Throwable {
         String containerId = properties.getProperty("containerId");
@@ -225,6 +230,21 @@ public class ApiTaskInterface extends KieApiManager {
         return form;
     }
 
+    public JSONObject getTaskInputOutput(Properties properties) throws Throwable {
+        String containerId = properties.getProperty("containerId");
+        String taskIdString = properties.getProperty("taskId");
+        String user = properties.getProperty("user");
+        Map<String, String> opt = null;
+        if (StringUtils.isNotBlank(user)) {
+            opt = new HashMap<>();
+            opt.put("user", user);
+        }
+        String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
+        KieApiForm form = null;
+        JSONObject processForm = this.getKieFormManager().getTaskFormData(containerId, Long.valueOf(taskIdString), opt);
+        return processForm;
+    }
+
     public void postTaskForm(final KieApiInputFormTask form) throws Throwable {
         if (null == form) {
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Form null", Response.Status.CONFLICT);
@@ -242,7 +262,7 @@ public class ApiTaskInterface extends KieApiManager {
             input.put(field.getName().replace(KieApiField.FIELD_NAME_PREFIX, ""), field.getValue());
         }
 
-        final String result = this.getKieFormManager().completeHumanFormTask(containerId, Long.valueOf(taskId), input);
+        final String result = this.getKieFormManager().completeHumanFormTask(containerId, "com.redhat.bpms.examples.mortgage.MortgageApplication", Long.valueOf(taskId), input);
         logger.info("Result {} ", result);
 
     }

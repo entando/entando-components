@@ -23,6 +23,7 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
+import java.util.List;
 import junit.framework.TestCase;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 
@@ -33,7 +34,7 @@ import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
  */
 public class TestKieProcessForm extends TestCase {
 
-    public void testKieProcessForm() throws Throwable {
+    public void testKieProcessFormWithSublings() throws Throwable {
         KieProcessFormQueryResult kpfq = (KieProcessFormQueryResult) JAXBHelper
                 .unmarshall(kieProcessFormXML, KieProcessFormQueryResult.class, true, false);
 
@@ -85,9 +86,9 @@ public class TestKieProcessForm extends TestCase {
 
         // check the 2nd form
 
-        assertNotNull(kpfq.getForms());
-        assertEquals(2, kpfq.getForms().size());
-        KieProcessFormQueryResult form = kpfq.getForms().get(1);
+        assertNotNull(kpfq.getNestedForms());
+        assertEquals(2, kpfq.getNestedForms().size());
+        KieProcessFormQueryResult form = kpfq.getNestedForms().get(1);
 
         assertEquals((Long)1458843297L,
                 form.getId());
@@ -140,6 +141,27 @@ public class TestKieProcessForm extends TestCase {
                 form.getHolders().get(0).getType());
         assertEquals("com.redhat.bpms.examples.mortgage.Property",
                 form.getHolders().get(0).getValue());
+    }
+
+
+    public void testKieProcessForm() throws Throwable {
+        try {
+            KieProcessFormQueryResult kpfq = (KieProcessFormQueryResult) JAXBHelper
+                    .unmarshall(fsiProcessDefinition, KieProcessFormQueryResult.class, true, false);
+
+            assertNotNull(kpfq);
+            List<KieProcessFormField> fields = kpfq.getFields();
+            assertFalse(fields.isEmpty());
+            assertEquals(8, fields.size());
+            List<KieDataHolder> holders = kpfq.getHolders();
+            assertNotNull(holders);
+            assertEquals(4, holders.size());
+            List<KieProcessProperty> properties = kpfq.getProperties();
+            assertNotNull(properties);
+            assertEquals(3, properties.size());
+        } catch (Throwable t) {
+            throw t;
+        }
     }
 
     public final static String kieProcessFormXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><form id=\"1849151362\">\n" +
@@ -309,4 +331,70 @@ public class TestKieProcessForm extends TestCase {
             "<dataHolder id=\"ssn\" inputId=\"\" name=\"#FF54A7\" outId=\"ssn\" type=\"basicType\" value=\"java.lang.Integer\"/>\n" +
             "</form>";
 
+
+    public final static String fsiProcessDefinition ="<?xml version=\"1.0\" encoding=\"UTF-8\"?><form id=\"1773106659\">\n" +
+            "<property name=\"name\" value=\"commercial-client-onboarding.ClientOnboardingProcess-taskform.form\"/>\n" +
+            "<property name=\"displayMode\" value=\"default\"/>\n" +
+            "<property name=\"status\" value=\"0\"/>\n" +
+            "<field id=\"875181348\" name=\"client_bic\" position=\"0\" type=\"InputText\">\n" +
+            "<property name=\"fieldRequired\" value=\"false\"/>\n" +
+            "<property name=\"label\" value=\"bic (client)\"/>\n" +
+            "<property name=\"readonly\" value=\"false\"/>\n" +
+            "<property name=\"outputBinding\" value=\"client/bic\"/>\n" +
+            "<property name=\"fieldClass\" value=\"java.lang.String\"/>\n" +
+            "</field>\n" +
+            "<field id=\"39318712\" name=\"client_country\" position=\"1\" type=\"InputText\">\n" +
+            "<property name=\"fieldRequired\" value=\"false\"/>\n" +
+            "<property name=\"label\" value=\"country (client)\"/>\n" +
+            "<property name=\"readonly\" value=\"false\"/>\n" +
+            "<property name=\"outputBinding\" value=\"client/country\"/>\n" +
+            "<property name=\"fieldClass\" value=\"java.lang.String\"/>\n" +
+            "</field>\n" +
+            "<field id=\"794114113\" name=\"client_id\" position=\"2\" type=\"InputTextLong\">\n" +
+            "<property name=\"fieldRequired\" value=\"false\"/>\n" +
+            "<property name=\"label\" value=\"id (client)\"/>\n" +
+            "<property name=\"readonly\" value=\"false\"/>\n" +
+            "<property name=\"outputBinding\" value=\"client/id\"/>\n" +
+            "<property name=\"fieldClass\" value=\"java.lang.Long\"/>\n" +
+            "</field>\n" +
+            "<field id=\"283935533\" name=\"client_name\" position=\"3\" type=\"InputText\">\n" +
+            "<property name=\"fieldRequired\" value=\"false\"/>\n" +
+            "<property name=\"label\" value=\"name (client)\"/>\n" +
+            "<property name=\"readonly\" value=\"false\"/>\n" +
+            "<property name=\"outputBinding\" value=\"client/name\"/>\n" +
+            "<property name=\"fieldClass\" value=\"java.lang.String\"/>\n" +
+            "</field>\n" +
+            "<field id=\"1248382375\" name=\"client_type\" position=\"4\" type=\"InputText\">\n" +
+            "<property name=\"fieldRequired\" value=\"false\"/>\n" +
+            "<property name=\"label\" value=\"type (client)\"/>\n" +
+            "<property name=\"readonly\" value=\"false\"/>\n" +
+            "<property name=\"outputBinding\" value=\"client/type\"/>\n" +
+            "<property name=\"fieldClass\" value=\"java.lang.String\"/>\n" +
+            "</field>\n" +
+            "<field id=\"1517211770\" name=\"accountManager\" position=\"5\" type=\"InputText\">\n" +
+            "<property name=\"fieldRequired\" value=\"false\"/>\n" +
+            "<property name=\"label\" value=\"accountManager (accountManager)\"/>\n" +
+            "<property name=\"readonly\" value=\"false\"/>\n" +
+            "<property name=\"outputBinding\" value=\"accountManager\"/>\n" +
+            "<property name=\"fieldClass\" value=\"java.lang.String\"/>\n" +
+            "</field>\n" +
+            "<field id=\"609428127\" name=\"accountName\" position=\"6\" type=\"InputText\">\n" +
+            "<property name=\"fieldRequired\" value=\"false\"/>\n" +
+            "<property name=\"label\" value=\"accountName (accountName)\"/>\n" +
+            "<property name=\"readonly\" value=\"false\"/>\n" +
+            "<property name=\"outputBinding\" value=\"accountName\"/>\n" +
+            "<property name=\"fieldClass\" value=\"java.lang.String\"/>\n" +
+            "</field>\n" +
+            "<field bag-type=\"org.jbpm.document.Document\" id=\"861799815\" name=\"documents_documents\" position=\"7\" type=\"MultipleInput\">\n" +
+            "<property name=\"fieldRequired\" value=\"false\"/>\n" +
+            "<property name=\"label\" value=\"documents (documents)\"/>\n" +
+            "<property name=\"readonly\" value=\"false\"/>\n" +
+            "<property name=\"outputBinding\" value=\"documents/documents\"/>\n" +
+            "<property name=\"fieldClass\" value=\"java.util.List\"/>\n" +
+            "</field>\n" +
+            "<dataHolder id=\"accountManager\" inputId=\"\" name=\"#9BCAFA\" outId=\"accountManager\" type=\"basicType\" value=\"java.lang.String\"/>\n" +
+            "<dataHolder id=\"accountName\" inputId=\"\" name=\"#FF54A7\" outId=\"accountName\" type=\"basicType\" value=\"java.lang.String\"/>\n" +
+            "<dataHolder id=\"client\" inputId=\"\" name=\"#E9E371\" outId=\"client\" type=\"dataModelerEntry\" value=\"com.redhat.bpms.demo.fsi.onboarding.model.Client\"/>\n" +
+            "<dataHolder id=\"documents\" inputId=\"\" name=\"#BBBBBB\" outId=\"documents\" type=\"dataModelerEntry\" value=\"com.redhat.bpms.demo.fsi.onboarding.model.Documents\"/>\n" +
+            "</form>";
 }

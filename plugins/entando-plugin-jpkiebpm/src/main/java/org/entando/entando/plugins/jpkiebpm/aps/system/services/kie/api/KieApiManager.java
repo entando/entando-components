@@ -54,6 +54,8 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
 
 public class KieApiManager extends AbstractService implements IKieApiManager {
 
@@ -166,8 +168,8 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             for (final KieProcessFormField field : form.getFields()) {
                 processField(field, langCode);
             }
-            if (null != form.getForms()) {
-                for (KieProcessFormQueryResult subForm : form.getForms()) {
+            if (null != form.getNestedForms()) {
+                for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
                     this.setLabels(subForm, langCode);
                 }
             }
@@ -200,6 +202,17 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             }
         }
         return toBpm;
+    }
+
+    @Override
+    public void postSignal(KieApiSignal signalObj) throws Throwable {
+        this.getKieFormManager().sendSignal(signalObj.getContainerId(), signalObj.getProcessId(),
+                signalObj.getSignal(), signalObj.getAccountId(), null);
+    }
+
+    @Override
+    public void startNewProcess(KieApiProcessStart process) throws Throwable {
+        this.getKieFormManager().startNewProcess(process, null);
     }
 
     protected II18nManager getI18nManager() {

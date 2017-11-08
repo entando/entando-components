@@ -20,33 +20,33 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
- */
+*/
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.HEADER_VALUE_JSON;
 import org.entando.entando.plugins.jprestapi.aps.core.RequestBuilder;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.RequestHelper;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.HEADER_KEY_ACCEPT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Entando
  */
 public class KieRequestBuilder extends RequestBuilder {
+    private static final Logger _logger = LoggerFactory.getLogger(KieRequestBuilder.class);
 
     public KieRequestBuilder(KieClient client) {
-        this._client = client;
+        this._configClient = client;
     }
 
     @Override
     protected void setupRequest(HttpRequestBase verb) throws Throwable {
         // process evaluation URL
-        RequestHelper.addBaseUrl(verb, _client.getBaseUrl());
+        RequestHelper.addBaseUrl(verb, _configClient.getBaseUrl());
         // headers are set on single mothod basis
     }
 
@@ -62,16 +62,24 @@ public class KieRequestBuilder extends RequestBuilder {
         DefaultHttpClient httpclient = new DefaultHttpClient();
 
         // basic authentication
-        String username = _client.getCredentials().getUsername();
-        String password = _client.getCredentials().getPassword();
+        String username = _configClient.getCredentials().getUsername();
+        String password = _configClient.getCredentials().getPassword();
         UsernamePasswordCredentials authCredentials = new UsernamePasswordCredentials(username, password);
 
         // TODO restrict host and scope!
         AuthScope authScope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT);
         httpclient.getCredentialsProvider().setCredentials(authScope, authCredentials);
-        httpclient.getParams().setIntParameter("http.connection.timeout", 500);
         return httpclient;
     }
 
-    private final KieClient _client;
+    @Override
+    protected void setupOverallConnectionTimeout(DefaultHttpClient client) {
+        if (null != _configClient.getTimeoutMsec()) {
+            client.getParams().setIntParameter(PARAM_TIMEOUT,
+                    _configClient.getTimeoutMsec());
+        }
+    }
+
+
+    private final KieClient _configClient;
 }

@@ -48,6 +48,7 @@ public class KieBpmConfig {
         cfg.setSchema(this.getSchema());
         cfg.setUsername(this.getUsername());
         cfg.setWebapp(this.getWebapp());
+        cfg.setTimeoutMsec(this.getTimeoutMsec());
 
         return cfg;
     }
@@ -108,6 +109,14 @@ public class KieBpmConfig {
         this._webapp = webapp;
     }
 
+    public Integer getTimeoutMsec() {
+        return _timeoutMsec;
+    }
+
+    public void setTimeoutMsec(Integer timeoutMsec) {
+        this._timeoutMsec = timeoutMsec;
+    }
+
     @XmlElement(name="active")
     private Boolean _active;
     @XmlElement(name="username")
@@ -122,4 +131,6 @@ public class KieBpmConfig {
     private Integer _port;
     @XmlElement(name="webapp")
     private String _webapp;
+    @XmlElement(name="timeout")
+    private Integer _timeoutMsec;
 }

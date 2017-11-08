@@ -1,6 +1,6 @@
 package org.entando.entando.plugins.jpkiebpm;
 
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortgageDemoTest;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestBpmToFormHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestFormToBpmHelper;
@@ -22,7 +22,7 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("KIE-BPM connector test");
 
-		suite.addTestSuite(TestKieFormManager.class);
+//		suite.addTestSuite(TestKieFormManager.class);
 		suite.addTestSuite(TestKieContainer.class);
 		suite.addTestSuite(TestKieProcesses.class);
 		suite.addTestSuite(TestKieProcesseInstance.class);
