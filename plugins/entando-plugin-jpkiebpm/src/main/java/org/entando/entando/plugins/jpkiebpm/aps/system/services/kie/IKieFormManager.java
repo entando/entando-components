@@ -158,7 +158,7 @@ public interface IKieFormManager {
 	 * @return
 	 * @throws ApsSystemException
 	 */
-	public JSONObject getTaskFormData(String containerId, long taskId) throws ApsSystemException;
+    public JSONObject getTaskFormData(String containerId, long taskId, Map<String, String> opt) throws ApsSystemException;
 
 	/**
 	 *
@@ -186,8 +186,8 @@ public interface IKieFormManager {
 			throws ApsSystemException;
 
     /**
-     * Get a specific human task
-     * FIXME check whether there is already a specific call for this
+     * Get a specific human task FIXME check whether there is already a specific
+     * call for this
      *
      *
      * @param processId
@@ -197,7 +197,7 @@ public interface IKieFormManager {
 	KieTask getHumanTask(String processId) throws ApsSystemException;
 
    /**
-    * 0
+    * 
     * @param containerId
     * @param taskId
     * @param opt

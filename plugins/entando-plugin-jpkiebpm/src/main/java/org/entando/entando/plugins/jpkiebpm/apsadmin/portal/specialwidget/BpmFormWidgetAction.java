@@ -73,6 +73,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             props.loadFromXml(xml);
             String processId = props.getProperty(PROP_PROCESS_ID),
                     containerId = props.getProperty(PROP_CONTAINER_ID);
+            String title = containerId;
+
             //DataModel - start
             KieProcessFormQueryResult kpfr = this.getFormManager()
                     .getProcessForm(containerId, processId);
@@ -91,8 +93,14 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
                 entityType.setTypeCode(typeCode);
                 entityType.setTypeDescription(processId + "_" + containerId);
                 this.addAttributesToEntityType(entityType, kpfr);
+                List<kieProcess> processes = this.getProcess();
+                for (kieProcess proc : processes) {
+                    if (proc.getProcessId().equalsIgnoreCase(processId)) {
+                        title = proc.getProcessName();
+                    }
+                }
                 try {
-                    this.processTitle(containerId, this.getCurrentLang().getCode());
+                    this.processTitle(title, this.getCurrentLang().getCode());
                 } catch (ApsSystemException ex) {
                     java.util.logging.Logger.getLogger(BpmFormWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -104,7 +112,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             //dataModel.setDescription(processId + "_" + containerId); exceeds 50 chars limit
             dataModel.setDescription("Model for " + containerId);
             DataUXBuilder uXBuilder = new DataUXBuilder();
-            String dataUx = uXBuilder.createDataUx(kpfr, containerId, processId);
+            String dataUx = uXBuilder.createDataUx(kpfr, containerId, processId, title);
             dataModel.setShape(dataUx);
             this.getDataObjectModelManager().addDataObjectModel(dataModel);
 
@@ -125,7 +133,21 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         if (null != form && null != form.getFields()) {
             if (form.getFields().size() > 0) {
                 try {
-                    this.processForm(form.getFields().get(0), this.getCurrentLang().getCode());
+                    if (form.getFields().get(0).getName().contains("_")) {
+                        this.processForm(form.getFields().get(0), this.getCurrentLang().getCode());
+                    } else {
+                        String formName = null;
+                        if (KieApiUtil.getFieldProperty(form.getProperties(), "name").contains(".")) {
+                            formName = KieApiUtil.getFieldProperty(form.getProperties(), "name")
+                                    .substring(0, KieApiUtil.getFieldProperty(form.getProperties(), "name").indexOf("."));
+                        } else {
+                            formName = KieApiUtil.getFieldProperty(form.getProperties(), "name");
+                        }
+                        String formLabel = KieApiUtil.getI18nFormLabelProperty(formName);
+                        if (null == this.getI18nManager().getLabel(formLabel, this.getCurrentLang().getCode())) {
+                            this.saveEntandoLabel(formLabel, formName);
+                        }
+                    }
                 } catch (ApsSystemException ex) {
                     java.util.logging.Logger.getLogger(BpmFormWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
                 }

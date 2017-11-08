@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import org.json.JSONObject;
 
 /**
  * @author E.Santoboni
@@ -71,10 +72,6 @@ public class ApiTaskInterface extends KieApiManager {
             pageSize = pageSizeString != null ? Integer.parseInt(pageSizeString) : 0;
         } catch (NumberFormatException e) {
             throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
-        }
-        // WTF?!?!?
-        if (pageSize == 0) {
-            pageSize = 2000;
         }
         List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", page, pageSize, null);
         for (KieTask task : rawList) {
@@ -197,7 +194,13 @@ public class ApiTaskInterface extends KieApiManager {
     public KieTaskDetail getTaskDetail(Properties properties) throws Throwable {
         String containerId = properties.getProperty("containerId");
         String taskIdString = properties.getProperty("taskId");
-        KieTaskDetail taskDetail = this.getKieFormManager().getTaskDetail(containerId, Long.valueOf(taskIdString), null);
+        String user = properties.getProperty("user");
+        Map<String, String> opt = null;
+        if (StringUtils.isNotBlank(user)) {
+            opt = new HashMap<>();
+            opt.put("user", user);
+        }
+        KieTaskDetail taskDetail = this.getKieFormManager().getTaskDetail(containerId, Long.valueOf(taskIdString), opt);
         if (null == taskDetail) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
@@ -225,6 +228,21 @@ public class ApiTaskInterface extends KieApiManager {
             e.printStackTrace();
         }
         return form;
+    }
+
+    public JSONObject getTaskInputOutput(Properties properties) throws Throwable {
+        String containerId = properties.getProperty("containerId");
+        String taskIdString = properties.getProperty("taskId");
+        String user = properties.getProperty("user");
+        Map<String, String> opt = null;
+        if (StringUtils.isNotBlank(user)) {
+            opt = new HashMap<>();
+            opt.put("user", user);
+        }
+        String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
+        KieApiForm form = null;
+        JSONObject processForm = this.getKieFormManager().getTaskFormData(containerId, Long.valueOf(taskIdString), opt);
+        return processForm;
     }
 
     public void postTaskForm(final KieApiInputFormTask form) throws Throwable {
