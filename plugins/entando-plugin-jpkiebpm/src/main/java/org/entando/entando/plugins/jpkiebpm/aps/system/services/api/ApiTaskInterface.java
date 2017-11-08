@@ -73,10 +73,6 @@ public class ApiTaskInterface extends KieApiManager {
         } catch (NumberFormatException e) {
             throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
         }
-        // WTF?!?!?
-        if (pageSize == 0) {
-            pageSize = 2000;
-        }
         List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", page, pageSize, null);
         for (KieTask task : rawList) {
             if (id == task.getId()) {
