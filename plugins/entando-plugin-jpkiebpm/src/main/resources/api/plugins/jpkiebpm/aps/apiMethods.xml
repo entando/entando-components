@@ -65,7 +65,7 @@
         <method httpMethod="GET" active="true">
             <description>Return task detail</description>
             <springBean name="jpkiebpmApiTaskInterface" method="getTaskInputOutput"/>
-            <responseClass>org.json.JSONObject</responseClass>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response.TaskInOutResponse</responseClass>
             <parameters>
                 <parameter key="containerId" required="true">
                     <description>The container id</description>

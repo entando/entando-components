@@ -34,8 +34,10 @@ import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
 
 public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
@@ -78,6 +80,10 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             //DataModel - start
             KieProcessFormQueryResult kpfr = this.getFormManager()
                     .getProcessForm(containerId, processId);
+
+            //add missing fields FIXME this should be in the form retrieved
+            kpfr = FSIDemoHelper.addMissinFields(kpfr);
+
             Map<String, IApsEntity> types = this.getDataObjectManager().getEntityPrototypes();
             String typeCode = null;
             IApsEntity entityType = null;
@@ -93,6 +99,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
                 entityType.setTypeCode(typeCode);
                 entityType.setTypeDescription(processId + "_" + containerId);
                 this.addAttributesToEntityType(entityType, kpfr);
+
                 List<kieProcess> processes = this.getProcess();
                 for (kieProcess proc : processes) {
                     if (proc.getProcessId().equalsIgnoreCase(processId)) {
