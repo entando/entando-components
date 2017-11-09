@@ -115,7 +115,7 @@ public class FSIDemoHelper {
         process.setPrelationship("Consultant");
         process.setPemail((String) input.get("client_email"));
         process.setPdateOfBirth("1506590295001");
-        process.setCorrelation(processId);
+        process.setCorrelation(processId + "_" + process.getBic());
         process.setPssn((String) input.get("client_creditScore"));
         process.setPname((String) input.get("party_name"));
         process.setPsurname((String) input.get("party_surname"));

@@ -154,9 +154,12 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
             }
             //message.setLangCode(this.getCurrentLang().getCode());
             //this.getDataObjectManager().insertOnLineDataObject(dataObject);
-            this.getFormManager().startNewProcess(containerId, processId, toBpm);
+            String procId = this.getFormManager().startNewProcess(containerId, processId, toBpm);
+            _logger.info("NEW PROCCESS ID: {}", procId);
+            List<String> args = new ArrayList<>();
+            args.add(procId);
             this.setDataObjectOnSession(null);
-            this.addActionMessage(this.getText("message.success"));
+            this.addActionMessage(this.getText("message.success", args));
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "save");
             return FAILURE;
