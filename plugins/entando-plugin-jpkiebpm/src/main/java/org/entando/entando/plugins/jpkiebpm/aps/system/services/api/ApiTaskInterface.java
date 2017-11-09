@@ -131,7 +131,7 @@ public class ApiTaskInterface extends KieApiManager {
                     return taskList;
                 }
             } catch (ApsSystemException e) {
-                logger.error("Error {}", e.getMessage());
+                logger.error("Error {}", e);
 
             }
         }

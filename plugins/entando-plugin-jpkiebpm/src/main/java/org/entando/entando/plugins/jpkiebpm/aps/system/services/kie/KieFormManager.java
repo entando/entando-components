@@ -43,6 +43,7 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 
+
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoPayloadHelper;
@@ -191,6 +192,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         if (!_config.getActive()) {
             return list;
         }
+        opt = new HashMap<>();
+        opt.put("user", "ddoyle");
         try {
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_HUMAN_TASK_LIST).resolveParams(page, pageSize);
@@ -214,6 +217,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return list;
     }
+
 
     @Override
     public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException {
@@ -246,6 +250,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return null;
     }
+
 
     @Override
     public String getProcInstDiagramImage(String containerId, String processId) throws ApsSystemException {
@@ -324,11 +329,11 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return json;
     }
 
+
     @Override
     // This uses XML unmarshaling
     public KieProcessFormQueryResult getProcessForm(String containerId, String processId) throws ApsSystemException {
         KieProcessFormQueryResult result = null;
-
         if (!_config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(processId)) {
             return result;
         }
@@ -383,8 +388,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-                    //.setDebug(true)
-                    //.setTestMode(true)
+                    .setDebug(true)
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
@@ -462,7 +466,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public String completeHumanFormTask(final String containerId, final String processId, final long taskId,
             final Map<String, String> input) throws ApsSystemException {
         String result = null;
-
         try {
             // get human task definition
             KieProcessFormQueryResult form = getTaskForm(containerId, taskId);
@@ -480,6 +483,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             map.put("brokerOverride", brokerOverrideValue);
             // finally
             completeHumanFormTask(containerId, taskId, form, taskData, map);
+
         } catch (ApsSystemException t) {
             throw new ApsSystemException("Error completing the task", t);
         } catch (Throwable throwable) {
@@ -488,7 +492,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
-    @Deprecated
     @Override
     public String completeHumanFormTask(final String containerId, final long taskId, final KieProcessFormQueryResult form, final JSONObject task, final Map<String, Object> input)
             throws ApsSystemException {
@@ -759,15 +762,15 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         SKIPPED("skipped"),
         SUSPENDED("suspended"),
         NOMINATED("nominated");
-
+        //TODO pagination
         TASK_STATES(String value) {
             this.value = value;
-        }
-
+                }
         public String getValue() {
             return this.value;
-        }
+            }
 
         private String value;
     }
+
 }
