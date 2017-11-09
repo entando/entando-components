@@ -20,17 +20,23 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
-*/
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
 import org.json.JSONObject;
 
 /**
  *
  * @author entando
  */
-public class FSIDemoPayloadHelper {
+public class FSIDemoHelper {
 
     protected static JSONObject getJsonForBpm() {
         return new JSONObject("{\n"
@@ -84,13 +90,12 @@ public class FSIDemoPayloadHelper {
         return json;
     }
 
-
     public static String createStartProcessPayload(KieApiProcessStart process) {
         String res = null;
 
         try {
-            JSONObject json = FSIDemoPayloadHelper.getJsonForBpm();
-            json = FSIDemoPayloadHelper.replaceValuesFromProcess(json, process);
+            JSONObject json = FSIDemoHelper.getJsonForBpm();
+            json = FSIDemoHelper.replaceValuesFromProcess(json, process);
             res = json.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,6 +103,100 @@ public class FSIDemoPayloadHelper {
         return res;
     }
 
+    public static KieApiProcessStart createStartProcessPayload(String containerId, String processId, Map<String, Object> input) {
+        KieApiProcessStart process = new KieApiProcessStart();
+        process.setContainerId(containerId);
+        process.setProcessId(processId);
+        process.setAccountManager((String) input.get("accountManager"));
+        process.setBic((String) input.get("client_bic"));
+        process.setCname((String) input.get("client_name"));
+        process.setCountry((String) input.get("client_country"));
+        process.setType((String) input.get("client_type"));
+        process.setPrelationship("Consultant");
+        process.setPemail((String) input.get("client_email"));
+        process.setPdateOfBirth("1506590295001");
+        process.setCorrelation(processId);
+        process.setPssn((String) input.get("client_creditScore"));
+        process.setPname((String) input.get("party_name"));
+        process.setPsurname((String) input.get("party_surname"));
+        return process;
+    }
 
+    public static KieProcessFormQueryResult addMissinFields(KieProcessFormQueryResult kpfr) {
+        // CLIENT EMAIL
+        KieProcessFormField email = new KieProcessFormField();
+        email.setName("client_email");
+        email.setId(1111l);
+        email.setPosition(12);
+        email.setType("InputText");
+        List<KieProcessProperty> propsEmail = new ArrayList<>();
+        KieProcessProperty req = new KieProcessProperty();
+        req.setName("fieldRequired");
+        req.setValue("true");
+        propsEmail.add(req);
+        KieProcessProperty lab = new KieProcessProperty();
+        lab.setName("label");
+        lab.setValue("email (client)");
+        propsEmail.add(lab);
+        KieProcessProperty read = new KieProcessProperty();
+        read.setName("readonly");
+        read.setValue("false");
+        propsEmail.add(read);
+        KieProcessProperty out = new KieProcessProperty();
+        out.setName("outputBinding");
+        out.setValue("client/email");
+        propsEmail.add(out);
+        KieProcessProperty fclass = new KieProcessProperty();
+        fclass.setName("fieldClass");
+        fclass.setValue("java.lang.String");
+        propsEmail.add(fclass);
+        email.setProperties(propsEmail);
+
+        //PARTY NAME
+        KieProcessFormField pname = new KieProcessFormField();
+        pname.setName("party_name");
+        pname.setId(1222l);
+        pname.setPosition(13);
+        pname.setType("InputText");
+        List<KieProcessProperty> propsPname = new ArrayList<>();
+        propsPname.add(req);
+        lab = new KieProcessProperty();
+        lab.setName("label");
+        lab.setValue("name (consultant)");
+        propsPname.add(lab);
+        propsPname.add(read);
+        out = new KieProcessProperty();
+        out.setName("outputBinding");
+        out.setValue("party/name");
+        propsPname.add(out);
+        propsPname.add(fclass);
+        pname.setProperties(propsPname);
+
+        //PARTY SURNAME
+        KieProcessFormField psurname = new KieProcessFormField();
+        psurname.setName("party_surname");
+        psurname.setId(1333l);
+        psurname.setPosition(14);
+        psurname.setType("InputText");
+        List<KieProcessProperty> propsPsurname = new ArrayList<>();
+        propsPsurname.add(req);
+        lab = new KieProcessProperty();
+        lab.setName("label");
+        lab.setValue("surname (consultant)");
+        propsPsurname.add(lab);
+        propsPsurname.add(read);
+        out = new KieProcessProperty();
+        out.setName("outputBinding");
+        out.setValue("party/surname");
+        propsPsurname.add(out);
+        propsPsurname.add(fclass);
+        psurname.setProperties(propsPsurname);
+
+        kpfr.getFields().add(email);
+        kpfr.getFields().add(pname);
+        kpfr.getFields().add(psurname);
+
+        return kpfr;
+    }
 
 }

@@ -38,6 +38,9 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
 import org.json.JSONObject;
 
 /**
@@ -230,19 +233,24 @@ public class ApiTaskInterface extends KieApiManager {
         return form;
     }
 
-    public JSONObject getTaskInputOutput(Properties properties) throws Throwable {
-        String containerId = properties.getProperty("containerId");
-        String taskIdString = properties.getProperty("taskId");
-        String user = properties.getProperty("user");
-        Map<String, String> opt = null;
-        if (StringUtils.isNotBlank(user)) {
-            opt = new HashMap<>();
-            opt.put("user", user);
+    public KieApiProcessStart getTaskInputOutput(Properties properties) {
+        try {
+            String containerId = properties.getProperty("containerId");
+            String taskIdString = properties.getProperty("taskId");
+            String user = properties.getProperty("user");
+            Map<String, String> opt = null;
+            if (StringUtils.isNotBlank(user)) {
+                opt = new HashMap<>();
+                opt.put("user", user);
+            }
+            JSONObject processForm = this.getKieFormManager().getTaskFormData(containerId, Long.valueOf(taskIdString), opt);
+            KieApiProcessStart form = new KieApiProcessStart();
+            form = JsonHelper.replaceValuesFromJson(processForm, form);
+            return form;
+        } catch (ApsSystemException ex) {
+            ex.printStackTrace();
         }
-        String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
-        KieApiForm form = null;
-        JSONObject processForm = this.getKieFormManager().getTaskFormData(containerId, Long.valueOf(taskIdString), opt);
-        return processForm;
+        return null;
     }
 
     public void postTaskForm(final KieApiInputFormTask form) throws Throwable {
@@ -276,4 +284,5 @@ public class ApiTaskInterface extends KieApiManager {
     public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
+
 }
