@@ -90,6 +90,24 @@ public class FSIDemoHelper {
         return json;
     }
 
+    public static KieApiProcessStart replaceValuesFromJson(JSONObject json, KieApiProcessStart process) {
+        JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
+                .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
+        JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0);
+        process.setPname(party.getString("name"));
+        process.setPsurname(party.getString("surname"));
+        process.setPdateOfBirth(party.getString("dateOfBirth"));
+        process.setPssn(party.getString("ssn"));
+        process.setPemail(party.getString("email"));
+        process.setPrelationship(party.getString("relationship"));
+        process.setCname(client.getString("name"));
+        process.setCountry(client.getString("country"));
+        process.setType(client.getString("type"));
+        process.setBic(client.getString("bic"));
+        process.setAccountManager(json.getString("accountManager"));
+        return process;
+    }
+
     public static String createStartProcessPayload(KieApiProcessStart process) {
         String res = null;
 

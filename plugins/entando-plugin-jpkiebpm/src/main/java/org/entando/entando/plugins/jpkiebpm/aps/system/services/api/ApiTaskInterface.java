@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
 import org.json.JSONObject;
 
@@ -245,7 +246,7 @@ public class ApiTaskInterface extends KieApiManager {
             }
             JSONObject processForm = this.getKieFormManager().getTaskFormData(containerId, Long.valueOf(taskIdString), opt);
             KieApiProcessStart form = new KieApiProcessStart();
-            form = JsonHelper.replaceValuesFromJson(processForm, form);
+            form = FSIDemoHelper.replaceValuesFromJson(processForm, form);
             return form;
         } catch (ApsSystemException ex) {
             ex.printStackTrace();
@@ -269,7 +270,7 @@ public class ApiTaskInterface extends KieApiManager {
             }
             input.put(field.getName().replace(KieApiField.FIELD_NAME_PREFIX, ""), field.getValue());
         }
-
+        // FIXME this is already dynamic!!!! Development leftover???
         final String result = this.getKieFormManager().completeHumanFormTask(containerId, "com.redhat.bpms.examples.mortgage.MortgageApplication", Long.valueOf(taskId), input);
         logger.info("Result {} ", result);
 
