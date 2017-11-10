@@ -42,6 +42,8 @@ import java.util.logging.Level;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
 import org.json.JSONObject;
 
 /**
@@ -273,7 +275,6 @@ public class ApiTaskInterface extends KieApiManager {
         // FIXME this is already dynamic!!!! Development leftover???
         final String result = this.getKieFormManager().completeHumanFormTask(containerId, "com.redhat.bpms.examples.mortgage.MortgageApplication", Long.valueOf(taskId), input);
         logger.info("Result {} ", result);
-
     }
 
     @Override

@@ -103,15 +103,33 @@
         </method>
     </resource>
 
-    <resource name="processInstances" namespace="jpkiebpm">
-        <description>Red Hat Bpm process instances list</description>
+    <resource name="instanceProcessesList" namespace="jpkiebpm">
+        <description>Red Hat Bpm process list</description>
         <source pluginCode="jpkiebpm">plugins</source>
         <method httpMethod="GET" active="true">
-            <description>Return the list of the process instances given a process id</description>
-            <springBean name="jpkiebpmsApiManager" method="getProcessInstancesList"/>
+            <description>Return the list of the process instances of the given a process id</description>
+            <springBean name="jpkiebpmsApiManager" method="getInstanceProcessesList"/>
             <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.process.KieProcessInstanceListApiResponse</responseClass>
             <parameters>
                 <parameter key="processId" required="true">
+                    <description>The process Id</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+
+    <resource name="processList" namespace="jpkiebpm">
+        <description>Red Hat Bpm process instances list</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return the list of the processes</description>
+            <springBean name="jpkiebpmsApiManager" method="processList"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.process.KieProcessInstanceListApiResponse</responseClass>
+            <parameters>
+                <parameter key="page" required="false">
+                    <description>The process Id</description>
+                </parameter>
+                <parameter key="pageSize" required="false">
                     <description>The process Id</description>
                 </parameter>
             </parameters>

@@ -238,7 +238,7 @@ public interface IKieFormManager {
      * @return
      * @throws ApsSystemException
      */
-    public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException;
+    public List<KieProcessInstance> getAllProcessInstancesList(Map<String, String> opt) throws ApsSystemException;
 
     /**
      *

@@ -163,7 +163,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         try {
             // process endpoint first
-            Endpoint ep = KieEndpointDictionary.create().get(API_GET_PROCESS_INSTANCES_LIST).resolveParams(processId, page, pageSize);
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_PROCESS_INSTANCES_LIST)
+                    .resolveParams(processId, page, pageSize);
             // generate client from the current configuration
             KieClient client = getCurrentClient();
             // perform query
@@ -628,9 +629,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException {
+    public List<KieProcessInstance> getAllProcessInstancesList(Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<String, String>();
         List<KieProcessInstance> list = new ArrayList<KieProcessInstance>();
+
 
         if (!this.getConfig().getActive()) {
             return null;
@@ -647,10 +649,13 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieProcessInstancesQueryResult result = (KieProcessInstancesQueryResult) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
+                    .setRequestParams(opt)
                     .setDebug(true)
                     .doRequest(KieProcessInstancesQueryResult.class);
             // unfold returned object to get the payload
-            if (null != result && null != result.getInstances() && !result.getInstances().isEmpty()) {
+            if (null != result
+                    && null != result.getInstances()
+                    && !result.getInstances().isEmpty()) {
                 list = result.getInstances();
             }
             return list;

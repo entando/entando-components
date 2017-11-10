@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.util.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
 
 public class KieApiManager extends AbstractService implements IKieApiManager {
 
@@ -148,9 +149,39 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     }
 
     @Override
-    public List<KieProcessInstance> getProcessInstancesList(Properties properties) throws Throwable {
+    public List<KieProcessInstance> getInstanceProcessesList(Properties properties) throws Throwable {
         String processId = properties.getProperty("processId");
-        return this.getKieFormManager().getProcessInstancesList(processId, 0, 5000);
+
+        try {
+            List<KieProcessInstance> list = this.getKieFormManager().getProcessInstancesList(processId, 0, 5000);
+            return list;
+        } catch (ApsSystemException t) {
+            String msg = String.format("No error getting the list of processes of type '{}'", processId);
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public List<KieProcessInstance> processList(Properties properties) throws Throwable {
+        final String page = properties.getProperty("page");
+        final String pageSize = properties.getProperty("pageSize");
+        Map<String, String> opt = new HashMap<String, String>();
+
+        try {
+            if (StringUtils.isNotBlank(page)) {
+                opt.put("page", page);
+            }
+            if (StringUtils.isNotBlank(pageSize)) {
+                opt.put("pageSize", pageSize);
+            }
+            List<KieProcessInstance> list =
+                    this.getKieFormManager().getAllProcessInstancesList(opt);
+            return list;
+        } catch (ApsSystemException t) {
+            t.printStackTrace();
+            String msg = String.format("No error getting the list of processes");
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private void processField(final KieProcessFormField field, final String langCode) throws ApsSystemException {
