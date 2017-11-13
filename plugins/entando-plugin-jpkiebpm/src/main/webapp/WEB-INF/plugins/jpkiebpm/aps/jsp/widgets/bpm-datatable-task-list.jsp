@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jpkie:datatable widgetConfigInfoIdVar="configId"/>
-<c:set var = "id" value = "${configId}"/>
+<c:set var="id" value="${configId}"/>
 
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery.validate.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/additional-methods.js"></script>
@@ -21,27 +21,10 @@
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery-ui.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/buttons.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery.dataTables.min.css" media="screen"/>
-<link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/responsive.dataTables.min.css" media="screen"/>
+<link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/responsive.dataTables.min.css"
+      media="screen"/>
 
 <script>
-
-    var loadDataTable = function (url, idTable, extraConfig) {
-
-        $.get(url, function (data) {
-            var items = data.response.result.taskList.list;
-            items = items.map(function(item) {
-                item['activated'] = new Date(item['activated']).toLocaleString();
-                item['created'] = new Date(item['created']).toLocaleString();
-                return item;
-            });
-            extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
-            org.entando.datatable.CustomDatatable(items, idTable, extraConfig);
-        });
-    }
-
-
-
-
 
     function addRow(data, label, index) {
         var html = "<tr><td>" + label + "</td><td>" + data[index] + "</td></tr>"
@@ -103,21 +86,20 @@
     }
 
 
-
     /* Modal Form*/
     function openModalForm(event, rowData, context) {
 
         var url = context + "taskForm.json?containerId=" + rowData.containerId + "&taskId=" + rowData.id;
 
         $.get(url, function (data) {
-            $('#modal-bpm-form').empty();
+            $('#bpm-task-list-modal-form').empty();
             var jsonKie = data.response.result;
             jsonKie.mainForm.method = "post";
             org.entando.form.dynamicForm = new org.entando.form.DynamicForm(jsonKie);
             //org.entando.form.dynamicForm.json.html[0].value = processId;
-            $("#modal-bpm-form").dform(org.entando.form.dynamicForm.json);
+            $("#bpm-task-list-modal-form").dform(org.entando.form.dynamicForm.json);
             optModal.title = "BPM Form Data";
-            $('#modal-bpm-form').dialog(optModal);
+            $('#bpm-task-list-modal-form').dialog(optModal);
 
             $('form.ui-dform-form').submit(function (event1) {
                 event1.preventDefault();
@@ -143,8 +125,8 @@
                     dataType: 'json'
                 }).done(function (result) {
                     if (result.response.result = "SUCCESS") {
-                        $("#modal-bpm-form").dialog("close");
-                        $('#modal-bpm-form').empty();
+                        $("#bpm-task-list-modal-form").dialog("close");
+                        $('#bpm-task-list-modal-form').empty();
                         //row.remove().draw(false);
                         var url = context + "tasks.json?configId=" + configId;
                         $.get(url, function (data) {
@@ -163,8 +145,22 @@
     }
 
 
-
     $(document).ready(function () {
+
+
+        var loadDataTable = function (url, idTable, extraConfig) {
+
+            $.get(url, function (data) {
+                var items = data.response.result.taskList.list;
+                items = items.map(function (item) {
+                    item['activated'] = new Date(item['activated']).toLocaleString();
+                    item['created'] = new Date(item['created']).toLocaleString();
+                    return item;
+                });
+                extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
+                org.entando.datatable.CustomDatatable(items, idTable, extraConfig);
+            });
+        };
 
         var configId = "${id}";
 
@@ -176,24 +172,24 @@
 
         var extraBtns = [
             {
-                html: '<button type="button" class="class-open-modal-bpm-form-details btn btn-success btn-sm" style="margin-right:10px;">Complete</button>',
+                html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Complete</button>',
                 onClick: function (ev, data) {
 
                     openModalForm(ev, data, context);
                 }
             },
             {
-                html: '<button type="button" class=" class-open-modal-bpm-diagram-details btn btn-info btn-sm ">Diagram</button>',
+                html: '<button type="button" class=" class-open-bpm-task-list-modal-diagram-details btn btn-info btn-sm ">Diagram</button>',
                 onClick: function (event, rowData) {
 
                     var url = context + "diagram.json?configId=" + configId + "&processInstanceId=" + rowData.processInstanceId;
-                    $('#modal-bpm-diagram-data').empty();
+                    $('#bpm-task-list-modal-diagram-data').empty();
                     $.get(url, function (data) {
-                        $('#modal-bpm-diagram-data').attr("src", "data:image/svg+xml;utf8," + data.response.result);
+                        $('#bpm-task-list-modal-diagram-data').attr("src", "data:image/svg+xml;utf8," + data.response.result);
                         optModal.title = "BPM Process Diagram";
                         optModal.show.effect = "fold";
                         optModal.position = {my: "center", at: "center"};
-                        $('#modal-bpm-diagram').dialog(optModal);
+                        $('#bpm-task-list-modal-diagram').dialog(optModal);
                     });
 
                 }
@@ -203,32 +199,32 @@
         var extraConfig = {
             buttons: extraBtns,
             onClickRow: function (ev, rowData) {
-                $('#modal-bpm-data-table-tbody').empty();
+                $('#bpm-task-list-modal-data-table-tbody').empty();
                 var url = context + "taskDetail.json?containerId=" + rowData.containerId + "&taskId=" + rowData.id;
                 //console.log(url);
                 $.get(url, function (data) {
-                    $('#modal-bpm-data-table-tbody').append(getTemplateTaskDetail(data.response.result.mainForm));
+                    $('#bpm-task-list-modal-data-table-tbody').append(getTemplateTaskDetail(data.response.result.mainForm));
                     optModal.title = "BPM Data";
-                    $('#modal-bpm-data').dialog(optModal);
+                    $('#bpm-task-list-modal-data').dialog(optModal);
                 });
             }
         };
 
 
-        loadDataTable(url, '#data-table-active',extraConfig);
+        loadDataTable(url, '#data-table-task-list', extraConfig);
     });
 </script>
 
-<table id="data-table-active" class="display nowrap" cellspacing="0" width="100%"></table>
+<table id="data-table-task-list" class="display nowrap" cellspacing="0" width="100%"></table>
 
-<div id="modal-bpm-data" >
-    <table id="modal-bpm-data-table" class="table table-hover no-margins">
-        <tbody id="modal-bpm-data-table-tbody"></tbody>
+<div id="bpm-task-list-modal-data">
+    <table id="bpm-task-list-modal-data-table" class="table table-hover no-margins">
+        <tbody id="bpm-task-list-modal-data-table-tbody"></tbody>
     </table>
 </div>
 
-<div id="modal-bpm-form"/>
+<div id="bpm-task-list-modal-form"/>
 
-<div id="modal-bpm-diagram">
-    <img id="modal-bpm-diagram-data" class="img-responsive"/>
+<div id="bpm-task-list-modal-diagram">
+    <img id="bpm-task-list-modal-diagram-data" class="img-responsive"/>
 </div>
