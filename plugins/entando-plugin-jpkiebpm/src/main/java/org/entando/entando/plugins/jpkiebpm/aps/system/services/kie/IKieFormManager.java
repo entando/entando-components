@@ -88,12 +88,13 @@ public interface IKieFormManager {
      * Get the list of human task
      *
      * @param groups
+     * @param opt
      * @param page
      * @param pageSize
      * @return
      * @throws ApsSystemException
      */
-    public List<KieTask> getHumanTaskList(String groups, int page, int pageSize, Map<String, String> opt) throws ApsSystemException;
+    public List<KieTask> getHumanTaskList(String groups, Map<String, String> opt) throws ApsSystemException;
 
     /**
      * Get the deiser human task form given container ID and form ID

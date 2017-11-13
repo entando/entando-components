@@ -186,7 +186,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public List<KieTask> getHumanTaskList(String groups, int page, int pageSize, Map<String, String> opt) throws ApsSystemException {
+    public List<KieTask> getHumanTaskList(String groups, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
         List<KieTask> list = new ArrayList<>();
 
@@ -197,7 +197,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         opt.put("user", "ddoyle");
         try {
             // process endpoint first
-            Endpoint ep = KieEndpointDictionary.create().get(API_GET_HUMAN_TASK_LIST).resolveParams(page, pageSize);
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_HUMAN_TASK_LIST);
             // generate client from the current configuration
             KieClient client = getCurrentClient();
             // perform query
@@ -466,8 +466,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-                    //                  .setDebug(true)
-                    //                  .setTestMode(true)
+//                  .setDebug(true)
+//                  .setTestMode(true)
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
@@ -551,7 +551,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public KieTask getHumanTask(String processId) throws ApsSystemException {
         KieTask task = null;
         //TODO pagination
-        List<KieTask> tasks = this.getHumanTaskList(null, 0, 5000, null);
+        List<KieTask> tasks = this.getHumanTaskList(null, null);
         if (null != tasks && !tasks.isEmpty()) {
             for (KieTask elem : tasks) {
                 if (elem.getProcessInstanceId().equals(Long.valueOf(processId))) {

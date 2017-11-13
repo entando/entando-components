@@ -66,20 +66,28 @@ public class ApiTaskInterface extends KieApiManager {
 
     public JAXBTask getTask(Properties properties) throws Throwable {
         JAXBTask resTask = null;
-        String idString = properties.getProperty("id");
-        String pageString = properties.getProperty("page");
-        String pageSizeString = properties.getProperty("pageSize");
-        int id;
-        int page;
-        int pageSize;
+        final String idString = properties.getProperty("id");
+        final String page = properties.getProperty("page");
+        final String pageSize = properties.getProperty("pageSize");
+        final String user = properties.getProperty("user");
+        HashMap<String, String> opt = new HashMap<>();
+        int id; // parameter appended to the original payload
+
         try {
             id = Integer.parseInt(idString);
-            page = pageString != null ? Integer.parseInt(pageString) : 0;
-            pageSize = pageSizeString != null ? Integer.parseInt(pageSizeString) : 0;
+            if (StringUtils.isNotBlank("page")) {
+               opt.put("page", page);
+            }
+            if (StringUtils.isNotBlank("pageSize")) {
+               opt.put("pageSize", pageSize);
+            }
+            if (StringUtils.isNotBlank("user")) {
+               opt.put("user", user);
+            }
         } catch (NumberFormatException e) {
             throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
         }
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", page, pageSize, null);
+        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", opt);
         for (KieTask task : rawList) {
             if (id == task.getId()) {
                 resTask = new JAXBTask(task);
@@ -118,6 +126,7 @@ public class ApiTaskInterface extends KieApiManager {
 
     public JAXBTaskList getTasks(Properties properties) {
         final String configId = properties.getProperty("configId");
+        
         if (null != configId) {
             try {
                 final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
@@ -190,7 +199,7 @@ public class ApiTaskInterface extends KieApiManager {
     private void setElementList(final ApsProperties config, final JAXBTaskList taskList) throws ApsSystemException {
         final String groups = "groups=" + config.getProperty("groups").replace(" ", "").replace(",", "&groups=");
         final List<JAXBTask> list = new ArrayList<>();
-        final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(groups, 0, 2000, null);
+        final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(groups, null);
         for (final KieTask task : rawList) {
             list.add(new JAXBTask(task));
         }
