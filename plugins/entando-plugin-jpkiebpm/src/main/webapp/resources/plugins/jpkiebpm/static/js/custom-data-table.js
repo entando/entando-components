@@ -4,7 +4,21 @@ org.entando.datatable = org.entando.datatable || {};
 org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
 
 
-    function getConfigColumnDatatable(items) {
+    function getConfigColumnDatatable(items, columnDefinition) {
+
+        if (columnDefinition && Array.isArray(columnDefinition)) {
+            var columns = columnDefinition.map(function(col, i) {
+                return {
+                    title: col.title || col.data,
+                    data: col.data,
+                    visible: col.visible,
+                    class: 'entando-datatable-row',
+                    targets: col.position || i + 1
+                };
+            });
+            return columns;
+        }
+
         var keys = items.length ? Object.keys(items[0]) : [];
         var columns = keys.map(function(key, i) {
             return {
@@ -12,11 +26,13 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
                 data: key,
                 visible: true,
                 class: 'entando-datatable-row',
-                targets: i
+                targets: i + 1
             };
         });
         return columns;
     }
+
+
 
     function getJsonData(items, columns) {
 
@@ -30,7 +46,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
 
     }
 
-    var jsonColumns = getConfigColumnDatatable(items);
+    var jsonColumns = getConfigColumnDatatable(items,extraConfig.columnDefinition);
     var buttonsColumnDef;
     if (extraConfig && extraConfig.buttons && Array.isArray(extraConfig.buttons)) {
         jsonColumns.push({});

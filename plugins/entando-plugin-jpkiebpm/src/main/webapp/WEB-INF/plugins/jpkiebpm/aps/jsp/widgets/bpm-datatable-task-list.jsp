@@ -34,6 +34,7 @@
                 item['created'] = new Date(item['created']).toLocaleString();
                 return item;
             });
+            extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
             org.entando.datatable.CustomDatatable(items, idTable, extraConfig);
         });
     }
