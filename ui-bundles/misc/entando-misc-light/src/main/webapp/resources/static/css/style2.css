@@ -11,7 +11,7 @@
 [Table of contents]
 
 1. Reset
-2. Helper classes 
+2. Helper classes
 3. Buttons
 4. Dropdown
 5. Navbar Custom
@@ -111,19 +111,6 @@ a:hover,a:focus,.a:active {
 
 .font-light {
     font-weight: 300;
-}
-
-.bg-light {
-    background: url(../img/Help_Banner.png) no-repeat center center;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    /* border-top: 1px solid #E6EDF3; */
-    /* border-bottom: 1px solid #E6EDF3; */
-    /* padding: 0em; */
-    padding: 8em;
-    min-height: 580px;
 }
 
 .m-t-20 {
@@ -897,8 +884,16 @@ textarea.form-control {
 }
 
 .back-to-top:hover,.bg-custom,.btn-custom,.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover,
+.navbar-custom.light  {
+    background: url(../img/Foto_Header.png) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.back-to-top:hover,.bg-custom-purple,.btn-custom,.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover,
 .navbar-custom  {
-    background: url(../img/Foto_Header.png) no-repeat center center fixed; 
+    background: url(../img/Foto_Header_Viola.png) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -925,7 +920,7 @@ textarea.form-control {
 }
 
 .progress-dots {
-    display: table;     
+    display: table;
     width: 100%;
     position: relative;
 }
@@ -933,7 +928,7 @@ textarea.form-control {
 .progress-dots-step:before {
     top: 30px;
     position: absolute;
-    content: " ";  
+    content: " ";
     height: 3px;
     background-color: #f5f5f5;
     width: 70%;
@@ -944,7 +939,7 @@ textarea.form-control {
     display:none;
 }
 
-.progress-dots-step {    
+.progress-dots-step {
     display: table-cell;
     text-align: center;
     position: relative;
@@ -962,4 +957,74 @@ textarea.form-control {
 }
 .title-mortgage{
     margin: 0 0 27px 0;
+}
+.title-advisors{
+    font-size: 32px;
+    color: #f9f9f9;
+}
+.title-advisors-subtitle{
+    font-size: 14px;
+    color: #d2d2d2;
+}
+.purple .banner-advisors {
+    background: url(../img/Help_Viola.png) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding: 8em;
+    min-height: 580px;
+}
+
+.light .banner-advisors {
+    background: url(../img/Help_Banner.png) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding: 8em;
+    min-height: 580px;
+}
+.row-spacer{
+    margin:37px 0 0 0;
+}
+.row-big-spacer{
+    margin:60px 0 0 0;
+}
+.stars{
+    background: url(../img/stelle_Viola.png) no-repeat center center;
+    height:34px;
+    margin-bottom:10px;
+}
+.avarage{
+    background: url(../img/banner_avarage.png) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding: 8em;
+}
+.security{
+}
+.subtitle{
+    font-size:16px;
+    height:34px;
+}
+.title-mortgage {
+    font-size: 33px;
+    margin-top: 0;
+}
+
+.margin-top{
+    margin:  44px 0 0 0;
+}
+.security-logos{
+    margin:40px 0 0 0;
+}
+
+.logo-security {
+    width: 100%;
+}
+.margin-top-email{
+    margin:  22px 0 0 0;
 }
