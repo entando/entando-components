@@ -1,4 +1,4 @@
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-3-step-mortgage', '<?xml version="1.0" encoding="UTF-8"?>
+﻿INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-3-step-mortgage', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
     <property key="en">3 step process demo Mortgage banner</property>
     <property key="it">3 step del Mutuo demo banner </property>

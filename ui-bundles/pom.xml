@@ -57,7 +57,7 @@
 		<module>widgets/entando-widget-search_form</module>
 		 <module>widgets/entando-widget-login_form</module>
 		 <module>widgets/entando-widget-navigation_bar</module>
-        <!-- 
+        <!--
         <module>widgets/entando-widget-navigation_menu</module>
         <module>widgets/entando-widget-navigation_breadcrumbs</module>
         <module>widgets/entando-widget-sharewith</module>
@@ -66,7 +66,7 @@
         <module>content-types/entando-content-download</module>
         <module>content-types/entando-content-resolution</module>
         <module>content-types/entando-content-announcement</module>
-        <module>content-types/entando-content-blogpost</module>       
+        <module>content-types/entando-content-blogpost</module>
         <module>themes/entando-page-2columns-left</module>
        <module>app-views/entando-app-view-webdynamicform-default</module>
         <module>app-views/entando-app-view-rss-default</module>
