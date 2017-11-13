@@ -258,7 +258,7 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
 
-            List<KieProcessInstance> list = _formManager.getAllProcessInstancesList(0, 10, null);
+            List<KieProcessInstance> list = _formManager.getAllProcessInstancesList(null);
             assertNotNull(list);
             assertFalse(list.isEmpty());
         } catch (Throwable t) {

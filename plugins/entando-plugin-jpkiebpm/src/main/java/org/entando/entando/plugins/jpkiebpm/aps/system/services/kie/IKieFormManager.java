@@ -39,98 +39,99 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.fo
  */
 public interface IKieFormManager {
 
-	public final static String BEAN_NAME_ID = "jpkiebpmsManager";
+    public final static String BEAN_NAME_ID = "jpkiebpmsManager";
 
-	/**
-	 * Return service configuration
-	 *
-	 * @return
-	 */
-	public KieBpmConfig getConfig();
+    /**
+     * Return service configuration
+     *
+     * @return
+     */
+    public KieBpmConfig getConfig();
 
-	/**
-	 * List KIE containers
-	 *
-	 * @return
-	 * @throws com.agiletec.aps.system.exception.ApsSystemException
-	 */
-	public List<KieContainer> getContainersList() throws ApsSystemException;
+    /**
+     * List KIE containers
+     *
+     * @return
+     * @throws com.agiletec.aps.system.exception.ApsSystemException
+     */
+    public List<KieContainer> getContainersList() throws ApsSystemException;
 
-	/**
-	 * Update service configuration
-	 *
-	 * @param config
-	 * @return
-	 * @throws ApsSystemException
-	 */
-	public KieBpmConfig updateConfig(KieBpmConfig config) throws ApsSystemException;
+    /**
+     * Update service configuration
+     *
+     * @param config
+     * @return
+     * @throws ApsSystemException
+     */
+    public KieBpmConfig updateConfig(KieBpmConfig config) throws ApsSystemException;
 
-	/**
-	 * Return the process definition list
-	 *
-	 * @return
-	 * @throws ApsSystemException
-	 */
-	public List<kieProcess> getProcessDefinitionsList() throws ApsSystemException;
+    /**
+     * Return the process definition list
+     *
+     * @return
+     * @throws ApsSystemException
+     */
+    public List<kieProcess> getProcessDefinitionsList() throws ApsSystemException;
 
-	/**
-	 * Get the process instances give the process ID
-	 *
-	 * @param processId
-	 * @param page
-	 * @param pageSize
-	 * @return
-	 * @throws ApsSystemException
-	 */
-	public List<KieProcessInstance> getProcessInstancesList(String processId, int page, int pageSize) throws ApsSystemException;
+    /**
+     * Get the process instances give the process ID
+     *
+     * @param processId
+     * @param page
+     * @param pageSize
+     * @return
+     * @throws ApsSystemException
+     */
+    public List<KieProcessInstance> getProcessInstancesList(String processId, int page, int pageSize) throws ApsSystemException;
 
-	/**
-	 * Get the list of human task
-	 *
+    /**
+     * Get the list of human task
+     *
      * @param groups
-	 * @param page
-	 * @param pageSize
-	 * @return
-	 * @throws ApsSystemException
-	 */
-	public List<KieTask> getHumanTaskList(String groups, int page, int pageSize, Map<String, String> opt) throws ApsSystemException;
+     * @param opt
+     * @param page
+     * @param pageSize
+     * @return
+     * @throws ApsSystemException
+     */
+    public List<KieTask> getHumanTaskList(String groups, Map<String, String> opt) throws ApsSystemException;
 
-	/**
-	 * Get the deiser human task form given container ID and form ID
-	 *
-	 * @param containerId
-	 * @param taskId
-	 * @return
-	 * @throws ApsSystemException
-	 */
-	public KieProcessFormQueryResult getTaskForm(String containerId, long taskId) throws ApsSystemException;
+    /**
+     * Get the deiser human task form given container ID and form ID
+     *
+     * @param containerId
+     * @param taskId
+     * @return
+     * @throws ApsSystemException
+     */
+    public KieProcessFormQueryResult getTaskForm(String containerId, long taskId) throws ApsSystemException;
 
-	/**
-	 * Return the process forms.
-	 *
-	 * @note This method marshals the XML returned by the server
-	 * @param containerId
-	 * @param processId
-	 * @return
-	 * @throws ApsSystemException
-	 * @note This method marshals the XML returned by the server
-	 */
-	public KieProcessFormQueryResult getProcessForm(String containerId, String processId) throws ApsSystemException;
+    /**
+     * Return the process forms.
+     *
+     * @note This method marshals the XML returned by the server
+     * @param containerId
+     * @param processId
+     * @return
+     * @throws ApsSystemException
+     * @note This method marshals the XML returned by the server
+     */
+    public KieProcessFormQueryResult getProcessForm(String containerId, String processId) throws ApsSystemException;
 
-	/**
-	 * Submit a form and start the related process
-	 *
-	 * @param containerId
-	 * @param processId
-	 * @param input
-	 * @return
-	 * @throws ApsSystemException
-	 */
-	public String startProcessSubmittingForm(String containerId, String processId, Map<String, Object> input) throws ApsSystemException;
+    /**
+     * Submit a form and start the related process
+     *
+     * @param containerId
+     * @param processId
+     * @param input
+     * @return
+     * @throws ApsSystemException
+     */
+    public String startProcessSubmittingForm(String containerId, String processId, Map<String, Object> input) throws ApsSystemException;
 
-	public String startProcessSubmittingForm(KieProcessFormQueryResult form, String containerId, String processId, Map<String, Object> input) throws ApsSystemException;
+    public String startProcessSubmittingForm(KieProcessFormQueryResult form, String containerId, String processId, Map<String, Object> input) throws ApsSystemException;
 
-	/**
+    /**
      * Submit a form and start the related process
      *
      * @param process
@@ -140,50 +141,52 @@ public interface IKieFormManager {
      */
     public String startNewProcess(KieApiProcessStart process, Map<String, Object> input) throws ApsSystemException;
 
-    /**
-	 * Get the process diagram
-	 *
-	 * @param containerId
-	 * @param processId
-	 * @return
-	 * @throws ApsSystemException
-	 */
-	public String getProcInstDiagramImage(String containerId, String processId) throws ApsSystemException;
+    public String startNewProcess(String containerId, String processId, Map<String, Object> input) throws ApsSystemException;
 
-	/**
-	 * Get the data of the current task
-	 *
-	 * @param containerId
-	 * @param taskId
-	 * @return
-	 * @throws ApsSystemException
-	 */
+    /**
+     * Get the process diagram
+     *
+     * @param containerId
+     * @param processId
+     * @return
+     * @throws ApsSystemException
+     */
+    public String getProcInstDiagramImage(String containerId, String processId) throws ApsSystemException;
+
+    /**
+     * Get the data of the current task
+     *
+     * @param containerId
+     * @param taskId
+     * @return
+     * @throws ApsSystemException
+     */
     public JSONObject getTaskFormData(String containerId, long taskId, Map<String, String> opt) throws ApsSystemException;
 
-	/**
-	 *
-	 * @param containerId
+    /**
+     *
+     * @param containerId
      * @param processId
-	 * @param taskId
-	 * @param input
-	 * @return
-	 * @throws ApsSystemException
-	 */
-	public String completeHumanFormTask(final String containerId, final String processId, final long taskId, final Map<String, String> input) throws ApsSystemException;
+     * @param taskId
+     * @param input
+     * @return
+     * @throws ApsSystemException
+     */
+    public String completeHumanFormTask(final String containerId, final String processId, final long taskId, final Map<String, String> input) throws ApsSystemException;
 
-	/**
-	 *
-	 *
-	 * @param containerId
-	 * @param taskId
-	 * @param form
-	 * @param task
-	 * @param input
-	 * @return
-	 * @throws ApsSystemException
-	 */
-	public String completeHumanFormTask(final String containerId, final long taskId, final KieProcessFormQueryResult form, final JSONObject task, final Map<String, Object> input)
-			throws ApsSystemException;
+    /**
+     *
+     *
+     * @param containerId
+     * @param taskId
+     * @param form
+     * @param task
+     * @param input
+     * @return
+     * @throws ApsSystemException
+     */
+    public String completeHumanFormTask(final String containerId, final long taskId, final KieProcessFormQueryResult form, final JSONObject task, final Map<String, Object> input)
+            throws ApsSystemException;
 
     /**
      * Get a specific human task FIXME check whether there is already a specific
@@ -194,16 +197,16 @@ public interface IKieFormManager {
      * @return
      * @throws ApsSystemException
      */
-	KieTask getHumanTask(String processId) throws ApsSystemException;
+    KieTask getHumanTask(String processId) throws ApsSystemException;
 
-   /**
-    * 
-    * @param containerId
-    * @param taskId
-    * @param opt
-    * @return
-    * @throws ApsSystemException
-    */
+    /**
+     *
+     * @param containerId
+     * @param taskId
+     * @param opt
+     * @return
+     * @throws ApsSystemException
+     */
     public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException;
 
     /**
@@ -219,7 +222,6 @@ public interface IKieFormManager {
      */
     public boolean sendSignal(final String containerId, final String processId, final String signal, String accountId, Map<String, String> opt) throws ApsSystemException;
 
-
     /**
      *
      * @param containerId
@@ -229,7 +231,6 @@ public interface IKieFormManager {
      */
     public void deleteProcess(final String containerId, final String processId, Map<String, String> opt) throws ApsSystemException;
 
-
     /**
      *
      * @param page
@@ -238,8 +239,7 @@ public interface IKieFormManager {
      * @return
      * @throws ApsSystemException
      */
-    public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException;
-
+    public List<KieProcessInstance> getAllProcessInstancesList(Map<String, String> opt) throws ApsSystemException;
 
     /**
      *
@@ -252,7 +252,6 @@ public interface IKieFormManager {
      * @throws Throwable
      */
     public String submitHumanFormTask(final String containerId, final String taskId, final TASK_STATES state, Map<String, String> opt, String payload) throws Throwable;
-
 
     /**
      *

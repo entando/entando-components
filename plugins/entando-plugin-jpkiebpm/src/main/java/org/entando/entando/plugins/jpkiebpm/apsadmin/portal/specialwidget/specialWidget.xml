@@ -23,6 +23,15 @@
             </interceptor-ref>
         </action>
 
+        <!-- Process List config -->
+<!--        <action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig"
+                class="jpkiebpmBpmProcessDatatableWidgetAction" method="init">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>-->
+
     </package>
 
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmFormViewer" namespace="/do/bpm/Page/SpecialWidget/BpmFormViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
@@ -32,7 +41,7 @@
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
-        
+
     	<action name="changeForm*" class="jpkiebpmBpmFormWidgetAction" method="changeForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>

@@ -21,28 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api;
+package org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response;
 
-import java.util.List;
-import java.util.Properties;
-
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputForm;
+import javax.xml.bind.annotation.XmlElement;
+import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
 
-public interface IKieApiManager {
+/**
+ *
+ * @author paddeo
+ */
+public class TaskInOutResponseResult extends AbstractApiResponseResult {
 
-    KieApiForm getBpmForm(Properties properties) throws Throwable;
-
-    void postBpmForm(KieApiInputForm form) throws Throwable;
-
-    List<KieProcessInstance> getInstanceProcessesList(Properties properties) throws Throwable;
-
-    void postSignal(KieApiSignal signal) throws Throwable;
-
-    void startNewProcess(KieApiProcessStart process) throws Throwable;
-
-    public List<KieProcessInstance> processList(Properties properties) throws Throwable;
+    @Override
+    @XmlElement(name = "processObj", required = false)
+    public KieApiProcessStart getResult() {
+        return (KieApiProcessStart) this.getMainResult();
+    }
 }

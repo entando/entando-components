@@ -29,6 +29,15 @@
         <property name="groupManager" ref="GroupManager"/>
     </bean>
 
+    <!--    <bean id="jpkiebpmBpmDatatableWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmDatatableWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
+        <property name="formManager" ref="jpkiebpmsManager"/>
+        <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
+        <property name="groupManager" ref="GroupManager"/>
+    </bean>-->
+
     <bean id="jpkiebpmConfigAction"
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.config.KieBpmConfigAction"
           parent="abstractBaseAction" scope="prototype">

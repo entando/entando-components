@@ -85,7 +85,7 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // invoke the manager
-            List<KieTask> list = _formManager.getHumanTaskList("", 0, 10, null);
+            List<KieTask> list = _formManager.getHumanTaskList("", null);
             assertNotNull(list);
             if (TEST_ENABLED) {
                 assertFalse(list.isEmpty());
@@ -129,7 +129,7 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // invoke the manager
-            List<KieTask> tasks = _formManager.getHumanTaskList("", 0, 10, null);
+            List<KieTask> tasks = _formManager.getHumanTaskList("", null);
             assertNotNull(tasks);
             assertFalse(tasks.isEmpty());
             KieTask task = tasks.get(0);
@@ -292,7 +292,7 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // invoke the manager
-            List<KieTask> tasks = _formManager.getHumanTaskList(null, 0, 10, null);
+            List<KieTask> tasks = _formManager.getHumanTaskList(null, null);
             assertNotNull(tasks);
             assertFalse(tasks.isEmpty());
             KieTask task = tasks.get(0);

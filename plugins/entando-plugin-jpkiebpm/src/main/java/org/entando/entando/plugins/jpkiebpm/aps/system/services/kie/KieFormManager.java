@@ -43,8 +43,10 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 
+
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
 
 /**
@@ -161,7 +163,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         try {
             // process endpoint first
-            Endpoint ep = KieEndpointDictionary.create().get(API_GET_PROCESS_INSTANCES_LIST).resolveParams(processId, page, pageSize);
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_PROCESS_INSTANCES_LIST)
+                    .resolveParams(processId, page, pageSize);
             // generate client from the current configuration
             KieClient client = getCurrentClient();
             // perform query
@@ -183,16 +186,18 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public List<KieTask> getHumanTaskList(String groups, int page, int pageSize, Map<String, String> opt) throws ApsSystemException {
+    public List<KieTask> getHumanTaskList(String groups, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
         List<KieTask> list = new ArrayList<>();
 
         if (!_config.getActive()) {
             return list;
         }
+        opt = new HashMap<>();
+        opt.put("user", "ddoyle");
         try {
             // process endpoint first
-            Endpoint ep = KieEndpointDictionary.create().get(API_GET_HUMAN_TASK_LIST).resolveParams(page, pageSize);
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_HUMAN_TASK_LIST);
             // generate client from the current configuration
             KieClient client = getCurrentClient();
             // perform query
@@ -213,6 +218,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return list;
     }
+
 
     @Override
     public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException {
@@ -245,6 +251,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return null;
     }
+
 
     @Override
     public String getProcInstDiagramImage(String containerId, String processId) throws ApsSystemException {
@@ -323,11 +330,11 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return json;
     }
 
+
     @Override
     // This uses XML unmarshaling
     public KieProcessFormQueryResult getProcessForm(String containerId, String processId) throws ApsSystemException {
         KieProcessFormQueryResult result = null;
-
         if (!_config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(processId)) {
             return result;
         }
@@ -382,8 +389,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-                    //.setDebug(true)
-                    //.setTestMode(true)
+                    .setDebug(true)
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
@@ -401,8 +407,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return null;
         }
         try {
-            // generate payload
-            String payload = this.createPayloadFromObj(process);
+            // generate payload FIXME this should be dynamic
+            String payload = FSIDemoHelper.createStartProcessPayload(process);
             _logger.info("PAYLOAD CREATED: {}", payload);
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_POST_PROCESS_START)
@@ -425,15 +431,16 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
-    private String createPayloadFromObj(KieApiProcessStart process) {
+    @Override
+    public String startNewProcess(String containerId, String processId, Map<String, Object> input) throws ApsSystemException {
+        KieApiProcessStart process = null;
         try {
-            JSONObject json = JsonHelper.getJsonForBpm();
-            json = JsonHelper.replaceValuesFromProcess(json, process);
-            return json.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
+            // generate payload FIXME this should be dynamic
+            process = FSIDemoHelper.createStartProcessPayload(containerId, processId, input);
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error starting the process", t);
         }
-        return null;
+        return this.startNewProcess(process, input);
     }
 
     @Override
@@ -459,8 +466,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-                    //                  .setDebug(true)
-                    //                  .setTestMode(true)
+//                  .setDebug(true)
+//                  .setTestMode(true)
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
@@ -468,11 +475,22 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
+    private KieApiProcessStart convertDataFormToProcessForm(KieProcessFormQueryResult form, String containerId, String processId) {
+        KieApiProcessStart process = new KieApiProcessStart();
+        process.setContainerId(containerId);
+        process.setProcessId(processId);
+        for (KieProcessFormField field : form.getFields()) {
+            if (field.getName().equals("accountManager")) {
+                process.setAccountManager(field.getProperty("value").getValue());
+            }
+        }
+        return process;
+    }
+
     @Override
     public String completeHumanFormTask(final String containerId, final String processId, final long taskId,
             final Map<String, String> input) throws ApsSystemException {
         String result = null;
-
         try {
             // get human task definition
             KieProcessFormQueryResult form = getTaskForm(containerId, taskId);
@@ -490,6 +508,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             map.put("brokerOverride", brokerOverrideValue);
             // finally
             completeHumanFormTask(containerId, taskId, form, taskData, map);
+
         } catch (ApsSystemException t) {
             throw new ApsSystemException("Error completing the task", t);
         } catch (Throwable throwable) {
@@ -498,7 +517,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
-    @Deprecated
     @Override
     public String completeHumanFormTask(final String containerId, final long taskId, final KieProcessFormQueryResult form, final JSONObject task, final Map<String, Object> input)
             throws ApsSystemException {
@@ -533,7 +551,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public KieTask getHumanTask(String processId) throws ApsSystemException {
         KieTask task = null;
         //TODO pagination
-        List<KieTask> tasks = this.getHumanTaskList(null, 0, 5000, null);
+        List<KieTask> tasks = this.getHumanTaskList(null, null);
         if (null != tasks && !tasks.isEmpty()) {
             for (KieTask elem : tasks) {
                 if (elem.getProcessInstanceId().equals(Long.valueOf(processId))) {
@@ -611,9 +629,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public List<KieProcessInstance> getAllProcessInstancesList(int page, int pageSize, Map<String, String> opt) throws ApsSystemException {
+    public List<KieProcessInstance> getAllProcessInstancesList(Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<String, String>();
         List<KieProcessInstance> list = new ArrayList<KieProcessInstance>();
+
 
         if (!this.getConfig().getActive()) {
             return null;
@@ -630,10 +649,13 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieProcessInstancesQueryResult result = (KieProcessInstancesQueryResult) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
+                    .setRequestParams(opt)
                     .setDebug(true)
                     .doRequest(KieProcessInstancesQueryResult.class);
             // unfold returned object to get the payload
-            if (null != result && null != result.getInstances() && !result.getInstances().isEmpty()) {
+            if (null != result
+                    && null != result.getInstances()
+                    && !result.getInstances().isEmpty()) {
                 list = result.getInstances();
             }
             return list;
@@ -769,15 +791,15 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         SKIPPED("skipped"),
         SUSPENDED("suspended"),
         NOMINATED("nominated");
-
+        //TODO pagination
         TASK_STATES(String value) {
             this.value = value;
-        }
-
+                }
         public String getValue() {
             return this.value;
-        }
+            }
 
         private String value;
     }
+
 }

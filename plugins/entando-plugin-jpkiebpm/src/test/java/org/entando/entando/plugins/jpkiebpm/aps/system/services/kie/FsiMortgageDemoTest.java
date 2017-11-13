@@ -31,8 +31,6 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TEST_ENABLED;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.TestKieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
@@ -92,7 +90,7 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // invoke the manager
-            _tasks = _formManager.getHumanTaskList("", 0, 10, opt);
+            _tasks = _formManager.getHumanTaskList("", opt);
             assertNotNull(_tasks);
             if (TEST_ENABLED) {
                 assertFalse(_tasks.isEmpty());

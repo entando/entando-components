@@ -21,28 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api;
+package org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response;
 
-import java.util.List;
-import java.util.Properties;
+import javax.xml.bind.annotation.XmlElement;
+import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
+import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
+/**
+ *
+ * @author matteo
+ */
+public class ProcessListResponse extends AbstractApiResponse {
 
-public interface IKieApiManager {
+    @Override
+    @XmlElement(name = "result", required = true)
+    public ProcessListResponseResult getResult() {
+        return (ProcessListResponseResult) super.getResult();
+    }
 
-    KieApiForm getBpmForm(Properties properties) throws Throwable;
+    @Override
+    protected AbstractApiResponseResult createResponseResultInstance() {
+        return new TaskListResponseResult();
+    }
 
-    void postBpmForm(KieApiInputForm form) throws Throwable;
-
-    List<KieProcessInstance> getInstanceProcessesList(Properties properties) throws Throwable;
-
-    void postSignal(KieApiSignal signal) throws Throwable;
-
-    void startNewProcess(KieApiProcessStart process) throws Throwable;
-
-    public List<KieProcessInstance> processList(Properties properties) throws Throwable;
 }

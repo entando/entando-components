@@ -27,12 +27,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.json.annotations.JSON;
-import org.entando.entando.aps.system.services.api.IApiErrorCodes;
-import org.entando.entando.aps.system.services.api.model.ApiError;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
 
@@ -40,7 +36,6 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieDat
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.NullFormField;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
