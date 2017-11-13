@@ -90,7 +90,7 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // invoke the manager
-            _tasks = _formManager.getHumanTaskList("", 0, 10, opt);
+            _tasks = _formManager.getHumanTaskList("", opt);
             assertNotNull(_tasks);
             if (TEST_ENABLED) {
                 assertFalse(_tasks.isEmpty());
