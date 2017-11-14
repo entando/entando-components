@@ -14,5 +14,5 @@ INSERT INTO widgetcatalog VALUES ('bpm-datatable-process-list', '<?xml version="
 <property key="it">BPM-Lista processi</property>
 </properties>', '<config>
 	<parameter name="widgetInfoId">WidgetInfoID</parameter>
-	<action name="jpkiebpmBpmDatatableWidgetViewerConfig"/>
+	<action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
