@@ -33,15 +33,16 @@
 
             $.get(url, function (data) {
 
-                var items = data.response.result.items.item;
+                var items = data.response.result.processInstanceList.list;
                 items = items.map(function (item) {
                     item['start-date'] = new Date(item['start-date']).toLocaleString();
                     delete item['@xsi.type'];
 
                     return item;
                 });
-                //extraConfig.columnDefinition = data.response.result.t["datatable-field-definition"].fields;
+                extraConfig.columnDefinition = data.response.result.processInstanceList["datatable-field-definition"].fields;
                 org.entando.datatable.CustomDatatable(items, idTable, extraConfig);
+
             });
         }
 
@@ -49,16 +50,16 @@
         var configId = "${id}";
 
         var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />api/rs/<wp:info key="currentLang"/>/jpkiebpm/";
-        var url = context + "processList.json";
+        var url = context + "processInstanceList.json?configId=${id}";
         var extraConfig = {
             //buttons: extraBtns,
             onClickRow: function (ev, rowData) {
 
             }
         };
-        loadDataTable(url, '#data-table-process-list');
+        loadDataTable(url, '#data-table-process-list',extraConfig);
 
     });
 </script>
 
-<table id="data-table-process-list" class="display nowrap" cellspacing="0" width="100%"></table>
+<table id="data-table-process-list" class="display nowrap" cellspacing="0" width="100%"></table>process
