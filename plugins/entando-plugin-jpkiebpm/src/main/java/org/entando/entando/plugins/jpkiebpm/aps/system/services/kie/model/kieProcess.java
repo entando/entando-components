@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Entando
  */
-@XmlRootElement(name="kie-containers")
+@XmlRootElement(name = "kie-containers")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class kieProcess {
 
@@ -76,15 +76,19 @@ public class kieProcess {
         this.containerId = containerId;
     }
 
-    @XmlElement(name="process-id")
+    @XmlElement(name = "process-id")
     private String processId;
-    @XmlElement(name="process-name")
+    @XmlElement(name = "process-name")
     private String processName;
-    @XmlElement(name="process-version")
+    @XmlElement(name = "process-version")
     private String processVersion;
-    @XmlElement(name="package")
+    @XmlElement(name = "package")
     private String packageName;
-    @XmlElement(name="container-id")
+    @XmlElement(name = "container-id")
     private String containerId;
 
+    @Override
+    public String toString() {
+        return "process-id,process-name,process-version,package,container-id";
+    }
 }

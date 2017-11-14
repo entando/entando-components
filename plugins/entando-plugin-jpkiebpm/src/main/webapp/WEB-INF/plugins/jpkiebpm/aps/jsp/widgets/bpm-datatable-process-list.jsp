@@ -26,7 +26,7 @@
 <script>
     $(document).ready(function () {
         var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />api/rs/<wp:info key="currentLang"/>/jpkiebpm/";
-        var url = context + "tasks.json?configId=${id}";
+        var url = context + "processInstanceList.json?configId=${id}";
         //console.log(url);
         org.entando.datatable.loadDataTable(url, '#data-table-active', context,${id});
     });

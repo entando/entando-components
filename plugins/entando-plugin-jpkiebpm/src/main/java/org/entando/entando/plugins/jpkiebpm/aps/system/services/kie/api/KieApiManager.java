@@ -54,6 +54,10 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.DatatableFieldDefinition;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstance;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstanceList;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBTaskList;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
@@ -65,6 +69,13 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     @Override
     public void init() throws Exception {
         /**/
+    }
+
+    private void initFieldMandatory() {
+        fieldMandatory = new HashMap<>();
+        fieldMandatory.put("processInstanceId", Boolean.TRUE);
+        fieldMandatory.put("id", Boolean.TRUE);
+        fieldMandatory.put("processDefinitionId", Boolean.TRUE);
     }
 
     protected Map<String, KieFormOverride> getFormOverridesMap(String containerId, String processId, String overrides) throws ApsSystemException {
@@ -174,14 +185,113 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             if (StringUtils.isNotBlank(pageSize)) {
                 opt.put("pageSize", pageSize);
             }
-            List<KieProcessInstance> list =
-                    this.getKieFormManager().getAllProcessInstancesList(opt);
+            List<KieProcessInstance> list
+                    = this.getKieFormManager().getAllProcessInstancesList(opt);
             return list;
         } catch (ApsSystemException t) {
             t.printStackTrace();
             String msg = String.format("No error getting the list of processes");
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public JAXBProcessInstanceList processInstancesDataTable(Properties properties) throws Throwable {
+        final String pageString = properties.getProperty("page");
+        final String pageSizeString = properties.getProperty("pageSize");
+        final String configId = properties.getProperty("configId");
+        int page = 0, pageSize = 5000;
+        try {
+            if (StringUtils.isNotBlank(pageString)) {
+                page = Integer.valueOf(pageString);
+            }
+            if (StringUtils.isNotBlank(pageSizeString)) {
+                pageSize = Integer.valueOf(pageSizeString);
+            }
+
+            if (null != configId) {
+                try {
+                    final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+                    final String information = bpmWidgetInfo.getInformationDraft();
+                    if (StringUtils.isNotEmpty(information)) {
+                        final ApsProperties config = new ApsProperties();
+                        try {
+                            config.loadFromXml(information);
+                        } catch (IOException e) {
+                            logger.error("Error load configuration  {} ", e.getMessage());
+                        }
+                        final JAXBProcessInstanceList processList = new JAXBProcessInstanceList();
+                        this.setElementDatatableFieldDefinition(config, processList);
+                        this.setElementList(config, processList);
+                        processList.setContainerId(config.getProperty("containerId"));
+                        processList.setProcessId(config.getProperty("processId"));
+                        return processList;
+                    }
+                } catch (ApsSystemException e) {
+                    logger.error("Error {}", e);
+
+                }
+            }
+            return null;
+        } catch (Throwable t) {
+            t.printStackTrace();
+            String msg = String.format("No error getting the list of processes");
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void setElementDatatableFieldDefinition(final ApsProperties config, final JAXBProcessInstanceList processList) {
+        final String PREFIX_FIELD = "field_";
+        final String PREFIX_VISIBLE = "visible_";
+        final String PREFIX_OVERRIDE = "override_";
+        final String PREFIX_POSITION = "position_";
+
+        initFieldMandatory();
+        for (final Map.Entry entry : config.entrySet()) {
+            final boolean isPropertyField = ((String) entry.getKey()).startsWith(PREFIX_FIELD);
+            if (isPropertyField) {
+                final String fieldName = ((String) entry.getKey()).replace(PREFIX_FIELD, "").trim();
+                final boolean propertyIsVisible = Boolean.valueOf(config.getProperty(PREFIX_VISIBLE + fieldName));
+                if (propertyIsVisible) {
+                    final DatatableFieldDefinition.Field field = new DatatableFieldDefinition.Field();
+                    String title = config.getProperty(PREFIX_OVERRIDE + fieldName) == null ? fieldName : config.getProperty(PREFIX_OVERRIDE + fieldName);
+                    field.setTitle(title);
+                    field.setData(fieldName);
+                    field.setVisible(Boolean.valueOf(true));
+                    field.setPosition(Byte.parseByte(config.getProperty(PREFIX_POSITION + fieldName)));
+                    processList.getDatatableFieldDefinition().addField(field);
+
+                } else if (isMandatory(fieldName)) {
+                    final DatatableFieldDefinition.Field field = new DatatableFieldDefinition.Field();
+                    field.setTitle(fieldName);
+                    field.setData(fieldName);
+                    field.setVisible(Boolean.valueOf(false));
+                    field.setPosition(Byte.parseByte(config.getProperty(PREFIX_POSITION + fieldName)));
+                    processList.getDatatableFieldDefinition().addField(field);
+                }
+            }
+        }
+        Collections.sort(processList.getDatatableFieldDefinition().getFields(), new Comparator<DatatableFieldDefinition.Field>() {
+            @Override
+            public int compare(DatatableFieldDefinition.Field o1, DatatableFieldDefinition.Field o2) {
+                return o1.getPosition().compareTo(o2.getPosition());
+            }
+        });
+    }
+
+    private boolean isMandatory(String fieldName) {
+        return fieldMandatory.containsKey(fieldName);
+    }
+
+    private void setElementList(final ApsProperties config, final JAXBProcessInstanceList processList) throws ApsSystemException {
+        final String groups = "groups=" + config.getProperty("groups") != null ? config.getProperty("groups").replace(" ", "").replace(",", "&groups=") : "";
+        final String processId = config.getProperty("processId");
+        final List<JAXBProcessInstance> list = new ArrayList<>();
+        final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesList(processId, 0, 5000);
+        for (final KieProcessInstance process : rawList) {
+            list.add(new JAXBProcessInstance(process));
+        }
+        processList.setList(list);
     }
 
     private void processField(final KieProcessFormField field, final String langCode) throws ApsSystemException {
@@ -286,6 +396,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 
+    private HashMap<String, Boolean> fieldMandatory;
     private II18nManager i18nManager;
     private ILangManager langManager;
     private IKieFormManager kieFormManager;
