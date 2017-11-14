@@ -27,13 +27,17 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+<<<<<<< HEAD
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
+=======
+>>>>>>> master
 
 /**
  *
  * @author matteo
  */
 @XmlRootElement(name = "process-instanc")
+<<<<<<< HEAD
 @XmlType(propOrder = {"processInstanceId",
     "processId",
     "processName",
@@ -45,6 +49,19 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
     "processInstanceDesc",
     "correlationKey",
     "parentInstanceId"})
+=======
+@XmlType(propOrder = {"process-instance-id",
+    "process-id",
+    "process-name",
+    "process-version",
+    "process-instance-state",
+    "container-id",
+    "initiator",
+    "start-date",
+    "process-instance-desc",
+    "correlation-key",
+    "parent-instance-id"})
+>>>>>>> master
 public class JAXBProcessInstance {
 
     private String processInstanceId;
