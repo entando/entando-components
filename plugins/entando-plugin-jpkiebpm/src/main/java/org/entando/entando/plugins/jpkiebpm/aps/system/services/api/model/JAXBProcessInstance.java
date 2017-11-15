@@ -23,28 +23,18 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model;
 
-import java.util.Date;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
+import java.util.Date;
 
 /**
- *
  * @author matteo
  */
-@XmlRootElement(name = "process-instanc")
-@XmlType(propOrder = {"processInstanceId",
-    "processId",
-    "processName",
-    "processVersion",
-    "processInstanceState",
-    "containerId",
-    "initiator",
-    "startDate",
-    "processInstanceDesc",
-    "correlationKey",
-    "parentInstanceId"})
+@XmlRootElement(name = "processInstance")
+
 public class JAXBProcessInstance {
 
     private String processInstanceId;
@@ -91,7 +81,7 @@ public class JAXBProcessInstance {
     public JAXBProcessInstance() {
     }
 
-    @XmlElement(name = "processInstanceId")
+    @XmlElement(name = "process-instance-id")
     public String getProcessInstanceId() {
         return processInstanceId;
     }
@@ -100,7 +90,7 @@ public class JAXBProcessInstance {
         this.processInstanceId = processInstanceId;
     }
 
-    @XmlElement(name = "processId")
+    @XmlElement(name = "process-id")
     public String getProcessId() {
         return processId;
     }
@@ -109,7 +99,7 @@ public class JAXBProcessInstance {
         this.processId = processId;
     }
 
-    @XmlElement(name = "processName")
+    @XmlElement(name = "process-name")
     public String getProcessName() {
         return processName;
     }
@@ -118,7 +108,7 @@ public class JAXBProcessInstance {
         this.processName = processName;
     }
 
-    @XmlElement(name = "processVersion")
+    @XmlElement(name = "process-version")
     public String getProcessVersion() {
         return processVersion;
     }
@@ -127,7 +117,7 @@ public class JAXBProcessInstance {
         this.processVersion = processVersion;
     }
 
-    @XmlElement(name = "processInstanceState")
+    @XmlElement(name = "process-instance-state")
     public String getProcessInstanceState() {
         return processInstanceState;
     }
@@ -136,7 +126,7 @@ public class JAXBProcessInstance {
         this.processInstanceState = processInstanceState;
     }
 
-    @XmlElement(name = "containerId")
+    @XmlElement(name = "container-id")
     public String getContainerId() {
         return containerId;
     }
@@ -154,7 +144,7 @@ public class JAXBProcessInstance {
         this.initiator = initiator;
     }
 
-    @XmlElement(name = "startDate")
+    @XmlElement(name = "start-date")
     public Date getStartDate() {
         return startDate;
     }
@@ -163,7 +153,7 @@ public class JAXBProcessInstance {
         this.startDate = startDate;
     }
 
-    @XmlElement(name = "processInstanceDesc")
+    @XmlElement(name = "process-instance-desc")
     public String getProcessInstanceDesc() {
         return processInstanceDesc;
     }
@@ -172,7 +162,7 @@ public class JAXBProcessInstance {
         this.processInstanceDesc = processInstanceDesc;
     }
 
-    @XmlElement(name = "correlationKey")
+    @XmlElement(name = "correlation-key")
     public String getCorrelationKey() {
         return correlationKey;
     }
@@ -181,7 +171,7 @@ public class JAXBProcessInstance {
         this.correlationKey = correlationKey;
     }
 
-    @XmlElement(name = "parentInstanceId")
+    @XmlElement(name = "parent-instance-id")
     public String getParentInstanceId() {
         return parentInstanceId;
     }

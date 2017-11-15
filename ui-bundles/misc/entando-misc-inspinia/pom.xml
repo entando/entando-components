@@ -57,17 +57,5 @@
         </plugins>
     </build>
     <dependencies>
-        <!--        <dependency>
-            <groupId>org.entando.entando.bundles.misc</groupId>
-            <artifactId>entando-misc-html5-essentials</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.entando.entando.bundles.misc</groupId>
-            <artifactId>entando-misc-jquery</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
-            <type>war</type>
-        </dependency>-->
     </dependencies>
 </project>
