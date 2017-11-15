@@ -129,7 +129,7 @@ public class KieProcessInstance {
     @XmlElement(name="process-instance-id")
     private Long instanceId;
 
-    @XmlElement(name="proceprocess-id")
+    @XmlElement(name="process-id")
     private String id;
 
     @XmlElement(name="process-name")
