@@ -5,23 +5,26 @@ import com.agiletec.aps.system.services.group.IGroupManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
  *
  */
-public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
+public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
 
     private IKieFormManager formManager;
     private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
+
     protected void loadFieldIntoDatatableFromBpm() throws ApsSystemException {
-        List<kieProcess> processes = formManager.getProcessDefinitionsList();
-        if (!processes.isEmpty()) {
-            super.loadDataIntoFieldDatatable(processes);
+        HashMap<String, String> opt = new HashMap<>();
+        List<KieTask> task = formManager.getHumanTaskList(null, opt);
+        if (!task.isEmpty()) {
+            super.loadDataIntoFieldDatatable(task);
         }
     }
 
@@ -34,6 +37,7 @@ public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
     public void setGroupManager(IGroupManager groupManager) {
         this.groupManager = groupManager;
     }
+
 
     @Override
     public IKieFormManager getFormManager() {

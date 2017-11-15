@@ -522,4 +522,59 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     private IDataObjectModelManager _dataObjectModelManager;
     private II18nManager i18nManager;
 
+    public static class FieldDatatable {
+
+        private String name;
+        private String field;
+        private Boolean visible;
+        private String override;
+        private Byte position;
+
+
+        FieldDatatable(final String name) {
+            this.name = name;
+
+        }
+
+        public String getField() {
+            return field;
+        }
+
+        public void setField(String field) {
+            this.field = field;
+        }
+
+        public Boolean getVisible() {
+            return visible;
+        }
+
+        public void setVisible(Boolean visible) {
+            this.visible = visible;
+        }
+
+        public String getOverride() {
+            return override;
+        }
+
+        public void setOverride(String override) {
+            this.override = override;
+        }
+
+        public Byte getPosition() {
+            return position;
+        }
+
+        public void setPosition(Byte position) {
+            this.position = position;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
 }
