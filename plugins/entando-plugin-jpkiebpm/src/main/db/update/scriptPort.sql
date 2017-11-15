@@ -9,10 +9,11 @@ INSERT INTO widgetcatalog VALUES ('bpm-datatable-task-list', '<?xml version="1.0
 	<parameter name="widgetInfoId">WidgetInfoID</parameter>
 	<action name="jpkiebpmBpmTaskListDatatableWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+
 INSERT INTO widgetcatalog VALUES ('bpm-datatable-process-list', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">BPM-Datatable Process list</property>
-<property key="it">BPM-Datatable Lista processi</property>
+<property key="en">BPM-Process list</property>
+<property key="it">BPM-Lista processi</property>
 </properties>', '<config>
 	<parameter name="widgetInfoId">WidgetInfoID</parameter>
 	<action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig"/>

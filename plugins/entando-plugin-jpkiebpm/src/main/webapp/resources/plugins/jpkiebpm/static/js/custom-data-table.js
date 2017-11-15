@@ -7,7 +7,9 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
     function getConfigColumnDatatable(items, columnDefinition) {
 
         if (columnDefinition) {
+
             columnDefinition = Array.isArray(columnDefinition) ? columnDefinition : [columnDefinition];
+
             var columns = columnDefinition.map(function(col, i) {
                 return {
                     title: col.title || col.data,
