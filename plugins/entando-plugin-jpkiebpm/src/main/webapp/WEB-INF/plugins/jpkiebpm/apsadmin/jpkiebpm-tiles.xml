@@ -11,10 +11,16 @@
                        value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmFormConfig.jsp"/>
     </definition>
 
-    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmDatatable.config">
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmTaskListDatatable.config">
         <put-attribute name="title" value="kiebpm Datatable"/>
         <put-attribute name="body"
-                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmDatatableConfig.jsp"/>
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmTaskListDatatableConfig.jsp"/>
+    </definition>
+
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmProcessDatatable.config">
+        <put-attribute name="title" value="kiebpm Datatable"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmProcessDatatableConfig.jsp"/>
     </definition>
 
     <definition extends="layout.default" name="admin.jpkiebpm.config.entry">

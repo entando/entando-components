@@ -9,24 +9,31 @@
              extends="core_do/Page/SpecialWidget">
 
         <action name="jpkiebpmBpmFormWidgetViewerConfig" class="jpkiebpmBpmFormWidgetAction" method="init">
-                <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <interceptor-ref name="entandoDefaultStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
 
 
-        <action name="jpkiebpmBpmDatatableWidgetViewerConfig" class="jpkiebpmBpmDatatableWidgetAction" method="init">
-            <result type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
+        <action name="jpkiebpmBpmTaskListDatatableWidgetViewerConfig" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="init">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig" class="jpkiebpmBpmProcessDatatableWidgetAction" method="init">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
             <interceptor-ref name="entandoDefaultStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
 
         <!-- Process List config -->
-<!--        <action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig"
+        <!--        <action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig"
                 class="jpkiebpmBpmProcessDatatableWidgetAction" method="init">
-            <result type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <interceptor-ref name="entandoDefaultStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
@@ -36,16 +43,20 @@
 
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmFormViewer" namespace="/do/bpm/Page/SpecialWidget/BpmFormViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
 
-    	<action name="chooseForm*" class="jpkiebpmBpmFormWidgetAction" method="chooseForm">
+        <action name="chooseForm*" class="jpkiebpmBpmFormWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
-    	<action name="changeForm*" class="jpkiebpmBpmFormWidgetAction" method="changeForm">
+        <action name="changeForm*" class="jpkiebpmBpmFormWidgetAction" method="changeForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
         <action name="save" class="jpkiebpmBpmFormWidgetAction" method="save">
@@ -58,22 +69,26 @@
     </package>
 
 
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmDatatableViewer" namespace="/do/bpm/Page/SpecialWidget/BpmDatatableViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmTaskListDatatableViewer" namespace="/do/bpm/Page/SpecialWidget/BpmTaskListDatatableViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
 
-        <action name="chooseForm*" class="jpkiebpmBpmDatatableWidgetAction" method="chooseForm">
-            <result type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
-            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
-            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        <action name="chooseForm*" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="chooseForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
-        <action name="changeForm*" class="jpkiebpmBpmDatatableWidgetAction" method="changeForm">
-            <result type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
-            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
-            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        <action name="changeForm*" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="changeForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
         </action>
 
-        <action name="save" class="jpkiebpmBpmDatatableWidgetAction" method="save">
-            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmDatatable.config</result>
+        <action name="save" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="save">
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <interceptor-ref name="entandoValidationStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
@@ -81,5 +96,30 @@
 
     </package>
 
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmProcessDatatableViewer" namespace="/do/bpm/Page/SpecialWidget/BpmProcessDatatableViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
 
+        <action name="chooseForm*" class="jpkiebpmBpmProcessDatatableWidgetAction" method="chooseForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="changeForm*" class="jpkiebpmBpmProcessDatatableWidgetAction" method="changeForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="save" class="jpkiebpmBpmProcessDatatableWidgetAction" method="save">
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+
+    </package>
 </struts>

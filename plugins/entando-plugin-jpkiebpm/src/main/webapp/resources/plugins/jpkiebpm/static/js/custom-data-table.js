@@ -6,7 +6,8 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
 
     function getConfigColumnDatatable(items, columnDefinition) {
 
-        if (columnDefinition && Array.isArray(columnDefinition)) {
+        if (columnDefinition) {
+            columnDefinition = Array.isArray(columnDefinition) ? columnDefinition : [columnDefinition];
             var columns = columnDefinition.map(function(col, i) {
                 return {
                     title: col.title || col.data,
@@ -18,6 +19,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
             });
             return columns;
         }
+
 
         var keys = items.length ? Object.keys(items[0]) : [];
         var columns = keys.map(function(key, i) {

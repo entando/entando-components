@@ -27,21 +27,20 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 /**
  * @author E.Santoboni
  */
-
-@XmlSeeAlso({ KieProcessInstance.class })
+@XmlSeeAlso({KieProcessInstance.class})
 public class KieProcessInstanceListApiResponseResult extends AbstractApiResponseResult {
 
-	@Override
-	@XmlElement(name = "items", required = false)
-	public ListResponse<KieProcessInstance> getResult() {
-		if (this.getMainResult() instanceof Collection) {
-			List<KieProcessInstance> proocessList = new ArrayList<KieProcessInstance>();
-			proocessList.addAll((Collection<KieProcessInstance>) this.getMainResult());
-			ListResponse<KieProcessInstance> entity = new ListResponse<KieProcessInstance>(proocessList) {
-			};
-			return entity;
-		}
-		return null;
-	}
+    @Override
+    @XmlElement(name = "items", required = false)
+    public ListResponse<KieProcessInstance> getResult() {
+        if (this.getMainResult() instanceof Collection) {
+            List<KieProcessInstance> processList = new ArrayList<KieProcessInstance>();
+            processList.addAll((Collection<KieProcessInstance>) this.getMainResult());
+            ListResponse<KieProcessInstance> entity = new ListResponse<KieProcessInstance>(processList) {
+            };
+            return entity;
+        }
+        return null;
+    }
 
 }

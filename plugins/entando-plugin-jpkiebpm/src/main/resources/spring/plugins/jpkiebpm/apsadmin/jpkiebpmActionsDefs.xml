@@ -20,8 +20,8 @@
         <property name="i18nManager" ref="I18nManager"/>
     </bean>
 
-    <bean id="jpkiebpmBpmDatatableWidgetAction"
-          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmDatatableWidgetAction"
+    <bean id="jpkiebpmBpmTaskListDatatableWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmTaskListDatatableWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
         <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
         <property name="formManager" ref="jpkiebpmsManager"/>
@@ -29,14 +29,14 @@
         <property name="groupManager" ref="GroupManager"/>
     </bean>
 
-    <!--    <bean id="jpkiebpmBpmDatatableWidgetAction"
-          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmDatatableWidgetAction"
-          parent="simpleWidgetAction" scope="prototype">
+    <bean id="jpkiebpmBpmProcessDatatableWidgetAction"
+              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmProcessDatatableWidgetAction"
+              parent="simpleWidgetAction" scope="prototype">
         <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
         <property name="formManager" ref="jpkiebpmsManager"/>
         <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
         <property name="groupManager" ref="GroupManager"/>
-    </bean>-->
+    </bean>
 
     <bean id="jpkiebpmConfigAction"
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.config.KieBpmConfigAction"

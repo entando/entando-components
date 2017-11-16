@@ -136,6 +136,27 @@
         </method>
     </resource>
 
+    <resource name="processInstanceList" namespace="jpkiebpm">
+        <description>The rapresentation of a process instance list</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a process instance list</description>
+            <springBean name="jpkiebpmsApiManager" method="processInstancesDataTable"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response.ProcessInstanceListResponse</responseClass>
+            <parameters>
+                <parameter key="configId" required="true">
+                    <description>The confguration id of jpkiebpm_widgetinfo</description>
+                </parameter>
+                <parameter key="page" required="false">
+                    <description>The page of the list</description>
+                </parameter>
+                <parameter key="pageSize" required="false">
+                    <description>The size of the page list</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+
     <resource name="sendSignal" namespace="jpkiebpm">
         <description>Red Hat Bpm Signal</description>
         <source pluginCode="jpkiebpm">plugins</source>

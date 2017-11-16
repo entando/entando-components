@@ -35,7 +35,7 @@
     <s:param name="selectedNode" value="pageCode"></s:param>
 </s:action>
 
-<s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmDatatableViewer" class="form-horizontal">
+<s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmTaskListDatatableViewer" class="form-horizontal">
     <p class="noscreen">
         <wpsf:hidden name="pageCode"/>
         <wpsf:hidden name="frame"/>
