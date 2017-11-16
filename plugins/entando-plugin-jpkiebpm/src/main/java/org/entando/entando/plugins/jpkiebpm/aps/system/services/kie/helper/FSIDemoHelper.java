@@ -20,12 +20,15 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
- */
+*/
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.struts2.json.annotations.JSONParameter;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
@@ -217,4 +220,66 @@ public class FSIDemoHelper {
         return kpfr;
     }
 
+    public static String getPayloadForCompleteEnrichDocument(Map<String, Object> input) throws IOException
+    {
+        JSONObject payload = new JSONObject(PAYLOAD_ENRICHMENT);
+        Object docObj = JsonHelper.findKey(payload, "org.jbpm.document.service.impl.DocumentImpl");
+
+        if (docObj instanceof JSONObject) {
+            JSONObject doc = (JSONObject) docObj;
+
+            if (input.containsKey("identifier")) {
+                JsonHelper.replaceKey(doc, "identifier", input.get("identifier"));
+            }
+            if (input.containsKey("name")) {
+                JsonHelper.replaceKey(doc, "name", input.get("name"));
+            }
+            if (input.containsKey("link")) {
+                JsonHelper.replaceKey(doc, "link", input.get("link"));
+            }
+            if (input.containsKey("size")) {
+                Long val = (Long) input.get("size");
+
+                JsonHelper.replaceKey(doc, "size", val);
+            }
+            if (input.containsKey("lastModified")) {
+                Long val = (Long) input.get("lastModified");
+
+                JsonHelper.replaceKey(doc, "lastModified", val);
+            }
+            if (input.containsKey("content")) {
+                JsonHelper.replaceKey(doc, "content", input.get("content"));
+            }
+
+            if (input.containsKey("attributes")
+                    && input.get("attributes") instanceof Map) {
+                Object attr = JsonHelper.findKey(doc, "attributes");
+
+                if (attr instanceof JSONObject) {
+                    JsonHelper.replaceKey(doc, "attributes", input.get("attributes"));
+                }
+            }
+
+        }
+
+        return payload.toString();
+    }
+
+
+    public final static String PAYLOAD_ENRICHMENT =
+            "{\n" +
+            "  \"htUploadedDocument\" : {\n" +
+            "  	\"org.jbpm.document.service.impl.DocumentImpl\":{\n" +
+            "      \"identifier\" : \"myCoolIdentifier\",\n" +
+            "      \"name\" : \"My Cool Document.\",\n" +
+            "      \"link\" : \"my-cool-link\",\n" +
+            "      \"size\" : 1200,\n" +
+            "      \"lastModified\" : 1507840764549,\n" +
+            "      \"content\" : \"VkdocGN5QnBjeUJoSUhOaGJYQnNaU0JwWkdWdWRHbG1hV05oZEdsdmJpQmtiMk4xYldWdWRDND0=\",\n" +
+            "      \"attributes\" : {\n" +
+            "        \"testKey\" : \"testValue\"\n" +
+            "      }\n" +
+            "  	}\n" +
+            "  }\n" +
+            "}";
 }

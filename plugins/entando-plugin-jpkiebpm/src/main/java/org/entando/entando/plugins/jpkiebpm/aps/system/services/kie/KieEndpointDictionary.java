@@ -71,6 +71,8 @@ public class KieEndpointDictionary {
         endpoints.put(API_GET_ALL_PROCESS_INSTANCES_LIST, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/queries/processes/instances", HttpStatus.SC_OK));
         endpoints.put(API_PUT_HUMAN_TASK_STATE, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/tasks/%s/states/%s", HttpStatus.SC_CREATED, true));
         endpoints.put(API_PUT_SET_TASK_STATE, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/tasks/%s/states/%s", HttpStatus.SC_CREATED, true));
+        endpoints.put(API_GET_ALL_TASK_LIST_ADMIN, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/queries/tasks/instances/admins", HttpStatus.SC_OK, true));
+
     }
 
     public static HashMap<String, Endpoint> create() {
