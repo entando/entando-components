@@ -275,7 +275,7 @@ public class FSIDemoHelper {
             "      \"link\" : \"my-cool-link\",\n" +
             "      \"size\" : 1200,\n" +
             "      \"lastModified\" : 1507840764549,\n" +
-            "      \"content\" : \"VkdocGN5QnBjeUJoSUhOaGJYQnNaU0JwWkdWdWRHbG1hV05oZEdsdmJpQmtiMk4xYldWdWRDND0=\",\n" +
+            "      \"content\" : \"VkdocGN5QnBjeUIwYUdVZ1ptbHNaU0IxYzJWa0lHWnZjaUIwWlhOMGFXNW4=\",\n" +
             "      \"attributes\" : {\n" +
             "        \"testKey\" : \"testValue\"\n" +
             "      }\n" +
