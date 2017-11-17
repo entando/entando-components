@@ -20,7 +20,7 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
-*/
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
 import java.io.IOException;
@@ -220,8 +220,7 @@ public class FSIDemoHelper {
         return kpfr;
     }
 
-    public static String getPayloadForCompleteEnrichDocument(Map<String, Object> input) throws IOException
-    {
+    public static String getPayloadForCompleteEnrichDocument(Map<String, Object> input) throws IOException {
         JSONObject payload = new JSONObject(PAYLOAD_ENRICHMENT);
         Object docObj = JsonHelper.findKey(payload, "org.jbpm.document.service.impl.DocumentImpl");
 
@@ -265,21 +264,20 @@ public class FSIDemoHelper {
         return payload.toString();
     }
 
-
-    public final static String PAYLOAD_ENRICHMENT =
-            "{\n" +
-            "  \"htUploadedDocument\" : {\n" +
-            "  	\"org.jbpm.document.service.impl.DocumentImpl\":{\n" +
-            "      \"identifier\" : \"myCoolIdentifier\",\n" +
-            "      \"name\" : \"My Cool Document.\",\n" +
-            "      \"link\" : \"my-cool-link\",\n" +
-            "      \"size\" : 1200,\n" +
-            "      \"lastModified\" : 1507840764549,\n" +
-            "      \"content\" : \"VkdocGN5QnBjeUIwYUdVZ1ptbHNaU0IxYzJWa0lHWnZjaUIwWlhOMGFXNW4=\",\n" +
-            "      \"attributes\" : {\n" +
-            "        \"testKey\" : \"testValue\"\n" +
-            "      }\n" +
-            "  	}\n" +
-            "  }\n" +
-            "}";
+    public final static String PAYLOAD_ENRICHMENT
+            = "{\n"
+            + "  \"htUploadedDocument\" : {\n"
+            + "  	\"org.jbpm.document.service.impl.DocumentImpl\":{\n"
+            + "      \"identifier\" : \"myCoolIdentifier\",\n"
+            + "      \"name\" : \"My Cool Document.\",\n"
+            + "      \"link\" : \"my-cool-link\",\n"
+            + "      \"size\" : 1200,\n"
+            + "      \"lastModified\" : 1507840764549,\n"
+            + "      \"content\" : \"VkdocGN5QnBjeUIwYUdVZ1ptbHNaU0IxYzJWa0lHWnZjaUIwWlhOMGFXNW4=\",\n"
+            + "      \"attributes\" : {\n"
+            + "        \"testKey\" : \"testValue\"\n"
+            + "      }\n"
+            + "  	}\n"
+            + "  }\n"
+            + "}";
 }
