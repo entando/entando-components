@@ -39,7 +39,10 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
@@ -76,13 +79,13 @@ public class ApiTaskInterface extends KieApiManager {
         try {
             id = Integer.parseInt(idString);
             if (StringUtils.isNotBlank("page")) {
-               opt.put("page", page);
+                opt.put("page", page);
             }
             if (StringUtils.isNotBlank("pageSize")) {
-               opt.put("pageSize", pageSize);
+                opt.put("pageSize", pageSize);
             }
             if (StringUtils.isNotBlank("user")) {
-               opt.put("user", user);
+                opt.put("user", user);
             }
         } catch (NumberFormatException e) {
             throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
@@ -126,7 +129,7 @@ public class ApiTaskInterface extends KieApiManager {
 
     public JAXBTaskList getTasks(Properties properties) {
         final String configId = properties.getProperty("configId");
-        
+
         if (null != configId) {
             try {
                 final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
@@ -284,6 +287,30 @@ public class ApiTaskInterface extends KieApiManager {
         // FIXME this is already dynamic!!!! Development leftover???
         final String result = this.getKieFormManager().completeHumanFormTask(containerId, "com.redhat.bpms.examples.mortgage.MortgageApplication", Long.valueOf(taskId), input);
         logger.info("Result {} ", result);
+    }
+
+    public void setTaskState(final KiaApiTaskState state) throws Throwable {
+        try {
+            Map<String, String> input = new HashMap<>();
+            input.put("user", state.getUser());
+            KieFormManager.TASK_STATES enumState = KieFormManager.TASK_STATES.valueOf(state.getState().toUpperCase());
+            this.getKieFormManager().setTaskState(state.getContainerId(), state.getTaskId(), enumState, input);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void putTaskDoc(final KiaApiTaskDoc doc) throws Throwable {
+        Map<String, String> queryStringParam = new HashMap<>();
+        queryStringParam.put("user", doc.getUser());
+        Map<String, Object> input = new HashMap<>();
+        input.put("content", doc.getContent());
+        input.put("identifier", doc.getIdentifier());
+        input.put("lastModified", Long.valueOf(doc.getLastModified()));
+        input.put("size", Long.valueOf(doc.getSize()));
+        input.put("link", doc.getLink());
+        input.put("name", doc.getName());
+        this.getKieFormManager().submitHumanFormTask(doc.getContainerId(), doc.getTaskId(), KieFormManager.TASK_STATES.COMPLETED, queryStringParam, input);
     }
 
     @Override
