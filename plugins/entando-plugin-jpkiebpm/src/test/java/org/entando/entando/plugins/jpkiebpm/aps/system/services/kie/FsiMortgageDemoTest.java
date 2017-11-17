@@ -23,6 +23,7 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +105,7 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
         }
     }
 
+
     public void testProcessDelete() throws Throwable {
         KieBpmConfig current = _formManager.getConfig();
 
@@ -169,27 +171,21 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
     }
 
     // COMPLETE ENRICH DOCUMENT TASK
-    public void testSubmitHumanFormTask() throws Throwable {
-        Map<String, String> opt = new HashMap<String, String>();
+    public void _testSubmitHumanFormTask() throws Throwable {
+        Map<String, String> reqParams = new HashMap<String, String>();
         String containerId = null;
         Long taskId = null;
-        final String PAYLOAD = "{\n" +
-            "  \"htUploadedDocument\" : {\n" +
-            "    \"org.jbpm.document.service.impl.DocumentImpl\":{\n" +
-            "      \"identifier\" : \"myCoolIdentifier\",\n" +
-            "      \"name\" : \"My Cool Document.\",\n" +
-            "      \"link\" : \"my-cool-link\",\n" +
-            "      \"size\" : 1200,\n" +
-            "      \"lastModified\" : 1507840764549,\n" +
-            "      \"content\" : \"VkdocGN5QnBjeUJoSUhOaGJYQnNaU0JwWkdWdWRHbG1hV05oZEdsdmJpQmtiMk4xYldWdWRDND0=\",\n" +
-            "      \"attributes\" : {\n" +
-            "        \"testKey\" : \"testValue\"\n" +
-            "      }\n" +
-            "    }\n" +
-            "  }\n" +
-            "}";
+        Map<String, Object> input = new HashMap<>();
+        Date now = new Date();
 
-        opt.put("user", "ddoyle");
+        reqParams.put("user", "ddoyle");
+        input.put("identifier", "anyIdentifier");
+        input.put("name", "anyName");
+        input.put("link", "anyLink");
+        input.put("content", "anyBase64Content");
+
+        input.put("size", new Long(1234567));
+        input.put("lastModified", now.getTime());
         try {
             containerId = makeSureContainerListExists();
             makeSureTasksListExists();
@@ -197,11 +193,56 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             assertNotNull(task);
             taskId = task.getId();
             _formManager.submitHumanFormTask(
-                    containerId, String.valueOf(taskId), KieFormManager.TASK_STATES.STARTED, opt, PAYLOAD);
+                    containerId, String.valueOf(taskId), KieFormManager.TASK_STATES.STARTED, reqParams, input);
         } catch (Throwable t) {
             throw t;
         }
     }
+
+    public void testHumanTaskListForAdmin() throws Throwable {
+        KieBpmConfig current = _formManager.getConfig();
+        Map<String, String> opt = new HashMap<String, String>();
+
+        try {
+            // update configuration to reflect test configuration
+            _formManager.updateConfig(getConfigForTests());
+            // invoke the manager
+            _tasks = _formManager.getHumanTaskListForAdmin("Administrator", null);
+            assertNotNull(_tasks);
+            if (TEST_ENABLED) {
+                assertFalse(_tasks.isEmpty());
+            } else {
+                assertTrue(_tasks.isEmpty());
+            }
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            _formManager.updateConfig(current);
+        }
+    }
+
+    public void testHumanTaskListForUsers() throws Throwable {
+        KieBpmConfig current = _formManager.getConfig();
+        Map<String, String> opt = new HashMap<String, String>();
+
+        try {
+            // update configuration to reflect test configuration
+            _formManager.updateConfig(getConfigForTests());
+            // invoke the manager
+            _tasks = _formManager.getHumanTaskListForUser("ddoyle", null);
+            assertNotNull(_tasks);
+            if (TEST_ENABLED) {
+                assertFalse(_tasks.isEmpty());
+            } else {
+                assertTrue(_tasks.isEmpty());
+            }
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            _formManager.updateConfig(current);
+        }
+    }
+
 
     public void testPayload() throws Throwable {
         try {
