@@ -103,6 +103,26 @@ public class ApiTaskInterface extends KieApiManager {
         return resTask;
     }
 
+    public JAXBTask getUserTask(Properties properties) throws Throwable {
+        JAXBTask resTask = null;
+        final String user = properties.getProperty("user");
+        HashMap<String, String> opt = new HashMap<>();
+        int id; // parameter appended to the original payload
+
+        if (StringUtils.isNotBlank("user")) {
+            opt.put("user", user);
+        }
+
+        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", opt);
+        if (!rawList.isEmpty()) {
+            resTask = this.getCurrentTask(rawList, opt);
+        }
+        if (null == resTask) {
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
+        }
+        return resTask;
+    }
+
     public String getDiagram(Properties properties) {
         final String configId = properties.getProperty("configId");
         if (null != configId) {
@@ -295,6 +315,13 @@ public class ApiTaskInterface extends KieApiManager {
             input.put("user", state.getUser());
             KieFormManager.TASK_STATES enumState = KieFormManager.TASK_STATES.valueOf(state.getState().toUpperCase());
             this.getKieFormManager().setTaskState(state.getContainerId(), state.getTaskId(), enumState, input);
+            List<KieTask> tasks = this.getKieFormManager().getHumanTaskList(null, input);
+            if (!tasks.isEmpty()) {
+                for (KieTask task : tasks) {
+                    this.getKieFormManager().setTaskState(state.getContainerId(),
+                            String.valueOf(task.getId()), enumState, input);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -321,6 +348,19 @@ public class ApiTaskInterface extends KieApiManager {
     @Override
     public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
+    }
+
+    private JAXBTask getCurrentTask(List<KieTask> list, HashMap<String, String> opt) throws Throwable {
+        JAXBTask task = null;
+        long taskId = 999999999999999l;
+        for (KieTask cur : list) {
+            if (cur.getId() < taskId) {
+                taskId = cur.getId();
+                task = new JAXBTask(cur);
+            }
+        }
+        this.getKieFormManager().setTaskState(task.getContainerId(), String.valueOf(taskId), KieFormManager.TASK_STATES.STARTED, opt);
+        return task;
     }
 
 }
