@@ -151,7 +151,7 @@
         var loadDataTable = function (url, idTable, extraConfig) {
 
             $.get(url, function (data) {
-                var items = data.response.result.taskList.list;
+                var items = data.response.result.taskList.list || [];
                 items = items.map(function (item) {
                     item['activated'] = new Date(item['activated']).toLocaleString();
                     item['created'] = new Date(item['created']).toLocaleString();
