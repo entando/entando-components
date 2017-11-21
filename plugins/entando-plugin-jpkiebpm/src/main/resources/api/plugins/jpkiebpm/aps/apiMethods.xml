@@ -198,15 +198,15 @@
     </resource>
 
     <resource name="userTask" namespace="jpkiebpm">
-        <description>The current task of a user</description>
+        <description>The current tasks of a user</description>
         <source pluginCode="jpkiebpm">plugins</source>
         <method httpMethod="GET" active="true">
-            <description>Return a task name and id</description>
+            <description>Return a task list</description>
             <springBean name="jpkiebpmApiTaskInterface" method="getUserTask"/>
-            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response.TaskResponse</responseClass>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response.TaskListResponse</responseClass>
             <parameters>
                 <parameter key="user" required="true">
-                    <description>The task owner</description>
+                    <description>The tasks owner</description>
                 </parameter>
             </parameters>
         </method>

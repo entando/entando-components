@@ -103,8 +103,7 @@ public class ApiTaskInterface extends KieApiManager {
         return resTask;
     }
 
-    public JAXBTask getUserTask(Properties properties) throws Throwable {
-        JAXBTask resTask = null;
+    public JAXBTaskList getUserTask(Properties properties) throws Throwable {
         final String user = properties.getProperty("user");
         HashMap<String, String> opt = new HashMap<>();
         int id; // parameter appended to the original payload
@@ -114,13 +113,21 @@ public class ApiTaskInterface extends KieApiManager {
         }
 
         List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", opt);
-        if (!rawList.isEmpty()) {
-            resTask = this.getCurrentTask(rawList, opt);
+        final JAXBTaskList taskList = new JAXBTaskList();
+        List<JAXBTask> list = new ArrayList<>();
+        for (KieTask raw : rawList) {
+            JAXBTask task = new JAXBTask(raw);
+            list.add(task);
+            taskList.setContainerId(task.getContainerId());
+            taskList.setOwner(user);
+            taskList.setProcessId(task.getProcessDefinitionId());
         }
-        if (null == resTask) {
+        taskList.setList(list);
+        this.startTasks(rawList, opt);
+        if (taskList.getList().isEmpty()) {
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
         }
-        return resTask;
+        return taskList;
     }
 
     public String getDiagram(Properties properties) {
@@ -350,17 +357,13 @@ public class ApiTaskInterface extends KieApiManager {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 
-    private JAXBTask getCurrentTask(List<KieTask> list, HashMap<String, String> opt) throws Throwable {
-        JAXBTask task = null;
-        long taskId = 999999999999999l;
+    private void startTasks(List<KieTask> list, HashMap<String, String> opt) throws Throwable {
         for (KieTask cur : list) {
-            if (cur.getId() < taskId) {
-                taskId = cur.getId();
-                task = new JAXBTask(cur);
+            if (!cur.getStatus().equalsIgnoreCase("inprogress")) {
+                this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, opt);
             }
         }
-        this.getKieFormManager().setTaskState(task.getContainerId(), String.valueOf(taskId), KieFormManager.TASK_STATES.STARTED, opt);
-        return task;
+
     }
 
 }
