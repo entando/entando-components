@@ -79,13 +79,13 @@ public class ApiTaskInterface extends KieApiManager {
         try {
             id = Integer.parseInt(idString);
             if (StringUtils.isNotBlank("page")) {
-                opt.put("page", page);
+               opt.put("page", page);
             }
             if (StringUtils.isNotBlank("pageSize")) {
-                opt.put("pageSize", pageSize);
+               opt.put("pageSize", pageSize);
             }
             if (StringUtils.isNotBlank("user")) {
-                opt.put("user", user);
+               opt.put("user", user);
             }
         } catch (NumberFormatException e) {
             throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
@@ -129,7 +129,6 @@ public class ApiTaskInterface extends KieApiManager {
         }
         return taskList;
     }
-
     public String getDiagram(Properties properties) {
         final String configId = properties.getProperty("configId");
         if (null != configId) {
@@ -156,7 +155,7 @@ public class ApiTaskInterface extends KieApiManager {
 
     public JAXBTaskList getTasks(Properties properties) {
         final String configId = properties.getProperty("configId");
-
+        
         if (null != configId) {
             try {
                 final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
@@ -363,7 +362,6 @@ public class ApiTaskInterface extends KieApiManager {
                 this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, opt);
             }
         }
-
     }
 
 }

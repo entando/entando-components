@@ -94,12 +94,16 @@ public class FSIDemoHelper {
     }
 
     public static KieApiProcessStart replaceValuesFromJson(JSONObject json, KieApiProcessStart process) {
+        try {
         JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
                 .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
-        JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0);
+            JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0)
+                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty");
+            process.setPrelationship(party.getString("relationship"));
+            party = party.getJSONObject("party").getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Party");
         process.setPname(party.getString("name"));
         process.setPsurname(party.getString("surname"));
-        process.setPdateOfBirth(party.getString("dateOfBirth"));
+            process.setPdateOfBirth(String.valueOf(party.getLong("dateOfBirth")));
         process.setPssn(party.getString("ssn"));
         process.setPemail(party.getString("email"));
         process.setPrelationship(party.getString("relationship"));
@@ -107,7 +111,9 @@ public class FSIDemoHelper {
         process.setCountry(client.getString("country"));
         process.setType(client.getString("type"));
         process.setBic(client.getString("bic"));
-        process.setAccountManager(json.getString("accountManager"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return process;
     }
 

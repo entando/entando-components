@@ -211,7 +211,6 @@
             </parameters>
         </method>
     </resource>
-
     <!-- ************** DIAGRAM ************** -->
 
     <resource name="diagram" namespace="jpkiebpm">
