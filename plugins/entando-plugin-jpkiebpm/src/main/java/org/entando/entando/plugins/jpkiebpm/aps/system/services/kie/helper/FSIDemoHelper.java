@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import org.apache.struts2.json.annotations.JSONParameter;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
@@ -136,7 +137,8 @@ public class FSIDemoHelper {
         process.setPrelationship("Consultant");
         process.setPemail((String) input.get("client_email"));
         process.setPdateOfBirth("1506590295001");
-        process.setCorrelation(processId + "_" + process.getBic());
+        Random fRandom = new Random();
+        process.setCorrelation(String.valueOf(fRandom.nextGaussian()));
         process.setPssn((String) input.get("client_creditScore"));
         process.setPname((String) input.get("party_name"));
         process.setPsurname((String) input.get("party_surname"));
