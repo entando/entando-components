@@ -28,11 +28,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.json.JSONObject;
 
 /**
  *
- * @author matteo
+ * @author Entando
  */
 public class TestFSIDemoHelper extends TestCase {
 

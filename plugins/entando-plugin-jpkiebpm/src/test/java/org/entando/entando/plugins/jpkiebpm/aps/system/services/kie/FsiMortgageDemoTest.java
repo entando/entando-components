@@ -33,6 +33,8 @@ import static junit.framework.Assert.assertTrue;
 import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TEST_ENABLED;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.TestKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
 
@@ -244,12 +246,28 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
     }
 
 
-    public void testPayload() throws Throwable {
+    public void testGetProcessInstancesWithClientData() throws Throwable {
+        KieBpmConfig current = _formManager.getConfig();
+        Map<String, String> opt = new HashMap<>();
+
+        opt.put("page", "0");
+        opt.put("pageSize", "100");
         try {
-
-
+            // update configuration to reflect test configuration
+            _formManager.updateConfig(getConfigForTests());
+            // invoke the manager
+            KieProcessInstancesQueryResult resp = _formManager.getProcessInstancesWithClientData(null, opt);
+            assertNotNull(resp);
+            assertNotNull(resp.getInstances());
+            assertFalse(resp.getInstances().isEmpty());
+            KieProcessInstance proc = resp.getInstances().get(0);
+            assertNotNull(proc.getProcess_instance_variables());
+            assertFalse(proc.getProcess_instance_variables().isEmpty());
+            assertTrue(proc.getProcess_instance_variables().containsKey("clientid"));
         } catch(Throwable t) {
             throw t;
+        } finally {
+            _formManager.updateConfig(current);
         }
     }
 

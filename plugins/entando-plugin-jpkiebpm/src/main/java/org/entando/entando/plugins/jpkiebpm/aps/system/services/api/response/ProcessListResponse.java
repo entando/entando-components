@@ -29,7 +29,7 @@ import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResu
 
 /**
  *
- * @author matteo
+ * @author Entando
  */
 public class ProcessListResponse extends AbstractApiResponse {
 
