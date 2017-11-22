@@ -265,7 +265,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return list;
     }
 
-
     @Override
     public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
@@ -731,6 +730,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieClient client = getCurrentClient();
             // header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put("X-KIE-ContentType", "JSON");
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
@@ -776,8 +777,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return result;
     }
-
-
 
     /**
      * Return a KIE CLient given the configuration

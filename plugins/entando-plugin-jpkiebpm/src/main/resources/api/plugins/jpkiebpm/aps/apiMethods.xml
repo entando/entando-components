@@ -177,6 +177,26 @@
         </method>
     </resource>
 
+    <resource name="setTaskState" namespace="jpkiebpm">
+        <description>Red Hat Bpm Set Task State</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="PUT" active="true">
+            <description>set the state of a task</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="setTaskState"/>
+            <expectedType>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState</expectedType>
+        </method>
+    </resource>
+
+    <resource name="putTaskDoc" namespace="jpkiebpm">
+        <description>Red Hat Bpm Send Task Document</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="PUT" active="true">
+            <description>send the document needed for the task</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="putTaskDoc"/>
+            <expectedType>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc</expectedType>
+        </method>
+    </resource>
+
     <!-- ************** DIAGRAM ************** -->
 
     <resource name="diagram" namespace="jpkiebpm">

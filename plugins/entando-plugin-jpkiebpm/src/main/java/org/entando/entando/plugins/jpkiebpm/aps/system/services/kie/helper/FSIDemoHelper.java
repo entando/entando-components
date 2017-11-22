@@ -20,7 +20,7 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
-*/
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
 import java.io.IOException;
@@ -94,12 +94,16 @@ public class FSIDemoHelper {
     }
 
     public static KieApiProcessStart replaceValuesFromJson(JSONObject json, KieApiProcessStart process) {
+        try {
         JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
                 .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
-        JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0);
+            JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0)
+                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty");
+            process.setPrelationship(party.getString("relationship"));
+            party = party.getJSONObject("party").getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Party");
         process.setPname(party.getString("name"));
         process.setPsurname(party.getString("surname"));
-        process.setPdateOfBirth(party.getString("dateOfBirth"));
+            process.setPdateOfBirth(String.valueOf(party.getLong("dateOfBirth")));
         process.setPssn(party.getString("ssn"));
         process.setPemail(party.getString("email"));
         process.setPrelationship(party.getString("relationship"));
@@ -107,7 +111,9 @@ public class FSIDemoHelper {
         process.setCountry(client.getString("country"));
         process.setType(client.getString("type"));
         process.setBic(client.getString("bic"));
-        process.setAccountManager(json.getString("accountManager"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return process;
     }
 
@@ -220,8 +226,7 @@ public class FSIDemoHelper {
         return kpfr;
     }
 
-    public static String getPayloadForCompleteEnrichDocument(Map<String, Object> input) throws IOException
-    {
+    public static String getPayloadForCompleteEnrichDocument(Map<String, Object> input) throws IOException {
         JSONObject payload = new JSONObject(PAYLOAD_ENRICHMENT);
         Object docObj = JsonHelper.findKey(payload, "org.jbpm.document.service.impl.DocumentImpl");
 
@@ -265,21 +270,20 @@ public class FSIDemoHelper {
         return payload.toString();
     }
 
-
-    public final static String PAYLOAD_ENRICHMENT =
-            "{\n" +
-            "  \"htUploadedDocument\" : {\n" +
-            "  	\"org.jbpm.document.service.impl.DocumentImpl\":{\n" +
-            "      \"identifier\" : \"myCoolIdentifier\",\n" +
-            "      \"name\" : \"My Cool Document.\",\n" +
-            "      \"link\" : \"my-cool-link\",\n" +
-            "      \"size\" : 1200,\n" +
-            "      \"lastModified\" : 1507840764549,\n" +
-            "      \"content\" : \"VkdocGN5QnBjeUJoSUhOaGJYQnNaU0JwWkdWdWRHbG1hV05oZEdsdmJpQmtiMk4xYldWdWRDND0=\",\n" +
-            "      \"attributes\" : {\n" +
-            "        \"testKey\" : \"testValue\"\n" +
-            "      }\n" +
-            "  	}\n" +
-            "  }\n" +
-            "}";
+    public final static String PAYLOAD_ENRICHMENT
+            = "{\n"
+            + "  \"htUploadedDocument\" : {\n"
+            + "  	\"org.jbpm.document.service.impl.DocumentImpl\":{\n"
+            + "      \"identifier\" : \"myCoolIdentifier\",\n"
+            + "      \"name\" : \"My Cool Document.\",\n"
+            + "      \"link\" : \"my-cool-link\",\n"
+            + "      \"size\" : 1200,\n"
+            + "      \"lastModified\" : 1507840764549,\n"
+            + "      \"content\" : \"VkdocGN5QnBjeUIwYUdVZ1ptbHNaU0IxYzJWa0lHWnZjaUIwWlhOMGFXNW4=\",\n"
+            + "      \"attributes\" : {\n"
+            + "        \"testKey\" : \"testValue\"\n"
+            + "      }\n"
+            + "  	}\n"
+            + "  }\n"
+            + "}";
 }
