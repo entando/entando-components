@@ -320,12 +320,12 @@ public class ApiTaskInterface extends KieApiManager {
             Map<String, String> input = new HashMap<>();
             input.put("user", state.getUser());
             KieFormManager.TASK_STATES enumState = KieFormManager.TASK_STATES.valueOf(state.getState().toUpperCase());
-            this.getKieFormManager().setTaskState(state.getContainerId(), state.getTaskId(), enumState, input);
+            this.getKieFormManager().setTaskState(state.getContainerId(), state.getTaskId(), enumState, null, input);
             List<KieTask> tasks = this.getKieFormManager().getHumanTaskList(null, input);
             if (!tasks.isEmpty()) {
                 for (KieTask task : tasks) {
                     this.getKieFormManager().setTaskState(state.getContainerId(),
-                            String.valueOf(task.getId()), enumState, input);
+                            String.valueOf(task.getId()), enumState, null, input);
                 }
             }
         } catch (Exception e) {
@@ -359,7 +359,7 @@ public class ApiTaskInterface extends KieApiManager {
     private void startTasks(List<KieTask> list, HashMap<String, String> opt) throws Throwable {
         for (KieTask cur : list) {
             if (!cur.getStatus().equalsIgnoreCase("inprogress")) {
-                this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, opt);
+                this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
             }
         }
     }

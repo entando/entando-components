@@ -140,7 +140,7 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             // update configuration to reflect test configuration
             _formManager.updateConfig(getConfigForTests());
             // test
-            _formManager.setTaskState(containerId, String.valueOf(taskId), KieFormManager.TASK_STATES.STARTED, opt);
+            _formManager.setTaskState(containerId, String.valueOf(taskId), KieFormManager.TASK_STATES.STARTED, null, opt);
         } catch (Throwable t) {
             throw t;
         } finally {

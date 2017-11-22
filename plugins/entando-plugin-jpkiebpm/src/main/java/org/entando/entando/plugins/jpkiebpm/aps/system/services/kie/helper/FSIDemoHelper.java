@@ -32,6 +32,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.fo
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -271,6 +272,82 @@ public class FSIDemoHelper {
         return json.toString();
     }
 
+    public static String getPayloadForAdditionalClientDetailTask(Map<String, Object> input) {
+        JSONObject json = new JSONObject(PAYLOAD_ADDITIONAL_CLIENT_DETAIL_TASK);
+        JSONObject clientModel = (JSONObject) JsonHelper.findKey(json, "com.redhat.bpms.demo.fsi.onboarding.model.Client");
+        JSONObject address = (JSONObject) JsonHelper.findKey(clientModel, "address");
+        JSONArray relatedParties = (JSONArray) JsonHelper.findKey(json, "relatedParties");
+
+        if (clientModel instanceof JSONObject
+                && address instanceof JSONObject
+                && relatedParties instanceof JSONArray) {
+
+            if (input.containsKey("name")) {
+                JsonHelper.replaceKey(clientModel, "name", input.get("name"));
+            }
+            if (input.containsKey("country")) {
+                JsonHelper.replaceKey(clientModel, "country", input.get("country"));
+            }
+            if (input.containsKey("type")) {
+                JsonHelper.replaceKey(clientModel, "type", input.get("type"));
+            }
+            if (input.containsKey("bic")) {
+                Long val = 0L;
+
+                if (input.get("") instanceof Integer) {
+                    val = Long.valueOf((Integer)input.get("bic"));
+                }
+                val = (Long) input.get("bic");
+                JsonHelper.replaceKey(clientModel, "bic", val);
+            }
+
+            if (input.containsKey("street")) {
+                JsonHelper.replaceKey(address, "street", input.get("street"));
+            }
+            if (input.containsKey("zipcode")) {
+                Integer val = (Integer) input.get("zipcode");
+
+                JsonHelper.replaceKey(address, "zipcode", input.get("zipcode"));
+            }
+            if (input.containsKey("state")) {
+                JsonHelper.replaceKey(address, "state", input.get("state"));
+            }
+            if (input.containsKey("address_country")) {
+                JsonHelper.replaceKey(address, "country", input.get("address_country"));
+            }
+
+            JSONObject relatePartiesEntry = (JSONObject) relatedParties.get(0);
+
+            if (input.containsKey("relationship")) {
+                JsonHelper.replaceKey(relatePartiesEntry, "relationship", input.get("relationship"));
+            }
+            if (input.containsKey("party_name")) {
+                JsonHelper.replaceKey(relatePartiesEntry, "name", input.get("party_name"));
+            }
+            if (input.containsKey("surname")) {
+                JsonHelper.replaceKey(relatePartiesEntry, "surname", input.get("surname"));
+            }
+            if (input.containsKey("dateOfBirth")) {
+                Long val = (Long) input.get("dateOfBirth");
+
+                JsonHelper.replaceKey(relatePartiesEntry, "dateOfBirth", val);
+            }
+            if (input.containsKey("ssn")) {
+                Long val = 0L;
+
+                if (input.get("") instanceof Integer) {
+                    val = Long.valueOf((Integer)input.get("ssn"));
+                }
+                val = (Long) input.get("ssn");
+                JsonHelper.replaceKey(relatePartiesEntry, "ssn", val);
+            }
+            if (input.containsKey("email")) {
+                JsonHelper.replaceKey(relatePartiesEntry, "email", input.get("email"));
+            }
+
+        }
+        return json.toString();
+    }
 
     public final static String PAYLOAD_ENRICHMENT
             = "{\n"
@@ -303,5 +380,40 @@ public class FSIDemoHelper {
             "  }\n" +
             "}";
 
+    public final static String PAYLOAD_ADDITIONAL_CLIENT_DETAIL_TASK = "{\n" +
+            "  \"htClient\" : {\n" +
+            "      \"com.redhat.bpms.demo.fsi.onboarding.model.Client\":{\n" +
+            "         \"id\":null,\n" +
+            "         \"name\":\"Red Hat\",\n" +
+            "         \"country\":\"IT\",\n" +
+            "         \"type\":\"BIG_BUSINESS\",\n" +
+            "         \"bic\":\"123456789\",\n" +
+            "         \"address\": {\n" +
+            "         	\"street\":\"314 Littleton Rd\",\n" +
+            "         	\"zipcode\":\"01886\",\n" +
+            "         	\"state\":\"MA\",\n" +
+            "         	\"country\":\"USA\"\n" +
+            "         },\n" +
+            "         \"relatedParties\":[\n" +
+            "            {\n" +
+            "               \"com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty\":{\n" +
+            "                  \"id\":null,\n" +
+            "                  \"relationship\":\"Consultant\",\n" +
+            "                  \"party\":{\n" +
+            "                     \"com.redhat.bpms.demo.fsi.onboarding.model.Party\":{\n" +
+            "                        \"id\":null,\n" +
+            "                        \"name\":\"Duncan\",\n" +
+            "                        \"surname\":\"Doyle\",\n" +
+            "                        \"dateOfBirth\":1506590295001,\n" +
+            "                        \"ssn\":\"987654321\",\n" +
+            "                        \"email\": \"mail@localdomain.com\"\n" +
+            "                     }\n" +
+            "                  }\n" +
+            "               }\n" +
+            "            }\n" +
+            "         ]\n" +
+            "      }\n" +
+            "   }\n" +
+            "}";
 
 }

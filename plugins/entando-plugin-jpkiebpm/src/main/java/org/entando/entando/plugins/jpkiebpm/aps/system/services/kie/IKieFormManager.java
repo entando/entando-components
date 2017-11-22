@@ -247,7 +247,7 @@ public interface IKieFormManager {
      * @return
      * @throws Throwable
      */
-    String setTaskState(final String containerId, final String taskId, final TASK_STATES state, Map<String, String> opt) throws Throwable;
+    String setTaskState(final String containerId, final String taskId, final TASK_STATES state, Map<String, Object> input, Map<String, String> opt) throws Throwable;
 
 
     /**
