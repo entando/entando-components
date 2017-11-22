@@ -815,7 +815,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setHeaders(headersMap)
                     .setPayload(payoload)
                     .setRequestParams(opt)
-                    .setDebug(false)
+                    .setDebug(true)
                     .doRequest();
 
             res = res.replaceAll("process-instance-variables", "process_instance_variables");
