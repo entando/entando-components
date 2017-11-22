@@ -24,9 +24,11 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.struts2.json.annotations.JSONParameter;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
@@ -92,16 +94,12 @@ public class FSIDemoHelper {
     }
 
     public static KieApiProcessStart replaceValuesFromJson(JSONObject json, KieApiProcessStart process) {
-        try {
         JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
                 .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
-            JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0)
-                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty");
-            process.setPrelationship(party.getString("relationship"));
-            party = party.getJSONObject("party").getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Party");
+        JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0);
         process.setPname(party.getString("name"));
         process.setPsurname(party.getString("surname"));
-            process.setPdateOfBirth(String.valueOf(party.getLong("dateOfBirth")));
+        process.setPdateOfBirth(party.getString("dateOfBirth"));
         process.setPssn(party.getString("ssn"));
         process.setPemail(party.getString("email"));
         process.setPrelationship(party.getString("relationship"));
@@ -109,9 +107,7 @@ public class FSIDemoHelper {
         process.setCountry(client.getString("country"));
         process.setType(client.getString("type"));
         process.setBic(client.getString("bic"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        process.setAccountManager(json.getString("accountManager"));
         return process;
     }
 
@@ -140,7 +136,8 @@ public class FSIDemoHelper {
         process.setPrelationship("Consultant");
         process.setPemail((String) input.get("client_email"));
         process.setPdateOfBirth("1506590295001");
-        process.setCorrelation(processId + "_" + process.getBic());
+        Random fRandom = new Random();
+        process.setCorrelation(String.valueOf(fRandom.nextGaussian()));
         process.setPssn((String) input.get("client_creditScore"));
         process.setPname((String) input.get("party_name"));
         process.setPsurname((String) input.get("party_surname"));
@@ -253,6 +250,7 @@ public class FSIDemoHelper {
             if (input.containsKey("content")) {
                 JsonHelper.replaceKey(doc, "content", input.get("content"));
             }
+
             if (input.containsKey("attributes")
                     && input.get("attributes") instanceof Map) {
                 Object attr = JsonHelper.findKey(doc, "attributes");
@@ -265,13 +263,6 @@ public class FSIDemoHelper {
         }
 
         return payload.toString();
-    }
-
-    // currently hardcoded for the FSI
-    public static String getPayloadForProcessInstancesWithClient(Map<String, String> input) {
-        JSONObject json = new JSONObject(PAYLOAD_INSTANCES_W_DATA);
-        // TODO process dynamic data here
-        return json.toString();
     }
 
     public final static String PAYLOAD_ENRICHMENT
@@ -290,17 +281,4 @@ public class FSIDemoHelper {
             + "  	}\n"
             + "  }\n"
             + "}";
-
-    public final static String PAYLOAD_INSTANCES_W_DATA = "{\n" +
-            "  \"order-asc\" : false,\n" +
-            "  \"query-params\" : [ {\n" +
-            "    \"cond-column\" : \"status\",\n" +
-            "    \"cond-operator\" : \"EQUALS_TO\",\n" +
-            "    \"cond-values\" : [ \"1\" ]\n" +
-            "  } ],\n" +
-            "  \"result-column-mapping\" : {\n" +
-            "    \"clientid\" : \"integer\",\n" +
-            "    \"name\" : \"string\"\n" +
-            "  }\n" +
-            "}";
 }
