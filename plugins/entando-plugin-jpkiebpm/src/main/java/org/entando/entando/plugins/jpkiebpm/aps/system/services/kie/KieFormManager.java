@@ -46,7 +46,12 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.CLIENT_DETAILS;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.ENRICHMENT_UPLOAD_DOCUMENT;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.ENRICHMENT_UPLOAD_IDENTITY;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.KNOWLEGE_WORKER;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.LEGAL_WORKER;
 
 /**
  * @author Entando
@@ -263,6 +268,50 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return list;
     }
+
+    @Override
+    public List<KieTask> getHumanTaskListForAdmin(String user, TASK_NAME taskName, Map<String, String> opt) throws ApsSystemException {
+
+        List<KieTask> result = new ArrayList<>();
+
+        try {
+            List<KieTask> list = getHumanTaskListForAdmin(user, opt);
+            if (null != list
+                    && !list.isEmpty()) {
+                for (KieTask task: list) {
+
+                    if (taskName == ENRICHMENT_UPLOAD_DOCUMENT
+                            && task.getName().equals("Enrichment Upload Document")
+                            && task.getSubject().equals("CreditDocuments")) {
+                        result.add(task);
+                    }
+                    if (taskName == ENRICHMENT_UPLOAD_IDENTITY
+                            && task.getName().equals("Enrichment Upload Document")
+                            && task.getSubject().equals("IdentityDocuments")) {
+                        result.add(task);
+                    }
+                    if (taskName == CLIENT_DETAILS
+                            && task.getName().equals("Additional Client Details")) {
+                        result.add(task);
+                    }
+                    if (taskName == LEGAL_WORKER
+                            && task.getName().equals("Legal Worker Document Review")) {
+                        result.add(task);
+                    }
+                    if (taskName == KNOWLEGE_WORKER
+                            && task.getName().equals("Knowledge Worker Document Review")) {
+                        result.add(task);
+                    }
+
+                }
+            }
+        } catch (Throwable t) {
+//            _logger.error("Error getting the list of human tasks by name", t);
+            throw new ApsSystemException("Error getting the list of human tasks by name", t);
+        }
+        return result;
+    }
+
 
     @Override
     public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException {
@@ -508,8 +557,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-                    //                  .setDebug(true)
-                    //                  .setTestMode(true)
+                    .setDebug(true)
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
@@ -612,6 +660,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                 || StringUtils.isBlank(processId)
                 || StringUtils.isBlank(signal)
                 || StringUtils.isBlank(accountId)) {
+            _logger.error("CANNOT PERFORM sendSignal");
             return false;
         }
         try {
@@ -755,23 +804,31 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         try {
             // process endpoint first
+            if (opt == null ) {
+                opt = new HashMap<>();
+            }
+
+            opt.put("auto-progress","true");
             Endpoint ep = KieEndpointDictionary.create().get(API_PUT_SET_TASK_STATE)
                     .resolveParams(containerId, taskId, state.getValue());
             // generate client from the current configuration
             KieClient client = getCurrentClient();
             // header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put("X-KIE-ContentType", "JSON");
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            // perform query
             if (null != input) {
                 // generate payload
                 String payload = FSIDemoHelper.getPayloadForAdditionalClientDetailTask(input);
-            // perform query
-            result = (String) new KieRequestBuilder(client)
-                    .setEndpoint(ep)
-                    .setHeaders(headersMap)
+                // do invocation with payload
+                result = (String) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setHeaders(headersMap)
                         .setPayload(payload)
-                    .setRequestParams(opt)
-                    .setDebug(true)
-                    .doRequest();
+                        .setRequestParams(opt)
+                        .setDebug(true)
+                        .doRequest();
             } else {
                 result = (String) new KieRequestBuilder(client)
                         .setEndpoint(ep)

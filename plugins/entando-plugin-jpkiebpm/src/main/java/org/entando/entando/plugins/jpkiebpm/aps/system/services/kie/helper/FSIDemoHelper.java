@@ -24,15 +24,14 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.apache.struts2.json.annotations.JSONParameter;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -344,6 +343,17 @@ public class FSIDemoHelper {
         }
         return json.toString();
     }
+
+    public enum TASK_NAME {
+        CLIENT_DETAILS,
+        ENRICHMENT_UPLOAD_DOCUMENT,
+        ENRICHMENT_UPLOAD_IDENTITY,
+        LEGAL_WORKER,
+        KNOWLEGE_WORKER
+    }
+
+
+
     public final static String PAYLOAD_ENRICHMENT
             = "{\n"
             + "  \"htUploadedDocument\" : {\n"

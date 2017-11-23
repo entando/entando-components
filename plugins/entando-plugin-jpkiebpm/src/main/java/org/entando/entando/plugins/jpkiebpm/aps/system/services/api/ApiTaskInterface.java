@@ -43,6 +43,8 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.fo
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.KNOWLEGE_WORKER;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.LEGAL_WORKER;
 import org.json.JSONObject;
 
 /**
@@ -110,6 +112,74 @@ public class ApiTaskInterface extends KieApiManager {
         }
 
         List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", opt);
+        final JAXBTaskList taskList = new JAXBTaskList();
+        List<JAXBTask> list = new ArrayList<>();
+        for (KieTask raw : rawList) {
+            JAXBTask task = new JAXBTask(raw);
+            list.add(task);
+            taskList.setContainerId(task.getContainerId());
+            taskList.setOwner(user);
+            taskList.setProcessId(task.getProcessDefinitionId());
+        }
+        taskList.setList(list);
+        this.startTasks(rawList, opt);
+        if (taskList.getList().isEmpty()) {
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
+        }
+        return taskList;
+    }
+
+    public JAXBTaskList getLegalWorkerTask(Properties properties) throws Throwable {
+        HashMap<String, String> opt = new HashMap<>();
+        final String pageSize = properties.getProperty("pageSize");
+        final String page = properties.getProperty("page");
+        final String user = properties.getProperty("user");
+        int id; // parameter appended to the original payload
+
+        if (StringUtils.isNotBlank(page)) {
+            opt.put("page", page);
+        }
+        if (StringUtils.isNotBlank(pageSize)) {
+            opt.put("pageSize", pageSize);
+        } else {
+            opt.put("pageSize", "5000");
+        }
+
+        List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForAdmin("Administrator", LEGAL_WORKER, null);
+        final JAXBTaskList taskList = new JAXBTaskList();
+        List<JAXBTask> list = new ArrayList<>();
+        for (KieTask raw : rawList) {
+            JAXBTask task = new JAXBTask(raw);
+            list.add(task);
+            taskList.setContainerId(task.getContainerId());
+            taskList.setOwner(user);
+            taskList.setProcessId(task.getProcessDefinitionId());
+        }
+        taskList.setList(list);
+        this.startTasks(rawList, opt);
+        if (taskList.getList().isEmpty()) {
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
+        }
+        return taskList;
+    }
+
+    public JAXBTaskList getKnowledgeWorkerTask(Properties properties) throws Throwable {
+        HashMap<String, String> opt = new HashMap<>();
+        final String pageSize = properties.getProperty("pageSize");
+        final String page = properties.getProperty("page");
+        final String user = properties.getProperty("user");
+        int id; // parameter appended to the original payload
+
+        if (StringUtils.isNotBlank(page)) {
+            opt.put("page", page);
+        }
+        if (StringUtils.isNotBlank(pageSize)) {
+            opt.put("pageSize", pageSize);
+        } else {
+            opt.put("pageSize", "5000");
+        }
+
+        List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForAdmin("Administrator", KNOWLEGE_WORKER, null);
         final JAXBTaskList taskList = new JAXBTaskList();
         List<JAXBTask> list = new ArrayList<>();
         for (KieTask raw : rawList) {
@@ -383,7 +453,7 @@ public class ApiTaskInterface extends KieApiManager {
         input.put("country", taskInOut.getCountry());
         input.put("street", state.getStreet());
         input.put("state", state.getUsstate());
-        input.put("zipcode", Integer.valueOf(state.getZipcode()));
+        input.put("zipcode", state.getZipcode());
         input.put("dateOfBirth", Long.valueOf(taskInOut.getPdateOfBirth()));
         input.put("email", taskInOut.getPemail());
         input.put("party_name", taskInOut.getPname());

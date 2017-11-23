@@ -14,6 +14,7 @@ public class DatatableFieldDefinition {
     private List<Field> fields = new ArrayList<>();
 
     public DatatableFieldDefinition() {
+        // do nothing
     }
 
     public List<Field> getFields() {
@@ -43,6 +44,7 @@ public class DatatableFieldDefinition {
 
 
         public Field() {
+            // no nothing
         }
 
         public String getTitle() {

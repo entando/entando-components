@@ -211,6 +211,49 @@
             </parameters>
         </method>
     </resource>
+
+    <resource name="legalWorkerTasks" namespace="jpkiebpm">
+        <description>The current tasks of a user</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a task list</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="getLegalWorkerTask"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response.TaskListResponse</responseClass>
+            <parameters>
+                <parameter key="user" required="false">
+                    <description>The tasks owner</description>
+                </parameter>
+                <parameter key="page" required="false">
+                    <description>The page of the list</description>
+                </parameter>
+                <parameter key="pageSize" required="false">
+                    <description>The size of the page list</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+
+    <resource name="knwoledgeWorkerTasks" namespace="jpkiebpm">
+        <description>The current tasks of a user</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a task list</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="getKnowledgeWorkerTask"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response.TaskListResponse</responseClass>
+            <parameters>
+                <parameter key="user" required="false">
+                    <description>The tasks owner</description>
+                </parameter>
+                <parameter key="page" required="false">
+                    <description>The page of the list</description>
+                </parameter>
+                <parameter key="pageSize" required="false">
+                    <description>The size of the page list</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+
     <!-- ************** DIAGRAM ************** -->
 
     <resource name="diagram" namespace="jpkiebpm">

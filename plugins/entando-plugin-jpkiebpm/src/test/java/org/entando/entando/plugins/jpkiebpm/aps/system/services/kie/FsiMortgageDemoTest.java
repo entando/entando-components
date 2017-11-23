@@ -32,6 +32,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TEST_ENABLED;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.TestKieFormManager;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.LEGAL_WORKER;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
@@ -222,6 +223,29 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             _formManager.updateConfig(current);
         }
     }
+
+    public void testHumanTaskListForAdminRestrict() throws Throwable {
+        KieBpmConfig current = _formManager.getConfig();
+        Map<String, String> opt = new HashMap<String, String>();
+
+        try {
+            // update configuration to reflect test configuration
+            _formManager.updateConfig(getConfigForTests());
+            // invoke the manager
+            _tasks = _formManager.getHumanTaskListForAdmin("Administrator", LEGAL_WORKER, null);
+            assertNotNull(_tasks);
+            if (TEST_ENABLED) {
+                assertFalse(_tasks.isEmpty());
+            } else {
+                assertTrue(_tasks.isEmpty());
+            }
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            _formManager.updateConfig(current);
+        }
+    }
+
 
     public void testHumanTaskListForUsers() throws Throwable {
         KieBpmConfig current = _formManager.getConfig();
