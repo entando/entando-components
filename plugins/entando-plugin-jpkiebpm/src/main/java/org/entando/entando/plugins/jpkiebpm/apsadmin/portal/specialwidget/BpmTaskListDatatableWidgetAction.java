@@ -19,9 +19,13 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
     private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
+    private String DEMO_USER = "taskUser";
 
+
+    @Override
     protected void loadFieldIntoDatatableFromBpm() throws ApsSystemException {
         HashMap<String, String> opt = new HashMap<>();
+        opt.put("user", DEMO_USER);
         List<KieTask> task = formManager.getHumanTaskList(null, opt);
         if (!task.isEmpty()) {
             super.loadDataIntoFieldDatatable(task);

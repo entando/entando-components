@@ -38,15 +38,11 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
 import org.json.JSONObject;
 
 /**
@@ -104,6 +100,7 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     public JAXBTaskList getUserTask(Properties properties) throws Throwable {
+
         final String user = properties.getProperty("user");
         HashMap<String, String> opt = new HashMap<>();
         int id; // parameter appended to the original payload
@@ -324,12 +321,13 @@ public class ApiTaskInterface extends KieApiManager {
             if (StringUtils.isNotBlank(state.getState())) {
                 enumState = KieFormManager.TASK_STATES.valueOf(state.getState().toUpperCase());
             }
-            this.getKieFormManager().setTaskState(state.getContainerId(), state.getTaskId(), enumState, null, opt);
+            Map<String, Object> input = this.getInputForTaskState(state);
+            this.getKieFormManager().setTaskState(state.getContainerId(), state.getTaskId(), enumState, input, opt);
             List<KieTask> tasks = this.getKieFormManager().getHumanTaskList(null, opt);
             if (!tasks.isEmpty()) {
                 for (KieTask task : tasks) {
                     this.getKieFormManager().setTaskState(state.getContainerId(),
-                            String.valueOf(task.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
+                            String.valueOf(task.getId()), KieFormManager.TASK_STATES.STARTED, input, opt);
                 }
             }
         } catch (Exception e) {
@@ -360,12 +358,42 @@ public class ApiTaskInterface extends KieApiManager {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 
-    private void startTasks(List<KieTask> list, HashMap<String, String> opt) throws Throwable {
+    private void startTasks(List<KieTask> list, HashMap<String, String> opt) {
         for (KieTask cur : list) {
             if (!cur.getStatus().equalsIgnoreCase("inprogress")) {
-                this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
+                try {
+                    this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         }
+    }
+
+    private Map<String, Object> getInputForTaskState(KiaApiTaskState state) {
+        Properties properties = new Properties();
+        properties.put("containerId", state.getContainerId());
+        properties.put("taskId", state.getTaskId());
+        properties.put("user", state.getUser());
+        KieApiProcessStart taskInOut = this.getTaskInputOutput(properties);
+        Map<String, Object> input = new HashMap<>();
+        input.put("accountManager", taskInOut.getAccountManager());
+        input.put("bic", state.getBic());
+        input.put("name", state.getName());
+        input.put("country", taskInOut.getCountry());
+        input.put("street", state.getStreet());
+        input.put("state", state.getUsstate());
+        input.put("zipcode", Integer.valueOf(state.getZipcode()));
+        input.put("dateOfBirth", Long.valueOf(taskInOut.getPdateOfBirth()));
+        input.put("email", taskInOut.getPemail());
+        input.put("party_name", taskInOut.getPname());
+        input.put("surname", taskInOut.getPsurname());
+        input.put("address_country", state.getCountry());
+        input.put("type", taskInOut.getType());
+        input.put("relationship", taskInOut.getPrelationship());
+        input.put("ssn", "7987989797");
+
+        return input;
     }
 
 }

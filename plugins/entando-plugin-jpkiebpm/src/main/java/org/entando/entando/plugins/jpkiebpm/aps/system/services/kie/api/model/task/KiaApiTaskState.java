@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author paddeo
  */
 @XmlRootElement(name = "taskState")
-@XmlType(propOrder = {"containerId", "taskId", "user", "state", "name", "street", "zipcode", "usstate", "country"})
+@XmlType(propOrder = {"containerId", "taskId", "user", "state", "name", "street", "zipcode", "usstate", "country", "bic"})
 public class KiaApiTaskState {
 
     public String getContainerId() {
@@ -106,6 +106,14 @@ public class KiaApiTaskState {
         this.country = country;
     }
 
+    public String getBic() {
+        return bic;
+    }
+
+    public void setBic(String bic) {
+        this.bic = bic;
+    }
+
     private String containerId;
     private String taskId;
     private String user;
@@ -115,4 +123,5 @@ public class KiaApiTaskState {
     private String zipcode;
     private String usstate;
     private String country;
+    private String bic;
 }

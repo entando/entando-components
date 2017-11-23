@@ -610,6 +610,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                 || StringUtils.isBlank(processId)
                 || StringUtils.isBlank(signal)
                 || StringUtils.isBlank(accountId)) {
+            _logger.error("CANNOT PERFORM sendSignal");
             return false;
         }
         try {
@@ -752,7 +753,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return null;
         }
         try {
-            String payload = FSIDemoHelper.getPayloadForAdditionalClientDetailTask(input);
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_PUT_SET_TASK_STATE)
                     .resolveParams(containerId, taskId, state.getValue());
@@ -761,13 +761,25 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             // header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             // perform query
-            result = (String) new KieRequestBuilder(client)
-                    .setEndpoint(ep)
-                    .setHeaders(headersMap)
-                    .setPayload(payload)
-                    .setRequestParams(opt)
-                    .setDebug(true)
-                    .doRequest();
+            if (null != input) {
+                // generate payload
+                String payload = FSIDemoHelper.getPayloadForAdditionalClientDetailTask(input);
+                // do invocation with payload
+                result = (String) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setHeaders(headersMap)
+                        .setPayload(payload)
+                        .setRequestParams(opt)
+                        .setDebug(true)
+                        .doRequest();
+            } else {
+                result = (String) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setHeaders(headersMap)
+                        .setRequestParams(opt)
+                        .setDebug(true)
+                        .doRequest();
+            }
         } catch (Throwable t) {
             throw new ApsSystemException("error submitting human task with state: " + state.getValue(), t);
         }
@@ -779,8 +791,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         Map<String, String> headersMap = new HashMap<String, String>();
         KieProcessInstancesQueryResult result = new KieProcessInstancesQueryResult();
 
-        if (!this.getConfig().getActive()
-//                || null == input
+        if (!this.getConfig().getActive() //                || null == input
                 ) {
             return null;
         }
@@ -829,6 +840,59 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
+    /*@Override
+    public KieProcessInstancesQueryResult getProcessInstancesWithClientData(Map<String, String> input, Map<String, String> opt) throws Throwable {
+        Map<String, String> headersMap = new HashMap<String, String>();
+        KieProcessInstancesQueryResult result = new KieProcessInstancesQueryResult();
+
+        if (!this.getConfig().getActive() //                || null == input
+                ) {
+            return null;
+        }
+        if (null == opt
+                || opt.isEmpty()) {
+            opt = new HashMap<>();
+        }
+        // add mandatory args
+        if (!opt.containsKey("mapper")) {
+            opt.put("mapper", "ClientOnboardingProcessInstancesWithCustomVariables");
+        }
+        try {
+            String payoload = FSIDemoHelper.getPayloadForProcessInstancesWithClient(input);
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create()
+                    .get(API_POST_ALL_PROCESS_INSTANCES_W_CLIENT_DATA);
+            // generate client from the current configuration
+            KieClient client = getCurrentClient();
+            // header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            headersMap.put("X-KIE-ContentType", "JSON");
+            // perform query
+//            result = (KieProcessInstancesQueryResult) new KieRequestBuilder(client)
+//                    .setEndpoint(ep)
+//                    .setHeaders(headersMap)
+//                    .setPayload(payoload)
+//                    .setRequestParams(opt)
+//                    .setDebug(true)
+//                    .doRequest(KieProcessInstancesQueryResult.class);
+
+            String res = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setPayload(payoload)
+                    .setRequestParams(opt)
+                    .setDebug(true)
+                    .doRequest();
+            // necessary as we cannot change the property name looked by JAXB
+            res = res.replaceAll("process-instance-variables", "process_instance_variables");
+            result = (KieProcessInstancesQueryResult) JAXBHelper
+                    .unmarshall(res, KieProcessInstancesQueryResult.class, false, true);
+        } catch (Throwable t) {
+            throw new ApsSystemException("error getting process list with data ", t);
+        }
+        return result;
+    }*/
     /**
      * Return a KIE CLient given the configuration
      *
