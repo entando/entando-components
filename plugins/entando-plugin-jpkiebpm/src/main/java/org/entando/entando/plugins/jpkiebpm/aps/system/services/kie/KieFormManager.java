@@ -46,6 +46,10 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.CLIENT_DETAILS;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.ENRICHMENT_UPLOAD_DOCUMENT;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.ENRICHMENT_UPLOAD_IDENTITY;
 
 /**
  * @author Entando
@@ -261,6 +265,48 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             throw new ApsSystemException("Error getting the list of human tasks", t);
         }
         return list;
+    }
+
+
+    @Override
+    public List<KieTask> getHumanTaskListForAdmin(String user, TASK_NAME taskName, Map<String, String> opt) throws ApsSystemException {
+
+        List<KieTask> result = new ArrayList<>();
+
+        if (null == opt) {
+            opt = new HashMap<>();
+        }
+        if (!opt.containsKey("pageSize")) {
+            opt.put("pageSize", "5000");
+        }
+        try {
+            List<KieTask> list = getHumanTaskListForAdmin(user, opt);
+            if (null != list
+                    && !list.isEmpty()) {
+                for (KieTask task: list) {
+
+                    if (taskName == ENRICHMENT_UPLOAD_DOCUMENT
+                            && task.getName().equals("Enrichment Upload Document")
+                            && task.getSubject().equals("CreditDocuments")) {
+                        result.add(task);
+                    }
+                    if (taskName == ENRICHMENT_UPLOAD_IDENTITY
+                            && task.getName().equals("Enrichment Upload Document")
+                            && task.getSubject().equals("IdentityDocuments")) {
+                        result.add(task);
+                    }
+                    if (taskName == CLIENT_DETAILS
+                            && task.getName().equals("Additional Client Details")) {
+                        result.add(task);
+                    }
+
+                }
+            }
+        } catch (Throwable t) {
+//            _logger.error("Error getting the list of human tasks by name", t);
+            throw new ApsSystemException("Error getting the list of human tasks by name", t);
+        }
+        return result;
     }
 
     @Override
@@ -606,7 +652,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public boolean sendSignal(final String containerId, final String processId, final String signal, String accountId, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
 
-        if (!this.getConfig().getActive() || StringUtils.isBlank(containerId)
+        if (!this.getConfig().getActive()
+                || StringUtils.isBlank(containerId)
                 || StringUtils.isBlank(processId)
                 || StringUtils.isBlank(signal)
                 || StringUtils.isBlank(accountId)) {
@@ -760,6 +807,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieClient client = getCurrentClient();
             // header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put("X-KIE-ContentType", "JSON");
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
             // perform query
             if (null != input) {
                 // generate payload

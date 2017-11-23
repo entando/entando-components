@@ -100,7 +100,8 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     public JAXBTaskList getUserTask(Properties properties) throws Throwable {
-
+        final JAXBTaskList taskList = new JAXBTaskList();
+        List<KieTask> rawList = new ArrayList<>();
         final String user = properties.getProperty("user");
         HashMap<String, String> opt = new HashMap<>();
         int id; // parameter appended to the original payload
@@ -109,20 +110,23 @@ public class ApiTaskInterface extends KieApiManager {
             opt.put("user", user);
         }
 
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", opt);
-        final JAXBTaskList taskList = new JAXBTaskList();
-        List<JAXBTask> list = new ArrayList<>();
-        for (KieTask raw : rawList) {
-            JAXBTask task = new JAXBTask(raw);
-            list.add(task);
-            taskList.setContainerId(task.getContainerId());
-            taskList.setOwner(user);
-            taskList.setProcessId(task.getProcessDefinitionId());
-        }
-        taskList.setList(list);
-        this.startTasks(rawList, opt);
-        if (taskList.getList().isEmpty()) {
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
+        try {
+            rawList = this.getKieFormManager().getHumanTaskList("", opt);
+            List<JAXBTask> list = new ArrayList<>();
+            for (KieTask raw : rawList) {
+                JAXBTask task = new JAXBTask(raw);
+                list.add(task);
+                taskList.setContainerId(task.getContainerId());
+                taskList.setOwner(user);
+                taskList.setProcessId(task.getProcessDefinitionId());
+            }
+            taskList.setList(list);
+            this.startTasks(rawList, opt);
+            if (taskList.getList().isEmpty()) {
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
+            }
+        } catch (Throwable r) {
+            r.printStackTrace();
         }
         return taskList;
     }
