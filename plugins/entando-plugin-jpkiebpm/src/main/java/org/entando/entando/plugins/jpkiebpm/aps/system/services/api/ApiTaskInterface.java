@@ -38,15 +38,11 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
 import org.json.JSONObject;
 
 /**
