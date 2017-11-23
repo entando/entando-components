@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME;
 
 /**
  * @author Entando
@@ -262,11 +263,22 @@ public interface IKieFormManager {
     public List<KieTask> getHumanTaskListForAdmin(String user, Map<String, String> opt) throws ApsSystemException;
 
     /**
-     * 
+     *
      * @param input
      * @param opt
      * @return
      * @throws Throwable
      */
     public KieProcessInstancesQueryResult getProcessInstancesWithClientData(Map<String, String> input, Map<String, String> opt) throws Throwable;
+
+
+    /**
+     *
+     * @param user
+     * @param taskName
+     * @param opt
+     * @return
+     * @throws ApsSystemException
+     */
+    public List<KieTask> getHumanTaskListForAdmin(String user, TASK_NAME taskName, Map<String, String> opt) throws ApsSystemException;
 }

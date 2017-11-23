@@ -35,13 +35,8 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 /**
+ *
  * @author entando
  */
 public class FSIDemoHelper {
@@ -100,8 +95,8 @@ public class FSIDemoHelper {
 
     public static KieApiProcessStart replaceValuesFromJson(JSONObject json, KieApiProcessStart process) {
         try {
-            JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
-                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
+        JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
+                .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
             JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0)
                     .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty");
             JSONObject innerparty = party.getJSONObject("party")
@@ -315,7 +310,7 @@ public class FSIDemoHelper {
                 JsonHelper.replaceKey(address, "street", input.get("street"));
             }
             if (input.containsKey("zipcode")) {
-               JsonHelper.replaceKey(address, "zipcode", input.get("zipcode"));
+                JsonHelper.replaceKey(address, "zipcode", input.get("zipcode"));
             }
             if (input.containsKey("state")) {
                 JsonHelper.replaceKey(address, "state", input.get("state"));
@@ -351,6 +346,12 @@ public class FSIDemoHelper {
         return json.toString();
     }
 
+    public enum TASK_NAME {
+        CLIENT_DETAILS,
+        ENRICHMENT_UPLOAD_DOCUMENT,
+        ENRICHMENT_UPLOAD_IDENTITY
+    }
+
     public final static String PAYLOAD_ENRICHMENT
             = "{\n"
             + "  \"htUploadedDocument\" : {\n"
@@ -367,7 +368,6 @@ public class FSIDemoHelper {
             + "  	}\n"
             + "  }\n"
             + "}";
-
     public final static String PAYLOAD_INSTANCES_W_DATA = "{\n"
             + "  \"order-asc\" : false,\n"
             + "  \"query-params\" : [ {\n"
@@ -380,6 +380,7 @@ public class FSIDemoHelper {
             + "    \"name\" : \"string\"\n"
             + "  }\n"
             + "}";
+
 
     public final static String PAYLOAD_ADDITIONAL_CLIENT_DETAIL_TASK = "{\n"
             + "  \"htClient\" : {\n"
