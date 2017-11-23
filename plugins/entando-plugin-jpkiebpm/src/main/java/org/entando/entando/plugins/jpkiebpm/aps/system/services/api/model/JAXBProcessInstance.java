@@ -27,14 +27,12 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.util.Date;
 
 /**
- * @author matteo
+ * @author Entando
  */
 @XmlRootElement(name = "processInstance")
-
 public class JAXBProcessInstance {
 
     private String processInstanceId;

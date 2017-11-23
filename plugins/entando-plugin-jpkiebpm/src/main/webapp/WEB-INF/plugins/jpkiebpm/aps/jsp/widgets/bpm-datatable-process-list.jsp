@@ -33,7 +33,7 @@
 
             $.get(url, function (data) {
 
-                var items = data.response.result.processInstanceList.list;
+                var items = data.response.result.processInstanceList.list || [];
                 items = items.map(function (item) {
                     item['start-date'] = new Date(item['start-date']).toLocaleString();
                     delete item['@xsi.type'];

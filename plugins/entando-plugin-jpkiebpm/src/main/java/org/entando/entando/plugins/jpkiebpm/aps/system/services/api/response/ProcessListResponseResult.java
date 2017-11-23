@@ -29,7 +29,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBTa
 
 /**
  *
- * @author matteo
+ * @author Entando
  */
 public class ProcessListResponseResult extends AbstractApiResponseResult {
 
