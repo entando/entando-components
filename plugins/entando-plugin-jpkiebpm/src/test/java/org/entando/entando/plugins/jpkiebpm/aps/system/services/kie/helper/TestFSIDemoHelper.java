@@ -105,11 +105,11 @@ public class TestFSIDemoHelper extends TestCase {
         input.put("name", "anyName");
         input.put("country", "anyCountry");
         input.put("dateOfBirth", now.getTime());
-        input.put("ssn", new Long(2677));
+        input.put("ssn", "2677");
         input.put("email", "anyemail@yanydomain.com");
-        input.put("bic", new Long(23812677));
+        input.put("bic", "23812677");
         input.put("street", "anyStreet");
-        input.put("zipcode", 12345);
+        input.put("zipcode", "12345");
         input.put("state", "anyState");
         input.put("address_country", "anyAddressCountry");
 
@@ -137,8 +137,8 @@ public class TestFSIDemoHelper extends TestCase {
                     (String)((JSONObject)obj).get("type"));
 
             assertTrue(((JSONObject)obj).has("bic"));
-            assertEquals(Long.valueOf(23812677),
-                    Long.valueOf((Integer)((JSONObject)obj).get("bic")));
+            assertEquals("23812677",
+                    ((JSONObject)obj).get("bic"));
 
             // ADDRESS
             obj = JsonHelper.findKey(json, "address");
@@ -148,8 +148,8 @@ public class TestFSIDemoHelper extends TestCase {
                     (String)((JSONObject)obj).get("street"));
 
             assertTrue(((JSONObject)obj).has("zipcode"));
-            assertEquals((Integer)12345,
-                    (Integer)((JSONObject)obj).get("zipcode"));
+            assertEquals("12345",
+                    ((JSONObject)obj).get("zipcode"));
 
             assertTrue(((JSONObject)obj).has("state"));
             assertEquals("anyState",
@@ -176,14 +176,15 @@ public class TestFSIDemoHelper extends TestCase {
                     (Long)((JSONObject)obj).get("dateOfBirth"));
 
             assertTrue(((JSONObject)obj).has("ssn"));
-            assertEquals(Long.valueOf(2677),
-                    Long.valueOf((Integer)((JSONObject)obj).get("ssn")));
+            assertEquals("2677",
+                    ((JSONObject)obj).get("ssn"));
 
             assertTrue(((JSONObject)obj).has("email"));
             assertEquals("anyemail@yanydomain.com",
                     (String)((JSONObject)obj).get("email"));
 
         } catch (Throwable t) {
+            t.printStackTrace();
             throw t;
         }
     }
