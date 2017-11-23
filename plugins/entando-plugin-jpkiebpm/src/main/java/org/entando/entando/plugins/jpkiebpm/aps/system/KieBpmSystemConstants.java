@@ -64,6 +64,7 @@ public interface KieBpmSystemConstants {
     public final static String API_PUT_HUMAN_TASK_STATE = "API_PUT_HUMAN_TASK_STATE";
     public final static String API_PUT_SET_TASK_STATE = "API_PUT_SET_TASK_STATE";
     public final static String API_GET_ALL_TASK_LIST_ADMIN = "API_GET_ALL_TASK_LIST_ADMIN";
+    public final static String API_POST_ALL_PROCESS_INSTANCES_W_CLIENT_DATA = "API_POST_ALL_PROCESS_INSTANCES_W_CLIENT_DATA";
 
 
 	public static final String WIDGET_PARAM_DATA_TYPE_CODE = "dataTypeCode";

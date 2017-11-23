@@ -247,7 +247,7 @@ public interface IKieFormManager {
      * @return
      * @throws Throwable
      */
-    String setTaskState(final String containerId, final String taskId, final TASK_STATES state, Map<String, String> opt) throws Throwable;
+    String setTaskState(final String containerId, final String taskId, final TASK_STATES state, Map<String, Object> input, Map<String, String> opt) throws Throwable;
 
 
     /**
@@ -260,4 +260,13 @@ public interface IKieFormManager {
     public List<KieTask> getHumanTaskListForUser(String user, Map<String, String> opt) throws ApsSystemException;
 
     public List<KieTask> getHumanTaskListForAdmin(String user, Map<String, String> opt) throws ApsSystemException;
+
+    /**
+     * 
+     * @param input
+     * @param opt
+     * @return
+     * @throws Throwable
+     */
+    public KieProcessInstancesQueryResult getProcessInstancesWithClientData(Map<String, String> input, Map<String, String> opt) throws Throwable;
 }

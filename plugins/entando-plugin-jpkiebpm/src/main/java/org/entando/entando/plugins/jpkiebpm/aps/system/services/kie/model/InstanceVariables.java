@@ -21,27 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response;
+package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
-import javax.xml.bind.annotation.XmlElement;
-import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
-import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
+import java.util.HashMap;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.InstanceVariables.VariableMap;
 
 /**
+ * AAARGH! MOXy (as well as JAXB) don't work out-of-the-box with maps!
  *
  * @author Entando
  */
-public class ProcessListResponse extends AbstractApiResponse {
+public class InstanceVariables extends XmlAdapter<VariableMap, HashMap<String, Object>> {
 
-    @Override
-    @XmlElement(name = "result", required = true)
-    public ProcessListResponseResult getResult() {
-        return (ProcessListResponseResult) super.getResult();
+    @XmlRootElement
+    public static class VariableMap {
+        public String name;
+        public Long clientid;
     }
 
     @Override
-    protected AbstractApiResponseResult createResponseResultInstance() {
-        return new TaskListResponseResult();
+    public HashMap<String, Object> unmarshal(VariableMap p) throws Exception {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("name", p.name);
+        map.put("clientid", p.clientid);
+        return map;
     }
 
+
+    @Override
+    public VariableMap marshal(HashMap<String, Object> v) throws Exception {
+        VariableMap p = new VariableMap();
+        p.name = (String) v.get("name");
+        p.clientid = (Long) v.get("clientid");
+        return p;
+    }
 }
+
+

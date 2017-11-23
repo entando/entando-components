@@ -138,7 +138,6 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
 
             Map<String, Object> toBpm = new HashMap<String, Object>();
             EntityAttributeIterator iterator = new EntityAttributeIterator(dataObject);
-            Enumeration<String> e = this.getRequest().getParameterNames();
 
             while (iterator.hasNext()) {
                 AttributeInterface attribute = (AttributeInterface) iterator.next();
@@ -158,6 +157,7 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
             _logger.info("NEW PROCCESS ID: {}", procId);
             List<String> args = new ArrayList<>();
             args.add(procId);
+            args.add(processId.substring(processId.lastIndexOf("."))+1);
             this.setDataObjectOnSession(null);
             this.addActionMessage(this.getText("message.success", args));
         } catch (Throwable t) {

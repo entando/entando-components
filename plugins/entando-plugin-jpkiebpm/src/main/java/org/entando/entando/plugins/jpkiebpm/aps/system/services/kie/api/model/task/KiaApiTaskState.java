@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author paddeo
  */
 @XmlRootElement(name = "taskState")
-@XmlType(propOrder = {"containerId", "taskId", "user", "state"})
+@XmlType(propOrder = {"containerId", "taskId", "user", "state", "name", "street", "zipcode", "usstate", "country"})
 public class KiaApiTaskState {
 
     public String getContainerId() {
@@ -66,8 +66,53 @@ public class KiaApiTaskState {
         this.state = state;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public String getUsstate() {
+        return usstate;
+    }
+
+    public void setUsstate(String usstate) {
+        this.usstate = usstate;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     private String containerId;
     private String taskId;
     private String user;
     private String state;
+    private String name;
+    private String street;
+    private String zipcode;
+    private String usstate;
+    private String country;
 }
