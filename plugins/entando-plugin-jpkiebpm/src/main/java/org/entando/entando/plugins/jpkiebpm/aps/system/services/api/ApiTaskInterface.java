@@ -382,7 +382,7 @@ public class ApiTaskInterface extends KieApiManager {
         KieApiProcessStart taskInOut = this.getTaskInputOutput(properties);
         Map<String, Object> input = new HashMap<>();
         input.put("accountManager", taskInOut.getAccountManager());
-        input.put("bic", Long.valueOf(state.getBic()));
+        input.put("bic", state.getBic());
         input.put("name", state.getName());
         input.put("country", taskInOut.getCountry());
         input.put("street", state.getStreet());
@@ -395,11 +395,8 @@ public class ApiTaskInterface extends KieApiManager {
         input.put("address_country", state.getCountry());
         input.put("type", taskInOut.getType());
         input.put("relationship", taskInOut.getPrelationship());
-        try {
-            input.put("ssn", (taskInOut.getPssn() != null) ? Long.valueOf(taskInOut.getPssn()) : 0l);
-        } catch (Exception e) {
-            input.put("ssn", 345676567l);
-        }
+        input.put("ssn", "7987989797");
+
         return input;
     }
 
