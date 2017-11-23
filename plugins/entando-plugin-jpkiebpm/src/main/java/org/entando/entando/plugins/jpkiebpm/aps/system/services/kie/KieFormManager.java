@@ -610,6 +610,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                 || StringUtils.isBlank(processId)
                 || StringUtils.isBlank(signal)
                 || StringUtils.isBlank(accountId)) {
+            _logger.error("CANNOT PERFORM sendSignal");
             return false;
         }
         try {
@@ -761,13 +762,22 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             // header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             // perform query
-            result = (String) new KieRequestBuilder(client)
-                    .setEndpoint(ep)
-                    .setHeaders(headersMap)
-                    .setPayload(payload)
-                    .setRequestParams(opt)
-                    .setDebug(true)
-                    .doRequest();
+            if (null != input) {
+                result = (String) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setHeaders(headersMap)
+                        .setPayload(payload)
+                        .setRequestParams(opt)
+                        .setDebug(true)
+                        .doRequest();
+            } else {
+                result = (String) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setHeaders(headersMap)
+                        .setRequestParams(opt)
+                        .setDebug(true)
+                        .doRequest();
+            }
         } catch (Throwable t) {
             throw new ApsSystemException("error submitting human task with state: " + state.getValue(), t);
         }
