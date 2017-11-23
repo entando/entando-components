@@ -23,11 +23,6 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
@@ -35,8 +30,13 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 /**
- *
  * @author entando
  */
 public class FSIDemoHelper {
@@ -285,6 +285,10 @@ public class FSIDemoHelper {
         JSONObject address = (JSONObject) JsonHelper.findKey(clientModel, "address");
         JSONArray relatedParties = (JSONArray) JsonHelper.findKey(json, "relatedParties");
 
+        if (input == null) {
+            return "";
+        }
+
         if (clientModel instanceof JSONObject
                 && address instanceof JSONObject
                 && relatedParties instanceof JSONArray) {
@@ -302,7 +306,7 @@ public class FSIDemoHelper {
                 Long val = 0L;
 
                 if (input.get("") instanceof Integer) {
-                    val = Long.valueOf((Integer)input.get("bic"));
+                    val = Long.valueOf((Integer) input.get("bic"));
                 }
                 val = (Long) input.get("bic");
                 JsonHelper.replaceKey(clientModel, "bic", val);
@@ -343,7 +347,7 @@ public class FSIDemoHelper {
                 Long val = 0L;
 
                 if (input.get("") instanceof Integer) {
-                    val = Long.valueOf((Integer)input.get("ssn"));
+                    val = Long.valueOf((Integer) input.get("ssn"));
                 }
                 val = (Long) input.get("ssn");
                 JsonHelper.replaceKey(relatePartiesEntry, "ssn", val);

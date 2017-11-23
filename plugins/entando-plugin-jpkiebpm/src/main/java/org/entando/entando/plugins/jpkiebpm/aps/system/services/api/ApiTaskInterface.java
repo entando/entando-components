@@ -104,6 +104,7 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     public JAXBTaskList getUserTask(Properties properties) throws Throwable {
+
         final String user = properties.getProperty("user");
         HashMap<String, String> opt = new HashMap<>();
         int id; // parameter appended to the original payload
@@ -360,10 +361,14 @@ public class ApiTaskInterface extends KieApiManager {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 
-    private void startTasks(List<KieTask> list, HashMap<String, String> opt) throws Throwable {
+    private void startTasks(List<KieTask> list, HashMap<String, String> opt)  {
         for (KieTask cur : list) {
             if (!cur.getStatus().equalsIgnoreCase("inprogress")) {
-                this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
+                try {
+                    this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         }
     }
