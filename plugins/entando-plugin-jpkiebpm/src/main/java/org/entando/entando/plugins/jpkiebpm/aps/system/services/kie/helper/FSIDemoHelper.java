@@ -303,22 +303,14 @@ public class FSIDemoHelper {
                 JsonHelper.replaceKey(clientModel, "type", input.get("type"));
             }
             if (input.containsKey("bic")) {
-                Long val = 0L;
-
-                if (input.get("bic") instanceof Integer) {
-                    val = Long.valueOf((Integer) input.get("bic"));
-                }
-                val = (Long) input.get("bic");
-                JsonHelper.replaceKey(clientModel, "bic", val);
+                JsonHelper.replaceKey(clientModel, "bic", input.get("bic"));
             }
 
             if (input.containsKey("street")) {
                 JsonHelper.replaceKey(address, "street", input.get("street"));
             }
             if (input.containsKey("zipcode")) {
-                Integer val = (Integer) input.get("zipcode");
-
-                JsonHelper.replaceKey(address, "zipcode", input.get("zipcode"));
+               JsonHelper.replaceKey(address, "zipcode", input.get("zipcode"));
             }
             if (input.containsKey("state")) {
                 JsonHelper.replaceKey(address, "state", input.get("state"));
@@ -344,13 +336,7 @@ public class FSIDemoHelper {
                 JsonHelper.replaceKey(relatePartiesEntry, "dateOfBirth", val);
             }
             if (input.containsKey("ssn")) {
-                Long val = 0L;
-
-                if (input.get("ssn") instanceof Integer) {
-                    val = Long.valueOf((Integer) input.get("ssn"));
-                }
-                val = (Long) input.get("ssn");
-                JsonHelper.replaceKey(relatePartiesEntry, "ssn", val);
+               JsonHelper.replaceKey(relatePartiesEntry, "ssn", input.get("ssn"));
             }
             if (input.containsKey("email")) {
                 JsonHelper.replaceKey(relatePartiesEntry, "email", input.get("email"));
