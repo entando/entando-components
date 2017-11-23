@@ -157,7 +157,7 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
             _logger.info("NEW PROCCESS ID: {}", procId);
             List<String> args = new ArrayList<>();
             args.add(procId);
-            args.add(processId.substring(processId.lastIndexOf("."))+1);
+            args.add(processId.substring(processId.lastIndexOf(".")+1));
             this.setDataObjectOnSession(null);
             this.addActionMessage(this.getText("message.success", args));
         } catch (Throwable t) {
