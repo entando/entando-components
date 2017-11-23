@@ -753,7 +753,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return null;
         }
         try {
-            String payload = FSIDemoHelper.getPayloadForAdditionalClientDetailTask(input);
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_PUT_SET_TASK_STATE)
                     .resolveParams(containerId, taskId, state.getValue());
@@ -763,6 +762,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             // perform query
             if (null != input) {
+                // generate payload
+                String payload = FSIDemoHelper.getPayloadForAdditionalClientDetailTask(input);
+                // do invocation with payload
                 result = (String) new KieRequestBuilder(client)
                         .setEndpoint(ep)
                         .setHeaders(headersMap)

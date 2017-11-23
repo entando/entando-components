@@ -285,10 +285,10 @@ public class FSIDemoHelper {
         JSONObject address = (JSONObject) JsonHelper.findKey(clientModel, "address");
         JSONArray relatedParties = (JSONArray) JsonHelper.findKey(json, "relatedParties");
 
-        if (input == null) {
-            return "";
+        if (null == input) {
+            // return empty JSON
+            return "{}";
         }
-
         if (clientModel instanceof JSONObject
                 && address instanceof JSONObject
                 && relatedParties instanceof JSONArray) {
