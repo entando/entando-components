@@ -38,15 +38,13 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.KNOWLEGE_WORKER;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.LEGAL_WORKER;
 import org.json.JSONObject;
 
 /**
@@ -104,6 +102,7 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     public JAXBTaskList getUserTask(Properties properties) throws Throwable {
+
         final String user = properties.getProperty("user");
         HashMap<String, String> opt = new HashMap<>();
         int id; // parameter appended to the original payload
@@ -113,6 +112,74 @@ public class ApiTaskInterface extends KieApiManager {
         }
 
         List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", opt);
+        final JAXBTaskList taskList = new JAXBTaskList();
+        List<JAXBTask> list = new ArrayList<>();
+        for (KieTask raw : rawList) {
+            JAXBTask task = new JAXBTask(raw);
+            list.add(task);
+            taskList.setContainerId(task.getContainerId());
+            taskList.setOwner(user);
+            taskList.setProcessId(task.getProcessDefinitionId());
+        }
+        taskList.setList(list);
+        this.startTasks(rawList, opt);
+        if (taskList.getList().isEmpty()) {
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
+        }
+        return taskList;
+    }
+
+    public JAXBTaskList getLegalWorkerTask(Properties properties) throws Throwable {
+        HashMap<String, String> opt = new HashMap<>();
+        final String pageSize = properties.getProperty("pageSize");
+        final String page = properties.getProperty("page");
+        final String user = properties.getProperty("user");
+        int id; // parameter appended to the original payload
+
+        if (StringUtils.isNotBlank(page)) {
+            opt.put("page", page);
+        }
+        if (StringUtils.isNotBlank(pageSize)) {
+            opt.put("pageSize", pageSize);
+        } else {
+            opt.put("pageSize", "5000");
+        }
+
+        List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForAdmin("Administrator", LEGAL_WORKER, null);
+        final JAXBTaskList taskList = new JAXBTaskList();
+        List<JAXBTask> list = new ArrayList<>();
+        for (KieTask raw : rawList) {
+            JAXBTask task = new JAXBTask(raw);
+            list.add(task);
+            taskList.setContainerId(task.getContainerId());
+            taskList.setOwner(user);
+            taskList.setProcessId(task.getProcessDefinitionId());
+        }
+        taskList.setList(list);
+        this.startTasks(rawList, opt);
+        if (taskList.getList().isEmpty()) {
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
+        }
+        return taskList;
+    }
+
+    public JAXBTaskList getKnowledgeWorkerTask(Properties properties) throws Throwable {
+        HashMap<String, String> opt = new HashMap<>();
+        final String pageSize = properties.getProperty("pageSize");
+        final String page = properties.getProperty("page");
+        final String user = properties.getProperty("user");
+        int id; // parameter appended to the original payload
+
+        if (StringUtils.isNotBlank(page)) {
+            opt.put("page", page);
+        }
+        if (StringUtils.isNotBlank(pageSize)) {
+            opt.put("pageSize", pageSize);
+        } else {
+            opt.put("pageSize", "5000");
+        }
+
+        List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForAdmin("Administrator", KNOWLEGE_WORKER, null);
         final JAXBTaskList taskList = new JAXBTaskList();
         List<JAXBTask> list = new ArrayList<>();
         for (KieTask raw : rawList) {
@@ -365,11 +432,11 @@ public class ApiTaskInterface extends KieApiManager {
         for (KieTask cur : list) {
             if (!cur.getStatus().equalsIgnoreCase("inprogress")) {
                 try {
-                this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
+                    this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
+                }
             }
-        }
         }
     }
 
@@ -386,7 +453,7 @@ public class ApiTaskInterface extends KieApiManager {
         input.put("country", taskInOut.getCountry());
         input.put("street", state.getStreet());
         input.put("state", state.getUsstate());
-        input.put("zipcode", Integer.valueOf(state.getZipcode()));
+        input.put("zipcode", state.getZipcode());
         input.put("dateOfBirth", Long.valueOf(taskInOut.getPdateOfBirth()));
         input.put("email", taskInOut.getPemail());
         input.put("party_name", taskInOut.getPname());

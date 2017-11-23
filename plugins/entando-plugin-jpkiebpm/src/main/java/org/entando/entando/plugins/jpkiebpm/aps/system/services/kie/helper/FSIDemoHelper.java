@@ -24,15 +24,15 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import org.apache.struts2.json.annotations.JSONParameter;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -95,8 +95,8 @@ public class FSIDemoHelper {
 
     public static KieApiProcessStart replaceValuesFromJson(JSONObject json, KieApiProcessStart process) {
         try {
-        JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
-                .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
+            JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
+                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
             JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0)
                     .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty");
             JSONObject innerparty = party.getJSONObject("party")
@@ -112,6 +112,7 @@ public class FSIDemoHelper {
             process.setType(client.isNull("type") ? null : client.getString("type"));
             process.setBic(String.valueOf(innerparty.isNull("bic") ? null : client.getLong("bic")));
             process.setAccountManager(json.isNull("accountManager") ? null : json.getString("accountManager"));
+//            process.setAccountManager(json.getString("accountManager"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -272,7 +273,6 @@ public class FSIDemoHelper {
         return payload.toString();
     }
 
-    // currently hardcoded for the FSI
     public static String getPayloadForProcessInstancesWithClient(Map<String, String> input) {
         JSONObject json = new JSONObject(PAYLOAD_INSTANCES_W_DATA);
         // TODO process dynamic data here
@@ -310,7 +310,7 @@ public class FSIDemoHelper {
                 JsonHelper.replaceKey(address, "street", input.get("street"));
             }
             if (input.containsKey("zipcode")) {
-                JsonHelper.replaceKey(address, "zipcode", input.get("zipcode"));
+               JsonHelper.replaceKey(address, "zipcode", input.get("zipcode"));
             }
             if (input.containsKey("state")) {
                 JsonHelper.replaceKey(address, "state", input.get("state"));
@@ -345,13 +345,13 @@ public class FSIDemoHelper {
         }
         return json.toString();
     }
-
     public enum TASK_NAME {
         CLIENT_DETAILS,
         ENRICHMENT_UPLOAD_DOCUMENT,
-        ENRICHMENT_UPLOAD_IDENTITY
+        ENRICHMENT_UPLOAD_IDENTITY,
+        LEGAL_WORKER,
+        KNOWLEGE_WORKER
     }
-
     public final static String PAYLOAD_ENRICHMENT
             = "{\n"
             + "  \"htUploadedDocument\" : {\n"
@@ -380,7 +380,6 @@ public class FSIDemoHelper {
             + "    \"name\" : \"string\"\n"
             + "  }\n"
             + "}";
-
 
     public final static String PAYLOAD_ADDITIONAL_CLIENT_DETAIL_TASK = "{\n"
             + "  \"htClient\" : {\n"
@@ -417,5 +416,4 @@ public class FSIDemoHelper {
             + "      }\n"
             + "   }\n"
             + "}";
-
 }

@@ -64,6 +64,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
             "class": "buttons-col",
             "width": "300px",
             "data": null,
+            "title": extraConfig.buttonsColumnTitle || '&nbsp;',
             "defaultContent": buttonsStr
         }];
     }
