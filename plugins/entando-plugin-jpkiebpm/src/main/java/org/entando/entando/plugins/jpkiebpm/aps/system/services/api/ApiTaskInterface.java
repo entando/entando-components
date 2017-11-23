@@ -325,12 +325,13 @@ public class ApiTaskInterface extends KieApiManager {
             if (StringUtils.isNotBlank(state.getState())) {
                 enumState = KieFormManager.TASK_STATES.valueOf(state.getState().toUpperCase());
             }
-            this.getKieFormManager().setTaskState(state.getContainerId(), state.getTaskId(), enumState, null, opt);
+            Map<String, Object> input = this.getInputForTaskState(state);
+            this.getKieFormManager().setTaskState(state.getContainerId(), state.getTaskId(), enumState, input, opt);
             List<KieTask> tasks = this.getKieFormManager().getHumanTaskList(null, opt);
             if (!tasks.isEmpty()) {
                 for (KieTask task : tasks) {
                     this.getKieFormManager().setTaskState(state.getContainerId(),
-                            String.valueOf(task.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
+                            String.valueOf(task.getId()), KieFormManager.TASK_STATES.STARTED, input, opt);
                 }
             }
         } catch (Exception e) {
@@ -361,7 +362,7 @@ public class ApiTaskInterface extends KieApiManager {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 
-    private void startTasks(List<KieTask> list, HashMap<String, String> opt)  {
+    private void startTasks(List<KieTask> list, HashMap<String, String> opt) {
         for (KieTask cur : list) {
             if (!cur.getStatus().equalsIgnoreCase("inprogress")) {
                 try {
@@ -371,6 +372,35 @@ public class ApiTaskInterface extends KieApiManager {
                 }
             }
         }
+    }
+
+    private Map<String, Object> getInputForTaskState(KiaApiTaskState state) {
+        Properties properties = new Properties();
+        properties.put("containerId", state.getContainerId());
+        properties.put("taskId", state.getTaskId());
+        properties.put("user", state.getUser());
+        KieApiProcessStart taskInOut = this.getTaskInputOutput(properties);
+        Map<String, Object> input = new HashMap<>();
+        input.put("accountManager", taskInOut.getAccountManager());
+        input.put("bic", Long.valueOf(state.getBic()));
+        input.put("name", state.getName());
+        input.put("country", taskInOut.getCountry());
+        input.put("street", state.getStreet());
+        input.put("state", state.getUsstate());
+        input.put("zipcode", Integer.valueOf(state.getZipcode()));
+        input.put("dateOfBirth", Long.valueOf(taskInOut.getPdateOfBirth()));
+        input.put("email", taskInOut.getPemail());
+        input.put("party_name", taskInOut.getPname());
+        input.put("surname", taskInOut.getPsurname());
+        input.put("address_country", state.getCountry());
+        input.put("type", taskInOut.getType());
+        input.put("relationship", taskInOut.getPrelationship());
+        try {
+            input.put("ssn", (taskInOut.getPssn() != null) ? Long.valueOf(taskInOut.getPssn()) : 0l);
+        } catch (Exception e) {
+            input.put("ssn", 345676567l);
+        }
+        return input;
     }
 
 }

@@ -305,7 +305,7 @@ public class FSIDemoHelper {
             if (input.containsKey("bic")) {
                 Long val = 0L;
 
-                if (input.get("") instanceof Integer) {
+                if (input.get("bic") instanceof Integer) {
                     val = Long.valueOf((Integer) input.get("bic"));
                 }
                 val = (Long) input.get("bic");
@@ -346,7 +346,7 @@ public class FSIDemoHelper {
             if (input.containsKey("ssn")) {
                 Long val = 0L;
 
-                if (input.get("") instanceof Integer) {
+                if (input.get("ssn") instanceof Integer) {
                     val = Long.valueOf((Integer) input.get("ssn"));
                 }
                 val = (Long) input.get("ssn");
@@ -377,54 +377,53 @@ public class FSIDemoHelper {
             + "  }\n"
             + "}";
 
+    public final static String PAYLOAD_INSTANCES_W_DATA = "{\n"
+            + "  \"order-asc\" : false,\n"
+            + "  \"query-params\" : [ {\n"
+            + "    \"cond-column\" : \"status\",\n"
+            + "    \"cond-operator\" : \"EQUALS_TO\",\n"
+            + "    \"cond-values\" : [ \"1\" ]\n"
+            + "  } ],\n"
+            + "  \"result-column-mapping\" : {\n"
+            + "    \"clientid\" : \"integer\",\n"
+            + "    \"name\" : \"string\"\n"
+            + "  }\n"
+            + "}";
 
-    public final static String PAYLOAD_INSTANCES_W_DATA = "{\n" +
-            "  \"order-asc\" : false,\n" +
-            "  \"query-params\" : [ {\n" +
-            "    \"cond-column\" : \"status\",\n" +
-            "    \"cond-operator\" : \"EQUALS_TO\",\n" +
-            "    \"cond-values\" : [ \"1\" ]\n" +
-            "  } ],\n" +
-            "  \"result-column-mapping\" : {\n" +
-            "    \"clientid\" : \"integer\",\n" +
-            "    \"name\" : \"string\"\n" +
-            "  }\n" +
-            "}";
-
-    public final static String PAYLOAD_ADDITIONAL_CLIENT_DETAIL_TASK = "{\n" +
-            "  \"htClient\" : {\n" +
-            "      \"com.redhat.bpms.demo.fsi.onboarding.model.Client\":{\n" +
-            "         \"id\":null,\n" +
-            "         \"name\":\"Red Hat\",\n" +
-            "         \"country\":\"IT\",\n" +
-            "         \"type\":\"BIG_BUSINESS\",\n" +
-            "         \"bic\":\"123456789\",\n" +
-            "         \"address\": {\n" +
-            "         	\"street\":\"314 Littleton Rd\",\n" +
-            "         	\"zipcode\":\"01886\",\n" +
-            "         	\"state\":\"MA\",\n" +
-            "         	\"country\":\"USA\"\n" +
-            "         },\n" +
-            "         \"relatedParties\":[\n" +
-            "            {\n" +
-            "               \"com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty\":{\n" +
-            "                  \"id\":null,\n" +
-            "                  \"relationship\":\"Consultant\",\n" +
-            "                  \"party\":{\n" +
-            "                     \"com.redhat.bpms.demo.fsi.onboarding.model.Party\":{\n" +
-            "                        \"id\":null,\n" +
-            "                        \"name\":\"Duncan\",\n" +
-            "                        \"surname\":\"Doyle\",\n" +
-            "                        \"dateOfBirth\":1506590295001,\n" +
-            "                        \"ssn\":\"987654321\",\n" +
-            "                        \"email\": \"mail@localdomain.com\"\n" +
-            "                     }\n" +
-            "                  }\n" +
-            "               }\n" +
-            "            }\n" +
-            "         ]\n" +
-            "      }\n" +
-            "   }\n" +
-            "}";
+    public final static String PAYLOAD_ADDITIONAL_CLIENT_DETAIL_TASK = "{\n"
+            + "  \"htClient\" : {\n"
+            + "      \"com.redhat.bpms.demo.fsi.onboarding.model.Client\":{\n"
+            + "         \"id\":null,\n"
+            + "         \"name\":\"Red Hat\",\n"
+            + "         \"country\":\"IT\",\n"
+            + "         \"type\":\"BIG_BUSINESS\",\n"
+            + "         \"bic\":\"123456789\",\n"
+            + "         \"address\": {\n"
+            + "         	\"street\":\"314 Littleton Rd\",\n"
+            + "         	\"zipcode\":\"01886\",\n"
+            + "         	\"state\":\"MA\",\n"
+            + "         	\"country\":\"USA\"\n"
+            + "         },\n"
+            + "         \"relatedParties\":[\n"
+            + "            {\n"
+            + "               \"com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty\":{\n"
+            + "                  \"id\":null,\n"
+            + "                  \"relationship\":\"Consultant\",\n"
+            + "                  \"party\":{\n"
+            + "                     \"com.redhat.bpms.demo.fsi.onboarding.model.Party\":{\n"
+            + "                        \"id\":null,\n"
+            + "                        \"name\":\"Duncan\",\n"
+            + "                        \"surname\":\"Doyle\",\n"
+            + "                        \"dateOfBirth\":1506590295001,\n"
+            + "                        \"ssn\":\"987654321\",\n"
+            + "                        \"email\": \"mail@localdomain.com\"\n"
+            + "                     }\n"
+            + "                  }\n"
+            + "               }\n"
+            + "            }\n"
+            + "         ]\n"
+            + "      }\n"
+            + "   }\n"
+            + "}";
 
 }
