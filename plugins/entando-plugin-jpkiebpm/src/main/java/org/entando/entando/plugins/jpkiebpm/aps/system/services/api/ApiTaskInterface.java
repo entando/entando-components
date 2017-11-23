@@ -38,11 +38,15 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
 import org.json.JSONObject;
 
 /**
@@ -100,8 +104,6 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     public JAXBTaskList getUserTask(Properties properties) throws Throwable {
-        final JAXBTaskList taskList = new JAXBTaskList();
-        List<KieTask> rawList = new ArrayList<>();
         final String user = properties.getProperty("user");
         HashMap<String, String> opt = new HashMap<>();
         int id; // parameter appended to the original payload
@@ -110,23 +112,20 @@ public class ApiTaskInterface extends KieApiManager {
             opt.put("user", user);
         }
 
-        try {
-            rawList = this.getKieFormManager().getHumanTaskList("", opt);
-            List<JAXBTask> list = new ArrayList<>();
-            for (KieTask raw : rawList) {
-                JAXBTask task = new JAXBTask(raw);
-                list.add(task);
-                taskList.setContainerId(task.getContainerId());
-                taskList.setOwner(user);
-                taskList.setProcessId(task.getProcessDefinitionId());
-            }
-            taskList.setList(list);
-            this.startTasks(rawList, opt);
-            if (taskList.getList().isEmpty()) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
-            }
-        } catch (Throwable r) {
-            r.printStackTrace();
+        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", opt);
+        final JAXBTaskList taskList = new JAXBTaskList();
+        List<JAXBTask> list = new ArrayList<>();
+        for (KieTask raw : rawList) {
+            JAXBTask task = new JAXBTask(raw);
+            list.add(task);
+            taskList.setContainerId(task.getContainerId());
+            taskList.setOwner(user);
+            taskList.setProcessId(task.getProcessDefinitionId());
+        }
+        taskList.setList(list);
+        this.startTasks(rawList, opt);
+        if (taskList.getList().isEmpty()) {
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
         }
         return taskList;
     }
@@ -366,11 +365,11 @@ public class ApiTaskInterface extends KieApiManager {
         for (KieTask cur : list) {
             if (!cur.getStatus().equalsIgnoreCase("inprogress")) {
                 try {
-                    this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
+                this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
-                }
             }
+        }
         }
     }
 
