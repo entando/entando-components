@@ -95,22 +95,24 @@ public class FSIDemoHelper {
 
     public static KieApiProcessStart replaceValuesFromJson(JSONObject json, KieApiProcessStart process) {
         try {
-        JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
-                .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
+            JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
+                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
             JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0)
                     .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty");
+            JSONObject innerparty = party.getJSONObject("party")
+                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Party");
+            process.setPname(innerparty.getString("name"));
+            process.setPsurname(innerparty.getString("surname"));
+            process.setPdateOfBirth(String.valueOf(innerparty.getLong("dateOfBirth")));
+            process.setPssn(String.valueOf(innerparty.isNull("ssn") ? null : innerparty.getInt("ssn")));
+            process.setPemail(innerparty.getString("email"));
             process.setPrelationship(party.getString("relationship"));
-            party = party.getJSONObject("party").getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Party");
-        process.setPname(party.getString("name"));
-        process.setPsurname(party.getString("surname"));
-            process.setPdateOfBirth(String.valueOf(party.getLong("dateOfBirth")));
-        process.setPssn(party.getString("ssn"));
-        process.setPemail(party.getString("email"));
-        process.setPrelationship(party.getString("relationship"));
-        process.setCname(client.getString("name"));
-        process.setCountry(client.getString("country"));
-        process.setType(client.getString("type"));
-        process.setBic(client.getString("bic"));
+            process.setCname(client.getString("name"));
+            process.setCountry(client.isNull("country") ? null : client.getString("country"));
+            process.setType(client.isNull("type") ? null : client.getString("type"));
+            process.setBic(String.valueOf(innerparty.isNull("bic") ? null : client.getLong("bic")));
+            process.setAccountManager(json.isNull("accountManager") ? null : json.getString("accountManager"));
+//            process.setAccountManager(json.getString("accountManager"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -270,6 +272,78 @@ public class FSIDemoHelper {
         return payload.toString();
     }
 
+    public static String getPayloadForProcessInstancesWithClient(Map<String, String> input) {
+        JSONObject json = new JSONObject(PAYLOAD_INSTANCES_W_DATA);
+        // TODO process dynamic data here
+        return json.toString();
+    }
+
+    public static String getPayloadForAdditionalClientDetailTask(Map<String, Object> input) {
+        JSONObject json = new JSONObject(PAYLOAD_ADDITIONAL_CLIENT_DETAIL_TASK);
+        JSONObject clientModel = (JSONObject) JsonHelper.findKey(json, "com.redhat.bpms.demo.fsi.onboarding.model.Client");
+        JSONObject address = (JSONObject) JsonHelper.findKey(clientModel, "address");
+        JSONArray relatedParties = (JSONArray) JsonHelper.findKey(json, "relatedParties");
+
+        if (null == input) {
+            // return empty JSON
+            return "{}";
+        }
+        if (clientModel instanceof JSONObject
+                && address instanceof JSONObject
+                && relatedParties instanceof JSONArray) {
+
+            if (input.containsKey("name")) {
+                JsonHelper.replaceKey(clientModel, "name", input.get("name"));
+            }
+            if (input.containsKey("country")) {
+                JsonHelper.replaceKey(clientModel, "country", input.get("country"));
+            }
+            if (input.containsKey("type")) {
+                JsonHelper.replaceKey(clientModel, "type", input.get("type"));
+            }
+            if (input.containsKey("bic")) {
+                JsonHelper.replaceKey(clientModel, "bic", input.get("bic"));
+            }
+
+            if (input.containsKey("street")) {
+                JsonHelper.replaceKey(address, "street", input.get("street"));
+            }
+            if (input.containsKey("zipcode")) {
+               JsonHelper.replaceKey(address, "zipcode", input.get("zipcode"));
+            }
+            if (input.containsKey("state")) {
+                JsonHelper.replaceKey(address, "state", input.get("state"));
+            }
+            if (input.containsKey("address_country")) {
+                JsonHelper.replaceKey(address, "country", input.get("address_country"));
+            }
+
+            JSONObject relatePartiesEntry = (JSONObject) relatedParties.get(0);
+
+            if (input.containsKey("relationship")) {
+                JsonHelper.replaceKey(relatePartiesEntry, "relationship", input.get("relationship"));
+            }
+            if (input.containsKey("party_name")) {
+                JsonHelper.replaceKey(relatePartiesEntry, "name", input.get("party_name"));
+            }
+            if (input.containsKey("surname")) {
+                JsonHelper.replaceKey(relatePartiesEntry, "surname", input.get("surname"));
+            }
+            if (input.containsKey("dateOfBirth")) {
+                Long val = (Long) input.get("dateOfBirth");
+
+                JsonHelper.replaceKey(relatePartiesEntry, "dateOfBirth", val);
+            }
+            if (input.containsKey("ssn")) {
+               JsonHelper.replaceKey(relatePartiesEntry, "ssn", input.get("ssn"));
+            }
+            if (input.containsKey("email")) {
+                JsonHelper.replaceKey(relatePartiesEntry, "email", input.get("email"));
+            }
+
+        }
+        return json.toString();
+    }
     public final static String PAYLOAD_ENRICHMENT
             = "{\n"
             + "  \"htUploadedDocument\" : {\n"
@@ -285,5 +359,53 @@ public class FSIDemoHelper {
             + "      }\n"
             + "  	}\n"
             + "  }\n"
+            + "}";
+    public final static String PAYLOAD_INSTANCES_W_DATA = "{\n"
+            + "  \"order-asc\" : false,\n"
+            + "  \"query-params\" : [ {\n"
+            + "    \"cond-column\" : \"status\",\n"
+            + "    \"cond-operator\" : \"EQUALS_TO\",\n"
+            + "    \"cond-values\" : [ \"1\" ]\n"
+            + "  } ],\n"
+            + "  \"result-column-mapping\" : {\n"
+            + "    \"clientid\" : \"integer\",\n"
+            + "    \"name\" : \"string\"\n"
+            + "  }\n"
+            + "}";
+
+    public final static String PAYLOAD_ADDITIONAL_CLIENT_DETAIL_TASK = "{\n"
+            + "  \"htClient\" : {\n"
+            + "      \"com.redhat.bpms.demo.fsi.onboarding.model.Client\":{\n"
+            + "         \"id\":null,\n"
+            + "         \"name\":\"Red Hat\",\n"
+            + "         \"country\":\"IT\",\n"
+            + "         \"type\":\"BIG_BUSINESS\",\n"
+            + "         \"bic\":\"123456789\",\n"
+            + "         \"address\": {\n"
+            + "         	\"street\":\"314 Littleton Rd\",\n"
+            + "         	\"zipcode\":\"01886\",\n"
+            + "         	\"state\":\"MA\",\n"
+            + "         	\"country\":\"USA\"\n"
+            + "         },\n"
+            + "         \"relatedParties\":[\n"
+            + "            {\n"
+            + "               \"com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty\":{\n"
+            + "                  \"id\":null,\n"
+            + "                  \"relationship\":\"Consultant\",\n"
+            + "                  \"party\":{\n"
+            + "                     \"com.redhat.bpms.demo.fsi.onboarding.model.Party\":{\n"
+            + "                        \"id\":null,\n"
+            + "                        \"name\":\"Duncan\",\n"
+            + "                        \"surname\":\"Doyle\",\n"
+            + "                        \"dateOfBirth\":1506590295001,\n"
+            + "                        \"ssn\":\"987654321\",\n"
+            + "                        \"email\": \"mail@localdomain.com\"\n"
+            + "                     }\n"
+            + "                  }\n"
+            + "               }\n"
+            + "            }\n"
+            + "         ]\n"
+            + "      }\n"
+            + "   }\n"
             + "}";
 }

@@ -23,10 +23,13 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -124,36 +127,48 @@ public class KieProcessInstance {
         this.parentInstanceId = parentInstanceId;
     }
 
+    public Map<String, Object> getProcess_instance_variables() {
+        return process_instance_variables;
+    }
+
+    public void setProcess_instance_variables(HashMap<String, Object> process_instance_variables) {
+        this.process_instance_variables = process_instance_variables;
+    }
+
+    @XmlElement(name = "initiator")
     private String initiator;
 
-    @XmlElement(name="process-instance-id")
+    @XmlElement(name = "process-instance-id")
     private Long instanceId;
 
-    @XmlElement(name="process-id")
+    @XmlElement(name = "process-id")
     private String id;
 
-    @XmlElement(name="process-name")
+    @XmlElement(name = "process-name")
     private String name;
 
-    @XmlElement(name="process-version")
+    @XmlElement(name = "process-version")
     private String version;
 
-    @XmlElement(name="process-instance-state")
+    @XmlElement(name = "process-instance-state")
     private Long state;
 
-    @XmlElement(name="container-id")
+    @XmlElement(name = "container-id")
     private String containerId;
 
-    @XmlElement(name="start-date")
+    @XmlElement(name = "start-date")
     private Long startDate;
 
-    @XmlElement(name="process-instance-desc")
+    @XmlElement(name = "process-instance-desc")
     private String desc;
 
-    @XmlElement(name="correlation-key", nillable=true)
+    @XmlElement(name = "correlation-key", nillable = true)
     private String correlationKey;
 
-    @XmlElement(name="parent-instance-id")
+    @XmlElement(name = "parent-instance-id")
     private Long parentInstanceId;
 
+//    @XmlElementWrapper(name="process-instance-process_instance_variables")
+    @XmlJavaTypeAdapter(InstanceVariables.class)
+    private HashMap<String, Object> process_instance_variables;
 }
