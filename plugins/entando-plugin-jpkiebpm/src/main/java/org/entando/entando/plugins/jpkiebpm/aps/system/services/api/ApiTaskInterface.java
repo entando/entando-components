@@ -383,7 +383,7 @@ public class ApiTaskInterface extends KieApiManager {
         input.put("country", taskInOut.getCountry());
         input.put("street", state.getStreet());
         input.put("state", state.getUsstate());
-        input.put("zipcode", Integer.valueOf(state.getZipcode()));
+        input.put("zipcode", state.getZipcode());
         input.put("dateOfBirth", Long.valueOf(taskInOut.getPdateOfBirth()));
         input.put("email", taskInOut.getPemail());
         input.put("party_name", taskInOut.getPname());

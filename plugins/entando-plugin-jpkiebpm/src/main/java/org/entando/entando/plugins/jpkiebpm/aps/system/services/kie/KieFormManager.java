@@ -753,6 +753,13 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return null;
         }
         try {
+
+            if (opt == null ) {
+                opt = new HashMap<>();
+            }
+
+            opt.put("auto-progress","true");
+
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_PUT_SET_TASK_STATE)
                     .resolveParams(containerId, taskId, state.getValue());
@@ -760,6 +767,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieClient client = getCurrentClient();
             // header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put("X-KIE-ContentType", "JSON");
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
             // perform query
             if (null != input) {
                 // generate payload
