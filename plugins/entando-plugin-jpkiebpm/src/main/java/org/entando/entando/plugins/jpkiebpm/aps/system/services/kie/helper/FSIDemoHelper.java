@@ -20,7 +20,7 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
-*/
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
 import java.io.IOException;
@@ -94,20 +94,27 @@ public class FSIDemoHelper {
     }
 
     public static KieApiProcessStart replaceValuesFromJson(JSONObject json, KieApiProcessStart process) {
-        JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
-                .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
-        JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0);
-        process.setPname(party.getString("name"));
-        process.setPsurname(party.getString("surname"));
-        process.setPdateOfBirth(party.getString("dateOfBirth"));
-        process.setPssn(party.getString("ssn"));
-        process.setPemail(party.getString("email"));
-        process.setPrelationship(party.getString("relationship"));
-        process.setCname(client.getString("name"));
-        process.setCountry(client.getString("country"));
-        process.setType(client.getString("type"));
-        process.setBic(client.getString("bic"));
-        process.setAccountManager(json.getString("accountManager"));
+        try {
+            JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
+                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
+            JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0)
+                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty");
+            JSONObject innerparty = party.getJSONObject("party")
+                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Party");
+            process.setPname(innerparty.getString("name"));
+            process.setPsurname(innerparty.getString("surname"));
+            process.setPdateOfBirth(String.valueOf(innerparty.getLong("dateOfBirth")));
+            process.setPssn(String.valueOf(innerparty.isNull("ssn") ? null : innerparty.getInt("ssn")));
+            process.setPemail(innerparty.getString("email"));
+            process.setPrelationship(party.getString("relationship"));
+            process.setCname(client.getString("name"));
+            process.setCountry(client.isNull("country") ? null : client.getString("country"));
+            process.setType(client.isNull("type") ? null : client.getString("type"));
+            process.setBic(String.valueOf(innerparty.isNull("bic") ? null : client.getLong("bic")));
+            process.setAccountManager(json.isNull("accountManager") ? null : json.getString("accountManager"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return process;
     }
 

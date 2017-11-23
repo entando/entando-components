@@ -79,13 +79,13 @@ public class ApiTaskInterface extends KieApiManager {
         try {
             id = Integer.parseInt(idString);
             if (StringUtils.isNotBlank("page")) {
-               opt.put("page", page);
+                opt.put("page", page);
             }
             if (StringUtils.isNotBlank("pageSize")) {
-               opt.put("pageSize", pageSize);
+                opt.put("pageSize", pageSize);
             }
             if (StringUtils.isNotBlank("user")) {
-               opt.put("user", user);
+                opt.put("user", user);
             }
         } catch (NumberFormatException e) {
             throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
@@ -129,6 +129,7 @@ public class ApiTaskInterface extends KieApiManager {
         }
         return taskList;
     }
+
     public String getDiagram(Properties properties) {
         final String configId = properties.getProperty("configId");
         if (null != configId) {
@@ -155,7 +156,7 @@ public class ApiTaskInterface extends KieApiManager {
 
     public JAXBTaskList getTasks(Properties properties) {
         final String configId = properties.getProperty("configId");
-        
+
         if (null != configId) {
             try {
                 final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
@@ -317,15 +318,18 @@ public class ApiTaskInterface extends KieApiManager {
 
     public void setTaskState(final KiaApiTaskState state) throws Throwable {
         try {
-            Map<String, String> input = new HashMap<>();
-            input.put("user", state.getUser());
-            KieFormManager.TASK_STATES enumState = KieFormManager.TASK_STATES.valueOf(state.getState().toUpperCase());
-            this.getKieFormManager().setTaskState(state.getContainerId(), state.getTaskId(), enumState, null, input);
-            List<KieTask> tasks = this.getKieFormManager().getHumanTaskList(null, input);
+            Map<String, String> opt = new HashMap<>();
+            opt.put("user", state.getUser());
+            KieFormManager.TASK_STATES enumState = KieFormManager.TASK_STATES.COMPLETED;
+            if (StringUtils.isNotBlank(state.getState())) {
+                enumState = KieFormManager.TASK_STATES.valueOf(state.getState().toUpperCase());
+            }
+            this.getKieFormManager().setTaskState(state.getContainerId(), state.getTaskId(), enumState, null, opt);
+            List<KieTask> tasks = this.getKieFormManager().getHumanTaskList(null, opt);
             if (!tasks.isEmpty()) {
                 for (KieTask task : tasks) {
                     this.getKieFormManager().setTaskState(state.getContainerId(),
-                            String.valueOf(task.getId()), enumState, null, input);
+                            String.valueOf(task.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
                 }
             }
         } catch (Exception e) {
