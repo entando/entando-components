@@ -262,14 +262,13 @@ public interface IKieFormManager {
     public List<KieTask> getHumanTaskListForAdmin(String user, Map<String, String> opt) throws ApsSystemException;
 
     /**
-     *
+     * 
      * @param input
      * @param opt
      * @return
      * @throws Throwable
      */
     public KieProcessInstancesQueryResult getProcessInstancesWithClientData(Map<String, String> input, Map<String, String> opt) throws Throwable;
-
     /**
      *
      * @param opt

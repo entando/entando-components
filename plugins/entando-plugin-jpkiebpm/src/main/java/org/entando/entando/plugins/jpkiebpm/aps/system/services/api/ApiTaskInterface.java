@@ -194,7 +194,6 @@ public class ApiTaskInterface extends KieApiManager {
         }
         return taskList;
     }
-
     public String getDiagram(Properties properties) {
         final String configId = properties.getProperty("configId");
         if (null != configId) {

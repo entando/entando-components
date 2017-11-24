@@ -35,7 +35,6 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 /**
  * @author entando
  */
@@ -112,6 +111,7 @@ public class FSIDemoHelper {
             process.setType(client.isNull("type") ? null : client.getString("type"));
             process.setBic(String.valueOf(innerparty.isNull("bic") ? null : client.getLong("bic")));
             process.setAccountManager(json.isNull("accountManager") ? null : json.getString("accountManager"));
+//            process.setAccountManager(json.getString("accountManager"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -272,7 +272,6 @@ public class FSIDemoHelper {
         return payload.toString();
     }
 
-    // currently hardcoded for the FSI
     public static String getPayloadForProcessInstancesWithClient(Map<String, String> input) {
         JSONObject json = new JSONObject(PAYLOAD_INSTANCES_W_DATA);
         // TODO process dynamic data here
@@ -345,7 +344,7 @@ public class FSIDemoHelper {
         }
         return json.toString();
     }
-
+    
     public final static String PAYLOAD_ENRICHMENT
             = "{\n"
             + "  \"htUploadedDocument\" : {\n"
@@ -411,5 +410,4 @@ public class FSIDemoHelper {
             + "      }\n"
             + "   }\n"
             + "}";
-
 }
