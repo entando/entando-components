@@ -38,7 +38,9 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import static org.entando.entando.aps.system.services.api.server.IResponseBuilder.SUCCESS;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager.TASK_STATES.COMPLETED;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
@@ -195,15 +197,17 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
      public String approveDocument(Properties properties) throws ApiException {
+         final String user = properties.getProperty("user");
          final String containerId = properties.getProperty("containerId");
          final String taskId = properties.getProperty("taskId");
          final String review = properties.getProperty("review");
         try {
-
-            return "";
+            this.getKieFormManager()
+                    .getCompleteEnrichmentDcumentApprovalTask(user, containerId, taskId, COMPLETED, review, null);
+            return SUCCESS;
         } catch (Throwable t) {
             throw new ApiException(IApiErrorCodes.API_METHOD_ERROR,
-                    "Error during ducument approval",
+                    "Error during document approval",
                     Response.Status.INTERNAL_SERVER_ERROR);
         }
     }

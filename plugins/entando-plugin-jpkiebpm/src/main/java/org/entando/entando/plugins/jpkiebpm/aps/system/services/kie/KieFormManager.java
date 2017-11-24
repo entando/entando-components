@@ -318,8 +318,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return getHumanTaskList(null, opt);
     }
 
-
-
     @Override
     public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
