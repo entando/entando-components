@@ -43,8 +43,6 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.fo
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.KNOWLEGE_WORKER;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.LEGAL_WORKER;
 import org.json.JSONObject;
 
 /**
@@ -145,7 +143,7 @@ public class ApiTaskInterface extends KieApiManager {
             opt.put("pageSize", "5000");
         }
 
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForAdmin("Administrator", LEGAL_WORKER, null);
+        List<KieTask> rawList = this.getKieFormManager().getLegalWorkerTaskList(opt);
         final JAXBTaskList taskList = new JAXBTaskList();
         List<JAXBTask> list = new ArrayList<>();
         for (KieTask raw : rawList) {
@@ -179,7 +177,7 @@ public class ApiTaskInterface extends KieApiManager {
             opt.put("pageSize", "5000");
         }
 
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForAdmin("Administrator", KNOWLEGE_WORKER, null);
+        List<KieTask> rawList = this.getKieFormManager().getKnowledgeWorkerTaskList(opt);
         final JAXBTaskList taskList = new JAXBTaskList();
         List<JAXBTask> list = new ArrayList<>();
         for (KieTask raw : rawList) {
