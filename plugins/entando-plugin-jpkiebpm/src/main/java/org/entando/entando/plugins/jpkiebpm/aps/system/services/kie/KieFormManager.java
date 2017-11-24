@@ -294,11 +294,11 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                         result.add(task);
                     }
                     if (taskName == LEGAL_WORKER
-                            && task.getName().equals("Legal Worker Document Review")) {
+                            && task.getOwner().equals("legalWorker")) {
                         result.add(task);
                     }
                     if (taskName == KNOWLEGE_WORKER
-                            && task.getName().equals("Knowledge Worker Document Review")) {
+                            && task.getOwner().equals("knowledgeWorker")) {
                         result.add(task);
                     }
 
