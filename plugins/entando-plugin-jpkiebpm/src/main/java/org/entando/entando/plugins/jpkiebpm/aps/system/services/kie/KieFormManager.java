@@ -656,7 +656,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public boolean sendSignal(final String containerId, final String processId, final String signal, String accountId, Map<String, String> opt) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
 
-        if (!this.getConfig().getActive() || StringUtils.isBlank(containerId)
+        if (!this.getConfig().getActive()
+                || StringUtils.isBlank(containerId)
                 || StringUtils.isBlank(processId)
                 || StringUtils.isBlank(signal)
                 || StringUtils.isBlank(accountId)) {
