@@ -7,7 +7,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormMana
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
 
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -23,6 +23,32 @@ public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
         if (!processes.isEmpty()) {
             super.loadDataIntoFieldDatatable(processes);
         }
+
+        HashMap<String,String> columns = new HashMap<>();
+
+        columns.put("Status Progress","statusProgress");
+        columns.put("Customer Name","customerName");
+        columns.put("Company","company");
+        columns.put("Case Due In","dueDate");
+
+        this.loadDataIntoFieldDatatable(columns);
+    }
+
+    private void loadDataIntoFieldDatatable(HashMap fields) {
+
+        Byte position = 1;
+        for (Iterator<Map.Entry> iter = fields.entrySet().iterator(); iter.hasNext();){
+            Map.Entry<String,String> obj = iter.next();
+            final String name = obj.getValue();
+            final FieldDatatable fd = new FieldDatatable(name);
+            fd.setField(PREFIX_FIELD + obj.getKey());
+            fd.setPosition(position++);
+            fd.setVisible(Boolean.valueOf(true));
+            fd.setOverride("");
+            this.fieldsDatatable.add(fd);
+
+        }
+
     }
 
     @Override

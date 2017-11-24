@@ -89,6 +89,6 @@ public class kieProcess {
 
     @Override
     public String toString() {
-        return "process-id,process-name,process-version,package,container-id";
+        return "parent-instance-id,start-date,process-id,process-name,process-version,package,container-id";
     }
 }

@@ -38,9 +38,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
-import static org.entando.entando.aps.system.services.api.server.IResponseBuilder.SUCCESS;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager.TASK_STATES.COMPLETED;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
@@ -150,13 +148,13 @@ public class ApiTaskInterface extends KieApiManager {
         List<JAXBTask> list = new ArrayList<>();
         if (null != rawList
                 && !rawList.isEmpty()) {
-            for (KieTask raw : rawList) {
-                JAXBTask task = new JAXBTask(raw);
-                list.add(task);
-                taskList.setContainerId(task.getContainerId());
-                taskList.setOwner(user);
-                taskList.setProcessId(task.getProcessDefinitionId());
-            }
+        for (KieTask raw : rawList) {
+            JAXBTask task = new JAXBTask(raw);
+            list.add(task);
+            taskList.setContainerId(task.getContainerId());
+            taskList.setOwner(user);
+            taskList.setProcessId(task.getProcessDefinitionId());
+        }
         }
         taskList.setList(list);
         return taskList;
@@ -181,36 +179,20 @@ public class ApiTaskInterface extends KieApiManager {
         List<KieTask> rawList = this.getKieFormManager().getKnowledgeWorkerTaskList(opt);
         final JAXBTaskList taskList = new JAXBTaskList();
         List<JAXBTask> list = new ArrayList<>();
-
         if (null != rawList
                 && !rawList.isEmpty()) {
-            for (KieTask raw : rawList) {
-                JAXBTask task = new JAXBTask(raw);
-                list.add(task);
-                taskList.setContainerId(task.getContainerId());
-                taskList.setOwner(user);
-                taskList.setProcessId(task.getProcessDefinitionId());
+        for (KieTask raw : rawList) {
+            JAXBTask task = new JAXBTask(raw);
+            list.add(task);
+            taskList.setContainerId(task.getContainerId());
+            taskList.setOwner(user);
+            taskList.setProcessId(task.getProcessDefinitionId());
             }
         }
         taskList.setList(list);
         return taskList;
     }
-
-     public String approveDocument(Properties properties) throws ApiException {
-         final String user = properties.getProperty("user");
-         final String containerId = properties.getProperty("containerId");
-         final String taskId = properties.getProperty("taskId");
-         final String review = properties.getProperty("review");
-        try {
-            this.getKieFormManager()
-                    .getCompleteEnrichmentDcumentApprovalTask(user, containerId, taskId, COMPLETED, review, null);
-            return SUCCESS;
-        } catch (Throwable t) {
-            throw new ApiException(IApiErrorCodes.API_METHOD_ERROR,
-                    "Error during document approval",
-                    Response.Status.INTERNAL_SERVER_ERROR);
-        }
-    }
+  
 
     public String getDiagram(Properties properties) {
         final String configId = properties.getProperty("configId");
