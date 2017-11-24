@@ -233,7 +233,7 @@
         </method>
     </resource>
 
-    <resource name="knwoledgeWorkerTasks" namespace="jpkiebpm">
+    <resource name="knowledgeWorkerTasks" namespace="jpkiebpm">
         <description>The current tasks of a user</description>
         <source pluginCode="jpkiebpm">plugins</source>
         <method httpMethod="GET" active="true">
