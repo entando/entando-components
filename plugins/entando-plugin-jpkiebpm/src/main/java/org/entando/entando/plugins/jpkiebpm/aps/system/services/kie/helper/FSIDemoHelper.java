@@ -346,13 +346,6 @@ public class FSIDemoHelper {
         return json.toString();
     }
 
-    public enum TASK_NAME {
-        CLIENT_DETAILS,
-        ENRICHMENT_UPLOAD_DOCUMENT,
-        ENRICHMENT_UPLOAD_IDENTITY,
-        LEGAL_WORKER,
-        KNOWLEGE_WORKER
-    }
     public final static String PAYLOAD_ENRICHMENT
             = "{\n"
             + "  \"htUploadedDocument\" : {\n"

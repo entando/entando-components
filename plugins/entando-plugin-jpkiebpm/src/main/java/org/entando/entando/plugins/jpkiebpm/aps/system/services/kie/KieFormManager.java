@@ -46,12 +46,6 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.CLIENT_DETAILS;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.ENRICHMENT_UPLOAD_DOCUMENT;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.ENRICHMENT_UPLOAD_IDENTITY;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.KNOWLEGE_WORKER;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.LEGAL_WORKER;
 
 /**
  * @author Entando
@@ -59,6 +53,7 @@ import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helpe
 public class KieFormManager extends AbstractService implements IKieFormManager {
 
     private static final Logger _logger = LoggerFactory.getLogger(KieFormManager.class);
+
 
     @Override
     public void init() throws Exception {
@@ -270,48 +265,22 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public List<KieTask> getHumanTaskListForAdmin(String user, TASK_NAME taskName, Map<String, String> opt) throws ApsSystemException {
-
-        List<KieTask> result = new ArrayList<>();
-
-        try {
-            List<KieTask> list = getHumanTaskListForAdmin(user, opt);
-            if (null != list
-                    && !list.isEmpty()) {
-                for (KieTask task: list) {
-
-                    if (taskName == ENRICHMENT_UPLOAD_DOCUMENT
-                            && task.getName().equals("Enrichment Upload Document")
-                            && task.getSubject().equals("CreditDocuments")) {
-                        result.add(task);
-                    }
-                    if (taskName == ENRICHMENT_UPLOAD_IDENTITY
-                            && task.getName().equals("Enrichment Upload Document")
-                            && task.getSubject().equals("IdentityDocuments")) {
-                        result.add(task);
-                    }
-                    if (taskName == CLIENT_DETAILS
-                            && task.getName().equals("Additional Client Details")) {
-                        result.add(task);
-                    }
-                    if (taskName == LEGAL_WORKER
-                            && task.getOwner().equals("legalWorker")) {
-                        result.add(task);
-                    }
-                    if (taskName == KNOWLEGE_WORKER
-                            && task.getName().equals("knowledgeWorker")) {
-                        result.add(task);
-                    }
-
-                }
-            }
-        } catch (Throwable t) {
-//            _logger.error("Error getting the list of human tasks by name", t);
-            throw new ApsSystemException("Error getting the list of human tasks by name", t);
+    public List<KieTask> getLegalWorkerTaskList(Map<String, String> opt) throws ApsSystemException {
+        if (null == opt) {
+            opt = new HashMap<>();
         }
-        return result;
+        opt.put("user", LEGAL_WORKER);
+        return getHumanTaskList(null, opt);
     }
 
+    @Override
+    public List<KieTask> getKnowledgeWorkerTaskList(Map<String, String> opt) throws ApsSystemException {
+        if (null == opt) {
+            opt = new HashMap<>();
+        }
+        opt.put("user", KNOWLEDGE_WORKER);
+        return getHumanTaskList(null, opt);
+    }
 
     @Override
     public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException {
@@ -1025,4 +994,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         private final String value;
     }
 
+    private String KNOWLEDGE_WORKER = "knowledgeWorker";
+    private String LEGAL_WORKER = "legalWorker";
 }
