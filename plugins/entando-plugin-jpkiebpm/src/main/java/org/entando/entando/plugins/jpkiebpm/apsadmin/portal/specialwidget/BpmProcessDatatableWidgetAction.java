@@ -8,6 +8,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOver
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  *
@@ -22,6 +23,23 @@ public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
         List<kieProcess> processes = formManager.getProcessDefinitionsList();
         if (!processes.isEmpty()) {
             super.loadDataIntoFieldDatatable(processes);
+        }
+        this.loadDataIntoFieldDatatable("Status Progress,Customer Name,Company,Case Due In");
+    }
+
+    private void loadDataIntoFieldDatatable(String fields) {
+
+        StringTokenizer tokenizer = new StringTokenizer(fields, ",");
+        Byte position = 1;
+        while (tokenizer.hasMoreTokens()) {
+            final String name = tokenizer.nextToken().trim();
+            final FieldDatatable fd = new FieldDatatable(name);
+            fd.setField(PREFIX_FIELD + name);
+            fd.setPosition(position++);
+            fd.setVisible(Boolean.valueOf(true));
+            fd.setOverride("");
+            this.fieldsDatatable.add(fd);
+
         }
     }
 
