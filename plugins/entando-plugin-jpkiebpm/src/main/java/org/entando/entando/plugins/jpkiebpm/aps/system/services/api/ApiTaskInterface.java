@@ -43,8 +43,6 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.fo
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.KNOWLEGE_WORKER;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.LEGAL_WORKER;
 import org.json.JSONObject;
 
 /**
@@ -145,21 +143,20 @@ public class ApiTaskInterface extends KieApiManager {
             opt.put("pageSize", "5000");
         }
 
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForAdmin("Administrator", LEGAL_WORKER, null);
+        List<KieTask> rawList = this.getKieFormManager().getLegalWorkerTaskList(opt);
         final JAXBTaskList taskList = new JAXBTaskList();
         List<JAXBTask> list = new ArrayList<>();
-        for (KieTask raw : rawList) {
-            JAXBTask task = new JAXBTask(raw);
-            list.add(task);
-            taskList.setContainerId(task.getContainerId());
-            taskList.setOwner(user);
-            taskList.setProcessId(task.getProcessDefinitionId());
+        if (null != rawList
+                && !rawList.isEmpty()) {
+            for (KieTask raw : rawList) {
+                JAXBTask task = new JAXBTask(raw);
+                list.add(task);
+                taskList.setContainerId(task.getContainerId());
+                taskList.setOwner(user);
+                taskList.setProcessId(task.getProcessDefinitionId());
+            }
         }
         taskList.setList(list);
-        this.startTasks(rawList, opt);
-        if (taskList.getList().isEmpty()) {
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
-        }
         return taskList;
     }
 
@@ -179,22 +176,36 @@ public class ApiTaskInterface extends KieApiManager {
             opt.put("pageSize", "5000");
         }
 
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForAdmin("Administrator", KNOWLEGE_WORKER, null);
+        List<KieTask> rawList = this.getKieFormManager().getKnowledgeWorkerTaskList(opt);
         final JAXBTaskList taskList = new JAXBTaskList();
         List<JAXBTask> list = new ArrayList<>();
-        for (KieTask raw : rawList) {
-            JAXBTask task = new JAXBTask(raw);
-            list.add(task);
-            taskList.setContainerId(task.getContainerId());
-            taskList.setOwner(user);
-            taskList.setProcessId(task.getProcessDefinitionId());
+
+        if (null != rawList
+                && !rawList.isEmpty()) {
+            for (KieTask raw : rawList) {
+                JAXBTask task = new JAXBTask(raw);
+                list.add(task);
+                taskList.setContainerId(task.getContainerId());
+                taskList.setOwner(user);
+                taskList.setProcessId(task.getProcessDefinitionId());
+            }
         }
         taskList.setList(list);
-        this.startTasks(rawList, opt);
-        if (taskList.getList().isEmpty()) {
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
-        }
         return taskList;
+    }
+
+     public String approveDocument(Properties properties) throws ApiException {
+         final String containerId = properties.getProperty("containerId");
+         final String taskId = properties.getProperty("taskId");
+         final String review = properties.getProperty("review");
+        try {
+
+            return "";
+        } catch (Throwable t) {
+            throw new ApiException(IApiErrorCodes.API_METHOD_ERROR,
+                    "Error during ducument approval",
+                    Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public String getDiagram(Properties properties) {

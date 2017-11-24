@@ -35,7 +35,6 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 /**
  * @author entando
  */
@@ -112,6 +111,7 @@ public class FSIDemoHelper {
             process.setType(client.isNull("type") ? null : client.getString("type"));
             process.setBic(String.valueOf(innerparty.isNull("bic") ? null : client.getLong("bic")));
             process.setAccountManager(json.isNull("accountManager") ? null : json.getString("accountManager"));
+//            process.setAccountManager(json.getString("accountManager"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -272,10 +272,16 @@ public class FSIDemoHelper {
         return payload.toString();
     }
 
-    // currently hardcoded for the FSI
     public static String getPayloadForProcessInstancesWithClient(Map<String, String> input) {
         JSONObject json = new JSONObject(PAYLOAD_INSTANCES_W_DATA);
         // TODO process dynamic data here
+        return json.toString();
+    }
+
+    public static String getPayloadForCompleteEnrichmentDocumentApproval(String review) {
+        JSONObject json = new JSONObject(PAYLOAD_COMPLE_ENRICHMENT_DOCUMENT_APPROVAL_TASK);
+
+        JsonHelper.replaceKey(json, "htApprovalStatus", review);
         return json.toString();
     }
 
@@ -346,13 +352,6 @@ public class FSIDemoHelper {
         return json.toString();
     }
 
-    public enum TASK_NAME {
-        CLIENT_DETAILS,
-        ENRICHMENT_UPLOAD_DOCUMENT,
-        ENRICHMENT_UPLOAD_IDENTITY,
-        LEGAL_WORKER,
-        KNOWLEGE_WORKER
-    }
     public final static String PAYLOAD_ENRICHMENT
             = "{\n"
             + "  \"htUploadedDocument\" : {\n"
@@ -418,5 +417,10 @@ public class FSIDemoHelper {
             + "      }\n"
             + "   }\n"
             + "}";
+
+    public final static String PAYLOAD_COMPLE_ENRICHMENT_DOCUMENT_APPROVAL_TASK = "{\n" +
+            "  \"htApprovalStatus\" : \"Approved because of this and this.\",\n" +
+            "  \"htDocumentApproved\" : true\n" +
+            "}";
 
 }

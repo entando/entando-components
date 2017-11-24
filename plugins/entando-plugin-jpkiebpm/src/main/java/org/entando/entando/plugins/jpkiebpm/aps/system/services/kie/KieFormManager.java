@@ -46,12 +46,6 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.CLIENT_DETAILS;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.ENRICHMENT_UPLOAD_DOCUMENT;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.ENRICHMENT_UPLOAD_IDENTITY;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.KNOWLEGE_WORKER;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper.TASK_NAME.LEGAL_WORKER;
 
 /**
  * @author Entando
@@ -270,47 +264,60 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public List<KieTask> getHumanTaskListForAdmin(String user, TASK_NAME taskName, Map<String, String> opt) throws ApsSystemException {
+    public boolean getCompleteEnrichmentDcumentApprovalTask(final String user, final String containerId, final String taskId, TASK_STATES state, String review, Map<String, String> opt) throws ApsSystemException {
+        Map<String, String> headersMap = new HashMap<>();
 
-        List<KieTask> result = new ArrayList<>();
+        if (null == opt) {
+            opt = new HashMap<>();
+        }
+        opt.put("auto-progress", "true");
+        opt.put("user", user);
 
         try {
-            List<KieTask> list = getHumanTaskListForAdmin(user, opt);
-            if (null != list
-                    && !list.isEmpty()) {
-                for (KieTask task: list) {
-
-                    if (taskName == ENRICHMENT_UPLOAD_DOCUMENT
-                            && task.getName().equals("Enrichment Upload Document")
-                            && task.getSubject().equals("CreditDocuments")) {
-                        result.add(task);
-                    }
-                    if (taskName == ENRICHMENT_UPLOAD_IDENTITY
-                            && task.getName().equals("Enrichment Upload Document")
-                            && task.getSubject().equals("IdentityDocuments")) {
-                        result.add(task);
-                    }
-                    if (taskName == CLIENT_DETAILS
-                            && task.getName().equals("Additional Client Details")) {
-                        result.add(task);
-                    }
-                    if (taskName == LEGAL_WORKER
-                            && task.getOwner().equals("legalWorker")) {
-                        result.add(task);
-                    }
-                    if (taskName == KNOWLEGE_WORKER
-                            && task.getName().equals("knowledgeWorker")) {
-                        result.add(task);
-                    }
-
-                }
-            }
+            String payload = FSIDemoHelper.getPayloadForCompleteEnrichmentDocumentApproval(review);
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK)
+                    .resolveParams(containerId, taskId, state.getValue());
+            // generate client from the current configuration
+            KieClient client = getCurrentClient();
+            // perform query
+            headersMap.put("X-KIE-ContentType", "JSON");
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            // perform query
+            String result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setRequestParams(opt)
+                    .setPayload(payload)
+                    .setDebug(true)
+                    .doRequest();
         } catch (Throwable t) {
-//            _logger.error("Error getting the list of human tasks by name", t);
-            throw new ApsSystemException("Error getting the list of human tasks by name", t);
+            _logger.error("Error whole approving document for enrichment", t);
+//            throw new ApsSystemException("Error whole approving document for enrichment", t);
+            return false;
         }
-        return result;
+        return true;
     }
+
+    @Override
+    public List<KieTask> getLegalWorkerTaskList(Map<String, String> opt) throws ApsSystemException {
+        if (null == opt) {
+            opt = new HashMap<>();
+        }
+        opt.put("user", LEGAL_WORKER);
+        return getHumanTaskList(null, opt);
+    }
+
+    @Override
+    public List<KieTask> getKnowledgeWorkerTaskList(Map<String, String> opt) throws ApsSystemException {
+        if (null == opt) {
+            opt = new HashMap<>();
+        }
+        opt.put("user", KNOWLEDGE_WORKER);
+        return getHumanTaskList(null, opt);
+    }
+
 
 
     @Override
@@ -371,7 +378,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public KieProcessFormQueryResult getTaskForm(String containerId, long taskId) throws ApsSystemException {
         KieProcessFormQueryResult form = null;
 
-        if (!_config.getActive() || StringUtils.isBlank(containerId)) {
+        if (!_config.getActive()
+                || StringUtils.isBlank(containerId)) {
             return form;
         }
         try {
@@ -661,7 +669,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                 || StringUtils.isBlank(processId)
                 || StringUtils.isBlank(signal)
                 || StringUtils.isBlank(accountId)) {
-            _logger.error("CANNOT PERFORM sendSignal");
             return false;
         }
         try {
@@ -818,18 +825,17 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             headersMap.put("X-KIE-ContentType", "JSON");
             headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
-            // perform query
             if (null != input) {
                 // generate payload
                 String payload = FSIDemoHelper.getPayloadForAdditionalClientDetailTask(input);
-                // do invocation with payload
-                result = (String) new KieRequestBuilder(client)
-                        .setEndpoint(ep)
-                        .setHeaders(headersMap)
+            // perform query
+            result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
                         .setPayload(payload)
-                        .setRequestParams(opt)
-                        .setDebug(true)
-                        .doRequest();
+                    .setRequestParams(opt)
+                    .setDebug(true)
+                    .doRequest();
             } else {
                 result = (String) new KieRequestBuilder(client)
                         .setEndpoint(ep)
@@ -898,59 +904,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
-    /*@Override
-    public KieProcessInstancesQueryResult getProcessInstancesWithClientData(Map<String, String> input, Map<String, String> opt) throws Throwable {
-        Map<String, String> headersMap = new HashMap<String, String>();
-        KieProcessInstancesQueryResult result = new KieProcessInstancesQueryResult();
-
-        if (!this.getConfig().getActive() //                || null == input
-                ) {
-            return null;
-        }
-        if (null == opt
-                || opt.isEmpty()) {
-            opt = new HashMap<>();
-        }
-        // add mandatory args
-        if (!opt.containsKey("mapper")) {
-            opt.put("mapper", "ClientOnboardingProcessInstancesWithCustomVariables");
-        }
-        try {
-            String payoload = FSIDemoHelper.getPayloadForProcessInstancesWithClient(input);
-            // process endpoint first
-            Endpoint ep = KieEndpointDictionary.create()
-                    .get(API_POST_ALL_PROCESS_INSTANCES_W_CLIENT_DATA);
-            // generate client from the current configuration
-            KieClient client = getCurrentClient();
-            // header
-            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
-            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
-            headersMap.put("X-KIE-ContentType", "JSON");
-            // perform query
-//            result = (KieProcessInstancesQueryResult) new KieRequestBuilder(client)
-//                    .setEndpoint(ep)
-//                    .setHeaders(headersMap)
-//                    .setPayload(payoload)
-//                    .setRequestParams(opt)
-//                    .setDebug(true)
-//                    .doRequest(KieProcessInstancesQueryResult.class);
-
-            String res = (String) new KieRequestBuilder(client)
-                    .setEndpoint(ep)
-                    .setHeaders(headersMap)
-                    .setPayload(payoload)
-                    .setRequestParams(opt)
-                    .setDebug(true)
-                    .doRequest();
-            // necessary as we cannot change the property name looked by JAXB
-            res = res.replaceAll("process-instance-variables", "process_instance_variables");
-            result = (KieProcessInstancesQueryResult) JAXBHelper
-                    .unmarshall(res, KieProcessInstancesQueryResult.class, false, true);
-        } catch (Throwable t) {
-            throw new ApsSystemException("error getting process list with data ", t);
-        }
-        return result;
-    }*/
     /**
      * Return a KIE CLient given the configuration
      *
@@ -1025,4 +978,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         private final String value;
     }
 
+    public final static String KNOWLEDGE_WORKER = "knowledgeWorker";
+    public final static String LEGAL_WORKER = "legalWorker";
 }

@@ -4,14 +4,14 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 
 <s:if test="hasActionMessages()">
-   <div class="alert alert-success" role="alert">
+    <div class="alert alert-success alert-success-bpm" role="alert">
         <s:iterator value="actionMessages">
             <p>
-            <s:property/>
+                <i class="fa fa-check" aria-hidden="true"></i> &nbsp;&nbsp;<s:property/>
             </p>
         </s:iterator>
 
-   </div>
+    </div>
 
 </s:if>
 <s:property value="renderedForm" />
