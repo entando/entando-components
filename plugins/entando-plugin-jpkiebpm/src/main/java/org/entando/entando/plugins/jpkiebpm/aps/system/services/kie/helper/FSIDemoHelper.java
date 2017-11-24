@@ -273,7 +273,15 @@ public class FSIDemoHelper {
     }
 
     public static String getPayloadForProcessInstancesWithClient(Map<String, String> input) {
-        JSONObject json = new JSONObject(PAYLOAD_INSTANCES_W_DATA);
+        String jsonString = PAYLOAD_INSTANCES_W_DATA;
+        if (input != null && input.containsKey("processInstanceId")) {
+            String piid = input.get("processInstanceId");
+            jsonString = jsonString.replace("#PLACEHOLDER#", QUERY_PLACEHOLDER).replace("666", piid);
+        } else {
+            jsonString = jsonString.replace("#PLACEHOLDER#", "");
+        }
+        System.out.println("json:" + jsonString);
+        JSONObject json = new JSONObject(jsonString);
         // TODO process dynamic data here
         return json.toString();
     }
@@ -316,7 +324,7 @@ public class FSIDemoHelper {
                 JsonHelper.replaceKey(address, "street", input.get("street"));
             }
             if (input.containsKey("zipcode")) {
-               JsonHelper.replaceKey(address, "zipcode", input.get("zipcode"));
+                JsonHelper.replaceKey(address, "zipcode", input.get("zipcode"));
             }
             if (input.containsKey("state")) {
                 JsonHelper.replaceKey(address, "state", input.get("state"));
@@ -342,7 +350,7 @@ public class FSIDemoHelper {
                 JsonHelper.replaceKey(relatePartiesEntry, "dateOfBirth", val);
             }
             if (input.containsKey("ssn")) {
-               JsonHelper.replaceKey(relatePartiesEntry, "ssn", input.get("ssn"));
+                JsonHelper.replaceKey(relatePartiesEntry, "ssn", input.get("ssn"));
             }
             if (input.containsKey("email")) {
                 JsonHelper.replaceKey(relatePartiesEntry, "email", input.get("email"));
@@ -371,16 +379,31 @@ public class FSIDemoHelper {
 
     public final static String PAYLOAD_INSTANCES_W_DATA = "{\n"
             + "  \"order-asc\" : false,\n"
-            + "  \"query-params\" : [ {\n"
-            + "    \"cond-column\" : \"status\",\n"
-            + "    \"cond-operator\" : \"EQUALS_TO\",\n"
-            + "    \"cond-values\" : [ \"1\" ]\n"
-            + "  } ],\n"
+            + "#PLACEHOLDER#"
             + "  \"result-column-mapping\" : {\n"
             + "    \"clientid\" : \"integer\",\n"
-            + "    \"name\" : \"string\"\n"
+            + "    \"name\" : \"string\",\n"
+            + "    \"status\": \"string\",\n"
+            + "    \"bic\":\"string\",\n"
+            + "    \"type\": \"string\",\n"
+            + "    \"country\":\"string\",\n"
+            + "    \"phonenumber\":\"string\",\n"
+            + "    \"creditscore\":\"number\",\n"
+            + "    \"relationship\":\"string\",\n"
+            + "    \"email\":\"string\",\n"
+            + "    \"dateofbirth\":\"date\",\n"
+            + "    \"pname\":\"string\",\n"
+            + "    \"surname\":\"string\",\n"
+            + "    \"ssn\":\"string\"\n"
             + "  }\n"
             + "}";
+
+    public final static String QUERY_PLACEHOLDER
+            = "    \"query-params\" : [ {\n"
+            + "    \"cond-column\" : \"processinstanceid\",\n"
+            + "    \"cond-operator\" : \"EQUALS_TO\",\n"
+            + "    \"cond-values\" : [ \"666\" ]\n"
+            + "  } ],\n";
 
     public final static String PAYLOAD_ADDITIONAL_CLIENT_DETAIL_TASK = "{\n"
             + "  \"htClient\" : {\n"
@@ -418,9 +441,9 @@ public class FSIDemoHelper {
             + "   }\n"
             + "}";
 
-    public final static String PAYLOAD_COMPLE_ENRICHMENT_DOCUMENT_APPROVAL_TASK = "{\n" +
-            "  \"htApprovalStatus\" : \"Approved because of this and this.\",\n" +
-            "  \"htDocumentApproved\" : true\n" +
-            "}";
+    public final static String PAYLOAD_COMPLE_ENRICHMENT_DOCUMENT_APPROVAL_TASK = "{\n"
+            + "  \"htApprovalStatus\" : \"Approved because of this and this.\",\n"
+            + "  \"htDocumentApproved\" : true\n"
+            + "}";
 
 }

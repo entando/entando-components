@@ -168,6 +168,9 @@
                 <parameter key="configId" required="true">
                     <description>The confguration id of jpkiebpm_widgetinfo</description>
                 </parameter>
+                <parameter key="processInstanceId" required="false">
+                    <description>The process instance id of the process</description>
+                </parameter>
                 <parameter key="page" required="false">
                     <description>The page of the list</description>
                 </parameter>

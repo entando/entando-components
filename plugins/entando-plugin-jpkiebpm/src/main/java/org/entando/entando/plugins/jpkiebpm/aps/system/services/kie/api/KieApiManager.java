@@ -301,6 +301,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         final String pageString = properties.getProperty("page");
         final String pageSizeString = properties.getProperty("pageSize");
         final String configId = properties.getProperty("configId");
+        final String procIstId = properties.getProperty("processInstanceId");
         int page = 0, pageSize = 5000;
         try {
             if (StringUtils.isNotBlank(pageString)) {
@@ -323,7 +324,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                         }
                         final JAXBProcessInstanceListPlus processList = new JAXBProcessInstanceListPlus();
                         this.setElementDatatableFieldDefinition(config, processList);
-                        this.setElementList(config, processList);
+                        this.setElementList(config, processList, procIstId);
                         processList.setContainerId(config.getProperty("containerId"));
                         processList.setProcessId(config.getProperty("processId"));
                         return processList;
@@ -380,11 +381,16 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         });
     }
 
-    private void setElementList(ApsProperties config, JAXBProcessInstanceListPlus processList) {
+    private void setElementList(ApsProperties config, JAXBProcessInstanceListPlus processList, String procIstId) {
         try {
             final String processId = config.getProperty("processId");
             final List<JAXBProcessInstancePlus> list = new ArrayList<>();
-            final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesWithClientData(null, null).getInstances();
+            Map<String, String> input = null;
+            if (procIstId != null) {
+                input = new HashMap<>();
+                input.put("processInstanceId", procIstId);
+            }
+            final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesWithClientData(input, null).getInstances();
             for (final KieProcessInstance process : rawList) {
                 list.add(new JAXBProcessInstancePlus(process));
             }
