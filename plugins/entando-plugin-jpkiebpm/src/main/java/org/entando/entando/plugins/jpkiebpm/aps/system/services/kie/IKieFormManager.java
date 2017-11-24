@@ -262,7 +262,7 @@ public interface IKieFormManager {
     public List<KieTask> getHumanTaskListForAdmin(String user, Map<String, String> opt) throws ApsSystemException;
 
     /**
-     * 
+     *
      * @param input
      * @param opt
      * @return
@@ -278,10 +278,23 @@ public interface IKieFormManager {
     public List<KieTask> getLegalWorkerTaskList(Map<String, String> opt) throws ApsSystemException;
 
     /**
-     * 
+     *
      * @param opt
      * @return
      * @throws ApsSystemException
      */
     public List<KieTask> getKnowledgeWorkerTaskList(Map<String, String> opt) throws ApsSystemException;
+
+    /**
+     * 
+     * @param user
+     * @param containerId
+     * @param taskId
+     * @param state
+     * @param review
+     * @param opt
+     * @return
+     * @throws ApsSystemException
+     */
+    public boolean getCompleteEnrichmentDcumentApprovalTask(final String user, final String containerId, final String taskId, TASK_STATES state, String review, Map<String, String> opt) throws ApsSystemException;
 }

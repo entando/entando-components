@@ -46,7 +46,6 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.JsonHelper;
 
 /**
  * @author Entando
@@ -265,6 +264,43 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
+    public boolean getCompleteEnrichmentDcumentApprovalTask(final String user, final String containerId, final String taskId, TASK_STATES state, String review, Map<String, String> opt) throws ApsSystemException {
+        Map<String, String> headersMap = new HashMap<>();
+
+        if (null == opt) {
+            opt = new HashMap<>();
+        }
+        opt.put("auto-progress", "true");
+        opt.put("user", user);
+
+        try {
+            String payload = FSIDemoHelper.getPayloadForCompleteEnrichmentDocumentApproval(review);
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK)
+                    .resolveParams(containerId, taskId, state.getValue());
+            // generate client from the current configuration
+            KieClient client = getCurrentClient();
+            // perform query
+            headersMap.put("X-KIE-ContentType", "JSON");
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            // perform query
+            String result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setRequestParams(opt)
+                    .setPayload(payload)
+                    .setDebug(true)
+                    .doRequest();
+        } catch (Throwable t) {
+            _logger.error("Error whole approving document for enrichment", t);
+//            throw new ApsSystemException("Error whole approving document for enrichment", t);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public List<KieTask> getLegalWorkerTaskList(Map<String, String> opt) throws ApsSystemException {
         if (null == opt) {
             opt = new HashMap<>();
@@ -342,7 +378,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public KieProcessFormQueryResult getTaskForm(String containerId, long taskId) throws ApsSystemException {
         KieProcessFormQueryResult form = null;
 
-        if (!_config.getActive() || StringUtils.isBlank(containerId)) {
+        if (!_config.getActive()
+                || StringUtils.isBlank(containerId)) {
             return form;
         }
         try {

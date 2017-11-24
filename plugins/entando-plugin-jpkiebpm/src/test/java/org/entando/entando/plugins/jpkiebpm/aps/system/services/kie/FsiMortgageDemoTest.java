@@ -32,6 +32,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TEST_ENABLED;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.TestKieFormManager;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager.TASK_STATES.COMPLETED;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
@@ -222,6 +223,7 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             _formManager.updateConfig(current);
         }
     }
+
     public void testHumanTaskListForLegalWorker() throws Throwable {
         KieBpmConfig current = _formManager.getConfig();
         Map<String, String> opt = new HashMap<String, String>();
@@ -232,6 +234,29 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             // invoke the manager
             _tasks = _formManager.getLegalWorkerTaskList(null);
             assertNotNull(_tasks);
+            if (TEST_ENABLED) {
+                assertFalse(_tasks.isEmpty());
+            } else {
+                assertTrue(_tasks.isEmpty());
+            }
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            _formManager.updateConfig(current);
+        }
+    }
+
+        public void _testGetCompleteEnrichmentDcumentApprovalTask() throws Throwable {
+        KieBpmConfig current = _formManager.getConfig();
+        Map<String, String> opt = new HashMap<String, String>();
+
+        try {
+            // update configuration to reflect test configuration
+            _formManager.updateConfig(getConfigForTests());
+            // invoke the manager
+            _formManager.getCompleteEnrichmentDcumentApprovalTask("legalWorker",
+                    "5fdf1ed1672f5358e70570bd7f50b163",
+                    "77", COMPLETED, "review ok", null);
             if (TEST_ENABLED) {
                 assertFalse(_tasks.isEmpty());
             } else {
@@ -265,7 +290,6 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             _formManager.updateConfig(current);
         }
     }
-
 
     public void testGetProcessInstancesWithClientData() throws Throwable {
         KieBpmConfig current = _formManager.getConfig();

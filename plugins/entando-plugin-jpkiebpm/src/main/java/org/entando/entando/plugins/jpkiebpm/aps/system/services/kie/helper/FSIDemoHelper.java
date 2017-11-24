@@ -278,6 +278,13 @@ public class FSIDemoHelper {
         return json.toString();
     }
 
+    public static String getPayloadForCompleteEnrichmentDocumentApproval(String review) {
+        JSONObject json = new JSONObject(PAYLOAD_COMPLE_ENRICHMENT_DOCUMENT_APPROVAL_TASK);
+
+        JsonHelper.replaceKey(json, "htApprovalStatus", review);
+        return json.toString();
+    }
+
     public static String getPayloadForAdditionalClientDetailTask(Map<String, Object> input) {
         JSONObject json = new JSONObject(PAYLOAD_ADDITIONAL_CLIENT_DETAIL_TASK);
         JSONObject clientModel = (JSONObject) JsonHelper.findKey(json, "com.redhat.bpms.demo.fsi.onboarding.model.Client");
@@ -344,7 +351,7 @@ public class FSIDemoHelper {
         }
         return json.toString();
     }
-    
+
     public final static String PAYLOAD_ENRICHMENT
             = "{\n"
             + "  \"htUploadedDocument\" : {\n"
@@ -410,4 +417,10 @@ public class FSIDemoHelper {
             + "      }\n"
             + "   }\n"
             + "}";
+
+    public final static String PAYLOAD_COMPLE_ENRICHMENT_DOCUMENT_APPROVAL_TASK = "{\n" +
+            "  \"htApprovalStatus\" : \"Approved because of this and this.\",\n" +
+            "  \"htDocumentApproved\" : true\n" +
+            "}";
+
 }
