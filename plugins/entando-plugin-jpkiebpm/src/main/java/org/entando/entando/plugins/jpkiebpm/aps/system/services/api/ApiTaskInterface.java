@@ -148,13 +148,13 @@ public class ApiTaskInterface extends KieApiManager {
         List<JAXBTask> list = new ArrayList<>();
         if (null != rawList
                 && !rawList.isEmpty()) {
-            for (KieTask raw : rawList) {
-                JAXBTask task = new JAXBTask(raw);
-                list.add(task);
-                taskList.setContainerId(task.getContainerId());
-                taskList.setOwner(user);
-                taskList.setProcessId(task.getProcessDefinitionId());
-            }
+        for (KieTask raw : rawList) {
+            JAXBTask task = new JAXBTask(raw);
+            list.add(task);
+            taskList.setContainerId(task.getContainerId());
+            taskList.setOwner(user);
+            taskList.setProcessId(task.getProcessDefinitionId());
+        }
         }
         taskList.setList(list);
         return taskList;
@@ -179,34 +179,20 @@ public class ApiTaskInterface extends KieApiManager {
         List<KieTask> rawList = this.getKieFormManager().getKnowledgeWorkerTaskList(opt);
         final JAXBTaskList taskList = new JAXBTaskList();
         List<JAXBTask> list = new ArrayList<>();
-
         if (null != rawList
                 && !rawList.isEmpty()) {
-            for (KieTask raw : rawList) {
-                JAXBTask task = new JAXBTask(raw);
-                list.add(task);
-                taskList.setContainerId(task.getContainerId());
-                taskList.setOwner(user);
-                taskList.setProcessId(task.getProcessDefinitionId());
+        for (KieTask raw : rawList) {
+            JAXBTask task = new JAXBTask(raw);
+            list.add(task);
+            taskList.setContainerId(task.getContainerId());
+            taskList.setOwner(user);
+            taskList.setProcessId(task.getProcessDefinitionId());
             }
         }
         taskList.setList(list);
         return taskList;
     }
-
-     public String approveDocument(Properties properties) throws ApiException {
-         final String containerId = properties.getProperty("containerId");
-         final String taskId = properties.getProperty("taskId");
-         final String review = properties.getProperty("review");
-        try {
-
-            return "";
-        } catch (Throwable t) {
-            throw new ApiException(IApiErrorCodes.API_METHOD_ERROR,
-                    "Error during ducument approval",
-                    Response.Status.INTERNAL_SERVER_ERROR);
-        }
-    }
+  
 
     public String getDiagram(Properties properties) {
         final String configId = properties.getProperty("configId");

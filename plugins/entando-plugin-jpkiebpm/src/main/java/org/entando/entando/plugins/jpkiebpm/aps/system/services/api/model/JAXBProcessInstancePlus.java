@@ -25,7 +25,6 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model;
 
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
@@ -44,6 +43,13 @@ public class JAXBProcessInstancePlus extends JAXBProcessInstance {
     private String phone;
     private Date dueDate;
 
+    private String country;
+    private Long dateofbirth;
+    private Long clientid;
+    private String creditscore;
+    private String ssn;
+    private String relationship;
+    private String status;
     public JAXBProcessInstancePlus(KieProcessInstance process) {
         super(process);
         this.setCompany((String) process.getProcess_instance_variables().get("name"));
@@ -51,9 +57,31 @@ public class JAXBProcessInstancePlus extends JAXBProcessInstance {
         this.setBic((String) process.getProcess_instance_variables().get("bic"));
         this.setProcessStatus((String) process.getProcess_instance_variables().get("status"));
         this.setDueDate(new Date(process.getStartDate() + (60 * 60 * 24 * 14 * 1000)));
-        this.setCompany((String) process.getProcess_instance_variables().get("name"));
-        this.setCompany((String) process.getProcess_instance_variables().get("name"));
-        this.setCompany((String) process.getProcess_instance_variables().get("name"));
+        this.setCountry((String) process.getProcess_instance_variables().get("country"));
+        // email
+        this.setEmail((String) process.getProcess_instance_variables().get("email"));
+        // partyname
+        this.setPartyName((String) process.getProcess_instance_variables().get("pname")
+         + " " + (String) process.getProcess_instance_variables().get("surname"));
+        // date of birth
+        this.setDateofbirth((Long) process.getProcess_instance_variables().get("dateofbirth"));
+        // clientId
+        if (process.getProcess_instance_variables().get("clientid") instanceof Integer) {
+            this.setClientid(Long.valueOf((Integer)process.getProcess_instance_variables().get("clientid")));
+        }
+        if (process.getProcess_instance_variables().get("clientid") instanceof Long) {
+            this.setClientid((Long) process.getProcess_instance_variables().get("clientid"));
+        }
+        // credit score
+        this.setCreditscore((String) process.getProcess_instance_variables().get("creditscore"));
+        // phone
+        this.setPhone((String) process.getProcess_instance_variables().get("phonenumber"));
+        // ssn
+        this.setSsn((String) process.getProcess_instance_variables().get("ssn"));
+        // relationship
+        this.setRelationship((String) process.getProcess_instance_variables().get("relationship"));
+        // status
+        this.setStatus((String) process.getProcess_instance_variables().get("status"));
     }
 
     public JAXBProcessInstancePlus() {
@@ -121,6 +149,62 @@ public class JAXBProcessInstancePlus extends JAXBProcessInstance {
 
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public Long getDateofbirth() {
+        return dateofbirth;
+    }
+
+    public void setDateofbirth(Long dateofbirth) {
+        this.dateofbirth = dateofbirth;
+    }
+
+    public Long getClientid() {
+        return clientid;
+    }
+
+    public void setClientid(Long clientid) {
+        this.clientid = clientid;
+    }
+
+    public String getCreditscore() {
+        return creditscore;
+    }
+
+    public void setCreditscore(String creditscore) {
+        this.creditscore = creditscore;
+    }
+
+    public String getSsn() {
+        return ssn;
+    }
+
+    public void setSsn(String ssn) {
+        this.ssn = ssn;
+    }
+
+    public String getRelationship() {
+        return relationship;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }
