@@ -60,10 +60,8 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBPr
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstanceList;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstanceListPlus;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstancePlus;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBTaskList;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
 
 public class KieApiManager extends AbstractService implements IKieApiManager {
 
@@ -301,15 +299,19 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         final String pageString = properties.getProperty("page");
         final String pageSizeString = properties.getProperty("pageSize");
         final String configId = properties.getProperty("configId");
-        int page = 0, pageSize = 5000;
+        final String procIstId = properties.getProperty("processInstanceId");
+
+        Map<String, String> opt = new HashMap();
+
         try {
             if (StringUtils.isNotBlank(pageString)) {
-                page = Integer.valueOf(pageString);
+                opt.put("page", pageString);
             }
             if (StringUtils.isNotBlank(pageSizeString)) {
-                pageSize = Integer.valueOf(pageSizeString);
+                opt.put("pageSize", pageSizeString);
+            } else {
+                opt.put("pageSize", "5000");
             }
-
             if (null != configId) {
                 try {
                     final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
@@ -323,7 +325,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                         }
                         final JAXBProcessInstanceListPlus processList = new JAXBProcessInstanceListPlus();
                         this.setElementDatatableFieldDefinition(config, processList);
-                        this.setElementList(config, processList);
+                        this.setElementList(config, processList, procIstId, opt);
                         processList.setContainerId(config.getProperty("containerId"));
                         processList.setProcessId(config.getProperty("processId"));
                         return processList;
@@ -380,11 +382,16 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         });
     }
 
-    private void setElementList(ApsProperties config, JAXBProcessInstanceListPlus processList) {
+    private void setElementList(ApsProperties config, JAXBProcessInstanceListPlus processList, String procIstId, Map<String, String> opt) {
         try {
             final String processId = config.getProperty("processId");
             final List<JAXBProcessInstancePlus> list = new ArrayList<>();
-            final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesWithClientData(null, null).getInstances();
+            Map<String, String> input = null;
+            if (procIstId != null) {
+                input = new HashMap<>();
+                input.put("processInstanceId", procIstId);
+            }
+            final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesWithClientData(input, opt).getInstances();
             for (final KieProcessInstance process : rawList) {
                 list.add(new JAXBProcessInstancePlus(process));
             }

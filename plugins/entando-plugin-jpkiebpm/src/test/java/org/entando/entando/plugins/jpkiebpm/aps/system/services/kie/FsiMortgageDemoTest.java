@@ -223,7 +223,6 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             _formManager.updateConfig(current);
         }
     }
-
     public void testHumanTaskListForLegalWorker() throws Throwable {
         KieBpmConfig current = _formManager.getConfig();
         Map<String, String> opt = new HashMap<String, String>();
@@ -268,7 +267,6 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             _formManager.updateConfig(current);
         }
     }
-
     public void testHumanTaskListForUsers() throws Throwable {
         KieBpmConfig current = _formManager.getConfig();
         Map<String, String> opt = new HashMap<String, String>();
@@ -290,6 +288,7 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
             _formManager.updateConfig(current);
         }
     }
+
 
     public void testGetProcessInstancesWithClientData() throws Throwable {
         KieBpmConfig current = _formManager.getConfig();

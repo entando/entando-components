@@ -35,10 +35,42 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.Instan
  */
 public class InstanceVariables extends XmlAdapter<VariableMap, HashMap<String, Object>> {
 
+    /*
+
+
+
+    11"country" : "USA",
+      "" : 1506590295001,
+
+      "" : "John",
+      "" : null,
+      "" : null,
+      "" : null,
+      "" : null,
+      "" : "William",
+
+      "" : "Consultant",
+      "" : null,
+      "" : "n.puddu@entando.com",
+      "" : "2.0"
+*/
+
+
     @XmlRootElement
     public static class VariableMap {
         public String name;
         public Long clientid;
+        public String pname;
+        public String creditscore;
+        public String phonenumber;
+        public String type;
+        public Long dateofbirth;
+        public String ssn;
+        public String surname;
+        public String relationship;
+        public String bic;
+        public String email;
+        public String status;
     }
 
     @Override
@@ -46,6 +78,18 @@ public class InstanceVariables extends XmlAdapter<VariableMap, HashMap<String, O
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", p.name);
         map.put("clientid", p.clientid);
+        map.put("pname", p.pname);
+        map.put("creditscore", p.creditscore);
+        map.put("phonenumber", p.phonenumber);
+        map.put("type", p.type);
+        map.put("dateofbirth", p.dateofbirth);
+        map.put("ssn", p.ssn);
+        map.put("surname", p.surname);
+        map.put("relationship", p.relationship);
+        map.put("bic", p.bic);
+        map.put("email", p.email);
+        map.put("status", p.status);
+
         return map;
     }
 
@@ -55,6 +99,18 @@ public class InstanceVariables extends XmlAdapter<VariableMap, HashMap<String, O
         VariableMap p = new VariableMap();
         p.name = (String) v.get("name");
         p.clientid = (Long) v.get("clientid");
+        p.pname = (String) v.get("pname");
+        p.creditscore = (String) v.get("creditscore");
+        p.phonenumber = (String) v.get("phonenumber");
+        p.type = (String) v.get("type");
+        p.dateofbirth = (Long) v.get("dateofbirth");
+        p.ssn = (String) v.get("ssn");
+        p.surname = (String) v.get("surname");
+        p.relationship = (String) v.get("relationship");
+        p.bic = (String) v.get("bic");
+        p.email = (String) v.get("email");
+        p.status = (String) v.get("status");
+
         return p;
     }
 }
