@@ -22,7 +22,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 /**
  * Helper class for URI management.
  * We perform only basic checks on input data
- * 
+ *
  * @author entando
  */
 public class RequestHelper {
@@ -85,7 +85,7 @@ public class RequestHelper {
   }
 
   /**
-   * Appen query parameters
+   * Append query parameters
    *
    * @param verb
    * @param params
@@ -136,12 +136,12 @@ public class RequestHelper {
   /**
    * Prepend the given base to the given HTTP element.
    * @param verb
-   * @param base 
+   * @param base
    */
   public static void addBaseUrl(HttpRequestBase verb, String base) throws Throwable {
     if (null != verb) {
       String address = verb.getURI().toString();
-      
+
       address = appendPath(base, address);
       URI uri = new URI(address);
       verb.setURI(uri);

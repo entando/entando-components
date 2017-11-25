@@ -42,27 +42,27 @@ public class JAXBProcessInstance {
     private String processInstanceState;
     private String containerId;
     private String initiator;
-    private Date startDate;
+    private Long startDate;
     private String processInstanceDesc;
     private String correlationKey;
     private String parentInstanceId;
 
     public JAXBProcessInstance(KieProcessInstance process) {
-        this.processInstanceId = String.valueOf(process.getParentInstanceId());
+        this.processInstanceId = String.valueOf(process.getInstanceId());
         this.processId = process.getId();
         this.processName = process.getName();
         this.processVersion = process.getVersion();
         this.processInstanceState = String.valueOf(process.getState());
         this.containerId = process.getContainerId();
         this.initiator = process.getInitiator();
-        this.startDate = new Date(process.getStartDate());
+        this.startDate = process.getStartDate();
         this.processInstanceDesc = process.getDesc();
         this.correlationKey = process.getCorrelationKey();
         this.parentInstanceId = String.valueOf(process.getParentInstanceId());
 
     }
 
-    public JAXBProcessInstance(String processInstanceId, String processId, String processName, String processVersion, String processInstanceState, String containerId, String initiator, Date startDate, String processInstanceDesc, String correlationKey, String parentInstanceId) {
+    public JAXBProcessInstance(String processInstanceId, String processId, String processName, String processVersion, String processInstanceState, String containerId, String initiator, Long startDate, String processInstanceDesc, String correlationKey, String parentInstanceId) {
         this.processInstanceId = processInstanceId;
         this.processId = processId;
         this.processName = processName;
@@ -143,11 +143,11 @@ public class JAXBProcessInstance {
     }
 
     @XmlElement(name = "start-date")
-    public Date getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Long startDate) {
         this.startDate = startDate;
     }
 

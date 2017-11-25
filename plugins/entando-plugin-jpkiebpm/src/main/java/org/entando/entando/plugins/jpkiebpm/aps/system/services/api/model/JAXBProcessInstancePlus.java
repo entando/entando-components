@@ -27,6 +27,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Entando
@@ -41,7 +42,7 @@ public class JAXBProcessInstancePlus extends JAXBProcessInstance {
     private String bic;
     private String email;
     private String phone;
-    private Date dueDate;
+    private Long dueDate;
 
     private String country;
     private Long dateofbirth;
@@ -50,19 +51,31 @@ public class JAXBProcessInstancePlus extends JAXBProcessInstance {
     private String ssn;
     private String relationship;
     private String status;
+
+
     public JAXBProcessInstancePlus(KieProcessInstance process) {
         super(process);
+
+        String pnameStr = (String) process.getProcess_instance_variables().get("pname");
+        String surnameStr = (String) process.getProcess_instance_variables().get("surname");
+
+        if (StringUtils.isBlank(pnameStr)) {
+            pnameStr= "";
+        }
+        if (StringUtils.isBlank(surnameStr)) {
+            surnameStr= "";
+        }
+
         this.setCompany((String) process.getProcess_instance_variables().get("name"));
         this.setType((String) process.getProcess_instance_variables().get("type"));
         this.setBic((String) process.getProcess_instance_variables().get("bic"));
         this.setProcessStatus((String) process.getProcess_instance_variables().get("status"));
-        this.setDueDate(new Date(process.getStartDate() + (60 * 60 * 24 * 14 * 1000)));
+        this.setDueDate(new Date(process.getStartDate() + (60 * 60 * 24 * 14 * 1000)).getTime());
         this.setCountry((String) process.getProcess_instance_variables().get("country"));
         // email
         this.setEmail((String) process.getProcess_instance_variables().get("email"));
         // partyname
-        this.setPartyName((String) process.getProcess_instance_variables().get("pname")
-         + " " + (String) process.getProcess_instance_variables().get("surname"));
+        this.setPartyName(pnameStr + " " + surnameStr);
         // date of birth
         this.setDateofbirth((Long) process.getProcess_instance_variables().get("dateofbirth"));
         // clientId
@@ -143,11 +156,11 @@ public class JAXBProcessInstancePlus extends JAXBProcessInstance {
         this.phone = phone;
     }
 
-    public Date getDueDate() {
+    public Long getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(Long dueDate) {
         this.dueDate = dueDate;
     }
 
