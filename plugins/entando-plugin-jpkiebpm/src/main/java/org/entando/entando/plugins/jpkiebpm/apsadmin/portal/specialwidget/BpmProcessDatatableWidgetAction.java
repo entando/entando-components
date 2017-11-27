@@ -28,6 +28,8 @@ public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
 
         columns.put("Status Progress","statusProgress");
         columns.put("Customer Name","customerName");
+        columns.put("partyName","partyName");
+        columns.put("status","status");
         columns.put("Company","company");
         columns.put("Case Due In","dueDate");
 
