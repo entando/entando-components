@@ -78,14 +78,14 @@ public class FSIDemoHelper {
         JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0);
         JsonHelper.replaceKey(party, "name", process.getPname());
         JsonHelper.replaceKey(party, "surname", process.getPsurname());
-        JsonHelper.replaceKey(party, "dateOfBirth", process.getPdateOfBirth());
-        JsonHelper.replaceKey(party, "ssn", process.getPssn());
+        JsonHelper.replaceKey(party, "dateOfBirth", Long.valueOf(process.getPdateOfBirth()));
+        JsonHelper.replaceKey(party, "ssn", "123456789");//Hardcoded
         JsonHelper.replaceKey(party, "email", process.getPemail());
         JsonHelper.replaceKey(party, "relationship", process.getPrelationship());
         JsonHelper.replaceKey(client, "name", process.getCname());
         JsonHelper.replaceKey(client, "country", process.getCountry());
-        JsonHelper.replaceKey(client, "type", process.getType());
-        JsonHelper.replaceKey(client, "bic", process.getBic());
+        JsonHelper.replaceKey(client, "type", "BIG_BUSINESS");//Hardcoded
+        JsonHelper.replaceKey(client, "bic", "987654321");//Hardcoded
         JsonHelper.replaceKey(json, "accountManager", process.getAccountManager());
         client.getJSONArray("relatedParties").put(0, party);
         json.getJSONObject("client").put("com.redhat.bpms.demo.fsi.onboarding.model.Client", client);
@@ -94,23 +94,27 @@ public class FSIDemoHelper {
 
     public static KieApiProcessStart replaceValuesFromJson(JSONObject json, KieApiProcessStart process) {
         try {
-            JSONObject client = json.getJSONObject("task-input-data").getJSONObject("htClient")
-                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
-            JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0)
-                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty");
-            JSONObject innerparty = party.getJSONObject("party")
-                    .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Party");
-            process.setPname(innerparty.getString("name"));
-            process.setPsurname(innerparty.getString("surname"));
-            process.setPdateOfBirth(String.valueOf(innerparty.getLong("dateOfBirth")));
-            process.setPssn(String.valueOf(innerparty.isNull("ssn") ? null : innerparty.getInt("ssn")));
-            process.setPemail(innerparty.getString("email"));
-            process.setPrelationship(party.getString("relationship"));
-            process.setCname(client.getString("name"));
-            process.setCountry(client.isNull("country") ? null : client.getString("country"));
-            process.setType(client.isNull("type") ? null : client.getString("type"));
-            process.setBic(String.valueOf(innerparty.isNull("bic") ? null : client.getLong("bic")));
-            process.setAccountManager(json.isNull("accountManager") ? null : json.getString("accountManager"));
+
+            JSONObject client = json.getJSONObject("task-input-data");
+            if (client.has("htClient")) {
+                client = client.getJSONObject("htClient")
+                        .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Client");
+                JSONObject party = client.getJSONArray("relatedParties").getJSONObject(0)
+                        .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.RelatedParty");
+                JSONObject innerparty = party.getJSONObject("party")
+                        .getJSONObject("com.redhat.bpms.demo.fsi.onboarding.model.Party");
+                process.setPname(innerparty.getString("name"));
+                process.setPsurname(innerparty.getString("surname"));
+                process.setPdateOfBirth(String.valueOf(innerparty.getLong("dateOfBirth")));
+                process.setPssn(String.valueOf(innerparty.isNull("ssn") ? null : innerparty.getInt("ssn")));
+                process.setPemail(innerparty.getString("email"));
+                process.setPrelationship(party.getString("relationship"));
+                process.setCname(client.getString("name"));
+                process.setCountry(client.isNull("country") ? null : client.getString("country"));
+                process.setType(client.isNull("type") ? null : client.getString("type"));
+                process.setBic(String.valueOf(innerparty.isNull("bic") ? null : client.getLong("bic")));
+                process.setAccountManager(json.isNull("accountManager") ? null : json.getString("accountManager"));
+            }
 //            process.setAccountManager(json.getString("accountManager"));
         } catch (Exception e) {
             e.printStackTrace();
