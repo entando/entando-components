@@ -148,13 +148,13 @@ public class ApiTaskInterface extends KieApiManager {
         List<JAXBTask> list = new ArrayList<>();
         if (null != rawList
                 && !rawList.isEmpty()) {
-        for (KieTask raw : rawList) {
-            JAXBTask task = new JAXBTask(raw);
-            list.add(task);
-            taskList.setContainerId(task.getContainerId());
-            taskList.setOwner(user);
-            taskList.setProcessId(task.getProcessDefinitionId());
-        }
+            for (KieTask raw : rawList) {
+                JAXBTask task = new JAXBTask(raw);
+                list.add(task);
+                taskList.setContainerId(task.getContainerId());
+                taskList.setOwner(user);
+                taskList.setProcessId(task.getProcessDefinitionId());
+            }
         }
         taskList.setList(list);
         return taskList;
@@ -181,18 +181,17 @@ public class ApiTaskInterface extends KieApiManager {
         List<JAXBTask> list = new ArrayList<>();
         if (null != rawList
                 && !rawList.isEmpty()) {
-        for (KieTask raw : rawList) {
-            JAXBTask task = new JAXBTask(raw);
-            list.add(task);
-            taskList.setContainerId(task.getContainerId());
-            taskList.setOwner(user);
-            taskList.setProcessId(task.getProcessDefinitionId());
+            for (KieTask raw : rawList) {
+                JAXBTask task = new JAXBTask(raw);
+                list.add(task);
+                taskList.setContainerId(task.getContainerId());
+                taskList.setOwner(user);
+                taskList.setProcessId(task.getProcessDefinitionId());
             }
         }
         taskList.setList(list);
         return taskList;
     }
-  
 
     public String getDiagram(Properties properties) {
         final String configId = properties.getProperty("configId");
@@ -458,7 +457,7 @@ public class ApiTaskInterface extends KieApiManager {
         input.put("address_country", state.getCountry());
         input.put("type", taskInOut.getType());
         input.put("relationship", taskInOut.getPrelationship());
-        input.put("ssn", "7987989797");
+        input.put("ssn", "987654321");
 
         return input;
     }
