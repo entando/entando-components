@@ -108,7 +108,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
             if (!btn.onClick || typeof btn.onClick !== 'function') {
                 return;
             }
-            $('.btn'+i).click(function(ev){
+            $(idTable+ ' tbody').on('click','.btn'+i,function(ev){
                 ev.preventDefault();
                 ev.stopPropagation();
                 btn.onClick(ev, table.row($(this).closest('tr')).data());
