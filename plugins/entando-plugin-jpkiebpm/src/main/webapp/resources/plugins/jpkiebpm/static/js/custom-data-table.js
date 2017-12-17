@@ -68,7 +68,8 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
             "defaultContent": buttonsStr
         }];
     }
-    var table = $(idTable).DataTable({
+
+    var config = {
         destroy: true,
         responsive: false,
         processing: true,
@@ -94,7 +95,13 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
                 "titleAttr": 'CSV'
             }
         ]
-    });
+    };
+
+    if (extraConfig.createdRow && typeof extraConfig.createdRow === 'function' ){
+        config.createdRow = extraConfig.createdRow;
+    }
+
+    var table = $(idTable).DataTable(config);
 
     if (extraConfig && extraConfig.onClickRow && typeof extraConfig.onClickRow === 'function') {
         $(idTable + ' tbody').on('click', 'tr', function(ev) {
@@ -108,7 +115,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
             if (!btn.onClick || typeof btn.onClick !== 'function') {
                 return;
             }
-            $('.btn'+i).click(function(ev){
+            $(idTable+ ' tbody').on('click','.btn'+i,function(ev){
                 ev.preventDefault();
                 ev.stopPropagation();
                 btn.onClick(ev, table.row($(this).closest('tr')).data());
