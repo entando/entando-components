@@ -25,14 +25,10 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.aps.system.services.user.IUserManager;
-import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -57,11 +53,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.logging.Level;
-import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
-import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.DatatableFieldDefinition;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstance;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstanceList;
@@ -476,59 +469,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
 
     @Override
     public void startNewProcess(KieApiProcessStart process) throws Throwable {
-        String res = this.getKieFormManager().startNewProcess(process, null);
-        if (res != null) {
-            User user = new User();
-            user.setUsername(process.getPemail());
-            UserProfile profile = new UserProfile();
-            profile.setId(process.getPemail());
-            //att - fullname
-            MonoTextAttribute text = (MonoTextAttribute) profile.getAttribute("Monotext");
-            text.setName("fullname");
-            text.setDescription("Full Name");
-            text.setSearchable(true);
-            text.setText(process.getPname() + " " + process.getPsurname());
-            profile.addAttribute(text);
-
-            //att - email
-            text = (MonoTextAttribute) profile.getAttribute("Monotext");
-            text.setName("email");
-            text.setDescription("Email");
-            text.setSearchable(true);
-            text.setText(process.getPemail());
-            profile.addAttribute(text);
-
-            //att - street
-            text = (MonoTextAttribute) profile.getAttribute("Monotext");
-            text.setName("street");
-            text.setDescription("Address - street");
-            text.setText(process.getStreet());
-            profile.addAttribute(text);
-
-            //att - zipcode
-            text = (MonoTextAttribute) profile.getAttribute("Monotext");
-            text.setName("zipcode");
-            text.setDescription("Address - zipcode");
-            text.setText(process.getZipcode());
-            profile.addAttribute(text);
-
-            //att - state
-            text = (MonoTextAttribute) profile.getAttribute("Monotext");
-            text.setName("state");
-            text.setDescription("Address - state");
-            text.setText(process.getState());
-            profile.addAttribute(text);
-
-            //att - phonenumber
-            NumberAttribute number = (NumberAttribute) profile.getAttribute("Number");
-            number.setName("phonenumber");
-            number.setDescription("Phone Number");
-            number.setValue(BigDecimal.valueOf(9999999999l));
-            profile.addAttribute(number);
-
-            this.getUserManager().addUser(user);
-            this.getUserProfileManager().addProfile(user.getUsername(), profile);
-        }
+        this.getKieFormManager().startNewProcess(process, null);
     }
 
     protected II18nManager getI18nManager() {
@@ -571,29 +512,11 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 
-    public IUserManager getUserManager() {
-        return _userManager;
-    }
-
-    public void setUserManager(IUserManager _userManager) {
-        this._userManager = _userManager;
-    }
-
-    public IUserProfileManager getUserProfileManager() {
-        return _userProfileManager;
-    }
-
-    public void setUserProfileManager(IUserProfileManager _userProfileManager) {
-        this._userProfileManager = _userProfileManager;
-    }
-
     private HashMap<String, Boolean> fieldMandatory;
     private II18nManager i18nManager;
     private ILangManager langManager;
     private IKieFormManager kieFormManager;
     private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
-    private IUserManager _userManager;
-    private IUserProfileManager _userProfileManager;
 
 }
