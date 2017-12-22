@@ -40,11 +40,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import java.util.logging.Level;
+import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 
 /**
@@ -58,6 +65,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public void init() throws Exception {
         try {
             loadConfig();
+//            createBpmProfileType();
             _logger.info("{} ready, enabled: {}", this.getClass().getName(), _config.getActive());
         } catch (ApsSystemException t) {
             _logger.error("{} Manager: Error on initialization", this.getClass().getName(), t);
@@ -317,8 +325,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         opt.put("user", KNOWLEDGE_WORKER);
         return getHumanTaskList(null, opt);
     }
-
-
 
     @Override
     public KieTaskDetail getTaskDetail(final String containerId, final Long taskId, Map<String, String> opt) throws ApsSystemException {
@@ -812,11 +818,11 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         try {
             // process endpoint first
-            if (opt == null ) {
+            if (opt == null) {
                 opt = new HashMap<>();
             }
 
-            opt.put("auto-progress","true");
+            opt.put("auto-progress", "true");
             Endpoint ep = KieEndpointDictionary.create().get(API_PUT_SET_TASK_STATE)
                     .resolveParams(containerId, taskId, state.getValue());
             // generate client from the current configuration
@@ -828,14 +834,14 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             if (null != input) {
                 // generate payload
                 String payload = FSIDemoHelper.getPayloadForAdditionalClientDetailTask(input);
-            // perform query
-            result = (String) new KieRequestBuilder(client)
-                    .setEndpoint(ep)
-                    .setHeaders(headersMap)
+                // perform query
+                result = (String) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setHeaders(headersMap)
                         .setPayload(payload)
-                    .setRequestParams(opt)
-                    .setDebug(true)
-                    .doRequest();
+                        .setRequestParams(opt)
+                        .setDebug(true)
+                        .doRequest();
             } else {
                 result = (String) new KieRequestBuilder(client)
                         .setEndpoint(ep)
@@ -925,6 +931,48 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return client;
     }
 
+    private void createBpmProfileType() throws Exception {
+        Map<String, IApsEntity> types = this.getUserProfileManager().getEntityPrototypes();
+        String typeCode = "BPM";
+        IApsEntity entityType = null;
+        for (IApsEntity etype : types.values()) {
+            if (etype.getTypeCode().equals(typeCode)) {
+                entityType = etype;
+            }
+        }
+        if (entityType == null) {
+            entityType = (IApsEntity) this.getUserProfileManager().getEntityPrototype("PFL");
+            entityType.setTypeCode(typeCode);
+            entityType.setTypeDescription("BPM User Profile");
+
+            //att - street
+            MonoTextAttribute text = (MonoTextAttribute) entityType.getAttribute("Monotext");
+            text.setName("street");
+            text.setDescription("Address - street");
+            entityType.addAttribute(text);
+
+            //att - zipcode
+            text = (MonoTextAttribute) entityType.getAttribute("Monotext");
+            text.setName("zipcode");
+            text.setDescription("Address - zipcode");
+            entityType.addAttribute(text);
+
+            //att - state
+            text = (MonoTextAttribute) entityType.getAttribute("Monotext");
+            text.setName("state");
+            text.setDescription("Address - state");
+            entityType.addAttribute(text);
+
+            //att - phonenumber
+            NumberAttribute number = (NumberAttribute) entityType.getAttribute("Number");
+            number.setName("phonenumber");
+            number.setDescription("Phone Number");
+            entityType.addAttribute(number);
+
+            ((IEntityTypesConfigurer) this.getUserProfileManager()).addEntityPrototype(entityType);
+        }
+    }
+
     public ConfigInterface getConfigManager() {
         return _configManager;
     }
@@ -946,9 +994,18 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return _config.clone();
     }
 
+    public IUserProfileManager getUserProfileManager() {
+        return _userProfileManager;
+    }
+
+    public void setUserProfileManager(IUserProfileManager _userProfileManager) {
+        this._userProfileManager = _userProfileManager;
+    }
+
     private KieBpmConfig _config;
     private ConfigInterface _configManager;
     private IKieFormOverrideManager _overrideManager;
+    private IUserProfileManager _userProfileManager;
 
     public enum TASK_STATES {
         ACTIVATED("activated"),
