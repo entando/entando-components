@@ -14,11 +14,8 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.api;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.entity.model.attribute.JAXBTextAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.plugins.jpmail.aps.services.mail.IMailManager;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
@@ -41,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
@@ -57,7 +53,7 @@ public class ApiTaskInterface extends KieApiManager {
     private static final Logger logger = LoggerFactory.getLogger(ApiTaskInterface.class);
 
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
-    private IMailManager _mailManager;
+
     private HashMap<String, Boolean> fieldMandatory;
 
     private void initFieldMandatory() {
@@ -109,21 +105,11 @@ public class ApiTaskInterface extends KieApiManager {
         HashMap<String, String> opt = new HashMap<>();
         int id; // parameter appended to the original payload
 
-        if (StringUtils.isNotBlank(user)) {
+        if (StringUtils.isNotBlank("user")) {
             opt.put("user", user);
         }
 
         List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", opt);
-
-        if (StringUtils.isNotBlank(user) && (rawList == null || rawList.isEmpty())) {
-            String sender = (String) this.getMailManager().getMailConfig().getSenders().keySet().toArray()[0];
-            IUserProfile profile = this.getUserProfileManager().getProfile(user);
-            String email = ((MonoTextAttribute) profile.getAttribute("email")).getText();
-            String[] rec = {email};
-            this.getMailManager().sendMail("Application form completed - wait for managers' review.", "Application form completed",
-                    rec, null, null, sender, IMailManager.CONTENTTYPE_TEXT_HTML);
-        }
-
         final JAXBTaskList taskList = new JAXBTaskList();
         List<JAXBTask> list = new ArrayList<>();
         for (KieTask raw : rawList) {
@@ -428,15 +414,6 @@ public class ApiTaskInterface extends KieApiManager {
         this.getKieFormManager().submitHumanFormTask(doc.getContainerId(), doc.getTaskId(), KieFormManager.TASK_STATES.COMPLETED, queryStringParam, input);
     }
 
-    public void rejectDoc(KiaApiTaskDoc doc) throws Throwable {
-        String sender = (String) this.getMailManager().getMailConfig().getSenders().keySet().toArray()[0];
-        IUserProfile profile = this.getUserProfileManager().getProfile(doc.getUser());
-        String email = ((MonoTextAttribute) profile.getAttribute("email")).getText();
-        String[] rec = {email};
-        this.getMailManager().sendMail("Document (" + doc.getName() + ") rejected with the note: " + doc.getContent(), "Document rejected",
-                rec, null, null, sender, IMailManager.CONTENTTYPE_TEXT_HTML);
-    }
-
     @Override
     public IBpmWidgetInfoManager getBpmWidgetInfoManager() {
         return bpmWidgetInfoManager;
@@ -445,14 +422,6 @@ public class ApiTaskInterface extends KieApiManager {
     @Override
     public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
-    }
-
-    public IMailManager getMailManager() {
-        return _mailManager;
-    }
-
-    public void setMailManager(IMailManager _mailManager) {
-        this._mailManager = _mailManager;
     }
 
     private void startTasks(List<KieTask> list, HashMap<String, String> opt) {
@@ -477,7 +446,7 @@ public class ApiTaskInterface extends KieApiManager {
         input.put("accountManager", taskInOut.getAccountManager());
         input.put("bic", state.getBic());
         input.put("name", state.getName());
-        input.put("country", taskInOut.getState());
+        input.put("country", taskInOut.getCountry());
         input.put("street", state.getStreet());
         input.put("state", state.getUsstate());
         input.put("zipcode", state.getZipcode());

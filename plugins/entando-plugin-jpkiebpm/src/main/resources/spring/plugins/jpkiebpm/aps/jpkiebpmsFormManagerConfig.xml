@@ -32,7 +32,6 @@ THE SOFTWARE.
           parent="abstractService">
         <property name="configManager" ref="BaseConfigManager"/>
         <property name="overrideManager" ref="jpkiebpmFormOverrideManager"/>
-        <property name="userProfileManager" ref="UserProfileManager" />
     </bean>
 
     <bean id="jpkiebpmsApiManager"
@@ -43,16 +42,12 @@ THE SOFTWARE.
         <property name="kieFormManager" ref="jpkiebpmsManager"/>
         <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
         <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
-        <property name="userManager" ref="UserManager"/>
-        <property name="userProfileManager" ref="UserProfileManager" />
     </bean>
 
     <bean id="jpkiebpmApiTaskInterface"
           class="org.entando.entando.plugins.jpkiebpm.aps.system.services.api.ApiTaskInterface"
           parent="jpkiebpmsApiManager" scope="prototype">
         <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
-        <property name="mailManager" ref="jpmailMailManager" />
-        <property name="userProfileManager" ref="UserProfileManager" />
     </bean>
 
     <bean id="jpkiebpmBpmWidgetInfoDAO"

@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author paddeo
  */
 @XmlRootElement(name = "processObj")
-@XmlType(propOrder = {"containerId", "processId", "correlation", "cname", "street", "zipcode", "state", "type",
+@XmlType(propOrder = {"containerId", "processId", "correlation", "cname", "country", "type",
     "bic", "prelationship", "pname", "psurname", "pdateOfBirth", "pssn", "pemail", "accountManager"})
 public class KieApiProcessStart {
 
@@ -67,28 +67,12 @@ public class KieApiProcessStart {
         this.cname = cname;
     }
 
-    public String getStreet() {
-        return street;
+    public String getCountry() {
+        return country;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getZipcode() {
-        return zipcode;
-    }
-
-    public void setZipcode(String zipcode) {
-        this.zipcode = zipcode;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getType() {
@@ -167,9 +151,7 @@ public class KieApiProcessStart {
     private String processId;
     private String correlation;
     private String cname;
-    private String street;
-    private String zipcode;
-    private String state;
+    private String country;
     private String type;
     private String bic;
     private String prelationship;

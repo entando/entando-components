@@ -83,7 +83,7 @@ public class FSIDemoHelper {
         JsonHelper.replaceKey(party, "email", process.getPemail());
         JsonHelper.replaceKey(party, "relationship", process.getPrelationship());
         JsonHelper.replaceKey(client, "name", process.getCname());
-        JsonHelper.replaceKey(client, "country", process.getState());
+        JsonHelper.replaceKey(client, "country", process.getCountry());
         JsonHelper.replaceKey(client, "type", "BIG_BUSINESS");//Hardcoded
         JsonHelper.replaceKey(client, "bic", "987654321");//Hardcoded
         JsonHelper.replaceKey(json, "accountManager", process.getAccountManager());
@@ -110,7 +110,7 @@ public class FSIDemoHelper {
                 process.setPemail(innerparty.getString("email"));
                 process.setPrelationship(party.getString("relationship"));
                 process.setCname(client.getString("name"));
-                process.setState(client.isNull("country") ? null : client.getString("country"));
+                process.setCountry(client.isNull("country") ? null : client.getString("country"));
                 process.setType(client.isNull("type") ? null : client.getString("type"));
                 process.setBic(String.valueOf(innerparty.isNull("bic") ? null : client.getLong("bic")));
                 process.setAccountManager(json.isNull("accountManager") ? null : json.getString("accountManager"));
@@ -142,7 +142,7 @@ public class FSIDemoHelper {
         process.setAccountManager((String) input.get("accountManager"));
         process.setBic((String) input.get("client_bic"));
         process.setCname((String) input.get("client_name"));
-        process.setState((String) input.get("client_country"));
+        process.setCountry((String) input.get("client_country"));
         process.setType((String) input.get("client_type"));
         process.setPrelationship("Consultant");
         process.setPemail((String) input.get("client_email"));

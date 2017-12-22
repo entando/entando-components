@@ -221,16 +221,6 @@
         </method>
     </resource>
 
-       <resource name="rejectTaskDoc" namespace="jpkiebpm">
-        <description>Red Hat Bpm Reject Task Document</description>
-        <source pluginCode="jpkiebpm">plugins</source>
-        <method httpMethod="PUT" active="true">
-            <description>reject the document needed for the task</description>
-            <springBean name="jpkiebpmApiTaskInterface" method="rejectDoc"/>
-            <expectedType>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc</expectedType>
-        </method>
-    </resource>
-
     <resource name="userTask" namespace="jpkiebpm">
         <description>The current tasks of a user</description>
         <source pluginCode="jpkiebpm">plugins</source>
@@ -287,7 +277,7 @@
             </parameters>
         </method>
     </resource>
-
+    
 <!--
     <resource name="enrichmentApproveDocument" namespace="jpkiebpm">
         <method httpMethod="PUT" active="true">

@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>entando-plugins-parent</artifactId>
-        <groupId>org.entando.entando.plugins</groupId>
-        <version>4.3.2-SNAPSHOT</version>
-    </parent>
+		<artifactId>entando-plugins-parent</artifactId>
+		<groupId>org.entando.entando.plugins</groupId>
+		<version>4.3.2-SNAPSHOT</version>
+	</parent>
     <artifactId>entando-plugin-jpkiebpm</artifactId>
     <groupId>org.entando.entando.plugins</groupId>
     <packaging>war</packaging>
@@ -56,16 +56,16 @@
                 </executions>
             </plugin>
         </plugins>
-        <!--        <resources>
+<!--        <resources>
             <resource>
-                                <directory>src/main/java</directory>
-                                <includes>
-                                        <include>**/*.properties</include>
-                                        <include>**/*.xml</include>
-                                        <include>**/*.xsd</include>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+					<include>**/*.xsd</include>
                     <include>**/*.txt</include>
-                                </includes>
-                        </resource>
+				</includes>
+			</resource>
         </resources>-->
     </build>
 
@@ -97,32 +97,6 @@
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jprestapi</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>test</scope>
-            <classifier>tests</classifier>
-        </dependency>
-
-        <!-- Plugin MAIL -->
-        <dependency>
-            <groupId>org.entando.entando.plugins</groupId>
-            <artifactId>entando-plugin-jpmail</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
-            <type>war</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.entando.entando.plugins</groupId>
-            <artifactId>entando-plugin-jpmail</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
-            <type>jar</type>
-            <classifier>classes</classifier>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.entando.entando.plugins</groupId>
-            <artifactId>entando-plugin-jpmail</artifactId>
             <version>4.3.2-SNAPSHOT</version>
             <type>jar</type>
             <scope>test</scope>
