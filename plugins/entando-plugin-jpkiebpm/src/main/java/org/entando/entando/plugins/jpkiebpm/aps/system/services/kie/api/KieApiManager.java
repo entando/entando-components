@@ -312,28 +312,37 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             } else {
                 opt.put("pageSize", "5000");
             }
+            BpmWidgetInfo bpmWidgetInfo = null;
             if (null != configId) {
-                try {
-                    final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
-                    final String information = bpmWidgetInfo.getInformationDraft();
-                    if (StringUtils.isNotEmpty(information)) {
-                        final ApsProperties config = new ApsProperties();
-                        try {
-                            config.loadFromXml(information);
-                        } catch (IOException e) {
-                            logger.error("Error load configuration  {} ", e.getMessage());
-                        }
-                        final JAXBProcessInstanceListPlus processList = new JAXBProcessInstanceListPlus();
-                        this.setElementDatatableFieldDefinition(config, processList);
-                        this.setElementList(config, processList, procIstId, opt);
-                        processList.setContainerId(config.getProperty("containerId"));
-                        processList.setProcessId(config.getProperty("processId"));
-                        return processList;
-                    }
-                } catch (ApsSystemException e) {
-                    logger.error("Error {}", e);
-
+                bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+            } else {
+                int id = bpmWidgetInfoManager.getBpmWidgetInfos().get(0);
+                if (id > 0) {
+                    bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(id);
+                } else {
+                    return null;
                 }
+            }
+            try {
+
+                final String information = bpmWidgetInfo.getInformationDraft();
+                if (StringUtils.isNotEmpty(information)) {
+                    final ApsProperties config = new ApsProperties();
+                    try {
+                        config.loadFromXml(information);
+                    } catch (IOException e) {
+                        logger.error("Error load configuration  {} ", e.getMessage());
+                    }
+                    final JAXBProcessInstanceListPlus processList = new JAXBProcessInstanceListPlus();
+                    this.setElementDatatableFieldDefinition(config, processList);
+                    this.setElementList(config, processList, procIstId, opt);
+                    processList.setContainerId(config.getProperty("containerId"));
+                    processList.setProcessId(config.getProperty("processId"));
+                    return processList;
+                }
+            } catch (Exception e) {
+                logger.error("Error {}", e);
+
             }
             return null;
         } catch (Throwable t) {

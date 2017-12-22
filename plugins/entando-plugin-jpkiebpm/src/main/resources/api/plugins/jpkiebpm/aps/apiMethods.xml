@@ -165,7 +165,7 @@
             <springBean name="jpkiebpmsApiManager" method="processInstancesDataTablePlus"/>
             <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response.ProcessInstanceListPlusResponse</responseClass>
             <parameters>
-                <parameter key="configId" required="true">
+                <parameter key="configId" required="false">
                     <description>The confguration id of jpkiebpm_widgetinfo</description>
                 </parameter>
                 <parameter key="processInstanceId" required="false">
