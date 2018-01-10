@@ -285,7 +285,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     }
 
     private void setElementList(final ApsProperties config, final JAXBProcessInstanceList processList) throws ApsSystemException {
-        final String groups = "groups=" + config.getProperty("groups") != null ? config.getProperty("groups").replace(" ", "").replace(",", "&groups=") : "";
+//        final String groups = "groups=" + config.getProperty("groups") != null ? config.getProperty("groups").replace(" ", "").replace(",", "&groups=") : "";
         final String processId = config.getProperty("processId");
         final List<JAXBProcessInstance> list = new ArrayList<>();
         final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesList(processId, 0, 5000);
