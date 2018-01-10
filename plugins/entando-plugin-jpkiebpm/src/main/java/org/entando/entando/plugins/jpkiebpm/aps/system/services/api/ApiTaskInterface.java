@@ -52,6 +52,8 @@ public class ApiTaskInterface extends KieApiManager {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiTaskInterface.class);
 
+    private static boolean busy = false;
+
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
     private HashMap<String, Boolean> fieldMandatory;
@@ -402,16 +404,26 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     public void putTaskDoc(final KiaApiTaskDoc doc) throws Throwable {
-        Map<String, String> queryStringParam = new HashMap<>();
-        queryStringParam.put("user", doc.getUser());
-        Map<String, Object> input = new HashMap<>();
-        input.put("content", doc.getContent());
-        input.put("identifier", doc.getIdentifier());
-        input.put("lastModified", Long.valueOf(doc.getLastModified()));
-        input.put("size", Long.valueOf(doc.getSize()));
-        input.put("link", doc.getLink());
-        input.put("name", doc.getName());
-        this.getKieFormManager().submitHumanFormTask(doc.getContainerId(), doc.getTaskId(), KieFormManager.TASK_STATES.COMPLETED, queryStringParam, input);
+        try {
+            logger.info("putTaskDoc for task id-{} and resource {}busy", doc.getTaskId(), busy ? "" : "not ");
+            while (busy) {
+                logger.info("putTaskDoc for task id-{} waiting 500 mils");
+                Thread.sleep(500);
+            }
+            busy = true;
+            Map<String, String> queryStringParam = new HashMap<>();
+            queryStringParam.put("user", doc.getUser());
+            Map<String, Object> input = new HashMap<>();
+            input.put("content", doc.getContent());
+            input.put("identifier", doc.getIdentifier());
+            input.put("lastModified", Long.valueOf(doc.getLastModified()));
+            input.put("size", Long.valueOf(doc.getSize()));
+            input.put("link", doc.getLink());
+            input.put("name", doc.getName());
+            this.getKieFormManager().submitHumanFormTask(doc.getContainerId(), doc.getTaskId(), KieFormManager.TASK_STATES.COMPLETED, queryStringParam, input);
+        } finally {
+            busy = false;
+        }
     }
 
     @Override
