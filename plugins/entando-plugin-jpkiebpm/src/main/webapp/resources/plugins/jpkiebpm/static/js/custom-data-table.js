@@ -97,6 +97,12 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
         ]
     };
 
+
+    if (extraConfig.language){
+        config.language = extraConfig.language;
+    }
+
+
     if (extraConfig.createdRow && typeof extraConfig.createdRow === 'function' ){
         config.createdRow = extraConfig.createdRow;
     }
