@@ -49,12 +49,13 @@ public class KieBpmConfig {
         cfg.setUsername(this.getUsername());
         cfg.setWebapp(this.getWebapp());
         cfg.setTimeoutMsec(this.getTimeoutMsec());
+        cfg.setDebug(this.getDebug());
 
         return cfg;
     }
 
     public Boolean getActive() {
-        return _active;
+        return (null != _active ? _active : false);
     }
 
     public void setActive(Boolean active) {
@@ -116,8 +117,16 @@ public class KieBpmConfig {
     public void setTimeoutMsec(Integer timeoutMsec) {
         this._timeoutMsec = timeoutMsec;
     }
+    
+    public Boolean getDebug() {
+		return (null != _debug ? _debug : false);
+	}
 
-    @XmlElement(name="active")
+	public void setDebug(Boolean debug) {
+		this._debug = debug;
+	}
+
+	@XmlElement(name="active")
     private Boolean _active;
     @XmlElement(name="username")
     private String _username;
@@ -133,4 +142,6 @@ public class KieBpmConfig {
     private String _webapp;
     @XmlElement(name="timeout")
     private Integer _timeoutMsec;
+    @XmlElement(name="debug")
+    private Boolean _debug;
 }

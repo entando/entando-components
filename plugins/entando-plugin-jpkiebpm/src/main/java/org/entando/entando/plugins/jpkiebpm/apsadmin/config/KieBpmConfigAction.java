@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
-import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
-import static com.opensymphony.xwork2.Action.SUCCESS;
 
 public class KieBpmConfigAction extends BaseAction {
 
@@ -55,11 +53,31 @@ public class KieBpmConfigAction extends BaseAction {
                 this.getFormManager().getContainersList();
                 this.addActionMessage(this.getText("message.config.test.success"));
             } catch (Exception e) {
-                _logger.error("CONF TEST FAILED!", e);
+                _logger.error("Configuration test failed!", e);
                 this.addActionError(this.getText("message.config.test.fail"));
             }
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
+			return FAILURE;
+		}
+		return SUCCESS;
+	}
+	
+	public String test() {
+		try {
+			// enable plugin by default;
+			this.setActive(true);
+			KieBpmConfig config = this.modelToConfig();
+			this.getFormManager().updateConfig(config);
+            try {
+                this.getFormManager().getContainersList();
+                this.addActionMessage(this.getText("message.config.test.success"));
+            } catch (Exception e) {
+                _logger.error("Configuration test failed!", e);
+                this.addActionError(this.getText("message.config.test.fail"));
+            }
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "test");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -74,6 +92,7 @@ public class KieBpmConfigAction extends BaseAction {
 		this.setPort(config.getPort());
 		this.setWebappName(config.getWebapp());
         this.setTimeout(config.getTimeoutMsec());
+        this.setDebug(config.getDebug());
 	}
 
 	protected KieBpmConfig modelToConfig() {
@@ -86,6 +105,7 @@ public class KieBpmConfigAction extends BaseAction {
 		config.setPort(this.getPort());
 		config.setWebapp(this.getWebappName());
         config.setTimeoutMsec(this.getTimeout());
+        config.setDebug(this.getDebug());
 		return config;
 	}
 
@@ -160,6 +180,16 @@ public class KieBpmConfigAction extends BaseAction {
     public void setTimeout(Integer _timeout) {
         this._timeout = _timeout;
     }
+    
+	public Boolean getDebug() {
+		return _debug;
+	}
+
+	public void setDebug(Boolean debug) {
+		this._debug = debug;
+	}
+
+
 	private IKieFormManager _formManager;
 
 	private Boolean _active;
@@ -170,4 +200,5 @@ public class KieBpmConfigAction extends BaseAction {
 	private Integer _port;
 	private String _webappName;
     private Integer _timeout;
+    private Boolean _debug;
 }
