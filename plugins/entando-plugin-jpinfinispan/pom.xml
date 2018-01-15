@@ -51,4 +51,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-spring</artifactId>
+			<version>7.2.5.Final</version>
+		</dependency>
+	</dependencies>
 </project>
