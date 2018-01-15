@@ -60,10 +60,11 @@ import com.agiletec.plugins.jpcrowdsourcing.apsadmin.util.SmallCategory;
 
 public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(ApiIdeaInterface.class);
+	private static final Logger _logger = LoggerFactory.getLogger(ApiIdeaInterface.class);
 
 	/**
 	 * GET http://localhost:8080/<portal>/api/rs/en/ideaInstances?
+	 *
 	 * @param properties
 	 * @return
 	 * @throws Throwable
@@ -74,7 +75,9 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 			Collection<String> groupCodes = this.extractGroups(properties);
 			//required params
 			String codeParam = properties.getProperty("code");
-			if (StringUtils.isNotBlank(codeParam)) codeParam = URLDecoder.decode(codeParam, "UTF-8");
+			if (StringUtils.isNotBlank(codeParam)) {
+				codeParam = URLDecoder.decode(codeParam, "UTF-8");
+			}
 			IdeaInstance instance = this.getIdeaInstanceManager().getIdeaInstance(codeParam);
 			if (null == instance) {
 				_logger.warn("instance {} not found", codeParam);
@@ -86,7 +89,9 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 			}
 			//optional params
 			String textParam = properties.getProperty("text");
-			if (StringUtils.isNotBlank(textParam)) textParam = URLDecoder.decode(codeParam, "UTF-8");
+			if (StringUtils.isNotBlank(textParam)) {
+				textParam = URLDecoder.decode(codeParam, "UTF-8");
+			}
 			String tagParam = properties.getProperty("tag");
 			String orderParam = properties.getProperty("order");
 			Integer order = null;
@@ -105,6 +110,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 
 	/**
 	 * GET http://localhost:8080/<portal>/api/rs/en/idea?code=1
+	 *
 	 * @param properties
 	 * @return
 	 * @throws Throwable
@@ -113,7 +119,9 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 		JAXBIdea jaxbIdea = null;
 		try {
 			String codeParam = properties.getProperty("code");
-			if (StringUtils.isNotBlank(codeParam)) codeParam = URLDecoder.decode(codeParam, "UTF-8");
+			if (StringUtils.isNotBlank(codeParam)) {
+				codeParam = URLDecoder.decode(codeParam, "UTF-8");
+			}
 			IIdea idea = this.getIdeaManager().getIdea(codeParam);
 			if (null == idea) {
 				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Idea with code '" + codeParam + "' does not exist", Response.Status.CONFLICT);
@@ -156,7 +164,9 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 		StringApiResponse response = new StringApiResponse();
 		try {
 			String ideaId = vote.getIdeaId();
-			if (StringUtils.isNotBlank(ideaId)) ideaId = URLDecoder.decode(ideaId, "UTF-8");
+			if (StringUtils.isNotBlank(ideaId)) {
+				ideaId = URLDecoder.decode(ideaId, "UTF-8");
+			}
 
 			IIdea idea = this.getIdeaManager().getIdea(ideaId);
 			if (null == idea) {
@@ -185,12 +195,14 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 			if (!voteType.equals("like") && !voteType.equals("unlike")) {
 				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Vote invalid. Accepted values are 'like' and 'unlike'", Response.Status.CONFLICT);
 			}
-			if (StringUtils.isNotBlank(voteType)) voteType = URLDecoder.decode(voteType, "UTF-8");
+			if (StringUtils.isNotBlank(voteType)) {
+				voteType = URLDecoder.decode(voteType, "UTF-8");
+			}
 			if (voteType.equalsIgnoreCase("like")) {
-				((Idea)idea).setVotePositive(idea.getVotePositive() + 1);
+				((Idea) idea).setVotePositive(idea.getVotePositive() + 1);
 				this.getIdeaManager().updateIdea(idea);
 			} else if (voteType.equalsIgnoreCase("unlike")) {
-				((Idea)idea).setVoteNegative(idea.getVoteNegative() + 1);
+				((Idea) idea).setVoteNegative(idea.getVoteNegative() + 1);
 				this.getIdeaManager().updateIdea(idea);
 			}
 			response.setResult(IResponseBuilder.SUCCESS, null);
@@ -254,7 +266,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 			IIdea clone = this.getIdeaManager().getIdea(id);
 			if (null == clone) {
 				_logger.warn("idea {} not found", id);
-				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Idea with code '" + id + "' does not exist", Response.Status.CONFLICT);				
+				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Idea with code '" + id + "' does not exist", Response.Status.CONFLICT);
 			}
 			IdeaInstance instance = this.getIdeaInstanceManager().getIdeaInstance(instanceCode);
 			if (null == instance) {
@@ -272,7 +284,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 			}
 			int status = jaxbIdea.getStatus();
 			if (!ArrayUtils.contains(IIdea.STATES, status)) {
-				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid status specified: " + status,  Response.Status.CONFLICT);
+				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid status specified: " + status, Response.Status.CONFLICT);
 			}
 			Set<String> tags = this.joinCategories(jaxbIdea, langCode);
 			Idea idea = jaxbIdea.getIdea();
@@ -318,7 +330,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 			String code = "";
 			for (int i = 0; i < ideaTags.size(); i++) {
 				SmallCategory smallCategory = ideaTags.get(i);
-				if(jaxbValue.equals(smallCategory.getTitle())){
+				if (jaxbValue.equals(smallCategory.getTitle())) {
 					code = smallCategory.getCode();
 					break;
 				}
@@ -359,8 +371,8 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	private List<SmallCategory> getCategoryLeaf(String nodeRootCode, String langCode, boolean completeTitle) {
 		List<SmallCategory> categories = new ArrayList<SmallCategory>();
 		try {
-			Category root = (Category) this.getCategoryManager().getCategory(nodeRootCode);
-			this.addSmallCategory(categories, root, langCode, completeTitle, true);
+			Category root = this.getCategoryManager().getCategory(nodeRootCode);
+			this.addSmallCategory(categories, root, langCode, completeTitle);
 		} catch (Throwable t) {
 			_logger.error("error in methodName", t);
 			throw new RuntimeException("Errore in estrazione categorie");
@@ -368,9 +380,11 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 		return categories;
 	}
 
-	private void addSmallCategory(List<SmallCategory> categories, Category parentCat, String langCode, boolean completeTitle, boolean isFirst) {
-		for (Category cat : parentCat.getChildren()) {
-			if (null == cat.getChildren() || cat.getChildren().length == 0) {
+	private void addSmallCategory(List<SmallCategory> categories, Category parentCat, String langCode, boolean completeTitle) {
+		String[] childrenCodes = parentCat.getChildrenCodes();
+		for (int i = 0; i < childrenCodes.length; i++) {
+			Category cat = this.getCategoryManager().getCategory(childrenCodes[i]);
+			if (null == cat.getChildrenCodes() || cat.getChildrenCodes().length == 0) {
 				SmallCategory catSmall = new SmallCategory();
 				catSmall.setCode(cat.getCode());
 				if (!completeTitle) {
@@ -380,13 +394,14 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 				}
 				categories.add(catSmall);
 			}
-			this.addSmallCategory(categories, cat, langCode, completeTitle, false);
+			this.addSmallCategory(categories, cat, langCode, completeTitle);
 		}
 	}
 
 	protected IIdeaInstanceManager getIdeaInstanceManager() {
 		return _ideaInstanceManager;
 	}
+
 	public void setIdeaInstanceManager(IIdeaInstanceManager ideaInstanceManager) {
 		this._ideaInstanceManager = ideaInstanceManager;
 	}
@@ -394,6 +409,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	protected IIdeaManager getIdeaManager() {
 		return _ideaManager;
 	}
+
 	public void setIdeaManager(IIdeaManager ideaManager) {
 		this._ideaManager = ideaManager;
 	}
@@ -401,6 +417,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	protected ICategoryManager getCategoryManager() {
 		return _categoryManager;
 	}
+
 	public void setCategoryManager(ICategoryManager categoryManager) {
 		this._categoryManager = categoryManager;
 	}
@@ -408,6 +425,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	protected ILangManager getLangManager() {
 		return _langManager;
 	}
+
 	public void setLangManager(ILangManager langManager) {
 		this._langManager = langManager;
 	}
@@ -415,6 +433,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	protected ICategoryActionHelper getHelper() {
 		return _helper;
 	}
+
 	public void setHelper(ICategoryActionHelper helper) {
 		this._helper = helper;
 	}
