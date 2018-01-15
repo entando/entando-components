@@ -22,6 +22,14 @@
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
+        
+        <action name="test" class="jpkiebpmConfigAction" method="test">
+            <result name="input" type="tiles">admin.jpkiebpm.config.entry</result>
+            <result type="chain">edit</result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
 
     </package>
 

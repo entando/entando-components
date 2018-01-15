@@ -107,7 +107,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieContainersQueryResult result = (KieContainersQueryResult) new KieRequestBuilder(client)
                     .setEndpoint(KieEndpointDictionary.create().get(API_GET_CONTAINERS_LIST))
                     .setHeaders(headersMap)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest(KieContainersQueryResult.class);
             // unfold returned object to get the payload
             if (result.getType().equals(SUCCESS)) {
@@ -139,7 +139,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieProcessesQueryResult result = (KieProcessesQueryResult) new KieRequestBuilder(client)
                     .setEndpoint(KieEndpointDictionary.create().get(API_GET_PROCESS_DEFINITIONS_LIST))
                     .setHeaders(headersMap)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest(KieProcessesQueryResult.class);
             // unfold returned object to get the payload
             if (null != result && null != result.getProcesses() && !result.getProcesses().isEmpty()) {
@@ -171,7 +171,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieProcessInstancesQueryResult result = (KieProcessInstancesQueryResult) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest(KieProcessInstancesQueryResult.class);
             // unfold returned object to get the payload
             if (null != result && null != result.getInstances() && !result.getInstances().isEmpty()) {
@@ -215,7 +215,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(opt)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest(KieTaskQueryResult.class);
             // unfold returned object to get the payload
             if (null != result && null != result.getList() && !result.getList().isEmpty()) {
@@ -251,7 +251,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(opt)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest(KieTaskQueryResult.class);
             // unfold returned object to get the payload
             if (null != result && null != result.getList() && !result.getList().isEmpty()) {
@@ -290,7 +290,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setHeaders(headersMap)
                     .setRequestParams(opt)
                     .setPayload(payload)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest();
         } catch (Throwable t) {
             _logger.error("Error whole approving document for enrichment", t);
@@ -340,7 +340,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(opt)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest(KieTaskDetail.class);
             // unfold returned object to get the payload
             if (null != result) {
@@ -366,6 +366,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             // perform query
             result = new KieRequestBuilder(client)
                     .setEndpoint(ep)
+                    .setDebug(_config.getDebug())
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error getting the process diagram", t);
@@ -392,7 +393,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             form = (KieProcessFormQueryResult) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setUnmarshalOptions(false, true)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest(KieProcessFormQueryResult.class);
 
         } catch (Throwable t) {
@@ -420,7 +421,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(opt)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest();
             json = new JSONObject(data);
         } catch (Throwable t) {
@@ -445,7 +446,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             // perform query
             result = (KieProcessFormQueryResult) new KieRequestBuilder(client)
                     .setEndpoint(ep)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .setUnmarshalOptions(false, true)
                     .doRequest(KieProcessFormQueryResult.class);
         } catch (Throwable t) {
@@ -488,7 +489,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
@@ -521,7 +522,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     //.setTestMode(true)
                     .doRequest();
         } catch (Throwable t) {
@@ -565,7 +566,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
@@ -637,7 +638,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload(payload)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error completing the task", t);
@@ -686,7 +687,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setHeaders(headersMap)
                     .setPayload(accountId)
                     .setRequestParams(opt)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest();
             return true;
         } catch (Throwable t) {
@@ -720,7 +721,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             String res = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setRequestParams(opt)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("Error deleting process", t);
@@ -748,7 +749,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(opt)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest(KieProcessInstancesQueryResult.class);
             // unfold returned object to get the payload
             if (null != result
@@ -791,7 +792,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setHeaders(headersMap)
                     .setRequestParams(queryStringParam)
                     .setPayload(payload)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest();
         } catch (Throwable t) {
             throw new ApsSystemException("error submitting human task with state: " + state.getValue(), t);
@@ -834,14 +835,14 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setHeaders(headersMap)
                         .setPayload(payload)
                     .setRequestParams(opt)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest();
             } else {
                 result = (String) new KieRequestBuilder(client)
                         .setEndpoint(ep)
                         .setHeaders(headersMap)
                         .setRequestParams(opt)
-                        .setDebug(true)
+                        .setDebug(_config.getDebug())
                         .doRequest();
             }
         } catch (Throwable t) {
@@ -884,7 +885,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 //                    .setHeaders(headersMap)
 //                    .setPayload(payoload)
 //                    .setRequestParams(opt)
-//                    .setDebug(true)
+//                    .setDebug(_config.getDebug())
 //                    .doRequest(KieProcessInstancesQueryResult.class);
 
             String res = (String) new KieRequestBuilder(client)
@@ -892,7 +893,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setHeaders(headersMap)
                     .setPayload(payoload)
                     .setRequestParams(opt)
-                    .setDebug(true)
+                    .setDebug(_config.getDebug())
                     .doRequest();
             // necessary as we cannot change the property name looked by JAXB
             res = res.replaceAll("process-instance-variables", "process_instance_variables");
