@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<infinispan
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:infinispan:config:7.2 http://www.infinispan.org/schemas/infinispan-config-7.2.xsd"
+        xmlns="urn:infinispan:config:7.2">
+	
+	<cache-container default-cache="Entando_Cache">
+		<jmx duplicate-domains="true" />
+		<local-cache name="Entando_Cache">
+			<eviction strategy="LIRS" max-entries="1000000" />
+		</local-cache>
+		<local-cache name="Entando_PageManager">
+			<eviction strategy="LIRS" max-entries="10000" />
+		</local-cache>
+		<local-cache name="Entando_PageModelManager">
+			<eviction strategy="LIRS" max-entries="1000" />
+		</local-cache>
+		<local-cache name="Entando_WidgetTypeManager">
+			<eviction strategy="LIRS" max-entries="1000" />
+		</local-cache>
+	</cache-container>
+	
+</infinispan>

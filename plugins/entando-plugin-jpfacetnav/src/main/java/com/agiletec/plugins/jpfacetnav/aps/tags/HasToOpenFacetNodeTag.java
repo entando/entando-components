@@ -41,13 +41,13 @@ import org.slf4j.LoggerFactory;
 public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
 
 	private static final Logger _logger = LoggerFactory.getLogger(HasToOpenFacetNodeTag.class);
-	
+
 	@Override
 	public int doStartTag() throws JspException {
 		try {
-			boolean hasToOpen = 
-				((this.getRequiredFacets().contains(this.getFacetNodeCode())) || this.isSelectedOneChild()) 
-				&& this.hasChildrenOccurrences(); 
+			boolean hasToOpen
+					= ((this.getRequiredFacets().contains(this.getFacetNodeCode())) || this.isSelectedOneChild())
+					&& this.hasChildrenOccurrences();
 			if (hasToOpen) {
 				return EVAL_BODY_INCLUDE;
 			} else {
@@ -61,17 +61,20 @@ public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
 
 	/**
 	 * Returns true if one child is selected
+	 *
 	 * @return True if one child is selected
 	 */
 	private boolean isSelectedOneChild() {
 		ITreeNodeManager facetManager = this.getFacetManager();
 		List<String> requiredFacets = this.getRequiredFacets();
-		for (int i=0; i<requiredFacets.size(); i++) {
+		for (int i = 0; i < requiredFacets.size(); i++) {
 			String requiredFacet = requiredFacets.get(i);
 			ITreeNode facet = facetManager.getNode(requiredFacet);
 			if (null != facet) {
 				boolean check = this.checkSelectChild(facet, this.getFacetNodeCode());
-				if (check) return true;
+				if (check) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -79,8 +82,9 @@ public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
 
 	/**
 	 * Returns true if a child is selected.
+	 *
 	 * @param facet
-	 * @param codeForCheck 
+	 * @param codeForCheck
 	 * @return true if a child is selected
 	 */
 	private boolean checkSelectChild(ITreeNode facet, String codeForCheck) {
@@ -96,15 +100,17 @@ public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
 
 	/**
 	 * Returns true if there are children occurrences.
+	 *
 	 * @return true if there are children occurrences
 	 */
 	private boolean hasChildrenOccurrences() {
 		ITreeNodeManager facetManager = this.getFacetManager();
 		ITreeNode facet = facetManager.getNode(this.getFacetNodeCode());
-		for (int i=0; i<facet.getChildren().length; i++) {
-			ITreeNode child = facet.getChildren()[i];
+		for (int i = 0; i < facet.getChildrenCodes().length; i++) {
+			String code = facet.getChildrenCodes()[i];
+			ITreeNode child = facetManager.getNode(code);
 			Integer occurrence = this.getOccurrences().get(child.getCode());
-			if (null != occurrence && occurrence.intValue()>0) {
+			if (null != occurrence && occurrence.intValue() > 0) {
 				return true;
 			}
 		}
@@ -114,10 +120,11 @@ public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
 	public String getFacetNodeCode() {
 		return _facetNodeCode;
 	}
+
 	public void setFacetNodeCode(String facetNodeCode) {
 		this._facetNodeCode = facetNodeCode;
 	}
-	
+
 	@Override
 	public List<String> getRequiredFacets() {
 		if (null == this._requiredFacets) {
@@ -135,10 +142,11 @@ public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
 		}
 		return _requiredFacets;
 	}
+
 	public void setRequiredFacets(List<String> requiredFacets) {
 		this._requiredFacets = requiredFacets;
 	}
-	
+
 	public Map<String, Integer> getOccurrences() {
 		if (null == this._occurrences) {
 			if (null == this.getOccurrencesParamName()) {
@@ -155,12 +163,13 @@ public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
 		}
 		return _occurrences;
 	}
+
 	public void setOccurrences(Map<String, Integer> occurrences) {
 		this._occurrences = occurrences;
 	}
-	
+
 	private String _facetNodeCode;//="${facetNode.code}"
-	private List<String> _requiredFacets;//="requiredFacets" 
+	private List<String> _requiredFacets;//="requiredFacets"
 	private Map<String, Integer> _occurrences; //="${occurrences}"
 
 }
