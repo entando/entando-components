@@ -36,11 +36,10 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.Idea;
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.IIdeaInstanceManager;
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.IdeaInstance;
 
-public class IdeaFinderAction extends BaseAction implements IIdeaFinderAction {
+public class IdeaFinderAction extends BaseAction {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(IdeaFinderAction.class);
 
-	@Override
 	public List<String> getIdeas() {
 		List<String> list = new ArrayList<String>();
 		try {
@@ -52,7 +51,6 @@ public class IdeaFinderAction extends BaseAction implements IIdeaFinderAction {
 		return list;
 	}
 
-	@Override
 	public IIdea getIdea(String code) {
 		IIdea idea = null;
 		try {
@@ -64,7 +62,6 @@ public class IdeaFinderAction extends BaseAction implements IIdeaFinderAction {
 		return idea;
 	}
 
-	@Override
 	public String changeStatus() {
 		try {
 			IIdea idea = this.getIdeaManager().getIdea(this.getIdeaId());
@@ -81,7 +78,6 @@ public class IdeaFinderAction extends BaseAction implements IIdeaFinderAction {
 		return SUCCESS;
 	}
 
-	@Override
 	public String trash() {
 		try {
 			IIdea idea = this.getIdeaManager().getIdea(this.getIdeaId());
@@ -97,7 +93,6 @@ public class IdeaFinderAction extends BaseAction implements IIdeaFinderAction {
 		return SUCCESS;
 	}
 
-	@Override
 	public String delete() {
 		try {
 			if (this.getStrutsAction() != ApsAdminSystemConstants.DELETE) {

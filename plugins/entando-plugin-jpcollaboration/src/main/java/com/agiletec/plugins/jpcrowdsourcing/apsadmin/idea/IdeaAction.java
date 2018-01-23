@@ -38,7 +38,7 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.IId
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.IdeaInstance;
 import com.agiletec.plugins.jpcrowdsourcing.apsadmin.util.SmallCategory;
 
-public class IdeaAction extends BaseAction implements IIdeaAction {
+public class IdeaAction extends BaseAction {
 
 	private static final Logger _logger = LoggerFactory.getLogger(IdeaAction.class);
 
@@ -50,7 +50,6 @@ public class IdeaAction extends BaseAction implements IIdeaAction {
 		return this.getCategoryManager().getCategory(code);
 	}
 
-	@Override
 	public String edit() {
 		try {
 			Idea idea = (Idea) this.getIdeaManager().getIdea(this.getIdeaId());
@@ -66,7 +65,6 @@ public class IdeaAction extends BaseAction implements IIdeaAction {
 		return SUCCESS;
 	}
 
-	@Override
 	public String save() {
 		try {
 			IIdea idea = this.getIdea();
@@ -78,7 +76,6 @@ public class IdeaAction extends BaseAction implements IIdeaAction {
 		return SUCCESS;
 	}
 
-	@Override
 	public String joinCategory() {
 		try {
 			Idea idea = this.getIdea();
@@ -94,7 +91,6 @@ public class IdeaAction extends BaseAction implements IIdeaAction {
 		return SUCCESS;
 	}
 
-	@Override
 	public String removeCategory() {
 		try {
 			Idea idea = this.getIdea();
@@ -137,6 +133,9 @@ public class IdeaAction extends BaseAction implements IIdeaAction {
 
 	private void addSmallCategory(List<SmallCategory> categories, Category parentCat, String langCode, boolean completeTitle) {
 		String[] childrenCodes = parentCat.getChildrenCodes();
+		if (null == childrenCodes) {
+			return;
+		}
 		for (int i = 0; i < childrenCodes.length; i++) {
 			Category cat = this.getCategory(childrenCodes[i]);
 			if (null == cat.getChildrenCodes() || cat.getChildrenCodes().length == 0) {
@@ -153,7 +152,6 @@ public class IdeaAction extends BaseAction implements IIdeaAction {
 		}
 	}
 
-	@Override
 	public IIdea getIdea(String code) {
 		IIdea idea = null;
 		try {
