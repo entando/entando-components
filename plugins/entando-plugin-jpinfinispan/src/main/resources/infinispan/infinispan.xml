@@ -24,6 +24,9 @@
 			<eviction strategy="LIRS" max-entries="100" />
 		</local-cache>
 		<local-cache name="Entando_RoleManager">
+			<eviction strategy="LIRS" max-entries="200" />
+		</local-cache>
+		<local-cache name="Entando_GroupManager">
 			<eviction strategy="LIRS" max-entries="100" />
 		</local-cache>
 	</cache-container>
