@@ -29,6 +29,9 @@
 		<local-cache name="Entando_GroupManager">
 			<eviction strategy="LIRS" max-entries="100" />
 		</local-cache>
+		<local-cache name="Entando_LangManager">
+			<eviction strategy="LIRS" max-entries="10" />
+		</local-cache>
 	</cache-container>
 	
 </infinispan>
