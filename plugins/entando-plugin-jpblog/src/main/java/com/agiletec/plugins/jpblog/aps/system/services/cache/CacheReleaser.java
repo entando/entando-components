@@ -25,35 +25,39 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.services.cache.ICacheManager;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jpcontentfeedback.aps.system.services.contentfeedback.event.ContentFeedbackChangedEvent;
 import com.agiletec.plugins.jpcontentfeedback.aps.system.services.contentfeedback.event.ContentFeedbackChangedObserver;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 
 /**
  * @author E.Santoboni
  */
 public class CacheReleaser extends AbstractService implements ContentFeedbackChangedObserver {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(CacheReleaser.class);
+	private static final Logger _logger = LoggerFactory.getLogger(CacheReleaser.class);
 
-    public void init() throws Exception {
-        _logger.debug("{} ready", this.getClass().getName());
-    }
-    
-    public void updateFromContentFeedbackChanged(ContentFeedbackChangedEvent event) {
-        if (null != event.getContentId()) {
-			this.getCacheManager().flushGroup(JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + event.getContentId());
-        }
-    }
-    
-    protected ICacheManager getCacheManager() {
-        return _cacheManager;
-    }
-    public void setCacheManager(ICacheManager cacheManager) {
-        this._cacheManager = cacheManager;
-    }
-    
-    private ICacheManager _cacheManager;
-    
+	private ICacheInfoManager cacheInfoManager;
+
+	@Override
+	public void init() throws Exception {
+		_logger.debug("{} ready", this.getClass().getName());
+	}
+
+	@Override
+	public void updateFromContentFeedbackChanged(ContentFeedbackChangedEvent event) {
+		if (null != event.getContentId()) {
+			this.getCacheInfoManager().flushGroup(ICacheInfoManager.DEFAULT_CACHE_NAME,
+					JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + event.getContentId());
+		}
+	}
+
+	protected ICacheInfoManager getCacheInfoManager() {
+		return cacheInfoManager;
+	}
+
+	public void setCacheInfoManager(ICacheInfoManager cacheInfoManager) {
+		this.cacheInfoManager = cacheInfoManager;
+	}
+
 }
