@@ -38,6 +38,10 @@
 		<local-cache name="Entando_I18nManager">
 			<eviction strategy="LIRS" max-entries="1000" />
 		</local-cache>
+		<local-cache name="Entando_ApiCatalogManager">
+			<eviction strategy="LIRS" max-entries="200" />
+		</local-cache>
 	</cache-container>
 	
 </infinispan>
+
