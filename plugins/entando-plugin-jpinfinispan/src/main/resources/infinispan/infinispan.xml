@@ -44,6 +44,9 @@
 		<local-cache name="Entando_InitializerManager">
 			<eviction strategy="LIRS" max-entries="10" />
 		</local-cache>
+		<local-cache name="Entando_DataObjectModelManager">
+			<eviction strategy="LIRS" max-entries="100" />
+		</local-cache>
 	</cache-container>
 	
 </infinispan>
