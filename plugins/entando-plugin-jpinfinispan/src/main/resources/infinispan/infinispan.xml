@@ -47,6 +47,9 @@
 		<local-cache name="Entando_ContentModelManager">
 			<eviction strategy="LIRS" max-entries="100" />
 		</local-cache>
+		<local-cache name="Entando_KeyGeneratorManager">
+			<eviction strategy="LIRS" max-entries="1" />
+		</local-cache>
 	</cache-container>
 	
 </infinispan>
