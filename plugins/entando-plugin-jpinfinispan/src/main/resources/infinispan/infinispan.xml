@@ -50,6 +50,9 @@
 		<local-cache name="Entando_KeyGeneratorManager">
 			<eviction strategy="LIRS" max-entries="1" />
 		</local-cache>
+		<local-cache name="Entando_ResourceManager">
+			<eviction strategy="LIRS" max-entries="1" />
+		</local-cache>
 	</cache-container>
 	
 </infinispan>
