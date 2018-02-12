@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>entando-plugins-parent</artifactId>
 		<groupId>org.entando.entando.plugins</groupId>
-		<version>4.3.2-SNAPSHOT</version>
+		<version>4.3.2-RC1</version>
 	</parent>
 	<artifactId>entando-plugin-jpblog</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>
@@ -60,13 +60,13 @@
 		<dependency>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpcontentfeedback</artifactId>
-			<version>4.3.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+			<version>4.3.2-RC1</version><!-- version. Don't remove this comment. -->
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpcontentfeedback</artifactId>
-			<version>4.3.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+			<version>4.3.2-RC1</version><!-- version. Don't remove this comment. -->
 			<type>jar</type>
 			<classifier>classes</classifier>
 			<scope>provided</scope>
@@ -74,7 +74,7 @@
 		<dependency>
 			<groupId>org.entando.entando.plugins</groupId>
 			<artifactId>entando-plugin-jpcontentfeedback</artifactId>
-			<version>4.3.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+			<version>4.3.2-RC1</version><!-- version. Don't remove this comment. -->
 			<type>jar</type>
 			<classifier>tests</classifier>
 			<scope>test</scope>
