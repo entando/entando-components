@@ -31,7 +31,6 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -58,67 +57,67 @@ import org.entando.entando.plugins.jptokenapi.aps.system.token.IApiTokenizerMana
  * @author E.Santoboni
  */
 public class ApiRestServer extends org.entando.entando.aps.system.services.api.server.ApiRestServer {
-	
+
 	@Override
-    protected Object buildGetDeleteResponse(String langCode, ApiMethod.HttpMethod httpMethod, 
-            String namespace, String resourceName, HttpServletRequest request, HttpServletResponse response, UriInfo ui) {
-        Object responseObject = null;
-        try {
-            IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
-            Properties properties = this.extractRequestParameters(ui);
-            properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
-            ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
+	protected Object buildGetDeleteResponse(String langCode, ApiMethod.HttpMethod httpMethod,
+			String namespace, String resourceName, HttpServletRequest request, UriInfo ui) {
+		Object responseObject = null;
+		try {
+			IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
+			Properties properties = this.extractRequestParameters(ui);
+			properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
+			ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
 			String entandoApiToken = this.extractApiToken(request, ui);
 			if (null != entandoApiToken) {
 				this.extractTokenParameters(entandoApiToken, apiMethod, request, properties);
 			} else {
-				this.extractOAuthParameters(apiMethod, request, response, properties);
+				this.extractOAuthParameters(request, apiMethod.getRequiredPermission());
 			}
-            responseObject = responseBuilder.createResponse(apiMethod, properties);
-        } catch (ApiException ae) {
-            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, ae);
-        } catch (Throwable t) {
-            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, t);
-        }
-        return this.createResponse(responseObject);
-    }
-    
+			responseObject = responseBuilder.createResponse(apiMethod, properties);
+		} catch (ApiException ae) {
+			responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, ae);
+		} catch (Throwable t) {
+			responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, t);
+		}
+		return this.createResponse(responseObject);
+	}
+
 	@Override
-    protected Object buildPostPutResponse(String langCode, ApiMethod.HttpMethod httpMethod, 
-            String namespace, String resourceName, HttpServletRequest request, HttpServletResponse response, UriInfo ui, MediaType mediaType) {
-        Object responseObject = null;
-        try {
-            IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
-            Properties properties = this.extractRequestParameters(ui);
-            properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
-            ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
-			
+	protected Object buildPostPutResponse(String langCode, ApiMethod.HttpMethod httpMethod,
+			String namespace, String resourceName, HttpServletRequest request, UriInfo ui, MediaType mediaType) {
+		Object responseObject = null;
+		try {
+			IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
+			Properties properties = this.extractRequestParameters(ui);
+			properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
+			ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
+
 			String entandoApiToken = this.extractApiToken(request, ui);
 			if (null != entandoApiToken) {
 				this.extractTokenParameters(entandoApiToken, apiMethod, request, properties);
 			} else {
-				this.extractOAuthParameters(apiMethod, request, response, properties);
+				this.extractOAuthParameters(request, apiMethod.getRequiredPermission());
 			}
-            Class expectedType = apiMethod.getExpectedType();
-            Object bodyObject = null;
-            if (MediaType.APPLICATION_JSON_TYPE.equals(mediaType)) {
-                JSONProvider jsonProvider = new JSONProvider();
-                bodyObject = jsonProvider.readFrom(expectedType, expectedType.getGenericSuperclass(), 
-                        expectedType.getAnnotations(), mediaType, null, request.getInputStream());
-            } else {
-                JAXBContext context = JAXBContext.newInstance(expectedType);
-                Unmarshaller unmarshaller = context.createUnmarshaller();
-                bodyObject = (Object) unmarshaller.unmarshal(request.getInputStream());
-            }
-            responseObject = responseBuilder.createResponse(apiMethod, bodyObject, properties);
-        } catch (ApiException ae) {
-            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, ae);
-        } catch (Throwable t) {
-            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, t);
-        }
-        return this.createResponse(responseObject);
-    }
-    
+			Class expectedType = apiMethod.getExpectedType();
+			Object bodyObject = null;
+			if (MediaType.APPLICATION_JSON_TYPE.equals(mediaType)) {
+				JSONProvider jsonProvider = new JSONProvider();
+				bodyObject = jsonProvider.readFrom(expectedType, expectedType.getGenericSuperclass(),
+						expectedType.getAnnotations(), mediaType, null, request.getInputStream());
+			} else {
+				JAXBContext context = JAXBContext.newInstance(expectedType);
+				Unmarshaller unmarshaller = context.createUnmarshaller();
+				bodyObject = (Object) unmarshaller.unmarshal(request.getInputStream());
+			}
+			responseObject = responseBuilder.createResponse(apiMethod, bodyObject, properties);
+		} catch (ApiException ae) {
+			responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, ae);
+		} catch (Throwable t) {
+			responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, t);
+		}
+		return this.createResponse(responseObject);
+	}
+
 	private String extractApiToken(HttpServletRequest request, UriInfo ui) {
 		String token = request.getHeader(API_TOKEN_PARAM_NAME);
 		if (null != token && token.trim().length() > 0) {
@@ -139,37 +138,37 @@ public class ApiRestServer extends org.entando.entando.aps.system.services.api.s
 		}
 		return null;
 	}
-	
-	protected void extractTokenParameters(String entandoApiToken, ApiMethod apiMethod, 
+
+	protected void extractTokenParameters(String entandoApiToken, ApiMethod apiMethod,
 			HttpServletRequest request, Properties properties) throws ApiException, IOException, ServletException {
 		UserDetails user = null;
-        IApiTokenizerManager tokenizerManager = 
-                (IApiTokenizerManager) ApsWebApplicationUtils.getBean(JpTokenApiSystemConstants.TOKENIZER_MANAGER, request);
-        IAuthenticationProviderManager authenticationProvider = 
-                (IAuthenticationProviderManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER, request);
-        IAuthorizationManager authorizationManager = 
-                (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
-        try {
-            String username = tokenizerManager.getUser(entandoApiToken);
-            user = authenticationProvider.getUser(username);
-            if (null != user) {
-                properties.put(SystemConstants.API_USER_PARAMETER, user);
-            } else if (apiMethod.getRequiredAuth()) {
+		IApiTokenizerManager tokenizerManager
+				= (IApiTokenizerManager) ApsWebApplicationUtils.getBean(JpTokenApiSystemConstants.TOKENIZER_MANAGER, request);
+		IAuthenticationProviderManager authenticationProvider
+				= (IAuthenticationProviderManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER, request);
+		IAuthorizationManager authorizationManager
+				= (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
+		try {
+			String username = tokenizerManager.getUser(entandoApiToken);
+			user = authenticationProvider.getUser(username);
+			if (null != user) {
+				properties.put(SystemConstants.API_USER_PARAMETER, user);
+			} else if (apiMethod.getRequiredAuth()) {
 				throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Invalid or missing user for token '" + entandoApiToken + "'", Response.Status.UNAUTHORIZED);
 			}
-        } catch (Exception e) {
-            if (apiMethod.getRequiredAuth()) {
-                throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Authentication Required", Response.Status.UNAUTHORIZED);
-            }
-        }
-        if (null == user && (apiMethod.getRequiredAuth() || null != apiMethod.getRequiredPermission())) {
-            throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Authentication Required", Response.Status.UNAUTHORIZED);
-        } else if (null != user && null != apiMethod.getRequiredPermission() 
-                && !authorizationManager.isAuthOnPermission(user, apiMethod.getRequiredPermission())) {
-            throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, "Authorization Required", Response.Status.UNAUTHORIZED);
-        }
+		} catch (Exception e) {
+			if (apiMethod.getRequiredAuth()) {
+				throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Authentication Required", Response.Status.UNAUTHORIZED);
+			}
+		}
+		if (null == user && (apiMethod.getRequiredAuth() || null != apiMethod.getRequiredPermission())) {
+			throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Authentication Required", Response.Status.UNAUTHORIZED);
+		} else if (null != user && null != apiMethod.getRequiredPermission()
+				&& !authorizationManager.isAuthOnPermission(user, apiMethod.getRequiredPermission())) {
+			throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, "Authorization Required", Response.Status.UNAUTHORIZED);
+		}
 	}
-    
+
 	public static final String API_TOKEN_PARAM_NAME = "entandoApiToken";
-	
+
 }
