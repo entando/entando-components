@@ -40,32 +40,36 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.Idea;
 
 public class IdeaFrontCommentAction extends BaseAction {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(IdeaFrontCommentAction.class);
-	
+	private static final Logger _logger = LoggerFactory.getLogger(IdeaFrontCommentAction.class);
+
 	public IIdea getIdea(String code) {
 		IIdea idea = null;
 		try {
 			idea = this.getIdeaManager().getIdea(code);
-			if (null != idea && idea.getStatus() != IIdea.STATUS_APPROVED) return null;
+			if (null != idea && idea.getStatus() != IIdea.STATUS_APPROVED) {
+				return null;
+			}
 		} catch (Throwable t) {
 			_logger.error("error in getIdea", t);
 			throw new RuntimeException("Errore in caricamento idea " + code);
 		}
 		return idea;
 	}
-	
+
 	public IIdeaComment getComment(int id) {
 		IIdeaComment comment = null;
 		try {
 			comment = this.getIdeaCommentManager().getComment(id);
-			if (null != comment && comment.getStatus() != IIdea.STATUS_APPROVED) return null;
+			if (null != comment && comment.getStatus() != IIdea.STATUS_APPROVED) {
+				return null;
+			}
 		} catch (Throwable t) {
 			_logger.error("error in getComment", t);
 			throw new RuntimeException("Errore in caricamento commento " + id);
 		}
 		return comment;
 	}
-	
+
 	public String saveComment() {
 		try {
 			IdeaComment ideaComment = (IdeaComment) this.getIdeaComment();
@@ -82,7 +86,7 @@ public class IdeaFrontCommentAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public String entryComment() {
 		try {
 			this.setIdeaComment(null);
@@ -94,19 +98,22 @@ public class IdeaFrontCommentAction extends BaseAction {
 	}
 
 	/**
-	 * Restituisce solamente le categorie figlie del nodo principale associato la servizio
-	 * I nodi speciali sono definiti nel wrapper
+	 * Restituisce solamente le categorie figlie del nodo principale associato
+	 * la servizio I nodi speciali sono definiti nel wrapper
+	 *
+	 * @param idea
+	 * @return
 	 */
 	public List<Category> getSpecialCategories(Idea idea) {
 		List<Category> categories = new ArrayList<Category>();
-		List<String> commentCategories= idea.getTags();
+		List<String> commentCategories = idea.getTags();
 		if (null != commentCategories) {
 			Iterator<String> it = commentCategories.iterator();
 			while (it.hasNext()) {
 				Category cat = this.getCategoryManager().getCategory(it.next());
 				if (null != cat) {
 					String rootCode = this.getIdeaManager().getCategoryRoot();
-					if (cat.isChildOf(rootCode) && (null == cat.getChildren() || cat.getChildren().length == 0)) {
+					if (cat.isChildOf(rootCode) && (null == cat.getChildrenCodes() || cat.getChildrenCodes().length == 0)) {
 						categories.add(cat);
 					}
 				}
@@ -118,6 +125,7 @@ public class IdeaFrontCommentAction extends BaseAction {
 	public String getIdeaId() {
 		return ideaId;
 	}
+
 	public void setIdeaId(String ideaId) {
 		this.ideaId = ideaId;
 	}
@@ -125,6 +133,7 @@ public class IdeaFrontCommentAction extends BaseAction {
 	public void setIdeaComment(IdeaComment ideaComment) {
 		this._ideaComment = ideaComment;
 	}
+
 	public IdeaComment getIdeaComment() {
 		return _ideaComment;
 	}
@@ -132,6 +141,7 @@ public class IdeaFrontCommentAction extends BaseAction {
 	protected IIdeaManager getIdeaManager() {
 		return ideaManager;
 	}
+
 	public void setIdeaManager(IIdeaManager ideaManager) {
 		this.ideaManager = ideaManager;
 	}
@@ -139,6 +149,7 @@ public class IdeaFrontCommentAction extends BaseAction {
 	protected IIdeaCommentManager getIdeaCommentManager() {
 		return ideaCommentManager;
 	}
+
 	public void setIdeaCommentManager(IIdeaCommentManager ideaCommentManager) {
 		this.ideaCommentManager = ideaCommentManager;
 	}
@@ -146,6 +157,7 @@ public class IdeaFrontCommentAction extends BaseAction {
 	public void setCategoryManager(ICategoryManager categoryManager) {
 		this._categoryManager = categoryManager;
 	}
+
 	protected ICategoryManager getCategoryManager() {
 		return _categoryManager;
 	}
