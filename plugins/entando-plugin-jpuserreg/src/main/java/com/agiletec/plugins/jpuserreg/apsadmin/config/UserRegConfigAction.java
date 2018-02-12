@@ -71,21 +71,21 @@ public class UserRegConfigAction extends BaseAction {
 			Template template = templates.get(lang.getCode());
 			if (template == null) {
 				this.addFieldError(fieldName,
-						this.getText("jpuserreg.errors.templates.notValued", new String[]{this.getText(fieldName), lang.getDescr()}));
+						this.getText("jpuserreg.errors.templates.notValued", new String[] { this.getText(fieldName), lang.getDescr() }));
 			} else {
 				String subject = template.getSubject();
 				if (subject == null || subject.trim().length() == 0) {
 					this.addFieldError(
 							fieldName,
 							this.getText("jpuserreg.errors.templates.subject.notValued",
-									new String[]{this.getText(fieldName), lang.getDescr()}));
+									new String[] { this.getText(fieldName), lang.getDescr() }));
 				}
 				String body = template.getBody();
 				if (body == null || body.trim().length() == 0) {
 					this.addFieldError(
 							fieldName,
 							this.getText("jpuserreg.errors.templates.body.notValued",
-									new String[]{this.getText(fieldName), lang.getDescr()}));
+									new String[] { this.getText(fieldName), lang.getDescr() }));
 				}
 			}
 		}
@@ -103,7 +103,7 @@ public class UserRegConfigAction extends BaseAction {
 				if (null == groupName || null == getGroupManager().getGroup(groupName)
 						|| (roleName != null && null == this.getRoleManager().getRole(roleName))) {
 					this.addFieldError("config.defaultCsvAuthorizations",
-							this.getText("jpuserreg.errors.authority.invalid", new String[]{groupName, roleName}));
+							this.getText("jpuserreg.errors.authority.invalid", new String[] { groupName, roleName }));
 				}
 			}
 		}
@@ -221,13 +221,9 @@ public class UserRegConfigAction extends BaseAction {
 
 	protected void addPages(IPage page, List<IPage> pages) {
 		pages.add(page);
-		boolean isOnline = page.isOnline();
-		String[] children = page.getChildrenCodes();
+		IPage[] children = page.getChildren();
 		for (int i = 0; i < children.length; i++) {
-			IPage child = (isOnline)
-					? this.getPageManager().getOnlinePage(children[i])
-					: this.getPageManager().getDraftPage(children[i]);
-			this.addPages(child, pages);
+			this.addPages(children[i], pages);
 		}
 	}
 

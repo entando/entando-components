@@ -63,6 +63,7 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 			this.addFacet(requiredFacets, value);
 			index++;
 		}
+
 		Enumeration<String> paramNames = request.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = paramNames.nextElement();
@@ -74,10 +75,14 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 				}
 			}
 		}
+
 		String selectedNode = request.getParameter("selectedNode");
 		this.addFacet(requiredFacets, selectedNode);
+
 		this.removeSelections(requiredFacets);
+
 		this.manageCurrentSelect(selectedNode, requiredFacets);
+
 		return requiredFacets;
 	}
 
@@ -236,9 +241,7 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 		Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
 		Widget[] widgets = page.getWidgets();
 		for (int i = 0; i < widgets.length; i++) {
-			if (i == currentFrame.intValue()) {
-				continue;
-			}
+			if (i == currentFrame.intValue()) continue;
 			Widget widget = widgets[i];
 			String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_WIDGET_PARAM_NAME;
 			if (null != widget && null != widget.getConfig()

@@ -48,7 +48,7 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IIdeaManage
 
 public class IdeaTagListTag extends TagSupport {
 
-	private static final Logger _logger = LoggerFactory.getLogger(IdeaTagListTag.class);
+	private static final Logger _logger =  LoggerFactory.getLogger(IdeaTagListTag.class);
 
 	@Override
 	public int doStartTag() throws JspException {
@@ -57,7 +57,7 @@ public class IdeaTagListTag extends TagSupport {
 
 	@Override
 	public int doEndTag() throws JspException {
-		ServletRequest request = this.pageContext.getRequest();
+		ServletRequest request =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		try {
 			List<CategoryInfoBean> list = this.loadTags(reqCtx);
@@ -77,7 +77,12 @@ public class IdeaTagListTag extends TagSupport {
 			ICategoryManager categoryManager = (ICategoryManager) ApsWebApplicationUtils.getBean(SystemConstants.CATEGORY_MANAGER, this.pageContext);
 			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 			Map<String, Integer> fullList = ideaManager.getIdeaTags(IIdea.STATUS_APPROVED);
+
+			//boolean filterByRootNode = null != this.getOnlyCrawdSourcingNode() && this.getOnlyCrawdSourcingNode().equalsIgnoreCase("true");
 			boolean filterByRootNode = null != this.getCategoryFilterType() && (this.getCategoryFilterType().equals("tag") || this.getCategoryFilterType().equals("cloudTag"));
+			
+			
+			
 			boolean onlyLeaf = null != this.getOnlyLeaf() && this.getOnlyLeaf().equalsIgnoreCase("true");
 			String serviceCatagoryRoot = null;
 			if (filterByRootNode) {
@@ -87,7 +92,7 @@ public class IdeaTagListTag extends TagSupport {
 					_logger.warn("Invalid parameter for 'CategoryFilterType' with value {}. Allowed values are 'tag' or 'tagCloud'", this.getCategoryFilterType());
 					filterByRootNode = false;
 				}
-
+				
 			}
 			Iterator<String> it = fullList.keySet().iterator();
 			while (it.hasNext()) {
@@ -104,7 +109,7 @@ public class IdeaTagListTag extends TagSupport {
 							okForRoot = true;
 						}
 						if (onlyLeaf) {
-							if (null == cat.getChildrenCodes() || cat.getChildrenCodes().length == 0) {
+							if (null == cat.getChildren() || cat.getChildren().length == 0) {
 								okForLeaf = true;
 							} else {
 								okForLeaf = false;
@@ -139,7 +144,6 @@ public class IdeaTagListTag extends TagSupport {
 	public void setVar(String var) {
 		this._var = var;
 	}
-
 	public String getVar() {
 		return _var;
 	}
@@ -147,7 +151,6 @@ public class IdeaTagListTag extends TagSupport {
 	public void setOnlyLeaf(String onlyLeaf) {
 		this._onlyLeaf = onlyLeaf;
 	}
-
 	public String getOnlyLeaf() {
 		return _onlyLeaf;
 	}
@@ -155,11 +158,10 @@ public class IdeaTagListTag extends TagSupport {
 	public void setCategoryFilterType(String categoryFilterType) {
 		this._categoryFilterType = categoryFilterType;
 	}
-
 	public String getCategoryFilterType() {
 		return _categoryFilterType;
 	}
-
+	
 	private String _var;
 	private String _onlyLeaf;
 	private String _categoryFilterType;

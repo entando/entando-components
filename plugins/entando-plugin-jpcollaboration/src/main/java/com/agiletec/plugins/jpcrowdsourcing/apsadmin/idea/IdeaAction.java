@@ -38,18 +38,19 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.IId
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.ideainstance.IdeaInstance;
 import com.agiletec.plugins.jpcrowdsourcing.apsadmin.util.SmallCategory;
 
-public class IdeaAction extends BaseAction {
+public class IdeaAction extends BaseAction implements IIdeaAction {
 
-	private static final Logger _logger = LoggerFactory.getLogger(IdeaAction.class);
+	private static final Logger _logger =  LoggerFactory.getLogger(IdeaAction.class);
 
 	public Category getCategoryRoot() {
-		return this.getCategoryManager().getRoot();
+		return (Category) this.getCategoryManager().getRoot();
 	}
 
 	public Category getCategory(String code) {
-		return this.getCategoryManager().getCategory(code);
+		return (Category) this.getCategoryManager().getCategory(code);
 	}
 
+	@Override
 	public String edit() {
 		try {
 			Idea idea = (Idea) this.getIdeaManager().getIdea(this.getIdeaId());
@@ -65,6 +66,7 @@ public class IdeaAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String save() {
 		try {
 			IIdea idea = this.getIdea();
@@ -76,9 +78,10 @@ public class IdeaAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String joinCategory() {
 		try {
-			Idea idea = this.getIdea();
+			Idea idea =  this.getIdea();
 			String categoryCode = this.getTag();
 			Category category = this.getCategoryManager().getCategory(categoryCode);
 			if (null != category && !category.getCode().equals(category.getParentCode()) && !idea.getTags().contains(category.getCode())) {
@@ -91,9 +94,10 @@ public class IdeaAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String removeCategory() {
 		try {
-			Idea idea = this.getIdea();
+			Idea idea =  this.getIdea();
 			String categoryCode = this.getTag();
 			Category category = this.getCategoryManager().getCategory(categoryCode);
 			if (null != category) {
@@ -122,8 +126,8 @@ public class IdeaAction extends BaseAction {
 	private List<SmallCategory> getCategoryLeaf(String nodeRootCode, String langCode, boolean completeTitle) {
 		List<SmallCategory> categories = new ArrayList<SmallCategory>();
 		try {
-			Category root = this.getCategoryManager().getCategory(nodeRootCode);
-			this.addSmallCategory(categories, root, langCode, completeTitle);
+			Category root = (Category) this.getCategoryManager().getCategory(nodeRootCode);
+			this.addSmallCategory(categories, root, langCode, completeTitle, true);
 		} catch (Throwable t) {
 			_logger.error("Errore loading categories leafs", t);
 			throw new RuntimeException("Errore loading categories leafs");
@@ -131,14 +135,9 @@ public class IdeaAction extends BaseAction {
 		return categories;
 	}
 
-	private void addSmallCategory(List<SmallCategory> categories, Category parentCat, String langCode, boolean completeTitle) {
-		String[] childrenCodes = parentCat.getChildrenCodes();
-		if (null == childrenCodes) {
-			return;
-		}
-		for (int i = 0; i < childrenCodes.length; i++) {
-			Category cat = this.getCategory(childrenCodes[i]);
-			if (null == cat.getChildrenCodes() || cat.getChildrenCodes().length == 0) {
+	private void addSmallCategory(List<SmallCategory> categories, Category parentCat, String langCode,  boolean completeTitle, boolean isFirst) {
+		for (Category cat : parentCat.getChildren()) {
+			if (null == cat.getChildren() || cat.getChildren().length == 0) {
 				SmallCategory catSmall = new SmallCategory();
 				catSmall.setCode(cat.getCode());
 				if (!completeTitle) {
@@ -148,10 +147,11 @@ public class IdeaAction extends BaseAction {
 				}
 				categories.add(catSmall);
 			}
-			this.addSmallCategory(categories, cat, langCode, completeTitle);
+			this.addSmallCategory(categories, cat, langCode, completeTitle, false);
 		}
 	}
 
+	@Override
 	public IIdea getIdea(String code) {
 		IIdea idea = null;
 		try {
@@ -187,7 +187,6 @@ public class IdeaAction extends BaseAction {
 	public void setIdea(Idea idea) {
 		this._idea = idea;
 	}
-
 	public Idea getIdea() {
 		return _idea;
 	}
@@ -195,7 +194,6 @@ public class IdeaAction extends BaseAction {
 	public void setIdeaId(String ideaId) {
 		this._ideaId = ideaId;
 	}
-
 	public String getIdeaId() {
 		return _ideaId;
 	}
@@ -203,7 +201,6 @@ public class IdeaAction extends BaseAction {
 	public void setTag(String tag) {
 		this._tag = tag;
 	}
-
 	public String getTag() {
 		return _tag;
 	}
@@ -211,7 +208,6 @@ public class IdeaAction extends BaseAction {
 	public void setCategoryManager(ICategoryManager categoryManager) {
 		this._categoryManager = categoryManager;
 	}
-
 	protected ICategoryManager getCategoryManager() {
 		return _categoryManager;
 	}
@@ -219,7 +215,6 @@ public class IdeaAction extends BaseAction {
 	public void setIdeaManager(IIdeaManager ideaManager) {
 		this._ideaManager = ideaManager;
 	}
-
 	protected IIdeaManager getIdeaManager() {
 		return _ideaManager;
 	}
@@ -227,7 +222,6 @@ public class IdeaAction extends BaseAction {
 	protected IIdeaInstanceManager getIdeaInstanceManager() {
 		return _ideaInstanceManager;
 	}
-
 	public void setIdeaInstanceManager(IIdeaInstanceManager ideaInstanceManager) {
 		this._ideaInstanceManager = ideaInstanceManager;
 	}
@@ -238,5 +232,6 @@ public class IdeaAction extends BaseAction {
 	private Idea _idea;
 	private String _tag;
 	private ICategoryManager _categoryManager;
+
 
 }
