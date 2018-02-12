@@ -11,6 +11,7 @@
 			parent="abstractService" >
 		<property name="userManager" ref="UserManager" />
 		<property name="authorizationManager" ref="AuthorizationManager" />
+		<property name="tokenManager" ref="OAuth2TokenManager" />
 	</bean>
 	
 	<bean id="jpcasclient_CasClientConfigManager" class="com.agiletec.plugins.jpcasclient.aps.system.services.config.CasClientConfigManager" parent="abstractService" >

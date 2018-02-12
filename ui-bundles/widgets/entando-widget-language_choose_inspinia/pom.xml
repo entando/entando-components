@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando.entando.bundles</groupId>
         <artifactId>entando-bundles-parent</artifactId>
-        <version>4.3.2-SNAPSHOT</version>
+        <version>4.3.2-RC1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-widget-language_choose_inspinia</artifactId>
