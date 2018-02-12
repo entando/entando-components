@@ -28,10 +28,11 @@ import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.CrowdSourcingConfig;
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IIdeaManager;
 
-public class CrowdSourcingConfigAction extends BaseAction {
+public class CrowdSourcingConfigAction extends BaseAction implements ICrowdSourcingConfigAction {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(CrowdSourcingConfigAction.class);
 
+	@Override
 	public String entryConfig() {
 		try {
 			CrowdSourcingConfig config = this.getIdeaManager().getConfig();
@@ -48,6 +49,7 @@ public class CrowdSourcingConfigAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String saveConfig() {
 		try {
 			CrowdSourcingConfig config = new CrowdSourcingConfig();

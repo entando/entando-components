@@ -34,10 +34,11 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.comment.IIdeaCom
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IIdea;
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IIdeaManager;
 
-public class IdeaCommentFinderAction extends BaseAction {
+public class IdeaCommentFinderAction extends BaseAction implements IIdeaCommentFinderAction {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(IdeaCommentFinderAction.class);
 
+	@Override
 	public List<Integer> getComments() {
 		List<Integer> list = new ArrayList<Integer>();
 		try {
@@ -49,6 +50,7 @@ public class IdeaCommentFinderAction extends BaseAction {
 		return list;
 	}
 
+	@Override
 	public IIdeaComment getComment(int id) {
 		IIdeaComment comment = null;
 		try {
@@ -60,6 +62,7 @@ public class IdeaCommentFinderAction extends BaseAction {
 		return comment;
 	}
 
+	@Override
 	public IIdea getIdea(String ideaId) {
 		IIdea idea = null;
 		try {
@@ -71,6 +74,7 @@ public class IdeaCommentFinderAction extends BaseAction {
 		return idea;
 	}
 
+	@Override
 	public String view() {
 		try {
 			IIdeaComment comment = this.getIdeaCommentManager().getComment(this.getCommentId());
@@ -85,6 +89,7 @@ public class IdeaCommentFinderAction extends BaseAction {
 		return SUCCESS;
 	}
 	
+	@Override
 	public String changeStatus() {
 		try {
 			IIdeaComment comment = this.getIdeaCommentManager().getComment(this.getCommentId());
@@ -101,6 +106,7 @@ public class IdeaCommentFinderAction extends BaseAction {
 		return SUCCESS;
 	}
 	
+	@Override
 	public String delete() {
 		try {
 			IIdeaComment comment = this.getIdeaCommentManager().getComment(this.getCommentId());
@@ -118,6 +124,7 @@ public class IdeaCommentFinderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String trash() {
 		try {
 			IIdeaComment comment = this.getIdeaCommentManager().getComment(this.getCommentId());
