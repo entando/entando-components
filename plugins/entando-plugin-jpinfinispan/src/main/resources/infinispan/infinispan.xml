@@ -9,54 +9,67 @@
 			<eviction strategy="LIRS" max-entries="1000000" />
 		</local-cache>
 		<local-cache name="Entando_PageManager">
-			<eviction strategy="LIRS" max-entries="10000" />
+			<!-- <eviction strategy="NONE" max-entries="10000" /> -->
 		</local-cache>
 		<local-cache name="Entando_PageModelManager">
-			<eviction strategy="LIRS" max-entries="1000" />
+			<!-- <eviction strategy="NONE" max-entries="1000" /> -->
 		</local-cache>
 		<local-cache name="Entando_WidgetTypeManager">
-			<eviction strategy="LIRS" max-entries="1000" />
+			<!-- <eviction strategy="NONE" max-entries="1000" /> -->
 		</local-cache>
 		<local-cache name="Entando_CategoryManager">
-			<eviction strategy="LIRS" max-entries="10000" />
+			<!-- <eviction strategy="NONE" max-entries="10000" /> -->
 		</local-cache>
 		<local-cache name="Entando_ConfigManager">
-			<eviction strategy="LIRS" max-entries="100" />
+			<!-- <eviction strategy="NONE" max-entries="100" /> -->
 		</local-cache>
 		<local-cache name="Entando_RoleManager">
-			<eviction strategy="LIRS" max-entries="200" />
+			<!-- <eviction strategy="NONE" max-entries="200" /> -->
 		</local-cache>
 		<local-cache name="Entando_GroupManager">
-			<eviction strategy="LIRS" max-entries="100" />
+			<!-- <eviction strategy="NONE" max-entries="100" /> -->
 		</local-cache>
 		<local-cache name="Entando_LangManager">
-			<eviction strategy="LIRS" max-entries="10" />
+			<!-- <eviction strategy="NONE" max-entries="10" /> -->
 		</local-cache>
 		<local-cache name="Entando_CacheInfoManager">
-			<eviction strategy="LIRS" max-entries="10" />
+			<!-- <eviction strategy="NONE" max-entries="10" /> -->
 		</local-cache>
 		<local-cache name="Entando_I18nManager">
-			<eviction strategy="LIRS" max-entries="1000" />
+			<!-- <eviction strategy="NONE" max-entries="1000" /> -->
 		</local-cache>
 		<local-cache name="Entando_ApiCatalogManager">
-			<eviction strategy="LIRS" max-entries="200" />
+			<!-- <eviction strategy="NONE" max-entries="200" /> -->
 		</local-cache>
 		<local-cache name="Entando_InitializerManager">
-			<eviction strategy="LIRS" max-entries="10" />
+			<!-- <eviction strategy="NONE" max-entries="10" /> -->
+		</local-cache>
+		
+		<local-cache name="Entando_DataObjectManager">
 		</local-cache>
 		<local-cache name="Entando_DataObjectModelManager">
-			<eviction strategy="LIRS" max-entries="100" />
+			<!-- <eviction strategy="NONE" max-entries="100" /> -->
+		</local-cache>
+		<local-cache name="Entando_DataObjectPageMapperManager">
+		</local-cache>
+		
+		<local-cache name="Entando_UserProfileManager">
+		</local-cache>
+		
+		<local-cache name="Entando_jacmsContentManager">
 		</local-cache>
 		<local-cache name="Entando_ContentModelManager">
-			<eviction strategy="LIRS" max-entries="100" />
+			<!-- <eviction strategy="NONE" max-entries="100" /> -->
 		</local-cache>
-		<local-cache name="Entando_KeyGeneratorManager">
-			<eviction strategy="LIRS" max-entries="1" />
+		<local-cache name="Entando_ContentPageMapperManager">
 		</local-cache>
 		<local-cache name="Entando_ResourceManager">
-			<eviction strategy="LIRS" max-entries="1" />
+			<!-- <eviction strategy="NONE" max-entries="1" /> -->
+		</local-cache>
+		
+		<local-cache name="Entando_KeyGeneratorManager">
+			<!-- <eviction strategy="NONE" max-entries="1" /> -->
 		</local-cache>
 	</cache-container>
 	
 </infinispan>
-
