@@ -41,10 +41,9 @@ public class TestCasClientAuthenticatorControlService extends ApsPluginBaseTestC
 
 	@Override
 	protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+		super.setUp();
+		this.init();
+	}
 
 	public void test_no_auth() {
 		RequestContext reqCtx = this.getRequestContext();
@@ -76,7 +75,6 @@ public class TestCasClientAuthenticatorControlService extends ApsPluginBaseTestC
 		assertEquals(SystemConstants.GUEST_USER_NAME, currentUser.getUsername());
 	}
 
-
 	public void test_cas_auth_authFailure() throws ApsSystemException {
 		RequestContext reqCtx = this.getRequestContext();
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
@@ -92,17 +90,13 @@ public class TestCasClientAuthenticatorControlService extends ApsPluginBaseTestC
 	}
 
 	private void init() throws Exception {
-        try {
-        	this._authenticator = (CasClientAuthenticatorControlService) this.getApplicationContext().getBean("AuthenticatorControlService");
-        } catch (Throwable e) {
-            throw new Exception(e);
-        }
-    }
+		try {
+			this._authenticator = (CasClientAuthenticatorControlService) this.getApplicationContext().getBean("AuthenticatorControlService");
+		} catch (Throwable e) {
+			throw new Exception(e);
+		}
+	}
 
 	private CasClientAuthenticatorControlService _authenticator;
-
-
-
-
 
 }

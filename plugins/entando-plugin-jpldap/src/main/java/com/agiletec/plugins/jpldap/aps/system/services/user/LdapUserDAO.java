@@ -58,205 +58,208 @@ import sun.misc.BASE64Encoder;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.IApsEncrypter;
 import com.agiletec.plugins.jpldap.aps.system.LdapSystemConstants;
 import com.agiletec.plugins.jpldap.aps.system.services.user.tls.MyTLSHostnameVerifier;
 import com.agiletec.plugins.jpldap.aps.system.services.user.tls.MyX509TrustManager;
 
 /**
  * The Data Access Object for LdapUser.
+ *
  * @author E.Santoboni
  */
 public class LdapUserDAO implements ILdapUserDAO {
 
-	private static final Logger _logger = LoggerFactory.getLogger(LdapUserDAO.class);
-	
+    private static final Logger _logger = LoggerFactory.getLogger(LdapUserDAO.class);
+
     @Override
-	public void addUser(UserDetails user) {
-		this.checkDn();
-		DirContext dirCtx = null;
-		try {
-			dirCtx = this.getDirContext();
-			Attributes attrs = this.createNewEntry(user);
-			dirCtx.createSubcontext(this.getEntryName(user), attrs);
-		} catch (ConnectException e) {
-			_logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
+    public void addUser(UserDetails user) {
+        this.checkDn();
+        DirContext dirCtx = null;
+        try {
+            dirCtx = this.getDirContext();
+            Attributes attrs = this.createNewEntry(user);
+            dirCtx.createSubcontext(this.getEntryName(user), attrs);
+        } catch (ConnectException e) {
+            _logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
         } catch (CommunicationException e) {
-         	_logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
+            _logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
         } catch (PartialResultException e) {
-        	_logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
+            _logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
         } catch (Throwable t) {
             throw new RuntimeException("Error while adding user '" + user.getUsername() + "'", t);
         } finally {
-			this.closeDirContext(dirCtx);
-		}
-	}
-	
-	private void checkDn() {
+            this.closeDirContext(dirCtx);
+        }
+    }
+
+    private void checkDn() {
         DirContext dirCtx = null;
-		Context result = null;
-		try {
-			String filterExpr = "(&(" + this.getBaseDn() + "))";
+        Context result = null;
+        try {
+            String filterExpr = "(&(" + this.getBaseDn() + "))";
             SearchResult sr = this.search(filterExpr);
             if (sr != null) {
                 return;
             }
             dirCtx = this.getDirContext();
-			Attributes attrs = new BasicAttributes(true); // case-ignore
-			Attribute objclass = new BasicAttribute("objectClass");
-			String[] classes = this.getOuObjectClasses();
-			//if (null == classes) {
-			//	classes = new String[]{"organizationalUnit", "top"};
-			//}
-			for (int i = 0; i < classes.length; i++) {
-				objclass.add(classes[i]);
-			}
-			attrs.put(objclass);
-			result = dirCtx.createSubcontext(this.getBaseDn(), attrs);
-		} catch (ConnectException e) {
-			_logger.error("Error while adding new OU : Directory not available", e);
+            Attributes attrs = new BasicAttributes(true); // case-ignore
+            Attribute objclass = new BasicAttribute("objectClass");
+            String[] classes = this.getOuObjectClasses();
+            //if (null == classes) {
+            //	classes = new String[]{"organizationalUnit", "top"};
+            //}
+            for (int i = 0; i < classes.length; i++) {
+                objclass.add(classes[i]);
+            }
+            attrs.put(objclass);
+            result = dirCtx.createSubcontext(this.getBaseDn(), attrs);
+        } catch (ConnectException e) {
+            _logger.error("Error while adding new OU : Directory not available", e);
         } catch (CommunicationException e) {
-        	_logger.error("Error while adding new OU : Directory not available", e);
+            _logger.error("Error while adding new OU : Directory not available", e);
         } catch (PartialResultException e) {
-        	_logger.error("Error while adding new OU : Directory not available", e);
+            _logger.error("Error while adding new OU : Directory not available", e);
         } catch (Throwable t) {
-        	_logger.error("Error while adding new OU.", t);
+            _logger.error("Error while adding new OU.", t);
             throw new RuntimeException("Error while adding new OU ", t);
         } finally {
-			if (null != result) {
-				try {
-					result.close();
-				} catch (NamingException ex) {}
-			}
-			this.closeDirContext(dirCtx);
-		}
+            if (null != result) {
+                try {
+                    result.close();
+                } catch (NamingException ex) {
+                }
+            }
+            this.closeDirContext(dirCtx);
+        }
     }
-	
-	private Attributes createNewEntry(UserDetails user) {
-		Attributes attrs = new BasicAttributes(true);
-		Attribute oc = new BasicAttribute("objectClass");
-		String[] classes = this.getUserObjectClasses();
-		//if (null == classes) {
-		//	classes = new String[]{this.getUserObjectClass(), "top"};
-		//}
-		for (int i = 0; i < classes.length; i++) {
-			oc.add(classes[i]);
-		}
+
+    private Attributes createNewEntry(UserDetails user) {
+        Attributes attrs = new BasicAttributes(true);
+        Attribute oc = new BasicAttribute("objectClass");
+        String[] classes = this.getUserObjectClasses();
+        //if (null == classes) {
+        //	classes = new String[]{this.getUserObjectClass(), "top"};
+        //}
+        for (int i = 0; i < classes.length; i++) {
+            oc.add(classes[i]);
+        }
         attrs.put(oc);
-		Attribute cn = new BasicAttribute(this.getUserRealAttributeName(), user.getUsername());
-		String sEncrypted = this.encryptLdapPassword(user.getPassword());
+        Attribute cn = new BasicAttribute(this.getUserRealAttributeName(), user.getUsername());
+        String sEncrypted = this.encryptLdapPassword(user.getPassword());
         Attribute password = new BasicAttribute(this.getUserPasswordAttributeName(), sEncrypted);
         Attribute uid = new BasicAttribute(this.getUserIdAttributeName(), user.getUsername());
         attrs.put(cn);
         attrs.put(password);
         attrs.put(uid);
         return attrs;
-	}
-	
-	private String encryptLdapPassword(String password) {
-		String sEncrypted = password;
-		if ((password != null) && (password.length() > 0)) {
-			String algorithm = this.getUserPasswordAlgorithm().toUpperCase();
-			if (algorithm.equalsIgnoreCase(LdapSystemConstants.USER_PASSWORD_ALGORITHM_MD5) 
-					|| algorithm.equalsIgnoreCase(LdapSystemConstants.USER_PASSWORD_ALGORITHM_SHA)) {
-				try {
-					MessageDigest md = MessageDigest.getInstance(algorithm);
-					md.update(password.getBytes("UTF-8"));
-					sEncrypted = "{" + algorithm + "}" + (new BASE64Encoder()).encode(md.digest());
-				} catch (Exception e) {
-					sEncrypted = password;
-					_logger.error("Error while encrypting Ldap Password", e);
-				}
-			}
-		}
-		return sEncrypted;
-	}
-	
-	private String getEntryName(UserDetails user) {
-		StringBuilder entryName = new StringBuilder();
-		entryName.append(this.getUserIdAttributeName()).append("=").append(user.getUsername());
-		String baseDN = this.getBaseDn();
-		if (null != baseDN && baseDN.trim().length() > 0) {
-			entryName.append(",").append(baseDN);
-		}
-		return entryName.toString();
-	}
-    
+    }
+
+    private String encryptLdapPassword(String password) {
+        String sEncrypted = password;
+        if ((password != null) && (password.length() > 0)) {
+            String algorithm = this.getUserPasswordAlgorithm().toUpperCase();
+            if (algorithm.equalsIgnoreCase(LdapSystemConstants.USER_PASSWORD_ALGORITHM_MD5)
+                    || algorithm.equalsIgnoreCase(LdapSystemConstants.USER_PASSWORD_ALGORITHM_SHA)) {
+                try {
+                    MessageDigest md = MessageDigest.getInstance(algorithm);
+                    md.update(password.getBytes("UTF-8"));
+                    sEncrypted = "{" + algorithm + "}" + (new BASE64Encoder()).encode(md.digest());
+                } catch (Exception e) {
+                    sEncrypted = password;
+                    _logger.error("Error while encrypting Ldap Password", e);
+                }
+            }
+        }
+        return sEncrypted;
+    }
+
+    private String getEntryName(UserDetails user) {
+        StringBuilder entryName = new StringBuilder();
+        entryName.append(this.getUserIdAttributeName()).append("=").append(user.getUsername());
+        String baseDN = this.getBaseDn();
+        if (null != baseDN && baseDN.trim().length() > 0) {
+            entryName.append(",").append(baseDN);
+        }
+        return entryName.toString();
+    }
+
     @Override
     public void deleteUser(String username) {
-		SearchResult res = this.searchUserByFilterExpr(username);
-		if (res != null) {
-			this.removeEntry(res.getName());
-		}
+        SearchResult res = this.searchUserByFilterExpr(username);
+        if (res != null) {
+            this.removeEntry(res.getName());
+        }
     }
-    
+
     @Override
     public void deleteUser(UserDetails user) {
         this.deleteUser(user.getUsername());
     }
-	
-	private void removeEntry(String uid) {
-		DirContext dirCtx = null;
-		try {
-			dirCtx = this.getDirContext();
-			dirCtx.destroySubcontext(uid);
-		} catch (ConnectException e) {
+
+    private void removeEntry(String uid) {
+        DirContext dirCtx = null;
+        try {
+            dirCtx = this.getDirContext();
+            dirCtx.destroySubcontext(uid);
+        } catch (ConnectException e) {
             _logger.error("Error while deleting user '{}' : Directory not available", uid, e);
         } catch (CommunicationException e) {
-        	_logger.error("Error while deleting user '{}' : Directory not available", uid, e);
+            _logger.error("Error while deleting user '{}' : Directory not available", uid, e);
         } catch (PartialResultException e) {
-        	_logger.error("Error while deleting user '{}' : Directory not available", uid, e);
+            _logger.error("Error while deleting user '{}' : Directory not available", uid, e);
         } catch (Throwable t) {
-        	_logger.error("Error while deleting user '{}'", t);
+            _logger.error("Error while deleting user '{}'", t);
             throw new RuntimeException("Error while deleting user '" + uid + "'", t);
         } finally {
             closeDirContext(dirCtx);
         }
-	}
-    
+    }
+
     @Override
     public void updateUser(UserDetails user) {
         this.updateUser(user.getUsername(), user.getPassword());
     }
-    
+
     @Override
     public void changePassword(String username, String password) {
         this.updateUser(username, password);
     }
-	
-	private void updateUser(String username, String password) {
-		SearchResult res = this.searchUserByFilterExpr(username);
-		if (res != null) {
-			ModificationItem[] mods = new ModificationItem[1];
-			String sEncrypted = this.encryptLdapPassword(password);
-			mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
-					new BasicAttribute(this.getUserPasswordAttributeName(), sEncrypted));
-			this.editEntry(res.getName(), mods);
-		}
-	}
-	
-	protected void editEntry(String uid, ModificationItem[] mods) {
-		DirContext dirCtx = null;
-		try {
-			dirCtx = this.getDirContext();
-			dirCtx.modifyAttributes(uid, mods);
-		} catch (ConnectException e) {
-			_logger.error("Error while editing user '{}' : Directory not available", uid, e);
+
+    private void updateUser(String username, String password) {
+        SearchResult res = this.searchUserByFilterExpr(username);
+        if (res != null) {
+            ModificationItem[] mods = new ModificationItem[1];
+            String sEncrypted = this.encryptLdapPassword(password);
+            mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+                    new BasicAttribute(this.getUserPasswordAttributeName(), sEncrypted));
+            this.editEntry(res.getName(), mods);
+        }
+    }
+
+    protected void editEntry(String uid, ModificationItem[] mods) {
+        DirContext dirCtx = null;
+        try {
+            dirCtx = this.getDirContext();
+            dirCtx.modifyAttributes(uid, mods);
+        } catch (ConnectException e) {
+            _logger.error("Error while editing user '{}' : Directory not available", uid, e);
         } catch (CommunicationException e) {
-        	_logger.error("Error while editing user '{}' : Directory not available", uid, e);
+            _logger.error("Error while editing user '{}' : Directory not available", uid, e);
         } catch (PartialResultException e) {
-        	_logger.error("Error while editing user '{}' : Directory not available", uid, e);
+            _logger.error("Error while editing user '{}' : Directory not available", uid, e);
         } catch (Throwable t) {
             throw new RuntimeException("Error while editing user '" + uid + "'", t);
         } finally {
             closeDirContext(dirCtx);
         }
-	}
-    
+    }
+
     @Override
     public void updateLastAccess(String username) {
         ApsSystemUtils.getLogger().error("Method not supported");
     }
-    
+
     @Override
     public UserDetails loadUser(String username, String password) {
         boolean isAuth = this.isAuth(username, password);
@@ -267,7 +270,7 @@ public class LdapUserDAO implements ILdapUserDAO {
         }
         return null;
     }
-    
+
     @Override
     public UserDetails loadUser(String username) {
         LdapUser user = null;
@@ -279,17 +282,17 @@ public class LdapUserDAO implements ILdapUserDAO {
             Attributes attrs = sr.getAttributes();
             user = this.createUserFromAttributes(attrs);
         } catch (Throwable t) {
-        	_logger.error("Error loading user {}", username, t);
+            _logger.error("Error loading user {}", username, t);
             throw new RuntimeException("Error loading user " + username, t);
         }
         return user;
     }
-    
+
     protected SearchResult searchUserByFilterExpr(String uid) {
         String filterExpr = "(&(objectClass=" + this.getUserObjectClass() + ")(" + this.getUserIdAttributeName() + "=" + uid + ")" + this.getFilterGroupBlock() + ")";
         return search(filterExpr);
     }
-    
+
     private SearchResult search(String filterExpr) {
         SearchResult res = null;
         DirContext dirCtx = null;
@@ -302,11 +305,11 @@ public class LdapUserDAO implements ILdapUserDAO {
                 res = answer.next();
             }
         } catch (ConnectException e) {
-        	_logger.error("Extracting SearchResult : Directory not available", e);
+            _logger.error("Extracting SearchResult : Directory not available", e);
         } catch (CommunicationException e) {
-        	_logger.error("Extracting SearchResult : Directory not available", e);
+            _logger.error("Extracting SearchResult : Directory not available", e);
         } catch (PartialResultException e) {
-        	_logger.error("Extracting SearchResult : Directory not available", e);
+            _logger.error("Extracting SearchResult : Directory not available", e);
         } catch (Throwable t) {
             throw new RuntimeException("Error extracting serach result ", t);
         } finally {
@@ -314,7 +317,7 @@ public class LdapUserDAO implements ILdapUserDAO {
         }
         return res;
     }
-    
+
     protected boolean isAuth(String username, String password) {
         Logger log = ApsSystemUtils.getLogger();
         boolean isAuth = false;
@@ -349,32 +352,32 @@ public class LdapUserDAO implements ILdapUserDAO {
             }
             answer.close();
         } catch (ConnectException e) {
-        	_logger.error("Directory not available", e);
+            _logger.error("Directory not available", e);
         } catch (CommunicationException e) {
-        	_logger.error("Directory not available", e);
+            _logger.error("Directory not available", e);
         } catch (NamingException e) {
-        	_logger.error("user authentication '{}' : Directory not available", username, e);
+            _logger.error("user authentication '{}' : Directory not available", username, e);
         } catch (Throwable t) {
-        	_logger.error("Error verifying user authentication {}", username, t);
+            _logger.error("Error verifying user authentication {}", username, t);
             throw new RuntimeException("Error verifying user authentication " + username, t);
         } finally {
             this.closeDirContext(dirCtx);
         }
         return isAuth;
     }
-    
+
     @Override
     public List<UserDetails> loadUsers() {
         String filterExpr = "(&(objectClass=" + this.getUserObjectClass() + ")(" + this.getUserIdAttributeName() + "=*)" + this.getFilterGroupBlock() + ")";
         return this.searchUsersByFilterExpr(filterExpr);
     }
-    
+
     @Override
     public List<String> loadUsernames() {
         String filterExpr = "(&(objectClass=" + this.getUserObjectClass() + ")(" + this.getUserIdAttributeName() + "=*)" + this.getFilterGroupBlock() + ")";
         return this.searchUsernamesByFilterExpr(filterExpr);
     }
-    
+
     protected LdapUser createUserFromAttributes(Attributes attrs) throws NamingException {
         LdapUser user = new LdapUser();
         String username = (String) attrs.get(this.getUserIdAttributeName()).get(0);
@@ -387,25 +390,25 @@ public class LdapUserDAO implements ILdapUserDAO {
         user.setAttributes(attrs);
         return user;
     }
-    
+
     @Override
     public List<UserDetails> searchUsers(String text) {
-		if (null == text || text.trim().length() == 0) {
-			return loadUsers();
-		}
+        if (null == text || text.trim().length() == 0) {
+            return loadUsers();
+        }
         String filterExpr = "(&(objectClass=" + this.getUserObjectClass() + ")" + this.getFilterGroupBlock() + "(|(" + this.getUserIdAttributeName() + "=*" + text + "*)(cn=*" + text + "*)))";
         return this.searchUsersByFilterExpr(filterExpr);
     }
-    
+
     @Override
     public List<String> searchUsernames(String text) {
         if (null == text || text.trim().length() == 0) {
-			return loadUsernames();
-		}
+            return loadUsernames();
+        }
         String filterExpr = "(&(objectClass=" + this.getUserObjectClass() + ")" + this.getFilterGroupBlock() + "(|(" + this.getUserIdAttributeName() + "=*" + text + "*)(cn=*" + text + "*)))";
         return this.searchUsernamesByFilterExpr(filterExpr);
     }
-    
+
     protected String getFilterGroupBlock() {
         String block = "";
         String filterGroup = this.getFilterGroup();
@@ -414,7 +417,7 @@ public class LdapUserDAO implements ILdapUserDAO {
         }
         return block;
     }
-    
+
     protected List<String> searchUsernamesByFilterExpr(String filterExpr) {
         List<String> usernames = new ArrayList<String>();
         DirContext dirCtx = null;
@@ -431,23 +434,23 @@ public class LdapUserDAO implements ILdapUserDAO {
             while (answer.hasMore()) {
                 SearchResult res = answer.next();
                 Attributes attrs = res.getAttributes();
-				usernames.add((String) attrs.get(this.getUserIdAttributeName()).get(0));
+                usernames.add((String) attrs.get(this.getUserIdAttributeName()).get(0));
             }
         } catch (ConnectException e) {
-        	_logger.error("Error loading users : Directory not available", e);
+            _logger.error("Error loading users : Directory not available", e);
         } catch (CommunicationException e) {
-        	_logger.error("Error loading users : Directory not available", e);
+            _logger.error("Error loading users : Directory not available", e);
         } catch (NamingException e) {
-        	_logger.error("Error loading users : Directory not available", e);
+            _logger.error("Error loading users : Directory not available", e);
         } catch (Throwable t) {
-        	_logger.error("Error loading users", t);
+            _logger.error("Error loading users", t);
             throw new RuntimeException("Error loading users", t);
         } finally {
             this.closeDirContext(dirCtx);
         }
         return usernames;
     }
-    
+
     protected List<UserDetails> searchUsersByFilterExpr(String filterExpr) {
         List<UserDetails> users = new ArrayList<UserDetails>();
         DirContext dirCtx = null;
@@ -468,130 +471,132 @@ public class LdapUserDAO implements ILdapUserDAO {
                 users.add(user);
             }
         } catch (ConnectException e) {
-        	_logger.error("Error loading users : Directory not available", e);
+            _logger.error("Error loading users : Directory not available", e);
         } catch (CommunicationException e) {
-        	_logger.error("Error loading users : Directory not available", e);
+            _logger.error("Error loading users : Directory not available", e);
         } catch (NamingException e) {
-        	_logger.error("Error loading users : Directory not available", e);
+            _logger.error("Error loading users : Directory not available", e);
         } catch (Throwable t) {
-        	_logger.error("Error loading users ", t);
+            _logger.error("Error loading users ", t);
             throw new RuntimeException("Error loading users", t);
         } finally {
             this.closeDirContext(dirCtx);
         }
         return users;
     }
-    
+
     protected DirContext getDirContext() throws NamingException, CommunicationException, ConnectException {
         DirContext dirCtx = null;
         try {
-			if (this.isTlsSecurityConnection()) {
-				dirCtx = new InitialLdapContext(this.getParams(true), null);
-				StartTlsResponse tls = (StartTlsResponse) ((InitialLdapContext) dirCtx).extendedOperation(new StartTlsRequest());
-				if (this.isTlsFreeSecurityConnection()) {
-					// Set the (our) HostVerifier
-					tls.setHostnameVerifier(new MyTLSHostnameVerifier());
-					SSLSocketFactory sslsf = null;
-					try {
-						TrustManager[] tm = new TrustManager [] {new MyX509TrustManager()};
-						SSLContext sslC = SSLContext.getInstance("TLS");
-						sslC.init(null, tm, null);
-						sslsf = sslC.getSocketFactory();
-					} catch(NoSuchAlgorithmException nSAE) {
-						_logger.error("error Hier: {}", nSAE.getMessage(), nSAE);
-					} catch(KeyManagementException kME) {
-						_logger.error("error Hier: {}", kME.getMessage(), kME);
-					}
-					tls.negotiate(sslsf);
-				} else {
-					tls.negotiate();
-				}
-				if (null != this.getSecurityPrincipal() && null != this.getSecurityCredentials()) {
-					dirCtx.addToEnvironment(Context.SECURITY_PRINCIPAL, this.getSecurityPrincipal());
-					dirCtx.addToEnvironment(Context.SECURITY_CREDENTIALS, this.getSecurityCredentials());
-					dirCtx.addToEnvironment(Context.SECURITY_AUTHENTICATION, "simple");
-				}
-			} else {
-				dirCtx = new InitialDirContext(this.getParams(false));
-			}
+            if (this.isTlsSecurityConnection()) {
+                dirCtx = new InitialLdapContext(this.getParams(true), null);
+                StartTlsResponse tls = (StartTlsResponse) ((InitialLdapContext) dirCtx).extendedOperation(new StartTlsRequest());
+                if (this.isTlsFreeSecurityConnection()) {
+                    // Set the (our) HostVerifier
+                    tls.setHostnameVerifier(new MyTLSHostnameVerifier());
+                    SSLSocketFactory sslsf = null;
+                    try {
+                        TrustManager[] tm = new TrustManager[]{new MyX509TrustManager()};
+                        SSLContext sslC = SSLContext.getInstance("TLS");
+                        sslC.init(null, tm, null);
+                        sslsf = sslC.getSocketFactory();
+                    } catch (NoSuchAlgorithmException nSAE) {
+                        _logger.error("error Hier: {}", nSAE.getMessage(), nSAE);
+                    } catch (KeyManagementException kME) {
+                        _logger.error("error Hier: {}", kME.getMessage(), kME);
+                    }
+                    tls.negotiate(sslsf);
+                } else {
+                    tls.negotiate();
+                }
+                if (null != this.getSecurityPrincipal() && null != this.getSecurityCredentials()) {
+                    dirCtx.addToEnvironment(Context.SECURITY_PRINCIPAL, this.getSecurityPrincipal());
+                    dirCtx.addToEnvironment(Context.SECURITY_CREDENTIALS, this.getSecurityCredentials());
+                    dirCtx.addToEnvironment(Context.SECURITY_AUTHENTICATION, "simple");
+                }
+            } else {
+                dirCtx = new InitialDirContext(this.getParams(false));
+            }
         } catch (IOException ex) {
-        	_logger.error("error in getDirContext", ex);
-		} catch (NamingException e) {
+            _logger.error("error in getDirContext", ex);
+        } catch (NamingException e) {
             throw e;
         }
         return dirCtx;
     }
-    
+
     protected void closeDirContext(DirContext dirCtx) {
-        if (null == dirCtx) return;
-		try {
-			if (dirCtx instanceof InitialLdapContext) {
-				((StartTlsResponse) ((InitialLdapContext) dirCtx).getExtendedResponse()).close();
-			}
+        if (null == dirCtx) {
+            return;
+        }
+        try {
+            if (dirCtx instanceof InitialLdapContext) {
+                ((StartTlsResponse) ((InitialLdapContext) dirCtx).getExtendedResponse()).close();
+            }
             dirCtx.close();
         } catch (IOException ex) {
-        	_logger.error("Error closing DirContext", ex);
-		} catch (NamingException e) {
-			_logger.error("Error closing DirContext", e);
+            _logger.error("Error closing DirContext", ex);
+        } catch (NamingException e) {
+            _logger.error("Error closing DirContext", e);
             throw new RuntimeException("Error closing DirContext", e);
-		}
+        }
     }
-    
+
     protected Hashtable<String, String> getParams(boolean isTls) {
         Hashtable<String, String> params = new Hashtable<String, String>(11);
         params.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         params.put(Context.PROVIDER_URL, this.getProviderUrl());
         if (null != this.getSecurityPrincipal() && null != this.getSecurityCredentials()) {
-			if (!isTls) {
-				params.put(Context.SECURITY_PRINCIPAL, this.getSecurityPrincipal());
-				params.put(Context.SECURITY_CREDENTIALS, this.getSecurityCredentials());
-				params.put(Context.SECURITY_AUTHENTICATION, "simple");
-			}
-			params.put(Context.REFERRAL, "ignore");
+            if (!isTls) {
+                params.put(Context.SECURITY_PRINCIPAL, this.getSecurityPrincipal());
+                params.put(Context.SECURITY_CREDENTIALS, this.getSecurityCredentials());
+                params.put(Context.SECURITY_AUTHENTICATION, "simple");
+            }
+            params.put(Context.REFERRAL, "ignore");
         }
-		if (this.isSslSecurityConnection()) {
-			params.put(Context.SECURITY_PROTOCOL, "ssl");
-		}
+        if (this.isSslSecurityConnection()) {
+            params.put(Context.SECURITY_PROTOCOL, "ssl");
+        }
         return params;
     }
-    
+
     protected String getProviderUrl() {
         return this.getConfigParam(LdapSystemConstants.PROVIDER_URL_PARAM_NAME);
     }
-	
-	private boolean isSslSecurityConnection() {
-		return this.getSecurityConnectionType().equalsIgnoreCase(LdapSystemConstants.SECURITY_CONNECTION_TYPE_SSL);
-	}
-    
-	private boolean isTlsSecurityConnection() {
-		return (this.isTlsFreeSecurityConnection() || 
-				this.getSecurityConnectionType().equalsIgnoreCase(LdapSystemConstants.SECURITY_CONNECTION_TYPE_TLS));
-	}
-    
-	private boolean isTlsFreeSecurityConnection() {
-		return this.getSecurityConnectionType().equalsIgnoreCase(LdapSystemConstants.SECURITY_CONNECTION_TYPE_TLS_FREE);
-	}
-    
+
+    private boolean isSslSecurityConnection() {
+        return this.getSecurityConnectionType().equalsIgnoreCase(LdapSystemConstants.SECURITY_CONNECTION_TYPE_SSL);
+    }
+
+    private boolean isTlsSecurityConnection() {
+        return (this.isTlsFreeSecurityConnection()
+                || this.getSecurityConnectionType().equalsIgnoreCase(LdapSystemConstants.SECURITY_CONNECTION_TYPE_TLS));
+    }
+
+    private boolean isTlsFreeSecurityConnection() {
+        return this.getSecurityConnectionType().equalsIgnoreCase(LdapSystemConstants.SECURITY_CONNECTION_TYPE_TLS_FREE);
+    }
+
     protected String getSecurityConnectionType() {
         String type = this.getConfigParam(LdapSystemConstants.SECURITY_CONNECTION_TYPE_PARAM_NAME);
-		if (null != type) {
-			if (type.equalsIgnoreCase(LdapSystemConstants.SECURITY_CONNECTION_TYPE_SSL)) {
-				return LdapSystemConstants.SECURITY_CONNECTION_TYPE_SSL;
-			} else if (type.equalsIgnoreCase(LdapSystemConstants.SECURITY_CONNECTION_TYPE_TLS)) {
-				return LdapSystemConstants.SECURITY_CONNECTION_TYPE_TLS;
-			}
-		}
-		return LdapSystemConstants.SECURITY_CONNECTION_TYPE_NONE;
+        if (null != type) {
+            if (type.equalsIgnoreCase(LdapSystemConstants.SECURITY_CONNECTION_TYPE_SSL)) {
+                return LdapSystemConstants.SECURITY_CONNECTION_TYPE_SSL;
+            } else if (type.equalsIgnoreCase(LdapSystemConstants.SECURITY_CONNECTION_TYPE_TLS)) {
+                return LdapSystemConstants.SECURITY_CONNECTION_TYPE_TLS;
+            }
+        }
+        return LdapSystemConstants.SECURITY_CONNECTION_TYPE_NONE;
     }
-    
+
     protected String getSecurityPrincipal() {
         return this.getConfigParam(LdapSystemConstants.SECURITY_PRINCIPAL_PARAM_NAME);
     }
-    
+
     protected String getSecurityCredentials() {
         return this.getConfigParam(LdapSystemConstants.SECURITY_CREDENTIALS_PARAM_NAME);
     }
-    
+
     protected String getUserObjectClass() {
         String objectClass = this.getConfigParam(LdapSystemConstants.USER_OBJECT_CLASS_PARAM_NAME);
         if (null == objectClass) {
@@ -599,23 +604,23 @@ public class LdapUserDAO implements ILdapUserDAO {
         }
         return objectClass;
     }
-    
+
     protected String getUserIdAttributeName() {
         String attributeName = this.getConfigParam(LdapSystemConstants.USER_ID_ATTRIBUTE_NAME_PARAM_NAME);
-		if (null == attributeName) {
+        if (null == attributeName) {
             attributeName = "uid";
         }
         return attributeName;
     }
-    
+
     protected String getFilterGroup() {
         return this.getConfigParam(LdapSystemConstants.FILTER_GROUP_PARAM_NAME);
     }
-    
+
     protected String getFilterGroupAttributeName() {
         return this.getConfigParam(LdapSystemConstants.FILTER_GROUP_ATTRIBUTE_NAME_PARAM_NAME);
     }
-    
+
     protected int getSearchResultMaxSize() {
         String maxSizeString = this.getConfigParam(LdapSystemConstants.SEARCH_RESULT_MAX_SIZE_PARAM_NAME);
         int maxSize = -1;
@@ -626,71 +631,79 @@ public class LdapUserDAO implements ILdapUserDAO {
         }
         return maxSize;
     }
-	
-	@Override
-	public boolean isWriteUserEnable() {
-		String activeString = this.getConfigManager().getParam(LdapSystemConstants.USER_EDITING_ACTIVE_PARAM_NAME);
+
+    @Override
+    public boolean isWriteUserEnable() {
+        String activeString = this.getConfigManager().getParam(LdapSystemConstants.USER_EDITING_ACTIVE_PARAM_NAME);
         Boolean active = Boolean.parseBoolean(activeString);
         return active.booleanValue();
-	}
-	
-	protected String getBaseDn() {
+    }
+
+    protected String getBaseDn() {
         return this.getConfigParam(LdapSystemConstants.USER_BASE_DN_PARAM_NAME);
     }
-	
-	protected String getUserRealAttributeName() {
+
+    protected String getUserRealAttributeName() {
         String attributeName = this.getConfigParam(LdapSystemConstants.USER_REAL_ATTRIBUTE_NAME_PARAM_NAME);
-		if (null == attributeName) {
+        if (null == attributeName) {
             attributeName = "cn";
         }
         return attributeName;
     }
-	
-	protected String getUserPasswordAttributeName() {
+
+    protected String getUserPasswordAttributeName() {
         String attributeName = this.getConfigParam(LdapSystemConstants.USER_PASSWORD_ATTRIBUTE_NAME_PARAM_NAME);
-		if (null == attributeName) {
+        if (null == attributeName) {
             attributeName = "userPassword";
         }
         return attributeName;
     }
-	
-	protected String getUserPasswordAlgorithm() {
+
+    protected String getUserPasswordAlgorithm() {
         String algorithm = this.getConfigParam(LdapSystemConstants.USER_PASSWORD_ALGORITHM_PARAM_NAME);
-		if (null == algorithm) {
+        if (null == algorithm) {
             algorithm = LdapSystemConstants.USER_PASSWORD_ALGORITHM_NONE;
         }
         return algorithm;
     }
-	
-	protected String[] getUserObjectClasses() {
-		String csv = this.getConfigParam(LdapSystemConstants.USER_OBJECT_CLASSES_CSV_PARAM_NAME);
-		if (null == csv || csv.trim().length() == 0) {
-			csv = this.getUserObjectClass() + ",top";
-		}
-		return csv.split(",");
+
+    protected String[] getUserObjectClasses() {
+        String csv = this.getConfigParam(LdapSystemConstants.USER_OBJECT_CLASSES_CSV_PARAM_NAME);
+        if (null == csv || csv.trim().length() == 0) {
+            csv = this.getUserObjectClass() + ",top";
+        }
+        return csv.split(",");
     }
-	
-	protected String[] getOuObjectClasses() {
-		String csv = this.getConfigParam(LdapSystemConstants.OU_OBJECT_CLASSES_CSV_PARAM_NAME);
-		if (null == csv || csv.trim().length() == 0) {
-			csv = "top,organizationalUnit";
-		}
-		return csv.split(",");
+
+    protected String[] getOuObjectClasses() {
+        String csv = this.getConfigParam(LdapSystemConstants.OU_OBJECT_CLASSES_CSV_PARAM_NAME);
+        if (null == csv || csv.trim().length() == 0) {
+            csv = "top,organizationalUnit";
+        }
+        return csv.split(",");
     }
-	
+
     private String getConfigParam(String paramName) {
         String paramValue = this.getConfigManager().getParam(paramName);
-        if (null == paramValue || paramValue.trim().length() == 0) return null;
+        if (null == paramValue || paramValue.trim().length() == 0) {
+            return null;
+        }
         return paramValue.trim();
     }
-    
+
+    @Override
+    public IApsEncrypter getEncrypter() {
+        throw new UnsupportedOperationException("Not supported.");
+    }
+
     protected ConfigInterface getConfigManager() {
         return _configManager;
     }
+
     public void setConfigManager(ConfigInterface configManager) {
         this._configManager = configManager;
     }
-    
+
     private ConfigInterface _configManager;
-    
+
 }

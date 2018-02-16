@@ -45,8 +45,8 @@ public class TestMailSenderConfigAction extends ApsAdminPluginBaseTestCase {
     }
 	
 	public void testViewSenders() throws Throwable {
-		this.setUserOnSession("admin");
 		this.initAction("/do/jpmail/MailConfig", "viewSenders");
+		this.setUserOnSession("admin");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		MailSenderConfigAction action = (MailSenderConfigAction) this.getAction();
@@ -55,8 +55,8 @@ public class TestMailSenderConfigAction extends ApsAdminPluginBaseTestCase {
 	}
 	
 	public void testNewSender() throws Throwable {
-		this.setUserOnSession("admin");
 		this.initAction("/do/jpmail/MailConfig", "newSender");
+		this.setUserOnSession("admin");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		MailSenderConfigAction action = (MailSenderConfigAction) this.getAction();
@@ -114,8 +114,8 @@ public class TestMailSenderConfigAction extends ApsAdminPluginBaseTestCase {
 	}
 	
 	public void testTrashSender() throws Throwable {
-		this.setUserOnSession("admin");
 		this.initAction("/do/jpmail/MailConfig", "trashSender");
+		this.setUserOnSession("admin");
 		this.addParameter("code", "CODE1");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
@@ -126,8 +126,8 @@ public class TestMailSenderConfigAction extends ApsAdminPluginBaseTestCase {
 	
 	public void testDeleteSender() throws Throwable {
 		try {
-			this.setUserOnSession("admin");
 			this.initAction("/do/jpmail/MailConfig", "deleteSender");
+			this.setUserOnSession("admin");
 			this.addParameter("code", "CODE1");
 			String result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
@@ -152,16 +152,16 @@ public class TestMailSenderConfigAction extends ApsAdminPluginBaseTestCase {
 	}
 	
 	private String executeEditSender(String currentUser, String code) throws Throwable {
-		this.setUserOnSession(currentUser);
 		this.initAction("/do/jpmail/MailConfig", "editSender");
+		this.setUserOnSession(currentUser);
 		this.addParameter("code", code);
 		String result = this.executeAction();
 		return result;
 	}
 	
 	private String executeSaveSender(String currentUser, String code, String mail, int strutsAction) throws Throwable {
-		this.setUserOnSession(currentUser);
 		this.initAction("/do/jpmail/MailConfig", "saveSender");
+		this.setUserOnSession(currentUser);
 		this.addParameter("code", code);
 		this.addParameter("mail", mail);
 		this.addParameter("strutsAction", String.valueOf(strutsAction));

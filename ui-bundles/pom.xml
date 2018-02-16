@@ -53,10 +53,10 @@
         <module>widgets/entando-widget-3-step-mortgage</module>
         <module>content-types/entando-content-generic</module>
         <module>widgets/entando-widget-language_choose</module>
-		<module>themes/entando-page-bootstrap-hero</module>
-		<module>widgets/entando-widget-search_form</module>
-		 <module>widgets/entando-widget-login_form</module>
-		 <module>widgets/entando-widget-navigation_bar</module>
+        <module>themes/entando-page-bootstrap-hero</module>
+        <module>widgets/entando-widget-search_form</module>
+        <module>widgets/entando-widget-login_form</module>
+        <module>widgets/entando-widget-navigation_bar</module>
         <!--
         <module>widgets/entando-widget-navigation_menu</module>
         <module>widgets/entando-widget-navigation_breadcrumbs</module>
