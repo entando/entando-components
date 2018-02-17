@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando.entando.components</groupId>
         <artifactId>entando-components</artifactId>
-        <version>4.3.2-SNAPSHOT</version>
+        <version>4.3.2-CN</version>
     </parent>
     <groupId>org.entando.entando.bundles</groupId>
     <artifactId>entando-bundles-parent</artifactId>
@@ -51,13 +51,11 @@
         <module>misc/entando-misc-light</module>
         <module>themes/entando-page-light</module>
         <module>widgets/entando-widget-3-step-mortgage</module>
-        <module>content-types/entando-content-generic</module>
         <module>widgets/entando-widget-language_choose</module>
         <module>themes/entando-page-bootstrap-hero</module>
         <module>widgets/entando-widget-search_form</module>
         <module>widgets/entando-widget-login_form</module>
         <module>widgets/entando-widget-navigation_bar</module>
-        <!--
         <module>widgets/entando-widget-navigation_menu</module>
         <module>widgets/entando-widget-navigation_breadcrumbs</module>
         <module>widgets/entando-widget-sharewith</module>
@@ -71,7 +69,7 @@
        <module>app-views/entando-app-view-webdynamicform-default</module>
         <module>app-views/entando-app-view-rss-default</module>
         <module>app-views/entando-app-view-facetnav-default</module>
-        <module>app-views/entando-app-view-userreg-default</module>-->
+        <module>app-views/entando-app-view-userreg-default</module>
         <!-- <module>app-views/entando-app-view-addressbook-default</module> -->
         <!--        <module>app-views/entando-app-view-calendar-default</module>
         <module>app-views/entando-app-view-survey-default</module>

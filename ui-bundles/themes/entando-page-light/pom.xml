@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-bundles-parent</artifactId>
         <groupId>org.entando.entando.bundles</groupId>
-        <version>4.3.2-SNAPSHOT</version>
+        <version>4.3.2-CN</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-page-light</artifactId>
@@ -60,49 +60,49 @@
         <dependency>
             <groupId>org.entando.entando.bundles.misc</groupId>
             <artifactId>entando-misc-light</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
+            <version>4.3.2-CN</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-language_choose_inspinia</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
+            <version>4.3.2-CN</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-3-step-mortgage</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
+            <version>4.3.2-CN</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-search_form_inspinia</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
+            <version>4.3.2-CN</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-navigation_bar_inspinia</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
+            <version>4.3.2-CN</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-login_form_inspinia</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
+            <version>4.3.2-CN</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-search_result_inspinia</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
+            <version>4.3.2-CN</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.contents</groupId>
             <artifactId>entando-content-generic</artifactId>
-            <version>4.3.2-SNAPSHOT</version>
+            <version>4.3.2-CN</version>
             <type>war</type>
         </dependency>
     </dependencies>
