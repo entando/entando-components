@@ -38,7 +38,6 @@
 		<property name="entitySearcherDAO" >
 			<bean class="com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.MessageSearcherDAO">
 				<property name="dataSource" ref="servDataSource" />
-				<property name="forceCaseInsensitiveLikeSearch"><value>true</value></property>
 			</bean>
 		</property>
 		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />

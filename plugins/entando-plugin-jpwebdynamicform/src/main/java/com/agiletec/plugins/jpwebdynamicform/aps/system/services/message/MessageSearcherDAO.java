@@ -62,7 +62,12 @@ public class MessageSearcherDAO extends AbstractEntitySearcherDAO implements IMe
 			conn = this.getConnection();
 			stat = this.buildStatement(filters, false, answered, conn);
 			result = stat.executeQuery();
-			this.flowResult(idList, filters, result);
+            while (result.next()) {
+                String id = result.getString(this.getMasterTableIdFieldName());
+                if (!idList.contains(id)) {
+                    idList.add(id);
+                }
+            }
 		} catch (Throwable t) {
 			processDaoException(t, "Errore in caricamento lista id ", "searchId");
 		} finally {
