@@ -14,13 +14,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.OverrideList;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
 
 public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormOverrideDAO {
 
@@ -39,11 +38,6 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 	@Override
 	protected String getMasterTableIdFieldName() {
 		return "id";
-	}
-
-	@Override
-	protected boolean isForceCaseInsensitiveLikeSearch() {
-		return true;
 	}
 
 	@Override

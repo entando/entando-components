@@ -5,19 +5,19 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo;
 
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.util.ApsProperties;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.util.ApsProperties;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BpmWidgetInfoDAO extends AbstractSearcherDAO implements IBpmWidgetInfoDAO {
 
@@ -36,11 +36,6 @@ public class BpmWidgetInfoDAO extends AbstractSearcherDAO implements IBpmWidgetI
     @Override
     protected String getMasterTableIdFieldName() {
         return "id";
-    }
-
-    @Override
-    protected boolean isForceCaseInsensitiveLikeSearch() {
-        return true;
     }
 
     @Override

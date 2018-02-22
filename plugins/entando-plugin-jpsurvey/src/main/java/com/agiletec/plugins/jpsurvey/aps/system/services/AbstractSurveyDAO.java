@@ -29,14 +29,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Choice;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Question;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Survey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AbstractSurveyDAO extends AbstractSearcherDAO {
 
@@ -55,11 +54,6 @@ public class AbstractSurveyDAO extends AbstractSearcherDAO {
 	@Override
 	protected String getMasterTableIdFieldName() {
 		return "id";
-	}
-	
-	@Override
-	protected boolean isForceCaseInsensitiveLikeSearch() {
-		return true;
 	}
 	
 	/**

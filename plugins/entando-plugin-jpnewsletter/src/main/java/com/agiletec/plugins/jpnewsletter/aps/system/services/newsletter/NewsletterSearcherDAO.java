@@ -50,7 +50,12 @@ public class NewsletterSearcherDAO extends PublicContentSearcherDAO implements I
 			conn = this.getConnection();
 			stat = this.buildStatement(contentTypes, filters, categories, userGroupCodes, conn);
 			result = stat.executeQuery();
-			this.flowResult(contentsId, filters, result);
+            while (result.next()) {
+                String id = result.getString(this.getMasterTableIdFieldName());
+                if (!contentsId.contains(id)) {
+                    contentsId.add(id);
+                }
+            }
 		} catch (Throwable t) {
 			processDaoException(t, "Errore in caricamento lista id contenuti", "loadContentsId");
 		} finally {
