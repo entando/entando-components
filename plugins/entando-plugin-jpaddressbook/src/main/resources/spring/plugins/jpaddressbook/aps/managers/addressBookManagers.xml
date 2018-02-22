@@ -21,7 +21,6 @@
 		<property name="addressBookSearcherDAO">
 			<bean class="com.agiletec.plugins.jpaddressbook.aps.system.services.addressbook.AddressBookSearcherDAO">
 				<property name="dataSource" ref="servDataSource" />
-				<property name="forceCaseInsensitiveLikeSearch"><value>true</value></property>
 			</bean>
 		</property>
 	</bean>

@@ -73,7 +73,6 @@
 		<property name="entitySearcherDAO" >
 			<bean class="org.entando.entando.plugins.jpwebform.aps.system.services.form.FormSearcherDAO">
 				<property name="dataSource" ref="servDataSource" />
-				<property name="forceCaseInsensitiveLikeSearch"><value>true</value></property>
 			</bean>
 		</property>
 		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />

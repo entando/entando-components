@@ -27,14 +27,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.common.entity.AbstractEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.plugins.jpaddressbook.aps.system.services.addressbook.model.ContactRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
@@ -53,7 +52,12 @@ public class AddressBookSearcherDAO extends AbstractEntitySearcherDAO implements
 			conn = this.getConnection();
 			stat = this.buildStatement(owner, filters, conn);
 			result = stat.executeQuery();
-			this.flowResult(contactIds, filters, result);
+            while (result.next()) {
+                String id = result.getString(this.getMasterTableIdFieldName());
+                if (!contactIds.contains(id)) {
+                    contactIds.add(id);
+                }
+            }
 		} catch (Throwable t) {
 			_logger.error("Error on search contacts",  t);
 			throw new RuntimeException("Error on search contacts", t);

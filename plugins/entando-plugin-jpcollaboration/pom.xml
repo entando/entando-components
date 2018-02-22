@@ -1,86 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>entando-plugins-parent</artifactId>
-		<groupId>org.entando.entando.plugins</groupId>
-		<version>4.3.2-SNAPSHOT</version>
-	</parent>
-	<artifactId>entando-plugin-jpcollaboration</artifactId>
-	<packaging>war</packaging>
-	<name>Entando Plugin: Social Collaboration</name>
-	<description>Creating a dedicated area where users may post and vote ideas</description>
-	<developers>
-		<developer>
-			<id>e.santoboni</id>
-			<name>Eugenio Santoboni</name>
-			<email>eugenio.santoboni@gmail.com</email>
-		</developer>
-	</developers>
-	<url>http://www.entando.com/</url>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.3</version><!--$NO-MVN-MAN-VER$ -->
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>1.0-beta-1</version>
-				<executions>
-					<execution>
-						<id>enforce-versions</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireMavenVersion>
-									<version>2.2.1</version>
-								</requireMavenVersion>
-								<requireJavaVersion>
-									<version>1.6</version>
-								</requireJavaVersion>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>			
-		</plugins>
-	</build>
-	<dependencies>
-                
-		<dependency>
-			<groupId>org.entando.entando.plugins</groupId>
-			<artifactId>entando-plugin-jpavatar</artifactId>
-			<version>4.3.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
-			<type>war</type>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.entando.entando.plugins</groupId>
-			<artifactId>entando-plugin-jpavatar</artifactId>
-			<version>4.3.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
-			<type>jar</type>
-			<classifier>classes</classifier>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.entando.entando.plugins</groupId>
-			<artifactId>entando-plugin-jpavatar</artifactId>
-			<version>4.3.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
-			<type>jar</type>
-			<classifier>tests</classifier>
-			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.jgeppert.struts2.jquery</groupId>
-			<artifactId>struts2-jquery-plugin</artifactId>
-			<version>4.0.2</version>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>entando-plugins-parent</artifactId>
+        <groupId>org.entando.entando.plugins</groupId>
+        <version>4.3.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>entando-plugin-jpcollaboration</artifactId>
+    <packaging>war</packaging>
+    <name>Entando Plugin: Social Collaboration</name>
+    <description>Creating a dedicated area where users may post and vote ideas</description>
+    <developers>
+        <developer>
+            <id>e.santoboni</id>
+            <name>Eugenio Santoboni</name>
+            <email>eugenio.santoboni@gmail.com</email>
+        </developer>
+    </developers>
+    <url>http://www.entando.com/</url>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.3</version><!--$NO-MVN-MAN-VER$ -->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.0-beta-1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>2.2.1</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>1.6</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+
+        <dependency>
+            <groupId>org.entando.entando.plugins</groupId>
+            <artifactId>entando-plugin-jpavatar</artifactId>
+            <version>4.3.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+            <type>war</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.entando.entando.plugins</groupId>
+            <artifactId>entando-plugin-jpavatar</artifactId>
+            <version>4.3.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+            <type>jar</type>
+            <classifier>classes</classifier>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.entando.entando.plugins</groupId>
+            <artifactId>entando-plugin-jpavatar</artifactId>
+            <version>4.3.2-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+            <type>jar</type>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jgeppert.struts2.jquery</groupId>
+            <artifactId>struts2-jquery-plugin</artifactId>
+            <version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
@@ -91,11 +91,11 @@
                     <artifactId>struts2-core</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.jgeppert.struts2.jquery</groupId>
-			<artifactId>struts2-jquery-grid-plugin</artifactId>
-			<version>4.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jgeppert.struts2.jquery</groupId>
+            <artifactId>struts2-jquery-grid-plugin</artifactId>
+            <version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
@@ -106,11 +106,11 @@
                     <artifactId>struts2-core</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.jgeppert.struts2.jquery</groupId>
-			<artifactId>struts2-jquery-richtext-plugin</artifactId>
-			<version>4.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jgeppert.struts2.jquery</groupId>
+            <artifactId>struts2-jquery-richtext-plugin</artifactId>
+            <version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
@@ -121,11 +121,11 @@
                     <artifactId>struts2-core</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.jgeppert.struts2.jquery</groupId>
-			<artifactId>struts2-jquery-tree-plugin</artifactId>
-			<version>4.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jgeppert.struts2.jquery</groupId>
+            <artifactId>struts2-jquery-tree-plugin</artifactId>
+            <version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
@@ -136,11 +136,11 @@
                     <artifactId>struts2-core</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.jgeppert.struts2.jquery</groupId>
-			<artifactId>struts2-jquery-mobile-plugin</artifactId>
-			<version>4.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jgeppert.struts2.jquery</groupId>
+            <artifactId>struts2-jquery-mobile-plugin</artifactId>
+            <version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.velocity</groupId>
@@ -151,8 +151,8 @@
                     <artifactId>struts2-core</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
-		
-	</dependencies>
-	
+        </dependency>
+
+    </dependencies>
+
 </project>
