@@ -59,6 +59,12 @@
         <property name="kieFormManager" ref="jpkiebpmsManager"/>
     </bean>
 
-
+    <bean id="jpkiebpmBpmCaseProgressWidgetAction"
+              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction"
+              parent="simpleWidgetAction" scope="prototype">
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>  
+        <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
+        <property name="groupManager" ref="GroupManager"/>
+    </bean>
 
 </beans>

@@ -43,6 +43,23 @@ import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper
 public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
     private static final Logger _logger = LoggerFactory.getLogger(BpmFormWidgetAction.class);
+    protected String processId;
+    protected String containerId;
+    protected String processPath;
+
+    public static final String PROP_NAME_WIDGET_INFO_ID = KieBpmSystemConstants.WIDGET_PARAM_INFO_ID;//"widgetInfoId";
+
+    protected final String PROP_PROCESS_ID = KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID;
+    protected final String PROP_CONTAINER_ID = KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID;
+    protected final String PROP_OVERRIDE_ID = KieBpmSystemConstants.WIDGET_INFO_PROP_OVERRIDE_ID;
+
+    private IKieFormManager formManager;
+    private IKieFormOverrideManager kieFormOverrideManager;
+    private IBpmWidgetInfoManager bpmWidgetInfoManager;
+    private Set<Integer> ovrd;
+    private IDataObjectManager _dataObjectManager;
+    private IDataObjectModelManager _dataObjectModelManager;
+    private II18nManager i18nManager;
 
     @Override
     public String save() {
@@ -504,24 +521,6 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         this.i18nManager = i18nManager;
     }
 
-    protected String processId;
-    protected String containerId;
-    protected String processPath;
-
-    public static final String PROP_NAME_WIDGET_INFO_ID = KieBpmSystemConstants.WIDGET_PARAM_INFO_ID;//"widgetInfoId";
-
-    protected final String PROP_PROCESS_ID = KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID;
-    protected final String PROP_CONTAINER_ID = KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID;
-    protected final String PROP_OVERRIDE_ID = KieBpmSystemConstants.WIDGET_INFO_PROP_OVERRIDE_ID;
-
-    private IKieFormManager formManager;
-    private IKieFormOverrideManager kieFormOverrideManager;
-    private IBpmWidgetInfoManager bpmWidgetInfoManager;
-    private Set<Integer> ovrd;
-    private IDataObjectManager _dataObjectManager;
-    private IDataObjectModelManager _dataObjectModelManager;
-    private II18nManager i18nManager;
-
     public static class FieldDatatable {
 
         private String name;
@@ -529,7 +528,6 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         private Boolean visible;
         private String override;
         private Byte position;
-
 
         FieldDatatable(final String name) {
             this.name = name;

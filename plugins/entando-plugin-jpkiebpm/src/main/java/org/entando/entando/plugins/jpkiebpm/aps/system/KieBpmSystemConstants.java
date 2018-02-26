@@ -29,35 +29,35 @@ package org.entando.entando.plugins.jpkiebpm.aps.system;
  */
 public interface KieBpmSystemConstants {
 
-	public final static String WIDGET_CODE_BPM_FORM = "bpm-form";
-	public static final String WIDGET_PROP_NAME_OVERRIDE_ID = "overrides";
+    public final static String WIDGET_CODE_BPM_FORM = "bpm-form";
+    public static final String WIDGET_PROP_NAME_OVERRIDE_ID = "overrides";
 
-	public final static String DEFAULT_SCHEMA = "http";
-	public final static int DEFAULT_POSRT = 80;
+    public final static String DEFAULT_SCHEMA = "http";
+    public final static int DEFAULT_POSRT = 80;
 
-	// TODO check if this is a constant somewhere in java.net or arg.apache.httpd
-	public final static String HEADER_KEY_ACCEPT = "Accept";
-	public final static String HEADER_KEY_CONTENT_TYPE = "Content-Type";
-	public final static String HEADER_VALUE_JSON = "application/json";
+    // TODO check if this is a constant somewhere in java.net or arg.apache.httpd
+    public final static String HEADER_KEY_ACCEPT = "Accept";
+    public final static String HEADER_KEY_CONTENT_TYPE = "Content-Type";
+    public final static String HEADER_VALUE_JSON = "application/json";
 
-	// configuration parameter
-	public final static String KIE_BPM_CONFIG_ITEM = "jpkiebpm_config";
+    // configuration parameter
+    public final static String KIE_BPM_CONFIG_ITEM = "jpkiebpm_config";
 
-	// misc
-	public final static String SUCCESS = "SUCCESS";
+    // misc
+    public final static String SUCCESS = "SUCCESS";
 
-	// API mnemonics
-	public final static String API_GET_CONTAINERS_LIST = "API_GET_CONTAINERS_LIST";
-	public final static String API_GET_PROCESS_DEFINITIONS_LIST = "API_GET_PROCESS_DEFINITIONS_LIST";
-	public final static String API_GET_PROCESS_INSTANCES_LIST = "API_GET_PROCESS_INSTANCES_LIST";
-	public final static String API_GET_HUMAN_TASK_LIST = "API_GET_HUMAN_TASK_LIST";
-	public final static String API_GET_TASK_FORM_DEFINITION = "API_GET_TASK_FORM_DEFINITION";
-	public final static String API_GET_PROCESS_DEFINITION = "API_GET_PROCESS_DEFINITION";
-	public final static String API_POST_PROCESS_START = "API_POST_PROCESS_START";
-	public final static String API_GET_PROCESS_DIAGRAM = "API_GET_PROCESS_DIAGRAM";
-	public final static String API_GET_DATA_HUMAN_TASK = "API_GET_DATA_HUMAN_TASK";
-	public final static String API_GET_DATA_HUMAN_TASK_DETAIL = "API_GET_DATA_HUMAN_TASK_DETAIL";
-	public final static String API_PUT_HUMAN_TASK = "API_PUT_HUMAN_TASK";
+    // API mnemonics
+    public final static String API_GET_CONTAINERS_LIST = "API_GET_CONTAINERS_LIST";
+    public final static String API_GET_PROCESS_DEFINITIONS_LIST = "API_GET_PROCESS_DEFINITIONS_LIST";
+    public final static String API_GET_PROCESS_INSTANCES_LIST = "API_GET_PROCESS_INSTANCES_LIST";
+    public final static String API_GET_HUMAN_TASK_LIST = "API_GET_HUMAN_TASK_LIST";
+    public final static String API_GET_TASK_FORM_DEFINITION = "API_GET_TASK_FORM_DEFINITION";
+    public final static String API_GET_PROCESS_DEFINITION = "API_GET_PROCESS_DEFINITION";
+    public final static String API_POST_PROCESS_START = "API_POST_PROCESS_START";
+    public final static String API_GET_PROCESS_DIAGRAM = "API_GET_PROCESS_DIAGRAM";
+    public final static String API_GET_DATA_HUMAN_TASK = "API_GET_DATA_HUMAN_TASK";
+    public final static String API_GET_DATA_HUMAN_TASK_DETAIL = "API_GET_DATA_HUMAN_TASK_DETAIL";
+    public final static String API_PUT_HUMAN_TASK = "API_PUT_HUMAN_TASK";
     public final static String API_POST_SIGNAL = "API_POST_SIGNAL";
     public final static String API_DELETE_PROCESS = "API_DELETE_PROCESS";
     public final static String API_GET_ALL_PROCESS_INSTANCES_LIST = "API_GET_ALL_PROCESS_INSTANCES_LIST";
@@ -66,14 +66,15 @@ public interface KieBpmSystemConstants {
     public final static String API_GET_ALL_TASK_LIST_ADMIN = "API_GET_ALL_TASK_LIST_ADMIN";
     public final static String API_POST_ALL_PROCESS_INSTANCES_W_CLIENT_DATA = "API_POST_ALL_PROCESS_INSTANCES_W_CLIENT_DATA";
     public final static String API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK = "API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK";
+    public final static String API_GET_CASES_LIST = "API_GET_CASES_LIST";
+    public final static String API_GET_MILESTONES_LIST = "API_GET_MILESTONES_LIST";
 
+    public static final String WIDGET_PARAM_DATA_TYPE_CODE = "dataTypeCode";
+    public static final String WIDGET_PARAM_DATA_UX_ID = "dataUxId";
+    public static final String WIDGET_PARAM_INFO_ID = "widgetInfoId";
 
-	public static final String WIDGET_PARAM_DATA_TYPE_CODE = "dataTypeCode";
-	public static final String WIDGET_PARAM_DATA_UX_ID = "dataUxId";
-	public static final String WIDGET_PARAM_INFO_ID = "widgetInfoId";
-
-	public static final String WIDGET_INFO_PROP_PROCESS_ID = "processId";
-	public static final String WIDGET_INFO_PROP_CONTAINER_ID = "containerId";
-	public static final String WIDGET_INFO_PROP_OVERRIDE_ID = "overrides";
+    public static final String WIDGET_INFO_PROP_PROCESS_ID = "processId";
+    public static final String WIDGET_INFO_PROP_CONTAINER_ID = "containerId";
+    public static final String WIDGET_INFO_PROP_OVERRIDE_ID = "overrides";
 
 }

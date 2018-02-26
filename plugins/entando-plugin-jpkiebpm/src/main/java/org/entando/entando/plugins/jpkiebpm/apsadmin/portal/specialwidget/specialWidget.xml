@@ -29,6 +29,13 @@
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
+        
+        <action name="jpkiebpmBpmCaseProgressWidgetViewerConfig" class="jpkiebpmBpmCaseProgressWidgetAction" method="init">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
 
         <!-- Process List config -->
         <!--        <action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig"
