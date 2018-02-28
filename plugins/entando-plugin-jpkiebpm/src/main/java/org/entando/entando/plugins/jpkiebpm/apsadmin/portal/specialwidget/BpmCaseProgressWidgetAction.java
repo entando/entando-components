@@ -25,57 +25,87 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.IGroupManager;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.json.JSONArray;
 
 /**
  *
  * @author own_strong
  */
-public class BpmCaseProgressWidgetAction extends BpmDatatableWidgetAction {
+public class BpmCaseProgressWidgetAction extends BpmProcessDatatableWidgetAction {
 
+//    public static final String SUCCESS = "success";
     private CaseManager caseManager;
+    private IKieFormManager formManager;
+    private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
+    String processPath;
+    String casesPath;
+    List cases;
+    String casesPathDefaultValue;
+    String milestones;
+    String milestoneJson;
+    
+    String frontEndMilestonesData;
 
     @Override
     protected void loadFieldIntoDatatableFromBpm() throws ApsSystemException {
-        List<kieProcess> processes = caseManager.getProcessDefinitionsList();
-        if (!processes.isEmpty()) {
-            super.loadDataIntoFieldDatatable(processes);
-        }
+        super.loadFieldIntoDatatableFromBpm();
 
-        HashMap<String, String> columns = new HashMap<>();
-
-        columns.put("Status Progress", "statusProgress");
-        columns.put("Customer Name", "customerName");
-        columns.put("partyName", "partyName");
-        columns.put("status", "status");
-        columns.put("Company", "company");
-        columns.put("Case Due In", "dueDate");
-
-        this.loadDataIntoFieldDatatable(columns);
     }
 
-    private void loadDataIntoFieldDatatable(HashMap fields) {
+    @Override
+    public String chooseForm() {
 
-        Byte position = 1;
-        for (Iterator<Map.Entry> iter = fields.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry<String, String> obj = iter.next();
-            final String name = obj.getValue();
-            final FieldDatatable fd = new FieldDatatable(name);
-            fd.setField(PREFIX_FIELD + obj.getKey());
-            fd.setPosition(position++);
-            fd.setVisible(Boolean.valueOf(true));
-            fd.setOverride("");
-            this.fieldsDatatable.add(fd);
-
+        try {
+            this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
+        } catch (ApsSystemException ex) {
+            Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return SUCCESS;
+    }
 
+    @Override
+    public String changeForm() {
+
+        try {
+            this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
+        } catch (ApsSystemException ex) {
+            Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return SUCCESS;
+    }
+
+    public String chooseCaseForm() throws ApsSystemException {
+
+        this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
+        this.setCasesPathDefaultValue(casesPath);
+        
+        JSONArray milestonJSAR = this.getCaseManager().getMilestonesList(this.getProcessPath(), this.getCasesPath());
+        
+        this.setMilestones(this.getCaseManager().getMilestonesNameInList(milestonJSAR).toString());
+        this.setMilestoneJson(milestonJSAR.toString());
+
+        return SUCCESS;
+    }
+
+    public String changeCaseForm() throws ApsSystemException {
+
+        this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
+        this.setCasesPathDefaultValue(casesPath);
+        
+        JSONArray milestonJSAR = this.getCaseManager().getMilestonesList(this.getProcessPath(), this.getCasesPath());
+        
+        this.setMilestones(this.getCaseManager().getMilestonesNameInList(milestonJSAR).toString());
+        this.setMilestoneJson(milestonJSAR.toString());
+
+        return SUCCESS;
     }
 
     @Override
@@ -88,12 +118,22 @@ public class BpmCaseProgressWidgetAction extends BpmDatatableWidgetAction {
         this.groupManager = groupManager;
     }
 
+    @Override
+    public IKieFormManager getFormManager() {
+        return formManager;
+    }
+
     public CaseManager getCaseManager() {
         return caseManager;
     }
 
     public void setCaseManager(CaseManager caseManager) {
         this.caseManager = caseManager;
+    }
+
+    @Override
+    public void setFormManager(IKieFormManager formManager) {
+        this.formManager = formManager;
     }
 
     @Override
@@ -106,5 +146,74 @@ public class BpmCaseProgressWidgetAction extends BpmDatatableWidgetAction {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 
+    @Override
+    public IKieFormOverrideManager getKieFormOverrideManager() {
+        return kieFormOverrideManager;
+    }
+
+    @Override
+    public void setKieFormOverrideManager(IKieFormOverrideManager kieFormOverrideManager) {
+        this.kieFormOverrideManager = kieFormOverrideManager;
+    }
+
+    @Override
+    public String getProcessPath() {
+        return processPath;
+    }
+
+    @Override
+    public void setProcessPath(String processPath) {
+        this.processPath = processPath;
+    }
+
+    public List getCases() {
+        return cases;
+    }
+
+    public void setCases(List cases) {
+        this.cases = cases;
+    }
+
+    public String getMilestones() {
+        return milestones;
+    }
+
+    public void setMilestones(String milestones) {
+        this.milestones = milestones;
+    }
+
+    public String getCasesPath() {
+        return casesPath;
+    }
+
+    public void setCasesPath(String casesPath) {
+        this.casesPath = casesPath;
+    }
+
+    public String getCasesPathDefaultValue() {
+        return casesPathDefaultValue;
+    }
+
+    public void setCasesPathDefaultValue(String casesPathDefaultValue) {
+        this.casesPathDefaultValue = casesPathDefaultValue;
+    }
+
+    public String getFrontEndMilestonesData() {
+        return frontEndMilestonesData;
+    }
+
+    public void setFrontEndMilestonesData(String frontEndMilestonesData) {
+        this.frontEndMilestonesData = frontEndMilestonesData;
+    }
+
+    public String getMilestoneJson() {
+        return milestoneJson;
+    }
+
+    public void setMilestoneJson(String milestoneJson) {
+        this.milestoneJson = milestoneJson;
+    }
+    
+    
 
 }

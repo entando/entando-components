@@ -129,4 +129,47 @@
         </action>
 
     </package>
+    
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseProgressViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseProgressViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+
+        <action name="chooseForm*" class="jpkiebpmBpmCaseProgressWidgetAction" method="chooseForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="changeForm*" class="jpkiebpmBpmCaseProgressWidgetAction" method="changeForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>        
+        
+        <action name="chooseCaseForm*" class="jpkiebpmBpmCaseProgressWidgetAction" method="chooseCaseForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="changeCaseForm*" class="jpkiebpmBpmCaseProgressWidgetAction" method="changeCaseForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="save" class="jpkiebpmBpmCaseProgressWidgetAction" method="save">
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+
+    </package>
 </struts>

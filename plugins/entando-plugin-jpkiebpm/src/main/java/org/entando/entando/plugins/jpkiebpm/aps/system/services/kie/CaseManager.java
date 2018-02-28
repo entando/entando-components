@@ -24,10 +24,16 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +41,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author own_strong
  */
-public class CaseManager extends KieFormManager implements ICaseManager {
+public class CaseManager extends KieFormManager {
 
     private static final Logger _logger = LoggerFactory.getLogger(KieFormManager.class);
 
@@ -45,53 +51,98 @@ public class CaseManager extends KieFormManager implements ICaseManager {
         this.setKieBpmConfig(super.getConfig());
     }
 
-    @Override
-    public String getCasesList(String containerId) throws ApsSystemException {
+    public List<String> getCasesList(String containerId) throws ApsSystemException {
+
+        List<String> casesList = new ArrayList<>();
+        Map<String, String> headersMap = new HashMap<>();
+
         String result = null;
+        JSONObject json = null;
+
         if (!_config.getActive() || StringUtils.isBlank(containerId)) {
-            return result;
+            return casesList;
         }
         try {
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_CASES_LIST).resolveParams(containerId);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             // generate client from the current configuration
             KieClient client = super.getCurrentClient();
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
+                    .setHeaders(headersMap)
                     .setDebug(_config.getDebug())
-                    .setUnmarshalOptions(false, true)
-                    .doRequest(String.class);
+                    .doRequest();
+
+            json = new JSONObject(result);
+
+            JSONArray instances = (JSONArray) json.get("instances");
+
+            for (int i = 0; i < instances.length(); i++) {
+                JSONObject iJson = instances.getJSONObject(i);
+                casesList.add(iJson.getString("case-id"));
+
+            }
+
         } catch (Throwable t) {
             throw new ApsSystemException("Error getting the cases list", t);
         }
 
-        return result;
+        return casesList;
     }
 
-    @Override
-    public String getMilestonesList(String containerId, String caseID) throws ApsSystemException {
+    public JSONArray getMilestonesList(String containerId, String caseID) throws ApsSystemException {
+
+        JSONArray milestonesList = null;
+        Map<String, String> headersMap = new HashMap<>();
+        Map<String, String> param = new HashMap<>();
+        
         String result = null;
+        JSONObject json = null;
+        
         if (!_config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
-            return result;
+            return milestonesList;
         }
         try {
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_MILESTONES_LIST).resolveParams(containerId, caseID);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            param.put(HEADER_MILESTONES_ACHIEVEDONLY_PARM, HEADER_MILESTONES_ACHIEVEDONLY_FALSE);
             // generate client from the current configuration
             KieClient client = super.getCurrentClient();
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setRequestParams(param)
                     .setDebug(_config.getDebug())
-                    .setUnmarshalOptions(false, true)
-                    .doRequest(String.class);
+                    .doRequest();
+
+            json = new JSONObject(result);
+
+            milestonesList = (JSONArray) json.get("milestones");
+
         } catch (Throwable t) {
             throw new ApsSystemException("Error getting the cases list", t);
         }
 
-        return result;
+        return milestonesList;
     }
+    public List<String> getMilestonesNameInList(JSONArray milestonesList){
+        List<String> milestonesNameInList = new ArrayList<>(); 
+        
+        for (int i = 0; i < milestonesList.length(); i++) {
+            JSONObject iJson = milestonesList.getJSONObject(i);
+            milestonesNameInList.add(iJson.getString("milestone-name"));
+
+        }
+        return milestonesNameInList;
+        
+    }
+    
 
     public KieBpmConfig getKieBpmConfig() {
         return _config;

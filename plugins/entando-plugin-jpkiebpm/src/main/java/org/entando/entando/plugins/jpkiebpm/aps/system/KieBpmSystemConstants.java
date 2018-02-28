@@ -39,6 +39,11 @@ public interface KieBpmSystemConstants {
     public final static String HEADER_KEY_ACCEPT = "Accept";
     public final static String HEADER_KEY_CONTENT_TYPE = "Content-Type";
     public final static String HEADER_VALUE_JSON = "application/json";
+    
+    //MILESTONES PARAMETERS
+    public final static String HEADER_MILESTONES_ACHIEVEDONLY_PARM = "achievedOnly";
+    public final static String HEADER_MILESTONES_ACHIEVEDONLY_FALSE = "false";
+    public final static String HEADER_MILESTONES_ACHIEVEDONLY_TRUE = "true";
 
     // configuration parameter
     public final static String KIE_BPM_CONFIG_ITEM = "jpkiebpm_config";

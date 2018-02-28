@@ -30,8 +30,8 @@
     </bean>
 
     <bean id="jpkiebpmBpmProcessDatatableWidgetAction"
-              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmProcessDatatableWidgetAction"
-              parent="simpleWidgetAction" scope="prototype">
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmProcessDatatableWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
         <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
         <property name="formManager" ref="jpkiebpmsManager"/>
         <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
@@ -60,9 +60,11 @@
     </bean>
 
     <bean id="jpkiebpmBpmCaseProgressWidgetAction"
-              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction"
-              parent="simpleWidgetAction" scope="prototype">
-        <property name="caseManager" ref="jpkiebpmsCaseManager"/>  
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>        
+        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
+        <property name="formManager" ref="jpkiebpmsManager"/>
         <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
         <property name="groupManager" ref="GroupManager"/>
     </bean>

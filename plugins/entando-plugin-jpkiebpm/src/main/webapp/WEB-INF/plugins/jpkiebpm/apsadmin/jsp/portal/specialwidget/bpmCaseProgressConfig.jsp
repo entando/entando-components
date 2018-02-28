@@ -4,7 +4,9 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
 
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
@@ -27,7 +29,7 @@
 </div>
 <br>
 
-<div class="mb-20">
+<div class="mb-20" data-ng-app="caseProgressApp" data-ng-controller="myCtrl">
 
     <s:set var="breadcrumbs_pivotPageCode" value="pageCode"/>
 
@@ -35,7 +37,7 @@
         <s:param name="selectedNode" value="pageCode"></s:param>
     </s:action>
 
-    <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmProcessDatatableViewer" class="form-horizontal">
+    <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmCaseProgressViewer" class="form-horizontal">
         <p class="noscreen">
             <wpsf:hidden name="pageCode"/>
             <wpsf:hidden name="frame"/>
@@ -69,7 +71,7 @@
                 </s:if>
 
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
-                <s:set var="isGroupsSetted" value="%{groups != null && groups != ''}"/>
+                <s:set var="isCaseSetted" value="%{casesPath != null && casesPath != ''}"/>
 
 
                 <div class="form-horizontal">
@@ -80,14 +82,14 @@
                         <div class="col-xs-5">
                             <s:if test="!#isProcessPathSetted">
                                 <s:select list="process" id="processPath" name="processPath"
-                                          listKey="%{processId+ '@' + containerId}"
-                                          listValue="%{processName + ' @ ' + containerId}">
+                                          listKey="containerId"
+                                          listValue="processName">
                                 </s:select>
                             </s:if>
                             <s:else>
                                 <s:select disabled="true" list="process" id="processPath" name="processPath"
-                                          listKey="%{processId + '@' + containerId}"
-                                          listValue="%{processName + ' @ ' + containerId}">
+                                          listKey="containerId"
+                                          listValue="processName">
                                 </s:select>
                                 <s:hidden name="processPath"/>
 
@@ -111,53 +113,105 @@
                 </div>
 
                 <s:if test="#isProcessPathSetted">
-                    <div class="form-group">
-                        <label class="control-label col-xs-2" for="Bpm Groups">
-                            <s:text name="Bpm Groups"/>
-                        </label>
-                        <div class="col-xs-5">
-                            <s:if test="!#isGroupsSetted">
-                                <s:checkboxlist label="Bpm Groups" list="listBpmGroups" value="selectedGroups" name="groups"/>
+
+                    <%--<s:property value="processPath"/>--%>
+                    <%--<s:property value="cases"/>--%>
+
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2" for="casesPath">
+                                <s:text name="Cases"/>
+                            </label>
+                            <div class="col-xs-5">
+                                <s:if test="!#isCaseSetted">
+                                    <s:select list="cases" id="casesPath" name="casesPath" value="casesPathDefaultValue">
+                                    </s:select>
+                                </s:if>
+                                <s:else>
+                                    <s:select disabled="true" list="cases" id="casesPath" name="casesPath" value="casesPathDefaultValue">
+                                    </s:select>
+                                    <s:hidden name="casesPath"/>
+
+                                </s:else>
+                            </div>
+
+                            <s:if test="#isCaseSetted">
+                                <div class="col-xs-2">
+                                    <wpsf:submit action="changeCaseForm" value="Change Case"
+                                                 cssClass="btn btn-warning pull-right"/>
+                                </div>
                             </s:if>
                             <s:else>
-                                <s:checkboxlist label="Bpm Groups" list="listBpmGroups" value="selectedGroups" name="groups"/>
-
+                                <div class="col-xs-2">
+                                    <wpsf:submit action="chooseCaseForm" value="Choose Case"
+                                                 cssClass="btn btn-success pull-right"/>
+                                </div>
                             </s:else>
-                            <s:hidden name="groups"/>
                         </div>
-                    </div>
-                    <hr/>
-                    <div class="table-responsive overflow-visible">
 
+                    </div>
+
+                </s:if>
+                <s:if test="#isCaseSetted">
+                    <hr/>
+
+                    <!--<h1>Values:</h1>-->
+                    <%--<s:property value="milestones"/>--%>
+                    
+
+                    <div class="table-responsive overflow-visible">
+                        <input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" value=""/>
+                        <h2>{{ frontEndMilestonesData }}</h2>
+                        <br />
+                        <h2>{{ milestones }}</h2>
+                        
+                        
+                        
+                        <br />
+                        <br />
+                        <h1>Direct Ourput:</h1>
+                        <s:property value="milestoneJson"/>
+                        <br />
+                        <s:property value="milestones"/>
                         <table id="sort" class="grid table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th class="text-center table-w-5"><s:text name="label.position"/></th>
-                                    <th class="table-w-20"><s:text name="label.colunmsName"/></th>
-                                    <th class="text-center table-w-5"><s:text name="label.visible"/></th>
-                                    <th class="text-center table-w-20"><s:text name="label.override"/></th>
+
+                                    <th class="text-center table-w-5">Visible</th>
+                                    <th class="table-w-20">Milestone Name</th>
+                                    <th class="text-center table-w-20">% Completed (Even by Default)</th>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                <s:iterator var="i" status="status" value="fieldsDatatable">
+                                <tr ng-repeat="x in milestones">
+
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+
+                                    <td class="field text-center">{{ x }}</td>
+
+                                    <td class="text-center">
+                                        <input type="text"/>
+                                    </td>
+
+                                </tr>
+                                <%-- <s:iterator var="i" status="status" value="milestones">
                                     <tr>
 
-                                        <td class="index text-center">${i.position}
-                                            <input type="hidden" name="position_${i.name}" value="${i.position}"/>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="visible_${i}">
                                         </td>
-                                        <td class="field text-center"><s:property value="name"/>
-                                            <input type="hidden" name="field_${name}" value="${i.field}"/>
+
+                                        <td class="field text-center">${i}
+                                            <input type="hidden" name="field_${i}" value="${i}"/>
                                         </td>
                                         <td class="text-center">
-                                            <input type="checkbox" name="visible_${i.name}"
-                                                   <c:if test="${i.visible}">checked</c:if> >
-                                            </td>
-                                            <td class="text-center">
-                                                <input type="text" name="override_${name}" value="${i.override}"/>
+                                            <input type="text" name="percentage_${i}"/>
                                         </td>
                                     </tr>
-                                </s:iterator>
+                                </s:iterator>--%>
 
                             </tbody>
                         </table>
@@ -168,54 +222,44 @@
                             }
                         </style>
 
-                        <script>
-                            var fixHelper = function (e, tr) {
-                                var $originals = tr.children();
-                                var $helper = tr.clone();
-                                $helper.children().each(function (index) {
-                                    $(this).width($originals.eq(index).width())
-
-                                });
-                                return $helper;
-                            };
-                            var updateIndex = function (e, ui) {
-
-                                $('td.index', ui.item.parent()).each(function (i) {
-                                    var value = i + 1;
-                                    var self = $(this);
-                                    self.html(value);
-                                    var fieldValue = $('td.field')[i].getElementsByTagName("input")[0].value.replace("field_", "");
-                                    var inputHidden = $('<input>')
-                                            .attr('type', 'hidden')
-                                            .attr('name', 'position_' + fieldValue)
-                                            .attr('value', i + 1);
-                                    self.append(inputHidden);
-                                });
-                            };
-
-                            $("#sort tbody").sortable({
-                                opacity: 0.5,
-                                cursor: "move",
-                                helper: fixHelper,
-                                stop: updateIndex
-                            }).disableSelection();
-                        </script>
-
                     </div>
+
                 </s:if>
             </div>
         </div>
-    </div>
-    <div class="form-horizontal">
-        <div class="form-group">
-            <div class="col-xs-12">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-xs-6">
+                    <input type="button" cssClass="btn btn-primary" id="milestonetablesavebt" value="Apply"/>
+                    <!--ng-click="setfrontEndMilestonesData()" />-->
+                </div>
+                <div class="col-xs-6">
 
-                <wpsf:submit disabled="!#isProcessPathSetted" type="button" cssClass="btn btn-primary pull-right"
-                             action="save">
-                    <s:text name="%{getText('label.save')}"/>
-                </wpsf:submit>
+                    <wpsf:submit disabled="!#isProcessPathSetted" type="button" cssClass="btn btn-primary pull-right"
+                                 action="save">
+                        <s:text name="%{getText('label.save')}"/>
+                    </wpsf:submit>
+                </div>
             </div>
         </div>
-    </div>
-</s:form>
+    </s:form>
 </div>
+
+<script>
+    var app = angular.module('caseProgressApp', []);
+    app.controller('myCtrl', function ($scope) {
+
+        var milestoneJson = <s:property value="milestoneJson"/>;
+        var milestones = <s:property value="milestones"/>;
+
+        $scope.frontEndMilestonesData = milestoneJson;
+        $scope.milestones = milestones;
+
+//        $scope.setfrontEndMilestonesData = function () {
+//
+//        }
+
+    });
+
+
+</script>

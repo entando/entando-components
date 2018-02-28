@@ -41,6 +41,6 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-progress-status', '<?xml version="1.
 <property key="en">BPM-Case progress status</property>
 <property key="it">BPM-Case Estado de progreso de</property>
 </properties>', '<config>
-	<parameter name="widgetInfoId">WidgetInfoID</parameter>
+	<parameter name="frontEndMilestonesData">frontEndMilestonesData</parameter>
 	<action name="jpkiebpmBpmCaseProgressWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
