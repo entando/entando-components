@@ -29,7 +29,7 @@
 </div>
 <br>
 
-<div class="mb-20" data-ng-app="caseProgressApp" data-ng-controller="myCtrl">
+<div class="mb-20" data-ng-app="caseProgressApp" data-ng-controller="CaseProgressConfigCtrl as vm">
 
     <s:set var="breadcrumbs_pivotPageCode" value="pageCode"/>
 
@@ -70,7 +70,7 @@
                     </div>
                 </s:if>
 
-                <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
+                               <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
 
                 <div class="form-horizontal">
                     <div class="form-group">
@@ -105,97 +105,63 @@
 
                 </div>
 
-                <%--<s:if test="#isProcessPathSetted">--%>
+                <s:if test="#isProcessPathSetted">
+                
 
-                <%--<s:property value="processPath"/>--%>
-                <%--<s:property value="cases"/>--%>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-xs-4" for="knowledgeSources">
+                            <s:text name="Knowledge Sources"/>
+                        </label>
+                        <div class="col-xs-8">
+                            <select ng-options="knowledgeSource.name for knowledgeSource in vm.knowledgeSources.all track by knowledgeSource.id" ng-model="vm.form.knowledgeSource" ng-change="vm.ui.updateCaseDefs()">
+                            </select>
 
-                <!--                    <div class="form-horizontal">
-                                        <div class="form-group">
-                                            <label class="control-label col-xs-2" for="casesPath">Cases
-                                            </label>
-                                            <div class="col-xs-5">
-                                                <select id="casesPath" ng-model="selectedCases" ng-options="x for x in cases">
-                                                </select>
-                                            </div>
-                                            <input type="button" class="btn btn-primary pull-right" id="selectCase" value="Select Case"/>
-                                        </div>
-                                    </div>-->
+                        </div>
 
-                <%--</s:if>--%>
-                <hr/>
+                    </div>
+                    <div class="form-group" ng-show="vm.form.knowledgeSource">
+                        <label class="control-label col-xs-4" for="processPath">
+                            <s:text name="Process"/>
+                        </label>
+                        <div class="col-xs-8">
+                            <select ng-options="caseDef.name for caseDef in vm.defs.all track by caseDef['container-id']" ng-model="vm.form.caseDef">
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-                <!--<h1>Values:</h1>-->
-                <%--<s:property value="milestones"/>--%>
-
-
-                <!--<div class="table-responsive overflow-visible">-->
-                <input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" value="TestingData" />
-                <s:hidden name="frontEndMilestonesData" value="frontEndMilestonesData"/>
-                       <!--data-ng-model="frontEndmilestonesList" />-->
-                <!--<h2>{{ frontEndMilestonesData }}</h2>-->
-
-
-
-                <br />
-                <br />
-                <h1>Direct Ourput:</h1>
+                <hr/>         
                 <%--<s:property value="casesDefinitions"/>--%>
-                <!--{{ frontEndmilestonesList }}-->
                 <br />
-                <!--                        <table id="sort" class="grid table table-bordered table-hover">
-                                            <thead>
-                                                <tr>
-                
-                                                    <th class="text-center table-w-5">Visible</th>
-                                                    <th class="table-w-20">Milestone Name</th>
-                                                    <th class="text-center table-w-20">Completed (Even by Default)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>-->
+                <table id="sort" class="grid table table-bordered table-hover" ng-show="vm.form.caseDef">
+                    <thead>
+                        <tr>
 
-                <!--                                <tr ng-repeat="x in frontEndmilestonesList">
-                
-                                                    <td class="text-center">
-                                                        <input type="checkbox">
-                                                    </td>
-                
-                                                    <td class="field text-center">{{ x }}</td>
-                
-                                                    <td class="text-center">
-                                                        <input type="text"/>
-                                                    </td>
-                
-                                                </tr>-->
-                <%-- <s:iterator var="i" status="status" value="milestones">
-                    <tr>
+                            <th class="text-center table-w-5">Visible</th>
+                            <th class="table-w-20">Milestone Name</th>
+                            <th class="text-center table-w-20">Completed (Even by Default)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="milestone in vm.form.caseDef.milestones track by milestone['milestone-id']">
 
-                                        <td class="text-center">
-                                            <input type="checkbox" name="visible_${i}">
-                                        </td>
+                            <td class="text-center">
+                                <input type="checkbox" ng-model="milestone.visible">
+                            </td>
 
-                                        <td class="field text-center">${i}
-                                            <input type="hidden" name="field_${i}" value="${i}"/>
-                                        </td>
-                                        <td class="text-center">
-                                            <input type="text" name="percentage_${i}"/>
-                                        </td>
-                                    </tr>
-                                </s:iterator>--%>
-                <!--
-                                            </tbody>
-                                        </table>
-                
-                                        <style>
-                                            .ui-sortable-helper {
-                                                display: table;
-                                            }
-                                        </style>
-                
-                                    </div>-->
+                            <td class="field text-center">{{ milestone['milestone-name']}}</td>
 
-                <!--</div>-->
-            </div>
+                            <td class="text-center">
+                                <input type="text" width="20" ng-model="milestone.percentage"/>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </s:if>
+</div>
             <div class="form-horizontal">
                 <div class="form-group">
                     <div class="col-xs-6">
@@ -213,17 +179,175 @@
             </div>
         </s:form>
     </div>
+
     <script>
-        var app = angular.module('caseProgressApp', []);
-        app.controller('myCtrl', function ($scope) {
+                (function ngApp(){
 
-//        var frontEndmilestonesListInput = { "name": "Order for IT hardware" };
-//        $scope.frontEndmilestonesList = JSON.stringify(frontEndmilestonesListInput);
-        //        $scope.setfrontEndMilestonesData = function () {
-        //
-        //        }
+                angular.module('caseProgressApp', [])
+                        .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
+                        .service("BpmService", BpmService);
+                       
+        function CaseProgressConfigCtrl($log, BpmService) {
+                        var vm = this;
+                                //hold all known knoledge sources
+                                vm.knowledgeSources = {};
+                                //hold all case definitions by selected knowledge source                        
+                                vm.defs = {};
+                                //data selected by the user
+                                vm.form = {
+                                knowledgeSource : undefined,
+                                        caseDef : undefined
+                                };
+                                vm.ui = {updateCaseDefs : loadCaseDefOnSelectedKS};
+                                function loadCaseDefOnSelectedKS(){
+                                loadCaseDefinition(vm.form.knowledgeSource);
+                                }
 
-        });
+
+                        function loadKnowledgeSources(){
+                        BpmService.knowledgeSources()
+                                .then(function success(res){
+                                vm.knowledgeSources.all = res.data;
+                                }, function errHandler(error){
+                                $log.error("Ops... something goes wrong!", err);
+                                })
+                        }
+
+
+                        function loadCaseDefinition(knowledgeSource){
+
+                        BpmService.caseDefinition(knowledgeSource)
+                                .then(function(res){
+                                vm.defs.all = res.data.definitions;
+                                }, function(err){
+                                $log.error("Ops... something goes wrong!", err);
+                                });
+                        }
+
+
+
+                        function init(){
+                        loadKnowledgeSources();
+                        }
+
+                        init();
+
+
+                        }
+
+                function BpmService($http, $q){
+
+
+                this.caseDefinition = readCaseDefinition;
+                        this.knowledgeSources = knowledgeSources;
+                        function readCaseDefinition(){
+                        var promise = $q(
+                                function mockData(resolve, reject){
+                                resolve({data:fakeDataCases});
+                                });
+                                return promise;
+                        }
+
+
+                function knowledgeSources(){
+                var promise = $q(
+                        function mockKSs(resolve, reject){
+                        resolve({data:fakeKSs})
+                        });
+                        return promise;
+                }
+
+                var fakeKSs = [{
+                name: "Knowledge Source A",
+                        id:"kbs-a"
+                },
+                {
+                name: "Knowledge Source B",
+                        id:"kbs-b"
+                }];
+            
+                        var fakeDataCases = {
+                        "definitions": [
+                        {
+                        "name": "Order for IT hardware",
+                                "id": "itorders.orderhardware",
+                                "version": "1.0",
+                                "case-id-prefix": "IT",
+                                "container-id": "itorders_1.0.0-SNAPSHOT",
+                                "adhoc-fragments": [
+                                {
+                                "name": "Prepare hardware spec",
+                                        "type": "HumanTaskNode"
+                                },
+                                {
+                                "name": "Milestone 1: Order placed",
+                                        "type": "MilestoneNode"
+                                },
+                                {
+                                "name": "Milestone 2: Order shipped",
+                                        "type": "MilestoneNode"
+                                },
+                                {
+                                "name": "Milestone 3: Delivered to customer",
+                                        "type": "MilestoneNode"
+                                },
+                                {
+                                "name": "Hardware spec ready",
+                                        "type": "MilestoneNode"
+                                },
+                                {
+                                "name": "Manager decision",
+                                        "type": "MilestoneNode"
+                                }
+                                ],
+                                "roles": {
+                                "owner": 1,
+                                        "manager": 1,
+                                        "supplier": 2
+                                },
+                                "milestones": [
+                                {
+                                "milestone-name": "Milestone 1: Order placed",
+                                        "milestone-id": "_DCD97847-6E3C-4C5E-9EE3-221C04BE42ED",
+                                        "milestone-mandatory": false,
+                                        "visible": true,
+                                        "percentage": "30"
+                                },
+                                {
+                                "milestone-name": "Milestone 2: Order shipped",
+                                        "milestone-id": "_343B90CD-AA19-4894-B63C-3CE1906E6FD1",
+                                        "milestone-mandatory": false,
+                                        "visible": true,
+                                        "percentage": "30"
+                                },
+                                {
+                                "milestone-name": "Milestone 3: Delivered to customer",
+                                        "milestone-id": "_52AFA23F-C087-4519-B8F2-BABCC31D68A6",
+                                        "milestone-mandatory": false,
+                                        "visible": true,
+                                        "percentage": "30"
+                                },
+                                {
+                                "milestone-name": "Hardware spec ready",
+                                        "milestone-id": "_483CF785-96DD-40C1-9148-4CFAFAE5778A",
+                                        "milestone-mandatory": false,
+                                        "visible": false,
+                                        "percentage": "30"
+                                },
+                                {
+                                "milestone-name": "Manager decision",
+                                        "milestone-id": "_79953D58-25DB-4FD6-94A0-DFC6EA2D0339",
+                                        "milestone-mandatory": false,
+                                        "visible": true,
+                                        "percentage": "10"
+                                }
+                                ],
+                                "stages": []
+                        }
+                        ]
+                        };
+                }
+                })();
 
 
     </script>
