@@ -71,8 +71,6 @@
                 </s:if>
 
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
-                <s:set var="isCaseSetted" value="%{casesPath != null && casesPath != ''}"/>
-
 
                 <div class="form-horizontal">
                     <div class="form-group">
@@ -81,18 +79,13 @@
                         </label>
                         <div class="col-xs-5">
                             <s:if test="!#isProcessPathSetted">
-                                <s:select list="process" id="processPath" name="processPath"
-                                          listKey="containerId"
-                                          listValue="processName">
+                                <s:select list="process" id="processPath" name="processPath"  value="processPathDefaultValue">
                                 </s:select>
                             </s:if>
                             <s:else>
-                                <s:select disabled="true" list="process" id="processPath" name="processPath"
-                                          listKey="containerId"
-                                          listValue="processName">
+                                <s:select disabled="true" list="process" id="processPath" name="processPath" value="processPathDefaultValue">
                                 </s:select>
-                                <s:hidden name="processPath"/>
-
+                             <%--<s:hidden name="processPath"/>--%>
                             </s:else>
                         </div>
 
@@ -112,93 +105,70 @@
 
                 </div>
 
-                <s:if test="#isProcessPathSetted">
+                <%--<s:if test="#isProcessPathSetted">--%>
 
-                    <%--<s:property value="processPath"/>--%>
-                    <%--<s:property value="cases"/>--%>
+                <%--<s:property value="processPath"/>--%>
+                <%--<s:property value="cases"/>--%>
 
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label col-xs-2" for="casesPath">
-                                <s:text name="Cases"/>
-                            </label>
-                            <div class="col-xs-5">
-                                <s:if test="!#isCaseSetted">
-                                    <s:select list="cases" id="casesPath" name="casesPath" value="casesPathDefaultValue">
-                                    </s:select>
-                                </s:if>
-                                <s:else>
-                                    <s:select disabled="true" list="cases" id="casesPath" name="casesPath" value="casesPathDefaultValue">
-                                    </s:select>
-                                    <s:hidden name="casesPath"/>
+                <!--                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="casesPath">Cases
+                                            </label>
+                                            <div class="col-xs-5">
+                                                <select id="casesPath" ng-model="selectedCases" ng-options="x for x in cases">
+                                                </select>
+                                            </div>
+                                            <input type="button" class="btn btn-primary pull-right" id="selectCase" value="Select Case"/>
+                                        </div>
+                                    </div>-->
 
-                                </s:else>
-                            </div>
+                <%--</s:if>--%>
+                <hr/>
 
-                            <s:if test="#isCaseSetted">
-                                <div class="col-xs-2">
-                                    <wpsf:submit action="changeCaseForm" value="Change Case"
-                                                 cssClass="btn btn-warning pull-right"/>
-                                </div>
-                            </s:if>
-                            <s:else>
-                                <div class="col-xs-2">
-                                    <wpsf:submit action="chooseCaseForm" value="Choose Case"
-                                                 cssClass="btn btn-success pull-right"/>
-                                </div>
-                            </s:else>
-                        </div>
+                <!--<h1>Values:</h1>-->
+                <%--<s:property value="milestones"/>--%>
 
-                    </div>
 
-                </s:if>
-                <s:if test="#isCaseSetted">
-                    <hr/>
+                <!--<div class="table-responsive overflow-visible">-->
+                <input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" value="TestingData" />
+                <s:hidden name="frontEndMilestonesData" value="frontEndMilestonesData"/>
+                       <!--data-ng-model="frontEndmilestonesList" />-->
+                <!--<h2>{{ frontEndMilestonesData }}</h2>-->
 
-                    <!--<h1>Values:</h1>-->
-                    <%--<s:property value="milestones"/>--%>
-                    
 
-                    <div class="table-responsive overflow-visible">
-                        <input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" value=""/>
-                        <h2>{{ frontEndMilestonesData }}</h2>
-                        <br />
-                        <h2>{{ milestones }}</h2>
-                        
-                        
-                        
-                        <br />
-                        <br />
-                        <h1>Direct Ourput:</h1>
-                        <s:property value="milestoneJson"/>
-                        <br />
-                        <s:property value="milestones"/>
-                        <table id="sort" class="grid table table-bordered table-hover">
-                            <thead>
-                                <tr>
 
-                                    <th class="text-center table-w-5">Visible</th>
-                                    <th class="table-w-20">Milestone Name</th>
-                                    <th class="text-center table-w-20">% Completed (Even by Default)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                <br />
+                <br />
+                <h1>Direct Ourput:</h1>
+                <%--<s:property value="casesDefinitions"/>--%>
+                <!--{{ frontEndmilestonesList }}-->
+                <br />
+                <!--                        <table id="sort" class="grid table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                
+                                                    <th class="text-center table-w-5">Visible</th>
+                                                    <th class="table-w-20">Milestone Name</th>
+                                                    <th class="text-center table-w-20">Completed (Even by Default)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>-->
 
-                                <tr ng-repeat="x in milestones">
-
-                                    <td class="text-center">
-                                        <input type="checkbox">
-                                    </td>
-
-                                    <td class="field text-center">{{ x }}</td>
-
-                                    <td class="text-center">
-                                        <input type="text"/>
-                                    </td>
-
-                                </tr>
-                                <%-- <s:iterator var="i" status="status" value="milestones">
-                                    <tr>
+                <!--                                <tr ng-repeat="x in frontEndmilestonesList">
+                
+                                                    <td class="text-center">
+                                                        <input type="checkbox">
+                                                    </td>
+                
+                                                    <td class="field text-center">{{ x }}</td>
+                
+                                                    <td class="text-center">
+                                                        <input type="text"/>
+                                                    </td>
+                
+                                                </tr>-->
+                <%-- <s:iterator var="i" status="status" value="milestones">
+                    <tr>
 
                                         <td class="text-center">
                                             <input type="checkbox" name="visible_${i}">
@@ -212,54 +182,50 @@
                                         </td>
                                     </tr>
                                 </s:iterator>--%>
+                <!--
+                                            </tbody>
+                                        </table>
+                
+                                        <style>
+                                            .ui-sortable-helper {
+                                                display: table;
+                                            }
+                                        </style>
+                
+                                    </div>-->
 
-                            </tbody>
-                        </table>
-
-                        <style>
-                            .ui-sortable-helper {
-                                display: table;
-                            }
-                        </style>
-
+                <!--</div>-->
+            </div>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-6">
+                        <input type="button" cssClass="btn btn-primary" id="milestonetablesavebt" value="Apply"/>
+                        <!--ng-click="setfrontEndMilestonesData()" />-->
                     </div>
+                    <div class="col-xs-6">
 
-                </s:if>
-            </div>
-        </div>
-        <div class="form-horizontal">
-            <div class="form-group">
-                <div class="col-xs-6">
-                    <input type="button" cssClass="btn btn-primary" id="milestonetablesavebt" value="Apply"/>
-                    <!--ng-click="setfrontEndMilestonesData()" />-->
-                </div>
-                <div class="col-xs-6">
-
-                    <wpsf:submit disabled="!#isProcessPathSetted" type="button" cssClass="btn btn-primary pull-right"
-                                 action="save">
-                        <s:text name="%{getText('label.save')}"/>
-                    </wpsf:submit>
+                        <wpsf:submit disabled="!#isProcessPathSetted" type="button" cssClass="btn btn-primary pull-right"
+                                     action="save">
+                            <s:text name="%{getText('label.save')}"/>
+                        </wpsf:submit>
+                    </div>
                 </div>
             </div>
-        </div>
-    </s:form>
-</div>
+        </s:form>
+    </div>
+    <script>
+        var app = angular.module('caseProgressApp', []);
+        app.controller('myCtrl', function ($scope) {
 
-<script>
-    var app = angular.module('caseProgressApp', []);
-    app.controller('myCtrl', function ($scope) {
+//        var frontEndmilestonesListInput = { "name": "Order for IT hardware" };
+//        $scope.frontEndmilestonesList = JSON.stringify(frontEndmilestonesListInput);
+        //        $scope.setfrontEndMilestonesData = function () {
+        //
+        //        }
 
-        var milestoneJson = <s:property value="milestoneJson"/>;
-        var milestones = <s:property value="milestones"/>;
-
-        $scope.frontEndMilestonesData = milestoneJson;
-        $scope.milestones = milestones;
-
-//        $scope.setfrontEndMilestonesData = function () {
-//
-//        }
-
-    });
+        });
 
 
-</script>
+    </script>
+
+

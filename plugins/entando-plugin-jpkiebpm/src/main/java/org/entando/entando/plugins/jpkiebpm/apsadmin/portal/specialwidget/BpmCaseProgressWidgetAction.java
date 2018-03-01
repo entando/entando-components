@@ -24,21 +24,23 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
-import org.json.JSONArray;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
 
 /**
  *
  * @author own_strong
  */
-public class BpmCaseProgressWidgetAction extends BpmProcessDatatableWidgetAction {
+public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
 //    public static final String SUCCESS = "success";
     private CaseManager caseManager;
@@ -46,79 +48,113 @@ public class BpmCaseProgressWidgetAction extends BpmProcessDatatableWidgetAction
     private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
     String processPath;
-    String casesPath;
-    List cases;
-    String casesPathDefaultValue;
-    String milestones;
-    String milestoneJson;
-    
-    String frontEndMilestonesData;
+    String processPathDefaultValue;
+    String casesDefinitions;
+    List<String> process;
+
+    String _frontEndMilestonesData;
 
     @Override
-    protected void loadFieldIntoDatatableFromBpm() throws ApsSystemException {
-        super.loadFieldIntoDatatableFromBpm();
+    public String init() {
+        String result = super.init();
+        try {
+            List<String> cids = new ArrayList();
+            List<kieProcess> in = this.getCaseManager().getProcessDefinitionsList();
+            for (int i = 0; i < in.size(); i++) {
+                cids.add(in.get(i).getContainerId());
 
+            }
+            this.setProcess(cids);
+
+        } catch (ApsSystemException ex) {
+            Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result;
     }
 
     @Override
+    protected String extractInitConfig() {
+        String result = super.extractInitConfig();
+
+        String frontEndMilestonesDataIn = this.getWidget().getConfig().getProperty("frontEndMilestonesData");
+        if (StringUtils.isNotBlank(frontEndMilestonesDataIn)) {
+            this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
+        }
+        return result;
+    }
+
     public String chooseForm() {
 
         try {
-            this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
+            this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
+            this.setFrontEndMilestonesData(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
+            
+            List<String> cids = new ArrayList();
+            List<kieProcess> in = this.getCaseManager().getProcessDefinitionsList();
+            for (int i = 0; i < in.size(); i++) {
+                cids.add(in.get(i).getContainerId());
+            }
+            this.setProcess(cids);
+            this.setProcessPathDefaultValue(processPath);
         } catch (ApsSystemException ex) {
             Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         return SUCCESS;
     }
 
-    @Override
     public String changeForm() {
-
         try {
-            this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
+            this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
+            this.setFrontEndMilestonesData(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
+            
+            List<String> cids = new ArrayList();
+            List<kieProcess> in = this.getCaseManager().getProcessDefinitionsList();
+            for (int i = 0; i < in.size(); i++) {
+                cids.add(in.get(i).getContainerId());
+            }
+            this.setProcess(cids);
+            this.setProcessPathDefaultValue(processPath);
         } catch (ApsSystemException ex) {
             Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         return SUCCESS;
     }
 
-    public String chooseCaseForm() throws ApsSystemException {
-
-        this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
-        this.setCasesPathDefaultValue(casesPath);
-        
-        JSONArray milestonJSAR = this.getCaseManager().getMilestonesList(this.getProcessPath(), this.getCasesPath());
-        
-        this.setMilestones(this.getCaseManager().getMilestonesNameInList(milestonJSAR).toString());
-        this.setMilestoneJson(milestonJSAR.toString());
-
-        return SUCCESS;
-    }
-
-    public String changeCaseForm() throws ApsSystemException {
-
-        this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
-        this.setCasesPathDefaultValue(casesPath);
-        
-        JSONArray milestonJSAR = this.getCaseManager().getMilestonesList(this.getProcessPath(), this.getCasesPath());
-        
-        this.setMilestones(this.getCaseManager().getMilestonesNameInList(milestonJSAR).toString());
-        this.setMilestoneJson(milestonJSAR.toString());
-
-        return SUCCESS;
-    }
-
-    @Override
-    public IGroupManager getGroupManager() {
-        return groupManager;
-    }
-
-    @Override
-    public void setGroupManager(IGroupManager groupManager) {
-        this.groupManager = groupManager;
-    }
-
-    @Override
+//    public String chooseCaseForm() throws ApsSystemException {
+//
+//        this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
+//        this.setCasesPathDefaultValue(casesPath);
+//        
+//        JSONArray milestonJSAR = this.getCaseManager().getMilestonesList(this.getProcessPath(), this.getCasesPath());
+//        
+//        this.setMilestonesNameListString(this.getCaseManager().getMilestonesNameInList(milestonJSAR).toString());
+//        this.setMilestoneJson(milestonJSAR.toString());
+//
+//        return SUCCESS;
+//    }
+//
+//    public String changeCaseForm() throws ApsSystemException {
+//
+//        this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
+//        this.setCasesPathDefaultValue(casesPath);
+//        
+//        JSONArray milestonJSAR = this.getCaseManager().getMilestonesList(this.getProcessPath(), this.getCasesPath());
+//        
+//        this.setMilestonesNameListString(this.getCaseManager().getMilestonesNameInList(milestonJSAR).toString());
+//        this.setMilestoneJson(milestonJSAR.toString());
+//
+//        return SUCCESS;
+//    }
+//    @Override
+//    public IGroupManager getGroupManager() {
+//        return groupManager;
+//    }
+//
+//    @Override
+//    public void setGroupManager(IGroupManager groupManager) {
+//        this.groupManager = groupManager;
+//    }
     public IKieFormManager getFormManager() {
         return formManager;
     }
@@ -131,89 +167,64 @@ public class BpmCaseProgressWidgetAction extends BpmProcessDatatableWidgetAction
         this.caseManager = caseManager;
     }
 
-    @Override
     public void setFormManager(IKieFormManager formManager) {
         this.formManager = formManager;
     }
 
-    @Override
     public IBpmWidgetInfoManager getBpmWidgetInfoManager() {
         return bpmWidgetInfoManager;
     }
 
-    @Override
     public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 
-    @Override
     public IKieFormOverrideManager getKieFormOverrideManager() {
         return kieFormOverrideManager;
     }
 
-    @Override
     public void setKieFormOverrideManager(IKieFormOverrideManager kieFormOverrideManager) {
         this.kieFormOverrideManager = kieFormOverrideManager;
     }
 
-    @Override
     public String getProcessPath() {
         return processPath;
     }
 
-    @Override
     public void setProcessPath(String processPath) {
         this.processPath = processPath;
     }
 
-    public List getCases() {
-        return cases;
+    public String getCasesDefinitions() {
+        return casesDefinitions;
     }
 
-    public void setCases(List cases) {
-        this.cases = cases;
-    }
-
-    public String getMilestones() {
-        return milestones;
-    }
-
-    public void setMilestones(String milestones) {
-        this.milestones = milestones;
-    }
-
-    public String getCasesPath() {
-        return casesPath;
-    }
-
-    public void setCasesPath(String casesPath) {
-        this.casesPath = casesPath;
-    }
-
-    public String getCasesPathDefaultValue() {
-        return casesPathDefaultValue;
-    }
-
-    public void setCasesPathDefaultValue(String casesPathDefaultValue) {
-        this.casesPathDefaultValue = casesPathDefaultValue;
+    public void setCasesDefinitions(String casesDefinitions) {
+        this.casesDefinitions = casesDefinitions;
     }
 
     public String getFrontEndMilestonesData() {
-        return frontEndMilestonesData;
+        return _frontEndMilestonesData;
     }
 
     public void setFrontEndMilestonesData(String frontEndMilestonesData) {
-        this.frontEndMilestonesData = frontEndMilestonesData;
+        this._frontEndMilestonesData = frontEndMilestonesData;
     }
 
-    public String getMilestoneJson() {
-        return milestoneJson;
+    public List<String> getProcess() {
+        return process;
     }
 
-    public void setMilestoneJson(String milestoneJson) {
-        this.milestoneJson = milestoneJson;
+    public void setProcess(List<String> process) {
+        this.process = process;
     }
-    
-    
+
+    public String getProcessPathDefaultValue() {
+        return processPathDefaultValue;
+    }
+
+    public void setProcessPathDefaultValue(String processPathDefaultValue) {
+        this.processPathDefaultValue = processPathDefaultValue;
+    }
 
 }

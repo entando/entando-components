@@ -19,6 +19,12 @@
 		<property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
         <property name="i18nManager" ref="I18nManager" />
     </bean>
+    
+     <bean id="jpkieBpmCaseProgressFrontAction"
+          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseProgressAction"
+          parent="abstractBaseAction" scope="prototype" >
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
+    </bean>
 	
 	
 <!--
@@ -33,7 +39,7 @@
           parent="simpleWidgetAction" scope="prototype" >
         <property name="formManager" ref="jpkiebpmsManager" />
 
-		</bean>
-	-->
+            </bean>
+    -->
 
 </beans>

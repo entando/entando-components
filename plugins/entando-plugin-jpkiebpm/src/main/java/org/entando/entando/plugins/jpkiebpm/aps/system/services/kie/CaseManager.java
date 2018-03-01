@@ -51,6 +51,39 @@ public class CaseManager extends KieFormManager {
         this.setKieBpmConfig(super.getConfig());
     }
 
+    public JSONObject getCasesDefinitions(String containerId) throws ApsSystemException {
+
+        Map<String, String> headersMap = new HashMap<>();
+
+        String result = null;
+        JSONObject json = null;
+
+        if (!_config.getActive() || StringUtils.isBlank(containerId)) {
+            return json;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_CASES_DEFINITIONS).resolveParams(containerId);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+            // perform query
+            result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setDebug(_config.getDebug())
+                    .doRequest();
+
+            json = new JSONObject(result);
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error getting the cases list", t);
+        }
+
+        return json;
+    }
+
     public List<String> getCasesList(String containerId) throws ApsSystemException {
 
         List<String> casesList = new ArrayList<>();
@@ -98,10 +131,10 @@ public class CaseManager extends KieFormManager {
         JSONArray milestonesList = null;
         Map<String, String> headersMap = new HashMap<>();
         Map<String, String> param = new HashMap<>();
-        
+
         String result = null;
         JSONObject json = null;
-        
+
         if (!_config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return milestonesList;
         }
@@ -131,18 +164,33 @@ public class CaseManager extends KieFormManager {
 
         return milestonesList;
     }
-    public List<String> getMilestonesNameInList(JSONArray milestonesList){
-        List<String> milestonesNameInList = new ArrayList<>(); 
-        
+
+    ////Helpers
+    public List<String> getCaseListFromCaseDefinitions(JSONObject caseDefinitions) {
+        List<String> caseNameList = new ArrayList<>();
+        JSONArray definitions = (JSONArray) caseDefinitions.getJSONArray("definitions");
+
+        for (int i = 0; i < definitions.length(); i++) {
+            JSONObject iJson = definitions.getJSONObject(i);
+            caseNameList.add(iJson.getString("name"));
+
+        }
+        return caseNameList;
+
+    }
+
+
+    public List<String> getMilestonesNameInList(JSONArray milestonesList) {
+        List<String> milestonesNameInList = new ArrayList<>();
+
         for (int i = 0; i < milestonesList.length(); i++) {
             JSONObject iJson = milestonesList.getJSONObject(i);
             milestonesNameInList.add(iJson.getString("milestone-name"));
 
         }
         return milestonesNameInList;
-        
+
     }
-    
 
     public KieBpmConfig getKieBpmConfig() {
         return _config;
