@@ -54,16 +54,13 @@
                 <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
             </interceptor-ref>
         </action>
-        <!--
-        <action name="save" class="jpkieBpmDataTypeFormFrontAction" method="save">
-            <result name="input" type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/form/form_type_view.jsp</result>
-            <result type="chain">
-                <param name="actionName">view</param>
-            </result>
+        
+        <action name="selectCaseInstance" class="jpkieBpmCaseProgressFrontAction" method="selectCaseInstance">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-progress-status.jsp</result>
             <interceptor-ref name="entandoFrontEndFreeStack" >
                 <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
             </interceptor-ref>
-        </action>-->
+        </action>
 
 
     </package>

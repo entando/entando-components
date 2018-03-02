@@ -176,9 +176,8 @@ public class CaseManager extends KieFormManager {
 
         }
         return caseNameList;
-
     }
-
+    
 
     public List<String> getMilestonesNameInList(JSONArray milestonesList) {
         List<String> milestonesNameInList = new ArrayList<>();

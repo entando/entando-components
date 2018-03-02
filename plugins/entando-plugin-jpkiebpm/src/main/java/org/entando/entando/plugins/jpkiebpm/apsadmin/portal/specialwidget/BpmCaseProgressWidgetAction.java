@@ -26,7 +26,7 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +43,6 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kiePro
  */
 public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
-//    public static final String SUCCESS = "success";
     private CaseManager caseManager;
     private IKieFormManager formManager;
     private IKieFormOverrideManager kieFormOverrideManager;
@@ -51,67 +50,54 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     String processPath;
     String processPathDefaultValue;
     String casesDefinitions;
-    List<String> process;
-
+    List<kieProcess> process;
     String _frontEndMilestonesData;
 
     @Override
     public String init() {
         String result = super.init();
         try {
-            List<String> cids = new ArrayList();
-            List<kieProcess> in = this.getCaseManager().getProcessDefinitionsList();
-            for (int i = 0; i < in.size(); i++) {
-                cids.add(in.get(i).getContainerId());
-
-            }
-            this.setProcess(cids);
-
+            this.setProcess(this.getCaseManager().getProcessDefinitionsList());
         } catch (ApsSystemException ex) {
             Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    @Override
+    public String save() {
+        String result = super.save();
+        Widget widget = this.createNewWidget();
+        
+        if (widget != null) {
+            widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
+        } else {
+            System.out.println("NULL WIDGET");
         }
 
         return result;
     }
-//    @Override
-//    public String save(){
-//        String result = super.save();
-//        Widget widget = this.createNewWidget();
-//        
-//        widget.getConfig().setProperty("frontEndMilestonesData", "frontEndMilestonesData");
-//        
-//        return result;
-//    }
 
     protected String extractInitConfig() {
         String result = super.extractInitConfig();
         String configParam = this.getWidget().getConfig().getProperty("frontEndMilestonesData");
+        
         if (StringUtils.isNotBlank(configParam)) {
             this.setFrontEndMilestonesData(configParam);
         }
         return result;
     }
 
-    public String chooseForm() {
+    public String chooseForm() throws IOException {
 
         try {
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
-            this.setFrontEndMilestonesData("Choose Form");
-//            if (this.getWidget() != null) {
-//                this.getWidget().getConfig().setProperty("frontEndMilestonesData", "Choose Form");
-//            } else{
-//                System.out.println("String (nonSt )Conf: "+this.getWidget().toString());
-//                System.out.println("String Conf: "+this.getWidget().toString());
-//            }
-//            System.out.println("After clicking choose " + this.getWidget().getConfig().getProperty("frontEndMilestonesData"));
 
-            List<String> cids = new ArrayList();
-            List<kieProcess> in = this.getCaseManager().getProcessDefinitionsList();
-            for (int i = 0; i < in.size(); i++) {
-                cids.add(in.get(i).getContainerId());
-            }
-            this.setProcess(cids);
-            this.setProcessPathDefaultValue(processPath);
+            ///This will set the Conf json to case definition input json
+            //After modifying the conf json at the front end this must be removed
+            this.setFrontEndMilestonesData(this.getCasesDefinitions());
+           
+            this.setProcess(this.getCaseManager().getProcessDefinitionsList());
         } catch (ApsSystemException ex) {
             Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -119,57 +105,22 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     }
 
     public String changeForm() {
+
         try {
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
-            this.setFrontEndMilestonesData("ChangeForm");
 
-            List<String> cids = new ArrayList();
-            List<kieProcess> in = this.getCaseManager().getProcessDefinitionsList();
-            for (int i = 0; i < in.size(); i++) {
-                cids.add(in.get(i).getContainerId());
-            }
-            this.setProcess(cids);
-            this.setProcessPathDefaultValue(processPath);
+            ///This will set the Conf json to case definition input json
+            //After modifying the conf json at the front end this must be removed
+            this.setFrontEndMilestonesData(this.getCasesDefinitions());
+
+            
+            this.setProcess(this.getCaseManager().getProcessDefinitionsList());
         } catch (ApsSystemException ex) {
             Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         return SUCCESS;
     }
 
-//    public String chooseCaseForm() throws ApsSystemException {
-//
-//        this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
-//        this.setCasesPathDefaultValue(casesPath);
-//        
-//        JSONArray milestonJSAR = this.getCaseManager().getMilestonesList(this.getProcessPath(), this.getCasesPath());
-//        
-//        this.setMilestonesNameListString(this.getCaseManager().getMilestonesNameInList(milestonJSAR).toString());
-//        this.setMilestoneJson(milestonJSAR.toString());
-//
-//        return SUCCESS;
-//    }
-//
-//    public String changeCaseForm() throws ApsSystemException {
-//
-//        this.setCases(this.getCaseManager().getCasesList(this.getProcessPath()));
-//        this.setCasesPathDefaultValue(casesPath);
-//        
-//        JSONArray milestonJSAR = this.getCaseManager().getMilestonesList(this.getProcessPath(), this.getCasesPath());
-//        
-//        this.setMilestonesNameListString(this.getCaseManager().getMilestonesNameInList(milestonJSAR).toString());
-//        this.setMilestoneJson(milestonJSAR.toString());
-//
-//        return SUCCESS;
-//    }
-//    @Override
-//    public IGroupManager getGroupManager() {
-//        return groupManager;
-//    }
-//
-//    @Override
-//    public void setGroupManager(IGroupManager groupManager) {
-//        this.groupManager = groupManager;
-//    }
     public IKieFormManager getFormManager() {
         return formManager;
     }
@@ -226,11 +177,11 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         this._frontEndMilestonesData = frontEndMilestonesData;
     }
 
-    public List<String> getProcess() {
+    public List<kieProcess> getProcess() {
         return process;
     }
 
-    public void setProcess(List<String> process) {
+    public void setProcess(List<kieProcess> process) {
         this.process = process;
     }
 

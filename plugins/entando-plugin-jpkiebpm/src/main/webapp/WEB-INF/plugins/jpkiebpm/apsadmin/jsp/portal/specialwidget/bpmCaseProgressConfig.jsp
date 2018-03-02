@@ -71,42 +71,36 @@
                 </s:if>
 
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
-
+                
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-xs-2" for="processPath">
+                        <label class="control-label col-xs-4" for="processPath">
                             <s:text name="Process"/>
                         </label>
-                        <div class="col-xs-5">
-                            <s:if test="!#isProcessPathSetted">
-                                <s:select list="process" id="processPath" name="processPath"  value="processPathDefaultValue">
-                                </s:select>
-                            </s:if>
-                            <s:else>
-                                <s:select disabled="true" list="process" id="processPath" name="processPath" value="processPathDefaultValue">
-                                </s:select>
-                                <%--<s:hidden name="processPath"/>--%>
-                            </s:else>
+                        <div class="col-xs-6">
+                            <s:select list="process" id="processPath" name="processPath"  
+                                      listKey="containerId"
+                                      listValue="containerId">
+                            </s:select>
                         </div>
 
                         <s:if test="#isProcessPathSetted">
                             <div class="col-xs-2">
                                 <wpsf:submit action="changeForm" value="%{getText('label.changeForm')}"
-                                             cssClass="btn btn-warning pull-right"/>
+                                             cssClass="btn btn-warning"/>
                             </div>
                         </s:if>
                         <s:else>
                             <div class="col-xs-2">
                                 <wpsf:submit action="chooseForm" value="%{getText('label.chooseForm')}"
-                                             cssClass="btn btn-success pull-right"/>
+                                             cssClass="btn btn-success"/>
                             </div>
                         </s:else>
                     </div>
-
                 </div>
 
                 <s:if test="#isProcessPathSetted">
-
+                    
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label class="control-label col-xs-4" for="knowledgeSources">
@@ -159,10 +153,13 @@
                     </table>
 
                     <br />
-                    <!--strurt-->
 
-                    <%--<s:textarea name="casesDefinitions" id="casesDefinitions" ></s:textarea>--%>
-                    <%--<wpsf:textfield name="casesDefinitions" id="casesDefinitions"></wpsf:textfield>--%>
+                    <!--Please store your JSON output in following hidden input in order to be sent to widget front end-->
+                    <!--Please dont change the name or the id-->
+                    <!--<input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-model=""/>-->
+                    <!--If you use the above hidden input, you must comment out the following tag so the form submitted with your data (instead of default data)-->
+                    <!--commen out--> <wpsf:hidden  name="frontEndMilestonesData" id="frontEndMilestonesData"></wpsf:hidden><!--commen out-->
+                    <!--You also need to comment out line 98 & 114 in org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction class -->
                 </s:if>
             </div>
             <div class="form-horizontal">
@@ -185,88 +182,88 @@
     </div>
 
     <script>
-                        (function ngApp(){
+                (function ngApp(){
 
-                        angular.module('caseProgressApp', [])
-                                .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
-                                .service("BpmService", BpmService);
-                                function CaseProgressConfigCtrl($log, BpmService) {
-                                var vm = this;
-                                        //hold all known knoledge sources
-                                        vm.knowledgeSources = {};
-                                        //hold all case definitions by selected knowledge source                        
-                                        vm.defs = {};
-                                        //data selected by the user
-                                        vm.form = {
-                                        knowledgeSource : undefined,
-                                                caseDef : undefined
-                                        };
-                                        vm.ui = {updateCaseDefs : loadCaseDefOnSelectedKS};
-                                        function loadCaseDefOnSelectedKS(){
-                                        loadCaseDefinition(vm.form.knowledgeSource);
-                                        }
-
-
-                                function loadKnowledgeSources(){
-                                BpmService.knowledgeSources()
-                                        .then(function success(res){
-                                        vm.knowledgeSources.all = res.data;
-                                        }, function errHandler(error){
-                                        $log.error("Ops... something goes wrong!", err);
-                                        })
+                angular.module('caseProgressApp', [])
+                        .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
+                        .service("BpmService", BpmService);
+                        function CaseProgressConfigCtrl($log, BpmService) {
+                        var vm = this;
+                                //hold all known knoledge sources
+                                vm.knowledgeSources = {};
+                                //hold all case definitions by selected knowledge source                        
+                                vm.defs = {};
+                                //data selected by the user
+                                vm.form = {
+                                knowledgeSource : undefined,
+                                        caseDef : undefined
+                                };
+                                vm.ui = {updateCaseDefs : loadCaseDefOnSelectedKS};
+                                function loadCaseDefOnSelectedKS(){
+                                loadCaseDefinition(vm.form.knowledgeSource);
                                 }
 
 
-                                function loadCaseDefinition(knowledgeSource){
-
-                                BpmService.caseDefinition(knowledgeSource)
-                                        .then(function(res){
-                                        vm.defs.all = res.data.definitions;
-                                        }, function(err){
-                                        $log.error("Ops... something goes wrong!", err);
-                                        });
-                                }
-
+                        function loadKnowledgeSources(){
+                        BpmService.knowledgeSources()
+                                .then(function success(res){
+                                vm.knowledgeSources.all = res.data;
+                                }, function errHandler(error){
+                                $log.error("Ops... something goes wrong!", err);
+                                })
+                        }
 
 
-                                function init(){
-                                loadKnowledgeSources();
-                                }
+                        function loadCaseDefinition(knowledgeSource){
 
-                                init();
-                                }
-
-                        function BpmService($http, $q){
-
-
-                        this.caseDefinition = readCaseDefinition;
-                                this.knowledgeSources = knowledgeSources;
-                                function readCaseDefinition(){
-                                var promise = $q(
-                                        function mockData(resolve, reject){
-                                        resolve({data:fakeDataCases});
-                                        });
-                                        return promise;
-                                }
+                        BpmService.caseDefinition(knowledgeSource)
+                                .then(function(res){
+                                vm.defs.all = res.data.definitions;
+                                }, function(err){
+                                $log.error("Ops... something goes wrong!", err);
+                                });
+                        }
 
 
-                        function knowledgeSources(){
+
+                        function init(){
+                        loadKnowledgeSources();
+                        }
+
+                        init();
+                        }
+
+                function BpmService($http, $q){
+
+
+                this.caseDefinition = readCaseDefinition;
+                        this.knowledgeSources = knowledgeSources;
+                        function readCaseDefinition(){
                         var promise = $q(
-                                function mockKSs(resolve, reject){
-                                resolve({data:fakeKSs})
+                                function mockData(resolve, reject){
+                                resolve({data:fakeDataCases});
                                 });
                                 return promise;
                         }
 
-                        var fakeKSs = [{
-                        name: "Knowledge Source A",
-                                id:"kbs-a"
-                        },
-                        {
-                        name: "Knowledge Source B",
-                                id:"kbs-b"
-                        }];
-                                var fakeDataCases = <s:property value="casesDefinitions"/>;
+
+                function knowledgeSources(){
+                var promise = $q(
+                        function mockKSs(resolve, reject){
+                        resolve({data:fakeKSs})
+                        });
+                        return promise;
+                }
+
+                var fakeKSs = [{
+                name: "Knowledge Source A",
+                        id:"kbs-a"
+                },
+                {
+                name: "Knowledge Source B",
+                        id:"kbs-b"
+                }];
+                        var fakeDataCases = <s:property value="casesDefinitions"/>;
 //                                {
 //                        "definitions": [
 //                        {
@@ -347,8 +344,8 @@
 //                        }
 //                        ]
 //                        };
-                        }
-                        })();
+                }
+                })();
 
 
     </script>
