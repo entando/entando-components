@@ -39,28 +39,30 @@ import org.slf4j.LoggerFactory;
  * @author own_strong
  */
 public class BpmCaseProgressAction extends BaseAction {
-    
+
     private static final Logger _logger = LoggerFactory.getLogger(BpmFormAction.class);
     private CaseManager caseManager;
     private String _frontEndMilestonesData;
     private String test1;
     private String test2;
-    
+
     public String view() {
         try {
             String frontEndMilestonesDataIn = extractWidgetConfig("frontEndMilestonesData");
             this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
+            
+            System.out.println("Front End conf: "+frontEndMilestonesDataIn);
             this.setTest1("TEST1");
             this.setTest2("TEST2");
-            
+
         } catch (Throwable t) {
             _logger.error("Error getting the configuration parameter", t);
             return FAILURE;
         }
-        
+
         return SUCCESS;
     }
-    
+
     protected String extractWidgetConfig(String paramName) {
         String value = null;
         try {
@@ -75,6 +77,9 @@ public class BpmCaseProgressAction extends BaseAction {
                         if (widgetParam != null && widgetParam.trim().length() > 0) {
                             value = widgetParam.trim();
                         }
+                    }else{
+                        System.out.println(config);
+                        value = "Empty Widget";
                     }
                 }
             }
@@ -83,37 +88,37 @@ public class BpmCaseProgressAction extends BaseAction {
         }
         return value;
     }
-    
+
     public CaseManager getCaseManager() {
         return caseManager;
     }
-    
+
     public void setCaseManager(CaseManager caseManager) {
         this.caseManager = caseManager;
     }
-    
+
     public String getFrontEndMilestonesData() {
         return _frontEndMilestonesData;
     }
-    
+
     public void setFrontEndMilestonesData(String frontEndMilestonesData) {
         this._frontEndMilestonesData = frontEndMilestonesData;
     }
-    
+
     public String getTest1() {
         return test1;
     }
-    
+
     public void setTest1(String test1) {
         this.test1 = test1;
     }
-    
+
     public String getTest2() {
         return test2;
     }
-    
+
     public void setTest2(String test2) {
         this.test2 = test2;
     }
-    
+
 }

@@ -24,6 +24,7 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,14 +73,21 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
         return result;
     }
+//    @Override
+//    public String save(){
+//        String result = super.save();
+//        Widget widget = this.createNewWidget();
+//        
+//        widget.getConfig().setProperty("frontEndMilestonesData", "frontEndMilestonesData");
+//        
+//        return result;
+//    }
 
-    @Override
     protected String extractInitConfig() {
         String result = super.extractInitConfig();
-
-        String frontEndMilestonesDataIn = this.getWidget().getConfig().getProperty("frontEndMilestonesData");
-        if (StringUtils.isNotBlank(frontEndMilestonesDataIn)) {
-            this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
+        String configParam = this.getWidget().getConfig().getProperty("frontEndMilestonesData");
+        if (StringUtils.isNotBlank(configParam)) {
+            this.setFrontEndMilestonesData(configParam);
         }
         return result;
     }
@@ -88,8 +96,10 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
         try {
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
-            this.setFrontEndMilestonesData(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
-            
+            this.setFrontEndMilestonesData("Choose Form");
+            this.getWidget().getConfig().setProperty("frontEndMilestonesData", "Choose Form");
+            System.out.println("After clicking choose "+this.getWidget().getConfig().getProperty("frontEndMilestonesData"));
+
             List<String> cids = new ArrayList();
             List<kieProcess> in = this.getCaseManager().getProcessDefinitionsList();
             for (int i = 0; i < in.size(); i++) {
@@ -106,8 +116,9 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     public String changeForm() {
         try {
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
-            this.setFrontEndMilestonesData(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
-            
+            this.setFrontEndMilestonesData("ChangeForm");
+            this.getWidget().getConfig().setProperty("frontEndMilestonesData", "Choose Form");
+
             List<String> cids = new ArrayList();
             List<kieProcess> in = this.getCaseManager().getProcessDefinitionsList();
             for (int i = 0; i < in.size(); i++) {
