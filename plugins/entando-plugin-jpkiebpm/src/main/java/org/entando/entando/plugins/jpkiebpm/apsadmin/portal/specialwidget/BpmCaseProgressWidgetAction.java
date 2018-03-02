@@ -97,8 +97,13 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         try {
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
             this.setFrontEndMilestonesData("Choose Form");
-            this.getWidget().getConfig().setProperty("frontEndMilestonesData", "Choose Form");
-            System.out.println("After clicking choose "+this.getWidget().getConfig().getProperty("frontEndMilestonesData"));
+//            if (this.getWidget() != null) {
+//                this.getWidget().getConfig().setProperty("frontEndMilestonesData", "Choose Form");
+//            } else{
+//                System.out.println("String (nonSt )Conf: "+this.getWidget().toString());
+//                System.out.println("String Conf: "+this.getWidget().toString());
+//            }
+//            System.out.println("After clicking choose " + this.getWidget().getConfig().getProperty("frontEndMilestonesData"));
 
             List<String> cids = new ArrayList();
             List<kieProcess> in = this.getCaseManager().getProcessDefinitionsList();
@@ -117,7 +122,6 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         try {
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
             this.setFrontEndMilestonesData("ChangeForm");
-            this.getWidget().getConfig().setProperty("frontEndMilestonesData", "Choose Form");
 
             List<String> cids = new ArrayList();
             List<kieProcess> in = this.getCaseManager().getProcessDefinitionsList();

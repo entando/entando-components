@@ -159,10 +159,10 @@
                     </table>
 
                     <br />
-                    strurt
+                    <!--strurt-->
 
-                    <s:textarea name="casesDefinitions" id="casesDefinitions" ></s:textarea>
-                    <wpsf:textfield name="casesDefinitions" id="casesDefinitions"></wpsf:textfield>
+                    <%--<s:textarea name="casesDefinitions" id="casesDefinitions" ></s:textarea>--%>
+                    <%--<wpsf:textfield name="casesDefinitions" id="casesDefinitions"></wpsf:textfield>--%>
                 </s:if>
             </div>
             <div class="form-horizontal">
