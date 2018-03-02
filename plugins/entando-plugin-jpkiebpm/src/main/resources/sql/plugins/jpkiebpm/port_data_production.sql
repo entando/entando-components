@@ -40,7 +40,7 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-progress-status'
 , '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">BPM-Case progress status</property>
-<property key="it">BPM-Case Estado de progreso de</property>
+<property key="it">BPM-Case stato del processo</property>
 </properties>', 
 '<config>
 	<parameter name="frontEndMilestonesData">frontEndMilestonesData</parameter>

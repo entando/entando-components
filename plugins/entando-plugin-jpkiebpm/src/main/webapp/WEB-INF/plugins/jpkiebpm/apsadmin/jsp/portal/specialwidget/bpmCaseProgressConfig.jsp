@@ -7,6 +7,9 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery-ui.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.7/angular-sanitize.min.js"></script>
+
+
 
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
@@ -71,7 +74,7 @@
                 </s:if>
 
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
-                
+
                 <div class="form-horizontal">
                     <div class="form-group">
                         <label class="control-label col-xs-4" for="processPath">
@@ -100,7 +103,7 @@
                 </div>
 
                 <s:if test="#isProcessPathSetted">
-                    
+
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label class="control-label col-xs-4" for="knowledgeSources">
@@ -181,173 +184,116 @@
         </s:form>
     </div>
 
-    <script>
-                (function ngApp(){
+    <script type="text/javascript">
+                        (function ngApp(){
 
-                angular.module('caseProgressApp', [])
-                        .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
-                        .service("BpmService", BpmService);
-                        function CaseProgressConfigCtrl($log, BpmService) {
-                        var vm = this;
-                                //hold all known knoledge sources
-                                vm.knowledgeSources = {};
-                                //hold all case definitions by selected knowledge source                        
-                                vm.defs = {};
-                                //data selected by the user
-                                vm.form = {
-                                knowledgeSource : undefined,
-                                        caseDef : undefined
-                                };
-                                vm.ui = {updateCaseDefs : loadCaseDefOnSelectedKS};
+                        angular.module('caseProgressApp', ['ngSanitize'])
+                                .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
+                                .service("BpmService", BpmService)
+                                .filter('escape', function () {
+                                        return function(str) {
+                                        return String(str).replace(/"/g,'&quot;' );
+                                        }
+                                });
+                                
+                                function CaseProgressConfigCtrl($log, $sanitize, BpmService) {
+                                var vm = this;
+                                        //hold all known knoledge sources
+                                        vm.knowledgeSources = {};
+                                        //hold all case definitions by selected knowledge source                        
+                                        vm.defs = {};
+                                        //data selected by the user
+                                        vm.form = {
+                                        knowledgeSource : undefined,
+                                                caseDef : undefined
+                                        };
+                                        vm.ui = {updateCaseDefs : loadCaseDefOnSelectedKS,
+                                                defToJSONEscaped : defToJSONEscaped
+                                        };
+                                        function defToJSONEscaped(){
+                                        return $sanitize(angular.toJson(vm.form.caseDef));
+                                        }
+
+
                                 function loadCaseDefOnSelectedKS(){
                                 loadCaseDefinition(vm.form.knowledgeSource);
                                 }
 
 
-                        function loadKnowledgeSources(){
-                        BpmService.knowledgeSources()
-                                .then(function success(res){
-                                vm.knowledgeSources.all = res.data;
-                                }, function errHandler(error){
-                                $log.error("Ops... something goes wrong!", err);
-                                })
-                        }
+                                function loadKnowledgeSources(){
+                                BpmService.knowledgeSources()
+                                        .then(function success(res){
+                                        vm.knowledgeSources.all = res.data;
+                                        }, function errHandler(error){
+                                        $log.error("Ops... something goes wrong!", err);
+                                        })
+                                }
 
 
-                        function loadCaseDefinition(knowledgeSource){
+                                function loadCaseDefinition(knowledgeSource){
 
-                        BpmService.caseDefinition(knowledgeSource)
-                                .then(function(res){
-                                vm.defs.all = res.data.definitions;
-                                }, function(err){
-                                $log.error("Ops... something goes wrong!", err);
-                                });
-                        }
-
-
-
-                        function init(){
-                        loadKnowledgeSources();
-                        }
-
-                        init();
-                        }
-
-                function BpmService($http, $q){
+                                BpmService.caseDefinition(knowledgeSource)
+                                        .then(function(res){
+                                        vm.defs.all = res.data.definitions;
+                                        }, function(err){
+                                        $log.error("Ops... something goes wrong!", err);
+                                        });
+                                }
 
 
-                this.caseDefinition = readCaseDefinition;
-                        this.knowledgeSources = knowledgeSources;
-                        function readCaseDefinition(){
+
+                                function init(){
+                                loadKnowledgeSources();
+                                }
+
+                                init();
+                                }
+
+                        function BpmService($http, $q){
+
+
+                        this.caseDefinition = readCaseDefinition;
+                                this.knowledgeSources = knowledgeSources;
+                                function readCaseDefinition(){
+                                var promise = $q(
+                                        function loadCaseDefData(resolve, reject){
+                                        var milestones = caseDefinitionData.definitions[0].milestones;
+                                                angular.forEach(milestones, function addFields(value, key){
+                                                value.visible = true;
+                                                        value.percentage = Math.floor(100 / milestones.length);
+                                                }
+                                                )
+                                                debugger;
+                                                resolve({data:caseDefinitionData});
+                                        });
+                                        return promise;
+                                }
+
+
+                        function knowledgeSources(){
                         var promise = $q(
-                                function mockData(resolve, reject){
-                                resolve({data:fakeDataCases});
+                                function mockKSs(resolve, reject){
+                                resolve({data:fakeKSs})
                                 });
                                 return promise;
                         }
 
-
-                function knowledgeSources(){
-                var promise = $q(
-                        function mockKSs(resolve, reject){
-                        resolve({data:fakeKSs})
-                        });
-                        return promise;
-                }
-
-                var fakeKSs = [{
-                name: "Knowledge Source A",
-                        id:"kbs-a"
-                },
-                {
-                name: "Knowledge Source B",
-                        id:"kbs-b"
-                }];
-                        var fakeDataCases = <s:property value="casesDefinitions"/>;
-//                                {
-//                        "definitions": [
-//                        {
-//                        "name": "Order for IT hardware",
-//                                "id": "itorders.orderhardware",
-//                                "version": "1.0",
-//                                "case-id-prefix": "IT",
-//                                "container-id": "itorders_1.0.0-SNAPSHOT",
-//                                "adhoc-fragments": [
-//                                {
-//                                "name": "Prepare hardware spec",
-//                                        "type": "HumanTaskNode"
-//                                },
-//                                {
-//                                "name": "Milestone 1: Order placed",
-//                                        "type": "MilestoneNode"
-//                                },
-//                                {
-//                                "name": "Milestone 2: Order shipped",
-//                                        "type": "MilestoneNode"
-//                                },
-//                                {
-//                                "name": "Milestone 3: Delivered to customer",
-//                                        "type": "MilestoneNode"
-//                                },
-//                                {
-//                                "name": "Hardware spec ready",
-//                                        "type": "MilestoneNode"
-//                                },
-//                                {
-//                                "name": "Manager decision",
-//                                        "type": "MilestoneNode"
-//                                }
-//                                ],
-//                                "roles": {
-//                                "owner": 1,
-//                                        "manager": 1,
-//                                        "supplier": 2
-//                                },
-//                                "milestones": [
-//                                {
-//                                "milestone-name": "Milestone 1: Order placed",
-//                                        "milestone-id": "_DCD97847-6E3C-4C5E-9EE3-221C04BE42ED",
-//                                        "milestone-mandatory": false,
-//                                        "visible": true,
-//                                        "percentage": "30"
-//                                },
-//                                {
-//                                "milestone-name": "Milestone 2: Order shipped",
-//                                        "milestone-id": "_343B90CD-AA19-4894-B63C-3CE1906E6FD1",
-//                                        "milestone-mandatory": false,
-//                                        "visible": true,
-//                                        "percentage": "30"
-//                                },
-//                                {
-//                                "milestone-name": "Milestone 3: Delivered to customer",
-//                                        "milestone-id": "_52AFA23F-C087-4519-B8F2-BABCC31D68A6",
-//                                        "milestone-mandatory": false,
-//                                        "visible": true,
-//                                        "percentage": "30"
-//                                },
-//                                {
-//                                "milestone-name": "Hardware spec ready",
-//                                        "milestone-id": "_483CF785-96DD-40C1-9148-4CFAFAE5778A",
-//                                        "milestone-mandatory": false,
-//                                        "visible": false,
-//                                        "percentage": "30"
-//                                },
-//                                {
-//                                "milestone-name": "Manager decision",
-//                                        "milestone-id": "_79953D58-25DB-4FD6-94A0-DFC6EA2D0339",
-//                                        "milestone-mandatory": false,
-//                                        "visible": true,
-//                                        "percentage": "10"
-//                                }
-//                                ],
-//                                "stages": []
-//                        }
-//                        ]
-//                        };
-                }
-                })();
-
-
+                        var fakeKSs = [{
+                        name: "Knowledge Source A",
+                                id:"kbs-a"
+                        },
+                        {
+                        name: "Knowledge Source B",
+                                id:"kbs-b"
+                        }];
+        <s:if test="casesDefinitions != null">
+                        var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
+        </s:if>
+        <s:else>
+                        var caseDefinitionData = undefined;
+        </s:else>
+                        }
+                        })();
     </script>
 
 

@@ -66,12 +66,15 @@ public class BpmCaseProgressAction extends BaseAction {
         return SUCCESS;
     }
 
-    public String selectCaseInstance() throws ApsSystemException {
-
-        String containerid = this.getContainerIDfromfrontEndMilestonesData(this.getFrontEndMilestonesData());
-        this.setCases(this.getCaseManager().getCasesList(containerid));
-        this.setCaseInstanceMilestones(this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString());
-
+    public String selectCaseInstance() {
+        try {
+            String containerid = this.getContainerIDfromfrontEndMilestonesData(this.getFrontEndMilestonesData());
+            this.setCases(this.getCaseManager().getCasesList(containerid));
+            this.setCaseInstanceMilestones(this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString());
+        } catch (Throwable t) {
+            _logger.error("Error getting the configuration parameter", t);
+            return FAILURE;
+        }
         return SUCCESS;
     }
 

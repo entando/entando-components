@@ -70,7 +70,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         Widget widget = this.createNewWidget();
         
         if (widget != null) {
-            widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
+            widget.getConfig().setProperty("frontEndMilestonesData",  this.getFrontEndMilestonesData());
         } else {
             System.out.println("NULL WIDGET");
         }
