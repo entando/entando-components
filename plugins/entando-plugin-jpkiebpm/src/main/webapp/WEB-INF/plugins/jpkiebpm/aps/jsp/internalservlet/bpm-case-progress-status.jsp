@@ -32,48 +32,48 @@
             </div>
         </form>
 
-       
 
-        <!--//Select Case Instanse Option
-        <br />
+
+        <!--Select Case Instanse Option-->
+<!--        <br />
         Case Definition with Milestones Configurations:
 
-        <br />
-        <s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="false"/>
+        <br />-->
+        <%--<s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="false"/>--%>
 
-        <br />
+<!--        <br />
         <br />       
 
         Case Instance List:
 
-        <br />
-        <s:property value="cases" escapeHtml="false" escapeJavaScript="false"/>
+        <br />-->
+        <%--<s:property value="cases" escapeHtml="false" escapeJavaScript="false"/>--%>
 
-        <br />
+<!--        <br />
         <br />
         Selected Case Instance Milestone:
-        <br />
+        <br />-->
 
-        <s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="false"/>
-        <s:property/>
+        <%--<s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="false"/>--%>
+        <%--<s:property/>--%>
         
-        -->
-
-        
-         <s:if test="caseInstanceMilestones!=null">
-         <div  data-ng-app="caseProgressApp" ng-controller="ProgressBarCtrl as vm">
+     
 
 
-            <div class="progress progress-striped">
+        <s:if test="caseInstanceMilestones!=null">
+            <div  data-ng-app="caseProgressApp" ng-controller="ProgressBarCtrl as vm">
 
-                <div ng-repeat="ms in vm.def.milestones "  ng-style="{width: vm.ui.getPercentage(ms)+'%'}" class="progress-bar progress-bar-success">
-                    <span  class="sr-only">{{ms["milestone-name"]}}</span>
+
+                <div class="progress progress-striped">
+
+                    <div ng-repeat="ms in vm.def.milestones"  ng-style="{width: vm.ui.getPercentage(ms) + '%'}" class="progress-bar progress-bar-success">
+                        <span  class="sr-only">{{ms["milestone-name"]}}</span>
+                    </div>
+
                 </div>
 
             </div>
-
-        </div>
-         </s:if>
+        </s:if>
     </div>
 </div>
 <script type="text/javascript">
@@ -122,9 +122,9 @@
             };
 
 
-            function calculatePercentageForMilestone(ms){
-                if(!ms.percentage){
-                    ms.percentage =Math.floor((Math.random() * 40) + 1);
+            function calculatePercentageForMilestone(ms) {
+                if (!ms.percentage) {
+                    ms.percentage = Math.floor((Math.random() * 40) + 1);
                 }
                 return  ms.percentage;
             }

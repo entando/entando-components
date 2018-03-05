@@ -75,21 +75,26 @@ public class CaseManager extends KieFormManager {
                     .setDebug(_config.getDebug())
                     .doRequest();
 
-            json = new JSONObject(result);
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                _logger.debug("received successful message: ", result);
+            } else {
+                _logger.debug("received empty case definitions message: ");
+            }
 
         } catch (Throwable t) {
-            throw new ApsSystemException("Error getting the cases list", t);
+            throw new ApsSystemException("Error getting the cases definitions", t);
         }
 
         return json;
     }
 
-    public List<String> getCasesList(String containerId) throws ApsSystemException {
+    public List<String> getCaseInstancesList(String containerId) throws ApsSystemException {
 
         List<String> casesList = new ArrayList<>();
         Map<String, String> headersMap = new HashMap<>();
 
-        String result = null;
+        String result;
         JSONObject json = null;
 
         if (!_config.getActive() || StringUtils.isBlank(containerId)) {
@@ -109,18 +114,21 @@ public class CaseManager extends KieFormManager {
                     .setDebug(_config.getDebug())
                     .doRequest();
 
-            json = new JSONObject(result);
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                JSONArray instances = (JSONArray) json.get("instances");
 
-            JSONArray instances = (JSONArray) json.get("instances");
-
-            for (int i = 0; i < instances.length(); i++) {
-                JSONObject iJson = instances.getJSONObject(i);
-                casesList.add(iJson.getString("case-id"));
-
+                for (int i =0; i < instances.length(); i++) {
+                    JSONObject iJson = instances.getJSONObject(i);
+                    casesList.add(iJson.getString("case-id"));
+                }
+                _logger.debug("received successful message: ", result);
+            } else {
+                _logger.debug("received empty case instances message: ");
             }
 
         } catch (Throwable t) {
-            throw new ApsSystemException("Error getting the cases list", t);
+            throw new ApsSystemException("Error getting the cases instances list", t);
         }
 
         return casesList;
@@ -132,8 +140,8 @@ public class CaseManager extends KieFormManager {
         Map<String, String> headersMap = new HashMap<>();
         Map<String, String> param = new HashMap<>();
 
-        String result = null;
-        JSONObject json = null;
+        String result;
+        JSONObject json;
 
         if (!_config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return milestonesList;
@@ -154,41 +162,20 @@ public class CaseManager extends KieFormManager {
                     .setDebug(_config.getDebug())
                     .doRequest();
 
-            json = new JSONObject(result);
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                milestonesList = (JSONArray) json.get("milestones");
+                _logger.debug("received successful message: ", result);
 
-            milestonesList = (JSONArray) json.get("milestones");
+            } else {
+                _logger.debug("received empty case instances message: ");
+            }
 
         } catch (Throwable t) {
             throw new ApsSystemException("Error getting the cases list", t);
         }
 
         return milestonesList;
-    }
-
-    ////Helpers
-    public List<String> getCaseListFromCaseDefinitions(JSONObject caseDefinitions) {
-        List<String> caseNameList = new ArrayList<>();
-        JSONArray definitions = (JSONArray) caseDefinitions.getJSONArray("definitions");
-
-        for (int i = 0; i < definitions.length(); i++) {
-            JSONObject iJson = definitions.getJSONObject(i);
-            caseNameList.add(iJson.getString("name"));
-
-        }
-        return caseNameList;
-    }
-    
-
-    public List<String> getMilestonesNameInList(JSONArray milestonesList) {
-        List<String> milestonesNameInList = new ArrayList<>();
-
-        for (int i = 0; i < milestonesList.length(); i++) {
-            JSONObject iJson = milestonesList.getJSONObject(i);
-            milestonesNameInList.add(iJson.getString("milestone-name"));
-
-        }
-        return milestonesNameInList;
-
     }
 
     public KieBpmConfig getKieBpmConfig() {
@@ -217,7 +204,7 @@ public class CaseManager extends KieFormManager {
 
     private KieBpmConfig _config;
 
-    String containerId;
-    String caseID;
+    private String containerId;
+    private String caseID;
 
 }

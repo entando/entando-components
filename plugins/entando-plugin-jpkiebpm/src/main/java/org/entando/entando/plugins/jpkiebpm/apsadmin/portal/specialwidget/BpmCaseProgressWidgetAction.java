@@ -36,6 +36,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -43,15 +44,17 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kiePro
  */
 public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
+    private static final org.slf4j.Logger _logger = LoggerFactory.getLogger(BpmDatatableWidgetAction.class);
+
     private CaseManager caseManager;
     private IKieFormManager formManager;
     private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
-    String processPath;
-    String processPathDefaultValue;
-    String casesDefinitions;
-    List<kieProcess> process;
-    String _frontEndMilestonesData;
+    private String processPath;
+    private String processPathDefaultValue;
+    private String casesDefinitions;
+    private List<kieProcess> process;
+    private String _frontEndMilestonesData;
 
     @Override
     public String init() {
@@ -61,6 +64,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         } catch (ApsSystemException ex) {
             Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return result;
     }
 
@@ -68,23 +72,25 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     public String save() {
         String result = super.save();
         Widget widget = this.createNewWidget();
-        
+
         if (widget != null) {
-            widget.getConfig().setProperty("frontEndMilestonesData",  this.getFrontEndMilestonesData());
+            widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
         } else {
-            System.out.println("NULL WIDGET");
+            _logger.error("Null widget");
         }
 
         return result;
     }
 
+    @Override
     protected String extractInitConfig() {
         String result = super.extractInitConfig();
         String configParam = this.getWidget().getConfig().getProperty("frontEndMilestonesData");
-        
+
         if (StringUtils.isNotBlank(configParam)) {
             this.setFrontEndMilestonesData(configParam);
         }
+
         return result;
     }
 
@@ -96,7 +102,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             ///This will set the Conf json to case definition input json
             //After modifying the conf json at the front end this must be removed
             this.setFrontEndMilestonesData(this.getCasesDefinitions());
-           
+
             this.setProcess(this.getCaseManager().getProcessDefinitionsList());
         } catch (ApsSystemException ex) {
             Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
@@ -113,7 +119,6 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             //After modifying the conf json at the front end this must be removed
             this.setFrontEndMilestonesData(this.getCasesDefinitions());
 
-            
             this.setProcess(this.getCaseManager().getProcessDefinitionsList());
         } catch (ApsSystemException ex) {
             Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);

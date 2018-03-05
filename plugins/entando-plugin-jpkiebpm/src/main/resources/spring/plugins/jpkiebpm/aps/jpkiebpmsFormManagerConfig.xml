@@ -56,8 +56,8 @@
     </bean>
     
     <bean id="jpkiebpmsCaseManager"
-              class="org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager"
-              parent="abstractService">
+          class="org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager"
+          parent="abstractService">
         <property name="configManager" ref="BaseConfigManager"/>
     </bean>
 

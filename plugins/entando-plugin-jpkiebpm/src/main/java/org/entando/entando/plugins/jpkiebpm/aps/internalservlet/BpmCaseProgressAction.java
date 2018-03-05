@@ -25,7 +25,6 @@ package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.BaseAction;
@@ -48,15 +47,14 @@ public class BpmCaseProgressAction extends BaseAction {
     private CaseManager caseManager;
     private String _frontEndMilestonesData;
     private List<String> _cases;
-    String casePath;
-    String _caseInstanceMilestones;
+    private String casePath;
+    private String _caseInstanceMilestones;
 
-//    final String CONTAINER_ID = "itorders_1.0.0-SNAPSHOT";
     public String view() {
         try {
             String frontEndMilestonesDataIn = extractWidgetConfig("frontEndMilestonesData");
             this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
-            this.setCases(this.getCaseManager().getCasesList(this.getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDataIn)));
+            this.setCases(this.getCaseManager().getCaseInstancesList(this.getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDataIn)));
 
         } catch (Throwable t) {
             _logger.error("Error getting the configuration parameter", t);
@@ -69,7 +67,7 @@ public class BpmCaseProgressAction extends BaseAction {
     public String selectCaseInstance() {
         try {
             String containerid = this.getContainerIDfromfrontEndMilestonesData(this.getFrontEndMilestonesData());
-            this.setCases(this.getCaseManager().getCasesList(containerid));
+            this.setCases(this.getCaseManager().getCaseInstancesList(containerid));
             this.setCaseInstanceMilestones(this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString());
         } catch (Throwable t) {
             _logger.error("Error getting the configuration parameter", t);
@@ -94,9 +92,11 @@ public class BpmCaseProgressAction extends BaseAction {
                             value = widgetParam.trim();
                         }
                     } else {
-                        System.out.println(config);
-                        value = "Empty Widget";
+                        value = "Null widget config";
+                        _logger.error("Null widget config");
                     }
+                } else {
+                    _logger.error("Null widget");
                 }
             }
         } catch (Throwable t) {
@@ -106,11 +106,17 @@ public class BpmCaseProgressAction extends BaseAction {
     }
 
     protected String getContainerIDfromfrontEndMilestonesData(String frontEndMilestonesData) {
+        String containerID = null;
 
-        JSONObject frontEndMilestonesDataJSON = new JSONObject(frontEndMilestonesData);
-        JSONArray definitions = frontEndMilestonesDataJSON.getJSONArray("definitions");
-        JSONObject first_object = definitions.getJSONObject(0);
-        String containerID = first_object.getString("container-id");
+        try {
+            JSONObject frontEndMilestonesDataJSON = new JSONObject(frontEndMilestonesData);
+            JSONArray definitions = frontEndMilestonesDataJSON.getJSONArray("definitions");
+            JSONObject first_object = definitions.getJSONObject(0);
+            containerID = first_object.getString("container-id");
+
+        } catch (Throwable t) {
+            _logger.error("Front end Milestones Data json can not be recognised");
+        }
 
         return containerID;
     }

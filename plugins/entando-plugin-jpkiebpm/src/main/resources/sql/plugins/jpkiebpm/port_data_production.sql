@@ -36,13 +36,11 @@ INSERT INTO widgetcatalog VALUES ('bpm-datatable-process-list', '<?xml version="
 	<parameter name="widgetInfoId">WidgetInfoID</parameter>
 	<action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
-INSERT INTO widgetcatalog VALUES ('bpm-case-progress-status'
-, '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog VALUES ('bpm-case-progress-status', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">BPM-Case progress status</property>
 <property key="it">BPM-Case stato del processo</property>
-</properties>', 
-'<config>
+</properties>', '<config>
 	<parameter name="frontEndMilestonesData">frontEndMilestonesData</parameter>
 	<action name="jpkiebpmBpmCaseProgressWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);

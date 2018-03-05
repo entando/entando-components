@@ -112,10 +112,9 @@
                             <div class="col-xs-8">
                                 <select ng-options="knowledgeSource.name for knowledgeSource in vm.knowledgeSources.all track by knowledgeSource.id" ng-model="vm.form.knowledgeSource" ng-change="vm.ui.updateCaseDefs()">
                                 </select>
-
                             </div>
-
                         </div>
+
                         <div class="form-group" ng-show="vm.form.knowledgeSource">
                             <label class="control-label col-xs-4">Cases</label>
                             <div class="col-xs-8">
@@ -162,7 +161,7 @@
                     <!--<input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-model=""/>-->
                     <!--If you use the above hidden input, you must comment out the following tag so the form submitted with your data (instead of default data)-->
                     <!--commen out--> <wpsf:hidden  name="frontEndMilestonesData" id="frontEndMilestonesData"></wpsf:hidden><!--commen out-->
-                    <!--You also need to comment out line 98 & 114 in org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction class -->
+                        <!--You also need to comment out line 98 & 114 in org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction class -->
                 </s:if>
             </div>
             <div class="form-horizontal">
@@ -185,115 +184,115 @@
     </div>
 
     <script type="text/javascript">
-                        (function ngApp(){
+                (function ngApp() {
 
-                        angular.module('caseProgressApp', ['ngSanitize'])
-                                .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
-                                .service("BpmService", BpmService)
-                                .filter('escape', function () {
-                                        return function(str) {
-                                        return String(str).replace(/"/g,'&quot;' );
-                                        }
+                angular.module('caseProgressApp', ['ngSanitize'])
+                        .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
+                        .service("BpmService", BpmService)
+                        .filter('escape', function () {
+                        return function (str) {
+                        return String(str).replace(/"/g, '&quot;');
+                        }
+                        });
+                        function CaseProgressConfigCtrl($log, $sanitize, BpmService) {
+                        var vm = this;
+                                //hold all known knoledge sources
+                                vm.knowledgeSources = {};
+                                //hold all case definitions by selected knowledge source                        
+                                vm.defs = {};
+                                //data selected by the user
+                                vm.form = {
+                                knowledgeSource: undefined,
+                                        caseDef: undefined
+                                };
+                                vm.ui = {
+                                updateCaseDefs: loadCaseDefOnSelectedKS,
+                                        defToJSONEscaped: defToJSONEscaped
+                                };
+                                function defToJSONEscaped() {
+                                return $sanitize(angular.toJson(vm.form.caseDef));
+                                }
+
+
+                        function loadCaseDefOnSelectedKS() {
+                        loadCaseDefinition(vm.form.knowledgeSource);
+                        }
+
+
+                        function loadKnowledgeSources() {
+                        BpmService.knowledgeSources()
+                                .then(function success(res) {
+                                vm.knowledgeSources.all = res.data;
+                                }, function errHandler(error) {
+                                $log.error("Ops... something goes wrong!", err);
+                                })
+                        }
+
+
+                        function loadCaseDefinition(knowledgeSource) {
+
+                        BpmService.caseDefinition(knowledgeSource)
+                                .then(function (res) {
+                                vm.defs.all = res.data.definitions;
+                                }, function (err) {
+                                $log.error("Ops... something goes wrong!", err);
                                 });
-                                
-                                function CaseProgressConfigCtrl($log, $sanitize, BpmService) {
-                                var vm = this;
-                                        //hold all known knoledge sources
-                                        vm.knowledgeSources = {};
-                                        //hold all case definitions by selected knowledge source                        
-                                        vm.defs = {};
-                                        //data selected by the user
-                                        vm.form = {
-                                        knowledgeSource : undefined,
-                                                caseDef : undefined
-                                        };
-                                        vm.ui = {updateCaseDefs : loadCaseDefOnSelectedKS,
-                                                defToJSONEscaped : defToJSONEscaped
-                                        };
-                                        function defToJSONEscaped(){
-                                        return $sanitize(angular.toJson(vm.form.caseDef));
-                                        }
-
-
-                                function loadCaseDefOnSelectedKS(){
-                                loadCaseDefinition(vm.form.knowledgeSource);
-                                }
-
-
-                                function loadKnowledgeSources(){
-                                BpmService.knowledgeSources()
-                                        .then(function success(res){
-                                        vm.knowledgeSources.all = res.data;
-                                        }, function errHandler(error){
-                                        $log.error("Ops... something goes wrong!", err);
-                                        })
-                                }
-
-
-                                function loadCaseDefinition(knowledgeSource){
-
-                                BpmService.caseDefinition(knowledgeSource)
-                                        .then(function(res){
-                                        vm.defs.all = res.data.definitions;
-                                        }, function(err){
-                                        $log.error("Ops... something goes wrong!", err);
-                                        });
-                                }
+                        }
 
 
 
-                                function init(){
-                                loadKnowledgeSources();
-                                }
+                        function init() {
+                        loadKnowledgeSources();
+                        }
 
-                                init();
-                                }
+                        init();
+                        }
 
-                        function BpmService($http, $q){
-
-
-                        this.caseDefinition = readCaseDefinition;
-                                this.knowledgeSources = knowledgeSources;
-                                function readCaseDefinition(){
-                                var promise = $q(
-                                        function loadCaseDefData(resolve, reject){
-                                        var milestones = caseDefinitionData.definitions[0].milestones;
-                                                angular.forEach(milestones, function addFields(value, key){
-                                                value.visible = true;
-                                                        value.percentage = Math.floor(100 / milestones.length);
-                                                }
-                                                )
-                                                debugger;
-                                                resolve({data:caseDefinitionData});
-                                        });
-                                        return promise;
-                                }
+                function BpmService($http, $q) {
 
 
-                        function knowledgeSources(){
+                this.caseDefinition = readCaseDefinition;
+                        this.knowledgeSources = knowledgeSources;
+                        function readCaseDefinition() {
                         var promise = $q(
-                                function mockKSs(resolve, reject){
-                                resolve({data:fakeKSs})
+                                function loadCaseDefData(resolve, reject) {
+                                var milestones = caseDefinitionData.definitions[0].milestones;
+                                        angular.forEach(milestones, function addFields(value, key) {
+                                        value.visible = true;
+                                                value.percentage = Math.floor(100 / milestones.length);
+                                        }
+                                        )
+                                        debugger;
+                                        resolve({ data: caseDefinitionData });
                                 });
                                 return promise;
                         }
 
-                        var fakeKSs = [{
-                        name: "Knowledge Source A",
-                                id:"kbs-a"
-                        },
-                        {
-                        name: "Knowledge Source B",
-                                id:"kbs-b"
-                        }];
+
+                function knowledgeSources() {
+                var promise = $q(
+                        function mockKSs(resolve, reject) {
+                        resolve({ data: fakeKSs })
+                        });
+                        return promise;
+                }
+
+                var fakeKSs = [{
+                name: "Knowledge Source A",
+                        id: "kbs-a"
+                },
+                {
+                name: "Knowledge Source B",
+                        id: "kbs-b"
+                }];
         <s:if test="casesDefinitions != null">
-                        var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
+                var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
         </s:if>
         <s:else>
-                        var caseDefinitionData = undefined;
+                var caseDefinitionData = undefined;
         </s:else>
-                        }
-                        })();
+                }
+                })();
     </script>
 
 
