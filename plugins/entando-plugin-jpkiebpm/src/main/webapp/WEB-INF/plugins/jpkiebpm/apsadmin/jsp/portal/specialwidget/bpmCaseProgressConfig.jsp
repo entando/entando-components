@@ -7,8 +7,8 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery-ui.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.7/angular-sanitize.min.js"></script>
 
+<script src="<wp:resourceURL />plugins/jpkiebpm/administration/js/jbpm-component-config.js"></script>
 
 
 
@@ -160,7 +160,10 @@
                     <!--Please dont change the name or the id-->
                     <!--<input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-model=""/>-->
                     <!--If you use the above hidden input, you must comment out the following tag so the form submitted with your data (instead of default data)-->
-                    <!--commen out--> <wpsf:hidden  name="frontEndMilestonesData" id="frontEndMilestonesData"></wpsf:hidden><!--commen out-->
+                    
+                    <input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-value="vm.ui.defToJSONEscaped()"/>
+
+                    
                         <!--You also need to comment out line 98 & 114 in org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction class -->
                 </s:if>
             </div>
@@ -184,99 +187,13 @@
     </div>
 
     <script type="text/javascript">
-                (function ngApp() {
 
-                angular.module('caseProgressApp', ['ngSanitize'])
-                        .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
-                        .service("BpmService", BpmService)
-                        .filter('escape', function () {
-                        return function (str) {
-                        return String(str).replace(/"/g, '&quot;');
-                        }
-                        });
-                        function CaseProgressConfigCtrl($log, $sanitize, BpmService) {
-                        var vm = this;
-                                //hold all known knoledge sources
-                                vm.knowledgeSources = {};
-                                //hold all case definitions by selected knowledge source                        
-                                vm.defs = {};
-                                //data selected by the user
-                                vm.form = {
-                                knowledgeSource: undefined,
-                                        caseDef: undefined
-                                };
-                                vm.ui = {
-                                updateCaseDefs: loadCaseDefOnSelectedKS,
-                                        defToJSONEscaped: defToJSONEscaped
-                                };
-                                function defToJSONEscaped() {
-                                return $sanitize(angular.toJson(vm.form.caseDef));
-                                }
-
-
-                        function loadCaseDefOnSelectedKS() {
-                        loadCaseDefinition(vm.form.knowledgeSource);
-                        }
-
-
-                        function loadKnowledgeSources() {
-                        BpmService.knowledgeSources()
-                                .then(function success(res) {
-                                vm.knowledgeSources.all = res.data;
-                                }, function errHandler(error) {
-                                $log.error("Ops... something goes wrong!", err);
-                                })
-                        }
-
-
-                        function loadCaseDefinition(knowledgeSource) {
-
-                        BpmService.caseDefinition(knowledgeSource)
-                                .then(function (res) {
-                                vm.defs.all = res.data.definitions;
-                                }, function (err) {
-                                $log.error("Ops... something goes wrong!", err);
-                                });
-                        }
-
-
-
-                        function init() {
-                        loadKnowledgeSources();
-                        }
-
-                        init();
-                        }
-
-                function BpmService($http, $q) {
-
-
-                this.caseDefinition = readCaseDefinition;
-                        this.knowledgeSources = knowledgeSources;
-                        function readCaseDefinition() {
-                        var promise = $q(
-                                function loadCaseDefData(resolve, reject) {
-                                var milestones = caseDefinitionData.definitions[0].milestones;
-                                        angular.forEach(milestones, function addFields(value, key) {
-                                        value.visible = true;
-                                                value.percentage = Math.floor(100 / milestones.length);
-                                        }
-                                        )
-                                        debugger;
-                                        resolve({ data: caseDefinitionData });
-                                });
-                                return promise;
-                        }
-
-
-                function knowledgeSources() {
-                var promise = $q(
-                        function mockKSs(resolve, reject) {
-                        resolve({ data: fakeKSs })
-                        });
-                        return promise;
-                }
-
+        <s:if test="casesDefinitions != null">
+                var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
+        </s:if>
+        <s:else>
+                var caseDefinitionData = undefined;
+        </s:else>
                 var fakeKSs = [{
                 name: "Knowledge Source A",
                         id: "kbs-a"
@@ -285,14 +202,7 @@
                 name: "Knowledge Source B",
                         id: "kbs-b"
                 }];
-        <s:if test="casesDefinitions != null">
-                var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
-        </s:if>
-        <s:else>
-                var caseDefinitionData = undefined;
-        </s:else>
-                }
-                })();
+                bootBpmComponent(caseDefinitionData, fakeKSs);
     </script>
 
 

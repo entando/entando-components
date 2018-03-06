@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,7 @@ public class BpmCaseProgressAction extends BaseAction {
 
     public String view() {
         try {
+
             String frontEndMilestonesDataIn = extractWidgetConfig("frontEndMilestonesData");
             this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
             this.setCases(this.getCaseManager().getCaseInstancesList(this.getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDataIn)));
@@ -68,7 +70,10 @@ public class BpmCaseProgressAction extends BaseAction {
         try {
             String containerid = this.getContainerIDfromfrontEndMilestonesData(this.getFrontEndMilestonesData());
             this.setCases(this.getCaseManager().getCaseInstancesList(containerid));
-            this.setCaseInstanceMilestones(this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString());
+
+            String updatedMilestones = this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString();
+            this.setCaseInstanceMilestones(this.updatefrontEndMilestonesDataMilestones(this.getFrontEndMilestonesData(), updatedMilestones));
+
         } catch (Throwable t) {
             _logger.error("Error getting the configuration parameter", t);
             return FAILURE;
@@ -105,6 +110,7 @@ public class BpmCaseProgressAction extends BaseAction {
         return value;
     }
 
+    //Helper
     protected String getContainerIDfromfrontEndMilestonesData(String frontEndMilestonesData) {
         String containerID = null;
 
@@ -119,6 +125,48 @@ public class BpmCaseProgressAction extends BaseAction {
         }
 
         return containerID;
+    }
+
+    public String updatefrontEndMilestonesDataMilestones(String currentMilestonesData, String newMilestonesData) {
+
+        JSONObject currentMilestonesDataJson = null;
+        JSONArray newMilestonesDataJsonar = null;
+        JSONArray output = new JSONArray();
+
+        try {
+            currentMilestonesDataJson = new JSONObject(currentMilestonesData);
+        } catch (JSONException t) {
+            throw new RuntimeException("Error parsing json " + currentMilestonesData, t);
+        }
+        try {
+            newMilestonesDataJsonar = new JSONArray(newMilestonesData);
+        } catch (JSONException t) {
+            throw new RuntimeException("Error parsing json " + newMilestonesData, t);
+        }
+        JSONArray definitions = currentMilestonesDataJson.getJSONArray("definitions");
+        JSONObject firstCaseDef = definitions.getJSONObject(0);
+        JSONArray milestones = firstCaseDef.getJSONArray("milestones");
+
+        for (int i = 0; i < newMilestonesDataJsonar.length(); i++) {
+
+            JSONObject iMilestone = newMilestonesDataJsonar.getJSONObject(i);
+            String iMilestoneName = iMilestone.getString("milestone-name");
+
+            for (int j = 0; j < milestones.length(); j++) {
+
+                JSONObject jMilestones = milestones.getJSONObject(j);
+                String jMilestoneName = jMilestones.getString("milestone-name");
+
+                if (jMilestoneName.equals(iMilestoneName)) {
+
+                    iMilestone.put("visible", jMilestones.getBoolean("visible"));
+                    iMilestone.put("percentage", jMilestones.getInt("percentage"));
+                }
+            }
+            output.put(iMilestone);
+        }
+
+        return output.toString();
     }
 
     public CaseManager getCaseManager() {
