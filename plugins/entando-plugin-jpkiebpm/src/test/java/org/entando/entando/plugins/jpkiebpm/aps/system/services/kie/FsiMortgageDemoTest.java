@@ -316,7 +316,7 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
     }
 
 
-    private KieBpmConfig getConfigForTests() {
+    protected KieBpmConfig getConfigForTests() {
         KieBpmConfig cfg = new KieBpmConfig();
 
         cfg.setActive(TEST_ENABLED);

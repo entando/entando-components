@@ -321,7 +321,7 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         return _processes.get(0).getInstanceId();
     }
 
-    private KieBpmConfig getConfigForTests() {
+    protected KieBpmConfig getConfigForTests() {
         KieBpmConfig cfg = new KieBpmConfig();
 
         cfg.setActive(TEST_ENABLED);
@@ -336,9 +336,9 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         return cfg;
     }
 
-    private List<kieProcess> _processDefinitions;
-    private List<KieContainer> _containers;
-    private List<KieProcessInstance> _processes;
+    protected List<kieProcess> _processDefinitions;
+    protected List<KieContainer> _containers;
+    protected List<KieProcessInstance> _processes;
 
-    private IKieFormManager _formManager;
+    protected IKieFormManager _formManager;
 }
