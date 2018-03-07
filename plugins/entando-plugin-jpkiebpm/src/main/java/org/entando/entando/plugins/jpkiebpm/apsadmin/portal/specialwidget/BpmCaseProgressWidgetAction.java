@@ -26,7 +26,6 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
-    private static final org.slf4j.Logger _logger = LoggerFactory.getLogger(BpmDatatableWidgetAction.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmDatatableWidgetAction.class);
 
     private CaseManager caseManager;
     private IKieFormManager formManager;
@@ -54,7 +53,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     private String processPathDefaultValue;
     private String casesDefinitions;
     private List<kieProcess> process;
-    private String _frontEndMilestonesData;
+    private String frontEndMilestonesData;
 
     @Override
     public String init() {
@@ -72,13 +71,18 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     public String save() {
         String result = super.save();
         Widget widget = this.createNewWidget();
-
-        if (widget != null) {
-            widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
-        } else {
-            _logger.error("Null widget");
+        
+        try {
+            if (widget != null) {
+                widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
+            } else {
+                logger.error("Null widget");
+                return INPUT;
+            }
+        } catch (Throwable t) {
+            logger.error("error in save", t);
+            return FAILURE;
         }
-
         return result;
     }
 
@@ -90,12 +94,10 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         if (StringUtils.isNotBlank(configParam)) {
             this.setFrontEndMilestonesData(configParam);
         }
-
         return result;
     }
 
-    public String chooseForm() throws IOException {
-
+    public String chooseForm() {
         try {
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
 
@@ -104,8 +106,9 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.setFrontEndMilestonesData(this.getCasesDefinitions());
 
             this.setProcess(this.getCaseManager().getProcessDefinitionsList());
-        } catch (ApsSystemException ex) {
-            Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Throwable t) {
+            logger.error("Error in chooseForm()", t);
+            return FAILURE;
         }
         return SUCCESS;
     }
@@ -120,8 +123,9 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.setFrontEndMilestonesData(this.getCasesDefinitions());
 
             this.setProcess(this.getCaseManager().getProcessDefinitionsList());
-        } catch (ApsSystemException ex) {
-            Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Throwable t) {
+            logger.error("Error in changeForm()", t);
+            return FAILURE;
         }
         return SUCCESS;
     }
@@ -175,11 +179,11 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     }
 
     public String getFrontEndMilestonesData() {
-        return _frontEndMilestonesData;
+        return frontEndMilestonesData;
     }
 
     public void setFrontEndMilestonesData(String frontEndMilestonesData) {
-        this._frontEndMilestonesData = frontEndMilestonesData;
+        this.frontEndMilestonesData = frontEndMilestonesData;
     }
 
     public List<kieProcess> getProcess() {

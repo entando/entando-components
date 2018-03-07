@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CaseManager extends KieFormManager {
 
-    private static final Logger _logger = LoggerFactory.getLogger(KieFormManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
 
     @Override
     public void init() throws Exception {
@@ -58,7 +58,7 @@ public class CaseManager extends KieFormManager {
         String result = null;
         JSONObject json = null;
 
-        if (!_config.getActive() || StringUtils.isBlank(containerId)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId)) {
             return json;
         }
         try {
@@ -72,14 +72,14 @@ public class CaseManager extends KieFormManager {
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(_config.getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
                 json = new JSONObject(result);
-                _logger.debug("received successful message: ", result);
+                logger.debug("received successful message: ", result);
             } else {
-                _logger.debug("received empty case definitions message: ");
+                logger.debug("received empty case definitions message: ");
             }
 
         } catch (Throwable t) {
@@ -97,7 +97,7 @@ public class CaseManager extends KieFormManager {
         String result;
         JSONObject json = null;
 
-        if (!_config.getActive() || StringUtils.isBlank(containerId)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId)) {
             return casesList;
         }
         try {
@@ -111,7 +111,7 @@ public class CaseManager extends KieFormManager {
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(_config.getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -122,9 +122,9 @@ public class CaseManager extends KieFormManager {
                     JSONObject iJson = instances.getJSONObject(i);
                     casesList.add(iJson.getString("case-id"));
                 }
-                _logger.debug("received successful message: ", result);
+                logger.debug("received successful message: ", result);
             } else {
-                _logger.debug("received empty case instances message: ");
+                logger.debug("received empty case instances message: ");
             }
 
         } catch (Throwable t) {
@@ -143,7 +143,7 @@ public class CaseManager extends KieFormManager {
         String result;
         JSONObject json;
 
-        if (!_config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return milestonesList;
         }
         try {
@@ -159,16 +159,16 @@ public class CaseManager extends KieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(param)
-                    .setDebug(_config.getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
                 json = new JSONObject(result);
                 milestonesList = (JSONArray) json.get("milestones");
-                _logger.debug("received successful message: ", result);
+                logger.debug("received successful message: ", result);
 
             } else {
-                _logger.debug("received empty case instances message: ");
+                logger.debug("received empty case instances message: ");
             }
 
         } catch (Throwable t) {
@@ -179,11 +179,11 @@ public class CaseManager extends KieFormManager {
     }
 
     public KieBpmConfig getKieBpmConfig() {
-        return _config;
+        return config;
     }
 
     public void setKieBpmConfig(KieBpmConfig _config) {
-        this._config = _config;
+        this.config = _config;
     }
 
     public String getContainerId() {
@@ -202,7 +202,7 @@ public class CaseManager extends KieFormManager {
         this.caseID = caseID;
     }
 
-    private KieBpmConfig _config;
+    private KieBpmConfig config;
 
     private String containerId;
     private String caseID;
