@@ -48,8 +48,8 @@ public class KieBpmConfigAction extends BaseAction {
         try {
             KieBpmConfig config = this.modelToConfig();
             
-//            this.getFormManager().addConfig(config);
-            this.getFormManager().updateConfig(config);
+            this.getFormManager().addConfig(config);
+//            this.getFormManager().updateConfig(config);
             this.addActionMessage(this.getText("message.config.savedConfirm"));
             try {
                 this.getFormManager().getContainersList();
@@ -70,7 +70,8 @@ public class KieBpmConfigAction extends BaseAction {
             // enable plugin by default;
             this.setActive(true);
             KieBpmConfig config = this.modelToConfig();
-            this.getFormManager().updateConfig(config);
+//            this.getFormManager().updateConfig(config);
+            this.getFormManager().addConfig(config);
             try {
                 this.getFormManager().getContainersList();
                 this.addActionMessage(this.getText("message.config.test.success"));

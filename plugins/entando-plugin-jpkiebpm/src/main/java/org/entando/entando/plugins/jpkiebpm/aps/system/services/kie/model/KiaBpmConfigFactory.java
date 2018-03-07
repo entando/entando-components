@@ -37,7 +37,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KiaBpmConfigFactory {
 
-    
     @XmlElement(name = "kieBpmConfigeMap")
     private HashMap<String, KieBpmConfig> kieBpmConfigeMap = new HashMap();
 
@@ -51,15 +50,15 @@ public class KiaBpmConfigFactory {
         this.getKieBpmConfigeMap().put(_kieBpmConfig.getHostname(), _kieBpmConfig);
 
     }
-    @Override
-    public KiaBpmConfigFactory clone() {
+
+    public KieBpmConfig getFirstKiaBpmConfig() {
         
-        KiaBpmConfigFactory kiaBpmConfigFactory = new KiaBpmConfigFactory();
-        kiaBpmConfigFactory.setKieBpmConfigeMap(this.getKieBpmConfigeMap());
-        return kiaBpmConfigFactory;
-//        for(String key : this.getKieBpmConfigeMap().keySet()){
-//            this.getKieBpmConfigeMap().get(key).clone();
-//        }
+        HashMap.Entry<String,KieBpmConfig> entry= this.getKieBpmConfigeMap().entrySet().iterator().next();
+        return entry.getValue();
+    }
+
+    public KiaBpmConfigFactory initiateKiaBpmConfigFactory() {
+        return new KiaBpmConfigFactory();
     }
 
     public HashMap<String, KieBpmConfig> getKieBpmConfigeMap() {

@@ -1,14 +1,21 @@
 INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jpkiebpm_config', 'KIE-BPM service configuration',
 '<?xml version="1.0" encoding="UTF-8"?>
-<kieBpmConfig>
-   <active>false</active>
-   <username></username>
-   <password></password>
-   <hostname></hostname>
-   <schema>http</schema>
-   <port>8080</port>
-   <webapp>kie-server</webapp>
-</kieBpmConfig>');
+<kiaBpmConfigFactory>
+   <kieBpmConfigeMap>
+      <entry>
+         <key>localhost</key>
+         <value>
+            <active>true</active>
+            <username>krisv</username>
+            <password>krisv</password>
+            <hostname>localhost</hostname>
+            <schema>http</schema>
+            <port>8080</port>
+            <webapp>kie-server</webapp>
+         </value>
+      </entry>
+   </kieBpmConfigeMap>
+</kiaBpmConfigFactory>');
 
 INSERT INTO widgetcatalog VALUES ('bpm-datatype-form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>

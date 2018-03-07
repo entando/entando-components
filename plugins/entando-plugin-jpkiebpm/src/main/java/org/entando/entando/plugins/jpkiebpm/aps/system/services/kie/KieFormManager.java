@@ -60,8 +60,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     @Override
     public void init() throws Exception {
         try {
-//            loadConfigurations();
-            loadConfig();
+            loadConfigurations();
+//            loadConfig();
             logger.info("{} ready, enabled: {}", this.getClass().getName(), config.getActive());
         } catch (ApsSystemException t) {
             logger.error("{} Manager: Error on initialization", this.getClass().getName(), t);
@@ -70,10 +70,18 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     private void loadConfig() throws ApsSystemException {
         try {
+            //this doesnt work with multi server configuration
+//            ConfigInterface configManager = this.getConfigManager();
+//            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+//            config = (KieBpmConfig) JAXBHelper.unmarshall(xml, KieBpmConfig.class, true, false);
             ConfigInterface configManager = this.getConfigManager();
-            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
 
-            config = (KieBpmConfig) JAXBHelper.unmarshall(xml, KieBpmConfig.class, true, false);
+            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+            KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
+
+            //get the first entry in database
+            config = kBpmConfFctry.getFirstKiaBpmConfig();
+            
         } catch (Throwable t) {
             throw new ApsSystemException("Error in loadConfigs", t);
         }
@@ -94,47 +102,45 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return config;
     }
 
-//    @Override
-//    public KieBpmConfig addConfig(KieBpmConfig config) throws ApsSystemException {
-//        try {
-//            if (null != config) {
-//                KiaBpmConfigFactory kBpmConfFctry = this.getKiaBpmConfigFactory();
-//                kBpmConfFctry.addKiaBpmConfig(config);
-//
-////                JAXBContext jaxbContext = JAXBContext.newInstance(KiaBpmConfigFactory.class);
-////                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-////
-////                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-////
-////                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-////                jaxbMarshaller.marshal(kBpmConfFctry, baos);
-////                String xml = baos.toString();
-//                String xml = JAXBHelper.marshall(kBpmConfFctry, true, false);
-//
-//                this.getConfigManager().updateConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM, xml);
-//                this._config = config;
-//
-//            }
-//        } catch (Throwable t) {
-//            throw new ApsSystemException("Error adding configuration", t);
-//        }
-//        return config;
-//    }
+    @Override
+    public KieBpmConfig addConfig(KieBpmConfig config) throws ApsSystemException {
+        try {
+            if (null != config) {
 
-//    private void loadConfigurations() throws ApsSystemException {
-//        try {
-//            ConfigInterface configManager = this.getConfigManager();
-//
-//            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
-//            System.out.println("loadConfigurations: " + xml);
-//
-//            KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
-//            _config = kBpmConfFctry.getKieBpmConfigeMap().get("localhost");
-////            _config = (KieBpmConfig) JAXBHelper.unmarshall(xml, KieBpmConfig.class, true, false);
-//        } catch (Throwable t) {
-//            throw new ApsSystemException("Error in loadConfigs", t);
-//        }
-//    }
+                //Get current config from database
+                ConfigInterface configManager = this.getConfigManager();
+                String xmlin = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+
+                //add new config
+                KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xmlin, KiaBpmConfigFactory.class, true, false);
+                kBpmConfFctry.addKiaBpmConfig(config);
+                String xml = JAXBHelper.marshall(kBpmConfFctry, true, false);
+
+                //load updated config
+                configManager.updateConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM, xml);
+                this.config = config;
+
+            }
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error adding configuration", t);
+        }
+        return config;
+    }
+
+    private void loadConfigurations() throws ApsSystemException {
+        try {
+            ConfigInterface configManager = this.getConfigManager();
+
+            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+            KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
+
+            //get the first entry in database
+            config = kBpmConfFctry.getFirstKiaBpmConfig();
+//            _config = (KieBpmConfig) JAXBHelper.unmarshall(xml, KieBpmConfig.class, true, false);
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error in loadConfigs", t);
+        }
+    }
 
     @Override
     public List<KieContainer> getContainersList() throws ApsSystemException {
@@ -992,15 +998,15 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     public KiaBpmConfigFactory getKiaBpmConfigFactory() {
-        return new KiaBpmConfigFactory();
+        return kiaBpmConfigFactory.initiateKiaBpmConfigFactory();
     }
 
     public void setKiaBpmConfigFactory(KiaBpmConfigFactory _kiaBpmConfigFactory) {
-        this._kiaBpmConfigFactory = _kiaBpmConfigFactory;
+        this.kiaBpmConfigFactory = kiaBpmConfigFactory;
     }
 
 //    private KieBpmConfig _config;
-    private KiaBpmConfigFactory _kiaBpmConfigFactory;
+    private KiaBpmConfigFactory kiaBpmConfigFactory;
 //    private ConfigInterface _configManager;
 //    private IKieFormOverrideManager _overrideManager;
 
