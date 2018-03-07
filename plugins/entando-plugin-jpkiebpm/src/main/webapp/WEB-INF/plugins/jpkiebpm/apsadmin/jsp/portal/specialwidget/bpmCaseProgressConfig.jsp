@@ -32,7 +32,7 @@
 </div>
 <br>
 
-<div class="mb-20" data-ng-app="caseProgressApp" data-ng-controller="CaseProgressConfigCtrl as vm">
+<div class="mb-20" >
 
     <s:set var="breadcrumbs_pivotPageCode" value="pageCode"/>
 
@@ -40,7 +40,7 @@
         <s:param name="selectedNode" value="pageCode"></s:param>
     </s:action>
 
-    <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmCaseProgressViewer" class="form-horizontal">
+    <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmCaseProgressViewer" class="form-horizontal" data-ng-app="caseProgressApp" data-ng-controller="CaseProgressConfigCtrl as vm">
         <p class="noscreen">
             <wpsf:hidden name="pageCode"/>
             <wpsf:hidden name="frame"/>
@@ -104,57 +104,112 @@
 
                 <s:if test="#isProcessPathSetted">
 
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label col-xs-4" for="knowledgeSources">
-                                <s:text name="Knowledge Sources"/>
-                            </label>
-                            <div class="col-xs-8">
-                                <select ng-options="knowledgeSource.name for knowledgeSource in vm.knowledgeSources.all track by knowledgeSource.id" ng-model="vm.form.knowledgeSource" ng-change="vm.ui.updateCaseDefs()">
-                                </select>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3>Progress bar Settings
+                                <br/>
+                                <small>You can manage the settings</small>
+                                <small class="pull-right">
+                                    <sup>*</sup> Required Fields</small>
+                            </h3>
+                
+                        </div>
+                        <div class="panel/body">
+                
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <p>KIE Case
+                                        <sup>*</sup>
+                                    </p>
+                                    <div class="form-group">
+                                        <label for="knowledgeSources">
+                                            Knowledge Sources
+                                        </label>
+                                        <select class="form-control" ng-options="knowledgeSource.name for knowledgeSource in vm.data.knowledgeSources track by knowledgeSource.id"
+                                            ng-model="vm.form.knowledgeSource"></select>
+                                    </div>
+                
+                                    <div class="form-group" ng-show="vm.form.knowledgeSource">
+                                        <label for="caseSelector">Cases</label>
+                                        <select class="form-control" id="caseSelector" ng-options="caseDef.name for caseDef in vm.data.caseDefinitions.definitions track by caseDef['container-id']"
+                                            ng-model="vm.form.caseDef"></select>
+                                    </div>
+                
+                                </div>
+                                <div class="col-lg-4">
+                                    <p>Select the type of Progress bar
+                                        <sup>*</sup>
+                                    </p>
+                                    <div class="radio" ng-repeat="pbType in vm.ui.data.progressBar.types track by pbType.id">
+                                        <label>
+                                            <input type="radio" ng-model="vm.form.progressBarType" name="progressbar-type" ng-value="pbType">{{pbType.name}}
+                                        </label>
+                                    </div>
+                
+                                </div>
+                                <div class="col-lg-4">
+                                    <p>Other features</p>
+                                    <div class="checkbox" ng-repeat="extInfo in vm.ui.data.progressBar.additionalInfos track by extInfo.id">
+                                        <label>
+                                            <input type="checkbox" ng-value="extInfo" ng-checked="extInfo.default" ng-model="vm.form.additionalSettings[extInfo.id]"
+                                                ng-true-value="true" ng-false-value="false"> {{extInfo.name}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <table id="sort" class="grid table table-bordered table-hover" ng-show="vm.form.caseDef">
+                                    <thead>
+                                        <tr>
+                
+                                            <th class="text-center col-md-1">Visible</th>
+                                            <th class=" col-md-9">Milestone Name</th>
+                                            <th class="text-center col-md-2">Completed
+                                                <br>
+                                                <small>(Even by Default)</small>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="milestone in vm.form.caseDef.milestones track by milestone['milestone-id']">
+                
+                                            <td class="text-center">
+                                                <input type="checkbox" ng-model="milestone.visible">
+                                            </td>
+                
+                                            <td class="field">{{ milestone['milestone-name']}}</td>
+                
+                                            <td class="text-center">
+                                                <input type="text" class="form-control" width="20" ng-model="milestone.percentage" />
+                                            </td>
+                
+                                        </tr>
+                
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs" ng-click="vm.ui.save()" type="button">
+                                        <strong>Generate Config (TODO Click me before SAVE)</strong>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-group" ng-show="vm.form.knowledgeSource">
-                            <label class="control-label col-xs-4">Cases</label>
-                            <div class="col-xs-8">
-                                <select ng-options="caseDef.name for caseDef in vm.defs.all track by caseDef['container-id']" ng-model="vm.form.caseDef">
-                                </select>
+                </div>
+                
+                        <!-- Debug info section-->
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <i class="fa fa-info-circle"></i> Widget Configuration Viewer
                             </div>
+                            <div class="panel-body">
+                                <pre>{{vm.data.widgetConfig?(vm.data.widgetConfig|json):"Click save to generate configuration"}}</pre>
+                            </div>
+                
                         </div>
-                    </div>
-
-                    <hr/>         
-                    <%--<s:property value="casesDefinitions"/>--%>
-                    <br />
-                    <table id="sort" class="grid table table-bordered table-hover" ng-show="vm.form.caseDef">
-                        <thead>
-                            <tr>
-
-                                <th class="text-center table-w-5">Visible</th>
-                                <th class="table-w-20">Milestone Name</th>
-                                <th class="text-center table-w-20">Completed (Even by Default)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="milestone in vm.form.caseDef.milestones track by milestone['milestone-id']">
-
-                                <td class="text-center">
-                                    <input type="checkbox" ng-model="milestone.visible">
-                                </td>
-
-                                <td class="field text-center">{{ milestone['milestone-name']}}</td>
-
-                                <td class="text-center">
-                                    <input type="text" width="20" ng-model="milestone.percentage"/>
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-                    </table>
-
-                    <br />
+                
+                    
 
                     <!--Please store your JSON output in following hidden input in order to be sent to widget front end-->
                     <!--Please dont change the name or the id-->

@@ -25,93 +25,151 @@
 var bootBpmComponent = (function ngApp(caseDefinitionData, knowledgeSourcesData) {
     'use strict';
     angular.module('caseProgressApp', [])
-            .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
-            .service("BpmService", BpmService);
+        .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
+        .service("BpmService", BpmService);
 
-    function CaseProgressConfigCtrl($log, BpmService) {
+    function CaseProgressConfigCtrl($filter, $log, BpmService) {
+
         var vm = this;
-        //hold all known knoledge sources
-        vm.knowledgeSources = {};
-        //hold all case definitions by selected knowledge source                        
-        vm.defs = {};
-        //data selected by the user
+
+        vm.data = {
+            knowledgeSources: undefined,
+            caseDefinitions: undefined
+        }
         vm.form = {
-            knowledgeSource: undefined,
-            caseDef: undefined
-        };
+            progressBarType: undefined,
+            additionalSettings: {}
+        }
+
         vm.ui = {
-            updateCaseDefs: loadCaseDefOnSelectedKS,
+            data: {
+                progressBar: {
+                    types: [{
+                        id: 'basic',
+                        name: 'Basic (Default)'
+                    },
+                    {
+                        id: "stacked",
+                        name: 'Stacked Bar with milestones'
+                    }
+                    ],
+                    additionalInfos: [
+                        {
+                            id: "show-milestones",
+                            name: "Show milestones"
+
+                        },
+                        {
+                            id: "show-number-of-tasks",
+                            name: "Show number of tasks"
+                        }
+                    ]
+                }
+            },
+            save: buildWidgetConfig,
             defToJSONEscaped: defToJSONEscaped
         };
-        
+
         function defToJSONEscaped() {
-            return angular.toJson({definitions: [vm.form.caseDef]});
-
-        }
-
-
-        function loadCaseDefOnSelectedKS() {
-            loadCaseDefinition(vm.form.knowledgeSource);
-        }
-
-
-        function loadKnowledgeSources() {
-            BpmService.knowledgeSources()
-                    .then(function success(res) {
-                        vm.knowledgeSources.all = res.data;
-                    }, function errHandler(error) {
-                        $log.error("Ops... something goes wrong!", err);
-                    })
-        }
-
-
-        function loadCaseDefinition(knowledgeSource) {
-
-            BpmService.caseDefinition(knowledgeSource)
-                    .then(function (res) {
-                        vm.defs.all = res.data.definitions;
-                    }, function (err) {
-                        $log.error("Ops... something goes wrong!", err);
-                    });
+            return angular.toJson(vm.data.widgetConfig);
         }
 
 
 
+
+        function buildWidgetConfig() {
+            vm.data.widgetConfig =
+                {
+                    "container-id": vm.form.caseDef["case-id-prefix"],
+                    "name": vm.form.caseDef.name,
+                    "case-id-prefix": vm.form.caseDef["case-id-prefix"],
+                    "stages": [],
+                    "id": vm.form.caseDef.id,
+                    "milestones": angular.copy(vm.form.caseDef.milestones),
+                    "ui": {
+                        "progress-bar-type": vm.form.progressBarType.id,
+                        "additionalSettings": addUIAdditonalSettings(),
+                    },
+                    "version": "1.0"
+                }
+        }
+        function filterVisibleMiletones(caseInstance) {
+            return caseInstance ? filterMiletones(caseInstance.milestones, { "visible": true }) : [];
+        }
+
+        function filterMiletones(instance, filterMap) {
+            return $filter('filter')(instance, filterMap);
+        }
+
+        function addUIAdditonalSettings() {
+            var out = [];
+            angular.forEach(vm.form.additionalSettings, function (value, key) {
+                if (value) {
+                    out.push(key);
+                }
+            })
+            return out;
+        }
+        //init function  
         function init() {
-            loadKnowledgeSources();
+            BpmService.data.knowledgeSources().then(function (res) {
+                vm.data.knowledgeSources = res;
+            })
+
+            BpmService.data.caseDefinitions().then(function (caseDef) {
+                vm.data.caseDefinitions = caseDef;
+            });
+
+
+            //settings defaults
+            vm.form.progressBarType = vm.ui.data.progressBar.types[0];
         }
 
         init();
+
+
     }
 
     function BpmService($http, $q) {
-
-
-        this.caseDefinition = readCaseDefinition;
-        this.knowledgeSources = knowledgeSources;
-        function readCaseDefinition() {
-            var promise = $q(
-                    function loadCaseDefData(resolve, reject) {
-                        var milestones = caseDefinitionData.definitions[0].milestones;
-                        angular.forEach(milestones, function addFields(value, key) {
-                            value.visible = true;
-                            value.percentage = Math.floor(100 / milestones.length);
-                        }
-                        )
-                        resolve({data: caseDefinitionData});
-                    });
-            return promise;
+        this.data = {
+            caseDefinitions: getCaseDefinitions,
+            knowledgeSources: getKnowledgeSources
         }
 
 
-        function knowledgeSources() {
+        function getCaseDefinitions() {
+            //Entando data injection
             var promise = $q(
-                    function mockKSs(resolve, reject) {
-                        resolve({data: knowledgeSourcesData})
-                    });
+                function loadCaseInstanceData(resolve, reject) {
+                    resolve(caseDefinitionData);
+                });
             return promise;
+
+            /*
+            return $http.get('/mocks/caseInstanceDef.json').then(
+                function (res) {
+                    return res.data;
+                }
+            )*/
         }
 
 
+        function getKnowledgeSources() {
+
+            //Entando data injection
+            var promise = $q(
+                function loadCaseInstanceData(resolve, reject) {
+                    resolve(knowledgeSourcesData);
+                });
+            return promise;
+
+
+
+            /*return $http.get('/mocks/knowledgeSources.json').then(
+                function (res) {
+                    return res.data;
+                }
+            )*/
+        }
     }
 });
