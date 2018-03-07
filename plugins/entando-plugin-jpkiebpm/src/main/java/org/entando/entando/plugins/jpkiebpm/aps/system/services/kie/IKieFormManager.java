@@ -66,6 +66,15 @@ public interface IKieFormManager {
     /**
      * Return the process definition list
      *
+     * @param config
+     * @return
+     * @throws ApsSystemException
+     */
+//    KieBpmConfig addConfig(KieBpmConfig config) throws ApsSystemException;
+
+    /**
+     * Return the process definition list
+     *
      * @return
      * @throws ApsSystemException
      */

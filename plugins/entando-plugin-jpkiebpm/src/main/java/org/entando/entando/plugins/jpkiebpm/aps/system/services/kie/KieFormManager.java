@@ -42,6 +42,9 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import java.io.ByteArrayOutputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
@@ -57,6 +60,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     @Override
     public void init() throws Exception {
         try {
+//            loadConfigurations();
             loadConfig();
             _logger.info("{} ready, enabled: {}", this.getClass().getName(), _config.getActive());
         } catch (ApsSystemException t) {
@@ -89,6 +93,48 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return config;
     }
+
+//    @Override
+//    public KieBpmConfig addConfig(KieBpmConfig config) throws ApsSystemException {
+//        try {
+//            if (null != config) {
+//                KiaBpmConfigFactory kBpmConfFctry = this.getKiaBpmConfigFactory();
+//                kBpmConfFctry.addKiaBpmConfig(config);
+//
+////                JAXBContext jaxbContext = JAXBContext.newInstance(KiaBpmConfigFactory.class);
+////                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+////
+////                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+////
+////                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+////                jaxbMarshaller.marshal(kBpmConfFctry, baos);
+////                String xml = baos.toString();
+//                String xml = JAXBHelper.marshall(kBpmConfFctry, true, false);
+//
+//                this.getConfigManager().updateConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM, xml);
+//                this._config = config;
+//
+//            }
+//        } catch (Throwable t) {
+//            throw new ApsSystemException("Error adding configuration", t);
+//        }
+//        return config;
+//    }
+
+//    private void loadConfigurations() throws ApsSystemException {
+//        try {
+//            ConfigInterface configManager = this.getConfigManager();
+//
+//            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+//            System.out.println("loadConfigurations: " + xml);
+//
+//            KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
+//            _config = kBpmConfFctry.getKieBpmConfigeMap().get("localhost");
+////            _config = (KieBpmConfig) JAXBHelper.unmarshall(xml, KieBpmConfig.class, true, false);
+//        } catch (Throwable t) {
+//            throw new ApsSystemException("Error in loadConfigs", t);
+//        }
+//    }
 
     @Override
     public List<KieContainer> getContainersList() throws ApsSystemException {
@@ -945,7 +991,16 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return _config.clone();
     }
 
+    public KiaBpmConfigFactory getKiaBpmConfigFactory() {
+        return new KiaBpmConfigFactory();
+    }
+
+    public void setKiaBpmConfigFactory(KiaBpmConfigFactory _kiaBpmConfigFactory) {
+        this._kiaBpmConfigFactory = _kiaBpmConfigFactory;
+    }
+
     private KieBpmConfig _config;
+    private KiaBpmConfigFactory _kiaBpmConfigFactory;
     private ConfigInterface _configManager;
     private IKieFormOverrideManager _overrideManager;
 
