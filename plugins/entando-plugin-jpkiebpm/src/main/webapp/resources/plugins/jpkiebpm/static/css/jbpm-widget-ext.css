@@ -1,0 +1,19 @@
+.progress-labeled {
+    margin-bottom: 5px;
+}
+
+.progress-labels{
+    margin-bottom: 5px;
+    background-color: transparent;
+}
+
+.progress-bar-label{
+    background-color: transparent;
+    color: #000;
+    font-size: 11px;
+    text-align: left;
+}
+
+.progress-labeled .progress-bar{
+    border-left:  2px solid #000;
+}

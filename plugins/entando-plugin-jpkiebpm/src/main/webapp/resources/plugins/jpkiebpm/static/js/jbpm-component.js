@@ -22,102 +22,143 @@
  * THE SOFTWARE.
  */
 
-var bootBpmComponents = (function ngApp(caseDefinitionData,caseInstanceMilestones) {
+var bootBpmComponents = (function (caseInstanceMilestones) {
     'use strict';
 
-    //Case Definition with Milestones Configurations:
-
-    angular.module('caseProgressApp', [])
-            .controller('ProgressBarCtrl', ProgressBarCtrl)
-            .service("BpmService", BpmService);
-
-    function ProgressBarCtrl($log, BpmService) {
-        var vm = this;
-        //hold all known knoledge sources
-        vm.knowledgeSources = {};
-        //hold all case definitions by selected knowledge source                        
-        vm.caseInstance = {};
-        //data selected by the user
-        vm.def = {
-
-            caseDef: undefined,
-            milestones: undefined
-        };
-        vm.ui = {
-            updateCaseDefs: loadCaseDefOnSelectedKS,
-            caseInstanceStatus: loadCaseInstanceStatus,
-            getPercentage: calculatePercentageForMilestone
-        };
-
-
-        function calculatePercentageForMilestone(ms) {
-            if (!ms.percentage) {
-                ms.percentage = Math.floor((Math.random() * 40) + 1);
+    angular.module('caseProgressApp',[])
+        .service('BpmService', function ($http, $q) {
+            this.data = {
+                //caseInstanceDef: getCaseInstanceDef,
+                caseInstanceData: getCaseInstanceData
             }
-            return  ms.percentage;
-        }
 
 
+            /*  function getCaseInstanceDef() {
+                 return $http.get('/mocks/caseInstanceDef.json').then(
+                     function (res) {
+                         return res.data;
+                     }
+                 )
+             } */
+            function getCaseInstanceData() {
 
-        function loadCaseDefOnSelectedKS() {
-            loadCaseDefinition(vm.form.knowledgeSource);
-        }
-
-
-        function loadCaseInstanceStatus(caseInstanceId) {
-            BpmService.caseInstanceStatus(caseInstanceId)
-                    .then(function success(res) {
-                        vm.caseInstance.milestones = res.data;
-                    }, function errHandler(error) {
-                        $log.error("Ops... something goes wrong!", err);
-                    })
-        }
-
-
-        function loadCaseDefinition(knowledgeSource) {
-
-            BpmService.caseDefinition(knowledgeSource)
-                    .then(function (res) {
-                        vm.def.caseDef = res.data.definitions;
-                        vm.def.milestones = res.data.definitions[0].milestones;
-
-                    }, function (err) {
-                        $log.error("Ops... something goes wrong!", err);
-                    });
-        }
-
-
-
-        function init() {
-            loadCaseDefinition();
-            loadCaseInstanceStatus();
-
-        }
-
-        init();
-    }
-
-    function BpmService($http, $q) {
-        this.caseDefinition = readCaseDefinition;
-        this.caseInstanceStatus = readCaseInstanceStatus;
-
-        function readCaseDefinition() {
-            var promise = $q(
-                    function loadCaseDefData(resolve, reject) {
-                        resolve({data: caseDefinitionData});
-                    });
-            return promise;
-        }
-
-
-        function readCaseInstanceStatus(caseInstanceId) {
-            var promise = $q(
+                //Entando data injection
+                var promise = $q(
                     function loadCaseInstanceData(resolve, reject) {
-                        resolve({data: caseInstanceMilestones});
+                        resolve(
+                            {
+                                "caseInstance": {
+                                    "name": "FIXME - IT000001",
+
+                                    "milestones": caseInstanceMilestones
+                                }
+                            });
                     });
-            return promise;
-        }
+                return promise;
 
-    }
 
-});
+                //Simulating a JSON/HTTP api
+                /*
+                return $http.get('/mocks/caseInstanceData.json').then(
+                    function (res) {
+                        return res.data;
+                    }
+                )*/
+            }
+
+
+        });
+
+        angular.module('caseProgressApp')
+            .controller('ProgressBarCtrl', function ($filter, $log, BpmService) {
+
+                var vm = this;
+
+                vm.data = {
+                    caseInstance: undefined
+                }
+
+                vm.ui = {
+                    milestonePercentage: calculateMilestonePercentage,
+                    milestoneComplete: isMilestoneComplete,
+                    totalCaseCompletedPercentage: totalCaseCompletedPercentage,
+                    milestoneCompletedStyles: milestoneCompletedStyles,
+                    countVisibleMilestones: countVisibleMilestones,
+                    filterVisibleMiletones: filterCurrentVisibleMilestones,
+                    filterAchievedMilestones: countAchievedMilestones,
+                    instanceName: instanceName
+                }
+
+
+                function instanceName() {
+                    return vm.data.caseInstance ? vm.data.caseInstance.name : '';
+                }
+
+                function filterCurrentVisibleMilestones() {
+                    return filterVisibleMiletones(vm.data.caseInstance);
+                }
+
+                function milestoneCompletedStyles() {
+                    return ['progress-bar-success'];
+                }
+
+
+                function totalCaseCompletedPercentage() {
+                    var count = 0;
+                    angular.forEach(filterVisibleMiletones(vm.data.caseInstance), function (ms) {
+                        if (ms["milestone-achieved"]) {
+                            count += ms.percentage;
+                          }
+                    });
+                    return count;
+                }
+
+                function countAchievedMilestones() {
+                    return filterAchievedMilestones(vm.data.caseInstance);
+                }
+
+                function isMilestoneComplete(milestone) {
+                    return milestone['milestone-achieved'];
+                }
+
+                function calculateMilestonePercentage(milestone) {
+                    return milestone.percentage;
+                }
+
+                function countVisibleMilestones() {
+                    var found = filterVisibleMiletones(vm.data.caseInstance)
+                    return found.length
+                }
+
+                function filterCurrentVisibleMilestones() {
+                    return filterVisibleMiletones(vm.data.caseInstance);
+                }
+
+                function filterAchievedMilestones(caseInstance) {
+                    return caseInstance ? filterMiletones(filterVisibleMiletones(caseInstance), { "milestone-achieved": true }) : [];
+                }
+                function filterVisibleMiletones(caseInstance) {
+                    return caseInstance ? filterMiletones(caseInstance.milestones, { "visible": true }) : [];
+                }
+
+                function filterMiletones(instance, filterMap) {
+                    return $filter('filter')(instance, filterMap);
+                }
+                function init() {
+                    /*BpmService.data.caseInstanceDef().then(function (caseDef) {
+                      vm.data.caseDef = caseDef;
+                      vm.data.milestonesDef = caseDef.definitions[0].milestones;
+                    });
+                    */
+
+                    BpmService.data.caseInstanceData().then(function (res) {
+                        vm.data.caseInstance = res.caseInstance;
+                    });
+                }
+
+                init();
+
+
+            });
+})
+

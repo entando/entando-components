@@ -2,6 +2,7 @@
 <%@ taglib prefix="wp" uri="/aps-core"%>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jbpm-widget-ext.css" rel="stylesheet">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery-ui.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
@@ -33,7 +34,42 @@
             </div>
         </form>
 
+        <s:if test="caseInstanceMilestones!=null">
+            <div  data-ng-app="caseProgressApp" ng-controller="ProgressBarCtrl as vm">
+                
+                <div class="ibox-content">
+                    <h2>Simple progressbar</h2>
+                    <hr>
+                    <h5>{{vm.ui.instanceName()}}<br><small>Tasks {{vm.ui.filterAchievedMilestones().length}} of {{vm.ui.filterVisibleMiletones().length}}</small></h5>
+                    <div class="progress progress-labeled">
+                        <div ng-style="{width: vm.ui.totalCaseCompletedPercentage() + '%'}" ng-class="vm.ui.milestoneCompletedStyles()"
+                            class="progress-bar">
+                            <span>{{vm.ui.totalCaseCompletedPercentage()+'%'}}</span>
+                        </div>
+                    </div>
+                
+                </div>
+                
+                
+                
+                <div class="ibox-content">
+                    <h2>Simple with milestones</h2>
+                    <hr>
+                    <div class="progress progress-labeled">
+                        <div ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" ng-class="{'progress-bar-success':vm.ui.milestoneComplete(ms) }"
+                            class="progress-bar">
+                            <span>{{vm.ui.milestoneComplete(ms)?"COMPLETED":"IN PROGRESS"}}</span>
+                        </div>
+                    </div>
+                    <div class="progress progress-labels">
+                        <span ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" class="progress-bar progress-bar-label">
+                           {{ms["milestone-name"]}}
+                        </span>
+                    </div>
+                </div>
 
+            </div>
+        </s:if>
 
         <!--Select Case Instanse Option-->
         <br />
@@ -61,30 +97,12 @@
 
 
 
-        <s:if test="caseInstanceMilestones!=null">
-            <div  data-ng-app="caseProgressApp" ng-controller="ProgressBarCtrl as vm">
-                <div class="progress progress-striped">
-                    <div ng-repeat="ms in vm.def.milestones|filter:{visible:true}"  ng-style="{width: vm.ui.getPercentage(ms) + '%'}" class="progress-bar progress-bar-success">
-                        <span>{{ms["milestone-name"]}}</span>
-                    </div>
-                </div>
 
-            </div>
-        </s:if>
     </div>
 </div>
 <script type="text/javascript">
-    var caseDefinitionData = <s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="false"/>;
-
-    //Case Instance List:
-    //var caseInstances = <s:property value="cases" escapeHtml="false" escapeJavaScript="false"/>;
-    //Selected Case Instance Milestone:
     <s:if test="caseInstanceMilestones != null">
     var caseInstanceMilestones = <s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="false"/>;
+    bootBpmComponents(caseInstanceMilestones);
     </s:if>
-    <s:else>
-    var caseInstanceMilestones = undefined;
-    </s:else>
-
-    bootBpmComponents(caseDefinitionData, caseInstanceMilestones);
 </script>
