@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-var bootBpmComponent = (function ngApp(caseDefinitionData, knowledgeSourcesData) {
+var bootBpmComponent = (function ngApp(caseDefinitionData) {
     'use strict';
     angular.module('caseProgressApp', [])
         .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
@@ -33,7 +33,6 @@ var bootBpmComponent = (function ngApp(caseDefinitionData, knowledgeSourcesData)
         var vm = this;
 
         vm.data = {
-            knowledgeSources: undefined,
             caseDefinitions: undefined
         }
         vm.form = {
@@ -112,11 +111,13 @@ var bootBpmComponent = (function ngApp(caseDefinitionData, knowledgeSourcesData)
         }
         //init function  
         function init() {
-            BpmService.data.knowledgeSources().then(function (res) {
-                vm.data.knowledgeSources = res;
-            })
-
             BpmService.data.caseDefinitions().then(function (caseDef) {
+                angular.forEach(caseDef.definitions, function caseDefinition(def) {
+                    angular.forEach(def.milestones, function extendMilestoner(milestones){
+                      angular.extend(milestones,{visible:true,percentage:100/def.milestones.length})
+                    })
+                  })
+                
                 vm.data.caseDefinitions = caseDef;
             });
 
@@ -132,8 +133,7 @@ var bootBpmComponent = (function ngApp(caseDefinitionData, knowledgeSourcesData)
 
     function BpmService($http, $q) {
         this.data = {
-            caseDefinitions: getCaseDefinitions,
-            knowledgeSources: getKnowledgeSources
+            caseDefinitions: getCaseDefinitions
         }
 
 
@@ -147,25 +147,6 @@ var bootBpmComponent = (function ngApp(caseDefinitionData, knowledgeSourcesData)
 
             /*
             return $http.get('/mocks/caseInstanceDef.json').then(
-                function (res) {
-                    return res.data;
-                }
-            )*/
-        }
-
-
-        function getKnowledgeSources() {
-
-            //Entando data injection
-            var promise = $q(
-                function loadCaseInstanceData(resolve, reject) {
-                    resolve(knowledgeSourcesData);
-                });
-            return promise;
-
-
-
-            /*return $http.get('/mocks/knowledgeSources.json').then(
                 function (res) {
                     return res.data;
                 }

@@ -133,17 +133,11 @@
                 </s:if>
                 <s:if test="#isProcessPathSetted">
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3>Progress bar Settings
-                                <br/>
-                                <small>You can manage the settings</small>
-                                <small class="pull-right">
-                                    <sup>*</sup> Required Fields</small>
-                            </h3>
-                
-                        </div>
-                        <div class="panel/body">
+         
+         <div class="container-fluid">
+             
+         
+         
                 
                             <div class="row">
                                 <div class="col-lg-4">
@@ -151,14 +145,6 @@
                                         <sup>*</sup>
                                     </p>
                                     <div class="form-group">
-                                        <label for="knowledgeSources">
-                                            Knowledge Sources
-                                        </label>
-                                        <select class="form-control" ng-options="knowledgeSource.name for knowledgeSource in vm.data.knowledgeSources track by knowledgeSource.id"
-                                            ng-model="vm.form.knowledgeSource"></select>
-                                    </div>
-                
-                                    <div class="form-group" ng-show="vm.form.knowledgeSource">
                                         <label for="caseSelector">Cases</label>
                                         <select class="form-control" id="caseSelector" ng-options="caseDef.name for caseDef in vm.data.caseDefinitions.definitions track by caseDef['container-id']"
                                             ng-model="vm.form.caseDef"></select>
@@ -220,17 +206,15 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <button class="btn btn-sm btn-primary pull-right m-t-n-xs" ng-click="vm.ui.save()" type="button">
-                                        <strong>Generate Config (TODO Click me before SAVE)</strong>
+                                        <strong>Generate Config</strong>
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                </div>
                 
                         <!-- Debug info section-->
                         <div class="panel panel-info">
                             <div class="panel-heading">
-                                <i class="fa fa-info-circle"></i> Widget Configuration Viewer
+                                <i class="fa fa-bug"></i> DEV INFO (TO BE REMOVED) Widget Configuration Viewer
                             </div>
                             <div class="panel-body">
                                 <pre>{{vm.data.widgetConfig?(vm.data.widgetConfig|json):"Click save to generate configuration"}}</pre>
@@ -238,7 +222,7 @@
                 
                         </div>
                 
-                    
+                    </div>
 
                     <!--Please store your JSON output in following hidden input in order to be sent to widget front end-->
                     <!--Please dont change the name or the id-->
@@ -259,7 +243,7 @@
                     </div>
                     <div class="col-xs-6">
 
-                        <wpsf:submit disabled="!#isProcessPathSetted" type="button" cssClass="btn btn-primary pull-right"
+                        <wpsf:submit disabled="!#isProcessPathSetted" type="button" ng-click="vm.ui.save()" cssClass="btn btn-primary pull-right"
                                      action="save">
                             <s:text name="%{getText('label.save')}"/>
                         </wpsf:submit>
@@ -286,7 +270,7 @@
                 name: "Knowledge Source B",
                         id: "kbs-b"
                 }];
-                        bootBpmComponent(caseDefinitionData, fakeKSs);
+                        bootBpmComponent(caseDefinitionData);
     </script>
 
 
