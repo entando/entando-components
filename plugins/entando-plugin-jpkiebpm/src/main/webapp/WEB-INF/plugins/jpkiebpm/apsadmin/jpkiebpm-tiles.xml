@@ -27,7 +27,11 @@
         <put-attribute name="title" value="kiebpm"/>
         <put-attribute name="body" value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/config/config-entry.jsp"/>
     </definition>
-
+    
+    <definition extends="layout.default" name="admin.jpkiebpm.config.list">
+        <put-attribute name="title" value="kiebpm"/>
+        <put-attribute name="body" value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/config/config-kie-server-list.jsp"/>
+    </definition>
 
     <definition extends="layout.default" name="admin.jpkiebpm.formoverride.list">
         <put-attribute name="title" value="kiebpm"/>

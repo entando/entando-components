@@ -116,9 +116,7 @@ public class BpmCaseProgressAction extends BaseAction {
 
         try {
             JSONObject frontEndMilestonesDataJSON = new JSONObject(frontEndMilestonesData);
-            JSONArray definitions = frontEndMilestonesDataJSON.getJSONArray("definitions");
-            JSONObject first_object = definitions.getJSONObject(0);
-            containerID = first_object.getString("container-id");
+            containerID = frontEndMilestonesDataJSON.getString("container-id");
 
         } catch (Throwable t) {
             _logger.error("Front end Milestones Data json can not be recognised");
@@ -131,7 +129,7 @@ public class BpmCaseProgressAction extends BaseAction {
 
         JSONObject currentMilestonesDataJson = null;
         JSONArray newMilestonesDataJsonar = null;
-        JSONArray output = new JSONArray();
+        JSONArray updatedMilestones = new JSONArray();
 
         try {
             currentMilestonesDataJson = new JSONObject(currentMilestonesData);
@@ -143,30 +141,31 @@ public class BpmCaseProgressAction extends BaseAction {
         } catch (JSONException t) {
             throw new RuntimeException("Error parsing json " + newMilestonesData, t);
         }
-        JSONArray definitions = currentMilestonesDataJson.getJSONArray("definitions");
-        JSONObject firstCaseDef = definitions.getJSONObject(0);
-        JSONArray milestones = firstCaseDef.getJSONArray("milestones");
+        JSONArray milestones = currentMilestonesDataJson.getJSONArray("milestones");
 
-        for (int i = 0; i < newMilestonesDataJsonar.length(); i++) {
+        for (int i = 0; i < milestones.length(); i++) {
 
-            JSONObject iMilestone = newMilestonesDataJsonar.getJSONObject(i);
+            JSONObject iMilestone = milestones.getJSONObject(i);
             String iMilestoneName = iMilestone.getString("milestone-name");
 
-            for (int j = 0; j < milestones.length(); j++) {
+            for (int j = 0; j < newMilestonesDataJsonar.length(); j++) {
 
-                JSONObject jMilestones = milestones.getJSONObject(j);
+                JSONObject jMilestones = newMilestonesDataJsonar.getJSONObject(j);
                 String jMilestoneName = jMilestones.getString("milestone-name");
 
                 if (jMilestoneName.equals(iMilestoneName)) {
-
-                    iMilestone.put("visible", jMilestones.getBoolean("visible"));
-                    iMilestone.put("percentage", jMilestones.getInt("percentage"));
+                    iMilestone.put("milestone-name", jMilestones.getString("milestone-name"));
+                    iMilestone.put("milestone-id", jMilestones.getString("milestone-id"));
+                    iMilestone.put("milestone-achieved", jMilestones.getBoolean("milestone-achieved"));
+                    iMilestone.put("milestone-achieved-at", jMilestones.getString("milestone-achieved-at"));
+                    iMilestone.put("milestone-status", jMilestones.getString("milestone-status"));
                 }
             }
-            output.put(iMilestone);
+            updatedMilestones.put(iMilestone);
         }
+        currentMilestonesDataJson.put("milestones", updatedMilestones);
 
-        return output.toString();
+        return updatedMilestones.toString();
     }
 
     public CaseManager getCaseManager() {

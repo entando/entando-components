@@ -24,6 +24,7 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.HashMap;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager.TASK_STATES;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
@@ -45,7 +46,29 @@ public interface IKieFormManager {
      * @return
      */
     KieBpmConfig getConfig();
+    
+    /**
+     * add service configuration
+     *
+     * @param config
+     * @return
+     * @throws com.agiletec.aps.system.exception.ApsSystemException
+     */
+    public KieBpmConfig addConfig(KieBpmConfig config) throws ApsSystemException;   
+    /**
+     * Get list of service configuration
+     *
+     * @return
+     * @throws com.agiletec.aps.system.exception.ApsSystemException
+     */
+    public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException;  /**
 
+    /**
+     * Set service configuration
+     * @param kieHostname
+     * @throws com.agiletec.aps.system.exception.ApsSystemException
+     */
+    public void setKieServerConfiguration(String kieHostname) throws ApsSystemException;
     /**
      * List KIE containers
      *

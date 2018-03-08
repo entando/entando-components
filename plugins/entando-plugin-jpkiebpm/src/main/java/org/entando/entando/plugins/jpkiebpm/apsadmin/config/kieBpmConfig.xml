@@ -6,6 +6,14 @@
 <struts>
 
     <package name="jpkiebpm_do/jpkiebpm/Config" namespace="/do/jpkiebpm/Config" extends="entando-default">
+        
+        <action name="list" class="jpkiebpmConfigAction" method="list">
+            <result type="tiles">admin.jpkiebpm.config.list</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
 
         <action name="edit" class="jpkiebpmConfigAction" method="edit">
             <result type="tiles">admin.jpkiebpm.config.entry</result>

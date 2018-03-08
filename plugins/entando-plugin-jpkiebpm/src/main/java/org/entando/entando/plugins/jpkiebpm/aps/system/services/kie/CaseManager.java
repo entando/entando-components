@@ -24,14 +24,18 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
+import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiaBpmConfigFactory;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
+import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -50,6 +54,7 @@ public class CaseManager extends KieFormManager {
         super.init();
         this.setKieBpmConfig(super.getConfig());
     }
+
 
     public JSONObject getCasesDefinitions(String containerId) throws ApsSystemException {
 
@@ -118,7 +123,7 @@ public class CaseManager extends KieFormManager {
                 json = new JSONObject(result);
                 JSONArray instances = (JSONArray) json.get("instances");
 
-                for (int i =0; i < instances.length(); i++) {
+                for (int i = 0; i < instances.length(); i++) {
                     JSONObject iJson = instances.getJSONObject(i);
                     casesList.add(iJson.getString("case-id"));
                 }
