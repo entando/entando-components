@@ -26,6 +26,7 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +35,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IB
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
 import org.slf4j.LoggerFactory;
 
@@ -54,12 +56,15 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     private String casesDefinitions;
     private List<kieProcess> process;
     private String frontEndMilestonesData;
+    private HashMap<String, KieBpmConfig> knowledgeSource;
+    private String knowledgeSourcePath;
 
     @Override
     public String init() {
         String result = super.init();
         try {
-            this.setProcess(this.getCaseManager().getProcessDefinitionsList());
+            this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
+//            this.setProcess(this.getCaseManager().getProcessDefinitionsList());
         } catch (ApsSystemException ex) {
             Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -71,7 +76,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     public String save() {
         String result = super.save();
         Widget widget = this.createNewWidget();
-        
+
         try {
             if (widget != null) {
                 widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
@@ -86,15 +91,29 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         return result;
     }
 
-    @Override
-    protected String extractInitConfig() {
-        String result = super.extractInitConfig();
-        String configParam = this.getWidget().getConfig().getProperty("frontEndMilestonesData");
-
-        if (StringUtils.isNotBlank(configParam)) {
-            this.setFrontEndMilestonesData(configParam);
+    public String chooseKnowledgeSourceForm() {
+        try {
+            this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
+            this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
+            this.setProcess(this.getCaseManager().getProcessDefinitionsList());
+        } catch (Throwable t) {
+            logger.error("Error in chooseKnowledgeSourceForm()", t);
+            return FAILURE;
         }
-        return result;
+        return SUCCESS;
+    }
+
+    public String changeKnowledgeSourceForm() {
+        try {
+            this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
+            this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
+            this.setProcess(this.getCaseManager().getProcessDefinitionsList());
+            
+        } catch (Throwable t) {
+            logger.error("Error in changeKnowledgeSourceForm()", t);
+            return FAILURE;
+        }
+        return SUCCESS;
     }
 
     public String chooseForm() {
@@ -106,6 +125,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.setFrontEndMilestonesData(this.getCasesDefinitions());
 
             this.setProcess(this.getCaseManager().getProcessDefinitionsList());
+            this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
         } catch (Throwable t) {
             logger.error("Error in chooseForm()", t);
             return FAILURE;
@@ -123,11 +143,23 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.setFrontEndMilestonesData(this.getCasesDefinitions());
 
             this.setProcess(this.getCaseManager().getProcessDefinitionsList());
+            this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
         } catch (Throwable t) {
             logger.error("Error in changeForm()", t);
             return FAILURE;
         }
         return SUCCESS;
+    }
+
+    @Override
+    protected String extractInitConfig() {
+        String result = super.extractInitConfig();
+        String configParam = this.getWidget().getConfig().getProperty("frontEndMilestonesData");
+
+        if (StringUtils.isNotBlank(configParam)) {
+            this.setFrontEndMilestonesData(configParam);
+        }
+        return result;
     }
 
     public IKieFormManager getFormManager() {
@@ -201,5 +233,22 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     public void setProcessPathDefaultValue(String processPathDefaultValue) {
         this.processPathDefaultValue = processPathDefaultValue;
     }
+
+    public HashMap<String, KieBpmConfig> getKnowledgeSource() {
+        return knowledgeSource;
+    }
+
+    public void setKnowledgeSource(HashMap<String, KieBpmConfig> knowledgeSource) {
+        this.knowledgeSource = knowledgeSource;
+    }
+
+    public String getKnowledgeSourcePath() {
+        return knowledgeSourcePath;
+    }
+
+    public void setKnowledgeSourcePath(String knowledgeSourcePath) {
+        this.knowledgeSourcePath = knowledgeSourcePath;
+    }
+    
 
 }

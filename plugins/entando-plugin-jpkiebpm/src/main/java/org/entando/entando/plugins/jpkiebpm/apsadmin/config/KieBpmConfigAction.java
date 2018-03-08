@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
+import java.util.HashMap;
 
 public class KieBpmConfigAction extends BaseAction {
 
@@ -37,6 +38,15 @@ public class KieBpmConfigAction extends BaseAction {
         try {
             KieBpmConfig config = this.getFormManager().getConfig().clone();
             this.configToModel(config);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "edit");
+            return FAILURE;
+        }
+        return SUCCESS;
+    } 
+    public String list() {
+        try {
+            this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "edit");
             return FAILURE;
@@ -192,6 +202,15 @@ public class KieBpmConfigAction extends BaseAction {
         this._debug = debug;
     }
 
+    public HashMap<String, KieBpmConfig> getKnowledgeSource() {
+        return knowledgeSource;
+    }
+
+    public void setKnowledgeSource(HashMap<String, KieBpmConfig> knowledgeSource) {
+        this.knowledgeSource = knowledgeSource;
+    }
+
+    
     private IKieFormManager _formManager;
 
     private Boolean _active;
@@ -203,4 +222,7 @@ public class KieBpmConfigAction extends BaseAction {
     private String _webappName;
     private Integer _timeout;
     private Boolean _debug;
+    
+    
+    private HashMap<String, KieBpmConfig> knowledgeSource;;
 }

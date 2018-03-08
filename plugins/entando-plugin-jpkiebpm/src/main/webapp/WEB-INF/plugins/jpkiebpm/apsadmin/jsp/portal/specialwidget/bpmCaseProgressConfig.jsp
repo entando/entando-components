@@ -73,35 +73,64 @@
                     </div>
                 </s:if>
 
+                <s:set var="isknowledgeSourcePathSetted" value="%{knowledgeSourcePath != null && knowledgeSourcePath != ''}"/>
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
+
 
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-xs-4" for="processPath">
-                            <s:text name="Process"/>
+                        <label class="control-label col-xs-4" for="knowledgeSource">
+                            <s:text name="knowledgeSource"/>
                         </label>
                         <div class="col-xs-6">
-                            <s:select list="process" id="processPath" name="processPath"  
-                                      listKey="containerId"
-                                      listValue="containerId">
+                            <s:select list="knowledgeSource" id="knowledgeSourcePath" name="knowledgeSourcePath"  
+                                      listValue="value.hostname">
                             </s:select>
                         </div>
-
-                        <s:if test="#isProcessPathSetted">
+                        <s:if test="#isknowledgeSourcePathSetted">
                             <div class="col-xs-2">
-                                <wpsf:submit action="changeForm" value="%{getText('label.changeForm')}"
+                                <wpsf:submit action="changeKnowledgeSourceForm" value="%{getText('label.changeForm')}"
                                              cssClass="btn btn-warning"/>
                             </div>
                         </s:if>
                         <s:else>
                             <div class="col-xs-2">
-                                <wpsf:submit action="chooseForm" value="%{getText('label.chooseForm')}"
+                                <wpsf:submit action="chooseKnowledgeSourceForm" value="%{getText('label.chooseForm')}"
                                              cssClass="btn btn-success"/>
                             </div>
                         </s:else>
                     </div>
                 </div>
 
+
+                <s:if test="#isknowledgeSourcePathSetted">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="processPath">
+                                <s:text name="Process"/>
+                            </label>
+                            <div class="col-xs-6">
+                                <s:select list="process" id="processPath" name="processPath"  
+                                          listKey="containerId"
+                                          listValue="containerId">
+                                </s:select>
+                            </div>
+
+                            <s:if test="#isProcessPathSetted">
+                                <div class="col-xs-2">
+                                    <wpsf:submit action="changeForm" value="%{getText('label.changeForm')}"
+                                                 cssClass="btn btn-warning"/>
+                                </div>
+                            </s:if>
+                            <s:else>
+                                <div class="col-xs-2">
+                                    <wpsf:submit action="chooseForm" value="%{getText('label.chooseForm')}"
+                                                 cssClass="btn btn-success"/>
+                                </div>
+                            </s:else>
+                        </div>
+                    </div>
+                </s:if>
                 <s:if test="#isProcessPathSetted">
 
                     <div class="form-horizontal">
@@ -160,11 +189,11 @@
                     <!--Please dont change the name or the id-->
                     <!--<input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-model=""/>-->
                     <!--If you use the above hidden input, you must comment out the following tag so the form submitted with your data (instead of default data)-->
-                    
+
                     <input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-value="vm.ui.defToJSONEscaped()"/>
 
-                    
-                        <!--You also need to comment out line 98 & 114 in org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction class -->
+
+                    <!--You also need to comment out line 98 & 114 in org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction class -->
                 </s:if>
             </div>
             <div class="form-horizontal">
@@ -202,7 +231,7 @@
                 name: "Knowledge Source B",
                         id: "kbs-b"
                 }];
-                bootBpmComponent(caseDefinitionData, fakeKSs);
+                        bootBpmComponent(caseDefinitionData, fakeKSs);
     </script>
 
 

@@ -42,9 +42,6 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import java.io.ByteArrayOutputStream;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
@@ -81,7 +78,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
             //get the first entry in database
             config = kBpmConfFctry.getFirstKiaBpmConfig();
-            
+
         } catch (Throwable t) {
             throw new ApsSystemException("Error in loadConfigs", t);
         }
@@ -138,7 +135,32 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             config = kBpmConfFctry.getFirstKiaBpmConfig();
 //            _config = (KieBpmConfig) JAXBHelper.unmarshall(xml, KieBpmConfig.class, true, false);
         } catch (Throwable t) {
-            throw new ApsSystemException("Error in loadConfigs", t);
+            throw new ApsSystemException("Error in loadConfigurations", t);
+        }
+    }
+
+    @Override
+    public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException {
+
+        try {
+            ConfigInterface configManager = this.getConfigManager();
+
+            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+            KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
+
+            return kBpmConfFctry.getKieBpmConfigeMap();
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error in getKieServerConfigurations", t);
+        }
+    }
+
+    @Override
+    public void setKieServerConfiguration(String kieHostname) throws ApsSystemException {
+        try {
+            config = this.getKieServerConfigurations().get(kieHostname);
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error in setKieServerConfiguration", t);
         }
     }
 
@@ -998,18 +1020,15 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     public KiaBpmConfigFactory getKiaBpmConfigFactory() {
-        return kiaBpmConfigFactory.initiateKiaBpmConfigFactory();
+        kiaBpmConfigFactory = new KiaBpmConfigFactory();
+        return kiaBpmConfigFactory;
     }
 
     public void setKiaBpmConfigFactory(KiaBpmConfigFactory _kiaBpmConfigFactory) {
         this.kiaBpmConfigFactory = kiaBpmConfigFactory;
     }
 
-//    private KieBpmConfig _config;
     private KiaBpmConfigFactory kiaBpmConfigFactory;
-//    private ConfigInterface _configManager;
-//    private IKieFormOverrideManager _overrideManager;
-
     private KieBpmConfig config;
     private ConfigInterface configManager;
     private IKieFormOverrideManager overrideManager;

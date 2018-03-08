@@ -57,9 +57,9 @@ public class KiaBpmConfigFactory {
         return entry.getValue();
     }
 
-    public KiaBpmConfigFactory initiateKiaBpmConfigFactory() {
-        return new KiaBpmConfigFactory();
-    }
+//    public KiaBpmConfigFactory initiateKiaBpmConfigFactory() {
+//        return new KiaBpmConfigFactory();
+//    }
 
     public HashMap<String, KieBpmConfig> getKieBpmConfigeMap() {
         return kieBpmConfigeMap;
