@@ -78,7 +78,8 @@ public class KieEndpointDictionary {
         endpoints.put(API_GET_CASES_DEFINITIONS, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/cases/definitions", HttpStatus.SC_OK));
         endpoints.put(API_GET_CASES_LIST, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/cases/instances", HttpStatus.SC_OK));
         endpoints.put(API_GET_MILESTONES_LIST, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/cases/instances/%s/milestones", HttpStatus.SC_OK));
-
+        endpoints.put(API_GET_SERVER_STATUS, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server", HttpStatus.SC_OK));
+        
         endpoints.put(API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/tasks/%s/states/%s", HttpStatus.SC_CREATED, true));
         // /services/rest/server/containers/%s/tasks/%s/states/%s?user=legalWorker&auto-progress=true
 

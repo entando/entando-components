@@ -52,8 +52,7 @@
 
 <div class="mb-20">
 
-    <s:form id="configurationForm" name="configurationForm" method="post"
-            action="save" cssClass="form-horizontal">
+    <s:form id="configurationForm" name="configurationForm" method="post" action="save" cssClass="form-horizontal">
         <s:if test="hasActionErrors()">
             <div class="alert alert-danger alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert"

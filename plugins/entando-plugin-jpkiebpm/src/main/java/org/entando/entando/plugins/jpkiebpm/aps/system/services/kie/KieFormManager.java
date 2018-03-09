@@ -1019,6 +1019,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return config.clone();
     }
 
+    public void setConfig(KieBpmConfig config) {
+        this.config = config;
+    }
+
     public KiaBpmConfigFactory getKiaBpmConfigFactory() {
         kiaBpmConfigFactory = new KiaBpmConfigFactory();
         return kiaBpmConfigFactory;

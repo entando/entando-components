@@ -42,6 +42,7 @@
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.config.KieBpmConfigAction"
           parent="abstractBaseAction" scope="prototype">
         <property name="formManager" ref="jpkiebpmsManager"/>
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>
     </bean>
 
     <bean id="jpkiebpmFormOverrideAction"

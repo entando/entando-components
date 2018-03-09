@@ -24,18 +24,14 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
-import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiaBpmConfigFactory;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
-import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -55,8 +51,61 @@ public class CaseManager extends KieFormManager {
         this.setKieBpmConfig(super.getConfig());
     }
 
+    public JSONArray getKieServerStasus() throws ApsSystemException {
+        Map<String, String> headersMap = new HashMap<>();
+
+        JSONArray ServersStatus = new JSONArray();
+        String result = null;
+        JSONObject json = null;
+
+        HashMap<String, KieBpmConfig> ServerConfigurations = super.getKieServerConfigurations();
+
+        for (String key : ServerConfigurations.keySet()) {
+
+            this.setKieBpmConfig(ServerConfigurations.get(key));
+            super.setConfig(ServerConfigurations.get(key));
+
+            try {
+                // process endpoint first
+                Endpoint ep = KieEndpointDictionary.create().get(API_GET_SERVER_STATUS);
+                // add header
+                headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+                // generate client from the current configuration
+                KieClient client = super.getCurrentClient();
+                // perform query
+                result = (String) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setHeaders(headersMap)
+                        .setDebug(config.getDebug())
+                        .doRequest();
+
+                if (!result.isEmpty()) {
+
+                    json = new JSONObject(result);
+
+                    JSONObject serverStatusJson = new JSONObject();
+                    serverStatusJson.put(config.getHostname(), json);
+                    ServersStatus.put(serverStatusJson);
+
+                    logger.debug("received successful message: ", result);
+                } else {
+                    logger.debug("received empty message: ");
+                }
+
+            } catch (Throwable t) {
+                JSONObject serverStatusJson = new JSONObject();
+                serverStatusJson.put(config.getHostname(), "null");
+                ServersStatus.put(serverStatusJson);
+                logger.debug("Error connecting to the server: " + t);
+            }
+        }
+
+        return ServersStatus;
+    }
 
     public JSONObject getCasesDefinitions(String containerId) throws ApsSystemException {
+        
+        this.setKieBpmConfig(super.getConfig());
 
         Map<String, String> headersMap = new HashMap<>();
 
@@ -95,6 +144,8 @@ public class CaseManager extends KieFormManager {
     }
 
     public List<String> getCaseInstancesList(String containerId) throws ApsSystemException {
+        
+        this.setKieBpmConfig(super.getConfig());
 
         List<String> casesList = new ArrayList<>();
         Map<String, String> headersMap = new HashMap<>();
@@ -140,6 +191,8 @@ public class CaseManager extends KieFormManager {
     }
 
     public JSONArray getMilestonesList(String containerId, String caseID) throws ApsSystemException {
+        
+        this.setKieBpmConfig(super.getConfig());
 
         JSONArray milestonesList = null;
         Map<String, String> headersMap = new HashMap<>();
@@ -187,8 +240,8 @@ public class CaseManager extends KieFormManager {
         return config;
     }
 
-    public void setKieBpmConfig(KieBpmConfig _config) {
-        this.config = _config;
+    public void setKieBpmConfig(KieBpmConfig config) {
+        this.config = config;
     }
 
     public String getContainerId() {

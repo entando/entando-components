@@ -74,6 +74,8 @@ public interface KieBpmSystemConstants {
     public final static String API_GET_CASES_DEFINITIONS = "API_GET_CASES_DEFINITIONS";
     public final static String API_GET_CASES_LIST = "API_GET_CASES_LIST";
     public final static String API_GET_MILESTONES_LIST = "API_GET_MILESTONES_LIST";
+    public final static String API_GET_SERVER_STATUS = "API_GET_SERVER_STATUS";
+    
 
     public static final String WIDGET_PARAM_DATA_TYPE_CODE = "dataTypeCode";
     public static final String WIDGET_PARAM_DATA_UX_ID = "dataUxId";

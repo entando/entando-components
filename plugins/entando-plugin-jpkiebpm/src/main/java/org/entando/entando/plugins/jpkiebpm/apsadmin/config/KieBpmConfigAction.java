@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
 import java.util.HashMap;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 
 public class KieBpmConfigAction extends BaseAction {
 
@@ -43,12 +44,16 @@ public class KieBpmConfigAction extends BaseAction {
             return FAILURE;
         }
         return SUCCESS;
-    } 
+    }
+
     public String list() {
         try {
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
+            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
+            
+
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "edit");
+            ApsSystemUtils.logThrowable(t, this, "list");
             return FAILURE;
         }
         return SUCCESS;
@@ -56,8 +61,10 @@ public class KieBpmConfigAction extends BaseAction {
 
     public String save() {
         try {
-            KieBpmConfig config = this.modelToConfig();
             
+            
+            KieBpmConfig config = this.modelToConfig();
+
             this.getFormManager().addConfig(config);
 //            this.getFormManager().updateConfig(config);
             this.addActionMessage(this.getText("message.config.savedConfirm"));
@@ -128,6 +135,14 @@ public class KieBpmConfigAction extends BaseAction {
 
     public void setFormManager(IKieFormManager formManager) {
         this._formManager = formManager;
+    }
+
+    public CaseManager getCaseManager() {
+        return caseManager;
+    }
+
+    public void setCaseManager(CaseManager caseManager) {
+        this.caseManager = caseManager;
     }
 
     public Boolean getActive() {
@@ -210,8 +225,16 @@ public class KieBpmConfigAction extends BaseAction {
         this.knowledgeSource = knowledgeSource;
     }
 
-    
+    public String getKnowledgeSourceStatus() {
+        return knowledgeSourceStatus;
+    }
+
+    public void setKnowledgeSourceStatus(String knowledgeSourceStatus) {
+        this.knowledgeSourceStatus = knowledgeSourceStatus;
+    }
+
     private IKieFormManager _formManager;
+    private CaseManager caseManager;
 
     private Boolean _active;
     private String _userName;
@@ -222,7 +245,8 @@ public class KieBpmConfigAction extends BaseAction {
     private String _webappName;
     private Integer _timeout;
     private Boolean _debug;
-    
-    
-    private HashMap<String, KieBpmConfig> knowledgeSource;;
+
+    private HashMap<String, KieBpmConfig> knowledgeSource;
+    private String knowledgeSourceStatus;
+;
 }
