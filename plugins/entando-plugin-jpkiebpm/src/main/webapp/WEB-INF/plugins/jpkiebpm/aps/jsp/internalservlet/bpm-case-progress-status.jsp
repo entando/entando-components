@@ -8,6 +8,38 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jbpm-component.js"></script>
 
+
+<script type="text/ng-template" id="basic-tpl">
+    <h2>Basic</h2>
+    <hr>
+    <h5 >{{vm.ui.instanceName()}}<br><small ng-show="vm.ui.showNumberOfTasks()">Tasks {{vm.ui.countAchievedMilestones()}} of {{vm.ui.filterVisibleMiletones().length}}</small></h5>
+    <div class="progress progress-labeled">
+        <div ng-style="{width: vm.ui.totalCaseCompletedPercentage() + '%'}" ng-class="vm.ui.milestoneCompletedStyles()"
+            class="progress-bar">
+            <span>{{vm.ui.totalCaseCompletedPercentage()+'%'}}</span>
+        </div>
+    </div>
+
+</div>
+</script>
+
+<script type="text/ng-template" id="stacked-tpl">
+<h2>Stacked</h2>
+<hr>
+<div class="progress progress-labeled">
+    <div ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" ng-class="{'progress-bar-success':vm.ui.milestoneComplete(ms) }"
+        class="progress-bar">
+        <span>{{vm.ui.milestoneComplete(ms)?"COMPLETED":"IN PROGRESS"}}</span>
+    </div>
+</div>
+<div class="progress progress-labels" ng-show="vm.ui.showMilestonesLabels()">
+    <span ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" class="progress-bar progress-bar-label">
+        {{ms["milestone-name"]}}
+    </span>
+</div>
+</script>
+
+
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 <div class="row">
     <div class="col-md-2"></div>
@@ -38,35 +70,11 @@
             <div  data-ng-app="caseProgressApp" ng-controller="ProgressBarCtrl as vm">
                 
                 <div class="ibox-content">
-                    <h2>Simple progressbar</h2>
-                    <hr>
-                    <h5>{{vm.ui.instanceName()}}<br><small>Tasks {{vm.ui.filterAchievedMilestones().length}} of {{vm.ui.filterVisibleMiletones().length}}</small></h5>
-                    <div class="progress progress-labeled">
-                        <div ng-style="{width: vm.ui.totalCaseCompletedPercentage() + '%'}" ng-class="vm.ui.milestoneCompletedStyles()"
-                            class="progress-bar">
-                            <span>{{vm.ui.totalCaseCompletedPercentage()+'%'}}</span>
-                        </div>
-                    </div>
+                    <progress-bar options="<s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="true"/>" case-data="<s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="true"/>"></progress-bar>
                 
                 </div>
                 
                 
-                
-                <div class="ibox-content">
-                    <h2>Simple with milestones</h2>
-                    <hr>
-                    <div class="progress progress-labeled">
-                        <div ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" ng-class="{'progress-bar-success':vm.ui.milestoneComplete(ms) }"
-                            class="progress-bar">
-                            <span>{{vm.ui.milestoneComplete(ms)?"COMPLETED":"IN PROGRESS"}}</span>
-                        </div>
-                    </div>
-                    <div class="progress progress-labels">
-                        <span ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" class="progress-bar progress-bar-label">
-                           {{ms["milestone-name"]}}
-                        </span>
-                    </div>
-                </div>
 
             </div>
         </s:if>
@@ -76,7 +84,7 @@
         Case Definition with Milestones Configurations:
 
         <br />
-        <s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="false"/>
+        <s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="true"/>
 
 <!--                <br />
                 <br />       
@@ -102,7 +110,6 @@
 </div>
 <script type="text/javascript">
     <s:if test="caseInstanceMilestones != null">
-    var caseInstanceMilestones = <s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="false"/>;
-    bootBpmComponents(caseInstanceMilestones);
+    bootBpmComponents();
     </s:if>
 </script>

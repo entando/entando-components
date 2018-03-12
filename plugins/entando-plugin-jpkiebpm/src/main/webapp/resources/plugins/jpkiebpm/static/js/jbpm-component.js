@@ -22,143 +22,186 @@
  * THE SOFTWARE.
  */
 
-var bootBpmComponents = (function (caseInstanceMilestones) {
+var bootBpmComponents = (function () {
     'use strict';
 
-    angular.module('caseProgressApp',[])
-        .service('BpmService', function ($http, $q) {
-            this.data = {
-                //caseInstanceDef: getCaseInstanceDef,
-                caseInstanceData: getCaseInstanceData
+    angular.module('caseProgressApp', [])
+        .directive('progressBar', progressBar)
+        //.service('BpmService', BpmService)
+        .controller('ProgressBarCtrl', ProgressBarCtrl);
+
+    function progressBar() {
+        return {
+            restrict: 'E',
+            scope: {},
+            template: [
+                '<ng-include src="vm.ui.pickTemplate()"/>'
+            ].join(''),
+            controllerAs: 'vm',
+            controller: 'ProgressBarCtrl',
+            bindToController: {
+                options: '=',
+                caseData: '='
             }
+            //link: link
+        };
+    }
+
+    
 
 
-            /*  function getCaseInstanceDef() {
-                 return $http.get('/mocks/caseInstanceDef.json').then(
-                     function (res) {
-                         return res.data;
-                     }
-                 )
-             } */
-            function getCaseInstanceData() {
+    function ProgressBarCtrl($state, $filter, $log) {
 
-                //Entando data injection
-                var promise = $q(
-                    function loadCaseInstanceData(resolve, reject) {
-                        resolve(
-                            {
-                                "caseInstance": {
-                                    "name": "FIXME - IT000001",
-
-                                    "milestones": caseInstanceMilestones
-                                }
-                            });
-                    });
-                return promise;
-
-
-                //Simulating a JSON/HTTP api
-                /*
-                return $http.get('/mocks/caseInstanceData.json').then(
-                    function (res) {
-                        return res.data;
-                    }
-                )*/
+        var vm = this;
+  
+        var templateMap = {
+          basic: 'basic-tpl',
+          stacked: 'stacked-tpl'
+        }
+  
+        vm.ui = {
+          milestonePercentage: calculateMilestonePercentage,
+          milestoneComplete: isMilestoneComplete,
+          totalCaseCompletedPercentage: totalCaseCompletedPercentage,
+          milestoneCompletedStyles: milestoneCompletedStyles,
+          countVisibleMilestones: countVisibleMilestones,
+          filterVisibleMiletones: filterCurrentVisibleMilestones,
+          countAchievedMilestones: countAchievedMilestones,
+          instanceName: instanceName,
+          showMilestonesLabels: showMilestonesLabels,
+          showNumberOfTasks : showNumberOfTasks,
+          pickTemplate: pickTemplateFromMap(templateMap)
+        }
+  
+        //vm.options = \\ui options
+        //vm.caseData = \\case instance data
+  
+        function showMilestonesLabels() {
+          var out = false;
+          if (vm.options)
+            angular.forEach(vm.options.ui.additionalSettings, function (value) {
+              if ('show-milestones' === value) {
+                out = true;
+              }
+            })
+          return out;
+        }
+  
+        function showNumberOfTasks() {
+          var out = false;
+          if (vm.options)
+            angular.forEach(vm.options.ui.additionalSettings, function (value) {
+              if ('show-number-of-tasks' === value) {
+                out = true;
+              }
+            })
+          return out;
+        }
+  
+  
+        function pickTemplateFromMap(templateMap) {
+          return function pickTemplate() {
+            if (vm.options && vm.options.ui) {
+              return templateMap[vm.options.ui["progress-bar-type"]];
             }
-
-
-        });
-
-        angular.module('caseProgressApp')
-            .controller('ProgressBarCtrl', function ($filter, $log, BpmService) {
-
-                var vm = this;
-
-                vm.data = {
-                    caseInstance: undefined
-                }
-
-                vm.ui = {
-                    milestonePercentage: calculateMilestonePercentage,
-                    milestoneComplete: isMilestoneComplete,
-                    totalCaseCompletedPercentage: totalCaseCompletedPercentage,
-                    milestoneCompletedStyles: milestoneCompletedStyles,
-                    countVisibleMilestones: countVisibleMilestones,
-                    filterVisibleMiletones: filterCurrentVisibleMilestones,
-                    filterAchievedMilestones: countAchievedMilestones,
-                    instanceName: instanceName
-                }
-
-
-                function instanceName() {
-                    return vm.data.caseInstance ? vm.data.caseInstance.name : '';
-                }
-
-                function filterCurrentVisibleMilestones() {
-                    return filterVisibleMiletones(vm.data.caseInstance);
-                }
-
-                function milestoneCompletedStyles() {
-                    return ['progress-bar-success'];
-                }
-
-
-                function totalCaseCompletedPercentage() {
-                    var count = 0;
-                    angular.forEach(filterVisibleMiletones(vm.data.caseInstance), function (ms) {
-                        if (ms["milestone-achieved"]) {
-                            count += ms.percentage;
-                          }
-                    });
-                    return count;
-                }
-
-                function countAchievedMilestones() {
-                    return filterAchievedMilestones(vm.data.caseInstance);
-                }
-
-                function isMilestoneComplete(milestone) {
-                    return milestone['milestone-achieved'];
-                }
-
-                function calculateMilestonePercentage(milestone) {
-                    return milestone.percentage;
-                }
-
-                function countVisibleMilestones() {
-                    var found = filterVisibleMiletones(vm.data.caseInstance)
-                    return found.length
-                }
-
-                function filterCurrentVisibleMilestones() {
-                    return filterVisibleMiletones(vm.data.caseInstance);
-                }
-
-                function filterAchievedMilestones(caseInstance) {
-                    return caseInstance ? filterMiletones(filterVisibleMiletones(caseInstance), { "milestone-achieved": true }) : [];
-                }
-                function filterVisibleMiletones(caseInstance) {
-                    return caseInstance ? filterMiletones(caseInstance.milestones, { "visible": true }) : [];
-                }
-
-                function filterMiletones(instance, filterMap) {
-                    return $filter('filter')(instance, filterMap);
-                }
-                function init() {
-                    /*BpmService.data.caseInstanceDef().then(function (caseDef) {
-                      vm.data.caseDef = caseDef;
-                      vm.data.milestonesDef = caseDef.definitions[0].milestones;
-                    });
-                    */
-
-                    BpmService.data.caseInstanceData().then(function (res) {
-                        vm.data.caseInstance = res.caseInstance;
-                    });
-                }
-
-                init();
-
-
-            });
+            return templateMap.basic;
+          }
+        }
+  
+        function instanceName() {
+          return vm.options ? vm.options.name : '';
+        }
+  
+        function filterCurrentVisibleMilestones() {
+          return filterVisibleMiletones(vm.options, vm.caseData).length;
+        }
+  
+        function milestoneCompletedStyles() {
+          return ['progress-bar-success'];
+        }
+  
+  
+        function totalCaseCompletedPercentage() {
+          var count = 0;
+          angular.forEach(filterVisibleMiletones(vm.options, vm.caseData), function (ms) {
+  
+  
+            if (ms["milestone-achieved"]) {
+              count += ms.percentage;
+            }
+          });
+          return count;
+        }
+  
+        function countAchievedMilestones() {
+          return filterAchievedMilestones(vm.options, vm.caseData).length;
+        }
+  
+        function isMilestoneComplete(milestone) {
+          if (milestone) {
+            return milestone['milestone-achieved'];
+          }
+  
+          return false;
+        }
+  
+        function calculateMilestonePercentage(milestone) {
+          return milestone.percentage;
+        }
+  
+        function countVisibleMilestones() {
+          return filterVisibleMiletones(vm.options, vm.caseData).length
+        }
+  
+        function filterAchievedMilestones(options, caseData) {
+          var msVisible = filterVisibleMiletones(options, caseData)
+  
+          return _filterMiletones(msVisible, {
+            "milestone-achieved": true
+          });
+        }
+  
+        function filterVisibleMiletones(options, caseData) {
+          var visibleMilestones = _filterMiletones(mergeMilestonesConfigAndData(options, caseData), {
+            "visible": true
+          });
+          return visibleMilestones;
+        }
+  
+  
+  
+        var old_options = undefined;
+        var old_caseInstance = undefined;
+        var merged = undefined;
+  
+        function mergeMilestonesConfigAndData(options, caseInstance) {
+  
+          if (!options || !caseInstance) {
+            return [];
+          }
+          if (angular.equals(old_options, options) && angular.equals(old_caseInstance, caseInstance)) {
+            return merged;
+          }
+  
+  
+          old_options = options;
+          old_caseInstance = caseInstance;
+          merged = [];
+          angular.forEach(options.milestones, function extendConf(ms) {
+            var found = $filter('filter')(caseInstance.milestones, {
+              "milestone-name": ms['milestone-name']
+            })
+            if (found.length === 1) {
+              merged.push(angular.extend({}, ms, found[0]));
+            }
+          });
+          $log.info(merged)
+          return merged;
+        }
+  
+        function _filterMiletones(instance, filterMap) {
+          return $filter('filter')(instance, filterMap);
+        }
+  
+      }
 })
-
