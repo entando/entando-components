@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-var bootBpmComponent = (function ngApp(caseDefinitionData) {
+var bootBpmComponent = (function ngApp(caseDefinitionData,savedConfiguration) {
     'use strict';
     angular.module('caseProgressApp', [])
         .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
@@ -109,6 +109,33 @@ var bootBpmComponent = (function ngApp(caseDefinitionData) {
             })
             return out;
         }
+
+
+        function loadConfiguration(configuration) {
+            var matchingConf = $filter('filter')(vm.data.caseDefinitions.definitions, {
+              id: configuration.id
+            })
+    
+            if (matchingConf || matchingConf.length == 1) {
+              matchingConf = matchingConf[0];
+              angular.extend(matchingConf, configuration);
+              vm.form.caseDef = matchingConf;
+              vm.form.progressBarType = $filter('filter')(  vm.ui.data.progressBar.types,{id:matchingConf.ui['progress-bar-type']})[0];
+    
+              angular.forEach(matchingConf.ui.additionalSettings,function pushAddSetting(value){ 
+                vm.form.additionalSettings[value]=true;
+    
+              });
+    
+            } else {
+              $log.error("No configuration found for case definition id [" + configuration.id + "]");
+            }
+    
+    
+          }
+
+
+
         //init function  
         function init() {
             BpmService.data.caseDefinitions().then(function (caseDef) {
@@ -124,6 +151,14 @@ var bootBpmComponent = (function ngApp(caseDefinitionData) {
 
             //settings defaults
             vm.form.progressBarType = vm.ui.data.progressBar.types[0];
+
+            BpmService.progressBar.loadConfig().then(
+                function (savedData) {
+                  if (savedData) {
+                    loadConfiguration(savedData);
+                  }
+                }
+              )
         }
 
         init();
@@ -133,7 +168,10 @@ var bootBpmComponent = (function ngApp(caseDefinitionData) {
 
     function BpmService($http, $q) {
         this.data = {
-            caseDefinitions: getCaseDefinitions
+            caseDefinitions: getCaseDefinitions,
+        }
+        this.progressBar = {
+            loadConfig: getSavedConfiguration
         }
 
 
@@ -147,6 +185,22 @@ var bootBpmComponent = (function ngApp(caseDefinitionData) {
 
             /*
             return $http.get('/mocks/caseInstanceDef.json').then(
+                function (res) {
+                    return res.data;
+                }
+            )*/
+        }
+
+
+        function getSavedConfiguration(){
+            var promise = $q(
+                function loadCaseInstanceData(resolve, reject) {
+                    resolve(savedConfiguration);
+                });
+            return promise;
+
+            /*
+            return $http.get('/mocks/savedConfiguration.json').then(
                 function (res) {
                     return res.data;
                 }

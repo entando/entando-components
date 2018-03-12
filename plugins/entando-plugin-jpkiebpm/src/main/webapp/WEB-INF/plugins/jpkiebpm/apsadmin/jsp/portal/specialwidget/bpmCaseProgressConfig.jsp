@@ -3,9 +3,6 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery-ui.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
 
 <script src="<wp:resourceURL />plugins/jpkiebpm/administration/js/jbpm-component-config.js"></script>
@@ -219,6 +216,12 @@
                             <div class="panel-body">
                                 <pre>{{vm.data.widgetConfig ? (vm.data.widgetConfig | json) : "Click save to generate configuration"}}</pre>
                             </div>
+                            <div class="panel-heading">
+                                <i class="fa fa-bug"></i> DEV INFO (TO BE REMOVED) Case Definitions
+                            </div>
+                            <div class="panel-body">
+                                <pre>{{vm.data.caseDefinitions|json}}</pre>
+                            </div>
 
                         </div>
 
@@ -262,15 +265,15 @@
         <s:else>
         var caseDefinitionData = undefined;
         </s:else>
-        var fakeKSs = [{
-                name: "Knowledge Source A",
-                id: "kbs-a"
-            },
-            {
-                name: "Knowledge Source B",
-                id: "kbs-b"
-            }];
-        bootBpmComponent(caseDefinitionData);
+
+        <s:if test="savedConfiguration != null">
+        var savedConfiguration = <s:property value="savedConfiguration" escapeJavaScript="false" escapeHtml="false"/>;
+        </s:if>
+        <s:else>
+        var savedConfiguration = undefined;
+        </s:else>
+
+        bootBpmComponent(caseDefinitionData, savedConfiguration);
     </script>
 
 
