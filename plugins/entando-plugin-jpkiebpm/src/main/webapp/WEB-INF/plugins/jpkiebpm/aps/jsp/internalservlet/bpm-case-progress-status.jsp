@@ -69,7 +69,7 @@
             <div  data-ng-app="caseProgressApp" ng-controller="ProgressBarCtrl as vm">
                 
                 <div class="ibox-content">
-                    <progress-bar options="<s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="true"/>" case-data="<s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="true"/>"></progress-bar>
+                    <progress-bar options='<s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="true"/>' case-data='<s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="true"/>'></progress-bar>
                 
                 </div>
                 
@@ -83,7 +83,7 @@
         Case Definition with Milestones Configurations:
 
         <br />
-        <s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="true"/>
+        <s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="false"/>
 
 <!--                <br />
                 <br />       

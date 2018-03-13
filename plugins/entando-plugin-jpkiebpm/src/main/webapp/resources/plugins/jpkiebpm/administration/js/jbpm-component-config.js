@@ -81,7 +81,7 @@ var bootBpmComponent = (function ngApp(caseDefinitionData,savedConfiguration,con
                 {
                     "container-id": vm.form.caseDef["container-id"],
                     "name": vm.form.caseDef.name,
-                    "knowledge-source-id": configName||"Config Name NULL",
+                    "knowledge-source-id": configName||"default",
                     "case-id-prefix": vm.form.caseDef["case-id-prefix"],
                     "stages": [],
                     "id": vm.form.caseDef.id,

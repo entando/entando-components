@@ -50,7 +50,7 @@ var bootBpmComponents = (function () {
     
 
 
-    function ProgressBarCtrl($state, $filter, $log) {
+    function ProgressBarCtrl($filter, $log) {
 
         var vm = this;
   
