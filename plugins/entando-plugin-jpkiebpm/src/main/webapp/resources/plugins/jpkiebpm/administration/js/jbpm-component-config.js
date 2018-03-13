@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-var bootBpmComponent = (function ngApp(caseDefinitionData,savedConfiguration) {
+var bootBpmComponent = (function ngApp(caseDefinitionData,savedConfiguration,configName) {
     'use strict';
     angular.module('caseProgressApp', [])
         .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
@@ -81,6 +81,7 @@ var bootBpmComponent = (function ngApp(caseDefinitionData,savedConfiguration) {
                 {
                     "container-id": vm.form.caseDef["container-id"],
                     "name": vm.form.caseDef.name,
+                    "knowledge-source-id": configName||"Config Name NULL",
                     "case-id-prefix": vm.form.caseDef["case-id-prefix"],
                     "stages": [],
                     "id": vm.form.caseDef.id,

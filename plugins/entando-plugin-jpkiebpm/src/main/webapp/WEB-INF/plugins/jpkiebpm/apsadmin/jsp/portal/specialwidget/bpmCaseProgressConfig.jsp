@@ -268,21 +268,22 @@
 
 <script type="text/javascript">
 
-    <s:if test="casesDefinitions != null">
-    var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
+    <s:if test="configName != null">
+    var configName = <s:property value="configName" escapeJavaScript="false" escapeHtml="false"/>
     </s:if>
     <s:else>
-    var caseDefinitionData = undefined;
+    var configName = undefined;
     </s:else>
-
-    <s:if test="frontEndMilestonesData != null">
+    <s:if test="savedConfiguration != null">
     var savedConfiguration = <s:property value="frontEndMilestonesData" escapeJavaScript="false" escapeHtml="false"/>;
     </s:if>
     <s:else>
     var savedConfiguration = undefined;
     </s:else>
-
-    bootBpmComponent(caseDefinitionData, savedConfiguration);
+    <s:if test="casesDefinitions != null">
+    var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
+    bootBpmComponent(caseDefinitionData, savedConfiguration, configName);
+    </s:if>
+    
+    
 </script>
-
-
