@@ -40,14 +40,14 @@ public class KiaBpmConfigFactory {
     @XmlElement(name = "kieBpmConfigeMap")
     private HashMap<String, KieBpmConfig> kieBpmConfigeMap = new HashMap();
 
-    public KieBpmConfig getKiaBpmConfig(String _hostname) {
-        KieBpmConfig kieBpmConfig = this.getKieBpmConfigeMap().get(_hostname);
+    public KieBpmConfig getKiaBpmConfig(String hostname) {
+        KieBpmConfig kieBpmConfig = this.getKieBpmConfigeMap().get(hostname);
         return kieBpmConfig;
     }
 
-    public void addKiaBpmConfig(KieBpmConfig _kieBpmConfig) {
+    public void addKiaBpmConfig(KieBpmConfig kieBpmConfig) {
 
-        this.getKieBpmConfigeMap().put(_kieBpmConfig.getHostname(), _kieBpmConfig);
+        this.getKieBpmConfigeMap().put(kieBpmConfig.getName(), kieBpmConfig);
 
     }
 
@@ -56,10 +56,6 @@ public class KiaBpmConfigFactory {
         HashMap.Entry<String,KieBpmConfig> entry= this.getKieBpmConfigeMap().entrySet().iterator().next();
         return entry.getValue();
     }
-
-//    public KiaBpmConfigFactory initiateKiaBpmConfigFactory() {
-//        return new KiaBpmConfigFactory();
-//    }
 
     public HashMap<String, KieBpmConfig> getKieBpmConfigeMap() {
         return kieBpmConfigeMap;

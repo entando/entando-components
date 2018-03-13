@@ -81,7 +81,7 @@
                         </label>
                         <div class="col-xs-6">
                             <s:select list="knowledgeSource" id="knowledgeSourcePath" name="knowledgeSourcePath"  
-                                      listValue="value.hostname">
+                                      listValue="value.name">
                             </s:select>
                         </div>
                         <s:if test="#isknowledgeSourcePathSetted">
@@ -132,9 +132,6 @@
 
 
                     <div class="container-fluid">
-
-
-
 
                         <div class="row">
                             <div class="col-lg-4">
@@ -238,42 +235,54 @@
                     <!--You also need to comment out line 98 & 114 in org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction class -->
                 </s:if>
             </div>
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <div class="col-xs-6">
-                        <input type="button" cssClass="btn btn-primary" id="milestonetablesavebt" value="Apply"/>
-                        <!--ng-click="setfrontEndMilestonesData()" />-->
-                    </div>
-                    <div class="col-xs-6">
+        </div>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-xs-6">
+                    <input type="button" cssClass="btn btn-primary" id="milestonetablesavebt" value="Apply"/>
+                    <!--ng-click="setfrontEndMilestonesData()" />-->
+                </div>
+                <div class="col-xs-6">
 
-                        <wpsf:submit disabled="!#isProcessPathSetted" type="button" ng-click="vm.ui.save()" cssClass="btn btn-primary pull-right"
-                                     action="save">
-                            <s:text name="%{getText('label.save')}"/>
-                        </wpsf:submit>
-                    </div>
+                    <wpsf:submit disabled="!#isProcessPathSetted" type="button" ng-click="vm.ui.save()" cssClass="btn btn-primary pull-right"
+                                 action="save">
+                        <s:text name="%{getText('label.save')}"/>
+                    </wpsf:submit>
                 </div>
             </div>
+        </div>
 
-        </s:form>
-    </div>
+    </s:form>
 
-    <script type="text/javascript">
+    <!--Saved Configurations-->
+    <s:if test="frontEndMilestonesData != null">
+        <s:property value="frontEndMilestonesData" escapeJavaScript="false" escapeHtml="false"/>
+    </s:if>
+    <!--Saved Configurations-->
+    <!--knowledgeSource value-->
+    <s:if test="configName != null">
+        <s:property value="configName" escapeJavaScript="false" escapeHtml="false"/>
+    </s:if>
+    <!--/knowledgeSource value-->
+</div>
 
-        <s:if test="casesDefinitions != null">
-        var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
-        </s:if>
-        <s:else>
-        var caseDefinitionData = undefined;
-        </s:else>
+<script type="text/javascript">
 
-        <s:if test="savedConfiguration != null">
-        var savedConfiguration = <s:property value="savedConfiguration" escapeJavaScript="false" escapeHtml="false"/>;
-        </s:if>
-        <s:else>
-        var savedConfiguration = undefined;
-        </s:else>
+    <s:if test="casesDefinitions != null">
+    var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
+    </s:if>
+    <s:else>
+    var caseDefinitionData = undefined;
+    </s:else>
 
-        bootBpmComponent(caseDefinitionData, savedConfiguration);
-    </script>
+    <s:if test="frontEndMilestonesData != null">
+    var savedConfiguration = <s:property value="frontEndMilestonesData" escapeJavaScript="false" escapeHtml="false"/>;
+    </s:if>
+    <s:else>
+    var savedConfiguration = undefined;
+    </s:else>
+
+    bootBpmComponent(caseDefinitionData, savedConfiguration);
+</script>
 
 

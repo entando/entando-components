@@ -105,6 +105,8 @@ public class KieBpmConfigAction extends BaseAction {
 
     protected void configToModel(KieBpmConfig config) {
         this.setActive(config.getActive());
+        this.setId(config.getId());
+        this.setName(config.getName());
         this.setUserName(config.getUsername());
         this.setPassword(config.getPassword());
         this.setHostName(config.getHostname());
@@ -118,6 +120,8 @@ public class KieBpmConfigAction extends BaseAction {
     protected KieBpmConfig modelToConfig() {
         KieBpmConfig config = new KieBpmConfig();
         config.setActive(this.getActive());
+        config.setId(this.getId());
+        config.setName(this.getName());
         config.setUsername(this.getUserName());
         config.setPassword(this.getPassword());
         config.setHostname(this.getHostName());
@@ -151,6 +155,22 @@ public class KieBpmConfigAction extends BaseAction {
 
     public void setActive(Boolean active) {
         this._active = active;
+    }
+
+    public String getId() {
+        return _id;
+    }
+
+    public void setId(String _id) {
+        this._id = _id;
+    }
+
+    public String getName() {
+        return _name;
+    }
+
+    public void setName(String _name) {
+        this._name = _name;
     }
 
     public String getUserName() {
@@ -237,6 +257,8 @@ public class KieBpmConfigAction extends BaseAction {
     private CaseManager caseManager;
 
     private Boolean _active;
+    private String _id;
+    private String _name;
     private String _userName;
     private String _password;
     private String _hostName;

@@ -3,9 +3,11 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jpki
 <kiaBpmConfigFactory>
    <kieBpmConfigeMap>
       <entry>
-         <key>localhost</key>
+         <key>default</key>
          <value>
             <active>true</active>
+            <id>1</id>
+            <name>default</name>
             <username>krisv</username>
             <password>krisv</password>
             <hostname>localhost</hostname>

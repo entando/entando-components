@@ -61,6 +61,22 @@ public class KieBpmConfig {
         this._active = active;
     }
 
+    public String getId() {
+        return _id;
+    }
+
+    public void setId(String _id) {
+        this._id = _id;
+    }
+
+    public String getName() {
+        return _name;
+    }
+
+    public void setName(String _name) {
+        this._name = _name;
+    }
+    
     public String getUsername() {
         return _username;
     }
@@ -127,6 +143,10 @@ public class KieBpmConfig {
 
     @XmlElement(name = "active")
     private Boolean _active;
+    @XmlElement(name = "id")
+    private String _id;
+    @XmlElement(name = "name")
+    private String _name;
     @XmlElement(name = "username")
     private String _username;
     @XmlElement(name = "password")

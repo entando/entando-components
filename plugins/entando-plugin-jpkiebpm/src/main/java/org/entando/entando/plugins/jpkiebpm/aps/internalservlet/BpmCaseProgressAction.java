@@ -25,6 +25,7 @@ package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.BaseAction;
@@ -44,22 +45,24 @@ import org.slf4j.LoggerFactory;
  */
 public class BpmCaseProgressAction extends BaseAction {
 
-    private static final Logger _logger = LoggerFactory.getLogger(BpmFormAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(BpmFormAction.class);
     private CaseManager caseManager;
-    private String _frontEndMilestonesData;
-    private List<String> _cases;
+    private String frontEndMilestonesData;
+    private List<String> cases;
     private String casePath;
-    private String _caseInstanceMilestones;
+    private String caseInstanceMilestones;
 
     public String view() {
         try {
 
             String frontEndMilestonesDataIn = extractWidgetConfig("frontEndMilestonesData");
             this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
+
+            this.getCaseManager().setKieServerConfiguration(this.getKieIDfromfrontEndMilestonesData(frontEndMilestonesDataIn));
             this.setCases(this.getCaseManager().getCaseInstancesList(this.getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDataIn)));
 
-        } catch (Throwable t) {
-            _logger.error("Error getting the configuration parameter", t);
+        } catch (ApsSystemException t) {
+            logger.error("Error getting the configuration parameter", t);
             return FAILURE;
         }
 
@@ -75,7 +78,7 @@ public class BpmCaseProgressAction extends BaseAction {
             this.setCaseInstanceMilestones(this.updatefrontEndMilestonesDataMilestones(this.getFrontEndMilestonesData(), updatedMilestones));
 
         } catch (Throwable t) {
-            _logger.error("Error getting the configuration parameter", t);
+            logger.error("Error getting the configuration parameter", t);
             return FAILURE;
         }
         return SUCCESS;
@@ -98,10 +101,10 @@ public class BpmCaseProgressAction extends BaseAction {
                         }
                     } else {
                         value = "Null widget config";
-                        _logger.error("Null widget config");
+                        logger.error("Null widget config");
                     }
                 } else {
-                    _logger.error("Null widget");
+                    logger.error("Null widget");
                 }
             }
         } catch (Throwable t) {
@@ -118,11 +121,25 @@ public class BpmCaseProgressAction extends BaseAction {
             JSONObject frontEndMilestonesDataJSON = new JSONObject(frontEndMilestonesData);
             containerID = frontEndMilestonesDataJSON.getString("container-id");
 
-        } catch (Throwable t) {
-            _logger.error("Front end Milestones Data json can not be recognised");
+        } catch (JSONException t) {
+            logger.error("Front end Milestones Data json can not be recognised");
         }
 
         return containerID;
+    }
+
+    protected String getKieIDfromfrontEndMilestonesData(String frontEndMilestonesData) {
+        String knowledgeSourceID = null;
+
+        try {
+            JSONObject frontEndMilestonesDataJSON = new JSONObject(frontEndMilestonesData);
+            knowledgeSourceID = frontEndMilestonesDataJSON.getString("knowledge-source-id");
+
+        } catch (Throwable t) {
+            logger.error("Front end Milestones Data json can not be recognised");
+        }
+
+        return knowledgeSourceID;
     }
 
     public String updatefrontEndMilestonesDataMilestones(String currentMilestonesData, String newMilestonesData) {
@@ -157,7 +174,7 @@ public class BpmCaseProgressAction extends BaseAction {
                     iMilestone.put("milestone-name", jMilestones.getString("milestone-name"));
                     iMilestone.put("milestone-id", jMilestones.getString("milestone-id"));
                     iMilestone.put("milestone-achieved", jMilestones.getBoolean("milestone-achieved"));
-                    iMilestone.put("milestone-achieved-at", jMilestones.getString("milestone-achieved-at"));
+                    iMilestone.put("milestone-achieved-at", jMilestones.get("milestone-achieved-at").toString());
                     iMilestone.put("milestone-status", jMilestones.getString("milestone-status"));
                 }
             }
@@ -177,19 +194,19 @@ public class BpmCaseProgressAction extends BaseAction {
     }
 
     public String getFrontEndMilestonesData() {
-        return _frontEndMilestonesData;
+        return frontEndMilestonesData;
     }
 
     public void setFrontEndMilestonesData(String frontEndMilestonesData) {
-        this._frontEndMilestonesData = frontEndMilestonesData;
+        this.frontEndMilestonesData = frontEndMilestonesData;
     }
 
     public List<String> getCases() {
-        return _cases;
+        return cases;
     }
 
-    public void setCases(List<String> _cases) {
-        this._cases = _cases;
+    public void setCases(List<String> cases) {
+        this.cases = cases;
     }
 
     public String getCasePath() {
@@ -201,11 +218,11 @@ public class BpmCaseProgressAction extends BaseAction {
     }
 
     public String getCaseInstanceMilestones() {
-        return _caseInstanceMilestones;
+        return caseInstanceMilestones;
     }
 
-    public void setCaseInstanceMilestones(String _caseInstanceMilestones) {
-        this._caseInstanceMilestones = _caseInstanceMilestones;
+    public void setCaseInstanceMilestones(String caseInstanceMilestones) {
+        this.caseInstanceMilestones = caseInstanceMilestones;
     }
 
 }

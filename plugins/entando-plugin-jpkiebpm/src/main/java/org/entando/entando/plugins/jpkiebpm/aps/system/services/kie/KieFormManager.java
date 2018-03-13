@@ -155,9 +155,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public void setKieServerConfiguration(String kieHostname) throws ApsSystemException {
+    public void setKieServerConfiguration(String kiename) throws ApsSystemException {
         try {
-            config = this.getKieServerConfigurations().get(kieHostname);
+            config = this.getKieServerConfigurations().get(kiename);
 
         } catch (Throwable t) {
             throw new ApsSystemException("Error in setKieServerConfiguration", t);

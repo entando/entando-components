@@ -113,7 +113,24 @@
             <legend>
                 <s:text name="legend.connection" />
             </legend>
-
+            <div class="form-group">
+                <div class="col-xs-2 control-label ">
+                    <label for="id"><s:text name="label.id" /></label>
+                </div>
+                <div class="col-xs-10 ">
+                    <wpsf:textfield name="id" id="id"
+                                    cssClass="form-control" placeholder="id" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-2 control-label ">
+                    <label for="name"><s:text name="label.name" /></label>
+                </div>
+                <div class="col-xs-10 ">
+                    <wpsf:textfield name="name" id="name"
+                                    cssClass="form-control" placeholder="name" />
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-xs-2 control-label ">
                     <label for="hostName"><s:text name="label.hostName" /></label>

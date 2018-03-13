@@ -59,6 +59,8 @@
                     <thead>
                         <tr>
                             <th class="text-center table-w-5">active</th>
+                            <th class="text-center table-w-5">id</th>
+                            <th class="text-center table-w-5">name</th>
                             <th class="text-center table-w-5">hostname</th>
                             <th class="text-center table-w-5">schema</th>
                             <th class="text-center table-w-5">port</th>
@@ -71,6 +73,8 @@
                         <s:iterator value="knowledgeSource">
                             <tr>
                                 <td class="index text-center">${value.active}</td>
+                                <td class="index text-center">${value.id}</td>
+                                <td class="index text-center">${value.name}</td>
                                 <td class="index text-center">${value.hostname}</td>
                                 <td class="index text-center">${value.schema}</td>
                                 <td class="index text-center">${value.port}</td>
@@ -181,7 +185,24 @@
                         <legend>
                             <s:text name="legend.connection" />
                         </legend>
-
+                        <div class="form-group">
+                            <div class="col-xs-2 control-label ">
+                                <label for="id"><s:text name="label.id" /></label>
+                            </div>
+                            <div class="col-xs-10 ">
+                                <wpsf:textfield name="id" id="id"
+                                                cssClass="form-control" placeholder="id" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-2 control-label ">
+                                <label for="name"><s:text name="label.name" /></label>
+                            </div>
+                            <div class="col-xs-10 ">
+                                <wpsf:textfield name="name" id="name"
+                                                cssClass="form-control" placeholder="name" />
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-xs-2 control-label ">
                                 <label for="hostName"><s:text name="label.hostName" /></label>

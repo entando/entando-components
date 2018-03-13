@@ -48,7 +48,6 @@ public class CaseManager extends KieFormManager {
     @Override
     public void init() throws Exception {
         super.init();
-        this.setKieBpmConfig(super.getConfig());
     }
 
     public JSONArray getKieServerStasus() throws ApsSystemException {
@@ -76,7 +75,7 @@ public class CaseManager extends KieFormManager {
                 result = (String) new KieRequestBuilder(client)
                         .setEndpoint(ep)
                         .setHeaders(headersMap)
-                        .setDebug(config.getDebug())
+                        .setDebug(this.getKieBpmConfig().getDebug())
                         .doRequest();
 
                 if (!result.isEmpty()) {
@@ -84,7 +83,7 @@ public class CaseManager extends KieFormManager {
                     json = new JSONObject(result);
 
                     JSONObject serverStatusJson = new JSONObject();
-                    serverStatusJson.put(config.getHostname(), json);
+                    serverStatusJson.put(this.getKieBpmConfig().getHostname(), json);
                     ServersStatus.put(serverStatusJson);
 
                     logger.debug("received successful message: ", result);
@@ -94,7 +93,7 @@ public class CaseManager extends KieFormManager {
 
             } catch (Throwable t) {
                 JSONObject serverStatusJson = new JSONObject();
-                serverStatusJson.put(config.getHostname(), "null");
+                serverStatusJson.put(this.getKieBpmConfig().getHostname(), "null");
                 ServersStatus.put(serverStatusJson);
                 logger.debug("Error connecting to the server: " + t);
             }
@@ -112,7 +111,7 @@ public class CaseManager extends KieFormManager {
         String result = null;
         JSONObject json = null;
 
-        if (!config.getActive() || StringUtils.isBlank(containerId)) {
+        if (!this.getKieBpmConfig().getActive() || StringUtils.isBlank(containerId)) {
             return json;
         }
         try {
@@ -126,7 +125,7 @@ public class CaseManager extends KieFormManager {
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(config.getDebug())
+                    .setDebug(this.getKieBpmConfig().getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -153,7 +152,7 @@ public class CaseManager extends KieFormManager {
         String result;
         JSONObject json = null;
 
-        if (!config.getActive() || StringUtils.isBlank(containerId)) {
+        if (!this.getKieBpmConfig().getActive() || StringUtils.isBlank(containerId)) {
             return casesList;
         }
         try {
@@ -167,7 +166,7 @@ public class CaseManager extends KieFormManager {
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(config.getDebug())
+                    .setDebug(this.getKieBpmConfig().getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -201,7 +200,7 @@ public class CaseManager extends KieFormManager {
         String result;
         JSONObject json;
 
-        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+        if (!this.getKieBpmConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return milestonesList;
         }
         try {
@@ -217,7 +216,7 @@ public class CaseManager extends KieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(param)
-                    .setDebug(config.getDebug())
+                    .setDebug(this.getKieBpmConfig().getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -237,11 +236,11 @@ public class CaseManager extends KieFormManager {
     }
 
     public KieBpmConfig getKieBpmConfig() {
-        return config;
+        return super.getConfig();
     }
 
     public void setKieBpmConfig(KieBpmConfig config) {
-        this.config = config;
+        super.setConfig(config);
     }
 
     public String getContainerId() {
@@ -260,7 +259,7 @@ public class CaseManager extends KieFormManager {
         this.caseID = caseID;
     }
 
-    private KieBpmConfig config;
+//    private KieBpmConfig config;
 
     private String containerId;
     private String caseID;
