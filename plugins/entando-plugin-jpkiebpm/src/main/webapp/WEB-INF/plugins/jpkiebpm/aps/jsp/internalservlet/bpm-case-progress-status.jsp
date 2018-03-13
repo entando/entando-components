@@ -12,7 +12,7 @@
 <script type="text/ng-template" id="basic-tpl">
     <h2>Basic</h2>
     <hr>
-    <h5 >{{vm.ui.instanceName()}}<br><small ng-show="vm.ui.showNumberOfTasks()">Tasks {{vm.ui.countAchievedMilestones()}} of {{vm.ui.filterVisibleMiletones().length}}</small></h5>
+    <h5 >{{vm.ui.instanceName()}}<br><small ng-show="vm.ui.showNumberOfTasks()">Tasks {{vm.ui.countAchievedMilestones()}} of {{vm.ui.countVisibleMilestones()}}</small></h5>
     <div class="progress progress-labeled">
         <div ng-style="{width: vm.ui.totalCaseCompletedPercentage() + '%'}" ng-class="vm.ui.milestoneCompletedStyles()"
             class="progress-bar">
@@ -38,7 +38,6 @@
     </span>
 </div>
 </script>
-
 
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 <div class="row">
