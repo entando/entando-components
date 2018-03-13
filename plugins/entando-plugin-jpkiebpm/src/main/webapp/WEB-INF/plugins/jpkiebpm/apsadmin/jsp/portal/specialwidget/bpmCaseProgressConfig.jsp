@@ -189,7 +189,7 @@
                                         <td class="field">{{ milestone['milestone-name']}}</td>
 
                                         <td class="text-center">
-                                            <input type="text" class="form-control" width="20" ng-model="milestone.percentage" />
+                                            <input type="number" class="form-control" width="20" ng-model="milestone.percentage" />
                                         </td>
 
                                     </tr>

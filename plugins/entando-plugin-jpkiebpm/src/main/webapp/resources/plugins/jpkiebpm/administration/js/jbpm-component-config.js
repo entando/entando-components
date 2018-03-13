@@ -79,7 +79,7 @@ var bootBpmComponent = (function ngApp(caseDefinitionData,savedConfiguration) {
         function buildWidgetConfig() {
             vm.data.widgetConfig =
                 {
-                    "container-id": vm.form.caseDef["case-id-prefix"],
+                    "container-id": vm.form.caseDef["container-id"],
                     "name": vm.form.caseDef.name,
                     "case-id-prefix": vm.form.caseDef["case-id-prefix"],
                     "stages": [],
