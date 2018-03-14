@@ -1016,7 +1016,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public KieBpmConfig getConfig() {
-        return config.clone();
+        return config;
     }
 
     public void setConfig(KieBpmConfig config) {
@@ -1033,7 +1033,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     private KiaBpmConfigFactory kiaBpmConfigFactory;
-    private KieBpmConfig config;
+    protected KieBpmConfig config;
     private ConfigInterface configManager;
     private IKieFormOverrideManager overrideManager;
 

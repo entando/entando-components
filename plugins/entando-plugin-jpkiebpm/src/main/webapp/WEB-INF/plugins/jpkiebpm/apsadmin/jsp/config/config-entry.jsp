@@ -26,7 +26,7 @@
             </h1>
         </div>
         <div class="col-sm-6">
-            <ul class="nav nav-tabs nav-justified nav-tabs-pattern" id="frag-tab">
+<!--            <ul class="nav nav-tabs nav-justified nav-tabs-pattern" id="frag-tab">
                 <li>
                     <a href="<s:url action="list" namespace="/do/jpkiebpm/Config" />" role="tab"> 
                         List
@@ -42,7 +42,7 @@
                         <s:text name="label.kie.list" />
                     </a>
                 </li>
-            </ul>
+            </ul>-->
         </div>
     </div>
 </div>
@@ -190,6 +190,19 @@
                 </div>
                 <div class="col-xs-10 ">
                     <wpsf:textfield name="timeout" id="timeout" cssClass="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-2 control-label ">
+                    <s:if test="hostName != null">
+                        <label><s:property value="hostName" /></label>
+                    </s:if>
+                    <s:else>
+                        
+                        <label>Null</label>
+                    </s:else>
+                </div>
+                <div class="col-xs-10 ">
                 </div>
             </div>
         </fieldset>

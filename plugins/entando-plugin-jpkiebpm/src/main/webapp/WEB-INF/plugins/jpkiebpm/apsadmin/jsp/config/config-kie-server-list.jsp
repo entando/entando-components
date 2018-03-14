@@ -58,30 +58,125 @@
                 <table id="sort" class="grid table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th class="text-center table-w-5">active</th>
-                            <th class="text-center table-w-5">id</th>
-                            <th class="text-center table-w-5">name</th>
-                            <th class="text-center table-w-5">hostname</th>
-                            <th class="text-center table-w-5">schema</th>
-                            <th class="text-center table-w-5">port</th>
-                            <th class="text-center table-w-5">webapp</th>
-                            <th class="text-center table-w-5">debug</th>
+                            <th class="text-center table-w-5">Active</th>
+                            <th class="text-center table-w-5">Debug</th>
+                            <th class="text-center table-w-5">ID</th>
+                            <th class="text-center table-w-5">Name</th>
+                            <th class="text-center table-w-5">Hostname</th>
+                            <th class="text-center table-w-5">Schema</th>
+                            <th class="text-center table-w-5">Port</th>
+                            <th class="text-center table-w-5">Webapp</th>
+                            <th class="text-center table-w-5">Username</th>
+                            <th class="text-center table-w-5">Password</th>
+                            <th class="text-center table-w-5">Timeout</th>
+                            <th class="text-center table-w-5">Test</th>
+                            <th class="text-center table-w-5">Edit</th>
+                            <th class="text-center table-w-5">Delete</th>
                         </tr>
                     </thead>
                     <tbody>
+                        
+                        <s:iterator value="knowledgeSource"> 
 
-                        <s:iterator value="knowledgeSource">
+                            <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal">
+                                <s:if test="hasActionErrors()">
+                                <div class="alert alert-danger alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">
+                                        <span class="pficon pficon-close"></span>
+                                    </button>
+                                    <span class="pficon pficon-error-circle-o"></span> <strong><s:text
+                                            name="message.title.ActionErrors" /></strong>
+                                    <ul class="margin-base-top">
+                                        <s:iterator value="actionErrors">
+                                            <li><s:property escapeHtml="false" /></li>
+                                            </s:iterator>
+                                    </ul>
+                                </div>
+                            </s:if>
+                            <s:if test="hasActionMessages()">
+                                <div class="alert alert-success alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">
+                                        <span class="pficon pficon-close"></span>
+                                    </button>
+                                    <span class="pficon pficon-ok"></span> <strong><s:text
+                                            name="messages.confirm" /></strong>
+                                    <ul class="margin-base-top">
+                                        <s:iterator value="actionMessages">
+                                            <li><s:property escapeHtml="false" /></li>
+                                            </s:iterator>
+                                    </ul>
+                                </div>
+                            </s:if>
+
                             <tr>
-                                <td class="index text-center">${value.active}</td>
-                                <td class="index text-center">${value.id}</td>
-                                <td class="index text-center">${value.name}</td>
-                                <td class="index text-center">${value.hostname}</td>
-                                <td class="index text-center">${value.schema}</td>
-                                <td class="index text-center">${value.port}</td>
-                                <td class="index text-center">${value.webapp}</td>
-                                <td class="index text-center">${value.debug}</td>
+                                <td class="index text-center">
+                                    ${value.active}
+                                    <%--<wpsf:checkbox name="active" id="active" cssClass="bootstrap-switch" />--%>
+                                    <input type="hidden" name="active" id="active" value="${value.active}"/>
+                                </td>
+                                <td class="index text-center">
+                                    ${value.debug}
+                                    <%--<wpsf:checkbox name="debug" id="debug" cssClass="bootstrap-switch" />--%>
+                                    <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
+                                </td>
+                                <td class="index text-center">
+                                    ${value.id}
+                                    <input type="hidden" name="id" id="id" value="${value.id}"/>
+                                </td>
+                                <td class="index text-center">
+                                    ${value.name}
+                                    <input type="hidden" name="name" id="name" value="${value.name}"/>
+                                </td>
+                                <td class="index text-center">
+                                    ${value.hostname}
+                                    <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
+                                </td>
+                                <td class="index text-center">
+                                    ${value.schema}
+                                    <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
+                                </td>
+                                <td class="index text-center">
+                                    ${value.port}
+                                    <input type="hidden" name="port" id="port" value="${value.port}"/>
+                                </td>
+                                <td class="index text-center">
+                                    ${value.webapp}
+                                    <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
+                                </td>
+                                <td class="index text-center">
+                                    ${value.username}
+                                    <input type="hidden" name="userName" id="userName" value="${value.username}"/>
+                                </td>
+                                <td class="index text-center">
+                                    ${value.password}
+                                    <input type="hidden" name="password" id="password" value="${value.password}"/>
+                                </td>
+                                <td class="index text-center">
+                                    <wpsf:textfield type="hidden" name="timeout" id="timeout" cssClass="form-control" />
+                                </td>
+                                <td class="index text-center">
+                                    <wpsf:submit name="testinlist" type="button" action="testinlist"
+                                                 cssClass="btn btn-primary pull-right">
+                                        <s:text name="Test" />
+                                    </wpsf:submit>
+                                </td>
+                                <td class="index text-center">
+                                    <wpsf:submit name="edit" type="button" action="edit"
+                                                 cssClass="btn btn-primary pull-right">
+                                        <s:text name="Edit" />
+                                    </wpsf:submit>
+                                </td>
+                                <td class="index text-center">
+                                    <wpsf:submit name="delete" type="button" action="delete" disabled="true"
+                                                 cssClass="btn btn-primary pull-right">
+                                        <s:text name="Delete" />
+                                    </wpsf:submit>
+                                </td>
                             </tr>
-                        </s:iterator>
+                        </s:form>
+                    </s:iterator>
 
                     </tbody>
                 </table>
@@ -104,190 +199,6 @@
 
         </div>
         <div class="col-xs-12 mb-20">
-            <s:iterator value="knowledgeSource">
-
-                <!--
-                
-                knowledgeSource value fields:
-                Boolean _active;
-                String _username;
-                String _password;
-                String _hostname;
-                String _schema;
-                Integer _port;
-                String _webapp;
-                Integer _timeoutMsec;
-                Boolean _debug;
-                
-                
-                -->
-                <br />
-                <br />
-                <!--Generate this form for each server-->
-                <s:form id="configurationForm" name="configurationForm" method="post" action="save" cssClass="form-horizontal">
-                    <s:if test="hasActionErrors()">
-                        <div class="alert alert-danger alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert"
-                                    aria-hidden="true">
-                                <span class="pficon pficon-close"></span>
-                            </button>
-                            <span class="pficon pficon-error-circle-o"></span> <strong><s:text
-                                    name="message.title.ActionErrors" /></strong>
-                            <ul class="margin-base-top">
-                                <s:iterator value="actionErrors">
-                                    <li><s:property escapeHtml="false" /></li>
-                                    </s:iterator>
-                            </ul>
-                        </div>
-                    </s:if>
-                    <s:if test="hasActionMessages()">
-                        <div class="alert alert-success alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert"
-                                    aria-hidden="true">
-                                <span class="pficon pficon-close"></span>
-                            </button>
-                            <span class="pficon pficon-ok"></span> <strong><s:text
-                                    name="messages.confirm" /></strong>
-                            <ul class="margin-base-top">
-                                <s:iterator value="actionMessages">
-                                    <li><s:property escapeHtml="false" /></li>
-                                    </s:iterator>
-                            </ul>
-                        </div>
-                    </s:if>
-                    <fieldset class="col-xs-12">
-                        <legend>
-                            <s:text name="legend.generalSettings" />
-                        </legend>
-                        <div class="form-group">
-                            <div class="col-xs-4">
-                                <div class="col-xs-2 control-label ">
-                                    <s:text name="label.active" />
-                                </div>
-                                <div class="col-xs-10 ">
-                                    <wpsf:checkbox name="active" id="active"
-                                                   cssClass="bootstrap-switch" />
-                                </div>
-                            </div>
-
-                            <div class="col-xs-4">
-                                <div class="col-xs-2 control-label ">
-                                    <s:text name="label.debug" />
-                                </div>
-                                <div class="col-xs-10 ">
-                                    <wpsf:checkbox name="debug" id="debug" cssClass="bootstrap-switch" />
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <fieldset class="col-xs-12">
-                        <legend>
-                            <s:text name="legend.connection" />
-                        </legend>
-                        <div class="form-group">
-                            <div class="col-xs-2 control-label ">
-                                <label for="id"><s:text name="label.id" /></label>
-                            </div>
-                            <div class="col-xs-10 ">
-                                <wpsf:textfield name="id" id="id"
-                                                cssClass="form-control" placeholder="id" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-2 control-label ">
-                                <label for="name"><s:text name="label.name" /></label>
-                            </div>
-                            <div class="col-xs-10 ">
-                                <wpsf:textfield name="name" id="name"
-                                                cssClass="form-control" placeholder="name" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-2 control-label ">
-                                <label for="hostName"><s:text name="label.hostName" /></label>
-                            </div>
-                            <div class="col-xs-10 ">
-                                <input type="text" name="hostName" id="hostName" value="${value.hostname}"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-2 control-label ">
-                                <label for="schema"><s:text name="label.schema" /></label>
-                            </div>
-                            <div class="col-xs-10 ">
-                                <input type="text" name="schema" id="schema" value="${value.schema}"/>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-xs-2 control-label ">
-                                <label for="port"><s:text name="label.port" /></label>
-                            </div>
-                            <div class="col-xs-10 ">
-                                <input type="text" name="port" id="port" value="${value.port}"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-2 control-label ">
-                                <label for="webappName"><s:text name="label.webappName" /></label>
-                            </div>
-                            <div class="col-xs-10 ">
-                                <input type="text" name="webappName" id="webappName" value="${value.webapp}"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-2 control-label ">
-                                <label for="userName"><s:text name="label.userName" /></label>
-                            </div>
-                            <div class="col-xs-10 ">
-                                <input type="text" name="userName" id="userName" value="${value.username}"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-2 control-label ">
-                                <label for="password"><s:text name="label.password" /></label>
-                                <input type="text" name="" id="" value=""/>
-                            </div>
-                            <div class="col-xs-10 ">
-                                <input type="password" name="password" id="password" value="${value.password}"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-2 control-label ">
-                                <label for="password"><s:text name="label.timeout" /></label>
-                            </div>
-                            <div class="col-xs-10 ">
-                                <wpsf:textfield name="timeout" id="timeout" cssClass="form-control" />
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <div class="form-group">
-
-                        <div class="col-xs-12">
-                            <wpsf:submit name="test" type="button" action="test"
-                                         cssClass="btn btn-primary pull-right">
-                                <s:text name="%{getText('label.test')}" />
-                            </wpsf:submit>
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <wpsf:submit name="save" type="button" action="save"
-                                         cssClass="btn btn-primary pull-right">
-                                <s:text name="%{getText('label.save')}" />
-                            </wpsf:submit>
-                        </div>
-
-                    </div>
-
-                </s:form>
-                <!--/Generate this form for each server-->
-            </s:iterator>
-
-
         </div>
     </div>
     <div class="col-xs-12">

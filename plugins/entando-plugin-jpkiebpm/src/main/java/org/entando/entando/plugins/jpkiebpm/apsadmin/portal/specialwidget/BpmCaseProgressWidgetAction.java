@@ -35,10 +35,10 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IB
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getContainerIDfromfrontEndMilestonesData;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getKieIDfromfrontEndMilestonesData;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -60,7 +60,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     private String frontEndMilestonesData;
     private HashMap<String, KieBpmConfig> knowledgeSource;
     private String knowledgeSourcePath;
-    
+
     private String configName;
 
     @Override
@@ -94,6 +94,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
+            
         } catch (ApsSystemException t) {
             logger.error("Error in chooseKnowledgeSourceForm()", t);
             return FAILURE;
@@ -106,6 +107,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
+            
         } catch (ApsSystemException t) {
             logger.error("Error in chooseKnowledgeSourceForm()", t);
             return FAILURE;
@@ -118,9 +120,9 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
-            
+
             this.setConfigName(this.getCaseManager().getKieBpmConfig().getName());
-        } catch (Throwable t) {
+        } catch (ApsSystemException t) {
             logger.error("Error in chooseForm()", t);
             return FAILURE;
         }
@@ -132,10 +134,9 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
-            
-            
+
             this.setConfigName(this.getCaseManager().getKieBpmConfig().getName());
-        } catch (Throwable t) {
+        } catch (ApsSystemException t) {
             logger.error("Error in changeForm()", t);
             return FAILURE;
         }
@@ -148,7 +149,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         String result = super.extractInitConfig();
 
         try {
-            
+
             Widget widget = this.getWidget();
             String frontEndMilestonesDatain;
 
@@ -159,11 +160,14 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
                 if (StringUtils.isNotBlank(frontEndMilestonesDatain)) {
 
                     this.setFrontEndMilestonesData(frontEndMilestonesDatain);
-                    this.getCaseManager().setKieServerConfiguration(this.getKieIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
+                    this.getCaseManager().setKieServerConfiguration(getKieIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
                     this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
-                    this.setKnowledgeSourcePath(this.getKieIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
+                    this.setKnowledgeSourcePath(getKieIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
                     this.setProcess(this.getCaseManager().getContainersList());
-                    this.setProcessPath(this.getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
+                    this.setProcessPath(getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
+
+                    this.setConfigName(this.getCaseManager().getKieBpmConfig().getName());
+                    this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
 
                 } else {
                     this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
@@ -175,35 +179,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
         return result;
     }
-    
-    protected String getContainerIDfromfrontEndMilestonesData(String frontEndMilestonesData) {
-        String containerID = null;
 
-        try {
-            JSONObject frontEndMilestonesDataJSON = new JSONObject(frontEndMilestonesData);
-            containerID = frontEndMilestonesDataJSON.getString("container-id");
-
-        } catch (Throwable t) {
-            logger.error("Front end Milestones Data json can not be recognised");
-        }
-
-        return containerID;
-    }
-    
-    protected String getKieIDfromfrontEndMilestonesData(String frontEndMilestonesData) {
-        String knowledgeSourceID = null;
-
-        try {
-            JSONObject frontEndMilestonesDataJSON = new JSONObject(frontEndMilestonesData);
-            knowledgeSourceID = frontEndMilestonesDataJSON.getString("knowledge-source-id");
-
-        } catch (JSONException t) {
-            logger.error("Front end Milestones Data json can not be recognised");
-        }
-
-        return knowledgeSourceID;
-    }
-    
     public IKieFormManager getFormManager() {
         return formManager;
     }
@@ -299,6 +275,5 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     public void setConfigName(String configName) {
         this.configName = configName;
     }
-    
 
 }

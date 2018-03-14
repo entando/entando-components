@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.BaseAction;
 import java.util.HashMap;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
@@ -35,12 +36,23 @@ public class KieBpmConfigAction extends BaseAction {
 
     private static final Logger _logger = LoggerFactory.getLogger(KieBpmConfigAction.class);
 
-    public String edit() {
+    public String add() {
         try {
-            KieBpmConfig config = this.getFormManager().getConfig().clone();
+            KieBpmConfig config = this.getFormManager().getConfig();
             this.configToModel(config);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "edit");
+            ApsSystemUtils.logThrowable(t, this, "add");
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+
+    public String edit() {
+        try {
+            KieBpmConfig config = this.modelToConfig();
+            this.getFormManager().setKieServerConfiguration(config.getName());
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "FAILURE");
             return FAILURE;
         }
         return SUCCESS;
@@ -50,7 +62,6 @@ public class KieBpmConfigAction extends BaseAction {
         try {
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
             this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
-            
 
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "list");
@@ -61,20 +72,22 @@ public class KieBpmConfigAction extends BaseAction {
 
     public String save() {
         try {
-            
-            
-            KieBpmConfig config = this.modelToConfig();
 
+            KieBpmConfig config = this.modelToConfig();
             this.getFormManager().addConfig(config);
-//            this.getFormManager().updateConfig(config);
+
             this.addActionMessage(this.getText("message.config.savedConfirm"));
             try {
                 this.getFormManager().getContainersList();
                 this.addActionMessage(this.getText("message.config.test.success"));
-            } catch (Exception e) {
+            } catch (ApsSystemException e) {
                 _logger.error("Configuration test failed!", e);
                 this.addActionError(this.getText("message.config.test.fail"));
             }
+
+            this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
+            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
+
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "save");
             return FAILURE;
@@ -84,18 +97,23 @@ public class KieBpmConfigAction extends BaseAction {
 
     public String test() {
         try {
+
             // enable plugin by default;
             this.setActive(true);
             KieBpmConfig config = this.modelToConfig();
-//            this.getFormManager().updateConfig(config);
-            this.getFormManager().addConfig(config);
+
+            this.getFormManager().setKieServerConfiguration(config.getName());
             try {
                 this.getFormManager().getContainersList();
                 this.addActionMessage(this.getText("message.config.test.success"));
-            } catch (Exception e) {
+            } catch (ApsSystemException e) {
                 _logger.error("Configuration test failed!", e);
                 this.addActionError(this.getText("message.config.test.fail"));
             }
+
+            this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
+            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
+
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "test");
             return FAILURE;

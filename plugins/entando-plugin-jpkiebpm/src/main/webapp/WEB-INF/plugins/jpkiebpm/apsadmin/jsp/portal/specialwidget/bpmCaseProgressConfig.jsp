@@ -284,6 +284,6 @@
     var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
     bootBpmComponent(caseDefinitionData, savedConfiguration, configName);
     </s:if>
-    
-    
+
+
 </script>

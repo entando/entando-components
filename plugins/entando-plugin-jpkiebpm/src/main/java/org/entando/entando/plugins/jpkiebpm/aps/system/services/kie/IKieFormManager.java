@@ -68,7 +68,7 @@ public interface IKieFormManager {
      * @param kieHostname
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
-    public void setKieServerConfiguration(String kieHostname) throws ApsSystemException;
+    public void setKieServerConfiguration(String kiename) throws ApsSystemException;
     /**
      * List KIE containers
      *

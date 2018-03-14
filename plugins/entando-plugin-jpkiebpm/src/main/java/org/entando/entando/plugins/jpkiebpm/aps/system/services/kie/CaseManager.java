@@ -62,7 +62,6 @@ public class CaseManager extends KieFormManager {
         for (String key : ServerConfigurations.keySet()) {
 
             this.setKieBpmConfig(ServerConfigurations.get(key));
-            super.setConfig(ServerConfigurations.get(key));
 
             try {
                 // process endpoint first
@@ -83,7 +82,7 @@ public class CaseManager extends KieFormManager {
                     json = new JSONObject(result);
 
                     JSONObject serverStatusJson = new JSONObject();
-                    serverStatusJson.put(this.getKieBpmConfig().getHostname(), json);
+                    serverStatusJson.put(this.getKieBpmConfig().getName(), json);
                     ServersStatus.put(serverStatusJson);
 
                     logger.debug("received successful message: ", result);
@@ -93,7 +92,7 @@ public class CaseManager extends KieFormManager {
 
             } catch (Throwable t) {
                 JSONObject serverStatusJson = new JSONObject();
-                serverStatusJson.put(this.getKieBpmConfig().getHostname(), "null");
+                serverStatusJson.put(this.getKieBpmConfig().getName(), "null");
                 ServersStatus.put(serverStatusJson);
                 logger.debug("Error connecting to the server: " + t);
             }
@@ -103,7 +102,7 @@ public class CaseManager extends KieFormManager {
     }
 
     public JSONObject getCasesDefinitions(String containerId) throws ApsSystemException {
-        
+
         this.setKieBpmConfig(super.getConfig());
 
         Map<String, String> headersMap = new HashMap<>();
@@ -143,7 +142,7 @@ public class CaseManager extends KieFormManager {
     }
 
     public List<String> getCaseInstancesList(String containerId) throws ApsSystemException {
-        
+
         this.setKieBpmConfig(super.getConfig());
 
         List<String> casesList = new ArrayList<>();
@@ -190,7 +189,7 @@ public class CaseManager extends KieFormManager {
     }
 
     public JSONArray getMilestonesList(String containerId, String caseID) throws ApsSystemException {
-        
+
         this.setKieBpmConfig(super.getConfig());
 
         JSONArray milestonesList = null;
@@ -260,7 +259,6 @@ public class CaseManager extends KieFormManager {
     }
 
 //    private KieBpmConfig config;
-
     private String containerId;
     private String caseID;
 
