@@ -24,6 +24,14 @@
 
 var bootBpmComponent = (function ngApp(caseDefinitionData,savedConfiguration,configName) {
     'use strict';
+
+    if(!caseDefinitionData && savedConfiguration){
+        console.log("WARN:Rebuilding config from saved data");
+        caseDefinitionData = {definitions : []}
+        caseDefinitionData.definitions.push(angular.copy(savedConfiguration));
+    }
+
+
     angular.module('caseProgressApp', [])
         .controller('CaseProgressConfigCtrl', CaseProgressConfigCtrl)
         .service("BpmService", BpmService);

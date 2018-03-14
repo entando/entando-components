@@ -52,9 +52,14 @@ public class KiaBpmConfigFactory {
     }
 
     public KieBpmConfig getFirstKiaBpmConfig() {
-        
+        /*
+         Directly referencing HashMap.Entry (my conf is JDK 1.8u161 (macos)) will cause a compilation error like:
+         java.util.HashMap.Entry is not public in java.util.HashMap
+
         HashMap.Entry<String,KieBpmConfig> entry= this.getKieBpmConfigeMap().entrySet().iterator().next();
         return entry.getValue();
+*/
+        return this.getKieBpmConfigeMap().entrySet().iterator().next().getValue();
     }
 
     public HashMap<String, KieBpmConfig> getKieBpmConfigeMap() {

@@ -113,7 +113,7 @@ var bootBpmComponents = (function () {
         }
   
         function filterCurrentVisibleMilestones() {
-          return filterVisibleMiletones(vm.options, vm.caseData).length;
+          return filterVisibleMiletones(vm.options, vm.caseData);
         }
   
         function milestoneCompletedStyles() {

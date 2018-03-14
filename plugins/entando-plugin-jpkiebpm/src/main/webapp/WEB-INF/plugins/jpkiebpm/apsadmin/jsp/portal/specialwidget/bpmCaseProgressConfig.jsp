@@ -269,12 +269,12 @@
 <script type="text/javascript">
 
     <s:if test="configName != null">
-    var configName = <s:property value="configName" escapeJavaScript="false" escapeHtml="false"/>
+    var configName = "<s:property value="configName" escapeJavaScript="false" escapeHtml="false"/>";
     </s:if>
     <s:else>
     var configName = undefined;
     </s:else>
-    <s:if test="savedConfiguration != null">
+    <s:if test="frontEndMilestonesData != null">
     var savedConfiguration = <s:property value="frontEndMilestonesData" escapeJavaScript="false" escapeHtml="false"/>;
     </s:if>
     <s:else>
@@ -282,8 +282,8 @@
     </s:else>
     <s:if test="casesDefinitions != null">
     var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
-    bootBpmComponent(caseDefinitionData, savedConfiguration, configName);
+    
     </s:if>
 
-
+bootBpmComponent(caseDefinitionData, savedConfiguration, configName);
 </script>
