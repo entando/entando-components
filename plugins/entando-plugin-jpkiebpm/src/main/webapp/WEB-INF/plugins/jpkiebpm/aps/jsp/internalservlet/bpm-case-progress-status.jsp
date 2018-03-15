@@ -9,8 +9,6 @@
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jbpm-component.js"></script>
 
 
-
-
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 <div class="row">
     <div class="col-md-2"></div>

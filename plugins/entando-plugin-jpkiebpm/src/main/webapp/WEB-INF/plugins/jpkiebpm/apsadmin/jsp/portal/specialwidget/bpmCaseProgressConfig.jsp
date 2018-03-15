@@ -81,6 +81,7 @@
                         </label>
                         <div class="col-xs-6">
                             <s:select list="knowledgeSource" id="knowledgeSourcePath" name="knowledgeSourcePath"  
+                                      listKey="value.id"
                                       listValue="value.name">
                             </s:select>
                         </div>
@@ -104,7 +105,7 @@
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label class="control-label col-xs-4" for="processPath">
-                                <s:text name="Process"/>
+                                knowledgeSource/Container ID
                             </label>
                             <div class="col-xs-6">
                                 <s:select list="process" id="processPath" name="processPath"  
@@ -260,16 +261,27 @@
     </s:if>
     <!--Saved Configurations-->
     <!--knowledgeSource value-->
-    <s:if test="configName != null">
-        <s:property value="configName" escapeJavaScript="false" escapeHtml="false"/>
+    <s:if test="configID != null">
+        <s:property value="configID" escapeJavaScript="false" escapeHtml="false"/>
     </s:if>
     <!--/knowledgeSource value-->
+
+    <!--kieContainerListJson value-->
+    <s:if test="kieContainerListJson != null">
+        <s:property value="kieContainerListJson" escapeJavaScript="false" escapeHtml="false"/>
+    </s:if>
+    <!--/kieContainerListJson value-->
+    <!--knowledgeSourceJson value-->
+    <s:if test="knowledgeSourceJson != null">
+        <s:property value="knowledgeSourceJson" escapeJavaScript="false" escapeHtml="false"/>
+    </s:if>
+    <!--/knowledgeSourceJson value-->
 </div>
 
 <script type="text/javascript">
 
-    <s:if test="configName != null">
-    var configName = "<s:property value="configName" escapeJavaScript="false" escapeHtml="false"/>";
+    <s:if test="configID != null">
+    var configName = "<s:property value="configID" escapeJavaScript="false" escapeHtml="false"/>";
     </s:if>
     <s:else>
     var configName = undefined;
@@ -282,8 +294,8 @@
     </s:else>
     <s:if test="casesDefinitions != null">
     var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
-    
+
     </s:if>
 
-bootBpmComponent(caseDefinitionData, savedConfiguration, configName);
+    bootBpmComponent(caseDefinitionData, savedConfiguration, configName);
 </script>

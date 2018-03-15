@@ -33,15 +33,10 @@
             <ul class="nav nav-tabs nav-justified nav-tabs-pattern" id="frag-tab">
                 <li>
                     <a href="<s:url action="list" namespace="/do/jpkiebpm/Config" />" role="tab"> 
-                       list
+                        list
                     </a>
                 </li>
-                <li>
-                    <a href="<s:url action="edit" namespace="/do/jpkiebpm/Config" />" role="tab"> 
-                        <s:text name="label.kie.settings" />
-                    </a>
-                </li>
-                <li class="active">
+                <li  class="active">
                     <a href="<s:url action="list" namespace="/do/jpkiebpm/form/override"/>" role="tab"> 
                         <s:text name="label.kie.list" />
                     </a>

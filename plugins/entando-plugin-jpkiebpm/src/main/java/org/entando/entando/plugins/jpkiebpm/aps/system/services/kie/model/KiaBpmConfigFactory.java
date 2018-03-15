@@ -36,38 +36,38 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KiaBpmConfigFactory {
-
+    
     @XmlElement(name = "kieBpmConfigeMap")
     private HashMap<String, KieBpmConfig> kieBpmConfigeMap = new HashMap();
-
+    
     public KieBpmConfig getKiaBpmConfig(String hostname) {
         KieBpmConfig kieBpmConfig = this.getKieBpmConfigeMap().get(hostname);
         return kieBpmConfig;
     }
-
+    
     public void addKiaBpmConfig(KieBpmConfig kieBpmConfig) {
-
-        this.getKieBpmConfigeMap().put(kieBpmConfig.getName(), kieBpmConfig);
-
+        
+        this.getKieBpmConfigeMap().put(kieBpmConfig.getId(), kieBpmConfig);
+        
     }
-
+    
+    public void removeKiaBpmConfig(String kieId) {
+        
+        this.getKieBpmConfigeMap().remove(kieId);
+    }
+    
     public KieBpmConfig getFirstKiaBpmConfig() {
-        /*
-         Directly referencing HashMap.Entry (my conf is JDK 1.8u161 (macos)) will cause a compilation error like:
-         java.util.HashMap.Entry is not public in java.util.HashMap
-
-        HashMap.Entry<String,KieBpmConfig> entry= this.getKieBpmConfigeMap().entrySet().iterator().next();
+        
+        HashMap.Entry<String, KieBpmConfig> entry = this.getKieBpmConfigeMap().entrySet().iterator().next();
         return entry.getValue();
-*/
-        return this.getKieBpmConfigeMap().entrySet().iterator().next().getValue();
     }
-
+    
     public HashMap<String, KieBpmConfig> getKieBpmConfigeMap() {
         return kieBpmConfigeMap;
     }
-
+    
     public void setKieBpmConfigeMap(HashMap<String, KieBpmConfig> _kieBpmConfigeMap) {
         this.kieBpmConfigeMap = _kieBpmConfigeMap;
     }
-
+    
 }

@@ -23,6 +23,10 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
+import java.util.HashMap;
+import java.util.List;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,5 +110,44 @@ public class CaseProgressWidgetHelpers {
         currentMilestonesDataJson.put("milestones", updatedMilestones);
 
         return updatedMilestones.toString();
+    }
+
+    public static JSONArray convertKieContainerToListToJson(List<KieContainer> kieContainerList) {
+
+        JSONArray kieContainetListjs = new JSONArray();
+
+        for (KieContainer kc : kieContainerList) {
+
+            JSONObject kieContainetjs = new JSONObject();
+            kieContainetjs.put("container-id", kc.getContainerId());
+
+            kieContainetListjs.put(kieContainetjs);
+        }
+
+        return kieContainetListjs;
+    }
+
+    public static JSONArray convertKnowledgeSourceHashMapToJson(HashMap<String, KieBpmConfig> knowledgeSource) {
+        JSONArray knowledgeSourceListJS = new JSONArray();
+
+        for (String key : knowledgeSource.keySet()) {
+            JSONObject knowledgeSourceJS = new JSONObject();
+
+            knowledgeSourceJS.put("active", knowledgeSource.get(key).getActive());
+            knowledgeSourceJS.put("id", knowledgeSource.get(key).getId());
+            knowledgeSourceJS.put("name", knowledgeSource.get(key).getName());
+            knowledgeSourceJS.put("hostname", knowledgeSource.get(key).getHostname());
+            knowledgeSourceJS.put("port", knowledgeSource.get(key).getPort());
+            knowledgeSourceJS.put("username", knowledgeSource.get(key).getUsername());
+            knowledgeSourceJS.put("password", knowledgeSource.get(key).getPassword());
+            knowledgeSourceJS.put("schema", knowledgeSource.get(key).getSchema());
+            knowledgeSourceJS.put("webapp", knowledgeSource.get(key).getWebapp());
+            knowledgeSourceJS.put("timeout", knowledgeSource.get(key).getTimeoutMsec());
+            knowledgeSourceJS.put("debug", knowledgeSource.get(key).getDebug());
+
+            knowledgeSourceListJS.put(knowledgeSourceJS);
+
+        }
+        return knowledgeSourceListJS;
     }
 }

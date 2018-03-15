@@ -46,6 +46,12 @@ public interface IKieFormManager {
      * @return
      */
     KieBpmConfig getConfig();
+    /**
+     * Return service configuration
+     *
+     * @param config
+     */
+    public void setConfig(KieBpmConfig config);
     
     /**
      * add service configuration
@@ -55,6 +61,13 @@ public interface IKieFormManager {
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
     public KieBpmConfig addConfig(KieBpmConfig config) throws ApsSystemException;   
+    /**
+     * add service configuration
+     *
+     * @param kieId
+     * @throws com.agiletec.aps.system.exception.ApsSystemException
+     */
+    public void deleteConfig(String kieId) throws ApsSystemException;   
     /**
      * Get list of service configuration
      *
@@ -68,7 +81,7 @@ public interface IKieFormManager {
      * @param kieHostname
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
-    public void setKieServerConfiguration(String kiename) throws ApsSystemException;
+    public void setKieServerConfiguration(String kieId) throws ApsSystemException;
     /**
      * List KIE containers
      *

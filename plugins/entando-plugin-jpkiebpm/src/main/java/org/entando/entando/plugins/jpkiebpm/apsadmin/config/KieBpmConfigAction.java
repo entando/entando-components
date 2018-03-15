@@ -31,6 +31,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.BaseAction;
 import java.util.HashMap;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class KieBpmConfigAction extends BaseAction {
 
@@ -50,7 +52,7 @@ public class KieBpmConfigAction extends BaseAction {
     public String edit() {
         try {
             KieBpmConfig config = this.modelToConfig();
-            this.getFormManager().setKieServerConfiguration(config.getName());
+            this.getFormManager().setKieServerConfiguration(config.getId());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "FAILURE");
             return FAILURE;
@@ -97,12 +99,11 @@ public class KieBpmConfigAction extends BaseAction {
 
     public String test() {
         try {
-
             // enable plugin by default;
             this.setActive(true);
             KieBpmConfig config = this.modelToConfig();
 
-            this.getFormManager().setKieServerConfiguration(config.getName());
+            this.getFormManager().setConfig(config);
             try {
                 this.getFormManager().getContainersList();
                 this.addActionMessage(this.getText("message.config.test.success"));
@@ -118,6 +119,27 @@ public class KieBpmConfigAction extends BaseAction {
             ApsSystemUtils.logThrowable(t, this, "test");
             return FAILURE;
         }
+        return SUCCESS;
+    }
+
+    public String delete() {
+        try {
+
+            this.getFormManager().deleteConfig(this.getId());
+
+            this.addActionMessage("Configuration Deleted");
+
+            this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
+            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
+
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "delete");
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+
+    public String addConf() {
         return SUCCESS;
     }
 

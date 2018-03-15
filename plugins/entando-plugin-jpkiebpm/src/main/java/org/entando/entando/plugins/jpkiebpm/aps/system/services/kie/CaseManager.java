@@ -82,7 +82,25 @@ public class CaseManager extends KieFormManager {
                     json = new JSONObject(result);
 
                     JSONObject serverStatusJson = new JSONObject();
-                    serverStatusJson.put(this.getKieBpmConfig().getName(), json);
+                    serverStatusJson.put("id", this.getKieBpmConfig().getId());
+                    serverStatusJson.put("status", json);
+
+                    JSONObject serverConfJson = new JSONObject();
+
+                    serverConfJson.put("active", this.getKieBpmConfig().getActive());
+                    serverConfJson.put("id", this.getKieBpmConfig().getId());
+                    serverConfJson.put("name", this.getKieBpmConfig().getName());
+                    serverConfJson.put("username", this.getKieBpmConfig().getUsername());
+                    serverConfJson.put("password", this.getKieBpmConfig().getPassword());
+                    serverConfJson.put("hostname", this.getKieBpmConfig().getHostname());
+                    serverConfJson.put("port", this.getKieBpmConfig().getPort());
+                    serverConfJson.put("schema", this.getKieBpmConfig().getSchema());
+                    serverConfJson.put("webapp", this.getKieBpmConfig().getWebapp());
+                    serverConfJson.put("timeoutMsec", this.getKieBpmConfig().getTimeoutMsec());
+                    serverConfJson.put("debug", this.getKieBpmConfig().getDebug());
+
+                    serverStatusJson.put("config", serverConfJson);
+
                     ServersStatus.put(serverStatusJson);
 
                     logger.debug("received successful message: ", result);
@@ -92,7 +110,25 @@ public class CaseManager extends KieFormManager {
 
             } catch (Throwable t) {
                 JSONObject serverStatusJson = new JSONObject();
-                serverStatusJson.put(this.getKieBpmConfig().getName(), "null");
+                serverStatusJson.put("id", this.getKieBpmConfig().getId());
+                serverStatusJson.put("status", "null");
+
+                JSONObject serverConfJson = new JSONObject();
+
+                serverConfJson.put("active", this.getKieBpmConfig().getActive());
+                serverConfJson.put("id", this.getKieBpmConfig().getId());
+                serverConfJson.put("name", this.getKieBpmConfig().getName());
+                serverConfJson.put("username", this.getKieBpmConfig().getUsername());
+                serverConfJson.put("password", this.getKieBpmConfig().getPassword());
+                serverConfJson.put("hostname", this.getKieBpmConfig().getHostname());
+                serverConfJson.put("port", this.getKieBpmConfig().getPort());
+                serverConfJson.put("schema", this.getKieBpmConfig().getSchema());
+                serverConfJson.put("webapp", this.getKieBpmConfig().getWebapp());
+                serverConfJson.put("timeoutMsec", this.getKieBpmConfig().getTimeoutMsec());
+                serverConfJson.put("debug", this.getKieBpmConfig().getDebug());
+
+                serverStatusJson.put("config", serverConfJson);
+
                 ServersStatus.put(serverStatusJson);
                 logger.debug("Error connecting to the server: " + t);
             }

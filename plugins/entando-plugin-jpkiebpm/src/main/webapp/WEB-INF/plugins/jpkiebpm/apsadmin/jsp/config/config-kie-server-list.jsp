@@ -52,9 +52,43 @@
 <div class="tab-content margin-large-bottom">
     <div class="tab-pane active" id="frag-list">
 
-        <div class="col-xs-12 mb-20">
+        <div class="col-xs-12 mb-20">                               
+
+            <!--Action messages-->
+            <s:if test="hasActionErrors()">
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert"
+                            aria-hidden="true">
+                        <span class="pficon pficon-close"></span>
+                    </button>
+                    <span class="pficon pficon-error-circle-o"></span> <strong><s:text
+                            name="message.title.ActionErrors" /></strong>
+                    <ul class="margin-base-top">
+                        <s:iterator value="actionErrors">
+                            <li><s:property escapeHtml="false" /></li>
+                            </s:iterator>
+                    </ul>
+                </div>
+            </s:if>
+            <s:if test="hasActionMessages()">
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert"
+                            aria-hidden="true">
+                        <span class="pficon pficon-close"></span>
+                    </button>
+                    <span class="pficon pficon-ok"></span> <strong><s:text
+                            name="messages.confirm" /></strong>
+                    <ul class="margin-base-top">
+                        <s:iterator value="actionMessages">
+                            <li><s:property escapeHtml="false" /></li>
+                            </s:iterator>
+                    </ul>
+                </div>
+            </s:if>
+            <!--Action messages-->
 
             <div class="table-responsive overflow-visible">
+
                 <table id="sort" class="grid table table-bordered table-hover">
                     <thead>
                         <tr>
@@ -75,87 +109,66 @@
                         </tr>
                     </thead>
                     <tbody>
-                        
+
+                        <!--knowledgeSource is HashMap<String, KieBpmConfig>, this can be replaced with angularjs iterator along 
+                         config data in knowledgeSourceStatus json. In order to get the Strut form work, the following are needed:
+                        - form tag
+                        - Action messages (not essential)
+                        - input with same name and id
+                        - submit button with relative action  
+                        -->
                         <s:iterator value="knowledgeSource"> 
 
                             <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal">
-                                <s:if test="hasActionErrors()">
-                                <div class="alert alert-danger alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert"
-                                            aria-hidden="true">
-                                        <span class="pficon pficon-close"></span>
-                                    </button>
-                                    <span class="pficon pficon-error-circle-o"></span> <strong><s:text
-                                            name="message.title.ActionErrors" /></strong>
-                                    <ul class="margin-base-top">
-                                        <s:iterator value="actionErrors">
-                                            <li><s:property escapeHtml="false" /></li>
-                                            </s:iterator>
-                                    </ul>
-                                </div>
-                            </s:if>
-                            <s:if test="hasActionMessages()">
-                                <div class="alert alert-success alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert"
-                                            aria-hidden="true">
-                                        <span class="pficon pficon-close"></span>
-                                    </button>
-                                    <span class="pficon pficon-ok"></span> <strong><s:text
-                                            name="messages.confirm" /></strong>
-                                    <ul class="margin-base-top">
-                                        <s:iterator value="actionMessages">
-                                            <li><s:property escapeHtml="false" /></li>
-                                            </s:iterator>
-                                    </ul>
-                                </div>
-                            </s:if>
+
+                            <input type="hidden" name="active" id="active" value="${value.active}"/>
+                            <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
+                            <input type="hidden" name="id" id="id" value="${value.id}"/>
+                            <input type="hidden" name="name" id="name" value="${value.name}"/>
+                            <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
+                            <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
+                            <input type="hidden" name="port" id="port" value="${value.port}"/>
+                            <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
+                            <input type="hidden" name="userName" id="userName" value="${value.username}"/>
+                            <input type="hidden" name="password" id="password" value="${value.password}"/>
+                            <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}"/>
+                            <%--<wpsf:textfield type="hidden" name="timeout" id="timeout" cssClass="form-control" />--%>
 
                             <tr>
                                 <td class="index text-center">
                                     ${value.active}
-                                    <%--<wpsf:checkbox name="active" id="active" cssClass="bootstrap-switch" />--%>
-                                    <input type="hidden" name="active" id="active" value="${value.active}"/>
                                 </td>
                                 <td class="index text-center">
                                     ${value.debug}
-                                    <%--<wpsf:checkbox name="debug" id="debug" cssClass="bootstrap-switch" />--%>
-                                    <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
                                 </td>
                                 <td class="index text-center">
                                     ${value.id}
-                                    <input type="hidden" name="id" id="id" value="${value.id}"/>
                                 </td>
                                 <td class="index text-center">
                                     ${value.name}
-                                    <input type="hidden" name="name" id="name" value="${value.name}"/>
                                 </td>
                                 <td class="index text-center">
                                     ${value.hostname}
-                                    <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
                                 </td>
                                 <td class="index text-center">
                                     ${value.schema}
-                                    <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
                                 </td>
                                 <td class="index text-center">
                                     ${value.port}
-                                    <input type="hidden" name="port" id="port" value="${value.port}"/>
                                 </td>
                                 <td class="index text-center">
                                     ${value.webapp}
-                                    <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
                                 </td>
                                 <td class="index text-center">
                                     ${value.username}
-                                    <input type="hidden" name="userName" id="userName" value="${value.username}"/>
                                 </td>
                                 <td class="index text-center">
                                     ${value.password}
-                                    <input type="hidden" name="password" id="password" value="${value.password}"/>
                                 </td>
                                 <td class="index text-center">
-                                    <wpsf:textfield type="hidden" name="timeout" id="timeout" cssClass="form-control" />
+                                    ${value.timeoutMsec}
                                 </td>
+
                                 <td class="index text-center">
                                     <wpsf:submit name="testinlist" type="button" action="testinlist"
                                                  cssClass="btn btn-primary pull-right">
@@ -169,7 +182,7 @@
                                     </wpsf:submit>
                                 </td>
                                 <td class="index text-center">
-                                    <wpsf:submit name="delete" type="button" action="delete" disabled="true"
+                                    <wpsf:submit name="delete" type="button" action="delete"
                                                  cssClass="btn btn-primary pull-right">
                                         <s:text name="Delete" />
                                     </wpsf:submit>
@@ -187,8 +200,9 @@
                     }
                 </style>
             </div>
-
-
+            <a href="<s:url action="addConf" namespace="/do/jpkiebpm/Config" />" class="btn btn-primary pull-right"> 
+                <s:text name="Add Configuration" />
+            </a>
         </div>
         <div class="col-xs-12 mb-20">
             <br />
@@ -204,9 +218,6 @@
     <div class="col-xs-12">
     </div>
 </div>
-
-
-
 
 <div class="tab-pane" id="frag-settings">
 </div>

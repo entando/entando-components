@@ -3,7 +3,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_c
 <kiaBpmConfigFactory>
    <kieBpmConfigeMap>
       <entry>
-         <key>default</key>
+         <key>1</key>
          <value>
             <active>true</active>
             <id>1</id>

@@ -26,23 +26,23 @@
             </h1>
         </div>
         <div class="col-sm-6">
-<!--            <ul class="nav nav-tabs nav-justified nav-tabs-pattern" id="frag-tab">
-                <li>
-                    <a href="<s:url action="list" namespace="/do/jpkiebpm/Config" />" role="tab"> 
-                        List
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="<s:url action="edit" namespace="/do/jpkiebpm/Config" />" role="tab"> 
-                        <s:text name="label.kie.settings" />
-                    </a>
-                </li>
-                <li>
-                    <a href="<s:url action="list" namespace="/do/jpkiebpm/form/override"/>" role="tab"> 
-                        <s:text name="label.kie.list" />
-                    </a>
-                </li>
-            </ul>-->
+            <!--            <ul class="nav nav-tabs nav-justified nav-tabs-pattern" id="frag-tab">
+                            <li>
+                                <a href="<s:url action="list" namespace="/do/jpkiebpm/Config" />" role="tab"> 
+                                    List
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="<s:url action="edit" namespace="/do/jpkiebpm/Config" />" role="tab"> 
+            <s:text name="label.kie.settings" />
+        </a>
+    </li>
+    <li>
+        <a href="<s:url action="list" namespace="/do/jpkiebpm/form/override"/>" role="tab"> 
+            <s:text name="label.kie.list" />
+        </a>
+    </li>
+</ul>-->
         </div>
     </div>
 </div>
@@ -192,19 +192,6 @@
                     <wpsf:textfield name="timeout" id="timeout" cssClass="form-control" />
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-xs-2 control-label ">
-                    <s:if test="hostName != null">
-                        <label><s:property value="hostName" /></label>
-                    </s:if>
-                    <s:else>
-                        
-                        <label>Null</label>
-                    </s:else>
-                </div>
-                <div class="col-xs-10 ">
-                </div>
-            </div>
         </fieldset>
 
         <div class="form-group">
@@ -218,7 +205,12 @@
 
         </div>
         <div class="form-group">
-            <div class="col-xs-12">
+            <div class="col-xs-6">
+                <a href="<s:url action="list" namespace="/do/jpkiebpm/Config" />" class="btn btn-warning"> 
+                    <s:text name="Cancel" />
+                </a>
+            </div>
+            <div class="col-xs-6">
                 <wpsf:submit name="save" type="button" action="save"
                              cssClass="btn btn-primary pull-right">
                     <s:text name="%{getText('label.save')}" />

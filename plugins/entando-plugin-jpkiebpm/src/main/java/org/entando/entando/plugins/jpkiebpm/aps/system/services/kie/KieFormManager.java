@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
@@ -102,7 +103,15 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     @Override
     public KieBpmConfig addConfig(KieBpmConfig config) throws ApsSystemException {
         try {
+//            if (this.getKeyGeneratorManager() != null) {
+//                System.out.println("Generator: " + this.getKeyGeneratorManager().getUniqueKeyCurrentValue());
+//            }else{
+//                System.out.println("Generator:nulll ");
+//            }
+
             if (null != config) {
+                //generate value for the id
+               // config.setId(String.valueOf(11));
 
                 //Get current config from database
                 ConfigInterface configManager = this.getConfigManager();
@@ -122,6 +131,31 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             throw new ApsSystemException("Error adding configuration", t);
         }
         return config;
+    }
+
+    @Override
+    public void deleteConfig(String kieId) throws ApsSystemException {
+        try {
+            if (!StringUtils.isBlank(kieId)) {
+
+                //Get current config from database
+                ConfigInterface configManager = this.getConfigManager();
+                String xmlin = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+
+                //delete new config
+                KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xmlin, KiaBpmConfigFactory.class, true, false);
+                kBpmConfFctry.removeKiaBpmConfig(kieId);
+                String xml = JAXBHelper.marshall(kBpmConfFctry, true, false);
+
+                //load updated config
+                configManager.updateConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM, xml);
+
+            } else {
+                logger.error("Blank Kie ID ", kieId);
+            }
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error deleteing configuration", t);
+        }
     }
 
     private void loadConfigurations() throws ApsSystemException {
@@ -155,9 +189,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public void setKieServerConfiguration(String kiename) throws ApsSystemException {
+    public void setKieServerConfiguration(String kieId) throws ApsSystemException {
         try {
-            config = this.getKieServerConfigurations().get(kiename);
+            config = this.getKieServerConfigurations().get(kieId);
 
         } catch (Throwable t) {
             throw new ApsSystemException("Error in setKieServerConfiguration", t);
@@ -1019,6 +1053,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return config;
     }
 
+    @Override
     public void setConfig(KieBpmConfig config) {
         this.config = config;
     }
@@ -1032,10 +1067,19 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         this.kiaBpmConfigFactory = kiaBpmConfigFactory;
     }
 
+    public IKeyGeneratorManager getKeyGeneratorManager() {
+        return _keyGeneratorManager;
+    }
+
+    public void setKeyGeneratorManager(IKeyGeneratorManager _keyGeneratorManager) {
+        this._keyGeneratorManager = _keyGeneratorManager;
+    }
+
     private KiaBpmConfigFactory kiaBpmConfigFactory;
     protected KieBpmConfig config;
     private ConfigInterface configManager;
     private IKieFormOverrideManager overrideManager;
+    private IKeyGeneratorManager _keyGeneratorManager;
 
     public enum TASK_STATES {
         ACTIVATED("activated"),
