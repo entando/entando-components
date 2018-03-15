@@ -161,7 +161,7 @@
                                 <p>Other features</p>
                                 <div class="checkbox" ng-repeat="extInfo in vm.ui.data.progressBar.additionalInfos track by extInfo.id">
                                     <label>
-                                        <input type="checkbox" ng-value="extInfo" ng-checked="extInfo.default" ng-model="vm.form.additionalSettings[extInfo.id]"
+                                        <input type="checkbox" ng-value="extInfo" ng-checked="extInfo.default ||vm.form.additionalSettings[extInfo.id]" ng-model="vm.form.additionalSettings[extInfo.id]"
                                                ng-true-value="true" ng-false-value="false"> {{extInfo.name}}
                                     </label>
                                 </div>

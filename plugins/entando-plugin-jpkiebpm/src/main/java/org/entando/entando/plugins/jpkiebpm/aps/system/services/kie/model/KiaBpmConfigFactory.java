@@ -57,9 +57,7 @@ public class KiaBpmConfigFactory {
     }
     
     public KieBpmConfig getFirstKiaBpmConfig() {
-        
-        HashMap.Entry<String, KieBpmConfig> entry = this.getKieBpmConfigeMap().entrySet().iterator().next();
-        return entry.getValue();
+        return this.getKieBpmConfigeMap().entrySet().iterator().next().getValue();
     }
     
     public HashMap<String, KieBpmConfig> getKieBpmConfigeMap() {
