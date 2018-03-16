@@ -23,8 +23,12 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
 import org.json.JSONArray;
@@ -127,27 +131,33 @@ public class CaseProgressWidgetHelpers {
         return kieContainetListjs;
     }
 
-    public static JSONArray convertKnowledgeSourceHashMapToJson(HashMap<String, KieBpmConfig> knowledgeSource) {
-        JSONArray knowledgeSourceListJS = new JSONArray();
+//    public static JSONArray convertKnowledgeSourceHashMapToJson(HashMap<String, KieBpmConfig> knowledgeSource) {
+//        JSONArray knowledgeSourceListJS = new JSONArray();
+//
+//        for (String key : knowledgeSource.keySet()) {
+//            JSONObject knowledgeSourceJS = new JSONObject();
+//
+//            knowledgeSourceJS.put("active", knowledgeSource.get(key).getActive());
+//            knowledgeSourceJS.put("id", knowledgeSource.get(key).getId());
+//            knowledgeSourceJS.put("name", knowledgeSource.get(key).getName());
+//            knowledgeSourceJS.put("hostname", knowledgeSource.get(key).getHostname());
+//            knowledgeSourceJS.put("port", knowledgeSource.get(key).getPort());
+//            knowledgeSourceJS.put("username", knowledgeSource.get(key).getUsername());
+//            knowledgeSourceJS.put("password", knowledgeSource.get(key).getPassword());
+//            knowledgeSourceJS.put("schema", knowledgeSource.get(key).getSchema());
+//            knowledgeSourceJS.put("webapp", knowledgeSource.get(key).getWebapp());
+//            knowledgeSourceJS.put("timeout", knowledgeSource.get(key).getTimeoutMsec());
+//            knowledgeSourceJS.put("debug", knowledgeSource.get(key).getDebug());
+//
+//            knowledgeSourceListJS.put(knowledgeSourceJS);
+//
+//        }
+//        return knowledgeSourceListJS;
+//    }
 
-        for (String key : knowledgeSource.keySet()) {
-            JSONObject knowledgeSourceJS = new JSONObject();
-
-            knowledgeSourceJS.put("active", knowledgeSource.get(key).getActive());
-            knowledgeSourceJS.put("id", knowledgeSource.get(key).getId());
-            knowledgeSourceJS.put("name", knowledgeSource.get(key).getName());
-            knowledgeSourceJS.put("hostname", knowledgeSource.get(key).getHostname());
-            knowledgeSourceJS.put("port", knowledgeSource.get(key).getPort());
-            knowledgeSourceJS.put("username", knowledgeSource.get(key).getUsername());
-            knowledgeSourceJS.put("password", knowledgeSource.get(key).getPassword());
-            knowledgeSourceJS.put("schema", knowledgeSource.get(key).getSchema());
-            knowledgeSourceJS.put("webapp", knowledgeSource.get(key).getWebapp());
-            knowledgeSourceJS.put("timeout", knowledgeSource.get(key).getTimeoutMsec());
-            knowledgeSourceJS.put("debug", knowledgeSource.get(key).getDebug());
-
-            knowledgeSourceListJS.put(knowledgeSourceJS);
-
-        }
-        return knowledgeSourceListJS;
+    public static String generateNewUUID() {
+        LocalDateTime currentDateTime = LocalDate.now().atTime(LocalTime.now());
+        String uuid = UUID.randomUUID().toString() + currentDateTime.toString();
+        return uuid;
     }
 }

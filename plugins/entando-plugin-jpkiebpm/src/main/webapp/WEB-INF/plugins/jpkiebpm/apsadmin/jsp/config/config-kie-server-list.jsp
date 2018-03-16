@@ -94,7 +94,6 @@
                         <tr>
                             <th class="text-center table-w-5">Active</th>
                             <th class="text-center table-w-5">Debug</th>
-                            <th class="text-center table-w-5">ID</th>
                             <th class="text-center table-w-5">Name</th>
                             <th class="text-center table-w-5">Hostname</th>
                             <th class="text-center table-w-5">Schema</th>
@@ -140,9 +139,6 @@
                                 </td>
                                 <td class="index text-center">
                                     ${value.debug}
-                                </td>
-                                <td class="index text-center">
-                                    ${value.id}
                                 </td>
                                 <td class="index text-center">
                                     ${value.name}

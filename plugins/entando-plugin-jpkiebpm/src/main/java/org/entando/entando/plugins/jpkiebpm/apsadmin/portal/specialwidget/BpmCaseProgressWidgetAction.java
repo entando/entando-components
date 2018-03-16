@@ -36,13 +36,10 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKieContainerToListToJson;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKnowledgeSourceHashMapToJson;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getContainerIDfromfrontEndMilestonesData;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getKieIDfromfrontEndMilestonesData;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -102,7 +99,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
 
-            this.setKnowledgeSourceJson(convertKnowledgeSourceHashMapToJson(this.getCaseManager().getKieServerConfigurations()).toString());
+            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
 
         } catch (ApsSystemException t) {
@@ -118,7 +115,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
 
-            this.setKnowledgeSourceJson(convertKnowledgeSourceHashMapToJson(this.getCaseManager().getKieServerConfigurations()).toString());
+            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
 
         } catch (ApsSystemException t) {
@@ -134,7 +131,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
 
-            this.setKnowledgeSourceJson(convertKnowledgeSourceHashMapToJson(this.getCaseManager().getKieServerConfigurations()).toString());
+            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
             this.setConfigID(this.getCaseManager().getKieBpmConfig().getId());
         } catch (ApsSystemException t) {
@@ -150,7 +147,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
 
-            this.setKnowledgeSourceJson(convertKnowledgeSourceHashMapToJson(this.getCaseManager().getKieServerConfigurations()).toString());
+            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
             this.setConfigID(this.getCaseManager().getKieBpmConfig().getId());
         } catch (ApsSystemException t) {
@@ -180,7 +177,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
                     //Add if conf exist
                     this.getCaseManager().setKieServerConfiguration(getKieIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
                     this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
-                    this.setKnowledgeSourceJson(convertKnowledgeSourceHashMapToJson(this.getCaseManager().getKieServerConfigurations()).toString());
+                    this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
                     this.setKnowledgeSourcePath(getKieIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
                     this.setProcess(this.getCaseManager().getContainersList());
                     this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
@@ -191,7 +188,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
                 } else {
                     this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
-                    this.setKnowledgeSourceJson(convertKnowledgeSourceHashMapToJson(this.getCaseManager().getKieServerConfigurations()).toString());
+                    this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
                 }
             }
         } catch (ApsSystemException ex) {

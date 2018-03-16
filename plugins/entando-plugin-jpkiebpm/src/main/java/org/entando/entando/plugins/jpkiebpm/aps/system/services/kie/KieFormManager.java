@@ -42,10 +42,10 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.generateNewUUID;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 
 /**
@@ -103,15 +103,15 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     @Override
     public KieBpmConfig addConfig(KieBpmConfig config) throws ApsSystemException {
         try {
-//            if (this.getKeyGeneratorManager() != null) {
-//                System.out.println("Generator: " + this.getKeyGeneratorManager().getUniqueKeyCurrentValue());
-//            }else{
-//                System.out.println("Generator:nulll ");
-//            }
 
             if (null != config) {
-                //generate value for the id
-               // config.setId(String.valueOf(11));
+
+                if (StringUtils.isBlank(config.getId())) {
+                    //generate a unique id by using UUID + current datetime
+                    //and set unique value for the id
+                    String uuid = generateNewUUID();
+                    config.setId(uuid);
+                }
 
                 //Get current config from database
                 ConfigInterface configManager = this.getConfigManager();
@@ -1063,23 +1063,14 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return kiaBpmConfigFactory;
     }
 
-    public void setKiaBpmConfigFactory(KiaBpmConfigFactory _kiaBpmConfigFactory) {
+    public void setKiaBpmConfigFactory(KiaBpmConfigFactory kiaBpmConfigFactory) {
         this.kiaBpmConfigFactory = kiaBpmConfigFactory;
     }
-
-    public IKeyGeneratorManager getKeyGeneratorManager() {
-        return _keyGeneratorManager;
-    }
-
-    public void setKeyGeneratorManager(IKeyGeneratorManager _keyGeneratorManager) {
-        this._keyGeneratorManager = _keyGeneratorManager;
-    }
-
+    
     private KiaBpmConfigFactory kiaBpmConfigFactory;
     protected KieBpmConfig config;
     private ConfigInterface configManager;
     private IKieFormOverrideManager overrideManager;
-    private IKeyGeneratorManager _keyGeneratorManager;
 
     public enum TASK_STATES {
         ACTIVATED("activated"),
