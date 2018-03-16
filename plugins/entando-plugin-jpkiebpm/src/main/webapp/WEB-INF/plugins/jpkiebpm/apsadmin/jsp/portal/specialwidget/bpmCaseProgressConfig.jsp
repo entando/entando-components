@@ -167,7 +167,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" >
                             <table id="sort" class="grid table table-bordered table-hover" ng-show="vm.form.caseDef">
                                 <thead>
                                     <tr>
@@ -198,17 +198,16 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" ng-click="vm.ui.save()" type="button">
+
+                        <!-- Debug info section-->
+                        <!--
+                        <div class="panel panel-info">
+                            <div class="panel-heading" >
+                              <button class="btn btn-sm btn-primary pull-right m-t-n-xs" ng-click="vm.ui.save()" type="button">
                                     <strong>Generate Config</strong>
                                 </button>
                             </div>
-                        </div>
-
-                        <!-- Debug info section-->
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
+                            
                                 <i class="fa fa-bug"></i> DEV INFO (TO BE REMOVED) Widget Configuration Viewer
                             </div>
                             <div class="panel-body">
@@ -222,7 +221,7 @@
                             </div>
 
                         </div>
-
+                        -->
                     </div>
 
                     <!--Please store your JSON output in following hidden input in order to be sent to widget front end-->
@@ -254,28 +253,29 @@
         </div>
 
     </s:form>
-
+    <pre style="display:none;">
     <!--Saved Configurations-->
-    <s:if test="frontEndMilestonesData != null">
-        <s:property value="frontEndMilestonesData" escapeJavaScript="false" escapeHtml="false"/>
-    </s:if>
+        <s:if test="frontEndMilestonesData != null">
+            <s:property value="frontEndMilestonesData" escapeJavaScript="false" escapeHtml="false"/>
+        </s:if>
     <!--Saved Configurations-->
     <!--knowledgeSource value-->
-    <s:if test="configID != null">
-        <s:property value="configID" escapeJavaScript="false" escapeHtml="false"/>
-    </s:if>
+        <s:if test="configID != null">
+            <s:property value="configID" escapeJavaScript="false" escapeHtml="false"/>
+        </s:if>
     <!--/knowledgeSource value-->
 
     <!--kieContainerListJson value-->
-    <s:if test="kieContainerListJson != null">
-        <s:property value="kieContainerListJson" escapeJavaScript="false" escapeHtml="false"/>
-    </s:if>
+        <s:if test="kieContainerListJson != null">
+            <s:property value="kieContainerListJson" escapeJavaScript="false" escapeHtml="false"/>
+        </s:if>
     <!--/kieContainerListJson value-->
     <!--knowledgeSourceJson value-->
-    <s:if test="knowledgeSourceJson != null">
-        <s:property value="knowledgeSourceJson" escapeJavaScript="false" escapeHtml="false"/>
-    </s:if>
+        <s:if test="knowledgeSourceJson != null">
+            <s:property value="knowledgeSourceJson" escapeJavaScript="false" escapeHtml="false"/>
+        </s:if>
     <!--/knowledgeSourceJson value-->
+    </pre>
 </div>
 
 <script type="text/javascript">

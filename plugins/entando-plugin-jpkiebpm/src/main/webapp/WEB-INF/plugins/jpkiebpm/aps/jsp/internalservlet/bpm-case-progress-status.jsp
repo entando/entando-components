@@ -74,19 +74,19 @@
         </s:if>
 
         <!--Select Case Instanse Option-->
+        <%--
         <br />
         Case Definition with Milestones Configurations:
 
         <br />
         <s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="false"/>
 
-<!--                <br />
                 <br />       
-        
+       
                 Case Instance List:
         
-                <br />-->
-        <%--<s:property value="cases" escapeHtml="false" escapeJavaScript="false"/>--%>
+                <br />
+        <s:property value="cases" escapeHtml="false" escapeJavaScript="false"/>
 
                 <br />
                 <br />
@@ -94,8 +94,7 @@
                 <br />
 
         <s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="false"/>
-        <%--<s:property/>--%>
-
+       <s:property/>--%>
 
 
 

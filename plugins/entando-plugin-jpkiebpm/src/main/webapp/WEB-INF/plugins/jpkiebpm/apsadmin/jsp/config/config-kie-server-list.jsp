@@ -5,7 +5,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
 <script src="<wp:resourceURL />administration/js/lodash.js"></script>
-
+<style type="text/css">
+ .card-pf-view .card-pf-item .fa-times {
+    color: #8b0000;
+ }
+</style>
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations" /></li>
     <li><s:text name="breadcrumb.integrations.components" /></li>
@@ -86,115 +90,112 @@
                 </div>
             </s:if>
             <!--Action messages-->
+            <div class="container-fluid container-cards-pf">
+                <div class="row row-cards-pf">
+                    <s:iterator value="knowledgeSource"> 
 
-            <div class="table-responsive overflow-visible">
+                        <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal">
+                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
-                <table id="sort" class="grid table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th class="text-center table-w-5">Active</th>
-                            <th class="text-center table-w-5">Debug</th>
-                            <th class="text-center table-w-5">Name</th>
-                            <th class="text-center table-w-5">Hostname</th>
-                            <th class="text-center table-w-5">Schema</th>
-                            <th class="text-center table-w-5">Port</th>
-                            <th class="text-center table-w-5">Webapp</th>
-                            <th class="text-center table-w-5">Username</th>
-                            <th class="text-center table-w-5">Password</th>
-                            <th class="text-center table-w-5">Timeout</th>
-                            <th class="text-center table-w-5">Test</th>
-                            <th class="text-center table-w-5">Edit</th>
-                            <th class="text-center table-w-5">Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                                <input type="hidden" name="active" id="active" value="${value.active}"/>
+                                <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
+                                <input type="hidden" name="id" id="id" value="${value.id}"/>
+                                <input type="hidden" name="name" id="name" value="${value.name}"/>
+                                <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
+                                <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
+                                <input type="hidden" name="port" id="port" value="${value.port}"/>
+                                <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
+                                <input type="hidden" name="userName" id="userName" value="${value.username}"/>
+                                <input type="hidden" name="password" id="password" value="${value.password}"/>
+                                <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}"/>
+                                <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
+                                    <div class="card-pf-title">
+                                        <div class="dropdown  dropdown-kebab-pf  pull-left">
+                                            <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebab" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="true">
+                                                <span class="fa fa-ellipsis-v"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownKebab">
+                                                <li>
+                                                    <wpsf:submit name="testinlist" type="button" action="testinlist"
+                                                                 cssClass="btn btn-link">
+                                                        <s:text name="TEST" />
+                                                    </wpsf:submit>
+                                                </li>
+                                                <li>             
+                                                    <wpsf:submit name="edit" type="button" action="edit"
+                                                                 cssClass="btn btn-link">
+                                                        <s:text name="EDIT" />
+                                                    </wpsf:submit>
+                                                </li>
+                                                <li>
+                                                    <wpsf:submit name="delete" type="button" action="delete"
+                                                                 cssClass="btn btn-link">
+                                                        <s:text name="REMOVE" />
+                                                    </wpsf:submit>
 
-                        <!--knowledgeSource is HashMap<String, KieBpmConfig>, this can be replaced with angularjs iterator along 
-                         config data in knowledgeSourceStatus json. In order to get the Strut form work, the following are needed:
-                        - form tag
-                        - Action messages (not essential)
-                        - input with same name and id
-                        - submit button with relative action  
-                        -->
-                        <s:iterator value="knowledgeSource"> 
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
 
-                            <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal">
 
-                            <input type="hidden" name="active" id="active" value="${value.active}"/>
-                            <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
-                            <input type="hidden" name="id" id="id" value="${value.id}"/>
-                            <input type="hidden" name="name" id="name" value="${value.name}"/>
-                            <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
-                            <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
-                            <input type="hidden" name="port" id="port" value="${value.port}"/>
-                            <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
-                            <input type="hidden" name="userName" id="userName" value="${value.username}"/>
-                            <input type="hidden" name="password" id="password" value="${value.password}"/>
-                            <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}"/>
-                            <%--<wpsf:textfield type="hidden" name="timeout" id="timeout" cssClass="form-control" />--%>
+                                    <div class="card-pf-body">
+                                        <div class="card-pf-top-element">
+                                            <span class="fa fa-server card-pf-icon-circle"></span>
+                                        </div>
+                                        <h3 class="card-pf-title text-center">
+                                            <b>SERVER</b>
+                                            <br>${value.name}
+                                        </h3>
+                                        <div class="card-pf-items text-center">
+                                            <div class="card-pf-item">
 
-                            <tr>
-                                <td class="index text-center">
-                                    ${value.active}
-                                </td>
-                                <td class="index text-center">
-                                    ${value.debug}
-                                </td>
-                                <td class="index text-center">
-                                    ${value.name}
-                                </td>
-                                <td class="index text-center">
-                                    ${value.hostname}
-                                </td>
-                                <td class="index text-center">
-                                    ${value.schema}
-                                </td>
-                                <td class="index text-center">
-                                    ${value.port}
-                                </td>
-                                <td class="index text-center">
-                                    ${value.webapp}
-                                </td>
-                                <td class="index text-center">
-                                    ${value.username}
-                                </td>
-                                <td class="index text-center">
-                                    ${value.password}
-                                </td>
-                                <td class="index text-center">
-                                    ${value.timeoutMsec}
-                                </td>
+                                                <strong>Status</strong>
+                                                </span>
+                                            </div>
+                                            <div class="card-pf-item">
 
-                                <td class="index text-center">
-                                    <wpsf:submit name="testinlist" type="button" action="testinlist"
-                                                 cssClass="btn btn-primary pull-right">
-                                        <s:text name="Test" />
-                                    </wpsf:submit>
-                                </td>
-                                <td class="index text-center">
-                                    <wpsf:submit name="edit" type="button" action="edit"
-                                                 cssClass="btn btn-primary pull-right">
-                                        <s:text name="Edit" />
-                                    </wpsf:submit>
-                                </td>
-                                <td class="index text-center">
-                                    <wpsf:submit name="delete" type="button" action="delete"
-                                                 cssClass="btn btn-primary pull-right">
-                                        <s:text name="Delete" />
-                                    </wpsf:submit>
-                                </td>
-                            </tr>
+                                                <s:if test="value.active">
+                                                    <span class="fa fa-check"></span>
+                                                </s:if>
+                                                <s:else>
+                                                    <span class="fafa-times"></span>
+                                                </s:else>
+                                            </div>
+                                        </div>
+                                            <%--<p class="card-pf-info text-center">
+                                            <strong>ID </strong>${value.id}</p>--%>
+                                        <p class="card-pf-info text-center">
+                                            <strong>Debug</strong>  <s:if test="value.debug">
+                                                   Active
+                                                </s:if>
+                                                <s:else>
+                                                   Disabled
+                                                </s:else>
+                                        </p>
+                                        <p class="card-pf-info text-center">
+                                            <strong>Version</strong> WIP
+                                        </p>
+                                       <%--<p class="card-pf-info text-center">
+
+                                            <strong>Connection Timeout</strong> ${value.timeoutMsec}
+                                        </p>--%>
+                                        <p class="card-pf-info text-center">
+
+                                            <strong>Address</strong>
+                                            ${value.schema}://${value.hostname}:${value.port}/${value.webapp}
+                                        </p>
+                                    </div>
+                                </div>
+
+
+                            </div>
                         </s:form>
                     </s:iterator>
+                </div>
 
-                    </tbody>
-                </table>
 
-                <style>
-                    .ui-sortable-helper {
-                        display: table;
-                    }
-                </style>
             </div>
             <a href="<s:url action="addConf" namespace="/do/jpkiebpm/Config" />" class="btn btn-primary pull-right"> 
                 <s:text name="Add Configuration" />
