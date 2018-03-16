@@ -5,10 +5,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
 <script src="<wp:resourceURL />administration/js/lodash.js"></script>
+<script src="<wp:resourceURL />plugins/jpkiebpm/administration/js/jbpm-servers-config.js"></script>
 <style type="text/css">
- .card-pf-view .card-pf-item .fa-times {
-    color: #8b0000;
- }
+    .card-pf-view .card-pf-item .fa-times {
+        color: #8b0000;
+    }
 </style>
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations" /></li>
@@ -53,7 +54,7 @@
 
 
 <!-- Tab panes -->
-<div class="tab-content margin-large-bottom">
+<div class="tab-content margin-large-bottom" >
     <div class="tab-pane active" id="frag-list">
 
         <div class="col-xs-12 mb-20">                               
@@ -89,133 +90,130 @@
                     </ul>
                 </div>
             </s:if>
-            <!--Action messages-->
-            <div class="container-fluid container-cards-pf">
+
+
+
+            <div class="container-fluid container-cards-pf"  ng-controller="CaseServersController as vm" ng-app="caseServersApp">
                 <div class="row row-cards-pf">
-                    <s:iterator value="knowledgeSource"> 
 
-                        <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal">
-                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
-                                <input type="hidden" name="active" id="active" value="${value.active}"/>
-                                <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
-                                <input type="hidden" name="id" id="id" value="${value.id}"/>
-                                <input type="hidden" name="name" id="name" value="${value.name}"/>
-                                <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
-                                <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
-                                <input type="hidden" name="port" id="port" value="${value.port}"/>
-                                <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
-                                <input type="hidden" name="userName" id="userName" value="${value.username}"/>
-                                <input type="hidden" name="password" id="password" value="${value.password}"/>
-                                <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}"/>
-                                <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
-                                    <div class="card-pf-title">
-                                        <div class="dropdown  dropdown-kebab-pf  pull-left">
-                                            <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebab" data-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="true">
-                                                <span class="fa fa-ellipsis-v"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownKebab">
-                                                <li>
-                                                    <wpsf:submit name="testinlist" type="button" action="testinlist"
-                                                                 cssClass="btn btn-link">
-                                                        <s:text name="TEST" />
-                                                    </wpsf:submit>
-                                                </li>
-                                                <li>             
-                                                    <wpsf:submit name="edit" type="button" action="edit"
-                                                                 cssClass="btn btn-link">
-                                                        <s:text name="EDIT" />
-                                                    </wpsf:submit>
-                                                </li>
-                                                <li>
-                                                    <wpsf:submit name="delete" type="button" action="delete"
-                                                                 cssClass="btn btn-link">
-                                                        <s:text name="REMOVE" />
-                                                    </wpsf:submit>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" ng-repeat="ks in vm.data.servers track by ks.id">
 
-                                                </li>
-                                            </ul>
-                                        </div>
+
+                        <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
+                            <div class="card-pf-title">
+                                <div class="dropdown  dropdown-kebab-pf  pull-left">
+                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebab" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="true">
+                                        <span class="fa fa-ellipsis-v"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownKebab" >
+                                        <ng-include src="vm.ui.getForm(ks)"></ng-include>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="card-pf-body">
+                                <div class="card-pf-top-element">
+                                    <span class="fa fa-server card-pf-icon-circle"></span>
+                                </div>
+                                <h3 class="card-pf-title">
+                                    <b>SERVER</b>
+                                    <br>{{ks.name}}
+                                </h3>
+                                <div class="card-pf-items">
+                                    <div class="card-pf-item">
+
+                                        <strong>Status</strong>
+                                        </span>
                                     </div>
-
-
-                                    <div class="card-pf-body">
-                                        <div class="card-pf-top-element">
-                                            <span class="fa fa-server card-pf-icon-circle"></span>
-                                        </div>
-                                        <h3 class="card-pf-title text-center">
-                                            <b>SERVER</b>
-                                            <br>${value.name}
-                                        </h3>
-                                        <div class="card-pf-items text-center">
-                                            <div class="card-pf-item">
-
-                                                <strong>Status</strong>
-                                                </span>
-                                            </div>
-                                            <div class="card-pf-item">
-
-                                                <s:if test="value.active">
-                                                    <span class="fa fa-check"></span>
-                                                </s:if>
-                                                <s:else>
-                                                    <span class="fafa-times"></span>
-                                                </s:else>
-                                            </div>
-                                        </div>
-                                            <%--<p class="card-pf-info text-center">
-                                            <strong>ID </strong>${value.id}</p>--%>
-                                        <p class="card-pf-info text-center">
-                                            <strong>Debug</strong>  <s:if test="value.debug">
-                                                   Active
-                                                </s:if>
-                                                <s:else>
-                                                   Disabled
-                                                </s:else>
-                                        </p>
-                                        <p class="card-pf-info text-center">
-                                            <strong>Version</strong> WIP
-                                        </p>
-                                       <%--<p class="card-pf-info text-center">
+                                    <div class="card-pf-item">
+                                        <span class="fa" ng-class="{'fa-check':ks.config.active , 'fa-times': !ks.config.active }"></span>
+                                    </div>
+                                </div>
+                                <%--<p class="card-pf-info text-center">
+                                <strong>ID </strong>${value.id}</p>--%>
+                                <p class="card-pf-info">
+                                    <strong>Debug</strong>  {{ks.config.debug ? "Active" : "Disabled"}}
+                                </p>
+                                <p class="card-pf-info text-center">
+                                    <strong>Version</strong> {{ks.status.result['kie-server-info'].version}}
+                                </p>
+                                <%--<p class="card-pf-info text-center">
 
                                             <strong>Connection Timeout</strong> ${value.timeoutMsec}
                                         </p>--%>
-                                        <p class="card-pf-info text-center">
+                                <p class="card-pf-info">
 
-                                            <strong>Address</strong>
-                                            ${value.schema}://${value.hostname}:${value.port}/${value.webapp}
-                                        </p>
-                                    </div>
-                                </div>
-
-
+                                    <strong>Address</strong>{{ks.config.schema+"://" + ks.config.hostname+":"+ks.config.port+"/"+ks.config.webapp}}
+                                </p>
                             </div>
-                        </s:form>
-                    </s:iterator>
-                </div>
+                        </div>
 
+
+                    </div>
+
+                </div>
+                <!--Action messages-->
+                <s:iterator value="knowledgeSource"> 
+
+
+                    <script type="text/ng-template" id="srv-${value.id}">
+                        <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal" >
+                            <input type="hidden" name="active" id="active" value="${value.active}"/>
+                            <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
+                            <input type="hidden" name="id" id="id" value="${value.id}"/>
+                            <input type="hidden" name="name" id="name" value="${value.name}"/>
+                            <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
+                            <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
+                            <input type="hidden" name="port" id="port" value="${value.port}"/>
+                            <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
+                            <input type="hidden" name="userName" id="userName" value="${value.username}"/>
+                            <input type="hidden" name="password" id="password" value="${value.password}"/>
+                            <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}"/>
+                            <li>
+                            <wpsf:submit name="testinlist" type="button" action="testinlist"
+                                         cssClass="btn btn-link">
+                                <s:text name="TEST" />
+                            </wpsf:submit>
+                            </li>
+                            <li>             
+                            <wpsf:submit name="edit" type="button" action="edit"
+                                         cssClass="btn btn-link">
+                                <s:text name="EDIT" />
+                            </wpsf:submit>
+                            </li>
+                            <li>
+                            <wpsf:submit name="delete" type="button" action="delete"
+                                         cssClass="btn btn-link">
+                                <s:text name="REMOVE" />
+                            </wpsf:submit>
+
+                            </li>
+                        </s:form>
+                    </script>
+
+                </s:iterator>
 
             </div>
             <a href="<s:url action="addConf" namespace="/do/jpkiebpm/Config" />" class="btn btn-primary pull-right"> 
                 <s:text name="Add Configuration" />
             </a>
         </div>
-        <div class="col-xs-12 mb-20">
-            <br />
-            <br />
-            <br />
-            <h3>Server Status</h3>
-            <s:property value="knowledgeSourceStatus" escapeHtml="false" escapeJavaScript="false"/>
-
-        </div>
-        <div class="col-xs-12 mb-20">
-        </div>
-    </div>
-    <div class="col-xs-12">
     </div>
 </div>
 
 <div class="tab-pane" id="frag-settings">
 </div>
 </div>
+<script type="text/javascript">
+
+
+    <s:if test="knowledgeSourceStatus != null">
+    var knowledgeSourceStatus = <s:property value="knowledgeSourceStatus" escapeJavaScript="false" escapeHtml="false"/>;
+    bootBpmComponent(knowledgeSourceStatus);
+    </s:if>
+
+
+</script>
