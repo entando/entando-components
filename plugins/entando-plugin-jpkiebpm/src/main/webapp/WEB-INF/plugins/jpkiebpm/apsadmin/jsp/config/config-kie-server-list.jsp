@@ -149,6 +149,16 @@
                                     <strong>Address</strong>{{ks.config.schema+"://" + ks.config.hostname+":"+ks.config.port+"/"+ks.config.webapp}}
                                 </p>
                             </div>
+                            <hr>
+                            <div class="card-pf-body">
+                                <strong>Capabilities</strong>
+                                <p class="card-pf-info" ng-if="ks.status">
+                                    <span ng-repeat="capability in ks.status.result['kie-server-info'].capabilities" class="label label-default" style="display:inline-block; padding-top:0; padding-bottom:0; line-height:1.5em;margin-right: 2px;">{{capability}}</span>
+                               </p>
+                                    
+                                </div>
+                                    
+                            </div>
                         </div>
 
 
