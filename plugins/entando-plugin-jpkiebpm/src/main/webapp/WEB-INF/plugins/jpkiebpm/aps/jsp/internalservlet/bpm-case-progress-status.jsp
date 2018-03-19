@@ -13,9 +13,6 @@
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        <h1>Hello BPMS World!</h1>
-        <br />
-
         <!--Select Case Instanse Option-->
         <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/selectCaseInstance.action"/>" method="post" class="form-horizontal">
             <div class="form-horizontal">
