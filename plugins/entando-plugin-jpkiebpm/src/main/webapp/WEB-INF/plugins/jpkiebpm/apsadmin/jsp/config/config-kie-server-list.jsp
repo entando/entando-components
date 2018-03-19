@@ -113,12 +113,12 @@
 
                         <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
                             <div class="card-pf-title">
-                                <div class="dropdown  dropdown-kebab-pf  pull-left">
+                                <div class="dropdown pull-right dropdown-kebab-pf">
                                     <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebab" data-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="true">
                                         <span class="fa fa-ellipsis-v"></span>
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownKebab" >
+                                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebab" >
                                         <ng-include src="vm.ui.getForm(ks)"></ng-include>
                                     </ul>
                                 </div>
@@ -174,48 +174,48 @@
 
 
                 </div>
+  <!--Action messages-->
+  <s:iterator value="knowledgeSource"> 
 
+
+    <script type="text/ng-template" id="srv-${value.id}">
+        <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal" >
+            <input type="hidden" name="active" id="active" value="${value.active}"/>
+            <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
+            <input type="hidden" name="id" id="id" value="${value.id}"/>
+            <input type="hidden" name="name" id="name" value="${value.name}"/>
+            <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
+            <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
+            <input type="hidden" name="port" id="port" value="${value.port}"/>
+            <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
+            <input type="hidden" name="userName" id="userName" value="${value.username}"/>
+            <input type="hidden" name="password" id="password" value="${value.password}"/>
+            <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}"/>
+            <li>
+            <wpsf:submit name="testinlist" type="button" action="testinlist"
+                         cssClass="btn btn-link">
+                <s:text name="TEST" />
+            </wpsf:submit>
+            </li>
+            <li>             
+            <wpsf:submit name="edit" type="button" action="edit"
+                         cssClass="btn btn-link">
+                <s:text name="EDIT" />
+            </wpsf:submit>
+            </li>
+            <li>
+            <wpsf:submit name="delete" type="button" action="delete"
+                         cssClass="btn btn-link">
+                <s:text name="REMOVE" />
+            </wpsf:submit>
+
+            </li>
+        </s:form>
+        </script>
+
+    </s:iterator>
             </div>
-            <!--Action messages-->
-            <s:iterator value="knowledgeSource"> 
-
-
-                <script type="text/ng-template" id="srv-${value.id}">
-                    <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal" >
-                        <input type="hidden" name="active" id="active" value="${value.active}"/>
-                        <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
-                        <input type="hidden" name="id" id="id" value="${value.id}"/>
-                        <input type="hidden" name="name" id="name" value="${value.name}"/>
-                        <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
-                        <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
-                        <input type="hidden" name="port" id="port" value="${value.port}"/>
-                        <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
-                        <input type="hidden" name="userName" id="userName" value="${value.username}"/>
-                        <input type="hidden" name="password" id="password" value="${value.password}"/>
-                        <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}"/>
-                        <li>
-                        <wpsf:submit name="testinlist" type="button" action="testinlist"
-                                     cssClass="btn btn-link">
-                            <s:text name="TEST" />
-                        </wpsf:submit>
-                        </li>
-                        <li>             
-                        <wpsf:submit name="edit" type="button" action="edit"
-                                     cssClass="btn btn-link">
-                            <s:text name="EDIT" />
-                        </wpsf:submit>
-                        </li>
-                        <li>
-                        <wpsf:submit name="delete" type="button" action="delete"
-                                     cssClass="btn btn-link">
-                            <s:text name="REMOVE" />
-                        </wpsf:submit>
-
-                        </li>
-                    </s:form>
-                    </script>
-
-                </s:iterator>
+          
 
             </div>
 

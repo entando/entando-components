@@ -68,9 +68,12 @@ var bootBpmComponent = (function ngApp(serverList) {
     }
 
     function BpmService($http, $q) {
+        
         this.data = {
             servers: getServersList,
         }
+
+        
         function getServersList() {
             //Entando data injection
             var promise = $q(
