@@ -26,10 +26,8 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -154,10 +152,11 @@ public class CaseProgressWidgetHelpers {
 //        }
 //        return knowledgeSourceListJS;
 //    }
-
     public static String generateNewUUID() {
         LocalDateTime currentDateTime = LocalDate.now().atTime(LocalTime.now());
+//        String uuid = UUID.randomUUID().toString().replace("-", "").replace(":", "").replace(".", "");
         String uuid = UUID.randomUUID().toString() + currentDateTime.toString();
+        uuid = uuid.replace("-", "").replace(":", "").replace(".", "").replace("{", "").replace("}", "");
         return uuid;
     }
 }

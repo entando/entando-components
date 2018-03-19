@@ -122,6 +122,44 @@ public class KieBpmConfigAction extends BaseAction {
         return SUCCESS;
     }
 
+    public String testall() {
+        try {
+
+            JSONArray output = new JSONArray();
+
+            HashMap<String, KieBpmConfig> ServerConfigurations = this.getCaseManager().getKieServerConfigurations();
+
+            for (String key : ServerConfigurations.keySet()) {
+
+                this.getCaseManager().setKieBpmConfig(ServerConfigurations.get(key));
+
+                JSONObject serverJS = new JSONObject();
+
+                serverJS.put("kie-server-id", key);
+
+                try {
+                    this.getCaseManager().getContainersList();
+                    serverJS.put("passed", true);
+
+                } catch (Throwable t) {
+                    _logger.error("Configuration test failed!", t);
+                    serverJS.put("passed", false);
+                }
+
+                output.put(serverJS);
+            }
+            this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
+            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
+
+            this.addActionMessage(this.getText("message.config.test.success"));
+            this.setKnowledgeSourceTestAllResult(output.toString());
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "testall");
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+
     public String delete() {
         try {
 
@@ -293,6 +331,14 @@ public class KieBpmConfigAction extends BaseAction {
         this.knowledgeSourceStatus = knowledgeSourceStatus;
     }
 
+    public String getKnowledgeSourceTestAllResult() {
+        return knowledgeSourceTestAllResult;
+    }
+
+    public void setKnowledgeSourceTestAllResult(String knowledgeSourceTestAllResult) {
+        this.knowledgeSourceTestAllResult = knowledgeSourceTestAllResult;
+    }
+
     private IKieFormManager _formManager;
     private CaseManager caseManager;
 
@@ -310,5 +356,6 @@ public class KieBpmConfigAction extends BaseAction {
 
     private HashMap<String, KieBpmConfig> knowledgeSource;
     private String knowledgeSourceStatus;
+    private String knowledgeSourceTestAllResult;
 ;
 }

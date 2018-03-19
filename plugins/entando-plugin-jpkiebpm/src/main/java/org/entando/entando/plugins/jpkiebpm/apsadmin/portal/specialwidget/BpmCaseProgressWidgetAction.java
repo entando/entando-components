@@ -76,18 +76,19 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
     @Override
     public String save() {
+        
         String result = super.save();
         Widget widget = this.createNewWidget();
-
+        
         try {
             if (widget != null) {
                 widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
             } else {
                 logger.error("Null widget");
-                return INPUT;
+               // return INPUT;
             }
         } catch (Throwable t) {
-            logger.error("error in save", t);
+            logger.error("error in save ", t);
             return FAILURE;
         }
         return result;

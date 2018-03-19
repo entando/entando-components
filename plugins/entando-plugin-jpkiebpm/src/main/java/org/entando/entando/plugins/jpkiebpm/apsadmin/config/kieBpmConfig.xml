@@ -47,6 +47,13 @@
             </interceptor-ref>
         </action>
         
+        <action name="testall" class="jpkiebpmConfigAction" method="testall">
+            <result type="tiles">admin.jpkiebpm.config.list</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+        
         <action name="edit" class="jpkiebpmConfigAction" method="edit">
             <result name="input" type="tiles">admin.jpkiebpm.config.list</result>
             <result type="chain">add</result>

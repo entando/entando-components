@@ -52,13 +52,25 @@
 </div>
 <br/>
 
-
 <!-- Tab panes -->
 <div class="tab-content margin-large-bottom" >
     <div class="tab-pane active" id="frag-list">
 
-        <div class="col-xs-12 mb-20">                               
+        <div class="col-xs-12 mb-20">
 
+            <div class="form-group">
+                <div class="col-xs-6">
+                    <a href="<s:url action="testall" namespace="/do/jpkiebpm/Config" />" class="btn btn-warning"> 
+                        <s:text name="Test All" />
+                    </a>
+                </div>
+                <div class="col-xs-6">
+                    <a href="<s:url action="addConf" namespace="/do/jpkiebpm/Config" />" class="btn btn-primary pull-right"> 
+                        <s:text name="Add Configuration" />
+                    </a>
+                </div>
+            </div>
+            <br />
             <!--Action messages-->
             <s:if test="hasActionErrors()">
                 <div class="alert alert-danger alert-dismissable">
@@ -90,7 +102,6 @@
                     </ul>
                 </div>
             </s:if>
-
 
 
             <div class="container-fluid container-cards-pf"  ng-controller="CaseServersController as vm" ng-app="caseServersApp">
@@ -154,76 +165,77 @@
                                 <strong>Capabilities</strong>
                                 <p class="card-pf-info" ng-if="ks.status">
                                     <span ng-repeat="capability in ks.status.result['kie-server-info'].capabilities" class="label label-default" style="display:inline-block; padding-top:0; padding-bottom:0; line-height:1.5em;margin-right: 2px;">{{capability}}</span>
-                               </p>
-                                    
-                                </div>
-                                    
+                                </p>
+
                             </div>
+
                         </div>
-
-
                     </div>
 
+
                 </div>
-                <!--Action messages-->
-                <s:iterator value="knowledgeSource"> 
+
+            </div>
+            <!--Action messages-->
+            <s:iterator value="knowledgeSource"> 
 
 
-                    <script type="text/ng-template" id="srv-${value.id}">
-                        <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal" >
-                            <input type="hidden" name="active" id="active" value="${value.active}"/>
-                            <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
-                            <input type="hidden" name="id" id="id" value="${value.id}"/>
-                            <input type="hidden" name="name" id="name" value="${value.name}"/>
-                            <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
-                            <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
-                            <input type="hidden" name="port" id="port" value="${value.port}"/>
-                            <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
-                            <input type="hidden" name="userName" id="userName" value="${value.username}"/>
-                            <input type="hidden" name="password" id="password" value="${value.password}"/>
-                            <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}"/>
-                            <li>
-                            <wpsf:submit name="testinlist" type="button" action="testinlist"
-                                         cssClass="btn btn-link">
-                                <s:text name="TEST" />
-                            </wpsf:submit>
-                            </li>
-                            <li>             
-                            <wpsf:submit name="edit" type="button" action="edit"
-                                         cssClass="btn btn-link">
-                                <s:text name="EDIT" />
-                            </wpsf:submit>
-                            </li>
-                            <li>
-                            <wpsf:submit name="delete" type="button" action="delete"
-                                         cssClass="btn btn-link">
-                                <s:text name="REMOVE" />
-                            </wpsf:submit>
+                <script type="text/ng-template" id="srv-${value.id}">
+                    <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal" >
+                        <input type="hidden" name="active" id="active" value="${value.active}"/>
+                        <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
+                        <input type="hidden" name="id" id="id" value="${value.id}"/>
+                        <input type="hidden" name="name" id="name" value="${value.name}"/>
+                        <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
+                        <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
+                        <input type="hidden" name="port" id="port" value="${value.port}"/>
+                        <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
+                        <input type="hidden" name="userName" id="userName" value="${value.username}"/>
+                        <input type="hidden" name="password" id="password" value="${value.password}"/>
+                        <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}"/>
+                        <li>
+                        <wpsf:submit name="testinlist" type="button" action="testinlist"
+                                     cssClass="btn btn-link">
+                            <s:text name="TEST" />
+                        </wpsf:submit>
+                        </li>
+                        <li>             
+                        <wpsf:submit name="edit" type="button" action="edit"
+                                     cssClass="btn btn-link">
+                            <s:text name="EDIT" />
+                        </wpsf:submit>
+                        </li>
+                        <li>
+                        <wpsf:submit name="delete" type="button" action="delete"
+                                     cssClass="btn btn-link">
+                            <s:text name="REMOVE" />
+                        </wpsf:submit>
 
-                            </li>
-                        </s:form>
+                        </li>
+                    </s:form>
                     </script>
 
                 </s:iterator>
 
             </div>
-            <a href="<s:url action="addConf" namespace="/do/jpkiebpm/Config" />" class="btn btn-primary pull-right"> 
-                <s:text name="Add Configuration" />
-            </a>
+
+            <br />
+            <br />
+            <s:if test="knowledgeSourceTestAllResult != null">
+                <s:property value="knowledgeSourceTestAllResult" escapeJavaScript="false" escapeHtml="false"/>;
+            </s:if>
         </div>
     </div>
-</div>
 
-<div class="tab-pane" id="frag-settings">
-</div>
-</div>
-<script type="text/javascript">
+    <div class="tab-pane" id="frag-settings">
+    </div>
+    <script type="text/javascript">
 
 
-    <s:if test="knowledgeSourceStatus != null">
-    var knowledgeSourceStatus = <s:property value="knowledgeSourceStatus" escapeJavaScript="false" escapeHtml="false"/>;
-    bootBpmComponent(knowledgeSourceStatus);
-    </s:if>
+        <s:if test="knowledgeSourceStatus != null">
+        var knowledgeSourceStatus = <s:property value="knowledgeSourceStatus" escapeJavaScript="false" escapeHtml="false"/>;
+        bootBpmComponent(knowledgeSourceStatus);
+        </s:if>
 
 
-</script>
+    </script>
