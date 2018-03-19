@@ -22,9 +22,8 @@
  * THE SOFTWARE.
  */
 
-var bootBpmComponent = (function ngApp(serverList) {
+var bootBpmComponent = (function ngApp(serverList, allServerTest) {
     'use strict';
-
     angular.module('caseServersApp', [])
             .controller('CaseServersController', CaseServersController)
             .service("BpmService", BpmService)
@@ -34,46 +33,59 @@ var bootBpmComponent = (function ngApp(serverList) {
                     };
                 }]);
     ;
-
-    function CaseServersController($filter, $log,$sce, BpmService) {
+    function CaseServersController($filter, $log, $sce, BpmService) {
 
         var vm = this;
-        var formIDFix ={};
-        vm.ui={
-            getForm: function getFormID(ks){
-                if(!formIDFix[ks.id]){
-                    formIDFix[ks.id]=$sce.trustAsResourceUrl('srv-'+ks.id);
-                }
-                return formIDFix[ks.id];
-            }
+        var formIDFix = {};
+        vm.ui = {
+            getForm: getFormID,
+            connectionTest: connectionTest
         }
 
         vm.data = {
-            servers: []
+            servers: [],
+            healtCheck: {}
+
         };
+
+        function connectionTest(ks) {
+            if (vm.data.healtCheck) {
+                var hcData = $filter('filter')(vm.data.healtCheck, {"kie-server-id": ks.id}, true);
+
+                return hcData.length === 1 ? hcData[0] : undefined;
+            }
+        }
+
+        function getFormID(ks) {
+            if (!formIDFix[ks.id]) {
+                formIDFix[ks.id] = $sce.trustAsResourceUrl('srv-' + ks.id);
+            }
+            return formIDFix[ks.id];
+        }
 
         //init function  
         function init() {
             BpmService.data.servers().then(function (servers) {
-
                 vm.data.servers = servers;
             });
 
-
+            BpmService.util.healthCheck().then(function (hc) {
+                vm.data.healtCheck = hc;
+            });
         }
 
         init();
-
-
     }
 
     function BpmService($http, $q) {
-        
+
         this.data = {
-            servers: getServersList,
+            servers: getServersList
+        }
+        this.util = {
+            healthCheck: execHealthCheck
         }
 
-        
         function getServersList() {
             //Entando data injection
             var promise = $q(
@@ -81,13 +93,21 @@ var bootBpmComponent = (function ngApp(serverList) {
                         resolve(serverList);
                     });
             return promise;
-
             /*
              return $http.get('/mocks/caseInstanceDef.json').then(
              function (res) {
              return res.data;
              }
              )*/
+        }
+
+
+        function execHealthCheck() {
+            var promise = $q(
+                    function healtCheck(resolve, reject) {
+                        resolve(allServerTest);
+                    });
+            return promise;
         }
     }
 });
