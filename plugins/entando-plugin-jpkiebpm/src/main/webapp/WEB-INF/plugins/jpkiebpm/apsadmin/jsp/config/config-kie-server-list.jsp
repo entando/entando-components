@@ -133,7 +133,7 @@
                                     <b>SERVER</b>
                                     <br>{{ks.name}}
                                 </h3>
-                                
+
                                 <div class="card-pf-items" ng-init="hc = vm.ui.connectionTest(ks)" ng-show="hc">
                                     <div class="card-pf-item">
 
@@ -232,6 +232,9 @@
 
         <br />
         <br />
+        <s:if test="knowledgeSourceTestAllResult != null">
+            <s:property value="knowledgeSourceTestAllResult" escapeJavaScript="false" escapeHtml="false"/>
+        </s:if>
 
     </div>
 </div>
@@ -242,14 +245,14 @@
 
     var allServerTest = undefined;
     <s:if test="knowledgeSourceTestAllResult != null">
-        allServerTest = <s:property value="knowledgeSourceTestAllResult" escapeJavaScript="false" escapeHtml="false"/>;
+    allServerTest = <s:property value="knowledgeSourceTestAllResult" escapeJavaScript="false" escapeHtml="false"/>;
     </s:if>
 
 
 
     <s:if test="knowledgeSourceStatus != null">
     var knowledgeSourceStatus = <s:property value="knowledgeSourceStatus" escapeJavaScript="false" escapeHtml="false"/>;
-    bootBpmComponent(knowledgeSourceStatus,allServerTest);
+    bootBpmComponent(knowledgeSourceStatus, allServerTest);
     </s:if>
 
 

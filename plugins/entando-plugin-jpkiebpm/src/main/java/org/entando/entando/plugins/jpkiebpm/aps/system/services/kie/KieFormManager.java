@@ -56,14 +56,12 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
 
     @Override
-    public void init() throws Exception {
-        try {
-            loadConfigurations();
-//            loadConfig();
-            logger.info("{} ready, enabled: {}", this.getClass().getName(), config.getActive());
-        } catch (ApsSystemException t) {
-            logger.error("{} Manager: Error on initialization", this.getClass().getName(), t);
-        }
+    public void init() {
+        //leaving the default config object null
+
+//        loadConfigurations();
+//        loadConfig();
+//        logger.info("{} ready, enabled: {}", this.getClass().getName());
     }
 
     private void loadConfig() throws ApsSystemException {
@@ -85,6 +83,21 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
     }
 
+    private void loadConfigurations() throws ApsSystemException {
+        try {
+            ConfigInterface configManager = this.getConfigManager();
+
+            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+            KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
+
+            //get the first entry in database
+            config = kBpmConfFctry.getFirstKiaBpmConfig();
+//            _config = (KieBpmConfig) JAXBHelper.unmarshall(xml, KieBpmConfig.class, true, false);
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error in loadConfigurations", t);
+        }
+    }
+
     @Override
     public KieBpmConfig updateConfig(KieBpmConfig config) throws ApsSystemException {
         try {
@@ -101,7 +114,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public KieBpmConfig addConfig(KieBpmConfig config) throws ApsSystemException {
+    public void addConfig(KieBpmConfig config) throws ApsSystemException {
         try {
 
             if (null != config) {
@@ -130,7 +143,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         } catch (Throwable t) {
             throw new ApsSystemException("Error adding configuration", t);
         }
-        return config;
     }
 
     @Override
@@ -155,21 +167,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             }
         } catch (Throwable t) {
             throw new ApsSystemException("Error deleteing configuration", t);
-        }
-    }
-
-    private void loadConfigurations() throws ApsSystemException {
-        try {
-            ConfigInterface configManager = this.getConfigManager();
-
-            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
-            KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
-
-            //get the first entry in database
-            config = kBpmConfFctry.getFirstKiaBpmConfig();
-//            _config = (KieBpmConfig) JAXBHelper.unmarshall(xml, KieBpmConfig.class, true, false);
-        } catch (Throwable t) {
-            throw new ApsSystemException("Error in loadConfigurations", t);
         }
     }
 
@@ -1066,7 +1063,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public void setKiaBpmConfigFactory(KiaBpmConfigFactory kiaBpmConfigFactory) {
         this.kiaBpmConfigFactory = kiaBpmConfigFactory;
     }
-    
+
     private KiaBpmConfigFactory kiaBpmConfigFactory;
     protected KieBpmConfig config;
     private ConfigInterface configManager;

@@ -79,21 +79,21 @@
                         <label class="control-label col-xs-4" for="knowledgeSource">
                             <s:text name="knowledgeSource"/>
                         </label>
-                        <div class="col-xs-6">
+                        <div class="col-xs-4">
                             <s:select list="knowledgeSource" id="knowledgeSourcePath" name="knowledgeSourcePath"  
                                       listKey="value.id"
                                       listValue="value.name">
                             </s:select>
                         </div>
                         <s:if test="#isknowledgeSourcePathSetted">
-                            <div class="col-xs-2">
-                                <wpsf:submit action="changeKnowledgeSourceForm" value="%{getText('label.changeForm')}"
+                            <div class="col-xs-4">
+                                <wpsf:submit action="changeKnowledgeSourceForm" value="Change Knowledge Source"
                                              cssClass="btn btn-warning"/>
                             </div>
                         </s:if>
                         <s:else>
-                            <div class="col-xs-2">
-                                <wpsf:submit action="chooseKnowledgeSourceForm" value="%{getText('label.chooseForm')}"
+                            <div class="col-xs-4">
+                                <wpsf:submit action="chooseKnowledgeSourceForm" value="Choose Knowledge Source"
                                              cssClass="btn btn-success"/>
                             </div>
                         </s:else>
@@ -107,7 +107,7 @@
                             <label class="control-label col-xs-4" for="processPath">
                                 knowledgeSource/Container ID
                             </label>
-                            <div class="col-xs-6">
+                            <div class="col-xs-4">
                                 <s:select list="process" id="processPath" name="processPath"  
                                           listKey="containerId"
                                           listValue="containerId">
@@ -115,14 +115,14 @@
                             </div>
 
                             <s:if test="#isProcessPathSetted">
-                                <div class="col-xs-2">
-                                    <wpsf:submit action="changeForm" value="%{getText('label.changeForm')}"
+                                <div class="col-xs-4">
+                                    <wpsf:submit action="changeForm" value="Change Container"
                                                  cssClass="btn btn-warning"/>
                                 </div>
                             </s:if>
                             <s:else>
-                                <div class="col-xs-2">
-                                    <wpsf:submit action="chooseForm" value="%{getText('label.chooseForm')}"
+                                <div class="col-xs-4">
+                                    <wpsf:submit action="chooseForm" value="Choose Container"
                                                  cssClass="btn btn-success"/>
                                 </div>
                             </s:else>

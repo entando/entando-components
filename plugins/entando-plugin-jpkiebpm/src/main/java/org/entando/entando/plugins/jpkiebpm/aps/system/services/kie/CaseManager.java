@@ -45,12 +45,12 @@ public class CaseManager extends KieFormManager {
 
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
 
-    @Override
-    public void init() throws Exception {
-        super.init();
-    }
 
     public JSONArray getKieServerStasus() throws ApsSystemException {
+        
+        //Save the current Config
+        KieBpmConfig setKieBpmConfig = super.getConfig();
+        
         Map<String, String> headersMap = new HashMap<>();
 
         JSONArray ServersStatus = new JSONArray();
@@ -61,7 +61,7 @@ public class CaseManager extends KieFormManager {
 
         for (String key : ServerConfigurations.keySet()) {
 
-            this.setKieBpmConfig(ServerConfigurations.get(key));
+            super.setConfig(ServerConfigurations.get(key));
 
             try {
                 // process endpoint first
@@ -74,7 +74,7 @@ public class CaseManager extends KieFormManager {
                 result = (String) new KieRequestBuilder(client)
                         .setEndpoint(ep)
                         .setHeaders(headersMap)
-                        .setDebug(this.getKieBpmConfig().getDebug())
+                        .setDebug(super.getConfig().getDebug())
                         .doRequest();
 
                 if (!result.isEmpty()) {
@@ -82,22 +82,22 @@ public class CaseManager extends KieFormManager {
                     json = new JSONObject(result);
 
                     JSONObject serverStatusJson = new JSONObject();
-                    serverStatusJson.put("id", this.getKieBpmConfig().getId());
+                    serverStatusJson.put("id", super.getConfig().getId());
                     serverStatusJson.put("status", json);
 
                     JSONObject serverConfJson = new JSONObject();
 
-                    serverConfJson.put("active", this.getKieBpmConfig().getActive());
-                    serverConfJson.put("id", this.getKieBpmConfig().getId());
-                    serverConfJson.put("name", this.getKieBpmConfig().getName());
-                    serverConfJson.put("username", this.getKieBpmConfig().getUsername());
-                    serverConfJson.put("password", this.getKieBpmConfig().getPassword());
-                    serverConfJson.put("hostname", this.getKieBpmConfig().getHostname());
-                    serverConfJson.put("port", this.getKieBpmConfig().getPort());
-                    serverConfJson.put("schema", this.getKieBpmConfig().getSchema());
-                    serverConfJson.put("webapp", this.getKieBpmConfig().getWebapp());
-                    serverConfJson.put("timeoutMsec", this.getKieBpmConfig().getTimeoutMsec());
-                    serverConfJson.put("debug", this.getKieBpmConfig().getDebug());
+                    serverConfJson.put("active", super.getConfig().getActive());
+                    serverConfJson.put("id", super.getConfig().getId());
+                    serverConfJson.put("name", super.getConfig().getName());
+                    serverConfJson.put("username", super.getConfig().getUsername());
+                    serverConfJson.put("password", super.getConfig().getPassword());
+                    serverConfJson.put("hostname", super.getConfig().getHostname());
+                    serverConfJson.put("port", super.getConfig().getPort());
+                    serverConfJson.put("schema", super.getConfig().getSchema());
+                    serverConfJson.put("webapp", super.getConfig().getWebapp());
+                    serverConfJson.put("timeoutMsec", super.getConfig().getTimeoutMsec());
+                    serverConfJson.put("debug", super.getConfig().getDebug());
 
                     serverStatusJson.put("config", serverConfJson);
 
@@ -110,22 +110,22 @@ public class CaseManager extends KieFormManager {
 
             } catch (Throwable t) {
                 JSONObject serverStatusJson = new JSONObject();
-                serverStatusJson.put("id", this.getKieBpmConfig().getId());
+                serverStatusJson.put("id", super.getConfig().getId());
                 serverStatusJson.put("status", "null");
 
                 JSONObject serverConfJson = new JSONObject();
 
-                serverConfJson.put("active", this.getKieBpmConfig().getActive());
-                serverConfJson.put("id", this.getKieBpmConfig().getId());
-                serverConfJson.put("name", this.getKieBpmConfig().getName());
-                serverConfJson.put("username", this.getKieBpmConfig().getUsername());
-                serverConfJson.put("password", this.getKieBpmConfig().getPassword());
-                serverConfJson.put("hostname", this.getKieBpmConfig().getHostname());
-                serverConfJson.put("port", this.getKieBpmConfig().getPort());
-                serverConfJson.put("schema", this.getKieBpmConfig().getSchema());
-                serverConfJson.put("webapp", this.getKieBpmConfig().getWebapp());
-                serverConfJson.put("timeoutMsec", this.getKieBpmConfig().getTimeoutMsec());
-                serverConfJson.put("debug", this.getKieBpmConfig().getDebug());
+                serverConfJson.put("active", super.getConfig().getActive());
+                serverConfJson.put("id", super.getConfig().getId());
+                serverConfJson.put("name", super.getConfig().getName());
+                serverConfJson.put("username", super.getConfig().getUsername());
+                serverConfJson.put("password", super.getConfig().getPassword());
+                serverConfJson.put("hostname", super.getConfig().getHostname());
+                serverConfJson.put("port", super.getConfig().getPort());
+                serverConfJson.put("schema", super.getConfig().getSchema());
+                serverConfJson.put("webapp", super.getConfig().getWebapp());
+                serverConfJson.put("timeoutMsec", super.getConfig().getTimeoutMsec());
+                serverConfJson.put("debug", super.getConfig().getDebug());
 
                 serverStatusJson.put("config", serverConfJson);
 
@@ -133,20 +133,21 @@ public class CaseManager extends KieFormManager {
                 logger.debug("Error connecting to the server: " + t);
             }
         }
+        
+        //load the current config
+        super.setConfig(setKieBpmConfig);
 
         return ServersStatus;
     }
 
     public JSONObject getCasesDefinitions(String containerId) throws ApsSystemException {
 
-        this.setKieBpmConfig(super.getConfig());
-
         Map<String, String> headersMap = new HashMap<>();
 
         String result = null;
         JSONObject json = null;
 
-        if (!this.getKieBpmConfig().getActive() || StringUtils.isBlank(containerId)) {
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId)) {
             return json;
         }
         try {
@@ -160,7 +161,7 @@ public class CaseManager extends KieFormManager {
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(this.getKieBpmConfig().getDebug())
+                    .setDebug(super.getConfig().getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -179,15 +180,13 @@ public class CaseManager extends KieFormManager {
 
     public List<String> getCaseInstancesList(String containerId) throws ApsSystemException {
 
-        this.setKieBpmConfig(super.getConfig());
-
         List<String> casesList = new ArrayList<>();
         Map<String, String> headersMap = new HashMap<>();
 
         String result;
         JSONObject json = null;
 
-        if (!this.getKieBpmConfig().getActive() || StringUtils.isBlank(containerId)) {
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId)) {
             return casesList;
         }
         try {
@@ -201,7 +200,7 @@ public class CaseManager extends KieFormManager {
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(this.getKieBpmConfig().getDebug())
+                    .setDebug(super.getConfig().getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -226,7 +225,7 @@ public class CaseManager extends KieFormManager {
 
     public JSONArray getMilestonesList(String containerId, String caseID) throws ApsSystemException {
 
-        this.setKieBpmConfig(super.getConfig());
+        super.setConfig(super.getConfig());
 
         JSONArray milestonesList = null;
         Map<String, String> headersMap = new HashMap<>();
@@ -235,7 +234,7 @@ public class CaseManager extends KieFormManager {
         String result;
         JSONObject json;
 
-        if (!this.getKieBpmConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return milestonesList;
         }
         try {
@@ -251,7 +250,7 @@ public class CaseManager extends KieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(param)
-                    .setDebug(this.getKieBpmConfig().getDebug())
+                    .setDebug(super.getConfig().getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -268,14 +267,6 @@ public class CaseManager extends KieFormManager {
         }
 
         return milestonesList;
-    }
-
-    public KieBpmConfig getKieBpmConfig() {
-        return super.getConfig();
-    }
-
-    public void setKieBpmConfig(KieBpmConfig config) {
-        super.setConfig(config);
     }
 
     public String getContainerId() {

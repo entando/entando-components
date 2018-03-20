@@ -76,16 +76,17 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
     @Override
     public String save() {
-        
+
         String result = super.save();
         Widget widget = this.createNewWidget();
-        
+
         try {
             if (widget != null) {
+                
                 widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
             } else {
                 logger.error("Null widget");
-               // return INPUT;
+                // return INPUT;
             }
         } catch (Throwable t) {
             logger.error("error in save ", t);
@@ -97,8 +98,9 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     public String chooseKnowledgeSourceForm() {
         try {
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
-            this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
+
+            this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
 
             this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
@@ -113,8 +115,9 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     public String changeKnowledgeSourceForm() {
         try {
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
-            this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
+
+            this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
 
             this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
@@ -128,13 +131,19 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
     public String chooseForm() {
         try {
+            this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
+            
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
+
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
 
             this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
-            this.setConfigID(this.getCaseManager().getKieBpmConfig().getId());
+            
+            
+            this.setConfigID(this.getCaseManager().getConfig().getId());
+            
         } catch (ApsSystemException t) {
             logger.error("Error in chooseForm()", t);
             return FAILURE;
@@ -144,15 +153,17 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
     public String changeForm() {
         try {
+            this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
+
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
 
             this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
-            this.setConfigID(this.getCaseManager().getKieBpmConfig().getId());
+            this.setConfigID(this.getCaseManager().getConfig().getId());
         } catch (ApsSystemException t) {
-            logger.error("Error in changeForm()", t);
+            logger.error("Error in chooseForm()", t);
             return FAILURE;
         }
         return SUCCESS;
@@ -184,7 +195,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
                     this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
                     //Add if Container exist
                     this.setProcessPath(getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
-                    this.setConfigID(this.getCaseManager().getKieBpmConfig().getId());
+                    this.setConfigID(this.getCaseManager().getConfig().getId());
                     this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
 
                 } else {

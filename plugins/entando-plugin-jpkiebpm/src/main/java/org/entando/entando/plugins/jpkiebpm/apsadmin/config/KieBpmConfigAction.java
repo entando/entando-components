@@ -32,6 +32,7 @@ import com.agiletec.apsadmin.system.BaseAction;
 import java.util.HashMap;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class KieBpmConfigAction extends BaseAction {
@@ -124,6 +125,8 @@ public class KieBpmConfigAction extends BaseAction {
 
     public String testall() {
         try {
+            //Save the current Config
+            KieBpmConfig setKieBpmConfig = this.getCaseManager().getConfig();
 
             JSONArray output = new JSONArray();
 
@@ -131,29 +134,30 @@ public class KieBpmConfigAction extends BaseAction {
 
             for (String key : ServerConfigurations.keySet()) {
 
-                this.getCaseManager().setKieBpmConfig(ServerConfigurations.get(key));
-
+                this.getCaseManager().setConfig(ServerConfigurations.get(key));
                 JSONObject serverJS = new JSONObject();
-
                 serverJS.put("kie-server-id", key);
 
                 try {
                     this.getCaseManager().getContainersList();
                     serverJS.put("passed", true);
 
-                } catch (Throwable t) {
-                    _logger.error("Configuration test failed!", t);
+                } catch (ApsSystemException e) {
+                    _logger.error("Configuration test failed!", e);
                     serverJS.put("passed", false);
                 }
 
                 output.put(serverJS);
             }
+            //load the current config
+            this.getCaseManager().setConfig(setKieBpmConfig);
+            
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
             this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
 
             this.addActionMessage(this.getText("message.config.test.success"));
             this.setKnowledgeSourceTestAllResult(output.toString());
-        } catch (Throwable t) {
+        } catch (ApsSystemException | JSONException t) {
             ApsSystemUtils.logThrowable(t, this, "testall");
             return FAILURE;
         }

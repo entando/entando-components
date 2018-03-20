@@ -57,10 +57,9 @@ public interface IKieFormManager {
      * add service configuration
      *
      * @param config
-     * @return
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
-    public KieBpmConfig addConfig(KieBpmConfig config) throws ApsSystemException;   
+    public void addConfig(KieBpmConfig config) throws ApsSystemException;   
     /**
      * add service configuration
      *

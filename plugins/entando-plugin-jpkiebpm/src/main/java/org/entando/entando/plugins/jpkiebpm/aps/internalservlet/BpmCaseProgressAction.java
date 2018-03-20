@@ -31,6 +31,7 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.BaseAction;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getContainerIDfromfrontEndMilestonesData;
@@ -56,10 +57,16 @@ public class BpmCaseProgressAction extends BaseAction {
         try {
 
             String frontEndMilestonesDataIn = extractWidgetConfig("frontEndMilestonesData");
+            String containerid = getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDataIn);
             this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
 
             this.getCaseManager().setKieServerConfiguration(getKieIDfromfrontEndMilestonesData(frontEndMilestonesDataIn));
-            this.setCases(this.getCaseManager().getCaseInstancesList(getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDataIn)));
+            this.setCases(this.getCaseManager().getCaseInstancesList(containerid));
+
+            if (!StringUtils.isBlank(this.getCasePath())) {
+                String updatedMilestones = this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString();
+                this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(frontEndMilestonesDataIn, updatedMilestones));
+            }
 
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
@@ -72,6 +79,8 @@ public class BpmCaseProgressAction extends BaseAction {
     public String selectCaseInstance() {
         try {
             String containerid = getContainerIDfromfrontEndMilestonesData(this.getFrontEndMilestonesData());
+
+            this.getCaseManager().setKieServerConfiguration(getKieIDfromfrontEndMilestonesData(this.getFrontEndMilestonesData()));
             this.setCases(this.getCaseManager().getCaseInstancesList(containerid));
 
             String updatedMilestones = this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString();
