@@ -37,7 +37,7 @@
         <s:param name="selectedNode" value="pageCode"></s:param>
     </s:action>
 
-    <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmCaseProgressViewer" class="form-horizontal" data-ng-app="caseProgressApp" data-ng-controller="CaseProgressConfigCtrl as vm">
+    <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmCaseProgressViewer" class="form-horizontal" data-ng-app="caseProgressApp" data-ng-controller="CaseProgressConfigCtrl as vm" >
         <p class="noscreen">
             <wpsf:hidden name="pageCode"/>
             <wpsf:hidden name="frame"/>
@@ -74,71 +74,71 @@
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
 
 
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label col-xs-4" for="knowledgeSource">
-                            <s:text name="knowledgeSource"/>
-                        </label>
-                        <div class="col-xs-4">
-                            <s:select list="knowledgeSource" id="knowledgeSourcePath" name="knowledgeSourcePath"  
-                                      listKey="value.id"
-                                      listValue="value.name">
-                            </s:select>
-                        </div>
-                        <s:if test="#isknowledgeSourcePathSetted">
-                            <div class="col-xs-4">
-                                <wpsf:submit action="changeKnowledgeSourceForm" value="Change Knowledge Source"
-                                             cssClass="btn btn-warning"/>
-                            </div>
-                        </s:if>
-                        <s:else>
-                            <div class="col-xs-4">
-                                <wpsf:submit action="chooseKnowledgeSourceForm" value="Choose Knowledge Source"
-                                             cssClass="btn btn-success"/>
-                            </div>
-                        </s:else>
-                    </div>
-                </div>
 
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-xs-8">
 
-                <s:if test="#isknowledgeSourcePathSetted">
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label col-xs-4" for="processPath">
-                                knowledgeSource/Container ID
-                            </label>
-                            <div class="col-xs-4">
-                                <s:select list="process" id="processPath" name="processPath"  
-                                          listKey="containerId"
-                                          listValue="containerId">
-                                </s:select>
-                            </div>
+                            <div class="form-group">
+                                <label for="knowledgeSource"><s:text name="knowledgeSource"/></label> 
+                                <div class="input-group">
 
-                            <s:if test="#isProcessPathSetted">
-                                <div class="col-xs-4">
-                                    <wpsf:submit action="changeForm" value="Change Container"
-                                                 cssClass="btn btn-warning"/>
+                                    <s:select list="knowledgeSource" id="knowledgeSourcePath" name="knowledgeSourcePath"  
+                                              listKey="value.id"
+                                              listValue="value.name" class="form-control">
+                                    </s:select>
+                                    <span class="input-group-btn">
+                                        <s:if test="#isknowledgeSourcePathSetted">
+                                            <wpsf:submit action="changeKnowledgeSourceForm" value="Change Knowledge Source"
+                                                         cssClass="btn btn-warning"/>
+                                        </s:if>
+                                        <s:else>
+
+                                            <wpsf:submit action="chooseKnowledgeSourceForm" value="Choose Knowledge Source"
+                                                         cssClass="btn btn-success"/>
+                                        </s:else>
+                                    </span>
                                 </div>
-                            </s:if>
-                            <s:else>
-                                <div class="col-xs-4">
-                                    <wpsf:submit action="chooseForm" value="Choose Container"
-                                                 cssClass="btn btn-success"/>
-                                </div>
-                            </s:else>
+                            </div>
                         </div>
+
                     </div>
-                </s:if>
-                <s:if test="#isProcessPathSetted">
 
+                    <s:if test="#isknowledgeSourcePathSetted">
 
-                    <div class="container-fluid">
 
                         <div class="row">
+                            <div class="col-lg-8 col-md-8 col-xs-8">
+
+                                <div class="form-group">
+                                    <label for="Container ID"><s:text name="container-id"/></label>
+                                    <div class="input-group">
+
+                                        <s:select list="process" id="container-id" name="processPath"  
+                                                  listKey="containerId"
+                                                  listValue="containerId" class="form-control">
+                                        </s:select>
+                                        <span class="input-group-btn">
+                                            <s:if test="#isProcessPathSetted">
+                                                <wpsf:submit action="changeForm" value="Change Container"
+                                                             cssClass="btn btn-warning"/>
+                                            </s:if>
+                                            <s:else>
+                                                <wpsf:submit action="chooseForm" value="Choose Container"
+                                                             cssClass="btn btn-success"/>
+                                            </s:else>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </s:if>
+                    <s:if test="#isProcessPathSetted">
+                        <hr>
+                        <div class="row">
                             <div class="col-lg-4">
-                                <p>KIE Case
-                                    <sup>*</sup>
-                                </p>
                                 <div class="form-group">
                                     <label for="caseSelector">Cases</label>
                                     <select class="form-control" id="caseSelector" ng-options="caseDef.name for caseDef in vm.data.caseDefinitions.definitions track by caseDef['container-id']"
@@ -219,21 +219,22 @@
                             <div class="panel-body">
                                 <pre>{{vm.data.caseDefinitions|json}}</pre>
                             </div>
-
+    
                         </div>
                         -->
-                    </div>
-
-                    <!--Please store your JSON output in following hidden input in order to be sent to widget front end-->
-                    <!--Please dont change the name or the id-->
-                    <!--<input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-model=""/>-->
-                    <!--If you use the above hidden input, you must comment out the following tag so the form submitted with your data (instead of default data)-->
-
-                    <input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-value="vm.ui.defToJSONEscaped()"/>
 
 
-                    <!--You also need to comment out line 98 & 114 in org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction class -->
-                </s:if>
+                        <!--Please store your JSON output in following hidden input in order to be sent to widget front end-->
+                        <!--Please dont change the name or the id-->
+                        <!--<input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-model=""/>-->
+                        <!--If you use the above hidden input, you must comment out the following tag so the form submitted with your data (instead of default data)-->
+
+                        <input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-value="vm.ui.defToJSONEscaped()"/>
+
+
+                        <!--You also need to comment out line 98 & 114 in org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction class -->
+                    </s:if>
+                </div>
             </div>
         </div>
         <div class="form-horizontal">
@@ -286,7 +287,7 @@
     <s:else>
     var configName = undefined;
     </s:else>
-    <s:if test="frontEndMilestonesData != null">
+    <s:if test="frontEndMilestonesData != null && !frontEndMilestonesData.equals('')">
     var savedConfiguration = <s:property value="frontEndMilestonesData" escapeJavaScript="false" escapeHtml="false"/>;
     </s:if>
     <s:else>
@@ -294,8 +295,12 @@
     </s:else>
     <s:if test="casesDefinitions != null">
     var caseDefinitionData = <s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;
-
-    </s:if>
-
     bootBpmComponent(caseDefinitionData, savedConfiguration, configName);
+    </s:if>
+    <s:else>
+    //Case definition data is required to boot application
+    //value retrieved = [<s:property value="casesDefinitions" escapeJavaScript="false" escapeHtml="false"/>;]
+    </s:else>
+
+
 </script>

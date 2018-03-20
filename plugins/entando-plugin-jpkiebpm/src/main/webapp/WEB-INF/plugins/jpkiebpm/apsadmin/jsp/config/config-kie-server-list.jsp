@@ -129,9 +129,8 @@
                                 <div class="card-pf-top-element">
                                     <span class="fa fa-server card-pf-icon-circle"></span>
                                 </div>
-                                <h3 class="card-pf-title">
-                                    <b>SERVER</b>
-                                    <br>{{ks.name}}
+                                <h3 class="card-pf-title text-center">
+                                    <strong>SERVER</strong><br> {{ks.config.name}}
                                 </h3>
 
                                 <div class="card-pf-items" ng-init="hc = vm.ui.connectionTest(ks)" ng-show="hc">
@@ -159,7 +158,7 @@
                                 <p class="card-pf-info">
                                     <strong>Debug</strong>  {{ks.config.debug ? "Active" : "Disabled"}}
                                 </p>
-                                <p class="card-pf-info text-center">
+                                <p class="card-pf-info">
                                     <strong>Version</strong> {{ks.status.result['kie-server-info'].version}}
                                 </p>
                                 <%--<p class="card-pf-info text-center">
