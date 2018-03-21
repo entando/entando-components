@@ -129,29 +129,6 @@ public class CaseProgressWidgetHelpers {
         return kieContainetListjs;
     }
 
-//    public static JSONArray convertKnowledgeSourceHashMapToJson(HashMap<String, KieBpmConfig> knowledgeSource) {
-//        JSONArray knowledgeSourceListJS = new JSONArray();
-//
-//        for (String key : knowledgeSource.keySet()) {
-//            JSONObject knowledgeSourceJS = new JSONObject();
-//
-//            knowledgeSourceJS.put("active", knowledgeSource.get(key).getActive());
-//            knowledgeSourceJS.put("id", knowledgeSource.get(key).getId());
-//            knowledgeSourceJS.put("name", knowledgeSource.get(key).getName());
-//            knowledgeSourceJS.put("hostname", knowledgeSource.get(key).getHostname());
-//            knowledgeSourceJS.put("port", knowledgeSource.get(key).getPort());
-//            knowledgeSourceJS.put("username", knowledgeSource.get(key).getUsername());
-//            knowledgeSourceJS.put("password", knowledgeSource.get(key).getPassword());
-//            knowledgeSourceJS.put("schema", knowledgeSource.get(key).getSchema());
-//            knowledgeSourceJS.put("webapp", knowledgeSource.get(key).getWebapp());
-//            knowledgeSourceJS.put("timeout", knowledgeSource.get(key).getTimeoutMsec());
-//            knowledgeSourceJS.put("debug", knowledgeSource.get(key).getDebug());
-//
-//            knowledgeSourceListJS.put(knowledgeSourceJS);
-//
-//        }
-//        return knowledgeSourceListJS;
-//    }
     public static String generateNewUUID() {
         LocalDateTime currentDateTime = LocalDate.now().atTime(LocalTime.now());
 //        String uuid = UUID.randomUUID().toString().replace("-", "").replace(":", "").replace(".", "");

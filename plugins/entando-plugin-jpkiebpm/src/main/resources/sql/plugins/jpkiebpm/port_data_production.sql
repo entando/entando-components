@@ -53,3 +53,11 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-progress-status', '<?xml version="1.
 	<parameter name="frontEndMilestonesData">frontEndMilestonesData</parameter>
 	<action name="jpkiebpmBpmCaseProgressWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+INSERT INTO widgetcatalog VALUES ('bpm-case-instance-selector', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM-Case instance selector</property>
+<property key="it">Selettore di istanza Case BPM</property>
+</properties>', '<config>
+	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
+	<action name="jpkiebpmBpmCaseInstanceSelectorWidgetViewerConfig"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);

@@ -35,6 +35,12 @@
             <interceptor-ref name="entandoDefaultStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
+        </action>        
+        <action name="jpkiebpmBpmCaseInstanceSelectorWidgetViewerConfig" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="init">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
         </action>
 
         <!-- Process List config -->
@@ -166,6 +172,49 @@
 
         <action name="save" class="jpkiebpmBpmCaseProgressWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+
+    </package>
+    
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceSelectorViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceSelectorViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+
+        <action name="chooseForm*" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="chooseForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="changeForm*" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="changeForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>        
+
+            <action name="chooseKnowledgeSourceForm*" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="chooseKnowledgeSourceForm">
+                <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
+                <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
+                <interceptor-ref name="entandoDefaultStack">
+                    <param name="requestAuth.requiredPermission">superuser</param>
+                </interceptor-ref>
+            </action>
+
+            <action name="changeKnowledgeSourceForm*" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="changeKnowledgeSourceForm">
+                <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
+                <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
+                <interceptor-ref name="entandoDefaultStack">
+                    <param name="requestAuth.requiredPermission">superuser</param>
+                </interceptor-ref>
+            </action>
+
+        <action name="save" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="save">
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
             <interceptor-ref name="entandoValidationStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>

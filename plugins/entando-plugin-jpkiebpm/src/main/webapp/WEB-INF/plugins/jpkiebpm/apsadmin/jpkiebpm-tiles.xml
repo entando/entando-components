@@ -49,10 +49,15 @@
     </definition>
     
     <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmCaseProgress.config">
-        <put-attribute name="title" value="kiebpm Datatable"/>
+        <put-attribute name="title" value="Kiebpm Case Progress"/>
         <put-attribute name="body"
                        value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmCaseProgressConfig.jsp"/>
     </definition>
-
+    
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config">
+        <put-attribute name="title" value="kiebpm Case Instance Selector"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmCaseInstanceSelectorConfig.jsp"/>
+    </definition>
 
 </tiles-definitions>

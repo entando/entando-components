@@ -72,6 +72,7 @@
 
                 <s:set var="isknowledgeSourcePathSetted" value="%{knowledgeSourcePath != null && knowledgeSourcePath != ''}"/>
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
+                <s:set var="isCasesDefinitions" value="%{casesDefinitions != null && casesDefinitions != ''}"/>
 
 
 
@@ -106,7 +107,6 @@
 
                     <s:if test="#isknowledgeSourcePathSetted">
 
-
                         <div class="row">
                             <div class="col-lg-8 col-md-8 col-xs-8">
 
@@ -135,7 +135,7 @@
                         </div>
 
                     </s:if>
-                    <s:if test="#isProcessPathSetted">
+                    <s:if test="#isCasesDefinitions">
                         <hr>
                         <div class="row">
                             <div class="col-lg-4">
