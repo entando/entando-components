@@ -61,3 +61,11 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-instance-selector', '<?xml version="
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceSelectorWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+INSERT INTO widgetcatalog VALUES ('bpm-case-comments', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM-Case comments</property>
+<property key="it">Commenti del caso BPM</property>
+</properties>', '<config>
+	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
+	<action name="jpkiebpmBpmCaseInstanceCommentsWidgetViewerConfig"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);

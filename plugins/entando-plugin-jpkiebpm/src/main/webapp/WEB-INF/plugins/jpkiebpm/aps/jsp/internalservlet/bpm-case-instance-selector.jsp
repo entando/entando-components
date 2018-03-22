@@ -21,8 +21,6 @@
                     <div class="col-xs-6">
                         <s:select list="cases" id="casePath" name="casePath">
                         </s:select>
-
-                        <s:hidden name="frontEndMilestonesData" id="frontEndMilestonesData"></s:hidden>
                         </div>
                         <div class="col-xs-2">
                         <wpsf:submit type="button" value="Select"

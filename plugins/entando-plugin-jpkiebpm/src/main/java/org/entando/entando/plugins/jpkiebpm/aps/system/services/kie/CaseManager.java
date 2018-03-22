@@ -45,12 +45,11 @@ public class CaseManager extends KieFormManager {
 
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
 
-
     public JSONArray getKieServerStasus() throws ApsSystemException {
-        
+
         //Save the current Config
         KieBpmConfig setKieBpmConfig = super.getConfig();
-        
+
         Map<String, String> headersMap = new HashMap<>();
 
         JSONArray ServersStatus = new JSONArray();
@@ -133,7 +132,7 @@ public class CaseManager extends KieFormManager {
                 logger.debug("Error connecting to the server: " + t);
             }
         }
-        
+
         //load the current config
         super.setConfig(setKieBpmConfig);
 
@@ -225,8 +224,6 @@ public class CaseManager extends KieFormManager {
 
     public JSONArray getMilestonesList(String containerId, String caseID) throws ApsSystemException {
 
-        super.setConfig(super.getConfig());
-
         JSONArray milestonesList = null;
         Map<String, String> headersMap = new HashMap<>();
         Map<String, String> param = new HashMap<>();
@@ -267,6 +264,77 @@ public class CaseManager extends KieFormManager {
         }
 
         return milestonesList;
+    }
+
+    public JSONArray getCaseComments(String containerId, String caseID) throws ApsSystemException {
+
+        JSONArray commentsList = null;
+        JSONObject json;
+        Map<String, String> headersMap = new HashMap<>();
+
+        String result;
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+            return commentsList;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_COMMENTS_LIST).resolveParams(containerId, caseID);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+            // perform query
+            result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                commentsList = (JSONArray) json.get("comments");
+                logger.debug("received successful message: ", result);
+
+            } else {
+                logger.debug("received empty case instances message: ");
+            }
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error getting the cases list", t);
+        }
+        return commentsList;
+    }
+
+    public boolean postCaseComments(String containerId, String caseID, String comment) throws ApsSystemException {
+
+        Map<String, String> headersMap = new HashMap<>();
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+            return false;
+        }
+
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_POST_COMMENTS).resolveParams(containerId, caseID);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+            // perform query
+            String result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setDebug(super.getConfig().getDebug())
+                    .setPayload(comment)
+                    .doRequest();
+
+            return true;
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error posting comments", t);
+        }
     }
 
     public String getContainerId() {

@@ -79,5 +79,11 @@
         <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
         <property name="groupManager" ref="GroupManager"/>     
     </bean>
+    
+    <bean id="jpkiebpmBpmCaseInstanceCommentsWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceCommentsWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>    
+    </bean>
 
 </beans>

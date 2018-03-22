@@ -31,7 +31,12 @@
           parent="abstractBaseAction" scope="prototype" >
         <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
     </bean>
-	
+    
+    <bean id="jpkieBpmCaseInstanceCommentsFrontAction"
+          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseInstanceCommentsAction"
+          parent="abstractBaseAction" scope="prototype" >
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
+    </bean>	
 <!--
     <bean id="jpkiebpmBpmFormWidgetAction"
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmFormWidgetAction"
