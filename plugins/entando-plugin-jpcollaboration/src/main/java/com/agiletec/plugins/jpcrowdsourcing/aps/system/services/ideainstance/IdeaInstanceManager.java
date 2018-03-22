@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.common.model.UtilizerEntry;
+import com.agiletec.aps.system.services.group.BaseGroupUtilizerEntry;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 
@@ -55,6 +57,7 @@ public class IdeaInstanceManager extends AbstractService implements IIdeaInstanc
 		return ideainstance;
 	}
 
+    @Override
 	public IdeaInstance getIdeaInstance(String code, Collection<Integer> status) throws ApsSystemException {
 		IdeaInstance ideainstance = null;
 		try {
@@ -122,13 +125,13 @@ public class IdeaInstanceManager extends AbstractService implements IIdeaInstanc
 	}
 
 	@Override
-	public List<IdeaInstance> getGroupUtilizers(String groupName) throws ApsSystemException {
-		List<String> instances = null;
-		List<IdeaInstance> utilizers = new ArrayList<IdeaInstance>();
+	public List<UtilizerEntry> getGroupUtilizers(String groupName) throws ApsSystemException {
+		List<UtilizerEntry> utilizerEntries = new ArrayList<>();
 		try {
-			List<String> groups = new ArrayList<String>();
+            List<IdeaInstance> utilizers = new ArrayList<>();
+			List<String> groups = new ArrayList<>();
 			groups.add(groupName);
-			instances = this.getIdeaInstanceDAO().searchIdeaInstances(groups, null);
+			List<String> instances = this.getIdeaInstanceDAO().searchIdeaInstances(groups, null);
 			if (instances != null) {
 				for (int i=0; i<instances.size(); i++) {
 					String code = instances.get(i);
@@ -138,14 +141,13 @@ public class IdeaInstanceManager extends AbstractService implements IIdeaInstanc
 					}
 				}
 			}
+            utilizers.stream().forEach(i -> utilizerEntries.add(new IdeaInstanceGroupUtilizerEntry(i)));
 		} catch (Throwable t) {
 			_logger.error("Error while loading the members of the group {}", groupName, t);
 			throw new ApsSystemException("Error while loading the members of the group "+ groupName, t);
 		}
-		return utilizers;
+		return utilizerEntries;
 	}
-
-
 	
 	protected IKeyGeneratorManager getKeyGeneratorManager() {
 		return _keyGeneratorManager;
