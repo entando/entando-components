@@ -136,6 +136,9 @@
                 </div>
             </div>
         </div>
+        <s:if test="frontEndCaseData != null">
+            <wpsf:hidden name="frontEndCaseData"/>
+        </s:if>
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-xs-12">
@@ -149,12 +152,6 @@
 
     </s:form>
     <!--<pre style="display:none;">-->
-    <!--Saved Configurations-->
-    Saved Configurations
-    <br />
-    <s:if test="frontEndCaseData != null">
-        <s:property value="frontEndCaseData" escapeJavaScript="false" escapeHtml="false"/>
-    </s:if>
     <!--Saved Configurations-->
     <br />
     <br />

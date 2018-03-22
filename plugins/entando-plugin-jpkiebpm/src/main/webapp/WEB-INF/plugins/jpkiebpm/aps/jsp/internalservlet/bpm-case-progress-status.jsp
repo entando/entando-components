@@ -17,17 +17,16 @@
         <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/selectCaseInstance.action"/>" method="post" class="form-horizontal">
             <div class="form-horizontal">
                 <div class="form-group">
-                    <label class="control-label col-xs-4" for="processPath">Select a Case Instance</label>
-                    <div class="col-xs-6">
-                        <s:select list="cases" id="casePath" name="casePath">
-                        </s:select>
+                    <!--<label class="control-label col-xs-4" for="processPath">Select a Case Instance</label>-->
+                    <!--<div class="col-xs-6">-->
+                    <%--<s:select list="cases" id="casePath" name="casePath">--%>
+                    <%--</s:select>--%>
 
-                        <s:hidden name="frontEndMilestonesData" id="frontEndMilestonesData"></s:hidden>
-                        </div>
-                        <div class="col-xs-2">
-                        <wpsf:submit type="button" value="Select"
-                                     cssClass="btn btn-primary pull-right" />
-                    </div>
+                    <s:hidden name="frontEndMilestonesData" id="frontEndMilestonesData"></s:hidden>
+                        <!--</div>-->
+                        <!--<div class="col-xs-2">-->
+                    <%--<wpsf:submit type="button" value="Select" cssClass="btn btn-primary pull-right" />--%>
+                    <!--</div>-->
                 </div>
             </div>
         </form>
@@ -39,33 +38,33 @@
                     <hr>
                     <h5 >{{vm.ui.instanceName()}}<br><small ng-show="vm.ui.showNumberOfTasks()">Tasks {{vm.ui.countAchievedMilestones()}} of {{vm.ui.countVisibleMilestones()}}</small></h5>
                     <div class="progress progress-labeled">
-                        <div ng-style="{width: vm.ui.totalCaseCompletedPercentage() + '%'}" ng-class="vm.ui.milestoneCompletedStyles()"
-                            class="progress-bar">
-                            <span>{{vm.ui.totalCaseCompletedPercentage()+'%'}}</span>
-                        </div>
+                    <div ng-style="{width: vm.ui.totalCaseCompletedPercentage() + '%'}" ng-class="vm.ui.milestoneCompletedStyles()"
+                    class="progress-bar">
+                    <span>{{vm.ui.totalCaseCompletedPercentage()+'%'}}</span>
+                    </div>
                     </div>
                 </script>
-                
+
                 <script type="text/ng-template" id="stacked-tpl">
-                <h2>Stacked</h2>
-                <hr>
-                <div class="progress progress-labeled">
+                    <h2>Stacked</h2>
+                    <hr>
+                    <div class="progress progress-labeled">
                     <div ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" ng-class="{'progress-bar-success':vm.ui.milestoneComplete(ms) }"
-                        class="progress-bar">
-                        <span>{{vm.ui.milestoneComplete(ms)?"COMPLETED":"IN PROGRESS"}}</span>
+                    class="progress-bar">
+                    <span>{{vm.ui.milestoneComplete(ms)?"COMPLETED":"IN PROGRESS"}}</span>
                     </div>
-                </div>
-                <div class="progress progress-labels" ng-show="vm.ui.showMilestonesLabels()">
+                    </div>
+                    <div class="progress progress-labels" ng-show="vm.ui.showMilestonesLabels()">
                     <span ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" class="progress-bar progress-bar-label">
-                        {{ms["milestone-name"]}}
+                    {{ms["milestone-name"]}}
                     </span>
-                </div>
+                    </div>
                 </script>
                 <div class="ibox-content">
                     <progress-bar options='<s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="false"/>' case-data='{"milestones":<s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="false"/>}'></progress-bar>
                 </div>
-                
-                
+
+
 
             </div>
         </s:if>

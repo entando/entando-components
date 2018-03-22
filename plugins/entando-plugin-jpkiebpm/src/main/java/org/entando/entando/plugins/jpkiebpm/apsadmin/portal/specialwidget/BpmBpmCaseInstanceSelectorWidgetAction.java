@@ -67,36 +67,6 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
     @Override
     public String init() {
         String result = super.init();
-        this.extractInitConfig();
-
-        return result;
-    }
-
-    @Override
-    public String save() {
-
-        String result = super.save();
-        Widget widget = this.createNewWidget();
-
-        try {
-            if (widget != null) {
-
-                JSONObject frontEndCaseDatajs = new JSONObject();
-                frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourcePath());
-                frontEndCaseDatajs.put("container-id", this.getProcessPath());
-                this.setFrontEndCaseData(frontEndCaseDatajs.toString());
-
-                widget.getConfig().setProperty("frontEndCaseData", this.getFrontEndCaseData());
-                System.out.println(" widget.getConfig() at save " + widget.getConfig());
-
-            } else {
-                logger.error("Null widget");
-                // return INPUT;
-            }
-        } catch (Throwable t) {
-            logger.error("error in save ", t);
-            return FAILURE;
-        }
         return result;
     }
 
@@ -134,6 +104,12 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
 
     public String chooseForm() {
         try {
+
+            JSONObject frontEndCaseDatajs = new JSONObject();
+            frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourcePath());
+            frontEndCaseDatajs.put("container-id", this.getProcessPath());
+            this.setFrontEndCaseData(frontEndCaseDatajs.toString());
+
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
@@ -150,6 +126,11 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
 
     public String changeForm() {
         try {
+            JSONObject frontEndCaseDatajs = new JSONObject();
+            frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourcePath());
+            frontEndCaseDatajs.put("container-id", this.getProcessPath());
+            this.setFrontEndCaseData(frontEndCaseDatajs.toString());
+
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
@@ -169,42 +150,38 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
     protected String extractInitConfig() {
         String result = super.extractInitConfig();
 
+        Widget widget = this.getWidget();
+        String frontEndCaseDatain;
         try {
-
-            Widget widget = this.getWidget();
-            String frontEndCaseDatain;
-
             if (widget != null) {
 
-                System.out.println(" widget.getConfig() at extract " + widget.getConfig());
                 frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
 
                 if (StringUtils.isNotBlank(frontEndCaseDatain)) {
 
-                    this.setFrontEndCaseData(frontEndCaseDatain);
-                    JSONObject frontEndCaseDatajs = new JSONObject(frontEndCaseDatain);
+                    JSONObject frontEndCaseDatainjs = new JSONObject(frontEndCaseDatain);
 
-                    this.getCaseManager().setKieServerConfiguration(frontEndCaseDatajs.getString("knowledge-source-id"));
+                    this.setKnowledgeSourcePath(frontEndCaseDatainjs.getString("knowledge-source-id"));
+                    this.setProcessPath(frontEndCaseDatainjs.getString("container-id"));
 
                     this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
-                    this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
-                    //Add if conf exist
-//                    this.getCaseManager().setKieServerConfiguration(getKieIDfromfrontEndMilestonesData(frontEndCaseDatain));
 
-//                    this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
-//                    this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
-//                    this.setKnowledgeSourcePath(getKieIDfromfrontEndMilestonesData(frontEndCaseDatain));
-//                    this.setProcess(this.getCaseManager().getContainersList());
-//                    this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
-//                    //Add if Container exist
-//                    this.setProcessPath(getContainerIDfromfrontEndMilestonesData(frontEndCaseDatain));
+                    this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
+                    this.setProcess(this.getCaseManager().getContainersList());
+
+                    this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
+
                 } else {
+
                     this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
                     this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
+
                 }
+            } else {
+                System.out.println(" widget is null in extraction ");
             }
         } catch (ApsSystemException ex) {
-            Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BpmBpmCaseInstanceSelectorWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return result;

@@ -55,9 +55,29 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
         try {
 
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
-            System.out.println("frontEndCaseDataIn: "+frontEndCaseDataIn);
             JSONObject frontEndCaseDataInjs = new JSONObject(frontEndCaseDataIn);
-            
+
+            String knowledgeSourceId = frontEndCaseDataInjs.getString("knowledge-source-id");
+            String containerid = frontEndCaseDataInjs.getString("container-id");
+
+            this.getCaseManager().setKieServerConfiguration(knowledgeSourceId);
+            this.setCases(this.getCaseManager().getCaseInstancesList(containerid));
+
+        } catch (ApsSystemException t) {
+            logger.error("Error getting the configuration parameter", t);
+            return FAILURE;
+        }
+
+        return SUCCESS;
+    }
+
+    public String selectCaseInstance() {
+        try {
+
+            String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
+            System.out.println("frontEndCaseDataIn: " + frontEndCaseDataIn);
+            JSONObject frontEndCaseDataInjs = new JSONObject(frontEndCaseDataIn);
+
             String knowledgeSourceId = frontEndCaseDataInjs.getString("knowledge-source-id");
             String containerid = frontEndCaseDataInjs.getString("container-id");
 

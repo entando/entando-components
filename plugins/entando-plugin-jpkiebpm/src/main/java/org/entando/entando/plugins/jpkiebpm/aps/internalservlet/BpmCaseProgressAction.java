@@ -66,6 +66,11 @@ public class BpmCaseProgressAction extends BaseAction {
             if (!StringUtils.isBlank(this.getCasePath())) {
                 String updatedMilestones = this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString();
                 this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(frontEndMilestonesDataIn, updatedMilestones));
+            } else {
+                this.setCasePath(this.getCases().get(0));
+                String updatedMilestones = this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString();
+                this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(frontEndMilestonesDataIn, updatedMilestones));
+
             }
 
         } catch (ApsSystemException t) {
