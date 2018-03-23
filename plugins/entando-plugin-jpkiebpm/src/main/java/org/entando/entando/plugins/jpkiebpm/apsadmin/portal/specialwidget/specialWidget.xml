@@ -186,7 +186,7 @@
 
     </package>
     
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceSelectorViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceSelectorViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceSelectorViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceSelectorViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">      
 
         <action name="chooseForm*" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
@@ -202,8 +202,8 @@
             <interceptor-ref name="entandoDefaultStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
-        </action>        
-
+        </action>  
+        
         <action name="chooseKnowledgeSourceForm*" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="chooseKnowledgeSourceForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
@@ -230,39 +230,6 @@
     </package>
     
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceCommentsViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceCommentsViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
-
-        <action name="chooseForm*" class="jpkiebpmBpmCaseInstanceCommentsWidgetAction" method="chooseForm">
-            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
-            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
-            <interceptor-ref name="entandoDefaultStack">
-                <param name="requestAuth.requiredPermission">managePages</param>
-            </interceptor-ref>
-        </action>
-
-        <action name="changeForm*" class="jpkiebpmBpmCaseInstanceCommentsWidgetAction" method="changeForm">
-            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
-            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
-            <interceptor-ref name="entandoDefaultStack">
-                <param name="requestAuth.requiredPermission">managePages</param>
-            </interceptor-ref>
-        </action>        
-
-        <action name="chooseKnowledgeSourceForm*" class="jpkiebpmBpmCaseInstanceCommentsWidgetAction" method="chooseKnowledgeSourceForm">
-            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
-            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
-            <interceptor-ref name="entandoDefaultStack">
-                <param name="requestAuth.requiredPermission">superuser</param>
-            </interceptor-ref>
-        </action>
-
-        <action name="changeKnowledgeSourceForm*" class="jpkiebpmBpmCaseInstanceCommentsWidgetAction" method="changeKnowledgeSourceForm">
-            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
-            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
-            <interceptor-ref name="entandoDefaultStack">
-                <param name="requestAuth.requiredPermission">superuser</param>
-            </interceptor-ref>
-        </action>
-
         <action name="save" class="jpkiebpmBpmCaseInstanceCommentsWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
             <interceptor-ref name="entandoValidationStack">

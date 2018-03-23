@@ -26,6 +26,7 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
+import static java.util.Arrays.asList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -58,6 +59,8 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
     private String knowledgeSourcePath;
     private List<KieContainer> process;
     private String processPath;
+    private List<Integer> channels;
+    private String channelPath;
 
     private String knowledgeSourceJson;
     private String kieContainerListJson;
@@ -108,6 +111,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
             JSONObject frontEndCaseDatajs = new JSONObject();
             frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourcePath());
             frontEndCaseDatajs.put("container-id", this.getProcessPath());
+            frontEndCaseDatajs.put("channel", this.getChannelPath());
             this.setFrontEndCaseData(frontEndCaseDatajs.toString());
 
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
@@ -129,6 +133,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
             JSONObject frontEndCaseDatajs = new JSONObject();
             frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourcePath());
             frontEndCaseDatajs.put("container-id", this.getProcessPath());
+            frontEndCaseDatajs.put("channel", this.getChannelPath());
             this.setFrontEndCaseData(frontEndCaseDatajs.toString());
 
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
@@ -139,7 +144,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
 
         } catch (ApsSystemException t) {
-            logger.error("Error in chooseForm()", t);
+            logger.error("Error in changeForm()", t);
             return FAILURE;
         }
         return SUCCESS;
@@ -273,6 +278,22 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
 
     public void setFrontEndCaseData(String frontEndCaseData) {
         this.frontEndCaseData = frontEndCaseData;
+    }
+
+    public String getChannelPath() {
+        return channelPath;
+    }
+
+    public void setChannelPath(String channelPath) {
+        this.channelPath = channelPath;
+    }
+
+    public List<Integer> getChannels() {
+        return channels = asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+    }
+
+    public void setChannels(List<Integer> channels) {
+        this.channels = channels;
     }
 
 }

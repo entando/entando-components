@@ -99,7 +99,20 @@
                 <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
             </interceptor-ref>
         </action>
-
+        
+        <action name="updateComment" class="jpkieBpmCaseInstanceCommentsFrontAction" method="updateComment">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-comments.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="deleteComment" class="jpkieBpmCaseInstanceCommentsFrontAction" method="deleteComment">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-comments.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
 
     </package>
 </struts>

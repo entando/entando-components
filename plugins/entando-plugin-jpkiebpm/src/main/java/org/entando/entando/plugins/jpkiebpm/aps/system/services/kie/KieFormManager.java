@@ -83,7 +83,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
     }
 
-    private void loadConfigurations() throws ApsSystemException {
+    public KieBpmConfig loadFirstConfigurations() throws ApsSystemException {
         try {
             ConfigInterface configManager = this.getConfigManager();
 
@@ -92,6 +92,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
             //get the first entry in database
             config = kBpmConfFctry.getFirstKiaBpmConfig();
+            return config;
 //            _config = (KieBpmConfig) JAXBHelper.unmarshall(xml, KieBpmConfig.class, true, false);
         } catch (Throwable t) {
             throw new ApsSystemException("Error in loadConfigurations", t);

@@ -116,6 +116,20 @@
                                                   listKey="containerId"
                                                   listValue="containerId" class="form-control">
                                         </s:select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-xs-8">
+
+                                <div class="form-group">
+                                    <label for="channelPath">Channel</label>
+                                    <div class="input-group">
+                                        <s:select list="channels" id="channelPath" name="channelPath" class="form-control">
+                                        </s:select>
                                         <span class="input-group-btn">
                                             <s:if test="#isProcessPathSetted">
                                                 <wpsf:submit action="changeForm" value="Change Container"

@@ -15,6 +15,15 @@
     <div class="col-md-8">
         <!--Select Case Instanse Option-->
         <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceSelector/selectCaseInstance.action"/>" method="post" class="form-horizontal">
+            <s:if test="knowledgeSourceId != null">
+                <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
+            </s:if>
+            <s:if test="containerid != null">
+                <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
+            </s:if>
+            <s:if test="channelPath != null">
+                <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
+            </s:if>
             <div class="form-horizontal">
                 <div class="form-group">
                     <label class="control-label col-xs-4" for="processPath">Select a Case Instance</label>
@@ -29,33 +38,5 @@
                 </div>
             </div>
         </form>
-
-
-        <!--Select Case Instanse Option-->
-        <%--
-        <br />
-        Case Definition with Milestones Configurations:
-
-        <br />
-        <s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="false"/>
-
-                <br />       
-       
-                Case Instance List:
-        
-                <br />
-        <s:property value="cases" escapeHtml="false" escapeJavaScript="false"/>
-
-                <br />
-                <br />
-                Selected Case Instance Milestone:
-                <br />
-
-        <s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="false"/>
-       <s:property/>--%>
-
-
-
-
     </div>
 </div>

@@ -318,16 +318,84 @@ public class CaseManager extends KieFormManager {
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_POST_COMMENTS).resolveParams(containerId, caseID);
             // add header
+
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+
             // generate client from the current configuration
             KieClient client = super.getCurrentClient();
+
+            // perform query
+            String result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setPayload("\"" + comment + "\"")
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+
+            return true;
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error posting comments", t);
+        }
+    }
+
+    public boolean updateCaseComments(String containerId, String caseID, String caseCommentId, String comment) throws ApsSystemException {
+        Map<String, String> headersMap = new HashMap<>();
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseCommentId) || StringUtils.isBlank(comment)) {
+            return false;
+        }
+
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_PUT_UPDATE_COMMENTS).resolveParams(containerId, caseID, caseCommentId);
+            // add header
+
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+
+            // perform query
+            String result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setPayload("\"" + comment + "\"")
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+
+            return true;
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error posting comments", t);
+        }
+    }
+
+    public boolean deleteCaseComments(String containerId, String caseID, String caseCommentId) throws ApsSystemException {
+                Map<String, String> headersMap = new HashMap<>();
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseCommentId)) {
+            return false;
+        }
+
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_DELETE_COMMENTS).resolveParams(containerId, caseID, caseCommentId);
+            // add header
+
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+
             // perform query
             String result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setDebug(super.getConfig().getDebug())
-                    .setPayload(comment)
                     .doRequest();
 
             return true;

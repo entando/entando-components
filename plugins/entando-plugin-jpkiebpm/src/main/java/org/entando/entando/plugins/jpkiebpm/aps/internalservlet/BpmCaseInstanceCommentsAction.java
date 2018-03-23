@@ -31,7 +31,6 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.BaseAction;
 import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
 import static com.opensymphony.xwork2.Action.SUCCESS;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -49,28 +48,33 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(BpmFormAction.class);
     private CaseManager caseManager;
     private String frontEndCaseData;
-    private List<String> cases;
     private String casePath;
     private String comments;
     private String commentInput;
+    private String caseCommentId;
+    private String knowledgeSourceId;
+    private String containerid;
+    private String channelPath;
 
     public String view() {
         try {
-
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
-            JSONObject frontEndCaseDataInjs = new JSONObject(frontEndCaseDataIn);
+            this.setFrontEndCaseData(frontEndCaseDataIn);
 
-            String knowledgeSourceId = frontEndCaseDataInjs.getString("knowledge-source-id");
-            String containerid = frontEndCaseDataInjs.getString("container-id");
+            if ((!StringUtils.isBlank(this.getKnowledgeSourceId()) || !StringUtils.isBlank(this.getContainerid()) || !StringUtils.isBlank(this.getCasePath()) || !StringUtils.isBlank(this.getChannelPath()))
+                    && (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData()))) {
 
-            this.getCaseManager().setKieServerConfiguration(knowledgeSourceId);
-            this.setCases(this.getCaseManager().getCaseInstancesList(containerid));
+                this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
+                this.setComments(this.getCaseManager().getCaseComments(this.getContainerid(), this.getCasePath()).toString());
 
-            if (!StringUtils.isBlank(this.getCasePath())) {
-                this.setComments(this.getCaseManager().getCaseComments(containerid, this.getCasePath()).toString());
             } else {
-                this.setCasePath(this.getCaseManager().getCaseInstancesList(containerid).get(0));
-                this.setComments(this.getCaseManager().getCaseComments(containerid, this.getCasePath()).toString());
+
+                //set the config to the first config in database
+                this.setKnowledgeSourceId(this.getCaseManager().loadFirstConfigurations().getId());
+                this.setContainerid(this.getCaseManager().getContainersList().get(0).getContainerId());
+
+                this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
+                this.setComments(this.getCaseManager().getCaseComments(this.getContainerid(), this.getCasePath()).toString());
             }
 
         } catch (ApsSystemException t) {
@@ -84,26 +88,59 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
     public String postComment() {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
-            JSONObject frontEndCaseDataInjs = new JSONObject(frontEndCaseDataIn);
+            this.setFrontEndCaseData(frontEndCaseDataIn);
 
-            String knowledgeSourceId = frontEndCaseDataInjs.getString("knowledge-source-id");
-            String containerid = frontEndCaseDataInjs.getString("container-id");
-            
-            this.getCaseManager().setKieServerConfiguration(knowledgeSourceId);
-            
-            boolean result = this.getCaseManager().postCaseComments(containerid, this.getCasePath(), this.getCommentInput());
-            
-            System.out.println("Posting "+this.getCasePath()+" - "+this.getCommentInput()+" Result: "+result);
-            
-//            boolean result = this.getCaseManager().postCaseComments("itorders_1.0.0-SNAPSHOT", "IT-0000000001", "test");
-            
+            if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
+
+                this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
+
+                this.getCaseManager().postCaseComments(this.getContainerid(), this.getCasePath(), this.getCommentInput());
+                this.setComments(this.getCaseManager().getCaseComments(this.getContainerid(), this.getCasePath()).toString());
+
+            }
+
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
             return FAILURE;
         }
-
         return SUCCESS;
+    }
 
+    public String updateComment() {
+        try {
+            String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
+            this.setFrontEndCaseData(frontEndCaseDataIn);
+
+            if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
+
+                this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
+
+                this.getCaseManager().updateCaseComments(this.getContainerid(), this.getCasePath(), this.getCaseCommentId(), this.getCommentInput());
+                this.setComments(this.getCaseManager().getCaseComments(this.getContainerid(), this.getCasePath()).toString());
+            }
+        } catch (ApsSystemException t) {
+            logger.error("Error getting the configuration parameter", t);
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+
+    public String deleteComment() {
+        try {
+            String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
+            this.setFrontEndCaseData(frontEndCaseDataIn);
+
+            if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
+                this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
+
+                this.getCaseManager().deleteCaseComments(this.getContainerid(), this.getCasePath(), this.getCaseCommentId());
+                this.setComments(this.getCaseManager().getCaseComments(this.getContainerid(), this.getCasePath()).toString());
+            }
+        } catch (ApsSystemException t) {
+            logger.error("Error getting the configuration parameter", t);
+            return FAILURE;
+        }
+        return SUCCESS;
     }
 
     //Helper classes
@@ -175,12 +212,36 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
         this.commentInput = commentInput;
     }
 
-    public List<String> getCases() {
-        return cases;
+    public String getCaseCommentId() {
+        return caseCommentId;
     }
 
-    public void setCases(List<String> cases) {
-        this.cases = cases;
+    public void setCaseCommentId(String caseCommentId) {
+        this.caseCommentId = caseCommentId;
+    }
+
+    public String getKnowledgeSourceId() {
+        return knowledgeSourceId;
+    }
+
+    public void setKnowledgeSourceId(String knowledgeSourceId) {
+        this.knowledgeSourceId = knowledgeSourceId;
+    }
+
+    public String getContainerid() {
+        return containerid;
+    }
+
+    public void setContainerid(String containerid) {
+        this.containerid = containerid;
+    }
+
+    public String getChannelPath() {
+        return channelPath;
+    }
+
+    public void setChannelPath(String channelPath) {
+        this.channelPath = channelPath;
     }
 
 }

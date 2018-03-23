@@ -77,6 +77,8 @@ public interface KieBpmSystemConstants {
     public final static String API_GET_SERVER_STATUS = "API_GET_SERVER_STATUS";
     public final static String API_GET_COMMENTS_LIST = "API_GET_COMMENTS_LIST";
     public final static String API_POST_COMMENTS = "API_POST_COMMENTS";
+    public final static String API_PUT_UPDATE_COMMENTS = "API_PUT_UPDATE_COMMENTS";
+    public final static String API_DELETE_COMMENTS = "API_DELETE_COMMENTS";
     
     
 

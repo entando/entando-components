@@ -47,21 +47,24 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(BpmFormAction.class);
     private CaseManager caseManager;
-    private String frontEndCaseData;
     private List<String> cases;
     private String casePath;
+    private String knowledgeSourceId;
+    private String containerid;
+    private String channelPath;
 
     public String view() {
         try {
 
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             JSONObject frontEndCaseDataInjs = new JSONObject(frontEndCaseDataIn);
+            
+            this.setKnowledgeSourceId(frontEndCaseDataInjs.getString("knowledge-source-id"));
+            this.setContainerid(frontEndCaseDataInjs.getString("container-id"));
+            this.setChannelPath(frontEndCaseDataInjs.getString("channel"));
 
-            String knowledgeSourceId = frontEndCaseDataInjs.getString("knowledge-source-id");
-            String containerid = frontEndCaseDataInjs.getString("container-id");
-
-            this.getCaseManager().setKieServerConfiguration(knowledgeSourceId);
-            this.setCases(this.getCaseManager().getCaseInstancesList(containerid));
+            this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
+            this.setCases(this.getCaseManager().getCaseInstancesList(this.getContainerid()));
 
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
@@ -75,14 +78,14 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
         try {
 
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
-            System.out.println("frontEndCaseDataIn: " + frontEndCaseDataIn);
             JSONObject frontEndCaseDataInjs = new JSONObject(frontEndCaseDataIn);
 
-            String knowledgeSourceId = frontEndCaseDataInjs.getString("knowledge-source-id");
-            String containerid = frontEndCaseDataInjs.getString("container-id");
+            this.setKnowledgeSourceId(frontEndCaseDataInjs.getString("knowledge-source-id"));
+            this.setContainerid(frontEndCaseDataInjs.getString("container-id"));
+            this.setChannelPath(frontEndCaseDataInjs.getString("channel"));
 
-            this.getCaseManager().setKieServerConfiguration(knowledgeSourceId);
-            this.setCases(this.getCaseManager().getCaseInstancesList(containerid));
+            this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
+            this.setCases(this.getCaseManager().getCaseInstancesList(this.getContainerid()));
 
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
@@ -129,14 +132,6 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
         this.caseManager = caseManager;
     }
 
-    public String getFrontEndCaseData() {
-        return frontEndCaseData;
-    }
-
-    public void setFrontEndCaseData(String frontEndCaseData) {
-        this.frontEndCaseData = frontEndCaseData;
-    }
-
     public List<String> getCases() {
         return cases;
     }
@@ -153,4 +148,28 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
         this.casePath = casePath;
     }
 
+    public String getKnowledgeSourceId() {
+        return knowledgeSourceId;
+    }
+
+    public void setKnowledgeSourceId(String knowledgeSourceId) {
+        this.knowledgeSourceId = knowledgeSourceId;
+    }
+
+    public String getContainerid() {
+        return containerid;
+    }
+
+    public void setContainerid(String containerid) {
+        this.containerid = containerid;
+    }
+
+    public String getChannelPath() {
+        return channelPath;
+    }
+
+    public void setChannelPath(String channelPath) {
+        this.channelPath = channelPath;
+    }
+    
 }

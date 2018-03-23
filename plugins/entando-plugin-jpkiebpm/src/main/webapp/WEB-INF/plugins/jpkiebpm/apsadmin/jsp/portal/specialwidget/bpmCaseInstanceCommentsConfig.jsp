@@ -69,70 +69,17 @@
                         </ul>
                     </div>
                 </s:if>
-
-                <s:set var="isknowledgeSourcePathSetted" value="%{knowledgeSourcePath != null && knowledgeSourcePath != ''}"/>
-                <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
-
-
+                 <s:set var="isFrontEndCaseDataSetted" value="%{frontEndCaseData != null && frontEndCaseData != ''}"/>
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-8 col-md-8 col-xs-8">
+                    <div class="col-lg-8 col-md-8 col-xs-8">
 
-                            <div class="form-group">
-                                <label for="knowledgeSource"><s:text name="knowledgeSource"/></label> 
-                                <div class="input-group">
-
-                                    <s:select list="knowledgeSource" id="knowledgeSourcePath" name="knowledgeSourcePath"  
-                                              listKey="value.id"
-                                              listValue="value.name" class="form-control">
-                                    </s:select>
-                                    <span class="input-group-btn">
-                                        <s:if test="#isknowledgeSourcePathSetted">
-                                            <wpsf:submit action="changeKnowledgeSourceForm" value="Change Knowledge Source"
-                                                         cssClass="btn btn-warning"/>
-                                        </s:if>
-                                        <s:else>
-
-                                            <wpsf:submit action="chooseKnowledgeSourceForm" value="Choose Knowledge Source"
-                                                         cssClass="btn btn-success"/>
-                                        </s:else>
-                                    </span>
-                                </div>
+                        <div class="form-group">
+                            <label for="channelPath">Channel</label>
+                            <div class="input-group">
+                                <s:select list="channels" id="frontEndCaseData" name="frontEndCaseData" class="form-control"></s:select>
                             </div>
                         </div>
-
                     </div>
-
-                    <s:if test="#isknowledgeSourcePathSetted">
-
-                        <div class="row">
-                            <div class="col-lg-8 col-md-8 col-xs-8">
-
-                                <div class="form-group">
-                                    <label for="Container ID"><s:text name="container-id"/></label>
-                                    <div class="input-group">
-
-                                        <s:select list="process" id="container-id" name="processPath"  
-                                                  listKey="containerId"
-                                                  listValue="containerId" class="form-control">
-                                        </s:select>
-                                        <span class="input-group-btn">
-                                            <s:if test="#isProcessPathSetted">
-                                                <wpsf:submit action="changeForm" value="Change Container"
-                                                             cssClass="btn btn-warning"/>
-                                            </s:if>
-                                            <s:else>
-                                                <wpsf:submit action="chooseForm" value="Choose Container"
-                                                             cssClass="btn btn-success"/>
-                                            </s:else>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </s:if>
                 </div>
             </div>
         </div>
@@ -142,7 +89,7 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-xs-12">
-                    <wpsf:submit disabled="!#isProcessPathSetted" type="button" cssClass="btn btn-primary pull-right"
+                    <wpsf:submit type="button" cssClass="btn btn-primary pull-right"
                                  action="save">
                         <s:text name="%{getText('label.save')}"/>
                     </wpsf:submit>
@@ -151,25 +98,4 @@
         </div>
 
     </s:form>
-    <!--<pre style="display:none;">-->
-    <!--Saved Configurations-->
-    <br />
-    <br />
-    <!--kieContainerListJson value-->
-    kieContainerListJson value
-    <br />
-    <s:if test="kieContainerListJson != null">
-        <s:property value="kieContainerListJson" escapeJavaScript="false" escapeHtml="false"/>
-    </s:if>
-    <!--/kieContainerListJson value-->
-    <br />
-    <br />
-    <!--knowledgeSourceJson value-->
-    knowledgeSourceJson value
-    <br />
-    <s:if test="knowledgeSourceJson != null">
-        <s:property value="knowledgeSourceJson" escapeJavaScript="false" escapeHtml="false"/>
-    </s:if>
-    <!--/knowledgeSourceJson value-->
-    <!--</pre>-->
 </div>
