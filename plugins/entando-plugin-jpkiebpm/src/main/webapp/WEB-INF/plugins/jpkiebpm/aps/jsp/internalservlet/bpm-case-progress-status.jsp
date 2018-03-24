@@ -2,12 +2,23 @@
 <%@ taglib prefix="wp" uri="/aps-core"%>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jbpm-widget-ext.css" rel="stylesheet">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery-ui.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
-<script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jbpm-component.js"></script>
+<%
+String cId = java.util.UUID.randomUUID().toString();
+%>
+<s:if test="#request['bpmcss']==null">
+    <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jbpm-widget-ext.css" rel="stylesheet">
+    <s:set var="bpmcss" value="true" scope="request"/>
+</s:if>
 
+<s:if test="#request['angular']==null">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
+    <s:set var="angular" value="true" scope="request"/>
+</s:if>
+
+<s:if test="#request['bpmProgressBar']==null">
+    <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jbpm-component.js"></script>
+    <s:set var="bpmProgressBar" value="true" scope="request"/>
+</s:if>
 
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 <div class="row">
@@ -32,7 +43,7 @@
         </form>
 
         <s:if test="caseInstanceMilestones!=null">
-            <div  data-ng-app="caseProgressApp" ng-controller="ProgressBarCtrl as vm">
+            <div  id="<%=cId%>" ng-controller="ProgressBarCtrl as vm">
                 <script type="text/ng-template" id="basic-tpl">
                     <h2>Basic</h2>
                     <hr>
@@ -98,7 +109,15 @@
     </div>
 </div>
 <script type="text/javascript">
+    
+    (function(){
     <s:if test="caseInstanceMilestones != null">
     bootBpmComponents();
+    var ngApp = document.getElementById('<%=cId%>');
+
+    angular.element(document).ready(function () {
+        angular.bootstrap(ngApp, ['caseProgressApp']);
+    });
     </s:if>
+    })();
 </script>
