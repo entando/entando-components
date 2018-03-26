@@ -40,10 +40,21 @@ public interface KieBpmSystemConstants {
     public final static String HEADER_KEY_CONTENT_TYPE = "Content-Type";
     public final static String HEADER_VALUE_JSON = "application/json";
     
-    //MILESTONES PARAMETERS
+    public final static String HEADER_TRUE = "true";
+    public final static String HEADER_FALSE = "false";
+   
+    //Mileston parameters
     public final static String HEADER_MILESTONES_ACHIEVEDONLY_PARM = "achievedOnly";
-    public final static String HEADER_MILESTONES_ACHIEVEDONLY_FALSE = "false";
-    public final static String HEADER_MILESTONES_ACHIEVEDONLY_TRUE = "true";
+   
+    //Case instance details parameters
+    public final static String HEADER_CASE_DETAILS_WITHDATA_PARM = "withData";
+    public final static String HEADER_CASE_DETAILS_WITHROLES_PARM = "withRoles";
+    public final static String HEADER_CASE_DETAILS_WITHMILESTONES_PARM = "withMilestones";
+    public final static String HEADER_CASE_DETAILS_WITHSTAGES_PARM = "withStages";
+    
+    //Case instance roles parameters
+    public final static String HEADER_CASE_ROLES_USER_PARM = "user";
+    public final static String HEADER_CASE_ROLES_GROUP_PARM = "group";
 
     // configuration parameter
     public final static String KIE_BPM_CONFIG_ITEM = "jpkiebpm_config";
@@ -73,12 +84,16 @@ public interface KieBpmSystemConstants {
     public final static String API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK = "API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK";
     public final static String API_GET_CASES_DEFINITIONS = "API_GET_CASES_DEFINITIONS";
     public final static String API_GET_CASES_LIST = "API_GET_CASES_LIST";
+    public final static String API_GET_CASES_DETAILS = "API_GET_CASES_DETAILS";
     public final static String API_GET_MILESTONES_LIST = "API_GET_MILESTONES_LIST";
     public final static String API_GET_SERVER_STATUS = "API_GET_SERVER_STATUS";
     public final static String API_GET_COMMENTS_LIST = "API_GET_COMMENTS_LIST";
     public final static String API_POST_COMMENTS = "API_POST_COMMENTS";
     public final static String API_PUT_UPDATE_COMMENTS = "API_PUT_UPDATE_COMMENTS";
     public final static String API_DELETE_COMMENTS = "API_DELETE_COMMENTS";
+    public final static String API_GET_ROLE = "API_GET_ROLE";
+    public final static String API_PUT_ROLE = "API_PUT_ROLE";
+    public final static String API_DELETE_ROLE = "API_DELETE_ROLE";
     
     
 

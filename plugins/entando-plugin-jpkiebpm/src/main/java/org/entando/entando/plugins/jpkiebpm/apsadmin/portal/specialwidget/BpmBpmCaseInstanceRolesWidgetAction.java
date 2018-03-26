@@ -34,9 +34,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author own_strong
  */
-public class BpmBpmCaseInstanceCommentsWidgetAction extends SimpleWidgetConfigAction {
+public class BpmBpmCaseInstanceRolesWidgetAction extends SimpleWidgetConfigAction {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmBpmCaseInstanceCommentsWidgetAction.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmBpmCaseInstanceRolesWidgetAction.class);
 
     private List<Integer> channels;
     private String frontEndCaseData;
@@ -84,5 +84,5 @@ public class BpmBpmCaseInstanceCommentsWidgetAction extends SimpleWidgetConfigAc
     public void setChannels(List<Integer> channels) {
         this.channels = channels;
     }
-
+    
 }

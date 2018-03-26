@@ -69,3 +69,27 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-comments', '<?xml version="1.0" enco
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceCommentsWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+INSERT INTO widgetcatalog VALUES ('bpm-case-details', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM-Case details</property>
+<property key="it">Dettagli caso BPM</property>
+</properties>', '<config>
+	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
+	<action name="jpkiebpmBpmCaseInstanceDetailsWidgetViewerConfig"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+INSERT INTO widgetcatalog VALUES ('bpm-case-actions', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM-Case actions</property>
+<property key="it">Azioni caso BPM</property>
+</properties>', '<config>
+	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
+	<action name="jpkiebpmBpmCaseInstanceActionsWidgetViewerConfig"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+INSERT INTO widgetcatalog VALUES ('bpm-case-roles', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM-Case roles</property>
+<property key="it">Ruoli caso BPM</property>
+</properties>', '<config>
+	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
+	<action name="jpkiebpmBpmCaseInstanceRolesWidgetViewerConfig"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);

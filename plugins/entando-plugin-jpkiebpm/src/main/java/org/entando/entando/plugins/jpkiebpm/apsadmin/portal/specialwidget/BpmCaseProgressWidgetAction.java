@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmDatatableWidgetAction.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmCaseProgressWidgetAction.class);
 
     private CaseManager caseManager;
     private IKieFormManager formManager;

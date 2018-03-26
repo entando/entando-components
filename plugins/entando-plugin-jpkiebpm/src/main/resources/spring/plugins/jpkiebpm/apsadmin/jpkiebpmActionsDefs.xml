@@ -84,5 +84,19 @@
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceCommentsWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
     </bean>
-
+    
+    <bean id="jpkiebpmBpmCaseInstanceDetailsWidgetAction"
+              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceDetailsWidgetAction"
+              parent="simpleWidgetAction" scope="prototype">
+    </bean>
+    
+    <bean id="jpkiebpmBpmCaseInstanceActionsWidgetAction"
+              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceActionsWidgetAction"
+              parent="simpleWidgetAction" scope="prototype">
+    </bean>  
+      
+    <bean id="jpkiebpmBpmCaseInstanceRolesWidgetAction"
+              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceRolesWidgetAction"
+              parent="simpleWidgetAction" scope="prototype">
+    </bean>
 </beans>

@@ -65,5 +65,23 @@
         <put-attribute name="body"
                        value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmCaseInstanceCommentsConfig.jsp"/>
     </definition>
+         
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmCaseInstanceDetails.config">
+        <put-attribute name="title" value="kiebpm Case Instance Details"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmCaseInstanceDetailsConfig.jsp"/>
+    </definition>
+    
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmCaseInstanceActions.config">
+        <put-attribute name="title" value="kiebpm Case Instance Actions"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmCaseInstanceActionsConfig.jsp"/>
+    </definition>
+    
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmCaseInstanceRoles.config">
+        <put-attribute name="title" value="kiebpm Case Instance Roles"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmCaseInstanceRolesConfig.jsp"/>
+    </definition>
 
 </tiles-definitions>

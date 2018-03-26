@@ -58,20 +58,20 @@ String cId = java.util.UUID.randomUUID().toString();
                                     {{::comment.text}}
                                 </p>
                                 <small class="text-muted" ng-show="!editMode">{{::comment['added-at']['java.util.Date']|date:medium}}</small>
-                                <wpsf:textarea name="commentInput" cssClass="form-control" value="" ng-show="editMode"/>
+                                <s:textarea name="commentInput" cssClass="form-control" value="" ng-show="editMode"/>
                                 <br>
-                                <wpsf:submit type="button" action="deleteComment" cssClass="btn btn-link" ng-show="!editMode">
+                                <s:submit type="button" action="deleteComment" cssClass="btn btn-link" ng-show="!editMode">
                                     <small>Delete</small>
-                                </wpsf:submit>
+                                </s:submit>
                                 <button class="btn btn-sm btn-link" type="button" ng-show="!editMode" ng-click="editMode = true"><small>Edit</small></button>
                                 <button class="btn btn-sm btn-link" type="button" ng-show="editMode" ng-click="editMode = false" ><small>Cancel</small></button>
-                                <wpsf:submit type="button" action="updateComment" cssClass="btn btn-link" ng-show="editMode">
+                                <s:submit type="button" action="updateComment" cssClass="btn btn-link" ng-show="editMode">
                                     <small>Update</small>
-                                </wpsf:submit>
+                                </s:submit>
                             </div>
                         </div>
-                        <wpsf:hidden name="caseCommentId" value="{{::comment.id}}"/>
-                        <wpsf:hidden name="commentInput" value="{{::comment.text}}"/>
+                        <s:hidden name="caseCommentId" value="{{::comment.id}}"/>
+                        <s:hidden name="commentInput" value="{{::comment.text}}"/>
                     </form>
                 </div>
             </div>
@@ -90,10 +90,10 @@ String cId = java.util.UUID.randomUUID().toString();
                         <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
                     </s:if>
                     <div class="form-group">
-                        <wpsf:textarea name="commentInput" cssClass="form-control" value=""/>
+                        <s:textarea name="commentInput" cssClass="form-control" value=""/>
                     </div>
                     <div class="text-right">
-                        <wpsf:submit type="button" action="postComment" value="Send message" cssClass="btn btn-sm btn-primary m-t-n-xs" />
+                        <s:submit type="button" action="postComment" value="Send message" cssClass="btn btn-sm btn-primary m-t-n-xs" />
                     </div>
                 </form>
             </div>

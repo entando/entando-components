@@ -115,4 +115,51 @@
         </action>
 
     </package>
+    
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseInstanceDetails" namespace="/do/bpm/FrontEnd/CaseInstanceDetails" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseInstanceDetailsFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-details.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+    </package>
+    
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseInstanceActions" namespace="/do/bpm/FrontEnd/CaseInstanceActions" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseInstanceActionsFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-actions.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+    </package>
+    
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseInstanceRoles" namespace="/do/bpm/FrontEnd/CaseInstanceRoles" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseInstanceRolesFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-roles.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+                
+        <action name="addRole" class="jpkieBpmCaseInstanceRolesFrontAction" method="addRole">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-roles.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="deleteRole" class="jpkieBpmCaseInstanceRolesFrontAction" method="deleteRole">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-roles.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+    </package>
 </struts>

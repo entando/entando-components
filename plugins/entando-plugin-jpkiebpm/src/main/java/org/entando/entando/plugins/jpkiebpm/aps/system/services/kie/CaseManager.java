@@ -222,6 +222,50 @@ public class CaseManager extends KieFormManager {
         return casesList;
     }
 
+    public JSONObject getCaseInstancesDetails(String containerId, String caseID) throws ApsSystemException {
+
+        Map<String, String> headersMap = new HashMap<>();
+        Map<String, String> param = new HashMap<>();
+
+        String result;
+        JSONObject casesDetails = null;
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+            return casesDetails;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_CASES_DETAILS).resolveParams(containerId, caseID);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            param.put(HEADER_CASE_DETAILS_WITHDATA_PARM, HEADER_TRUE);
+            param.put(HEADER_CASE_DETAILS_WITHROLES_PARM, HEADER_TRUE);
+            param.put(HEADER_CASE_DETAILS_WITHMILESTONES_PARM, HEADER_TRUE);
+            param.put(HEADER_CASE_DETAILS_WITHSTAGES_PARM, HEADER_TRUE);
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+            // perform query
+            result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setRequestParams(param)
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+
+            if (!result.isEmpty()) {
+                casesDetails = new JSONObject(result);
+                logger.debug("received successful message: ", result);
+            } else {
+                logger.debug("received empty case instance message: ");
+            }
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error getting the cases instance details", t);
+        }
+
+        return casesDetails;
+    }
+
     public JSONArray getMilestonesList(String containerId, String caseID) throws ApsSystemException {
 
         JSONArray milestonesList = null;
@@ -239,7 +283,7 @@ public class CaseManager extends KieFormManager {
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_MILESTONES_LIST).resolveParams(containerId, caseID);
             // add header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
-            param.put(HEADER_MILESTONES_ACHIEVEDONLY_PARM, HEADER_MILESTONES_ACHIEVEDONLY_FALSE);
+            param.put(HEADER_MILESTONES_ACHIEVEDONLY_PARM, HEADER_FALSE);
             // generate client from the current configuration
             KieClient client = super.getCurrentClient();
             // perform query
@@ -374,7 +418,7 @@ public class CaseManager extends KieFormManager {
     }
 
     public boolean deleteCaseComments(String containerId, String caseID, String caseCommentId) throws ApsSystemException {
-                Map<String, String> headersMap = new HashMap<>();
+        Map<String, String> headersMap = new HashMap<>();
 
         if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseCommentId)) {
             return false;
@@ -402,6 +446,121 @@ public class CaseManager extends KieFormManager {
 
         } catch (Throwable t) {
             throw new ApsSystemException("Error posting comments", t);
+        }
+    }
+
+    public JSONObject getCaseRoles(String containerId, String caseID) throws ApsSystemException {
+
+        JSONObject caseRoles = null;
+        Map<String, String> headersMap = new HashMap<>();
+
+        String result;
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+            return caseRoles;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_ROLE).resolveParams(containerId, caseID);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+            // perform query
+            result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+
+            if (!result.isEmpty()) {
+                caseRoles = new JSONObject(result);
+
+                logger.debug("received successful message: ", result);
+
+            } else {
+                logger.debug("received empty case instances message: ");
+            }
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error getting the cases roles", t);
+        }
+        return caseRoles;
+
+    }
+
+    public boolean addCaseRoles(String containerId, String caseID, String caseRoleName, String user, String group) throws ApsSystemException {
+        Map<String, String> headersMap = new HashMap<>(); 
+        Map<String, String> requestParams = new HashMap<>();
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseRoleName) || StringUtils.isBlank(user) || StringUtils.isBlank(group)) {
+            return false;
+        }
+
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_PUT_ROLE).resolveParams(containerId, caseID, caseRoleName);
+            // add header
+
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            
+            requestParams.put(HEADER_CASE_ROLES_USER_PARM, user);
+            requestParams.put(HEADER_CASE_ROLES_GROUP_PARM, group);
+
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+
+            // perform query
+            String result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setRequestParams(requestParams)
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+            
+                System.out.println("result role"+result);
+
+            return true;
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error putting role", t);
+        }
+
+    }
+
+    public boolean deleteCaseRoles(String containerId, String caseID, String caseRoleName, String user, String group) throws ApsSystemException {
+        Map<String, String> headersMap = new HashMap<>(); 
+        Map<String, String> requestParams = new HashMap<>();
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseRoleName) || StringUtils.isBlank(user) || StringUtils.isBlank(group)) {
+            return false;
+        }
+
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_DELETE_ROLE).resolveParams(containerId, caseID, caseRoleName);
+            // add header
+
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            
+            requestParams.put(HEADER_CASE_ROLES_USER_PARM, user);
+            requestParams.put(HEADER_CASE_ROLES_GROUP_PARM, group);
+
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+
+            // perform query
+            String result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setRequestParams(requestParams)
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+
+            return true;
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error deleting role", t);
         }
     }
 

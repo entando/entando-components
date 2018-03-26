@@ -50,6 +50,27 @@
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
+        
+        <action name="jpkiebpmBpmCaseInstanceDetailsWidgetViewerConfig" class="jpkiebpmBpmCaseInstanceDetailsWidgetAction" method="init">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceDetails.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+                
+        <action name="jpkiebpmBpmCaseInstanceActionsWidgetViewerConfig" class="jpkiebpmBpmCaseInstanceActionsWidgetAction" method="init">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceActions.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+                
+        <action name="jpkiebpmBpmCaseInstanceRolesWidgetViewerConfig" class="jpkiebpmBpmCaseInstanceRolesWidgetAction" method="init">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceRoles.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
         <!-- Process List config -->
         <!--        <action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig"
                 class="jpkiebpmBpmProcessDatatableWidgetAction" method="init">

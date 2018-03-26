@@ -36,7 +36,25 @@
           class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseInstanceCommentsAction"
           parent="abstractBaseAction" scope="prototype" >
         <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
+    </bean>
+    
+     <bean id="jpkieBpmCaseInstanceDetailsFrontAction"
+          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseInstanceDetailsAction"
+          parent="abstractBaseAction" scope="prototype" >
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
+    </bean>
+        
+     <bean id="jpkieBpmCaseInstanceActionsFrontAction"
+          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseInstanceActionsAction"
+          parent="abstractBaseAction" scope="prototype" >
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
     </bean>	
+        
+     <bean id="jpkieBpmCaseInstanceRolesFrontAction"
+          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseInstanceRolesAction"
+          parent="abstractBaseAction" scope="prototype" >
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
+    </bean>		
 <!--
     <bean id="jpkiebpmBpmFormWidgetAction"
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmFormWidgetAction"
