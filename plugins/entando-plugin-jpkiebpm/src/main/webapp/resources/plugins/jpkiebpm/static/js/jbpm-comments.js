@@ -22,10 +22,10 @@
  * THE SOFTWARE.
  */
 
-var bootBpmComponents = (function (comments) {
+var bootBpmCommentsComponents = (function (appId,comments) {
     'use strict';
 
-    angular.module('bpmCommentsApp', [])
+    angular.module(appId, [])
             .controller('CommentsController', CommentsController)
             .service('KieServerService', KieServerService);
 

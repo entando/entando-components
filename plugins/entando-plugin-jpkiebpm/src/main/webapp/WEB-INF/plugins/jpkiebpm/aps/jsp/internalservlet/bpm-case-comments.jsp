@@ -101,15 +101,11 @@ String cId = java.util.UUID.randomUUID().toString();
     </div>
 </div>
 <script type="text/javascript">
-    
     (function(){
     <s:if test="comments != null">
-    bootBpmComponents(<s:property value="comments" escapeHtml="false" escapeJavaScript="false"/>);
-
-    var ngApp = document.getElementById('<%=cId%>');
-
+    bootBpmCommentsComponents('<%=cId%>',<s:property value="comments" escapeHtml="false" escapeJavaScript="false"/>);
     angular.element(document).ready(function () {
-        angular.bootstrap(ngApp, ['bpmCommentsApp']);
+        angular.bootstrap( document.getElementById('<%=cId%>'), ['<%=cId%>']);
     });
 
     </s:if>

@@ -3,6 +3,12 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+
+<%
+String cId = java.util.UUID.randomUUID().toString();
+%>
+
+
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 <s:if test="#request['bpmcss']==null">
     <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jbpm-widget-ext.css" rel="stylesheet">
@@ -14,61 +20,110 @@
     <s:set var="angular" value="true" scope="request"/>
 </s:if>
 
-<s:if test="#request['bpmComments']==null">
-    <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jbpm-comments.js"></script>
-    <s:set var="bpmComments" value="true" scope="request"/>
+<s:if test="#request['bpmRoles']==null">
+    <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jbpm-roles.js"></script>
+    <s:set var="bpmRoles" value="true" scope="request"/>
 </s:if>
 
-<div class="constainer-fluid">
-    <div class="ibox">
+<div class="constainer-fluid" id="<%=cId%>" ng-controller="RolesController as vm">
+    <div class="ibox float-e-margins">
         <div class="ibox-title">
-
-            <h2 class="card-pf-title">
-                <span>Roles</span>
-            </h2>
+            <h5>Roles</h5>
         </div>
-        <div class="ibox float-e-margins">
-            <div class="ibox-content">
-                <div class="chat-form">
-                    <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceRoles/addRole.action"/>" method="post" class="form-horizontal" >
-                        <s:if test="casePath != null">
-                            <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
-                        </s:if>
-                        <s:if test="knowledgeSourceId != null">
-                            <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
-                        </s:if>
-                        <s:if test="containerid != null">
-                            <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
-                        </s:if>
-                        <s:if test="channelPath != null">
-                            <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
-                        </s:if>
-                        <div class="form-group">
-                            <br />
-                            <h4>Roles</h4>
-                            <br />
-                            <s:property value="roles" escapeHtml="false" escapeJavaScript="false"/>
-                            <br />
-                        </div>
-
-                        <div class="form-group">
-                            <s:textfield name="caseRoleName" cssClass="form-control"/>
-                        </div>
-                        <div class="form-group">
-                            <s:textfield name="user" cssClass="form-control"/>
-                        </div>
-                        <div class="form-group">
-                            <s:textfield name="group" cssClass="form-control"/>
-                        </div>
-                        <div class="text-right">
-                            <s:submit type="button" action="deleteRole" value="Delete role" cssClass="btn btn-sm btn-primary m-t-n-xs" />
-                        </div>
-                        <div class="text-right">
-                            <s:submit type="button" action="addRole" value="Add role" cssClass="btn btn-sm btn-primary m-t-n-xs" />
-                        </div>
-                    </form>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-6 m-b-xs">
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn btn-sm btn-white" ng-class="{'active':vm.ui.rolesFilter == 'all'}" ng-click="vm.ui.setFilter('all')">
+                            All </label>
+                        <label class="btn btn-sm btn-white" ng-class="{'active':vm.ui.rolesFilter == 'unassigned'}" ng-click="vm.ui.setFilter('unassigned')">
+                          Unassigned </label>
+                        <label class="btn btn-sm btn-white" ng-class="{'active':vm.ui.rolesFilter == 'assigned'}" ng-click="vm.ui.setFilter('assigned')" >
+                           Assigned </label>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group">
+                        <input type="text" placeholder="Search" class="input-sm form-control" ng-model="vm.ui.searchText">
+                        <span  class="input-group-btn"> <button class="btn btn-primary btn-sm" type="button"><i class="fa fa-search"></i></button></span>
+                    </div>
                 </div>
             </div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>User</th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="role in vm.mod.roles|rolesFilter:vm.ui.rolesFilter|filter:vm.ui.searchText">
+
+                            <td>{{role.name}}
+                            </td>
+                            <td>
+                                <span ng-repeat="user in role.users">
+                                    <i class="fa fa-user"></i> {{user}}
+                                </span>
+                                <span ng-repeat="group in role.groups">
+                                    <i class="fa fa-users"></i> {{group}}
+                                </span>
+                            </td>
+                            <td>
+                                <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceRoles/addRole.action"/>" method="post" class="form-horizontal" >
+                                    <s:if test="casePath != null">
+                                        <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
+                                    </s:if>
+                                    <s:if test="knowledgeSourceId != null">
+                                        <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
+                                    </s:if>
+                                    <s:if test="containerid != null">
+                                        <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
+                                    </s:if>
+                                    <s:if test="channelPath != null">
+                                        <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
+                                    </s:if>
+                                    <!--div class="form-group">
+                                    <s:textfield name="caseRoleName" cssClass="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <s:textfield name="user" cssClass="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <s:textfield name="group" cssClass="form-control"/>
+                                </div-->
+
+                                    <s:submit type="button" action="deleteRole" value="Remove" cssClass="btn btn-default btn-sm" />
+
+
+                                    <s:submit type="button" action="addRole" value="Edit" cssClass="btn btn-primary btn-sm" />
+
+                                </form
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
+
 </div>
+<script type="text/javascript">
+
+    (function () {
+    <s:if test="roles != null">
+        bootBpmRolesComponents('<%=cId%>',<s:property value="roles" escapeHtml="false" escapeJavaScript="false"/>);
+
+        angular.element(document).ready(function () {
+            angular.bootstrap(document.getElementById('<%=cId%>'), ['<%=cId%>']);
+        });
+
+    </s:if>
+    })();
+</script>
