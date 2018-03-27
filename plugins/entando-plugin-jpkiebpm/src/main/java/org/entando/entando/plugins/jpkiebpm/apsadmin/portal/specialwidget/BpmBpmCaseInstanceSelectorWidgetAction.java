@@ -32,10 +32,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKieContainerToListToJson;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
@@ -51,9 +48,6 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmBpmCaseInstanceSelectorWidgetAction.class);
 
     private CaseManager caseManager;
-    private IKieFormManager formManager;
-    private IKieFormOverrideManager kieFormOverrideManager;
-    private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
     private HashMap<String, KieBpmConfig> knowledgeSource;
     private String knowledgeSourcePath;
@@ -198,30 +192,6 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
 
     public void setCaseManager(CaseManager caseManager) {
         this.caseManager = caseManager;
-    }
-
-    public IKieFormManager getFormManager() {
-        return formManager;
-    }
-
-    public void setFormManager(IKieFormManager formManager) {
-        this.formManager = formManager;
-    }
-
-    public IKieFormOverrideManager getKieFormOverrideManager() {
-        return kieFormOverrideManager;
-    }
-
-    public void setKieFormOverrideManager(IKieFormOverrideManager kieFormOverrideManager) {
-        this.kieFormOverrideManager = kieFormOverrideManager;
-    }
-
-    public IBpmWidgetInfoManager getBpmWidgetInfoManager() {
-        return bpmWidgetInfoManager;
-    }
-
-    public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
-        this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 
     public HashMap<String, KieBpmConfig> getKnowledgeSource() {

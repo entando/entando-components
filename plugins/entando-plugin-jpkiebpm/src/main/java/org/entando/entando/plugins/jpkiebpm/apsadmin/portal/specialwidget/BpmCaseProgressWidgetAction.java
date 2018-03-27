@@ -31,10 +31,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKieContainerToListToJson;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getContainerIDfromfrontEndMilestonesData;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getKieIDfromfrontEndMilestonesData;
@@ -51,9 +48,6 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmCaseProgressWidgetAction.class);
 
     private CaseManager caseManager;
-    private IKieFormManager formManager;
-    private IKieFormOverrideManager kieFormOverrideManager;
-    private IBpmWidgetInfoManager bpmWidgetInfoManager;
     private String processPath;
     private String processPathDefaultValue;
     private String casesDefinitions;
@@ -70,31 +64,30 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     @Override
     public String init() {
         String result = super.init();
-        this.extractInitConfig();
+//        this.extractInitConfig();
         return result;
     }
 
-    @Override
-    public String save() {
-
-        String result = super.save();
-        Widget widget = this.createNewWidget();
-
-        try {
-            if (widget != null) {
-                
-                widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
-            } else {
-                logger.error("Null widget");
-                // return INPUT;
-            }
-        } catch (Throwable t) {
-            logger.error("error in save ", t);
-            return FAILURE;
-        }
-        return result;
-    }
-
+//    @Override
+//    public String save() {
+//
+//        String result = super.save();
+//        Widget widget = this.createNewWidget();
+//
+//        try {
+//            if (widget != null) {
+//
+//                widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
+//            } else {
+//                logger.error("Null widget");
+//                // return INPUT;
+//            }
+//        } catch (Throwable t) {
+//            logger.error("error in save ", t);
+//            return FAILURE;
+//        }
+//        return result;
+//    }
     public String chooseKnowledgeSourceForm() {
         try {
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
@@ -132,7 +125,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     public String chooseForm() {
         try {
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
-            
+
             this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
 
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
@@ -140,10 +133,9 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
             this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
-            
-            
+
             this.setConfigID(this.getCaseManager().getConfig().getId());
-            
+
         } catch (ApsSystemException t) {
             logger.error("Error in chooseForm()", t);
             return FAILURE;
@@ -210,36 +202,12 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         return result;
     }
 
-    public IKieFormManager getFormManager() {
-        return formManager;
-    }
-
     public CaseManager getCaseManager() {
         return caseManager;
     }
 
     public void setCaseManager(CaseManager caseManager) {
         this.caseManager = caseManager;
-    }
-
-    public void setFormManager(IKieFormManager formManager) {
-        this.formManager = formManager;
-    }
-
-    public IBpmWidgetInfoManager getBpmWidgetInfoManager() {
-        return bpmWidgetInfoManager;
-    }
-
-    public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
-        this.bpmWidgetInfoManager = bpmWidgetInfoManager;
-    }
-
-    public IKieFormOverrideManager getKieFormOverrideManager() {
-        return kieFormOverrideManager;
-    }
-
-    public void setKieFormOverrideManager(IKieFormOverrideManager kieFormOverrideManager) {
-        this.kieFormOverrideManager = kieFormOverrideManager;
     }
 
     public String getProcessPath() {

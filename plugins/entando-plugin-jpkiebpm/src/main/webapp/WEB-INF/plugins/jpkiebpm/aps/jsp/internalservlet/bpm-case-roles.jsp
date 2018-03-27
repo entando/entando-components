@@ -37,9 +37,9 @@ String cId = java.util.UUID.randomUUID().toString();
                         <label class="btn btn-sm btn-white" ng-class="{'active':vm.ui.rolesFilter == 'all'}" ng-click="vm.ui.setFilter('all')">
                             All </label>
                         <label class="btn btn-sm btn-white" ng-class="{'active':vm.ui.rolesFilter == 'unassigned'}" ng-click="vm.ui.setFilter('unassigned')">
-                          Unassigned </label>
+                            Unassigned </label>
                         <label class="btn btn-sm btn-white" ng-class="{'active':vm.ui.rolesFilter == 'assigned'}" ng-click="vm.ui.setFilter('assigned')" >
-                           Assigned </label>
+                            Assigned </label>
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -96,12 +96,12 @@ String cId = java.util.UUID.randomUUID().toString();
                                     <s:textfield name="group" cssClass="form-control"/>
                                 </div-->
 
-                                    <s:submit type="button" action="deleteRole" value="Remove" cssClass="btn btn-default btn-sm" />
+                                    <wpsf:submit type="button" action="deleteRole" name="deleteRole" value="Remove" cssClass="btn btn-default btn-sm" />
 
 
-                                    <s:submit type="button" action="addRole" value="Edit" cssClass="btn btn-primary btn-sm" />
+                                    <wpsf:submit type="button" action="addRole" name="addRole" value="Edit" cssClass="btn btn-primary btn-sm" />
 
-                                </form
+                                </form>
                             </td>
 
                         </tr>

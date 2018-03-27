@@ -64,20 +64,12 @@
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
         <property name="caseManager" ref="jpkiebpmsCaseManager"/>        
-        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
-        <property name="formManager" ref="jpkiebpmsManager"/>
-        <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
-        <property name="groupManager" ref="GroupManager"/>
     </bean>
     
     <bean id="jpkiebpmBpmCaseInstanceSelectorWidgetAction"
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceSelectorWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
-        <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
-        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
-        <property name="formManager" ref="jpkiebpmsManager"/>
-        <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
-        <property name="groupManager" ref="GroupManager"/>     
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>       
     </bean>
     
     <bean id="jpkiebpmBpmCaseInstanceCommentsWidgetAction"
@@ -86,17 +78,17 @@
     </bean>
     
     <bean id="jpkiebpmBpmCaseInstanceDetailsWidgetAction"
-              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceDetailsWidgetAction"
-              parent="simpleWidgetAction" scope="prototype">
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceDetailsWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
     </bean>
     
     <bean id="jpkiebpmBpmCaseInstanceActionsWidgetAction"
-              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceActionsWidgetAction"
-              parent="simpleWidgetAction" scope="prototype">
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceActionsWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
     </bean>  
       
     <bean id="jpkiebpmBpmCaseInstanceRolesWidgetAction"
-              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceRolesWidgetAction"
-              parent="simpleWidgetAction" scope="prototype">
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceRolesWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
     </bean>
 </beans>

@@ -1,10 +1,11 @@
-<%@ taglib prefix="s" uri="/struts-tags"%>
-<%@ taglib prefix="wp" uri="/aps-core"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
-String cId = java.util.UUID.randomUUID().toString();
+    String cId = java.util.UUID.randomUUID().toString();
 %>
 
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
@@ -34,7 +35,7 @@ String cId = java.util.UUID.randomUUID().toString();
         <div class="ibox float-e-margins">
             <div class="ibox-content">
                 <div class="chat-activity-list">
-                    <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceComments/postComment.action"/>" method="post" class="form-horizontal" ng-repeat="comment in vm.mod.comments track by comment.id" >
+                    <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceComments/updateComment.action"/>" method="post" class="form-horizontal" ng-repeat="comment in vm.mod.comments track by comment.id" >
                         <s:if test="casePath != null">
                             <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
                         </s:if>
@@ -58,20 +59,23 @@ String cId = java.util.UUID.randomUUID().toString();
                                     {{::comment.text}}
                                 </p>
                                 <small class="text-muted" ng-show="!editMode">{{::comment['added-at']['java.util.Date']|date:medium}}</small>
-                                <s:textarea name="commentInput" cssClass="form-control" value="" ng-show="editMode"/>
+
+                                <input type="text" name="commentInput" class="form-control" ng-show="editMode"  value=""/>
                                 <br>
-                                <s:submit type="button" action="deleteComment" cssClass="btn btn-link" ng-show="!editMode">
+                                <wpsf:submit type="button" action="deleteComment" name="deleteComment" class="btn btn-link" ng-show="!editMode">
                                     <small>Delete</small>
-                                </s:submit>
+                                </wpsf:submit>
+
                                 <button class="btn btn-sm btn-link" type="button" ng-show="!editMode" ng-click="editMode = true"><small>Edit</small></button>
                                 <button class="btn btn-sm btn-link" type="button" ng-show="editMode" ng-click="editMode = false" ><small>Cancel</small></button>
-                                <s:submit type="button" action="updateComment" cssClass="btn btn-link" ng-show="editMode">
+
+                                <wpsf:submit type="button" action="updateComment" name="updateComment" class="btn btn-link" ng-show="editMode" >
                                     <small>Update</small>
-                                </s:submit>
+                                </wpsf:submit>
                             </div>
                         </div>
-                        <s:hidden name="caseCommentId" value="{{::comment.id}}"/>
-                        <s:hidden name="commentInput" value="{{::comment.text}}"/>
+                        <input type="hidden" name="caseCommentId" value="{{::comment.id}}" />
+                        <input type="hidden" name="commentInput" value="{{::comment.text}}" />
                     </form>
                 </div>
             </div>
@@ -89,11 +93,11 @@ String cId = java.util.UUID.randomUUID().toString();
                     <s:if test="channelPath != null">
                         <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
                     </s:if>
-                    <div class="form-group">
-                        <s:textarea name="commentInput" cssClass="form-control" value=""/>
-                    </div>
+                    <s:textarea name="commentInput" cssClass="form-control" value="" />
                     <div class="text-right">
-                        <s:submit type="button" action="postComment" value="Send message" cssClass="btn btn-sm btn-primary m-t-n-xs" />
+                        <button type="submit" action="postComment" class="btn btn-sm btn-primary m-t-n-xs">
+                            Send message
+                        </button>
                     </div>
                 </form>
             </div>
@@ -101,12 +105,12 @@ String cId = java.util.UUID.randomUUID().toString();
     </div>
 </div>
 <script type="text/javascript">
-    (function(){
+    (function () {
     <s:if test="comments != null">
-    bootBpmCommentsComponents('<%=cId%>',<s:property value="comments" escapeHtml="false" escapeJavaScript="false"/>);
-    angular.element(document).ready(function () {
-        angular.bootstrap( document.getElementById('<%=cId%>'), ['<%=cId%>']);
-    });
+        bootBpmCommentsComponents('<%=cId%>',<s:property value="comments" escapeHtml="false" escapeJavaScript="false"/>);
+        angular.element(document).ready(function () {
+            angular.bootstrap(document.getElementById('<%=cId%>'), ['<%=cId%>']);
+        });
 
     </s:if>
     })();

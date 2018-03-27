@@ -52,12 +52,11 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
     private String knowledgeSourceId;
     private String containerid;
     private String channelPath;
-    
+
     private String roles;
     private String caseRoleName;
     private String user;
     private String group;
-    
 
     public String view() {
         try {
@@ -78,6 +77,7 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
 
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
                 this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
+                this.setChannelPath(this.getFrontEndCaseData());
             }
 
         } catch (ApsSystemException t) {
@@ -96,10 +96,10 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
             if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
-                
-                System.out.println("Deleteing role"+this.getContainerid()+" - "+ this.getCasePath()+" - "+ this.getCaseRoleName()+" - "+ this.getUser()+" - "+ this.getGroup());
 
-                this.getCaseManager().addCaseRoles(this.getContainerid(), this.getCasePath(),this.getCaseRoleName(), this.getUser(), this.getGroup());
+                System.out.println("adding role "+this.getChannelPath()+" - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getCaseRoleName() + " - " + this.getUser() + " - " + this.getGroup());
+
+                this.getCaseManager().addCaseRoles(this.getContainerid(), this.getCasePath(), this.getCaseRoleName(), this.getUser(), this.getGroup());
                 this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
             }
         } catch (ApsSystemException t) {
@@ -117,9 +117,8 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
             if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
 
-                System.out.println("Deleteing role"+this.getContainerid()+" - "+ this.getCasePath()+" - "+ this.getCaseRoleName()+" - "+ this.getUser()+" - "+ this.getGroup());
-                this.getCaseManager().deleteCaseRoles(this.getContainerid(), this.getCasePath(),this.getCaseRoleName(), this.getUser(), this.getGroup());
-                System.out.println("Deleteing role"+this.getContainerid()+" - "+ this.getCasePath()+" - "+ this.getCaseRoleName()+" - "+ this.getUser()+" - "+ this.getGroup());
+                System.out.println("Deleteing role "+this.getChannelPath()+" - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getCaseRoleName() + " - " + this.getUser() + " - " + this.getGroup());
+                this.getCaseManager().deleteCaseRoles(this.getContainerid(), this.getCasePath(), this.getCaseRoleName(), this.getUser(), this.getGroup());
                 this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
             }
         } catch (ApsSystemException t) {

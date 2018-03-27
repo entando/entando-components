@@ -75,6 +75,8 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
 
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
                 this.setComments(this.getCaseManager().getCaseComments(this.getContainerid(), this.getCasePath()).toString());
+                
+                this.setChannelPath(this.getFrontEndCaseData());
             }
 
         } catch (ApsSystemException t) {
@@ -89,7 +91,6 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
-
             if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
@@ -110,7 +111,6 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
-
             if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
@@ -129,7 +129,6 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
-
             if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
 
