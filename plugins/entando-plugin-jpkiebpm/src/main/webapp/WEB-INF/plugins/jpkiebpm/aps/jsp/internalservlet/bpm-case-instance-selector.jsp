@@ -39,12 +39,12 @@
             </s:if>
             <div class="form-horizontal">
                 <div class="form-group">
-                    <label class="control-label col-xs-4" for="processPath">Select a Case Instance</label>
-                    <div class="col-xs-6">
-                        <s:select list="cases" id="casePath" name="casePath">
+                    <label class="control-label col-md-4 col-xs-12" for="processPath">Case Instance</label>
+                    <div class=" col-md-8 col-xs-12">
+                        <s:select list="cases" id="casePath" name="casePath" cssClass="form-control">
                         </s:select>
                         </div>
-                        <div class="col-xs-2">
+                        <div class="col-md-12 col-xs-12">
                         <wpsf:submit type="button" value="Select"
                                      cssClass="btn btn-primary pull-right" />
                     </div>

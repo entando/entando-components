@@ -60,46 +60,48 @@
                                 </p>
                                 <small class="text-muted" ng-show="!editMode">{{::comment['added-at']['java.util.Date']|date:medium}}</small>
 
-                                <input type="text" name="commentInput" class="form-control" ng-show="editMode"  value=""/>
+                                <input type="text" name="commentInput" class="form-control" ng-show="editMode"  ng-value="comment.text"/>
                                 <br>
-                                <wpsf:submit type="button" action="deleteComment" name="deleteComment" class="btn btn-link" ng-show="!editMode">
+                                <wpsf:submit type="button" action="deleteComment" name="deleteComment" cssClass="btnv btn-sm btn-link" ng-show="!editMode">
+
                                     <small>Delete</small>
                                 </wpsf:submit>
 
                                 <button class="btn btn-sm btn-link" type="button" ng-show="!editMode" ng-click="editMode = true"><small>Edit</small></button>
                                 <button class="btn btn-sm btn-link" type="button" ng-show="editMode" ng-click="editMode = false" ><small>Cancel</small></button>
 
-                                <wpsf:submit type="button" action="updateComment" name="updateComment" class="btn btn-link" ng-show="editMode" >
+                                <wpsf:submit type="button" action="updateComment" name="updateComment" ccsClass="btn btn-link" ng-show="editMode" >
                                     <small>Update</small>
                                 </wpsf:submit>
                             </div>
                         </div>
                         <input type="hidden" name="caseCommentId" value="{{::comment.id}}" />
-                        <input type="hidden" name="commentInput" value="{{::comment.text}}" />
                     </form>
                 </div>
             </div>
-            <div class="chat-form">
-                <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceComments/postComment.action"/>" method="post" class="form-horizontal" >
-                    <s:if test="casePath != null">
-                        <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                    <s:if test="knowledgeSourceId != null">
-                        <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                    <s:if test="containerid != null">
-                        <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                    <s:if test="channelPath != null">
-                        <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                    <s:textarea name="commentInput" cssClass="form-control" value="" />
-                    <div class="text-right">
-                        <button type="submit" action="postComment" class="btn btn-sm btn-primary m-t-n-xs">
-                            Send message
-                        </button>
-                    </div>
-                </form>
+            <div class="ibox-content">
+                <div class="chat-form">
+                    <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceComments/postComment.action"/>" method="post" class="form-horizontal" >
+                        <s:if test="casePath != null">
+                            <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
+                        </s:if>
+                        <s:if test="knowledgeSourceId != null">
+                            <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
+                        </s:if>
+                        <s:if test="containerid != null">
+                            <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
+                        </s:if>
+                        <s:if test="channelPath != null">
+                            <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
+                        </s:if>
+                        <s:textarea name="commentInput" cssClass="form-control" value="" ng-model="vm.newCommentText"/>
+                        <div class="text-right">
+                            <button type="submit" action="postComment" class="btn btn-sm btn-primary" ng-disabled="!vm.newCommentText || vm.newCommentText.length===0">
+                                Send message
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
