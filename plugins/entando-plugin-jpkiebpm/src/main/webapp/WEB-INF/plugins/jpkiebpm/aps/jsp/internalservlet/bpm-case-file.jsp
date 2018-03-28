@@ -26,7 +26,9 @@
         </div>
         <div class="ibox float-e-margins">
             <div class="ibox-content">
-                <form action="<s:action name="updateData" />" method="post" class="form-horizontal" >
+
+
+                <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceFile/updateData.action"/>" method="post" class="form-horizontal" >
                     <%--<s:form namespace="/ExtStr2/do/bpm/FrontEnd/CaseInstanceFile" action="updateData" method="post" cssClass="form-horizontal">--%>
                     <s:if test="casePath != null">
                         <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
@@ -50,24 +52,25 @@
                     <h4>Data id (key) to be deleted</h4>
                     <s:textfield name="dataId" id="dataId" cssClass="form-control"/>
 
-                    <%--<wpsf:submit type="button" action="updateData" name="updateData" cssClass="btnv btn-sm btn-link" >--%>
-                    <!--<small>Edit</small>-->
-                    <%--</wpsf:submit>--%>
-                    <button type="submit" name="updateData" class="btnv btn-sm btn-link" >Update</button>
-                    <button type="submit" name="deleteData" formaction="<s:action name="deleteData" />" class="btnv btn-sm btn-link" >Remove</button>
+                    <wpsf:submit type="button" action="updateData" name="updateData" cssClass="btnv btn-sm btn-link" >
+                        <small>Edit</small>
+                    </wpsf:submit>
+                    <!--                    <button type="submit" name="updateData" class="btnv btn-sm btn-link" >Update</button>
+                                        <button type="submit" name="deleteData" formaction="<s:action name="deleteData" />" class="btnv btn-sm btn-link" >Remove</button>-->
 
-                    <%--<wpsf:submit type="button" action="deleteData" name="deleteData" ccsClass="btn btn-link"  >--%>
-                    <!--<small>Remove</small>-->
-                    <%--</wpsf:submit>--%>
+                    <wpsf:submit type="button" action="deleteData" name="deleteData" ccsClass="btn btn-link"  >
+                        <small>Remove</small>
+                    </wpsf:submit>
                     <%--</s:form>--%>
                 </form>
+
 
                 <!--configuration-->
                 <s:if test="frontEndCaseData != null">
                     <s:property value="frontEndCaseData" escapeHtml="false" escapeJavaScript="false"/>
                 </s:if>
                 <br />
-                 <s:if test="frontEndCaseData != null">
+                <s:if test="frontEndCaseData != null">
                     <s:property value="frontEndCaseData" escapeHtml="false" escapeJavaScript="false"/>
                 </s:if>
                 <br />
@@ -76,7 +79,7 @@
                     <s:property value="casefile" escapeHtml="false" escapeJavaScript="false"/>
                 </s:if>
                 <br />
-          
+
             </div>
         </div>
     </div>

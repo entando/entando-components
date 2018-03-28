@@ -81,6 +81,7 @@
             </div>
             <div class="ibox-content">
                 <div class="chat-form">
+                    
                     <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceComments/postComment.action"/>" method="post" class="form-horizontal" >
                         <s:if test="casePath != null">
                             <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
@@ -101,6 +102,8 @@
                             </button>
                         </div>
                     </form>
+                        
+                        
                 </div>
             </div>
         </div>
