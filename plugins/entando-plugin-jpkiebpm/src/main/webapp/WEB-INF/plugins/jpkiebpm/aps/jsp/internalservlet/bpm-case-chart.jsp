@@ -18,47 +18,52 @@
     <s:set var="angular" value="true" scope="request"/>
 </s:if>
 
-<s:if test="#request['bpmComments']==null">
-    <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jbpm-comments.js"></script>
-    <s:set var="bpmComments" value="true" scope="request"/>
+<s:if test="#request['bpmCharts']==null">
+    <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jbpm-charts.js"></script>
+    <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/angular-chart.min.js"></script>
+    
+    <s:set var="bpmCharts" value="true" scope="request"/>
 </s:if>
 
-<div class="constainer-fluid">
-    <div class="ibox">
-        <div class="ibox-title">
-
-            <h2 class="card-pf-title">
-                <span>Case Instance Chart</span>
-            </h2>
-        </div>
-        <div class="ibox float-e-margins">
-            <div class="ibox-content">
-                <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceChart/view.action"/>" method="post" class="form-horizontal" >
-                    <s:if test="casePath != null">
-                        <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                    <s:if test="knowledgeSourceId != null">
-                        <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                    <s:if test="containerid != null">
-                        <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                    <s:if test="channelPath != null">
-                        <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                </form>
-                 <!--configuration-->
-                <s:if test="frontEndCaseData != null">
-                    <s:property value="frontEndCaseData" escapeHtml="false" escapeJavaScript="false"/>
-                </s:if>
-                <br />
-                <br />
-                <!--Milestone data-->
-                <s:if test="milestones != null">
-                    <s:property value="milestones" escapeHtml="false" escapeJavaScript="false"/>
-                </s:if>
-
-            </div>
-        </div>
+    
+    
+    
+    
+    
+<div class="ibox" id="<%=cId%>" ng-controller="CaseMilestoneChartController as vm">
+  <div class="ibox-title"></div>
+  <div class="ibox-content">
+    <canvas id="doughnut" class="chart-base" chart-type="vm.mod.chartType"
+    chart-data="vm.mod.chart.data" chart-labels="vm.mod.chart.labels" chart-options="vm.mod.chart.options" chart-colors="vm.mod.chart.colors">
+  </canvas> 
+      <br>
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h3 class="panel-title">Config</h3>
     </div>
-</div>
+    <div class="panel-body" style="min-height:400px">
+        <pre>{{vm.mod|json}}</pre>
+    </div>
+   
+  </div>
+  </div>
+</div>    
+    
+    
+    
+<script type="text/javascript">
+
+    (function () {
+    <s:if test="milestones != null">
+        bootBpmChartsComponents('<%=cId%>',<s:property value="milestones" escapeHtml="false" escapeJavaScript="false"/>);
+
+        angular.element(document).ready(function () {
+            angular.bootstrap(document.getElementById('<%=cId%>'), ['<%=cId%>']);
+        });
+
+    </s:if>
+    })();
+</script>
+    
+    
+ 
