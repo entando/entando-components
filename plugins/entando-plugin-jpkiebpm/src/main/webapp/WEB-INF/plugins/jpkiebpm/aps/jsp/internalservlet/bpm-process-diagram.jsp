@@ -8,20 +8,25 @@
 %>
 
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
-<s:if test="#request['bpmcss']==null">
-    <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jbpm-widget-ext.css" rel="stylesheet">
-    <s:set var="bpmcss" value="true" scope="request"/>
+<s:if test="#request['svgfix']==null">
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+
+            var svgList = document.getElementsByTagName("svg");
+            for (i = 0; i < svgList.length; i++) {
+                var svg = svgList[i];
+                var h = svg.getAttribute("height")
+                var w = svg.getAttribute("width")
+                svg.removeAttribute("height")
+                svg.removeAttribute("width")
+                svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+            }
+
+        });
+    </script>
+    <s:set var="svgfix" value="true" scope="request"/>
 </s:if>
 
-<s:if test="#request['angular']==null">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
-    <s:set var="angular" value="true" scope="request"/>
-</s:if>
-
-<s:if test="#request['bpmComments']==null">
-    <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jbpm-comments.js"></script>
-    <s:set var="bpmComments" value="true" scope="request"/>
-</s:if>
 
 <div class="constainer-fluid">
     <div class="ibox">
@@ -47,15 +52,10 @@
                         <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
                     </s:if>
                 </form>
-                <!--configuration-->
-                <s:if test="frontEndCaseData != null">
-                    <s:property value="frontEndCaseData" escapeHtml="false" escapeJavaScript="false"/>
-                </s:if>
-                <br />
-                <br />
-                <!--Milestone data-->
                 <s:if test="diagram != null">
-                    <s:property value="diagram" escapeHtml="false" escapeJavaScript="false"/>
+                    
+                        <s:property value="diagram" escapeHtml="false" escapeJavaScript="false"/>
+                    
                 </s:if>
 
             </div>
