@@ -490,7 +490,7 @@ public class CaseManager extends KieFormManager {
     }
 
     public boolean addCaseRoles(String containerId, String caseID, String caseRoleName, String user, String group) throws ApsSystemException {
-        Map<String, String> headersMap = new HashMap<>(); 
+        Map<String, String> headersMap = new HashMap<>();
         Map<String, String> requestParams = new HashMap<>();
 
         if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseRoleName) || StringUtils.isBlank(user) || StringUtils.isBlank(group)) {
@@ -503,7 +503,7 @@ public class CaseManager extends KieFormManager {
             // add header
 
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
-            
+
             requestParams.put(HEADER_CASE_ROLES_USER_PARM, user);
             requestParams.put(HEADER_CASE_ROLES_GROUP_PARM, group);
 
@@ -517,8 +517,6 @@ public class CaseManager extends KieFormManager {
                     .setRequestParams(requestParams)
                     .setDebug(super.getConfig().getDebug())
                     .doRequest();
-            
-                System.out.println("result role"+result);
 
             return true;
 
@@ -529,7 +527,7 @@ public class CaseManager extends KieFormManager {
     }
 
     public boolean deleteCaseRoles(String containerId, String caseID, String caseRoleName, String user, String group) throws ApsSystemException {
-        Map<String, String> headersMap = new HashMap<>(); 
+        Map<String, String> headersMap = new HashMap<>();
         Map<String, String> requestParams = new HashMap<>();
 
         if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseRoleName) || StringUtils.isBlank(user) || StringUtils.isBlank(group)) {
@@ -542,7 +540,7 @@ public class CaseManager extends KieFormManager {
             // add header
 
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
-            
+
             requestParams.put(HEADER_CASE_ROLES_USER_PARM, user);
             requestParams.put(HEADER_CASE_ROLES_GROUP_PARM, group);
 
@@ -562,6 +560,116 @@ public class CaseManager extends KieFormManager {
         } catch (Throwable t) {
             throw new ApsSystemException("Error deleting role", t);
         }
+    }
+
+    public JSONObject getCaseFile(String containerId, String caseID) throws ApsSystemException {
+
+        JSONObject caseFile = null;
+        Map<String, String> headersMap = new HashMap<>();
+
+        String result;
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+            return caseFile;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_CASE_FILE).resolveParams(containerId, caseID);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+            // perform query
+            result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+
+            if (!result.isEmpty()) {
+                caseFile = new JSONObject(result);
+
+                logger.debug("received successful message: ", result);
+
+            } else {
+                logger.debug("received empty case file message: ");
+            }
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error getting the cases roles", t);
+        }
+        return caseFile;
+
+    }
+
+    public boolean postCaseFile(String containerId, String caseID, String data) throws ApsSystemException {
+
+        Map<String, String> headersMap = new HashMap<>();
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(data)) {
+            return false;
+        }
+
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_POST_CASE_FILE).resolveParams(containerId, caseID);
+            // add header
+
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+
+            // perform query
+            String result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setPayload(data)
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+
+            return true;
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error posting data into case file", t);
+        }
+
+    }
+
+    public boolean deleteCaseFile(String containerId, String caseID, String dataId) throws ApsSystemException {
+
+        Map<String, String> headersMap = new HashMap<>();
+        Map<String, String> requestParams = new HashMap<>();
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(dataId)) {
+            return false;
+        }
+
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_DELETE_CASE_FILE).resolveParams(containerId, caseID);
+            // add header
+
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            requestParams.put(HEADER_CASE_FILE_DATA_ID_PARM, dataId);
+
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+
+            // perform query
+            String result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setRequestParams(requestParams)
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+
+            return true;
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error deleting data", t);
+        }
+
     }
 
     public String getContainerId() {

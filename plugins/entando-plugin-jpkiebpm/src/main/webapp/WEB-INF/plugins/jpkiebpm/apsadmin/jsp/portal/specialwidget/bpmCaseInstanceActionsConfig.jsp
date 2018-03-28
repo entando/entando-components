@@ -37,7 +37,7 @@
         <s:param name="selectedNode" value="pageCode"></s:param>
     </s:action>
 
-    <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceCommentsViewer" class="form-horizontal">
+    <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceActionsViewer" class="form-horizontal">
         <p class="noscreen">
             <wpsf:hidden name="pageCode"/>
             <wpsf:hidden name="frame"/>

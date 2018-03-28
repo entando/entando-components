@@ -26,6 +26,7 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
+import static java.util.Arrays.asList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -49,7 +50,6 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
     private CaseManager caseManager;
     private String processPath;
-    private String processPathDefaultValue;
     private String casesDefinitions;
     private List<KieContainer> process;
     private String frontEndMilestonesData;
@@ -60,34 +60,13 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     private String kieContainerListJson;
 
     private String configID;
+    private List<Integer> channels;
 
     @Override
     public String init() {
         String result = super.init();
-//        this.extractInitConfig();
         return result;
     }
-
-//    @Override
-//    public String save() {
-//
-//        String result = super.save();
-//        Widget widget = this.createNewWidget();
-//
-//        try {
-//            if (widget != null) {
-//
-//                widget.getConfig().setProperty("frontEndMilestonesData", this.getFrontEndMilestonesData());
-//            } else {
-//                logger.error("Null widget");
-//                // return INPUT;
-//            }
-//        } catch (Throwable t) {
-//            logger.error("error in save ", t);
-//            return FAILURE;
-//        }
-//        return result;
-//    }
     public String chooseKnowledgeSourceForm() {
         try {
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
@@ -242,14 +221,6 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         this.process = process;
     }
 
-    public String getProcessPathDefaultValue() {
-        return processPathDefaultValue;
-    }
-
-    public void setProcessPathDefaultValue(String processPathDefaultValue) {
-        this.processPathDefaultValue = processPathDefaultValue;
-    }
-
     public HashMap<String, KieBpmConfig> getKnowledgeSource() {
         return knowledgeSource;
     }
@@ -288,6 +259,14 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
     public void setKnowledgeSourceJson(String knowledgeSourceJson) {
         this.knowledgeSourceJson = knowledgeSourceJson;
+    }
+
+    public List<Integer> getChannels() {
+        return channels = asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+    }
+
+    public void setChannels(List<Integer> channels) {
+        this.channels = channels;
     }
 
 }

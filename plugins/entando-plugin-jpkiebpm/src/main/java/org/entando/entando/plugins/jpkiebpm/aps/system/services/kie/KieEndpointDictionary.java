@@ -62,7 +62,7 @@ public class KieEndpointDictionary {
         endpoints.put(API_GET_TASK_FORM_DEFINITION, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/forms/tasks/%s?filter=true", HttpStatus.SC_OK));
         endpoints.put(API_GET_PROCESS_DEFINITION, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/forms/processes/%s?filter=true", HttpStatus.SC_OK, true));
         endpoints.put(API_POST_PROCESS_START, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/containers/%s/processes/%s/instances/correlation/%s", HttpStatus.SC_CREATED, true));
-        endpoints.put(API_GET_PROCESS_DIAGRAM, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/images/processes/instances/%s", HttpStatus.SC_OK, true));
+        endpoints.put(API_GET_PROCESS_DIAGRAM, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/images/processes/%s", HttpStatus.SC_OK, true));
         endpoints.put(API_GET_DATA_HUMAN_TASK, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/tasks/%s?withInputData=true&withOutputData=true", HttpStatus.SC_OK, true));
         endpoints.put(API_GET_DATA_HUMAN_TASK_DETAIL, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/tasks/%s?withAssignments=true", HttpStatus.SC_OK, true));
         endpoints.put(API_PUT_HUMAN_TASK, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/tasks/%s/states/completed?auto-progress=true", HttpStatus.SC_CREATED, true));
@@ -87,6 +87,10 @@ public class KieEndpointDictionary {
         endpoints.put(API_GET_ROLE, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/cases/instances/%s/roles", HttpStatus.SC_OK));
         endpoints.put(API_PUT_ROLE, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/cases/instances/%s/roles/%s", HttpStatus.SC_CREATED, true));
         endpoints.put(API_DELETE_ROLE, new Endpoint(IEndpoint.httpVerb.DELETE, "/services/rest/server/containers/%s/cases/instances/%s/roles/%s", HttpStatus.SC_CREATED, true));
+        
+        endpoints.put(API_GET_CASE_FILE, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/cases/instances/%s/caseFile", HttpStatus.SC_OK));
+        endpoints.put(API_POST_CASE_FILE, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/containers/%s/cases/instances/%s/caseFile", HttpStatus.SC_CREATED, true));
+        endpoints.put(API_DELETE_CASE_FILE, new Endpoint(IEndpoint.httpVerb.DELETE, "/services/rest/server/containers/%s/cases/instances/%s/caseFile", HttpStatus.SC_CREATED, true));
         
         endpoints.put(API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/tasks/%s/states/%s", HttpStatus.SC_CREATED, true));
         // /services/rest/server/containers/%s/tasks/%s/states/%s?user=legalWorker&auto-progress=true

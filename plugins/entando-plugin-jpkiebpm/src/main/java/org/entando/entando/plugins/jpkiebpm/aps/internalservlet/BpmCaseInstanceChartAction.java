@@ -42,42 +42,42 @@ import org.slf4j.LoggerFactory;
  *
  * @author own_strong
  */
-public class BpmCaseInstanceRolesAction extends BaseAction {
+public class BpmCaseInstanceChartAction extends BaseAction {
 
-    private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceRolesAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceChartAction.class);
     private CaseManager caseManager;
     private String frontEndCaseData;
-
+    private String channel;
+    
     private String knowledgeSourceId;
     private String containerid;
     private String casePath;
     private String channelPath;
 
-    private String roles;
-    private String caseRoleName;
-    private String user;
-    private String group;
+    private String milestones;
 
     public String view() {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
 
             if ((!StringUtils.isBlank(this.getKnowledgeSourceId()) || !StringUtils.isBlank(this.getContainerid()) || !StringUtils.isBlank(this.getCasePath()) || !StringUtils.isBlank(this.getChannelPath()))
-                    && (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData()))) {
+                    && (this.getChannelPath().equalsIgnoreCase(this.getChannel()))) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
-                this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
+                this.setMilestones(this.getCaseManager().getMilestonesList(this.getContainerid(), this.getCasePath()).toString());
 
             } else {
 
                 //set the config to the first config in database
                 this.setKnowledgeSourceId(this.getCaseManager().loadFirstConfigurations().getId());
                 this.setContainerid(this.getCaseManager().getContainersList().get(0).getContainerId());
-
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
-                this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
                 this.setChannelPath(this.getFrontEndCaseData());
+                
+                this.setMilestones(this.getCaseManager().getMilestonesList(this.getContainerid(), this.getCasePath()).toString());
             }
 
         } catch (ApsSystemException t) {
@@ -85,46 +85,6 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
             return FAILURE;
         }
 
-        return SUCCESS;
-    }
-
-    public String addRole() {
-        try {
-            String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
-            this.setFrontEndCaseData(frontEndCaseDataIn);
-
-            if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
-
-                this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
-
-                System.out.println("adding role "+this.getChannelPath()+" - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getCaseRoleName() + " - " + this.getUser() + " - " + this.getGroup());
-
-                this.getCaseManager().addCaseRoles(this.getContainerid(), this.getCasePath(), this.getCaseRoleName(), this.getUser(), this.getGroup());
-                this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
-            }
-        } catch (ApsSystemException t) {
-            logger.error("Error getting the configuration parameter", t);
-            return FAILURE;
-        }
-        return SUCCESS;
-    }
-
-    public String deleteRole() {
-        try {
-            String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
-            this.setFrontEndCaseData(frontEndCaseDataIn);
-
-            if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
-                this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
-
-                System.out.println("Deleteing role "+this.getChannelPath()+" - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getCaseRoleName() + " - " + this.getUser() + " - " + this.getGroup());
-                this.getCaseManager().deleteCaseRoles(this.getContainerid(), this.getCasePath(), this.getCaseRoleName(), this.getUser(), this.getGroup());
-                this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
-            }
-        } catch (ApsSystemException t) {
-            logger.error("Error getting the configuration parameter", t);
-            return FAILURE;
-        }
         return SUCCESS;
     }
 
@@ -173,14 +133,6 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
         this.frontEndCaseData = frontEndCaseData;
     }
 
-    public String getCasePath() {
-        return casePath;
-    }
-
-    public void setCasePath(String casePath) {
-        this.casePath = casePath;
-    }
-
     public String getKnowledgeSourceId() {
         return knowledgeSourceId;
     }
@@ -197,6 +149,14 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
         this.containerid = containerid;
     }
 
+    public String getCasePath() {
+        return casePath;
+    }
+
+    public void setCasePath(String casePath) {
+        this.casePath = casePath;
+    }
+
     public String getChannelPath() {
         return channelPath;
     }
@@ -205,35 +165,21 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
         this.channelPath = channelPath;
     }
 
-    public String getCaseRoleName() {
-        return caseRoleName;
+    public String getMilestones() {
+        return milestones;
     }
 
-    public void setCaseRoleName(String caseRoleName) {
-        this.caseRoleName = caseRoleName;
+    public void setMilestones(String milestones) {
+        this.milestones = milestones;
     }
 
-    public String getUser() {
-        return user;
+    public String getChannel() {
+        return channel;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
+    
 
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
-
-    public String getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String roles) {
-        this.roles = roles;
-    }
 }

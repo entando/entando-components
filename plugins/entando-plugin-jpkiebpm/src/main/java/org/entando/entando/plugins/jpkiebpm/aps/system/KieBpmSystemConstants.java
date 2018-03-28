@@ -55,6 +55,9 @@ public interface KieBpmSystemConstants {
     //Case instance roles parameters
     public final static String HEADER_CASE_ROLES_USER_PARM = "user";
     public final static String HEADER_CASE_ROLES_GROUP_PARM = "group";
+    
+    //Case File parameters
+    public final static String HEADER_CASE_FILE_DATA_ID_PARM = "dataId";
 
     // configuration parameter
     public final static String KIE_BPM_CONFIG_ITEM = "jpkiebpm_config";
@@ -94,6 +97,9 @@ public interface KieBpmSystemConstants {
     public final static String API_GET_ROLE = "API_GET_ROLE";
     public final static String API_PUT_ROLE = "API_PUT_ROLE";
     public final static String API_DELETE_ROLE = "API_DELETE_ROLE";
+    public final static String API_GET_CASE_FILE = "API_GET_CASE_FILE";
+    public final static String API_POST_CASE_FILE = "API_POST_CASE_FILE";
+    public final static String API_DELETE_CASE_FILE = "API_DELETE_CASE_FILE";
     
     
 

@@ -50,6 +50,7 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-progress-status', '<?xml version="1.
 <property key="en">BPM-Case progress status</property>
 <property key="it">BPM-Case stato del processo</property>
 </properties>', '<config>
+        <parameter name="channel">channel</parameter>
 	<parameter name="frontEndMilestonesData">frontEndMilestonesData</parameter>
 	<action name="jpkiebpmBpmCaseProgressWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
@@ -92,4 +93,31 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-roles', '<?xml version="1.0" encodin
 </properties>', '<config>
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceRolesWidgetViewerConfig"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+INSERT INTO widgetcatalog VALUES ('bpm-case-chart', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM-Case chart</property>
+<property key="it">BPM-Case chart</property>
+</properties>', '<config>
+        <parameter name="channel">channel</parameter>
+	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
+	<action name="jpkiebpmBpmCaseInstanceChartWidgetViewerConfig"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+INSERT INTO widgetcatalog VALUES ('bpm-process-diagram', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM-Process diagram</property>
+<property key="it">Diagramma di processo BPM</property>
+</properties>', '<config>
+        <parameter name="channel">channel</parameter>
+	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
+	<action name="jpkiebpmBpmProcessDiagramWidgetViewerConfig"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+INSERT INTO widgetcatalog VALUES ('bpm-case-file', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM-Case file</property>
+<property key="it">File caso BPM</property>
+</properties>', '<config>
+        <parameter name="channel">channel</parameter>
+	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
+	<action name="jpkiebpmBpmCaseInstanceFileWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
