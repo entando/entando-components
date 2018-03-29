@@ -24,6 +24,20 @@
 </s:if>
 
 <div class="constainer-fluid" id="<%=cId%>" ng-controller="CaseDetailsController as vm">
+     <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceDetails/view.action"/>" method="post" class="form-horizontal" >
+                    <s:if test="casePath != null">
+                        <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
+                    </s:if>
+                    <s:if test="knowledgeSourceId != null">
+                        <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
+                    </s:if>
+                    <s:if test="containerid != null">
+                        <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
+                    </s:if>
+                    <s:if test="channelPath != null">
+                        <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
+                    </s:if>
+                </form>
     <div class="ibox">
         <div class="ibox-content">
             <div class="row">
@@ -53,51 +67,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="ibox">
-        <div class="ibox-title">
-
-            <h2 class="card-pf-title">
-                <span>Case Instance Details</span>
-            </h2>
-        </div>
-        <div class="ibox float-e-margins">
-            <div class="ibox-content">
-                <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceDetails/view.action"/>" method="post" class="form-horizontal" >
-                    <s:if test="casePath != null">
-                        <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                    <s:if test="knowledgeSourceId != null">
-                        <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                    <s:if test="containerid != null">
-                        <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                    <s:if test="channelPath != null">
-                        <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
-                    </s:if>
-                </form>
-
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <script type="text/javascript">

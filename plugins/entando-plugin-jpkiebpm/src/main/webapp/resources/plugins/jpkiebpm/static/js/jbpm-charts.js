@@ -29,7 +29,7 @@ var bootBpmChartsComponents = (function (appId,caseInstanceData) {
  .controller('CaseMilestoneChartController', CaseMilestoneChartController)
     .service('ChartKieServerService', ChartKieServerService)
 
-    function CaseMilestoneChartController($log,$filter, ChartKieServerService) {
+    function CaseMilestoneChartController($filter,$scope, ChartKieServerService) {
     var vm = this;
 
     vm.mod = {
@@ -64,7 +64,8 @@ var bootBpmChartsComponents = (function (appId,caseInstanceData) {
 
     function init() {
       readDetails().then(function () {
-        generateChartData()
+        generateChartData();
+        $scope.$watch('vm.mod.details',generateChartData);
       });
     }
 

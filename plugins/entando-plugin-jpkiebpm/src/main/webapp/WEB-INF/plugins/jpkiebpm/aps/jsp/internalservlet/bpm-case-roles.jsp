@@ -86,20 +86,24 @@ String cId = java.util.UUID.randomUUID().toString();
                                     <s:if test="channelPath != null">
                                         <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
                                     </s:if>
-                                    <!--div class="form-group">
-                                    <s:textfield name="caseRoleName" cssClass="form-control"/>
-                                </div>
-                                <div class="form-group">
-                                    <s:textfield name="user" cssClass="form-control"/>
-                                </div>
-                                <div class="form-group">
-                                    <s:textfield name="group" cssClass="form-control"/>
-                                </div-->
 
-                                    <wpsf:submit type="button" action="deleteRole" name="deleteRole" value="Remove" cssClass="btn btn-default btn-sm" />
+                                    <s:hidden name="caseRoleName" escapeHtml="false" escapeJavaScript="false" value="{{::role.name}}"/>
 
+                                    <div class="form-group" ng-show="role.edit">
+                                        <label><i class="fa fa-user"></i> User
+                                            <s:textfield name="user" cssClass="form-control"/>
 
-                                    <wpsf:submit type="button" action="addRole" name="addRole" value="Edit" cssClass="btn btn-primary btn-sm" />
+                                    </div>
+                                    <div class="form-group" ng-show="role.edit">
+                                        <label><i class="fa fa-users"></i> Group
+                                            <s:textfield name="group" cssClass="form-control"/>
+                                        </label>
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-sm" ng-click="role.edit = true" ng-hide="role.edit">Edit</button>
+                                    <wpsf:submit type="button" action="deleteRole" name="deleteRole" value="Remove Assignments" ng-hide="role.edit" cssClass="btn btn-default btn-sm" ng-disabled="role.users.length===0 && role.groups.length===0"/>
+
+                                    <button type="button" class="btn btn-primary btn-sm" ng-click="role.edit = false" ng-show="role.edit">Cancel</button>
+                                    <wpsf:submit type="button" action="addRole" name="addRole" value="Save" cssClass="btn btn-primary btn-sm" ng-show="role.edit" />
 
                                 </form>
                             </td>
