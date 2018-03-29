@@ -64,7 +64,6 @@ public class BpmCaseInstanceFileAction extends BaseAction {
             this.setFrontEndCaseData(frontEndCaseDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-            System.out.println("this.getChannel() " + this.getChannel());
 
             if ((!StringUtils.isBlank(this.getKnowledgeSourceId()) || !StringUtils.isBlank(this.getContainerid()) || !StringUtils.isBlank(this.getCasePath()) || !StringUtils.isBlank(this.getChannelPath()))
                     && (this.getChannelPath().equalsIgnoreCase(this.getChannel()))) {
@@ -97,12 +96,12 @@ public class BpmCaseInstanceFileAction extends BaseAction {
             this.setFrontEndCaseData(frontEndCaseDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-            System.out.println("this.getChannel() " + this.getChannel());
+
             if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
 
-                System.out.println("adding role " + this.getChannelPath() + " - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getData());
+//                System.out.println("adding role " + this.getChannelPath() + " - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getData());
 
                 this.getCaseManager().postCaseFile(this.getContainerid(), this.getCasePath(), this.getData());
                 this.setCasefile(this.getCaseManager().getCaseFile(this.getContainerid(), this.getCasePath()).toString());
@@ -124,7 +123,7 @@ public class BpmCaseInstanceFileAction extends BaseAction {
             if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
 
-                System.out.println("Deleteing role " + this.getChannelPath() + " - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getDataId());
+//                System.out.println("Deleteing data " + this.getChannelPath() + " - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getDataId());
 
                 this.getCaseManager().deleteCaseFile(this.getContainerid(), this.getCasePath(), this.getDataId());
                 this.setCasefile(this.getCaseManager().getCaseFile(this.getContainerid(), this.getCasePath()).toString());

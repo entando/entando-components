@@ -48,10 +48,12 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(BpmFormAction.class);
     private CaseManager caseManager;
     private String frontEndCaseData;
-    private String casePath;
+    private String channel;
     private String comments;
     private String commentInput;
     private String caseCommentId;
+    
+    private String casePath;
     private String knowledgeSourceId;
     private String containerid;
     private String channelPath;
@@ -60,13 +62,16 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
 
             if ((!StringUtils.isBlank(this.getKnowledgeSourceId()) || !StringUtils.isBlank(this.getContainerid()) || !StringUtils.isBlank(this.getCasePath()) || !StringUtils.isBlank(this.getChannelPath()))
-                    && (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData()))) {
+                    && (this.getChannelPath().equalsIgnoreCase(this.getChannel()))) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
                 this.setComments(this.getCaseManager().getCaseComments(this.getContainerid(), this.getCasePath()).toString());
-
+                this.setChannelPath(this.getChannel());
+                
             } else {
 
                 //set the config to the first config in database
@@ -75,8 +80,7 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
 
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
                 this.setComments(this.getCaseManager().getCaseComments(this.getContainerid(), this.getCasePath()).toString());
-                
-                this.setChannelPath(this.getFrontEndCaseData());
+                this.setChannelPath(this.getChannel());
             }
 
         } catch (ApsSystemException t) {
@@ -91,7 +95,10 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
-            if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
+            
+            if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
 
@@ -111,7 +118,10 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
-            if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
+            
+            if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
 
@@ -129,7 +139,10 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
-            if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
+            
+            if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
 
                 this.getCaseManager().deleteCaseComments(this.getContainerid(), this.getCasePath(), this.getCaseCommentId());
@@ -241,6 +254,14 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
 
     public void setChannelPath(String channelPath) {
         this.channelPath = channelPath;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
 }

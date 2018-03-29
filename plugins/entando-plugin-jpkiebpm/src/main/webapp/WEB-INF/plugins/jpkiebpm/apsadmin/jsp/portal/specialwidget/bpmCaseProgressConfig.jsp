@@ -73,6 +73,7 @@
                 <s:set var="isknowledgeSourcePathSetted" value="%{knowledgeSourcePath != null && knowledgeSourcePath != ''}"/>
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
                 <s:set var="isCasesDefinitions" value="%{casesDefinitions != null && casesDefinitions != ''}"/>
+                <s:set var="isChannelSetted" value="%{channel != null && channel != ''}"/>
 
 
 
@@ -134,6 +135,19 @@
 
                         </div>
 
+                    </s:if>
+                    <s:if test="#isProcessPathSetted">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-xs-8">
+                                <div class="form-group">
+                                    <label for="channel">Channel</label>
+                                    <div class="input-group">
+                                        <s:select list="channels" id="channel" name="channel" class="form-control">
+                                        </s:select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </s:if>
                     <s:if test="#isCasesDefinitions">
                         <hr>
@@ -222,25 +236,18 @@
     
                         </div>
                         -->
-
-
-                        <!--Please store your JSON output in following hidden input in order to be sent to widget front end-->
-                        <!--Please dont change the name or the id-->
-                        <!--<input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-model=""/>-->
-                        <!--If you use the above hidden input, you must comment out the following tag so the form submitted with your data (instead of default data)-->
-
                         <input type="hidden" name="frontEndMilestonesData" id="frontEndMilestonesData" ng-value="vm.ui.defToJSONEscaped()"/>
-
-
-                        <!--You also need to comment out line 98 & 114 in org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction class -->
                     </s:if>
                 </div>
             </div>
         </div>
+        <s:if test="channel != null">
+            <wpsf:hidden name="channel"/>
+        </s:if>
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-xs-6">
-                    <input type="button" cssClass="btn btn-primary" id="milestonetablesavebt" value="Apply"/>
+                    <!--<input type="button" cssClass="btn btn-primary" id="milestonetablesavebt" value="Apply"/>-->
                     <!--ng-click="setfrontEndMilestonesData()" />-->
                 </div>
                 <div class="col-xs-6">

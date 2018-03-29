@@ -38,6 +38,7 @@ public class BpmBpmCaseInstanceActionsWidgetAction extends SimpleWidgetConfigAct
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmBpmCaseInstanceActionsWidgetAction.class);
 
+    private String channel;
     private List<Integer> channels;
     private String frontEndCaseData;
 
@@ -57,10 +58,12 @@ public class BpmBpmCaseInstanceActionsWidgetAction extends SimpleWidgetConfigAct
         if (widget != null) {
 
             frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
+             String channel = widget.getConfig().getProperty("channel");
 
-            if (StringUtils.isNotBlank(frontEndCaseDatain)) {
+//            if (StringUtils.isNotBlank(frontEndCaseDatain)) {
                 this.setFrontEndCaseData(frontEndCaseDatain);
-            }
+                this.setChannel(channel);
+//            }
 
         } else {
             System.out.println(" widget is null in extraction ");
@@ -84,5 +87,14 @@ public class BpmBpmCaseInstanceActionsWidgetAction extends SimpleWidgetConfigAct
     public void setChannels(List<Integer> channels) {
         this.channels = channels;
     }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+    
     
 }

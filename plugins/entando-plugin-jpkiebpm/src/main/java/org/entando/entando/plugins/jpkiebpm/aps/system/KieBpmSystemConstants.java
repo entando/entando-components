@@ -100,6 +100,8 @@ public interface KieBpmSystemConstants {
     public final static String API_GET_CASE_FILE = "API_GET_CASE_FILE";
     public final static String API_POST_CASE_FILE = "API_POST_CASE_FILE";
     public final static String API_DELETE_CASE_FILE = "API_DELETE_CASE_FILE";
+    public final static String API_GET_PROCESS_INSTANCE = "API_GET_PROCESS_INSTANCE";
+    
     
     
 

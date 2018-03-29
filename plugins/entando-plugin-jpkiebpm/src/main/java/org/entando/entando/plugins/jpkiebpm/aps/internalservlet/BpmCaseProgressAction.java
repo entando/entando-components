@@ -46,55 +46,54 @@ import org.slf4j.LoggerFactory;
  */
 public class BpmCaseProgressAction extends BaseAction {
 
-    private static final Logger logger = LoggerFactory.getLogger(BpmFormAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(BpmCaseProgressAction.class);
     private CaseManager caseManager;
+    private String channel;
     private String frontEndMilestonesData;
-    private List<String> cases;
-    private String casePath;
+//    private List<String> cases;
     private String caseInstanceMilestones;
+
+    private String configuredKnowledgeSourceId;
+    private String configuredContainerid;
+
+    private String knowledgeSourceId;
+    private String casePath;
+    private String containerid;
+    private String channelPath;
 
     public String view() {
         try {
 
             String frontEndMilestonesDataIn = extractWidgetConfig("frontEndMilestonesData");
-            String containerid = getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDataIn);
             this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
+            String channelIn = extractWidgetConfig("channel");
 
-            this.getCaseManager().setKieServerConfiguration(getKieIDfromfrontEndMilestonesData(frontEndMilestonesDataIn));
-            this.setCases(this.getCaseManager().getCaseInstancesList(containerid));
+            this.setConfiguredKnowledgeSourceId(getKieIDfromfrontEndMilestonesData(frontEndMilestonesDataIn));
+            this.setConfiguredContainerid(getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDataIn));
+            this.setChannel(channelIn);
 
-            if (!StringUtils.isBlank(this.getCasePath())) {
-                String updatedMilestones = this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString();
-                this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(frontEndMilestonesDataIn, updatedMilestones));
+            this.getCaseManager().setKieServerConfiguration(this.getConfiguredKnowledgeSourceId());
+
+            if ((!StringUtils.isBlank(this.getKnowledgeSourceId()) || !StringUtils.isBlank(this.getContainerid()) || !StringUtils.isBlank(this.getCasePath()) || !StringUtils.isBlank(this.getChannelPath()))
+                    && (this.getKnowledgeSourceId().equalsIgnoreCase(this.getConfiguredKnowledgeSourceId()))
+                    && (this.getContainerid().equalsIgnoreCase(this.getConfiguredContainerid()))
+                    && (this.getChannelPath().equalsIgnoreCase(this.getChannel()))) {
+
+                String updatedMilestones = this.getCaseManager().getMilestonesList(this.getConfiguredContainerid(), this.getCasePath()).toString();
+                this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(this.getFrontEndMilestonesData(), updatedMilestones));
+
             } else {
-                this.setCasePath(this.getCases().get(0));
-                String updatedMilestones = this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString();
-                this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(frontEndMilestonesDataIn, updatedMilestones));
+
+                this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getConfiguredContainerid()).get(0));
+                String updatedMilestones = this.getCaseManager().getMilestonesList(this.getConfiguredContainerid(), this.getCasePath()).toString();
+                this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(this.getFrontEndMilestonesData(), updatedMilestones));
 
             }
-
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
             return FAILURE;
         }
 
-        return SUCCESS;
-    }
-
-    public String selectCaseInstance() {
-        try {
-            String containerid = getContainerIDfromfrontEndMilestonesData(this.getFrontEndMilestonesData());
-
-            this.getCaseManager().setKieServerConfiguration(getKieIDfromfrontEndMilestonesData(this.getFrontEndMilestonesData()));
-            this.setCases(this.getCaseManager().getCaseInstancesList(containerid));
-
-            String updatedMilestones = this.getCaseManager().getMilestonesList(containerid, this.getCasePath()).toString();
-            this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(this.getFrontEndMilestonesData(), updatedMilestones));
-
-        } catch (ApsSystemException t) {
-            logger.error("Error getting the configuration parameter", t);
-            return FAILURE;
-        }
         return SUCCESS;
     }
 
@@ -143,14 +142,6 @@ public class BpmCaseProgressAction extends BaseAction {
         this.frontEndMilestonesData = frontEndMilestonesData;
     }
 
-    public List<String> getCases() {
-        return cases;
-    }
-
-    public void setCases(List<String> cases) {
-        this.cases = cases;
-    }
-
     public String getCasePath() {
         return casePath;
     }
@@ -165,6 +156,54 @@ public class BpmCaseProgressAction extends BaseAction {
 
     public void setCaseInstanceMilestones(String caseInstanceMilestones) {
         this.caseInstanceMilestones = caseInstanceMilestones;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public String getKnowledgeSourceId() {
+        return knowledgeSourceId;
+    }
+
+    public void setKnowledgeSourceId(String knowledgeSourceId) {
+        this.knowledgeSourceId = knowledgeSourceId;
+    }
+
+    public String getContainerid() {
+        return containerid;
+    }
+
+    public void setContainerid(String containerid) {
+        this.containerid = containerid;
+    }
+
+    public String getChannelPath() {
+        return channelPath;
+    }
+
+    public void setChannelPath(String channelPath) {
+        this.channelPath = channelPath;
+    }
+
+    public String getConfiguredKnowledgeSourceId() {
+        return configuredKnowledgeSourceId;
+    }
+
+    public void setConfiguredKnowledgeSourceId(String configuredKnowledgeSourceId) {
+        this.configuredKnowledgeSourceId = configuredKnowledgeSourceId;
+    }
+
+    public String getConfiguredContainerid() {
+        return configuredContainerid;
+    }
+
+    public void setConfiguredContainerid(String configuredContainerid) {
+        this.configuredContainerid = configuredContainerid;
     }
 
 }

@@ -72,6 +72,7 @@
 
                 <s:set var="isknowledgeSourcePathSetted" value="%{knowledgeSourcePath != null && knowledgeSourcePath != ''}"/>
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
+                <s:set var="isChannelSetted" value="%{channel != null && channel != ''}"/>
 
 
                 <div class="container-fluid">
@@ -104,7 +105,6 @@
                     </div>
 
                     <s:if test="#isknowledgeSourcePathSetted">
-
                         <div class="row">
                             <div class="col-lg-8 col-md-8 col-xs-8">
 
@@ -115,21 +115,7 @@
                                         <s:select list="process" id="container-id" name="processPath"  
                                                   listKey="containerId"
                                                   listValue="containerId" class="form-control">
-                                        </s:select>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-8 col-md-8 col-xs-8">
-
-                                <div class="form-group">
-                                    <label for="channelPath">Channel</label>
-                                    <div class="input-group">
-                                        <s:select list="channels" id="channelPath" name="channelPath" class="form-control">
-                                        </s:select>
+                                        </s:select>                                        
                                         <span class="input-group-btn">
                                             <s:if test="#isProcessPathSetted">
                                                 <wpsf:submit action="changeForm" value="Change Container"
@@ -147,11 +133,29 @@
                         </div>
 
                     </s:if>
+
+                    <s:if test="#isProcessPathSetted">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-xs-8">
+                                <div class="form-group">
+                                    <label for="channel">Channel</label>
+                                    <div class="input-group">
+                                        <s:select list="channels" id="channel" name="channel" class="form-control">
+                                        </s:select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </s:if>
+
                 </div>
             </div>
         </div>
         <s:if test="frontEndCaseData != null">
             <wpsf:hidden name="frontEndCaseData"/>
+        </s:if>        
+        <s:if test="channel != null">
+            <wpsf:hidden name="channel"/>
         </s:if>
         <div class="form-horizontal">
             <div class="form-group">
@@ -165,25 +169,25 @@
         </div>
 
     </s:form>
-    <!--<pre style="display:none;">-->
+    <pre style="display:none;">
     <!--Saved Configurations-->
     <br />
     <br />
     <!--kieContainerListJson value-->
     kieContainerListJson value
     <br />
-    <s:if test="kieContainerListJson != null">
-        <s:property value="kieContainerListJson" escapeJavaScript="false" escapeHtml="false"/>
-    </s:if>
+        <s:if test="kieContainerListJson != null">
+            <s:property value="kieContainerListJson" escapeJavaScript="false" escapeHtml="false"/>
+        </s:if>
     <!--/kieContainerListJson value-->
     <br />
     <br />
     <!--knowledgeSourceJson value-->
     knowledgeSourceJson value
     <br />
-    <s:if test="knowledgeSourceJson != null">
-        <s:property value="knowledgeSourceJson" escapeJavaScript="false" escapeHtml="false"/>
-    </s:if>
+        <s:if test="knowledgeSourceJson != null">
+            <s:property value="knowledgeSourceJson" escapeJavaScript="false" escapeHtml="false"/>
+        </s:if>
     <!--/knowledgeSourceJson value-->
-    <!--</pre>-->
+    </pre>
 </div>

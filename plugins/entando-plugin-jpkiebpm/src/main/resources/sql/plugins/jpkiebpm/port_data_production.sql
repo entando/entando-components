@@ -59,6 +59,7 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-instance-selector', '<?xml version="
 <property key="en">BPM-Case instance selector</property>
 <property key="it">Selettore di istanza Case BPM</property>
 </properties>', '<config>
+        <parameter name="channel">channel</parameter>
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceSelectorWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
@@ -67,6 +68,7 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-comments', '<?xml version="1.0" enco
 <property key="en">BPM-Case comments</property>
 <property key="it">Commenti del caso BPM</property>
 </properties>', '<config>
+        <parameter name="channel">channel</parameter>
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceCommentsWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
@@ -75,6 +77,7 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-details', '<?xml version="1.0" encod
 <property key="en">BPM-Case details</property>
 <property key="it">Dettagli caso BPM</property>
 </properties>', '<config>
+        <parameter name="channel">channel</parameter>
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceDetailsWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
@@ -83,6 +86,7 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-actions', '<?xml version="1.0" encod
 <property key="en">BPM-Case actions</property>
 <property key="it">Azioni caso BPM</property>
 </properties>', '<config>
+        <parameter name="channel">channel</parameter>
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceActionsWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
@@ -91,6 +95,7 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-roles', '<?xml version="1.0" encodin
 <property key="en">BPM-Case roles</property>
 <property key="it">Ruoli caso BPM</property>
 </properties>', '<config>
+        <parameter name="channel">channel</parameter>
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceRolesWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);

@@ -611,11 +611,14 @@ public class CaseManager extends KieFormManager {
         }
 
         try {
+            JSONObject datajs = new JSONObject(data);
+
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_POST_CASE_FILE).resolveParams(containerId, caseID);
             // add header
 
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
 
             // generate client from the current configuration
             KieClient client = super.getCurrentClient();
@@ -624,7 +627,7 @@ public class CaseManager extends KieFormManager {
             String result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setPayload(data)
+                    .setPayload("" + datajs + "")
                     .setDebug(super.getConfig().getDebug())
                     .doRequest();
 
@@ -669,6 +672,46 @@ public class CaseManager extends KieFormManager {
         } catch (Throwable t) {
             throw new ApsSystemException("Error deleting data", t);
         }
+
+    }
+
+    public JSONObject getProcessInstanceByCorrelationKey(String correlationKey) throws ApsSystemException {
+
+        JSONObject processInstance = null;
+        Map<String, String> headersMap = new HashMap<>();
+
+        String result;
+
+        if (!super.getConfig().getActive() || StringUtils.isBlank(correlationKey)) {
+            return processInstance;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_PROCESS_INSTANCE).resolveParams(correlationKey);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            // generate client from the current configuration
+            KieClient client = super.getCurrentClient();
+            // perform query
+            result = (String) new KieRequestBuilder(client)
+                    .setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setDebug(super.getConfig().getDebug())
+                    .doRequest();
+
+            if (!result.isEmpty()) {
+                processInstance = new JSONObject(result);
+
+                logger.debug("received successful message: ", result);
+
+            } else {
+                logger.debug("received empty process instance message: ");
+            }
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error getting the cases roles", t);
+        }
+        return processInstance;
 
     }
 

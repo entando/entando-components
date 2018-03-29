@@ -47,6 +47,7 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceRolesAction.class);
     private CaseManager caseManager;
     private String frontEndCaseData;
+    private String channel;
 
     private String knowledgeSourceId;
     private String containerid;
@@ -62,9 +63,11 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
 
             if ((!StringUtils.isBlank(this.getKnowledgeSourceId()) || !StringUtils.isBlank(this.getContainerid()) || !StringUtils.isBlank(this.getCasePath()) || !StringUtils.isBlank(this.getChannelPath()))
-                    && (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData()))) {
+                    && (this.getChannelPath().equalsIgnoreCase(this.getChannel()))) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
                 this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
@@ -77,7 +80,7 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
 
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
                 this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
-                this.setChannelPath(this.getFrontEndCaseData());
+                this.setChannelPath(this.getChannel());
             }
 
         } catch (ApsSystemException t) {
@@ -92,13 +95,12 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
 
-            if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
+            if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
-
-                System.out.println("adding role "+this.getChannelPath()+" - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getCaseRoleName() + " - " + this.getUser() + " - " + this.getGroup());
-
                 this.getCaseManager().addCaseRoles(this.getContainerid(), this.getCasePath(), this.getCaseRoleName(), this.getUser(), this.getGroup());
                 this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
             }
@@ -113,11 +115,12 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
 
-            if (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData())) {
+            if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
+                
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
-
-                System.out.println("Deleteing role "+this.getChannelPath()+" - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getCaseRoleName() + " - " + this.getUser() + " - " + this.getGroup());
                 this.getCaseManager().deleteCaseRoles(this.getContainerid(), this.getCasePath(), this.getCaseRoleName(), this.getUser(), this.getGroup());
                 this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
             }
@@ -236,4 +239,13 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
     public void setRoles(String roles) {
         this.roles = roles;
     }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+    
 }

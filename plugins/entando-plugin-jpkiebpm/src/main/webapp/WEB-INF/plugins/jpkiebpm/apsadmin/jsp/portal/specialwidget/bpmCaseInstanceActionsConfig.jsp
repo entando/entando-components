@@ -69,14 +69,14 @@
                         </ul>
                     </div>
                 </s:if>
-                <s:set var="isFrontEndCaseDataSetted" value="%{frontEndCaseData != null && frontEndCaseData != ''}"/>
+                <s:set var="isChannelSetted" value="%{channel != null && channel != ''}"/>
                 <div class="container-fluid">
                     <div class="col-lg-8 col-md-8 col-xs-8">
 
                         <div class="form-group">
                             <label for="channelPath">Channel</label>
                             <div class="input-group">
-                                <s:select list="channels" id="frontEndCaseData" name="frontEndCaseData" class="form-control"></s:select>
+                                <s:select list="channels" id="channel" name="channel" class="form-control"></s:select>
                                 </div>
                             </div>
                         </div>
@@ -85,6 +85,9 @@
             </div>
         <s:if test="frontEndCaseData != null">
             <wpsf:hidden name="frontEndCaseData"/>
+        </s:if>
+        <s:if test="channel != null">
+            <wpsf:hidden name="channel"/>
         </s:if>
         <div class="form-horizontal">
             <div class="form-group">

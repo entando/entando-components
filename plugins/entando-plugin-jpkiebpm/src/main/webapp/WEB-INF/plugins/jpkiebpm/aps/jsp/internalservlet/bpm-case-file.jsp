@@ -45,9 +45,7 @@
 
                     <h4>Data to be added (json String, adding the same key will overwrite the existing value)</h4>
 
-                    <%--<s:if test="casefile != null">--%>
                     <s:textarea name="data" id="data" cssClass="form-control" value="%{casefile}" />
-                    <%--</s:if>--%>
                     <br />
                     <h4>Data id (key) to be deleted</h4>
                     <s:textfield name="dataId" id="dataId" cssClass="form-control"/>
@@ -55,13 +53,10 @@
                     <wpsf:submit type="button" action="updateData" name="updateData" cssClass="btnv btn-sm btn-link" >
                         <small>Edit</small>
                     </wpsf:submit>
-                    <!--                    <button type="submit" name="updateData" class="btnv btn-sm btn-link" >Update</button>
-                                        <button type="submit" name="deleteData" formaction="<s:action name="deleteData" />" class="btnv btn-sm btn-link" >Remove</button>-->
 
                     <wpsf:submit type="button" action="deleteData" name="deleteData" ccsClass="btn btn-link"  >
                         <small>Remove</small>
                     </wpsf:submit>
-                    <%--</s:form>--%>
                 </form>
 
 

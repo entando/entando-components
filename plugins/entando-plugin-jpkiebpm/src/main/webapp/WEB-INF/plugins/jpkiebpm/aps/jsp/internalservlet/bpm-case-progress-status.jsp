@@ -22,6 +22,21 @@ String cId = java.util.UUID.randomUUID().toString();
 
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 
+<form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view.action"/>" method="post" class="form-horizontal" >
+    <s:if test="casePath != null">
+        <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
+    </s:if>
+    <s:if test="knowledgeSourceId != null">
+        <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
+    </s:if>
+    <s:if test="containerid != null">
+        <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
+    </s:if>
+    <s:if test="channelPath != null">
+        <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
+    </s:if>
+</form>
+
 <s:if test="caseInstanceMilestones!=null">
     <div  id="<%=cId%>" ng-controller="ProgressBarCtrl as vm" class="ibox">
         <script type="text/ng-template" id="basic-tpl">                    

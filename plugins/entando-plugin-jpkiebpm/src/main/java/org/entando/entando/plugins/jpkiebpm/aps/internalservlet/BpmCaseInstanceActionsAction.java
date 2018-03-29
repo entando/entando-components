@@ -47,10 +47,11 @@ public class BpmCaseInstanceActionsAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceActionsAction.class);
     private CaseManager caseManager;
     private String frontEndCaseData;
-    private String casePath;
+    private String channel;
     private String caseInstanceDetails;
 
     private String knowledgeSourceId;
+    private String casePath;
     private String containerid;
     private String channelPath;
 
@@ -58,9 +59,11 @@ public class BpmCaseInstanceActionsAction extends BaseAction {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
 
             if ((!StringUtils.isBlank(this.getKnowledgeSourceId()) || !StringUtils.isBlank(this.getContainerid()) || !StringUtils.isBlank(this.getCasePath()) || !StringUtils.isBlank(this.getChannelPath()))
-                    && (this.getChannelPath().equalsIgnoreCase(this.getFrontEndCaseData()))) {
+                    && (this.getChannelPath().equalsIgnoreCase(this.getChannel()))) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
                 this.setCaseInstanceDetails(this.getCaseManager().getCaseInstancesDetails(this.getContainerid(), this.getCasePath()).toString());
@@ -73,6 +76,7 @@ public class BpmCaseInstanceActionsAction extends BaseAction {
 
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
                 this.setCaseInstanceDetails(this.getCaseManager().getCaseInstancesDetails(this.getContainerid(), this.getCasePath()).toString());
+                this.setChannelPath(this.getChannel());
             }
 
         } catch (ApsSystemException t) {
@@ -166,6 +170,14 @@ public class BpmCaseInstanceActionsAction extends BaseAction {
 
     public void setChannelPath(String channelPath) {
         this.channelPath = channelPath;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
 }

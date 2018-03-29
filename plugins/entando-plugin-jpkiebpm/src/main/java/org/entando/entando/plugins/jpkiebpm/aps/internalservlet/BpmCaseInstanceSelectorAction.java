@@ -45,12 +45,13 @@ import org.slf4j.LoggerFactory;
  */
 public class BpmCaseInstanceSelectorAction extends BaseAction {
 
-    private static final Logger logger = LoggerFactory.getLogger(BpmFormAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceSelectorAction.class);
     private CaseManager caseManager;
     private List<String> cases;
     private String casePath;
     private String knowledgeSourceId;
     private String containerid;
+    private String channel;
     private String channelPath;
 
     public String view() {
@@ -58,10 +59,12 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
 
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             JSONObject frontEndCaseDataInjs = new JSONObject(frontEndCaseDataIn);
-            
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
+
             this.setKnowledgeSourceId(frontEndCaseDataInjs.getString("knowledge-source-id"));
             this.setContainerid(frontEndCaseDataInjs.getString("container-id"));
-            this.setChannelPath(frontEndCaseDataInjs.getString("channel"));
+            this.setChannelPath(this.getChannel());
 
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
             this.setCases(this.getCaseManager().getCaseInstancesList(this.getContainerid()));
@@ -79,10 +82,12 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
 
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             JSONObject frontEndCaseDataInjs = new JSONObject(frontEndCaseDataIn);
+            String channelIn = extractWidgetConfig("channel");
+            this.setChannel(channelIn);
 
             this.setKnowledgeSourceId(frontEndCaseDataInjs.getString("knowledge-source-id"));
             this.setContainerid(frontEndCaseDataInjs.getString("container-id"));
-            this.setChannelPath(frontEndCaseDataInjs.getString("channel"));
+            this.setChannelPath(this.getChannel());
 
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
             this.setCases(this.getCaseManager().getCaseInstancesList(this.getContainerid()));
@@ -171,5 +176,13 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
     public void setChannelPath(String channelPath) {
         this.channelPath = channelPath;
     }
-    
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
 }

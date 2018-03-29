@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getProcessInstanceIdFromProcessInstanceJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +68,9 @@ public class BpmProcessDiagramAction extends BaseAction {
                     && (this.getChannelPath().equalsIgnoreCase(this.getChannel()))) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
-                this.setDiagram(this.getCaseManager().getProcInstDiagramImage(this.getContainerid(), "itorders.orderhardware"));
+
+                String processInstanceid = getProcessInstanceIdFromProcessInstanceJson(this.getCaseManager().getProcessInstanceByCorrelationKey(this.getCasePath()));
+                this.setDiagram(this.getCaseManager().getProcInstDiagramImage(this.getContainerid(), processInstanceid));
 
             } else {
 
@@ -75,10 +78,10 @@ public class BpmProcessDiagramAction extends BaseAction {
                 this.setKnowledgeSourceId(this.getCaseManager().loadFirstConfigurations().getId());
                 this.setContainerid(this.getCaseManager().getContainersList().get(0).getContainerId());
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
-                this.setChannelPath(this.getFrontEndCaseData());
+                this.setChannelPath(this.getChannel());
 
-                this.setDiagram(this.getCaseManager().getProcInstDiagramImage(this.getContainerid(), "itorders.orderhardware"));
-
+                String processInstanceid = getProcessInstanceIdFromProcessInstanceJson(this.getCaseManager().getProcessInstanceByCorrelationKey(this.getCasePath()));
+                this.setDiagram(this.getCaseManager().getProcInstDiagramImage(this.getContainerid(), processInstanceid));
             }
 
         } catch (ApsSystemException t) {

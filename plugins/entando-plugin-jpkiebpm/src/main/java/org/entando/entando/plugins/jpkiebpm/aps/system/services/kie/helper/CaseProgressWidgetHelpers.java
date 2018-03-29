@@ -136,4 +136,11 @@ public class CaseProgressWidgetHelpers {
         uuid = uuid.replace("-", "").replace(":", "").replace(".", "").replace("{", "").replace("}", "");
         return uuid;
     }
+    
+    public static String getProcessInstanceIdFromProcessInstanceJson(JSONObject processInstanceJson){
+        
+        String processid = processInstanceJson.getString("process-id");
+        
+        return processid;
+    }
 }

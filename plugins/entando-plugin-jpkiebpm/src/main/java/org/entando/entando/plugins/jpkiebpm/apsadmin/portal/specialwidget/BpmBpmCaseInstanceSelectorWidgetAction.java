@@ -53,8 +53,8 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
     private String knowledgeSourcePath;
     private List<KieContainer> process;
     private String processPath;
+    private String channel;
     private List<Integer> channels;
-    private String channelPath;
 
     private String knowledgeSourceJson;
     private String kieContainerListJson;
@@ -105,7 +105,6 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
             JSONObject frontEndCaseDatajs = new JSONObject();
             frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourcePath());
             frontEndCaseDatajs.put("container-id", this.getProcessPath());
-            frontEndCaseDatajs.put("channel", this.getChannelPath());
             this.setFrontEndCaseData(frontEndCaseDatajs.toString());
 
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
@@ -127,7 +126,6 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
             JSONObject frontEndCaseDatajs = new JSONObject();
             frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourcePath());
             frontEndCaseDatajs.put("container-id", this.getProcessPath());
-            frontEndCaseDatajs.put("channel", this.getChannelPath());
             this.setFrontEndCaseData(frontEndCaseDatajs.toString());
 
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
@@ -151,11 +149,12 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
 
         Widget widget = this.getWidget();
         String frontEndCaseDatain;
+        String channel;
         try {
             if (widget != null) {
 
                 frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
-
+                channel = widget.getConfig().getProperty("channel");
                 if (StringUtils.isNotBlank(frontEndCaseDatain)) {
 
                     JSONObject frontEndCaseDatainjs = new JSONObject(frontEndCaseDatain);
@@ -167,6 +166,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
 
                     this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
                     this.setProcess(this.getCaseManager().getContainersList());
+                    this.setChannel(channel);
 
                     this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
 
@@ -250,14 +250,6 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
         this.frontEndCaseData = frontEndCaseData;
     }
 
-    public String getChannelPath() {
-        return channelPath;
-    }
-
-    public void setChannelPath(String channelPath) {
-        this.channelPath = channelPath;
-    }
-
     public List<Integer> getChannels() {
         return channels = asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
     }
@@ -265,5 +257,14 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
     public void setChannels(List<Integer> channels) {
         this.channels = channels;
     }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+    
 
 }

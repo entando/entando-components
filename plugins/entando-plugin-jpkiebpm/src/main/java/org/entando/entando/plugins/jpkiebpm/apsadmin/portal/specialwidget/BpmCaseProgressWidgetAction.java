@@ -60,6 +60,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
     private String kieContainerListJson;
 
     private String configID;
+    private String channel;
     private List<Integer> channels;
 
     @Override
@@ -67,6 +68,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         String result = super.init();
         return result;
     }
+
     public String chooseKnowledgeSourceForm() {
         try {
             this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourcePath());
@@ -149,10 +151,12 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
             Widget widget = this.getWidget();
             String frontEndMilestonesDatain;
+            String channel;
 
             if (widget != null) {
 
                 frontEndMilestonesDatain = widget.getConfig().getProperty("frontEndMilestonesData");
+                channel = widget.getConfig().getProperty("channel");
 
                 if (StringUtils.isNotBlank(frontEndMilestonesDatain)) {
 
@@ -168,7 +172,8 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
                     this.setProcessPath(getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
                     this.setConfigID(this.getCaseManager().getConfig().getId());
                     this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(this.getProcessPath()).toString());
-
+                    this.setChannel(channel);
+                    
                 } else {
                     this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
                     this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
@@ -267,6 +272,14 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
 
     public void setChannels(List<Integer> channels) {
         this.channels = channels;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
 }
