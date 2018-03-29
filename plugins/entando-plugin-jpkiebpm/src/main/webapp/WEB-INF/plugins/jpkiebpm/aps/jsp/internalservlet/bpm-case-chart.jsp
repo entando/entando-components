@@ -25,7 +25,14 @@
     <s:set var="bpmCharts" value="true" scope="request"/>
 </s:if>
 
-    
+ <s:if test="#request['ngjsoneditor']==null">
+     <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jsoneditor.min.css" rel="stylesheet">
+    <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jsoneditor.min.js"></script>
+    <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/ng-jsoneditor.min.js"></script>
+    angular-chart.min.js
+    <s:set var="ngjsoneditor" value="true" scope="request"/>
+</s:if>
+       
     
     
     
@@ -37,15 +44,15 @@
     chart-data="vm.mod.chart.data" chart-labels="vm.mod.chart.labels" chart-options="vm.mod.chart.options" chart-colors="vm.mod.chart.colors">
   </canvas> 
       <br>
-  <div class="panel panel-danger">
-    <div class="panel-heading">
-      <h3 class="panel-title">Config</h3>
+     <div class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title">Config</h3>
+      </div>
+      <div class="panel-body" style="min-height:400px">
+        <div ng-jsoneditor ng-model="vm.mod" options="{}"></div>
+      </div>
+
     </div>
-    <div class="panel-body" style="min-height:400px">
-        <pre>{{vm.mod|json}}</pre>
-    </div>
-   
-  </div>
   </div>
 </div>    
     

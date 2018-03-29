@@ -25,7 +25,7 @@
 var bootBpmChartsComponents = (function (appId,caseInstanceData) {
     'use strict';
 
-    angular.module(appId, ['chart.js'])
+    angular.module(appId, ['chart.js','ng.jsoneditor'])
  .controller('CaseMilestoneChartController', CaseMilestoneChartController)
     .service('ChartKieServerService', ChartKieServerService)
 
