@@ -50,6 +50,18 @@ var bootBpmRolesComponents = (function (appId,rolesData) {
             rolesFilter: 'all',
             setFilter: function(value){
                 vm.ui.rolesFilter=value;
+            },
+            getUser: function(role){
+                if(role.users){
+                    return role.users.join(" ")
+                }
+                return "";
+            },
+            getGroup :  function(role){
+                if(role.groups){
+                    return role.groups.join(" ")
+                }
+                return "";
             }
         };
 

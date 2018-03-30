@@ -91,12 +91,12 @@ String cId = java.util.UUID.randomUUID().toString();
 
                                     <div class="form-group" ng-show="role.edit">
                                         <label><i class="fa fa-user"></i> User
-                                            <s:textfield name="user" cssClass="form-control"/>
+                                            <s:textfield name="user" cssClass="form-control" value="{{vm.ui.getUser(role)}}"/>
 
                                     </div>
                                     <div class="form-group" ng-show="role.edit">
                                         <label><i class="fa fa-users"></i> Group
-                                            <s:textfield name="group" cssClass="form-control"/>
+                                            <s:textfield name="group" cssClass="form-control" value="{{vm.ui.getGroup(role)}}"/>
                                         </label>
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm" ng-click="role.edit = true" ng-hide="role.edit">Edit</button>
