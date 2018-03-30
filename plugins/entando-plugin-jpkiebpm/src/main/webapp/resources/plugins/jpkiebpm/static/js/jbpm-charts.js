@@ -22,94 +22,110 @@
  * THE SOFTWARE.
  */
 
-var bootBpmChartsComponents = (function (appId,caseInstanceData) {
+var bootBpmChartsComponents = (function (appId, caseInstanceData) {
     'use strict';
 
-    angular.module(appId, ['chart.js','ng.jsoneditor'])
- .controller('CaseMilestoneChartController', CaseMilestoneChartController)
-    .service('ChartKieServerService', ChartKieServerService)
+    angular.module(appId, ['chart.js', 'ng.jsoneditor'])
+            .controller('CaseMilestoneChartController', CaseMilestoneChartController)
+            .service('ChartKieServerService', ChartKieServerService)
 
-    function CaseMilestoneChartController($filter,$scope, ChartKieServerService) {
-    var vm = this;
+    function CaseMilestoneChartController($filter, $scope, ChartKieServerService) {
+        var vm = this;
 
-    vm.mod = {
-      chartType:'doughnut'
-    }
-
-
-    var chartPrototype = {
-      labels: [],
-      data: [],
-      options: {
-        responsive: true,
-        legend: {
-          display: true,
-          position: 'left'
-        },
-        title: {
-          display: true,
-          text: ''
-        },
-        animation: {
-          animateScale: true,
-          animateRotate: true
+        vm.mod = {
+            chartType: 'doughnut'
         }
-      }
-
-    }
-    //init 
-    init();
 
 
-
-    function init() {
-      readDetails().then(function () {
-        generateChartData();
-        $scope.$watch('vm.mod.details',generateChartData);
-      });
-    }
-
-    function generateChartData() {
-
-      vm.mod.chart = angular.copy(chartPrototype);
-      vm.mod.chart.labels.push('To Do');
-      vm.mod.chart.labels.push('In Progress');
-      vm.mod.chart.labels.push('Completed');
-
-      vm.mod.chart.data.push(0);
-      vm.mod.chart.data.push($filter('filter')(vm.mod.details, {
-        "milestone-achieved": false
-      }).length);
-      vm.mod.chart.data.push($filter('filter')(vm.mod.details, {
-        "milestone-achieved": true
-      }).length);
-
-
-      vm.mod.chart.colors=['#B5B7CC','#DEDDDE','#1AB393'];
-
-
-
-    }
-
-    function readDetails() {
-      return ChartKieServerService.case.details.read().then(function (res) {
-        return vm.mod.details = res;
-      });
-    }
-  }
-
-  function ChartKieServerService($q) {
-   
-    this.case = {
-      details: {
-        read: function readRoles() {
-          var defer = $q.defer();
-
-          defer.resolve(caseInstanceData);
-          return defer.promise;
+        vm.ui = {
+            getLabelText: function (ms) {
+                if (ms["milestone-achieved"]) {
+                    return "Completed";
+                }
+                return "In Progress";
+            },
+            getLabelClass: function (ms) {
+                if (ms["milestone-achieved"]) {
+                    return "label-primary";
+                }
+                return "label-warning";
+            }
         }
-      }
-    };
-  }
-    
+
+
+        var chartPrototype = {
+            labels: [],
+            data: [],
+            options: {
+                responsive: true,
+                legend: {
+                    display: true,
+                    position: 'left'
+                },
+                title: {
+                    display: true,
+                    text: ''
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+
+        }
+        //init 
+        init();
+
+
+
+        function init() {
+            readDetails().then(function () {
+                generateChartData();
+                $scope.$watch('vm.mod.details', generateChartData);
+            });
+        }
+
+        function generateChartData() {
+
+            vm.mod.chart = angular.copy(chartPrototype);
+            vm.mod.chart.labels.push('To Do');
+            vm.mod.chart.labels.push('In Progress');
+            vm.mod.chart.labels.push('Completed');
+
+            vm.mod.chart.data.push(0);
+            vm.mod.chart.data.push($filter('filter')(vm.mod.details, {
+                "milestone-achieved": false
+            }).length);
+            vm.mod.chart.data.push($filter('filter')(vm.mod.details, {
+                "milestone-achieved": true
+            }).length);
+
+
+            vm.mod.chart.colors = ['#B5B7CC', '#DEDDDE', '#1AB393'];
+
+
+
+        }
+
+        function readDetails() {
+            return ChartKieServerService.case.details.read().then(function (res) {
+                return vm.mod.details = res;
+            });
+        }
+    }
+
+    function ChartKieServerService($q) {
+
+        this.case = {
+            details: {
+                read: function readRoles() {
+                    var defer = $q.defer();
+
+                    defer.resolve(caseInstanceData);
+                    return defer.promise;
+                }
+            }
+        };
+    }
+
 })
