@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando.entando.components</groupId>
         <artifactId>entando-components</artifactId>
-        <version>4.3.2-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
     <groupId>org.entando.entando.bundles</groupId>
     <artifactId>entando-bundles-parent</artifactId>
