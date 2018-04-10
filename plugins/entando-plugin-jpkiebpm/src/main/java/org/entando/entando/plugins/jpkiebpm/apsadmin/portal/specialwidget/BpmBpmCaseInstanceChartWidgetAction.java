@@ -36,64 +36,59 @@ import org.slf4j.LoggerFactory;
  */
 public class BpmBpmCaseInstanceChartWidgetAction extends SimpleWidgetConfigAction {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmBpmCaseInstanceActionsWidgetAction.class);
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmBpmCaseInstanceActionsWidgetAction.class);
 
-    private String channel;
-    private List<Integer> channels;
-    private String frontEndCaseData;
+	private String channel;
+	private List<Integer> channels;
+	private String frontEndCaseData;
 
-    @Override
-    public String init() {
-        String result = super.init();
-        return result;
-    }
+	@Override
+	public String init() {
+		String result = super.init();
+		return result;
+	}
 
-    //Helper
-    @Override
-    protected String extractInitConfig() {
-        String result = super.extractInitConfig();
+	@Override
+	protected String extractInitConfig() {
+		String result = super.extractInitConfig();
 
-        Widget widget = this.getWidget();
-        String frontEndCaseDatain;
-        if (widget != null) {
+		Widget widget = this.getWidget();
+		String frontEndCaseDatain;
+		if (widget != null) {
+			frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
+			String channel = widget.getConfig().getProperty("channel");
+			this.setFrontEndCaseData(frontEndCaseDatain);
+			this.setChannel(channel);
+			this.setWidgetTypeCode(this.getWidget().getType().getCode());
+		} else {
+			logger.warn(" widget is null in extraction ");
+		}
 
-            frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
-             String channel = widget.getConfig().getProperty("channel");
+		return result;
+	}
 
-//            if (StringUtils.isNotBlank(frontEndCaseDatain)) {
-                this.setFrontEndCaseData(frontEndCaseDatain);
-                this.setChannel(channel);
-//            }
+	public String getFrontEndCaseData() {
+		return frontEndCaseData;
+	}
 
-        } else {
-            System.out.println(" widget is null in extraction ");
-        }
+	public void setFrontEndCaseData(String frontEndCaseData) {
+		this.frontEndCaseData = frontEndCaseData;
+	}
 
-        return result;
-    }
+	public List<Integer> getChannels() {
+		return channels = asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+	}
 
-    public String getFrontEndCaseData() {
-        return frontEndCaseData;
-    }
+	public void setChannels(List<Integer> channels) {
+		this.channels = channels;
+	}
 
-    public void setFrontEndCaseData(String frontEndCaseData) {
-        this.frontEndCaseData = frontEndCaseData;
-    }
+	public String getChannel() {
+		return channel;
+	}
 
-    public List<Integer> getChannels() {
-        return channels = asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-    }
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
 
-    public void setChannels(List<Integer> channels) {
-        this.channels = channels;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-    
 }

@@ -48,7 +48,6 @@ public class BpmBpmCaseInstanceActionsWidgetAction extends SimpleWidgetConfigAct
         return result;
     }
 
-    //Helper
     @Override
     protected String extractInitConfig() {
         String result = super.extractInitConfig();
@@ -56,17 +55,13 @@ public class BpmBpmCaseInstanceActionsWidgetAction extends SimpleWidgetConfigAct
         Widget widget = this.getWidget();
         String frontEndCaseDatain;
         if (widget != null) {
-
             frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
              String channel = widget.getConfig().getProperty("channel");
-
-//            if (StringUtils.isNotBlank(frontEndCaseDatain)) {
-                this.setFrontEndCaseData(frontEndCaseDatain);
-                this.setChannel(channel);
-//            }
-
+             this.setFrontEndCaseData(frontEndCaseDatain);
+             this.setChannel(channel);
+             this.setWidgetTypeCode(this.getWidget().getType().getCode());
         } else {
-            System.out.println(" widget is null in extraction ");
+            logger.warn(" widget is null in extraction ");
         }
 
         return result;

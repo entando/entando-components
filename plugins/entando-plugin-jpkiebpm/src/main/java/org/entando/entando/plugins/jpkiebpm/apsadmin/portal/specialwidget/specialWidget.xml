@@ -192,7 +192,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
             <interceptor-ref name="entandoDefaultStack">
-                <param name="requestAuth.requiredPermission">managePages</param>
+                <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
 
@@ -200,7 +200,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
             <interceptor-ref name="entandoDefaultStack">
-                <param name="requestAuth.requiredPermission">managePages</param>
+                <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>        
 

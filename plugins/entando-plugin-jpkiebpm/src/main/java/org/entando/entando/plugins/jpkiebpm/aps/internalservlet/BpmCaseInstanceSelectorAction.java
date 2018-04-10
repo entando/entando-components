@@ -100,7 +100,6 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
         return SUCCESS;
     }
 
-    //Helper classes
     protected String extractWidgetConfig(String paramName) {
         String value = null;
         try {

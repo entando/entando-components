@@ -142,7 +142,6 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
         return SUCCESS;
     }
 
-    //Helper
     @Override
     protected String extractInitConfig() {
         String result = super.extractInitConfig();
@@ -152,11 +151,12 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
         String channel;
         try {
             if (widget != null) {
-
+            		this.setWidgetTypeCode(this.getWidget().getType().getCode());
                 frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
                 channel = widget.getConfig().getProperty("channel");
                 if (StringUtils.isNotBlank(frontEndCaseDatain)) {
 
+                		this.setFrontEndCaseData(frontEndCaseDatain);
                     JSONObject frontEndCaseDatainjs = new JSONObject(frontEndCaseDatain);
 
                     this.setKnowledgeSourcePath(frontEndCaseDatainjs.getString("knowledge-source-id"));
@@ -177,7 +177,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
 
                 }
             } else {
-                System.out.println(" widget is null in extraction ");
+                logger.warn(" widget is null in extraction ");
             }
         } catch (ApsSystemException ex) {
             Logger.getLogger(BpmBpmCaseInstanceSelectorWidgetAction.class.getName()).log(Level.SEVERE, null, ex);

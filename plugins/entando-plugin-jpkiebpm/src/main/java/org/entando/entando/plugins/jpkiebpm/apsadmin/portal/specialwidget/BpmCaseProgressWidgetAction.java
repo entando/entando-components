@@ -142,7 +142,6 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
         return SUCCESS;
     }
 
-    //Helper
     @Override
     protected String extractInitConfig() {
         String result = super.extractInitConfig();
@@ -154,7 +153,7 @@ public class BpmCaseProgressWidgetAction extends SimpleWidgetConfigAction {
             String channel;
 
             if (widget != null) {
-
+            		this.setWidgetTypeCode(this.getWidget().getType().getCode());
                 frontEndMilestonesDatain = widget.getConfig().getProperty("frontEndMilestonesData");
                 channel = widget.getConfig().getProperty("channel");
 

@@ -23,12 +23,14 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
+import static java.util.Arrays.asList;
+
+import java.util.List;
+
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
-import static java.util.Arrays.asList;
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -48,7 +50,6 @@ public class BpmBpmCaseInstanceCommentsWidgetAction extends SimpleWidgetConfigAc
         return result;
     }
 
-    //Helper
     @Override
     protected String extractInitConfig() {
         String result = super.extractInitConfig();
@@ -56,17 +57,13 @@ public class BpmBpmCaseInstanceCommentsWidgetAction extends SimpleWidgetConfigAc
         Widget widget = this.getWidget();
         String frontEndCaseDatain;
         if (widget != null) {
-
             frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
-             String channel = widget.getConfig().getProperty("channel");
-
-//            if (StringUtils.isNotBlank(frontEndCaseDatain)) {
-                this.setFrontEndCaseData(frontEndCaseDatain);
-                this.setChannel(channel);
-//            }
-
+            	String channel = widget.getConfig().getProperty("channel");
+			this.setFrontEndCaseData(frontEndCaseDatain);
+			this.setChannel(channel);
+			this.setWidgetTypeCode(this.getWidget().getType().getCode());
         } else {
-            System.out.println(" widget is null in extraction ");
+            logger.warn(" widget is null in extraction ");
         }
 
         return result;
