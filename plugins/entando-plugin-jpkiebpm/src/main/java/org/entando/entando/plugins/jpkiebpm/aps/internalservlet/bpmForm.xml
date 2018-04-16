@@ -37,7 +37,7 @@
             <result name="input" type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/form/form_type_view.jsp</result>
             <result type="chain">
                 <param name="actionName">view</param>
-                </result>
+            </result>
             <interceptor-ref name="entandoFrontEndFreeStack" >
                 <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
             </interceptor-ref>
@@ -45,5 +45,169 @@
 
 
     </package>
-	
+    
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseProgressBar" namespace="/do/bpm/FrontEnd/CaseProgressBar" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseProgressFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-progress-status.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="selectCaseInstance" class="jpkieBpmCaseProgressFrontAction" method="selectCaseInstance">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-progress-status.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+
+
+    </package>
+    
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseInstanceSelector" namespace="/do/bpm/FrontEnd/CaseInstanceSelector" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseInstanceSelectorFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-instance-selector.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="selectCaseInstance" class="jpkieBpmCaseInstanceSelectorFrontAction" method="selectCaseInstance">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-instance-selector.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+
+
+    </package>
+	    
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseInstanceComments" namespace="/do/bpm/FrontEnd/CaseInstanceComments" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseInstanceCommentsFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-comments.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="postComment" class="jpkieBpmCaseInstanceCommentsFrontAction" method="postComment">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-comments.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="updateComment" class="jpkieBpmCaseInstanceCommentsFrontAction" method="updateComment">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-comments.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="deleteComment" class="jpkieBpmCaseInstanceCommentsFrontAction" method="deleteComment">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-comments.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+
+    </package>
+    
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseInstanceDetails" namespace="/do/bpm/FrontEnd/CaseInstanceDetails" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseInstanceDetailsFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-details.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+    </package>
+    
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseInstanceActions" namespace="/do/bpm/FrontEnd/CaseInstanceActions" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseInstanceActionsFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-actions.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+    </package>
+    
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseInstanceRoles" namespace="/do/bpm/FrontEnd/CaseInstanceRoles" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseInstanceRolesFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-roles.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+                
+        <action name="addRole" class="jpkieBpmCaseInstanceRolesFrontAction" method="addRole">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-roles.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="deleteRole" class="jpkieBpmCaseInstanceRolesFrontAction" method="deleteRole">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-roles.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+    </package>
+    <!--f-->
+        
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseInstanceChart" namespace="/do/bpm/FrontEnd/CaseInstanceChart" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseInstanceChartFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-chart.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+    </package>
+        
+    <package name="jpkiebpm_do/bpm/FrontEnd/ProcessDiagram" namespace="/do/bpm/FrontEnd/ProcessDiagram" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmProcessDiagramFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-process-diagram.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+    </package>
+        
+    <package name="jpkiebpm_do/bpm/FrontEnd/CaseInstanceFile" namespace="/do/bpm/FrontEnd/CaseInstanceFile" extends="entando-front-default">
+
+        <action name="view" class="jpkieBpmCaseInstanceFileFrontAction" method="view">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-file.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+                        
+        <action name="updateData" class="jpkieBpmCaseInstanceFileFrontAction" method="updateData">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-file.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="deleteData" class="jpkieBpmCaseInstanceFileFrontAction" method="deleteData">
+            <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/bpm-case-file.jsp</result>
+            <interceptor-ref name="entandoFrontEndFreeStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
+        </action>
+        
+    </package>
 </struts>

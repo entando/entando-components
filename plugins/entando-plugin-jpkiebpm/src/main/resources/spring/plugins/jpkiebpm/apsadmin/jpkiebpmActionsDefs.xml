@@ -30,8 +30,8 @@
     </bean>
 
     <bean id="jpkiebpmBpmProcessDatatableWidgetAction"
-              class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmProcessDatatableWidgetAction"
-              parent="simpleWidgetAction" scope="prototype">
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmProcessDatatableWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
         <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
         <property name="formManager" ref="jpkiebpmsManager"/>
         <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
@@ -42,6 +42,7 @@
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.config.KieBpmConfigAction"
           parent="abstractBaseAction" scope="prototype">
         <property name="formManager" ref="jpkiebpmsManager"/>
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>
     </bean>
 
     <bean id="jpkiebpmFormOverrideAction"
@@ -59,6 +60,50 @@
         <property name="kieFormManager" ref="jpkiebpmsManager"/>
     </bean>
 
-
-
+    <bean id="jpkiebpmBpmCaseProgressWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>        
+    </bean>
+    
+    <bean id="jpkiebpmBpmCaseInstanceSelectorWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceSelectorWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+        <property name="caseManager" ref="jpkiebpmsCaseManager"/>       
+    </bean>
+    
+    <bean id="jpkiebpmBpmCaseInstanceCommentsWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceCommentsWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+    </bean>
+    
+    <bean id="jpkiebpmBpmCaseInstanceDetailsWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceDetailsWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+    </bean>
+    
+    <bean id="jpkiebpmBpmCaseInstanceActionsWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceActionsWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+    </bean>  
+      
+    <bean id="jpkiebpmBpmCaseInstanceRolesWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceRolesWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+    </bean>
+    
+    <bean id="jpkiebpmBpmCaseInstanceChartWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceChartWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+    </bean>      
+    
+    <bean id="jpkiebpmBpmProcessDiagramWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmProcessDiagramWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+    </bean>      
+    
+    <bean id="jpkiebpmBpmCaseInstanceFileWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceFileWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+    </bean>
 </beans>

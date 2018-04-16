@@ -1,12 +1,20 @@
 INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_config', 'KIE-BPM service configuration',
 '<?xml version="1.0" encoding="UTF-8"?>
-<kieBpmConfig>
-   <active>true</active>
-   <username>A_USERNAME</username>
-   <password>A_PASSWORD</password>
-   <hostname>HOSTNAME</hostname>
-   <schema>https</schema>
-   <port>443</port>
-   <webapp>kie</webapp>
-    <timeout>2677</timeout>
-</kieBpmConfig>');
+<kiaBpmConfigFactory>
+   <kieBpmConfigeMap>
+      <entry>
+         <key>1</key>
+         <value>
+            <active>true</active>
+            <id>1</id>
+            <name>default</name>
+            <username>krisv</username>
+            <password>krisv</password>
+            <hostname>localhost</hostname>
+            <schema>http</schema>
+            <port>8080</port>
+            <webapp>kie-server</webapp>
+         </value>
+      </entry>
+   </kieBpmConfigeMap>
+</kiaBpmConfigFactory>');

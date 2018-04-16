@@ -36,7 +36,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KieBpmConfig {
 
-
     @Override
     public KieBpmConfig clone() {
         KieBpmConfig cfg = new KieBpmConfig();
@@ -62,6 +61,22 @@ public class KieBpmConfig {
         this._active = active;
     }
 
+    public String getId() {
+        return _id;
+    }
+
+    public void setId(String _id) {
+        this._id = _id;
+    }
+
+    public String getName() {
+        return _name;
+    }
+
+    public void setName(String _name) {
+        this._name = _name;
+    }
+    
     public String getUsername() {
         return _username;
     }
@@ -117,31 +132,35 @@ public class KieBpmConfig {
     public void setTimeoutMsec(Integer timeoutMsec) {
         this._timeoutMsec = timeoutMsec;
     }
-    
+
     public Boolean getDebug() {
-		return (null != _debug ? _debug : false);
-	}
+        return (null != _debug ? _debug : false);
+    }
 
-	public void setDebug(Boolean debug) {
-		this._debug = debug;
-	}
+    public void setDebug(Boolean debug) {
+        this._debug = debug;
+    }
 
-	@XmlElement(name="active")
+    @XmlElement(name = "active")
     private Boolean _active;
-    @XmlElement(name="username")
+    @XmlElement(name = "id")
+    private String _id;
+    @XmlElement(name = "name")
+    private String _name;
+    @XmlElement(name = "username")
     private String _username;
-    @XmlElement(name="password")
+    @XmlElement(name = "password")
     private String _password;
-    @XmlElement(name="hostname")
+    @XmlElement(name = "hostname")
     private String _hostname;
-    @XmlElement(name="schema")
+    @XmlElement(name = "schema")
     private String _schema;
-    @XmlElement(name="port")
+    @XmlElement(name = "port")
     private Integer _port;
-    @XmlElement(name="webapp")
+    @XmlElement(name = "webapp")
     private String _webapp;
-    @XmlElement(name="timeout")
+    @XmlElement(name = "timeout")
     private Integer _timeoutMsec;
-    @XmlElement(name="debug")
+    @XmlElement(name = "debug")
     private Boolean _debug;
 }
