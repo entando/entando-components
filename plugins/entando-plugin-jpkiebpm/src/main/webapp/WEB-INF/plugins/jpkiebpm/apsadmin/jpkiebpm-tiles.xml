@@ -103,4 +103,10 @@
                        value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmCaseInstanceFileConfig.jsp"/>
     </definition>
 
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmProcessSignal.config">
+        <put-attribute name="title" value="Kiebpm Process Signal config"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmProcessSignalConfig.jsp"/>
+    </definition>
+
 </tiles-definitions>

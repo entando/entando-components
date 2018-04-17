@@ -126,3 +126,13 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-file', '<?xml version="1.0" encoding
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceFileWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+
+INSERT INTO widgetcatalog VALUES ('bpm-process-signal', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM Process Signal</property>
+<property key="it">BPM Segnali al processo</property>
+</properties>', '<config>
+        <parameter name="frontEndConfig">frontEndConfig</parameter>
+
+	<action name="jpkiebpmBpmProcessSignalWidgetAction"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);

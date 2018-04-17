@@ -106,4 +106,9 @@
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseInstanceFileWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
     </bean>
+
+    <bean id="jpkiebpmBpmProcessSignalWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmProcessSignalWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+    </bean>
 </beans>
