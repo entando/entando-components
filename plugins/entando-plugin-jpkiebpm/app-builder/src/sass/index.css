@@ -1,0 +1,12 @@
+.PluginStatus .PluginStatus--list-elem-label {
+  display: inline-block;
+  min-width: 200px; }
+
+.PluginStatus .PluginStatus--css-test {
+  height: 2px !important; }
+
+.PluginStatus .PluginStatus--list-elem__success {
+  color: green; }
+
+.PluginStatus .PluginStatus--list-elem__failure {
+  color: red; }
