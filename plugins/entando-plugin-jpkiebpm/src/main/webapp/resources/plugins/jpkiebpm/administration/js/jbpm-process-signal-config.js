@@ -38,7 +38,7 @@ var bootBpmComponent = (function ngApp(resourceUrl) {
 		vm.config = {
 				container:{},
 				process:{},
-				task:{}
+				widget:{}
 		};
 	}
 
@@ -89,7 +89,7 @@ var bootBpmComponent = (function ngApp(resourceUrl) {
 			process : {
 				select : function(selected) {
 					vm.form.process = selected;
-					loadProcessUserTasks();
+					//loadProcessUserTasks();
 				},
 				isCurrentActive : function(tested) {
 					return vm.form.process ? vm.form.process["process-instance-id"] === tested["process-instance-id"]
@@ -101,17 +101,17 @@ var bootBpmComponent = (function ngApp(resourceUrl) {
 				diagram : function() {
 					return vm.data.images ? vm.data.images : "Loading";
 				},
-				tasks : function() {
-					return vm.data.tasks ? vm.data.tasks : [];
-				},
-				task : {
-					select : function selectTask(newTask) {
-						vm.form.task = newTask;
-					},
-					current : function currentTask() {
-						return vm.form.task;
-					}
-				}
+//				tasks : function() {
+//					return vm.data.tasks ? vm.data.tasks : [];
+//				},
+//				task : {
+//					select : function selectTask(newTask) {
+//						vm.form.task = newTask;
+//					},
+//					current : function currentTask() {
+//						return vm.form.task;
+//					}
+//				}
 			}
 
 		};
@@ -140,14 +140,14 @@ var bootBpmComponent = (function ngApp(resourceUrl) {
 				vm.data.processes = processes;
 			});
 		}
-
-		function loadProcessUserTasks() {
-			KieServerService.core.server.container.process.task.user.list(
-					vm.form.container['container-id'],
-					vm.form.process['process-id']).then(function(tasks) {
-				vm.data.tasks = tasks;
-			});
-		}
+//
+//		function loadProcessUserTasks() {
+//			KieServerService.core.server.container.process.task.user.list(
+//					vm.form.container['container-id'],
+//					vm.form.process['process-id']).then(function(tasks) {
+//				vm.data.tasks = tasks;
+//			});
+//		}
 
 	}
 	

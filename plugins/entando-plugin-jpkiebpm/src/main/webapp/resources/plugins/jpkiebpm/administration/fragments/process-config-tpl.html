@@ -1,71 +1,84 @@
 <div class="container-fluid">
-  <ul class="breadcrumb">
-    <li>
-      <a href="#">
-        <i class="fa fa-thumb-tack"></i>
-      </a>
-    </li>
-    <li>
-      <a href="#">{{vm.form.container['container-id']|| '- Select Container -'}}</a>
-    </li>
-    <li>
-      <a href="#">{{vm.form.process["process-name"]|| '- Select Process -'}}</a>
-    </li>
-    <li class="active">
-      <b>{{vm.form.process["process-instance-id"]}}</b>
-    </li>
+	<ul class="breadcrumb">
+		<li><a href="#"> <i class="fa fa-thumb-tack"></i>
+		</a></li>
+		<li><a href="#">{{vm.form.container['container-id']|| '-
+				Select Container -'}}</a></li>
+		<li><a href="#">{{vm.form.process["process-name"]|| '- Select
+				Process -'}}</a></li>
+		<li class="active"><b>{{vm.form.process["process-instance-id"]}}</b>
+		</li>
 
 
-    <div class="well well-sm">
-      <h3>Quick copy & paste</h3>
-      <div class="row">
+		<div class="well well-sm">
+			<h3>Quick copy & paste</h3>
+			<div class="row">
 
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-          <label>
-            Conteiner ID
-            <input type="text" class="form-control input-sm" disabled ng-value="vm.ui.container.current()['container-id']">
-          </label>
-        </div>
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-          <label>
-            Process ID
-            <input type="text" class="form-control input-sm" disabled ng-value="vm.ui.process.current()['process-id']">
-          </label>
-        </div>
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-          <label>
-            Process Instance ID
-            <input type="text" class="form-control input-sm" disabled ng-value="vm.ui.process.current()['process-instance-id']">
-          </label>
-        </div>
-      </div>
-    </div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+					<label> Conteiner ID <input type="text"
+						class="form-control input-sm" disabled
+						ng-value="vm.ui.container.current()['container-id']">
+					</label>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+					<label> Process ID <input type="text"
+						class="form-control input-sm" disabled
+						ng-value="vm.ui.process.current()['process-id']">
+					</label>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+					<label> Process Instance ID <input type="text"
+						class="form-control input-sm" disabled
+						ng-value="vm.ui.process.current()['process-instance-id']">
+					</label>
+				</div>
+			</div>
+		</div>
 
 
-    <hr>
-    <div class="row">
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        <h3>Container</h3>
-        <ul class="list-group">
-          <li class="list-group-item" ng-repeat="container in vm.ui.containers()" ng-click="vm.ui.container.select(container)" ng-class="{'active':vm.ui.container.isCurrentActive(container)}">
-            <span class="badge  label-success">{{container.status}}</span>
-            {{container['container-id']}}
-          </li>
-        </ul>
-      </div>
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        <h3>Process Instances (TOP 10)</h3>
-        <p class="center" ng-show="vm.ui.processes.instances().length==0">Select a Container</p>
-        <ul class="list-group">
-          <li class="list-group-item" ng-repeat="process in vm.ui.processes.instances()" ng-click="vm.ui.process.select(process)" ng-class="{'active':vm.ui.process.isCurrentActive(process)}">
-            <span class="badge  label-success">pId: {{process["process-instance-id"]}}</span>
-            {{process["process-name"]}}
-            <small>{{process["process-id"]}}</small>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="row" ng-show="vm.ui.process.current()!=null">
+		<hr>
+		<div class="row">
+			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				<h3>Container</h3>
+				<ul class="list-group">
+					<li class="list-group-item"
+						ng-repeat="container in vm.ui.containers()"
+						ng-click="vm.ui.container.select(container)"
+						ng-class="{'active':vm.ui.container.isCurrentActive(container)}">
+						<span class="badge  label-success">{{container.status}}</span>
+						{{container['container-id']}}
+					</li>
+				</ul>
+			</div>
+			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				<h3>Process Instances (TOP 10)</h3>
+				<p class="center" ng-show="vm.ui.processes.instances().length==0">Select
+					a Container</p>
+				<ul class="list-group">
+					<li class="list-group-item"
+						ng-repeat="process in vm.ui.processes.instances()"
+						ng-click="vm.ui.process.select(process)"
+						ng-class="{'active':vm.ui.process.isCurrentActive(process)}">
+						<span class="badge  label-success">pId:
+							{{process["process-instance-id"]}}</span> {{process["process-name"]}} <small>{{process["process-id"]}}</small>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<label> Title <input type="text"
+					class="form-control input-sm" ng-model="vm.form.widget.title">
+				</label>
+				<hr>
+				<label> Description <textarea class="form-control"
+						ng-model="vm.form.widget.description"></textarea>
+				</label>
+			</div>
+		</div>
+
+		<!--   <div class="row" ng-show="vm.ui.process.current()!=null">
       <h3>User tasks definitions</h3>
       <a href="#" ng-init="vm.ui.showTaskDetail=false" ng-click="vm.ui.showTaskDetail=!vm.ui.showTaskDetail">
         <i class="fa" ng-class="{'fa-eye':'!vm.ui.showTaskDetail', 'fa-eye-slash':vm.ui.showTaskDetail}"></i> View/Hide Source JSON</a>
@@ -96,5 +109,5 @@
       </table>
 
 
-    </div>
+    </div> -->
 </div>
