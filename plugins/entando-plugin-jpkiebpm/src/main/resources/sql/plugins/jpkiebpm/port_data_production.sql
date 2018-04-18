@@ -108,10 +108,10 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-chart', '<?xml version="1.0" encodin
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceChartWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
-INSERT INTO widgetcatalog VALUES ('bpm-process-diagram', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog VALUES ('bpm-case-diagram', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">BPM-Process diagram</property>
-<property key="it">Diagramma di processo BPM</property>
+<property key="en">BPM-Case diagram</property>
+<property key="it">BPM Diagramma del caso </property>
 </properties>', '<config>
         <parameter name="channel">channel</parameter>
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
@@ -135,4 +135,14 @@ INSERT INTO widgetcatalog VALUES ('bpm-process-signal', '<?xml version="1.0" enc
         <parameter name="frontEndConfig">frontEndConfig</parameter>
 
 	<action name="jpkiebpmBpmProcessSignalWidgetAction"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+
+INSERT INTO widgetcatalog VALUES ('bpm-process-diagram', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM Process Diagram</property>
+<property key="it">BPM Diagramma di processo</property>
+</properties>', '<config>
+        <parameter name="frontEndConfig">frontEndConfig</parameter>
+
+	<action name="jpkiebpmBpmProcessDiagramWidgetAction"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);

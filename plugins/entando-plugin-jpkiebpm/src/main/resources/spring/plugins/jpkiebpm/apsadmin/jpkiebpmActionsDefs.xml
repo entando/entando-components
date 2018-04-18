@@ -97,8 +97,8 @@
           parent="simpleWidgetAction" scope="prototype">
     </bean>      
     
-    <bean id="jpkiebpmBpmProcessDiagramWidgetAction"
-          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmProcessDiagramWidgetAction"
+    <bean id="jpkiebpmBpmCaseDiagramWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmCaseDiagramWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
     </bean>      
     
@@ -109,6 +109,10 @@
 
     <bean id="jpkiebpmBpmProcessSignalWidgetAction"
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmBpmProcessSignalWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+    </bean>
+    <bean id="jpkiebpmBpmProcessDiagramWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmProcessDiagramWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
     </bean>
 </beans>

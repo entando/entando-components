@@ -91,10 +91,10 @@
                        value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmCaseInstanceChartConfig.jsp"/>
     </definition>    
     
-    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmProcessDiagram.config">
-        <put-attribute name="title" value="Kiebpm Process Diagram"/>
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmCaseDiagram.config">
+        <put-attribute name="title" value="Kiebpm Case Diagram"/>
         <put-attribute name="body"
-                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmProcessDiagramConfig.jsp"/>
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmCaseDiagramConfig.jsp"/>
     </definition>  
       
     <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmCaseInstanceFile.config">
@@ -107,6 +107,11 @@
         <put-attribute name="title" value="Kiebpm Process Signal config"/>
         <put-attribute name="body"
                        value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmProcessSignalConfig.jsp"/>
+    </definition>
+    <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmProcessDiagram.config">
+        <put-attribute name="title" value="Kiebpm Process Signal config"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmProcessDiagramConfig.jsp"/>
     </definition>
 
 </tiles-definitions>

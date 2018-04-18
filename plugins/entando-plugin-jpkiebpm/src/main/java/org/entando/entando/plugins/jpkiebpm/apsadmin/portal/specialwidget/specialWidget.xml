@@ -94,12 +94,13 @@
 		</action>
 
 		<action name="jpkiebpmBpmProcessDiagramWidgetViewerConfig"
-			class="jpkiebpmBpmProcessDiagramWidgetAction" method="init">
-			<result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDiagram.config</result>
+			class="jpkiebpmBpmCaseDiagramWidgetAction" method="init">
+			<result type="tiles">admin.jpkiebpm.page.widget.bpmCaseDiagram.config</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermission">managePages</param>
 			</interceptor-ref>
 		</action>
+
 
 		<action name="jpkiebpmBpmCaseInstanceFileWidgetViewerConfig"
 			class="jpkiebpmBpmCaseInstanceFileWidgetAction" method="init">
@@ -114,6 +115,14 @@
 		<action name="jpkiebpmBpmProcessSignalWidgetAction"
 			class="jpkiebpmBpmProcessSignalWidgetAction" method="init">
 			<result type="tiles">admin.jpkiebpm.page.widget.bpmProcessSignal.config</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">managePages</param>
+			</interceptor-ref>
+		</action>
+
+		<action name="jpkiebpmBpmProcessDiagramWidgetAction"
+			class="jpkiebpmBpmProcessDiagramWidgetAction" method="init">
+			<result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDiagram.config</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermission">managePages</param>
 			</interceptor-ref>

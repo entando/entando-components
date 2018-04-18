@@ -34,11 +34,11 @@ import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
 
 /**
  *
- * @author own_strong
+ * @author 
  */
-public class BpmBpmProcessDiagramWidgetAction extends SimpleWidgetConfigAction {
+public class BpmProcessDiagramWidgetAction extends SimpleWidgetConfigAction {
 
-	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmBpmCaseInstanceActionsWidgetAction.class);
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmProcessDiagramWidgetAction.class);
 
 	private String channel;
 	private List<Integer> channels;
