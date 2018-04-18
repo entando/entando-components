@@ -1,0 +1,51 @@
+<span>
+    <a href="#" ng-init="vm.ui.showConfig=false" ng-click="vm.ui.showConfig=!vm.ui.showConfig"><i class="fa" ng-class="{'fa-eye':'!vm.ui.showConfig', 'fa-eye-slash':vm.ui.showConfig}"></i> Toggle config visibility</a>
+    <div class="panel panel-danger" ng-show="vm.ui.showConfig">
+        <div class="panel-heading" >
+            <i class="fa fa-bug"></i >Signal Config Section 
+              
+        </div>
+        <div class="panel-body" >
+            <label>
+              Title
+              <input type="text" class="form-control input-sm" ng-model="vm.data.title">
+            </label>
+            <hr>
+            <label>
+              Description
+              <textarea class="form-control" ng-model="vm.data.description"></textarea>
+            </label>
+        </div>
+    </div>
+
+
+
+ 
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{vm.data.title}}
+    </div>
+    <div class="panel-body">
+      <p>{{vm.data.description}}</p>
+
+      <label>
+        Select an Available Signals <small>(from Kie-Server)</small>
+        <ul class="list-group">
+          <li class="list-group-item" ng-class="{active : vm.mod.actualSignal.name===signal}" ng-repeat="signal in vm.ui.process.signals()"
+            ng-click="vm.ui.process.signal.set(signal)">{{signal}}</li>
+        </ul>
+      </label>
+      <input type="text" class="form-control" ng-model="vm.mod.actualSignal.value"/>
+      <button type="button" class="btn btn-sm" ng-click="vm.ui.process.signal.send()">{{vm.ui.config.btnText||'Send'}}</button>
+    </div>
+
+  </div>
+
+
+
+
+
+  <hr>
+
+</span>
