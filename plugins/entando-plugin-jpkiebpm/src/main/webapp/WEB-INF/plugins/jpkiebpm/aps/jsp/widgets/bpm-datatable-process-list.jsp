@@ -49,7 +49,7 @@
         console.log('processlist');
         var configId = "${id}";
 
-        var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />api/rs/<wp:info key="currentLang"/>/jpkiebpm/";
+        var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
         var url = context + "processInstanceList.json?configId=${id}";
         var extraConfig = {
             //buttons: extraBtns,
