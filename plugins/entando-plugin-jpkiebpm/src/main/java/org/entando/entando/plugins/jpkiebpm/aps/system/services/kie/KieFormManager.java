@@ -150,19 +150,14 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public void deleteConfig(String kieId) throws ApsSystemException {
         try {
             if (!StringUtils.isBlank(kieId)) {
-
                 //Get current config from database
-                ConfigInterface configManager = this.getConfigManager();
-                String xmlin = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
-
+                String xmlin = this.getConfigManager().getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
                 //delete new config
                 KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xmlin, KiaBpmConfigFactory.class, true, false);
                 kBpmConfFctry.removeKiaBpmConfig(kieId);
                 String xml = JAXBHelper.marshall(kBpmConfFctry, true, false);
-
                 //load updated config
                 configManager.updateConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM, xml);
-
             } else {
                 logger.error("Blank Kie ID ", kieId);
             }
@@ -173,13 +168,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException {
-
         try {
-            ConfigInterface configManager = this.getConfigManager();
-
-            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+            String xml = this.getConfigManager().getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
             KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
-
             return kBpmConfFctry.getKieBpmConfigeMap();
         } catch (Throwable t) {
             throw new ApsSystemException("Error in getKieServerConfigurations", t);
@@ -678,6 +669,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
+    /*
     private KieApiProcessStart convertDataFormToProcessForm(KieProcessFormQueryResult form, String containerId, String processId) {
         KieApiProcessStart process = new KieApiProcessStart();
         process.setContainerId(containerId);
@@ -689,7 +681,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return process;
     }
-
+     */
     @Override
     public String completeHumanFormTask(final String containerId, final String processId, final long taskId,
             final Map<String, String> input) throws ApsSystemException {
