@@ -497,6 +497,19 @@
 			</interceptor-ref>
 		</action>
 	</package>
+	<package
+		name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmProcessDiagramViewer"
+		namespace="/do/bpm/Page/SpecialWidget/BpmProcessDiagramViewer"
+		extends="core_do/Page/SpecialWidget">
+		<action name="save"
+			class="jpkiebpmBpmProcessDiagramWidgetAction" method="save">
+			<result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDiagram.config
+			</result>
+			<interceptor-ref name="entandoValidationStack">
+				<param name="requestAuth.requiredPermission">managePages</param>
+			</interceptor-ref>
+		</action>
+	</package>
 
 
 </struts>

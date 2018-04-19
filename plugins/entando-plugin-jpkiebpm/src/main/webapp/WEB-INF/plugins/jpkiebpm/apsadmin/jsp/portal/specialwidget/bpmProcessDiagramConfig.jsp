@@ -9,7 +9,7 @@
 <script
 	src="<wp:resourceURL />plugins/jpkiebpm/administration/js/kieserver.service.js"></script>
 <script
-	src="<wp:resourceURL />plugins/jpkiebpm/administration/js/jbpm-process-signal-config.js"></script>
+	src="<wp:resourceURL />plugins/jpkiebpm/administration/js/jbpm-process-diagram-config.js"></script>
 
 
 
@@ -42,13 +42,12 @@
 
 	<s:form action="save"
 		namespace="/do/bpm/Page/SpecialWidget/BpmProcessDiagramViewer"
-		class="form-horizontal"  ng-app="bpm-process-signal-config" ng-controller="ProcessConfigEntandoController as vm">
+		class="form-horizontal"  ng-app="bpm-process-diagram-config" ng-controller="ProcessConfigEntandoController as vm">
 		<p class="noscreen">
 			<wpsf:hidden name="pageCode" />
 			<wpsf:hidden name="frame" />
 			<wpsf:hidden name="widgetTypeCode" />
 		</p>
-
 		<div class="panel panel-default" >
 			<div class="panel-heading">
 				<s:include
