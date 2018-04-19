@@ -46,41 +46,48 @@ public interface IKieFormManager {
      * @return
      */
     KieBpmConfig getConfig();
+
     /**
      * Return service configuration
      *
      * @param config
      */
     public void setConfig(KieBpmConfig config);
-    
+
     /**
      * add service configuration
      *
      * @param config
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
-    public void addConfig(KieBpmConfig config) throws ApsSystemException;   
+    public void addConfig(KieBpmConfig config) throws ApsSystemException;
+
     /**
      * add service configuration
      *
      * @param kieId
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
-    public void deleteConfig(String kieId) throws ApsSystemException;   
+    public void deleteConfig(String kieId) throws ApsSystemException;
+
     /**
      * Get list of service configuration
      *
      * @return
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
-    public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException;  /**
+    public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException;
 
     /**
+     *
+     * /**
      * Set service configuration
-     * @param kieHostname
+     *
+     * @param kieId
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
     public void setKieServerConfiguration(String kieId) throws ApsSystemException;
+
     /**
      * List KIE containers
      *
@@ -284,7 +291,6 @@ public interface IKieFormManager {
      */
     String setTaskState(final String containerId, final String taskId, final TASK_STATES state, Map<String, Object> input, Map<String, String> opt) throws Throwable;
 
-
     /**
      *
      * @param user
@@ -304,6 +310,7 @@ public interface IKieFormManager {
      * @throws Throwable
      */
     public KieProcessInstancesQueryResult getProcessInstancesWithClientData(Map<String, String> input, Map<String, String> opt) throws Throwable;
+
     /**
      *
      * @param opt
@@ -321,7 +328,7 @@ public interface IKieFormManager {
     public List<KieTask> getKnowledgeWorkerTaskList(Map<String, String> opt) throws ApsSystemException;
 
     /**
-     * 
+     *
      * @param user
      * @param containerId
      * @param taskId

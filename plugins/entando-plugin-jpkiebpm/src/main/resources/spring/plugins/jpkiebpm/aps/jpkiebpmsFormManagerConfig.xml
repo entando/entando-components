@@ -60,5 +60,10 @@
           parent="abstractService">
         <property name="configManager" ref="BaseConfigManager"/>
     </bean>
+    
+    <bean id="jpkiebpmsConfifService"
+          class="org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieConfigService">
+        <property name="kieFormManager" ref="jpkiebpmsManager"/>
+    </bean>
 
 </beans>

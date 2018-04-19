@@ -23,16 +23,15 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
+import java.util.List;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
 
 /**
  * @author E.Santoboni
  */
 public interface IKieConfigService {
 
-    public PagedMetadata<KieServerConfigDto> getConfigs(RestListRequest requestList);
+    public List<KieServerConfigDto> getConfigs(/*RestListRequest requestList*/);
 
     public KieServerConfigDto getConfig(String configCode);
 

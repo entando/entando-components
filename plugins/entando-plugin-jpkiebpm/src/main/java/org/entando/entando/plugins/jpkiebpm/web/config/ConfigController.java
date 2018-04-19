@@ -31,12 +31,11 @@ import javax.validation.Valid;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.List;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieConfigService;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -83,12 +82,12 @@ public class ConfigController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getConfigs(RestListRequest requestList) throws JsonProcessingException {
-        this.getConfigValidator().validateRestListRequest(requestList, KieServerConfigDto.class);
-        PagedMetadata<KieServerConfigDto> result = this.getKieConfigService().getConfigs(requestList);
-        this.getConfigValidator().validateRestListResult(requestList, result);
+    public ResponseEntity<RestResponse> getConfigs(/*RestListRequest requestList*/) throws JsonProcessingException {
+        //this.getConfigValidator().validateRestListRequest(requestList, KieServerConfigDto.class);
+        List<KieServerConfigDto> result = this.getKieConfigService().getConfigs(/*requestList*/);
+        //this.getConfigValidator().validateRestListResult(requestList, result);
         logger.debug("Main Response -> {}", result);
-        return new ResponseEntity<>(new RestResponse(result.getBody(), null, result), HttpStatus.OK);
+        return new ResponseEntity<>(new RestResponse(result), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)

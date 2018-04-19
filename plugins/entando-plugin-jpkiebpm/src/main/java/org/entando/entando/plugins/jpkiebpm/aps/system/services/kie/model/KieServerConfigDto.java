@@ -50,6 +50,20 @@ public class KieServerConfigDto {
 
     }
 
+    public KieServerConfigDto(KieBpmConfig src) {
+        this.setActive(src.getActive());
+        this.setDebug(src.getDebug());
+        this.setHostName(src.getHostname());
+        this.setId(src.getId());
+        this.setName(src.getName());
+        this.setPassword(src.getPassword());
+        this.setPort(src.getPort());
+        this.setSchema(src.getSchema());
+        this.setTimeout(src.getTimeoutMsec());
+        this.setUsername(src.getUsername());
+        this.setWebappName(src.getWebapp());
+    }
+
     public Boolean getActive() {
         return active;
     }

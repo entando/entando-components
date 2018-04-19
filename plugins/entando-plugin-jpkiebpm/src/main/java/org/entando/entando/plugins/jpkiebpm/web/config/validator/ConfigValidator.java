@@ -71,4 +71,9 @@ public class ConfigValidator extends AbstractPaginationValidator {
         }
     }
 
+    @Override
+    protected String getDefaultSortProperty() {
+        return "id";
+    }
+
 }
