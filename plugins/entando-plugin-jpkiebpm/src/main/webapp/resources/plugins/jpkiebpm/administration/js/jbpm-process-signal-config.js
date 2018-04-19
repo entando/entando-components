@@ -25,7 +25,7 @@
 var bootBpmComponent = (function ngApp(resourceUrl) {
 	'use strict';
 
-	angular.module('bpm-process-diagram-config', [ 'kie-commons' ])
+	angular.module('bpm-process-signal-config', [ 'kie-commons' ])
 			.directive('processConfig', ProcessConfig)
 			.controller('ProcessConfigController', ProcessConfigController)
 			.controller('ProcessConfigEntandoController',ProcessConfigEntandoController)
@@ -47,7 +47,7 @@ var bootBpmComponent = (function ngApp(resourceUrl) {
 			restrict : 'E',
 			scope : {},
 			templateUrl : resourceUrl
-					+ 'plugins/jpkiebpm/administration/fragments/process-config-tpl.html',
+					+ 'plugins/jpkiebpm/administration/fragments/process-signal-config-tpl.html',
 			controllerAs : 'vm',
 			controller : 'ProcessConfigController',
 			bindToController : {

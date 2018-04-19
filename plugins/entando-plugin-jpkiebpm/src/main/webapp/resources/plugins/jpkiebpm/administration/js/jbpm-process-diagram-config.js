@@ -47,7 +47,7 @@ var bootBpmComponent = (function ngApp(resourceUrl) {
 			restrict : 'E',
 			scope : {},
 			templateUrl : resourceUrl
-					+ 'plugins/jpkiebpm/administration/fragments/process-config-tpl.html',
+					+ 'plugins/jpkiebpm/administration/fragments/process-diagram-config-tpl.html',
 			controllerAs : 'vm',
 			controller : 'ProcessConfigController',
 			bindToController : {
