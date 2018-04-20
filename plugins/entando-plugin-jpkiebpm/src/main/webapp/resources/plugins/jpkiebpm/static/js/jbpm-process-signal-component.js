@@ -25,15 +25,19 @@
 var bootSignalComponent = (function ngApp(appId, resourceUrl, savedConfig) {
 	'use strict';
 
-	angular.module(appId, [ 'kie-commons' ])
-			.directive('processSignal',	ProcessSignal)
-			.controller('ProcessSignalController',ProcessSignalController)
-			.controller('ProcessEntandoController', ProcessEntandoController)
-			.run(runBlock);
+	angular.module(appId, [ 'kie-commons', 'widgets-shared-data' ]).directive(
+			'processSignal', ProcessSignal).controller(
+			'ProcessSignalController', ProcessSignalController).controller(
+			'ProcessEntandoController', ProcessEntandoController).run(runBlock);
 
-	function ProcessEntandoController() {
+	function ProcessEntandoController(SharedDataServices) {
 		var vm = this;
-		vm.config = savedConfig
+		vm.config = SharedDataServices.getSharedData();
+		for ( var attrname in savedConfig) {
+			if (!vm.config[attrname]) {
+				vm.config[attrname] = savedConfig[attrname];
+			}
+		}
 	}
 
 	function ProcessSignal() {
@@ -53,7 +57,7 @@ var bootSignalComponent = (function ngApp(appId, resourceUrl, savedConfig) {
 	}
 
 	function ProcessSignalController($scope, $rootScope, $log, $timeout,
-			KieServerService) {
+			KieServerService,$interval) {
 		var vm = this;
 
 		vm.ui = {
@@ -77,7 +81,7 @@ var bootSignalComponent = (function ngApp(appId, resourceUrl, savedConfig) {
 			}
 
 		};
-		vm.form = vm.options;
+		
 		vm.data = {
 			title : "Change the title",
 			description : 'Description goes here!'
@@ -90,12 +94,21 @@ var bootSignalComponent = (function ngApp(appId, resourceUrl, savedConfig) {
 		init();
 
 		function init() {
-			$scope.$watch('vm.form.process', function(newProcess) {
-				if (newProcess) {
-					loadProcessSignals()
-				}
+			$scope.$watch('vm.form', function(newProcess) {
+				loadProcessSignals()
 			});
 
+			var lastProcessId = -1;
+			$interval(function(){
+
+				if(lastProcessId != vm.form.process['process-instance-id'] ){
+					loadProcessSignals()
+					lastProcessId = vm.form.process['process-instance-id'] 
+				}
+				
+			},100)
+			
+			
 			$rootScope.$on('progress:refresh', function refres() {
 				loadProcessSignals();
 			});
@@ -112,12 +125,14 @@ var bootSignalComponent = (function ngApp(appId, resourceUrl, savedConfig) {
 		}
 
 		function loadProcessSignals() {
-			KieServerService.core.server.container.process.instance.signal
-					.list(vm.form.container['container-id'],
-							vm.form.process['process-instance-id']).then(
-							function(signals) {
-								vm.data.signals = signals;
-							});
+			if (vm.form.process && Object.keys(vm.form.process).length > 0) {
+				KieServerService.core.server.container.process.instance.signal
+						.list(vm.form.container['container-id'],
+								vm.form.process['process-instance-id']).then(
+								function(signals) {
+									vm.data.signals = signals;
+								});
+			}
 		}
 
 	}

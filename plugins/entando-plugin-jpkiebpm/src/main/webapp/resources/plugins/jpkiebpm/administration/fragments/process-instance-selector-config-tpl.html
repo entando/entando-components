@@ -1,0 +1,16 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<h3>Container</h3>
+			<ul class="list-group">
+				<li class="list-group-item"
+					ng-repeat="container in vm.ui.containers()"
+					ng-click="vm.ui.container.select(container)"
+					ng-class="{'active':vm.ui.container.isCurrentActive(container)}">
+					<span class="badge  label-success">{{container.status}}</span>
+					{{container['container-id']}}
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

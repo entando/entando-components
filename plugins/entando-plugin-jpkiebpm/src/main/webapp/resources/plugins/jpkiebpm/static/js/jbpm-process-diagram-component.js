@@ -25,15 +25,20 @@
 var bootProcessDiagramComponent = (function ngApp(appId, resourceUrl, savedConfig) {
 	'use strict';
 
-	angular.module(appId, [ 'ngSanitize','kie-commons' ])
+	angular.module(appId, [ 'ngSanitize','kie-commons','widgets-shared-data' ])
 			.directive('processDiagram',	ProcessDiagram)
 			.controller('ProcessDiagramController',ProcessDiagramController)
 			.controller('ProcessEntandoController', ProcessEntandoController)
 			.run(runBlock);
 
-	function ProcessEntandoController() {
+	function ProcessEntandoController(SharedDataServices) {
 		var vm = this;
-		vm.config = savedConfig
+		vm.config = SharedDataServices.getSharedData();
+		for ( var attrname in savedConfig) {
+			if(!vm.config[attrname]){
+				vm.config[attrname] = savedConfig[attrname];
+			}
+		}
 	}
 
 	function ProcessDiagram() {
@@ -52,7 +57,7 @@ var bootProcessDiagramComponent = (function ngApp(appId, resourceUrl, savedConfi
 		};
 	}
 
-	function ProcessDiagramController($scope,$rootScope, $log, KieServerService) {
+	function ProcessDiagramController($scope,$rootScope, $log, KieServerService,SharedDataServices,$interval) {
 	    var vm = this;
 
 
@@ -68,7 +73,6 @@ var bootProcessDiagramComponent = (function ngApp(appId, resourceUrl, savedConfi
 
 
 	    };
-	    vm.form = vm.options;
 	    vm.data = {};
 	    vm.mod = {};
 
@@ -78,11 +82,20 @@ var bootProcessDiagramComponent = (function ngApp(appId, resourceUrl, savedConfi
 
 
 	    function init() {
-	      $scope.$watch('vm.form.process', function (newProcess) {
-	        if (newProcess) {
+	    	
+	      $scope.$watch('vm.form', function (newProcess) {
 	          loadProcessInstancesImage();
-	        }
 	      })
+	      
+		var lastProcessId = -1;
+	      $interval(function(){
+
+				if(lastProcessId != vm.form.process['process-instance-id'] ){
+					loadProcessInstancesImage();
+					lastProcessId = vm.form.process['process-instance-id'] 
+				}
+				
+			},100)
 	    }
 	    $rootScope.$on('progress:refresh', function refres(){
 	      loadProcessInstancesImage();
@@ -90,12 +103,14 @@ var bootProcessDiagramComponent = (function ngApp(appId, resourceUrl, savedConfi
 
 
 	    function loadProcessInstancesImage() {
-	      KieServerService.core.server.container.process.image({
-	        container: vm.form.container,
-	        process: vm.form.process
-	      }).then(function (svg) {
-	        vm.data.images = svg;
-	      });
+	    	if (vm.form.process && Object.keys(vm.form.process).length > 0){
+		      KieServerService.core.server.container.process.image({
+		        container: vm.form.container,
+		        process: vm.form.process
+		      }).then(function (svg) {
+		        vm.data.images = svg;
+		      });
+	    	}
 	    }
 
 	  }

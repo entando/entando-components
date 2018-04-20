@@ -146,3 +146,13 @@ INSERT INTO widgetcatalog VALUES ('bpm-process-diagram', '<?xml version="1.0" en
 
 	<action name="jpkiebpmBpmProcessDiagramWidgetAction"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+
+INSERT INTO widgetcatalog VALUES ('bpm-process-instance-selector', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">BPM Process Instance Selector</property>
+<property key="it">BPM Selezionatore istanza di processo </property>
+</properties>', '<config>
+        <parameter name="frontEndConfig">frontEndConfig</parameter>
+
+	<action name="jpkiebpmBpmProcessInstanceSelectorWidgetAction"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);

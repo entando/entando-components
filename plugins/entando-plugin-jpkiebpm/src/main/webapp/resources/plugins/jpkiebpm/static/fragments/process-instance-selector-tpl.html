@@ -1,0 +1,11 @@
+<span>
+        <h3>Process Instances (TOP 10)</h3>
+        <p class="center" ng-show="vm.ui.processes.instances().length==0">Select a Container</p>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="process in vm.ui.processes.instances()" ng-click="vm.ui.process.select(process)" ng-class="{'active':vm.ui.process.isCurrentActive(process)}">
+            <span class="badge  label-success">pId: {{process["process-instance-id"]}}</span>
+            {{process["process-name"]}}
+            <small>{{process["process-id"]}}</small>
+          </li>
+        </ul>
+</span>

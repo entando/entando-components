@@ -115,4 +115,8 @@
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmProcessDiagramWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
     </bean>
+    <bean id="jpkiebpmBpmProcessInstanceSelectorWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmProcessInstanceSelectorWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+    </bean>
 </beans>
