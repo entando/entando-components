@@ -23,29 +23,27 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 public class KieServerConfigDto {
 
     private Boolean active;
+
+    @NotBlank(message = "kiebpm.id.notBlank")
     private String id;
     private String name;
     private String username;
     private String password;
+    @NotBlank(message = "kiebpm.hostName.notBlank")
     private String hostName;
+    @NotBlank(message = "kiebpm.schema.notBlank")
     private String schema;
+    @NotBlank(message = "kiebpm.port.notBlank")
     private Integer port;
     private String webappName;
     private Integer timeout;
     private Boolean debug;
 
-    /*
-    @Size(max = 20, message = "string.size.invalid")
-    @NotBlank(message = "group.code.notBlank")
-    private String code;
-
-    @Size(max = 50, message = "string.size.invalid")
-    @NotBlank(message = "group.name.notBlank")
-    private String name;
-     */
     public KieServerConfigDto() {
 
     }

@@ -24,6 +24,7 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import java.util.List;
+import java.util.Map;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
 
 /**
@@ -40,5 +41,9 @@ public interface IKieConfigService {
     public KieServerConfigDto updateConfig(KieServerConfigDto configRequest);
 
     public void removeConfig(String configCode);
+
+    public String testServerConfigs(KieServerConfigDto config);
+
+    public Map<String, String> testAllServerConfigs();
 
 }

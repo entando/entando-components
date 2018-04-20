@@ -23,8 +23,10 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.beanutils.BeanComparator;
@@ -105,7 +107,8 @@ public class KieConfigService implements IKieConfigService {
                 bindingResult.reject(ConfigValidator.ERRCODE_CONFIG_ALREADY_EXISTS, new String[]{configRequest.getId()}, "kiebpm.config.exists");
                 throw new ValidationGenericException(bindingResult);
             }
-            this.getKieFormManager().addConfig(config);
+            KieBpmConfig newConfig = this.buildConfig(configDto);
+            this.getKieFormManager().addConfig(newConfig);
             this.getKieFormManager().getContainersList();
         } catch (ValidationGenericException t) {
             throw t;
@@ -161,6 +164,46 @@ public class KieConfigService implements IKieConfigService {
             logger.error("error in delete configuration", t);
             throw new RestServerError("error in delete configuration", t);
         }
+    }
+
+    @Override
+    public String testServerConfigs(KieServerConfigDto configDto) {
+        try {
+            KieBpmConfig config = this.buildConfig(configDto);
+            config.setActive(Boolean.TRUE);
+            this.getKieFormManager().setConfig(config);
+            this.getKieFormManager().getContainersList();
+        } catch (Throwable t) {
+            logger.error("error checking configuration", t);
+            return "FAILURE";
+        }
+        return "SUCCESS";
+    }
+
+    @Override
+    public Map<String, String> testAllServerConfigs() {
+        Map<String, String> results = new HashMap<>();
+        try {
+            //Save the current Config
+            KieBpmConfig setKieBpmConfig = this.getKieFormManager().getConfig();
+            HashMap<String, KieBpmConfig> serverConfigurations = this.getKieFormManager().getKieServerConfigurations();
+            for (KieBpmConfig config : serverConfigurations.values()) {
+                this.getKieFormManager().setConfig(config);
+                try {
+                    this.getKieFormManager().getContainersList();
+                    results.put(config.getId(), "SUCCESS");
+                } catch (ApsSystemException e) {
+                    logger.error("Configuration test {} failed!", config.getId(), e);
+                    results.put(config.getId(), "FAILURE");
+                }
+            }
+            //load the current config
+            this.getKieFormManager().setConfig(setKieBpmConfig);
+        } catch (Throwable t) {
+            logger.error("error checking configuration", t);
+            throw new RestServerError("error checking configuration", t);
+        }
+        return results;
     }
 
     public IKieFormManager getKieFormManager() {

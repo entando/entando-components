@@ -53,7 +53,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/kiebpm/serverConfigs")
 public class ConfigController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -81,7 +80,7 @@ public class ConfigController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/kiebpm/serverConfigs", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> getConfigs(/*RestListRequest requestList*/) throws JsonProcessingException {
         //this.getConfigValidator().validateRestListRequest(requestList, KieServerConfigDto.class);
         List<KieServerConfigDto> result = this.getKieConfigService().getConfigs(/*requestList*/);
@@ -91,14 +90,14 @@ public class ConfigController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{configCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> getConfig(@PathVariable String configCode) {
         KieServerConfigDto group = this.getKieConfigService().getConfig(configCode);
         return new ResponseEntity<>(new RestResponse(group), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/kiebpm/serverConfigs", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> addConfig(@Valid @RequestBody KieServerConfigDto configRequest, BindingResult bindingResult) throws ApsSystemException {
         //field validations
         if (bindingResult.hasErrors()) {
@@ -114,7 +113,7 @@ public class ConfigController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{configCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> updateConfig(@PathVariable String configCode, @Valid @RequestBody KieServerConfigDto configRequest, BindingResult bindingResult) {
         //field validations
         if (bindingResult.hasErrors()) {
@@ -129,13 +128,31 @@ public class ConfigController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{configCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> deleteConfig(@PathVariable String configCode) throws ApsSystemException {
         logger.info("deleting {}", configCode);
         this.getKieConfigService().removeConfig(configCode);
         Map<String, String> result = new HashMap<>();
         result.put("code", configCode);
         return new ResponseEntity<>(new RestResponse(result), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/testServerConfigs", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> testConfig(@Valid @RequestBody KieServerConfigDto configRequest, BindingResult bindingResult) {
+        logger.info("test server {}", configRequest);
+        String testResult = this.getKieConfigService().testServerConfigs(configRequest);
+        Map<String, String> result = new HashMap<>();
+        result.put("result", testResult);
+        return new ResponseEntity<>(new RestResponse(result), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/testAllServerConfigs", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> testAllConfig(@Valid @RequestBody KieServerConfigDto configRequest, BindingResult bindingResult) {
+        logger.info("test all servers");
+        Map<String, String> testResult = this.getKieConfigService().testAllServerConfigs();
+        return new ResponseEntity<>(new RestResponse(testResult), HttpStatus.OK);
     }
 
 }
