@@ -24,13 +24,10 @@
 package org.entando.entando.plugins.jpkiebpm.web.config.validator;
 
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.aps.system.exception.RestServerError;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
@@ -43,9 +40,8 @@ public class ConfigValidator extends AbstractPaginationValidator {
     public static final String ERRCODE_CONFIG_ALREADY_EXISTS = "2";
     public static final String ERRCODE_URINAME_MISMATCH = "3";
 
-    @Autowired
-    private IKieFormManager formManager;
-
+    //@Autowired
+    //private IKieFormManager formManager;
     @Override
     public boolean supports(Class<?> paramClass) {
         return KieServerConfigDto.class.equals(paramClass);
@@ -55,6 +51,7 @@ public class ConfigValidator extends AbstractPaginationValidator {
     public void validate(Object target, Errors errors) {
         KieServerConfigDto request = (KieServerConfigDto) target;
         String configCode = request.getId();
+        /*
         try {
             if (null != formManager.getKieServerConfigurations().get(configCode)) {
                 errors.reject(ERRCODE_CONFIG_ALREADY_EXISTS, new String[]{configCode}, "config.exists");
@@ -63,6 +60,7 @@ public class ConfigValidator extends AbstractPaginationValidator {
             logger.error("Error loading config {}", configCode, e);
             throw new RestServerError("Error loading config", e);
         }
+         */
     }
 
     public void validateBodyName(String configCode, KieServerConfigDto configRequest, Errors errors) {
