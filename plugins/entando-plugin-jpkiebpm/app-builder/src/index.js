@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom';
 
 import PluginContainer from 'ui/plugin/containers/PluginContainer';
 import BpmCaseCommentsForm from 'ui/widgets/BpmCaseCommentsForm';
+import BpmCaseDetailsForm from 'ui/widgets/BpmCaseDetailsForm';
+// import BpmCaseFileForm from 'ui/widgets/BpmCaseFileForm';
+import BpmCaseInstanceSelectorForm from 'ui/widgets/BpmCaseInstanceSelectorForm';
+// import BpmChartForm from 'ui/widgets/BpmChartForm';
+// import BpmProgressStatusForm from 'ui/widgets/BpmProgressStatusForm';
+// import BpmRolesForm from 'ui/widgets/BpmRolesForm';
 import registerServiceWorker from 'registerServiceWorker';
 
 // state manager (Redux)
@@ -33,6 +39,8 @@ const mappedMessages = Object.keys(enLocale.messages)
 
 // wrapped forms
 const WrappedBpmCaseCommentsForm = reduxForm('BpmCaseCommentsForm')(BpmCaseCommentsForm);
+const WrappedBpmCaseDetailsForm = reduxForm('BpmCaseDetailsForm')(BpmCaseDetailsForm);
+const WrappedBpmCaseInstanceSelectorForm = reduxForm('BpmCaseInstanceSelectorForm')(BpmCaseInstanceSelectorForm);
 
 // exporting for tests
 export default ReactDOM.render(
@@ -40,7 +48,9 @@ export default ReactDOM.render(
     <IntlProvider locale={enLocale.locale} messages={mappedMessages}>
       <div>
         <PluginContainer />
-        <WrappedBpmCaseCommentsForm />
+        <WrappedBpmCaseCommentsForm onSubmit={form => console.log(`test${form}`)} />
+        <WrappedBpmCaseDetailsForm />
+        <WrappedBpmCaseInstanceSelectorForm />
       </div>
     </IntlProvider>
   </Provider>,
