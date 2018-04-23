@@ -58,12 +58,10 @@
     "start": "node scripts/start.js",
     "build": "npm run lint && echo 'lint ok' && node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "import-plugins": "node ./entando-plugins-config/import-plugins.js",
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
     "lint": "eslint ./src",
     "coverage": "node scripts/test.js --env=jsdom --coverage",
-    "build-plugin": "node scripts/build-plugin.js",
     "prepublish": "NODE_ENV=production babel src -d dist --ignore test --copy-files"
   },
   "files": [
