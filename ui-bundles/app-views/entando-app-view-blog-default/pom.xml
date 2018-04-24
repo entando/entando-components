@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-bundles-parent</artifactId>
         <groupId>org.entando.entando.bundles</groupId>
-        <version>4.3.2-CN</version>
+        <version>4.3.3-RC1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-app-view-blog-default</artifactId>
@@ -60,13 +60,13 @@
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jpblog</artifactId>
-            <version>4.3.2-CN</version>
+            <version>4.3.3-RC1</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.contents</groupId>
             <artifactId>entando-content-blogpost</artifactId>
-            <version>4.3.2-CN</version>
+            <version>4.3.3-RC1</version>
             <type>war</type>
         </dependency>
     </dependencies>
