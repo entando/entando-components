@@ -45,23 +45,16 @@ public class CaseManager extends KieFormManager {
 
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
 
-    public JSONArray getKieServerStasus() throws ApsSystemException {
-
+    public JSONArray getKieServerStatus() throws ApsSystemException {
         //Save the current Config
         KieBpmConfig setKieBpmConfig = super.getConfig();
-
         Map<String, String> headersMap = new HashMap<>();
-
-        JSONArray ServersStatus = new JSONArray();
+        JSONArray serversStatus = new JSONArray();
         String result = null;
         JSONObject json = null;
-
-        HashMap<String, KieBpmConfig> ServerConfigurations = super.getKieServerConfigurations();
-
-        for (String key : ServerConfigurations.keySet()) {
-
-            super.setConfig(ServerConfigurations.get(key));
-
+        HashMap<String, KieBpmConfig> serverConfigurations = super.getKieServerConfigurations();
+        for (String key : serverConfigurations.keySet()) {
+            super.setConfig(serverConfigurations.get(key));
             try {
                 // process endpoint first
                 Endpoint ep = KieEndpointDictionary.create().get(API_GET_SERVER_STATUS);
@@ -75,17 +68,12 @@ public class CaseManager extends KieFormManager {
                         .setHeaders(headersMap)
                         .setDebug(super.getConfig().getDebug())
                         .doRequest();
-
                 if (!result.isEmpty()) {
-
                     json = new JSONObject(result);
-
                     JSONObject serverStatusJson = new JSONObject();
                     serverStatusJson.put("id", super.getConfig().getId());
                     serverStatusJson.put("status", json);
-
                     JSONObject serverConfJson = new JSONObject();
-
                     serverConfJson.put("active", super.getConfig().getActive());
                     serverConfJson.put("id", super.getConfig().getId());
                     serverConfJson.put("name", super.getConfig().getName());
@@ -97,16 +85,12 @@ public class CaseManager extends KieFormManager {
                     serverConfJson.put("webapp", super.getConfig().getWebapp());
                     serverConfJson.put("timeoutMsec", super.getConfig().getTimeoutMsec());
                     serverConfJson.put("debug", super.getConfig().getDebug());
-
                     serverStatusJson.put("config", serverConfJson);
-
-                    ServersStatus.put(serverStatusJson);
-
+                    serversStatus.put(serverStatusJson);
                     logger.debug("received successful message: ", result);
                 } else {
                     logger.debug("received empty message: ");
                 }
-
             } catch (Throwable t) {
                 JSONObject serverStatusJson = new JSONObject();
                 serverStatusJson.put("id", super.getConfig().getId());
@@ -128,7 +112,7 @@ public class CaseManager extends KieFormManager {
 
                 serverStatusJson.put("config", serverConfJson);
 
-                ServersStatus.put(serverStatusJson);
+                serversStatus.put(serverStatusJson);
                 logger.debug("Error connecting to the server: " + t);
             }
         }
@@ -136,7 +120,7 @@ public class CaseManager extends KieFormManager {
         //load the current config
         super.setConfig(setKieBpmConfig);
 
-        return ServersStatus;
+        return serversStatus;
     }
 
     public JSONObject getCasesDefinitions(String containerId) throws ApsSystemException {
