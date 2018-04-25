@@ -15,7 +15,6 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.Kie
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
 
 /**
  *

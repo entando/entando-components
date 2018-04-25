@@ -22,7 +22,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOver
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,6 @@ import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
@@ -117,8 +116,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
                 entityType.setTypeDescription(processId + "_" + containerId);
                 this.addAttributesToEntityType(entityType, kpfr);
 
-                List<kieProcess> processes = this.getProcess();
-                for (kieProcess proc : processes) {
+                List<KieProcess> processes = this.getProcess();
+                for (KieProcess proc : processes) {
                     if (proc.getProcessId().equalsIgnoreCase(processId)) {
                         title = proc.getProcessName();
                     }
@@ -383,8 +382,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         return fileds;
     }
 
-    public List<kieProcess> getProcess() throws ApsSystemException {
-        List<kieProcess> list = this.getFormManager().getProcessDefinitionsList();
+    public List<KieProcess> getProcess() throws ApsSystemException {
+        List<KieProcess> list = this.getFormManager().getProcessDefinitionsList();
         return list;
     }
 

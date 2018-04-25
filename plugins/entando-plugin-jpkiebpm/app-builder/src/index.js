@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import PluginContainer from 'ui/plugin/containers/PluginContainer';
-import BpmCaseCommentsForm from 'ui/widgets/BpmCaseCommentsForm';
-import BpmCaseDetailsForm from 'ui/widgets/BpmCaseDetailsForm';
+// import BpmCaseCommentsForm from 'ui/widgets/BpmCaseCommentsForm';
+// import BpmCaseDetailsForm from 'ui/widgets/BpmCaseDetailsForm';
+import ChannelForm from 'ui/widgets/common/ChannelForm';
 // import BpmCaseFileForm from 'ui/widgets/BpmCaseFileForm';
-import BpmCaseInstanceSelectorForm from 'ui/widgets/BpmCaseInstanceSelectorForm';
+// import BpmCaseInstanceSelectorForm from 'ui/widgets/BpmCaseInstanceSelectorForm';
 // import BpmChartForm from 'ui/widgets/BpmChartForm';
 // import BpmProgressStatusForm from 'ui/widgets/BpmProgressStatusForm';
 // import BpmRolesForm from 'ui/widgets/BpmRolesForm';
@@ -38,9 +39,9 @@ const mappedMessages = Object.keys(enLocale.messages)
 
 
 // wrapped forms
-const WrappedBpmCaseCommentsForm = reduxForm('BpmCaseCommentsForm')(BpmCaseCommentsForm);
-const WrappedBpmCaseDetailsForm = reduxForm('BpmCaseDetailsForm')(BpmCaseDetailsForm);
-const WrappedBpmCaseInstanceSelectorForm = reduxForm('BpmCaseInstanceSelectorForm')(BpmCaseInstanceSelectorForm);
+const WrappedBpmCaseCommentsForm = reduxForm('ChannelForm')(ChannelForm);
+const WrappedBpmCaseDetailsForm = reduxForm('ChannelForm')(ChannelForm);
+const WrappedBpmCaseInstanceSelectorForm = reduxForm('ChannelForm')(ChannelForm);
 
 // exporting for tests
 export default ReactDOM.render(
@@ -48,9 +49,9 @@ export default ReactDOM.render(
     <IntlProvider locale={enLocale.locale} messages={mappedMessages}>
       <div>
         <PluginContainer />
-        <WrappedBpmCaseCommentsForm onSubmit={form => console.log(`test${form}`)} />
-        <WrappedBpmCaseDetailsForm />
-        <WrappedBpmCaseInstanceSelectorForm />
+        <WrappedBpmCaseCommentsForm widgetName="BpmCaseComments" onSubmit={form => console.log(`test${form}`)} />
+        <WrappedBpmCaseDetailsForm widgetName="BpmCaseDetails" />
+        <WrappedBpmCaseInstanceSelectorForm widgetName="BpmCaseInstanceSelector" />
       </div>
     </IntlProvider>
   </Provider>,

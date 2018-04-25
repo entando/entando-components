@@ -23,14 +23,14 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
@@ -39,14 +39,13 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.generateNewUUID;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 
 /**
  * @author Entando
@@ -208,9 +207,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public List<kieProcess> getProcessDefinitionsList() throws ApsSystemException {
+    public List<KieProcess> getProcessDefinitionsList() throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
-        List<kieProcess> list = new ArrayList<>();
+        List<KieProcess> list = new ArrayList<>();
         if (!config.getActive()) {
             return list;
         }

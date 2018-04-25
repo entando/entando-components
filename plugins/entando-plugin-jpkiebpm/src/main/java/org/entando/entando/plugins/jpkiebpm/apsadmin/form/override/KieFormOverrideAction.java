@@ -11,7 +11,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOver
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.AbstractBpmOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.IBpmOverride;
@@ -224,8 +224,8 @@ public class KieFormOverrideAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	public List<kieProcess> getProcessList() throws ApsSystemException {
-		List<kieProcess> list = this.getKieFormManager().getProcessDefinitionsList();
+	public List<KieProcess> getProcessList() throws ApsSystemException {
+		List<KieProcess> list = this.getKieFormManager().getProcessDefinitionsList();
 		return list;
 	}
 

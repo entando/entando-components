@@ -32,25 +32,16 @@ import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import org.entando.entando.plugins.jpkiebpm.KieTestParameters;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.HOSTNAME;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.PASSWORD;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.PORT;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.SCHEMA;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TEST_ENABLED;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TIMEOUT;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.USERNAME;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.WEBAPP;
 import org.entando.entando.plugins.jpkiebpm.aps.ApsPluginBaseTestCase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KIEAuthenticationCredentials;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieClient;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 
 /**
@@ -336,7 +327,7 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         return cfg;
     }
 
-    protected List<kieProcess> _processDefinitions;
+    protected List<KieProcess> _processDefinitions;
     protected List<KieContainer> _containers;
     protected List<KieProcessInstance> _processes;
 

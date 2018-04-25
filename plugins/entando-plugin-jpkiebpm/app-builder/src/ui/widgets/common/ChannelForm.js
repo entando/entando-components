@@ -2,27 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
 import { Row, Col, FormGroup, Button } from 'patternfly-react';
-import FormattedMessage from '../i18n/FormattedMessage';
+import FormattedMessage from '../../i18n/FormattedMessage';
+
 
 const options = [...Array(10).keys()].map(i => (
   <option value={i + 1}>{i + 1}</option>
 ));
 
-const BpmCaseCommentsForm = ({ handleSubmit }) => (
+const ChannelForm = ({ widgetName, handleSubmit }) => (
   <form
-    className="BpmCaseCommentsForm"
+    className="ChannelForm"
     onSubmit={(ev) => { ev.preventDefault(); handleSubmit(); }}
   >
     <h5>
       <i className="fa fa-puzzle-piece" />
-      &nbsp;
-      <FormattedMessage id="BpmCaseCommentsForm.widgetName" />
+            &nbsp;
+      <FormattedMessage id={widgetName} />
     </h5>
     <FormGroup>
       <Row>
         <Col xs={10}>
           <label htmlFor="displayedInMenu" className="control-label">
-            <FormattedMessage id="BpmCaseCommentsForm.channel" />
+            <FormattedMessage id="ChannelForm.channel" />
           </label>
           <div className="input-group">
             <Field
@@ -51,9 +52,9 @@ const BpmCaseCommentsForm = ({ handleSubmit }) => (
   </form>
 );
 
-
-BpmCaseCommentsForm.propTypes = {
+ChannelForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
+  widgetName: PropTypes.string.isRequired,
 };
 
-export default BpmCaseCommentsForm;
+export default ChannelForm;

@@ -37,15 +37,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KieProcessesQueryResult {
 
-    public List<kieProcess> getProcesses() {
+    public List<KieProcess> getProcesses() {
         return processes;
     }
 
-    public void setProcesses(List<kieProcess> processes) {
+    public void setProcesses(List<KieProcess> processes) {
         this.processes = processes;
     }
 
     @XmlElement(nillable=true)
-    private List<kieProcess> processes;
+    private List<KieProcess> processes;
 
 }

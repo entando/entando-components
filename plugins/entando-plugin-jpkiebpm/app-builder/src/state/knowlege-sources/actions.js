@@ -1,12 +1,12 @@
 import { initialize } from 'redux-form';
-import { getChannels } from 'api/channels';
+import { getKnowledgeSources } from 'api/knowledgeSources';
 
-export const fetchChannels = dispatch =>
+export const fetchKnowledgeSources = dispatch =>
   new Promise((resolve) => {
-    getChannels().then((response) => {
+    getKnowledgeSources().then((response) => {
       response.json().then((data) => {
         if (response.ok) {
-          dispatch(initialize('channels', data.payload));
+          dispatch(initialize('getKnowledgeSources', data.payload));
           resolve();
         } else {
           // TODO Handle api failure
@@ -17,4 +17,4 @@ export const fetchChannels = dispatch =>
     });
   });
 
-export default fetchChannels;
+export default fetchKnowledgeSources;

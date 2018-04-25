@@ -1,11 +1,11 @@
 import { makeRequest, METHODS } from '@entando/apimanager';
 
-export const getChannels = (params = '') => (
+export const getKnowledgeSources = (params = '') => (
   makeRequest({
-    uri: `/api/bpm/channels${params}`,
+    uri: `/api/bpm/knowledgeSources${params}`,
     method: METHODS.GET,
     useAuthentication: true,
   })
 );
 
-export default getChannels;
+export default getKnowledgeSources;
