@@ -64,7 +64,9 @@ public class ConfigValidator extends AbstractPaginationValidator {
     }
 
     public void validateBodyName(String configCode, KieServerConfigDto configRequest, Errors errors) {
-        if (!StringUtils.equals(configCode, configRequest.getId())) {
+        if (null == configRequest.getId()) {
+            errors.rejectValue("id", "51", new String[]{}, "kiebpm.id.notBlank");
+        } else if (!StringUtils.equals(configCode, configRequest.getId())) {
             errors.rejectValue("id", ERRCODE_URINAME_MISMATCH, new String[]{configCode, configRequest.getName()}, "configp.code.mismatch");
         }
     }

@@ -30,7 +30,6 @@ public class KieServerConfigDto {
 
     private Boolean active;
 
-    @NotBlank(message = "kiebpm.id.notBlank")
     private String id;
     private String name;
     private String username;

@@ -37,10 +37,8 @@ import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
-import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.validation.BeanPropertyBindingResult;
 
 /**
  * @author E.Santoboni
@@ -100,18 +98,9 @@ public class KieConfigService implements IKieConfigService {
     public synchronized KieServerConfigDto addConfig(KieServerConfigDto configRequest) {
         KieServerConfigDto configDto = null;
         try {
-            Map<String, KieBpmConfig> map = this.getKieFormManager().getKieServerConfigurations();
-            KieBpmConfig config = map.get(configRequest.getId());
-            if (null != config) {
-                BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(configRequest, "config");
-                bindingResult.reject(ConfigValidator.ERRCODE_CONFIG_ALREADY_EXISTS, new String[]{configRequest.getId()}, "kiebpm.config.exists");
-                throw new ValidationGenericException(bindingResult);
-            }
             KieBpmConfig newConfig = this.buildConfig(configDto);
             this.getKieFormManager().addConfig(newConfig);
             this.getKieFormManager().getContainersList();
-        } catch (ValidationGenericException t) {
-            throw t;
         } catch (Exception t) {
             logger.error("error in post configuration", t);
             throw new RestServerError("error in post configuration", t);
