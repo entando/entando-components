@@ -23,13 +23,13 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 
 public class KieServerConfigDto {
 
     private Boolean active;
 
-    @NotBlank(message = "kiebpm.id.notBlank")
     private String id;
     private String name;
     private String username;
@@ -38,7 +38,7 @@ public class KieServerConfigDto {
     private String hostName;
     @NotBlank(message = "kiebpm.schema.notBlank")
     private String schema;
-    @NotBlank(message = "kiebpm.port.notBlank")
+    @NotNull(message = "kiebpm.port.notBlank")
     private Integer port;
     private String webappName;
     private Integer timeout;
