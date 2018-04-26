@@ -39,6 +39,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieSer
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
 
 /**
  * @author E.Santoboni
@@ -95,12 +96,17 @@ public class KieConfigService implements IKieConfigService {
     }
 
     @Override
-    public synchronized KieServerConfigDto addConfig(KieServerConfigDto configRequest) {
+    public synchronized KieServerConfigDto addConfig(KieServerConfigDto configRequest, BindingResult bindingResult) {
         KieServerConfigDto configDto = null;
         try {
             KieBpmConfig newConfig = this.buildConfig(configRequest);
             this.getKieFormManager().addConfig(newConfig);
-            this.getKieFormManager().getContainersList();
+            try {
+                this.getKieFormManager().getContainersList();
+            } catch (Exception e) {
+                logger.warn("Added configuration with invalid server connection - {}", configRequest);
+                bindingResult.reject("schema", "Invalid configuration");
+            }
             configDto = this.getKieServerConfigDtoBuilder().convert(newConfig);
         } catch (Exception t) {
             logger.error("error in post configuration", t);
@@ -126,7 +132,7 @@ public class KieConfigService implements IKieConfigService {
     }
 
     @Override
-    public KieServerConfigDto updateConfig(KieServerConfigDto configRequest) {
+    public KieServerConfigDto updateConfig(KieServerConfigDto configRequest, BindingResult bindingResult) {
         KieServerConfigDto configDto = null;
         try {
             Map<String, KieBpmConfig> map = this.getKieFormManager().getKieServerConfigurations();
@@ -137,7 +143,12 @@ public class KieConfigService implements IKieConfigService {
             KieBpmConfig newConfig = this.buildConfig(configRequest);
             this.getKieFormManager().setKieServerConfiguration(configRequest.getId());
             this.getKieFormManager().addConfig(newConfig);
-            this.getKieFormManager().getContainersList();
+            try {
+                this.getKieFormManager().getContainersList();
+            } catch (Exception e) {
+                logger.warn("Modified configuration with invalid server connection - {}", configRequest);
+                bindingResult.reject("schema", "Invalid configuration");
+            }
             configDto = this.getKieServerConfigDtoBuilder().convert(newConfig);
         } catch (RestRourceNotFoundException t) {
             throw t;

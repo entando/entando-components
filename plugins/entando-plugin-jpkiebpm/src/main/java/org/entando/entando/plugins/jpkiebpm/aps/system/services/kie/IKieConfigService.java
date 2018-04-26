@@ -26,6 +26,7 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 import java.util.List;
 import java.util.Map;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
+import org.springframework.validation.BindingResult;
 
 /**
  * @author E.Santoboni
@@ -36,9 +37,9 @@ public interface IKieConfigService {
 
     public KieServerConfigDto getConfig(String configCode);
 
-    public KieServerConfigDto addConfig(KieServerConfigDto configRequest);
+    public KieServerConfigDto addConfig(KieServerConfigDto configRequest, BindingResult bindingResult);
 
-    public KieServerConfigDto updateConfig(KieServerConfigDto configRequest);
+    public KieServerConfigDto updateConfig(KieServerConfigDto configRequest, BindingResult bindingResult);
 
     public void removeConfig(String configCode);
 
