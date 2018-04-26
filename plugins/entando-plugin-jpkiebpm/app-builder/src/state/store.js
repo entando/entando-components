@@ -1,5 +1,7 @@
 import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
+import { config, currentUser, api } from '@entando/apimanager';
+
 import rootReducer from 'state/main/reducer';
 
 import { name } from '../../package.json';
@@ -10,6 +12,8 @@ const wrappedReducer = combineReducers({
 
 const pluginsReducer = combineReducers({
   plugins: wrappedReducer,
+  currentUser,
+  api,
 });
 
 const store = createStore(
@@ -21,5 +25,7 @@ const store = createStore(
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   ),
 );
+
+config(store);
 
 export default store;
