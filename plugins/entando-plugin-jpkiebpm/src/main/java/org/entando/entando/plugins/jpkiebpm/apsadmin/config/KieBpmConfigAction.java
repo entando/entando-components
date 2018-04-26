@@ -64,8 +64,7 @@ public class KieBpmConfigAction extends BaseAction {
     public String list() {
         try {
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
-            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
-
+            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStatus().toString());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "list");
             return FAILURE;
@@ -75,10 +74,8 @@ public class KieBpmConfigAction extends BaseAction {
 
     public String save() {
         try {
-
             KieBpmConfig config = this.modelToConfig();
             this.getFormManager().addConfig(config);
-
             this.addActionMessage(this.getText("message.config.savedConfirm"));
             try {
                 this.getFormManager().getContainersList();
@@ -87,10 +84,8 @@ public class KieBpmConfigAction extends BaseAction {
                 _logger.error("Configuration test failed!", e);
                 this.addActionError(this.getText("message.config.test.fail"));
             }
-
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
-            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
-
+            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStatus().toString());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "save");
             return FAILURE;
@@ -103,7 +98,6 @@ public class KieBpmConfigAction extends BaseAction {
             // enable plugin by default;
             this.setActive(true);
             KieBpmConfig config = this.modelToConfig();
-
             this.getFormManager().setConfig(config);
             try {
                 this.getFormManager().getContainersList();
@@ -112,10 +106,8 @@ public class KieBpmConfigAction extends BaseAction {
                 _logger.error("Configuration test failed!", e);
                 this.addActionError(this.getText("message.config.test.fail"));
             }
-
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
-            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
-
+            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStatus().toString());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "test");
             return FAILURE;
@@ -127,17 +119,12 @@ public class KieBpmConfigAction extends BaseAction {
         try {
             //Save the current Config
             KieBpmConfig setKieBpmConfig = this.getCaseManager().getConfig();
-
             JSONArray output = new JSONArray();
-
             HashMap<String, KieBpmConfig> ServerConfigurations = this.getCaseManager().getKieServerConfigurations();
-
             for (String key : ServerConfigurations.keySet()) {
-
                 this.getCaseManager().setConfig(ServerConfigurations.get(key));
                 JSONObject serverJS = new JSONObject();
                 serverJS.put("kie-server-id", key);
-
                 try {
                     this.getCaseManager().getContainersList();
                     serverJS.put("passed", true);
@@ -146,15 +133,12 @@ public class KieBpmConfigAction extends BaseAction {
                     _logger.error("Configuration test failed!", e);
                     serverJS.put("passed", false);
                 }
-
                 output.put(serverJS);
             }
             //load the current config
             this.getCaseManager().setConfig(setKieBpmConfig);
-            
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
-            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
-
+            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStatus().toString());
             this.addActionMessage(this.getText("message.config.test.success"));
             this.setKnowledgeSourceTestAllResult(output.toString());
         } catch (ApsSystemException | JSONException t) {
@@ -166,14 +150,10 @@ public class KieBpmConfigAction extends BaseAction {
 
     public String delete() {
         try {
-
             this.getFormManager().deleteConfig(this.getId());
-
             this.addActionMessage("Configuration Deleted");
-
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
-            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStasus().toString());
-
+            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStatus().toString());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "delete");
             return FAILURE;
@@ -243,16 +223,16 @@ public class KieBpmConfigAction extends BaseAction {
         return _id;
     }
 
-    public void setId(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this._id = id;
     }
 
     public String getName() {
         return _name;
     }
 
-    public void setName(String _name) {
-        this._name = _name;
+    public void setName(String name) {
+        this._name = name;
     }
 
     public String getUserName() {
@@ -307,8 +287,8 @@ public class KieBpmConfigAction extends BaseAction {
         return _timeout;
     }
 
-    public void setTimeout(Integer _timeout) {
-        this._timeout = _timeout;
+    public void setTimeout(Integer timeout) {
+        this._timeout = timeout;
     }
 
     public Boolean getDebug() {

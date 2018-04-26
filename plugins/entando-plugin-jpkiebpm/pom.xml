@@ -11,20 +11,10 @@
     <packaging>war</packaging>
     <name>Entando Plugin: Entando Redhat BPM connector</name>
     <description>Connector to gather data from forms exposed by KIE-BPM</description>
-    <developers>
-        <developer>
-            <id>myUsername</id>
-            <name>John J. Doe</name>
-            <email>me@myself.com</email>
-        </developer>
-    </developers>
     <url>http://www.entando.com/</url>
-
     <properties>
         <json.version>20170516</json.version>
     </properties>
-
-
     <build>
         <plugins>
             <plugin>
@@ -45,10 +35,10 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>2.2.1</version>
+                                    <version>3.0.0</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>1.6</version>
+                                    <version>1.8</version>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
@@ -109,14 +99,6 @@
             <version>2.13.0</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>el-api</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
 
