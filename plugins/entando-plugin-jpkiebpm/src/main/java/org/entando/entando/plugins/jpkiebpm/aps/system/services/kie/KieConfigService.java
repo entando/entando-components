@@ -98,9 +98,10 @@ public class KieConfigService implements IKieConfigService {
     public synchronized KieServerConfigDto addConfig(KieServerConfigDto configRequest) {
         KieServerConfigDto configDto = null;
         try {
-            KieBpmConfig newConfig = this.buildConfig(configDto);
+            KieBpmConfig newConfig = this.buildConfig(configRequest);
             this.getKieFormManager().addConfig(newConfig);
             this.getKieFormManager().getContainersList();
+            configDto = this.getKieServerConfigDtoBuilder().convert(newConfig);
         } catch (Exception t) {
             logger.error("error in post configuration", t);
             throw new RestServerError("error in post configuration", t);
@@ -133,9 +134,11 @@ public class KieConfigService implements IKieConfigService {
             if (null == config) {
                 throw new RestRourceNotFoundException(ConfigValidator.ERRCODE_CONFIG_NOT_FOUND, "kie bpm config", configRequest.getId());
             }
+            KieBpmConfig newConfig = this.buildConfig(configRequest);
             this.getKieFormManager().setKieServerConfiguration(configRequest.getId());
-            this.getKieFormManager().addConfig(config);
+            this.getKieFormManager().addConfig(newConfig);
             this.getKieFormManager().getContainersList();
+            configDto = this.getKieServerConfigDtoBuilder().convert(newConfig);
         } catch (RestRourceNotFoundException t) {
             throw t;
         } catch (Exception t) {
