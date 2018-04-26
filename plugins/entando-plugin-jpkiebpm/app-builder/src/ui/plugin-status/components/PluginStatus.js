@@ -4,7 +4,7 @@ import greenCheck from 'assets/green-check.png';
 
 import FormattedMessage from 'ui/i18n/FormattedMessage';
 
-import plugin from 'index-plugin';
+import plugin from 'index';
 
 
 class PluginStatus extends React.Component {

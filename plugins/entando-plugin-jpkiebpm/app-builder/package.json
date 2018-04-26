@@ -4,6 +4,8 @@
   "repository": "https://github.com/entando/entando-plugin-jpkiebpm",
   "private": true,
   "dependencies": {
+    "@entando/apimanager": "^1.0.1",
+    "@entando/router": "^1.0.1",
     "@entando/utils": "^1.0.1",
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
@@ -25,22 +27,24 @@
     "eslint-plugin-react": "7.4.0",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.5",
+    "frontend-common-components": "github:entando/frontend-common-components#master",
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
+    "lodash": "^4.17.5",
     "node-sass-chokidar": "0.0.3",
     "object-assign": "4.1.1",
-    "patternfly-react": "^1.18.1",
+    "patternfly-react": "^1.19.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
     "promise": "8.0.1",
     "prop-types": "^15.6.0",
     "raf": "3.4.0",
-    "react": "^16.2.0",
+    "react": "16.3.1",
     "react-dev-utils": "^4.2.1",
     "react-dom": "^16.2.0",
     "react-intl": "^2.4.0",
-    "react-redux": "^5.0.6",
+    "react-redux": "^5.0.7",
     "redux": "^3.7.2",
     "redux-form": "^7.3.0",
     "redux-mock-store": "^1.4.0",
@@ -58,11 +62,11 @@
     "start": "node scripts/start.js",
     "build": "npm run lint && echo 'lint ok' && node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "build-css": "node-sass-chokidar src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
+    "build-css": "node-sass-chokidar src/sass -o dist/",
     "lint": "eslint ./src",
     "coverage": "node scripts/test.js --env=jsdom --coverage",
-    "prepublish": "NODE_ENV=production babel src -d dist --ignore test --copy-files"
+    "prepublish": "NODE_ENV=production babel src -d dist --ignore test,index-app.js --copy-files",
+    "build-plugin": "npm run prepublish && npm run build-css"
   },
   "files": [
     "dist",
@@ -71,7 +75,7 @@
     "!public",
     "!config"
   ],
-  "main": "dist/index-plugin.js",
+  "main": "dist/index.js",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-module-resolver": "^3.1.1",
@@ -86,6 +90,12 @@
     "fs-extra": "^3.0.1",
     "npm-run": "^4.1.2",
     "react-test-renderer": "^16.2.0"
+  },
+  "peerDependencies": {
+    "react": "^16.3.1",
+    "redux": "^3.7.2",
+    "redux-form": "^7.3.0",
+    "@entando/apimanager": "^1.0.1"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -130,9 +140,14 @@
       "react-app"
     ],
     "plugins": [
-      ["module-resolver", {
-        "root": ["./src"]
-      }]
+      [
+        "module-resolver",
+        {
+          "root": [
+            "./src"
+          ]
+        }
+      ]
     ]
   }
 }
