@@ -31,6 +31,7 @@ import javax.validation.Valid;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.ArrayList;
 import java.util.List;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieConfigService;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
@@ -39,6 +40,7 @@ import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
+import org.entando.entando.web.common.model.RestError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,8 +110,8 @@ public class ConfigController {
         if (bindingResult.hasErrors()) {
             throw new ValidationConflictException(bindingResult);
         }
-        KieServerConfigDto dto = this.getKieConfigService().addConfig(configRequest);
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        KieServerConfigDto dto = this.getKieConfigService().addConfig(configRequest, bindingResult);
+        return this.getPostPutResponse(dto, bindingResult);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
@@ -123,8 +125,20 @@ public class ConfigController {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        KieServerConfigDto config = this.getKieConfigService().updateConfig(configRequest);
-        return new ResponseEntity<>(new RestResponse(config), HttpStatus.OK);
+        KieServerConfigDto config = this.getKieConfigService().updateConfig(configRequest, bindingResult);
+        return this.getPostPutResponse(config, bindingResult);
+    }
+
+    private ResponseEntity<RestResponse> getPostPutResponse(KieServerConfigDto config, BindingResult bindingResult) {
+        RestError error = (bindingResult.hasErrors()) ? new RestError("40", "Test connection failed") : null;
+        List<RestError> errors = null;
+        if (null != error) {
+            errors = new ArrayList<>();
+            errors.add(error);
+        }
+        HttpStatus httpStatus = (bindingResult.hasErrors()) ? HttpStatus.ACCEPTED : HttpStatus.OK;
+        RestResponse response = new RestResponse(config, errors, null);
+        return new ResponseEntity<>(response, httpStatus);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
