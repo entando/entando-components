@@ -233,6 +233,10 @@ public class KieFormOverrideAction extends BaseAction {
 		String[] params = this.getProcessPath().split("@");
 		String processId = (params[0]);
 		String containerId = (params[1]);
+		if (params.length > 2) {
+			String kieSourceId = params[2];
+			this.getKieFormManager().setKieServerConfiguration(kieSourceId);
+		}
 		KieProcessFormQueryResult form = this.getKieFormManager().getProcessForm(containerId, processId);
 		List<KieProcessFormField> fileds = new ArrayList<>();
 		this.addFileds(form, fileds);
