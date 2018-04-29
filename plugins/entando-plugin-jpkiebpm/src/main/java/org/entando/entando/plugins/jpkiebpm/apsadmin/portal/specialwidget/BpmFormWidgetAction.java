@@ -271,7 +271,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     protected void initSharedParameters(final BpmWidgetInfo widgetInfo) {
         String processId = widgetInfo.getConfigDraft().getProperty(PROP_PROCESS_ID);
         if (StringUtils.isNotBlank(processId) && !processId.equals("null")) {
-            String procString = widgetInfo.getConfigDraft().getProperty(PROP_PROCESS_ID) + "@" + widgetInfo.getConfigDraft().getProperty(PROP_CONTAINER_ID) + widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+            String procString = widgetInfo.getConfigDraft().getProperty(PROP_PROCESS_ID) + "@" + widgetInfo.getConfigDraft().getProperty(PROP_CONTAINER_ID) + "@" + widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+_logger.info("Setting processPath to {}", procString);            
             this.setProcessPath(procString);
             String[] param = this.getProcessPath().split("@");
             this.setProcessId(param[0]);

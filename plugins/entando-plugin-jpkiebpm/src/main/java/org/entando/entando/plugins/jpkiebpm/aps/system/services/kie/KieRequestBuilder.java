@@ -23,6 +23,9 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -38,6 +41,13 @@ import org.slf4j.LoggerFactory;
  */
 public class KieRequestBuilder extends RequestBuilder {
     private static final Logger _logger = LoggerFactory.getLogger(KieRequestBuilder.class);
+    
+    /**
+     *  Used for Request Parameters that occur more than once:
+     *  Key: parameter name
+     *  Value: comma separated list of values
+     */
+    private Map<String,String> recurringParameters;
 
     public KieRequestBuilder(KieClient client) {
         this._configClient = client;
@@ -79,7 +89,35 @@ public class KieRequestBuilder extends RequestBuilder {
                     _configClient.getTimeoutMsec());
         }
     }
+    
+    @Override
+    protected void injectParameters(HttpRequestBase verb) throws Throwable {
+    		super.injectParameters(verb);
+    		if (recurringParameters != null && recurringParameters.keySet().size() > 0) {
+	    		for (String parameterName : recurringParameters.keySet()) {
+	    			String[] repeatingValues = recurringParameters.get(parameterName).split(",");
+	    			for (String parameterValue : repeatingValues) {
+	    				Map<String,String> parameterMap = new HashMap<String,String>();
+	    				parameterMap.put(parameterName, parameterValue);
+	    				RequestHelper.appendParameters(verb, parameterMap);
+	    			}
+	    		}
+	        if (_debug) {
+	            _logger.info("after appending recurring parameters: {}",verb.getURI());
+	        }
+    		} else {
+    			_logger.debug("No recurring parameters found...");
+    		}
+    }
 
 
-    private final KieClient _configClient;
+    public Map<String, String> getRecurringParameters() {
+		return recurringParameters;
+	}
+
+	public void setRecurringParameters(Map<String, String> recurringParameters) {
+		this.recurringParameters = recurringParameters;
+	}
+
+	private final KieClient _configClient;
 }

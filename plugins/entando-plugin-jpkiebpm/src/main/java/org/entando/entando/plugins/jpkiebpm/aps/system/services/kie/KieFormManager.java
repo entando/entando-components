@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections.MultiMap;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
@@ -63,6 +64,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiaBpm
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainersQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
@@ -72,6 +74,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTas
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
+import org.entando.entando.plugins.jprestapi.aps.core.RequestBuilder;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -239,6 +242,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             // unfold returned object to get the payload
             if (null != result && null != result.getProcesses() && !result.getProcesses().isEmpty()) {
                 list = result.getProcesses();
+                for (kieProcess process : list) {
+                		process.setKieSourceId(config.getId());
+                }
             }
         } catch (Throwable t) {
             throw new ApsSystemException("Error getting the list of process definitions", t);
@@ -291,6 +297,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public List<KieTask> getHumanTaskList(String groups, Map<String, String> opt) throws ApsSystemException {
+	    	logger.info("getHumanTaskList(groups: {}, opt: {}", groups, opt);
         Map<String, String> headersMap = new HashMap<>();
         List<KieTask> list = new ArrayList<>();
         if (!config.getActive()) {
@@ -303,14 +310,24 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieClient client = getCurrentClient();
             // perform query
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
-            // perform query
-            KieTaskQueryResult result = (KieTaskQueryResult) new KieRequestBuilder(client)
+            
+            // Configure query
+            RequestBuilder requestBuilder = new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(opt)
-                    .setDebug(config.getDebug())
-                    .doRequest(KieTaskQueryResult.class);
+                    .setDebug(config.getDebug());
+            
+            // Add groups to request
+            if (groups != null && !"null".equalsIgnoreCase(groups)) {
+            		Map<String,String> recurringParameters = new HashMap<String,String>();
+            		recurringParameters.put("groups", groups);
+            		((KieRequestBuilder)requestBuilder).setRecurringParameters(recurringParameters);
+            }
+                    
             // unfold returned object to get the payload
+            
+            KieTaskQueryResult result = (KieTaskQueryResult) requestBuilder.doRequest(KieTaskQueryResult.class);
             if (null != result && null != result.getList() && !result.getList().isEmpty()) {
                 list = result.getList();
             }
@@ -514,10 +531,11 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return json;
     }
-
+    
     @Override
     // This uses XML unmarshaling
     public KieProcessFormQueryResult getProcessForm(String containerId, String processId) throws ApsSystemException {
+    		logger.info("invoking getProcessForm(containterId: {}, processId: {})", containerId, processId);
         KieProcessFormQueryResult result = null;
         if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(processId)) {
             return result;
@@ -681,8 +699,11 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieProcessFormQueryResult form = getTaskForm(containerId, taskId);
             // load related data
             JSONObject taskData = getTaskFormData(containerId, taskId, null);
-            final KieProcessFormQueryResult formProcess = getProcessForm(containerId, processId);
-            final Map<String, Object> inputValidated = FormToBpmHelper.validateForm(formProcess, input);
+            //final KieProcessFormQueryResult formProcess = getProcessForm(containerId, processId);
+            input.put("containerId", containerId);
+            input.put("processId", processId);
+            input.put("taskId",String.valueOf(taskId));
+            final Map<String, Object> inputValidated = FormToBpmHelper.validateForm(form, input);
             final Map<String, Object> map = new HashMap<>();
             BpmToFormHelper.getHumanTaskFormData(form, taskData, map);
             map.putAll(inputValidated);

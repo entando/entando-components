@@ -20,7 +20,7 @@
     </resource>
 
     <resource name="tasks" namespace="jpkiebpm">
-        <description>The rapresentation of a task list</description>
+        <description>The representation of a task list</description>
         <source pluginCode="jpkiebpm">plugins</source>
         <method httpMethod="GET" active="true">
             <description>Return a task list</description>

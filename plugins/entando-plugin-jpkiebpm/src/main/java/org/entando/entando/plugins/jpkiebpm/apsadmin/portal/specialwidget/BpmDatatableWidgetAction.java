@@ -106,7 +106,9 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
     protected void setPropertiesIntoWidgetInfo(final ApsProperties properties, final String procId, final String contId, final String sourceId) {
         properties.put(PROP_PROCESS_ID, procId);
         properties.put(PROP_CONTAINER_ID, contId);
-        properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID, sourceId);
+        if (sourceId != null) {
+        		properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID, sourceId);
+        }
         if (this.getGroups() != null) {
             properties.put(PROP_BPM_GROUP, this.getGroups());
         }
