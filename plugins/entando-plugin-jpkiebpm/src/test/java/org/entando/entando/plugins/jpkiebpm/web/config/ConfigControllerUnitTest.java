@@ -22,10 +22,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ConfigControllerUnitTest extends AbstractControllerTest {
@@ -109,7 +106,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                         .header("Authorization", "Bearer " + accessToken));
 
 
-        Mockito.verify(kieConfigService, Mockito.times(1)).addConfig(Mockito.any());
+        Mockito.verify(kieConfigService, Mockito.times(1)).addConfig(Mockito.any(), Mockito.any());
 
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(response);
@@ -132,7 +129,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                         .header("Authorization", "Bearer " + accessToken));
 
 
-        Mockito.verify(kieConfigService, Mockito.times(1)).updateConfig(Mockito.any());
+        Mockito.verify(kieConfigService, Mockito.times(1)).updateConfig(Mockito.any(), Mockito.any());
 
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(response);
