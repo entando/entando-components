@@ -75,7 +75,7 @@ public class ConfigController {
     @Autowired
     @Qualifier("jpkiebpmsCaseManager")
     IKieFormManager caseManager;
-    
+
     public IKieConfigService getKieConfigService() {
         return kieConfigService;
     }
