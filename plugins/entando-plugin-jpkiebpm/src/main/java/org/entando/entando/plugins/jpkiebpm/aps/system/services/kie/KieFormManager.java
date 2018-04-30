@@ -23,17 +23,58 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_DELETE_PROCESS;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_ALL_PROCESS_INSTANCES_LIST;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_ALL_TASK_LIST_ADMIN;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_CONTAINERS_LIST;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_DATA_HUMAN_TASK;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_DATA_HUMAN_TASK_DETAIL;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_HUMAN_TASK_LIST;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_DEFINITION;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_DEFINITIONS_LIST;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_DIAGRAM;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_INSTANCES_LIST;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_TASK_FORM_DEFINITION;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_POST_ALL_PROCESS_INSTANCES_W_CLIENT_DATA;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_POST_PROCESS_START;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_POST_SIGNAL;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_PUT_HUMAN_TASK;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_PUT_HUMAN_TASK_STATE;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_PUT_SET_TASK_STATE;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.HEADER_KEY_ACCEPT;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.HEADER_KEY_CONTENT_TYPE;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.HEADER_VALUE_JSON;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.SUCCESS;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.generateNewUUID;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import org.apache.commons.collections.MultiMap;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiaBpmConfigFactory;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainersQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieFormQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessesQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
+import org.entando.entando.plugins.jprestapi.aps.core.RequestBuilder;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -42,11 +83,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.generateNewUUID;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
+//import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 
 /**
  * @author Entando
@@ -57,33 +94,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public void init() {
-        //leaving the default config object null
-
-//        loadConfigurations();
-//        loadConfig();
-//        logger.info("{} ready, enabled: {}", this.getClass().getName());
+        // Looking config up instead of holding singleton
     }
 
-    /*
-    private void loadConfig() throws ApsSystemException {
-        try {
-            //this doesnt work with multi server configuration
-//            ConfigInterface configManager = this.getConfigManager();
-//            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
-//            config = (KieBpmConfig) JAXBHelper.unmarshall(xml, KieBpmConfig.class, true, false);
-            ConfigInterface configManager = this.getConfigManager();
-
-            String xml = configManager.getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
-            KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
-
-            //get the first entry in database
-            config = kBpmConfFctry.getFirstKiaBpmConfig();
-
-        } catch (Throwable t) {
-            throw new ApsSystemException("Error in loadConfigs", t);
-        }
-    }
-     */
+    @Override
     public KieBpmConfig loadFirstConfigurations() throws ApsSystemException {
         try {
             String xml = this.getConfigManager().getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
@@ -228,6 +242,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             // unfold returned object to get the payload
             if (null != result && null != result.getProcesses() && !result.getProcesses().isEmpty()) {
                 list = result.getProcesses();
+                for (kieProcess process : list) {
+                		process.setKieSourceId(config.getId());
+                }
             }
         } catch (Throwable t) {
             throw new ApsSystemException("Error getting the list of process definitions", t);
@@ -280,6 +297,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public List<KieTask> getHumanTaskList(String groups, Map<String, String> opt) throws ApsSystemException {
+	    	logger.info("getHumanTaskList(groups: {}, opt: {}", groups, opt);
         Map<String, String> headersMap = new HashMap<>();
         List<KieTask> list = new ArrayList<>();
         if (!config.getActive()) {
@@ -292,14 +310,24 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieClient client = getCurrentClient();
             // perform query
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
-            // perform query
-            KieTaskQueryResult result = (KieTaskQueryResult) new KieRequestBuilder(client)
+            
+            // Configure query
+            RequestBuilder requestBuilder = new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(opt)
-                    .setDebug(config.getDebug())
-                    .doRequest(KieTaskQueryResult.class);
+                    .setDebug(config.getDebug());
+            
+            // Add groups to request
+            if (groups != null && !"null".equalsIgnoreCase(groups)) {
+            		Map<String,String> recurringParameters = new HashMap<String,String>();
+            		recurringParameters.put("groups", groups);
+            		((KieRequestBuilder)requestBuilder).setRecurringParameters(recurringParameters);
+            }
+                    
             // unfold returned object to get the payload
+            
+            KieTaskQueryResult result = (KieTaskQueryResult) requestBuilder.doRequest(KieTaskQueryResult.class);
             if (null != result && null != result.getList() && !result.getList().isEmpty()) {
                 list = result.getList();
             }
@@ -354,7 +382,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         opt.put("user", user);
 
         try {
-            String payload = FSIDemoHelper.getPayloadForCompleteEnrichmentDocumentApproval(review);
+            String payload = "";//FSIDemoHelper.getPayloadForCompleteEnrichmentDocumentApproval(review);
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK)
                     .resolveParams(containerId, taskId, state.getValue());
@@ -503,10 +531,11 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         return json;
     }
-
+    
     @Override
     // This uses XML unmarshaling
     public KieProcessFormQueryResult getProcessForm(String containerId, String processId) throws ApsSystemException {
+    		logger.info("invoking getProcessForm(containterId: {}, processId: {})", containerId, processId);
         KieProcessFormQueryResult result = null;
         if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(processId)) {
             return result;
@@ -578,8 +607,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return null;
         }
         try {
-            // generate payload FIXME this should be dynamic
-            String payload = FSIDemoHelper.createStartProcessPayload(process);
+        		KieProcessFormQueryResult form = getProcessForm(process.getContainerId(), process.getProcessId());
+            String payload = FormToBpmHelper.generateFormJson(form, input, process.getContainerId(), process.getProcessId());
             logger.info("PAYLOAD CREATED: {}", payload);
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_POST_PROCESS_START)
@@ -604,13 +633,17 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public String startNewProcess(String containerId, String processId, Map<String, Object> input) throws ApsSystemException {
-        KieApiProcessStart process = null;
-        try {
+        KieApiProcessStart process = new KieApiProcessStart();
+        process.setContainerId(containerId);
+        process.setProcessId(processId);
+        process.setCorrelation(UUID.randomUUID().toString());
+        
+        /*try {
             // generate payload FIXME this should be dynamic
             process = FSIDemoHelper.createStartProcessPayload(containerId, processId, input);
         } catch (Throwable t) {
             throw new ApsSystemException("Error starting the process", t);
-        }
+        }*/
         return this.startNewProcess(process, input);
     }
 
@@ -666,8 +699,11 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieProcessFormQueryResult form = getTaskForm(containerId, taskId);
             // load related data
             JSONObject taskData = getTaskFormData(containerId, taskId, null);
-            final KieProcessFormQueryResult formProcess = getProcessForm(containerId, processId);
-            final Map<String, Object> inputValidated = FormToBpmHelper.validateForm(formProcess, input);
+            //final KieProcessFormQueryResult formProcess = getProcessForm(containerId, processId);
+            input.put("containerId", containerId);
+            input.put("processId", processId);
+            input.put("taskId",String.valueOf(taskId));
+            final Map<String, Object> inputValidated = FormToBpmHelper.validateForm(form, input);
             final Map<String, Object> map = new HashMap<>();
             BpmToFormHelper.getHumanTaskFormData(form, taskData, map);
             map.putAll(inputValidated);
@@ -843,7 +879,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                 || null == state) {
             return null;
         }
-        String payload = FSIDemoHelper.getPayloadForCompleteEnrichDocument(input);
+        KieProcessFormQueryResult form = getTaskForm(containerId, Long.parseLong(taskId));
+        JSONObject task = getTaskFormData(containerId, Long.parseLong(taskId), null);
+        String payload = FormToBpmHelper.generateHumanTaskFormJson(form, task, input); //FSIDemoHelper.getPayloadForCompleteEnrichDocument(input);
         try {
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_PUT_HUMAN_TASK_STATE)
@@ -894,7 +932,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
             if (null != input) {
                 // generate payload
-                String payload = FSIDemoHelper.getPayloadForAdditionalClientDetailTask(input);
+                String payload = "";//FSIDemoHelper.getPayloadForAdditionalClientDetailTask(input);
                 // perform query
                 result = (String) new KieRequestBuilder(client)
                         .setEndpoint(ep)
@@ -934,7 +972,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             opt.put("mapper", "ClientOnboardingProcessInstancesWithCustomVariables");
         }
         try {
-            String payoload = FSIDemoHelper.getPayloadForProcessInstancesWithClient(input);
+            String payoload = "";//FSIDemoHelper.getPayloadForProcessInstancesWithClient(input);
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create()
                     .get(API_POST_ALL_PROCESS_INSTANCES_W_CLIENT_DATA);

@@ -76,7 +76,15 @@ public class kieProcess {
         this.containerId = containerId;
     }
 
-    @XmlElement(name = "process-id")
+    public String getKieSourceId() {
+		return kieSourceId;
+	}
+
+	public void setKieSourceId(String kieSourceId) {
+		this.kieSourceId = kieSourceId;
+	}
+
+	@XmlElement(name = "process-id")
     private String processId;
     @XmlElement(name = "process-name")
     private String processName;
@@ -86,6 +94,8 @@ public class kieProcess {
     private String packageName;
     @XmlElement(name = "container-id")
     private String containerId;
+    
+    private String kieSourceId;
 
     @Override
     public String toString() {

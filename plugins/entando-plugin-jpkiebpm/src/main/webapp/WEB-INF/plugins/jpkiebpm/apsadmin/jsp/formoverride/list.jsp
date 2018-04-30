@@ -77,7 +77,7 @@
                             <s:text name="label.process"/>
                         </label>
                         <div class="col-sm-9">
-                            <s:select  headerKey="" headerValue="" cssClass="col-sm-12" list="processList" id="processPath" name="processPath"  listKey="%{packageName +'.'+processName + '@' + containerId}" listValue="%{processName + ' @ ' + containerId}"  >
+                            <s:select  headerKey="" headerValue="" cssClass="col-sm-12" list="processList" id="processPath" name="processPath"  listKey="%{packageName +'.'+processName + '@' + containerId + '@' + kieSourceId}" listValue="%{processName + ' @ ' + containerId}"  >
                             </s:select>
                         </div>
                     </div>

@@ -127,6 +127,8 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
             ApsProperties configOnline = widgetInfo.getConfigOnline();
             String processId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID);
             String containerId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID);
+            String kieSourceId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+            this.getFormManager().setKieServerConfiguration(kieSourceId);
             KieProcessFormQueryResult kieForm = this.getFormManager().getProcessForm(containerId, processId);
 
             String username = this.getCurrentUser().getUsername();

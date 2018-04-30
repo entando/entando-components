@@ -167,6 +167,7 @@ public class BpmToFormHelper {
                 return holder;
             }
         }
+        
         return null;
     }
 
@@ -313,45 +314,49 @@ public class BpmToFormHelper {
         }
         KieDataHolder dataModeler =
                 BpmToFormHelper.getFormDataModelerEntry(form);
-        Object obj = JsonHelper.findKey(data, dataModeler.getValue());
-        if (null == obj
-                || !(obj instanceof JSONObject)) {
-            throw new RuntimeException("Unexpected data for key " + dataModeler.getValue());
+        
+        // If dataModeler null... only have scalar values...
+        if (dataModeler != null) {
+	        Object obj = JsonHelper.findKey(data, dataModeler.getValue());
+	        if (null == obj
+	                || !(obj instanceof JSONObject)) {
+	            throw new RuntimeException("Unexpected data for key " + dataModeler.getValue());
+	        }
+	        JSONObject section = (JSONObject) obj;
+	        String sectionName = dataModeler.getId();
+	        List<String> sectionFields = new ArrayList<>();
+	        // collect field
+	        for (KieProcessFormField field : form.getFields()) {
+	            String jsonName = FormToBpmHelper.generateFieldNameForInput(field, sectionName);
+	            Object value = null;
+	            try {
+	                value = section.get(jsonName);
+	            } catch (org.json.JSONException ex) {
+	            }
+	            if (JSONObject.NULL == value) {
+	                result.put(field.getName(), null);
+	            } else {
+	                result.put(field.getName(), value);
+	            }
+	        }
+	        // collect JSON data. Some field might not exist in the form definition!
+	        for (String name : JSONObject.getNames(section)) {
+	            final String key = generateFieldNameForOutput(name, sectionName);
+	            final Object value = section.get(name);
+	
+	            // skip json objects
+	            if (value instanceof JSONObject) {
+	                continue;
+	            }
+	            if (JSONObject.NULL == value) {
+	                result.put(key, null);
+	            } else {
+	                result.put(key, value);
+	            }
+	        }
+	        // to avoid name collisions we delete the section just inspected
+	        JsonHelper.replaceKey(data, dataModeler.getValue(), "  ");
         }
-        JSONObject section = (JSONObject) obj;
-        String sectionName = dataModeler.getId();
-        List<String> sectionFields = new ArrayList<>();
-        // collect field
-        for (KieProcessFormField field : form.getFields()) {
-            String jsonName = FormToBpmHelper.generateFieldNameForInput(field, sectionName);
-            Object value = null;
-            try {
-                value = section.get(jsonName);
-            } catch (org.json.JSONException ex) {
-            }
-            if (JSONObject.NULL == value) {
-                result.put(field.getName(), null);
-            } else {
-                result.put(field.getName(), value);
-            }
-        }
-        // collect JSON data. Some field might not exist in the form definition!
-        for (String name : JSONObject.getNames(section)) {
-            final String key = generateFieldNameForOutput(name, sectionName);
-            final Object value = section.get(name);
-
-            // skip json objects
-            if (value instanceof JSONObject) {
-                continue;
-            }
-            if (JSONObject.NULL == value) {
-                result.put(key, null);
-            } else {
-                result.put(key, value);
-            }
-        }
-        // to avoid name collisions we delete the section just inspected
-        JsonHelper.replaceKey(data, dataModeler.getValue(), "  ");
     }
 
     /**

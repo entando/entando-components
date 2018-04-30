@@ -23,15 +23,14 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
-
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieDataHolder;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
@@ -81,30 +80,41 @@ public class FormToBpmHelper {
      * @param jmap
      * @param input
      * @param formParams
+     * @return JSONObject with all scalar values
      * @throws Throwable
      */
-    private static void buildSections(Map<String, JSONObject> jmap,
+    private static JSONObject buildSections(Map<String, JSONObject> jmap,
                                       Map<String, Object> input,
                                       List<String> formParams) throws Throwable {
+    		JSONObject singles = new JSONObject();
         if (null == jmap
                 || null == input
                 || null == formParams
                 || input.isEmpty()
                 || jmap.isEmpty()
                 || formParams.isEmpty()) {
-            return;
+            return singles;
         }
+        
         for (String parameter : formParams) {
             String[] tok = parameter.split(SEPARATOR);
-            String section = tok[0];
-            String field = tok[1];
-
-            // select the json
-            JSONObject json = jmap.get(section);
-            // add data
-            json.put(field, input.get(parameter));
-            _logger.info("adding field '{}' in section '{}'", field, section);
+            
+            if (tok.length > 1) {
+	            String section = tok[0];
+	            String field = tok[1];
+	
+	            // select the json
+	            JSONObject json = jmap.get(section);
+	            // add data
+	            json.put(field, input.get(parameter));
+	            _logger.info("adding field '{}' in section '{}'", field, section);
+            } else {
+            		String field = tok[0];
+            		singles.put(field, input.get(parameter));
+            		_logger.info("adding single '{}'", field);
+            }
         }
+        return singles;
     }
 
     /**
@@ -148,30 +158,30 @@ public class FormToBpmHelper {
                                           final Map<String, Object> input,
                                           final String containerId,
                                           final String processDefinitionId) throws Throwable {
-        JSONObject ojson = new JSONObject();
         JSONObject ajson = new JSONObject();
         List<String> formParams = BpmToFormHelper.getParamersMap(bpmForm);
         Map<String, JSONObject> jmap = createSectionJson(bpmForm, formParams);
         KieDataHolder mainDataHolder = BpmToFormHelper.getFormDataModelerEntry(bpmForm);
 
+        // process sections, compose inner json with all data, all components are still separated
+        JSONObject outJSON = buildSections(jmap, input, formParams);
+        
         if (null == mainDataHolder
                 || null == mainDataHolder.getId()
                 || null == mainDataHolder.getValue()) {
-            _logger.error("cannot find main mainDataHolder OR invalid mainDataHolder detected, aborting");
+            _logger.warn("cannot find main mainDataHolder OR invalid mainDataHolder detected, aborting");
+        } else {
+	        // prepare application object
+	        buildInternalSection(mainDataHolder.getId(), jmap);
+	        // prepare main dataholder section
+	        ajson.put(mainDataHolder.getValue(),
+	                jmap.get(mainDataHolder.getId()));
+	        // finally prepare the overall JOSN
+	        outJSON.put(mainDataHolder.getId(), ajson);
         }
-
-        // process sections, compose inner json with all data, all components are still separated
-        buildSections(jmap, input, formParams);
-        // prepare application object
-        buildInternalSection(mainDataHolder.getId(), jmap);
-        // prepare main dataholder section
-        ajson.put(mainDataHolder.getValue(),
-                jmap.get(mainDataHolder.getId()));
-        // finally prepare the overall JOSN
-        ojson.put(mainDataHolder.getId(), ajson);
-        ojson.put(FIELD_PROCESS_DEFINITION_ID, processDefinitionId);
-        ojson.put(FIELD_CONTANER_ID, containerId);
-        return ojson.toString();
+        outJSON.put(FIELD_PROCESS_DEFINITION_ID, processDefinitionId);
+        outJSON.put(FIELD_CONTANER_ID, containerId);
+        return outJSON.toString();
     }
 
     /**

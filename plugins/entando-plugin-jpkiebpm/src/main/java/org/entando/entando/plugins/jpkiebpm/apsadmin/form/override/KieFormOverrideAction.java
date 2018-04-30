@@ -26,6 +26,8 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 
+import ucar.unidata.util.StringUtil;
+
 public class KieFormOverrideAction extends BaseAction {
 
 	private static final Logger _logger = LoggerFactory.getLogger(KieFormOverrideAction.class);
@@ -233,6 +235,14 @@ public class KieFormOverrideAction extends BaseAction {
 		String[] params = this.getProcessPath().split("@");
 		String processId = (params[0]);
 		String containerId = (params[1]);
+		String kieSourceId = params[2];
+		
+		if (StringUtil.notEmpty(kieSourceId) && !"null".equalsIgnoreCase(kieSourceId)) {
+			this.getKieFormManager().setKieServerConfiguration(kieSourceId);
+		} else {
+			_logger.warn("No kie source id in process path");
+		}
+		
 		KieProcessFormQueryResult form = this.getKieFormManager().getProcessForm(containerId, processId);
 		List<KieProcessFormField> fileds = new ArrayList<>();
 		this.addFileds(form, fileds);
@@ -244,12 +254,13 @@ public class KieFormOverrideAction extends BaseAction {
 			String[] params = this.getProcessPath().split("@");
 			kieFormOverride.setProcessId(params[0]);
 			kieFormOverride.setContainerId(params[1]);
+			kieFormOverride.set_sourceId(params[2]);
 		}
 	}
 
 	protected void setProcessPathToController(KieFormOverride kieFormOverride) {
 		if (null != kieFormOverride) {
-			String procString = kieFormOverride.getProcessId() + "@" + kieFormOverride.getContainerId();
+			String procString = kieFormOverride.getProcessId() + "@" + kieFormOverride.getContainerId() + "@" + kieFormOverride.get_sourceId();
 			this.setProcessPath(procString);
 		}
 	}

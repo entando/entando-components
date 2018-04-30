@@ -37,7 +37,6 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
 
 public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
@@ -46,6 +45,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     protected String processId;
     protected String containerId;
     protected String processPath;
+    protected String knowledgeSourceId;
 
     public static final String PROP_NAME_WIDGET_INFO_ID = KieBpmSystemConstants.WIDGET_PARAM_INFO_ID;//"widgetInfoId";
 
@@ -90,16 +90,18 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             String xml = widgetInfo.getInformationDraft();
             ApsProperties props = new ApsProperties();
             props.loadFromXml(xml);
-            String processId = props.getProperty(PROP_PROCESS_ID),
-                    containerId = props.getProperty(PROP_CONTAINER_ID);
+            String processId = props.getProperty(PROP_PROCESS_ID);
+            String containerId = props.getProperty(PROP_CONTAINER_ID);
+            String kieSourceId = props.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
             String title = containerId;
 
             //DataModel - start
+            this.getFormManager().setKieServerConfiguration(kieSourceId);
             KieProcessFormQueryResult kpfr = this.getFormManager()
                     .getProcessForm(containerId, processId);
 
             //add missing fields FIXME this should be in the form retrieved
-            kpfr = FSIDemoHelper.addMissinFields(kpfr);
+            //kpfr = FSIDemoHelper.addMissinFields(kpfr);
 
             Map<String, IApsEntity> types = this.getDataObjectManager().getEntityPrototypes();
             String typeCode = null;
@@ -269,11 +271,17 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     protected void initSharedParameters(final BpmWidgetInfo widgetInfo) {
         String processId = widgetInfo.getConfigDraft().getProperty(PROP_PROCESS_ID);
         if (StringUtils.isNotBlank(processId) && !processId.equals("null")) {
-            String procString = widgetInfo.getConfigDraft().getProperty(PROP_PROCESS_ID) + "@" + widgetInfo.getConfigDraft().getProperty(PROP_CONTAINER_ID);
+            String procString = widgetInfo.getConfigDraft().getProperty(PROP_PROCESS_ID) + "@" + widgetInfo.getConfigDraft().getProperty(PROP_CONTAINER_ID) + "@" + widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+_logger.info("Setting processPath to {}", procString);            
             this.setProcessPath(procString);
             String[] param = this.getProcessPath().split("@");
             this.setProcessId(param[0]);
             this.setContainerId(param[1]);
+            this.setKnowledgeSourceId(param[2]);
+        }
+        String kieSourceId = widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+        if (StringUtils.isNotBlank(kieSourceId) && !"null".equalsIgnoreCase(kieSourceId)) {
+        		this.setKnowledgeSourceId(kieSourceId);
         }
         String listOverrrides = widgetInfo.getConfigDraft().getProperty(PROP_OVERRIDE_ID);
         if (StringUtils.isNotBlank(listOverrrides) && !listOverrrides.equals("null")) {
@@ -377,6 +385,10 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         String[] params = this.getProcessPath().split("@");
         String processId = (params[0]);
         String containerId = (params[1]);
+        if (params.length > 2) {
+        		String kieSourceId = params[2];
+        		this.getFormManager().setKieServerConfiguration(kieSourceId);
+        }
         KieProcessFormQueryResult form = this.getFormManager().getProcessForm(containerId, processId);
         List<KieProcessFormField> fileds = new ArrayList<>();
         this.addFileds(form, fileds);
@@ -415,6 +427,11 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             ApsProperties properties = new ApsProperties();
             properties.put(PROP_PROCESS_ID, procId);
             properties.put(PROP_CONTAINER_ID, contId);
+            
+            if (this.getKnowledgeSourceId() == null) {
+            		this.setKnowledgeSourceId(this.getFormManager().loadFirstConfigurations().getId());
+            } 
+            properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID, this.getKnowledgeSourceId());
 
             if (null != this.getOvrd() && !this.getOvrd().isEmpty()) {
                 String checkedOverrides = StringUtils.join(this.getOvrd(), ",");
@@ -463,6 +480,14 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
     public void setContainerId(String containerId) {
         this.containerId = containerId;
+    }
+    
+    public String getKnowledgeSourceId() {
+    		return this.knowledgeSourceId;
+    }
+    
+    public void setKnowledgeSourceId(String knowledgeSourceId) {
+    		this.knowledgeSourceId = knowledgeSourceId;
     }
 
     public String getProcessPath() {
