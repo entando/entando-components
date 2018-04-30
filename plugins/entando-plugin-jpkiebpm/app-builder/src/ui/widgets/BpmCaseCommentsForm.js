@@ -6,50 +6,50 @@ import FormattedMessage from '../i18n/FormattedMessage';
 
 
 const options = [...Array(10).keys()].map(i => (
-    <option value={i + 1}>{i + 1}</option>
+  <option value={i + 1}>{i + 1}</option>
 ));
 
 const BpmCaseCommentsForm = ({ handleSubmit }) => (
-    <form
-        className="BpmCaseCommentsForm"
-        onSubmit={(ev) => { ev.preventDefault(); handleSubmit(); }}
-    >
-      <h5>
-        <i className="fa fa-puzzle-piece" />
+  <form
+    className="BpmCaseCommentsForm"
+    onSubmit={(ev) => { ev.preventDefault(); handleSubmit(); }}
+  >
+    <h5>
+      <i className="fa fa-puzzle-piece" />
         &nbsp;
-        <FormattedMessage id="BpmCaseCommentsForm.widgetName" />
-      </h5>
-      <FormGroup>
-        <Row>
-          <Col xs={10}>
-            <label htmlFor="displayedInMenu" className="control-label">
-              <FormattedMessage id="BpmCaseCommentsForm.channel" />
-            </label>
-            <div className="input-group">
-              <Field
-                  id="channel"
-                  component="select"
-                  className="form-control"
-                  name="channel"
-              >
-                {options}
-              </Field>
-            </div>
-          </Col>
-        </Row>
-      </FormGroup>
+      <FormattedMessage id="BpmCaseCommentsForm.widgetName" />
+    </h5>
+    <FormGroup>
       <Row>
-        <Col xs={12}>
-          <Button
-              type="submit"
-              bsStyle="primary"
-              className="pull-right"
-          >
-            <FormattedMessage id="common.save" />
-          </Button>
+        <Col xs={10}>
+          <label htmlFor="displayedInMenu" className="control-label">
+            <FormattedMessage id="BpmCaseCommentsForm.channel" />
+          </label>
+          <div className="input-group">
+            <Field
+              id="channel"
+              component="select"
+              className="form-control"
+              name="channel"
+            >
+              {options}
+            </Field>
+          </div>
         </Col>
       </Row>
-    </form>
+    </FormGroup>
+    <Row>
+      <Col xs={12}>
+        <Button
+          type="submit"
+          bsStyle="primary"
+          className="pull-right"
+        >
+          <FormattedMessage id="common.save" />
+        </Button>
+      </Col>
+    </Row>
+  </form>
 );
 
 
