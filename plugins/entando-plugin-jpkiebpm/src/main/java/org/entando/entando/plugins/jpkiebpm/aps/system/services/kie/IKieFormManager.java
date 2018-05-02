@@ -46,7 +46,12 @@ public interface IKieFormManager {
      * @return
      */
     KieBpmConfig getConfig();
-
+    
+    /**
+     * Loads the first configuration available when not specified
+     */
+    public KieBpmConfig loadFirstConfigurations() throws ApsSystemException;
+    
     /**
      * Return service configuration
      *

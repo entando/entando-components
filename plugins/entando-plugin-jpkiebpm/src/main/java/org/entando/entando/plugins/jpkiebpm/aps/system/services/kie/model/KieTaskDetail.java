@@ -158,14 +158,20 @@ public class KieTaskDetail {
     public void setProcessInstanceId(Long processInstanceId) {
         this.processInstanceId = processInstanceId;
     }
+    
+    public String getProcessDefinitionId() {
+		return processDefinitionId;
+	}
 
-    public KiePotentialOwners getPotentialOwners() {
-        System.out.println("getPotentialOwners");
+	public void setProcessDefinitionId(String processDefinitionId) {
+		this.processDefinitionId = processDefinitionId;
+	}
+
+	public KiePotentialOwners getPotentialOwners() {
         return potentialOwners;
     }
 
     public void setPotentialOwners(KiePotentialOwners potentialOwners) {
-        System.out.println("setPotentialOwners");
         this.potentialOwners = potentialOwners;
     }
 
@@ -224,6 +230,9 @@ public class KieTaskDetail {
 
     @XmlElement(name = "task-process-instance-id")
     private Long processInstanceId;
+    
+    @XmlElement(name = "task-process-id")
+    private String processDefinitionId;
 
     @XmlElement(name = "task-parent-id")
     private Long parentId;

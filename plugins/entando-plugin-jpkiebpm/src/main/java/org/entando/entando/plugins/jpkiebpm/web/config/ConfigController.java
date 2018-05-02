@@ -67,10 +67,10 @@ public class ConfigController {
 
     @Autowired
     private ConfigValidator configValidator;
-
-    @Autowired
-    @Qualifier("jpkiebpmsManager")
-    IKieFormManager kieFormManager;
+//
+//    @Autowired
+//    @Qualifier("jpkiebpmsManager")
+//    IKieFormManager kieFormManager;
 
     @Autowired
     @Qualifier("jpkiebpmsCaseManager")
@@ -181,28 +181,15 @@ public class ConfigController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/kiebpm/knowledgeSources", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getKnowlegeSources() {
-
-        HashMap<String, KieBpmConfig> knowledgeSources = null;
-
-        try {
-            //TODO Is this different than the config call above?
-            knowledgeSources = this.kieFormManager.getKieServerConfigurations();
-        }catch(Exception e){
-            logger.error("Failed to fetch kie server configs ",e);
-        }
-
-        return new ResponseEntity<>(new RestResponse(knowledgeSources), HttpStatus.OK);
-    }
-
-    @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/kiebpm/deploymentUnits", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getDeploymentUnits() {
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/deploymentUnits", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getDeploymentUnits(@PathVariable String configCode) {
 
         List<KieContainer> containers = null;
         try{
-            containers = this.kieFormManager.getContainersList();
+            KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
+            //TODO This call makes the fetched config the active one.  Need to scope this to the widget at some point
+            kieConfigService.setConfig(serverConfigDto);
+            containers = this.kieConfigService.getContainerList();
         }catch(Exception e) {
             logger.error("Failed to fetch container ids ",e );
         }
@@ -212,46 +199,63 @@ public class ConfigController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/kiebpm/caseDefinitions/{deploymentUnit}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getCaseDefinitions(@PathVariable String deploymentUnit) {
-
-        JSONObject cases = null;
-        try{
-            cases = ((CaseManager)caseManager).getCasesDefinitions(deploymentUnit);
-        }catch(Exception e) {
-            logger.error("Failed to fetch container ids ",e );
-        }
-
-        return new ResponseEntity<>(new RestResponse(cases), HttpStatus.OK);
-    }
-
-    @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/kiebpm/milestoneList/{deploymentUnit}/{caseId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getMilestoneList(@PathVariable String deploymentUnit, @PathVariable String caseId) {
-
-        JSONArray milestoneList = null;
-        try{
-            milestoneList = ((CaseManager)caseManager).getMilestonesList(deploymentUnit, caseId);
-        }catch(Exception e) {
-            logger.error("Failed to fetch container ids ",e );
-        }
-
-
-        return new ResponseEntity<>(new RestResponse(milestoneList), HttpStatus.OK);
-    }
-
-    @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/kiebpm/processList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getProcessList() {
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/processList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getProcessList(@PathVariable String configCode) {
 
         List<KieProcess> processes = new ArrayList<KieProcess>();
         try{
-            processes = kieFormManager.getProcessDefinitionsList();
+
+            KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
+            //TODO This call makes the fetched config the active one.  This should be scoped to the widget at some point
+            kieConfigService.setConfig(serverConfigDto);
+            processes = kieConfigService.getProcessDefinitionsList();
         }catch(Exception e) {
             logger.error("Failed to fetch container ids ",e );
         }
 
         return new ResponseEntity<>(new RestResponse(processes), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/caseDefinitions/{deploymentUnit:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getCaseDefinitions(@PathVariable String configCode, @PathVariable String deploymentUnit) {
+
+        JSONObject cases = null;
+        try{
+
+            KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
+            KieBpmConfig bpmConfig = kieConfigService.buildConfig(serverConfigDto);
+            //TODO This call makes the fetched config the active one.  This should be scoped to the widget at some point
+            caseManager.setConfig(bpmConfig);
+
+            cases = ((CaseManager)caseManager).getCasesDefinitions(deploymentUnit);
+        }catch(Exception e) {
+            logger.error("Failed to fetch container ids ",e );
+        }
+
+        return new ResponseEntity<>(new RestResponse(cases.toMap()), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/milestoneList/{deploymentUnit:.+}/{caseId:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getMilestoneList(@PathVariable String configCode, @PathVariable String deploymentUnit, @PathVariable String caseId) {
+
+        JSONArray milestoneList = null;
+        try{
+            KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
+            KieBpmConfig bpmConfig = kieConfigService.buildConfig(serverConfigDto);
+            //TODO This call makes the fetched config the active one.  This should be scoped to the widget at some point
+            caseManager.setConfig(bpmConfig);
+
+            milestoneList = ((CaseManager)caseManager).getMilestonesList(deploymentUnit, caseId);
+        }catch(Exception e) {
+            logger.error("Failed to fetch container ids ",e );
+        }
+
+        JSONObject milestones = new JSONObject();
+        milestones.put("milestones", milestoneList);
+
+        return new ResponseEntity<>(new RestResponse(milestones.toMap()), HttpStatus.OK);
     }
 
 }

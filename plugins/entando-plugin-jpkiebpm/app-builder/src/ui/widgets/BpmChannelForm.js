@@ -6,24 +6,24 @@ import FormattedMessage from '../i18n/FormattedMessage';
 
 
 const options = [...Array(10).keys()].map(i => (
-  <option value={i + 1}>{i + 1}</option>
+  <option key={i} value={i + 1}>{i + 1}</option>
 ));
 
-const BpmCaseCommentsForm = ({ handleSubmit }) => (
+const BpmChannelForm = ({ handleSubmit, widgetId }) => (
   <form
-    className="BpmCaseCommentsForm"
+    className="BpmChannelForm"
     onSubmit={(ev) => { ev.preventDefault(); handleSubmit(); }}
   >
     <h5>
       <i className="fa fa-puzzle-piece" />
-        &nbsp;
-      <FormattedMessage id="BpmCaseCommentsForm.widgetName" />
+      &nbsp;
+      <FormattedMessage id={`widgetName.${widgetId}`} />
     </h5>
     <FormGroup>
       <Row>
         <Col xs={10}>
           <label htmlFor="displayedInMenu" className="control-label">
-            <FormattedMessage id="BpmCaseCommentsForm.channel" />
+            <FormattedMessage id="BpmChannelForm.channel" />
           </label>
           <div className="input-group">
             <Field
@@ -53,8 +53,9 @@ const BpmCaseCommentsForm = ({ handleSubmit }) => (
 );
 
 
-BpmCaseCommentsForm.propTypes = {
+BpmChannelForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
+  widgetId: PropTypes.string.isRequired,
 };
 
-export default BpmCaseCommentsForm;
+export default BpmChannelForm;

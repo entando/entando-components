@@ -111,6 +111,7 @@ public interface KieBpmSystemConstants {
 
     public static final String WIDGET_INFO_PROP_PROCESS_ID = "processId";
     public static final String WIDGET_INFO_PROP_CONTAINER_ID = "containerId";
+    public static final String WIDGET_INFO_PROP_KIE_SOURCE_ID = "kieSourceId";
     public static final String WIDGET_INFO_PROP_OVERRIDE_ID = "overrides";
 
 }

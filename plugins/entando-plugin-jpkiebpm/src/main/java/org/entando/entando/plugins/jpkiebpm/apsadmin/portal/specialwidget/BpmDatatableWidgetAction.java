@@ -7,6 +7,7 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
+import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,9 +103,12 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
         }
     }
 
-    protected void setPropertiesIntoWidgetInfo(final ApsProperties properties, final String procId, final String contId) {
+    protected void setPropertiesIntoWidgetInfo(final ApsProperties properties, final String procId, final String contId, final String sourceId) {
         properties.put(PROP_PROCESS_ID, procId);
         properties.put(PROP_CONTAINER_ID, contId);
+        if (sourceId != null) {
+        		properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID, sourceId);
+        }
         if (this.getGroups() != null) {
             properties.put(PROP_BPM_GROUP, this.getGroups());
         }
@@ -127,9 +131,13 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
             final String[] param = this.getProcessPath().split("@");
             final String procId = param[0];
             final String contId = param[1];
+            String sourceId = null;
+            if (param.length > 2) {
+            		sourceId = param[2];
+            }
             widgetInfo.setWidgetType(widget.getType().getCode());
             ApsProperties properties = new ApsProperties();
-            this.setPropertiesIntoWidgetInfo(properties, procId, contId);
+            this.setPropertiesIntoWidgetInfo(properties, procId, contId, sourceId);
             widgetInfo.setInformationDraft(properties.toXml());
             this.updateConfigWidget(widgetInfo, widget);
         } catch (Exception e) {

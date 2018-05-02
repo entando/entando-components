@@ -6,7 +6,7 @@ import reducer from 'state/main/reducer';
 import enLocale from 'locales/en';
 import itLocale from 'locales/it';
 
-import BpmCaseCommentsForm from 'ui/widgets/BpmCaseCommentsForm';
+import BpmChannelForm from 'ui/widgets/BpmChannelForm';
 
 import { name as id } from '../package.json';
 
@@ -23,7 +23,13 @@ const plugin = {
   // workaround to use apimanager (the plugins compilation has to be pulled out from webpack)
   apiManagerConfig: config,
   widgetForms: {
-    'bpm-case-comments': BpmCaseCommentsForm,
+    'bpm-case-comments': BpmChannelForm,
+    'bpm-case-actions': BpmChannelForm,
+    'bpm-case-chart': BpmChannelForm,
+    'bpm-case-details': BpmChannelForm,
+    'bpm-case-file': BpmChannelForm,
+    'bpm-case-roles': BpmChannelForm,
+    'bpm-process-diagram': BpmChannelForm,
   },
 };
 
