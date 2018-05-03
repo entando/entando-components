@@ -23,36 +23,39 @@
  */
 package org.entando.entando.plugins.jpkiebpm.web.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.validation.Valid;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.util.ArrayList;
-import java.util.List;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieConfigService;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
-import org.entando.entando.web.common.annotation.RestAccessControl;
-import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
+import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.RestError;
+import org.entando.entando.web.common.model.RestResponse;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ConfigController {
@@ -64,6 +67,14 @@ public class ConfigController {
 
     @Autowired
     private ConfigValidator configValidator;
+//
+//    @Autowired
+//    @Qualifier("jpkiebpmsManager")
+//    IKieFormManager kieFormManager;
+
+    @Autowired
+    @Qualifier("jpkiebpmsCaseManager")
+    IKieFormManager caseManager;
 
     public IKieConfigService getKieConfigService() {
         return kieConfigService;
@@ -83,10 +94,10 @@ public class ConfigController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/serverConfigs", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getConfigs(/*RestListRequest requestList*/) throws JsonProcessingException {
-        //this.getConfigValidator().validateRestListRequest(requestList, KieServerConfigDto.class);
+    public ResponseEntity<RestResponse> getConfigs() throws JsonProcessingException {
+
         List<KieServerConfigDto> result = this.getKieConfigService().getConfigs(/*requestList*/);
-        //this.getConfigValidator().validateRestListResult(requestList, result);
+
         logger.debug("Main Response -> {}", result);
         return new ResponseEntity<>(new RestResponse(result), HttpStatus.OK);
     }
@@ -167,6 +178,87 @@ public class ConfigController {
         logger.info("test all servers");
         Map<String, String> testResult = this.getKieConfigService().testAllServerConfigs();
         return new ResponseEntity<>(new RestResponse(testResult), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/deploymentUnits", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getDeploymentUnits(@PathVariable String configCode) {
+
+        List<KieContainer> containers = null;
+        try{
+            KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
+            //TODO This call makes the fetched config the active one.  Need to scope this to the widget at some point
+            kieConfigService.setConfig(serverConfigDto);
+            containers = this.kieConfigService.getContainerList();
+        }catch(Exception e) {
+            logger.error("Failed to fetch container ids ",e );
+        }
+
+
+        return new ResponseEntity<>(new RestResponse(containers), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/processList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getProcessList(@PathVariable String configCode) {
+
+        List<KieProcess> processes = new ArrayList<KieProcess>();
+        try{
+
+            KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
+            //TODO This call makes the fetched config the active one.  This should be scoped to the widget at some point
+            kieConfigService.setConfig(serverConfigDto);
+            processes = kieConfigService.getProcessDefinitionsList();
+        }catch(Exception e) {
+            logger.error("Failed to fetch container ids ",e );
+        }
+
+        return new ResponseEntity<>(new RestResponse(processes), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/caseDefinitions/{deploymentUnit:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getCaseDefinitions(@PathVariable String configCode, @PathVariable String deploymentUnit) {
+
+        JSONObject cases = null;
+        try{
+
+            KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
+            KieBpmConfig bpmConfig = kieConfigService.buildConfig(serverConfigDto);
+            //TODO This call makes the fetched config the active one.  This should be scoped to the widget at some point
+            caseManager.setConfig(bpmConfig);
+
+            cases = ((CaseManager)caseManager).getCasesDefinitions(deploymentUnit);
+        }catch(Exception e) {
+            logger.error("Failed to fetch container ids ",e );
+        }
+
+        if(cases == null) {
+            cases = new JSONObject();
+        }
+        return new ResponseEntity<>(new RestResponse(cases.toMap()), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/milestoneList/{deploymentUnit:.+}/{caseId:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getMilestoneList(@PathVariable String configCode, @PathVariable String deploymentUnit, @PathVariable String caseId) {
+
+        JSONArray milestoneList = null;
+        try{
+            KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
+            KieBpmConfig bpmConfig = kieConfigService.buildConfig(serverConfigDto);
+            //TODO This call makes the fetched config the active one.  This should be scoped to the widget at some point
+            caseManager.setConfig(bpmConfig);
+
+            milestoneList = ((CaseManager)caseManager).getMilestonesList(deploymentUnit, caseId);
+        }catch(Exception e) {
+            logger.error("Failed to fetch container ids ",e );
+        }
+
+        JSONObject milestones = new JSONObject();
+        milestones.put("milestones", milestoneList);
+
+        return new ResponseEntity<>(new RestResponse(milestones.toMap()), HttpStatus.OK);
     }
 
 }

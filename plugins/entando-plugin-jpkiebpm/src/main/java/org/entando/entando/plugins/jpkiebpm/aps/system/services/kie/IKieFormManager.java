@@ -116,7 +116,7 @@ public interface IKieFormManager {
      * @return
      * @throws ApsSystemException
      */
-    List<kieProcess> getProcessDefinitionsList() throws ApsSystemException;
+    List<KieProcess> getProcessDefinitionsList() throws ApsSystemException;
 
     /**
      * Get the process instances give the process ID

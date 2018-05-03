@@ -24,22 +24,21 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
+
+import java.util.*;
 
 /**
  * @author E.Santoboni
@@ -115,7 +114,7 @@ public class KieConfigService implements IKieConfigService {
         return configDto;
     }
 
-    protected KieBpmConfig buildConfig(KieServerConfigDto configDto) {
+    public KieBpmConfig buildConfig(KieServerConfigDto configDto) {
         KieBpmConfig config = new KieBpmConfig();
         config.setActive(configDto.getActive());
         config.setDebug(configDto.getDebug());
@@ -217,4 +216,37 @@ public class KieConfigService implements IKieConfigService {
         this.kieFormManager = kieFormManager;
     }
 
+    public List<KieContainer> getContainerList(){
+
+        List<KieContainer> containers = null;
+        try {
+            containers = this.kieFormManager.getContainersList();
+        }catch(Exception e) {
+            logger.error("Failed to fetch containers ",e);
+            throw new RestServerError("Error fetching containers ", e);
+        }
+
+        return containers;
+    }
+
+    public List<KieProcess> getProcessDefinitionsList() {
+
+        List<KieProcess> processes = null;
+
+        try {
+            processes = this.kieFormManager.getProcessDefinitionsList();
+        }catch(Exception e) {
+            logger.error("Failed to fetch containers ",e);
+            throw new RestServerError("Error fetching containers ", e);
+        }
+
+        return processes;
+
+    }
+
+    public void setConfig(KieServerConfigDto configDto) {
+
+        KieBpmConfig config = this.buildConfig(configDto);
+        this.kieFormManager.setConfig(config);
+    }
 }

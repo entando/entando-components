@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,8 +62,8 @@ public class KieFormOverrideFinderAction extends BaseAction {
 		return newFilters;
 	}
 
-	public List<kieProcess> getProcessList() throws ApsSystemException {
-		List<kieProcess> list = this.getKieFormManager().getProcessDefinitionsList();
+	public List<KieProcess> getProcessList() throws ApsSystemException {
+		List<KieProcess> list = this.getKieFormManager().getProcessDefinitionsList();
 		return list;
 	}
 

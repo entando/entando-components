@@ -23,56 +23,15 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_DELETE_PROCESS;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_ALL_PROCESS_INSTANCES_LIST;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_ALL_TASK_LIST_ADMIN;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_CONTAINERS_LIST;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_DATA_HUMAN_TASK;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_DATA_HUMAN_TASK_DETAIL;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_HUMAN_TASK_LIST;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_DEFINITION;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_DEFINITIONS_LIST;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_DIAGRAM;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_INSTANCES_LIST;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_TASK_FORM_DEFINITION;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_POST_ALL_PROCESS_INSTANCES_W_CLIENT_DATA;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_POST_PROCESS_START;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_POST_SIGNAL;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_PUT_HUMAN_TASK;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_PUT_HUMAN_TASK_STATE;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_PUT_SET_TASK_STATE;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.HEADER_KEY_ACCEPT;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.HEADER_KEY_CONTENT_TYPE;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.HEADER_VALUE_JSON;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.SUCCESS;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.generateNewUUID;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.collections.MultiMap;
+import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiaBpmConfigFactory;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainersQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessesQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
 import org.entando.entando.plugins.jprestapi.aps.core.RequestBuilder;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
@@ -80,9 +39,10 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import java.util.*;
+
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.generateNewUUID;
 //import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 
 /**
@@ -222,9 +182,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public List<kieProcess> getProcessDefinitionsList() throws ApsSystemException {
+    public List<KieProcess> getProcessDefinitionsList() throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
-        List<kieProcess> list = new ArrayList<>();
+        List<KieProcess> list = new ArrayList<>();
         if (!config.getActive()) {
             return list;
         }
@@ -242,7 +202,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             // unfold returned object to get the payload
             if (null != result && null != result.getProcesses() && !result.getProcesses().isEmpty()) {
                 list = result.getProcesses();
-                for (kieProcess process : list) {
+                for (KieProcess process : list) {
                 		process.setKieSourceId(config.getId());
                 }
             }

@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "kie-containers")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class kieProcess {
+public class KieProcess {
 
     public String getProcessId() {
         return processId;
