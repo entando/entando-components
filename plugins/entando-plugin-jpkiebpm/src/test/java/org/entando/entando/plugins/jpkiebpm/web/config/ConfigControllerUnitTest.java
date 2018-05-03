@@ -178,27 +178,17 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
+        KieServerConfigDto configDto = getTestConfig();
+        ObjectMapper mapper = new ObjectMapper();
+        String payload = mapper.writeValueAsString(configDto);
 
         ResultActions result = mockMvc.perform(
                 post("/kiebpm/testAllServerConfigs")
+                        .content(payload)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
 
         Mockito.verify(kieConfigService, Mockito.times(1)).testAllServerConfigs();
-        String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertNotNull(response);
-    }
-
-    @Test
-    public void testKnowledgeSources() throws Exception {
-
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        String accessToken = mockOAuthInterceptor(user);
-
-        ResultActions result = mockMvc.perform(
-                get("/kiebpm/knowledgeSources")
-                        .header("Authorization", "Bearer " + accessToken));
-
-        Mockito.verify(kieFormManager, Mockito.times(1)).getKieServerConfigurations();
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
@@ -210,10 +200,10 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
         String accessToken = mockOAuthInterceptor(user);
 
         ResultActions result = mockMvc.perform(
-                get("/kiebpm/deploymentUnits")
+                get("/kiebpm/serverConfigs/1/deploymentUnits")
                         .header("Authorization", "Bearer " + accessToken));
 
-        Mockito.verify(kieFormManager, Mockito.times(1)).getContainersList();
+        Mockito.verify(kieConfigService, Mockito.times(1)).getContainerList();
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
@@ -229,7 +219,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
         configController.caseManager = caseManager;
 
         ResultActions result = mockMvc.perform(
-                get("/kiebpm/caseDefinitions/test")
+                get("/kiebpm/serverConfigs/1/caseDefinitions/test")
                         .header("Authorization", "Bearer " + accessToken));
 
         Mockito.verify(caseManager, Mockito.times(1)).getCasesDefinitions("test");
@@ -248,10 +238,10 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
         configController.caseManager = caseManager;
 
         ResultActions result = mockMvc.perform(
-                get("/kiebpm/milestoneList/testDep/testCase")
+                get("/kiebpm/serverConfigs/1/milestoneList/test/test")
                         .header("Authorization", "Bearer " + accessToken));
 
-        Mockito.verify(caseManager, Mockito.times(1)).getMilestonesList("testDep", "testCase");
+        Mockito.verify(caseManager, Mockito.times(1)).getMilestonesList("test", "test");
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
@@ -263,10 +253,10 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
         String accessToken = mockOAuthInterceptor(user);
 
         ResultActions result = mockMvc.perform(
-                get("/kiebpm/processList")
+                get("/kiebpm/serverConfigs/1/processList")
                         .header("Authorization", "Bearer " + accessToken));
 
-        Mockito.verify(kieFormManager, Mockito.times(1)).getProcessDefinitionsList();
+        Mockito.verify(kieConfigService, Mockito.times(1)).getProcessDefinitionsList();
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }

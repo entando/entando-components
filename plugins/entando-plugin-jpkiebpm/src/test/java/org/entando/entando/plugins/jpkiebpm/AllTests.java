@@ -17,6 +17,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.overri
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerIntegrationTest;
+import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerUnitTest;
 
 public class AllTests {
 
@@ -38,6 +39,7 @@ public class AllTests {
         suite.addTestSuite(TestBpmOverrides.class);
 
         suite.addTest(new JUnit4TestAdapter(ConfigControllerIntegrationTest.class));
+        suite.addTest(new JUnit4TestAdapter(ConfigControllerUnitTest.class));
 
         return suite;
     }

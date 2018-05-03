@@ -233,6 +233,9 @@ public class ConfigController {
             logger.error("Failed to fetch container ids ",e );
         }
 
+        if(cases == null) {
+            cases = new JSONObject();
+        }
         return new ResponseEntity<>(new RestResponse(cases.toMap()), HttpStatus.OK);
     }
 
