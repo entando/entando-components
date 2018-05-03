@@ -39,7 +39,6 @@ import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.RestError;
 import org.entando.entando.web.common.model.RestResponse;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -238,27 +237,4 @@ public class ConfigController {
         }
         return new ResponseEntity<>(new RestResponse(cases.toMap()), HttpStatus.OK);
     }
-
-    @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/milestoneList/{deploymentUnit:.+}/{caseId:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getMilestoneList(@PathVariable String configCode, @PathVariable String deploymentUnit, @PathVariable String caseId) {
-
-        JSONArray milestoneList = null;
-        try{
-            KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
-            KieBpmConfig bpmConfig = kieConfigService.buildConfig(serverConfigDto);
-            //TODO This call makes the fetched config the active one.  This should be scoped to the widget at some point
-            caseManager.setConfig(bpmConfig);
-
-            milestoneList = ((CaseManager)caseManager).getMilestonesList(deploymentUnit, caseId);
-        }catch(Exception e) {
-            logger.error("Failed to fetch container ids ",e );
-        }
-
-        JSONObject milestones = new JSONObject();
-        milestones.put("milestones", milestoneList);
-
-        return new ResponseEntity<>(new RestResponse(milestones.toMap()), HttpStatus.OK);
-    }
-
 }

@@ -228,25 +228,6 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetMilestoneList() throws Exception {
-
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        String accessToken = mockOAuthInterceptor(user);
-
-        //This is necessary because there is a separately defeind case manager that doesn't conform to the interface
-        //should be refactored away in the future
-        configController.caseManager = caseManager;
-
-        ResultActions result = mockMvc.perform(
-                get("/kiebpm/serverConfigs/1/milestoneList/test/test")
-                        .header("Authorization", "Bearer " + accessToken));
-
-        Mockito.verify(caseManager, Mockito.times(1)).getMilestonesList("test", "test");
-        String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertNotNull(response);
-    }
-
-    @Test
     public void testGetProcessList() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
