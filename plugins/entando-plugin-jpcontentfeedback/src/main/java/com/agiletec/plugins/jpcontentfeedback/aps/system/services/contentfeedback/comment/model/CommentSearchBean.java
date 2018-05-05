@@ -86,11 +86,11 @@ public class CommentSearchBean implements ICommentSearchBean {
 		this.sort = sort;
 	}
 
-	public String _contentId;
-	public Date _creationFROMDate;
+	private String _contentId;
+	private Date _creationFROMDate;
 	private Date _creationTODate;
-	public String _comment;
-	public int _status = 0;
+	private String _comment;
+	private int _status = 0;
 	private String _username;
 	private String sort;
 

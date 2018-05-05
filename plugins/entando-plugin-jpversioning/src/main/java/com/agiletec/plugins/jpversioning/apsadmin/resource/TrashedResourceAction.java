@@ -21,13 +21,6 @@
  */
 package com.agiletec.plugins.jpversioning.apsadmin.resource;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -39,6 +32,10 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceIns
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.apsadmin.resource.ResourceFinderAction;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.ITrashedResourceManager;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @version 1.0
@@ -95,7 +92,6 @@ public class TrashedResourceAction extends ResourceFinderAction implements ITras
 			String id = this.getResourceId();
 			this.getTrashedResourceManager().restoreResource(id);
 		} catch(Throwable t) {
-			t.printStackTrace();
 			ApsSystemUtils.logThrowable(t, this, "restore");
 			return FAILURE;
 		}

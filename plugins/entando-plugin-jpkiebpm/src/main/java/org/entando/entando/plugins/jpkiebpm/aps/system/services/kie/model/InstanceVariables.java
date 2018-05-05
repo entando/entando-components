@@ -23,10 +23,11 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
-import java.util.HashMap;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.InstanceVariables.VariableMap;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.InstanceVariables.VariableMap;
+import java.util.HashMap;
 
 /**
  * AAARGH! MOXy (as well as JAXB) don't work out-of-the-box with maps!
@@ -58,19 +59,124 @@ public class InstanceVariables extends XmlAdapter<VariableMap, HashMap<String, O
 
     @XmlRootElement
     public static class VariableMap {
-        public String name;
-        public Long clientid;
-        public String pname;
-        public String creditscore;
-        public String phonenumber;
-        public String type;
-        public Long dateofbirth;
-        public String ssn;
-        public String surname;
-        public String relationship;
-        public String bic;
-        public String email;
-        public String status;
+        private String name;
+        private Long clientid;
+        private String pname;
+        private String creditscore;
+        private String phonenumber;
+        private String type;
+        private Long dateofbirth;
+        private String ssn;
+        private String surname;
+        private String relationship;
+        private String bic;
+        private String email;
+        private String status;
+
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Long getClientid() {
+            return clientid;
+        }
+
+        public void setClientid(Long clientid) {
+            this.clientid = clientid;
+        }
+
+        public String getPname() {
+            return pname;
+        }
+
+        public void setPname(String pname) {
+            this.pname = pname;
+        }
+
+        public String getCreditscore() {
+            return creditscore;
+        }
+
+        public void setCreditscore(String creditscore) {
+            this.creditscore = creditscore;
+        }
+
+        public String getPhonenumber() {
+            return phonenumber;
+        }
+
+        public void setPhonenumber(String phonenumber) {
+            this.phonenumber = phonenumber;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public Long getDateofbirth() {
+            return dateofbirth;
+        }
+
+        public void setDateofbirth(Long dateofbirth) {
+            this.dateofbirth = dateofbirth;
+        }
+
+        public String getSsn() {
+            return ssn;
+        }
+
+        public void setSsn(String ssn) {
+            this.ssn = ssn;
+        }
+
+        public String getSurname() {
+            return surname;
+        }
+
+        public void setSurname(String surname) {
+            this.surname = surname;
+        }
+
+        public String getRelationship() {
+            return relationship;
+        }
+
+        public void setRelationship(String relationship) {
+            this.relationship = relationship;
+        }
+
+        public String getBic() {
+            return bic;
+        }
+
+        public void setBic(String bic) {
+            this.bic = bic;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
     }
 
     @Override

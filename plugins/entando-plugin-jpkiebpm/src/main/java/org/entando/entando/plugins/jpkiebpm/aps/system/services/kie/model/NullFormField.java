@@ -29,6 +29,13 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
  */
 public class NullFormField {
 
-    public Boolean nillable = true;
+    private Boolean nillable = true;
 
+    public Boolean getNillable() {
+        return nillable;
+    }
+
+    public void setNillable(Boolean nillable) {
+        this.nillable = nillable;
+    }
 }

@@ -21,9 +21,9 @@
  */
 package com.agiletec.plugins.jpsurvey.aps.system.services.survey.model;
 
-import java.util.Date;
-
 import com.agiletec.aps.util.ApsProperties;
+
+import java.util.Date;
 
 /**
  * This class describes the object 'survey' as mapped in the database table. This is later extended so to
@@ -196,8 +196,8 @@ public class SurveyRecord {
 	private boolean _restricted;
 	private String _imageId;
 	private ApsProperties _imageDescriptions = new ApsProperties();
-	public boolean _checkCookie;
-	public boolean _checkIpAddress;
+	private boolean _checkCookie;
+	private boolean _checkIpAddress;
 	private boolean _checkUsername;
 	
 }

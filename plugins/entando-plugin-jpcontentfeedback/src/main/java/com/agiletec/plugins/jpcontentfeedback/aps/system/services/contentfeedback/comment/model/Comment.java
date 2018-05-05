@@ -126,27 +126,27 @@ public class Comment implements IComment {
 		return _username;
 	}
 
-	public int _id;
-	public String _contentId;
-	public Date _creationDate;
-	public String _comment;
-	public int _status;
+	private int _id;
+	private String _contentId;
+	private Date _creationDate;
+	private String _comment;
+	private int _status;
 	private String _username;
 
 	/**
 	 * Status of not approved
 	 */
-	public static int STATUS_NOT_APPROVED = 1;
+	public static final int STATUS_NOT_APPROVED = 1;
 
 	/**
 	 * Status of to approve
 	 */
-	public static int STATUS_TO_APPROVE = 2;
+	public static final int STATUS_TO_APPROVE = 2;
 
 	/**
 	 * Status of approved
 	 */
-	public static int STATUS_APPROVED = 3;
+	public static final int STATUS_APPROVED = 3;
 
 
 

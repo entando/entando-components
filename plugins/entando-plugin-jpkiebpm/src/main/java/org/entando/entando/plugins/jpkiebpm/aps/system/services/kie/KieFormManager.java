@@ -486,7 +486,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .doRequest();
             json = new JSONObject(data);
         } catch (Throwable t) {
-            t.printStackTrace();
+            logger.error("Failed to get task form data ",t);
             throw new ApsSystemException("Error getting the human task form", t);
         }
         return json;
@@ -678,7 +678,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         } catch (ApsSystemException t) {
             throw new ApsSystemException("Error completing the task", t);
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            logger.error("Failed to complete kie task ",throwable);
         }
         return result;
     }

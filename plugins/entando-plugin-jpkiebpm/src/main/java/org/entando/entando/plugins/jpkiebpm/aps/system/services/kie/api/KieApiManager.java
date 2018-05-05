@@ -35,6 +35,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
@@ -42,6 +43,8 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOver
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputForm;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
@@ -55,13 +58,6 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.DatatableFieldDefinition;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstanceList;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstanceListPlus;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstancePlus;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
 
 public class KieApiManager extends AbstractService implements IKieApiManager {
 
@@ -151,7 +147,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         try {
             toBpm = validateForm(form.getParamsMap(), kieForm, validationResult);
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            logger.error("Failed to post bpm form ",throwable);
         }
         if (!validationResult.isEmpty()) {
             throw new ApiException(validationResult);
@@ -190,7 +186,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                     = this.getKieFormManager().getAllProcessInstancesList(opt);
             return list;
         } catch (ApsSystemException t) {
-            t.printStackTrace();
+            logger.error("Failed to get process list in kie ",t);
             String msg = String.format("No error getting the list of processes");
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
         }
@@ -235,7 +231,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             }
             return null;
         } catch (Throwable t) {
-            t.printStackTrace();
+            logger.error("Failed to get process instances data table ",t);
             String msg = String.format("No error getting the list of processes");
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
         }
@@ -346,7 +342,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             }
             return null;
         } catch (Throwable t) {
-            t.printStackTrace();
+            logger.error("Failed to get processInstancesDataTablePlus ",t);
             String msg = String.format("No error getting the list of processes");
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
         }

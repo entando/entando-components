@@ -21,10 +21,6 @@
  */
 package com.agiletec.plugins.jpsurvey.apsadmin.survey;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
@@ -36,6 +32,10 @@ import com.agiletec.plugins.jpsurvey.aps.system.services.collect.IResponseManage
 import com.agiletec.plugins.jpsurvey.aps.system.services.collect.IVoterManager;
 import com.agiletec.plugins.jpsurvey.aps.system.services.collect.model.SingleQuestionResponse;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Survey;
+
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This is the base class for the _survey actions. To avoid useless duplication
@@ -602,8 +602,8 @@ public class SurveyAction extends AbstractSurveyAction implements ISurveyAction 
 	private ApsProperties _imageDescriptions = new ApsProperties();
 	private ApsProperties _titles = new ApsProperties();
 
-	public Boolean _checkCookie;
-	public Boolean _checkIpAddress;
+	private Boolean _checkCookie;
+	private Boolean _checkIpAddress;
 	private Boolean _checkUsername;
 
 	// managers

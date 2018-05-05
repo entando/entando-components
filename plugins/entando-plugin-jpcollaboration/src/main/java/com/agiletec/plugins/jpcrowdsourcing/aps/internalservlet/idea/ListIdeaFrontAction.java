@@ -21,17 +21,6 @@
  */
 package com.agiletec.plugins.jpcrowdsourcing.aps.internalservlet.idea;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.interceptor.ServletResponseAware;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.category.Category;
@@ -44,6 +33,15 @@ import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IIdea;
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.IIdeaManager;
 import com.agiletec.plugins.jpcrowdsourcing.aps.system.services.idea.Idea;
 import com.agiletec.plugins.jpcrowdsourcing.apsadmin.portal.specialwidget.IdeaInstanceWidgetAction;
+import org.apache.struts2.interceptor.ServletResponseAware;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class ListIdeaFrontAction extends BaseAction implements ServletResponseAware {
 
@@ -165,6 +163,7 @@ public class ListIdeaFrontAction extends BaseAction implements ServletResponseAw
 		String cookieName = CookieUtil.getCookieName(currentUser.getUsername(), ideaId);
 		String cookieValue = CookieUtil.getCookieValue(currentUser.getUsername(), ideaId);
 		Cookie cookie = new Cookie(cookieName, cookieValue);
+		cookie.setSecure(true);
 		cookie.setMaxAge(365*24*60*60);//one year
 		this.getServletResponse().addCookie(cookie);
 	}
