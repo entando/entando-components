@@ -21,21 +21,6 @@
  */
 package com.agiletec.plugins.jpcontentfeedback.aps.internalservlet.feedback;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.interceptor.ServletRequestAware;
-import org.apache.struts2.interceptor.ServletResponseAware;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -55,6 +40,13 @@ import com.agiletec.plugins.jpcontentfeedback.aps.system.services.contentfeedbac
 import com.agiletec.plugins.jpcontentfeedback.aps.tags.FeedbackIntroTag;
 import com.agiletec.plugins.jpcontentfeedback.apsadmin.feedback.AbstractContentFeedbackAction;
 import com.agiletec.plugins.jpcontentfeedback.apsadmin.portal.specialwidget.ContentFeedbackWidgetAction;
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 /**
  * @author D.Cherchi
@@ -328,6 +320,7 @@ public class ContentFeedbackAction extends AbstractContentFeedbackAction impleme
 		String cookieName = CheckVotingUtil.getCookieName(currentUser.getUsername(), contentId);
 		String cookieValue = CheckVotingUtil.getCookieValue(currentUser.getUsername(), contentId);
 		Cookie cookie = new Cookie(cookieName, cookieValue);
+		cookie.setSecure(true);
 		cookie.setMaxAge(365*24*60*60);//one year
 		this.getResponse().addCookie(cookie);
 	}
@@ -337,6 +330,7 @@ public class ContentFeedbackAction extends AbstractContentFeedbackAction impleme
 		String cookieName = CheckVotingUtil.getCookieName(currentUser.getUsername(), commentId);
 		String cookieValue = CheckVotingUtil.getCookieValue(currentUser.getUsername(), commentId);
 		Cookie cookie = new Cookie(cookieName, cookieValue);
+		cookie.setSecure(true);
 		cookie.setMaxAge(365*24*60*60);//one year
 		this.getResponse().addCookie(cookie);
 	}

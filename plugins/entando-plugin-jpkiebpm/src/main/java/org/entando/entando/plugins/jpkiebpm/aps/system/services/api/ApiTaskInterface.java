@@ -24,26 +24,26 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBTa
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBTaskList;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.KieApiManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputFormTask;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import org.json.JSONObject;
 
 /**
  * @author E.Santoboni
@@ -342,7 +342,7 @@ public class ApiTaskInterface extends KieApiManager {
             form.setContainerId(containerId);
             form.setProcessId(processId);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Failed to create kie form ",e);
         }
         return form;
     }
@@ -362,7 +362,7 @@ public class ApiTaskInterface extends KieApiManager {
             form = FSIDemoHelper.replaceValuesFromJson(processForm, form);
             return form;
         } catch (ApsSystemException ex) {
-            ex.printStackTrace();
+            logger.error("Failed to get task input output ",ex);
         }
         return null;
     }
@@ -410,7 +410,7 @@ public class ApiTaskInterface extends KieApiManager {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Failed to set task state ",e);
         }
     }
 
@@ -453,7 +453,7 @@ public class ApiTaskInterface extends KieApiManager {
                 try {
                     this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
                 } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                    logger.error("failed to start tasks ", throwable);
                 }
             }
         }

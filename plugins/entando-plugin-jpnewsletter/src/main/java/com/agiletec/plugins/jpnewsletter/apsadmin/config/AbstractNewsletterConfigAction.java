@@ -21,8 +21,6 @@
  */
 package com.agiletec.plugins.jpnewsletter.apsadmin.config;
 
-import java.util.List;
-
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
@@ -30,6 +28,8 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.INewsletterManager;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterConfig;
+
+import java.util.List;
 
 /**
  * @author E.Santoboni
@@ -80,6 +80,6 @@ public class AbstractNewsletterConfigAction extends BaseAction {
 	private IContentManager _contentManager;
 	private IContentModelManager _contentModelManager;
 	
-	public static String NEWSLETTER_CONFIG_SESSION_PARAM = "newsletterConfig_sessionParam";
+	public static final String NEWSLETTER_CONFIG_SESSION_PARAM = "newsletterConfig_sessionParam";
 	
 }

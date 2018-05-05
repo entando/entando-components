@@ -21,17 +21,6 @@
  */
 package com.agiletec.plugins.jpaddressbook.apsadmin.vcard;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.struts2.interceptor.ServletRequestAware;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -42,13 +31,21 @@ import com.agiletec.plugins.jpaddressbook.aps.system.JpaddressbookSystemConstant
 import com.agiletec.plugins.jpaddressbook.aps.system.services.addressbook.IAddressBookManager;
 import com.agiletec.plugins.jpaddressbook.aps.system.services.vcard.IVCardManager;
 import com.agiletec.plugins.jpaddressbook.aps.system.services.vcard.model.VCardContactField;
+import org.apache.struts2.interceptor.ServletRequestAware;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * @author A.Cocco
  */
 public class VCardAction extends AbstractEntityConfigAction implements IVCardAction, ServletRequestAware {
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(VCardAction.class);
 	@Override
 	public void validate() {
 		super.validate();
@@ -71,8 +68,7 @@ public class VCardAction extends AbstractEntityConfigAction implements IVCardAct
 				}
 			}
 		} catch (ApsSystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Failed to validate ",e);
 		}
 		this.setProfileMapping(profileMapping);
 	}

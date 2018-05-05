@@ -21,9 +21,6 @@
  */
 package com.agiletec.plugins.jpcontentworkflow.apsadmin.content;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.SelectItem;
@@ -33,6 +30,9 @@ import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.ICont
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.Workflow;
 import com.agiletec.plugins.jpcontentworkflow.apsadmin.content.helper.IContentWorkFlowActionHelper;
 import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author E.Santoboni
@@ -201,6 +201,6 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 	private String _previousStep;
 	private String _nextStep;
 	
-	public IContentWorkflowManager _workflowManager;
+	private IContentWorkflowManager _workflowManager;
 	
 }

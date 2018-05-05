@@ -21,12 +21,6 @@
  */
 package com.agiletec.plugins.jpcontentworkflow.apsadmin.content.helper;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
@@ -34,11 +28,15 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.IContentWorkflowManager;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.Step;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.Workflow;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.WorkflowSearchFilter;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author E.Santoboni
@@ -226,6 +224,6 @@ public class ContentActionHelper extends com.agiletec.plugins.jacms.apsadmin.con
 		this._workflowManager = workflowManager;
 	}
 	
-	public IContentWorkflowManager _workflowManager;
+	private IContentWorkflowManager _workflowManager;
 	
 }

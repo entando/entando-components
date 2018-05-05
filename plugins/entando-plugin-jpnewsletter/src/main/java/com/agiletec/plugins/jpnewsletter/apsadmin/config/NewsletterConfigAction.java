@@ -21,13 +21,6 @@
  */
 package com.agiletec.plugins.jpnewsletter.apsadmin.config;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
@@ -42,6 +35,8 @@ import com.agiletec.plugins.jpnewsletter.aps.system.JpnewsletterSystemConstants;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterConfig;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+
+import java.util.*;
 
 /**
  * @author E.Santoboni
@@ -377,6 +372,6 @@ public class NewsletterConfigAction extends AbstractNewsletterConfigAction {
 	private IMailManager _mailManager;
 	private IPageManager _pageManager;
 
-	public static String NEWSLETTER_CONFIG_SESSION_PARAM = "newsletterConfig_sessionParam";
+	public static final String NEWSLETTER_CONFIG_SESSION_PARAM = "newsletterConfig_sessionParam";
 
 }

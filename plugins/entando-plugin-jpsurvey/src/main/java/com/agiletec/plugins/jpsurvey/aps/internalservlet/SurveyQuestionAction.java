@@ -21,14 +21,6 @@
  */
 package com.agiletec.plugins.jpsurvey.aps.internalservlet;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.interceptor.ServletResponseAware;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jpsurvey.aps.internalservlet.model.CurrentVotingInfoBean;
@@ -40,6 +32,12 @@ import com.agiletec.plugins.jpsurvey.aps.system.services.collect.model.SingleQue
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Choice;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Question;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Survey;
+import org.apache.struts2.interceptor.ServletResponseAware;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author E.Santoboni
@@ -127,6 +125,7 @@ public class SurveyQuestionAction extends AbstractSurveyAction implements ISurve
 		String cookieName = CheckVotingUtil.getCookieName(currentUser.getUsername(), surveyId);
 		String cookieValue = CheckVotingUtil.getCookieValue(currentUser.getUsername(), surveyId);
 		Cookie cookie = new Cookie(cookieName, cookieValue);
+		cookie.setSecure(true);
 		cookie.setMaxAge(365*24*60*60);//one year
 		this.getResponse().addCookie(cookie);
 	}
