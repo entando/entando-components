@@ -515,8 +515,8 @@ public class DefaultComponentInstaller extends AbstractInitializerManager implem
             ctxList.add(newContext);
 
         } catch (Exception e) {
-            _logger.error("Unexpected error loading application context: " + e.getMessage());
-            e.printStackTrace();
+            _logger.error("Unexpected error loading application context: " ,e);
+
             throw e;
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
@@ -542,7 +542,7 @@ public class DefaultComponentInstaller extends AbstractInitializerManager implem
                     urlList.add(input.toURI().toURL());
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                _logger.error("Unexpected error loading application context: " ,e);
             }
         }
         URL[] urls = new URL[urlList.size()];

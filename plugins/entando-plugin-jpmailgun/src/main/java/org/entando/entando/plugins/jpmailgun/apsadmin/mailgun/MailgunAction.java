@@ -220,13 +220,13 @@ public class MailgunAction extends BaseAction {
 		this._messageErrorDB = _messageErrorDB;
 	}
 
-	public String _emailTo;
+	private String _emailTo;
 	private MailGunManager _mailgunManager;
-	public String _updateDomain;
-	public String _emailFrom;
-	public String _updateAPIKey;
-	public String _messageError;
-	public String _messageSuccess;
-	public String _messageErrorDB;
+	private String _updateDomain;
+	private String _emailFrom;
+	private String _updateAPIKey;
+	private String _messageError;
+	private String _messageSuccess;
+	private String _messageErrorDB;
 
 }

@@ -304,7 +304,7 @@ public class MailgunLog {
    
   private JSONObject _jsonObject;
   private JSONArray _jsonArray;
-  public String _completeResponse;
+  private String _completeResponse;
   public static final String RECIPIENTS = "recipients";	
   
 }

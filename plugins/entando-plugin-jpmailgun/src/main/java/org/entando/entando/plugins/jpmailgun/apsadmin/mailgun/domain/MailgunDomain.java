@@ -73,8 +73,8 @@ public class MailgunDomain extends MailgunAction {
 	public void setDomainPassSMTP(String _domainPassSMTP) {
 		this._domainPassSMTP = _domainPassSMTP;
 	}
-	
-	public String _domainPassSMTP;
-	public String _domainId;
+
+	private String _domainPassSMTP;
+	private String _domainId;
 	
 }

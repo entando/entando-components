@@ -47,7 +47,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     private Class clazz;
     private LocaleProvider localeProvider;
     private ResourceBundle bundle;
-    public static ServletContext servletContext;
+    private static ServletContext servletContext;
 
     /**
      * Default constructor
