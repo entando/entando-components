@@ -39,6 +39,11 @@ import net.oauth.ParameterStyle;
 public class HttpMessage
 {
 
+    private String method;
+    private URL url;
+    private final List<Map.Entry<String, String>> headers = new ArrayList<Map.Entry<String, String>>();
+    protected InputStream body = null;
+
     public HttpMessage()
     {
         this(null, null);
@@ -56,10 +61,7 @@ public class HttpMessage
         this.body = body;
     }
 
-    public String method;
-    public URL url;
-    public final List<Map.Entry<String, String>> headers = new ArrayList<Map.Entry<String, String>>();
-    protected InputStream body = null;
+
 
     /**
      * Get the value of the last header of the given name. The name is

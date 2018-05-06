@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright 2015-Present Entando Inc. (http://www.entando.com) All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -360,10 +360,12 @@ public class FormTypeGuiDAO extends AbstractDAO implements IFormTypeGuiDAO {
 		ResultSet res = null;
 		try {
 			if (null != typeCode) {
-				stat = conn.prepareStatement("SELECT MAX(" + fieldName + ") FROM jpwebform_typeversions WHERE typecode = ?");
+				stat = conn.prepareStatement("SELECT MAX(fieldName) FROM jpwebform_typeversions WHERE typecode = ?");
+				stat.replace("fieldName", fieldName)
 				stat.setString(1, typeCode);
 			} else {
-				stat = conn.prepareStatement("SELECT MAX(" + fieldName + ") FROM jpwebform_typeversions");
+				stat = conn.prepareStatement("SELECT MAX(fieldName) FROM jpwebform_typeversions");
+				stat.replace("fieldName", fieldName)
 			}
 			res = stat.executeQuery();
 			res.next();

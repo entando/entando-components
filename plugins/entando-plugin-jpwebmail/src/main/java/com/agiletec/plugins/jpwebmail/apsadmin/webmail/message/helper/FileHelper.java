@@ -43,10 +43,16 @@ public class FileHelper {
 				if (dir.exists() && fileToDelete.isDirectory()) {
 					deleteDir(fileToDelete, path);
 				} else {
-					fileToDelete.delete();
+					boolean deleted = fileToDelete.delete();
+					if(!deleted) {
+						logger.error("Failed to delete file {} ",path)
+					}
 				}
 			}
-			dir.delete();
+			boolean deleted = dir.delete();
+			if(!deleted) {
+				logger.error("failed to delete dir {}", dir.getAbsolutePath());
+			}
 		}
 	}
 	

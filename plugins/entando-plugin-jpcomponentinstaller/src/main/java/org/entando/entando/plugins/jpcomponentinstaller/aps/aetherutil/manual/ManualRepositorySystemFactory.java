@@ -37,6 +37,8 @@ import org.eclipse.aether.transport.http.HttpTransporterFactory;
 public class ManualRepositorySystemFactory
 {
 
+    private static final Logger logger = LoggerFactory.getLogger(ManualRepositorySystemFactory.class);
+
     public static RepositorySystem newRepositorySystem()
     {
         /*
@@ -54,7 +56,7 @@ public class ManualRepositorySystemFactory
             @Override
             public void serviceCreationFailed( Class<?> type, Class<?> impl, Throwable exception )
             {
-                exception.printStackTrace();
+                logger.error("Service creation failed ", exception)
             }
         } );
 
