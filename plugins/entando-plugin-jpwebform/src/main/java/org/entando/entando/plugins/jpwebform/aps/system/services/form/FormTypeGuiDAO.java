@@ -360,12 +360,12 @@ public class FormTypeGuiDAO extends AbstractDAO implements IFormTypeGuiDAO {
 		ResultSet res = null;
 		try {
 			if (null != typeCode) {
-				stat = conn.prepareStatement("SELECT MAX( ? ) FROM jpwebform_typeversions WHERE typecode = ?");
-				stat.setString(1, fieldName);
-				stat.setString(2, typeCode);
+				stat = conn.prepareStatement("SELECT MAX(fieldName) FROM jpwebform_typeversions WHERE typecode = ?");
+				stat.replace("fieldName", fieldName)
+				stat.setString(1, typeCode);
 			} else {
-				stat = conn.prepareStatement("SELECT MAX( ? ) FROM jpwebform_typeversions");
-				stat.setString(1, fieldName);
+				stat = conn.prepareStatement("SELECT MAX(fieldName) FROM jpwebform_typeversions");
+				stat.replace("fieldName", fieldName)
 			}
 			res = stat.executeQuery();
 			res.next();
