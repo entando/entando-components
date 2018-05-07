@@ -45,7 +45,7 @@ public class FileHelper {
 				} else {
 					boolean deleted = fileToDelete.delete();
 					if(!deleted) {
-						logger.error("Failed to delete file {} ",path)
+						logger.error("Failed to delete file {} ",path);
 					}
 				}
 			}
