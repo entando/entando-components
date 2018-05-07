@@ -83,6 +83,8 @@
         <module>entando-plugin-jprestapi</module>
         <module>entando-plugin-jpkiebpm</module>
         <module>entando-plugin-jpinfinispan</module>
+
+        <module>entando-plugin-jpwebmail</module>
     </modules>
     <profiles>
         <profile>

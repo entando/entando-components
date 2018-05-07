@@ -77,5 +77,10 @@
             <artifactId>smtp</artifactId>
             <version>1.4.7</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.16</version>
+        </dependency>
     </dependencies>
 </project>
