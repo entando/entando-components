@@ -36,6 +36,7 @@
         <url>http://www.entando.com/</url>
     </organization>
     <modules>
+        <module>entando-plugin-jacms</module>
         <module>entando-plugin-jpfacetnav</module>
         <module>entando-plugin-jpmail</module>
         <module>entando-plugin-jpwebdynamicform</module>
