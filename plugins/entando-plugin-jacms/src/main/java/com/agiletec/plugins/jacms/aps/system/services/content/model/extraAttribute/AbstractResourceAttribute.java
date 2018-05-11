@@ -230,8 +230,8 @@ public abstract class AbstractResourceAttribute extends TextAttribute
     }
 
     @Override
-    public void valueFrom(AbstractJAXBAttribute jaxbAttribute) {
-        super.valueFrom(jaxbAttribute);
+    public void valueFrom(AbstractJAXBAttribute jaxbAttribute, String langCode) {
+        super.valueFrom(jaxbAttribute, langCode);
         JAXBResourceValue value = ((JAXBResourceAttribute) jaxbAttribute).getResource();
         if (null == value) {
             return;
