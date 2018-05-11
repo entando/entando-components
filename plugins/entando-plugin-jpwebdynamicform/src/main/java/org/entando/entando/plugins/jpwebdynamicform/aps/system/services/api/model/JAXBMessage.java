@@ -44,71 +44,75 @@ import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.M
 @XmlType(propOrder = {"creationDate", "langCode", "username", "answers"})
 @XmlSeeAlso({JAXBAnswer.class})
 public class JAXBMessage extends JAXBEntity {
-    
-    public JAXBMessage() {}
-    
+
+    public JAXBMessage() {
+    }
+
     public JAXBMessage(IApsEntity mainEntity, String langCode) {
         super(mainEntity, langCode);
         Message message = (Message) mainEntity;
         this.setCreationDate(message.getCreationDate());
-		this.setLangCode(message.getLangCode());
-		this.setUsername(message.getUsername());
+        this.setLangCode(message.getLangCode());
+        this.setUsername(message.getUsername());
     }
-    
+
     public IApsEntity buildEntity(IApsEntity prototype, ICategoryManager categoryManager) {
-        Message message = (Message) super.buildEntity(prototype, categoryManager);
+        Message message = (Message) super.buildEntity(prototype, categoryManager, null);
         //this.setCreationDate(message.getCreationDate());
-		message.setLangCode(this.getLangCode());
-		message.setUsername(this.getUsername());
-		return message;
+        message.setLangCode(this.getLangCode());
+        message.setUsername(this.getUsername());
+        return message;
     }
-    
-	@XmlElement(name = "username", required = false)
-	public String getUsername() {
-		return _username;
-	}
-	public void setUsername(String username) {
-		this._username = username;
-	}
-	
-	@XmlElement(name = "creationDate", required = false)
-	public Date getCreationDate() {
-		return _creationDate;
-	}
-	public void setCreationDate(Date creationDate) {
-		this._creationDate = creationDate;
-	}
-	
-	@XmlElement(name = "langCode", required = false)
-	public String getLangCode() {
-		return _langCode;
-	}
-	public void setLangCode(String langCode) {
-		this._langCode = langCode;
-	}
-	
+
+    @XmlElement(name = "username", required = false)
+    public String getUsername() {
+        return _username;
+    }
+
+    public void setUsername(String username) {
+        this._username = username;
+    }
+
+    @XmlElement(name = "creationDate", required = false)
+    public Date getCreationDate() {
+        return _creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this._creationDate = creationDate;
+    }
+
+    @XmlElement(name = "langCode", required = false)
+    public String getLangCode() {
+        return _langCode;
+    }
+
+    public void setLangCode(String langCode) {
+        this._langCode = langCode;
+    }
+
     @XmlElement(name = "answer", required = false)
     @XmlElementWrapper(name = "answers", required = false)
     public List<JAXBAnswer> getAnswers() {
         return this._answers;
     }
-    
+
     public void addAnswers(List<Answer> mainAnswers) {
         if (null == mainAnswers || mainAnswers.isEmpty()) {
             return;
         }
-		this._answers = new ArrayList<JAXBAnswer>();
-		for (int i = 0; i < mainAnswers.size(); i++) {
-			Answer answer = mainAnswers.get(i);
-			JAXBAnswer jaxbAnswer = new JAXBAnswer(answer);
-			this._answers.add(jaxbAnswer);
-		}
+        this._answers = new ArrayList<JAXBAnswer>();
+        for (int i = 0; i < mainAnswers.size(); i++) {
+            Answer answer = mainAnswers.get(i);
+            JAXBAnswer jaxbAnswer = new JAXBAnswer(answer);
+            this._answers.add(jaxbAnswer);
+        }
     }
-    
-	private String _username;
-	private Date _creationDate;
-	private String _langCode;
-	
+
+    private String _username;
+    private Date _creationDate;
+    private String _langCode;
+
     private List<JAXBAnswer> _answers;
-	
+
 }
