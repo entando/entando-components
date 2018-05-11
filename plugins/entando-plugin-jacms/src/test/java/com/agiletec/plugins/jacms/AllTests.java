@@ -80,6 +80,7 @@ import org.entando.entando.plugins.jacms.aps.system.services.api.TestApiContentI
 import org.entando.entando.plugins.jacms.aps.system.services.cache.TestCacheInfoManager;
 import org.entando.entando.plugins.jacms.aps.system.services.content.command.common.TestContentBulkCommand;
 import org.entando.entando.plugins.jacms.aps.system.services.page.TestCmsPageManagerWrapper;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestContentPreviewAction;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestSaveBooleanAttributes;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateBooleanAttributes;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateDateAttribute;
@@ -89,6 +90,8 @@ import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateResourceAt
 import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateTextAttribute;
 import org.entando.entando.plugins.jacms.apsadmin.content.bulk.TestContentCategoryBulkAction;
 import org.entando.entando.plugins.jacms.apsadmin.content.bulk.TestContentGroupBulkAction;
+import org.entando.entando.plugins.jacms.web.contentmodel.ContentModelControllerUnitTest;
+import org.entando.entando.web.plugins.jacms.contentmodel.ContentModelControllerIntegrationTest;
 
 public class AllTests {
 
@@ -141,6 +144,9 @@ public class AllTests {
         suite.addTestSuite(TestCacheInfoManager.class);
         //
         suite.addTestSuite(TestApiContentInterface.class);
+
+        suite.addTest(new JUnit4TestAdapter(ContentModelControllerIntegrationTest.class));
+        suite.addTest(new JUnit4TestAdapter(ContentModelControllerUnitTest.class));
 
         // -------------------------------------
         suite.addTestSuite(TestTrashReferencedCategory.class);
@@ -195,6 +201,9 @@ public class AllTests {
 
         //Group
         suite.addTestSuite(TestTrashReferencedGroup.class);
+
+        // ----------------------------------------
+        suite.addTestSuite(TestContentPreviewAction.class);
 
         return suite;
     }

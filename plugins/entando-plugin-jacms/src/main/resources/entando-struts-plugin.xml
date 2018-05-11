@@ -18,5 +18,7 @@
 	<include file="org/entando/entando/plugins/jacms/apsadmin/portal/specialwidget/specialWidget.xml" />
 
     <include file="org/entando/entando/plugins/jacms/apsadmin/integration/integration.xml"/>
+	
+	<include file="org/entando/entando/plugins/jacms/apsadmin/content/content.xml" />
     
 </struts>

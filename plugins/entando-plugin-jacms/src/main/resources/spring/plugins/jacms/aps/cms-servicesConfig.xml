@@ -22,7 +22,5 @@
         <property name="dictionaryProvider" ref="ContentModelDictionaryProvider" />
         <property name="pageDtoBuilder" ref="PageDtoBuilder" />
     </bean>
-
- 
     
 </beans>

@@ -26,11 +26,11 @@ import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.entando.entando.aps.system.services.page.model.PageDtoBuilder;
+import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.plugins.jacms.contentmodel.model.ContentModelRequest;
-import org.entando.entando.web.plugins.jacms.contentmodel.validator.ContentModelValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -184,7 +184,6 @@ public class ContentModelService implements IContentModelService {
             throw new RestServerError("error in update content model", e);
         }
     }
-
 
     @Override
     public void removeContentModel(Long modelId) {
