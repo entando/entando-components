@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms;
 
+import com.agiletec.apsadmin.portal.TestPageActionReferences;
 import com.agiletec.plugins.jacms.aps.system.TestApplicationContext;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentManagerTest;
 import com.agiletec.plugins.jacms.aps.system.services.content.TestCategoryUtilizer;
@@ -193,6 +194,8 @@ public class AllTests {
         //Resource
         suite.addTestSuite(TestResourceAction.class);
         suite.addTestSuite(TestResourceFinderAction.class);
+
+        suite.addTestSuite(TestPageActionReferences.class);
 
         //Entity
         suite.addTestSuite(TestJacmsEntityAttributeConfigAction.class);

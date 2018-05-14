@@ -26,4 +26,9 @@
 		<property name="allowedCharsetsCSV"><value>${page.charset.allowedValues}</value></property>
 	</bean>
 	
+    <bean id="pageActionReferencesHelper" scope="prototype" 
+              class="org.entando.entando.plugins.jacms.apsadmin.portal.helper.PageActionReferencesHelper">
+        <property name="contentManager" ref="jacmsContentManager" />
+    </bean>
+	
 </beans>
