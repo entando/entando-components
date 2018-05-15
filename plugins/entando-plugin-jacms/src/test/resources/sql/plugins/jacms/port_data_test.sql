@@ -294,16 +294,6 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 	<parameter name="linkDescr_{lang}">Link description in lang {lang}</parameter>
 	<action name="listViewerConfig"/>
 </config>', 'jacms', NULL, NULL, 1, NULL);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('logic_type', '<?xml version="1.0" encoding="UTF-8"?>
-<properties>
-<property key="en">Logic type for test</property>
-<property key="it">Tipo logico per test</property>
-</properties>', NULL, NULL, 'content_viewer_list', '<?xml version="1.0" encoding="UTF-8"?>
-<properties>
-<property key="maxElemForItem">10</property>
-<property key="filters">(order=ASC;attributeFilter=true;end=31/12/1999;key=DataInizio;start=01/01/1990)</property>
-<property key="contentType">EVN</property>
-</properties>', 0, NULL);
 
 
 
