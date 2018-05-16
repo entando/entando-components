@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
 
+import widgetConfig from 'state/widgetConfig/reducer';
+
 import {
   SET_SERVER_CONFIG_LIST, REMOVE_SERVER_CONFIG, ADD_CONNECTION_OUTCOMES, CLEAN_CONNECTION_OUTCOMES,
 } from './types';
@@ -34,4 +36,5 @@ export default combineReducers({
   reduxStatus,
   serverConfig,
   connectionOutcomes,
+  widgetConfig,
 });

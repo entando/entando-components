@@ -22,8 +22,8 @@ const BpmChannelForm = ({ handleSubmit, widgetId }) => (
     <FormGroup>
       <Row>
         <Col xs={10}>
-          <label htmlFor="displayedInMenu" className="control-label">
-            <FormattedMessage id="BpmChannelForm.channel" />
+          <label htmlFor="channel" className="control-label">
+            <FormattedMessage id="common.channel" />
           </label>
           <div className="input-group">
             <Field
