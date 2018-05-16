@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Field } from 'redux-form';
+import { Field, FieldArray } from 'redux-form';
 import { Row, Col, FormGroup, Button } from 'patternfly-react';
 import { required } from '@entando/utils';
 import FormattedMessage from '../i18n/FormattedMessage';
+import MilestonesTableRenderer from './MilestonesTableRenderer';
 
 
 const channelOptions = [...Array(10).keys()].map(i => (
@@ -21,7 +22,7 @@ class BpmCaseProgressStatusForm extends Component {
     const {
       handleSubmit, invalid, submitting, widgetId, knowledgeSources, fetchDeploymentUnits,
       deploymentUnits, selectedKnowledgeSource, selectedDeploymentUnit, caseDefinitions,
-      fetchCaseDefinitions, selectedCaseDefinition,
+      fetchCaseDefinitions, selectedCaseDefinition, formMilestones,
     } = this.props;
 
     const knowledgeSourcesOptions = knowledgeSources && knowledgeSources.map(config => (
@@ -143,6 +144,7 @@ class BpmCaseProgressStatusForm extends Component {
                   component="select"
                   className="form-control"
                   name="casePath"
+                  validate={[required]}
                 >
                   {caseDefinitionsOptions}
                 </Field>
@@ -164,7 +166,7 @@ class BpmCaseProgressStatusForm extends Component {
                   className="form-check-input"
                   name="ui.progress-bar-type"
                   value="basic"
-                />
+                />&nbsp;
                 <label className="form-check-label" htmlFor="basic">
                   <FormattedMessage id="BpmCaseProgressStatusForm.progressBarBasic" />
                 </label>
@@ -177,7 +179,7 @@ class BpmCaseProgressStatusForm extends Component {
                   className="form-check-input"
                   name="ui.progress-bar-type"
                   value="stacked"
-                />
+                />&nbsp;
                 <label className="form-check-label" htmlFor="stacked">
                   <FormattedMessage id="BpmCaseProgressStatusForm.progressBarStacked" />
                 </label>
@@ -197,8 +199,8 @@ class BpmCaseProgressStatusForm extends Component {
                   component="input"
                   type="checkbox"
                   className="form-check-input"
-                  name="showMilestones"
-                />
+                  name="ui.additionalSettings.show-milestones"
+                />&nbsp;
                 <label className="form-check-label" htmlFor="showMilestones">
                   <FormattedMessage id="BpmCaseProgressStatusForm.showMilestones" />
                 </label>
@@ -209,8 +211,8 @@ class BpmCaseProgressStatusForm extends Component {
                   component="input"
                   type="checkbox"
                   className="form-check-input"
-                  name="showNumTasks"
-                />
+                  name="ui.additionalSettings.show-number-of-tasks"
+                />&nbsp;
                 <label className="form-check-label" htmlFor="showNumTasks">
                   <FormattedMessage id="BpmCaseProgressStatusForm.showNumTasks" />
                 </label>
@@ -221,31 +223,12 @@ class BpmCaseProgressStatusForm extends Component {
         <FormGroup>
           <Row className={selectedCaseDefinition ? '' : 'hide'}>
             <Col xs={10}>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th><FormattedMessage id="BpmCaseProgressStatusForm.visible" /></th>
-                    <th><FormattedMessage id="BpmCaseProgressStatusForm.milestoneName" /></th>
-                    <th><FormattedMessage id="BpmCaseProgressStatusForm.completed" /></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {selectedCaseDefinition &&
-                  selectedCaseDefinition.frontEndMilestonesData.milestones.map(item => (
-                    <tr>
-                      <td>
-                        <input type="checkbox" />
-                      </td>
-                      <td>
-                        {item.name}
-                      </td>
-                      <td>
-                        <input type="text" />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <FieldArray
+                component={MilestonesTableRenderer}
+                name="frontEndMilestonesData.milestones"
+                initialValues={selectedCaseDefinition && selectedCaseDefinition.milestones}
+                milestones={formMilestones}
+              />
             </Col>
           </Row>
         </FormGroup>
@@ -288,9 +271,8 @@ BpmCaseProgressStatusForm.propTypes = {
   submitting: PropTypes.bool.isRequired,
   selectedKnowledgeSource: PropTypes.string,
   selectedDeploymentUnit: PropTypes.string,
-  selectedCaseDefinition: PropTypes.shape({
-
-  }),
+  selectedCaseDefinition: PropTypes.shape({}),
+  formMilestones: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 BpmCaseProgressStatusForm.defaultProps = {
@@ -300,6 +282,7 @@ BpmCaseProgressStatusForm.defaultProps = {
   selectedKnowledgeSource: '',
   selectedDeploymentUnit: '',
   selectedCaseDefinition: null,
+  formMilestones: [],
 };
 
 export default BpmCaseProgressStatusForm;
