@@ -1,6 +1,6 @@
 
 import { connect } from 'react-redux';
-import { getFormValues } from 'redux-form';
+import { getFormValues, reduxForm } from 'redux-form';
 
 import { getDeploymentUnits } from 'state/widgetConfig/selectors';
 import { getServerConfigList } from 'state/main/selectors';
@@ -30,5 +30,8 @@ export const mapDispatchToProps = dispatch => ({
   },
 });
 
+const widgetConfigForm = reduxForm({
+  form: 'widgetConfigForm',
+})(BpmCaseInstanceForm);
 
-export default connect(mapStateToProps, mapDispatchToProps)(BpmCaseInstanceForm);
+export default connect(mapStateToProps, mapDispatchToProps)(widgetConfigForm);
