@@ -69,7 +69,7 @@
             "<tr><td>Process Instance</td><td>" + data['task-process-instance-id'] + "</td></tr>\n" +
             "<tr><td>Process Definition</td><td>" + data['task-process-id'] + "</td></tr>\n" +
             "<tr><td>Parent Id</td><td>" + data['task-parent-id'] + "</td></tr>\n" +
-            "<tr><td>Container Id</td><td>" + data['task-container-id'] + "</td></tr>\n" +
+            "<tr><td>Deployment Unit</td><td>" + data['task-container-id'] + "</td></tr>\n" +
             "<tr><td>Potential Owners</td><td>" + getHtmlListFragment(data['potential-owners'], 'task-pot-owners') + "</td></tr>\n" +
             "<tr><td>Excluded Owner</td><td>" + getHtmlListFragment(data['excluded-owners'], 'task-exc-owners') + "</td></tr>\n" +
             "<tr><td>Business Admin</td><td>" + getHtmlListFragment(data['business-admins'], 'task-business-admins') + "</td></tr>";
