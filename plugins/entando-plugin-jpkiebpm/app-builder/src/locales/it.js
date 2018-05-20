@@ -1,7 +1,7 @@
 export default {
   locale: 'it',
   messages: {
-    'plugin.title': 'Redhat BPM Config',
+    'plugin.title': 'Red Hat BPM Config',
     'plugin.bpmSetting': 'BPM setting',
     'common.save': 'Salva',
     'common.channel': 'Channel',
@@ -20,8 +20,8 @@ export default {
     'widgetName.bpm-datatable-process-list': 'BPM-Process list',
     'widgetName.bpm-datatype-form': 'BPM-Form by DataType',
     'PluginStatus.test': 'ok',
-    'ConfigPage.title': 'Redhat BPM Config',
-    'ConfigPage.help': 'In questa sezione si possono definire i valori di connessione ai processi generati con la BPM suite di RedHat',
+    'ConfigPage.title': 'Red Hat BPM Config',
+    'ConfigPage.help': 'In questa sezione si possono definire i valori di connessione ai processi generati con la BPM suite di Red Hat',
     'ConfigPage.list': 'Lista',
     'ConfigPage.overridesList': 'Lista Override',
     'ConfigPage.addConfig': 'Aggiungi Configurazione',

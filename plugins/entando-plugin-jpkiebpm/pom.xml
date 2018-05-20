@@ -9,7 +9,7 @@
     <artifactId>entando-plugin-jpkiebpm</artifactId>
     <groupId>org.entando.entando.plugins</groupId>
     <packaging>war</packaging>
-    <name>Entando Plugin: Entando Redhat BPM connector</name>
+    <name>Entando Plugin: Entando Red Hat PAM connector</name>
     <description>Connector to gather data from forms exposed by KIE-BPM</description>
     <url>http://www.entando.com/</url>
     <properties>

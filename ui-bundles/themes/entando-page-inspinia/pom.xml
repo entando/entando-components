@@ -11,7 +11,7 @@
     <groupId>org.entando.entando.bundles.pages</groupId>
     <packaging>war</packaging>
     <name>Entando Bundle: entando-page-inspinia</name>
-    <description>Full width layout for REDHAT BPM, built with Inspinia based on Bootstrap.</description>
+    <description>Full width layout for Red Hat PAM, built with Inspinia based on Bootstrap.</description>
     <developers>
         <developer>
             <id>D.Minnai</id>
