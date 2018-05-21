@@ -21,7 +21,7 @@ export default {
     'widgetName.bpm-datatype-form': 'PAM-Form by DataType',
     'PluginStatus.test': 'ok',
     'ConfigPage.title': 'Red Hat PAM Config',
-    'ConfigPage.help': 'In this section user can define and connect to a process created on Red Hat PAM Suite',
+    'ConfigPage.help': 'In this section user can define and connect to a process created on Red Hat PAM',
     'ConfigPage.list': 'List',
     'ConfigPage.overridesList': 'Overrides List',
     'ConfigPage.addConfig': 'Add Configuration',

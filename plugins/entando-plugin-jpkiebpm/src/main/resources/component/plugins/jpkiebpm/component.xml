@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
 	<code>jpkiebpm</code>
-	<description>Entando Red Hat BPM connector</description>
+	<description>Entando Red Hat BPM</description>
 	<!--
 	<artifact>
 		<artifactId>${project.artifactId}</artifactId>

@@ -21,7 +21,7 @@ export default {
     'widgetName.bpm-datatype-form': 'PAM-Form by DataType',
     'PluginStatus.test': 'ok',
     'ConfigPage.title': 'Red Hat PAM Config',
-    'ConfigPage.help': 'In questa sezione si possono definire i valori di connessione ai processi generati con la PAM suite di Red Hat',
+    'ConfigPage.help': 'In questa sezione si possono definire i valori di connessione ai processi generati con la Red Hat PAM',
     'ConfigPage.list': 'Lista',
     'ConfigPage.overridesList': 'Lista Override',
     'ConfigPage.addConfig': 'Aggiungi Configurazione',
