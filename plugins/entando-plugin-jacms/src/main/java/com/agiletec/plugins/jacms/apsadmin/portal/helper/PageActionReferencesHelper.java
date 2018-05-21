@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.plugins.jacms.apsadmin.portal.helper;
+package com.agiletec.plugins.jacms.apsadmin.portal.helper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
