@@ -13,7 +13,6 @@
  */
 package com.agiletec.plugins.jacms;
 
-import com.agiletec.apsadmin.portal.TestPageActionReferences;
 import com.agiletec.plugins.jacms.aps.system.TestApplicationContext;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentManagerTest;
 import com.agiletec.plugins.jacms.aps.system.services.content.TestCategoryUtilizer;
@@ -91,8 +90,7 @@ import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateResourceAt
 import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateTextAttribute;
 import org.entando.entando.plugins.jacms.apsadmin.content.bulk.TestContentCategoryBulkAction;
 import org.entando.entando.plugins.jacms.apsadmin.content.bulk.TestContentGroupBulkAction;
-import org.entando.entando.plugins.jacms.web.contentmodel.ContentModelControllerUnitTest;
-import org.entando.entando.web.plugins.jacms.contentmodel.ContentModelControllerIntegrationTest;
+import org.entando.entando.plugins.jacms.apsadmin.portal.TestPageActionReferences;
 
 public class AllTests {
 
@@ -146,8 +144,7 @@ public class AllTests {
         //
         suite.addTestSuite(TestApiContentInterface.class);
 
-        suite.addTest(new JUnit4TestAdapter(ContentModelControllerIntegrationTest.class));
-        suite.addTest(new JUnit4TestAdapter(ContentModelControllerUnitTest.class));
+        suite.addTest(ControllersAllTests.suite());
 
         // -------------------------------------
         suite.addTestSuite(TestTrashReferencedCategory.class);

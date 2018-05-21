@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageActionReferencesHelper implements IPageActionReferencesHelper {
+public class PageActionReferencesHelper extends com.agiletec.apsadmin.portal.helper.PageActionReferencesHelper implements IPageActionReferencesHelper {
 
     private static final Logger _logger = LoggerFactory.getLogger(PageActionReferencesHelper.class);
 
