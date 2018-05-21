@@ -11,7 +11,7 @@ import RenderTextInput from 'ui/common/form/RenderTextInput';
 import SwitchRenderer from 'ui/common/form/SwitchRenderer';
 import FormSectionTitle from 'ui/common/form/FormSectionTitle';
 
-const MASSAGE_PREFIX = 'plugin.entando-plugin-jpkiebpm';
+const MESSAGE_PREFIX = 'plugin.entando-plugin-jpkiebpm';
 
 export class ServerConfigFormBody extends Component {
   componentWillMount() {
@@ -59,7 +59,7 @@ export class ServerConfigFormBody extends Component {
         <Row>
           <Col xs={12}>
             <FormSectionTitle
-              titleId={`${MASSAGE_PREFIX}.ServerConfigForm.generalSettings`}
+              titleId={`${MESSAGE_PREFIX}.ServerConfigForm.generalSettings`}
             />
           </Col>
         </Row>
@@ -90,7 +90,7 @@ export class ServerConfigFormBody extends Component {
         <Row>
           <Col xs={12}>
             <FormSectionTitle
-              titleId={`${MASSAGE_PREFIX}.ServerConfigForm.connection`}
+              titleId={`${MESSAGE_PREFIX}.ServerConfigForm.connection`}
             />
           </Col>
         </Row>
@@ -101,7 +101,7 @@ export class ServerConfigFormBody extends Component {
                 component={RenderTextInput}
                 name="name"
                 label={<FormattedMessageLocal id="ServerConfigForm.name" />}
-                placeholder={formattedText(`${MASSAGE_PREFIX}.ServerConfigForm.name`)}
+                placeholder={formattedText(`${MESSAGE_PREFIX}.ServerConfigForm.name`)}
                 validate={[required]}
               />
             </fieldset>
@@ -110,7 +110,7 @@ export class ServerConfigFormBody extends Component {
                 component={RenderTextInput}
                 name="hostName"
                 label={<FormattedMessageLocal id="ServerConfigForm.hostName" />}
-                placeholder={formattedText(`${MASSAGE_PREFIX}.ServerConfigForm.hostName`)}
+                placeholder={formattedText(`${MESSAGE_PREFIX}.ServerConfigForm.hostName`)}
                 validate={[required]}
               />
             </fieldset>
@@ -120,7 +120,7 @@ export class ServerConfigFormBody extends Component {
                 component={RenderTextInput}
                 name="schema"
                 label={<FormattedMessageLocal id="ServerConfigForm.schema" />}
-                placeholder={formattedText(`${MASSAGE_PREFIX}.ServerConfigForm.schema`)}
+                placeholder={formattedText(`${MESSAGE_PREFIX}.ServerConfigForm.schema`)}
                 validate={[required]}
               />
             </fieldset>
@@ -130,7 +130,7 @@ export class ServerConfigFormBody extends Component {
                 name="port"
                 type="number"
                 label={<FormattedMessageLocal id="ServerConfigForm.port" />}
-                placeholder={formattedText(`${MASSAGE_PREFIX}.ServerConfigForm.port`)}
+                placeholder={formattedText(`${MESSAGE_PREFIX}.ServerConfigForm.port`)}
                 validate={[required, isNumber]}
               />
             </fieldset>
@@ -139,8 +139,7 @@ export class ServerConfigFormBody extends Component {
                 component={RenderTextInput}
                 name="webappName"
                 label={<FormattedMessageLocal id="ServerConfigForm.webappName" />}
-                placeholder={formattedText(`${MASSAGE_PREFIX}.ServerConfigForm.webappName`)}
-                validate={[required]}
+                placeholder={formattedText(`${MESSAGE_PREFIX}.ServerConfigForm.webappName`)}
               />
             </fieldset>
             <fieldset>
@@ -148,7 +147,7 @@ export class ServerConfigFormBody extends Component {
                 component={RenderTextInput}
                 name="username"
                 label={<FormattedMessageLocal id="ServerConfigForm.userName" />}
-                placeholder={formattedText(`${MASSAGE_PREFIX}.ServerConfigForm.userName`)}
+                placeholder={formattedText(`${MESSAGE_PREFIX}.ServerConfigForm.userName`)}
                 validate={[required]}
               />
             </fieldset>
@@ -158,7 +157,7 @@ export class ServerConfigFormBody extends Component {
                 type="password"
                 name="password"
                 label={<FormattedMessageLocal id="ServerConfigForm.password" />}
-                placeholder={formattedText(`${MASSAGE_PREFIX}.ServerConfigForm.password`)}
+                placeholder={formattedText(`${MESSAGE_PREFIX}.ServerConfigForm.password`)}
                 validate={[required]}
               />
             </fieldset>
@@ -168,7 +167,7 @@ export class ServerConfigFormBody extends Component {
                 name="timeout"
                 type="number"
                 label={<FormattedMessageLocal id="ServerConfigForm.connTimeout" />}
-                placeholder={formattedText(`${MASSAGE_PREFIX}.ServerConfigForm.connTimeout`)}
+                placeholder={formattedText(`${MESSAGE_PREFIX}.ServerConfigForm.connTimeout`)}
                 validate={[required, isNumber]}
               />
             </fieldset>

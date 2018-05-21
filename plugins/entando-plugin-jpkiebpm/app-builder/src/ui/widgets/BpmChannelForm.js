@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Field } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import { Row, Col, FormGroup, Button } from 'patternfly-react';
 import FormattedMessage from '../i18n/FormattedMessage';
 
@@ -22,8 +22,8 @@ const BpmChannelForm = ({ handleSubmit, widgetId }) => (
     <FormGroup>
       <Row>
         <Col xs={10}>
-          <label htmlFor="displayedInMenu" className="control-label">
-            <FormattedMessage id="BpmChannelForm.channel" />
+          <label htmlFor="channel" className="control-label">
+            <FormattedMessage id="common.channel" />
           </label>
           <div className="input-group">
             <Field
@@ -58,4 +58,6 @@ BpmChannelForm.propTypes = {
   widgetId: PropTypes.string.isRequired,
 };
 
-export default BpmChannelForm;
+export default reduxForm({
+  form: 'widgetConfigForm',
+})(BpmChannelForm);
