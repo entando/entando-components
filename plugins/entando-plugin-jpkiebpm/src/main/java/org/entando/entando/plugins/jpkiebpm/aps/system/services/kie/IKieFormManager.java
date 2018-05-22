@@ -344,4 +344,6 @@ public interface IKieFormManager {
      * @throws ApsSystemException
      */
     public boolean getCompleteEnrichmentDcumentApprovalTask(final String user, final String containerId, final String taskId, TASK_STATES state, String review, Map<String, String> opt) throws ApsSystemException;
+
+    public Map<String, String > getHostNameVersionMap();
 }

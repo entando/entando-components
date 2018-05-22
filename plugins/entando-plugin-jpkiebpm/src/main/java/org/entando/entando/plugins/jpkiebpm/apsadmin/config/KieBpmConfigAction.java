@@ -21,19 +21,19 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.config;
 
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.BaseAction;
-import java.util.HashMap;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
 
 public class KieBpmConfigAction extends BaseAction {
 
@@ -85,7 +85,20 @@ public class KieBpmConfigAction extends BaseAction {
                 this.addActionError(this.getText("message.config.test.fail"));
             }
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
-            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStatus().toString());
+
+            JSONArray serverStat = this.getCaseManager().getKieServerStatus();
+            for(int i =0; i<serverStat.length(); i++) {
+                Object obj = serverStat.get(i);
+                if(obj instanceof JSONObject) {
+                    JSONObject details = (JSONObject)obj;
+                    String id = details.getString("id");
+                    JSONObject conf = details.getJSONObject("config");
+                    String ver = conf.getString("version");
+                    this.getFormManager().getHostNameVersionMap().put(id, ver);
+                }
+            }
+
+            this.setKnowledgeSourceStatus(serverStat.toString());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "save");
             return FAILURE;

@@ -24,18 +24,20 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.lang.StringUtils;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 
 /**
  *
@@ -85,6 +87,12 @@ public class CaseManager extends KieFormManager {
                     serverConfJson.put("webapp", super.getConfig().getWebapp());
                     serverConfJson.put("timeoutMsec", super.getConfig().getTimeoutMsec());
                     serverConfJson.put("debug", super.getConfig().getDebug());
+
+                    JSONObject resulObj = (JSONObject) new JSONObject(result).get("result");
+                    JSONObject info = resulObj.getJSONObject("kie-server-info");
+                    String version = info.getString("version");
+                    serverConfJson.put("version", version);
+
                     serverStatusJson.put("config", serverConfJson);
                     serversStatus.put(serverStatusJson);
                     logger.debug("received successful message: ", result);

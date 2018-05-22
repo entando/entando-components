@@ -51,6 +51,7 @@ import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helpe
 public class KieFormManager extends AbstractService implements IKieFormManager {
 
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
+    private Map<String, String> hostNameVersionMap = new HashMap<>();
 
     @Override
     public void init() {
@@ -496,11 +497,25 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     // This uses XML unmarshaling
     public KieProcessFormQueryResult getProcessForm(String containerId, String processId) throws ApsSystemException {
     		logger.info("invoking getProcessForm(containterId: {}, processId: {})", containerId, processId);
-        KieProcessFormQueryResult result = null;
+
         if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(processId)) {
-            return result;
+            logger.warn("Config is not active or container id or process id is blank conf {} {} {} ", config.getActive(), containerId, processId);
+            return null;
         }
+
+
+        Object result = null;
+
         try {
+
+            String ver = this.hostNameVersionMap.get(config.getId());
+            logger.info("ver {} ",ver);
+
+            if(ver !=null  && ver.startsWith("6")) {
+                invokeSixProcessForm();
+            }else {
+                invokeSevenProcessForm();
+            }
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_PROCESS_DEFINITION).resolveParams(containerId, processId);
             // generate client from the current configuration
@@ -514,6 +529,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         } catch (Throwable t) {
             throw new ApsSystemException("Error getting the process forms", t);
         }
+
+        KieProcessFormQueryResult result = null;
         // if this fails it must affect the overrides only!
         try {
             // load overrides
@@ -524,6 +541,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         } catch (Throwable t) {
             logger.error("error retrieving overrides for the form; they will be IGNORED!", t);
         }
+
+
+
         return result;
     }
 
@@ -1020,6 +1040,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     public void setKiaBpmConfigFactory(KiaBpmConfigFactory kiaBpmConfigFactory) {
         this.kiaBpmConfigFactory = kiaBpmConfigFactory;
+    }
+
+    public Map<String, String> getHostNameVersionMap(){
+        return this.hostNameVersionMap;
     }
 
     private KiaBpmConfigFactory kiaBpmConfigFactory;
