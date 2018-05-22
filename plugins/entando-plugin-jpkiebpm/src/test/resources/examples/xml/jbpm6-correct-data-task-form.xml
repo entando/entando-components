@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form id="643225839">
+  <property name="subject" value=""/>
+  <property name="name" value="DataCorrection-taskform.form"/>
+  <property name="displayMode" value="default"/>
+  <property name="status" value="0"/>
+  <field id="2141949774" name="application_amortization" position="3" type="InputTextInteger">
+    <property name="fieldRequired" value="false"/>
+    <property name="groupWithPrevious" value="false"/>
+    <property name="labelCSSClass" value=""/>
+    <property name="labelCSSStyle" value=""/>
+    <property name="label" value="Amortization"/>
+    <property name="errorMessage" value=""/>
+    <property name="title" value=""/>
+    <property name="readonly" value="false"/>
+    <property name="size" value=""/>
+    <property name="formula" value=""/>
+    <property name="rangeFormula" value=""/>
+    <property name="styleclass" value=""/>
+    <property name="cssStyle" value=""/>
+    <property name="defaultValueFormula" value=""/>
+    <property name="inputBinding" value="30"/>
+    <property name="outputBinding" value="taskOutputApplication/amortization"/>
+    <property name="fieldClass" value="java.lang.Integer"/>
+  </field>
+  <form id="895131254">
+    <property name="subject" value=""/>
+    <property name="name" value="MortgageApplicant.form"/>
+    <property name="displayMode" value="default"/>
+    <property name="status" value="0"/>
+    <field id="1502946087" name="applicant_name" position="0" type="InputText">
+      <property name="fieldRequired" value="false"/>
+      <property name="labelCSSClass" value=""/>
+      <property name="labelCSSStyle" value=""/>
+      <property name="label" value="Name"/>
+      <property name="errorMessage" value=""/>
+      <property name="title" value=""/>
+      <property name="readonly" value="false"/>
+      <property name="size" value=""/>
+      <property name="formula" value=""/>
+      <property name="rangeFormula" value=""/>
+      <property name="pattern" value=""/>
+      <property name="styleclass" value=""/>
+      <property name="cssStyle" value=""/>
+      <property name="isHTML" value="false"/>
+      <property name="hideContent" value="false"/>
+      <property name="defaultValueFormula" value=""/>
+      <property name="inputBinding" value="Ken"/>
+      <property name="outputBinding" value="applicant/name"/>
+      <property name="fieldClass" value="java.lang.String"/>
+    </field>
+    <field id="462770498" name="applicant_ssn" position="1" type="InputTextInteger">
+      <property name="fieldRequired" value="false"/>
+      <property name="labelCSSClass" value=""/>
+      <property name="labelCSSStyle" value=""/>
+      <property name="label" value="Social Security Number"/>
+      <property name="errorMessage" value=""/>
+      <property name="title" value=""/>
+      <property name="readonly" value="false"/>
+      <property name="size" value=""/>
+      <property name="formula" value=""/>
+      <property name="rangeFormula" value=""/>
+      <property name="styleclass" value=""/>
+      <property name="cssStyle" value=""/>
+      <property name="defaultValueFormula" value=""/>
+      <property name="inputBinding" value="1231231234"/>
+      <property name="outputBinding" value="applicant/ssn"/>
+      <property name="fieldClass" value="java.lang.Integer"/>
+    </field>
+    <field id="1926790606" name="applicant_income" position="2" type="InputTextInteger">
+      <property name="fieldRequired" value="false"/>
+      <property name="labelCSSClass" value=""/>
+      <property name="labelCSSStyle" value=""/>
+      <property name="label" value="Annual Income"/>
+      <property name="errorMessage" value=""/>
+      <property name="title" value=""/>
+      <property name="readonly" value="false"/>
+      <property name="size" value=""/>
+      <property name="formula" value=""/>
+      <property name="rangeFormula" value=""/>
+      <property name="styleclass" value=""/>
+      <property name="cssStyle" value=""/>
+      <property name="defaultValueFormula" value=""/>
+      <property name="inputBinding" value="50000"/>
+      <property name="outputBinding" value="applicant/income"/>
+      <property name="fieldClass" value="java.lang.Integer"/>
+    </field>
+    <dataHolder id="applicant" inputId="applicant" name="#0000A0" outId="applicant" type="dataModelerEntry" value="com.redhat.bpms.examples.mortgage.Applicant"/>
+  </form>
+  <field id="601721302" name="application_downPayment" position="2" type="InputTextInteger">
+    <property name="fieldRequired" value="false"/>
+    <property name="groupWithPrevious" value="false"/>
+    <property name="labelCSSClass" value=""/>
+    <property name="labelCSSStyle" value=""/>
+    <property name="label" value="Down Payment"/>
+    <property name="errorMessage" value=""/>
+    <property name="title" value=""/>
+    <property name="readonly" value="false"/>
+    <property name="size" value=""/>
+    <property name="formula" value=""/>
+    <property name="rangeFormula" value=""/>
+    <property name="styleclass" value=""/>
+    <property name="cssStyle" value=""/>
+    <property name="defaultValueFormula" value=""/>
+    <property name="inputBinding" value="20000"/>
+    <property name="outputBinding" value="taskOutputApplication/downPayment"/>
+    <property name="fieldClass" value="java.lang.Integer"/>
+  </field>
+  <form id="1458843297">
+    <property name="subject" value=""/>
+    <property name="name" value="MortgageProperty.form"/>
+    <property name="displayMode" value="default"/>
+    <property name="status" value="0"/>
+    <field id="2013333214" name="property_address" position="0" type="InputText">
+      <property name="fieldRequired" value="false"/>
+      <property name="labelCSSClass" value=""/>
+      <property name="labelCSSStyle" value=""/>
+      <property name="label" value="Address"/>
+      <property name="errorMessage" value=""/>
+      <property name="title" value=""/>
+      <property name="readonly" value="false"/>
+      <property name="size" value=""/>
+      <property name="formula" value=""/>
+      <property name="rangeFormula" value=""/>
+      <property name="pattern" value=""/>
+      <property name="styleclass" value=""/>
+      <property name="cssStyle" value=""/>
+      <property name="isHTML" value="false"/>
+      <property name="hideContent" value="false"/>
+      <property name="defaultValueFormula" value=""/>
+      <property name="inputBinding" value="123 Apple Avenue"/>
+      <property name="outputBinding" value="property/address"/>
+      <property name="fieldClass" value="java.lang.String"/>
+    </field>
+    <field id="1518985727" name="property_price" position="1" type="InputTextInteger">
+      <property name="fieldRequired" value="false"/>
+      <property name="labelCSSClass" value=""/>
+      <property name="labelCSSStyle" value=""/>
+      <property name="label" value="Sale Price"/>
+      <property name="errorMessage" value=""/>
+      <property name="title" value=""/>
+      <property name="readonly" value="false"/>
+      <property name="size" value=""/>
+      <property name="formula" value=""/>
+      <property name="rangeFormula" value=""/>
+      <property name="styleclass" value=""/>
+      <property name="cssStyle" value=""/>
+      <property name="defaultValueFormula" value=""/>
+      <property name="inputBinding" value="150000"/>
+      <property name="outputBinding" value="property/price"/>
+      <property name="fieldClass" value="java.lang.Integer"/>
+    </field>
+    <dataHolder id="property" inputId="property" name="#0000A0" outId="property" type="dataModelerEntry" value="com.redhat.bpms.examples.mortgage.Property"/>
+  </form>
+  <dataHolder id="application" inputId="taskInputApplication" name="#BBBBBB" outId="taskOutputApplication" type="dataModelerEntry" value="com.redhat.bpms.examples.mortgage.Application"/>
+</form>
