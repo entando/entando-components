@@ -135,6 +135,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException {
         try {
             String xml = this.getConfigManager().getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+
+            if(xml ==null) {
+                return new HashMap<String, KieBpmConfig>();
+            }
             KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
             return kBpmConfFctry.getKieBpmConfigeMap();
         } catch (Throwable t) {
@@ -511,11 +515,11 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             String ver = this.hostNameVersionMap.get(config.getId());
             logger.info("ver {} ",ver);
 
-            if(ver !=null  && ver.startsWith("6")) {
-                invokeSixProcessForm();
-            }else {
-                invokeSevenProcessForm();
-            }
+//            if(ver !=null  && ver.startsWith("6")) {
+//                invokeSixProcessForm();
+//            }else {
+//                invokeSevenProcessForm();
+//            }
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_PROCESS_DEFINITION).resolveParams(containerId, processId);
             // generate client from the current configuration
