@@ -164,7 +164,7 @@ public class FSIDemoHelper {
         // CLIENT EMAIL
         KieProcessFormField email = new KieProcessFormField();
         email.setName("client_email");
-        email.setId(1111l);
+        email.setId("1111");
         email.setPosition(12);
         email.setType("InputText");
         List<KieProcessProperty> propsEmail = new ArrayList<>();
@@ -193,7 +193,7 @@ public class FSIDemoHelper {
         //PARTY NAME
         KieProcessFormField pname = new KieProcessFormField();
         pname.setName("party_name");
-        pname.setId(1222l);
+        pname.setId("1222");
         pname.setPosition(13);
         pname.setType("InputText");
         List<KieProcessProperty> propsPname = new ArrayList<>();
@@ -213,7 +213,7 @@ public class FSIDemoHelper {
         //PARTY SURNAME
         KieProcessFormField psurname = new KieProcessFormField();
         psurname.setName("party_surname");
-        psurname.setId(1333l);
+        psurname.setId("1333");
         psurname.setPosition(14);
         psurname.setType("InputText");
         List<KieProcessProperty> propsPsurname = new ArrayList<>();

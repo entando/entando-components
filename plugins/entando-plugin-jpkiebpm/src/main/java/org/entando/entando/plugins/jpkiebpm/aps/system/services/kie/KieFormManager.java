@@ -32,6 +32,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.fo
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
 import org.entando.entando.plugins.jprestapi.aps.core.RequestBuilder;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
@@ -498,7 +499,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
     
     @Override
-    // This uses XML unmarshaling
     public KieProcessFormQueryResult getProcessForm(String containerId, String processId) throws ApsSystemException {
     		logger.info("invoking getProcessForm(containterId: {}, processId: {})", containerId, processId);
 
@@ -507,34 +507,52 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return null;
         }
 
-
-        Object result = null;
+        KieProcessFormQueryResult result = null;
+        String ver = this.hostNameVersionMap.get(config.getId());
+        logger.info("server version {} ",ver);
+        boolean versionSix = ver !=null  && ver.startsWith("6");
+        String pamSevenString = "";
 
         try {
-
-            String ver = this.hostNameVersionMap.get(config.getId());
-            logger.info("ver {} ",ver);
-
-//            if(ver !=null  && ver.startsWith("6")) {
-//                invokeSixProcessForm();
-//            }else {
-//                invokeSevenProcessForm();
-//            }
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_PROCESS_DEFINITION).resolveParams(containerId, processId);
             // generate client from the current configuration
+
             KieClient client = getCurrentClient();
-            // perform query
-            result = (KieProcessFormQueryResult) new KieRequestBuilder(client)
-                    .setEndpoint(ep)
-                    .setDebug(config.getDebug())
-                    .setUnmarshalOptions(false, true)
-                    .doRequest(KieProcessFormQueryResult.class);
+            // perform query and use the auto unmarshalling of RequestBuilder
+            if(versionSix) {
+
+                result = (KieProcessFormQueryResult) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setDebug(config.getDebug())
+                        .setUnmarshalOptions(false, true)
+                        .doRequest(KieProcessFormQueryResult.class);
+
+            }else {
+
+                //Fetch a string. PAM 7 returns bad xml
+                pamSevenString = new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setDebug(config.getDebug())
+                        .setUnmarshalOptions(false, true)
+                        .doRequest();
+            }
+
+            //Turn the pam seven xml into the object the rest of the plugin expects
+            KieProcessFormQueryResult queryResult = null;
+            if(!versionSix) {
+
+                //PAM 7 returns invalid XML. Add a wrapper to make it valid.
+                pamSevenString = "<pamFormResult>"+pamSevenString+"</pamFormResult>";
+                PamProcessQueryFormResult pamResult = (PamProcessQueryFormResult)JAXBHelper
+                        .unmarshall(pamSevenString, PamProcessQueryFormResult.class, true, false);
+                result = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
+            }
         } catch (Throwable t) {
+            logger.error("Failed to invoke kie get process form", t);
             throw new ApsSystemException("Error getting the process forms", t);
         }
 
-        KieProcessFormQueryResult result = null;
         // if this fails it must affect the overrides only!
         try {
             // load overrides

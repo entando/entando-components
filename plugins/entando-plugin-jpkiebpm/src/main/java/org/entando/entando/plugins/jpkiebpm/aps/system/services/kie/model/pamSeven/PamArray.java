@@ -4,21 +4,20 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlAttribute;
 import java.util.List;
 
 @XmlRootElement(name="array")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PamArray {
 
-    @XmlAttribute
+    @XmlElement
     private String name;
 
-    @XmlAttribute
+    @XmlElement
     private String id;
 
     @XmlElement(name="model")
-    private List<PamModel> models;
+    private PamModel model;
 
     @XmlElement(name = "fields")
     private List<PamFields> pamFields;
@@ -40,12 +39,12 @@ public class PamArray {
         this.id = id;
     }
 
-    public List<PamModel> getModels() {
-        return models;
+    public PamModel getModel() {
+        return model;
     }
 
-    public void setModels(List<PamModel> models) {
-        this.models = models;
+    public void setModels(PamModel model) {
+        this.model = model;
     }
 
     public List<PamFields> getPamFields() {

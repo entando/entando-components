@@ -12,7 +12,30 @@ public class PamProperty {
     @XmlElement
     private PamTypeInfo typeInfo;
 
-    @XmlAttribute
+    @XmlElement(name="name")
     private String name;
 
+    public PamMetaData getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(PamMetaData metaData) {
+        this.metaData = metaData;
+    }
+
+    public PamTypeInfo getTypeInfo() {
+        return typeInfo;
+    }
+
+    public void setTypeInfo(PamTypeInfo typeInfo) {
+        this.typeInfo = typeInfo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

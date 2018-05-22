@@ -23,20 +23,22 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import junit.framework.TestCase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcessForm.kieProcessFormXML;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DropDownOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcessForm.kieProcessFormXML;
 
 /**
  *
@@ -55,7 +57,7 @@ public class TestBpmToFormHelper extends TestCase {
                 res.getPosition());
         assertEquals("InputTextInteger",
                 res.getType());
-        assertEquals((Long)1601486948L,
+        assertEquals("1601486948",
                 res.getId());
 
         res = BpmToFormHelper.getFormField(kpfq, "property_address");
@@ -64,7 +66,7 @@ public class TestBpmToFormHelper extends TestCase {
                 res.getPosition());
         assertEquals("InputText",
                 res.getType());
-        assertEquals((Long)2013333214L,
+        assertEquals("2013333214",
                 res.getId());
 
     }
