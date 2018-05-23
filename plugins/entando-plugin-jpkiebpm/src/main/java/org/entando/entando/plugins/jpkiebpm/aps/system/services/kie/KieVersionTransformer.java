@@ -122,13 +122,13 @@ public class KieVersionTransformer {
         field.getProperties().add(prop);
 
         KieProcessProperty req =  new KieProcessProperty();
-        prop.setName("fieldRequired");
-        prop.setValue(required+"");
+        req.setName("fieldRequired");
+        req.setValue(required+"");
         field.getProperties().add(req);
 
         KieProcessProperty fieldClass =  new KieProcessProperty();
-        prop.setName("fieldClass");
-        prop.setValue(type);
+        fieldClass.setName("fieldClass");
+        fieldClass.setValue(type);
         field.getProperties().add(fieldClass);
 
 
