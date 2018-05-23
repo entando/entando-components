@@ -96,7 +96,10 @@ public class DataUXBuilder {
             this.addFormField(field, builder);
         }
         String sectionFooter = this.extractTemplate("sectionFooter.txt");
-        builder.append(sectionFooter);
+
+        if (kpfr.getFields().size() > 0) {
+            builder.append(sectionFooter);
+        }
         List<KieProcessFormQueryResult> subForms = kpfr.getNestedForms();
         if (null != subForms && !subForms.isEmpty()) {
             for (int i = 0; i < subForms.size(); i++) {
