@@ -69,6 +69,7 @@ public class DataUXBuilder {
             }
             sectionHeader = String.format(sectionHeader, formName);
             builder.append(sectionHeader);
+
         }
 
         /*
