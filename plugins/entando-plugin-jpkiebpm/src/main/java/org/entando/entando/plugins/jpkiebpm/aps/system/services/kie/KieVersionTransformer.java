@@ -68,11 +68,13 @@ public class KieVersionTransformer {
             String label = field.getLabel();
             String type = field.getStandaloneClassName();
             String code = field.getCode();
+            Boolean required = field.getRequired();
+
             if(code.equals("SubForm")) {
                 //Sub forms will get processed and be nested under the root. This prevents duplicates
                 continue;
             }
-            addField(result, fieldId, modelName, fieldName, label, type);
+            addField(result, fieldId, modelName, fieldName, label, code, required, type);
         }
         return result;
     }
@@ -104,19 +106,31 @@ public class KieVersionTransformer {
         result.getHolders().add(holder);
     }
 
-    private static void addField(KieProcessFormQueryResult result, String id, String modelName, String fieldName, String label, String type) {
+    private static void addField(KieProcessFormQueryResult result, String id, String modelName, String fieldName, String label, String code, Boolean required, String type) {
 
 
         KieProcessFormField field = new KieProcessFormField();
+        field.setProperties(new ArrayList<>());
+
         field.setId(id);
         field.setName(modelName+"_"+fieldName);
-        field.setType(type);
+        field.setType(code);
 
         KieProcessProperty prop = new KieProcessProperty();
         prop.setName("label");
         prop.setValue(label);
-        field.setProperties(new ArrayList<>());
         field.getProperties().add(prop);
+
+        KieProcessProperty req =  new KieProcessProperty();
+        req.setName("fieldRequired");
+        req.setValue(required+"");
+        field.getProperties().add(req);
+
+        KieProcessProperty fieldClass =  new KieProcessProperty();
+        fieldClass.setName("fieldClass");
+        fieldClass.setValue(type);
+        field.getProperties().add(fieldClass);
+
 
         result.getFields().add(field);
 
