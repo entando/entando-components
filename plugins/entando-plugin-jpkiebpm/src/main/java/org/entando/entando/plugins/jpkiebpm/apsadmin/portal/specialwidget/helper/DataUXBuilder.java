@@ -6,15 +6,17 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
 import com.agiletec.aps.util.FileTextReader;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
+
 //import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieDataHolder;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
 
 /**
  *
@@ -66,8 +68,10 @@ public class DataUXBuilder {
                 }
             }
             sectionHeader = String.format(sectionHeader, formName);
+            builder.append(sectionHeader);
+
         }
-        builder.append(sectionHeader);
+
         /*
 		List<KieDataHolder> formHolders = kpfr.getHolders();
 		for (int i = 0; i < formHolders.size(); i++) {
@@ -93,7 +97,10 @@ public class DataUXBuilder {
             this.addFormField(field, builder);
         }
         String sectionFooter = this.extractTemplate("sectionFooter.txt");
-        builder.append(sectionFooter);
+
+        if (kpfr.getFields().size() > 0) {
+            builder.append(sectionFooter);
+        }
         List<KieProcessFormQueryResult> subForms = kpfr.getNestedForms();
         if (null != subForms && !subForms.isEmpty()) {
             for (int i = 0; i < subForms.size(); i++) {

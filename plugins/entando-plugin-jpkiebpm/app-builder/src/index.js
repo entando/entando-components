@@ -9,6 +9,7 @@ import itLocale from 'locales/it';
 import BpmChannelForm from 'ui/widgets/BpmChannelForm';
 import BpmCaseInstanceFormContainer from 'ui/widgets/BpmCaseInstanceFormContainer';
 import BpmCaseProgressStatusFormContainer from 'ui/widgets/BpmCaseProgressStatusFormContainer';
+import BpmDatatableTaskListFormContainer from 'ui/widgets/BpmDatatableTaskListFormContainer';
 
 import { name as id } from '../package.json';
 
@@ -34,6 +35,7 @@ const plugin = {
     'bpm-process-diagram': BpmChannelForm,
     'bpm-case-instance-selector': BpmCaseInstanceFormContainer,
     'bpm-case-progress-status': BpmCaseProgressStatusFormContainer,
+    'bpm-datatable-task-list': BpmDatatableTaskListFormContainer,
   },
 };
 

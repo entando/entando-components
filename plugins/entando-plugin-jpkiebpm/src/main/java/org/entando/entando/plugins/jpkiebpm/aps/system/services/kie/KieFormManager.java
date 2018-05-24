@@ -32,6 +32,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.fo
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
 import org.entando.entando.plugins.jprestapi.aps.core.RequestBuilder;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
@@ -51,6 +52,7 @@ import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helpe
 public class KieFormManager extends AbstractService implements IKieFormManager {
 
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
+    private Map<String, String> hostNameVersionMap = new HashMap<>();
 
     @Override
     public void init() {
@@ -134,6 +136,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException {
         try {
             String xml = this.getConfigManager().getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
+
+            if(xml ==null) {
+                return new HashMap<String, KieBpmConfig>();
+            }
             KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
             return kBpmConfFctry.getKieBpmConfigeMap();
         } catch (Throwable t) {
@@ -493,27 +499,60 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
     
     @Override
-    // This uses XML unmarshaling
     public KieProcessFormQueryResult getProcessForm(String containerId, String processId) throws ApsSystemException {
     		logger.info("invoking getProcessForm(containterId: {}, processId: {})", containerId, processId);
-        KieProcessFormQueryResult result = null;
+
         if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(processId)) {
-            return result;
+            logger.warn("Config is not active or container id or process id is blank conf {} {} {} ", config.getActive(), containerId, processId);
+            return null;
         }
+
+        KieProcessFormQueryResult result = null;
+        String ver = this.hostNameVersionMap.get(config.getId());
+        logger.info("server version {} ",ver);
+        boolean versionSix = ver !=null  && ver.startsWith("6");
+        String pamSevenString = "";
+
         try {
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_PROCESS_DEFINITION).resolveParams(containerId, processId);
             // generate client from the current configuration
+
             KieClient client = getCurrentClient();
-            // perform query
-            result = (KieProcessFormQueryResult) new KieRequestBuilder(client)
-                    .setEndpoint(ep)
-                    .setDebug(config.getDebug())
-                    .setUnmarshalOptions(false, true)
-                    .doRequest(KieProcessFormQueryResult.class);
+            // perform query and use the auto unmarshalling of RequestBuilder
+            if(versionSix) {
+
+                result = (KieProcessFormQueryResult) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setDebug(config.getDebug())
+                        .setUnmarshalOptions(false, true)
+                        .doRequest(KieProcessFormQueryResult.class);
+
+            }else {
+
+                //Fetch a string. PAM 7 returns bad xml
+                pamSevenString = new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setDebug(config.getDebug())
+                        .setUnmarshalOptions(false, true)
+                        .doRequest();
+            }
+
+            //Turn the pam seven xml into the object the rest of the plugin expects
+            KieProcessFormQueryResult queryResult = null;
+            if(!versionSix) {
+
+                //PAM 7 returns invalid XML. Add a wrapper to make it valid.
+                pamSevenString = "<pamFormResult>"+pamSevenString+"</pamFormResult>";
+                PamProcessQueryFormResult pamResult = (PamProcessQueryFormResult)JAXBHelper
+                        .unmarshall(pamSevenString, PamProcessQueryFormResult.class, true, false);
+                result = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
+            }
         } catch (Throwable t) {
+            logger.error("Failed to invoke kie get process form", t);
             throw new ApsSystemException("Error getting the process forms", t);
         }
+
         // if this fails it must affect the overrides only!
         try {
             // load overrides
@@ -524,6 +563,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         } catch (Throwable t) {
             logger.error("error retrieving overrides for the form; they will be IGNORED!", t);
         }
+
+
+
         return result;
     }
 
@@ -1020,6 +1062,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     public void setKiaBpmConfigFactory(KiaBpmConfigFactory kiaBpmConfigFactory) {
         this.kiaBpmConfigFactory = kiaBpmConfigFactory;
+    }
+
+    public Map<String, String> getHostNameVersionMap(){
+        return this.hostNameVersionMap;
     }
 
     private KiaBpmConfigFactory kiaBpmConfigFactory;
