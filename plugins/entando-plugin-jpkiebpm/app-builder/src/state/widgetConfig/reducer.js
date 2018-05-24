@@ -3,6 +3,8 @@ import { combineReducers } from 'redux';
 import {
   SET_DEPLOYMENT_UNITS_LIST,
   SET_CASE_DEFINITIONS_LIST,
+  SET_PROCESS_LIST,
+  SET_OVERRIDES,
 } from './types';
 
 
@@ -24,8 +26,28 @@ const caseDefinitions = (state = [], action = {}) => {
   }
 };
 
+const processList = (state = [], action = {}) => {
+  switch (action.type) {
+    case SET_PROCESS_LIST:
+      return action.payload.list;
+    default:
+      return state;
+  }
+};
+
+const overrides = (state = [], action = {}) => {
+  switch (action.type) {
+    case SET_OVERRIDES:
+      return action.payload.list;
+    default:
+      return state;
+  }
+};
+
 
 export default combineReducers({
   deploymentUnits,
   caseDefinitions,
+  processList,
+  overrides,
 });
