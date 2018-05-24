@@ -27,7 +27,6 @@ class MilestonesTableRenderer extends Component {
           {milestones && milestones.map((item, i) => (
             <tr key={item['milestone-id']}>
               <td>
-                {!console.log(item)}
                 <input
                   type="checkbox"
                   checked={item.visible}

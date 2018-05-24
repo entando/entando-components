@@ -12,3 +12,13 @@ export const getCaseDefinitions = createSelector(
   [getLocalState],
   localState => localState.widgetConfig.caseDefinitions,
 );
+
+export const getProcessList = createSelector(
+  [getLocalState],
+  localState => localState.widgetConfig.processList,
+);
+
+export const getOverrides = createSelector(
+  [getLocalState],
+  localState => localState.widgetConfig.overrides,
+);
