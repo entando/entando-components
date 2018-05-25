@@ -128,7 +128,7 @@
 
         <spring.version>5.0.5.RELEASE</spring.version>
         <struts2.version>2.3.16.3</struts2.version>
-        <cxf.version>2.7.14</cxf.version>
+        <cxf.version>3.0.4</cxf.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <build>
