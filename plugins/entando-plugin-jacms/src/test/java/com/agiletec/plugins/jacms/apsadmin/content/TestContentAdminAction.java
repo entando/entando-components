@@ -24,65 +24,71 @@ import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentA
  * @author E.Mezzano
  */
 public class TestContentAdminAction extends AbstractBaseTestContentAction {
-	
-	public void testOpenIndexProspect() throws Throwable {
-		String result = this.executeOpenIndexProspect("admin");
-		assertEquals(BaseAction.SUCCESS, result);
-		ContentAdminAction contentAdminAction = (ContentAdminAction) this.getAction();
-		assertEquals(IContentManager.STATUS_READY, contentAdminAction.getContentManagerStatus());
-		assertEquals(ICmsSearchEngineManager.STATUS_READY, contentAdminAction.getSearcherManagerStatus());
-		assertNull(contentAdminAction.getLastReloadInfo());
-	}
-	
-	public void testReloadContentsIndex() throws Throwable {
-		String result = this.executeReloadContentsIndex("admin");
-		assertEquals(BaseAction.SUCCESS, result);
-		this.waitReloadThreads();
-		ContentAdminAction contentAdminAction = (ContentAdminAction) this.getAction();
-		assertEquals(IContentManager.STATUS_READY, contentAdminAction.getContentManagerStatus());
-		assertEquals(ICmsSearchEngineManager.STATUS_READY, contentAdminAction.getSearcherManagerStatus());
-		assertNotNull(contentAdminAction.getLastReloadInfo());
-	}
-	
-	public void testReloadContentsReference() throws Throwable {
-		String result = this.executeReloadContentsReference("admin");
-		assertEquals(BaseAction.SUCCESS, result);
-		this.waitReloadThreads();
-		ContentAdminAction contentAdminAction = (ContentAdminAction) this.getAction();
-		assertEquals(IContentManager.STATUS_READY, contentAdminAction.getContentManagerStatus());
-		assertEquals(ICmsSearchEngineManager.STATUS_READY, contentAdminAction.getSearcherManagerStatus());
-		assertNull(contentAdminAction.getLastReloadInfo());
-	}
-	
-	private String executeOpenIndexProspect(String currentUserName) throws Throwable {
-		this.initAction("/do/jacms/Content/Admin", "openIndexProspect");
-		this.setUserOnSession(currentUserName);
-		return this.executeAction();
-	}
-	
-	private String executeReloadContentsIndex(String currentUserName) throws Throwable {
-		this.initAction("/do/jacms/Content/Admin", "reloadContentsIndex");
-		this.setUserOnSession(currentUserName);
-		return this.executeAction();
-	}
-	
-	private String executeReloadContentsReference(String currentUserName) throws Throwable {
-		this.initAction("/do/jacms/Content/Admin", "reloadContentsReference");
-		this.setUserOnSession(currentUserName);
-		return this.executeAction();
-	}
-	
-	private void waitReloadThreads() throws InterruptedException {
-		Thread[] threads = new Thread[20];
-	    Thread.enumerate(threads);
-	    for (int i=0; i<threads.length; i++) {
-	    	Thread currentThread = threads[i];
-	    	if (currentThread != null && 
-	    			(currentThread.getName().startsWith(SearchEngineManager.RELOAD_THREAD_NAME_PREFIX) 
-	    					|| currentThread.getName().startsWith(ApsEntityManager.RELOAD_REFERENCES_THREAD_NAME_PREFIX))) {
-	    		currentThread.join();
-	    	}
-	    }
-	}
-	
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        this.waitThreads(ICmsSearchEngineManager.RELOAD_THREAD_NAME_PREFIX);
+    }
+
+    public void testOpenIndexProspect() throws Throwable {
+        String result = this.executeOpenIndexProspect("admin");
+        assertEquals(BaseAction.SUCCESS, result);
+        ContentAdminAction contentAdminAction = (ContentAdminAction) this.getAction();
+        assertEquals(IContentManager.STATUS_READY, contentAdminAction.getContentManagerStatus());
+        assertEquals(ICmsSearchEngineManager.STATUS_READY, contentAdminAction.getSearcherManagerStatus());
+        assertNull(contentAdminAction.getLastReloadInfo());
+    }
+
+    public void testReloadContentsIndex() throws Throwable {
+        String result = this.executeReloadContentsIndex("admin");
+        assertEquals(BaseAction.SUCCESS, result);
+        this.waitReloadThreads();
+        ContentAdminAction contentAdminAction = (ContentAdminAction) this.getAction();
+        assertEquals(IContentManager.STATUS_READY, contentAdminAction.getContentManagerStatus());
+        assertEquals(ICmsSearchEngineManager.STATUS_READY, contentAdminAction.getSearcherManagerStatus());
+        assertNotNull(contentAdminAction.getLastReloadInfo());
+    }
+
+    public void testReloadContentsReference() throws Throwable {
+        String result = this.executeReloadContentsReference("admin");
+        assertEquals(BaseAction.SUCCESS, result);
+        this.waitReloadThreads();
+        ContentAdminAction contentAdminAction = (ContentAdminAction) this.getAction();
+        assertEquals(IContentManager.STATUS_READY, contentAdminAction.getContentManagerStatus());
+        assertEquals(ICmsSearchEngineManager.STATUS_READY, contentAdminAction.getSearcherManagerStatus());
+        assertNull(contentAdminAction.getLastReloadInfo());
+    }
+
+    private String executeOpenIndexProspect(String currentUserName) throws Throwable {
+        this.initAction("/do/jacms/Content/Admin", "openIndexProspect");
+        this.setUserOnSession(currentUserName);
+        return this.executeAction();
+    }
+
+    private String executeReloadContentsIndex(String currentUserName) throws Throwable {
+        this.initAction("/do/jacms/Content/Admin", "reloadContentsIndex");
+        this.setUserOnSession(currentUserName);
+        return this.executeAction();
+    }
+
+    private String executeReloadContentsReference(String currentUserName) throws Throwable {
+        this.initAction("/do/jacms/Content/Admin", "reloadContentsReference");
+        this.setUserOnSession(currentUserName);
+        return this.executeAction();
+    }
+
+    private void waitReloadThreads() throws InterruptedException {
+        Thread[] threads = new Thread[20];
+        Thread.enumerate(threads);
+        for (int i = 0; i < threads.length; i++) {
+            Thread currentThread = threads[i];
+            if (currentThread != null
+                    && (currentThread.getName().startsWith(SearchEngineManager.RELOAD_THREAD_NAME_PREFIX)
+                    || currentThread.getName().startsWith(ApsEntityManager.RELOAD_REFERENCES_THREAD_NAME_PREFIX))) {
+                currentThread.join();
+            }
+        }
+    }
+
 }

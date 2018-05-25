@@ -18,36 +18,44 @@ import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineM
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
- * Interfaccia base per i servizi detentori delle operazioni di indicizzazione 
+ * Interfaccia base per i servizi detentori delle operazioni di indicizzazione
  * di oggetti ricercabili tramite motore di ricerca.
+ *
  * @author W.Ambu - E.Santoboni
  */
 public interface ICmsSearchEngineManager extends IEntitySearchEngineManager {
-	
-	/**
-     * Ricarica in blocco le indicizzazioni dei contenuti 
-	 * necessari per le diverse ricerche sui contenuti.
-	 * @return Il thread lanciato in esecuzione.
-	 * @throws ApsSystemException in caso di errore in inizializzazione processo.
+
+    public static final String RELOAD_THREAD_NAME_PREFIX = "RELOAD_INDEX_";
+
+    public static final int STATUS_READY = 0;
+    public static final int STATUS_RELOADING_INDEXES_IN_PROGRESS = 1;
+    public static final int STATUS_NEED_TO_RELOAD_INDEXES = 2;
+
+    /**
+     * Ricarica in blocco le indicizzazioni dei contenuti necessari per le
+     * diverse ricerche sui contenuti.
+     *
+     * @return Il thread lanciato in esecuzione.
+     * @throws ApsSystemException in caso di errore in inizializzazione
+     * processo.
      */
     public Thread startReloadContentsReferences() throws ApsSystemException;
-    
-	public Thread startReloadContentsReferences(String subDirectory) throws ApsSystemException;
-	
+
+    public Thread startReloadContentsReferences(String subDirectory) throws ApsSystemException;
+
     /**
      * Return the service status id.
+     *
      * @return The service status id.
      */
     public int getStatus();
-    
+
     /**
-     * Restituisce le informazioni sull'ultimo ricaricamento della configurazione.
+     * Restituisce le informazioni sull'ultimo ricaricamento della
+     * configurazione.
+     *
      * @return Le informazioni sull'ultimo ricaricamento della configurazione.
      */
     public LastReloadInfo getLastReloadInfo();
-	
-    public static final int STATUS_READY = 0;
-	public static final int STATUS_RELOADING_INDEXES_IN_PROGRESS = 1;
-	public static final int STATUS_NEED_TO_RELOAD_INDEXES = 2;
-	
+
 }

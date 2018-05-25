@@ -99,6 +99,7 @@ public class AllTests {
         System.out.println("Test for jACMS plugin");
 
         //
+        suite.addTestSuite(TestContentAdminAction.class);
         suite.addTestSuite(TestContentAuthorization.class);
         suite.addTestSuite(TestContentBulkCommand.class);
         suite.addTestSuite(TestContentEntityManager.class);
@@ -168,7 +169,6 @@ public class AllTests {
         suite.addTestSuite(TestValidateNumberAttribute.class);
         suite.addTestSuite(TestValidateResourceAttribute.class);
         suite.addTestSuite(TestValidateTextAttribute.class);
-        suite.addTestSuite(TestContentAdminAction.class);
         suite.addTestSuite(TestContentFinderAction.class);
         suite.addTestSuite(TestContentGroupAction.class);
         suite.addTestSuite(TestContentInspectionAction.class);
