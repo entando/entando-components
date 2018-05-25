@@ -3,6 +3,7 @@
 <%@ taglib prefix="wpsa" uri="/apsadmin-core" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
 
+<wp:ifauthorized permission="superuser" var="isSuperUser" />
 <wp:ifauthorized permission="editContents" var="isEditContents" />
 <wp:ifauthorized permission="manageResources" var="isManageResources" />
 
