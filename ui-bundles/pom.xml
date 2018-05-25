@@ -18,18 +18,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <developers>
-        <developer>
-            <id>e.santoboni</id>
-            <name>Eugenio Santoboni</name>
-            <email>eugenio.santoboni@gmail.com</email>
-        </developer>
-        <developer>
-            <id>w.ghelfi</id>
-            <name>William Ghelfi</name>
-            <email>william@williamghelfi.com</email>
-        </developer>
-    </developers>
     <organization>
         <name>Entando Inc.</name>
         <url>http://www.entando.com/</url>
@@ -66,6 +54,7 @@
         <module>content-types/entando-content-announcement</module>
         <module>content-types/entando-content-blogpost</module>
         <module>themes/entando-page-2columns-left</module>
+        <module>app-views/entando-app-view-cms-default</module>
         <module>app-views/entando-app-view-webdynamicform-default</module>
         <module>app-views/entando-app-view-rss-default</module>
         <module>app-views/entando-app-view-facetnav-default</module>
