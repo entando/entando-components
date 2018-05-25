@@ -7,8 +7,9 @@
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean id="jacmsPluginSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
-        <property name="subMenuFilePath"><value>/WEB-INF/plugins/jacms/apsadmin/jsp/common/template/subMenu.jsp</value></property>
+    <bean id="jacmsAppsMenuMenuHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
+        <property name="filePath"><value>/WEB-INF/plugins/jacms/apsadmin/jsp/common/template/subMenu.jsp</value></property>
+        <property name="hookPointKey"><value>core.menu.apps</value></property>
     </bean>
 
     <bean id="jacmsDashboardStatusHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
