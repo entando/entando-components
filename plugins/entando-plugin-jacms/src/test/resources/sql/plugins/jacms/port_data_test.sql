@@ -314,7 +314,7 @@ INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('homep
 <property key="modelId">2</property>
 <property key="contentId">ART1</property>
 </properties>');
-INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('coach_page', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('coach_page', 1, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
 </properties>');
@@ -333,7 +333,7 @@ INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('custo
 <properties>
 <property key="contentId">ART112</property>
 </properties>');
-INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('contentview', 2, 'content_viewer', NULL);
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('contentview', 3, 'content_viewer', NULL);
 INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('pagina_2', 1, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
@@ -351,7 +351,7 @@ INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES (
 <property key="modelId">2</property>
 <property key="contentId">ART1</property>
 </properties>');
-INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('coach_page', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('coach_page', 1, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
 </properties>');
@@ -370,7 +370,7 @@ INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES (
 <properties>
 <property key="contentId">ART112</property>
 </properties>');
-INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('contentview', 2, 'content_viewer', NULL);
+INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('contentview', 3, 'content_viewer', NULL);
 INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('pagina_2', 1, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
