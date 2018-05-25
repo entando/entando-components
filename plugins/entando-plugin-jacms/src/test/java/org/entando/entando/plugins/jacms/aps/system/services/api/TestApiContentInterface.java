@@ -38,6 +38,7 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
+import org.entando.entando.plugins.jacms.aps.system.services.api.model.CmsApiResponse;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContent;
 
 /**
@@ -85,8 +86,8 @@ public class TestApiContentInterface extends ApiBaseTestCase {
 			jaxbContent.setId(null);
 			Object response = this.getResponseBuilder().createResponse(postMethod, jaxbContent, properties);
 			assertNotNull(response);
-			assertTrue(response instanceof StringApiResponse);
-			assertEquals(IResponseBuilder.SUCCESS, ((StringApiResponse) response).getResult());
+			assertTrue(response instanceof CmsApiResponse);
+			assertEquals(IResponseBuilder.SUCCESS, ((CmsApiResponse) response).getResult().getStatus());
 			ids = this._contentManager.searchId(filters);
 			assertEquals(1, ids.size());
 			String newContentId = ids.get(0);

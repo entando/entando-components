@@ -305,20 +305,20 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 
 
 
-INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('pagina_11', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('pagina_11', 3, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
 </properties>');
-INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('homepage', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('homepage', 3, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="modelId">2</property>
 <property key="contentId">ART1</property>
 </properties>');
-INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('coach_page', 1, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('coach_page', 3, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
 </properties>');
-INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('customers_page', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('customers_page', 3, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART111</property>
 </properties>');
@@ -329,7 +329,7 @@ INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('homep
 <property key="contentType">NEW</property>
 <property key="filters">(order=DESC;attributeFilter=true;likeOption=false;key=Date)+(order=ASC;attributeFilter=true;likeOption=false;key=Title)</property>
 </properties>');
-INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('customer_subpage_2', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('customer_subpage_2', 3, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART112</property>
 </properties>');
@@ -342,20 +342,20 @@ INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('pagin
 
 
 
-INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('pagina_11', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('pagina_11', 3, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
 </properties>');
-INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('homepage', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('homepage', 3, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="modelId">2</property>
 <property key="contentId">ART1</property>
 </properties>');
-INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('coach_page', 1, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('coach_page', 3, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
 </properties>');
-INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('customers_page', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('customers_page', 3, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART111</property>
 </properties>');
