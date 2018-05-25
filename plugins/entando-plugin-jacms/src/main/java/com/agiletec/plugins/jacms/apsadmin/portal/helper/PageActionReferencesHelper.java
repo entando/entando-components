@@ -33,7 +33,7 @@ public class PageActionReferencesHelper extends com.agiletec.apsadmin.portal.hel
     private static final Logger _logger = LoggerFactory.getLogger(PageActionReferencesHelper.class);
 
     @Override
-    public boolean checkContentsForSetOnline(IPage page, ActionSupport action) {
+    public boolean checkForSetOnline(IPage page, ActionSupport action) {
         try {
             for (Widget widget : page.getWidgets()) {
                 if (null != widget) {

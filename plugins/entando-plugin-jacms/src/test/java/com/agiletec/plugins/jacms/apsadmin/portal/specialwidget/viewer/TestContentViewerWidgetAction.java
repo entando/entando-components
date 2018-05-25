@@ -53,7 +53,7 @@ public class TestContentViewerWidgetAction extends ApsAdminBaseTestCase {
 	}
 
 	public void testInitConfigViewer_2() throws Throwable {
-		String result = this.executeConfigViewer("admin", "homepage", "2", null);
+		String result = this.executeConfigViewer("admin", "homepage", "3", null);
 		assertEquals(Action.SUCCESS, result);
 		ContentViewerWidgetAction action = (ContentViewerWidgetAction) this.getAction();
 		Widget widget = action.getWidget();
