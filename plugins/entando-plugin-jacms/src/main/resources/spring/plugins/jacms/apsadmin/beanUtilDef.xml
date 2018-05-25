@@ -22,6 +22,11 @@
         <property name="hookPointKey"><value>core.dashboard.bottomActions</value></property>
     </bean>
     
+    <bean id="jacmsGroupReferencesTabsHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
+        <property name="filePath"><value>/WEB-INF/plugins/jacms/apsadmin/jsp/user/group/groupReferences_tabs-jack.jsp</value></property>
+        <property name="hookPointKey"><value>core.groupReferences.tabs</value></property>
+    </bean>
+    
     <bean id="jacmsGroupReferencesHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
         <property name="filePath"><value>/WEB-INF/plugins/jacms/apsadmin/jsp/user/group/groupReferences-jack.jsp</value></property>
         <property name="hookPointKey"><value>core.groupReferences</value></property>
