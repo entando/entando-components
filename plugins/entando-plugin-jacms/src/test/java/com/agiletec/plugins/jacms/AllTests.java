@@ -59,7 +59,6 @@ import com.agiletec.plugins.jacms.apsadmin.content.attribute.TestUrlLinkAction;
 import com.agiletec.plugins.jacms.apsadmin.content.model.TestContentModelAction;
 import com.agiletec.plugins.jacms.apsadmin.content.model.TestContentModelFinderAction;
 import com.agiletec.plugins.jacms.apsadmin.portal.TestPageAction;
-import com.agiletec.plugins.jacms.apsadmin.portal.TestTrashReferencedPage;
 import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.TestBaseFilterAction;
 import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.TestContentListViewerWidgetAction;
 import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.TestDateAttributeFilterAction;
@@ -186,7 +185,6 @@ public class AllTests {
         suite.addTestSuite(TestContentFinderViewerAction.class);
         suite.addTestSuite(TestContentViewerWidgetAction.class);
         suite.addTestSuite(TestPageAction.class);
-        suite.addTestSuite(TestTrashReferencedPage.class);
 
         //Resource
         suite.addTestSuite(TestResourceAction.class);
