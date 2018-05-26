@@ -7,6 +7,8 @@ export default {
     'common.channel': 'Channel',
     'common.knowledgeSource': 'Knowledge Source',
     'common.deploymentUnit': 'Deployment Unit',
+    'common.process': 'Process',
+    'common.bpmGroups': 'Bpm Groups',
     'widgetName.bpm-case-actions': 'PAM-Case actions',
     'widgetName.bpm-case-chart': 'PAM-Case chart',
     'widgetName.bpm-case-details': 'PAM-Case details',
@@ -61,5 +63,9 @@ export default {
     'BpmCaseProgressStatusForm.visible': 'Visible',
     'BpmCaseProgressStatusForm.milestoneName': 'Milestone name',
     'BpmCaseProgressStatusForm.completed': 'Completed (Even by default)',
+    'BpmDatatableTaskListForm.position': 'Position',
+    'BpmDatatableTaskListForm.columnName': 'Column Name',
+    'BpmDatatableTaskListForm.visible': 'Visible',
+    'BpmDatatableTaskListForm.overrideFields': 'Override fields',
   },
 };
