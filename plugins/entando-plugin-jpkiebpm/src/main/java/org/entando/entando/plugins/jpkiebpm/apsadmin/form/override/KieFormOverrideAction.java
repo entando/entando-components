@@ -26,8 +26,6 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 
-import ucar.unidata.util.StringUtil;
-
 public class KieFormOverrideAction extends BaseAction {
 
 	private static final Logger _logger = LoggerFactory.getLogger(KieFormOverrideAction.class);
@@ -236,8 +234,7 @@ public class KieFormOverrideAction extends BaseAction {
 		String processId = (params[0]);
 		String containerId = (params[1]);
 		String kieSourceId = params[2];
-		
-		if (StringUtil.notEmpty(kieSourceId) && !"null".equalsIgnoreCase(kieSourceId)) {
+		if (!StringUtils.isEmpty(kieSourceId) && !"null".equalsIgnoreCase(kieSourceId)) {
 			this.getKieFormManager().setKieServerConfiguration(kieSourceId);
 		} else {
 			_logger.warn("No kie source id in process path");
