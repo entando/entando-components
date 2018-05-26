@@ -20,6 +20,9 @@ public class PamModel {
     private String formModelType;
 
     @XmlElement
+    private String className;
+
+    @XmlElement
     private List<PamProperty> properties;
 
     public String getProcessName() {
@@ -60,5 +63,13 @@ public class PamModel {
 
     public void setProperties(List<PamProperty> properties) {
         this.properties = properties;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }
