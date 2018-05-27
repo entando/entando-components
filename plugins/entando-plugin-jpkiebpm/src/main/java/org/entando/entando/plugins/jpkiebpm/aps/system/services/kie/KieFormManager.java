@@ -40,7 +40,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
@@ -50,6 +52,7 @@ import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helpe
 /**
  * @author Entando
  */
+@Service
 public class KieFormManager extends AbstractService implements IKieFormManager {
 
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
@@ -58,6 +61,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     @Override
     public void init() {
 
+    }
+
+    @PostConstruct
+    public void setupConfig() {
         //Initialize the config and set an active configuration. This prevents exceptions when first starting a PAM
         //enabled app. Without this the config has to be manually saved after restart. In the future we may not need
         //both calls but this will validate that the connections in the db are still valid.
@@ -75,8 +82,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }catch(Exception e){
             logger.error("Failed to initialize Kie server configuration. Service will start but configuration for Kie server will need to be updated and or re-saved ",e);
         }
-
-
     }
 
     @Override
@@ -170,6 +175,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     @Override
     public void setKieServerConfiguration(String kieId) throws ApsSystemException {
         try {
+            if(kieId ==null || this.getKieServerConfigurations().get(kieId) ==null){
+                return;
+            }
             config = this.getKieServerConfigurations().get(kieId);
         } catch (Throwable t) {
             throw new ApsSystemException("Error in setKieServerConfiguration", t);
@@ -1133,7 +1141,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     JSONObject info = resulObj.getJSONObject("kie-server-info");
                     String version = info.getString("version");
                     serverConfJson.put("version", version);
-
+                    this.hostNameVersionMap.put(this.getConfig().getId(), version);
                     serverStatusJson.put("config", serverConfJson);
                     serversStatus.put(serverStatusJson);
                     logger.debug("received successful message: ", result);
@@ -1167,7 +1175,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
 
         //load the current config
-        this.setConfig(setKieBpmConfig);
+        if(setKieBpmConfig !=null) {
+            this.setConfig(setKieBpmConfig);
+        }
 
         return serversStatus;
     }
