@@ -14,7 +14,7 @@
 
     </package>
 
-	<package name="collaboration_do/collaboration/Page/SpecialWidget/IdeaInstanceViewer" namespace="/do/collaboration/Page/SpecialWidget/IdeaInstanceViewer" extends="jacms_do/jacms/Page/SpecialWidget/ListViewer" >
+	<package name="collaboration_do/collaboration/Page/SpecialWidget/IdeaInstanceViewer" namespace="/do/collaboration/Page/SpecialWidget/IdeaInstanceViewer" extends="entando-default">
 
 		<action name="configInstance" class="jpcollaborationIdeaInstanceWidgetAction" method="save">
         	<result name="input" type="tiles">admin.jpcrowdsourcing.page.widget.publish-instance.config</result>

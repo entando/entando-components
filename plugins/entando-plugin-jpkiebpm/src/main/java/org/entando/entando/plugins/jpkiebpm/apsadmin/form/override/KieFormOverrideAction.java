@@ -233,8 +233,7 @@ public class KieFormOverrideAction extends BaseAction {
 		String processId = (params[0]);
 		String containerId = (params[1]);
 		String kieSourceId = params[2];
-		
-		if (StringUtils.isNotEmpty(kieSourceId) && !"null".equalsIgnoreCase(kieSourceId)) {
+		if (!StringUtils.isEmpty(kieSourceId) && !"null".equalsIgnoreCase(kieSourceId)) {
 			this.getKieFormManager().setKieServerConfiguration(kieSourceId);
 		} else {
 			_logger.warn("No kie source id in process path");
