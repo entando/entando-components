@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC
-        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
-        "http://struts.apache.org/dtds/struts-2.3.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
 
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget" namespace="/do/Page/SpecialWidget"
-             extends="core_do/Page/SpecialWidget">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget" namespace="/do/Page/SpecialWidget" extends="core_do/Page/SpecialWidget">
 
         <action name="jpkiebpmBpmFormWidgetViewerConfig" class="jpkiebpmBpmFormWidgetAction" method="init">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
@@ -14,7 +13,6 @@
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
-
 
         <action name="jpkiebpmBpmTaskListDatatableWidgetViewerConfig" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="init">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
@@ -72,7 +70,6 @@
             </interceptor-ref>
         </action>
         
-        <!--f-->
         <action name="jpkiebpmBpmCaseInstanceChartWidgetViewerConfig" class="jpkiebpmBpmCaseInstanceChartWidgetAction" method="init">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceChart.config</result>
             <interceptor-ref name="entandoDefaultStack">
@@ -93,18 +90,10 @@
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
-        <!-- Process List config -->
-        <!--        <action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig"
-                class="jpkiebpmBpmProcessDatatableWidgetAction" method="init">
-            <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
-            <interceptor-ref name="entandoDefaultStack">
-                <param name="requestAuth.requiredPermission">managePages</param>
-            </interceptor-ref>
-        </action>-->
 
     </package>
 
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmFormViewer" namespace="/do/bpm/Page/SpecialWidget/BpmFormViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmFormViewer" namespace="/do/bpm/Page/SpecialWidget/BpmFormViewer" extends="entando-default">
 
         <action name="chooseForm*" class="jpkiebpmBpmFormWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
@@ -132,7 +121,7 @@
     </package>
 
 
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmTaskListDatatableViewer" namespace="/do/bpm/Page/SpecialWidget/BpmTaskListDatatableViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmTaskListDatatableViewer" namespace="/do/bpm/Page/SpecialWidget/BpmTaskListDatatableViewer" extends="entando-default">
 
         <action name="chooseForm*" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
@@ -159,7 +148,7 @@
 
     </package>
 
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmProcessDatatableViewer" namespace="/do/bpm/Page/SpecialWidget/BpmProcessDatatableViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmProcessDatatableViewer" namespace="/do/bpm/Page/SpecialWidget/BpmProcessDatatableViewer" extends="entando-default">
 
         <action name="chooseForm*" class="jpkiebpmBpmProcessDatatableWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
@@ -186,7 +175,7 @@
 
     </package>
     
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseProgressViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseProgressViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseProgressViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseProgressViewer" extends="entando-default">
 
         <action name="chooseForm*" class="jpkiebpmBpmCaseProgressWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
@@ -229,7 +218,7 @@
 
     </package>
     
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceSelectorViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceSelectorViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">      
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceSelectorViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceSelectorViewer" extends="entando-default">
 
         <action name="chooseForm*" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
@@ -272,7 +261,7 @@
 
     </package>
     
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceCommentsViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceCommentsViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceCommentsViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceCommentsViewer" extends="entando-default">
         <action name="save" class="jpkiebpmBpmCaseInstanceCommentsWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
             <interceptor-ref name="entandoValidationStack">
@@ -283,7 +272,7 @@
     </package>
     
     <!--f-->
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceDetailsViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceDetailsViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceDetailsViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceDetailsViewer" extends="entando-default">
         <action name="save" class="jpkiebpmBpmCaseInstanceDetailsWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceDetails.config</result>
             <interceptor-ref name="entandoValidationStack">
@@ -293,7 +282,7 @@
 
     </package>
     
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceActionsViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceActionsViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceActionsViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceActionsViewer" extends="entando-default">
         <action name="save" class="jpkiebpmBpmCaseInstanceActionsWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceActions.config</result>
             <interceptor-ref name="entandoValidationStack">
@@ -303,7 +292,7 @@
 
     </package>
     
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceRoleViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceRoleViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceRoleViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceRoleViewer" extends="entando-default">
         <action name="save" class="jpkiebpmBpmCaseInstanceRolesWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceRoles.config</result>
             <interceptor-ref name="entandoValidationStack">
@@ -313,7 +302,7 @@
 
     </package>
     
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceChartViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceChartViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceChartViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceChartViewer" extends="entando-default">
         <action name="save" class="jpkiebpmBpmCaseInstanceChartWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceChart.config</result>
             <interceptor-ref name="entandoValidationStack">
@@ -323,7 +312,7 @@
 
     </package>
     
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmProcessDiagramViewer" namespace="/do/bpm/Page/SpecialWidget/BpmProcessDiagramViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmProcessDiagramViewer" namespace="/do/bpm/Page/SpecialWidget/BpmProcessDiagramViewer" extends="entando-default">
         <action name="save" class="jpkiebpmBpmProcessDiagramWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDiagram.config</result>
             <interceptor-ref name="entandoValidationStack">
@@ -333,7 +322,7 @@
 
     </package>
     
-    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceFileViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceFileViewer"  extends="jacms_do/jacms/Page/SpecialWidget/ListViewer">
+    <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceFileViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceFileViewer" extends="entando-default">
         <action name="save" class="jpkiebpmBpmCaseInstanceFileWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceFile.config</result>
             <interceptor-ref name="entandoValidationStack">
