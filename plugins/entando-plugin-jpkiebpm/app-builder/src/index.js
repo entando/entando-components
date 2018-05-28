@@ -36,6 +36,7 @@ const plugin = {
     'bpm-case-instance-selector': BpmCaseInstanceFormContainer,
     'bpm-case-progress-status': BpmCaseProgressStatusFormContainer,
     'bpm-datatable-task-list': BpmDatatableTaskListFormContainer,
+    'bpm-datatype-form': BpmDatatableTaskListFormContainer,
   },
 };
 

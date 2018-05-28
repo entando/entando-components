@@ -36,8 +36,23 @@ export const mapDispatchToProps = dispatch => ({
   },
 });
 
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...stateProps,
+  ...dispatchProps,
+  ...ownProps,
+  onSubmit: (data) => {
+    const transformedData = { ...data };
+    transformedData.overrides = transformedData.overrides.map((item, i) => ({
+      position: i + 1,
+      visible: item.visible,
+      fieldOverride: item.fieldOverride,
+    }));
+    ownProps.onSubmit(transformedData);
+  },
+});
+
 const widgetConfigForm = reduxForm({
   form: 'widgetConfigForm',
 })(BpmDatatableTaskListForm);
 
-export default connect(mapStateToProps, mapDispatchToProps)(widgetConfigForm);
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(widgetConfigForm);
