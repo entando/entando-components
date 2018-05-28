@@ -25,7 +25,6 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import org.apache.commons.lang.StringUtils;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,90 +45,6 @@ import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConsta
 public class CaseManager extends KieFormManager {
 
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
-
-    public JSONArray getKieServerStatus() throws ApsSystemException {
-        //Save the current Config
-        KieBpmConfig setKieBpmConfig = super.getConfig();
-        Map<String, String> headersMap = new HashMap<>();
-        JSONArray serversStatus = new JSONArray();
-        String result = null;
-        JSONObject json = null;
-        HashMap<String, KieBpmConfig> serverConfigurations = super.getKieServerConfigurations();
-        for (String key : serverConfigurations.keySet()) {
-            super.setConfig(serverConfigurations.get(key));
-            try {
-                // process endpoint first
-                Endpoint ep = KieEndpointDictionary.create().get(API_GET_SERVER_STATUS);
-                // add header
-                headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
-                // generate client from the current configuration
-                KieClient client = super.getCurrentClient();
-                // perform query
-                result = (String) new KieRequestBuilder(client)
-                        .setEndpoint(ep)
-                        .setHeaders(headersMap)
-                        .setDebug(super.getConfig().getDebug())
-                        .doRequest();
-                if (!result.isEmpty()) {
-                    json = new JSONObject(result);
-                    JSONObject serverStatusJson = new JSONObject();
-                    serverStatusJson.put("id", super.getConfig().getId());
-                    serverStatusJson.put("status", json);
-                    JSONObject serverConfJson = new JSONObject();
-                    serverConfJson.put("active", super.getConfig().getActive());
-                    serverConfJson.put("id", super.getConfig().getId());
-                    serverConfJson.put("name", super.getConfig().getName());
-                    serverConfJson.put("username", super.getConfig().getUsername());
-                    serverConfJson.put("password", super.getConfig().getPassword());
-                    serverConfJson.put("hostname", super.getConfig().getHostname());
-                    serverConfJson.put("port", super.getConfig().getPort());
-                    serverConfJson.put("schema", super.getConfig().getSchema());
-                    serverConfJson.put("webapp", super.getConfig().getWebapp());
-                    serverConfJson.put("timeoutMsec", super.getConfig().getTimeoutMsec());
-                    serverConfJson.put("debug", super.getConfig().getDebug());
-
-                    JSONObject resulObj = (JSONObject) new JSONObject(result).get("result");
-                    JSONObject info = resulObj.getJSONObject("kie-server-info");
-                    String version = info.getString("version");
-                    serverConfJson.put("version", version);
-
-                    serverStatusJson.put("config", serverConfJson);
-                    serversStatus.put(serverStatusJson);
-                    logger.debug("received successful message: ", result);
-                } else {
-                    logger.debug("received empty message: ");
-                }
-            } catch (Throwable t) {
-                JSONObject serverStatusJson = new JSONObject();
-                serverStatusJson.put("id", super.getConfig().getId());
-                serverStatusJson.put("status", "null");
-
-                JSONObject serverConfJson = new JSONObject();
-
-                serverConfJson.put("active", super.getConfig().getActive());
-                serverConfJson.put("id", super.getConfig().getId());
-                serverConfJson.put("name", super.getConfig().getName());
-                serverConfJson.put("username", super.getConfig().getUsername());
-                serverConfJson.put("password", super.getConfig().getPassword());
-                serverConfJson.put("hostname", super.getConfig().getHostname());
-                serverConfJson.put("port", super.getConfig().getPort());
-                serverConfJson.put("schema", super.getConfig().getSchema());
-                serverConfJson.put("webapp", super.getConfig().getWebapp());
-                serverConfJson.put("timeoutMsec", super.getConfig().getTimeoutMsec());
-                serverConfJson.put("debug", super.getConfig().getDebug());
-
-                serverStatusJson.put("config", serverConfJson);
-
-                serversStatus.put(serverStatusJson);
-                logger.debug("Error connecting to the server: " + t);
-            }
-        }
-
-        //load the current config
-        super.setConfig(setKieBpmConfig);
-
-        return serversStatus;
-    }
 
     public JSONObject getCasesDefinitions(String containerId) throws ApsSystemException {
 

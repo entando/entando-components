@@ -7,6 +7,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -21,21 +22,28 @@ public class KieVersionTransformer {
 
         boolean first = true;
         KieProcessFormQueryResult queryResult = null;
+
+        List<String> formModelTypes = new ArrayList<>();
+        for(PamArray array : pamProcessQueryFormResult.getArrays()) {
+            String modelType = array.getModel().getClassName();
+            formModelTypes.add(modelType);
+        }
+
         for(PamArray array : pamProcessQueryFormResult.getArrays()) {
             if(first){
-                queryResult = pamSevenFormToPamSix(array);
+                queryResult = pamSevenFormToPamSix(array, formModelTypes);
                 first = false;
             }else{
                 if(queryResult.getNestedForms() ==null) {
                     queryResult.setNestedForms(new ArrayList<>());
                 }
-                queryResult.getNestedForms().add(pamSevenFormToPamSix(array));
+                queryResult.getNestedForms().add(pamSevenFormToPamSix(array, formModelTypes));
             }
         }
 
         return queryResult;
     }
-    public static KieProcessFormQueryResult pamSevenFormToPamSix(PamArray pamSeven) {
+    public static KieProcessFormQueryResult pamSevenFormToPamSix(PamArray pamSeven, List<String> formModelTypes) {
 
         KieProcessFormQueryResult result = new KieProcessFormQueryResult();
 
@@ -54,6 +62,12 @@ public class KieVersionTransformer {
             String className = property.getTypeInfo().getClassName();
             String type = property.getTypeInfo().getType();
 
+            //In PAM 6.x the main container entity for each form was marked  as the dataModelerEntry. Downstream the form helper
+            //logic depends on this marker. The marker doesn't exist in 7.x so we add manually when the value of the class
+            //on the interior property matches the value of a top level entity on one of the other forms.
+            if(formModelTypes.contains(className)) {
+                type = "dataModelerEntry";
+            }
             addDataholder(result, propName, propName, propName, type, className);
         }
 

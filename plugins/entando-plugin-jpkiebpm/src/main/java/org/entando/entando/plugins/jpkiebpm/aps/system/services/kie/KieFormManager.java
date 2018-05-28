@@ -36,10 +36,13 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSev
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
 import org.entando.entando.plugins.jprestapi.aps.core.RequestBuilder;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
@@ -49,6 +52,7 @@ import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helpe
 /**
  * @author Entando
  */
+@Service
 public class KieFormManager extends AbstractService implements IKieFormManager {
 
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
@@ -56,7 +60,28 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public void init() {
-        // Looking config up instead of holding singleton
+
+    }
+
+    @PostConstruct
+    public void setupConfig() {
+        //Initialize the config and set an active configuration. This prevents exceptions when first starting a PAM
+        //enabled app. Without this the config has to be manually saved after restart. In the future we may not need
+        //both calls but this will validate that the connections in the db are still valid.
+        //
+        //Known issue here is that if one config goes bad you get none of them. TODO
+        try {
+            HashMap<String, KieBpmConfig> configs = getKieServerConfigurations();
+            this.getKieServerStatus();
+            for(KieBpmConfig config : configs.values()) {
+                if(config.getActive()) {
+                    this.config = config;
+                    break;
+                }
+            }
+        }catch(Exception e){
+            logger.error("Failed to initialize Kie server configuration. Service will start but configuration for Kie server will need to be updated and or re-saved ",e);
+        }
     }
 
     @Override
@@ -150,6 +175,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     @Override
     public void setKieServerConfiguration(String kieId) throws ApsSystemException {
         try {
+            if(kieId ==null || this.getKieServerConfigurations().get(kieId) ==null){
+                return;
+            }
             config = this.getKieServerConfigurations().get(kieId);
         } catch (Throwable t) {
             throw new ApsSystemException("Error in setKieServerConfiguration", t);
@@ -1068,6 +1096,92 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return this.hostNameVersionMap;
     }
 
+    public JSONArray getKieServerStatus() throws ApsSystemException {
+        //Save the current Config
+        KieBpmConfig setKieBpmConfig = this.getConfig();
+        Map<String, String> headersMap = new HashMap<>();
+        JSONArray serversStatus = new JSONArray();
+        String result = null;
+        JSONObject json = null;
+        HashMap<String, KieBpmConfig> serverConfigurations = this.getKieServerConfigurations();
+        for (String key : serverConfigurations.keySet()) {
+            this.setConfig(serverConfigurations.get(key));
+            try {
+                // process endpoint first
+                Endpoint ep = KieEndpointDictionary.create().get(API_GET_SERVER_STATUS);
+                // add header
+                headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+                // generate client from the current configuration
+                KieClient client = this.getCurrentClient();
+                // perform query
+                result = (String) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setHeaders(headersMap)
+                        .setDebug(this.getConfig().getDebug())
+                        .doRequest();
+                if (!result.isEmpty()) {
+                    json = new JSONObject(result);
+                    JSONObject serverStatusJson = new JSONObject();
+                    serverStatusJson.put("id", this.getConfig().getId());
+                    serverStatusJson.put("status", json);
+                    JSONObject serverConfJson = new JSONObject();
+                    serverConfJson.put("active", this.getConfig().getActive());
+                    serverConfJson.put("id", this.getConfig().getId());
+                    serverConfJson.put("name", this.getConfig().getName());
+                    serverConfJson.put("username", this.getConfig().getUsername());
+                    serverConfJson.put("password", this.getConfig().getPassword());
+                    serverConfJson.put("hostname", this.getConfig().getHostname());
+                    serverConfJson.put("port", this.getConfig().getPort());
+                    serverConfJson.put("schema", this.getConfig().getSchema());
+                    serverConfJson.put("webapp", this.getConfig().getWebapp());
+                    serverConfJson.put("timeoutMsec", this.getConfig().getTimeoutMsec());
+                    serverConfJson.put("debug", this.getConfig().getDebug());
+
+                    JSONObject resulObj = (JSONObject) new JSONObject(result).get("result");
+                    JSONObject info = resulObj.getJSONObject("kie-server-info");
+                    String version = info.getString("version");
+                    serverConfJson.put("version", version);
+                    this.hostNameVersionMap.put(this.getConfig().getId(), version);
+                    serverStatusJson.put("config", serverConfJson);
+                    serversStatus.put(serverStatusJson);
+                    logger.debug("received successful message: ", result);
+                } else {
+                    logger.debug("received empty message: ");
+                }
+            } catch (Throwable t) {
+                JSONObject serverStatusJson = new JSONObject();
+                serverStatusJson.put("id", this.getConfig().getId());
+                serverStatusJson.put("status", "null");
+
+                JSONObject serverConfJson = new JSONObject();
+
+                serverConfJson.put("active", this.getConfig().getActive());
+                serverConfJson.put("id", this.getConfig().getId());
+                serverConfJson.put("name", this.getConfig().getName());
+                serverConfJson.put("username", this.getConfig().getUsername());
+                serverConfJson.put("password", this.getConfig().getPassword());
+                serverConfJson.put("hostname", this.getConfig().getHostname());
+                serverConfJson.put("port", this.getConfig().getPort());
+                serverConfJson.put("schema", this.getConfig().getSchema());
+                serverConfJson.put("webapp", this.getConfig().getWebapp());
+                serverConfJson.put("timeoutMsec", this.getConfig().getTimeoutMsec());
+                serverConfJson.put("debug", this.getConfig().getDebug());
+
+                serverStatusJson.put("config", serverConfJson);
+
+                serversStatus.put(serverStatusJson);
+                logger.debug("Error connecting to the server: " + t);
+            }
+        }
+
+        //load the current config
+        if(setKieBpmConfig !=null) {
+            this.setConfig(setKieBpmConfig);
+        }
+
+        return serversStatus;
+    }
+
     private KiaBpmConfigFactory kiaBpmConfigFactory;
     protected KieBpmConfig config;
     private ConfigInterface configManager;
@@ -1100,6 +1214,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
         private final String value;
     }
+
 
     public final static String KNOWLEDGE_WORKER = "knowledgeWorker";
     public final static String LEGAL_WORKER = "legalWorker";

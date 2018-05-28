@@ -26,9 +26,7 @@ package org.entando.entando.plugins.jpkiebpm.web.config;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieConfigService;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
@@ -74,6 +72,9 @@ public class ConfigController {
     @Autowired
     @Qualifier("jpkiebpmsCaseManager")
     IKieFormManager caseManager;
+
+    @Autowired
+    private IKieFormOverrideManager overrideManager;
 
     public IKieConfigService getKieConfigService() {
         return kieConfigService;
@@ -237,4 +238,21 @@ public class ConfigController {
         }
         return new ResponseEntity<>(new RestResponse(cases.toMap()), HttpStatus.OK);
     }
+
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/processesList/{processId:.+}/overrides", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getProcessOverrides(@PathVariable String configCode, @PathVariable String processId) {
+
+        List<KieFormOverride> overrides = new ArrayList<>();
+        try{
+            overrides = overrideManager.getFormOverrides(configCode, processId);
+        }catch(Exception e) {
+            logger.error("Failed to fetch container ids ",e );
+        }
+
+        return new ResponseEntity<>(new RestResponse(overrides), HttpStatus.OK);
+    }
+
+
 }

@@ -49,10 +49,13 @@ public class KiePageManager extends PageManager implements IPageManager, GroupUt
             Widget widget = this.getDraftPage(pageCode).getWidgets()[pos];
             super.removeWidget(pageCode, pos);
             String stringId = widget.getConfig().getProperty(KieBpmSystemConstants.WIDGET_PARAM_DATA_UX_ID);
-            int modelId = Integer.valueOf(stringId);
-            DataObjectModel model = new DataObjectModel();
-            model.setId(modelId);
-            this.getDataObjectModelManager().removeDataObjectModel(model);
+
+            if(stringId!=null) {
+                int modelId = Integer.valueOf(stringId);
+                DataObjectModel model = new DataObjectModel();
+                model.setId(modelId);
+                this.getDataObjectModelManager().removeDataObjectModel(model);
+            }
         } catch (Throwable t) {
             String message = "Error removing the widget from the page '" + pageCode + "' in the frame " + pos;
             _kielogger.error("Error removing the widget from the page '{}' in the frame {}", pageCode, pos, t);

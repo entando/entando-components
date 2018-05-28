@@ -114,7 +114,6 @@
                                 <div class="form-group">
                                     <label for="Deployment Unit"><s:text name="Deployment Unit"/></label>
                                     <div class="input-group">
-ß
                                         <s:select list="process" id="container-id" name="processPath"  
                                                   listKey="containerId"
                                                   listValue="containerId" class="form-control">
