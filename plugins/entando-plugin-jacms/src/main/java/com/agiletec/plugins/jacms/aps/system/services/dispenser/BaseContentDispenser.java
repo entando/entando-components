@@ -37,7 +37,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicConte
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.linkresolver.ILinkResolverManager;
 import com.agiletec.plugins.jacms.aps.system.services.renderer.IContentRenderer;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * Fornisce i contenuti formattati. Il compito del servizio, in fase di
@@ -68,8 +68,8 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
     }
 
     @Override
-    @CachePut(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
-            key = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheKey(#contentId, #modelId, #langCode, #reqCtx)")
+    @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
+            key = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheKey(#contentId, #modelId, #langCode, #reqCtx)", condition = "#result != null")
     @CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheGroupsCsv(#contentId, #modelId)")
     public ContentRenderizationInfo getRenderizationInfo(String contentId, long modelId, String langCode, RequestContext reqCtx) {
         PublicContentAuthorizationInfo authInfo = this.getContentAuthorizationHelper().getAuthorizationInfo(contentId, true);
@@ -80,7 +80,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
     }
 
     @Override
-    @CachePut(value = ICacheInfoManager.DEFAULT_CACHE_NAME, condition = "#cacheable",
+    @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, condition = "#result != null and #cacheable",
             key = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheKey(#contentId, #modelId, #langCode, #reqCtx)")
     @CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheGroupsCsv(#contentId, #modelId)")
     public ContentRenderizationInfo getRenderizationInfo(String contentId,

@@ -14,6 +14,7 @@
 package com.agiletec.plugins.jacms.aps.system.services.content.widget;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -43,7 +45,6 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.FilterUtils;
-import org.springframework.cache.annotation.CachePut;
 
 /**
  * Classe helper per la widget di erogazione contenuti in lista.
@@ -101,9 +102,9 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
     }
 
     @Override
-    @CachePut(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
+    @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
             key = "T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).buildCacheKey(#bean, #reqCtx)",
-            condition = "#bean.cacheable && !T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).isUserFilterExecuted(#bean)")
+            condition = "#result != null and #bean.cacheable and !T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).isUserFilterExecuted(#bean)")
     @CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentListCacheGroupsCsv(#bean, #reqCtx)", expiresInMinute = 30)
     public List<String> getContentsId(IContentListTagBean bean, RequestContext reqCtx) throws Throwable {
         this.releaseCache(bean, reqCtx);
@@ -284,7 +285,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
     public static String buildCacheKey(IContentListTagBean bean, RequestContext reqCtx) {
         UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
         Collection<String> userGroupCodes = getAllowedGroupCodes(currentUser);
-        return buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
+        return buildCacheKey(bean, userGroupCodes, reqCtx);
     }
 
     protected static String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
@@ -328,6 +329,70 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
         if (null != listName) {
             cacheKey.append("_LISTNAME").append(listName);
         }
+
+        return cacheKey.toString();
+    }
+
+    protected static String buildCacheKey(IContentListTagBean bean, Collection<String> userGroupCodes, RequestContext reqCtx) {
+        StringBuilder cacheKey = new StringBuilder();
+
+        Widget currentWidget = (null != reqCtx) ? (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET) : null;
+        ApsProperties config = (null != currentWidget) ? currentWidget.getConfig() : null;
+
+        if (null != config && bean.getContentType() != null && bean.getContentType().equals(config.getProperty(WIDGET_PARAM_CONTENT_TYPE))) {
+            List<String> paramKeys = new ArrayList(currentWidget.getConfig().keySet());
+            Collections.sort(paramKeys);
+            for (int i = 0; i < paramKeys.size(); i++) {
+                if (i == 0) {
+                    cacheKey.append("_WIDGETPARAM");
+                } else {
+                    cacheKey.append(",");
+                }
+                String paramkey = (String) paramKeys.get(i);
+                cacheKey.append(paramkey).append("=").append(currentWidget.getConfig().getProperty(paramkey));
+            }
+        }
+
+        if (null != bean.getContentType()) {
+            cacheKey.append("TYPE_").append(bean.getContentType());
+        }
+
+        if (null != reqCtx) {
+            Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+            if (null != currentLang) {
+                cacheKey.append("_LANG").append(currentLang.getCode()).append("_");
+            }
+        }
+        List<String> groupCodes = new ArrayList<String>(userGroupCodes);
+        if (!groupCodes.contains(Group.FREE_GROUP_NAME)) {
+            groupCodes.add(Group.FREE_GROUP_NAME);
+        }
+        Collections.sort(groupCodes);
+        for (String code : groupCodes) {
+            cacheKey.append("_").append(code);
+        }
+
+        if (null != bean.getCategories()) {
+            List<String> categoryCodes = Arrays.asList(bean.getCategories());
+            Collections.sort(categoryCodes);
+            for (int j = 0; j < categoryCodes.size(); j++) {
+                if (j == 0) {
+                    cacheKey.append("-CATEGORIES");
+                }
+                String code = categoryCodes.get(j);
+                cacheKey.append("_").append(code);
+            }
+        }
+        if (null != bean.getFilters()) {
+            for (int k = 0; k < bean.getFilters().length; k++) {
+                if (k == 0) {
+                    cacheKey.append("-FILTERS");
+                }
+                EntitySearchFilter filter = bean.getFilters()[k];
+                cacheKey.append("_").append(filter.toString());
+            }
+        }
+
         return cacheKey.toString();
     }
 
