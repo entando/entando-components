@@ -76,7 +76,7 @@ https://github.com/entando/entando-core and https://github.com/entando/entando-a
 
 For latest updated news, please visit the company websites: https://www.entando.com.
 
-Entando Components is released under [MIT license](https://opensource.org/licenses/MIT) v2.1.
+Entando Components are released under licenses as marked in the individual plugin projects.
 
 Enjoy!
 
