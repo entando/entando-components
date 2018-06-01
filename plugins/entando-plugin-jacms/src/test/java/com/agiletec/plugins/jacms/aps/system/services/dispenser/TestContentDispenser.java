@@ -23,7 +23,6 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
-import static junit.framework.Assert.assertEquals;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 
 /**
@@ -36,7 +35,7 @@ public class TestContentDispenser extends BaseTestCase {
         super.setUp();
         this.init();
     }
-
+    
     public void testGetRenderedContent_1() throws Throwable {
         RequestContext reqCtx = this.getRequestContext();
 
@@ -86,7 +85,7 @@ public class TestContentDispenser extends BaseTestCase {
         outputInfo = this._contentDispenser.getRenderizationInfo("ART122", 2, "en", reqCtx);
         assertEquals(this.replaceNewLine(_attendedEnART122_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
     }
-
+    
     public void testGetRenderedContent_3() throws Throwable {
         Content content = this._contentManager.loadContent("ART120", true);
         content.setId(null);
@@ -96,10 +95,13 @@ public class TestContentDispenser extends BaseTestCase {
             this._contentManager.insertOnLineContent(content);
             ContentRenderizationInfo outputInfo = this._contentDispenser.getRenderizationInfo(content.getId(), 2, "it", reqCtx);
             assertNotNull(outputInfo);
+            String cacheKey = BaseContentDispenser.getRenderizationInfoCacheKey(content.getId(), 2, "it", reqCtx);
+            this.waitNotifyingThread();
+            assertNotNull(this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, cacheKey));
             assertNotNull(this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + content.getId()));
             this._contentManager.insertOnLineContent(content);
             this.waitNotifyingThread();
-            assertNull(this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + content.getId()));
+            assertNull(this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, cacheKey));
         } catch (Throwable t) {
             throw t;
         } finally {
@@ -108,7 +110,7 @@ public class TestContentDispenser extends BaseTestCase {
             }
         }
     }
-
+    
     public void testGetRenderedContent_4() throws Throwable {
         String contentId = "ART120";
         String contentShapeModel = "title (Text): testo=$content.Titolo.getText()";
@@ -167,7 +169,7 @@ public class TestContentDispenser extends BaseTestCase {
         String output = _contentDispenser.getRenderedContent("ART1", 67, "en", reqCtx);
         assertEquals("Content model 67 undefined", output.trim());
     }
-
+    
     private String replaceNewLine(String input) {
         input = input.replaceAll("\\n", "");
         input = input.replaceAll("\\r", "");

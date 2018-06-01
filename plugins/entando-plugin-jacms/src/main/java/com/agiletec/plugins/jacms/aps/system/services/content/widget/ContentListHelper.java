@@ -104,7 +104,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
     @Override
     @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
             key = "T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).buildCacheKey(#bean, #reqCtx)",
-            condition = "#result != null and #bean.cacheable and !T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).isUserFilterExecuted(#bean)")
+            condition = "#bean.cacheable and !T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).isUserFilterExecuted(#bean)")
     @CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentListCacheGroupsCsv(#bean, #reqCtx)", expiresInMinute = 30)
     public List<String> getContentsId(IContentListTagBean bean, RequestContext reqCtx) throws Throwable {
         this.releaseCache(bean, reqCtx);
