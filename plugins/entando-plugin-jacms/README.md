@@ -19,3 +19,6 @@ In order to install the CMS plugin, you must insert the following dependency in 
 </dependency>
 ```
 
+**License
+LGPL v2.1
+
