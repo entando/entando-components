@@ -14,7 +14,6 @@
 package com.agiletec.plugins.jacms.aps.system.services.content.widget;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -48,7 +47,6 @@ import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.Filter
 
 /**
  * Classe helper per la widget di erogazione contenuti in lista.
- *
  * @author E.Santoboni
  */
 public class ContentListHelper extends BaseContentListHelper implements IContentListWidgetHelper {
@@ -79,7 +77,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
         Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
         return super.getFilter(contentType, bean, currentLang.getCode());
     }
-
+	
     /**
      * @deprecated From Entando 3.0 version 3.0.1. Use
      * getUserFilterOption(String, IEntityFilterBean, RequestContext) method
@@ -104,7 +102,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
     @Override
     @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
             key = "T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).buildCacheKey(#bean, #reqCtx)",
-            condition = "#bean.cacheable and !T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).isUserFilterExecuted(#bean)")
+            condition = "#bean.cacheable && !T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).isUserFilterExecuted(#bean)")
     @CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentListCacheGroupsCsv(#bean, #reqCtx)", expiresInMinute = 30)
     public List<String> getContentsId(IContentListTagBean bean, RequestContext reqCtx) throws Throwable {
         this.releaseCache(bean, reqCtx);
@@ -205,17 +203,17 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
             }
         }
         if (fullTextUserFilter != null && null != fullTextUserFilter.getFormFieldValues()) {
-            String word = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[0]);
-            Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-            List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(currentLang.getCode(), word, this.getAllowedGroups(reqCtx));
-            if (null != fullTextResult) {
-                return ListUtils.intersection(fullTextResult, masterContentsId);
-            } else {
-                return new ArrayList<String>();
-            }
-        } else {
-            return masterContentsId;
-        }
+			String word = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[0]);
+			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+			List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(currentLang.getCode(), word, this.getAllowedGroups(reqCtx));
+			if (null != fullTextResult) {
+				return ListUtils.intersection(fullTextResult, masterContentsId);
+			} else {
+				return new ArrayList<String>();
+			}
+		} else {
+			return masterContentsId;
+		}
     }
 
     protected String[] getCategories(String[] categories, ApsProperties config, List<UserFilterOptionBean> userFilters) {
@@ -285,26 +283,26 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
     public static String buildCacheKey(IContentListTagBean bean, RequestContext reqCtx) {
         UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
         Collection<String> userGroupCodes = getAllowedGroupCodes(currentUser);
-        return buildCacheKey(bean, userGroupCodes, reqCtx);
+        return buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
     }
-
-    protected static String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
+	
+	protected static String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
         IPage page = (null != reqCtx) ? (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE) : null;
         StringBuilder cacheKey = (null != page) ? new StringBuilder(page.getCode()) : new StringBuilder("NOTFOUND");
         Widget currentWidget = (null != reqCtx) ? (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET) : null;
         if (null != currentWidget && null != currentWidget.getType()) {
             cacheKey.append("_").append(currentWidget.getType().getCode());
         }
-        if (null != reqCtx) {
-            Integer frame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
-            if (null != frame) {
-                cacheKey.append("_").append(frame.intValue());
-            }
-            Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-            if (null != currentLang) {
-                cacheKey.append("_LANG").append(currentLang.getCode()).append("_");
-            }
-        }
+		if (null != reqCtx) {
+			Integer frame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
+			if (null != frame) {
+				cacheKey.append("_").append(frame.intValue());
+			}
+			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+			if (null != currentLang) {
+				cacheKey.append("_LANG").append(currentLang.getCode()).append("_");
+			}
+		}
         List<String> groupCodes = new ArrayList<String>(userGroupCodes);
         if (!groupCodes.contains(Group.FREE_GROUP_NAME)) {
             groupCodes.add(Group.FREE_GROUP_NAME);
@@ -329,70 +327,6 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
         if (null != listName) {
             cacheKey.append("_LISTNAME").append(listName);
         }
-
-        return cacheKey.toString();
-    }
-
-    protected static String buildCacheKey(IContentListTagBean bean, Collection<String> userGroupCodes, RequestContext reqCtx) {
-        StringBuilder cacheKey = new StringBuilder();
-
-        Widget currentWidget = (null != reqCtx) ? (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET) : null;
-        ApsProperties config = (null != currentWidget) ? currentWidget.getConfig() : null;
-
-        if (null != config && bean.getContentType() != null && bean.getContentType().equals(config.getProperty(WIDGET_PARAM_CONTENT_TYPE))) {
-            List<String> paramKeys = new ArrayList(currentWidget.getConfig().keySet());
-            Collections.sort(paramKeys);
-            for (int i = 0; i < paramKeys.size(); i++) {
-                if (i == 0) {
-                    cacheKey.append("_WIDGETPARAM");
-                } else {
-                    cacheKey.append(",");
-                }
-                String paramkey = (String) paramKeys.get(i);
-                cacheKey.append(paramkey).append("=").append(currentWidget.getConfig().getProperty(paramkey));
-            }
-        }
-
-        if (null != bean.getContentType()) {
-            cacheKey.append("TYPE_").append(bean.getContentType());
-        }
-
-        if (null != reqCtx) {
-            Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-            if (null != currentLang) {
-                cacheKey.append("_LANG").append(currentLang.getCode()).append("_");
-            }
-        }
-        List<String> groupCodes = new ArrayList<String>(userGroupCodes);
-        if (!groupCodes.contains(Group.FREE_GROUP_NAME)) {
-            groupCodes.add(Group.FREE_GROUP_NAME);
-        }
-        Collections.sort(groupCodes);
-        for (String code : groupCodes) {
-            cacheKey.append("_").append(code);
-        }
-
-        if (null != bean.getCategories()) {
-            List<String> categoryCodes = Arrays.asList(bean.getCategories());
-            Collections.sort(categoryCodes);
-            for (int j = 0; j < categoryCodes.size(); j++) {
-                if (j == 0) {
-                    cacheKey.append("-CATEGORIES");
-                }
-                String code = categoryCodes.get(j);
-                cacheKey.append("_").append(code);
-            }
-        }
-        if (null != bean.getFilters()) {
-            for (int k = 0; k < bean.getFilters().length; k++) {
-                if (k == 0) {
-                    cacheKey.append("-FILTERS");
-                }
-                EntitySearchFilter filter = bean.getFilters()[k];
-                cacheKey.append("_").append(filter.toString());
-            }
-        }
-
         return cacheKey.toString();
     }
 
@@ -427,7 +361,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
     protected String getUserFilterDateFormat() {
         return userFilterDateFormat;
     }
-
+    
     public void setUserFilterDateFormat(String userFilterDateFormat) {
         this.userFilterDateFormat = userFilterDateFormat;
     }
@@ -435,7 +369,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
     protected IEntitySearchEngineManager getSearchEngineManager() {
         return searchEngineManager;
     }
-
+    
     public void setSearchEngineManager(IEntitySearchEngineManager searchEngineManager) {
         this.searchEngineManager = searchEngineManager;
     }
