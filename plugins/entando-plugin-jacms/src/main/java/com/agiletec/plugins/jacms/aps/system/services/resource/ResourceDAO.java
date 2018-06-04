@@ -23,6 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -30,10 +33,8 @@ import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * Data Access Object per gli oggetti risorsa.
@@ -249,14 +250,12 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             conn = this.getConnection();
             stat = this.buildStatement(filters, categoryCode, groupCodes, conn);
             res = stat.executeQuery();
-
             while (res.next()) {
                 String id = res.getString(this.getMasterTableIdFieldName());
                 if (!resources.contains(id)) {
                     resources.add(id);
                 }
             }
-
         } catch (Throwable t) {
             _logger.error("Error loading resources id", t);
             throw new RuntimeException("Error loading resources id", t);
@@ -311,7 +310,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
      * @return Il record della risorsa.
      */
     @Override
-    @CachePut(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'jacms_resource_'.concat(#id)", condition = "null != #id")
+    @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'jacms_resource_'.concat(#id)", condition = "null != #id and null != #result")
     public ResourceRecordVO loadResourceVo(String id) {
         Connection conn = null;
         ResourceRecordVO resourceVo = null;
