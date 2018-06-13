@@ -1,0 +1,12 @@
+<roles>
+	<role>
+		<name>jacms:description</name>
+		<description>The Attribute that contains the main description of content</description>
+		<allowedTypes>Text,Monotext,Longtext</allowedTypes>
+	</role>
+	<role>
+		<name>jacms:friendlyCode</name>
+		<description>The Attribute that contains the friendly code for the content page</description>
+		<allowedTypes>Text,Monotext,Longtext</allowedTypes>
+	</role>
+</roles>

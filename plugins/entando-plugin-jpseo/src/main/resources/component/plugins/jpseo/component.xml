@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>jpseo</code>
+	<description>SEO</description>
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
+	<dependencies>
+		<code>jacms</code>
+	</dependencies>
+	<installation>
+		<tableMapping>
+			<datasource name="portDataSource">
+				<class>org.entando.entando.plugins.jpseo.aps.system.init.portdb.FriendlyCode</class>
+			</datasource>
+		</tableMapping>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpseo/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpseo/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+		<environment code="test">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpseo/port_data_test.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpseo/serv_data_test.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+</component>
