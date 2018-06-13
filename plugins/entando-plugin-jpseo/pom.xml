@@ -47,8 +47,8 @@
 	</build>
 
 	<dependencies>
-        
-		<!-- AOP dependency -->
+
+        <!-- AOP dependency -->
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
