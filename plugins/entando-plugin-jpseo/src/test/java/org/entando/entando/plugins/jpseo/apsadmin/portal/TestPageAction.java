@@ -62,10 +62,10 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 	}
 
 	public void testJoinGroupPageForAdminUser() throws Throwable {
-		String extraGroup = "administrators";
+		String extraGroup = Group.ADMINS_GROUP_NAME;
 		String selectedPageCode = "pagina_1";
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("extraGroupName", extraGroup);
+		Map<String, String> params = new HashMap<>();
+		params.put("extraGroupNameToAdd", extraGroup);
 
 		//add extra group
 		String result = this.executeActionOnPage(selectedPageCode, "admin", "joinExtraGroup", params);
@@ -75,6 +75,7 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 		assertTrue(hasExtraGroupAdministrators);
 
 		//remove extra group
+        params.put("extraGroupNameToRemove", extraGroup);
 		result = this.executeActionOnPage(selectedPageCode, "admin", "removeExtraGroup", params);
 		assertEquals(Action.SUCCESS, result);
 		action = (PageAction) this.getAction();
@@ -102,7 +103,7 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 		assertNull(this._pageManager.getOnlinePage(longPageCode));
 		try {
 			IPage root = this._pageManager.getOnlineRoot();
-			Map<String, String> params = new HashMap<String, String>();
+			Map<String, String> params = new HashMap<>();
 			params.put("strutsAction", String.valueOf(ApsAdminSystemConstants.ADD));
 			params.put("parentPageCode", root.getCode());
 			String result = this.executeSave(params, "admin");
@@ -148,10 +149,10 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 
 	public void testSavePage_1() throws Throwable {
 		String pageCode = "pagina_test";
-		assertNull(this._pageManager.getOnlinePage(pageCode));
+		assertNull(this._pageManager.getDraftPage(pageCode));
 		try {
-			IPage root = this._pageManager.getOnlineRoot();
-			Map<String, String> params = new HashMap<String, String>();
+			IPage root = this._pageManager.getDraftRoot();
+			Map<String, String> params = new HashMap<>();
 			params.put("strutsAction", String.valueOf(ApsAdminSystemConstants.ADD));
 			params.put("parentPageCode", root.getCode());
 			params.put("langit", "Pagina Test 1");
@@ -159,15 +160,15 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 			params.put("model", "home");
 			params.put("group", Group.FREE_GROUP_NAME);
 			params.put("pageCode", pageCode);
-			params.put(PageActionAspect.PARAM_FRIENDLY_CODE, "gimmelove");
+			params.put(PageActionAspect.PARAM_FRIENDLY_CODE, "friendly_code_test");
 			String result = this.executeSave(params, "admin");
 			assertEquals(Action.SUCCESS, result);
-			IPage addedPage = this._pageManager.getOnlinePage(pageCode);
+			IPage addedPage = this._pageManager.getDraftPage(pageCode);
 			assertNotNull(addedPage);
 			assertEquals("Pagina Test 1", addedPage.getTitles().getProperty("it"));
 			assertTrue(addedPage.getMetadata() instanceof SeoPageMetadata);
 			SeoPageMetadata addedSeoPage = (SeoPageMetadata) addedPage.getMetadata();
-			assertEquals("gimmelove", addedSeoPage.getFriendlyCode());
+			assertEquals("friendly_code_test", addedSeoPage.getFriendlyCode());
 		} catch (Throwable t) {
 			throw t;
 		} finally {
