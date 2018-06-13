@@ -78,7 +78,7 @@ the jsp of the WIDGET content_viewer must be changed as follows:
 
 <%@ taglib prefix="jpseo" uri="/jpseo-aps-core" %>
 
-** Modify the content tag **
+**Modify the content tag**
 
 substitute:
 ```
