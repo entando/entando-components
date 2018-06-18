@@ -35,5 +35,7 @@ public class JpseoSystemConstants {
 	public static final String EXTRAPAR_HIDDEN_CONTENT_ID = "jpseo:hiddenContentId";
 	
 	public static final String SEO_MAPPING_MANAGER = "jpseoSeoMappingManager";
+    
+    public static final String ROBOT_ALTERNATIVE_PATH_PARAM_NAME = "jpseo_robotFileAlternativePath";
 	
 }
