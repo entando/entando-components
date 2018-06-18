@@ -28,6 +28,8 @@
 	
 	<bean id="jpseoPageActionSettingsAspect" scope="prototype"
 			class="org.entando.entando.plugins.jpseo.apsadmin.portal.PageActionSettingsAspect">
+		<property name="storageManager" ref="StorageManager" />
+		<property name="configManager" ref="BaseConfigManager" />
 	</bean>
 	
 </beans>
