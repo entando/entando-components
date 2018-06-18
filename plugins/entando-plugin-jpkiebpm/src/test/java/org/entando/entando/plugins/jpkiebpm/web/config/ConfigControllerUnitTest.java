@@ -10,6 +10,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieConfigSe
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.model.DatatableWidgetConfigDto;
+import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
 import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigRequest;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -35,6 +36,9 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
 
     @Mock
     private IKieConfigService kieConfigService;
+
+    @Mock
+    private ConfigValidator configValidator;
 
     @Mock
     IKieFormManager kieFormManager;
