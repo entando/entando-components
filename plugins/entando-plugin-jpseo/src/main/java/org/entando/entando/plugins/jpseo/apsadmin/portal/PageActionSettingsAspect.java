@@ -52,6 +52,8 @@ public class PageActionSettingsAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(PageActionSettingsAspect.class);
 
+    public static final String ROBOT_FILENAME = "robot.txt";
+
     public static final String PARAM_ROBOT_CONTENT_CODE = "robotContent";
 
     public static final String PARAM_ROBOT_ALTERNATIVE_PATH_CODE = "robotFilePath";
@@ -70,10 +72,10 @@ public class PageActionSettingsAspect {
             String robotContent = "";
             String alternativePath = this.getConfigManager().getParam(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME);
             if (StringUtils.isEmpty(alternativePath)) {
-                if (this.getStorageManager().exists("robot.txt", false)) {
-                    robotContent = this.getStorageManager().readFile("robot.txt", false);
+                if (this.getStorageManager().exists(ROBOT_FILENAME, false)) {
+                    robotContent = this.getStorageManager().readFile(ROBOT_FILENAME, false);
                 } else {
-                    String message = "File 'robot.txt' does not exists";
+                    String message = "File '"+ROBOT_FILENAME+"' does not exists";
                     action.addFieldError(PARAM_ROBOT_CONTENT_CODE, message);
                 }
             } else {
@@ -87,7 +89,7 @@ public class PageActionSettingsAspect {
                 request.setAttribute(PARAM_ROBOT_ALTERNATIVE_PATH_CODE, alternativePath);
             }
         } catch (Exception e) {
-            logger.error("Error extracting robot.txt file content", e);
+            logger.error("Error extracting "+ROBOT_FILENAME+" file content", e);
         }
     }
     
@@ -129,9 +131,9 @@ public class PageActionSettingsAspect {
                         ? new ByteArrayInputStream(robotContent.getBytes("UTF-8")) : null;
                 if (StringUtils.isBlank(alternativePath)) {
                     if (null != is) {
-                        this.getStorageManager().saveFile("robot.txt", false, is);
+                        this.getStorageManager().saveFile(ROBOT_FILENAME, false, is);
                     } else {
-                        this.getStorageManager().deleteFile("robot.txt", false);
+                        this.getStorageManager().deleteFile(ROBOT_FILENAME, false);
                     }
                 } else {
                     if (null != is) {
