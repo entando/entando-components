@@ -52,7 +52,7 @@ public class PageActionSettingsAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(PageActionSettingsAspect.class);
 
-    public static final String ROBOT_FILENAME = "robot.txt";
+    public static final String ROBOT_FILENAME = "robots.txt";
 
     public static final String PARAM_ROBOT_CONTENT_CODE = "robotContent";
 
