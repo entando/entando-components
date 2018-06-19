@@ -21,10 +21,17 @@
  */
 package org.entando.entando.plugins.jpseo.apsadmin.portal;
 
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.apsadmin.portal.PageSettingsAction;
 import com.agiletec.apsadmin.system.BaseAction;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -32,9 +39,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
 import org.slf4j.Logger;
@@ -47,13 +54,13 @@ public class PageActionSettingsAspect {
 
     public static final String PARAM_ROBOT_CONTENT_CODE = "robotContent";
 
-    public static final String PARAM_ROBOT_ALTERNATIVE_PATH_CODE = "robotPath";
+    public static final String PARAM_ROBOT_ALTERNATIVE_PATH_CODE = "robotFilePath";
     
     private ConfigInterface configManager;
 
     private IStorageManager storageManager;
 
-    @After("execution(* com.agiletec.apsadmin.admin.BaseAdminAction.configSystemParams())")
+    @Before("execution(* com.agiletec.apsadmin.admin.BaseAdminAction.configSystemParams())")
     public void executeIntiConfig(JoinPoint joinPoint) {
         if (!(joinPoint.getTarget() instanceof PageSettingsAction)) {
             return;
@@ -65,6 +72,9 @@ public class PageActionSettingsAspect {
             if (StringUtils.isEmpty(alternativePath)) {
                 if (this.getStorageManager().exists("robot.txt", false)) {
                     robotContent = this.getStorageManager().readFile("robot.txt", false);
+                } else {
+                    String message = "File 'robot.txt' does not exists";
+                    action.addFieldError(PARAM_ROBOT_CONTENT_CODE, message);
                 }
             } else {
                 robotContent = this.readFile(alternativePath, action);
@@ -106,23 +116,76 @@ public class PageActionSettingsAspect {
     @Around("execution(* com.agiletec.apsadmin.portal.PageSettingsAction.updateSystemParamsForAjax())")
     public Object executeUpdateSystemParams(ProceedingJoinPoint joinPoint) {
         Object result = null;
-        System.out.println("USCITO DA EDIT");
         HttpServletRequest request = ServletActionContext.getRequest();
+        PageSettingsAction action = (PageSettingsAction) joinPoint.getTarget();
         try {
             result = joinPoint.proceed();
-        } catch (Throwable t) {
-            logger.error("error saving page for seo", t);
-        }
-        try {
             //se il salvataggio va a buon fine, aggiorna l'oggetto
             if (null != result && result instanceof String) {
-                // TODO
+                result = joinPoint.proceed();
+                String robotContent = request.getParameter(PARAM_ROBOT_CONTENT_CODE);
+                String alternativePath = request.getParameter(PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
+                InputStream is = (!StringUtils.isBlank(robotContent)) 
+                        ? new ByteArrayInputStream(robotContent.getBytes("UTF-8")) : null;
+                if (StringUtils.isBlank(alternativePath)) {
+                    if (null != is) {
+                        this.getStorageManager().saveFile("robot.txt", false, is);
+                    } else {
+                        this.getStorageManager().deleteFile("robot.txt", false);
+                    }
+                } else {
+                    if (null != is) {
+                        this.saveFile(alternativePath, is, action);
+                    } else {
+                        File file = new File(alternativePath);
+                        try {
+                            if (file.exists()) {
+                                file.delete();
+                            }
+                        } catch (Exception e) {
+                            logger.error("error deleting file {}", alternativePath);
+                        }
+                    }
+                }
+                String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
+                Map<String, String> systemParams = SystemParamsUtils.getParams(xmlParams);
+                if (!StringUtils.isEmpty(alternativePath)) {
+                    systemParams.put(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME, alternativePath);
+                } else {
+                    systemParams.remove(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME);
+                }
+                String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, systemParams, true);
+                this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
             }
         } catch (Throwable t) {
             logger.error("error updating page settings for seo", t);
             return BaseAction.FAILURE;
         }
         return result;
+    }
+    
+    private void saveFile(String filePath, InputStream is, PageSettingsAction action) throws IOException {
+        FileOutputStream outStream = null;
+        try {
+            byte[] buffer = new byte[1024];
+            int length = -1;
+            outStream = new FileOutputStream(filePath);
+            while ((length = is.read(buffer)) != -1) {
+                outStream.write(buffer, 0, length);
+                outStream.flush();
+            }
+        } catch (IOException t) {
+            String message = "Error saving File '" + filePath + "' - " + t.getMessage();
+            action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE, message);
+            logger.error("Error on saving file", t);
+        } finally {
+            if (null != outStream) {
+                outStream.close();
+            }
+            if (null != is) {
+                is.close();
+            }
+        }
     }
 
     protected ConfigInterface getConfigManager() {

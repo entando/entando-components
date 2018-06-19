@@ -25,7 +25,6 @@
 </div>
 </div>
 
-
 <div class="row">
 <%-- robotFilePath --%>
 <s:set var="fieldErrorsVar" value="%{fieldErrors['robotFilePath']}" />
@@ -37,7 +36,7 @@
         <s:text name="jpseo.label.robotFilePath" />
     </label>
     <div class="col-sm-10">
-        <wpsf:textfield name="robotFilePath" id="robotFilePath" value="%{#attr.robotContent}" cssClass="form-control" />
+        <wpsf:textfield name="robotFilePath" id="robotFilePath" value="%{#attr.robotFilePath}" cssClass="form-control" />
         <s:if test="#hasFieldErrorVar">
             <span class="help-block text-danger">
                 <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
