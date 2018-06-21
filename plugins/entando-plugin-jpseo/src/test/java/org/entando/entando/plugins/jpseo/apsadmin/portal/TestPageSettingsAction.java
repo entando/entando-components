@@ -55,20 +55,20 @@ public class TestPageSettingsAction extends ApsAdminBaseTestCase {
         try {
             this.setUserOnSession("admin");
             this.initAction("/do/Page", "updateSystemParams");
-            this.addParameter(PageActionSettingsAspect.PARAM_ROBOT_CONTENT_CODE, "Test content");
+            this.addParameter(PageSettingsActionAspect.PARAM_ROBOT_CONTENT_CODE, "Test content");
             String result = this.executeAction();
             assertEquals(Action.SUCCESS, result);
-            assertTrue(this.storageManager.exists(PageActionSettingsAspect.ROBOT_FILENAME, false));
+            assertTrue(this.storageManager.exists(PageSettingsActionAspect.ROBOT_FILENAME, false));
             assertNull(this.configManager.getParam(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME));
             
             this.initAction("/do/Page", "updateSystemParams");
-            this.addParameter(PageActionSettingsAspect.PARAM_ROBOT_CONTENT_CODE, "");
+            this.addParameter(PageSettingsActionAspect.PARAM_ROBOT_CONTENT_CODE, "");
             result = this.executeAction();
             assertEquals(Action.SUCCESS, result);
-            assertFalse(this.storageManager.exists(PageActionSettingsAspect.ROBOT_FILENAME, false));
+            assertFalse(this.storageManager.exists(PageSettingsActionAspect.ROBOT_FILENAME, false));
             assertNull(this.configManager.getParam(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME));
         } catch (Exception e) {
-            this.storageManager.deleteFile(PageActionSettingsAspect.ROBOT_FILENAME, false);
+            this.storageManager.deleteFile(PageSettingsActionAspect.ROBOT_FILENAME, false);
             throw e;
         }
 	}
@@ -78,8 +78,8 @@ public class TestPageSettingsAction extends ApsAdminBaseTestCase {
         try {
             this.setUserOnSession("admin");
             this.initAction("/do/Page", "updateSystemParams");
-            this.addParameter(PageActionSettingsAspect.PARAM_ROBOT_CONTENT_CODE, "test content");
-            this.addParameter(PageActionSettingsAspect.PARAM_ROBOT_ALTERNATIVE_PATH_CODE, path);
+            this.addParameter(PageSettingsActionAspect.PARAM_ROBOT_CONTENT_CODE, "test content");
+            this.addParameter(PageSettingsActionAspect.PARAM_ROBOT_ALTERNATIVE_PATH_CODE, path);
             String result = this.executeAction();
             assertEquals(Action.SUCCESS, result);
             File added = new File(path);
@@ -87,8 +87,8 @@ public class TestPageSettingsAction extends ApsAdminBaseTestCase {
             assertNotNull(this.configManager.getParam(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME));
             
             this.initAction("/do/Page", "updateSystemParams");
-            this.addParameter(PageActionSettingsAspect.PARAM_ROBOT_CONTENT_CODE, "");
-            this.addParameter(PageActionSettingsAspect.PARAM_ROBOT_ALTERNATIVE_PATH_CODE, path);
+            this.addParameter(PageSettingsActionAspect.PARAM_ROBOT_CONTENT_CODE, "");
+            this.addParameter(PageSettingsActionAspect.PARAM_ROBOT_ALTERNATIVE_PATH_CODE, path);
             result = this.executeAction();
             assertEquals(Action.SUCCESS, result);
             added = new File(path);

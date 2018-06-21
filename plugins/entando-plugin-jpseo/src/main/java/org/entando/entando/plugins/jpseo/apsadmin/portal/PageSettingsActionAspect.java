@@ -48,9 +48,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Aspect
-public class PageActionSettingsAspect {
+public class PageSettingsActionAspect {
 
-    private static final Logger logger = LoggerFactory.getLogger(PageActionSettingsAspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(PageSettingsActionAspect.class);
 
     public static final String ROBOT_FILENAME = "robots.txt";
 
@@ -63,12 +63,13 @@ public class PageActionSettingsAspect {
     private IStorageManager storageManager;
 
     @Before("execution(* com.agiletec.apsadmin.admin.BaseAdminAction.configSystemParams())")
-    public void executeIntiConfig(JoinPoint joinPoint) {
+    public void executeInitConfig(JoinPoint joinPoint) {
         if (!(joinPoint.getTarget() instanceof PageSettingsAction)) {
             return;
         }
         PageSettingsAction action = (PageSettingsAction) joinPoint.getTarget();
         try {
+            HttpServletRequest request = ServletActionContext.getRequest();
             String robotContent = "";
             String alternativePath = this.getConfigManager().getParam(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME);
             if (StringUtils.isEmpty(alternativePath)) {
@@ -79,9 +80,14 @@ public class PageActionSettingsAspect {
                     action.addFieldError(PARAM_ROBOT_CONTENT_CODE, message);
                 }
             } else {
-                robotContent = this.readFile(alternativePath, action);
+                String errorMessage = (String) request.getSession().getAttribute(PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
+                if (null != errorMessage) {
+                    action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE, errorMessage);
+                    request.getSession().removeAttribute(PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
+                } else {
+                    robotContent = this.readFile(alternativePath, action);
+                }
             }
-            HttpServletRequest request = ServletActionContext.getRequest();
             if (null != robotContent) {
                 request.setAttribute(PARAM_ROBOT_CONTENT_CODE, robotContent);
             }
