@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-bundles-parent</artifactId>
         <groupId>org.entando.entando.bundles</groupId>
-        <version>4.3.3-RC1</version>
+        <version>4.3.3</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-app-view-survey-default</artifactId>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jpsurvey</artifactId>
-            <version>4.3.3-RC1</version>
+            <version>4.3.3</version>
             <type>war</type>
         </dependency>
     </dependencies>
