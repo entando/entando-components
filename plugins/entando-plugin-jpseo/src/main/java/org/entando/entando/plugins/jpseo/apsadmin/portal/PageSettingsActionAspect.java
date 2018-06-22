@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -58,6 +59,10 @@ public class PageSettingsActionAspect {
 
     public static final String PARAM_ROBOT_ALTERNATIVE_PATH_CODE = "robotFilePath";
     
+    public static final String SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE = "robotFilePath_sessionParam";
+    
+    public static final String SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR = "robotFilePath_error_sessionParam";
+    
     private ConfigInterface configManager;
 
     private IStorageManager storageManager;
@@ -70,8 +75,12 @@ public class PageSettingsActionAspect {
         PageSettingsAction action = (PageSettingsAction) joinPoint.getTarget();
         try {
             HttpServletRequest request = ServletActionContext.getRequest();
+            HttpSession session = request.getSession();
             String robotContent = "";
-            String alternativePath = this.getConfigManager().getParam(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME);
+            String alternativePath = (String) session.getAttribute(SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
+            if (StringUtils.isEmpty(alternativePath)) {
+                alternativePath = this.getConfigManager().getParam(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME);
+            }
             if (StringUtils.isEmpty(alternativePath)) {
                 if (this.getStorageManager().exists(ROBOT_FILENAME, false)) {
                     robotContent = this.getStorageManager().readFile(ROBOT_FILENAME, false);
@@ -80,7 +89,7 @@ public class PageSettingsActionAspect {
                     action.addFieldError(PARAM_ROBOT_CONTENT_CODE, message);
                 }
             } else {
-                String errorMessage = (String) request.getSession().getAttribute(PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
+                String errorMessage = (String) session.getAttribute(SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR);
                 if (null != errorMessage) {
                     action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE, errorMessage);
                     request.getSession().removeAttribute(PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
@@ -88,6 +97,8 @@ public class PageSettingsActionAspect {
                     robotContent = this.readFile(alternativePath, action);
                 }
             }
+            session.removeAttribute(SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
+            session.removeAttribute(SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR);
             if (null != robotContent) {
                 request.setAttribute(PARAM_ROBOT_CONTENT_CODE, robotContent);
             }

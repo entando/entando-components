@@ -22,13 +22,9 @@
 package org.entando.entando.plugins.jpseo.apsadmin.portal;
 
 import com.agiletec.apsadmin.portal.PageSettingsAction;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
-import static org.entando.entando.plugins.jpseo.apsadmin.portal.PageSettingsActionAspect.PARAM_ROBOT_ALTERNATIVE_PATH_CODE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,16 +36,18 @@ public class SeoPageSettingsAction extends PageSettingsAction {
     private static final Logger logger = LoggerFactory.getLogger(SeoPageSettingsAction.class);
     
     public String setRobotsPath() {
-        String alternativePath = this.getRequest().getParameter(PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
+        String alternativePath = this.getRequest().getParameter(PageSettingsActionAspect.PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
         try {
+            HttpSession session = this.getRequest().getSession();
             this.initLocalMap();
             if (!isRightPath(alternativePath)) {
-                this.getRequest().getSession().setAttribute(PARAM_ROBOT_ALTERNATIVE_PATH_CODE, 
+                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR,
                         this.getText("jpseo.error.robotFilePath.invalid", new String[]{alternativePath}));
                 return SUCCESS;
             }
             if (!StringUtils.isBlank(alternativePath)) {
-                this.saveTempFile(INPUT);
+                this.checkPath(alternativePath);
+                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE, alternativePath);
             }
         } catch (Throwable t) {
             logger.error("error in setRobotsPath", t);
@@ -79,27 +77,22 @@ public class SeoPageSettingsAction extends PageSettingsAction {
         return true;
     }
     
-    private void saveTempFile(String filePath) throws IOException {
-        InputStream is = new ByteArrayInputStream("".getBytes("UTF-8"));
-        FileOutputStream outStream = null;
-        try {
-            byte[] buffer = new byte[1024];
-            int length = -1;
-            outStream = new FileOutputStream(filePath);
-            while ((length = is.read(buffer)) != -1) {
-                outStream.write(buffer, 0, length);
-                outStream.flush();
+    private void checkPath(String filePath) {
+        HttpSession session = this.getRequest().getSession();
+        File file = new File(filePath);
+        if (file.exists()) {
+            if (!file.canRead() || !file.canWrite()) {
+                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR, 
+                        "Non si hanno diritti sul file " + filePath);
             }
-        } catch (IOException t) {
-            String message = "Error saving File '" + filePath + "' - " + t.getMessage();
-            this.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE, message);
-            logger.error("Error on saving file", t);
-        } finally {
-            if (null != outStream) {
-                outStream.close();
-            }
-            if (null != is) {
-                is.close();
+        } else {
+            File directory = file.getParentFile();
+            if (!file.exists()) {
+                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR, 
+                        "La directory non esiste - " + directory.getAbsolutePath());
+            } else if (!directory.canRead() || !directory.canWrite()) {
+                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR, 
+                        "Non si hanno diritti sula directory " + directory.getAbsolutePath());
             }
         }
     }
