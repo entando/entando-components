@@ -44,6 +44,7 @@ public class DatatableWidgetConfigRequest {
     private String processId;
     private String knowledgeSourceId;
     private String group;
+    private String lang;
 
     public int getId() {
         return id;
@@ -131,6 +132,14 @@ public class DatatableWidgetConfigRequest {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 
 }

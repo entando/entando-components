@@ -61,7 +61,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public void init() {
-
+        setupConfig();
     }
 
     @PostConstruct

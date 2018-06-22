@@ -51,6 +51,8 @@ public class DatatableWidgetConfigDto {
     private String containerId;
     private String processId;
     private String knowledgeSourceId;
+    private String dataType;
+    private long dataUxId;
 
     public DatatableWidgetConfigDto(BpmWidgetInfo info) {
         this.id = info.getId();
@@ -149,6 +151,22 @@ public class DatatableWidgetConfigDto {
 
     public void setKnowledgeSourceId(String knowledgeSourceId) {
         this.knowledgeSourceId = knowledgeSourceId;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public long getDataUxId() {
+        return dataUxId;
+    }
+
+    public void setDataUxId(long dataUxId) {
+        this.dataUxId = dataUxId;
     }
 
     private Map<String, Map<String, String>> extractInfo(ApsProperties config) {

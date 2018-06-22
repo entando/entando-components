@@ -34,11 +34,13 @@ public interface IKieBpmService {
 
     public DatatableWidgetConfigDto getDataTableWIdgetConfig(int configId);
 
-    public DatatableWidgetConfigDto createDataTableWIdgetConfig(DatatableWidgetConfigRequest req);
-
     public DatatableWidgetConfigDto updateDataTableWIdgetConfig(DatatableWidgetConfigRequest req);
 
     public DatatableWidgetConfigDto deleteDataTableWIdgetConfig(int configId);
 
     public DatatableWidgetConfigDto chooseForm();
+
+    public DatatableWidgetConfigDto chooseProcessForm();
+
+    public DatatableWidgetConfigDto updateDataTypeWIdgetConfig(DatatableWidgetConfigRequest req);
 }

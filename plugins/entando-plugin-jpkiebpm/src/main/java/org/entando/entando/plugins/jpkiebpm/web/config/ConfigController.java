@@ -304,6 +304,26 @@ public class ConfigController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatypeWidget", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> createDataTypeWIdgetConfig(@RequestBody DatatableWidgetConfigRequest req) {
+
+        DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTypeWIdgetConfig(req);
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatypeWidget/{configId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> updateDataTypeWIdgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
+        if (configId != req.getId()) {
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(configId, "configId");
+            bindingResult.reject("2", new String[]{}, "parameters mismatch");
+            throw new ValidationGenericException(bindingResult);
+        }
+        DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTypeWIdgetConfig(req);
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/form", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> chooseForm() {
 
@@ -311,4 +331,11 @@ public class ConfigController {
         return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
     }
 
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatableWidget/processform", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> chooseProcessForm() {
+
+        DatatableWidgetConfigDto dto = this.getKieBpmService().chooseProcessForm();
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
 }
