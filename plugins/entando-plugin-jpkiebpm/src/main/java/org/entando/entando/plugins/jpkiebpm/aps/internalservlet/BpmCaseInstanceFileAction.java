@@ -74,7 +74,7 @@ public class BpmCaseInstanceFileAction extends BaseAction {
             } else {
 
                 //set the config to the first config in database
-                this.setKnowledgeSourceId(this.getCaseManager().loadFirstConfigurations().getId());
+                this.setKnowledgeSourceId(this.getCaseManager().getConfig().getId());
                 this.setContainerid(this.getCaseManager().getContainersList().get(0).getContainerId());
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
                 this.setChannelPath(this.getChannel());
@@ -102,7 +102,6 @@ public class BpmCaseInstanceFileAction extends BaseAction {
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
 
 //                System.out.println("adding role " + this.getChannelPath() + " - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getData());
-
                 this.getCaseManager().postCaseFile(this.getContainerid(), this.getCasePath(), this.getData());
                 this.setCasefile(this.getCaseManager().getCaseFile(this.getContainerid(), this.getCasePath()).toString());
             }
@@ -124,7 +123,6 @@ public class BpmCaseInstanceFileAction extends BaseAction {
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
 
 //                System.out.println("Deleteing data " + this.getChannelPath() + " - " + this.getContainerid() + " - " + this.getCasePath() + " - " + this.getDataId());
-
                 this.getCaseManager().deleteCaseFile(this.getContainerid(), this.getCasePath(), this.getDataId());
                 this.setCasefile(this.getCaseManager().getCaseFile(this.getContainerid(), this.getCasePath()).toString());
             }

@@ -71,7 +71,7 @@ public class BpmCaseInstanceDetailsAction extends BaseAction {
             } else {
 
                 //set the config to the first config in database
-                this.setKnowledgeSourceId(this.getCaseManager().loadFirstConfigurations().getId());
+                this.setKnowledgeSourceId(this.getCaseManager().getConfig().getId());
                 this.setContainerid(this.getCaseManager().getContainersList().get(0).getContainerId());
 
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
