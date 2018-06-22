@@ -83,16 +83,16 @@ public class SeoPageSettingsAction extends PageSettingsAction {
         if (file.exists()) {
             if (!file.canRead() || !file.canWrite()) {
                 session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR, 
-                        "Non si hanno diritti sul file " + filePath);
+                        this.getText("jpseo.error.robotFilePath.file.requiredAuth", new String[]{filePath}));
             }
         } else {
             File directory = file.getParentFile();
-            if (!file.exists()) {
+            if (!directory.exists()) {
                 session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR, 
-                        "La directory non esiste - " + directory.getAbsolutePath());
+                        this.getText("jpseo.error.robotFilePath.directory.notExists", new String[]{directory.getAbsolutePath()}));
             } else if (!directory.canRead() || !directory.canWrite()) {
                 session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR, 
-                        "Non si hanno diritti sula directory " + directory.getAbsolutePath());
+                        this.getText("jpseo.error.robotFilePath.directory.requiredAuth", new String[]{directory.getAbsolutePath()}));
             }
         }
     }
