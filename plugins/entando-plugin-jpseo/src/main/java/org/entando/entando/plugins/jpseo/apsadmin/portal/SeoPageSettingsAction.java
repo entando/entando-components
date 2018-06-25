@@ -32,15 +32,15 @@ import org.slf4j.LoggerFactory;
  * @author E.Santoboni
  */
 public class SeoPageSettingsAction extends PageSettingsAction {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(SeoPageSettingsAction.class);
-    
+
     public String setRobotsPath() {
         String alternativePath = this.getRequest().getParameter(PageSettingsActionAspect.PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
         try {
             HttpSession session = this.getRequest().getSession();
             this.initLocalMap();
-            if (!isRightPath(alternativePath)) {
+            if (!PageSettingsUtils.isRightPath(alternativePath)) {
                 session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR,
                         this.getText("jpseo.error.robotFilePath.invalid", new String[]{alternativePath}));
                 return SUCCESS;
@@ -60,41 +60,25 @@ public class SeoPageSettingsAction extends PageSettingsAction {
         }
         return SUCCESS;
     }
-    
-    protected static boolean isRightPath(String alternativePath) {
-        String rapLowerCase = alternativePath.toLowerCase();
-        if (rapLowerCase.contains("web-inf")
-                || rapLowerCase.contains("meta-inf")
-                || rapLowerCase.contains("../")
-                || rapLowerCase.contains("%2e%2e%2f")
-                || rapLowerCase.contains("<")
-                || rapLowerCase.endsWith("%3c")
-                || rapLowerCase.endsWith("%00")
-                || rapLowerCase.endsWith("'")
-                || rapLowerCase.endsWith("\"")) {
-            return false;
-        }
-        return true;
-    }
-    
+
     private void checkPath(String filePath) {
         HttpSession session = this.getRequest().getSession();
         File file = new File(filePath);
         if (file.exists()) {
             if (!file.canRead() || !file.canWrite()) {
-                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR, 
+                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR,
                         this.getText("jpseo.error.robotFilePath.file.requiredAuth", new String[]{filePath}));
             }
         } else {
             File directory = file.getParentFile();
             if (!directory.exists()) {
-                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR, 
+                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR,
                         this.getText("jpseo.error.robotFilePath.directory.notExists", new String[]{directory.getAbsolutePath()}));
             } else if (!directory.canRead() || !directory.canWrite()) {
-                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR, 
+                session.setAttribute(PageSettingsActionAspect.SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR,
                         this.getText("jpseo.error.robotFilePath.directory.requiredAuth", new String[]{directory.getAbsolutePath()}));
             }
         }
     }
-    
+
 }
