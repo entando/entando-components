@@ -26,6 +26,7 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.apsadmin.portal.PageSettingsAction;
 import com.agiletec.apsadmin.system.BaseAction;
+import com.opensymphony.xwork2.ActionSupport;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,11 +59,11 @@ public class PageSettingsActionAspect {
     public static final String PARAM_ROBOT_CONTENT_CODE = "robotContent";
 
     public static final String PARAM_ROBOT_ALTERNATIVE_PATH_CODE = "robotFilePath";
-    
+
     public static final String SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE = "robotFilePath_sessionParam";
-    
+
     public static final String SESSION_PARAM_ROBOT_ALTERNATIVE_PATH_CODE_ERROR = "robotFilePath_error_sessionParam";
-    
+
     private ConfigInterface configManager;
 
     private IStorageManager storageManager;
@@ -85,7 +86,7 @@ public class PageSettingsActionAspect {
                 if (this.getStorageManager().exists(ROBOT_FILENAME, false)) {
                     robotContent = this.getStorageManager().readFile(ROBOT_FILENAME, false);
                 } else {
-                    String message = "File '"+ROBOT_FILENAME+"' does not exists";
+                    String message = "File '" + ROBOT_FILENAME + "' does not exists";
                     action.addFieldError(PARAM_ROBOT_CONTENT_CODE, message);
                 }
             } else {
@@ -93,7 +94,10 @@ public class PageSettingsActionAspect {
                 if (null != errorMessage) {
                     action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE, errorMessage);
                     request.getSession().removeAttribute(PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
-                } else {
+                } else if (!PageSettingsUtils.isRightPath(alternativePath)) {
+                    action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE,
+                            action.getText("jpseo.error.robotFilePath.invalid", new String[]{alternativePath}));
+                } else if (this.checkPath(alternativePath, action)) {
                     robotContent = this.readFile(alternativePath, action);
                 }
             }
@@ -106,12 +110,35 @@ public class PageSettingsActionAspect {
                 request.setAttribute(PARAM_ROBOT_ALTERNATIVE_PATH_CODE, alternativePath);
             }
         } catch (Exception e) {
-            logger.error("Error extracting "+ROBOT_FILENAME+" file content", e);
+            logger.error("Error extracting " + ROBOT_FILENAME + " file content", e);
         }
     }
-    
+
+    private boolean checkPath(String alternativePath, ActionSupport action) {
+        File file = new File(alternativePath);
+        if (file.exists()) {
+            if (!file.canRead() || !file.canWrite()) {
+                action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE,
+                        action.getText("jpseo.error.robotFilePath.file.requiredAuth", new String[]{alternativePath}));
+                return false;
+            }
+        } else {
+            File directory = file.getParentFile();
+            if (!directory.exists()) {
+                action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE,
+                        action.getText("jpseo.error.robotFilePath.directory.notExists", new String[]{directory.getAbsolutePath()}));
+                return false;
+            } else if (!directory.canRead() || !directory.canWrite()) {
+                action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE,
+                        action.getText("jpseo.error.robotFilePath.directory.requiredAuth", new String[]{directory.getAbsolutePath()}));
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected String readFile(String path, PageSettingsAction action) {
-		try {
+        try {
             File file = new File(path);
             if (file.exists()) {
                 return FileUtils.readFileToString(file, CharEncoding.UTF_8);
@@ -119,19 +146,19 @@ public class PageSettingsActionAspect {
                 String message = "File '" + path + "' does not exists";
                 action.addFieldError(PARAM_ROBOT_CONTENT_CODE, message);
             }
-		} catch (Throwable t) {
-			logger.error("Error reading File with path {}", path, t);
+        } catch (Throwable t) {
+            logger.error("Error reading File with path {}", path, t);
             String message = "Error reading File with path " + path + " - " + t.getMessage();
             action.addFieldError(PARAM_ROBOT_CONTENT_CODE, message);
-		}
+        }
         return "";
-	}
-    
+    }
+
     @Around("execution(* com.agiletec.apsadmin.portal.PageSettingsAction.updateSystemParams())")
     public Object executeUpdateSystemParamsForAjax(ProceedingJoinPoint joinPoint) {
         return executeUpdateSystemParams(joinPoint);
     }
-    
+
     @Around("execution(* com.agiletec.apsadmin.portal.PageSettingsAction.updateSystemParamsForAjax())")
     public Object executeUpdateSystemParams(ProceedingJoinPoint joinPoint) {
         Object result = null;
@@ -144,16 +171,21 @@ public class PageSettingsActionAspect {
                 result = joinPoint.proceed();
                 String robotContent = request.getParameter(PARAM_ROBOT_CONTENT_CODE);
                 String alternativePath = request.getParameter(PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
-                InputStream is = (!StringUtils.isBlank(robotContent)) 
+                InputStream is = (!StringUtils.isBlank(robotContent))
                         ? new ByteArrayInputStream(robotContent.getBytes("UTF-8")) : null;
                 if (StringUtils.isBlank(alternativePath)) {
+                    //default PATH
                     if (null != is) {
                         this.getStorageManager().saveFile(ROBOT_FILENAME, false, is);
                     } else {
                         this.getStorageManager().deleteFile(ROBOT_FILENAME, false);
                     }
-                } else {
+                } else if (!PageSettingsUtils.isRightPath(alternativePath)) {
+                    action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE,
+                            action.getText("jpseo.error.robotFilePath.invalid", new String[]{alternativePath}));
+                } else if (this.checkPath(alternativePath, action)) {
                     if (null != is) {
+                        //alternativePath and string
                         this.saveFile(alternativePath, is, action);
                     } else {
                         File file = new File(alternativePath);
@@ -182,7 +214,7 @@ public class PageSettingsActionAspect {
         }
         return result;
     }
-    
+
     private void saveFile(String filePath, InputStream is, PageSettingsAction action) throws IOException {
         FileOutputStream outStream = null;
         try {
@@ -210,7 +242,7 @@ public class PageSettingsActionAspect {
     protected ConfigInterface getConfigManager() {
         return configManager;
     }
-    
+
     public void setConfigManager(ConfigInterface configManager) {
         this.configManager = configManager;
     }
@@ -222,5 +254,5 @@ public class PageSettingsActionAspect {
     public void setStorageManager(IStorageManager storageManager) {
         this.storageManager = storageManager;
     }
-    
+
 }
