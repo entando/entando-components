@@ -1,7 +1,7 @@
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-login_form_inspinia', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Dropdown Sign In</property>
-<property key="it">Dropdown Sign In</property>
+<property key="en">Dropdown Sign In (INSPINIA)</property>
+<property key="it">Dropdown Sign In (INSPINIA)</property>
 </properties>', NULL, NULL, NULL, NULL, 1, NULL);
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-login_form_inspinia', 'entando-widget-login_form_inspinia', NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
