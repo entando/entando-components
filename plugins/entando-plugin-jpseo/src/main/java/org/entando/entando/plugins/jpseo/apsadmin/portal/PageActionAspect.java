@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +55,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.entando.entando.plugins.jpseo.aps.system.services.mapping.FriendlyCodeVO;
 import org.entando.entando.plugins.jpseo.aps.system.services.mapping.ISeoMappingManager;
+import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoComplexParameterDOM;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +107,7 @@ public class PageActionAspect {
             SeoPageMetadata pageMetadata = (SeoPageMetadata) page.getMetadata();
             request.setAttribute(PARAM_FRIENDLY_CODE, pageMetadata.getFriendlyCode());
             request.setAttribute(PARAM_USE_EXTRA_DESCRIPTIONS, pageMetadata.isUseExtraDescriptions());
-            request.setAttribute(PARAM_XML_CONFIG, pageMetadata.getXmlConfig());
+            request.setAttribute(PARAM_XML_CONFIG, new SeoComplexParameterDOM().extractXml(pageMetadata.getComplexParameters()));
             ApsProperties props = pageMetadata.getDescriptions();
             if (null != props) {
                 Iterator<Object> it = props.keySet().iterator();
@@ -218,7 +220,7 @@ public class PageActionAspect {
         }
         return valid;
     }
-    
+
     @Around("execution(* com.agiletec.apsadmin.portal.PageAction.saveAndConfigure())")
     public Object executeUpdateAfterSaveAndConfigure(ProceedingJoinPoint joinPoint) {
         return this.executeUpdateAfterSave(joinPoint);
@@ -273,7 +275,8 @@ public class PageActionAspect {
             SeoPageMetadata pageMetadata = (SeoPageMetadata) page.getMetadata();
             pageMetadata.setFriendlyCode(friendlyCode);
             pageMetadata.setDescriptions(descriptions);
-            pageMetadata.setXmlConfig(xmlConfig);
+            Map<String, Object> complexParameters = (new SeoComplexParameterDOM().extractComplexParameters(xmlConfig));
+            pageMetadata.setComplexParameters(complexParameters);
             pageMetadata.setUpdatedAt(new Date());
             pageMetadata.setUseExtraDescriptions(null != request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS) && request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS).equalsIgnoreCase("true"));
         }
