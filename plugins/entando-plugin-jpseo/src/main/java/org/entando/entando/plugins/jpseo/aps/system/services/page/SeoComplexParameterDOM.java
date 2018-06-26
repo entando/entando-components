@@ -23,7 +23,6 @@
  */
 package org.entando.entando.plugins.jpseo.aps.system.services.page;
 
-import com.agiletec.aps.util.ApsProperties;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
@@ -68,25 +67,7 @@ public class SeoComplexParameterDOM {
         }
         Document doc = this.decodeComplexParameterDOM(xmlConfig);
         List<Element> elements = doc.getRootElement().getChildren("parameter");
-        for (int i = 0; i < elements.size(); i++) {
-            Element paramElement = elements.get(i);
-            String paramKey = paramElement.getAttributeValue("key");
-            List<Element> langElements = paramElement.getChildren("property");
-            if (null != langElements && langElements.size() > 0) {
-                ApsProperties properties = new ApsProperties();
-                for (int j = 0; j < langElements.size(); j++) {
-                    Element langElement = langElements.get(j);
-                    String propertyKey = langElement.getAttributeValue("key");
-                    String propertyValue = langElement.getText();
-                    properties.setProperty(propertyKey, propertyValue);
-                }
-                complexParameters.put(paramKey, properties);
-            } else {
-                String paramValue = paramElement.getText();
-                complexParameters.put(paramKey, paramValue);
-            }
-        }
-        return complexParameters;
+        return new SeoPageExtraConfigDOM().extractComplexParameters(elements);
     }
 
     private Document decodeComplexParameterDOM(String xml) {
