@@ -111,7 +111,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
         return this.extractComplexParameters(elements);
     }
 
-    private Map<String, Object> extractComplexParameters(List<Element> elements) {
+    protected Map<String, Object> extractComplexParameters(List<Element> elements) {
         Map<String, Object> complexParameters = new HashMap<>();
         if (null == elements) {
             return complexParameters;
