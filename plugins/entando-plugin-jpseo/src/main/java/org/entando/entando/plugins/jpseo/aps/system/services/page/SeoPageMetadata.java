@@ -61,14 +61,6 @@ public class SeoPageMetadata extends PageMetadata {
         this._friendlyCode = friendlyCode;
     }
 
-    public String getXmlConfig() {
-        return _xmlConfig;
-    }
-
-    public void setXmlConfig(String xmlConfig) {
-        this._xmlConfig = xmlConfig;
-    }
-
     public Map<String, Object> getComplexParameters() {
         return _complexParameters;
     }
@@ -105,11 +97,6 @@ public class SeoPageMetadata extends PageMetadata {
                 || (null != other.getDescriptions() && null != this.getDescriptions()) && !other.getDescriptions().equals(this.getDescriptions())) {
             return false;
         }
-        if ((null != other.getXmlConfig() && null == this.getXmlConfig())
-                || (null == other.getXmlConfig() && null != this.getXmlConfig())
-                || (null != other.getXmlConfig() && null != this.getXmlConfig()) && !other.getXmlConfig().equals(this.getXmlConfig())) {
-            return false;
-        }
         return true;
     }
 
@@ -118,7 +105,6 @@ public class SeoPageMetadata extends PageMetadata {
 
     private String _friendlyCode;
 
-    private String _xmlConfig;
     private Map<String, Object> _complexParameters;
 
 }
