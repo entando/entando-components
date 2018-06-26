@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    
+    <package name="jpseo_do/Page" namespace="/do/Page" extends="entando-default">
+        
+        <action name="setRobotsPath" class="jpseoPageSettingsAction" method="setRobotsPath">
+            <result type="redirectAction">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">systemParams</param>
+            </result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+            <interceptor-ref name="redirectMessage" />
+        </action>
+        
+    </package>
+
+</struts>
