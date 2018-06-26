@@ -33,6 +33,11 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.KIE_SERVER_BASE_URL;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.KIE_SERVER_PASSWORD;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.KIE_SERVER_USERNAME;
+
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.*;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.plugins.jpkiebpm.KieTestParameters;
@@ -54,6 +59,7 @@ import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
  * @author Entando
  */
 public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTestParameters {
+
 
     @Override
     public void setUp() throws Exception {
@@ -122,9 +128,9 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
     }
     public void testDefaultConfigFromEnvironment() throws ApsSystemException {
         try {
-            System.setProperty("KIE_SERVER_BASE_URL", "http://someserver.somehost.com:9090/somecontxt");
-            System.setProperty("KIE_SERVER_PASSWORD","P@ssword");
-            System.setProperty("KIE_SERVER_USERNAME", "johnnie");
+            System.setProperty(KIE_SERVER_BASE_URL, "http://someserver.somehost.com:9090/somecontxt");
+            System.setProperty(KIE_SERVER_PASSWORD,"P@ssword");
+            System.setProperty(KIE_SERVER_USERNAME, "johnnie");
             ((KieFormManager)_formManager).setupConfig();
             KieBpmConfig cfg = _formManager.getConfig();
 
@@ -138,9 +144,9 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
             assertEquals("somecontxt", cfg.getWebapp());
             assertEquals((Integer) 5000, cfg.getTimeoutMsec());
         }finally{
-            System.getProperties().remove("KIE_SERVER_URL");
-            System.getProperties().remove("KIE_SERVER_PASSWORD");
-            System.getProperties().remove("KIE_SERVER_USERNAME");
+            System.getProperties().remove(KIE_SERVER_BASE_URL);
+            System.getProperties().remove(KIE_SERVER_PASSWORD);
+            System.getProperties().remove(KIE_SERVER_USERNAME);
             _formManager.deleteConfig("environment-based-kie-config-#0001");
             ((KieFormManager)_formManager).setupConfig();
             KieBpmConfig cfg = _formManager.getConfig();

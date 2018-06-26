@@ -6,10 +6,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class EnvironmentBasedConfigHelper {
+
+    public static final String KIE_SERVER_BASE_URL = "KIE_SERVER_BASE_URL";
+    public static final String KIE_SERVER_USERNAME = "KIE_SERVER_USERNAME";
+    public static final String KIE_SERVER_PASSWORD = "KIE_SERVER_PASSWORD";
+
     public static KieBpmConfig fromEnvironment(){
-        String kieServerUrl = resolve("KIE_SERVER_BASE_URL");
-        String kieServerUsername = resolve("KIE_SERVER_USERNAME");
-        String kieServerPassword = resolve("KIE_SERVER_PASSWORD");
+        String kieServerUrl = resolve(KIE_SERVER_BASE_URL);
+        String kieServerUsername = resolve(KIE_SERVER_USERNAME);
+        String kieServerPassword = resolve(KIE_SERVER_PASSWORD);
         if(isNotEmpty(kieServerPassword) && isNotEmpty(kieServerUsername) && isNotEmpty(kieServerUrl)){
             try {
                 URL url = new URL(kieServerUrl);
