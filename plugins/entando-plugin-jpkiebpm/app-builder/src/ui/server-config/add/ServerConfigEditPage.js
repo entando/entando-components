@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { Row, Col, Grid, Breadcrumb } from 'patternfly-react';
-import { BreadcrumbItem } from 'frontend-common-components';
 
 import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
 import ServerConfigFormContainer from 'ui/server-config/common/ServerConfigFormContainer';
@@ -22,18 +21,18 @@ class ServerConfigEditPage extends Component {
         <Row>
           <Col xs={12}>
             <Breadcrumb>
-              <BreadcrumbItem>
+              <Breadcrumb.Item>
                 <FormattedMessage id="menu.integration" />
-              </BreadcrumbItem>
-              <BreadcrumbItem>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
                 <FormattedMessage id="menu.components" />
-              </BreadcrumbItem>
-              <BreadcrumbItem>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
                 <FormattedMessageLocal id="plugin.title" />
-              </BreadcrumbItem>
-              <BreadcrumbItem active>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item active>
                 <FormattedMessageLocal id="plugin.bpmSetting" />
-              </BreadcrumbItem>
+              </Breadcrumb.Item>
             </Breadcrumb>
           </Col>
         </Row>
