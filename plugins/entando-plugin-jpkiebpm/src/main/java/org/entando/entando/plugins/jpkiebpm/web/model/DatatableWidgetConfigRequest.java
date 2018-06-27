@@ -142,4 +142,9 @@ public class DatatableWidgetConfigRequest {
         this.lang = lang;
     }
 
+    @Override
+    public String toString() {
+        return "DatatableWidgetConfigRequest:{" + "id=" + id + ", informationOnline=" + informationOnline + ", informationDraft=" + informationDraft + ", widgetType=" + widgetType + ", pageCode=" + pageCode + ", framePosOnline=" + framePosOnline + ", framePosDraft=" + framePosDraft + ", containerId=" + containerId + ", processId=" + processId + ", knowledgeSourceId=" + knowledgeSourceId + ", group=" + group + ", lang=" + lang + '}';
+    }
+
 }
