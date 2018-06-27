@@ -19,23 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpseo.aps.system;
+package org.entando.entando.plugins.jpseo.apsadmin.portal;
 
-/**
- * @author E.Santoboni
- */
-public class JpseoSystemConstants {
-	
-	public static final String ATTRIBUTE_ROLE_FRIENDLY_CODE = "jacms:friendlyCode";
-	
-	public static final String ATTRIBUTE_ROLE_DESCRIPTION = "jacms:description";
-	
-	public static final String EXTRAPAR_EXTRA_PAGE_DESCRIPTIONS = "jpseo:extraPageDescriptions";
-	
-	public static final String EXTRAPAR_HIDDEN_CONTENT_ID = "jpseo:hiddenContentId";
-	
-	public static final String SEO_MAPPING_MANAGER = "jpseoSeoMappingManager";
-    
-    public static final String ROBOT_ALTERNATIVE_PATH_PARAM_NAME = "jpseo_robotFileAlternativePath";
-	
+public class PageSettingsUtils {
+
+    protected static boolean isRightPath(String alternativePath) {
+        String rapLowerCase = alternativePath.toLowerCase();
+        if (rapLowerCase.contains("web-inf")
+                || rapLowerCase.contains("meta-inf")
+                || rapLowerCase.contains("../")
+                || rapLowerCase.contains("%2e%2e%2f")
+                || rapLowerCase.contains("<")
+                || rapLowerCase.endsWith("%3c")
+                || rapLowerCase.endsWith("%00")
+                || rapLowerCase.endsWith("'")
+                || rapLowerCase.endsWith("\"")) {
+            return false;
+        }
+        return true;
+    }
+
 }

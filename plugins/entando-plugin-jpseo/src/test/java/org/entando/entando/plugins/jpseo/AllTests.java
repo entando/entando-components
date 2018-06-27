@@ -27,6 +27,7 @@ import junit.framework.TestSuite;
 
 import org.entando.entando.plugins.jpseo.apsadmin.content.TestContentAction;
 import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageAction;
+import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageSettingsAction;
 
 public class AllTests {
 	
@@ -35,6 +36,7 @@ public class AllTests {
         
 		suite.addTestSuite(TestContentAction.class);
 		suite.addTestSuite(TestPageAction.class);
+		suite.addTestSuite(TestPageSettingsAction.class);
         
 		return suite;
 	}
