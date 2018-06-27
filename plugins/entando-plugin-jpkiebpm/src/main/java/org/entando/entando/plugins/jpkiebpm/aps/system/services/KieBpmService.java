@@ -33,20 +33,28 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
+import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
@@ -78,7 +86,13 @@ public class KieBpmService implements IKieBpmService {
     private final String PREFIX_OVERRIDE = "override_";
     private final String PREFIX_POSITION = "position_";
 
-    public static final String PROP_NAME_WIDGET_INFO_ID = KieBpmSystemConstants.WIDGET_PARAM_INFO_ID;//"widgetInfoId";
+    private static final String ERRCODE_PAGE_NOT_FOUND = "1";
+    private static final String ERRCODE_FRAME_INVALID = "2";
+    private static final String ERRCODE_WIDGET_INVALID = "4";
+
+    public static final String PROP_NAME_WIDGET_INFO_ID = KieBpmSystemConstants.WIDGET_PARAM_INFO_ID;
+    public static final String PROP_NAME_DATA_UX_ID = KieBpmSystemConstants.WIDGET_PARAM_DATA_UX_ID;
+    public static final String PROP_NAME_DATA_TYPE = KieBpmSystemConstants.WIDGET_PARAM_DATA_TYPE_CODE;
 
     protected final String PROP_PROCESS_ID = KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID;
     protected final String PROP_CONTAINER_ID = KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID;
@@ -107,6 +121,12 @@ public class KieBpmService implements IKieBpmService {
 
     @Autowired
     private ILangManager langManager;
+
+    @Autowired
+    private IPageManager pageManager;
+
+    @Autowired
+    private IWidgetTypeManager widgetTypeManager;
 
     @Autowired
     private IDtoBuilder<BpmWidgetInfo, DatatableWidgetConfigDto> dtoBuilder;
@@ -159,6 +179,22 @@ public class KieBpmService implements IKieBpmService {
         this.langManager = langManager;
     }
 
+    public IPageManager getPageManager() {
+        return pageManager;
+    }
+
+    public void setPageManager(IPageManager pageManager) {
+        this.pageManager = pageManager;
+    }
+
+    public IWidgetTypeManager getWidgetTypeManager() {
+        return widgetTypeManager;
+    }
+
+    public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
+        this.widgetTypeManager = widgetTypeManager;
+    }
+
     public IDtoBuilder<BpmWidgetInfo, DatatableWidgetConfigDto> getDtoBuilder() {
         return dtoBuilder;
     }
@@ -190,7 +226,9 @@ public class KieBpmService implements IKieBpmService {
     public DatatableWidgetConfigDto updateDataTableWIdgetConfig(DatatableWidgetConfigRequest req) {
         try {
             BpmWidgetInfo info = this.storeWidgetInfo(req);
-            return this.getDtoBuilder().convert(info);
+            DatatableWidgetConfigDto dto = this.getDtoBuilder().convert(info);
+            this.updateWidgetConfiguration(dto);
+            return dto;
         } catch (Throwable t) {
             logger.error("error in updating widget config", t);
             throw new RestServerError("error in updating widget config", t);
@@ -202,7 +240,9 @@ public class KieBpmService implements IKieBpmService {
         try {
             BpmWidgetInfo info = this.getBpmWidgetInfoManager().getBpmWidgetInfo(configId);
             this.getBpmWidgetInfoManager().deleteBpmWidgetInfo(configId);
-            return this.getDtoBuilder().convert(info);
+            DatatableWidgetConfigDto dto = this.getDtoBuilder().convert(info);
+            this.deleteWidgetConfiguration(dto.getPageCode(), dto.getFramePosDraft());
+            return dto;
         } catch (Throwable t) {
             logger.error("error in config delete", t);
             throw new RestServerError("error in config delete", t);
@@ -219,6 +259,7 @@ public class KieBpmService implements IKieBpmService {
             dto.setProcessId(req.getProcessId());
             dto.setKnowledgeSourceId(req.getKnowledgeSourceId());
             this.createDataType(dto);
+            this.updateWidgetConfiguration(dto);
             return dto;
         } catch (Throwable t) {
             logger.error("error in updating widget config", t);
@@ -310,7 +351,7 @@ public class KieBpmService implements IKieBpmService {
         return info;
     }
 
-    protected DatatableWidgetConfigDto loadFieldIntoDatatableProcessFromBpm() throws ApsSystemException {
+    private DatatableWidgetConfigDto loadFieldIntoDatatableProcessFromBpm() throws ApsSystemException {
         List<KieProcess> processes = formManager.getProcessDefinitionsList();
         DatatableWidgetConfigDto dto = new DatatableWidgetConfigDto();
         if (!processes.isEmpty()) {
@@ -510,7 +551,7 @@ public class KieBpmService implements IKieBpmService {
         }
     }
 
-    protected void saveEntandoLabel(String fieldName, String bpmLabel) throws ApsSystemException {
+    private void saveEntandoLabel(String fieldName, String bpmLabel) throws ApsSystemException {
         ApsProperties apsLabels = new ApsProperties();
         for (Lang lang : this.getLangManager().getLangs()) {
             apsLabels.put(lang.getCode(), bpmLabel);
@@ -518,10 +559,70 @@ public class KieBpmService implements IKieBpmService {
         this.getI18nManager().addLabelGroup(fieldName, apsLabels);
     }
 
-    protected AttributeInterface getAttributePrototype(String typeCode) {
+    private AttributeInterface getAttributePrototype(String typeCode) {
         IEntityManager entityManager = this.getDataObjectManager();
         Map<String, AttributeInterface> attributeTypes = entityManager.getEntityAttributePrototypes();
         return attributeTypes.get(typeCode);
+    }
+
+    private void updateWidgetConfiguration(DatatableWidgetConfigDto widgetConf) {
+        try {
+            IPage page = this.getPageManager().getDraftPage(widgetConf.getPageCode());
+            if (null == page) {
+                throw new RestRourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", widgetConf.getPageCode());
+            }
+            if (widgetConf.getFramePosDraft() > page.getWidgets().length) {
+                throw new RestRourceNotFoundException(ERRCODE_FRAME_INVALID, "frame", String.valueOf(widgetConf.getFramePosDraft()));
+            }
+            if (null == this.getWidgetTypeManager().getWidgetType(widgetConf.getWidgetType())) {
+                throw new RestRourceNotFoundException(ERRCODE_WIDGET_INVALID, "widget", String.valueOf(widgetConf.getWidgetType()));
+            }
+
+            ApsProperties properties = new ApsProperties();
+            properties.setProperty(PROP_NAME_DATA_TYPE, widgetConf.getDataType());
+            properties.setProperty(PROP_NAME_DATA_UX_ID, String.valueOf(widgetConf.getDataUxId()));
+            properties.setProperty(PROP_NAME_WIDGET_INFO_ID, String.valueOf(widgetConf.getId()));
+            WidgetType widgetType = this.getWidgetTypeManager().getWidgetType(widgetConf.getWidgetType());
+            Optional.ofNullable(widgetType).ifPresent(type -> type.getTypeParameters().forEach(param -> {
+                String key = param.getName();
+                switch (key) {
+                    case PROP_NAME_DATA_TYPE:
+                        properties.setProperty(PROP_NAME_DATA_TYPE, widgetConf.getDataType());
+                        break;
+                    case PROP_NAME_DATA_UX_ID:
+                        properties.setProperty(PROP_NAME_DATA_UX_ID, String.valueOf(widgetConf.getDataUxId()));
+                        break;
+                    case PROP_NAME_WIDGET_INFO_ID:
+                        properties.setProperty(PROP_NAME_WIDGET_INFO_ID, String.valueOf(widgetConf.getId()));
+                        break;
+                }
+            }));
+            Widget widget = new Widget();
+            widget.setType(widgetType);
+            widget.setConfig(properties);
+            this.getPageManager().joinWidget(widgetConf.getPageCode(), widget, widgetConf.getFramePosDraft());
+
+        } catch (ApsSystemException e) {
+            logger.error("Error in update widget configuration {}", widgetConf.getPageCode(), e);
+            throw new RestServerError("error in update widget configuration", e);
+        }
+
+    }
+
+    public void deleteWidgetConfiguration(String pageCode, int frameId) {
+        try {
+            IPage page = this.getPageManager().getDraftPage(pageCode);
+            if (null == page) {
+                throw new RestRourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", pageCode);
+            }
+            if (frameId > page.getWidgets().length) {
+                throw new RestRourceNotFoundException(ERRCODE_FRAME_INVALID, "frame", String.valueOf(frameId));
+            }
+            this.pageManager.removeWidget(pageCode, frameId);
+        } catch (ApsSystemException e) {
+            logger.error("Error in delete widget configuration for page {} and frame {}", pageCode, frameId, e);
+            throw new RestServerError("error in delete widget configuration", e);
+        }
     }
 
 }

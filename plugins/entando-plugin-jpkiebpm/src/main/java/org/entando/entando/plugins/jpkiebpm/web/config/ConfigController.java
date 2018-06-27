@@ -270,72 +270,82 @@ public class ConfigController {
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/{configId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> getDataTableWIdgetConfig(@PathVariable int configId) {
-
+        logger.debug("loading datatable widget config with id -> {}", configId);
         DatatableWidgetConfigDto dto = this.getKieBpmService().getDataTableWIdgetConfig(configId);
+        logger.debug("Main Result -> {}", dto);
         return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> createDataTableWIdgetConfig(@RequestBody DatatableWidgetConfigRequest req) {
-
+        logger.debug("adding datatable widget config -> {}", req);
         DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTableWIdgetConfig(req);
+        logger.debug("Main Result -> {}", dto);
         return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/{configId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> updateDataTableWIdgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
+        logger.debug("updating datatable widget config -> {}", req);
         if (configId != req.getId()) {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(configId, "configId");
             bindingResult.reject("2", new String[]{}, "parameters mismatch");
             throw new ValidationGenericException(bindingResult);
         }
         DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTableWIdgetConfig(req);
+        logger.debug("Main Result -> {}", dto);
         return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/{configId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> deleteDataTableWIdgetConfig(@PathVariable int configId) {
-
+        logger.debug("deleting datatable widget config with id -> {}", configId);
         DatatableWidgetConfigDto dto = this.getKieBpmService().deleteDataTableWIdgetConfig(configId);
+        logger.debug("Main Result -> {}", dto);
         return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatypeWidget", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> createDataTypeWIdgetConfig(@RequestBody DatatableWidgetConfigRequest req) {
-
+        logger.debug("adding datatype widget config -> {}", req);
         DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTypeWIdgetConfig(req);
+        logger.debug("Main Result -> {}", dto);
         return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatypeWidget/{configId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> updateDataTypeWIdgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
+        logger.debug("updating datatype widget config -> {}", req);
         if (configId != req.getId()) {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(configId, "configId");
             bindingResult.reject("2", new String[]{}, "parameters mismatch");
             throw new ValidationGenericException(bindingResult);
         }
         DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTypeWIdgetConfig(req);
+        logger.debug("Main Result -> {}", dto);
         return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/form", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> chooseForm() {
-
+        logger.debug("loading task list");
         DatatableWidgetConfigDto dto = this.getKieBpmService().chooseForm();
+        logger.debug("Main Result -> {}", dto);
         return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/processform", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> chooseProcessForm() {
-
+        logger.debug("loading process list");
         DatatableWidgetConfigDto dto = this.getKieBpmService().chooseProcessForm();
+        logger.debug("Main Result -> {}", dto);
         return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
     }
 }

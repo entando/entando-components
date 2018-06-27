@@ -74,7 +74,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             HashMap<String, KieBpmConfig> configs = getKieServerConfigurations();
             this.getKieServerStatus();
             for (KieBpmConfig config : configs.values()) {
-                System.out.println("SETUP CONFIG --- NAME: " + config.getName() + " , hostname: " + config.getHostname() + " , active: " + config.getActive());
                 if (config.getActive()) {
                     this.config = config;
                     break;

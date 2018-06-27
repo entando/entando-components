@@ -202,4 +202,9 @@ public class DatatableWidgetConfigDto {
         return fieldsMap;
     }
 
+    @Override
+    public String toString() {
+        return "DatatableWidgetConfigDto: {" + "id=" + id + ", informationOnline=" + informationOnline + ", informationDraft=" + informationDraft + ", widgetType=" + widgetType + ", pageCode=" + pageCode + ", framePosOnline=" + framePosOnline + ", framePosDraft=" + framePosDraft + ", containerId=" + containerId + ", processId=" + processId + ", knowledgeSourceId=" + knowledgeSourceId + ", dataType=" + dataType + ", dataUxId=" + dataUxId + '}';
+    }
+
 }
