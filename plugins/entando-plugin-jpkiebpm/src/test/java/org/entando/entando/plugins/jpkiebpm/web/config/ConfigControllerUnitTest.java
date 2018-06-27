@@ -1,13 +1,17 @@
 package org.entando.entando.plugins.jpkiebpm.web.config;
 
-
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.jayway.jsonassert.impl.matcher.IsCollectionWithSize.hasSize;
+import static org.hamcrest.CoreMatchers.is;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.IKieBpmService;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieConfigService;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.model.DatatableWidgetConfigDto;
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
+import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigRequest;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
@@ -22,7 +26,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ConfigControllerUnitTest extends AbstractControllerTest {
@@ -39,12 +46,14 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
     @Mock
     CaseManager caseManager;
 
+    @Mock
+    IKieBpmService kieBpmService;
+
     @InjectMocks
     private ConfigController configController;
 
     @Before
     public void setUp() throws Exception {
-
 
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(configController)
@@ -105,7 +114,6 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
 
-
         Mockito.verify(kieConfigService, Mockito.times(1)).addConfig(Mockito.any(), Mockito.any());
 
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -128,7 +136,6 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
 
-
         Mockito.verify(kieConfigService, Mockito.times(1)).updateConfig(Mockito.any(), Mockito.any());
 
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -141,11 +148,9 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
-
         ResultActions result = mockMvc.perform(
                 delete("/kiebpm/serverConfigs/test")
                         .header("Authorization", "Bearer " + accessToken));
-
 
         Mockito.verify(kieConfigService, Mockito.times(1)).removeConfig("test");
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -242,6 +247,54 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
         assertNotNull(response);
     }
 
+    @Test
+    public void testGetWidgetConfig() throws Exception {
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        when(kieBpmService.getDataTableWIdgetConfig(any(Integer.class))).thenReturn(getWidgetConfig(1));
+
+        ResultActions result = mockMvc.perform(
+                get("/kiebpm/datatableWidget/{configId}", "1")
+                        .header("Authorization", "Bearer " + accessToken));
+
+        String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    public void testPutWidgetConfigMismatch() throws Exception {
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        String mockJsonResult = "{\n"
+                + "        \"id\": 13,\n"
+                + "        \"informationOnline\": [],\n"
+                + "        \"informationDraft\": [],\n"
+                + "        \"widgetType\": \"bpm-datatable-task-list\",\n"
+                + "        \"pageCode\": \"hello2\",\n"
+                + "        \"framePosOnline\": 0,\n"
+                + "        \"framePosDraft\": 0,\n"
+                + "        \"containerId\": \"mortgage\",\n"
+                + "        \"processId\": \"com.redhat.bpms.examples.mortgage.MortgageApplication\",\n"
+                + "        \"knowledgeSourceId\": \"4e85caf304e04af1a413836daff70d9520180612T152311942\"\n"
+                + "    }";
+        DatatableWidgetConfigDto mock = (DatatableWidgetConfigDto) this.createMetadata(mockJsonResult, DatatableWidgetConfigDto.class);
+        when(kieBpmService.updateDataTableWIdgetConfig(any(DatatableWidgetConfigRequest.class))).thenReturn(mock);
+
+        ResultActions result = mockMvc.perform(
+                put("/kiebpm/datatableWidget/{configId}", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mockJsonResult)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        String response = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isBadRequest());
+        result.andExpect(jsonPath("$.errors", hasSize(1)));
+        result.andExpect(jsonPath("$.errors[0].code", is("2")));
+    }
+
     private KieServerConfigDto getTestConfig() {
         KieServerConfigDto configRequest = new KieServerConfigDto();
         configRequest.setActive(true);
@@ -257,5 +310,18 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
 
         return configRequest;
 
+    }
+
+    private DatatableWidgetConfigDto getWidgetConfig(int id) {
+        DatatableWidgetConfigDto dto = new DatatableWidgetConfigDto();
+        dto.setId(id++);
+        dto.setContainerId("containerId");
+        dto.setFramePosDraft(id++);
+        dto.setFramePosOnline(id++);
+        dto.setKnowledgeSourceId("knowledgeSourceId");
+        dto.setPageCode("pageCode");
+        dto.setProcessId("processId");
+        dto.setWidgetType("widgetType");
+        return dto;
     }
 }
