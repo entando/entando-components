@@ -19,29 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpseo;
+package org.entando.entando.plugins.jpseo.aps.system.services.metatag;
 
+import java.util.Map;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import org.entando.entando.plugins.jpseo.aps.system.services.metatag.TestMetatagCatalogue;
-
-import org.entando.entando.plugins.jpseo.apsadmin.content.TestContentAction;
-import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageAction;
-import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageSettingsAction;
-
-public class AllTests {
-	
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Seo plugin");
-        
-		suite.addTestSuite(TestMetatagCatalogue.class);
-        
-		suite.addTestSuite(TestContentAction.class);
-		suite.addTestSuite(TestPageAction.class);
-		suite.addTestSuite(TestPageSettingsAction.class);
-        
-		return suite;
-	}
-
+/**
+ * @author E.Santoboni
+ */
+public interface IMetatagCatalogue {
+    
+    public Map<String, Metatag> getCatalogue();
+    
 }

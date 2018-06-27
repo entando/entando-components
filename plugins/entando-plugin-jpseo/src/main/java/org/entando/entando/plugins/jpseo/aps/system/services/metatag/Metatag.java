@@ -19,29 +19,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpseo;
+package org.entando.entando.plugins.jpseo.aps.system.services.metatag;
 
+import java.io.Serializable;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import org.entando.entando.plugins.jpseo.aps.system.services.metatag.TestMetatagCatalogue;
+/**
+ * @author E.Santoboni
+ */
+public class Metatag implements Serializable {
+    
+    private String key;
+    private String attributeKey;
+    private String defaultValue;
+    private String group;
+    private String description;
 
-import org.entando.entando.plugins.jpseo.apsadmin.content.TestContentAction;
-import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageAction;
-import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageSettingsAction;
+    public String getKey() {
+        return key;
+    }
 
-public class AllTests {
-	
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Seo plugin");
-        
-		suite.addTestSuite(TestMetatagCatalogue.class);
-        
-		suite.addTestSuite(TestContentAction.class);
-		suite.addTestSuite(TestPageAction.class);
-		suite.addTestSuite(TestPageSettingsAction.class);
-        
-		return suite;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
+    public String getAttributeKey() {
+        return attributeKey;
+    }
+
+    public void setAttributeKey(String attributeKey) {
+        this.attributeKey = attributeKey;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
 }
