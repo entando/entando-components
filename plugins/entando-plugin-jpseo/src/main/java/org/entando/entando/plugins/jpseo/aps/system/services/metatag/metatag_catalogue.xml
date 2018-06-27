@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogue>
+    <meta attributeKey="name" key="keywords" defaultValue="your, tags" group="Basic HTML Meta Tags" >Description....</meta>
+    <!--
+    <meta attributeKey="name" key="description" defaultValue="150 words" group="Basic HTML Meta Tags" />
+    -->
+    <meta attributeKey="name" key="subject" defaultValue="your website's subject" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="copyright" defaultValue="company name" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="language" defaultValue="EN" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="robots" defaultValue="index,follow" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="revised" defaultValue="Sunday, July 18th, 2010, 5:15 pm" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="abstract" defaultValue="" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="topic" defaultValue="" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="summary" defaultValue="" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="Classification" defaultValue="Business" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="author" defaultValue="name, email@hotmail.com" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="designer" defaultValue="" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="copyright" defaultValue="" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="reply-to" defaultValue="email@hotmail.com" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="owner" defaultValue="" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="url" defaultValue="http://www.websiteaddrress.com" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="identifier-URL" defaultValue="http://www.websiteaddress.com" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="directory" defaultValue="submission" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="category" defaultValue="" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="coverage" defaultValue="Worldwide" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="distribution" defaultValue="Global" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="rating" defaultValue="General" group="Basic HTML Meta Tags" />
+    <meta attributeKey="name" key="revisit-after" defaultValue="7 days" group="Basic HTML Meta Tags" />
+    <meta attributeKey="http-equiv" key="Expires" defaultValue="0" group="Basic HTML Meta Tags" />
+    <meta attributeKey="http-equiv" key="Pragma" defaultValue="no-cache" group="Basic HTML Meta Tags" />
+    <meta attributeKey="http-equiv" key="Cache-Control" defaultValue="no-cache" group="Basic HTML Meta Tags" />
+    
+    <meta attributeKey="name" key="fb:page_id" defaultValue="43929265776" group="OpenGraph Meta Tags" />
+
+    <meta attributeKey="name" key="og:email" defaultValue="me@example.com" group="OpenGraph Meta Tags" />
+    <meta attributeKey="name" key="og:phone_number" defaultValue="650-123-4567" group="OpenGraph Meta Tags" />
+    <meta attributeKey="name" key="og:fax_number" defaultValue="+1-415-123-4567" group="OpenGraph Meta Tags" />
+
+    <meta attributeKey="name" key="og:latitude" defaultValue="37.416343" group="OpenGraph Meta Tags" />
+    <meta attributeKey="name" key="og:longitude" defaultValue="-122.153013" group="OpenGraph Meta Tags" />
+    <meta attributeKey="name" key="og:street-address" defaultValue="1601 S California Ave" group="OpenGraph Meta Tags" />
+    <meta attributeKey="name" key="og:locality" defaultValue="Palo Alto" group="OpenGraph Meta Tags" />
+    <meta attributeKey="name" key="og:region" defaultValue="CA" group="OpenGraph Meta Tags" />
+    <meta attributeKey="name" key="og:postal-code" defaultValue="94304" group="OpenGraph Meta Tags" />
+    <meta attributeKey="name" key="og:country-name" defaultValue="USA" group="OpenGraph Meta Tags" />
+    
+    <meta attributeKey="property" key="og:description" defaultValue="" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:determiner" defaultValue="the" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:locale" defaultValue="en_GB" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:locale:alternate" defaultValue="en_EN" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:site_name" defaultValue="" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:type" defaultValue="game.achievement" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:points" defaultValue="POINTS_FOR_ACHIEVEMENT" group="OpenGraph Meta Tags" />
+
+    <meta attributeKey="property" key="og:video" defaultValue="http://example.com/awesome.swf" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:video:height" defaultValue="640" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:video:width" defaultValue="385" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:video:type" defaultValue="application/x-shockwave-flash" />
+    <meta attributeKey="property" key="og:video" defaultValue="http://example.com/html5.mp4" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:video:type" defaultValue="video/mp4" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:video" defaultValue="http://example.com/fallback.vid" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:video:type" defaultValue="text/html" group="OpenGraph Meta Tags" />
+
+    <meta attributeKey="property" key="og:audio" defaultValue="http://example.com/amazing.mp3" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:audio:title" defaultValue="Amazing Song" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:audio:artist" defaultValue="Amazing Band" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:audio:album" defaultValue="Amazing Album" group="OpenGraph Meta Tags" />
+    <meta attributeKey="property" key="og:audio:type" defaultValue="application/mp3" group="OpenGraph Meta Tags" />
+    
+</catalogue>
