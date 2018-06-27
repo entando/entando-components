@@ -48,7 +48,7 @@ public class BpmCaseInstanceChartAction extends BaseAction {
     private CaseManager caseManager;
     private String frontEndCaseData;
     private String channel;
-    
+
     private String knowledgeSourceId;
     private String containerid;
     private String casePath;
@@ -72,11 +72,11 @@ public class BpmCaseInstanceChartAction extends BaseAction {
             } else {
 
                 //set the config to the first config in database
-                this.setKnowledgeSourceId(this.getCaseManager().loadFirstConfigurations().getId());
+                this.setKnowledgeSourceId(this.getCaseManager().getConfig().getId());
                 this.setContainerid(this.getCaseManager().getContainersList().get(0).getContainerId());
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
                 this.setChannelPath(this.getFrontEndCaseData());
-                
+
                 this.setMilestones(this.getCaseManager().getMilestonesList(this.getContainerid(), this.getCasePath()).toString());
             }
 
@@ -180,6 +180,5 @@ public class BpmCaseInstanceChartAction extends BaseAction {
     public void setChannel(String channel) {
         this.channel = channel;
     }
-    
 
 }
