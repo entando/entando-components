@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
@@ -71,16 +72,32 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         //
         //Known issue here is that if one config goes bad you get none of them. TODO
         try {
+            KieBpmConfig fromEnvironment=EnvironmentBasedConfigHelper.fromEnvironment();
+            if(fromEnvironment!=null){
+                addConfig(fromEnvironment);
+            }else {
             HashMap<String, KieBpmConfig> configs = getKieServerConfigurations();
+<<<<<<< 76ae47305179f77cd212223fa336e8d9adc4823b
             this.getKieServerStatus();
             for (KieBpmConfig config : configs.values()) {
                 if (config.getActive()) {
+=======
+                //Ampie: this invocation has no effect but does stall deployment to Wildfly: this.getKieServerStatus();
+            for(KieBpmConfig config : configs.values()) {
+                if(config.getActive()) {
+>>>>>>> EN-1666 Repeating the changes on MASTER
                     this.config = config;
                     break;
                 }
             }
+<<<<<<< 76ae47305179f77cd212223fa336e8d9adc4823b
         } catch (Exception e) {
             logger.error("Failed to initialize Kie server configuration. Service will start but configuration for Kie server will need to be updated and or re-saved ", e);
+=======
+            }
+        }catch(Exception e){
+            logger.error("Failed to initialize Kie server configuration. Service will start but configuration for Kie server will need to be updated and or re-saved ",e);
+>>>>>>> EN-1666 Repeating the changes on MASTER
         }
     }
 
@@ -100,16 +117,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public KieBpmConfig updateConfig(KieBpmConfig config) throws ApsSystemException {
-        try {
-            if (null != config) {
-                String xml = JAXBHelper.marshall(config, true, false);
-                this.getConfigManager().updateConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM, xml);
-                this.config = config;
-            }
-        } catch (Throwable t) {
-            throw new ApsSystemException("Error updating configuration", t);
-        }
-        return config;
+        addConfig(config);
+        return this.config;
     }
 
     @Override
