@@ -76,28 +76,17 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             if(fromEnvironment!=null){
                 addConfig(fromEnvironment);
             }else {
-            HashMap<String, KieBpmConfig> configs = getKieServerConfigurations();
-<<<<<<< 76ae47305179f77cd212223fa336e8d9adc4823b
-            this.getKieServerStatus();
-            for (KieBpmConfig config : configs.values()) {
-                if (config.getActive()) {
-=======
-                //Ampie: this invocation has no effect but does stall deployment to Wildfly: this.getKieServerStatus();
-            for(KieBpmConfig config : configs.values()) {
-                if(config.getActive()) {
->>>>>>> EN-1666 Repeating the changes on MASTER
-                    this.config = config;
-                    break;
+                HashMap<String, KieBpmConfig> configs = getKieServerConfigurations();
+                //Ampie: this invocation has no effect but does stall deployment to Wildfly this.getKieServerStatus();
+                for (KieBpmConfig config : configs.values()) {
+                    if (config.getActive()) {
+                        this.config = config;
+                        break;
+                    }
                 }
             }
-<<<<<<< 76ae47305179f77cd212223fa336e8d9adc4823b
         } catch (Exception e) {
             logger.error("Failed to initialize Kie server configuration. Service will start but configuration for Kie server will need to be updated and or re-saved ", e);
-=======
-            }
-        }catch(Exception e){
-            logger.error("Failed to initialize Kie server configuration. Service will start but configuration for Kie server will need to be updated and or re-saved ",e);
->>>>>>> EN-1666 Repeating the changes on MASTER
         }
     }
 
