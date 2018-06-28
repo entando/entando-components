@@ -28,11 +28,19 @@ import java.io.Serializable;
  */
 public class Metatag implements Serializable {
     
+    public static final String ATTRIBUTE_NAME_NAME = "name";
+    public static final String ATTRIBUTE_NAME_HTTP_EQUIV = "http-equiv";
+    public static final String ATTRIBUTE_NAME_PROPERTY = "property";
+    
     private String key;
     private String attributeKey;
     private String defaultValue;
     private String group;
     private String description;
+    
+    public static String[] getAttributeNames() {
+        return new String[]{ATTRIBUTE_NAME_NAME, ATTRIBUTE_NAME_HTTP_EQUIV, ATTRIBUTE_NAME_PROPERTY};
+    }
 
     public String getKey() {
         return key;

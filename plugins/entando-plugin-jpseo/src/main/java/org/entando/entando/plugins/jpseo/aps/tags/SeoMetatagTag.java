@@ -37,8 +37,9 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.PageMetadata;
-import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 
 public class SeoMetatagTag extends OutSupport {
@@ -57,22 +58,25 @@ public class SeoMetatagTag extends OutSupport {
                 this.release();
                 return EVAL_PAGE;
             }
-            Map<String, Object> complexParameters = ((SeoPageMetadata) pageMetadata).getComplexParameters();
+            Map<String, Map<String, PageMetatag>> complexParameters = ((SeoPageMetadata) pageMetadata).getComplexParameters();
             if (null != complexParameters) {
-                Object mapvalue = complexParameters.get(this.getKey());
+                Map<String, PageMetatag> mapvalue = complexParameters.get(currentLang.getCode());
+                Map<String, PageMetatag> defaultMapvalue = complexParameters.get("default");
+                if (null == defaultMapvalue) {
+                    ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
+                    Lang defaultLang = langManager.getDefaultLang();
+                    defaultMapvalue = complexParameters.get(defaultLang.getCode());
+                }
                 if (null != mapvalue) {
-                    if (mapvalue instanceof ApsProperties) {
-                        ApsProperties properties = (ApsProperties) mapvalue;
-                        String value = (String) properties.getProperty(currentLang.getCode());
-                        if (null == value || value.trim().length() == 0) {
-                            ILangManager langManager
-                                    = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
-                            Lang defaultLang = langManager.getDefaultLang();
-                            value = (String) properties.getProperty(defaultLang.getCode());
-                        }
-                        this.setValue(value);
-                    } else {
-                        this.setValue(mapvalue.toString());
+                    PageMetatag pageMetatag = mapvalue.get(this.getKey());
+                    if (null != pageMetatag && !pageMetatag.isUseDefaultLangValue() && !StringUtils.isBlank(pageMetatag.getValue())) {
+                        this.setValue(pageMetatag.getValue());
+                    }
+                }
+                if (null == this.getValue()) {
+                    PageMetatag pageMetatag = defaultMapvalue.get(this.getKey());
+                    if (null != pageMetatag && !StringUtils.isBlank(pageMetatag.getValue())) {
+                        this.setValue(pageMetatag.getValue());
                     }
                 }
             }

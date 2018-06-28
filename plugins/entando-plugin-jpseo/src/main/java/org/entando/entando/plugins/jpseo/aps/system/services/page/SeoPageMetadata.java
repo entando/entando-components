@@ -61,11 +61,11 @@ public class SeoPageMetadata extends PageMetadata {
         this._friendlyCode = friendlyCode;
     }
 
-    public Map<String, Object> getComplexParameters() {
+    public Map<String, Map<String, PageMetatag>> getComplexParameters() {
         return _complexParameters;
     }
 
-    public void setComplexParameters(Map<String, Object> complexParameters) {
+    public void setComplexParameters(Map<String, Map<String, PageMetatag>> complexParameters) {
         this._complexParameters = complexParameters;
     }
 
@@ -105,6 +105,6 @@ public class SeoPageMetadata extends PageMetadata {
 
     private String _friendlyCode;
 
-    private Map<String, Object> _complexParameters;
+    private Map<String, Map<String, PageMetatag>> _complexParameters;
 
 }

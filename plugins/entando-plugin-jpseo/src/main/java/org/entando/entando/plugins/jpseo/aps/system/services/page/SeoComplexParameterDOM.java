@@ -1,7 +1,5 @@
 /*
- * The MIT License
- *
- * Copyright 2018 Entando Inc..
+ * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +42,7 @@ public class SeoComplexParameterDOM {
 
     private static final Logger logger = LoggerFactory.getLogger(SeoComplexParameterDOM.class);
 
-    public String extractXml(Map<String, Object> parameters) {
+    public String extractXml(Map<String, Map<String, PageMetatag>> parameters) {
         Document doc = new Document();
         Element elementRoot = new Element("seoparameters");
         doc.setRootElement(elementRoot);
@@ -60,13 +58,12 @@ public class SeoComplexParameterDOM {
         return out.outputString(doc);
     }
 
-    public Map<String, Object> extractComplexParameters(String xmlConfig) {
-        Map<String, Object> complexParameters = new HashMap<>();
+    public Map<String, Map<String, PageMetatag>> extractComplexParameters(String xmlConfig) {
         if (StringUtils.isBlank(xmlConfig)) {
-            return complexParameters;
+            return new HashMap<>();
         }
         Document doc = this.decodeComplexParameterDOM(xmlConfig);
-        List<Element> elements = doc.getRootElement().getChildren("parameter");
+        List<Element> elements = doc.getRootElement().getChildren();
         return new SeoPageExtraConfigDOM().extractComplexParameters(elements);
     }
 
