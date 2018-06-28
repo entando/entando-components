@@ -55,6 +55,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.entando.entando.plugins.jpseo.aps.system.services.mapping.FriendlyCodeVO;
 import org.entando.entando.plugins.jpseo.aps.system.services.mapping.ISeoMappingManager;
+import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoComplexParameterDOM;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 import org.slf4j.Logger;
@@ -275,7 +276,7 @@ public class PageActionAspect {
             SeoPageMetadata pageMetadata = (SeoPageMetadata) page.getMetadata();
             pageMetadata.setFriendlyCode(friendlyCode);
             pageMetadata.setDescriptions(descriptions);
-            Map<String, Object> complexParameters = (new SeoComplexParameterDOM().extractComplexParameters(xmlConfig));
+            Map<String, Map<String, PageMetatag>> complexParameters = (new SeoComplexParameterDOM().extractComplexParameters(xmlConfig));
             pageMetadata.setComplexParameters(complexParameters);
             pageMetadata.setUpdatedAt(new Date());
             pageMetadata.setUseExtraDescriptions(null != request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS) && request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS).equalsIgnoreCase("true"));

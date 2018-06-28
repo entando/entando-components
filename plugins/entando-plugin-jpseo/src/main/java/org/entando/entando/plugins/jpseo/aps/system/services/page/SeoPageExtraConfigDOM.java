@@ -91,7 +91,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
         } else {
             Element complexParamElement = root.getChild(COMPLEX_PARAMS_ELEMENT_NAME);
             if (null != complexParamElement) {
-                List<Element> elements = complexParamElement.getChildren("parameter");
+                List<Element> elements = complexParamElement.getChildren();
                 seoPage.setComplexParameters(this.extractComplexParameters(elements));
             }
         }
@@ -105,33 +105,100 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
      * @deprecated Used to guarantee porting with previous versions of the
      * plugin
      */
-    private Map<String, Object> extractComplexParameters(String xmlConfig) {
+    private Map<String, Map<String, PageMetatag>> extractComplexParameters(String xmlConfig) {
         Document doc = this.decodeComplexParameterDOM(xmlConfig);
-        List<Element> elements = doc.getRootElement().getChildren("parameter");
+        List<Element> elements = doc.getRootElement().getChildren();
         return this.extractComplexParameters(elements);
     }
-
-    protected Map<String, Object> extractComplexParameters(List<Element> elements) {
-        Map<String, Object> complexParameters = new HashMap<>();
+    
+    /*
+.....
+    OLD STRUCTURE
+  <complexParameters>
+    <parameter key="key1">VALUE_1</parameter>
+    <parameter key="key2">VALUE_2</parameter>
+    <parameter key="key5">
+      <property key="fr">VALUE_5 FR</property>
+      <property key="en">VALUE_5 EN</property>
+      <property key="it">VALUE_5 IT</property>
+    </parameter>
+    <parameter key="key6">VALUE_6</parameter>
+    <parameter key="key3">
+      <property key="en">VALUE_3 EN</property>
+      <property key="it">VALUE_3 IT</property>
+    </parameter>
+    <parameter key="key4">VALUE_4</parameter>
+  </complexParameters>
+.....
+    */
+    
+    /*
+    New Structure
+.....
+  <complexParameters>
+    <lang code="it">
+      <meta key="key5">VALUE_5_IT</meta>
+      <meta key="key3" attributeName="name" useDefaultLang="false" >VALUE_3_IT</meta>
+      <meta key="key2" attributeName="property" useDefaultLang="true" />
+    </lang>
+    <lang code="en">
+      <meta key="key5">VALUE_5_IT</meta>
+      <meta key="key3" attributeName="name" useDefaultLang="false" >VALUE_3_EN</meta>
+      <meta key="key2" attributeName="property" useDefaultLang="true" />
+    </lang>
+    ...
+    ...
+  </complexParameters>
+.....
+    */
+    
+    private Map<String, PageMetatag> extractLangMap(String code, 
+            Map<String, Map<String, PageMetatag>> complexParameters) {
+        Map<String, PageMetatag> langMap = complexParameters.get(code);
+        if (null == langMap) {
+            langMap = new HashMap<>();
+            complexParameters.put(code, langMap);
+        }
+        return langMap;
+    }
+    
+    protected Map<String, Map<String, PageMetatag>> extractComplexParameters(List<Element> elements) {
+        Map<String, Map<String, PageMetatag>> complexParameters = new HashMap<>();
         if (null == elements) {
             return complexParameters;
         }
         for (int i = 0; i < elements.size(); i++) {
             Element paramElement = elements.get(i);
-            String paramKey = paramElement.getAttributeValue("key");
-            List<Element> langElements = paramElement.getChildren("property");
-            if (null != langElements && langElements.size() > 0) {
-                ApsProperties properties = new ApsProperties();
-                for (int j = 0; j < langElements.size(); j++) {
-                    Element langElement = langElements.get(j);
-                    String propertyKey = langElement.getAttributeValue("key");
-                    String propertyValue = langElement.getText();
-                    properties.setProperty(propertyKey, propertyValue);
+            String elementName = paramElement.getName();
+            if (elementName.equals("parameter")) {
+                //Used to guarantee porting with previous versions of the plugin
+                String key = paramElement.getAttributeValue("key");
+                List<Element> langElements = paramElement.getChildren("property");
+                if (null != langElements && langElements.size() > 0) {
+                    for (int j = 0; j < langElements.size(); j++) {
+                        Element langElement = langElements.get(j);
+                        String langCode = langElement.getAttributeValue("key");
+                        Map<String, PageMetatag> langMap = this.extractLangMap(langCode, complexParameters);
+                        PageMetatag metatag = new PageMetatag(langCode, key, paramElement.getText());
+                        langMap.put(key, metatag);
+                    }
+                } else {
+                    Map<String, PageMetatag> defaultLang = this.extractLangMap("default", complexParameters);
+                    PageMetatag metatag = new PageMetatag("default", key, paramElement.getText());
+                    defaultLang.put(key, metatag);
                 }
-                complexParameters.put(paramKey, properties);
-            } else {
-                String paramValue = paramElement.getText();
-                complexParameters.put(paramKey, paramValue);
+            } else if (elementName.equals("lang")) {
+                String langCode = paramElement.getAttributeValue("code");
+                Map<String, PageMetatag> langMap = this.extractLangMap(langCode, complexParameters);
+                List<Element> langElements = paramElement.getChildren("meta");
+                for (Element langElement : langElements) {
+                    String key = langElement.getAttributeValue("key");
+                    PageMetatag metatag = new PageMetatag(langCode, key, paramElement.getText());
+                    metatag.setKeyAttribute(langElement.getAttributeValue("attributeName"));
+                    String useDefaultLang = langElement.getAttributeValue("useDefaultLang");
+                    metatag.setUseDefaultLangValue(Boolean.parseBoolean(useDefaultLang));
+                    langMap.put(key, metatag);
+                }
             }
         }
         return complexParameters;
@@ -185,7 +252,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
         }
     }
 
-    protected void addComplexParameters(Element elementRoot, Map<String, Object> parameters) {
+    protected void addComplexParameters(Element elementRoot, Map<String, Map<String, PageMetatag>> parameters) {
         if (null == parameters) {
             return;
         }
