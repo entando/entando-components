@@ -13,6 +13,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_c
             <hostname>localhost</hostname>
             <schema>http</schema>
             <port>8080</port>
+            <timeout>1000</timeout>
             <webapp>kie-server</webapp>
          </value>
       </entry>
