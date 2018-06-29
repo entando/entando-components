@@ -26,6 +26,7 @@
     
     <bean id="jpseoPageAction" scope="prototype" 
           class="org.entando.entando.plugins.jpseo.apsadmin.portal.SeoPageAction" parent="abstractPortalAction">
+        <property name="metatagCatalogue" ref="jpseoMetatagCatalogue" />
         <property name="pageModelManager" ref="PageModelManager" />
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="pageActionHelper" ref="pageActionHelperDraft" />

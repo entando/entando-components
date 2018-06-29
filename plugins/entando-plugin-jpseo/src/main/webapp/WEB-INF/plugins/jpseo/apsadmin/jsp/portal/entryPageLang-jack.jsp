@@ -66,7 +66,7 @@
                 <s:text name="label.key" />
             </label>
             <div class="col-sm-10">
-                <wpsf:textfield name="new_metatag_key" id="new_metatag" cssClass="form-control" />
+                <wpsf:textfield name="metatagKey" id="new_metatag" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
                         <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
@@ -84,7 +84,7 @@
                 <s:text name="label.value" />
             </label>
             <div class="col-sm-10">
-                <wpsf:textfield name="new_metatag_value" cssClass="form-control" />
+                <wpsf:textfield name="metatagValue" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
                         <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>

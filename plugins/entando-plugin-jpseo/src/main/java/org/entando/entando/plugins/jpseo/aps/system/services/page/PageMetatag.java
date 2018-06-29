@@ -21,6 +21,7 @@
  */
 package org.entando.entando.plugins.jpseo.aps.system.services.page;
 
+import java.util.Arrays;
 import java.util.Objects;
 import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
 
@@ -76,6 +77,12 @@ public class PageMetatag {
     }
 
     public void setKeyAttribute(String keyAttribute) {
+        if (null == keyAttribute) {
+            return;
+        }
+        if (!Arrays.asList(Metatag.getAttributeNames()).contains(keyAttribute)) {
+            return;
+        }
         this.keyAttribute = keyAttribute;
     }
     

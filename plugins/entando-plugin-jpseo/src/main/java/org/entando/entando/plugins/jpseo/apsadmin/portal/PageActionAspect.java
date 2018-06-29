@@ -83,24 +83,21 @@ public class PageActionAspect {
     @Before("execution(* com.agiletec.plugins.jacms.apsadmin.portal.PageAction.validate())")
     public void executeExtraValidation(JoinPoint joinPoint) {
         PageAction action = (PageAction) joinPoint.getTarget();
-        this.updateDescriptions(action);
+        HttpServletRequest request = ServletActionContext.getRequest();
+        SeoPageActionUtils.extractAndSetDescriptions(request);
         this.checkFriendlyCode(action);
         this.checkXmlMapping(action);
-        HttpServletRequest request = ServletActionContext.getRequest();
         request.setAttribute(PARAM_USE_EXTRA_DESCRIPTIONS, request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS));
     }
 
     @Before("execution(* com.agiletec.apsadmin.portal.PageAction.joinExtraGroup())")
     public void executeExtraJoinExtraGroup(JoinPoint joinPoint) {
-        PageAction action = (PageAction) joinPoint.getTarget();
-        this.updateFields(action);
+        this.updateFields();
     }
 
     @Before("execution(* com.agiletec.apsadmin.portal.PageAction.removeExtraGroup())")
     public void executeExtraRemoveExtraGroup(JoinPoint joinPoint) {
-        PageAction action = (PageAction) joinPoint.getTarget();
-        this.updateDescriptions(action);
-        this.updateFields(action);
+        this.updateFields();
     }
 
     @After("execution(* com.agiletec.apsadmin.portal.PageAction.edit())")
@@ -162,45 +159,18 @@ public class PageActionAspect {
         return newMap;
     }
     
-
-    private void updateFields(PageAction action) {
-        this.updateDescriptions(action);
-        this.updateFriendlyCode(action);
-        this.updateXmlMapping(action);
+    private void updateFields() {
         HttpServletRequest request = ServletActionContext.getRequest();
+        SeoPageActionUtils.extractAndSetDescriptions(request);
+        SeoPageActionUtils.extractAndSetFriendlyCode(request);
+        SeoPageActionUtils.extractAndSetXmlMapping(request);
         String param = request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS);
         request.setAttribute(PARAM_USE_EXTRA_DESCRIPTIONS, param);
-    }
-
-    protected void updateDescriptions(PageAction action) {
-        HttpServletRequest request = ServletActionContext.getRequest();
-        Iterator<Lang> langsIter = this.getLangManager().getLangs().iterator();
-        while (langsIter.hasNext()) {
-            Lang lang = (Lang) langsIter.next();
-            String titleKey = PARAM_DESCRIPTION_PREFIX + lang.getCode();
-            String title = request.getParameter(titleKey);
-            if (null != title) {
-                request.setAttribute(titleKey, title);
-            }
-        }
-    }
-
-    protected void updateFriendlyCode(PageAction action) {
-        HttpServletRequest request = ServletActionContext.getRequest();
-        String code = request.getParameter(PARAM_FRIENDLY_CODE);
-        request.setAttribute(PARAM_FRIENDLY_CODE, code);
-    }
-
-    protected void updateXmlMapping(PageAction action) {
-        HttpServletRequest request = ServletActionContext.getRequest();
-        String xmlConfig = request.getParameter(PARAM_XML_CONFIG);
-        request.setAttribute(PARAM_XML_CONFIG, xmlConfig);
     }
 
     private void checkFriendlyCode(PageAction action) {
         HttpServletRequest request = ServletActionContext.getRequest();
         String code = request.getParameter(PARAM_FRIENDLY_CODE);
-
         if (null != code && code.trim().length() > 100) {
             String[] args = {"100"};
             action.addFieldError(PARAM_FRIENDLY_CODE, action.getText("jpseo.error.friendlyCode.stringlength", args));
@@ -326,7 +296,7 @@ public class PageActionAspect {
         }
         return seoPage;
     }
-
+    
     protected ILangManager getLangManager() {
         return langManager;
     }
