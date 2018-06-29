@@ -94,7 +94,7 @@
         </div>
     </div>
     <div class="col-sm-2"> 
-        <wpsf:submit name="/do/jpseo/Page" action="addMetatag" type="button" cssClass="btn btn-primary pull-right">
+        <wpsf:submit action="addMetatag" type="button" cssClass="btn btn-primary pull-right">
             <s:text name="label.add" />
         </wpsf:submit>
     </div> 
