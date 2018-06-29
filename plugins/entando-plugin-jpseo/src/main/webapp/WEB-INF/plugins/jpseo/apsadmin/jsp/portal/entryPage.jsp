@@ -51,15 +51,15 @@
                 <s:if test="hasActionErrors()">
                     <s:iterator value="actionErrors">
                         <li><s:property escapeHtml="false" /></li>
+                    </s:iterator>
+                </s:if>
+                <s:if test="hasFieldErrors()">
+                    <s:iterator value="fieldErrors">
+                        <s:iterator value="value">
+                        <li><s:property escapeHtml="false" /></li>
                         </s:iterator>
-                    </s:if>
-                    <s:if test="hasFieldErrors()">
-                        <s:iterator value="fieldErrors">
-                            <s:iterator value="value">
-                            <li><s:property escapeHtml="false" /></li>
-                            </s:iterator>
-                        </s:iterator>
-                    </s:if>
+                    </s:iterator>
+                </s:if>
             </ul>
         </div>
     </s:if>
@@ -95,8 +95,6 @@
 
     <legend><s:text name="label.info" /><span class="required-fields-edit"><s:text name="label.requiredFields" /></span></legend>
     
-    
-    
     <ul class="nav nav-tabs">
         <s:iterator value="langs" var="lang">
             <s:set var="labelModifier" value="''"/>
@@ -119,7 +117,7 @@
         </s:iterator>
     </ul>
     
-    <div class="tab-content">
+    <div class="tab-content well">
         <s:iterator value="langs" var="lang">
             <s:set var="classModifier" value="''"/>
             <s:if test="#lang.default">
@@ -136,10 +134,9 @@
                 <s:set var="fieldErrorsVar" value="%{fieldErrors['lang'+#lang.code]}" />
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-
                 <div class="form-group<s:property value="#controlGroupErrorClass" />">
                     <label class="col-sm-2 control-label" for="lang<s:property value="#lang.code" />">
-                        <abbr title="<s:property value="#lang.descr" />"><code class="label label-info" ><s:property value="#lang.code" /></code></abbr>&#32;<s:text name="name.pageTitle" />
+                        <s:text name="name.pageTitle" />
                         <i class="fa fa-asterisk required-icon"></i>
                     </label>
                     <div class="col-sm-10">
@@ -151,9 +148,13 @@
                         </s:if>
                     </div>
                 </div>
+                <wpsa:hookPoint key="core.entryPage.langElement" objectName="hookPointElements_core_entryPage_langElement">
+                    <s:iterator value="#hookPointElements_core_entryPage_langElement" var="hookPointElement">
+                        <wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
+                    </s:iterator>
+                </wpsa:hookPoint>
             </div>
         </s:iterator>
-        <hr />
     </div>
     
     <%-- pageCode --%>
@@ -354,8 +355,7 @@
                 <wpsf:checkbox name="useExtraTitles" id="useExtraTitles" cssClass="bootstrap-switch" />
             </div>
         </div>
-
-
+        
         <div class="col-sm-6" id="form-custom-select">
             <%-- charset --%>
             <s:set var="fieldErrorsVar" value="%{fieldErrors['charset']}" />
@@ -408,7 +408,7 @@
     <wpsa:hookPoint key="core.entryPage" objectName="hookPointElements_core_entryPage">
         <s:iterator value="#hookPointElements_core_entryPage" var="hookPointElement">
             <wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
-            </s:iterator>
+        </s:iterator>
     </wpsa:hookPoint>
 
     <div class="col-md-12">

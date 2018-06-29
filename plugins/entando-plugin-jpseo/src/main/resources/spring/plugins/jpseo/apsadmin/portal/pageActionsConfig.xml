@@ -14,6 +14,11 @@
 		<property name="hookPointKey"><value>core.entryPage</value></property>
 	</bean>
     
+    <bean id="jpseoEntryPageLangElementHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
+		<property name="filePath"><value>/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/entryPageLang-jack.jsp</value></property>
+		<property name="hookPointKey"><value>core.entryPage.langElement</value></property>
+	</bean>
+    
     <bean id="jpseoPageSettingsHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
 		<property name="filePath"><value>/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/pageSettings-jack.jsp</value></property>
 		<property name="hookPointKey"><value>core.pageSettings</value></property>
