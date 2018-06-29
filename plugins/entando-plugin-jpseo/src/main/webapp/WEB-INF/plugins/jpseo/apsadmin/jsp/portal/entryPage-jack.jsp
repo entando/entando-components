@@ -72,38 +72,9 @@
         </div>
     </div>
 </s:if>
-
-<legend><s:text name="jpseo.label.descriptions" /></legend>
-<s:iterator value="langs" var="lang">
-    <%-- lang --%>
-    <s:set var="mykey" value="'description_lang'+#lang.code" />
-    <s:set var="fieldErrorsVar" value="%{fieldErrors[#mykey]}" />
-    <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
-    <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-    <div class="form-group<s:property value="#controlGroupErrorClass" />">
-        <label class="col-sm-2 control-label" for="description_lang<s:property value="code" />">
-            <code class="label label-info" ><s:property value="#lang.code" /></code></abbr>&#32;<s:text name="jpseo.label.pageDescription" />
-        </label>
-        <div class="col-sm-10">
-            <wpsf:textfield name="%{'description_lang'+#lang.code}" id="%{'description_lang'+code}" value="%{#attr[#mykey]}" cssClass="form-control" />
-            <s:if test="#hasFieldErrorVar">
-                <span class="help-block text-danger">
-                    <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
-                </span>
-            </s:if>
-        </div>
-    </div>
-</s:iterator>
-
 <div class="form-checkbox form-group<s:property value="#controlGroupErrorClass" />">
     <div class="col-sm-3 control-label">
-        <label class="display-block" for="useExtraDescriptions"><s:text name="jpseo.label.useBetterDescriptions" />
-            <%--
-            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title="" data-content="<s:text name="jpseo.label.useBetterDescriptions" />" data-placement="left">
-                <span class="fa fa-info-circle"></span>
-            </a>
-            --%>
-        </label>
+        <label class="display-block" for="useExtraDescriptions"><s:text name="jpseo.label.useBetterDescriptions" /></label>
     </div>
     <div class="col-sm-4">
         <wpsf:checkbox name="useExtraDescriptions" id="useExtraDescriptions" value="#attr.useExtraDescriptions" cssClass="bootstrap-switch" />
