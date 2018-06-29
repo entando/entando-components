@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -174,11 +173,10 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
                 String key = paramElement.getAttributeValue("key");
                 List<Element> langElements = paramElement.getChildren("property");
                 if (null != langElements && langElements.size() > 0) {
-                    for (int j = 0; j < langElements.size(); j++) {
-                        Element langElement = langElements.get(j);
+                    for (Element langElement : langElements) {
                         String langCode = langElement.getAttributeValue("key");
                         Map<String, PageMetatag> langMap = this.extractLangMap(langCode, complexParameters);
-                        PageMetatag metatag = new PageMetatag(langCode, key, paramElement.getText());
+                        PageMetatag metatag = new PageMetatag(langCode, key, langElement.getText());
                         langMap.put(key, metatag);
                     }
                 } else {
@@ -192,7 +190,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
                 List<Element> langElements = paramElement.getChildren("meta");
                 for (Element langElement : langElements) {
                     String key = langElement.getAttributeValue("key");
-                    PageMetatag metatag = new PageMetatag(langCode, key, paramElement.getText());
+                    PageMetatag metatag = new PageMetatag(langCode, key, langElement.getText());
                     metatag.setKeyAttribute(langElement.getAttributeValue("attributeName"));
                     String useDefaultLang = langElement.getAttributeValue("useDefaultLang");
                     metatag.setUseDefaultLangValue(Boolean.parseBoolean(useDefaultLang));
