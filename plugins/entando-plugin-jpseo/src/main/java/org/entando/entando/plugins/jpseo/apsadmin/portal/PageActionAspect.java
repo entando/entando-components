@@ -34,6 +34,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -55,6 +56,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.entando.entando.plugins.jpseo.aps.system.services.mapping.FriendlyCodeVO;
 import org.entando.entando.plugins.jpseo.aps.system.services.mapping.ISeoMappingManager;
+import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoComplexParameterDOM;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
@@ -67,7 +69,10 @@ public class PageActionAspect {
     private static final Logger _logger = LoggerFactory.getLogger(PageActionAspect.class);
 
     public static final String PARAM_FRIENDLY_CODE = "friendlyCode";
+    @Deprecated
     public static final String PARAM_XML_CONFIG = "xmlConfig";
+    public static final String PARAM_METATAGS = "pageMetatags";
+    public static final String PARAM_METATAG_ATTRIBUTE_NAMES = "pageMetatagAttributeName";
     public static final String PARAM_DESCRIPTION_PREFIX = "description_lang";
     public static final String PARAM_USE_EXTRA_DESCRIPTIONS = "useExtraDescriptions";
 
@@ -108,7 +113,6 @@ public class PageActionAspect {
             SeoPageMetadata pageMetadata = (SeoPageMetadata) page.getMetadata();
             request.setAttribute(PARAM_FRIENDLY_CODE, pageMetadata.getFriendlyCode());
             request.setAttribute(PARAM_USE_EXTRA_DESCRIPTIONS, pageMetadata.isUseExtraDescriptions());
-            request.setAttribute(PARAM_XML_CONFIG, new SeoComplexParameterDOM().extractXml(pageMetadata.getComplexParameters()));
             ApsProperties props = pageMetadata.getDescriptions();
             if (null != props) {
                 Iterator<Object> it = props.keySet().iterator();
@@ -117,8 +121,47 @@ public class PageActionAspect {
                     request.setAttribute(PARAM_DESCRIPTION_PREFIX + key, props.get(key));
                 }
             }
+            Map<String, Map<String, PageMetatag>> seoParameters = pageMetadata.getComplexParameters();
+            if (null != seoParameters) {
+                Map<String, Map<String, PageMetatag>> metas = this.extractRightParams(seoParameters);
+                request.setAttribute(PARAM_XML_CONFIG, new SeoComplexParameterDOM().extractXml(metas));
+                request.setAttribute(PARAM_METATAGS, metas);
+            }
+            request.setAttribute(PARAM_METATAG_ATTRIBUTE_NAMES, Metatag.getAttributeNames());
         }
     }
+    
+    private Map<String, Map<String, PageMetatag>> extractRightParams(Map<String, Map<String, PageMetatag>> seoParameters) {
+        Map<String, Map<String, PageMetatag>> newMap = new HashMap<>();
+        Map<String, PageMetatag> defaultMetas = null;
+        Iterator<String> iter = seoParameters.keySet().iterator();
+        while (iter.hasNext()) {
+            String langKey = iter.next();
+            Map<String, PageMetatag> metas = seoParameters.get(langKey);
+            if (langKey.equals("default")) {
+                defaultMetas = metas;
+            } else {
+                newMap.put(langKey, metas);
+            }
+        }
+        if (null != defaultMetas) {
+            String defaultLangCode = this.getLangManager().getDefaultLang().getCode();
+            Map<String, PageMetatag> currentDefaultMetas = newMap.get(defaultLangCode);
+            if (null == currentDefaultMetas) {
+                currentDefaultMetas = new HashMap<>();
+                newMap.put(defaultLangCode, currentDefaultMetas);
+            }
+            Iterator<String> iter2 = defaultMetas.keySet().iterator();
+            while (iter2.hasNext()) {
+                String key = iter2.next();
+                PageMetatag meta = defaultMetas.get(key);
+                meta.setLangCode(defaultLangCode);
+                currentDefaultMetas.put(key, meta);
+            }
+        }
+        return newMap;
+    }
+    
 
     private void updateFields(PageAction action) {
         this.updateDescriptions(action);
