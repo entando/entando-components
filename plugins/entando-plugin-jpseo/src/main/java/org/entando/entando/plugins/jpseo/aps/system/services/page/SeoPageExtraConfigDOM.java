@@ -167,8 +167,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
         if (null == elements) {
             return complexParameters;
         }
-        for (int i = 0; i < elements.size(); i++) {
-            Element paramElement = elements.get(i);
+        for (Element paramElement : elements) {
             String elementName = paramElement.getName();
             if (elementName.equals("parameter")) {
                 //Used to guarantee porting with previous versions of the plugin
@@ -258,24 +257,34 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
         }
         Iterator<String> iter1 = parameters.keySet().iterator();
         while (iter1.hasNext()) {
-            String key = iter1.next();
-            Element parameterElement = new Element("parameter");
-            parameterElement.setAttribute("key", key);
-            Object value = parameters.get(key);
-            if (value instanceof Properties) {
-                Properties properties = (Properties) value;
-                Iterator<Object> iter2 = properties.keySet().iterator();
+            String langCode = iter1.next();
+            Map<String, PageMetatag> metas = parameters.get(langCode);
+            if (langCode.equals("default")) {
+                Iterator<String> iter2 = metas.keySet().iterator();
                 while (iter2.hasNext()) {
-                    Object key2 = iter2.next();
-                    Element propertyElement = new Element("property");
-                    propertyElement.setAttribute("key", key2.toString());
-                    propertyElement.setText(properties.get(key2).toString());
-                    parameterElement.addContent(propertyElement);
+                    String key2 = iter2.next();
+                    Element parameterElement = new Element("parameter");
+                    PageMetatag metatag = metas.get(key2);
+                    parameterElement.setAttribute("key", metatag.getKey());
+                    parameterElement.setText(metatag.getValue());
+                    elementRoot.addContent(parameterElement);
                 }
             } else {
-                parameterElement.setText(value.toString());
+                Element langElement = new Element("lang");
+                langElement.setAttribute("code", langCode);
+                Iterator<String> iter2 = metas.keySet().iterator();
+                while (iter2.hasNext()) {
+                    String key2 = iter2.next();
+                    Element metaElement = new Element("meta");
+                    PageMetatag metatag = metas.get(key2);
+                    metaElement.setAttribute("key", metatag.getKey());
+                    metaElement.setAttribute("attributeName", metatag.getKeyAttribute());
+                    metaElement.setAttribute("useDefaultLang", String.valueOf(metatag.isUseDefaultLangValue()));
+                    metaElement.setText(metatag.getValue());
+                    langElement.addContent(metaElement);
+                }
+                elementRoot.addContent(langElement);
             }
-            elementRoot.addContent(parameterElement);
         }
     }
 
