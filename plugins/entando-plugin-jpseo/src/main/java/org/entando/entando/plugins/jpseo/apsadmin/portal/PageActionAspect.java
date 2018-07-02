@@ -31,7 +31,6 @@ import com.agiletec.apsadmin.system.BaseAction;
 import com.opensymphony.xwork2.Action;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -49,6 +48,7 @@ import org.entando.entando.plugins.jpseo.aps.system.services.mapping.FriendlyCod
 import org.entando.entando.plugins.jpseo.aps.system.services.mapping.ISeoMappingManager;
 import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
+import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageExtraConfigDOM;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,43 +105,15 @@ public class PageActionAspect {
             }
             Map<String, Map<String, PageMetatag>> seoParameters = pageMetadata.getComplexParameters();
             if (null != seoParameters) {
-                Map<String, Map<String, PageMetatag>> metas = this.extractRightParams(seoParameters);
+                Lang defaultLang = this.getLangManager().getDefaultLang();
+                Map<String, Map<String, PageMetatag>> metas = SeoPageExtraConfigDOM.extractRightParams(seoParameters, defaultLang);
                 request.setAttribute(PARAM_METATAGS, metas);
             }
             request.setAttribute(PARAM_METATAG_ATTRIBUTE_NAMES, Metatag.getAttributeNames());
         }
     }
     
-    private Map<String, Map<String, PageMetatag>> extractRightParams(Map<String, Map<String, PageMetatag>> seoParameters) {
-        Map<String, Map<String, PageMetatag>> newMap = new HashMap<>();
-        Map<String, PageMetatag> defaultMetas = null;
-        Iterator<String> iter = seoParameters.keySet().iterator();
-        while (iter.hasNext()) {
-            String langKey = iter.next();
-            Map<String, PageMetatag> metas = seoParameters.get(langKey);
-            if (langKey.equals("default")) {
-                defaultMetas = metas;
-            } else {
-                newMap.put(langKey, metas);
-            }
-        }
-        if (null != defaultMetas) {
-            String defaultLangCode = this.getLangManager().getDefaultLang().getCode();
-            Map<String, PageMetatag> currentDefaultMetas = newMap.get(defaultLangCode);
-            if (null == currentDefaultMetas) {
-                currentDefaultMetas = new HashMap<>();
-                newMap.put(defaultLangCode, currentDefaultMetas);
-            }
-            Iterator<String> iter2 = defaultMetas.keySet().iterator();
-            while (iter2.hasNext()) {
-                String key = iter2.next();
-                PageMetatag meta = defaultMetas.get(key);
-                meta.setLangCode(defaultLangCode);
-                currentDefaultMetas.put(key, meta);
-            }
-        }
-        return newMap;
-    }
+    
     
     private void extractAndSetSeoFields() {
         HttpServletRequest request = ServletActionContext.getRequest();

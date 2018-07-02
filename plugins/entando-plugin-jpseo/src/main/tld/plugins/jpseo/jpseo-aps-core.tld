@@ -190,6 +190,26 @@
 	</tag>
     
 	<tag>
+		<description><![CDATA[Returns a full Meta-Tag informations of the current page.]]></description>
+		<name>seoMetasTag</name>
+		<tag-class>org.entando.entando.plugins.jpseo.aps.tags.SeoMetatagsTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[Name used to reference the value pushed into the pageContext.
+				In this case, the system <b>will not</b> escape the special characters in the value entered in pageContext.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to escape HTML. Possible entries (true|false). Default value: true.]]></description>
+			<name>escapeXml</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+    
+	<tag>
 		<description><![CDATA[Prepare a collection containing the free pages to build a site map.]]></description>
 		<name>siteMap</name>
 		<tag-class>org.entando.entando.plugins.jpseo.aps.tags.SiteMapTag</tag-class>
