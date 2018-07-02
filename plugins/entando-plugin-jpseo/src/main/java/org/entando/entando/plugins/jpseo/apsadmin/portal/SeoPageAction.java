@@ -98,7 +98,7 @@ public class SeoPageAction extends PageAction {
             }
             SeoPageActionUtils.setSeoParameters(seoParameters, this.getRequest());
         } catch (Throwable t) {
-            logger.error("error in addMetatag", t);
+            logger.error("error in removeMetatag", t);
             return FAILURE;
         }
         return SUCCESS;
