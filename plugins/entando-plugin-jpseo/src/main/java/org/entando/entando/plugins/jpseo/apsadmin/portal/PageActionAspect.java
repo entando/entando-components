@@ -30,9 +30,6 @@ import com.agiletec.apsadmin.portal.PageAction;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.opensymphony.xwork2.Action;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,12 +37,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.XMLConstants;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 
 import org.apache.struts2.ServletActionContext;
 import org.aspectj.lang.JoinPoint;
@@ -58,7 +49,6 @@ import org.entando.entando.plugins.jpseo.aps.system.services.mapping.FriendlyCod
 import org.entando.entando.plugins.jpseo.aps.system.services.mapping.ISeoMappingManager;
 import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
-import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoComplexParameterDOM;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +59,6 @@ public class PageActionAspect {
     private static final Logger _logger = LoggerFactory.getLogger(PageActionAspect.class);
 
     public static final String PARAM_FRIENDLY_CODE = "friendlyCode";
-    @Deprecated
-    public static final String PARAM_XML_CONFIG = "xmlConfig";
     public static final String PARAM_METATAGS = "pageMetatags";
     public static final String PARAM_METATAG_ATTRIBUTE_NAMES = "pageMetatagAttributeName";
     public static final String PARAM_DESCRIPTION_PREFIX = "description_lang";
@@ -79,14 +67,13 @@ public class PageActionAspect {
     private ILangManager langManager;
     private ISeoMappingManager seoMappingManager;
     private IPageManager pageManager;
-
+    
     @Before("execution(* com.agiletec.plugins.jacms.apsadmin.portal.PageAction.validate())")
     public void executeExtraValidation(JoinPoint joinPoint) {
         PageAction action = (PageAction) joinPoint.getTarget();
         HttpServletRequest request = ServletActionContext.getRequest();
         SeoPageActionUtils.extractAndSetDescriptions(request);
         this.checkFriendlyCode(action);
-        this.checkXmlMapping(action);
         request.setAttribute(PARAM_USE_EXTRA_DESCRIPTIONS, request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS));
     }
 
@@ -121,7 +108,6 @@ public class PageActionAspect {
             Map<String, Map<String, PageMetatag>> seoParameters = pageMetadata.getComplexParameters();
             if (null != seoParameters) {
                 Map<String, Map<String, PageMetatag>> metas = this.extractRightParams(seoParameters);
-                request.setAttribute(PARAM_XML_CONFIG, new SeoComplexParameterDOM().extractXml(metas));
                 request.setAttribute(PARAM_METATAGS, metas);
             }
             request.setAttribute(PARAM_METATAG_ATTRIBUTE_NAMES, Metatag.getAttributeNames());
@@ -163,7 +149,6 @@ public class PageActionAspect {
         HttpServletRequest request = ServletActionContext.getRequest();
         SeoPageActionUtils.extractAndSetDescriptions(request);
         SeoPageActionUtils.extractAndSetFriendlyCode(request);
-        SeoPageActionUtils.extractAndSetXmlMapping(request);
         SeoPageActionUtils.extractAndSetSeoParameters(request);
         String param = request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS);
         request.setAttribute(PARAM_USE_EXTRA_DESCRIPTIONS, param);
@@ -191,49 +176,6 @@ public class PageActionAspect {
             }
         }
         request.setAttribute(PARAM_FRIENDLY_CODE, code);
-    }
-
-    private void checkXmlMapping(PageAction action) {
-        HttpServletRequest request = ServletActionContext.getRequest();
-        String xmlConfig = request.getParameter(PARAM_XML_CONFIG);
-        if (null == xmlConfig || xmlConfig.trim().length() == 0) {
-            return;
-        }
-        if (!this.validateXmlConfig(xmlConfig)) {
-            action.addFieldError(PARAM_XML_CONFIG, action.getText("jpseo.error.page.invalidXmlConfig"));
-        }
-        request.setAttribute(PARAM_XML_CONFIG, xmlConfig);
-    }
-
-    private boolean validateXmlConfig(String xmlText) {
-        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        InputStream schemaIs = null;
-        InputStream xmlIs = null;
-        boolean valid = false;
-        try {
-            schemaIs = this.getClass().getResourceAsStream("mapping_seo.xsd");
-            Source schemaSource = new StreamSource(schemaIs);
-            Schema schema = factory.newSchema(schemaSource);
-            Validator validator = schema.newValidator();
-            xmlIs = new ByteArrayInputStream(xmlText.getBytes("UTF-8"));
-            Source source = new StreamSource(xmlIs);
-            validator.validate(source);
-            valid = true;
-        } catch (Throwable t) {
-            valid = false;
-        } finally {
-            try {
-                if (null != schemaIs) {
-                    schemaIs.close();
-                }
-                if (null != xmlIs) {
-                    xmlIs.close();
-                }
-            } catch (IOException e) {
-                _logger.error("error in validateXmlConfig. xml:{}", xmlText, e);
-            }
-        }
-        return valid;
     }
 
     @Around("execution(* com.agiletec.apsadmin.portal.PageAction.saveAndConfigure())")
@@ -274,7 +216,6 @@ public class PageActionAspect {
         String pagecode = action.getPageCode();
         ApsProperties descriptions = new ApsProperties();
         String friendlyCode = request.getParameter(PARAM_FRIENDLY_CODE);
-        String xmlConfig = request.getParameter(PARAM_XML_CONFIG);
         Iterator<Lang> langsIter = this.getLangManager().getLangs().iterator();
         while (langsIter.hasNext()) {
             Lang lang = (Lang) langsIter.next();
@@ -290,8 +231,7 @@ public class PageActionAspect {
             SeoPageMetadata pageMetadata = (SeoPageMetadata) page.getMetadata();
             pageMetadata.setFriendlyCode(friendlyCode);
             pageMetadata.setDescriptions(descriptions);
-            Map<String, Map<String, PageMetatag>> complexParameters = (new SeoComplexParameterDOM().extractComplexParameters(xmlConfig));
-            pageMetadata.setComplexParameters(complexParameters);
+            pageMetadata.setComplexParameters(SeoPageActionUtils.extractSeoParameters(request));
             pageMetadata.setUpdatedAt(new Date());
             pageMetadata.setUseExtraDescriptions(null != request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS) && request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS).equalsIgnoreCase("true"));
         }
