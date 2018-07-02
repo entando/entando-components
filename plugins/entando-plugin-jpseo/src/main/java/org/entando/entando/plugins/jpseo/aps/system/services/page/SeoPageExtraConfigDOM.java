@@ -21,6 +21,7 @@
  */
 package org.entando.entando.plugins.jpseo.aps.system.services.page;
 
+import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.PageExtraConfigDOM;
 import com.agiletec.aps.system.services.page.PageMetadata;
 import com.agiletec.aps.util.ApsProperties;
@@ -284,6 +285,43 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
                 elementRoot.addContent(langElement);
             }
         }
+    }
+    
+    /**
+     * Utility method
+     * @param seoParameters
+     * @param defaultLang
+     * @return 
+     */
+    public static Map<String, Map<String, PageMetatag>> extractRightParams(Map<String, Map<String, PageMetatag>> seoParameters, Lang defaultLang) {
+        Map<String, Map<String, PageMetatag>> newMap = new HashMap<>();
+        Map<String, PageMetatag> defaultMetas = null;
+        Iterator<String> iter = seoParameters.keySet().iterator();
+        while (iter.hasNext()) {
+            String langKey = iter.next();
+            Map<String, PageMetatag> metas = seoParameters.get(langKey);
+            if (langKey.equals("default")) {
+                defaultMetas = metas;
+            } else {
+                newMap.put(langKey, metas);
+            }
+        }
+        if (null != defaultMetas) {
+            String defaultLangCode = defaultLang.getCode();
+            Map<String, PageMetatag> currentDefaultMetas = newMap.get(defaultLangCode);
+            if (null == currentDefaultMetas) {
+                currentDefaultMetas = new HashMap<>();
+                newMap.put(defaultLangCode, currentDefaultMetas);
+            }
+            Iterator<String> iter2 = defaultMetas.keySet().iterator();
+            while (iter2.hasNext()) {
+                String key = iter2.next();
+                PageMetatag meta = defaultMetas.get(key);
+                meta.setLangCode(defaultLangCode);
+                currentDefaultMetas.put(key, meta);
+            }
+        }
+        return newMap;
     }
 
 }
