@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
-import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoComplexParameterDOM;
 
 public class SeoPageActionUtils {
     
