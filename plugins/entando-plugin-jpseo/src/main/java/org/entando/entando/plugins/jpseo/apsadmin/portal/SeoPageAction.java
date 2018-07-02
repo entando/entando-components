@@ -51,7 +51,6 @@ public class SeoPageAction extends PageAction {
             this.updateTitles();
             SeoPageActionUtils.extractAndSetDescriptions(this.getRequest());
             SeoPageActionUtils.extractAndSetFriendlyCode(this.getRequest());
-            SeoPageActionUtils.extractAndSetXmlMapping(this.getRequest());
             Map<String, Map<String, PageMetatag>> seoParameters = SeoPageActionUtils.extractSeoParameters(this.getRequest());
             String key = this.getMetatagKey();
             boolean hasError = false;
@@ -96,7 +95,7 @@ public class SeoPageAction extends PageAction {
             this.updateTitles();
             SeoPageActionUtils.extractAndSetDescriptions(this.getRequest());
             SeoPageActionUtils.extractAndSetFriendlyCode(this.getRequest());
-            SeoPageActionUtils.extractAndSetXmlMapping(this.getRequest());
+            
         } catch (Throwable t) {
             logger.error("error in addMetatag", t);
             return FAILURE;

@@ -66,7 +66,6 @@ public class SeoPageActionUtils {
     }
     
     protected static void setSeoParameters(Map<String, Map<String, PageMetatag>> seoParameters, HttpServletRequest request) {
-        request.setAttribute(PageActionAspect.PARAM_XML_CONFIG, new SeoComplexParameterDOM().extractXml(seoParameters));
         request.setAttribute(PageActionAspect.PARAM_METATAGS, seoParameters);
         request.setAttribute(PageActionAspect.PARAM_METATAG_ATTRIBUTE_NAMES, Metatag.getAttributeNames());
     }
@@ -82,16 +81,10 @@ public class SeoPageActionUtils {
             }
         }
     }
-
+    
     protected static void extractAndSetFriendlyCode(HttpServletRequest request) {
         String code = request.getParameter(PageActionAspect.PARAM_FRIENDLY_CODE);
         request.setAttribute(PageActionAspect.PARAM_FRIENDLY_CODE, code);
-    }
-
-    @Deprecated
-    protected static void extractAndSetXmlMapping(HttpServletRequest request) {
-        String xmlConfig = request.getParameter(PageActionAspect.PARAM_XML_CONFIG);
-        request.setAttribute(PageActionAspect.PARAM_XML_CONFIG, xmlConfig);
     }
 
     private static ILangManager getLangManager(HttpServletRequest request) {
