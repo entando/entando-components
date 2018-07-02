@@ -92,12 +92,12 @@ public class PageActionAspect {
 
     @Before("execution(* com.agiletec.apsadmin.portal.PageAction.joinExtraGroup())")
     public void executeExtraJoinExtraGroup(JoinPoint joinPoint) {
-        this.updateFields();
+        this.extractAndSetSeoFields();
     }
 
     @Before("execution(* com.agiletec.apsadmin.portal.PageAction.removeExtraGroup())")
     public void executeExtraRemoveExtraGroup(JoinPoint joinPoint) {
-        this.updateFields();
+        this.extractAndSetSeoFields();
     }
 
     @After("execution(* com.agiletec.apsadmin.portal.PageAction.edit())")
@@ -159,11 +159,12 @@ public class PageActionAspect {
         return newMap;
     }
     
-    private void updateFields() {
+    private void extractAndSetSeoFields() {
         HttpServletRequest request = ServletActionContext.getRequest();
         SeoPageActionUtils.extractAndSetDescriptions(request);
         SeoPageActionUtils.extractAndSetFriendlyCode(request);
         SeoPageActionUtils.extractAndSetXmlMapping(request);
+        SeoPageActionUtils.extractAndSetSeoParameters(request);
         String param = request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS);
         request.setAttribute(PARAM_USE_EXTRA_DESCRIPTIONS, param);
     }
