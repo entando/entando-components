@@ -48,9 +48,7 @@ public class SeoPageAction extends PageAction {
 
     public String addMetatag() {
         try {
-            this.updateTitles();
-            SeoPageActionUtils.extractAndSetDescriptions(this.getRequest());
-            SeoPageActionUtils.extractAndSetFriendlyCode(this.getRequest());
+            this.extractAndSetOtherParams();
             Map<String, Map<String, PageMetatag>> seoParameters = SeoPageActionUtils.extractSeoParameters(this.getRequest());
             String key = this.getMetatagKey();
             boolean hasError = false;
@@ -92,15 +90,24 @@ public class SeoPageAction extends PageAction {
     
     public String removeMetatag() {
         try {
-            this.updateTitles();
-            SeoPageActionUtils.extractAndSetDescriptions(this.getRequest());
-            SeoPageActionUtils.extractAndSetFriendlyCode(this.getRequest());
-            
+            this.extractAndSetOtherParams();
+            Map<String, Map<String, PageMetatag>> seoParameters = SeoPageActionUtils.extractSeoParameters(this.getRequest());
+            String metaKey = this.getMetatagKey();
+            if (!StringUtils.isBlank(metaKey) && null != seoParameters) {
+                seoParameters.values().stream().forEach(langMap -> langMap.remove(metaKey));
+            }
+            SeoPageActionUtils.setSeoParameters(seoParameters, this.getRequest());
         } catch (Throwable t) {
             logger.error("error in addMetatag", t);
             return FAILURE;
         }
         return SUCCESS;
+    }
+    
+    private void extractAndSetOtherParams() {
+        this.updateTitles();
+        SeoPageActionUtils.extractAndSetDescriptions(this.getRequest());
+        SeoPageActionUtils.extractAndSetFriendlyCode(this.getRequest());
     }
 
     public String getMetatagKey() {

@@ -27,25 +27,43 @@
     <s:if test="%{null != #pageMetatagsLangVar}">
         <s:iterator value="#pageMetatagsLangVar" var="pageMetatagVar" status="rowStatus">
             <div class="form-group">
-            <label class="col-sm-2 control-label" for="metata_lang_<s:property value="#lang.code" />_<s:property value="#pageMetatagVar.key" />">
-                <wpsf:hidden name="%{'pageMetataKey_'+#lang.code+'_'+#rowStatus.index}" value="%{#pageMetatagVar.key}" />
-                <s:property value="#pageMetatagVar.key" />
-            </label>
-            <div class="col-sm-2">
-                <wpsf:select name="%{'pageMetataAttribute_'+#lang.code+'_'+#rowStatus.index}" list="#attr['pageMetatagAttributeName']" cssClass="form-control" />
+                <label class="col-sm-2 control-label" for="metata_lang_<s:property value="#lang.code" />_<s:property value="#pageMetatagVar.key" />">
+                    <wpsf:hidden name="%{'pageMetataKey_'+#lang.code+'_'+#rowStatus.index}" value="%{#pageMetatagVar.key}" />
+                    <s:property value="#pageMetatagVar.key" />
+                </label>
+                <div class="col-sm-2">
+                    <wpsf:select 
+                        name="%{'pageMetataAttribute_'+#lang.code+'_'+#rowStatus.index}" 
+                        list="#attr['pageMetatagAttributeName']" value="%{#pageMetatagVar.value.keyAttribute}" 
+                        cssClass="form-control" />
+                </div>
+                <div class="col-sm-6">
+                    <wpsf:textfield name="%{'pageMetataValue_'+#lang.code+'_'+#rowStatus.index}" 
+                                    id="%{'metata_lang_'+#lang.code+'_'+#pageMetatagVar.key}" 
+                                    value="%{#pageMetatagVar.value.value}" cssClass="form-control" />
+                </div>
+                <s:if test="%{#lang.default}" >
+                <div class="col-sm-2">
+                    <wpsa:actionParam action="removeMetatag" var="actionNameVar" >
+                        <wpsa:actionSubParam name="metatagKey" value="%{#pageMetatagVar.key}" />
+                    </wpsa:actionParam>
+                    <wpsf:submit type="button" action="%{#actionNameVar}" value="%{getText('label.remove')}" title="%{getText('label.remove')}" cssClass="btn btn-primary pull-right">
+                        <s:text name="label.remove" />
+                    </wpsf:submit>
+                </div>
+                </s:if>
             </div>
-            <div class="col-sm-6">
-                <wpsf:textfield name="%{'pageMetataValue_'+#lang.code+'_'+#rowStatus.index}" id="%{'metata_lang_'+#lang.code+'_'+#pageMetatagVar.key}" value="%{#pageMetatagVar.value.value}" cssClass="form-control" />
+            <s:if test="%{!#lang.default}" >
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4">
+                    <wpsf:checkbox name="%{'pageMetataUseDefaultLang_'+#lang.code+'_'+#rowStatus.index}" 
+                                   id="%{'pageMetataUseDefaultLang_'+#lang.code+'_'+#pageMetatagVar.key}" 
+                                   value="%{#pageMetatagVar.value.useDefaultLangValue}" />
+                </div>
+                <label class="col-sm-6" for="pageMetataUseDefaultLang_<s:property value="#lang.code" />_<s:property value="#pageMetatagVar.key" />"><s:text name="jpseo.label.inheritFromDefaultLang" /></label>
             </div>
-            <div class="col-sm-2">
-                <wpsa:actionParam action="removeMetatag" var="actionNameVar" >
-                    <wpsa:actionSubParam name="metatagKey" value="%{#pageMetatagVar.key}" />
-                </wpsa:actionParam>
-                <wpsf:submit type="button" action="%{#actionNameVar}" value="%{getText('label.remove')}" title="%{getText('label.remove')}" cssClass="btn btn-primary pull-right">
-                    <s:text name="label.remove" />
-                </wpsf:submit>
-            </div>
-            </div>
+            </s:if>
         </s:iterator>
     </s:if>
 </s:if>
@@ -55,7 +73,7 @@
 
 <div class="form-group">
     <label class="col-sm-2 control-label" for="new_metatag">
-        ADD Metatags
+        <s:text name="jpseo.label.addMetatags" />
     </label>
     <div class="col-sm-4">
         <s:set var="fieldErrorsVar" value="%{fieldErrors['new_metatag_key']}" />
