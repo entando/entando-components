@@ -71,10 +71,8 @@ public class PageActionAspect {
     @Before("execution(* com.agiletec.plugins.jacms.apsadmin.portal.PageAction.validate())")
     public void executeExtraValidation(JoinPoint joinPoint) {
         PageAction action = (PageAction) joinPoint.getTarget();
-        HttpServletRequest request = ServletActionContext.getRequest();
-        SeoPageActionUtils.extractAndSetDescriptions(request);
         this.checkFriendlyCode(action);
-        request.setAttribute(PARAM_USE_EXTRA_DESCRIPTIONS, request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS));
+        this.extractAndSetSeoFields();
     }
 
     @Before("execution(* com.agiletec.apsadmin.portal.PageAction.joinExtraGroup())")
