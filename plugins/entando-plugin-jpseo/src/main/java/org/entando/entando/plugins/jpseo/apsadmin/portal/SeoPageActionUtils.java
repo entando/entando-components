@@ -47,8 +47,10 @@ public class SeoPageActionUtils {
                 String key = request.getParameter(mainPrefix+index);
                 String attributeName = request.getParameter("pageMetataAttribute_" + lang.getCode() + "_" + index);
                 String value = request.getParameter("pageMetataValue_" + lang.getCode() + "_" + index);
+                String useDefaultLang = request.getParameter("pageMetataUseDefaultLang_" + lang.getCode() + "_" + index);
                 PageMetatag meta = new PageMetatag(lang.getCode(), key, value);
                 meta.setKeyAttribute(attributeName);
+                meta.setUseDefaultLangValue(!lang.isDefault() && null != useDefaultLang);
                 langMetas.put(key, meta);
                 index++;
             }
