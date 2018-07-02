@@ -53,14 +53,14 @@ public class SeoPageActionUtils {
                 langMetas.put(key, meta);
                 index++;
             }
-            if (!seoParameters.isEmpty()) {
+            if (!langMetas.isEmpty()) {
                 seoParameters.put(lang.getCode(), langMetas);
             }
         }
         return seoParameters;
     }
     
-    protected static void setSeoParameters(HttpServletRequest request) {
+    protected static void extractAndSetSeoParameters(HttpServletRequest request) {
         Map<String, Map<String, PageMetatag>> seoParameters = extractSeoParameters(request);
         setSeoParameters(seoParameters, request);
     }
