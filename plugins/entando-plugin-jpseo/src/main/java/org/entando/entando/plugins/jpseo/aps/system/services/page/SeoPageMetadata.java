@@ -33,40 +33,47 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class SeoPageMetadata extends PageMetadata {
 
+    private ApsProperties descriptions = new ApsProperties();
+    private boolean useExtraDescriptions = false;
+
+    private String friendlyCode;
+
+    private Map<String, Map<String, PageMetatag>> complexParameters;
+
     public String getDescription(String langCode) {
         return this.getDescriptions().getProperty(langCode);
     }
 
     public ApsProperties getDescriptions() {
-        return _descriptions;
+        return descriptions;
     }
 
     public void setDescriptions(ApsProperties descriptions) {
-        this._descriptions = descriptions;
+        this.descriptions = descriptions;
     }
 
     public boolean isUseExtraDescriptions() {
-        return _useExtraDescriptions;
+        return useExtraDescriptions;
     }
 
     public void setUseExtraDescriptions(boolean useExtraDescriptions) {
-        this._useExtraDescriptions = useExtraDescriptions;
+        this.useExtraDescriptions = useExtraDescriptions;
     }
 
     public String getFriendlyCode() {
-        return _friendlyCode;
+        return friendlyCode;
     }
 
     public void setFriendlyCode(String friendlyCode) {
-        this._friendlyCode = friendlyCode;
+        this.friendlyCode = friendlyCode;
     }
 
     public Map<String, Map<String, PageMetatag>> getComplexParameters() {
-        return _complexParameters;
+        return complexParameters;
     }
 
     public void setComplexParameters(Map<String, Map<String, PageMetatag>> complexParameters) {
-        this._complexParameters = complexParameters;
+        this.complexParameters = complexParameters;
     }
 
     @Override
@@ -99,12 +106,5 @@ public class SeoPageMetadata extends PageMetadata {
         }
         return true;
     }
-
-    private ApsProperties _descriptions = new ApsProperties();
-    private boolean _useExtraDescriptions = false;
-
-    private String _friendlyCode;
-
-    private Map<String, Map<String, PageMetatag>> _complexParameters;
 
 }

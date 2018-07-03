@@ -40,6 +40,8 @@ import com.agiletec.aps.system.services.page.PageMetadata;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import java.util.Iterator;
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
+import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageExtraConfigDOM;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
@@ -63,11 +65,21 @@ public class SeoMetatagsTag extends OutSupport {
                 this.release();
                 return EVAL_PAGE;
             }
+            ILangManager langManager
+                    = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
+            Lang defaultLang = langManager.getDefaultLang();
+            Object descriptionObject = reqCtx.getExtraParam(JpseoSystemConstants.EXTRAPAR_EXTRA_PAGE_DESCRIPTIONS);
+            String description = (null != descriptionObject) ? descriptionObject.toString() : null;
+            if (null == description) {
+                description = ((SeoPageMetadata) pageMetadata).getDescription(currentLang.getCode());
+                if (StringUtils.isBlank(description)) {
+                    description = ((SeoPageMetadata) pageMetadata).getDescription(defaultLang.getCode());
+                }
+            }
+            this.appendMetadata(output, Metatag.ATTRIBUTE_NAME_NAME, "description", description);
             Map<String, Map<String, PageMetatag>> complexParameters = ((SeoPageMetadata) pageMetadata).getComplexParameters();
             if (null != complexParameters) {
-                ILangManager langManager
-                    = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
-                Lang defaultLang = langManager.getDefaultLang();
+                
                 Map<String, Map<String, PageMetatag>> metas = SeoPageExtraConfigDOM.extractRightParams(complexParameters, defaultLang);
                 Map<String, PageMetatag> defaultMap = metas.get(defaultLang.getCode());
                 Map<String, PageMetatag> langMap = (currentLang.getCode().equals(defaultLang.getCode())) ? null : metas.get(currentLang.getCode());
