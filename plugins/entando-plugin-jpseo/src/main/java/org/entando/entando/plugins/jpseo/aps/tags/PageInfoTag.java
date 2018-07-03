@@ -36,6 +36,7 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.PageMetadata;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 
 /**
@@ -94,26 +95,29 @@ public class PageInfoTag extends com.agiletec.aps.tags.PageInfoTag {
         this.release();
         return EVAL_PAGE;
     }
-
+    
+    // METODO UGUALE
     protected void extractPageDescription(IPage page, Lang currentLang) {
         PageMetadata pageMetadata = page.getMetadata();
         if (!(pageMetadata instanceof SeoPageMetadata) || null == ((SeoPageMetadata) pageMetadata).getDescriptions()) {
             return;
         }
         ApsProperties descriptions = ((SeoPageMetadata) pageMetadata).getDescriptions();
-        String value = null;
+        PageMetatag metatag = null;
         if ((this.getLangCode() == null) || (this.getLangCode().equals(""))
                 || (currentLang.getCode().equalsIgnoreCase(this.getLangCode()))) {
-            value = descriptions.getProperty(currentLang.getCode());
+            metatag = (PageMetatag) descriptions.get(currentLang.getCode());
         } else {
-            value = descriptions.getProperty(this.getLangCode());
+            metatag = (PageMetatag) descriptions.get(this.getLangCode());
         }
-        if (value == null || value.trim().equals("")) {
+        if (metatag == null || null == metatag.getValue()) {
             ILangManager langManager
                     = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
-            value = descriptions.getProperty(langManager.getDefaultLang().getCode());
+            metatag = (PageMetatag) descriptions.get(langManager.getDefaultLang().getCode());
         }
-        this.setValue(value);
+        if (null != metatag) {
+            this.setValue(metatag.getValue());
+        }
     }
 
     public static final String DESCRIPTION_INFO = "description";

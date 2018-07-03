@@ -99,11 +99,6 @@ public class SeoPageMetadata extends PageMetadata {
         if (other.isUseExtraDescriptions() != this.isUseExtraDescriptions()) {
             return false;
         }
-        if ((null != other.getDescriptions() && null == this.getDescriptions())
-                || (null == other.getDescriptions() && null != this.getDescriptions())
-                || (null != other.getDescriptions() && null != this.getDescriptions()) && !other.getDescriptions().equals(this.getDescriptions())) {
-            return false;
-        }
         return true;
     }
 

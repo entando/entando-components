@@ -48,6 +48,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
 
     private static final String USE_EXTRA_DESCRIPTIONS_ELEMENT_NAME = "useextradescriptions";
     private static final String DESCRIPTIONS_ELEMENT_NAME = "descriptions";
+    private static final String USE_DEFAULT_LANG_ELEMENT_NAME = "useDefaultLang";
     private static final String DESCRIPTION_ELEMENT_NAME = "property";
     private static final String DESCRIPTION_LANG_ATTRIBUTE_NAME = "key";
 
@@ -77,8 +78,11 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
             for (int i = 0; i < descriptionElements.size(); i++) {
                 Element descriptionElement = descriptionElements.get(i);
                 String langCode = descriptionElement.getAttributeValue(DESCRIPTION_LANG_ATTRIBUTE_NAME);
+                String useDefaultLang = descriptionElement.getAttributeValue(USE_DEFAULT_LANG_ELEMENT_NAME);
                 String description = descriptionElement.getText();
-                seoPage.getDescriptions().put(langCode, description);
+                PageMetatag metatag = new PageMetatag(langCode, "description", description);
+                metatag.setUseDefaultLangValue(Boolean.parseBoolean(useDefaultLang));
+                seoPage.getDescriptions().put(langCode, metatag);
             }
         }
         Element friendlyCodeElement = root.getChild(FRIENDLY_CODE_ELEMENT_NAME);
@@ -194,7 +198,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
                     String key = langElement.getAttributeValue("key");
                     PageMetatag metatag = new PageMetatag(langCode, key, langElement.getText());
                     metatag.setKeyAttribute(langElement.getAttributeValue("attributeName"));
-                    String useDefaultLang = langElement.getAttributeValue("useDefaultLang");
+                    String useDefaultLang = langElement.getAttributeValue(USE_DEFAULT_LANG_ELEMENT_NAME);
                     metatag.setUseDefaultLangValue(Boolean.parseBoolean(useDefaultLang));
                     langMap.put(key, metatag);
                 }
@@ -279,7 +283,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
                     PageMetatag metatag = metas.get(key2);
                     metaElement.setAttribute("key", metatag.getKey());
                     metaElement.setAttribute("attributeName", metatag.getKeyAttribute());
-                    metaElement.setAttribute("useDefaultLang", String.valueOf(metatag.isUseDefaultLangValue()));
+                    metaElement.setAttribute(USE_DEFAULT_LANG_ELEMENT_NAME, String.valueOf(metatag.isUseDefaultLangValue()));
                     metaElement.setText(metatag.getValue());
                     langElement.addContent(metaElement);
                 }
