@@ -23,7 +23,7 @@ In order to install the SEO plugin, you must insert the following dependency in 
 
 ###### Modify of web.xml
 
-Add, into web.xml file, the following xml section
+Add, into web.xml file (into src/main/conf folder), the following xml section
 
 ```
     <servlet-mapping>
@@ -38,23 +38,19 @@ Add the following tld declaration in the page models:
 
 <%@ taglib prefix="jpseo" uri="/jpseo-aps-core" %>
 
+You can add the following tag (into the header of the pagemodel) to print the entire metatag configuration of the current page
+
+```
+<jpseo:seoMetasTag escapeXml="true" /> 
+```
+OR use the follow instruction for more granular control on the metatag to print.
+
 In order to add the metadata description, add the following section in the header: 
 ```
 <jpseo:currentPage param="description" var="metaDescr" />
 <c:if test="${metaDescr!=null}" >
 <meta name="description" content="<c:out value="${metaDescr}" />" />
 </c:if>
-```
-
-If you have configured a page with the field "Complex parameters" (as in the example shown):
-```
-<seoparameters>
-	<parameter key="author">Elia Mezzano</parameter>
-	<parameter key="keywords">
-		<property key="en">aaa,bbb,ccc,ddd,eee,fff</property>
-		<property key="it">ggg,hhh,iii,lll,mmm,nnn</property>
-	</parameter>
-</seoparameters>
 ```
 you can use, into the header of the page models, the following sections:
 ```
