@@ -13,8 +13,8 @@ INSERT INTO pages_metadata_draft (code, titles, modelcode, showinmenu, extraconf
   <mimeType>text/html</mimeType>
   <useextradescriptions>false</useextradescriptions>
   <descriptions>
-    <property key="en" />
-    <property key="it" />
+    <property key="en">EN Description SeoPage 1</property>
+    <property key="it">Descrizione IT SeoPage 1</property>
   </descriptions>
   <complexParameters>
     <parameter key="key1">VALUE_1</parameter>
@@ -44,8 +44,8 @@ INSERT INTO pages_metadata_draft (code, titles, modelcode, showinmenu, extraconf
   <mimeType>text/html</mimeType>
   <useextradescriptions>false</useextradescriptions>
   <descriptions>
-    <property key="en" />
-    <property key="it" />
+    <property key="en">EN Description SeoPage 2</property>
+    <property key="it">Descrizione IT SeoPage 2</property>
   </descriptions>
   <complexParameters>
     <lang code="it">

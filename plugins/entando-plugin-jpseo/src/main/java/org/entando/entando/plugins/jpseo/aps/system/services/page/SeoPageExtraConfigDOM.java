@@ -239,7 +239,9 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
                 String langCode = (String) iterator.next();
                 Element extraDescriptionElement = new Element(DESCRIPTION_ELEMENT_NAME);
                 extraDescriptionElement.setAttribute(DESCRIPTION_LANG_ATTRIBUTE_NAME, langCode);
-                extraDescriptionElement.setText(descriptions.getProperty(langCode));
+                PageMetatag metatag = (PageMetatag) descriptions.get(langCode);
+                extraDescriptionElement.setAttribute(USE_DEFAULT_LANG_ELEMENT_NAME, String.valueOf(metatag.isUseDefaultLangValue()));
+                extraDescriptionElement.setText(metatag.getValue());
                 descriptionsElement.addContent(extraDescriptionElement);
             }
         }
