@@ -26,6 +26,7 @@ import com.agiletec.aps.system.services.page.PageExtraConfigDOM;
 import com.agiletec.aps.system.services.page.PageMetadata;
 import com.agiletec.aps.util.ApsProperties;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -319,6 +320,23 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
                 PageMetatag meta = defaultMetas.get(key);
                 meta.setLangCode(defaultLangCode);
                 currentDefaultMetas.put(key, meta);
+            }
+        }
+        Map<String, PageMetatag> currentDefaultMetas = newMap.get(defaultLang.getCode());
+        List<String> langKeys = new ArrayList<>(newMap.keySet());
+        Iterator<PageMetatag> iterMetatag = currentDefaultMetas.values().iterator();
+        while (iterMetatag.hasNext()) {
+            PageMetatag defaultMeta = iterMetatag.next();
+            for (String langKey : langKeys) {
+                if (langKey.equals(defaultLang.getCode())) {
+                    continue;
+                }
+                Map<String, PageMetatag> otherMetas = newMap.get(langKey);
+                if (null == otherMetas.get(defaultMeta.getKey())) {
+                    PageMetatag missingMeta = new PageMetatag(langKey, defaultMeta.getKey(), null);
+                    missingMeta.setKeyAttribute(defaultMeta.getKeyAttribute());
+                    otherMetas.put(defaultMeta.getKey(), missingMeta);
+                }
             }
         }
         return newMap;
