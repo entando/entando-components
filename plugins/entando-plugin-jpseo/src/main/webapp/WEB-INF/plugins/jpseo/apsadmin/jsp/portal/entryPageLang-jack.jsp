@@ -4,7 +4,7 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 
 <s:set var="mykey" value="'description_lang_'+#lang.code" />
-<s:set var="mykeyUseDefault" value="'description_lang_'+#lang.code" />
+<s:set var="mykeyUseDefault" value="'description_useDefaultLang_'+#lang.code" />
 <s:set var="fieldErrorsVar" value="%{fieldErrors[#mykey]}" />
 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
@@ -20,17 +20,17 @@
             </span>
         </s:if>
     </div>
-    <s:if test="%{!#lang.default}" >
-    <div class="form-group">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-4">
-            <wpsf:checkbox name="%{'description_useDefaultLang_'+#lang.code}" 
-                           id="%{'description_useDefaultLang_'+#lang.code}" value="%{#attr[#mykeyUseDefault]}" />
-        </div>
-        <label class="col-sm-6" for="description_useDefaultLang_<s:property value="#lang.code" />"><s:text name="jpseo.label.inheritFromDefaultLang" /></label>
-    </div>
-    </s:if>
 </div>
+<s:if test="%{!#lang.default}" >
+<div class="form-group">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-4">
+        <wpsf:checkbox name="%{'description_useDefaultLang_'+#lang.code}" 
+                       id="%{'description_useDefaultLang_'+#lang.code}" value="%{#attr[#mykeyUseDefault]}" />
+    </div>
+    <label class="col-sm-6" for="description_useDefaultLang_<s:property value="#lang.code" />"><s:text name="jpseo.label.inheritFromDefaultLang" /></label>
+</div>
+</s:if>
 
 <s:set var="pageMetatagsVar" value="#attr['pageMetatags']" /> 
 <s:if test="%{null != #pageMetatagsVar}">

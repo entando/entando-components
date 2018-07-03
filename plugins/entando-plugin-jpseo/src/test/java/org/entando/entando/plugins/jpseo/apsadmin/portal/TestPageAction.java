@@ -35,6 +35,7 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.apsadmin.portal.PageAction;
 import com.opensymphony.xwork2.Action;
+import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 
 public class TestPageAction extends ApsAdminPluginBaseTestCase {
@@ -45,11 +46,11 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 		this.init();
 	}
 
-	public void testEditPageForAdminUser() throws Throwable {
+	public void testEditPage_1() throws Throwable {
 		String selectedPageCode = "pagina_1";
 		String result = this.executeActionOnPage(selectedPageCode, "admin", "edit", null);
 		assertEquals(Action.SUCCESS, result);
-		IPage page = this._pageManager.getOnlinePage(selectedPageCode);
+		IPage page = this._pageManager.getDraftPage(selectedPageCode);
 		PageAction action = (PageAction) this.getAction();
 		assertEquals(action.getStrutsAction(), ApsAdminSystemConstants.EDIT);
 		assertEquals(page.getCode(), action.getPageCode());
@@ -59,6 +60,37 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 		assertEquals(page.isShowable(), action.isShowable());
 		assertEquals("Pagina 1", action.getTitles().getProperty("it"));
 		assertEquals("Page 1", action.getTitles().getProperty("en"));
+	}
+
+	public void testEditPage_2() throws Throwable {
+		String selectedPageCode = "seo_page_1";
+		String result = this.executeActionOnPage(selectedPageCode, "admin", "edit", null);
+		assertEquals(Action.SUCCESS, result);
+		IPage page = this._pageManager.getDraftPage(selectedPageCode);
+		PageAction action = (PageAction) this.getAction();
+		assertEquals(action.getStrutsAction(), ApsAdminSystemConstants.EDIT);
+		assertEquals(page.getCode(), action.getPageCode());
+		assertEquals(page.getParentCode(), action.getParentPageCode());
+		assertEquals(page.getModel().getCode(), action.getModel());
+		assertEquals(page.getGroup(), action.getGroup());
+		assertEquals(page.isShowable(), action.isShowable());
+		assertEquals("Seo Page 1", action.getTitles().getProperty("en"));
+		assertEquals("Pagina Seo 1", action.getTitles().getProperty("it"));
+        
+        Map<String, Map<String, PageMetatag>> metas = (Map<String, Map<String, PageMetatag>>) this.getRequest().getAttribute(PageActionAspect.PARAM_METATAGS);
+        assertNotNull(metas);
+        assertEquals(3, metas.size());
+        Map<String, PageMetatag> engMetas = metas.get("en");
+        assertNotNull(engMetas);
+        assertEquals(6, engMetas.size());
+        assertNull(engMetas.get("key2").getValue());
+        assertEquals("VALUE_5 EN", engMetas.get("key5").getValue());
+        
+        String descriptionIt = (String) this.getRequest().getAttribute(PageActionAspect.PARAM_DESCRIPTION_PREFIX + "it");
+        assertEquals("Descrizione IT SeoPage 1", descriptionIt);
+        Boolean useDefaultDescrIt = (Boolean) this.getRequest().getAttribute(PageActionAspect.PARAM_DESCRIPTION_USE_DEFAULT_PREFIX + "it");
+        assertFalse(useDefaultDescrIt);
+        
 	}
 
 	public void testJoinGroupPageForAdminUser() throws Throwable {
@@ -99,8 +131,8 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 	public void testValidateSavePage() throws Throwable {
 		String pageCode = "pagina_test";
 		String longPageCode = "very_long_page_code__very_long_page_code";
-		assertNull(this._pageManager.getOnlinePage(pageCode));
-		assertNull(this._pageManager.getOnlinePage(longPageCode));
+		assertNull(this._pageManager.getDraftPage(pageCode));
+		assertNull(this._pageManager.getDraftPage(longPageCode));
 		try {
 			IPage root = this._pageManager.getOnlineRoot();
 			Map<String, String> params = new HashMap<>();
