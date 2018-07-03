@@ -79,7 +79,6 @@ public class SeoMetatagsTag extends OutSupport {
             this.appendMetadata(output, Metatag.ATTRIBUTE_NAME_NAME, "description", description);
             Map<String, Map<String, PageMetatag>> complexParameters = ((SeoPageMetadata) pageMetadata).getComplexParameters();
             if (null != complexParameters) {
-                
                 Map<String, Map<String, PageMetatag>> metas = SeoPageExtraConfigDOM.extractRightParams(complexParameters, defaultLang);
                 Map<String, PageMetatag> defaultMap = metas.get(defaultLang.getCode());
                 Map<String, PageMetatag> langMap = (currentLang.getCode().equals(defaultLang.getCode())) ? null : metas.get(currentLang.getCode());

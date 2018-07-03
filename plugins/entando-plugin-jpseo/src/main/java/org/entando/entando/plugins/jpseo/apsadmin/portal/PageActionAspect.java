@@ -61,7 +61,8 @@ public class PageActionAspect {
     public static final String PARAM_FRIENDLY_CODE = "friendlyCode";
     public static final String PARAM_METATAGS = "pageMetatags";
     public static final String PARAM_METATAG_ATTRIBUTE_NAMES = "pageMetatagAttributeName";
-    public static final String PARAM_DESCRIPTION_PREFIX = "description_lang";
+    public static final String PARAM_DESCRIPTION_PREFIX = "description_lang_";
+    public static final String PARAM_DESCRIPTION_USE_DEFAULT_PREFIX = "description_useDefaultLang_";
     public static final String PARAM_USE_EXTRA_DESCRIPTIONS = "useExtraDescriptions";
 
     private ILangManager langManager;
@@ -97,10 +98,12 @@ public class PageActionAspect {
             request.setAttribute(PARAM_USE_EXTRA_DESCRIPTIONS, pageMetadata.isUseExtraDescriptions());
             ApsProperties props = pageMetadata.getDescriptions();
             if (null != props) {
-                Iterator<Object> it = props.keySet().iterator();
-                while (it.hasNext()) {
-                    String key = (String) it.next();
-                    request.setAttribute(PARAM_DESCRIPTION_PREFIX + key, props.get(key));
+                Iterator<Object> iter = props.keySet().iterator();
+                while (iter.hasNext()) {
+                    String key = (String) iter.next();
+                    PageMetatag metatag = (PageMetatag) props.get(key);
+                    request.setAttribute(PARAM_DESCRIPTION_PREFIX + key, metatag.getValue());
+                    request.setAttribute(PARAM_DESCRIPTION_USE_DEFAULT_PREFIX + key, metatag.isUseDefaultLangValue());
                 }
             }
             Map<String, Map<String, PageMetatag>> seoParameters = pageMetadata.getComplexParameters();
@@ -112,8 +115,6 @@ public class PageActionAspect {
             request.setAttribute(PARAM_METATAG_ATTRIBUTE_NAMES, Metatag.getAttributeNames());
         }
     }
-    
-    
     
     private void extractAndSetSeoFields() {
         HttpServletRequest request = ServletActionContext.getRequest();
@@ -192,7 +193,11 @@ public class PageActionAspect {
             String titleKey = PARAM_DESCRIPTION_PREFIX + lang.getCode();
             String title = request.getParameter(titleKey);
             if (null != title) {
-                descriptions.put(lang.getCode(), title.trim());
+                PageMetatag meta = new PageMetatag(lang.getCode(), "description", title.trim());
+                String useDefaultLangKey = PARAM_DESCRIPTION_USE_DEFAULT_PREFIX + lang.getCode();
+                String useDefaultLang = request.getParameter(useDefaultLangKey);
+                meta.setUseDefaultLangValue(Boolean.parseBoolean(useDefaultLang));
+                descriptions.put(lang.getCode(), meta);
             }
         }
         IPage page = this.getPageManager().getDraftPage(pagecode);

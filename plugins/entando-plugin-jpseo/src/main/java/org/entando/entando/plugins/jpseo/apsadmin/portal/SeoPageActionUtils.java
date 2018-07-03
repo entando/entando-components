@@ -80,6 +80,11 @@ public class SeoPageActionUtils {
             if (null != title) {
                 request.setAttribute(titleKey, title);
             }
+            String useDefaultLangKey = PageActionAspect.PARAM_DESCRIPTION_USE_DEFAULT_PREFIX + lang.getCode();
+            String useDefaultLang = request.getParameter(useDefaultLangKey);
+            if (null != useDefaultLang) {
+                request.setAttribute(useDefaultLangKey, useDefaultLang);
+            }
         }
     }
     
