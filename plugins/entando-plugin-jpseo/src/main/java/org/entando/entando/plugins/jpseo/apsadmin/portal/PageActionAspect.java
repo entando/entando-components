@@ -113,7 +113,7 @@ public class PageActionAspect {
                 Iterator<Object> iter = keywords.keySet().iterator();
                 while (iter.hasNext()) {
                     String key = (String) iter.next();
-                    PageMetatag metatag = (PageMetatag) props.get(key);
+                    PageMetatag metatag = (PageMetatag) keywords.get(key);
                     request.setAttribute(PARAM_KEYWORDS_PREFIX + key, metatag.getValue());
                     request.setAttribute(PARAM_KEYWORDS_USE_DEFAULT_PREFIX + key, metatag.isUseDefaultLangValue());
                 }

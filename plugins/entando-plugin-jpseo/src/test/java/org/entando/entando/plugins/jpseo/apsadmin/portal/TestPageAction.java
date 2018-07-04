@@ -91,6 +91,11 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
         assertEquals("Descrizione IT SeoPage 1", descriptionIt);
         Boolean useDefaultDescrIt = (Boolean) this.getRequest().getAttribute(PageActionAspect.PARAM_DESCRIPTION_USE_DEFAULT_PREFIX + "it");
         assertFalse(useDefaultDescrIt);
+        
+        String keywordsEn = (String) this.getRequest().getAttribute(PageActionAspect.PARAM_KEYWORDS_PREFIX + "en");
+        assertEquals("keyEN1.1,keyEN1.2", keywordsEn);
+        Boolean useDefaultKeywordsEn = (Boolean) this.getRequest().getAttribute(PageActionAspect.PARAM_KEYWORDS_USE_DEFAULT_PREFIX + "en");
+        assertTrue(useDefaultKeywordsEn);
 	}
 
 	public void testJoinGroupPageForAdminUser() throws Throwable {
