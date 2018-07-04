@@ -71,20 +71,25 @@ public class SeoPageActionUtils {
         request.setAttribute(PageActionAspect.PARAM_METATAG_ATTRIBUTE_NAMES, Metatag.getAttributeNames());
     }
     
-    protected static void extractAndSetDescriptions(HttpServletRequest request) {
+    protected static void extractAndSetDescriptionAndKeywords(HttpServletRequest request) {
         Iterator<Lang> langsIter = getLangManager(request).getLangs().iterator();
         while (langsIter.hasNext()) {
             Lang lang = (Lang) langsIter.next();
             String titleKey = PageActionAspect.PARAM_DESCRIPTION_PREFIX + lang.getCode();
-            String title = request.getParameter(titleKey);
-            if (null != title) {
-                request.setAttribute(titleKey, title);
-            }
+            extractAndSetParams(request, titleKey);
             String useDefaultLangKey = PageActionAspect.PARAM_DESCRIPTION_USE_DEFAULT_PREFIX + lang.getCode();
-            String useDefaultLang = request.getParameter(useDefaultLangKey);
-            if (null != useDefaultLang) {
-                request.setAttribute(useDefaultLangKey, useDefaultLang);
-            }
+            extractAndSetParams(request, useDefaultLangKey);
+            String keywordsKey = PageActionAspect.PARAM_KEYWORDS_PREFIX + lang.getCode();
+            extractAndSetParams(request, keywordsKey);
+            String useDefaultLangKeywordKey = PageActionAspect.PARAM_KEYWORDS_USE_DEFAULT_PREFIX + lang.getCode();
+            extractAndSetParams(request, useDefaultLangKeywordKey);
+        }
+    }
+    
+    private static void extractAndSetParams(HttpServletRequest request, String keyParam) {
+        String value = request.getParameter(keyParam);
+        if (null != value) {
+            request.setAttribute(keyParam, value);
         }
     }
     

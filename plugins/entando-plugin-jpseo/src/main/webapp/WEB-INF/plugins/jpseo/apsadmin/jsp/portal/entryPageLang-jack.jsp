@@ -32,6 +32,38 @@
 </div>
 </s:if>
 
+
+
+<s:set var="keywordskey" value="'keywords_lang_'+#lang.code" />
+<s:set var="keywordsUseDefault" value="'keywords_useDefaultLang_'+#lang.code" />
+<s:set var="fieldErrorsVar" value="%{fieldErrors[#keywordskey]}" />
+<s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
+<s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
+<div class="form-group<s:property value="#controlGroupErrorClass" />">
+    <label class="col-sm-2 control-label" for="keywords_lang<s:property value="#lang.code" />">
+        <s:text name="jpseo.label.pageKeywords" />
+    </label>
+    <div class="col-sm-10">
+        <wpsf:textfield name="%{'keywords_lang_'+#lang.code}" id="%{'keywords_lang_'+#lang.code}" value="%{#attr[#keywordskey]}" cssClass="form-control" />
+        <s:if test="#hasFieldErrorVar">
+            <span class="help-block text-danger">
+                <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+            </span>
+        </s:if>
+    </div>
+</div>
+<s:if test="%{!#lang.default}" >
+<div class="form-group">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-4">
+        <wpsf:checkbox name="%{'keywords_useDefaultLang_'+#lang.code}" 
+                       id="%{'keywords_useDefaultLang_'+#lang.code}" value="%{#attr[#keywordsUseDefault]}" />
+    </div>
+    <label class="col-sm-6" for="keywords_useDefaultLang_<s:property value="#lang.code" />"><s:text name="jpseo.label.inheritFromDefaultLang" /></label>
+</div>
+</s:if>
+
+
 <s:set var="pageMetatagsVar" value="#attr['pageMetatags']" /> 
 <s:if test="%{null != #pageMetatagsVar}">
     <s:set var="pageMetatagsLangVar" value="#pageMetatagsVar[#lang.code]" /> 
