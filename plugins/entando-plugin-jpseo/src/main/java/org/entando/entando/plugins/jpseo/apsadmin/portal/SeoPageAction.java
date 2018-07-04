@@ -54,12 +54,12 @@ public class SeoPageAction extends PageAction {
             boolean hasError = false;
             Metatag metatag = (!StringUtils.isBlank(key)) ? this.getMetatagCatalogue().getCatalogue().get(key) : null;
             if (StringUtils.isBlank(key)) {
-                this.addFieldError("metatagKey", this.getText("jpseo.errors.metadataKey.invalid", new String[]{key}));
+                this.addFieldError("metatagKey", this.getText("jpseo.errors.metatagKey.invalid", new String[]{key}));
                 hasError = true;
             }
             String value = this.getMetatagValue();
             if (StringUtils.isBlank(value)) {
-                this.addFieldError("metatagValue", this.getText("jpseo.errors.metadataValue.invalid", new String[]{value}));
+                this.addFieldError("metatagValue", this.getText("jpseo.errors.metatagValue.invalid", new String[]{value}));
                 hasError = true;
             }
             if (!hasError) {
