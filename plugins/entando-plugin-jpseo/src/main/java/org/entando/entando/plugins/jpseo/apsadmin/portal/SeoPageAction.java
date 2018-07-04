@@ -106,7 +106,7 @@ public class SeoPageAction extends PageAction {
     
     private void extractAndSetOtherParams() {
         this.updateTitles();
-        SeoPageActionUtils.extractAndSetDescriptions(this.getRequest());
+        SeoPageActionUtils.extractAndSetDescriptionAndKeywords(this.getRequest());
         SeoPageActionUtils.extractAndSetFriendlyCode(this.getRequest());
     }
 

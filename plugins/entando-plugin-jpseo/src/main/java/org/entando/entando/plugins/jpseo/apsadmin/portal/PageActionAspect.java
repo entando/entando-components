@@ -63,6 +63,8 @@ public class PageActionAspect {
     public static final String PARAM_METATAG_ATTRIBUTE_NAMES = "pageMetatagAttributeName";
     public static final String PARAM_DESCRIPTION_PREFIX = "description_lang_";
     public static final String PARAM_DESCRIPTION_USE_DEFAULT_PREFIX = "description_useDefaultLang_";
+    public static final String PARAM_KEYWORDS_PREFIX = "keywords_lang_";
+    public static final String PARAM_KEYWORDS_USE_DEFAULT_PREFIX = "keywords_useDefaultLang_";
     public static final String PARAM_USE_EXTRA_DESCRIPTIONS = "useExtraDescriptions";
 
     private ILangManager langManager;
@@ -106,6 +108,16 @@ public class PageActionAspect {
                     request.setAttribute(PARAM_DESCRIPTION_USE_DEFAULT_PREFIX + key, metatag.isUseDefaultLangValue());
                 }
             }
+            ApsProperties keywords = pageMetadata.getKeywords();
+            if (null != keywords) {
+                Iterator<Object> iter = keywords.keySet().iterator();
+                while (iter.hasNext()) {
+                    String key = (String) iter.next();
+                    PageMetatag metatag = (PageMetatag) props.get(key);
+                    request.setAttribute(PARAM_KEYWORDS_PREFIX + key, metatag.getValue());
+                    request.setAttribute(PARAM_KEYWORDS_USE_DEFAULT_PREFIX + key, metatag.isUseDefaultLangValue());
+                }
+            }
             Map<String, Map<String, PageMetatag>> seoParameters = pageMetadata.getComplexParameters();
             if (null != seoParameters) {
                 Lang defaultLang = this.getLangManager().getDefaultLang();
@@ -118,7 +130,7 @@ public class PageActionAspect {
     
     private void extractAndSetSeoFields() {
         HttpServletRequest request = ServletActionContext.getRequest();
-        SeoPageActionUtils.extractAndSetDescriptions(request);
+        SeoPageActionUtils.extractAndSetDescriptionAndKeywords(request);
         SeoPageActionUtils.extractAndSetFriendlyCode(request);
         SeoPageActionUtils.extractAndSetSeoParameters(request);
         String param = request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS);
@@ -186,6 +198,7 @@ public class PageActionAspect {
         IPage seoPage = null;
         String pagecode = action.getPageCode();
         ApsProperties descriptions = new ApsProperties();
+        ApsProperties langKeywordsKey = new ApsProperties();
         String friendlyCode = request.getParameter(PARAM_FRIENDLY_CODE);
         Iterator<Lang> langsIter = this.getLangManager().getLangs().iterator();
         while (langsIter.hasNext()) {
@@ -196,8 +209,17 @@ public class PageActionAspect {
                 PageMetatag meta = new PageMetatag(lang.getCode(), "description", title.trim());
                 String useDefaultLangKey = PARAM_DESCRIPTION_USE_DEFAULT_PREFIX + lang.getCode();
                 String useDefaultLang = request.getParameter(useDefaultLangKey);
-                meta.setUseDefaultLangValue(Boolean.parseBoolean(useDefaultLang));
+                meta.setUseDefaultLangValue(!lang.isDefault() && Boolean.parseBoolean(useDefaultLang));
                 descriptions.put(lang.getCode(), meta);
+            }
+            String keywordsKey = PARAM_KEYWORDS_PREFIX + lang.getCode();
+            String keywords = request.getParameter(keywordsKey);
+            if (null != keywords) {
+                PageMetatag meta = new PageMetatag(lang.getCode(), "keywords", keywords.trim());
+                String useDefaultLangKey = PARAM_KEYWORDS_USE_DEFAULT_PREFIX + lang.getCode();
+                String useDefaultLang = request.getParameter(useDefaultLangKey);
+                meta.setUseDefaultLangValue(!lang.isDefault() && Boolean.parseBoolean(useDefaultLang));
+                langKeywordsKey.put(lang.getCode(), meta);
             }
         }
         IPage page = this.getPageManager().getDraftPage(pagecode);
@@ -206,6 +228,7 @@ public class PageActionAspect {
             SeoPageMetadata pageMetadata = (SeoPageMetadata) page.getMetadata();
             pageMetadata.setFriendlyCode(friendlyCode);
             pageMetadata.setDescriptions(descriptions);
+            pageMetadata.setKeywords(langKeywordsKey);
             pageMetadata.setComplexParameters(SeoPageActionUtils.extractSeoParameters(request));
             pageMetadata.setUpdatedAt(new Date());
             pageMetadata.setUseExtraDescriptions(null != request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS) && request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS).equalsIgnoreCase("true"));

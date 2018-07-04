@@ -34,6 +34,7 @@ import com.agiletec.aps.util.ApsProperties;
 public class SeoPageMetadata extends PageMetadata {
 
     private ApsProperties descriptions = new ApsProperties();
+    private ApsProperties keywords = new ApsProperties();
     private boolean useExtraDescriptions = false;
 
     private String friendlyCode;
@@ -52,6 +53,14 @@ public class SeoPageMetadata extends PageMetadata {
         this.descriptions = descriptions;
     }
 
+    public ApsProperties getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(ApsProperties keywords) {
+        this.keywords = keywords;
+    }
+    
     public boolean isUseExtraDescriptions() {
         return useExtraDescriptions;
     }
@@ -94,6 +103,11 @@ public class SeoPageMetadata extends PageMetadata {
         if ((null != other.getDescriptions() && null == this.getDescriptions())
                 || (null == other.getDescriptions() && null != this.getDescriptions())
                 || (null != other.getDescriptions() && null != this.getDescriptions()) && !other.getDescriptions().equals(this.getDescriptions())) {
+            return false;
+        }
+        if ((null != other.getKeywords() && null == this.getKeywords())
+                || (null == other.getKeywords() && null != this.getKeywords())
+                || (null != other.getKeywords() && null != this.getKeywords()) && !other.getKeywords().equals(this.getKeywords())) {
             return false;
         }
         if (other.isUseExtraDescriptions() != this.isUseExtraDescriptions()) {

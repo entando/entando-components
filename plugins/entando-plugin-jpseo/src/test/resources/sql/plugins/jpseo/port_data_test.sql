@@ -16,6 +16,10 @@ INSERT INTO pages_metadata_draft (code, titles, modelcode, showinmenu, extraconf
     <property key="en">EN Description SeoPage 1</property>
     <property key="it">Descrizione IT SeoPage 1</property>
   </descriptions>
+  <keywords>
+    <property key="en">keyEN1.1,keyEN1.2</property>
+    <property key="it">keyIT1.1,keyIT1.2,keyIT1.3,keyIT1.4</property>
+  </keywords>
   <complexParameters>
     <parameter key="key1">VALUE_1</parameter>
     <parameter key="key2">VALUE_2</parameter>
@@ -47,6 +51,10 @@ INSERT INTO pages_metadata_draft (code, titles, modelcode, showinmenu, extraconf
     <property key="en">EN Description SeoPage 2</property>
     <property key="it">Descrizione IT SeoPage 2</property>
   </descriptions>
+  <keywords>
+    <property key="en">keyEN2.1,keyEN2.2,keyEN2.3</property>
+    <property key="it">keyIT2.1,keyIT2.2</property>
+  </keywords>
   <complexParameters>
     <lang code="it">
       <meta key="key5">VALUE_5_IT</meta>
