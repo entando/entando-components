@@ -21,16 +21,6 @@
  */
 package org.entando.entando.plugins.jpseo.aps.tags;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.jsp.JspException;
-
-import org.apache.taglibs.standard.tag.common.core.OutSupport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -38,17 +28,34 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.PageMetadata;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.jsp.JspException;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
 import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageExtraConfigDOM;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Tag that handles the printing of the entire metatags section in the page header. 
+ * The tag must be inserted in the header of each page template, taking care to set the escapeXml parameter to false. 
+ * The tag retrieves the values of the metagags defined in page and print configuration (for each one of them, for the current language) the corresponding value. 
+ * In case the value (for each metatag) in the current language is not present, the value in the default language is returned.
+ * @author E.Santoboni
+ */
 public class SeoMetatagsTag extends OutSupport {
 
-    private static final Logger _logger = LoggerFactory.getLogger(SeoMetatagsTag.class);
+    private static final Logger logger = LoggerFactory.getLogger(SeoMetatagsTag.class);
     
     private String var;
 
@@ -77,6 +84,11 @@ public class SeoMetatagsTag extends OutSupport {
                 }
             }
             this.appendMetadata(output, Metatag.ATTRIBUTE_NAME_NAME, "description", description);
+            String keywords = ((SeoPageMetadata) pageMetadata).getKeywords().getProperty(defaultLang.getCode());
+            if (StringUtils.isBlank(keywords)) {
+                keywords = ((SeoPageMetadata) pageMetadata).getKeywords().getProperty(defaultLang.getCode());
+            }
+            this.appendMetadata(output, Metatag.ATTRIBUTE_NAME_NAME, "keywords", keywords);
             Map<String, Map<String, PageMetatag>> complexParameters = ((SeoPageMetadata) pageMetadata).getComplexParameters();
             if (null != complexParameters) {
                 Map<String, Map<String, PageMetatag>> metas = SeoPageExtraConfigDOM.extractRightParams(complexParameters, defaultLang);
@@ -94,13 +106,18 @@ public class SeoMetatagsTag extends OutSupport {
             }
             this.evalValue(output.toString());
         } catch (Throwable t) {
-            _logger.error("error in doStartTag", t);
+            logger.error("error in doStartTag", t);
             throw new JspException("Error during tag initialization ", t);
         }
         this.release();
         return EVAL_PAGE;
     }
-
+    
+    /**
+     * Print the extracted output, or insert the output in a variable of the page context with the name provided.
+     * @param output the extracted output
+     * @throws JspException In case of error
+     */
     protected void evalValue(String output) throws JspException {
         if (this.getVar() != null) {
             this.pageContext.setAttribute(this.getVar(), output);
@@ -112,7 +129,7 @@ public class SeoMetatagsTag extends OutSupport {
                     this.pageContext.getOut().print(output);
                 }
             } catch (IOException e) {
-                _logger.error("error in doEndTag", e);
+                logger.error("error in doEndTag", e);
                 throw new JspException("Error closing tag ", e);
             }
         }
