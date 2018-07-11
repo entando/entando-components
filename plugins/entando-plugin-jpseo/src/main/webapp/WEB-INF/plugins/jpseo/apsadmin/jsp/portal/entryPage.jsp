@@ -9,9 +9,6 @@
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpseo/administration/css/master-seo.css">
 <script src="<wp:resourceURL />administration/js/jquery-ui.js"></script>
 
-<jsp:include page="/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/seo-autocomplete.jsp" />
-
-
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="title.pageDesigner" /></li>
     <li><a href="<s:url action="viewTree" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageTree" />"><s:text name="title.pageTree" /></a></li>

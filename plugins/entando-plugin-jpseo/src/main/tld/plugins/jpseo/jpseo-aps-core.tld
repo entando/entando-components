@@ -72,8 +72,6 @@
 		</attribute>
 	</tag>
 	
-	
-	
 	<tag>
 		<description><![CDATA[Returns the requested information held by the current page bean.]]></description>
 		<name>currentPage</name>
