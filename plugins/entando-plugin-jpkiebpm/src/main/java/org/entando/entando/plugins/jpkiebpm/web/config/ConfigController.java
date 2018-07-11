@@ -53,6 +53,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.IKieBpmService;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.model.DatatableWidgetConfigDto;
+import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigRequest;
+import org.springframework.validation.BeanPropertyBindingResult;
 
 @RestController
 public class ConfigController {
@@ -76,6 +80,9 @@ public class ConfigController {
     @Autowired
     private IKieFormOverrideManager overrideManager;
 
+    @Autowired
+    private IKieBpmService kieBpmService;
+
     public IKieConfigService getKieConfigService() {
         return kieConfigService;
     }
@@ -90,6 +97,14 @@ public class ConfigController {
 
     public void setConfigValidator(ConfigValidator configValidator) {
         this.configValidator = configValidator;
+    }
+
+    public IKieBpmService getKieBpmService() {
+        return kieBpmService;
+    }
+
+    public void setKieBpmService(IKieBpmService kieBpmService) {
+        this.kieBpmService = kieBpmService;
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
@@ -185,15 +200,14 @@ public class ConfigController {
     public ResponseEntity<RestResponse> getDeploymentUnits(@PathVariable String configCode) {
 
         List<KieContainer> containers = null;
-        try{
+        try {
             KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
             //TODO This call makes the fetched config the active one.  Need to scope this to the widget at some point
             kieConfigService.setConfig(serverConfigDto);
             containers = this.kieConfigService.getContainerList();
-        }catch(Exception e) {
-            logger.error("Failed to fetch container ids ",e );
+        } catch (Exception e) {
+            logger.error("Failed to fetch container ids ", e);
         }
-
 
         return new ResponseEntity<>(new RestResponse(containers), HttpStatus.OK);
     }
@@ -203,14 +217,14 @@ public class ConfigController {
     public ResponseEntity<RestResponse> getProcessList(@PathVariable String configCode) {
 
         List<KieProcess> processes = new ArrayList<KieProcess>();
-        try{
+        try {
 
             KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
             //TODO This call makes the fetched config the active one.  This should be scoped to the widget at some point
             kieConfigService.setConfig(serverConfigDto);
             processes = kieConfigService.getProcessDefinitionsList();
-        }catch(Exception e) {
-            logger.error("Failed to fetch container ids ",e );
+        } catch (Exception e) {
+            logger.error("Failed to fetch container ids ", e);
         }
 
         return new ResponseEntity<>(new RestResponse(processes), HttpStatus.OK);
@@ -221,38 +235,117 @@ public class ConfigController {
     public ResponseEntity<RestResponse> getCaseDefinitions(@PathVariable String configCode, @PathVariable String deploymentUnit) {
 
         JSONObject cases = null;
-        try{
+        try {
 
             KieServerConfigDto serverConfigDto = kieConfigService.getConfig(configCode);
             KieBpmConfig bpmConfig = kieConfigService.buildConfig(serverConfigDto);
             //TODO This call makes the fetched config the active one.  This should be scoped to the widget at some point
             caseManager.setConfig(bpmConfig);
 
-            cases = ((CaseManager)caseManager).getCasesDefinitions(deploymentUnit);
-        }catch(Exception e) {
-            logger.error("Failed to fetch container ids ",e );
+            cases = ((CaseManager) caseManager).getCasesDefinitions(deploymentUnit);
+        } catch (Exception e) {
+            logger.error("Failed to fetch container ids ", e);
         }
 
-        if(cases == null) {
+        if (cases == null) {
             cases = new JSONObject();
         }
         return new ResponseEntity<>(new RestResponse(cases.toMap()), HttpStatus.OK);
     }
-
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/processesList/{processId:.+}/overrides", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> getProcessOverrides(@PathVariable String configCode, @PathVariable String processId) {
 
         List<KieFormOverride> overrides = new ArrayList<>();
-        try{
+        try {
             overrides = overrideManager.getFormOverrides(configCode, processId);
-        }catch(Exception e) {
-            logger.error("Failed to fetch container ids ",e );
+        } catch (Exception e) {
+            logger.error("Failed to fetch container ids ", e);
         }
 
         return new ResponseEntity<>(new RestResponse(overrides), HttpStatus.OK);
     }
 
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatableWidget/{configId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getDataTableWIdgetConfig(@PathVariable int configId) {
+        logger.debug("loading datatable widget config with id -> {}", configId);
+        DatatableWidgetConfigDto dto = this.getKieBpmService().getDataTableWIdgetConfig(configId);
+        logger.debug("Main Result -> {}", dto);
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
 
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatableWidget", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> createDataTableWIdgetConfig(@RequestBody DatatableWidgetConfigRequest req) {
+        logger.debug("adding datatable widget config -> {}", req);
+        DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTableWIdgetConfig(req);
+        logger.debug("Main Result -> {}", dto);
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatableWidget/{configId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> updateDataTableWIdgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
+        logger.debug("updating datatable widget config -> {}", req);
+        if (configId != req.getId()) {
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(configId, "configId");
+            bindingResult.reject("2", new String[]{}, "parameters mismatch");
+            throw new ValidationGenericException(bindingResult);
+        }
+        DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTableWIdgetConfig(req);
+        logger.debug("Main Result -> {}", dto);
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatableWidget/{configId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> deleteDataTableWIdgetConfig(@PathVariable int configId) {
+        logger.debug("deleting datatable widget config with id -> {}", configId);
+        DatatableWidgetConfigDto dto = this.getKieBpmService().deleteDataTableWIdgetConfig(configId);
+        logger.debug("Main Result -> {}", dto);
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatypeWidget", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> createDataTypeWIdgetConfig(@RequestBody DatatableWidgetConfigRequest req) {
+        logger.debug("adding datatype widget config -> {}", req);
+        DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTypeWIdgetConfig(req);
+        logger.debug("Main Result -> {}", dto);
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatypeWidget/{configId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> updateDataTypeWIdgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
+        logger.debug("updating datatype widget config -> {}", req);
+        if (configId != req.getId()) {
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(configId, "configId");
+            bindingResult.reject("2", new String[]{}, "parameters mismatch");
+            throw new ValidationGenericException(bindingResult);
+        }
+        DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTypeWIdgetConfig(req);
+        logger.debug("Main Result -> {}", dto);
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatableWidget/form", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> chooseForm() {
+        logger.debug("loading task list");
+        DatatableWidgetConfigDto dto = this.getKieBpmService().chooseForm();
+        logger.debug("Main Result -> {}", dto);
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/kiebpm/datatableWidget/processform", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> chooseProcessForm() {
+        logger.debug("loading process list");
+        DatatableWidgetConfigDto dto = this.getKieBpmService().chooseProcessForm();
+        logger.debug("Main Result -> {}", dto);
+        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+    }
 }

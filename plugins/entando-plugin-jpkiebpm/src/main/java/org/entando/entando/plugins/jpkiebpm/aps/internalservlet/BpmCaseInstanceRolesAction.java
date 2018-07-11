@@ -75,7 +75,7 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
             } else {
 
                 //set the config to the first config in database
-                this.setKnowledgeSourceId(this.getCaseManager().loadFirstConfigurations().getId());
+                this.setKnowledgeSourceId(this.getCaseManager().getConfig().getId());
                 this.setContainerid(this.getCaseManager().getContainersList().get(0).getContainerId());
 
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
@@ -119,7 +119,7 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
             this.setChannel(channelIn);
 
             if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
-                
+
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
                 this.getCaseManager().deleteCaseRoles(this.getContainerid(), this.getCasePath(), this.getCaseRoleName(), this.getUser(), this.getGroup());
                 this.setRoles(this.getCaseManager().getCaseRoles(this.getContainerid(), this.getCasePath()).toString());
@@ -247,5 +247,5 @@ public class BpmCaseInstanceRolesAction extends BaseAction {
     public void setChannel(String channel) {
         this.channel = channel;
     }
-    
+
 }
