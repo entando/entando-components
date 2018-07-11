@@ -9,6 +9,23 @@
         <input type="hidden" name="linkTypeVar" value="2" />
     </p>
 
+
+    <s:if test="%{#parameters['prevCode'] != null}">
+      <div class="form-group mt-20">
+         <div class="col-xs-12">
+             <div class="alert alert-info mt-20 no-mb">
+                <span class="pficon pficon-info"></span>
+                <p>
+                    <s:set var="prevPageVar" value="%{getPage(#parameters['prevCode'])}" />
+                    <s:text name="label.previousValue" />:&nbsp;
+                    <s:property value="#prevPageVar.code"/> - <s:property value="#prevPageVar.descr"/>
+                </p>
+             </div>
+         </div>
+      </div>
+    </s:if>
+
+
      <div class="form-group mt-20">
          <div class="col-xs-12">
              <label class="col-sm-2 text-right">
@@ -102,6 +119,10 @@
              </div>
          </div>
      </div>
+
+     <!-- Link attributes -->
+     <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/entando-link-attributes.jsp" />
+
      <div class="form-group">
          <div class="col-xs-12">
              <div class="col-sm-10 col-sm-offset-2 text-right">

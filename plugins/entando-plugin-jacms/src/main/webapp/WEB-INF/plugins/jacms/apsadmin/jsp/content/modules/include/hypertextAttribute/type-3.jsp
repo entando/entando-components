@@ -3,6 +3,20 @@
 <%@ taglib prefix="wpsf" uri="/apsadmin-form"%>
 
 <s:form action="entandoSearch" cssClass="form-horizontal" role="search">
+
+    <s:if test="%{#parameters['prevCode'] != null}">
+        <div class="col-xs-12">
+            <div class="alert alert-info mt-20 no-mb">
+                <span class="pficon pficon-info"></span>
+            	<p>
+                    <s:set var="prevContentVoVar" value="%{getContentVo(#parameters['prevCode'])}" />
+                    <s:text name="label.previousValue" />:&nbsp;
+                    <s:property value="#prevContentVoVar.id"/> - <s:property value="#prevContentVoVar.descr"/>
+                </p>
+            </div>
+        </div>
+    </s:if>
+
 	<p class="sr-only">
 		<s:text name="note.chooseContentToLink" />
 	</p>
@@ -14,6 +28,8 @@
 			value="entandoContentSearch" />
 		<wpsf:hidden name="contentOnSessionMarker" />
 		<wpsf:hidden name="linkTypeVar" value="3" />
+		<wpsf:hidden name="prevCode" value="%{#prevContentVoVar.id}" />
+
 	</p>
 	<div class="col-xs-12">
 		<div class="well">
@@ -137,6 +153,12 @@
 					</div>
 				</div>
 			</div>
+
+
+			<!-- Link attributes -->
+            <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/entando-link-attributes.jsp" />
+
+
 		        <div class="form-group mt-20">
 					<button type="submit" id="button_contentLink" name="button_contentLink" 
 		                class="btn btn-primary pull-right">

@@ -13,6 +13,11 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Link attributes -->
+    <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/entando-link-attributes.jsp" />
+
     <div class="form-group">
         <div class="col-xs-12">
             <div class="col-sm-10 col-sm-offset-2 text-right">

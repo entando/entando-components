@@ -37,7 +37,7 @@ import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
 public class LinkAttributeAction extends BaseAction implements ILinkAttributeAction {
 
 	private static final Logger _logger = LoggerFactory.getLogger(LinkAttributeAction.class);
-	
+
 	@Override
 	public String chooseLink() {
 		try {

@@ -4,11 +4,29 @@
 
 <s:form action="entandoResourceSearch" cssClass="form-horizontal" role="search">
 	<p class="sr-only"><s:text name="note.chooseResourceToLink" />.</p>
+
+
+    <s:if test="%{#parameters['prevCode'] != null}">
+        <div class="col-xs-12">
+            <div class="alert alert-info mt-20 no-mb">
+                <span class="pficon pficon-info"></span>
+                <p>
+                    <s:set var="prevResourceVar" value="%{getResource(#parameters['prevCode'])}" />
+                    <s:text name="label.previousValue" />:&nbsp;
+                    <s:property value="#prevResourceVar.id"/> - <s:property value="#prevResourceVar.descr"/>
+                </p>
+            </div>
+        </div>
+    </s:if>
+
+
 	<p class="sr-only">
+		<wpsf:hidden name="prevCode" value="%{#prevResourceVar.id}" />
 		<wpsf:hidden name="activeTab" value="3" />
 		<wpsf:hidden name="internalResourceActionName" value="entandoResourceSearch" />
 		<wpsf:hidden name="contentOnSessionMarker" />
 		<wpsf:hidden name="linkTypeVar" value="5" />
+
 	</p>
     <div class="col-xs-12">
         <div class="well">
@@ -57,6 +75,7 @@
 			<wpsf:hidden name="internalResourceActionName" value="entandoResourceSearch" />
 			<wpsf:hidden name="contentOnSessionMarker" />
 			<wpsf:hidden name="linkTypeVar" value="5" />
+			Previous Value selected: <s:property value="#prevContentVoVar.id"/> - <s:property value="#prevContentVoVar.descr"/>
 		</p>
 		<s:if test="%{getResources().size() > 0}">
 			<wpsa:subset source="resources" count="10" objectName="groupContent" advanced="true" offset="5">
@@ -99,6 +118,10 @@
 		                    </div>
 		                </div>
 		            </div>
+
+			<!-- Link attributes -->
+            <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/entando-link-attributes.jsp" />
+
 		            <div class="form-group mt-20">
 		                <button type="submit" id="button_resourceLink" name="button_resourceLink" 
 		                    class="btn btn-primary pull-right">
