@@ -9,6 +9,9 @@
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpseo/administration/css/master-seo.css">
 <script src="<wp:resourceURL />administration/js/jquery-ui.js"></script>
 
+<jsp:include page="/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/seo-autocomplete.jsp" />
+
+
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="title.pageDesigner" /></li>
     <li><a href="<s:url action="viewTree" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageTree" />"><s:text name="title.pageTree" /></a></li>
@@ -113,7 +116,7 @@
         </p>
 
         <legend>
-            <s:text name="label.languages" />
+            <s:text name="jpseo.label.section" />
             <span class="required-fields-edit">
                 <s:text name="label.requiredFields" />
             </span>
@@ -163,7 +166,7 @@
                             <s:text name="name.pageTitle" />&nbsp;
                             <i class="fa fa-asterisk required-icon"></i>
                             <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                               data-placement="top" data-content="<s:text name="to be inserted" />"
+                               data-placement="top" data-content="<s:text name="jpseo.label.title" />"
                                data-original-title="">
                                 <span class="fa fa-info-circle"></span>
                             </a>
@@ -373,13 +376,6 @@
                     <wpsf:checkbox name="showable" id="showable" cssClass="bootstrap-switch" />
                 </div>
 
-
-
-
-
-
-
-
                 <div class="col-sm-3 control-label">
                     <label class="display-block" for="useExtraTitles">
                         <s:text name="name.SEO.short" />
@@ -391,7 +387,6 @@
                 <div class="col-sm-4">
                     <wpsf:checkbox name="useExtraTitles" id="useExtraTitles" cssClass="bootstrap-switch" />
                 </div>
-
             </div>
 
             <div class="col-sm-6" id="form-custom-select">
