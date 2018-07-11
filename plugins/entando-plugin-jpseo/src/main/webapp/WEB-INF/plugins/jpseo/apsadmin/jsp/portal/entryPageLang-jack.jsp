@@ -12,7 +12,7 @@
     <label class="col-sm-2 control-label" for="description_lang<s:property value="#lang.code" />">
         <s:text name="jpseo.label.pageDescription" /> 
         <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-           data-placement="top" data-content="<s:text name="to be inserted" />"
+           data-placement="top" data-content="<s:text name="jpseo.pageEdit.description.help" />"
            data-original-title="">
             <span class="fa fa-info-circle"></span>
         </a>
@@ -53,7 +53,7 @@
     <label class="col-sm-2 control-label" for="keywords_lang<s:property value="#lang.code" />">
         <s:text name="jpseo.label.pageKeywords" />
         <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-           data-placement="top" data-content="<s:text name="to be inserted" />"
+           data-placement="top" data-content="<s:text name="jpseo.pageEdit.keywords.help" />"
            data-original-title="">
             <span class="fa fa-info-circle"></span>
         </a>
@@ -151,7 +151,7 @@
             <label class="col-sm-2 section-label" for="new_metatag">
                 <s:text name="jpseo.label.addMetatags" />
                 <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                   data-placement="top" data-content="<s:text name="to be inserted" />"
+                   data-placement="top" data-content="<s:text name="jpseo.pageEdit.addMetatags.help" />"
                    data-original-title="">
                     <span class="fa fa-info-circle"></span>
                 </a>
