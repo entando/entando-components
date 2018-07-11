@@ -5,6 +5,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
 
+<link rel="stylesheet" href="<wp:resourceURL />administration/css/jquery-ui.css"></script>
+<link rel="stylesheet" href="<wp:resourceURL />plugins/jpseo/administration/css/master-seo.css">
+<script src="<wp:resourceURL />administration/js/jquery-ui.js"></script>
+
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="title.pageDesigner" /></li>
     <li><a href="<s:url action="viewTree" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageTree" />"><s:text name="title.pageTree" /></a></li>

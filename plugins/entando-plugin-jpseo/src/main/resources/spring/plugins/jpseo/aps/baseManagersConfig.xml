@@ -45,7 +45,7 @@
 		</property>
     </bean>
     
-    <bean id="jpseoMetatagCatalogue" class="org.entando.entando.plugins.jpseo.aps.system.services.metatag.MetatagCatalogue" />
+    <bean id="jpseoSeoMetatagCatalog" class="org.entando.entando.plugins.jpseo.aps.system.services.metatag.MetatagCatalog" />
     
     <bean id="jpseoAttributeRolesLoader" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeRolesWrapper">
 		<property name="entityManagerNameDest"><value>jacmsContentManager</value></property>

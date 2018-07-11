@@ -23,6 +23,7 @@ package org.entando.entando.plugins.jpseo.aps.system.services.metatag;
 
 import com.agiletec.aps.BaseTestCase;
 import java.util.Map;
+import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
 
 /**
  * @author E.Santoboni
@@ -30,8 +31,8 @@ import java.util.Map;
 public class TestMetatagCatalogue extends BaseTestCase {
     
 	public void testLoadCatalogue() {
-        IMetatagCatalogue catalogue = super.getApplicationContext().getBean("jpseoMetatagCatalogue", IMetatagCatalogue.class);
-        Map<String, Metatag> map = catalogue.getCatalogue();
+        IMetatagCatalog catalogue = super.getApplicationContext().getBean(JpseoSystemConstants.SEO_METATAG_CATALOG, IMetatagCatalog.class);
+        Map<String, Metatag> map = catalogue.getCatalog();
         assertNotNull(map);
         assertTrue(map.size() > 0);
         Metatag ogDescription = map.get("og:description");

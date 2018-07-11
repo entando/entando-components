@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="2.0"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+	<description><![CDATA[jACMS Apsadmin Core Tag Library]]></description>
+	<display-name>jpseo Apsadmin Core Tag Library</display-name>
+	<tlib-version>2.2</tlib-version>
+	<short-name>jpseoapsadmin</short-name>
+	<uri>/jpseo-apsadmin-core</uri>
+    
+	<tag>
+		<description><![CDATA[Returns the keys og Meta-Tag in the internal catalog]]></description>
+		<name>seoMetatagCatalogTag</name>
+		<tag-class>org.entando.entando.plugins.jpseo.aps.tags.SeoMetatagCatalogTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[Name used to reference the keys pushed into the pageContext.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+</taglib>

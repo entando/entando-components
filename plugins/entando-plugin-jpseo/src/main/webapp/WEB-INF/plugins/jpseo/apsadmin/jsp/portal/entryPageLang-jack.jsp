@@ -3,6 +3,8 @@
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 
+<jsp:include page="/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/seo-autocomplete.jsp" />
+
 <s:set var="mykey" value="'description_lang_'+#lang.code" />
 <s:set var="mykeyUseDefault" value="'description_useDefaultLang_'+#lang.code" />
 <s:set var="fieldErrorsVar" value="%{fieldErrors[#mykey]}" />

@@ -27,11 +27,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.plugins.jpseo.aps.system.services.metatag.IMetatagCatalogue;
 import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.entando.entando.plugins.jpseo.aps.system.services.metatag.IMetatagCatalog;
 
 /**
  * @author E.Santoboni
@@ -40,7 +40,7 @@ public class SeoPageAction extends PageAction {
     
     private static final Logger logger = LoggerFactory.getLogger(SeoPageAction.class);
     
-    private IMetatagCatalogue metatagCatalogue;
+    private IMetatagCatalog metatagCatalog;
     
     private String metatagKey;
     
@@ -52,7 +52,7 @@ public class SeoPageAction extends PageAction {
             Map<String, Map<String, PageMetatag>> seoParameters = SeoPageActionUtils.extractSeoParameters(this.getRequest());
             String key = this.getMetatagKey();
             boolean hasError = false;
-            Metatag metatag = (!StringUtils.isBlank(key)) ? this.getMetatagCatalogue().getCatalogue().get(key) : null;
+            Metatag metatag = (!StringUtils.isBlank(key)) ? this.getMetatagCatalog().getCatalog().get(key) : null;
             if (StringUtils.isBlank(key)) {
                 this.addFieldError("metatagKey", this.getText("jpseo.errors.metatagKey.invalid", new String[]{key}));
                 hasError = true;
@@ -126,12 +126,12 @@ public class SeoPageAction extends PageAction {
         this.metatagValue = metatagValue;
     }
 
-    protected IMetatagCatalogue getMetatagCatalogue() {
-        return metatagCatalogue;
+    protected IMetatagCatalog getMetatagCatalog() {
+        return metatagCatalog;
     }
 
-    public void setMetatagCatalogue(IMetatagCatalogue metatagCatalogue) {
-        this.metatagCatalogue = metatagCatalogue;
+    public void setMetatagCatalog(IMetatagCatalog metatagCatalog) {
+        this.metatagCatalog = metatagCatalog;
     }
     
 }
