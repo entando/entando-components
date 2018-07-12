@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
+import org.json.JSONArray;
 
 /**
  * @author Entando
@@ -46,12 +47,12 @@ public interface IKieFormManager {
      * @return
      */
     KieBpmConfig getConfig();
-    
+
     /**
      * Loads the first configuration available when not specified
      */
     public KieBpmConfig loadFirstConfigurations() throws ApsSystemException;
-    
+
     /**
      * Return service configuration
      *
@@ -345,5 +346,7 @@ public interface IKieFormManager {
      */
     public boolean getCompleteEnrichmentDcumentApprovalTask(final String user, final String containerId, final String taskId, TASK_STATES state, String review, Map<String, String> opt) throws ApsSystemException;
 
-    public Map<String, String > getHostNameVersionMap();
+    public Map<String, String> getHostNameVersionMap();
+
+    public JSONArray getKieServerStatus() throws ApsSystemException;
 }

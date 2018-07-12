@@ -72,10 +72,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         //
         //Known issue here is that if one config goes bad you get none of them. TODO
         try {
-            KieBpmConfig fromEnvironment=EnvironmentBasedConfigHelper.fromEnvironment();
-            if(fromEnvironment!=null){
+            KieBpmConfig fromEnvironment = EnvironmentBasedConfigHelper.fromEnvironment();
+            if (fromEnvironment != null) {
                 addConfig(fromEnvironment);
-            }else {
+            } else {
                 HashMap<String, KieBpmConfig> configs = getKieServerConfigurations();
                 //Ampie: this invocation has no effect but does stall deployment to Wildfly: this.getKieServerStatus();
                 for (KieBpmConfig config : configs.values()) {
@@ -1091,6 +1091,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return this.hostNameVersionMap;
     }
 
+    @Override
     public JSONArray getKieServerStatus() throws ApsSystemException {
         //Save the current Config
         KieBpmConfig setKieBpmConfig = this.getConfig();
@@ -1132,7 +1133,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     serverConfJson.put("timeoutMsec", this.getConfig().getTimeoutMsec());
                     serverConfJson.put("debug", this.getConfig().getDebug());
 
-                    JSONObject resulObj = (JSONObject) new JSONObject(result).get("result");
+                    JSONObject resulObj = new JSONObject(result).getJSONObject("result");
                     JSONObject info = resulObj.getJSONObject("kie-server-info");
                     String version = info.getString("version");
                     serverConfJson.put("version", version);

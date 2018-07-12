@@ -32,6 +32,8 @@ import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigReque
  */
 public interface IKieBpmService {
 
+    String BEAN_NAME = "KieBpmService";
+
     public DatatableWidgetConfigDto getDataTableWIdgetConfig(int configId);
 
     public DatatableWidgetConfigDto updateDataTableWIdgetConfig(DatatableWidgetConfigRequest req);

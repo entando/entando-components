@@ -87,14 +87,16 @@ public class KieBpmConfigAction extends BaseAction {
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
 
             JSONArray serverStat = this.getCaseManager().getKieServerStatus();
-            for(int i =0; i<serverStat.length(); i++) {
+            for (int i = 0; i < serverStat.length(); i++) {
                 Object obj = serverStat.get(i);
-                if(obj instanceof JSONObject) {
-                    JSONObject details = (JSONObject)obj;
+                if (obj instanceof JSONObject) {
+                    JSONObject details = (JSONObject) obj;
                     String id = details.getString("id");
                     JSONObject conf = details.getJSONObject("config");
-                    String ver = conf.getString("version");
-                    this.getFormManager().getHostNameVersionMap().put(id, ver);
+                    if (conf.has("version")) {
+                        String ver = conf.getString("version");
+                        this.getFormManager().getHostNameVersionMap().put(id, ver);
+                    }
                 }
             }
 
