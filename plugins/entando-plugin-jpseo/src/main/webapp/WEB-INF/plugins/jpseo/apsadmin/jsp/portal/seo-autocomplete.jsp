@@ -9,6 +9,7 @@
         var availableTags = [
     <s:iterator value="#keysCatalogVar">"<s:property />",</s:iterator>
         ];
+        $('#new_metatag, #save_metatagValue').val('');
         $("#new_metatag").autocomplete({
             source: availableTags
         });
