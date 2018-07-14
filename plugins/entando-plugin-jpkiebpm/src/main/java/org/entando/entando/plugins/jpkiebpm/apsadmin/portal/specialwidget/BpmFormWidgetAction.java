@@ -188,7 +188,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     }
 
     private void addAttributeToEntityType(IApsEntity entityType, KieProcessFormField field) {
-        if (field.getType().equalsIgnoreCase("InputText")) {
+        if (field.getType().equalsIgnoreCase("TextBox") || field.getType().equalsIgnoreCase("InputText")) {
             MonoTextAttribute text = (MonoTextAttribute) this.getAttributePrototype("Monotext");
             text.setName(field.getName());
             text.setDefaultLangCode(this.getCurrentLang().getCode());
@@ -197,8 +197,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             text.setRequired(req);
             entityType.addAttribute(text);
         }
-        if (field.getType().equalsIgnoreCase("InputTextInteger")
-                || field.getType().equalsIgnoreCase("InputTextFloat")) {
+        if (field.getType().equalsIgnoreCase("IntegerBox") || field.getType().equalsIgnoreCase("InputTextInteger")
+                || field.getType().equalsIgnoreCase("InputTextFloat") || field.getType().equalsIgnoreCase("FloatBox")) {
             NumberAttribute number = (NumberAttribute) this.getAttributePrototype("Number");
             number.setName(field.getName());
             number.setDefaultLangCode(this.getCurrentLang().getCode());
