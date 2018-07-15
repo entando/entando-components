@@ -18,6 +18,8 @@ public class TestPamQueryFormResult extends TestCase {
 
         try {
             String kieProcessFormXML = FileUtils.readFileToString(new File("src/test/resources/examples/xml/jbpm7-mortgage-process-form.xml"));
+           String kieProcessFormXML2 = FileUtils.readFileToString(new File("src/test/resources/examples/xml/jbpm7-task-complete-form.xml"));
+
             PamProcessQueryFormResult pamSeven = (PamProcessQueryFormResult) JAXBHelper
                     .unmarshall(kieProcessFormXML, PamProcessQueryFormResult.class, true, false);
 
@@ -26,14 +28,24 @@ public class TestPamQueryFormResult extends TestCase {
             assertNotNull(pamSeven.getArrays().get(0).getLayoutTemplate().getRows());
             assertNotNull(pamSeven.getArrays().get(0).getLayoutTemplate().getRows().get(0).getLayoutColums().get(0).getLayoutComponents().get(0));
             KieProcessFormQueryResult result = KieVersionTransformer.pamSevenFormToPamSix(pamSeven);
-
             List<KieProcessFormQueryResult> forms =  result.getNestedForms();
+
+            PamProcessQueryFormResult pamSeven2 = (PamProcessQueryFormResult) JAXBHelper
+                    .unmarshall(kieProcessFormXML2, PamProcessQueryFormResult.class, true, false);
+
+            KieProcessFormQueryResult result2 = KieVersionTransformer.pamSevenFormToPamSix(pamSeven2);
+            List<KieProcessFormQueryResult> forms2 =  result2.getNestedForms();
+
 
             assertEquals(3, forms.size());
 
 
             String xml = JAXBHelper.marshall(result, true, false);
+
+            String xml2 = JAXBHelper.marshall(result2, true, false);
             System.out.println(xml);
+
+            System.out.println(xml2);
         }catch(Throwable e){
             throw e;
         }

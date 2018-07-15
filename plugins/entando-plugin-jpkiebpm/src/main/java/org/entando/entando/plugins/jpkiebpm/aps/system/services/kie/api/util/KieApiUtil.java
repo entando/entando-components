@@ -47,7 +47,7 @@ public class KieApiUtil {
         final KieApiFields fields = new KieApiFields();
         final KieApiFieldset fieldset = new KieApiFieldset(processForm.getHolders().get(0).getId());
 
-        if (null != processForm.getFields()) {
+        if (null != processForm.getFields() && !processForm.getFields().isEmpty()) {
             for (KieProcessFormField field : processForm.getFields()) {
                 fieldset.getFields().add(createField(field, ii18nManager, langCode, overrideMap));
             }
