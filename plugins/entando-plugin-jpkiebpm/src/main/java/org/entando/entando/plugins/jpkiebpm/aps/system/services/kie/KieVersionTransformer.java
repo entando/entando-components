@@ -25,6 +25,10 @@ public class KieVersionTransformer {
         Map<String, PamArray> pamIdMap = new HashMap<>();
         Map<String, String> fieldIdToArrayId = new HashMap<>();
 
+        //Nested forms have two ids. One is a "fieldId" and one is the "formid" of the form itself. This crosswalk between
+        //form and field matters to the processing because the top level entry only references the fieldId but the formId
+        //is needed to capture the actual data. So build  two maps. One to map from formId to the data in the <array> and
+        //one to go from the "fieldId" to the "formId". Used below to order the forms in the transformed output.
         for(PamArray array : pamProcessQueryFormResult.getArrays()) {
             String modelType = array.getModel().getClassName();
             formModelTypes.add(modelType);
@@ -44,7 +48,6 @@ public class KieVersionTransformer {
 
         Map<String, PamArray> fieldToForms = new HashMap<>();
         for(Map.Entry<String, String> entry : fieldIdToArrayId.entrySet()) {
-
             fieldToForms.put(entry.getKey(), pamIdMap.get(entry.getValue()));
         }
 
@@ -55,7 +58,7 @@ public class KieVersionTransformer {
                 queryResult = pamSevenFormToPamSix(array, formModelTypes);
 
                 //This call processes the child forms of the parent in order based on the form id references. The output
-                //here is an ordered list of the child forms in the order they should appear
+                //here is an ordered list of the child forms in the order they should appear when rendered
                 buildFormOrder(array, fieldIdOrder, fieldToForms);
                 break;
             }
@@ -65,6 +68,7 @@ public class KieVersionTransformer {
             queryResult.setNestedForms(new ArrayList<>());
         }
 
+        //Process the forms in the order identified in the buildFormOrder call and add to the result in that order
         for(String fieldId : fieldIdOrder) {
             queryResult.getNestedForms().add(pamSevenFormToPamSix(fieldToForms.get(fieldId), formModelTypes));
         }
@@ -78,6 +82,14 @@ public class KieVersionTransformer {
         for(PamFields field : fields) {
             fieldMap.put(field.getId(), field);
         }
+
+        //This method starts with the top level entry that is identified as the one that has a "process-id"
+        //and then iterates all of the children that are forms. This allows the forms to get processed and displayed in the
+        //order that is implicit in the layoutTemplate in the forms. So start with the forms referenced by the top level and
+        //add further child ids to the list.
+        //
+        //This is an abbomination and should be replaced soon. The downstream processing of the form is very dependent
+        //on the order the forms and fields arrive in at this time.
         List<PamLayoutTemplateRow> rows = array.getLayoutTemplate().getRows();
         for(PamLayoutTemplateRow row : rows) {
             List<PamLayoutColumn> columns = row.getLayoutColums();
@@ -118,6 +130,8 @@ public class KieVersionTransformer {
         String modelerType = "dataModelerEntry";;
         String modelClassName = model.getClassName();
 
+        //Make sure the model name is the first "dataModelerEntry" if a subfield is first it breaks bindings later on.
+        //This ensures the form levels are labeled properly
         String modelNameDisplay = StringUtils.capitalize(modelName);
         addDataholder(result, modelNameDisplay, modelNameDisplay, modelNameDisplay, modelerType, modelClassName);
 
@@ -139,13 +153,11 @@ public class KieVersionTransformer {
             result.setFields(new ArrayList<>(pamSeven.getPamFields().size()));
         }
 
-        List<PamLayoutTemplateRow> rows =  pamSeven.getLayoutTemplate().getRows();
-        Map<String, Integer> rowIndex = new HashMap<>();
-
+        //Build a map of the fields so they can be added to the form. The order the fields are added matters to the rendering
+        //so this loop just creates the fields and indexes them. That then gets crosswalked based on the layout tempalte in the XML in the loop below.
         Map<String, KieProcessFormField> fieldMap = new HashMap<>();
         for(PamFields field : pamSeven.getPamFields()) {
             String fieldId = field.getId();
-//            String modelName = pamSeven.getName().toLowerCase();
             String fieldName = field.getName();
             String label = field.getLabel();
             String type = field.getStandaloneClassName();
@@ -160,7 +172,11 @@ public class KieVersionTransformer {
             fieldMap.put(fieldId, builtField);
         }
 
+        //The fields have to be added to the parent form in order. So start with the <rows> inside the <layoutTemplate>
+        //and then lookup the field definition from the fieldMap created above to add the details to the parent form.
         int count = 0;
+        List<PamLayoutTemplateRow> rows =  pamSeven.getLayoutTemplate().getRows();
+
         for(PamLayoutTemplateRow row : rows) {
 
             //TODO Support columns in form gen from PAM fields
