@@ -6,9 +6,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Class to manage transformations between the 6.x and 7.x Kie server formats. In most cases the downstream code
@@ -24,25 +22,76 @@ public class KieVersionTransformer {
         KieProcessFormQueryResult queryResult = null;
 
         List<String> formModelTypes = new ArrayList<>();
+        Map<String, PamArray> pamIdMap = new HashMap<>();
+        Map<String, String> fieldIdToArrayId = new HashMap<>();
+
         for(PamArray array : pamProcessQueryFormResult.getArrays()) {
             String modelType = array.getModel().getClassName();
             formModelTypes.add(modelType);
+
+            pamIdMap.put(array.getId(), array);
+            List<PamFields> fields = array.getPamFields();
+
+            for(PamFields field : fields) {
+                String id = field.getId();
+                String nestedForm = field.getNestedForm();
+
+                if(nestedForm !=null) {
+                    fieldIdToArrayId.put(id, nestedForm);
+                }
+            }
         }
+
+        Map<String, PamArray> fieldToForms = new HashMap<>();
+        for(Map.Entry<String, String> entry : fieldIdToArrayId.entrySet()) {
+
+            fieldToForms.put(entry.getKey(), pamIdMap.get(entry.getValue()));
+        }
+
+        List<String> fieldIdOrder = new ArrayList<String>();
 
         for(PamArray array : pamProcessQueryFormResult.getArrays()) {
             if(first){
                 queryResult = pamSevenFormToPamSix(array, formModelTypes);
+                buildFormOrder(array, fieldIdOrder, fieldToForms);
                 first = false;
-            }else{
-                if(queryResult.getNestedForms() ==null) {
-                    queryResult.setNestedForms(new ArrayList<>());
-                }
-                queryResult.getNestedForms().add(pamSevenFormToPamSix(array, formModelTypes));
             }
         }
 
+
+        if(queryResult.getNestedForms() ==null) {
+            queryResult.setNestedForms(new ArrayList<>());
+        }
+
+        for(String fieldId : fieldIdOrder) {
+            queryResult.getNestedForms().add(pamSevenFormToPamSix(fieldToForms.get(fieldId), formModelTypes));
+        }
         return queryResult;
     }
+
+    private static void buildFormOrder(PamArray array,List<String> fieldIdOrder,  Map<String, PamArray> nestedFormMap) {
+
+        List<PamLayoutTemplateRow> rows = array.getLayoutTemplate().getRows();
+        for(PamLayoutTemplateRow row : rows) {
+            List<PamLayoutColumn> columns = row.getLayoutColums();
+            for(PamLayoutColumn column : columns) {
+                List<PamLayoutComponent> components = column.getLayoutComponents();
+                for(PamLayoutComponent component : components) {
+                    if(component.getProperties()!=null && component.getProperties().getFieldId() !=null){
+                        String fieldId = component.getProperties().getFieldId();
+
+
+                        if(nestedFormMap.containsKey(fieldId)) {
+                            fieldIdOrder.add(fieldId);
+                            buildFormOrder(nestedFormMap.get(fieldId), fieldIdOrder, nestedFormMap);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
     public static KieProcessFormQueryResult pamSevenFormToPamSix(PamArray pamSeven, List<String> formModelTypes) {
 
         KieProcessFormQueryResult result = new KieProcessFormQueryResult();
@@ -72,9 +121,13 @@ public class KieVersionTransformer {
         }
 
         if(result.getFields() == null) {
-            result.setFields(new ArrayList<>());
+            result.setFields(new ArrayList<>(pamSeven.getPamFields().size()));
         }
 
+        List<PamLayoutTemplateRow> rows =  pamSeven.getLayoutTemplate().getRows();
+        Map<String, Integer> rowIndex = new HashMap<>();
+
+        Map<String, KieProcessFormField> fieldMap = new HashMap<>();
         for(PamFields field : pamSeven.getPamFields()) {
             String fieldId = field.getId();
             String modelName = pamSeven.getName().toLowerCase();
@@ -88,7 +141,32 @@ public class KieVersionTransformer {
                 //Sub forms will get processed and be nested under the root. This prevents duplicates
                 continue;
             }
-            addField(result, fieldId, modelName, fieldName, label, code, required, type);
+            KieProcessFormField builtField = buildField(fieldId, modelName, fieldName, label, code, required, type);
+            fieldMap.put(fieldId, builtField);
+        }
+
+        int count = 0;
+        for(PamLayoutTemplateRow row : rows) {
+
+            //TODO Support columns in form gen from PAM fields
+            //The PAM 7 form supports the creation of forms in rows and columns. The current data model
+            //layout doesn't suppor the creation of separate columns for fields on the same row. So move everything to
+            //a row in the result for now.
+            List<PamLayoutColumn> columns = row.getLayoutColums();
+            for(PamLayoutColumn column : columns) {
+
+                List<PamLayoutComponent> components = column.getLayoutComponents();
+                for(PamLayoutComponent component : components){
+                    String fieldId = component.getProperties().getFieldId();
+
+                    //If the value is a form it won't be in the map. Those get ordered elsewhere. This just orders fields
+                    if(fieldMap.containsKey(fieldId)) {
+                        fieldMap.get(fieldId).setPosition(count);
+                        result.getFields().add(fieldMap.get(fieldId));
+                        count++;
+                    }
+                }
+            }
         }
         return result;
     }
@@ -120,7 +198,7 @@ public class KieVersionTransformer {
         result.getHolders().add(holder);
     }
 
-    private static void addField(KieProcessFormQueryResult result, String id, String modelName, String fieldName, String label, String code, Boolean required, String type) {
+    private static KieProcessFormField buildField(String id, String modelName, String fieldName, String label, String code, Boolean required, String type) {
 
 
         KieProcessFormField field = new KieProcessFormField();
@@ -146,9 +224,7 @@ public class KieVersionTransformer {
         field.getProperties().add(fieldClass);
 
 
-        result.getFields().add(field);
-
-
-
+        return field;
     }
+
 }

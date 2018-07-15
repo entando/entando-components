@@ -22,6 +22,8 @@ public class PamArray {
     @XmlElement(name = "fields")
     private List<PamFields> pamFields;
 
+    @XmlElement(name = "layoutTemplate")
+    private PamLayoutTemplate layoutTemplate;
 
     public String getName() {
         return name;
@@ -53,6 +55,14 @@ public class PamArray {
 
     public void setPamFields(List<PamFields> pamFields) {
         this.pamFields = pamFields;
+    }
+
+    public PamLayoutTemplate getLayoutTemplate() {
+        return layoutTemplate;
+    }
+
+    public void setLayoutTemplate(PamLayoutTemplate layoutTemplate) {
+        this.layoutTemplate = layoutTemplate;
     }
 }
 

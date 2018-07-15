@@ -9,6 +9,7 @@ import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.List;
 
 public class TestPamQueryFormResult extends TestCase {
 
@@ -20,7 +21,16 @@ public class TestPamQueryFormResult extends TestCase {
             PamProcessQueryFormResult pamSeven = (PamProcessQueryFormResult) JAXBHelper
                     .unmarshall(kieProcessFormXML, PamProcessQueryFormResult.class, true, false);
 
+            assertNotNull(pamSeven.getArrays().get(0).getLayoutTemplate());
+
+            assertNotNull(pamSeven.getArrays().get(0).getLayoutTemplate().getRows());
+            assertNotNull(pamSeven.getArrays().get(0).getLayoutTemplate().getRows().get(0).getLayoutColums().get(0).getLayoutComponents().get(0));
             KieProcessFormQueryResult result = KieVersionTransformer.pamSevenFormToPamSix(pamSeven);
+
+            List<KieProcessFormQueryResult> forms =  result.getNestedForms();
+
+            assertEquals(3, forms.size());
+
 
             String xml = JAXBHelper.marshall(result, true, false);
             System.out.println(xml);
