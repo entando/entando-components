@@ -1,7 +1,7 @@
 var org = org || {};
 org.entando = org.entando || {};
 org.entando.datatable = org.entando.datatable || {};
-org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
+org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, containerId) {
 
 
     function getConfigColumnDatatable(items, columnDefinition) {
@@ -41,6 +41,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig) {
             columns.forEach(function (key) {
                 obj[key.data] = el[key.data] === undefined ? '' : el[key.data];
             });
+            obj.containerId = containerId;
             return obj;
         });
 
