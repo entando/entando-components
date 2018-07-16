@@ -202,24 +202,34 @@
 					<!-- Default separator -->
 					<div class="form-group-separator"></div>
 						<c:set var="linkTypeVar" value="${param.linkTypeVar}" scope="page"/>
+						<c:set var="prevCode" value="${param.prevCode}" scope="page"/>
+						<c:set var="prevLinkTypeVar" value="${param.prevLinkTypeVar}" scope="page"/>
 						<c:set var="contentOnSessionMarker" value="${param.contentOnSessionMarker}" scope="page"/>
 						<!-- Tab Menu -->
                         <ul class="nav nav-tabs tab-togglers mt-20" id="tab-togglers">
                             <s:url action="entandoInternalUrlLink" anchor="url-link" var="externalLinkURL">
                                 <s:param name="linkTypeVar" value="1" />
                                 <s:param name="contentOnSessionMarker" value="%{#attr.contentOnSessionMarker}" />
+                               	<s:param name="prevCode" value="%{#attr.prevCode}" />
+                                <s:param name="prevLinkTypeVar" value="%{#attr.prevLinkTypeVar}" />
                             </s:url>
                             <s:url action="entandoInternalPageLink" anchor="page-link" var="pageLinkURL">
                                 <s:param name="linkTypeVar" value="2" />
                                 <s:param name="contentOnSessionMarker" value="%{#attr.contentOnSessionMarker}" />
+                               	<s:param name="prevCode" value="%{#attr.prevCode}" />
+                                <s:param name="prevLinkTypeVar" value="%{#attr.prevLinkTypeVar}" />
                             </s:url>
                             <s:url action="entandoInternalContentLink" anchor="content-link" var="contentLinkURL">
                                 <s:param name="linkTypeVar" value="3" />
                                 <s:param name="contentOnSessionMarker" value="%{#attr.contentOnSessionMarker}" />
+                               	<s:param name="prevCode" value="%{#attr.prevCode}" />
+                                <s:param name="prevLinkTypeVar" value="%{#attr.prevLinkTypeVar}" />
                             </s:url>
                             <s:url action="entandoInternalResourceLink" anchor="resource-link" var="resourceLinkURL">
-                                <s:param name="linkTypeVar" value="4" />
+                                <s:param name="linkTypeVar" value="5" />
                                 <s:param name="contentOnSessionMarker" value="%{#attr.contentOnSessionMarker}" />
+                                <s:param name="prevCode" value="%{#attr.prevCode}" />
+                                <s:param name="prevLinkTypeVar" value="%{#attr.prevLinkTypeVar}" />
                             </s:url>
 							<li ${((param.linkTypeVar eq 1) || (empty param.linkTypeVar))?'class="active"':''}><a href="${externalLinkURL}"><s:text name="note.URLLinkTo" /></a></li>
 							<li ${(param.linkTypeVar eq 2)?'class="active"':''} ><a href="${pageLinkURL}"><s:text name="note.pageLinkTo" /></a></li>

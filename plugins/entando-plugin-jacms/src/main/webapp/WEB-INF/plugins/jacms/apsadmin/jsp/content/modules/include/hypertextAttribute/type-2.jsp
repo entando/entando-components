@@ -1,29 +1,17 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
 
+
+
 <s:form cssClass="form-horizontal" id="form_pageLink">
+
+    <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/hypertextAttribute/info-prev-value.jsp" />
 
     <p class="sr-only"><s:text name="note.choosePageToLink" />.</p>
     <p class="sr-only">
         <input type="hidden" name="contentOnSessionMarker" value="<s:property value="contentOnSessionMarker" />" />
         <input type="hidden" name="linkTypeVar" value="2" />
     </p>
-
-
-    <s:if test="%{#parameters['prevCode'] != null}">
-      <div class="form-group mt-20">
-         <div class="col-xs-12">
-             <div class="alert alert-info mt-20 no-mb">
-                <span class="pficon pficon-info"></span>
-                <p>
-                    <s:set var="prevPageVar" value="%{getPage(#parameters['prevCode'])}" />
-                    <s:text name="label.previousValue" />:&nbsp;
-                    <s:property value="#prevPageVar.code"/> - <s:property value="#prevPageVar.descr"/>
-                </p>
-             </div>
-         </div>
-      </div>
-    </s:if>
 
 
      <div class="form-group mt-20">

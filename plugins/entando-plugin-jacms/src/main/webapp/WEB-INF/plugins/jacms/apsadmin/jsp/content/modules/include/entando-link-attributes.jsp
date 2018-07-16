@@ -1,7 +1,6 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 
-
     <h2 class="col-xs-12">
         <s:text name="linkAdditionalAttributes.formTitle" />
     </h2>

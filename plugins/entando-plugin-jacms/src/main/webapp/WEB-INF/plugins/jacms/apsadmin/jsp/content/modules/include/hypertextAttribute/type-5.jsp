@@ -2,23 +2,12 @@
 <%@ taglib prefix="wpsa" uri="/apsadmin-core" %>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 
+
 <s:form action="entandoResourceSearch" cssClass="form-horizontal" role="search">
+
+    <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/hypertextAttribute/info-prev-value.jsp" />
+
 	<p class="sr-only"><s:text name="note.chooseResourceToLink" />.</p>
-
-
-    <s:if test="%{#parameters['prevCode'] != null}">
-        <div class="col-xs-12">
-            <div class="alert alert-info mt-20 no-mb">
-                <span class="pficon pficon-info"></span>
-                <p>
-                    <s:set var="prevResourceVar" value="%{getResource(#parameters['prevCode'])}" />
-                    <s:text name="label.previousValue" />:&nbsp;
-                    <s:property value="#prevResourceVar.id"/> - <s:property value="#prevResourceVar.descr"/>
-                </p>
-            </div>
-        </div>
-    </s:if>
-
 
 	<p class="sr-only">
 		<wpsf:hidden name="prevCode" value="%{#prevResourceVar.id}" />
