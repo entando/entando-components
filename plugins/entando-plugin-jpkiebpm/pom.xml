@@ -103,13 +103,13 @@
         <dependency>
             <groupId>org.kie</groupId>
             <artifactId>kie-api</artifactId>
-            <version>7.0.0.Final</version>
+            <version>7.8.0.Final</version>
         </dependency>
 
         <dependency>
             <groupId>org.kie.server</groupId>
             <artifactId>kie-server-client</artifactId>
-            <version>7.3.0.Final</version>
+            <version>7.8.0.Final</version>
         </dependency>
 
     </dependencies>

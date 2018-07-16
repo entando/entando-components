@@ -1,0 +1,110 @@
+package org.entando.entando.plugins.jpkiebpm.apsadmin.util;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.xml.bind.Marshaller;
+
+import org.apache.log4j.Logger;
+import org.junit.Test;
+import org.kie.server.api.marshalling.MarshallingFormat;
+import org.kie.server.api.model.instance.TaskSummary;
+import org.kie.server.client.KieServicesClient;
+import org.kie.server.client.KieServicesConfiguration;
+import org.kie.server.client.KieServicesFactory;
+import org.kie.server.client.UserTaskServicesClient;
+
+import com.redhat.bpms.examples.mortgage.Applicant;
+import com.redhat.bpms.examples.mortgage.Application;
+import com.redhat.bpms.examples.mortgage.Appraisal;
+import com.redhat.bpms.examples.mortgage.Property;
+import com.redhat.bpms.examples.mortgage.ValidationError;
+
+public class KieClientTester {
+	private static final transient Logger logger = Logger.getLogger(KieClientTester.class);
+
+    //SEE
+    //https://github.com/mswiderski/jbpm-examples/blob/master/kie-server-test/src/main/java/org/jbpm/test/kieserver/KieExecutionServerClientTest.java
+    // jBPM Process and Project constants
+
+    private final String USERNAME = "demouser";
+
+    private final String PASSWORD = "password99!";
+
+    private final String CONTAINER_ID = "mortgage_1.0";
+
+    private final String PROCESS_ID = "4";
+
+    private final String SERVER_URL = "http://localhost:8080/kie-server/services/rest/server";
+
+    @Test
+    public void run() {
+        KieServicesConfiguration config =  KieServicesFactory.newRestConfiguration(SERVER_URL, USERNAME, PASSWORD);
+
+        Set<Class<?>> jaxbClasses = new HashSet<Class<?>>();
+        jaxbClasses.add(Application.class);
+
+        config.addJaxbClasses(jaxbClasses);
+        config.setMarshallingFormat(MarshallingFormat.JSON);
+        KieServicesClient client = KieServicesFactory.newKieServicesClient(config);
+        UserTaskServicesClient taskServicesClient = client.getServicesClient(UserTaskServicesClient.class);
+
+        List<TaskSummary> tasks = taskServicesClient.findTasksAssignedAsPotentialOwner(USERNAME, 0, 10);
+
+        for (TaskSummary taskSummary : tasks) {
+	    		logger.info("task: " + String.valueOf(taskSummary));
+	    }
+        
+        
+//        taskServicesClient.claimTask(CONTAINER_ID, tasks.get(0).getId(), USERNAME); 
+//        taskServicesClient.activateTask(CONTAINER_ID, tasks.get(0).getId(), USERNAME); 
+//        taskServicesClient.startTask(CONTAINER_ID, tasks.get(0).getId(), USERNAME);
+        
+        //taskServicesClient.completeTask(CONTAINER_ID, tasks.get(0).getId(), USERNAME, null);
+        //taskServicesClient.completeAutoProgress(containerId, taskId, userId, params);
+        
+//        void completeTask(String containerId, Long taskId, String userId, Map<String, Object> params);
+        Map<String, Object> params = new HashMap<String,Object>();
+        params.put("taskOutputApplication", generateDummyApp());
+        taskServicesClient.completeAutoProgress(CONTAINER_ID, tasks.get(0).getId(), USERNAME, params);
+    }
+    
+    @Test
+    public void testMarshal() throws Exception {
+    		javax.xml.bind.JAXBContext jaxbContext = org.eclipse.persistence.jaxb.JAXBContext.newInstance(Application.class, HashMap.class);
+	    	Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+	    	jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+	    //jaxbMarshaller.setProperty(MarshallerProperties.MEDIA_TYPE, "application/json");
+	    	//jaxbMarshaller.setProperty(MarshallerProperties.JSON_INCLUDE_ROOT, false);
+	    	Map<String,Object> params = new HashMap<String,Object>();
+	    	params.put("taskOutputApplication", generateDummyApp());
+	    	jaxbMarshaller.marshal(params, System.out);
+    }
+    
+    
+    private Application generateDummyApp() {
+    		Application app = new Application();
+    		
+    		List<ValidationError> errors = new ArrayList<ValidationError>();
+    		errors.add(new ValidationError("cause1"));
+    		errors.add(new ValidationError("cause2"));
+    		app.setValidationErrors(errors);
+    		
+    		app.setApplicant(new Applicant("bob", 123132123, 50000, 25));
+    		app.setAmortization(30);
+    		
+    		Property property = new Property("123 maple lane", 10000);
+    		app.setAppraisal(new Appraisal(property, new java.util.Date(), 150000));
+    		
+    		app.setApr(1.5d);
+    		app.setDownPayment(10000);
+    		app.setMortgageAmount(175500);
+    		
+    		return app;
+    }
+
+}
