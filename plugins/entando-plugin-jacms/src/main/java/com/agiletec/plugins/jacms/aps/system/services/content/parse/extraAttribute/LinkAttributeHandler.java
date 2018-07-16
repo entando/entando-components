@@ -26,20 +26,6 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribu
  * @author E.Santoboni
  */
 public class LinkAttributeHandler extends TextAttributeHandler {
-
-    /*
-    <attribute name="Link" attributetype="Link">
-            <link type="external">
-                <urldest>http://www.google.com</urldest>
-            </link>
-            <text lang="it">text Link</text>
-            <properties>
-                <property key="key1">value1</property>
-                <property key="key2">value2</property>
-                <property key="key2">value3</property>
-            </properties>
-        </attribute>
-     */
 	
 	@Override
 	public void startAttribute(Attributes attributes, String qName) throws SAXException {
