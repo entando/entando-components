@@ -100,4 +100,30 @@ public class TestPamQueryFormResult extends TestCase {
 
 
     }
+    
+    @Test
+    public void testPamSevenSimpleFormParse() throws Throwable{
+    	
+    	try {
+    		String kieProcessFormXML = FileUtils.readFileToString(new File("src/test/resources/examples/xml/jbpm7-simple-process-task-form.xml"));
+    		
+    		PamProcessQueryFormResult pamSeven = (PamProcessQueryFormResult) JAXBHelper
+    				.unmarshall(kieProcessFormXML, PamProcessQueryFormResult.class, true, false);
+    		
+    		assertNotNull(pamSeven.getArrays().get(0).getLayoutTemplate());
+    		
+    		assertNotNull(pamSeven.getArrays().get(0).getLayoutTemplate().getRows());
+    		//assertNotNull(pamSeven.getArrays().get(0).getLayoutTemplate().getRows().get(0).getLayoutColums().get(0).getLayoutComponents().get(0));
+    		KieProcessFormQueryResult result = KieVersionTransformer.pamSevenFormToPamSix(pamSeven);
+    		
+    		String xml = JAXBHelper.marshall(result, true, false);
+    		
+    		logger.info(xml);
+    		
+    	}catch(Throwable e){
+    		throw e;
+    	}
+    	
+    	
+    }
 }

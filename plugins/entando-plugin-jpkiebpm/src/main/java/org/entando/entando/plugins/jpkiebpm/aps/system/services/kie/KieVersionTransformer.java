@@ -95,19 +95,21 @@ public class KieVersionTransformer {
             List<PamLayoutColumn> columns = row.getLayoutColums();
             for(PamLayoutColumn column : columns) {
                 List<PamLayoutComponent> components = column.getLayoutComponents();
-                for(PamLayoutComponent component : components) {
-                    if(component.getProperties()!=null && component.getProperties().getFieldId() !=null){
-                        String fieldId = component.getProperties().getFieldId();
-
-                        if(nestedFormMap.containsKey(fieldId)) {
-
-                            PamFields field = fieldMap.get(fieldId);
-                            if(!field.getReadOnly()) {
-                                fieldIdOrder.add(fieldId);
-                                buildFormOrder(nestedFormMap.get(fieldId), fieldIdOrder, nestedFormMap);
-                            }
-                        }
-                    }
+                if (components != null) {
+	                for(PamLayoutComponent component : components) {
+	                    if(component.getProperties()!=null && component.getProperties().getFieldId() !=null){
+	                        String fieldId = component.getProperties().getFieldId();
+	
+	                        if(nestedFormMap.containsKey(fieldId)) {
+	
+	                            PamFields field = fieldMap.get(fieldId);
+	                            if(!field.getReadOnly()) {
+	                                fieldIdOrder.add(fieldId);
+	                                buildFormOrder(nestedFormMap.get(fieldId), fieldIdOrder, nestedFormMap);
+	                            }
+	                        }
+	                    }
+	                }
                 }
             }
         }
@@ -187,15 +189,17 @@ public class KieVersionTransformer {
             for(PamLayoutColumn column : columns) {
 
                 List<PamLayoutComponent> components = column.getLayoutComponents();
-                for(PamLayoutComponent component : components){
-                    String fieldId = component.getProperties().getFieldId();
-
-                    //If the value is a form it won't be in the map. Those get ordered elsewhere. This just orders fields
-                    if(fieldMap.containsKey(fieldId)) {
-                        fieldMap.get(fieldId).setPosition(count);
-                        result.getFields().add(fieldMap.get(fieldId));
-                        count++;
-                    }
+                if (components != null) {
+	                for(PamLayoutComponent component : components){
+	                    String fieldId = component.getProperties().getFieldId();
+	
+	                    //If the value is a form it won't be in the map. Those get ordered elsewhere. This just orders fields
+	                    if(fieldMap.containsKey(fieldId)) {
+	                        fieldMap.get(fieldId).setPosition(count);
+	                        result.getFields().add(fieldMap.get(fieldId));
+	                        count++;
+	                    }
+	                }
                 }
             }
         }
