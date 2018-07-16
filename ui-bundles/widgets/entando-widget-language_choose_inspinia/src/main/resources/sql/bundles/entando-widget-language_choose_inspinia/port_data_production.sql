@@ -1,7 +1,7 @@
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-language_choose_inspinia', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Choose a Language</property>
-<property key="it">Choose a Language</property>
+<property key="en">Choose a Language (INSPINIA) </property>
+<property key="it">Choose a Language (INSPINIA)</property>
 </properties>', NULL, NULL, NULL, NULL, 1, NULL);
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-language_choose_inspinia', 'entando-widget-language_choose_inspinia', NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
