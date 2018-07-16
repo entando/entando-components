@@ -1,28 +1,17 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.bind.Marshaller;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.bpms.examples.mortgage.*;
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.kie.server.api.marshalling.MarshallingFormat;
 import org.kie.server.api.model.instance.TaskSummary;
 import org.kie.server.client.KieServicesClient;
 import org.kie.server.client.KieServicesConfiguration;
 import org.kie.server.client.KieServicesFactory;
 import org.kie.server.client.UserTaskServicesClient;
 
-import com.redhat.bpms.examples.mortgage.Applicant;
-import com.redhat.bpms.examples.mortgage.Application;
-import com.redhat.bpms.examples.mortgage.Appraisal;
-import com.redhat.bpms.examples.mortgage.Property;
-import com.redhat.bpms.examples.mortgage.ValidationError;
+import javax.xml.bind.Marshaller;
+import java.util.*;
 
 public class KieClientTester {
 	private static final transient Logger logger = Logger.getLogger(KieClientTester.class);
@@ -31,9 +20,9 @@ public class KieClientTester {
     //https://github.com/mswiderski/jbpm-examples/blob/master/kie-server-test/src/main/java/org/jbpm/test/kieserver/KieExecutionServerClientTest.java
     // jBPM Process and Project constants
 
-    private final String USERNAME = "demouser";
+    private final String USERNAME = "testBroker";
 
-    private final String PASSWORD = "password99!";
+    private final String PASSWORD = "broker1!";
 
     private final String CONTAINER_ID = "mortgage_1.0";
 
@@ -49,7 +38,7 @@ public class KieClientTester {
         jaxbClasses.add(Application.class);
 
         config.addJaxbClasses(jaxbClasses);
-        config.setMarshallingFormat(MarshallingFormat.JSON);
+//        config.setMarshallingFormat(MarshallingFormat.JSON);
         KieServicesClient client = KieServicesFactory.newKieServicesClient(config);
         UserTaskServicesClient taskServicesClient = client.getServicesClient(UserTaskServicesClient.class);
 
@@ -68,8 +57,19 @@ public class KieClientTester {
         //taskServicesClient.completeAutoProgress(containerId, taskId, userId, params);
         
 //        void completeTask(String containerId, Long taskId, String userId, Map<String, Object> params);
+
+
         Map<String, Object> params = new HashMap<String,Object>();
         params.put("taskOutputApplication", generateDummyApp());
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String val = mapper.writeValueAsString(params);
+            logger.info("json \n\n" +val);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
         taskServicesClient.completeAutoProgress(CONTAINER_ID, tasks.get(0).getId(), USERNAME, params);
     }
     
@@ -90,8 +90,8 @@ public class KieClientTester {
     		Application app = new Application();
     		
     		List<ValidationError> errors = new ArrayList<ValidationError>();
-    		errors.add(new ValidationError("cause1"));
-    		errors.add(new ValidationError("cause2"));
+//    		errors.add(new ValidationError("cause1"));
+//    		errors.add(new ValidationError("cause2"));
     		app.setValidationErrors(errors);
     		
     		app.setApplicant(new Applicant("bob", 123132123, 50000, 25));
@@ -103,7 +103,7 @@ public class KieClientTester {
     		app.setApr(1.5d);
     		app.setDownPayment(10000);
     		app.setMortgageAmount(175500);
-    		
+            app.setProperty(property);
     		return app;
     }
 

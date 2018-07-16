@@ -68,9 +68,26 @@ public class KieVersionTransformer {
             queryResult.setNestedForms(new ArrayList<>());
         }
 
+        //TODO This count thing is a total hack. This should be done by processing the forms sequentially based on layout
+        //order. Fix me
         //Process the forms in the order identified in the buildFormOrder call and add to the result in that order
+        int count = 0;
+        String parentDataHolderOutId = queryResult.getHolders().get(0).getOutId();
         for(String fieldId : fieldIdOrder) {
-            queryResult.getNestedForms().add(pamSevenFormToPamSix(fieldToForms.get(fieldId), formModelTypes));
+
+            if(count ==0) {
+                queryResult = pamSevenFormToPamSix(fieldToForms.get(fieldId), formModelTypes);
+                queryResult.getHolders().get(0).setOutId(parentDataHolderOutId);
+            }
+
+            if(count > 0) {
+                if(queryResult.getNestedForms() ==null) {
+                    queryResult.setNestedForms(new ArrayList<>());
+                }
+                queryResult.getNestedForms().add(pamSevenFormToPamSix(fieldToForms.get(fieldId), formModelTypes));
+            }
+
+            count ++;
         }
         return queryResult;
     }
@@ -135,20 +152,39 @@ public class KieVersionTransformer {
         //Make sure the model name is the first "dataModelerEntry" if a subfield is first it breaks bindings later on.
         //This ensures the form levels are labeled properly
         String modelNameDisplay = StringUtils.capitalize(modelName);
-        addDataholder(result, modelNameDisplay, modelNameDisplay, modelNameDisplay, modelerType, modelClassName);
-
+        if(modelNameDisplay!=null) {
+            addDataholder(result, modelNameDisplay, modelNameDisplay, modelName, modelerType, modelClassName);
+        }
         for(PamProperty property : model.getProperties()) {
             String propName = property.getName();
             String className = property.getTypeInfo().getClassName();
             String type = property.getTypeInfo().getType();
 
+            boolean readOnly = false;
+            if(property.getMetaData() !=null && property.getMetaData().getEntries()!=null) {
+
+                Optional<PamEntry> readOnlyEntry = property.getMetaData()
+                         .getEntries().stream()
+                        .filter(e -> e.getName().equals("field-readOnly"))
+                        .findFirst();
+
+                if(readOnlyEntry.isPresent() && readOnlyEntry.get().getValue().equals("true")){
+                    readOnly = true;
+                }
+
+            }
+
+            String propId = propName;
             //In PAM 6.x the main container entity for each form was marked  as the dataModelerEntry. Downstream the form helper
             //logic depends on this marker. The marker doesn't exist in 7.x so we add manually when the value of the class
             //on the interior property matches the value of a top level entity on one of the other forms.
             if(formModelTypes.contains(className)) {
                 type = "dataModelerEntry";
             }
-            addDataholder(result, propName, propName, propName, type, className);
+
+            if(!readOnly && propName!=null) {
+                addDataholder(result, propName, propName, propName, type, className);
+            }
         }
 
         if(result.getFields() == null) {
@@ -241,7 +277,7 @@ public class KieVersionTransformer {
         field.setProperties(new ArrayList<>());
 
         field.setId(id);
-        field.setName(modelName+"_"+fieldName);
+        field.setName(fieldName);
         field.setType(code);
 
         KieProcessProperty prop = new KieProcessProperty();

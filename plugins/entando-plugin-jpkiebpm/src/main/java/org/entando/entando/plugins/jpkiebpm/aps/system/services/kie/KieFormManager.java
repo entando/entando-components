@@ -768,7 +768,14 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             }
             map.put("brokerOverride", brokerOverrideValue);
             // finally
-            completeHumanFormTask(containerId, taskId, form, taskData, map);
+
+            //Change the first letter of the key to lower case so that it matches the form response. This is getting capitalized
+            //elsewhere because the same string is used for display in a form. To be refactored
+            Map<String, Object> fixedKeys = new HashMap<>();
+            for(Map.Entry entry : map.entrySet()) {
+                fixedKeys.put(StringUtils.uncapitalize((String)entry.getKey()), entry.getValue());
+            }
+            completeHumanFormTask(containerId, taskId, form, taskData, fixedKeys);
 
         } catch (Throwable t) {
             logger.error("Failed to complete kie task ", t);
