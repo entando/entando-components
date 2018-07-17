@@ -488,6 +488,12 @@ public class FormToBpmHelper {
         return outputIdJson.toString();
     }
 
+    //1. Find common top level keys to begin merge since the nesting is different. taskInput is the data from BPM and formOutput is what we plan to send back
+    //2. Merge keys that exist in taskInput back into formOutput so that we round trip all the data
+    //3. Don't overwrite anything.
+    //
+    //This assumes that there is a top level entity that holds all the forms. For example 'taskInputApplication'
+    //and that the merge can occur against the children of that object.
     private static void mergeTaskData(JSONObject formOutput, JSONObject taskInput) {
 
         Iterator<String> keys = formOutput.keys();
@@ -509,8 +515,10 @@ public class FormToBpmHelper {
         }
     }
 
-    //Take the keys from task input and if you find one that is missing copy it into the output to round trip
-    //the data. Recursively process pairs so that all of the nested data makes it back
+    //Take the keys from task input (this is the data we get from BPM about the process)
+    // and if you find one that is missing copy it into the output we are sending back to round trip
+    //the data that wasn't user visible. Recursively process pairs so that all of the nested data makes it back.
+    //Only copies missing keys
     private static void mergeDetails(JSONObject formOutput, JSONObject taskInput) {
 
         Set<String> keys = taskInput.keySet();
@@ -519,11 +527,14 @@ public class FormToBpmHelper {
             if(!formOutput.has(key) || formOutput.get(key).equals(JSONObject.NULL)) {
                 formOutput.put(key, taskInput.get(key));
             }else if(taskInput.get(key) instanceof JSONObject) {
+
+                //Recurse and check for missing child forms (for example property nested under appraisal in the mortgage data)
                 mergeDetails(formOutput.getJSONObject(key), taskInput.getJSONObject(key) );
             }
         }
     }
 
+    //Find a common top level key for a first level child represented by outputKey.
     private static Object findStartingPoint(String outputKey, JSONObject taskInput){
 
         Set<String> inputKeys = taskInput.keySet();
