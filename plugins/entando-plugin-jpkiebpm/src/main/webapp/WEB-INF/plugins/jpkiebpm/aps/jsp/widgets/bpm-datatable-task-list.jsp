@@ -162,8 +162,9 @@
                     item['created'] = new Date(item['created']).toLocaleString();
                     return item;
                 });
+                var containerId = data.response.result.taskList.containerId;
                 extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
-                org.entando.datatable.CustomDatatable(items, idTable, extraConfig);
+                org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);
             });
         };
 
