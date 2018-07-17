@@ -45,7 +45,7 @@ public class KieApiUtil {
             final Map<String, KieFormOverride> overrideMap) {
 
         final KieApiFields fields = new KieApiFields();
-        final KieApiFieldset fieldset = new KieApiFieldset(processForm.getHolders().get(0).getId());
+        final KieApiFieldset fieldset = new KieApiFieldset(processForm.getHolders().get(0).getName());
 
         if (null != processForm.getFields() && !processForm.getFields().isEmpty()) {
             for (KieProcessFormField field : processForm.getFields()) {

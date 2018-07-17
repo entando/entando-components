@@ -153,7 +153,7 @@ public class KieVersionTransformer {
         //This ensures the form levels are labeled properly
         String modelNameDisplay = StringUtils.capitalize(modelName);
         if(modelNameDisplay!=null) {
-            addDataholder(result, modelNameDisplay, modelNameDisplay, modelName, modelerType, modelClassName);
+            addDataholder(result, modelName, modelNameDisplay, modelName, modelerType, modelClassName);
         }
         for(PamProperty property : model.getProperties()) {
             String propName = property.getName();
@@ -277,7 +277,7 @@ public class KieVersionTransformer {
         field.setProperties(new ArrayList<>());
 
         field.setId(id);
-        field.setName(fieldName);
+        field.setName(modelName+"_"+fieldName);
         field.setType(code);
 
         KieProcessProperty prop = new KieProcessProperty();

@@ -66,8 +66,8 @@ public class TestPamQueryFormResult extends TestCase {
     public void testPamSevenFormParse() throws Throwable{
 
         try {
-//            String kieProcessFormXML = FileUtils.readFileToString(new File("src/test/resources/examples/xml/jbpm7-mortgage-process-form.xml"));
-           String kieProcessFormXML2 = FileUtils.readFileToString(new File("src/test/resources/examples/xml/jbpm7-task-complete-form.xml"));
+//            String kieProcessFormXML = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/jbpm7-mortgage-process-form.xml"));
+           String kieProcessFormXML2 = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/jbpm7-task-complete-form.xml"));
 
 //            PamProcessQueryFormResult pamSeven = (PamProcessQueryFormResult) JAXBHelper
 //                    .unmarshall(kieProcessFormXML, PamProcessQueryFormResult.class, true, false);

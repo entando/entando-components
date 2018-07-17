@@ -330,6 +330,11 @@ public class ApiTaskInterface extends KieApiManager {
         String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
         KieApiForm form = null;
         KieProcessFormQueryResult processForm = this.getKieFormManager().getTaskForm(containerId, Long.valueOf(taskIdString));
+
+        JSONObject taskData = this.getKieFormManager().getTaskFormData(containerId, Long.valueOf(taskIdString), null);
+
+        mergeTaskData(taskData, processForm);
+
         if (null == processForm) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
@@ -485,4 +490,20 @@ public class ApiTaskInterface extends KieApiManager {
         return input;
     }
 
+    public void mergeTaskData(JSONObject taskData, KieProcessFormQueryResult form) {
+
+        logger.info("Task data "+taskData.toString());
+
+        JSONObject taskInputData = taskData.getJSONObject("task-input-data");
+
+        form.getFields();
+        form.getHolders().get(0).getType();
+
+
+
+    }
+
+    private void mergeForm(JSONObject taskInputData, KieProcessFormQueryResult form) {
+
+    }
 }
