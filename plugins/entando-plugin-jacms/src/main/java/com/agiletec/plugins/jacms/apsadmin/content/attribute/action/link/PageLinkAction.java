@@ -48,9 +48,11 @@ public class PageLinkAction extends PageTreeAction {
 		String result= super.execute();
 		if (result.equals(SUCCESS)) {
 			Map<String, String> properties = (Map<String, String>) this.getRequest().getSession().getAttribute(ILinkAttributeActionHelper.LINK_PROPERTIES_MAP_SESSION_PARAM);
-			this.linkAttributeRel = properties.get("rel");
-			this.linkAttributeTarget = properties.get("target");
-			this.linkAttributeHRefLang = properties.get("hreflang");
+			if (null != properties) {
+				this.linkAttributeRel = properties.get("rel");
+				this.linkAttributeTarget = properties.get("target");
+				this.linkAttributeHRefLang = properties.get("hreflang");
+			}
 		}
 		return result;
 	}
