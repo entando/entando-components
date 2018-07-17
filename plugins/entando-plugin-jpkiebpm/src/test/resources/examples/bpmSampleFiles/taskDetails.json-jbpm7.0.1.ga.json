@@ -21,7 +21,7 @@
     "taskInputApplication": {
       "com.redhat.bpms.examples.mortgage.Application": {
         "apr": null,
-        "mortgageAmount": 0,
+        "mortgageAmount": 987654.0,
         "downPayment": 12345.0,
         "property": {
           "com.redhat.bpms.examples.mortgage.Property": {

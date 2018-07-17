@@ -34,6 +34,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.ta
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
@@ -494,16 +495,56 @@ public class ApiTaskInterface extends KieApiManager {
 
         logger.info("Task data "+taskData.toString());
 
-        JSONObject taskInputData = taskData.getJSONObject("task-input-data");
+        String holderType = form.getHolders().get(0).getValue();
+        String formName = form.getHolders().get(0).getId();
 
-        form.getFields();
-        form.getHolders().get(0).getType();
+        Set<String> children = taskData.keySet();
 
+        JSONObject formChild = null;
+        for(String child : children) {
+            if(child.equals(holderType)){
+                formChild = taskData.getJSONObject(child);
+                break;
+            }
+        }
 
-
+        if(formChild != null) {
+            mergeForm(formChild, form);
+        }else {
+            for(String child : children) {
+                if(taskData.get(child) instanceof JSONObject) {
+                    mergeTaskData(taskData.getJSONObject(child), form);
+                }
+            }
+        }
     }
 
     private void mergeForm(JSONObject taskInputData, KieProcessFormQueryResult form) {
 
+        List<KieProcessFormField> fields = form.getFields();
+        Map<String, KieProcessFormField> fieldMap  = new HashMap<>();
+        for(KieProcessFormField field : fields) {
+            if(field.getName().contains("_")){
+                fieldMap.put(field.getName().split("_")[1], field);
+            }else{
+                fieldMap.put(field.getName(), field);
+            }
+        }
+
+        Set<String> children = taskInputData.keySet();
+        for(String child : children) {
+
+            if(fieldMap.containsKey(child)) {
+                fieldMap.get(child).addProperty("inputBinding", taskInputData.get(child));
+            }
+        }
+
+        List<KieProcessFormQueryResult> nested = form.getNestedForms();
+
+        if(nested!=null) {
+            for (KieProcessFormQueryResult subForm : nested) {
+                mergeTaskData(taskInputData, subForm);
+            }
+        }
     }
 }
