@@ -79,35 +79,34 @@ public class TestApiTaskInterface extends TestCase {
         return fieldVal;
     }
 
-//    @Test
-//    public void testmergeSimpleScalar() {
-//
-//        String taskDataJson = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/taskDetails.simple.task.json"));
-//        String kieProcessFormXML2 = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/jbpm7-task-complete-form.xml"));
-//
-//        JSONObject taskData = new JSONObject(taskDataJson);
-//        PamProcessQueryFormResult pamSeven2 = (PamProcessQueryFormResult) JAXBHelper
-//                .unmarshall(kieProcessFormXML2, PamProcessQueryFormResult.class, true, false);
-//
-//        KieProcessFormQueryResult form = KieVersionTransformer.pamSevenFormToPamSix(pamSeven2);
-//
-//
-//        ApiTaskInterface apiTaskInterface = new ApiTaskInterface();
-//        apiTaskInterface.mergeTaskData(taskData.getJSONObject("task-input-data"), form);
-//
-//        String downPayment = "";
-//        for(KieProcessFormField field :  form.getFields()) {
-//            if(field.getName().equals("application_downPayment")) {
-//                Optional<KieProcessProperty> downPaymentVal = field.getProperties()
-//                        .stream()
-//                        .filter(p -> p.getName().equals("inputBinding"))
-//                        .findFirst();
-//                if(downPaymentVal.isPresent()) {
-//                    downPayment = downPaymentVal.get().getValue();
-//                }
-//
-//            }
-//        }
-//    }
+    @Test
+    public void testmergeSimpleScalar() throws Throwable{
+
+        String taskDataJson = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/taskDetails.simple.task.json"));
+        String kieProcessFormXML2 = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/jbpm7-simple-process-task-form.xml"));
+
+        JSONObject taskData = new JSONObject(taskDataJson);
+        PamProcessQueryFormResult pamSeven2 = (PamProcessQueryFormResult) JAXBHelper
+                .unmarshall(kieProcessFormXML2, PamProcessQueryFormResult.class, true, false);
+
+        KieProcessFormQueryResult form = KieVersionTransformer.pamSevenFormToPamSix(pamSeven2);
+
+        ApiTaskInterface apiTaskInterface = new ApiTaskInterface();
+        apiTaskInterface.mergeTaskData(taskData.getJSONObject("task-input-data"), form);
+
+        String downPayment = "";
+        for(KieProcessFormField field :  form.getFields()) {
+            if(field.getName().equals("age")) {
+                Optional<KieProcessProperty> downPaymentVal = field.getProperties()
+                        .stream()
+                        .filter(p -> p.getName().equals("inputBinding"))
+                        .findFirst();
+                if(downPaymentVal.isPresent()) {
+                    downPayment = downPaymentVal.get().getValue();
+                }
+
+            }
+        }
+    }
 
 }

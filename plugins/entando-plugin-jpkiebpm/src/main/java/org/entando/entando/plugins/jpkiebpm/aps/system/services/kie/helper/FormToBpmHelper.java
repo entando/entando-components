@@ -32,10 +32,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
 
@@ -483,9 +480,67 @@ public class FormToBpmHelper {
         // incapsulate with the key with value of the output id
         JSONObject outputIdJson = new JSONObject();
 
-        outputIdJson.put(dataModeler.getOutId(),
-                dataModelerJson);
+        outputIdJson.put(dataModeler.getOutId(), dataModelerJson);
+
+        JSONObject inputData = task.getJSONObject("task-input-data");
+        mergeTaskData(outputIdJson, inputData);
+
         return outputIdJson.toString();
+    }
+
+    private static void mergeTaskData(JSONObject formOutput, JSONObject taskInput) {
+
+        Iterator<String> keys = formOutput.keys();
+        String firstKey = keys.next();
+
+        if(formOutput.get(firstKey) instanceof JSONObject){
+
+            //Process the top level keys in the form to go back to BPM and find the corresponding form in the input data
+            //so that the tree merge can be performed one-to-one
+            Set<String> formChildKeys = formOutput.getJSONObject(firstKey).keySet();
+            for(String formChildKey : formChildKeys) {
+                Object starting = findStartingPoint(formChildKey, taskInput);
+                if(starting !=null && starting instanceof JSONObject) {
+
+                    JSONObject mergePointChild = formOutput.getJSONObject(firstKey).getJSONObject(formChildKey);
+                    mergeDetails(mergePointChild, (JSONObject)starting);
+                }
+            }
+        }
+    }
+
+    //Take the keys from task input and if you find one that is missing copy it into the output to round trip
+    //the data. Recursively process pairs so that all of the nested data makes it back
+    private static void mergeDetails(JSONObject formOutput, JSONObject taskInput) {
+
+        Set<String> keys = taskInput.keySet();
+
+        for(String key : keys) {
+            if(!formOutput.has(key) || formOutput.get(key).equals(JSONObject.NULL)) {
+                formOutput.put(key, taskInput.get(key));
+            }else if(taskInput.get(key) instanceof JSONObject) {
+                mergeDetails(formOutput.getJSONObject(key), taskInput.getJSONObject(key) );
+            }
+        }
+    }
+
+    private static Object findStartingPoint(String outputKey, JSONObject taskInput){
+
+        Set<String> inputKeys = taskInput.keySet();
+        for(String inputKey : inputKeys) {
+            if(inputKey.equals(outputKey)) {
+                return taskInput.get(inputKey);
+            }
+
+        }
+
+        for(String inputKey : inputKeys) {
+            if (taskInput.get(inputKey) instanceof JSONObject) {
+                return findStartingPoint(outputKey, taskInput.getJSONObject(inputKey));
+            }
+        }
+
+        return  null;
     }
 
 
