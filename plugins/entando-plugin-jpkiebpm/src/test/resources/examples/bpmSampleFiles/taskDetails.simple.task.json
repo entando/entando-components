@@ -1,0 +1,37 @@
+{
+  "task-priority": 0,
+  "task-parent-id": -1,
+  "task-output-data": {},
+  "task-created-by": "",
+  "task-description": "",
+  "task-workitem-id": 31,
+  "task-expiration-time": null,
+  "task-type": null,
+  "task-created-on": {
+    "java.util.Date": 1531824306270
+  },
+  "task-status": "Ready",
+  "task-form": "approve_user",
+  "task-process-instance-id": 32,
+  "task-process-id": "src.SimpleProcess",
+  "task-skippable": true,
+  "task-input-data": {
+    "in_age": 10,
+    "in_name": "10",
+    "TaskName": "approve_user",
+    "NodeName": "Approve User",
+    "Skippable": "true",
+    "GroupId": "broker"
+  },
+  "task-excl-owners": null,
+  "task-business-admins": null,
+  "task-actual-owner": "",
+  "task-activation-time": {
+    "java.util.Date": 1531824306270
+  },
+  "task-name": "Approve User",
+  "task-subject": "",
+  "task-id": 31,
+  "task-pot-owners": null,
+  "task-container-id": "Test_1.0.0"
+}

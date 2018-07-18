@@ -1,0 +1,60 @@
+{
+  "task-priority": 0,
+  "task-parent-id": -1,
+  "task-output-data": {},
+  "task-created-by": "",
+  "task-description": "",
+  "task-workitem-id": 27,
+  "task-expiration-time": null,
+  "task-type": null,
+  "task-created-on": {
+    "java.util.Date": 1531818924286
+  },
+  "task-status": "InProgress",
+  "task-form": "DataCorrection",
+  "task-process-instance-id": 29,
+  "task-process-id": "com.redhat.bpms.examples.mortgage.MortgageApplication",
+  "task-skippable": true,
+  "task-input-data": {
+    "TaskName": "DataCorrection",
+    "NodeName": "Correct Data",
+    "taskInputApplication": {
+      "com.redhat.bpms.examples.mortgage.Application": {
+        "apr": null,
+        "mortgageAmount": 987654.0,
+        "downPayment": 12345.0,
+        "property": {
+          "com.redhat.bpms.examples.mortgage.Property": {
+            "address": "789",
+            "price": 789
+          }
+        },
+        "validationErrors": null,
+        "appraisal": null,
+        "amortization": 789,
+        "applicant": {
+          "com.redhat.bpms.examples.mortgage.Applicant": {
+            "income": 789,
+            "creditScore": null,
+            "name": "789",
+            "ssn": 789
+          }
+        }
+      }
+    },
+    "Skippable": "true",
+    "SwimlaneActorId": null,
+    "GroupId": "broker"
+  },
+  "task-excl-owners": null,
+  "task-business-admins": null,
+  "task-actual-owner": "testBroker",
+  "task-activation-time": {
+    "java.util.Date": 1531818924286
+  },
+  "task-name": "Correct Data",
+  "task-subject": "",
+  "task-id": 27,
+  "task-pot-owners": null,
+  "task-container-id": "mortgage_1.0"
+}

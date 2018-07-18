@@ -465,6 +465,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setDebug(config.getDebug())
                     .doRequest();
         } catch (Throwable t) {
+            logger.error("Failed to fetch diagram ",t);
             throw new ApsSystemException("Error getting the process diagram", t);
         }
         return result;
@@ -483,13 +484,42 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_TASK_FORM_DEFINITION).resolveParams(containerId, taskId);
             // generate client from the current configuration
             KieClient client = getCurrentClient();
-            // perform query
-            form = (KieProcessFormQueryResult) new KieRequestBuilder(client)
-                    .setEndpoint(ep)
-                    .setUnmarshalOptions(false, true)
-                    .setDebug(config.getDebug())
-                    .doRequest(KieProcessFormQueryResult.class);
+            String ver = this.hostNameVersionMap.get(config.getId());
+            logger.info("server version {} ", ver);
+            boolean versionSix = ver != null && ver.startsWith("6");
+            String pamSevenString = "";
+            if(versionSix) {
+                // perform query
+                form = (KieProcessFormQueryResult) new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setUnmarshalOptions(false, true)
+                        .setDebug(config.getDebug())
+                        .doRequest(KieProcessFormQueryResult.class);
+            }
+            else {
+
+                //Fetch a string. PAM 7 returns bad xml missing wrapper data
+                pamSevenString = new KieRequestBuilder(client)
+                        .setEndpoint(ep)
+                        .setDebug(config.getDebug())
+                        .setUnmarshalOptions(false, true)
+                        .doRequest();
+            }
+
+            //Turn the pam seven xml into the object the rest of the plugin expects
+            KieProcessFormQueryResult queryResult = null;
+            if (!versionSix) {
+
+                //PAM 7 returns invalid XML. Add a wrapper to make it valid.
+                pamSevenString = "<pamFormResult>" + pamSevenString + "</pamFormResult>";
+                PamProcessQueryFormResult pamResult = (PamProcessQueryFormResult) JAXBHelper
+                        .unmarshall(pamSevenString, PamProcessQueryFormResult.class, true, false);
+                form = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
+            }
+
         } catch (Throwable t) {
+
+            logger.error("Error getting the human task form ",t);
             throw new ApsSystemException("Error getting the human task form", t);
         }
         return form;
@@ -732,19 +762,20 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             final Map<String, Object> map = new HashMap<>();
             BpmToFormHelper.getHumanTaskFormData(form, taskData, map);
             map.putAll(inputValidated);
-            final String brokerOverrideValue = input.get("brokerOverride") == null ? "" : input.get("brokerOverride");
-            if (map.containsKey("brokerOverride")) {
-                map.remove("brokerOverride");
+            
+            //Change the first letter of the key to lower case so that it matches the form response. This is getting capitalized
+            //elsewhere because the same string is used for display in a form. To be refactored
+            Map<String, Object> fixedKeys = new HashMap<>();
+            for(Map.Entry entry : map.entrySet()) {
+                fixedKeys.put(StringUtils.uncapitalize((String)entry.getKey()), entry.getValue());
             }
-            map.put("brokerOverride", brokerOverrideValue);
-            // finally
-            completeHumanFormTask(containerId, taskId, form, taskData, map);
+            completeHumanFormTask(containerId, taskId, form, taskData, fixedKeys);
 
-        } catch (ApsSystemException t) {
+        } catch (Throwable t) {
+            logger.error("Failed to complete kie task ", t);
             throw new ApsSystemException("Error completing the task", t);
-        } catch (Throwable throwable) {
-            logger.error("Failed to complete kie task ", throwable);
         }
+
         return result;
     }
 
@@ -773,6 +804,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setDebug(config.getDebug())
                     .doRequest();
         } catch (Throwable t) {
+            logger.error("failed to complete human task ",t);
             throw new ApsSystemException("Error completing the task", t);
         }
         return result;

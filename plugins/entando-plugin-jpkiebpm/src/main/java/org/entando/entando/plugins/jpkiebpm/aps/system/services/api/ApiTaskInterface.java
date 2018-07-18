@@ -34,6 +34,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.ta
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
@@ -330,6 +331,11 @@ public class ApiTaskInterface extends KieApiManager {
         String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
         KieApiForm form = null;
         KieProcessFormQueryResult processForm = this.getKieFormManager().getTaskForm(containerId, Long.valueOf(taskIdString));
+        
+        JSONObject taskData = this.getKieFormManager().getTaskFormData(containerId, Long.valueOf(taskIdString), null);
+
+        mergeTaskData(taskData, processForm);
+
         if (null == processForm) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
@@ -389,7 +395,7 @@ public class ApiTaskInterface extends KieApiManager {
             input.put(field.getName().replace(KieApiField.FIELD_NAME_PREFIX, ""), field.getValue());
         }
         final String result = this.getKieFormManager().completeHumanFormTask(containerId, processId, Long.valueOf(taskId), input);
-        logger.info("Result {} ", result);
+        logger.debug("Result {} ", result);
     }
 
     public void setTaskState(final KiaApiTaskState state) throws Throwable {
@@ -485,4 +491,64 @@ public class ApiTaskInterface extends KieApiManager {
         return input;
     }
 
+    public void mergeTaskData(JSONObject taskData, KieProcessFormQueryResult form) {
+
+        logger.debug("Task data "+taskData.toString());
+
+        String holderType = form.getHolders().get(0).getValue();
+        String formName = form.getHolders().get(0).getId();
+        
+        logger.debug("holderType {}, formName {}", holderType, formName);
+
+        Set<String> children = taskData.keySet();
+
+        JSONObject formChild = null;
+        for(String child : children) {
+            if(child.equals(holderType)){
+                formChild = taskData.getJSONObject(child);
+                break;
+            }
+        }
+
+        if (holderType == null) {
+        		// scalar only
+        		mergeForm(taskData, form);
+        } if(formChild != null) {
+            mergeForm(formChild, form);
+        }else {
+            for(String child : children) {
+                if(taskData.get(child) instanceof JSONObject) {
+                    mergeTaskData(taskData.getJSONObject(child), form);
+                }
+            }
+        }
+    }
+
+    private void mergeForm(JSONObject taskInputData, KieProcessFormQueryResult form) {
+
+        List<KieProcessFormField> fields = form.getFields();
+        Map<String, KieProcessFormField> fieldMap  = new HashMap<>();
+        for(KieProcessFormField field : fields) {
+            if(field.getName().contains("_")){
+                fieldMap.put(field.getName().split("_")[1], field);
+            }else{
+                fieldMap.put(field.getName(), field);
+            }
+        }
+
+        Set<String> children = taskInputData.keySet();
+        for(String child : children) {
+            if(fieldMap.containsKey(child)) {
+                fieldMap.get(child).addProperty("inputBinding", taskInputData.get(child));
+            }
+        }
+
+        List<KieProcessFormQueryResult> nested = form.getNestedForms();
+
+        if(nested!=null) {
+            for (KieProcessFormQueryResult subForm : nested) {
+                mergeTaskData(taskInputData, subForm);
+            }
+        }
+    }
 }

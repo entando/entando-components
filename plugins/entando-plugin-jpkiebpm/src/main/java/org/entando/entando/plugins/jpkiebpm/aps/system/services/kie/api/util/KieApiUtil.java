@@ -45,9 +45,9 @@ public class KieApiUtil {
             final Map<String, KieFormOverride> overrideMap) {
 
         final KieApiFields fields = new KieApiFields();
-        final KieApiFieldset fieldset = new KieApiFieldset(processForm.getHolders().get(0).getId());
+        final KieApiFieldset fieldset = new KieApiFieldset(processForm.getHolders().get(0).getName());
 
-        if (null != processForm.getFields()) {
+        if (null != processForm.getFields() && !processForm.getFields().isEmpty()) {
             for (KieProcessFormField field : processForm.getFields()) {
                 fieldset.getFields().add(createField(field, ii18nManager, langCode, overrideMap));
             }
@@ -175,7 +175,7 @@ public class KieApiUtil {
     public static String getFieldProperty(List<KieProcessProperty> props, String property) {
         if (null != props && StringUtils.isNotBlank(property)) {
             for (KieProcessProperty prop : props) {
-                if (prop.getName().equals(property)) {
+                if (prop.getName().equalsIgnoreCase(property)) {
                     return prop.getValue();
                 }
             }
@@ -186,7 +186,7 @@ public class KieApiUtil {
     public static String getFieldProperty(KieProcessFormField field, String property) {
         if (null != field) {
             for (KieProcessProperty prop : field.getProperties()) {
-                if (prop.getName().equals(property)) {
+                if (prop.getName().equalsIgnoreCase(property)) {
                     return prop.getValue();
                 }
             }

@@ -163,7 +163,7 @@ public class BpmToFormHelper {
         final List<KieDataHolder> holders = form.getHolders();
 
         for (KieDataHolder holder : holders) {
-            if (holder.getType().equals(DATA_MODELER_ENTRY)) {
+            if (holder.getType().equals(DATA_MODELER_ENTRY) && holder.getId() != null && holder.getValue() != null) {
                 return holder;
             }
         }
