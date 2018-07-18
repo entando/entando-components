@@ -762,13 +762,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             final Map<String, Object> map = new HashMap<>();
             BpmToFormHelper.getHumanTaskFormData(form, taskData, map);
             map.putAll(inputValidated);
-            final String brokerOverrideValue = input.get("brokerOverride") == null ? "" : input.get("brokerOverride");
-            if (map.containsKey("brokerOverride")) {
-                map.remove("brokerOverride");
-            }
-            map.put("brokerOverride", brokerOverrideValue);
-            // finally
-
+            
             //Change the first letter of the key to lower case so that it matches the form response. This is getting capitalized
             //elsewhere because the same string is used for display in a form. To be refactored
             Map<String, Object> fixedKeys = new HashMap<>();

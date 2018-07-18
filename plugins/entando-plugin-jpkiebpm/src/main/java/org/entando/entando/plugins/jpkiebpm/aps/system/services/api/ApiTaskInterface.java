@@ -331,7 +331,7 @@ public class ApiTaskInterface extends KieApiManager {
         String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
         KieApiForm form = null;
         KieProcessFormQueryResult processForm = this.getKieFormManager().getTaskForm(containerId, Long.valueOf(taskIdString));
-
+        
         JSONObject taskData = this.getKieFormManager().getTaskFormData(containerId, Long.valueOf(taskIdString), null);
 
         mergeTaskData(taskData, processForm);
@@ -395,7 +395,7 @@ public class ApiTaskInterface extends KieApiManager {
             input.put(field.getName().replace(KieApiField.FIELD_NAME_PREFIX, ""), field.getValue());
         }
         final String result = this.getKieFormManager().completeHumanFormTask(containerId, processId, Long.valueOf(taskId), input);
-        logger.info("Result {} ", result);
+        logger.debug("Result {} ", result);
     }
 
     public void setTaskState(final KiaApiTaskState state) throws Throwable {
@@ -493,10 +493,12 @@ public class ApiTaskInterface extends KieApiManager {
 
     public void mergeTaskData(JSONObject taskData, KieProcessFormQueryResult form) {
 
-        logger.info("Task data "+taskData.toString());
+        logger.debug("Task data "+taskData.toString());
 
         String holderType = form.getHolders().get(0).getValue();
         String formName = form.getHolders().get(0).getId();
+        
+        logger.debug("holderType {}, formName {}", holderType, formName);
 
         Set<String> children = taskData.keySet();
 
@@ -508,7 +510,10 @@ public class ApiTaskInterface extends KieApiManager {
             }
         }
 
-        if(formChild != null) {
+        if (holderType == null) {
+        		// scalar only
+        		mergeForm(taskData, form);
+        } if(formChild != null) {
             mergeForm(formChild, form);
         }else {
             for(String child : children) {
@@ -533,7 +538,6 @@ public class ApiTaskInterface extends KieApiManager {
 
         Set<String> children = taskInputData.keySet();
         for(String child : children) {
-
             if(fieldMap.containsKey(child)) {
                 fieldMap.get(child).addProperty("inputBinding", taskInputData.get(child));
             }

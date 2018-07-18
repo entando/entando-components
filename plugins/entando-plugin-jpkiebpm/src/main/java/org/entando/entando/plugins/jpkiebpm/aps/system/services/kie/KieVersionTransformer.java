@@ -207,6 +207,9 @@ public class KieVersionTransformer {
                 continue;
             }
             KieProcessFormField builtField = buildField(fieldId, modelName, fieldName, label, code, required, type);
+            if (field.getReadOnly()) {
+            		builtField.addProperty("readOnly", true);
+            }
             fieldMap.put(fieldId, builtField);
         }
 
@@ -277,7 +280,11 @@ public class KieVersionTransformer {
         field.setProperties(new ArrayList<>());
 
         field.setId(id);
-        field.setName(modelName+"_"+fieldName);
+        field.setName((modelName != null && 
+        		!"process".equalsIgnoreCase(modelName) && 
+        		!"task".equalsIgnoreCase(modelName)) ? 
+        				modelName+"_"+fieldName : 
+        					fieldName);
         field.setType(code);
 
         KieProcessProperty prop = new KieProcessProperty();

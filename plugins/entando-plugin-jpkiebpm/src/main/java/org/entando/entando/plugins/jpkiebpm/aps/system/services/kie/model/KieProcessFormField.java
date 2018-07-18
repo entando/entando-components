@@ -73,7 +73,7 @@ public class KieProcessFormField {
 		}
 		for (int i = 0; i < properties.size(); i++) {
 			KieProcessProperty property = properties.get(i);
-			if (property.getName().equals(name)) {
+			if (property.getName().equalsIgnoreCase(name)) {
 				return property;
 			}
 		}
@@ -111,4 +111,12 @@ public class KieProcessFormField {
 	private String type;
 	@XmlElement(name = "property")
 	private List<KieProcessProperty> properties;
+	
+	@Override
+	public String toString() {
+		return "KieProcessFormField [id=" + id + ", name=" + name + ", position=" + position + ", type=" + type
+				+ ", properties=" + properties + "]";
+	}
+	
+	
 }
