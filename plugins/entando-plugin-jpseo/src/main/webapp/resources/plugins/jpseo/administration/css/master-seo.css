@@ -1,0 +1,57 @@
+.well {
+    min-height: 20px;
+    padding: 20px 6em 20px 1.4em;
+    margin-bottom: 20px;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 1px;
+    box-shadow: none;
+}
+.separator {
+    border-bottom: 1px solid #c3b9b9;
+    margin: 0 19px 16px 85px;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    color: #212121;
+    font-weight: 600;
+    background-color: #f2f2f2;
+    border: 1px solid #f2f2f2;
+    border-bottom-color: transparent;
+    cursor: default;
+    text-transform: uppercase;
+}
+.nav-tabs {
+    border-bottom: none;
+}
+.form-inline input[type=text]{
+    width: 100%;
+}
+.metadata-well {
+    margin-left: -5px;
+    margin-right: -18px;
+    margin-bottom: 30px;
+}
+.nav-tabs>li>a {
+    text-transform: uppercase !important;
+}
+.section-label {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: capitalize;
+    text-align: right;
+    margin: 0 0 -20px 0;
+}
+.btn-position {
+    margin:  -25px 0 0 0;
+}
+.nav-tabs {
+    font-size: 14px;
+    margin-left: 90px;
+}
+
+.ui-autocomplete {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: default;
+}

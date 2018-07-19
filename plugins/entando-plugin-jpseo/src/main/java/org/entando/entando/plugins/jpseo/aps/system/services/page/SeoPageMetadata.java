@@ -33,48 +33,56 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class SeoPageMetadata extends PageMetadata {
 
+    private ApsProperties descriptions = new ApsProperties();
+    private ApsProperties keywords = new ApsProperties();
+    private boolean useExtraDescriptions = false;
+
+    private String friendlyCode;
+
+    private Map<String, Map<String, PageMetatag>> complexParameters;
+
     public String getDescription(String langCode) {
         return this.getDescriptions().getProperty(langCode);
     }
 
     public ApsProperties getDescriptions() {
-        return _descriptions;
+        return descriptions;
     }
 
     public void setDescriptions(ApsProperties descriptions) {
-        this._descriptions = descriptions;
+        this.descriptions = descriptions;
     }
 
+    public ApsProperties getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(ApsProperties keywords) {
+        this.keywords = keywords;
+    }
+    
     public boolean isUseExtraDescriptions() {
-        return _useExtraDescriptions;
+        return useExtraDescriptions;
     }
 
     public void setUseExtraDescriptions(boolean useExtraDescriptions) {
-        this._useExtraDescriptions = useExtraDescriptions;
+        this.useExtraDescriptions = useExtraDescriptions;
     }
 
     public String getFriendlyCode() {
-        return _friendlyCode;
+        return friendlyCode;
     }
 
     public void setFriendlyCode(String friendlyCode) {
-        this._friendlyCode = friendlyCode;
+        this.friendlyCode = friendlyCode;
     }
 
-    public String getXmlConfig() {
-        return _xmlConfig;
+    public Map<String, Map<String, PageMetatag>> getComplexParameters() {
+        return complexParameters;
     }
 
-    public void setXmlConfig(String xmlConfig) {
-        this._xmlConfig = xmlConfig;
-    }
-
-    public Map<String, Object> getComplexParameters() {
-        return _complexParameters;
-    }
-
-    public void setComplexParameters(Map<String, Object> complexParameters) {
-        this._complexParameters = complexParameters;
+    public void setComplexParameters(Map<String, Map<String, PageMetatag>> complexParameters) {
+        this.complexParameters = complexParameters;
     }
 
     @Override
@@ -97,28 +105,15 @@ public class SeoPageMetadata extends PageMetadata {
                 || (null != other.getDescriptions() && null != this.getDescriptions()) && !other.getDescriptions().equals(this.getDescriptions())) {
             return false;
         }
+        if ((null != other.getKeywords() && null == this.getKeywords())
+                || (null == other.getKeywords() && null != this.getKeywords())
+                || (null != other.getKeywords() && null != this.getKeywords()) && !other.getKeywords().equals(this.getKeywords())) {
+            return false;
+        }
         if (other.isUseExtraDescriptions() != this.isUseExtraDescriptions()) {
-            return false;
-        }
-        if ((null != other.getDescriptions() && null == this.getDescriptions())
-                || (null == other.getDescriptions() && null != this.getDescriptions())
-                || (null != other.getDescriptions() && null != this.getDescriptions()) && !other.getDescriptions().equals(this.getDescriptions())) {
-            return false;
-        }
-        if ((null != other.getXmlConfig() && null == this.getXmlConfig())
-                || (null == other.getXmlConfig() && null != this.getXmlConfig())
-                || (null != other.getXmlConfig() && null != this.getXmlConfig()) && !other.getXmlConfig().equals(this.getXmlConfig())) {
             return false;
         }
         return true;
     }
-
-    private ApsProperties _descriptions = new ApsProperties();
-    private boolean _useExtraDescriptions = false;
-
-    private String _friendlyCode;
-
-    private String _xmlConfig;
-    private Map<String, Object> _complexParameters;
 
 }

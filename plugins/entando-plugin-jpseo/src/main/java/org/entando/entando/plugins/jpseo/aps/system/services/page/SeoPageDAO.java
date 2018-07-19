@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.PageDAO;
 import com.agiletec.aps.system.services.page.PageExtraConfigDOM;
 import com.agiletec.aps.system.services.page.PageMetadata;

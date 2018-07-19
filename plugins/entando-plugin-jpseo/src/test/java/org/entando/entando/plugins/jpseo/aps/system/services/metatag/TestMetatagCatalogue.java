@@ -19,29 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpseo;
+package org.entando.entando.plugins.jpseo.aps.system.services.metatag;
 
+import com.agiletec.aps.BaseTestCase;
+import java.util.Map;
+import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import org.entando.entando.plugins.jpseo.aps.system.services.metatag.TestMetatagCatalogue;
-
-import org.entando.entando.plugins.jpseo.apsadmin.content.TestContentAction;
-import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageAction;
-import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageSettingsAction;
-
-public class AllTests {
-	
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Seo plugin");
-        
-		suite.addTestSuite(TestMetatagCatalogue.class);
-        
-		suite.addTestSuite(TestContentAction.class);
-		suite.addTestSuite(TestPageAction.class);
-		suite.addTestSuite(TestPageSettingsAction.class);
-        
-		return suite;
-	}
-
+/**
+ * @author E.Santoboni
+ */
+public class TestMetatagCatalogue extends BaseTestCase {
+    
+	public void testLoadCatalogue() {
+        IMetatagCatalog catalogue = super.getApplicationContext().getBean(JpseoSystemConstants.SEO_METATAG_CATALOG, IMetatagCatalog.class);
+        Map<String, Metatag> map = catalogue.getCatalog();
+        assertNotNull(map);
+        assertTrue(map.size() > 0);
+        Metatag ogDescription = map.get("og:description");
+        assertNotNull(ogDescription);
+        assertEquals("property", ogDescription.getAttributeKey());
+    }
+    
 }
