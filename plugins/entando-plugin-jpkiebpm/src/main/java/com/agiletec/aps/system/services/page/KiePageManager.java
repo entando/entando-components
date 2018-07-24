@@ -48,7 +48,7 @@ public class KiePageManager extends PageManager implements IPageManager, GroupUt
         try {
             Widget widget = this.getDraftPage(pageCode).getWidgets()[pos];
             super.removeWidget(pageCode, pos);
-            String stringId = widget != null ? widget.getConfig().getProperty(KieBpmSystemConstants.WIDGET_PARAM_DATA_UX_ID) : null;
+            String stringId = widget != null && widget.getConfig() != null ? widget.getConfig().getProperty(KieBpmSystemConstants.WIDGET_PARAM_DATA_UX_ID) : null;
 
             if (stringId != null) {
                 int modelId = Integer.valueOf(stringId);
