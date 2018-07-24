@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando.entando.bundles</groupId>
         <artifactId>entando-bundles-parent</artifactId>
-        <version>4.3.3</version>
+        <version>4.3.4</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-widget-search_form_inspinia</artifactId>

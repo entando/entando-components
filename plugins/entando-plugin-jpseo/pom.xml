@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>entando-plugins-parent</artifactId>
 		<groupId>org.entando.entando.plugins</groupId>
-		<version>4.3.3</version>
+		<version>4.3.4</version>
 	</parent>
 	<artifactId>entando-plugin-jpseo</artifactId>
 	<groupId>org.entando.entando.plugins</groupId>

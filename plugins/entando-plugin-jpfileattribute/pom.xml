@@ -4,11 +4,11 @@
     <parent>
         <artifactId>entando-plugins-parent</artifactId>
         <groupId>org.entando.entando.plugins</groupId>
-        <version>4.3.3</version>
+        <version>4.3.4</version>
     </parent>
     <artifactId>entando-plugin-jpfileattribute</artifactId>
     <groupId>org.entando.entando.plugins</groupId>
-    <version>4.3.3</version>
+    <version>4.3.4</version>
     <packaging>war</packaging>
     <name>Entando Plugin: File Attribute</name>
     <description>Adds an attribute to the CMS</description>
