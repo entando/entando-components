@@ -88,7 +88,7 @@ public class TestResourceAction extends ApsAdminBaseTestCase {
 		assertEquals(1, actionFieldErrors.get("resourceTypeCode").size());
 		assertEquals(1, actionFieldErrors.get("descr").size());
 		assertEquals(1, actionFieldErrors.get("mainGroup").size());
-		assertEquals(1, actionFieldErrors.get("upload").size());
+		assertEquals(1, actionFieldErrors.get("fileUpload").size());
 	}
 	
 	public void testSaveNewResource_2() throws Throwable {

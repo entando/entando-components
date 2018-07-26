@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>	
+    <package name="jacms_do/jacms/multipleResource" namespace="/do/jacms/Resource" extends="jacms_do/jacms/Resource">    	
+        <action name="increaseCount*" class="jacmsMultipleResourceAction" method="increaseCount">
+            <result type="tiles">admin.jacms.resource.entry</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">manageResources</param>
+            </interceptor-ref>
+        </action>              
+        <action name="decreaseCount*" class="jacmsMultipleResourceAction" method="decreaseCount">
+            <result type="tiles">admin.jacms.resource.entry</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">manageResources</param>
+            </interceptor-ref>
+        </action>
+    </package>
+</struts>
