@@ -28,6 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.user.UserDetails;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 
 /**
  * @author E.Santoboni
@@ -35,65 +38,96 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 @Aspect
 public class ApiTokenizerManager extends AbstractService implements IApiTokenizerManager {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ApiTokenizerManager.class);
-	
-	@Override
-	public void init() throws Exception {
-		_logger.debug("{} ready", this.getClass().getName());
-	}
-	
-	@Override
-	public String getUser(String token) throws ApsSystemException {
-		String username = null;
-		try {
-			username = this.getApiTokenDAO().getUser(token);
-		} catch (Throwable t) {
-			_logger.error("Error extracting user by token {}", token, t);
-			throw new ApsSystemException("Error extracting user by token '" + token + "'", t);
-		}
-		return username;
-	}
-	
-	@Override
-	public String getToken(String username) throws ApsSystemException {
-		String token = null;
-		try {
-			token = this.getApiTokenDAO().getToken(username);
-		} catch (Throwable t) {
-			_logger.error("Error extracting token by username {}", username, t);
-			throw new ApsSystemException("Error extracting token by username '" + username + "'", t);
-		}
-		return token;
-	}
-	
-	@Override
-	public String updateToken(String username) throws ApsSystemException {
-		String token = null;
-		try {
-			token = this.getApiTokenDAO().updateToken(username);
-		} catch (Throwable t) {
-			_logger.error("Error updating token by username {}", username, t);
-			throw new ApsSystemException("Error updating token by username '" + username + "'", t);
-		}
-		return token;
-	}
-	
-	@Before("execution(* com.agiletec.aps.system.services.user.IUserManager.changePassword(..)) && args(username, password)")
-	public void changePassword(Object username, Object password) {
-		try {
-			this.updateToken((String) username);
-		} catch (Throwable t) {
-			_logger.error("Error updating token by username {}", username, t);
-		}
-	}
-	
-	protected IApiTokenDAO getApiTokenDAO() {
-		return _apiTokenDAO;
-	}
-	public void setApiTokenDAO(IApiTokenDAO apiTokenDAO) {
-		this._apiTokenDAO = apiTokenDAO;
-	}
-	
-	private IApiTokenDAO _apiTokenDAO;
-	
+    private static final Logger logger = LoggerFactory.getLogger(ApiTokenizerManager.class);
+
+    private IApiTokenDAO apiTokenDAO;
+
+    @Override
+    public void init() throws Exception {
+        logger.debug("{} ready", this.getClass().getName());
+    }
+
+    @Override
+    public String getUser(String token) throws ApsSystemException {
+        String username = null;
+        try {
+            username = this.getApiTokenDAO().getUser(token);
+        } catch (Throwable t) {
+            logger.error("Error extracting user by token {}", token, t);
+            throw new ApsSystemException("Error extracting user by token '" + token + "'", t);
+        }
+        return username;
+    }
+
+    @Override
+    public String getToken(String username) throws ApsSystemException {
+        String token = null;
+        try {
+            token = this.getApiTokenDAO().getToken(username);
+        } catch (Throwable t) {
+            logger.error("Error extracting token by username {}", username, t);
+            throw new ApsSystemException("Error extracting token by username '" + username + "'", t);
+        }
+        return token;
+    }
+
+    @Override
+    public String updateToken(String username) throws ApsSystemException {
+        String token = null;
+        try {
+            token = this.getApiTokenDAO().updateToken(username);
+        } catch (Throwable t) {
+            logger.error("Error updating token by username {}", username, t);
+            throw new ApsSystemException("Error updating token by username '" + username + "'", t);
+        }
+        return token;
+    }
+
+    @Before("execution(* com.agiletec.aps.system.services.user.IUserManager.changePassword(..)) && args(username, password)")
+    public void changePassword(Object username, Object password) {
+        try {
+            this.updateToken((String) username);
+        } catch (Throwable t) {
+            logger.error("Error updating token by username {}", username, t);
+        }
+    }
+
+    @AfterReturning(pointcut = "execution(* com.agiletec.aps.system.services.user.IUserManager.removeUser(..)) && args(key)")
+    public void deleteToken(Object key) {
+        String username = null;
+        if (key instanceof String) {
+            username = key.toString();
+        } else if (key instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) key;
+            username = userDetails.getUsername();
+        }
+        if (username != null) {
+            try {
+                this.getApiTokenDAO().removeToken(username);
+            } catch (Throwable t) {
+                logger.error("Error deleting token. user: {}", username, t);
+            }
+        }
+    }
+
+    @After("execution(* com.agiletec.aps.system.services.user.IUserManager.addUser(..)) && args(user)")
+    public void addUser(UserDetails user) {
+        if (null == user) {
+            return;
+        }
+        try {
+            this.updateToken(user.getUsername());
+        } catch (Throwable t) {
+            logger.error("Error adding token by username {}", user.getUsername(), t);
+        }
+    }
+
+    protected IApiTokenDAO getApiTokenDAO() {
+        return apiTokenDAO;
+    }
+
+    public void setApiTokenDAO(IApiTokenDAO apiTokenDAO) {
+        this.apiTokenDAO = apiTokenDAO;
+    }
+
 }
