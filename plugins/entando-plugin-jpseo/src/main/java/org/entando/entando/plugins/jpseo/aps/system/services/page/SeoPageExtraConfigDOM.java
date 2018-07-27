@@ -94,7 +94,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
             }
         }
     }
-    
+
     private void extractMultilangProperty(Element mainElement, ApsProperties propertyToFill, String propertyName) {
         if (null != mainElement) {
             List<Element> mainElements = mainElement.getChildren(PROPERTY_ELEMENT_NAME);
@@ -122,11 +122,11 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
         List<Element> elements = doc.getRootElement().getChildren();
         return this.extractComplexParameters(elements);
     }
-    
+
     /*
-.....
+    .....
     OLD STRUCTURE
-  <complexParameters>
+    <complexParameters>
     <parameter key="key1">VALUE_1</parameter>
     <parameter key="key2">VALUE_2</parameter>
     <parameter key="key5">
@@ -140,14 +140,14 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
       <property key="it">VALUE_3 IT</property>
     </parameter>
     <parameter key="key4">VALUE_4</parameter>
-  </complexParameters>
-.....
-    */
-    
-    /*
+    </complexParameters>
+    .....
+     */
+
+ /*
     New Structure
-.....
-  <complexParameters>
+    .....
+    <complexParameters>
     <lang code="it">
       <meta key="key5">VALUE_5_IT</meta>
       <meta key="key3" attributeName="name" useDefaultLang="false" >VALUE_3_IT</meta>
@@ -160,11 +160,10 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
     </lang>
     ...
     ...
-  </complexParameters>
-.....
-    */
-    
-    private Map<String, PageMetatag> extractLangMap(String code, 
+    </complexParameters>
+    .....
+     */
+    private Map<String, PageMetatag> extractLangMap(String code,
             Map<String, Map<String, PageMetatag>> complexParameters) {
         Map<String, PageMetatag> langMap = complexParameters.get(code);
         if (null == langMap) {
@@ -173,7 +172,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
         }
         return langMap;
     }
-    
+
     protected Map<String, Map<String, PageMetatag>> extractComplexParameters(List<Element> elements) {
         Map<String, Map<String, PageMetatag>> complexParameters = new HashMap<>();
         if (null == elements) {
@@ -252,7 +251,7 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
             doc.getRootElement().addContent(complexConfigElement);
         }
     }
-    
+
     private void fillMultilangProperty(ApsProperties property, Element elementToFill, String elementName) {
         if (null != property && property.size() > 0) {
             Element mlElement = new Element(elementName);
@@ -306,12 +305,13 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
             }
         }
     }
-    
+
     /**
      * Utility method
+     *
      * @param seoParameters
      * @param defaultLang
-     * @return 
+     * @return
      */
     public static Map<String, Map<String, PageMetatag>> extractRightParams(Map<String, Map<String, PageMetatag>> seoParameters, Lang defaultLang) {
         Map<String, Map<String, PageMetatag>> newMap = new HashMap<>();
@@ -342,19 +342,21 @@ public class SeoPageExtraConfigDOM extends PageExtraConfigDOM {
             }
         }
         Map<String, PageMetatag> currentDefaultMetas = newMap.get(defaultLang.getCode());
-        List<String> langKeys = new ArrayList<>(newMap.keySet());
-        Iterator<PageMetatag> iterMetatag = currentDefaultMetas.values().iterator();
-        while (iterMetatag.hasNext()) {
-            PageMetatag defaultMeta = iterMetatag.next();
-            for (String langKey : langKeys) {
-                if (langKey.equals(defaultLang.getCode())) {
-                    continue;
-                }
-                Map<String, PageMetatag> otherMetas = newMap.get(langKey);
-                if (null == otherMetas.get(defaultMeta.getKey())) {
-                    PageMetatag missingMeta = new PageMetatag(langKey, defaultMeta.getKey(), null);
-                    missingMeta.setKeyAttribute(defaultMeta.getKeyAttribute());
-                    otherMetas.put(defaultMeta.getKey(), missingMeta);
+        if (null != currentDefaultMetas) {
+            List<String> langKeys = new ArrayList<>(newMap.keySet());
+            Iterator<PageMetatag> iterMetatag = currentDefaultMetas.values().iterator();
+            while (iterMetatag.hasNext()) {
+                PageMetatag defaultMeta = iterMetatag.next();
+                for (String langKey : langKeys) {
+                    if (langKey.equals(defaultLang.getCode())) {
+                        continue;
+                    }
+                    Map<String, PageMetatag> otherMetas = newMap.get(langKey);
+                    if (null == otherMetas.get(defaultMeta.getKey())) {
+                        PageMetatag missingMeta = new PageMetatag(langKey, defaultMeta.getKey(), null);
+                        missingMeta.setKeyAttribute(defaultMeta.getKeyAttribute());
+                        otherMetas.put(defaultMeta.getKey(), missingMeta);
+                    }
                 }
             }
         }
