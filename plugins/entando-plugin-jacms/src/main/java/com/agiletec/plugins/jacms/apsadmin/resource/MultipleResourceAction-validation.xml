@@ -22,17 +22,6 @@
         </field-validator>
     </field>
     
-    <field name="fileUpload">
-        <field-validator type="fieldexpression" short-circuit="true">
-            <param name="expression"><![CDATA[!(strutsAction == 1 && fileUpload == null)]]></param>
-            <message key="error.resource.file.required" />
-        </field-validator>
-        <field-validator type="fieldexpression" short-circuit="true">
-            <param name="expression"><![CDATA[!(strutsAction == 1 && fileUploadInputStream == null)]]></param>
-            <message key="error.resource.file.void" />
-        </field-validator>
-    </field>
-    
     <field name="fileName">
         <!--
         <field-validator type="regex" short-circuit="true">

@@ -30,6 +30,7 @@ import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
+import java.util.logging.Level;
 
 /**
  * Class used to handle resource objects.
@@ -42,10 +43,29 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
 
     @Override
     public void validate() {
-        super.validate();
-        if (null != this.getFile()) {
-            ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
-            this.checkRightFileType(resourcePrototype);
+        if (this.isOnEditContent()) {
+            super.validate();
+            if (this.getDescr() == null) {
+                this.addFieldError("descr", this.getText("error.resource.file.requiredstring"));
+            }
+
+            if ((this.getDescr() != null) && (this.getDescr().length() > 250)) {
+                this.addFieldError("descr", this.getText("wrongMaxLength"));
+            }
+            if ((ApsAdminSystemConstants.ADD == this.getStrutsAction()) && (null == this.getUpload())) {
+                this.addFieldError("upload", this.getText("error.resource.file.required"));
+            }
+            try {
+                if ((ApsAdminSystemConstants.ADD == this.getStrutsAction()) && (null == this.getInputStream())) {
+                    this.addFieldError("upload", this.getText("error.resource.file.void"));
+                }
+            } catch (Throwable ex) {
+                this.addFieldError("upload", this.getText("error.resource.file.void"));
+            }
+            if (null != this.getFile()) {
+                ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
+                this.checkRightFileType(resourcePrototype);
+            }
         }
     }
 
@@ -410,6 +430,22 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
         this._groupManager = groupManager;
     }
 
+    public int getFieldCount() {
+        return fieldCount;
+    }
+
+    public void setFieldCount(int fieldCount) {
+        this.fieldCount = fieldCount;
+    }
+
+    public boolean isOnEditContent() {
+        return onEditContent;
+    }
+
+    public void setOnEditContent(boolean onEditContent) {
+        this.onEditContent = onEditContent;
+    }
+
     private String _resourceId;
     private String _descr;
     private String _mainGroup;
@@ -426,5 +462,9 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
     private String _categoryCode;
 
     private IGroupManager _groupManager;
+
+    private int fieldCount = 0;
+
+    private boolean onEditContent = false;
 
 }

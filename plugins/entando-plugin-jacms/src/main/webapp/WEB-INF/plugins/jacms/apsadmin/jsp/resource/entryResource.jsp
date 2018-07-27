@@ -222,6 +222,67 @@
                 <div class="col-sm-4">
 
                     <s:file name="fileUpload" id="fileUpload_%{#ctr.count}" label="label.file" />
+
+                </div>
+
+
+            </s:iterator>
+
+
+
+        </s:if>
+
+
+        <s:if test="isOnEditContent()">
+
+            <div class="form-group<s:property value="#controlGroupErrorClass" />">
+                <%-- descr --%>
+                <s:set var="fieldErrorsVar" value="%{fieldErrors['descr']}" />
+                <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
+                <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
+                <label class="col-sm-2 control-label" for="descr">
+                    <s:text name="label.description" />
+                    <i class="fa fa-asterisk required-icon"></i>
+                </label>
+                <div class="col-sm-10">
+                    <wpsf:textfield name="descr" id="descr" cssClass="form-control" />
+                    <s:if test="#hasFieldErrorVar">
+                        <span class="help-block text-danger">
+                            <s:iterator value="%{#fieldErrorsVar}">
+                                <s:property escapeHtml="false" />
+                                &#32;
+                            </s:iterator>
+                        </span>
+                    </s:if>
+                </div>
+            </div>
+
+            <%-- upload --%>
+            <s:set var="uploadFieldErrorsVar" value="%{fieldErrors['upload']}" />
+            <s:set var="fileNameFieldErrorsVar" value="%{fieldErrors['fileName']}" />
+            <s:set var="hasFieldErrorVar"
+                   value="(#uploadFieldErrorsVar != null && !#uploadFieldErrorsVar.isEmpty()) || (#fileNameFieldErrorsVar != null && !#fileNameFieldErrorsVar.isEmpty())" />
+            <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
+            <div class="form-group<s:property value="#controlGroupErrorClass" />">
+                <label class="col-sm-2 control-label" for="upload">
+                    <s:text name="label.file" />
+                    <s:if test="%{resourceTypeCode == 'Image'}">
+                        <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+                           data-placement="top" data-content="<s:text name="title.resourceManagement.help" />"
+                           data-original-title="" style="position: absolute; right: 8px;">
+                            <span class="fa fa-info-circle"></span>
+                        </a>
+                    </s:if>
+                    <s:elseif test="%{resourceTypeCode == 'Attach'}">
+                        <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
+                           data-placement="bottom" data-content="<s:text name="title.resourceAttach.help" />"
+                           data-original-title="" style="position: absolute; right: 8px;">
+                            <span class="fa fa-info-circle"></span>
+                        </a>
+                    </s:elseif>
+                </label>
+                <div class="col-sm-10">
+                    <s:file name="upload" id="upload" label="label.file" />
                     <s:if test="#hasFieldErrorVar">
                         <span class="help-block text-danger">
                             <s:iterator value="%{#uploadFieldErrorsVar}">
@@ -233,193 +294,120 @@
                                 &#32;
                             </s:iterator>
                         </span>
-                    </s:if>               
-                </div> 
+                    </s:if>
+                </div>
             </div>
-
-
-        </s:iterator>
-
-
+        </div>
 
     </s:if>
 
-
-    <s:if test="isOnEditContent()">
-
-        <div class="form-group<s:property value="#controlGroupErrorClass" />">
-            <%-- descr --%>
-            <s:set var="fieldErrorsVar" value="%{fieldErrors['descr']}" />
-            <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
-            <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-            <label class="col-sm-2 control-label" for="descr">
-                <s:text name="label.description" />
-                <i class="fa fa-asterisk required-icon"></i>
-            </label>
-            <div class="col-sm-10">
-                <wpsf:textfield name="descr" id="descr" cssClass="form-control" />
-                <s:if test="#hasFieldErrorVar">
-                    <span class="help-block text-danger">
-                        <s:iterator value="%{#fieldErrorsVar}">
-                            <s:property escapeHtml="false" />
-                            &#32;
-                        </s:iterator>
-                    </span>
-                </s:if>
+    <fieldset class="margin-base-vertical" id="category-content-block">
+        <div class="form-group<s:property value="controlGroupErrorClassVar" />">
+            <div class="col-xs-2 control-label">
+                <label>
+                    <s:text name="title.categoriesManagement" />
+                </label>
             </div>
-        </div>
-
-        <%-- upload --%>
-        <s:set var="uploadFieldErrorsVar" value="%{fieldErrors['upload']}" />
-        <s:set var="fileNameFieldErrorsVar" value="%{fieldErrors['fileName']}" />
-        <s:set var="hasFieldErrorVar"
-               value="(#uploadFieldErrorsVar != null && !#uploadFieldErrorsVar.isEmpty()) || (#fileNameFieldErrorsVar != null && !#fileNameFieldErrorsVar.isEmpty())" />
-        <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-        <div class="form-group<s:property value="#controlGroupErrorClass" />">
-            <label class="col-sm-2 control-label" for="upload">
-                <s:text name="label.file" />
-                <s:if test="%{resourceTypeCode == 'Image'}">
-                    <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-placement="top" data-content="<s:text name="title.resourceManagement.help" />"
-                       data-original-title="" style="position: absolute; right: 8px;">
-                        <span class="fa fa-info-circle"></span>
-                    </a>
-                </s:if>
-                <s:elseif test="%{resourceTypeCode == 'Attach'}">
-                    <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-placement="bottom" data-content="<s:text name="title.resourceAttach.help" />"
-                       data-original-title="" style="position: absolute; right: 8px;">
-                        <span class="fa fa-info-circle"></span>
-                    </a>
-                </s:elseif>
-            </label>
-            <div class="col-sm-10">
-                <s:file name="upload" id="upload" label="label.file" />
-                <s:if test="#hasFieldErrorVar">
-                    <span class="help-block text-danger">
-                        <s:iterator value="%{#uploadFieldErrorsVar}">
-                            <s:property escapeHtml="false" />
+            <div class="col-xs-10">
+                <script src="<wp:resourceURL />administration/js/entando-typeahead-tree.js"></script>
+                <s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp" />
+                <table id="categoryTree" class="table table-bordered table-hover table-treegrid ${categoryTreeStyleVar}">
+                    <thead>
+                        <tr>
+                            <th>
+                                <s:text name="label.category.tree" />
+                                <s:if test="#categoryTreeStyleVar == 'classic'">
+                                    <button type="button" class="btn-no-button expand-button" id="expandAll">
+                                        <i class="fa fa-plus-square-o treeInteractionButtons" aria-hidden="true"></i>
+                                        &#32;
+                                        <s:text name="label.category.expandAll" />
+                                    </button>
+                                    <button type="button" class="btn-no-button" id="collapseAll">
+                                        <i class="fa fa-minus-square-o treeInteractionButtons" aria-hidden="true"></i>
+                                        &#32;
+                                        <s:text name="label.category.collapseAll" />
+                                    </button>
+                                </s:if>
+                            </th>
+                            <th class="text-center table-w-10">
+                                <s:text name="label.category.join" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <s:set var="selectedTreeNode" value="selectedNode" />
+                        <s:set var="currentRoot" value="categoryRoot" />
+                        <s:set var="inputFieldName" value="'categoryCode'" />
+                        <s:set var="selectedTreeNode" value="categoryCode" />
+                        <s:set var="liClassName" value="'category'" />
+                        <s:set var="treeItemIconName" value="'fa-folder'" />
+                        <s:if test="%{#categoryTreeStyleVar == 'classic'}">
+                            <s:set var="currentRoot" value="%{allowedTreeRootNode}" />
+                            <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp" />
+                        </s:if>
+                        <s:elseif test="%{#categoryTreeStyleVar == 'request'}">
+                            <s:set var="currentRoot" value="%{showableTree}" />
+                            <s:set var="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
+                            <s:set var="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
+                            <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilder-request-categories.jsp" />
+                        </s:elseif>
+                    </tbody>
+                </table>
+                <s:if test="extraGroups.size() != 0">
+                    <s:iterator value="extraGroups" var="groupName">
+                        <wpsa:actionParam action="removeExtraGroup" var="actionName">
+                            <wpsa:actionSubParam name="extraGroupName" value="%{#groupName}" />
+                        </wpsa:actionParam>
+                        <div class="label label-default label-tag label-sm">
+                            <s:property value="%{getSystemGroups()[#groupName].getDescr()}" />
                             &#32;
-                        </s:iterator>
-                        <s:iterator value="%{#fileNameFieldErrorsVar}">
-                            <s:property escapeHtml="false" />
-                            &#32;
-                        </s:iterator>
-                    </span>
-                </s:if>
-            </div>
-        </div>
-    </div>
-
-</s:if>
-
-<fieldset class="margin-base-vertical" id="category-content-block">
-    <div class="form-group<s:property value="controlGroupErrorClassVar" />">
-        <div class="col-xs-2 control-label">
-            <label>
-                <s:text name="title.categoriesManagement" />
-            </label>
-        </div>
-        <div class="col-xs-10">
-            <script src="<wp:resourceURL />administration/js/entando-typeahead-tree.js"></script>
-            <s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp" />
-            <table id="categoryTree" class="table table-bordered table-hover table-treegrid ${categoryTreeStyleVar}">
-                <thead>
-                    <tr>
-                        <th>
-                            <s:text name="label.category.tree" />
-                            <s:if test="#categoryTreeStyleVar == 'classic'">
-                                <button type="button" class="btn-no-button expand-button" id="expandAll">
-                                    <i class="fa fa-plus-square-o treeInteractionButtons" aria-hidden="true"></i>
-                                    &#32;
-                                    <s:text name="label.category.expandAll" />
-                                </button>
-                                <button type="button" class="btn-no-button" id="collapseAll">
-                                    <i class="fa fa-minus-square-o treeInteractionButtons" aria-hidden="true"></i>
-                                    &#32;
-                                    <s:text name="label.category.collapseAll" />
-                                </button>
-                            </s:if>
-                        </th>
-                        <th class="text-center table-w-10">
-                            <s:text name="label.category.join" />
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <s:set var="selectedTreeNode" value="selectedNode" />
-                    <s:set var="currentRoot" value="categoryRoot" />
-                    <s:set var="inputFieldName" value="'categoryCode'" />
-                    <s:set var="selectedTreeNode" value="categoryCode" />
-                    <s:set var="liClassName" value="'category'" />
-                    <s:set var="treeItemIconName" value="'fa-folder'" />
-                    <s:if test="%{#categoryTreeStyleVar == 'classic'}">
-                        <s:set var="currentRoot" value="%{allowedTreeRootNode}" />
-                        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp" />
-                    </s:if>
-                    <s:elseif test="%{#categoryTreeStyleVar == 'request'}">
-                        <s:set var="currentRoot" value="%{showableTree}" />
-                        <s:set var="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
-                        <s:set var="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
-                        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilder-request-categories.jsp" />
-                    </s:elseif>
-                </tbody>
-            </table>
-            <s:if test="extraGroups.size() != 0">
-                <s:iterator value="extraGroups" var="groupName">
-                    <wpsa:actionParam action="removeExtraGroup" var="actionName">
-                        <wpsa:actionSubParam name="extraGroupName" value="%{#groupName}" />
-                    </wpsa:actionParam>
-                    <div class="label label-default label-tag label-sm">
-                        <s:property value="%{getSystemGroups()[#groupName].getDescr()}" />
-                        &#32;
-                        <wpsf:submit type="button" action="%{#actionName}" value="%{getText('label.remove')}"
-                                     title="%{getText('label.remove')}" cssClass="btn btn-tag">
-                            <span class="icon fa fa-times"></span>
-                            <span class="sr-only">x</span>
-                        </wpsf:submit>
-                    </div>
-                </s:iterator>
-            </s:if>
-            <s:if test="categoryCodes != null && categoryCodes.size() > 0">
-                <ul class="list-inline mt-20">
-                    <s:iterator value="categoryCodes" var="categoryCode">
-                        <s:set var="resourceCategory" value="%{getCategory(#categoryCode)}"></s:set>
-                            <li>
-                                <span class="label label-info">
-                                    <span class="icon fa fa-tag"></span>
-                                    &#32;
-                                    <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
-                                    <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)" />
-                                </abbr>
-                                &#32;
-                                <wpsa:actionParam action="removeCategory" var="actionName">
-                                    <wpsa:actionSubParam name="categoryCode" value="%{#resourceCategory.code}" />
-                                </wpsa:actionParam>
-                                <wpsf:submit type="button" action="%{#actionName}"
-                                             title="%{getText('label.remove') + ' ' + #resourceCategory.defaultFullTitle}"
-                                             cssClass="btn btn-link">
-                                    <span class="pficon pficon-close white"></span>
-                                    <span class="sr-only">x</span>
-                                </wpsf:submit>
-                            </span>
-                        </li>
+                            <wpsf:submit type="button" action="%{#actionName}" value="%{getText('label.remove')}"
+                                         title="%{getText('label.remove')}" cssClass="btn btn-tag">
+                                <span class="icon fa fa-times"></span>
+                                <span class="sr-only">x</span>
+                            </wpsf:submit>
+                        </div>
                     </s:iterator>
-                </ul>
-            </s:if>
+                </s:if>
+                <s:if test="categoryCodes != null && categoryCodes.size() > 0">
+                    <ul class="list-inline mt-20">
+                        <s:iterator value="categoryCodes" var="categoryCode">
+                            <s:set var="resourceCategory" value="%{getCategory(#categoryCode)}"></s:set>
+                                <li>
+                                    <span class="label label-info">
+                                        <span class="icon fa fa-tag"></span>
+                                        &#32;
+                                        <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
+                                        <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)" />
+                                    </abbr>
+                                    &#32;
+                                    <wpsa:actionParam action="removeCategory" var="actionName">
+                                        <wpsa:actionSubParam name="categoryCode" value="%{#resourceCategory.code}" />
+                                    </wpsa:actionParam>
+                                    <wpsf:submit type="button" action="%{#actionName}"
+                                                 title="%{getText('label.remove') + ' ' + #resourceCategory.defaultFullTitle}"
+                                                 cssClass="btn btn-link">
+                                        <span class="pficon pficon-close white"></span>
+                                        <span class="sr-only">x</span>
+                                    </wpsf:submit>
+                                </span>
+                            </li>
+                        </s:iterator>
+                    </ul>
+                </s:if>
+            </div>
+        </div>
+    </fieldset>
+    <br>
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-12 margin-small-vertical">
+                <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
+                    <s:text name="label.save" />
+                </wpsf:submit>
+            </div>
         </div>
     </div>
-</fieldset>
-<br>
-<div class="form-horizontal">
-    <div class="form-group">
-        <div class="col-sm-12 margin-small-vertical">
-            <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
-                <s:text name="label.save" />
-            </wpsf:submit>
-        </div>
-    </div>
-</div>
 
 </s:form>
 
@@ -447,3 +435,4 @@
     </s:if>
 </s:form>
 --%>
+

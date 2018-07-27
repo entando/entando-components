@@ -33,23 +33,30 @@ import org.slf4j.LoggerFactory;
 public class MultipleResourceAction extends ResourceAction {
 
     private static final Logger logger = LoggerFactory.getLogger(MultipleResourceAction.class);
-
+    
     @Override
     public void validate() {
-        super.validate();
-
+       
         if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
 
-            if (null == fileDescriptions) {
+            if (null == getFileDescriptions()) {
                 this.addFieldError(DESCR_FIELD + 0, getText("error.resource.file.descrEmpty"));
             }
-            if (null == fileUpload) {
+            if (null == getFileUpload()) {
                 this.addFieldError(FILE_UPLOAD_FIELD + 0, this.getText("error.resource.file.fileEmpty"));
             }
 
         } else {
+            try {
+                if (null == getFileUploadInputStream()) {
+                    this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.void"));
+                }
 
-            if (null != this.getFileUpload()) {
+            } catch (Throwable ex) {
+                java.util.logging.Logger.getLogger(MultipleResourceAction.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            if (null != getFileUpload()) {
 
                 fetchFileDescriptions();
                 validateFileDescriptions();
@@ -153,6 +160,7 @@ public class MultipleResourceAction extends ResourceAction {
      *
      * @return The result code.
      */
+    @Override
     public String save() {
         int index = 0;
 
