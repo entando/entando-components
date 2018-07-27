@@ -24,26 +24,26 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBTa
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBTaskList;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.KieApiManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputFormTask;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import org.json.JSONObject;
 
 /**
  * @author E.Santoboni
@@ -88,15 +88,21 @@ public class ApiTaskInterface extends KieApiManager {
         } catch (NumberFormatException e) {
             throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
         }
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", opt);
-        for (KieTask task : rawList) {
-            if (id == task.getId()) {
-                resTask = new JAXBTask(task);
-                break;
-            }
-        }
-        if (null == resTask) {
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Task with id '" + idString + "' does not exist", Response.Status.CONFLICT);
+        
+        try {
+	        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList("", opt);
+	        for (KieTask task : rawList) {
+	            if (id == task.getId()) {
+	                resTask = new JAXBTask(task);
+	                break;
+	            }
+	        }
+	        if (null == resTask) {
+	            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Task with id '" + idString + "' does not exist", Response.Status.CONFLICT);
+	        }
+        } catch (Exception ex) {
+        		logger.error("Error in getTask", ex);
+        		throw ex;
         }
         return resTask;
     }
@@ -292,7 +298,7 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     private void setElementList(final ApsProperties config, final JAXBTaskList taskList) throws ApsSystemException {
-        final String groups = "groups=" + config.getProperty("groups").replace(" ", "").replace(",", "&groups=");
+        final String groups = config.getProperty("groups").replace(" ", "");
         final List<JAXBTask> list = new ArrayList<>();
         final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(groups, null);
         for (final KieTask task : rawList) {
@@ -334,8 +340,9 @@ public class ApiTaskInterface extends KieApiManager {
             form = KieApiUtil.createForm(processForm, this.getI18nManager(), langCode, this.getFormOverridesMap(containerId, processId, null));
             form.setTaskId(taskIdString);
             form.setContainerId(containerId);
+            form.setProcessId(processId);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Failed to create kie form ",e);
         }
         return form;
     }
@@ -355,7 +362,7 @@ public class ApiTaskInterface extends KieApiManager {
             form = FSIDemoHelper.replaceValuesFromJson(processForm, form);
             return form;
         } catch (ApsSystemException ex) {
-            ex.printStackTrace();
+            logger.error("Failed to get task input output ",ex);
         }
         return null;
     }
@@ -366,18 +373,22 @@ public class ApiTaskInterface extends KieApiManager {
         }
         String containerId = null;
         String taskId = null;
+        String processId = null;
         Map<String, String> input = new HashMap<>();
         for (KieApiInputFormTask.Field field : form.getFields()) {
+        		logger.info(">>> KieApiInputFormTask field {} = {}", field.getName(), field.getValue());
             if (field.getName().equalsIgnoreCase("containerId")) {
                 containerId = field.getValue();
             }
             if (field.getName().equalsIgnoreCase("taskId")) {
                 taskId = field.getValue();
             }
+            if (field.getName().equalsIgnoreCase("processId")) {
+            		processId = field.getValue();
+            }
             input.put(field.getName().replace(KieApiField.FIELD_NAME_PREFIX, ""), field.getValue());
         }
-        // FIXME this is already dynamic!!!! Development leftover???
-        final String result = this.getKieFormManager().completeHumanFormTask(containerId, "com.redhat.bpms.examples.mortgage.MortgageApplication", Long.valueOf(taskId), input);
+        final String result = this.getKieFormManager().completeHumanFormTask(containerId, processId, Long.valueOf(taskId), input);
         logger.info("Result {} ", result);
     }
 
@@ -399,7 +410,7 @@ public class ApiTaskInterface extends KieApiManager {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Failed to set task state ",e);
         }
     }
 
@@ -442,7 +453,7 @@ public class ApiTaskInterface extends KieApiManager {
                 try {
                     this.getKieFormManager().setTaskState(cur.getContainerId(), String.valueOf(cur.getId()), KieFormManager.TASK_STATES.STARTED, null, opt);
                 } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                    logger.error("failed to start tasks ", throwable);
                 }
             }
         }

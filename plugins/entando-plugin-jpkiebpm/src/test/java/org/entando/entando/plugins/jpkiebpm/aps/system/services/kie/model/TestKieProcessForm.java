@@ -23,9 +23,10 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
-import java.util.List;
 import junit.framework.TestCase;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
+
+import java.util.List;
 
 
 /**
@@ -67,7 +68,7 @@ public class TestKieProcessForm extends TestCase {
         assertFalse(kpfq.getFields().isEmpty());
         KieProcessFormField field = kpfq.getFields().get(1);
 
-        assertEquals((Long)469114348L,
+        assertEquals("469114348",
                 field.getId());
         assertEquals("application_amortization",
                 field.getName());
@@ -105,7 +106,7 @@ public class TestKieProcessForm extends TestCase {
         assertEquals(2,
                 form.getFields().size());
         field = form.getFields().get(1);
-        assertEquals((Long)1518985727L,
+        assertEquals("1518985727",
                 field.getId());
         assertEquals("property_price",
                 field.getName());

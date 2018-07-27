@@ -21,11 +21,10 @@
  */
 package com.agiletec.plugins.jpuserreg.aps.system.services.userreg.util;
 
-import java.security.MessageDigest;
-
-import java.security.NoSuchAlgorithmException;
-
 import org.apache.commons.codec.binary.Hex;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class ShaEncoder {
 
@@ -78,9 +77,7 @@ public class ShaEncoder {
 	protected static String mergePasswordAndSalt(String password, Object salt, boolean strict) {
 
 		if (password == null) {
-
-			password = "";
-
+			throw new IllegalArgumentException("Password cannot be null");
 		}
 
 		if (strict && (salt != null)) {

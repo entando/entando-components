@@ -62,11 +62,11 @@
             <s:if test="#attribute.type == 'Hypertext'">
                 <wp:headInfo type="JS" info="../../plugins/jpfastcontentedit/static/js/fckeditor/fckeditor.js" />
                 jQuery(function(){
-                var ofckeditor = new FCKeditor( "<s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" />" ); 
+                var ofckeditor = new FCKeditor( "<s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" />" );
                 ofckeditor.Config["AppBaseUrl"] = "<wp:info key="systemParam" paramName="applicationBaseURL" />";
                 ofckeditor.BasePath = "<wp:resourceURL />plugins/jpfastcontentedit/static/js/fckeditor/";
                 ofckeditor.Config["CustomConfigurationsPath"] = "<wp:resourceURL />plugins/jpfastcontentedit/static/js/fckeditor/fastContentEdit_jAPSConfig.js";
-                ofckeditor.ToolbarSet = "jAPS";			
+                ofckeditor.ToolbarSet = "jAPS";
                 ofckeditor.Height = 250;
                 ofckeditor.ReplaceTextarea();
                 });
@@ -74,7 +74,7 @@
         </s:iterator>
     </s:iterator>
 </c:set>
-<wp:headInfo type="JS_RAW" info="${javascript_attribute_code}" /> 
+<wp:headInfo type="JS_RAW" info="${javascript_attribute_code}" />
 
 <%-- <s:set var="removeIcon" var="removeIcon"><wp:resourceURL/>administration/common/img/icons/list-remove.png</s:set> --%>
 <s:set var="removeIcon" var="removeIcon"><wp:resourceURL/>icon icon-remove icon-white</s:set>
@@ -87,8 +87,8 @@
     <wp:i18n key="jpfastcontentedit_WORKING_ON" />:&#32;<em><s:property value="content.descr" /></em> (<s:property value="content.typeDescr" />)
 </p>
 
-<form 
-    class="form-horizontal" 
+<form
+    class="form-horizontal"
     action="<wp:action path="/ExtStr2/do/jpfastcontentedit/Content/save.action" />" method="post">
 
     <s:if test="hasFieldErrors()">
@@ -123,15 +123,15 @@
                 <label class="control-label" for="mainGroup"><s:text name="label.ownerGroup" /></label>
                 <div class="controls">
                     <s:set var="lockGroupSelect" value="%{content.id != null || content.mainGroup != null}" />
-                    <wpsf:select 
-                        useTabindexAutoIncrement="true" 
-                        name="mainGroup" 
-                        id="mainGroup" 
-                        list="allowedGroups" 
-                        value="content.mainGroup" 
-                        listKey="name" 
-                        listValue="descr" 
-                        disabled="%{lockGroupSelect}" 
+                    <wpsf:select
+                        useTabindexAutoIncrement="true"
+                        name="mainGroup"
+                        id="mainGroup"
+                        list="allowedGroups"
+                        value="content.mainGroup"
+                        listKey="name"
+                        listValue="descr"
+                        disabled="%{lockGroupSelect}"
                         />
                 </div>
             </div>
@@ -141,17 +141,17 @@
                 <div class="controls">
 
 
-                    <wpsf:select 
-                        useTabindexAutoIncrement="true" 
-                        name="extraGroupName" 
-                        id="extraGroups" 
-                        list="groups" 
-                        listKey="name" 
+                    <wpsf:select
+                        useTabindexAutoIncrement="true"
+                        name="extraGroupName"
+                        id="extraGroups"
+                        list="groups"
+                        listKey="name"
                         listValue="descr" />
-                    <wpsf:submit 
-                        useTabindexAutoIncrement="true" 
-                        action="joinGroup" 
-                        value="%{getText('label.join')}" 
+                    <wpsf:submit
+                        useTabindexAutoIncrement="true"
+                        action="joinGroup"
+                        value="%{getText('label.join')}"
                         cssClass="btn" />
                 </div>
             </div>
@@ -167,12 +167,11 @@
                                 <span class="label label-info">
                                     <i class="icon-tags icon-white"></i>&nbsp;&nbsp;
                                     <s:property value="%{getGroupsMap()[#groupName].getDescr()}" />&#32;
-                                    <%-- chiedere ad andrea se può rifatorizzare --%>
                                     <wpsf:submit action="%{#actionName}" type="button" theme="simple" cssClass="btn btn-link btn-small" title="%{#labelRemove}" >
                                         <span class="<s:property value="%{#removeIcon}"/>"></span>
                                     </wpsf:submit>
                                     <%-- value="%{#labelRemove}"  --%>
-                                </span>                                                            
+                                </span>
                             </li>
                         </s:iterator>
                     </ul>
@@ -186,10 +185,10 @@
 
                     <wp:categories var="categoriesVar" titleStyle="full" />
                     <wpsf:select list="%{#attr.categoriesVar}" name="categoryCode" listKey="key" listValue="value" />
-                    <wpsf:submit 
-                        useTabindexAutoIncrement="true" 
-                        action="joinCategory" 
-                        value="%{getText('label.join')}" 
+                    <wpsf:submit
+                        useTabindexAutoIncrement="true"
+                        action="joinCategory"
+                        value="%{getText('label.join')}"
                         cssClass="btn" />
                 </div>
             </div>
@@ -206,12 +205,11 @@
                                 <span class="label label-info">
                                     <i class="icon-tags icon-white"></i>&nbsp;&nbsp;
                                     <s:property value="#contentCategory.getFullTitle(currentLang.code)"/>&#32;
-                                    <%-- chiedere ad andrea se può rifatorizzare --%>
                                     <wpsf:submit action="%{#actionName}" type="button" theme="simple" cssClass="btn btn-link btn-small" title="%{#labelRemove}" >
                                         <span class="<s:property value="%{#removeIcon}"/>"></span>
                                     </wpsf:submit>
                                     <%-- value="%{#labelRemove}"  --%>
-                                </span>                                    
+                                </span>
                             </li>
                         </s:iterator>
                     </ul>
@@ -239,7 +237,7 @@
                                     <legend>
                                         <wp:i18n key="jpfastcontentedit_${contentType}_${attributeName}"/>
                                         <s:include value="/WEB-INF/plugins/jpfastcontentedit/aps/jsp/internalservlet/content/modules/include/front_attributeInfo.jsp" />
-                                    </legend>			
+                                    </legend>
                                 </s:if>
                                 <s:elseif test="#attribute.type == 'Composite'">
                                     <div class="well well-small attribute-type-<s:property value="#attribute.type" />">
@@ -359,7 +357,7 @@
     <%-- <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/entity/modules/monolistAttribute.jsp" /> --%>
     <s:include value="/WEB-INF/plugins/jpfastcontentedit/aps/jsp/internalservlet/content/modules/monolistAttribute.jsp" />
 </fieldset>
-</div> 
+</div>
 </s:elseif>
 <s:elseif test="#attribute.type == 'List'">
     <s:include value="/WEB-INF/apsadmin/jsp/entity/modules/listAttribute.jsp" />
@@ -369,7 +367,7 @@
 <s:elseif test="#attribute.type == 'Composite'">
     <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/entity/modules/compositeAttribute.jsp" />
 </fieldset>
-</div> 
+</div>
 </s:elseif>
 <s:elseif test="#attribute.type == 'Timestamp'">
     <s:include value="/WEB-INF/apsadmin/jsp/entity/modules/timestampAttribute.jsp" />
@@ -391,11 +389,11 @@
 </div>
 <p class="form-actions">
     <wp:i18n key="jpfastcontentedit_SAVE" var="jpfastcontentedit_SAVE" />
-    <wpsf:submit 
-        useTabindexAutoIncrement="true" 
-        action="save" 
-        value="%{#attr.jpfastcontentedit_SAVE}" 
-        title="%{#save_label}" 
+    <wpsf:submit
+        useTabindexAutoIncrement="true"
+        action="save"
+        value="%{#attr.jpfastcontentedit_SAVE}"
+        title="%{#save_label}"
         cssClass="btn btn-primary"/>
 </p>
 </form>

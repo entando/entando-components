@@ -112,20 +112,19 @@
                             <div class="col-lg-8 col-md-8 col-xs-8">
 
                                 <div class="form-group">
-                                    <label for="Container ID"><s:text name="container-id"/></label>
+                                    <label for="Deployment Unit"><s:text name="Deployment Unit"/></label>
                                     <div class="input-group">
-
                                         <s:select list="process" id="container-id" name="processPath"  
                                                   listKey="containerId"
                                                   listValue="containerId" class="form-control">
                                         </s:select>
                                         <span class="input-group-btn">
                                             <s:if test="#isProcessPathSetted">
-                                                <wpsf:submit action="changeForm" value="Change Container"
+                                                <wpsf:submit action="changeForm" value="Change Deployment Unit"
                                                              cssClass="btn btn-warning"/>
                                             </s:if>
                                             <s:else>
-                                                <wpsf:submit action="chooseForm" value="Choose Container"
+                                                <wpsf:submit action="chooseForm" value="Choose Deployment Unit"
                                                              cssClass="btn btn-success"/>
                                             </s:else>
                                         </span>

@@ -25,32 +25,33 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.KIE_SERVER_BASE_URL;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.KIE_SERVER_PASSWORD;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.KIE_SERVER_USERNAME;
+
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.*;
+
+import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.plugins.jpkiebpm.KieTestParameters;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.HOSTNAME;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.PASSWORD;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.PORT;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.SCHEMA;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TEST_ENABLED;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TIMEOUT;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.USERNAME;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.WEBAPP;
 import org.entando.entando.plugins.jpkiebpm.aps.ApsPluginBaseTestCase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KIEAuthenticationCredentials;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieClient;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.kieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 
 /**
@@ -58,6 +59,7 @@ import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
  * @author Entando
  */
 public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTestParameters {
+
 
     @Override
     public void setUp() throws Exception {
@@ -116,13 +118,38 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
 
         assertNotNull(cfg);
         assertEquals(Boolean.TRUE, cfg.getActive());
-        assertEquals("HOSTNAME", cfg.getHostname());
-        assertEquals("A_PASSWORD", cfg.getPassword());
-        assertEquals((Integer) 443, cfg.getPort());
-        assertEquals("https", cfg.getSchema());
-        assertEquals("A_USERNAME", cfg.getUsername());
-        assertEquals("kie", cfg.getWebapp());
-        assertEquals((Integer)2677, cfg.getTimeoutMsec());
+        assertEquals("localhost", cfg.getHostname());
+        assertEquals("krisv", cfg.getPassword());
+        assertEquals((Integer) 8080, cfg.getPort());
+        assertEquals("http", cfg.getSchema());
+        assertEquals("krisv", cfg.getUsername());
+        assertEquals("kie-server", cfg.getWebapp());
+        assertEquals((Integer)1000, cfg.getTimeoutMsec());
+    }
+    public void testDefaultConfigFromEnvironment() throws ApsSystemException {
+        try {
+            System.setProperty(KIE_SERVER_BASE_URL, "http://someserver.somehost.com:9090/somecontxt");
+            System.setProperty(KIE_SERVER_PASSWORD,"P@ssword");
+            System.setProperty(KIE_SERVER_USERNAME, "johnnie");
+            ((KieFormManager)_formManager).setupConfig();
+            KieBpmConfig cfg = _formManager.getConfig();
+
+            assertNotNull(cfg);
+            assertEquals(Boolean.TRUE, cfg.getActive());
+            assertEquals("someserver.somehost.com", cfg.getHostname());
+            assertEquals("P@ssword", cfg.getPassword());
+            assertEquals((Integer) 9090, cfg.getPort());
+            assertEquals("http", cfg.getSchema());
+            assertEquals("johnnie", cfg.getUsername());
+            assertEquals("somecontxt", cfg.getWebapp());
+            assertEquals((Integer) 5000, cfg.getTimeoutMsec());
+        }finally{
+            System.getProperties().remove(KIE_SERVER_BASE_URL);
+            System.getProperties().remove(KIE_SERVER_PASSWORD);
+            System.getProperties().remove(KIE_SERVER_USERNAME);
+            _formManager.deleteConfig("environment-based-kie-config-#0001");
+            ((KieFormManager)_formManager).setupConfig();
+        }
     }
 
     public void testUpdateConfig() throws Throwable {
@@ -134,6 +161,31 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
             _formManager.updateConfig(cfg);
             KieBpmConfig config = _formManager.getConfig();
             assertNotNull(config);
+            assertEquals(TEST_ENABLED, config.getActive());
+            assertEquals(HOSTNAME, config.getHostname());
+            assertEquals(PASSWORD, config.getPassword());
+            assertEquals(PORT, config.getPort());
+            assertEquals(SCHEMA, config.getSchema());
+            assertEquals(USERNAME, config.getUsername());
+            assertEquals(WEBAPP, config.getWebapp());
+            assertEquals(TIMEOUT, config.getTimeoutMsec());
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            _formManager.updateConfig(current);
+        }
+    }
+    public void testUpdateConfigWithGetKieServerConfigurations() throws Throwable {
+        KieBpmConfig current = _formManager.getConfig();
+
+        try {
+            KieBpmConfig cfg = getConfigForTests();
+
+            _formManager.updateConfig(cfg);
+            HashMap<String, KieBpmConfig> configs = _formManager.getKieServerConfigurations();
+            Optional<KieBpmConfig> first = configs.values().stream().filter((found) -> found.getHostname().equals(cfg.getHostname())).findFirst();
+            assertTrue(first.isPresent());
+            KieBpmConfig config=first.get();
             assertEquals(TEST_ENABLED, config.getActive());
             assertEquals(HOSTNAME, config.getHostname());
             assertEquals(PASSWORD, config.getPassword());
@@ -336,7 +388,7 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         return cfg;
     }
 
-    protected List<kieProcess> _processDefinitions;
+    protected List<KieProcess> _processDefinitions;
     protected List<KieContainer> _containers;
     protected List<KieProcessInstance> _processes;
 

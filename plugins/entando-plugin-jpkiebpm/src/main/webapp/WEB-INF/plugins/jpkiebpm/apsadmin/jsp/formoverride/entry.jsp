@@ -73,11 +73,11 @@
             </label>
             <div class="col-sm-5">
                 <s:if test="#isProcessPathSetted">
-                    <s:select disabled="true" cssClass="" list="processList" id="processPath" name="processPath"  listKey="%{packageName +'.'+processName + '@' + containerId}" listValue="%{processName + ' @ ' + containerId}"  ></s:select>
+                    <s:select disabled="true" cssClass="" list="processList" id="processPath" name="processPath"  listKey="%{packageName +'.'+processName + '@' + containerId + '@' + kieSourceId}" listValue="%{processName + ' @ ' + containerId}"  ></s:select>
                     <wpsf:hidden name="processPath"/>			
                 </s:if>
                 <s:else>
-                    <s:select list="processList" id="processPath" cssClass="" name="processPath"  listKey="%{packageName +'.'+processName + '@' + containerId}" listValue="%{processName + ' @ ' + containerId}"  ></s:select>
+                    <s:select list="processList" id="processPath" cssClass="" name="processPath"  listKey="%{packageName +'.'+processName + '@' + containerId + '@' + kieSourceId}" listValue="%{processName + ' @ ' + containerId}"  ></s:select>
                     <s:if test="#hasFieldErrorVar">
                         <span class="help-block text-danger">
                             <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>

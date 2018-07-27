@@ -1,7 +1,7 @@
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-search_result_inspinia', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Search Result</property>
-<property key="it">Search Result</property>
+<property key="en">Search Result (INSPINIA)</property>
+<property key="it">Search Result (INSPINIA)</property>
 </properties>', NULL, NULL, NULL, NULL, 1, NULL);
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-search_result_inspinia', 'entando-widget-search_result_inspinia', NULL, NULL, '<#assign jacms=JspTaglibs["/jacms-aps-core"]>

@@ -46,41 +46,53 @@ public interface IKieFormManager {
      * @return
      */
     KieBpmConfig getConfig();
+    
+    /**
+     * Loads the first configuration available when not specified
+     */
+    public KieBpmConfig loadFirstConfigurations() throws ApsSystemException;
+    
     /**
      * Return service configuration
      *
      * @param config
      */
     public void setConfig(KieBpmConfig config);
-    
+
     /**
      * add service configuration
      *
      * @param config
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
-    public void addConfig(KieBpmConfig config) throws ApsSystemException;   
+    public void addConfig(KieBpmConfig config) throws ApsSystemException;
+
     /**
      * add service configuration
      *
      * @param kieId
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
-    public void deleteConfig(String kieId) throws ApsSystemException;   
+    public void deleteConfig(String kieId) throws ApsSystemException;
+
     /**
      * Get list of service configuration
      *
      * @return
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
-    public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException;  /**
+    public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException;
 
     /**
+     *
+     * /**
      * Set service configuration
-     * @param kieHostname
+     *
+     * @param kieId
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
     public void setKieServerConfiguration(String kieId) throws ApsSystemException;
+
     /**
      * List KIE containers
      *
@@ -104,7 +116,7 @@ public interface IKieFormManager {
      * @return
      * @throws ApsSystemException
      */
-    List<kieProcess> getProcessDefinitionsList() throws ApsSystemException;
+    List<KieProcess> getProcessDefinitionsList() throws ApsSystemException;
 
     /**
      * Get the process instances give the process ID
@@ -284,7 +296,6 @@ public interface IKieFormManager {
      */
     String setTaskState(final String containerId, final String taskId, final TASK_STATES state, Map<String, Object> input, Map<String, String> opt) throws Throwable;
 
-
     /**
      *
      * @param user
@@ -304,6 +315,7 @@ public interface IKieFormManager {
      * @throws Throwable
      */
     public KieProcessInstancesQueryResult getProcessInstancesWithClientData(Map<String, String> input, Map<String, String> opt) throws Throwable;
+
     /**
      *
      * @param opt
@@ -321,7 +333,7 @@ public interface IKieFormManager {
     public List<KieTask> getKnowledgeWorkerTaskList(Map<String, String> opt) throws ApsSystemException;
 
     /**
-     * 
+     *
      * @param user
      * @param containerId
      * @param taskId
@@ -332,4 +344,6 @@ public interface IKieFormManager {
      * @throws ApsSystemException
      */
     public boolean getCompleteEnrichmentDcumentApprovalTask(final String user, final String containerId, final String taskId, TASK_STATES state, String review, Map<String, String> opt) throws ApsSystemException;
+
+    public Map<String, String > getHostNameVersionMap();
 }

@@ -13,7 +13,7 @@ The Entando components are:
 
 The Entando components project, based on Apache Maven, is organized in two modules including all Entando extensions ready to use just now:
 
-1. ```plugins``` module, including all Plugins. The following is a list of plugins released with ```entando-core``` version 4.3.2-SNAPSHOT:
+1. ```plugins``` module, including all Plugins. The following is a list of plugins released with ```entando-core``` version 5.1.0-SNAPSHOT:
 
     * Action Logger
     * Avatar
@@ -39,7 +39,7 @@ The Entando components project, based on Apache Maven, is organized in two modul
     * Web Dynamic Form
     * Widget Utils
 
-2. ```ui-bundles``` module, including all Bundles. The following is a list of main bundles released with ```entando-core``` version 4.3.2-SNAPSHOT:
+2. ```ui-bundles``` module, including all Bundles. The following is a list of main bundles released with ```entando-core``` version 5.1.0-SNAPSHOT:
 
     * Content type - Generic Content
     * Content type - News
@@ -76,7 +76,7 @@ https://github.com/entando/entando-core and https://github.com/entando/entando-a
 
 For latest updated news, please visit the company websites: https://www.entando.com.
 
-Entando Components is released under [MIT license](https://opensource.org/licenses/MIT) v2.1.
+Entando Components are released under licenses as marked in the individual plugin projects.
 
 Enjoy!
 

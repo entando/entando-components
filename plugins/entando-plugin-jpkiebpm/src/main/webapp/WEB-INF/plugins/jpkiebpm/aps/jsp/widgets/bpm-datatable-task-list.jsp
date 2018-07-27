@@ -63,12 +63,13 @@
             "<tr><td>Actual Owner</td><td>" + data['task-actual-owner'] + "</td></tr>\n" +
             "<tr><td>Created by</td><td>" + data['task-created-by'] + "</td></tr>\n" +
             "<tr><td>Created On</td><td>" + data['task-created-on'] + "</td></tr>\n" +
-            "<tr><td>Expiration Time</td>" + data['task-expiration-time'] + "<td></td></tr>\n" +
+            "<tr><td>Expiration Time</td><td>" + data['task-expiration-time'] + "</td></tr>\n" +
             "<tr><td>Skippable</td><td>" + data['task-skippable'] + "</td></tr>\n" +
             "<tr><td>Workitem Id</td><td>" + data['task-workitem-id'] + "</td></tr>\n" +
-            "<tr><td>Process Instance</td>" + data['task-process-instance-id'] + "<td></td></tr>\n" +
+            "<tr><td>Process Instance</td><td>" + data['task-process-instance-id'] + "</td></tr>\n" +
+            "<tr><td>Process Definition</td><td>" + data['task-process-id'] + "</td></tr>\n" +
             "<tr><td>Parent Id</td><td>" + data['task-parent-id'] + "</td></tr>\n" +
-            "<tr><td>Container Id</td><td>" + data['task-container-id'] + "</td></tr>\n" +
+            "<tr><td>Deployment Unit</td><td>" + data['task-container-id'] + "</td></tr>\n" +
             "<tr><td>Potential Owners</td><td>" + getHtmlListFragment(data['potential-owners'], 'task-pot-owners') + "</td></tr>\n" +
             "<tr><td>Excluded Owner</td><td>" + getHtmlListFragment(data['excluded-owners'], 'task-exc-owners') + "</td></tr>\n" +
             "<tr><td>Business Admin</td><td>" + getHtmlListFragment(data['business-admins'], 'task-business-admins') + "</td></tr>";
@@ -112,6 +113,9 @@
                     var entry = {name: el.name, value: el.value};
                     postData.task.fields.push(entry);
                 });
+                postData.task.fields.push({name: "processId", value: rowData.processDefinitionId});
+                postData.task.fields.push({name: "containerId", value: rowData.containerId});
+                postData.task.fields.push({name: "taskId", value: rowData.id});
                 var action = context + "taskForm.json";
                 //console.log(postData);
 
@@ -152,19 +156,21 @@
 
             $.get(url, function (data) {
                 var items = data.response.result.taskList.list || [];
+                items = Array.isArray(items) ? items : [items];
                 items = items.map(function (item) {
                     item['activated'] = new Date(item['activated']).toLocaleString();
                     item['created'] = new Date(item['created']).toLocaleString();
                     return item;
                 });
+                var containerId = data.response.result.taskList.containerId;
                 extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
-                org.entando.datatable.CustomDatatable(items, idTable, extraConfig);
+                org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);
             });
         };
 
         var configId = "${id}";
 
-        var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />api/rs/<wp:info key="currentLang"/>/jpkiebpm/";
+        var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
         var url = context + "tasks.json?configId=${id}";
         //console.log(url);
         //org.entando.datatable.loadDataTable(url, '#data-table-active', context,${id});
@@ -201,7 +207,7 @@
             onClickRow: function (ev, rowData) {
                 $('#bpm-task-list-modal-data-table-tbody').empty();
                 var url = context + "taskDetail.json?containerId=" + rowData.containerId + "&taskId=" + rowData.id;
-                //console.log(url);
+                console.log(url);
                 $.get(url, function (data) {
                     $('#bpm-task-list-modal-data-table-tbody').append(getTemplateTaskDetail(data.response.result.mainForm));
                     optModal.title = "BPM Data";

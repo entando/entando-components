@@ -73,7 +73,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
 
-            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
+            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStatus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
 
         } catch (ApsSystemException t) {
@@ -89,7 +89,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
 
-            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
+            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStatus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
 
         } catch (ApsSystemException t) {
@@ -111,7 +111,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
 
-            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
+            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStatus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
 
         } catch (ApsSystemException t) {
@@ -132,7 +132,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
             this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
             this.setProcess(this.getCaseManager().getContainersList());
 
-            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
+            this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStatus().toString());
             this.setKieContainerListJson(convertKieContainerToListToJson(this.getCaseManager().getContainersList()).toString());
 
         } catch (ApsSystemException t) {
@@ -151,12 +151,12 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
         String channel;
         try {
             if (widget != null) {
-            		this.setWidgetTypeCode(this.getWidget().getType().getCode());
+                this.setWidgetTypeCode(this.getWidget().getType().getCode());
                 frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
                 channel = widget.getConfig().getProperty("channel");
                 if (StringUtils.isNotBlank(frontEndCaseDatain)) {
 
-                		this.setFrontEndCaseData(frontEndCaseDatain);
+                    this.setFrontEndCaseData(frontEndCaseDatain);
                     JSONObject frontEndCaseDatainjs = new JSONObject(frontEndCaseDatain);
 
                     this.setKnowledgeSourcePath(frontEndCaseDatainjs.getString("knowledge-source-id"));
@@ -168,12 +168,12 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
                     this.setProcess(this.getCaseManager().getContainersList());
                     this.setChannel(channel);
 
-                    this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
+                    this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStatus().toString());
 
                 } else {
 
                     this.setKnowledgeSource(this.getCaseManager().getKieServerConfigurations());
-                    this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStasus().toString());
+                    this.setKnowledgeSourceJson(this.getCaseManager().getKieServerStatus().toString());
 
                 }
             } else {
@@ -265,6 +265,5 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends SimpleWidgetConfigAc
     public void setChannel(String channel) {
         this.channel = channel;
     }
-    
 
 }

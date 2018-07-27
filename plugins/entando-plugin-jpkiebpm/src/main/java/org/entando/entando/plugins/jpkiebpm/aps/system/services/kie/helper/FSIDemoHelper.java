@@ -23,22 +23,27 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * @author entando
  */
 public class FSIDemoHelper {
+
+    private static final Logger logger = LoggerFactory.getLogger(FSIDemoHelper.class);
 
     protected static JSONObject getJsonForBpm() {
         return new JSONObject("{\n"
@@ -117,7 +122,7 @@ public class FSIDemoHelper {
             }
 //            process.setAccountManager(json.getString("accountManager"));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Failed to replace value from json ",e);
         }
         return process;
     }
@@ -130,7 +135,7 @@ public class FSIDemoHelper {
             json = FSIDemoHelper.replaceValuesFromProcess(json, process);
             res = json.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Failed to create start process payload ",e);
         }
         return res;
     }
@@ -159,7 +164,7 @@ public class FSIDemoHelper {
         // CLIENT EMAIL
         KieProcessFormField email = new KieProcessFormField();
         email.setName("client_email");
-        email.setId(1111l);
+        email.setId("1111");
         email.setPosition(12);
         email.setType("InputText");
         List<KieProcessProperty> propsEmail = new ArrayList<>();
@@ -188,7 +193,7 @@ public class FSIDemoHelper {
         //PARTY NAME
         KieProcessFormField pname = new KieProcessFormField();
         pname.setName("party_name");
-        pname.setId(1222l);
+        pname.setId("1222");
         pname.setPosition(13);
         pname.setType("InputText");
         List<KieProcessProperty> propsPname = new ArrayList<>();
@@ -208,7 +213,7 @@ public class FSIDemoHelper {
         //PARTY SURNAME
         KieProcessFormField psurname = new KieProcessFormField();
         psurname.setName("party_surname");
-        psurname.setId(1333l);
+        psurname.setId("1333");
         psurname.setPosition(14);
         psurname.setType("InputText");
         List<KieProcessProperty> propsPsurname = new ArrayList<>();

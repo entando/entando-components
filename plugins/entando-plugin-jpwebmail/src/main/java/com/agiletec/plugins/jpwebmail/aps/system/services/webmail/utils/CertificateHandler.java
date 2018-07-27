@@ -169,7 +169,7 @@ public class CertificateHandler {
 		final String certificateFile = "jssecacerts";
 		
 		file = getCertificatesFile(certificateFile);
-		context = SSLContext.getInstance("TLS");
+		context = SSLContext.getInstance("TLSv1.2");
 		trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 		ApsSystemUtils.getLogger().info(showConsoleInfo("Caricamento file KeyStore '" + file + "'..."));
 		keyStore=doKeyStore(file, this.getPasswordInUse().toCharArray());

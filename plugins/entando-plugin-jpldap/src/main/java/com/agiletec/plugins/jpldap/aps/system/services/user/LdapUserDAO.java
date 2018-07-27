@@ -21,6 +21,24 @@
  */
 package com.agiletec.plugins.jpldap.aps.system.services.user;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.IApsEncrypter;
+import com.agiletec.plugins.jpldap.aps.system.LdapSystemConstants;
+import com.agiletec.plugins.jpldap.aps.system.services.user.tls.MyTLSHostnameVerifier;
+import com.agiletec.plugins.jpldap.aps.system.services.user.tls.MyX509TrustManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.misc.BASE64Encoder;
+
+import javax.naming.*;
+import javax.naming.directory.*;
+import javax.naming.ldap.StartTlsRequest;
+import javax.naming.ldap.StartTlsResponse;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.security.KeyManagementException;
@@ -29,39 +47,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-
-import javax.naming.CommunicationException;
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.PartialResultException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.BasicAttributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.ModificationItem;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
-import javax.naming.ldap.StartTlsRequest;
-import javax.naming.ldap.StartTlsResponse;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sun.misc.BASE64Encoder;
-
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.IApsEncrypter;
-import com.agiletec.plugins.jpldap.aps.system.LdapSystemConstants;
-import com.agiletec.plugins.jpldap.aps.system.services.user.tls.MyTLSHostnameVerifier;
-import com.agiletec.plugins.jpldap.aps.system.services.user.tls.MyX509TrustManager;
 
 /**
  * The Data Access Object for LdapUser.
@@ -497,7 +482,7 @@ public class LdapUserDAO implements ILdapUserDAO {
                     SSLSocketFactory sslsf = null;
                     try {
                         TrustManager[] tm = new TrustManager[]{new MyX509TrustManager()};
-                        SSLContext sslC = SSLContext.getInstance("TLS");
+                        SSLContext sslC = SSLContext.getInstance("TLSv1.2");
                         sslC.init(null, tm, null);
                         sslsf = sslC.getSocketFactory();
                     } catch (NoSuchAlgorithmException nSAE) {

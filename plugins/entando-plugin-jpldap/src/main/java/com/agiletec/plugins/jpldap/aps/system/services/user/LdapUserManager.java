@@ -26,14 +26,13 @@ import com.agiletec.aps.system.services.user.IUserDAO;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.system.services.user.UserManager;
 import com.agiletec.plugins.jpldap.aps.system.LdapSystemConstants;
+import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.beanutils.BeanComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The Manager for LdapUser.
@@ -235,6 +234,6 @@ public class LdapUserManager extends UserManager implements ILdapUserManager {
         this._ldapUserDAO = userLdapDAO;
     }
     
-    public ILdapUserDAO _ldapUserDAO;
+    private ILdapUserDAO _ldapUserDAO;
     
 }

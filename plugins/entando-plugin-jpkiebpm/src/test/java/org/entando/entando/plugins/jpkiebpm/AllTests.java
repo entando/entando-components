@@ -1,6 +1,6 @@
 package org.entando.entando.plugins.jpkiebpm;
 
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortgageDemoTest;
+import junit.framework.JUnit4TestAdapter;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestBpmToFormHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestFormToBpmHelper;
@@ -16,27 +16,32 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.overri
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerIntegrationTest;
+import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerUnitTest;
 
 public class AllTests {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("KIE-BPM connector test");
+    public static Test suite() {
+        TestSuite suite = new TestSuite("KIE-BPM connector test");
 
 //		suite.addTestSuite(TestKieFormManager.class);
-		suite.addTestSuite(TestKieContainer.class);
-		suite.addTestSuite(TestKieProcesses.class);
-		suite.addTestSuite(TestKieProcesseInstance.class);
-		suite.addTestSuite(TestKieTask.class);
-		suite.addTestSuite(TestKieForm.class);
-		suite.addTestSuite(TestKieProcessForm.class);
-		suite.addTestSuite(TestPayload.class);
-		suite.addTestSuite(TestBpmToFormHelper.class);
-		suite.addTestSuite(TestFormToBpmHelper.class);
-		suite.addTestSuite(TestJsonHelper.class);
-		suite.addTestSuite(TestKieFormOverrideManager.class);
-		suite.addTestSuite(TestBpmOverrides.class);
+        suite.addTestSuite(TestKieContainer.class);
+        suite.addTestSuite(TestKieProcesses.class);
+        suite.addTestSuite(TestKieProcesseInstance.class);
+        suite.addTestSuite(TestKieTask.class);
+        suite.addTestSuite(TestKieForm.class);
+        suite.addTestSuite(TestKieProcessForm.class);
+        suite.addTestSuite(TestPayload.class);
+        suite.addTestSuite(TestBpmToFormHelper.class);
+        suite.addTestSuite(TestFormToBpmHelper.class);
+        suite.addTestSuite(TestJsonHelper.class);
+        suite.addTestSuite(TestKieFormOverrideManager.class);
+        suite.addTestSuite(TestBpmOverrides.class);
 
-		return suite;
-	}
+        suite.addTest(new JUnit4TestAdapter(ConfigControllerIntegrationTest.class));
+        suite.addTest(new JUnit4TestAdapter(ConfigControllerUnitTest.class));
+
+        return suite;
+    }
 
 }

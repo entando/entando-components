@@ -52,7 +52,7 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
     private String comments;
     private String commentInput;
     private String caseCommentId;
-    
+
     private String casePath;
     private String knowledgeSourceId;
     private String containerid;
@@ -71,11 +71,11 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
                 this.setComments(this.getCaseManager().getCaseComments(this.getContainerid(), this.getCasePath()).toString());
                 this.setChannelPath(this.getChannel());
-                
+
             } else {
 
                 //set the config to the first config in database
-                this.setKnowledgeSourceId(this.getCaseManager().loadFirstConfigurations().getId());
+                this.setKnowledgeSourceId(this.getCaseManager().getConfig().getId());
                 this.setContainerid(this.getCaseManager().getContainersList().get(0).getContainerId());
 
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(this.getContainerid()).get(0));
@@ -97,7 +97,7 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
             this.setFrontEndCaseData(frontEndCaseDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-            
+
             if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
@@ -120,7 +120,7 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
             this.setFrontEndCaseData(frontEndCaseDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-            
+
             if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
 
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
@@ -141,7 +141,7 @@ public class BpmCaseInstanceCommentsAction extends BaseAction {
             this.setFrontEndCaseData(frontEndCaseDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-            
+
             if (this.getChannelPath().equalsIgnoreCase(this.getChannel())) {
                 this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
 

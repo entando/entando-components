@@ -21,19 +21,23 @@
  */
 package com.agiletec.plugins.jpwebmail.apsadmin.webmail.message.helper;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @version 1.0
  * @author E.Santoboni
  */
 public class FileHelper {
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(FileHelper.class);
+
 	public static void deleteDir(File dir, String dirPath) {
 		if (dir.exists() || dir.isDirectory()) {
 			String[] filesName = dir.list();
@@ -43,10 +47,16 @@ public class FileHelper {
 				if (dir.exists() && fileToDelete.isDirectory()) {
 					deleteDir(fileToDelete, path);
 				} else {
-					fileToDelete.delete();
+					boolean deleted = fileToDelete.delete();
+					if(!deleted) {
+						logger.error("Failed to delete file {} ",path);
+					}
 				}
 			}
-			dir.delete();
+			boolean deleted = dir.delete();
+			if(!deleted) {
+				logger.error("failed to delete dir {}", dir.getAbsolutePath());
+			}
 		}
 	}
 	

@@ -83,7 +83,15 @@ public class KieFormOverride {
 		this._processId = processId;
 	}
 
-    public OverrideList getOverrides() {
+    public String get_sourceId() {
+		return _sourceId;
+	}
+
+	public void set_sourceId(String _sourceId) {
+		this._sourceId = _sourceId;
+	}
+
+	public OverrideList getOverrides() {
         return _overrides;
     }
 
@@ -96,6 +104,7 @@ public class KieFormOverride {
 	private String _field;
 	private String _containerId;
 	private String _processId;
+	private String _sourceId;
     // this object is de/serialized automatically
 	private OverrideList _overrides;
 

@@ -76,11 +76,11 @@
                         </label>
                         <div class="col-xs-5">
                             <s:if test="!#isProcessPathSetted">
-                                <s:select list="process" id="processPath" name="processPath"  listKey="%{processId + '@' + containerId}" listValue="%{processName + ' @ ' + containerId}">
+                                <s:select list="process" id="processPath" name="processPath"  listKey="%{processId + '@' + containerId + '@' + kieSourceId}" listValue="%{processName + ' @ ' + containerId}">
                                 </s:select>
                             </s:if>
                             <s:else>
-                                <s:select disabled="true" list="process" id="processPath" name="processPath"  listKey="%{processId + '@' + containerId}" listValue="%{processName + ' @ ' + containerId}">
+                                <s:select disabled="true" list="process" id="processPath" name="processPath"  listKey="%{processId + '@' + containerId + '@' + kieSourceId}" listValue="%{processName + ' @ ' + containerId}">
                                 </s:select>
                                 <s:hidden name="processPath" />
 

@@ -37,7 +37,7 @@ public class TestKieProcesses extends TestCase {
         KieProcessesQueryResult res = (KieProcessesQueryResult) JAXBHelper
                 .unmarshall(processesJson, KieProcessesQueryResult.class, false, true);
         assertNotNull(res);
-        List<kieProcess> list = res.getProcesses();
+        List<KieProcess> list = res.getProcesses();
         assertNotNull(list);
         assertFalse(list.isEmpty());
         assertEquals(3, list.size());
