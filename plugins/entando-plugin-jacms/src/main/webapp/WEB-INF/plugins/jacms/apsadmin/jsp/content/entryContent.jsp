@@ -126,7 +126,9 @@
             <div class="col-sm-10">
                 <!-- Extra Groups Add -->
                 <div class="input-group">
-                    <wpsf:select name="extraGroupName" headerKey="" headerValue="%{getText('note.choose')}" id="extraGroups" list="groups" listKey="name"  listValue="descr" cssClass="combobox form-control" data-autosave="ignore" />
+                    <wpsf:select name="extraGroupNames"
+                                 headerKey="" headerValue="%{getText('note.choose')}" id="extraGroups" multiple="true" list="groups" listKey="name"
+                                 listValue="descr" cssClass="combobox form-control" data-autosave="ignore" />
                     <span class="input-group-btn">
                         <wpsf:submit  type="button" action="joinGroup" cssClass="btn btn-primary">
                             <span class="icon fa fa-plus"></span>
@@ -139,7 +141,7 @@
                     <div class="mt-20">
                         <s:iterator value="content.groups" var="groupName">
                             <wpsa:actionParam action="removeGroup" var="actionName" >
-                                <wpsa:actionSubParam name="extraGroupName" value="%{#groupName}" />
+                                <wpsa:actionSubParam name="extraGroupNames" value="%{#groupName}" />
                             </wpsa:actionParam>
 
                             <div class="label label-default label-tag label-sm">
