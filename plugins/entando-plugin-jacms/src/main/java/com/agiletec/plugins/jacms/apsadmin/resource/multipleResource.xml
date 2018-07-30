@@ -5,18 +5,6 @@
 
 <struts>	
     <package name="jacms_do/jacms/multipleResource" namespace="/do/jacms/Resource" extends="jacms_do/jacms/Resource">    	
-        <action name="increaseCount*" class="jacmsMultipleResourceAction" method="increaseCount">
-            <result type="tiles">admin.jacms.resource.entry</result>
-            <interceptor-ref name="entandoDefaultStack">
-                <param name="requestAuth.requiredPermission">manageResources</param>
-            </interceptor-ref>
-        </action>              
-        <action name="decreaseCount*" class="jacmsMultipleResourceAction" method="decreaseCount">
-            <result type="tiles">admin.jacms.resource.entry</result>
-            <interceptor-ref name="entandoDefaultStack">
-                <param name="requestAuth.requiredPermission">manageResources</param>
-            </interceptor-ref>
-        </action>
         
         <action name="save" class="jacmsMultipleResourceAction" method="save">
             <result type="tiles" name="input">admin.jacms.resource.entry</result>

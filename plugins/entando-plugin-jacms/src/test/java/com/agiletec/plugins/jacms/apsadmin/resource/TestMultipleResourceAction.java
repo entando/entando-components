@@ -34,26 +34,10 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
             throw new Exception(t);
         }
     }
-
-    public void testAddUploadField() throws Throwable {
-        this.setUserOnSession("admin");
-        this.initAction("/do/jacms/Resource", "increaseCount");
-        String result = this.executeAction();
-        assertEquals(Action.SUCCESS, result);
-        MultipleResourceAction action = (MultipleResourceAction) this.getAction();
-        action.increaseCount();
-        assertEquals(2, action.getFieldCount());
-    }
-
-    public void testDecreaseUploadField() throws Throwable {
-        this.setUserOnSession("admin");
-        this.initAction("/do/jacms/Resource", "increaseCount");
-        String result = this.executeAction();
-        assertEquals(Action.SUCCESS, result);
-        MultipleResourceAction action = (MultipleResourceAction) this.getAction();
-        action.decreaseCount();
-        assertEquals(0, action.getFieldCount());
-    }
+    
+    
+    
+    
     private IResourceManager _resourceManager = null;
 
 }

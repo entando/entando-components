@@ -26,6 +26,9 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,34 +36,32 @@ import org.slf4j.LoggerFactory;
 public class MultipleResourceAction extends ResourceAction {
 
     private static final Logger logger = LoggerFactory.getLogger(MultipleResourceAction.class);
-    
+
     @Override
     public void validate() {
-       
-        if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
 
+        if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
             if (null == getFileDescriptions()) {
                 this.addFieldError(DESCR_FIELD + 0, getText("error.resource.file.descrEmpty"));
             }
             if (null == getFileUpload()) {
-                this.addFieldError(FILE_UPLOAD_FIELD + 0, this.getText("error.resource.file.fileEmpty"));
+                this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.fileEmpty"));
             }
-
         } else {
             try {
-                if (null == getFileUploadInputStream()) {
-                    this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.void"));
+                fetchFileDescriptions();
+                for (int i = 0; i < getFileDescriptions().size(); i++) {
+                    if (null == getFileUploadInputStream(i)) {
+                        this.addFieldError(FILE_UPLOAD_FIELD + i, this.getText("error.resource.file.void"));
+                    }
                 }
 
             } catch (Throwable ex) {
-                java.util.logging.Logger.getLogger(MultipleResourceAction.class.getName()).log(Level.SEVERE, null, ex);
+                this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.void"));
             }
 
             if (null != getFileUpload()) {
-
-                fetchFileDescriptions();
                 validateFileDescriptions();
-
                 ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
                 this.getFileUploadFileName().forEach(fileName
                         -> checkRightFileType(resourcePrototype, fileName));
@@ -91,8 +92,11 @@ public class MultipleResourceAction extends ResourceAction {
     }
 
     protected void validateFileDescriptions() {
-        int i = 0;
-        for (File file : this.getFileUpload()) {
+        int fileUploadSize = 0;
+        if (null != this.getFileUpload()) {
+            fileUploadSize = this.getFileUpload().size();
+        }
+        for (int i = 0; i < fileUploadSize; i++) {
             if (null != fileDescriptions) {
                 if (!(fileDescriptions.get(i).length() > 0)) {
                     this.addFieldError(DESCR_FIELD + i, this.getText("error.resource.file.descrEmpty"));
@@ -100,7 +104,6 @@ public class MultipleResourceAction extends ResourceAction {
             } else {
                 this.addFieldError(DESCR_FIELD + i, this.getText("error.resource.file.descrEmpty"));
             }
-            i++;
         }
     }
 
@@ -143,23 +146,6 @@ public class MultipleResourceAction extends ResourceAction {
         return isValid;
     }
 
-    public String increaseCount() {
-        fetchFileDescriptions();
-        fieldCount++;
-        return SUCCESS;
-    }
-
-    public String decreaseCount() {
-        fetchFileDescriptions();
-        fieldCount--;
-        return SUCCESS;
-    }
-
-    /**
-     * Executes the specific action to modify an existing resource.
-     *
-     * @return The result code.
-     */
     @Override
     public String save() {
         int index = 0;
@@ -168,19 +154,15 @@ public class MultipleResourceAction extends ResourceAction {
 
             fetchFileDescriptions();
             for (String fileDescription : getFileDescriptions()) {
-
                 if ((fileDescription.length() > 0) && (null != getFile(index))) {
                     File file = getFile(index);
                     BaseResourceDataBean resourceFile = new BaseResourceDataBean(file);
-
                     resourceFile.setFileName(getFileUploadFileName().get(index));
                     resourceFile.setMimeType(getFileUploadContentType().get(index));
-
                     resourceFile.setDescr(fileDescription);
                     resourceFile.setMainGroup(getMainGroup());
                     resourceFile.setResourceType(this.getResourceType());
                     resourceFile.setCategories(getCategories());
-
                     List<BaseResourceDataBean> baseResourceDataBeanList = new ArrayList<BaseResourceDataBean>();
                     baseResourceDataBeanList.add(resourceFile);
 
@@ -225,9 +207,17 @@ public class MultipleResourceAction extends ResourceAction {
             fileDescriptions = new ArrayList<>();
         }
         fileDescriptions.clear();
-        for (int i = 0; i <= fieldCount; i++) {
-            String desc = this.getRequest().getParameter(DESCR_FIELD + i);
-            fileDescriptions.add(i, desc);
+
+        Map<String, String[]> parameterMap = this.getRequest().getParameterMap();
+        SortedSet<String> keys = new TreeSet<>(parameterMap.keySet());
+        int i = 0;
+        for (String key : keys) {
+            if (key.startsWith(DESCR_FIELD)) {
+                String descr = parameterMap.get(key)[0];
+                fileDescriptions.add(i, descr);
+                i++;
+            }
+
         }
     }
 
@@ -235,15 +225,22 @@ public class MultipleResourceAction extends ResourceAction {
         return fileUpload.get(index);
     }
 
-    public InputStream getFileUploadInputStream() throws Throwable {
+    public InputStream getFileUploadInputStream(int i) throws Throwable {
         if (null == this.getFileUpload()) {
             return null;
         }
-        return new FileInputStream(this.getFile(0));
+        return new FileInputStream(getFile(i));
     }
 
     public int getFieldCount() {
-        return fieldCount;
+        fieldCount = 0;
+        Map<String, String[]> parameterMap = this.getRequest().getParameterMap();
+        for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+            if (entry.getKey().startsWith(DESCR_FIELD)) {
+                fieldCount++;
+            }
+        }
+        return fieldCount - 1;
     }
 
     public void setFieldCount(int fieldCount) {
@@ -291,11 +288,9 @@ public class MultipleResourceAction extends ResourceAction {
 
     private int fieldCount = 0;
     private List<String> fileDescriptions;
-
     private List<File> fileUpload = new ArrayList<File>();
     private List<String> fileUploadContentType = new ArrayList<String>();
     private List<String> fileUploadFileName = new ArrayList<String>();
-
     public final static String DESCR_FIELD = "descr_";
     public final static String FILE_UPLOAD_FIELD = "fileUpload_";
 
