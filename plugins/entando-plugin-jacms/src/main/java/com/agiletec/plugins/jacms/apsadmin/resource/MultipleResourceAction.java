@@ -25,10 +25,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +42,7 @@ public class MultipleResourceAction extends ResourceAction {
 
     @Override
     public void validate() {
+        savedId.clear();
 
         if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
             if (null == getFileDescriptions()) {
@@ -72,6 +76,8 @@ public class MultipleResourceAction extends ResourceAction {
 
     public String edit() {
         try {
+            savedId.clear();
+
             ResourceInterface resource = this.loadResource(this.getResourceId());
             this.setResourceTypeCode(resource.getType());
             List fileDescr = new ArrayList<String>();
@@ -149,7 +155,9 @@ public class MultipleResourceAction extends ResourceAction {
     @Override
     public String save() {
         int index = 0;
+        savedId.clear();
 
+        boolean hasError = false;
         try {
 
             fetchFileDescriptions();
@@ -175,21 +183,28 @@ public class MultipleResourceAction extends ResourceAction {
                         }
                         this.addActionMessage(this.getText("message.resource.filename.uploaded",
                                 new String[]{fileUploadFileName.get(index)}));
+                        savedId.add(index);
                     } catch (ApsSystemException ex) {
-                        java.util.logging.Logger.getLogger(ResourceAction.class.getName()).log(Level.SEVERE, null, ex);
-                        // add action error
+                        hasError = true;
+                        logger.error("error loading file {} ", fileUploadFileName.get(index), ex);
                         this.addFieldError(String.valueOf(index), this.getText("error.resource.filename.uploadError",
                                 new String[]{fileUploadFileName.get(index)}));
                     }
-                }
-                index++;
-            }
 
+                }
+
+                index++;
+
+            }
         } catch (Throwable t) {
             logger.error("error in save", t);
             return FAILURE;
         }
-
+        if (hasError) {
+            logger.error("error uploading one or more resources");
+            savedId.forEach(id -> fileDescriptions.remove(id.toString()));
+            return FAILURE;
+        }
         return SUCCESS;
     }
 
@@ -217,8 +232,8 @@ public class MultipleResourceAction extends ResourceAction {
                 fileDescriptions.add(i, descr);
                 i++;
             }
-
         }
+
     }
 
     public File getFile(int index) {
@@ -240,6 +255,9 @@ public class MultipleResourceAction extends ResourceAction {
                 fieldCount++;
             }
         }
+
+        fieldCount = fieldCount - savedId.size();
+
         return fieldCount - 1;
     }
 
@@ -293,5 +311,6 @@ public class MultipleResourceAction extends ResourceAction {
     private List<String> fileUploadFileName = new ArrayList<String>();
     public final static String DESCR_FIELD = "descr_";
     public final static String FILE_UPLOAD_FIELD = "fileUpload_";
+    private List savedId = new ArrayList();
 
 }

@@ -132,6 +132,7 @@
             </s:if>
         </div>
     </div>
+
     <%-- upload --%>
 
     <s:set var="uploadFieldErrorsVar" value="%{fieldErrors['upload']}" />
@@ -139,8 +140,6 @@
     <s:set var="hasFieldErrorVar"
            value="(#uploadFieldErrorsVar != null && !#uploadFieldErrorsVar.isEmpty()) || (#fileNameFieldErrorsVar != null && !#fileNameFieldErrorsVar.isEmpty())" />
     <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-
-    <s:property />
 
 
     <fieldset class="margin-base-vertical" id="category-content-block">
@@ -443,7 +442,6 @@
     </s:if>
 </s:form>
 --%>
-
 <template id="hidden-fields-template">
 
     <div class="form-group">

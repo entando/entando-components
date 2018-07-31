@@ -8,6 +8,7 @@
         
         <action name="save" class="jacmsMultipleResourceAction" method="save">
             <result type="tiles" name="input">admin.jacms.resource.entry</result>
+            <result type="tiles" name="failure">admin.jacms.resource.entry</result>
             <result type="redirectAction">
                 <param name="actionName">list</param>
                 <param name="resourceTypeCode">${resourceTypeCode}</param>

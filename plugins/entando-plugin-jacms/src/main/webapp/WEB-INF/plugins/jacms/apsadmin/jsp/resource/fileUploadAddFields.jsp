@@ -1,12 +1,10 @@
-<%@ taglib prefix="s" uri="/struts-tags" %>
-
 <script type="text/javascript">
     $(document).ready(function () {
 
         $('#add-fields').click(function (e) {
             e.preventDefault();
             var numItems = $('.file-description').length;
-           
+
             var numItems = $('.file-description').length;
             var template = $('#hidden-fields-template').html();
 
@@ -23,7 +21,7 @@
             e.preventDefault();
             $(this).parent('div').remove();
         });
-        
+
         $('#fields-container').on("click", ".delete-fields", function (e) {
             e.preventDefault();
             $(this).parent('div').remove();
