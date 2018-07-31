@@ -126,10 +126,11 @@
             <div class="col-sm-10">
                 <!-- Extra Groups Add -->
                 <div class="input-group">
-                    <wpsf:select name="extraGroupNames"
-                                 headerKey="" id="extraGroups" multiple="true" list="groups" listKey="name"
-                                 listValue="descr" cssClass="combobox form-control" data-autosave="ignore" />
-                    <span class="input-group-btn">
+                    <wpsf:select 
+                        name="extraGroupNames" headerKey="" id="extraGroups"
+                        multiple="true" list="groups" listKey="name" size="4"
+                        listValue="descr" cssClass="combobox form-control" data-autosave="ignore" />
+                    <span class="input-group-btn" style="vertical-align: top">
                         <wpsf:submit  type="button" action="joinGroup" cssClass="btn btn-primary">
                             <span class="icon fa fa-plus"></span>
                         </wpsf:submit>
@@ -412,4 +413,11 @@
             </div>
         </div>
     </s:form>
-</div><%-- main --%>
+</div>
+<script>
+    $('option').mousedown(function (e) {
+        e.preventDefault();
+        $(this).prop('selected', !$(this).prop('selected'));
+        return false;
+    });
+</script>   
