@@ -74,7 +74,6 @@
         <module>entando-plugin-jpinfinispan</module>
 
         <module>entando-plugin-jpwebmail</module>
-        <module>entando-plugin-jpseo</module>
     </modules>
     <profiles>
         <profile>
