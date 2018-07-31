@@ -127,7 +127,7 @@
                 <!-- Extra Groups Add -->
                 <div class="input-group">
                     <wpsf:select name="extraGroupNames"
-                                 headerKey="" headerValue="%{getText('note.choose')}" id="extraGroups" multiple="true" list="groups" listKey="name"
+                                 headerKey="" id="extraGroups" multiple="true" list="groups" listKey="name"
                                  listValue="descr" cssClass="combobox form-control" data-autosave="ignore" />
                     <span class="input-group-btn">
                         <wpsf:submit  type="button" action="joinGroup" cssClass="btn btn-primary">
