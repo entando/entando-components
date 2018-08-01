@@ -19,20 +19,15 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.BaseResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
-import static com.opensymphony.xwork2.Action.INPUT;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.function.Predicate;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,15 +38,20 @@ public class MultipleResourceAction extends ResourceAction {
     @Override
     public void validate() {
         savedId.clear();
-
         if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
+            fetchFileDescriptions();
             if (null == getFileDescriptions()) {
                 this.addFieldError(DESCR_FIELD + 0, getText("error.resource.file.descrEmpty"));
             }
             if (null == getFileUpload()) {
                 this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.fileEmpty"));
             }
+            if (this.getFileUploadFileName().size()>0) {
+                ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
+                this.checkRightFileType(resourcePrototype, this.getFileUploadFileName().get(0));
+            }
         } else {
+
             try {
                 fetchFileDescriptions();
                 for (int i = 0; i < getFileDescriptions().size(); i++) {
@@ -66,18 +66,23 @@ public class MultipleResourceAction extends ResourceAction {
 
             if (null != getFileUpload()) {
                 validateFileDescriptions();
-                ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
-                this.getFileUploadFileName().forEach(fileName
-                        -> checkRightFileType(resourcePrototype, fileName));
+                if (null != this.getResourceType()) {
+                    ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
 
+                    this.getFileUploadFileName().forEach(fileName
+                            -> checkRightFileType(resourcePrototype, fileName));
+
+                } else {
+                    this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.genericError"));
+                }
             }
         }
     }
 
+    @Override
     public String edit() {
         try {
             savedId.clear();
-
             ResourceInterface resource = this.loadResource(this.getResourceId());
             this.setResourceTypeCode(resource.getType());
             List fileDescr = new ArrayList<String>();
@@ -90,6 +95,7 @@ public class MultipleResourceAction extends ResourceAction {
             }
             this.setMainGroup(resource.getMainGroup());
             this.setStrutsAction(ApsAdminSystemConstants.EDIT);
+
         } catch (Throwable t) {
             logger.error("error in edit", t);
             return FAILURE;
@@ -106,6 +112,9 @@ public class MultipleResourceAction extends ResourceAction {
             if (null != fileDescriptions) {
                 if (!(fileDescriptions.get(i).length() > 0)) {
                     this.addFieldError(DESCR_FIELD + i, this.getText("error.resource.file.descrEmpty"));
+                }
+                if (fileDescriptions.get(i).length() > 250) {
+                    this.addFieldError(DESCR_FIELD + i, this.getText("error.resource.file.descrTooLong"));
                 }
             } else {
                 this.addFieldError(DESCR_FIELD + i, this.getText("error.resource.file.descrEmpty"));
@@ -162,28 +171,36 @@ public class MultipleResourceAction extends ResourceAction {
 
             fetchFileDescriptions();
             for (String fileDescription : getFileDescriptions()) {
-                if ((fileDescription.length() > 0) && (null != getFile(index))) {
+                if (fileDescription.length() > 0) {
+                    List<BaseResourceDataBean> baseResourceDataBeanList;
+                    BaseResourceDataBean resourceFile = null;
+
                     File file = getFile(index);
-                    BaseResourceDataBean resourceFile = new BaseResourceDataBean(file);
-                    resourceFile.setFileName(getFileUploadFileName().get(index));
-                    resourceFile.setMimeType(getFileUploadContentType().get(index));
+                    if (null != file) {
+                        resourceFile = new BaseResourceDataBean(file);
+                        resourceFile.setFileName(getFileUploadFileName().get(index));
+                        resourceFile.setMimeType(getFileUploadContentType().get(index));
+
+                    } else {
+                        resourceFile = new BaseResourceDataBean();
+                    }
                     resourceFile.setDescr(fileDescription);
                     resourceFile.setMainGroup(getMainGroup());
                     resourceFile.setResourceType(this.getResourceType());
                     resourceFile.setCategories(getCategories());
-                    List<BaseResourceDataBean> baseResourceDataBeanList = new ArrayList<BaseResourceDataBean>();
+                    baseResourceDataBeanList = new ArrayList<BaseResourceDataBean>();
                     baseResourceDataBeanList.add(resourceFile);
-
                     try {
                         if (ApsAdminSystemConstants.ADD == this.getStrutsAction()) {
                             this.getResourceManager().addResources(baseResourceDataBeanList);
+                            this.addActionMessage(this.getText("message.resource.filename.uploaded",
+                                    new String[]{fileUploadFileName.get(index)}));
+                            savedId.add(index);
                         } else if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
                             resourceFile.setResourceId(super.getResourceId());
                             this.getResourceManager().updateResource(resourceFile);
                         }
-                        this.addActionMessage(this.getText("message.resource.filename.uploaded",
-                                new String[]{fileUploadFileName.get(index)}));
-                        savedId.add(index);
+
                     } catch (ApsSystemException ex) {
                         hasError = true;
                         logger.error("error loading file {} ", fileUploadFileName.get(index), ex);
@@ -237,6 +254,9 @@ public class MultipleResourceAction extends ResourceAction {
     }
 
     public File getFile(int index) {
+        if (fileUpload.size() == 0) {
+            return null;
+        }
         return fileUpload.get(index);
     }
 
@@ -248,6 +268,10 @@ public class MultipleResourceAction extends ResourceAction {
     }
 
     public int getFieldCount() {
+        if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
+            return 0;
+        }
+
         fieldCount = 0;
         Map<String, String[]> parameterMap = this.getRequest().getParameterMap();
         for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
@@ -273,7 +297,7 @@ public class MultipleResourceAction extends ResourceAction {
         this.fileDescriptions = fileDescriptions;
     }
 
-    public List<File> getFileUpload() {
+    public List<File> getFileUpload() {        
         return fileUpload;
     }
 

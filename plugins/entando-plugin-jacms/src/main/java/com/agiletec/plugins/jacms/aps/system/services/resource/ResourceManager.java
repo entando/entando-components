@@ -63,7 +63,7 @@ import org.xml.sax.InputSource;
  *
  * @author W.Ambu - E.Santoboni
  */
-public class ResourceManager extends AbstractService implements IResourceManager, GroupUtilizer<String>, CategoryUtilizer {
+public class ResourceManager extends AbstractService implements IResourceManager, GroupUtilizer, CategoryUtilizer {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -14,8 +14,7 @@
     <include file="com/agiletec/plugins/jacms/apsadmin/portal/specialwidget/specialWidget.xml"/>
     <include file="com/agiletec/plugins/jacms/apsadmin/system/entity.xml" />
     <include file="org/entando/entando/plugins/jacms/apsadmin/portal/specialwidget/specialWidget.xml" />
-    <include file="org/entando/entando/plugins/jacms/apsadmin/integration/integration.xml"/>	
+    <include file="org/entando/entando/plugins/jacms/apsadmin/integration/integration.xml"/>
     <include file="org/entando/entando/plugins/jacms/apsadmin/content/content.xml" />
-    <include file="com/agiletec/plugins/jacms/apsadmin/resource/multipleResource.xml"/>
 
 </struts>

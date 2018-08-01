@@ -275,7 +275,7 @@
                     <i class="fa fa-asterisk required-icon"></i>
                 </label>
                 <div class="col-sm-4">
-                    <wpsf:textfield name="descr_%{#ctr.count - 1}" id="descr_%{#ctr.count - 1}" cssClass="form-control file-description" value="%{getFileDescription(#ctr.count - 1)}" />
+                    <wpsf:textfield name="descr_%{#ctr.count - 1}" maxlength="250" id="descr_%{#ctr.count - 1}" cssClass="form-control file-description" value="%{getFileDescription(#ctr.count - 1)}" />
                     <s:if test="#fieldHasFieldErrorVar">
                         <span class="help-block text-danger">
                             <s:iterator value="#fieldErrorsVar">
@@ -350,7 +350,7 @@
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-10">
-                <wpsf:textfield name="descr" id="descr" cssClass="form-control" />
+                <wpsf:textfield name="descr" maxlength="250" id="descr" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
                         <s:iterator value="%{#fieldErrorsVar}">
@@ -450,7 +450,7 @@
             <i class="fa fa-asterisk required-icon"></i>
         </label>
         <div class="col-sm-4">
-            <wpsf:textfield name="descr" id="newDescr" cssClass="form-control file-description" />            
+            <wpsf:textfield name="descr" maxlength="250" id="newDescr" cssClass="form-control file-description" />            
         </div>
         <label class="col-sm-1 control-label" for="upload">
             <s:text name="label.file" />
