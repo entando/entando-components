@@ -36,48 +36,50 @@ import java.util.Date;
 
 /**
  * Data Access Object for the 'page' objects
+ *
  * @author E.Santoboni
  */
 public class SeoPageDAO extends PageDAO {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(SeoPageDAO.class);
+    private static final Logger _logger = LoggerFactory.getLogger(SeoPageDAO.class);
 
-	@Override
-	protected PageExtraConfigDOM getExtraConfigDOM() {
-		return new SeoPageExtraConfigDOM();
-	}
-    
     @Override
-	protected PageMetadata createPageMetadata(String code, ResultSet res, int startIndex) throws Throwable {
-		SeoPageMetadata pageMetadata = new SeoPageMetadata();
-		int index = startIndex;
-		String titleText = res.getString(index++);
-		ApsProperties titles = new ApsProperties();
-		try {
-			titles.loadFromXml(titleText);
-		} catch (Throwable t) {
-			_logger.error("IO error detected while parsing the titles of the page {}", code, t);
-			String msg = "IO error detected while parsing the titles of the page '" + code + "'";
-			throw new ApsSystemException(msg, t);
-		}
-		pageMetadata.setTitles(titles);
-		pageMetadata.setModel(this.getPageModelManager().getPageModel(res.getString(index++)));
-		Integer showable = res.getInt(index++);
-		pageMetadata.setShowable(showable == 1);
-		String extraConfig = res.getString(index++);
-		if (null != extraConfig && extraConfig.trim().length() > 0) {
-			try {
+    protected PageExtraConfigDOM getExtraConfigDOM() {
+        return new SeoPageExtraConfigDOM();
+    }
+
+    @Override
+    protected PageMetadata createPageMetadata(String code, ResultSet res, int startIndex) throws Throwable {
+        SeoPageMetadata pageMetadata = new SeoPageMetadata();
+        int index = startIndex;
+        pageMetadata.setGroup(res.getString(index++));
+        String titleText = res.getString(index++);
+        ApsProperties titles = new ApsProperties();
+        try {
+            titles.loadFromXml(titleText);
+        } catch (Throwable t) {
+            _logger.error("IO error detected while parsing the titles of the page {}", code, t);
+            String msg = "IO error detected while parsing the titles of the page '" + code + "'";
+            throw new ApsSystemException(msg, t);
+        }
+        pageMetadata.setTitles(titles);
+        pageMetadata.setModel(this.getPageModelManager().getPageModel(res.getString(index++)));
+        Integer showable = res.getInt(index++);
+        pageMetadata.setShowable(showable == 1);
+        String extraConfig = res.getString(index++);
+        if (null != extraConfig && extraConfig.trim().length() > 0) {
+            try {
                 SeoPageExtraConfigDOM configDom = new SeoPageExtraConfigDOM();
-				configDom.addExtraConfig(pageMetadata, extraConfig);
-			} catch (Throwable t) {
-				_logger.error("IO error detected while parsing the extra config of the page {}", code, t);
-				String msg = "IO error detected while parsing the extra config of the page '" + code + "'";
-				throw new ApsSystemException(msg, t);
-			}
-		}
-		Timestamp date = res.getTimestamp(index++);
-		pageMetadata.setUpdatedAt(date != null ? new Date(date.getTime()) : null);
-		return pageMetadata;
-	}
+                configDom.addExtraConfig(pageMetadata, extraConfig);
+            } catch (Throwable t) {
+                _logger.error("IO error detected while parsing the extra config of the page {}", code, t);
+                String msg = "IO error detected while parsing the extra config of the page '" + code + "'";
+                throw new ApsSystemException(msg, t);
+            }
+        }
+        Timestamp date = res.getTimestamp(index++);
+        pageMetadata.setUpdatedAt(date != null ? new Date(date.getTime()) : null);
+        return pageMetadata;
+    }
 
 }
