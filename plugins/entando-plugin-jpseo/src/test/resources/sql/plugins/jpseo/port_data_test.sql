@@ -1,7 +1,7 @@
-INSERT INTO pages (code, parentcode, pos, groupcode) VALUES ('seo_page_1', 'homepage', 7, 'free');
-INSERT INTO pages (code, parentcode, pos, groupcode) VALUES ('seo_page_2', 'homepage', 8, 'free');
+INSERT INTO pages (code, parentcode, pos) VALUES ('seo_page_1', 'homepage', 7);
+INSERT INTO pages (code, parentcode, pos) VALUES ('seo_page_2', 'homepage', 8);
 
-INSERT INTO pages_metadata_draft (code, titles, modelcode, showinmenu, extraconfig, updatedat) VALUES ('seo_page_1', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO pages_metadata_draft (code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat) VALUES ('seo_page_1', 'free', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Seo Page 1</property>
 <property key="it">Pagina Seo 1</property>
@@ -36,7 +36,7 @@ INSERT INTO pages_metadata_draft (code, titles, modelcode, showinmenu, extraconf
     <parameter key="key4">VALUE_4</parameter>
   </complexParameters>
 </config>', '2018-06-20 16:31:31');
-INSERT INTO pages_metadata_draft (code, titles, modelcode, showinmenu, extraconfig, updatedat) VALUES ('seo_page_2', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO pages_metadata_draft (code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat) VALUES ('seo_page_2', 'free', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Seo Page 1</property>
 <property key="it">Pagina Seo 1</property>
