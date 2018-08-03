@@ -32,18 +32,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MultipleResourceAction extends ResourceAction {
-
+    
+    public final static String DESCR_FIELD = "descr_";
+    public final static String FILE_UPLOAD_FIELD = "fileUpload_";
     private static final Logger logger = LoggerFactory.getLogger(MultipleResourceAction.class);
-
+    private int fieldCount = 0;
+    private List<String> fileDescriptions;
+    private List<File> fileUpload = new ArrayList<File>();
+    private List<String> fileUploadContentType = new ArrayList<String>();
+    private List<String> fileUploadFileName = new ArrayList<String>();
+    private List savedId = new ArrayList();
+    
     @Override
     public void validate() {
         savedId.clear();
         if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
             fetchFileDescriptions();
             if (null == getFileDescriptions()) {
+                logger.debug("Description empty for the field {} ", DESCR_FIELD + 0);
                 this.addFieldError(DESCR_FIELD + 0, getText("error.resource.file.descrEmpty"));
             }
             if (null == getFileUpload()) {
+                logger.debug("File empty for the field {} ", FILE_UPLOAD_FIELD);
                 this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.fileEmpty"));
             }
             if (this.getFileUploadFileName().size()>0) {
@@ -56,11 +66,13 @@ public class MultipleResourceAction extends ResourceAction {
                 fetchFileDescriptions();
                 for (int i = 0; i < getFileDescriptions().size(); i++) {
                     if (null == getFileUploadInputStream(i)) {
+                        logger.debug("File void for the field {} ", FILE_UPLOAD_FIELD + i);
                         this.addFieldError(FILE_UPLOAD_FIELD + i, this.getText("error.resource.file.void"));
                     }
                 }
 
             } catch (Throwable ex) {
+                logger.debug("File void for the field {} ", FILE_UPLOAD_FIELD);
                 this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.void"));
             }
 
@@ -73,6 +85,7 @@ public class MultipleResourceAction extends ResourceAction {
                             -> checkRightFileType(resourcePrototype, fileName));
 
                 } else {
+                    logger.debug("Resource Type null for the field {} ", FILE_UPLOAD_FIELD);
                     this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.genericError"));
                 }
             }
@@ -89,9 +102,8 @@ public class MultipleResourceAction extends ResourceAction {
             fileDescr.add(resource.getDescription());
             setFileDescriptions(fileDescr);
             List<Category> resCategories = resource.getCategories();
-            for (int i = 0; i < resCategories.size(); i++) {
-                Category resCat = resCategories.get(i);
-                this.getCategoryCodes().add(resCat.getCode());
+            for (Category cat : resCategories) {
+                this.getCategoryCodes().add(cat.getCode());
             }
             this.setMainGroup(resource.getMainGroup());
             this.setStrutsAction(ApsAdminSystemConstants.EDIT);
@@ -111,12 +123,16 @@ public class MultipleResourceAction extends ResourceAction {
         for (int i = 0; i < fileUploadSize; i++) {
             if (null != fileDescriptions) {
                 if (!(fileDescriptions.get(i).length() > 0)) {
+                    logger.debug("Description empty for the field {} ", DESCR_FIELD + i);
+
                     this.addFieldError(DESCR_FIELD + i, this.getText("error.resource.file.descrEmpty"));
                 }
                 if (fileDescriptions.get(i).length() > 250) {
+                    logger.debug("Description too long for the field {} ", DESCR_FIELD + i);
                     this.addFieldError(DESCR_FIELD + i, this.getText("error.resource.file.descrTooLong"));
                 }
             } else {
+                logger.debug("Description empty for the field {} ", DESCR_FIELD + i);
                 this.addFieldError(DESCR_FIELD + i, this.getText("error.resource.file.descrEmpty"));
             }
         }
@@ -139,9 +155,11 @@ public class MultipleResourceAction extends ResourceAction {
             String[] types = resourcePrototype.getAllowedFileTypes();
             isRight = isValidType(docType, types);
         } else {
+            logger.debug("Check uploaded file type: file format is right for {} ", fileName);
             isRight = true;
         }
         if (!isRight) {
+            logger.debug("Check uploaded file type: wrong file format for {} ", fileName);
             this.addFieldError("upload", this.getText("error.resource.file.wrongFormat"));
         }
     }
@@ -151,13 +169,16 @@ public class MultipleResourceAction extends ResourceAction {
         if (rightTypes.length > 0) {
             for (int i = 0; i < rightTypes.length; i++) {
                 if (docType.toLowerCase().equals(rightTypes[i])) {
+                    logger.debug("File type {} Is Valid Type {} ",docType , isValid);
                     isValid = true;
                     break;
                 }
             }
         } else {
+            logger.debug("File type  {} Is Valid Type {} ", docType, isValid);
             isValid = true;
         }
+        logger.debug("File type {} Is Valid Type {} ", docType, isValid);
         return isValid;
     }
 
@@ -174,15 +195,17 @@ public class MultipleResourceAction extends ResourceAction {
                 if (fileDescription.length() > 0) {
                     List<BaseResourceDataBean> baseResourceDataBeanList;
                     BaseResourceDataBean resourceFile = null;
-
+                 
                     File file = getFile(index);
                     if (null != file) {
                         resourceFile = new BaseResourceDataBean(file);
                         resourceFile.setFileName(getFileUploadFileName().get(index));
                         resourceFile.setMimeType(getFileUploadContentType().get(index));
+                        logger.debug("Save file {} with description {}", getFileUploadFileName().get(index),fileDescription);
 
                     } else {
                         resourceFile = new BaseResourceDataBean();
+                        logger.debug("Save file with description {}", fileDescription);
                     }
                     resourceFile.setDescr(fileDescription);
                     resourceFile.setMainGroup(getMainGroup());
@@ -192,13 +215,18 @@ public class MultipleResourceAction extends ResourceAction {
                     baseResourceDataBeanList.add(resourceFile);
                     try {
                         if (ApsAdminSystemConstants.ADD == this.getStrutsAction()) {
+                            logger.debug("Save on action ADD");
                             this.getResourceManager().addResources(baseResourceDataBeanList);
                             this.addActionMessage(this.getText("message.resource.filename.uploaded",
                                     new String[]{fileUploadFileName.get(index)}));
                             savedId.add(index);
+                            logger.debug("Resource saved successfully!");
                         } else if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
+                            logger.debug("Save on action EDIT");
+                            logger.debug("Updating file with description {}", fileDescription);
                             resourceFile.setResourceId(super.getResourceId());
                             this.getResourceManager().updateResource(resourceFile);
+                            logger.debug("Resource saved successfully!");
                         }
 
                     } catch (ApsSystemException ex) {
@@ -250,7 +278,6 @@ public class MultipleResourceAction extends ResourceAction {
                 i++;
             }
         }
-
     }
 
     public File getFile(int index) {
@@ -328,13 +355,5 @@ public class MultipleResourceAction extends ResourceAction {
         this.fileUploadFileName = fileUploadFileName;
     }
 
-    private int fieldCount = 0;
-    private List<String> fileDescriptions;
-    private List<File> fileUpload = new ArrayList<File>();
-    private List<String> fileUploadContentType = new ArrayList<String>();
-    private List<String> fileUploadFileName = new ArrayList<String>();
-    public final static String DESCR_FIELD = "descr_";
-    public final static String FILE_UPLOAD_FIELD = "fileUpload_";
-    private List savedId = new ArrayList();
 
 }
