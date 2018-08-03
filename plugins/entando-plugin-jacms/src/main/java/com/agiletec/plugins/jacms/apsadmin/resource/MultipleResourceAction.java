@@ -37,6 +37,8 @@ public class MultipleResourceAction extends ResourceAction {
     public final static String FILE_UPLOAD_FIELD = "fileUpload_";
     private static final Logger logger = LoggerFactory.getLogger(MultipleResourceAction.class);
     private int fieldCount = 0;
+    
+    //TODO fileDescriptions should be a Map so that all of the loops in this code can be turned into lookups based on file id or file name.
     private List<String> fileDescriptions;
     private List<File> fileUpload = new ArrayList<File>();
     private List<String> fileUploadContentType = new ArrayList<String>();
@@ -47,7 +49,6 @@ public class MultipleResourceAction extends ResourceAction {
     public void validate() {
         savedId.clear();
         if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
-          //  fetchFileDescriptions();
             if (null == getFileDescriptions()) {
                 logger.debug("Description empty for the field {} ", DESCR_FIELD + 0);
                 this.addFieldError(DESCR_FIELD + 0, getText("error.resource.file.descrEmpty"));
@@ -63,7 +64,6 @@ public class MultipleResourceAction extends ResourceAction {
         } else {
 
             try {
-//                fetchFileDescriptions();
                 for (int i = 0; i < getFileDescriptions().size(); i++) {
                     if (null == getFileUploadInputStream(i)) {
                         logger.debug("File void for the field {} ", FILE_UPLOAD_FIELD + i);
@@ -186,11 +186,8 @@ public class MultipleResourceAction extends ResourceAction {
     public String save() {
         int index = 0;
         savedId.clear();
-
         boolean hasError = false;
         try {
-
-            //fetchFileDescriptions();
             for (String fileDescription : getFileDescriptions()) {
                 if (fileDescription.length() > 0) {
                     List<BaseResourceDataBean> baseResourceDataBeanList;
@@ -266,7 +263,7 @@ public class MultipleResourceAction extends ResourceAction {
         }
         return "";
     }
-
+    
     protected List<String> getFileDescriptions() {
 
         if (null == fileDescriptions) {
@@ -305,7 +302,6 @@ public class MultipleResourceAction extends ResourceAction {
         if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
             return 0;
         }
-
         fieldCount = 0;
         Map<String, String[]> parameterMap = this.getRequest().getParameterMap();
         for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
@@ -313,20 +309,14 @@ public class MultipleResourceAction extends ResourceAction {
                 fieldCount++;
             }
         }
-
         fieldCount = fieldCount - savedId.size();
-
         return fieldCount - 1;
     }
 
     public void setFieldCount(int fieldCount) {
         this.fieldCount = fieldCount;
     }
-/*
-    public List<String> getFileDescriptions() {
-        return fileDescriptions;
-    }
-*/
+
     public void setFileDescriptions(List<String> fileDescriptions) {
         this.fileDescriptions = fileDescriptions;
     }
@@ -361,6 +351,5 @@ public class MultipleResourceAction extends ResourceAction {
     public void setFileUploadFileName(List<String> fileUploadFileName) {
         this.fileUploadFileName = fileUploadFileName;
     }
-
 
 }
