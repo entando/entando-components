@@ -27,56 +27,55 @@ import com.agiletec.aps.util.ApsProperties;
  * @author W.Ambu
  */
 public class TestContentViewerHelper extends BaseTestCase {
-	
-	protected void setUp() throws Exception {
+
+    protected void setUp() throws Exception {
         super.setUp();
         this.init();
     }
-	
+
     public void testGetRenderedContent() throws Throwable {
         try {
             String contentId = "ART1";
             String modelId = "3";
             String renderedContent = _helper.getRenderedContent(contentId, modelId, _requestContext);
-            
-            String expected = "------ RENDERING CONTENUTO: id = ART1; ---------\n" +
-            		"ATTRIBUTI:\n" +
-            		"  - AUTORI (Monolist-Monotext):\n" +
-            		"         testo=Pippo;\n" +
-            		"         testo=Paperino;\n" +
-            		"         testo=Pluto;\n" +
-            		"  - TITOLO (Text): testo=Il titolo;\n" +
-            		"  - VEDI ANCHE (Link): testo=Spiderman, dest=http://www.spiderman.org;\n" +
-            		"  - FOTO (Image): testo=Image description, src(1)=/Entando/resources/cms/images/lvback_d1.jpg;\n" +
-            		"  - DATA (Date): data_media = 10-mar-2004;\n" +
-            		"------ END ------";
+            String expected = "------ RENDERING CONTENUTO: id = ART1; ---------\n"
+                    + "ATTRIBUTI:\n"
+                    + "  - AUTORI (Monolist-Monotext):\n"
+                    + "         testo=Pippo;\n"
+                    + "         testo=Paperino;\n"
+                    + "         testo=Pluto;\n"
+                    + "  - TITOLO (Text): testo=Il titolo;\n"
+                    + "  - VEDI ANCHE (Link): testo=Spiderman, dest=http://www.spiderman.org;\n"
+                    + "  - FOTO (Image): testo=Image description, src(1)=/Entando/resources/cms/images/lvback_d1.jpg;\n"
+                    + "  - DATA (Date): data_media = 10-mar-2004;\n"
+                    + "------ END ------";
             assertEquals(replaceNewLine(expected.trim()), replaceNewLine(renderedContent.trim()));
         } catch (Throwable t) {
             throw t;
         }
     }
-	
+
     public void testGetRenderedContentWithParams() throws Throwable {
         try {
             String contentId = "ART1";
             String modelId = "11";
             String renderedContent = _helper.getRenderedContent(contentId, modelId, _requestContext);
-            
-            String expected = "<h1 class=\"titolo\">Il titolo</h1>" + 
-            		"<a href=\"/Entando/it/homepage.page\">Details...</a>" + 
-            		"Benvenuto Name Surname (admin - Name.Surname)";
+
+            String expected = "<h1 class=\"titolo\">Il titolo</h1>"
+                    + "<a href=\"http://www.entando.com/Entando/it/homepage.page\">Details...</a>"
+                    + "Benvenuto Name Surname (admin - Name.Surname)";
             assertEquals(replaceNewLine(expected.trim()), replaceNewLine(renderedContent.trim()));
         } catch (Throwable t) {
             throw t;
         }
     }
-    
+
     private String replaceNewLine(String input) {
-    	input = input.replaceAll("\\n", "");
-    	input = input.replaceAll("\\r", "");
+        input = input.replaceAll("\\n", "");
+        input = input.replaceAll("\\r", "");
         return input;
     }
-    
+
     public void testGetRenderedContentNotApproved() throws Throwable {
         try {
             String contentId = "ART2";
@@ -88,7 +87,7 @@ public class TestContentViewerHelper extends BaseTestCase {
             throw t;
         }
     }
-    
+
     public void testGetRenderedContentNotPresent() throws Throwable {
         try {
             String contentId = "ART3";
@@ -100,30 +99,28 @@ public class TestContentViewerHelper extends BaseTestCase {
             throw t;
         }
     }
-    
+
     private void init() throws Exception {
         try {
-            _requestContext = this.getRequestContext();
+            this._requestContext = this.getRequestContext();
             Lang lang = new Lang();
             lang.setCode("it");
             lang.setDescr("italiano");
-            _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
-            
+            this._requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
             Widget widget = new Widget();
-            IWidgetTypeManager showletTypeMan = 
-            	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+            IWidgetTypeManager showletTypeMan
+                    = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
             WidgetType showletType = showletTypeMan.getWidgetType("content_viewer");
             widget.setType(showletType);
             widget.setConfig(new ApsProperties());
-            _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
-            
+            this._requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
             this._helper = (IContentViewerHelper) this.getApplicationContext().getBean("jacmsContentViewerHelper");
         } catch (Throwable t) {
             throw new Exception(t);
         }
     }
-    
+
     private RequestContext _requestContext;
     private IContentViewerHelper _helper;
-    
+
 }

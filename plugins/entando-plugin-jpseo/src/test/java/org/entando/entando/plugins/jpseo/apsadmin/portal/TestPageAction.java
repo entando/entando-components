@@ -32,9 +32,11 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.apsadmin.portal.PageAction;
 import com.opensymphony.xwork2.Action;
+import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 
 public class TestPageAction extends ApsAdminPluginBaseTestCase {
@@ -45,11 +47,11 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 		this.init();
 	}
 
-	public void testEditPageForAdminUser() throws Throwable {
+	public void testEditPage_1() throws Throwable {
 		String selectedPageCode = "pagina_1";
 		String result = this.executeActionOnPage(selectedPageCode, "admin", "edit", null);
 		assertEquals(Action.SUCCESS, result);
-		IPage page = this._pageManager.getOnlinePage(selectedPageCode);
+		IPage page = this._pageManager.getDraftPage(selectedPageCode);
 		PageAction action = (PageAction) this.getAction();
 		assertEquals(action.getStrutsAction(), ApsAdminSystemConstants.EDIT);
 		assertEquals(page.getCode(), action.getPageCode());
@@ -59,6 +61,41 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 		assertEquals(page.isShowable(), action.isShowable());
 		assertEquals("Pagina 1", action.getTitles().getProperty("it"));
 		assertEquals("Page 1", action.getTitles().getProperty("en"));
+	}
+
+	public void testEditPage_2() throws Throwable {
+		String selectedPageCode = "seo_page_1";
+		String result = this.executeActionOnPage(selectedPageCode, "admin", "edit", null);
+		assertEquals(Action.SUCCESS, result);
+		IPage page = this._pageManager.getDraftPage(selectedPageCode);
+		PageAction action = (PageAction) this.getAction();
+		assertEquals(action.getStrutsAction(), ApsAdminSystemConstants.EDIT);
+		assertEquals(page.getCode(), action.getPageCode());
+		assertEquals(page.getParentCode(), action.getParentPageCode());
+		assertEquals(page.getModel().getCode(), action.getModel());
+		assertEquals(page.getGroup(), action.getGroup());
+		assertEquals(page.isShowable(), action.isShowable());
+		assertEquals("Seo Page 1", action.getTitles().getProperty("en"));
+		assertEquals("Pagina Seo 1", action.getTitles().getProperty("it"));
+        
+        Map<String, Map<String, PageMetatag>> metas = (Map<String, Map<String, PageMetatag>>) this.getRequest().getAttribute(PageActionAspect.PARAM_METATAGS);
+        assertNotNull(metas);
+        assertEquals(3, metas.size());
+        Map<String, PageMetatag> engMetas = metas.get("en");
+        assertNotNull(engMetas);
+        assertEquals(6, engMetas.size());
+        assertNull(engMetas.get("key2").getValue());
+        assertEquals("VALUE_5 EN", engMetas.get("key5").getValue());
+        
+        String descriptionIt = (String) this.getRequest().getAttribute(PageActionAspect.PARAM_DESCRIPTION_PREFIX + "it");
+        assertEquals("Descrizione IT SeoPage 1", descriptionIt);
+        Boolean useDefaultDescrIt = (Boolean) this.getRequest().getAttribute(PageActionAspect.PARAM_DESCRIPTION_USE_DEFAULT_PREFIX + "it");
+        assertFalse(useDefaultDescrIt);
+        
+        String keywordsEn = (String) this.getRequest().getAttribute(PageActionAspect.PARAM_KEYWORDS_PREFIX + "en");
+        assertEquals("keyEN1.1,keyEN1.2", keywordsEn);
+        Boolean useDefaultKeywordsEn = (Boolean) this.getRequest().getAttribute(PageActionAspect.PARAM_KEYWORDS_USE_DEFAULT_PREFIX + "en");
+        assertTrue(useDefaultKeywordsEn);
 	}
 
 	public void testJoinGroupPageForAdminUser() throws Throwable {
@@ -99,8 +136,8 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 	public void testValidateSavePage() throws Throwable {
 		String pageCode = "pagina_test";
 		String longPageCode = "very_long_page_code__very_long_page_code";
-		assertNull(this._pageManager.getOnlinePage(pageCode));
-		assertNull(this._pageManager.getOnlinePage(longPageCode));
+		assertNull(this._pageManager.getDraftPage(pageCode));
+		assertNull(this._pageManager.getDraftPage(longPageCode));
 		try {
 			IPage root = this._pageManager.getOnlineRoot();
 			Map<String, String> params = new HashMap<>();
@@ -148,19 +185,15 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 	}
 
 	public void testSavePage_1() throws Throwable {
-		String pageCode = "pagina_test";
+		String pageCode = "seo_test_1";
 		assertNull(this._pageManager.getDraftPage(pageCode));
 		try {
-			IPage root = this._pageManager.getDraftRoot();
-			Map<String, String> params = new HashMap<>();
-			params.put("strutsAction", String.valueOf(ApsAdminSystemConstants.ADD));
-			params.put("parentPageCode", root.getCode());
-			params.put("langit", "Pagina Test 1");
-			params.put("langen", "Test Page 1");
-			params.put("model", "home");
-			params.put("group", Group.FREE_GROUP_NAME);
-			params.put("pageCode", pageCode);
-			params.put(PageActionAspect.PARAM_FRIENDLY_CODE, "friendly_code_test");
+			Map<String, String> params = this.createParamForTest(pageCode);
+			params.put(PageActionAspect.PARAM_FRIENDLY_CODE, "friendly_code_test_1");
+            params.put("description_lang_en", "Seo Description Lang EN");
+			params.put("description_lang_it", "Descrizione SEO per LINGUA IT");
+            params.put("description_useDefaultLang_en", "true");
+			params.put("description_useDefaultLang_it", "false");
 			String result = this.executeSave(params, "admin");
 			assertEquals(Action.SUCCESS, result);
 			IPage addedPage = this._pageManager.getDraftPage(pageCode);
@@ -168,13 +201,85 @@ public class TestPageAction extends ApsAdminPluginBaseTestCase {
 			assertEquals("Pagina Test 1", addedPage.getTitles().getProperty("it"));
 			assertTrue(addedPage.getMetadata() instanceof SeoPageMetadata);
 			SeoPageMetadata addedSeoPage = (SeoPageMetadata) addedPage.getMetadata();
-			assertEquals("friendly_code_test", addedSeoPage.getFriendlyCode());
+			assertEquals("friendly_code_test_1", addedSeoPage.getFriendlyCode());
+            
+            ApsProperties titles = addedSeoPage.getDescriptions();
+            assertNotNull(titles);
+            assertEquals(2, titles.size());
+            assertEquals("Descrizione SEO per LINGUA IT", ((PageMetatag) titles.get("it")).getValue());
+            assertEquals("Seo Description Lang EN", ((PageMetatag) titles.get("en")).getValue());
+            assertFalse(((PageMetatag) titles.get("it")).isUseDefaultLangValue());
+            assertTrue(((PageMetatag) titles.get("en")).isUseDefaultLangValue());
 		} catch (Throwable t) {
 			throw t;
 		} finally {
 			this._pageManager.deletePage(pageCode);
 		}
 	}
+
+	public void testSavePage_2() throws Throwable {
+		String pageCode = "seo_test_2";
+		assertNull(this._pageManager.getDraftPage(pageCode));
+		try {
+			Map<String, String> params = this.createParamForTest(pageCode);
+			params.put(PageActionAspect.PARAM_FRIENDLY_CODE, "friendly_code_test_2");
+            
+            params.put("pageMetataKey_it_0", "metaKey_0");
+            params.put("pageMetataAttribute_it_0", "name");
+            params.put("pageMetataValue_it_0", "meta value IT 0");
+            
+            params.put("pageMetataKey_en_0", "metaKey_0");
+            
+            params.put("pageMetataKey_it_1", "metaKey_1");
+            params.put("pageMetataAttribute_it_1", "name");
+            params.put("pageMetataValue_it_1", "meta value IT 1");
+            
+            params.put("pageMetataKey_en_1", "metaKey_1");
+			params.put("pageMetataAttribute_en_1", "property");
+            params.put("pageMetataValue_en_1", "meta value EN 1");
+            
+			String result = this.executeSave(params, "admin");
+			assertEquals(Action.SUCCESS, result);
+			IPage addedPage = this._pageManager.getDraftPage(pageCode);
+			assertNotNull(addedPage);
+			assertEquals("Test Page 1", addedPage.getTitles().getProperty("en"));
+			assertTrue(addedPage.getMetadata() instanceof SeoPageMetadata);
+			SeoPageMetadata addedSeoPage = (SeoPageMetadata) addedPage.getMetadata();
+			assertEquals("friendly_code_test_2", addedSeoPage.getFriendlyCode());
+            Map<String, Map<String, PageMetatag>> extraParams = addedSeoPage.getComplexParameters();
+            assertEquals(2, extraParams.size());
+            assertEquals(2, extraParams.get("it").size());
+            assertEquals(2, extraParams.get("en").size());
+            PageMetatag metaIt0 = extraParams.get("it").get("metaKey_0");
+            assertNotNull(metaIt0);
+            assertEquals("meta value IT 0", metaIt0.getValue());
+            assertEquals("name", metaIt0.getKeyAttribute());
+            assertFalse(metaIt0.isUseDefaultLangValue());
+            
+            PageMetatag metaEn1 = extraParams.get("en").get("metaKey_1");
+            assertNotNull(metaEn1);
+            assertEquals("meta value EN 1", metaEn1.getValue());
+            assertEquals("property", metaEn1.getKeyAttribute());
+            assertFalse(metaEn1.isUseDefaultLangValue());
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._pageManager.deletePage(pageCode);
+		}
+	}
+    
+    private Map<String, String> createParamForTest(String pageCode) {
+        IPage root = this._pageManager.getDraftRoot();
+        Map<String, String> params = new HashMap<>();
+        params.put("strutsAction", String.valueOf(ApsAdminSystemConstants.ADD));
+        params.put("parentPageCode", root.getCode());
+        params.put("langit", "Pagina Test 1");
+        params.put("langen", "Test Page 1");
+        params.put("model", "home");
+        params.put("group", Group.FREE_GROUP_NAME);
+        params.put("pageCode", pageCode);
+        return params;
+    }
     
 	private String executeSave(Map<String, String> params, String username) throws Throwable {
 		this.setUserOnSession(username);

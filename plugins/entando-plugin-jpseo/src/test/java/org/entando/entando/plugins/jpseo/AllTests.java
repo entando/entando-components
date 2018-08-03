@@ -24,6 +24,7 @@ package org.entando.entando.plugins.jpseo;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.entando.entando.plugins.jpseo.aps.system.services.metatag.TestMetatagCatalogue;
 
 import org.entando.entando.plugins.jpseo.apsadmin.content.TestContentAction;
 import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageAction;
@@ -33,6 +34,8 @@ public class AllTests {
 	
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Seo plugin");
+        
+		suite.addTestSuite(TestMetatagCatalogue.class);
         
 		suite.addTestSuite(TestContentAction.class);
 		suite.addTestSuite(TestPageAction.class);
