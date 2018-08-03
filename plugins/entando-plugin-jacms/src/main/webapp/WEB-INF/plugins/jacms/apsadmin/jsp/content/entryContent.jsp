@@ -415,9 +415,9 @@
     </s:form>
 </div>
 <script>
-    $('option').mousedown(function (e) {
+    $('#extraGroups option').mousedown(function (e) {
         e.preventDefault();
         $(this).prop('selected', !$(this).prop('selected'));
         return false;
     });
-</script>   
+</script>  
