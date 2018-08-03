@@ -47,7 +47,7 @@ public class MultipleResourceAction extends ResourceAction {
     public void validate() {
         savedId.clear();
         if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
-            fetchFileDescriptions();
+          //  fetchFileDescriptions();
             if (null == getFileDescriptions()) {
                 logger.debug("Description empty for the field {} ", DESCR_FIELD + 0);
                 this.addFieldError(DESCR_FIELD + 0, getText("error.resource.file.descrEmpty"));
@@ -63,7 +63,7 @@ public class MultipleResourceAction extends ResourceAction {
         } else {
 
             try {
-                fetchFileDescriptions();
+//                fetchFileDescriptions();
                 for (int i = 0; i < getFileDescriptions().size(); i++) {
                     if (null == getFileUploadInputStream(i)) {
                         logger.debug("File void for the field {} ", FILE_UPLOAD_FIELD + i);
@@ -139,18 +139,19 @@ public class MultipleResourceAction extends ResourceAction {
     }
 
     public String joinCategory() {
-        fetchFileDescriptions();
+        getFileDescriptions();
         return super.joinCategory();
     }
 
     public String removeCategory() {
-        fetchFileDescriptions();
+        getFileDescriptions();
         return super.removeCategory();
     }
 
     protected void checkRightFileType(ResourceInterface resourcePrototype, String fileName) {
         boolean isRight = false;
         if (fileName.length() > 0) {
+            logger.debug("Check uploaded file type for {} ", fileName);
             String docType = fileName.substring(fileName.lastIndexOf('.') + 1).trim();
             String[] types = resourcePrototype.getAllowedFileTypes();
             isRight = isValidType(docType, types);
@@ -169,7 +170,6 @@ public class MultipleResourceAction extends ResourceAction {
         if (rightTypes.length > 0) {
             for (int i = 0; i < rightTypes.length; i++) {
                 if (docType.toLowerCase().equals(rightTypes[i])) {
-                    logger.debug("File type {} Is Valid Type {} ",docType , isValid);
                     isValid = true;
                     break;
                 }
@@ -190,18 +190,20 @@ public class MultipleResourceAction extends ResourceAction {
         boolean hasError = false;
         try {
 
-            fetchFileDescriptions();
+            //fetchFileDescriptions();
             for (String fileDescription : getFileDescriptions()) {
                 if (fileDescription.length() > 0) {
                     List<BaseResourceDataBean> baseResourceDataBeanList;
                     BaseResourceDataBean resourceFile = null;
                  
                     File file = getFile(index);
+                    String filename = "";
                     if (null != file) {
+                        filename= getFileUploadFileName().get(index);
                         resourceFile = new BaseResourceDataBean(file);
-                        resourceFile.setFileName(getFileUploadFileName().get(index));
+                        resourceFile.setFileName(filename);
                         resourceFile.setMimeType(getFileUploadContentType().get(index));
-                        logger.debug("Save file {} with description {}", getFileUploadFileName().get(index),fileDescription);
+                        logger.debug("Save file {} with description {}", filename,fileDescription);
 
                     } else {
                         resourceFile = new BaseResourceDataBean();
@@ -218,15 +220,20 @@ public class MultipleResourceAction extends ResourceAction {
                             logger.debug("Save on action ADD");
                             this.getResourceManager().addResources(baseResourceDataBeanList);
                             this.addActionMessage(this.getText("message.resource.filename.uploaded",
-                                    new String[]{fileUploadFileName.get(index)}));
+                                    new String[]{filename}));
                             savedId.add(index);
-                            logger.debug("Resource saved successfully!");
+                            logger.debug("Resource {} saved successfully!", filename);
                         } else if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
                             logger.debug("Save on action EDIT");
                             logger.debug("Updating file with description {}", fileDescription);
                             resourceFile.setResourceId(super.getResourceId());
                             this.getResourceManager().updateResource(resourceFile);
-                            logger.debug("Resource saved successfully!");
+                            if (filename.length()>0) {
+                                logger.debug("Resource {} saved successfully!", filename);
+                            }
+                            else{
+                                logger.debug("Resource saved successfully!");
+                            }
                         }
 
                     } catch (ApsSystemException ex) {
@@ -235,7 +242,6 @@ public class MultipleResourceAction extends ResourceAction {
                         this.addFieldError(String.valueOf(index), this.getText("error.resource.filename.uploadError",
                                 new String[]{fileUploadFileName.get(index)}));
                     }
-
                 }
 
                 index++;
@@ -261,7 +267,7 @@ public class MultipleResourceAction extends ResourceAction {
         return "";
     }
 
-    protected void fetchFileDescriptions() {
+    protected List<String> getFileDescriptions() {
 
         if (null == fileDescriptions) {
             fileDescriptions = new ArrayList<>();
@@ -278,6 +284,7 @@ public class MultipleResourceAction extends ResourceAction {
                 i++;
             }
         }
+        return fileDescriptions;
     }
 
     public File getFile(int index) {
@@ -315,11 +322,11 @@ public class MultipleResourceAction extends ResourceAction {
     public void setFieldCount(int fieldCount) {
         this.fieldCount = fieldCount;
     }
-
+/*
     public List<String> getFileDescriptions() {
         return fileDescriptions;
     }
-
+*/
     public void setFileDescriptions(List<String> fileDescriptions) {
         this.fileDescriptions = fileDescriptions;
     }
