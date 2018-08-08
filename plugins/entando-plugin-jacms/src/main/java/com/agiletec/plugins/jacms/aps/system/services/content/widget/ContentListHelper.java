@@ -15,7 +15,6 @@ package com.agiletec.plugins.jacms.aps.system.services.content.widget;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +26,6 @@ import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -35,7 +33,6 @@ import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
@@ -44,9 +41,13 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.FilterUtils;
+import java.util.Collections;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * Classe helper per la widget di erogazione contenuti in lista.
+ *
  * @author E.Santoboni
  */
 public class ContentListHelper extends BaseContentListHelper implements IContentListWidgetHelper {
@@ -77,7 +78,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
         Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
         return super.getFilter(contentType, bean, currentLang.getCode());
     }
-	
+
     /**
      * @deprecated From Entando 3.0 version 3.0.1. Use
      * getUserFilterOption(String, IEntityFilterBean, RequestContext) method
@@ -203,21 +204,21 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
             }
         }
         if (fullTextUserFilter != null && null != fullTextUserFilter.getFormFieldValues()) {
-			String word = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[0]);
-			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-			List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(currentLang.getCode(), word, this.getAllowedGroups(reqCtx));
-			if (null != fullTextResult) {
-				return ListUtils.intersection(fullTextResult, masterContentsId);
-			} else {
-				return new ArrayList<String>();
-			}
-		} else {
-			return masterContentsId;
-		}
+            String word = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[0]);
+            Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+            List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(currentLang.getCode(), word, this.getAllowedGroups(reqCtx));
+            if (null != fullTextResult) {
+                return ListUtils.intersection(fullTextResult, masterContentsId);
+            } else {
+                return new ArrayList<>();
+            }
+        } else {
+            return masterContentsId;
+        }
     }
 
     protected String[] getCategories(String[] categories, ApsProperties config, List<UserFilterOptionBean> userFilters) {
-        Set<String> codes = new HashSet<String>();
+        Set<String> codes = new HashSet<>();
         if (null != categories) {
             for (String category : categories) {
                 codes.add(category);
@@ -282,52 +283,28 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 
     public static String buildCacheKey(IContentListTagBean bean, RequestContext reqCtx) {
         UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-        Collection<String> userGroupCodes = getAllowedGroupCodes(currentUser);
-        return buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
-    }
-	
-	protected static String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
+        StringBuilder baseCacheKey = ContentListHelper.buildStringBuilderCacheKey(bean, currentUser);
         IPage page = (null != reqCtx) ? (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE) : null;
-        StringBuilder cacheKey = (null != page) ? new StringBuilder(page.getCode()) : new StringBuilder("NOTFOUND");
+        if (null == page) {
+            baseCacheKey.append("_PAGENOTFOUND");
+        } else {
+            baseCacheKey.append("_PAGE_" + page.getCode());
+        }
         Widget currentWidget = (null != reqCtx) ? (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET) : null;
-        if (null != currentWidget && null != currentWidget.getType()) {
-            cacheKey.append("_").append(currentWidget.getType().getCode());
-        }
-		if (null != reqCtx) {
-			Integer frame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
-			if (null != frame) {
-				cacheKey.append("_").append(frame.intValue());
-			}
-			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-			if (null != currentLang) {
-				cacheKey.append("_LANG").append(currentLang.getCode()).append("_");
-			}
-		}
-        List<String> groupCodes = new ArrayList<String>(userGroupCodes);
-        if (!groupCodes.contains(Group.FREE_GROUP_NAME)) {
-            groupCodes.add(Group.FREE_GROUP_NAME);
-        }
-        Collections.sort(groupCodes);
-        for (String code : groupCodes) {
-            cacheKey.append("_").append(code);
-        }
         if (null != currentWidget && null != currentWidget.getConfig()) {
             List<String> paramKeys = new ArrayList(currentWidget.getConfig().keySet());
             Collections.sort(paramKeys);
             for (int i = 0; i < paramKeys.size(); i++) {
                 if (i == 0) {
-                    cacheKey.append("_WIDGETPARAM");
+                    baseCacheKey.append("_WIDGETPARAM");
                 } else {
-                    cacheKey.append(",");
+                    baseCacheKey.append(",");
                 }
                 String paramkey = (String) paramKeys.get(i);
-                cacheKey.append(paramkey).append("=").append(currentWidget.getConfig().getProperty(paramkey));
+                baseCacheKey.append(paramkey).append("=").append(currentWidget.getConfig().getProperty(paramkey));
             }
         }
-        if (null != listName) {
-            cacheKey.append("_LISTNAME").append(listName);
-        }
-        return cacheKey.toString();
+        return DigestUtils.md5Hex(baseCacheKey.toString());
     }
 
     @Override
@@ -361,7 +338,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
     protected String getUserFilterDateFormat() {
         return userFilterDateFormat;
     }
-    
+
     public void setUserFilterDateFormat(String userFilterDateFormat) {
         this.userFilterDateFormat = userFilterDateFormat;
     }
@@ -369,7 +346,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
     protected IEntitySearchEngineManager getSearchEngineManager() {
         return searchEngineManager;
     }
-    
+
     public void setSearchEngineManager(IEntitySearchEngineManager searchEngineManager) {
         this.searchEngineManager = searchEngineManager;
     }
