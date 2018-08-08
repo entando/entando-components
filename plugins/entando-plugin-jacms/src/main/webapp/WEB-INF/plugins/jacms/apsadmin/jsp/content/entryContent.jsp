@@ -126,8 +126,11 @@
             <div class="col-sm-10">
                 <!-- Extra Groups Add -->
                 <div class="input-group">
-                    <wpsf:select name="extraGroupName" headerKey="" headerValue="%{getText('note.choose')}" id="extraGroups" list="groups" listKey="name"  listValue="descr" cssClass="combobox form-control" data-autosave="ignore" />
-                    <span class="input-group-btn">
+                    <wpsf:select 
+                        name="extraGroupNames" headerKey="" id="extraGroups"
+                        multiple="true" list="groups" listKey="name" size="4"
+                        listValue="descr" cssClass="combobox form-control" data-autosave="ignore" />
+                    <span class="input-group-btn" style="vertical-align: top">
                         <wpsf:submit  type="button" action="joinGroup" cssClass="btn btn-primary">
                             <span class="icon fa fa-plus"></span>
                         </wpsf:submit>
@@ -139,7 +142,7 @@
                     <div class="mt-20">
                         <s:iterator value="content.groups" var="groupName">
                             <wpsa:actionParam action="removeGroup" var="actionName" >
-                                <wpsa:actionSubParam name="extraGroupName" value="%{#groupName}" />
+                                <wpsa:actionSubParam name="extraGroupNames" value="%{#groupName}" />
                             </wpsa:actionParam>
 
                             <div class="label label-default label-tag label-sm">
@@ -410,4 +413,11 @@
             </div>
         </div>
     </s:form>
-</div><%-- main --%>
+</div>
+<script>
+    $('#extraGroups option').mousedown(function (e) {
+        e.preventDefault();
+        $(this).prop('selected', !$(this).prop('selected'));
+        return false;
+    });
+</script>  
