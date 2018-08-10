@@ -79,6 +79,7 @@ import org.entando.entando.plugins.jacms.aps.system.services.api.TestApiContentI
 import org.entando.entando.plugins.jacms.aps.system.services.cache.TestCacheInfoManager;
 import org.entando.entando.plugins.jacms.aps.system.services.content.command.common.TestContentBulkCommand;
 import org.entando.entando.plugins.jacms.aps.system.services.page.TestCmsPageManagerWrapper;
+import org.entando.entando.plugins.jacms.apsadmin.common.TestActivityStream;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestContentPreviewAction;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestSaveBooleanAttributes;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateBooleanAttributes;
@@ -198,6 +199,9 @@ public class AllTests {
 
         //Group
         suite.addTestSuite(TestTrashReferencedGroup.class);
+
+        //Activity Stream
+        suite.addTestSuite(TestActivityStream.class);
 
         // ----------------------------------------
         suite.addTestSuite(TestContentPreviewAction.class);
