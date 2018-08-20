@@ -150,6 +150,8 @@ public class AllTests {
         suite.addTestSuite(TestTrashReferencedCategory.class);
 
         // Content
+
+        suite.addTestSuite(TestSaveBooleanAttributes.class);
         suite.addTestSuite(TestHypertextAttributeAction.class);
         suite.addTestSuite(TestListAttributeAction.class);
         suite.addTestSuite(TestResourceAttributeAction.class);
@@ -162,7 +164,6 @@ public class AllTests {
         suite.addTestSuite(TestContentModelAction.class);
         suite.addTestSuite(TestContentModelFinderAction.class);
         suite.addTestSuite(TestContentAction.class);
-        suite.addTestSuite(TestSaveBooleanAttributes.class);
         suite.addTestSuite(TestValidateBooleanAttributes.class);
         suite.addTestSuite(TestValidateDateAttribute.class);
         suite.addTestSuite(TestValidateMonotextAttribute.class);
