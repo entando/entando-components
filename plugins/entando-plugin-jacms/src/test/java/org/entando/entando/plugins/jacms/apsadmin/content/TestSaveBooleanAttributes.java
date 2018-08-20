@@ -19,11 +19,15 @@ import com.agiletec.aps.system.common.entity.model.attribute.ThreeStateAttribute
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.opensymphony.xwork2.Action;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestSaveBooleanAttributes.class);
 
     public void testSaveBooleanAttribute() throws Throwable {
         try {
@@ -106,6 +110,8 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
             String contentOnSessionMarker = this.executeCreateNewContent();
             Content content = this.getContentOnEdit(contentOnSessionMarker);
             ThreeStateAttribute attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
+
+            logger.info("Three state Content ID: "+content.getId());
             assertNull(attribute.getBooleanValue());
             assertNull(attribute.getValue());
 
