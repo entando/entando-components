@@ -13,12 +13,14 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
+import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import java.util.Date;
 
 /**
  * Action gestore delle operazioni di creazione nuovo contenuto.
@@ -68,12 +70,22 @@ public class IntroNewContentAction extends AbstractContentAction {
 	
 	public String createNew() {
 		try {
+                        _logger.debug("Create new content");
 			Content prototype = this.getContentManager().createContentType(this.getContentTypeCode());
 			if (null == prototype) {
 				this.addFieldError("contentTypeCode", this.getText("error.content.type.invalid"));
+                                _logger.debug("Invalid content type");
 				return INPUT;
 			}
 			prototype.setFirstEditor(this.getCurrentUser().getUsername());
+                        prototype.getAttributeList().forEach(attr -> {
+                                
+                            if (attr instanceof DateAttribute) {
+                                _logger.debug("Assigning default value to date attribute {}", attr.getName());
+                                ((DateAttribute)attr).setDate(new Date());                                
+                            }
+                            
+                        });
 			this.fillSessionAttribute(prototype);
 		} catch (Throwable t) {
 			_logger.error("error in createNew", t);
