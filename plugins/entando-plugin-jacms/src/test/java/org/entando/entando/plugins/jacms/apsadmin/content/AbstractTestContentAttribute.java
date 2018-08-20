@@ -53,8 +53,9 @@ public abstract class AbstractTestContentAttribute extends AbstractBaseTestConte
 				TEST_CONTENT_DESCRIPTION, Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 		assertEquals(Action.SUCCESS, result);
 		String contentOnSessionMarker = this.extractSessionMarker(TEST_CONTENT_TYPE_CODE, ApsAdminSystemConstants.ADD);
-		logger.info("Session markerin create test content" + contentOnSessionMarker);
+		logger.info("Session markerin create test content " + contentOnSessionMarker);
 		Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
+		logger.info("In create hash code "+contentOnSession.hashCode());
 		assertNotNull(contentOnSession);
 		return contentOnSessionMarker;
 	}

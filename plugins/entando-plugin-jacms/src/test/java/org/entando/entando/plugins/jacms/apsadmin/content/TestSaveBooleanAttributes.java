@@ -108,15 +108,16 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
     public void testSaveThreeStateAttribute() throws Throwable {
         try {
             String contentOnSessionMarker = this.executeCreateNewContent();
-            Content content = this.getContentOnEdit(contentOnSessionMarker);
-            ThreeStateAttribute attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
-
-            logger.info("Three state Content ID: "+content.getId());
-            assertNull(attribute.getBooleanValue());
-            assertNull(attribute.getValue());
 
             this.initSaveContentAction(contentOnSessionMarker);
             contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+            Content content = this.getContentOnEdit(contentOnSessionMarker);
+            ThreeStateAttribute attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
+
+            logger.info("Three state Content : "+content.hashCode());
+            assertNull(attribute.getBooleanValue());
+            assertNull(attribute.getValue());
+
             content = this.getContentOnEdit(contentOnSessionMarker);
             attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
             assertNull(attribute.getBooleanValue());
