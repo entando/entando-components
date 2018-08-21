@@ -15,7 +15,6 @@ package org.entando.entando.plugins.jacms.apsadmin.content;
 
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.CheckBoxAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.ThreeStateAttribute;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.opensymphony.xwork2.Action;
@@ -107,45 +106,45 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
     }
 
     @Ignore
-    public void testSaveThreeStateAttribute() throws Throwable {
-        try {
-            String contentOnSessionMarker = this.executeCreateNewContent();
-            Content content = this.getContentOnEdit(contentOnSessionMarker);
-            ThreeStateAttribute attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
-
-            logger.info("Three state Content : "+content.hashCode());
-            assertNull(attribute.getBooleanValue());
-            assertNull(attribute.getValue());
-
-            this.initSaveContentAction(contentOnSessionMarker);
-            contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
-            content = this.getContentOnEdit(contentOnSessionMarker);
-            attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
-            assertNull(attribute.getBooleanValue());
-            assertNull(attribute.getValue());
-
-            this.initSaveContentAction(contentOnSessionMarker);
-            this.addParameter("ThreeState:ThreeState", "false");
-            contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
-            content = this.getContentOnEdit(contentOnSessionMarker);
-            attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
-            assertNotNull(attribute.getBooleanValue());
-            assertFalse(attribute.getValue());
-
-            this.initSaveContentAction(contentOnSessionMarker);
-            this.addParameter("ThreeState:ThreeState", "true");
-            contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
-            content = this.getContentOnEdit(contentOnSessionMarker);
-            attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
-            assertNotNull(attribute.getBooleanValue());
-            assertTrue(attribute.getValue());
-
-        } catch (Throwable t) {
-            throw t;
-        } finally {
-            this.deleteTestContent();
-        }
-    }
+//    public void testSaveThreeStateAttribute() throws Throwable {
+//        try {
+//            String contentOnSessionMarker = this.executeCreateNewContent();
+//            Content content = this.getContentOnEdit(contentOnSessionMarker);
+//            ThreeStateAttribute attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
+//
+//            logger.info("Three state Content : "+content.hashCode());
+//            assertNull(attribute.getBooleanValue());
+//            assertNull(attribute.getValue());
+//
+//            this.initSaveContentAction(contentOnSessionMarker);
+//            contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+//            content = this.getContentOnEdit(contentOnSessionMarker);
+//            attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
+//            assertNull(attribute.getBooleanValue());
+//            assertNull(attribute.getValue());
+//
+//            this.initSaveContentAction(contentOnSessionMarker);
+//            this.addParameter("ThreeState:ThreeState", "false");
+//            contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+//            content = this.getContentOnEdit(contentOnSessionMarker);
+//            attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
+//            assertNotNull(attribute.getBooleanValue());
+//            assertFalse(attribute.getValue());
+//
+//            this.initSaveContentAction(contentOnSessionMarker);
+//            this.addParameter("ThreeState:ThreeState", "true");
+//            contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+//            content = this.getContentOnEdit(contentOnSessionMarker);
+//            attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
+//            assertNotNull(attribute.getBooleanValue());
+//            assertTrue(attribute.getValue());
+//
+//        } catch (Throwable t) {
+//            throw t;
+//        } finally {
+//            this.deleteTestContent();
+//        }
+//    }
 
     private String executeSaveAndReloadContent(String contentOnSessionMarker) throws Throwable {
         Content contentOnSession = super.getContentOnEdit(contentOnSessionMarker);
