@@ -13,10 +13,6 @@
  */
 package org.entando.entando.plugins.jacms.apsadmin.content;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -27,11 +23,20 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
 import com.opensymphony.xwork2.Action;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author E.Santoboni
  */
 public abstract class AbstractTestContentAttribute extends AbstractBaseTestContentAction {
+
+
+	private static final Logger logger = LoggerFactory.getLogger(AbstractTestContentAttribute.class);
 
 	protected ILangManager getLangManager() {
 		return (ILangManager) super.getService(SystemConstants.LANGUAGE_MANAGER);
@@ -48,7 +53,9 @@ public abstract class AbstractTestContentAttribute extends AbstractBaseTestConte
 				TEST_CONTENT_DESCRIPTION, Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 		assertEquals(Action.SUCCESS, result);
 		String contentOnSessionMarker = this.extractSessionMarker(TEST_CONTENT_TYPE_CODE, ApsAdminSystemConstants.ADD);
+		logger.info("Session markerin create test content " + contentOnSessionMarker);
 		Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
+		logger.info("In create hash code "+contentOnSession.hashCode());
 		assertNotNull(contentOnSession);
 		return contentOnSessionMarker;
 	}

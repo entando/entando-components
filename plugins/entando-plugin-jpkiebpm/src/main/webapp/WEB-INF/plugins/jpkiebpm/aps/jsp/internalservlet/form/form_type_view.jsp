@@ -14,4 +14,4 @@
     </div>
 
 </s:if>
-<s:property value="renderedForm" />
+<s:property value="renderedForm" escapeHtml="false" />
