@@ -19,6 +19,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.ThreeStateAttribute
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.opensymphony.xwork2.Action;
+import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,6 +106,7 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
         }
     }
 
+    @Ignore
     public void testSaveThreeStateAttribute() throws Throwable {
         try {
             String contentOnSessionMarker = this.executeCreateNewContent();
@@ -112,9 +114,8 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
             ThreeStateAttribute attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
 
             logger.info("Three state Content : "+content.hashCode());
-            //TODO Re-enable these once build issues on Jenkins sorted out.
-//            assertNull(attribute.getBooleanValue());
-//            assertNull(attribute.getValue());
+            assertNull(attribute.getBooleanValue());
+            assertNull(attribute.getValue());
 
             this.initSaveContentAction(contentOnSessionMarker);
             contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
