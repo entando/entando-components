@@ -5,6 +5,7 @@ import com.agiletec.aps.system.services.group.IGroupManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 
 import java.util.HashMap;
@@ -26,7 +27,8 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
     protected void loadFieldIntoDatatableFromBpm() throws ApsSystemException {
         HashMap<String, String> opt = new HashMap<>();
         opt.put("user", DEMO_USER);
-        List<KieTask> task = formManager.getHumanTaskList(null, opt);
+        KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
+        List<KieTask> task = formManager.getHumanTaskList(config, null, opt);
         if (!task.isEmpty()) {
             super.loadDataIntoFieldDatatable(task);
         }

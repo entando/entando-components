@@ -104,8 +104,8 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
     }
 
     protected void setPropertiesIntoWidgetInfo(final ApsProperties properties, final String procId, final String contId, final String sourceId) {
-        properties.put(PROP_PROCESS_ID, procId);
-        properties.put(PROP_CONTAINER_ID, contId);
+        properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID, procId);
+        properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID, contId);
         if (sourceId != null) {
         		properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID, sourceId);
         }
@@ -188,7 +188,7 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
         List<WidgetTypeParameter> parameters = widget.getType().getTypeParameters();
         super.setPropertyWidget(parameters, widget);
         BpmWidgetInfo widgetInfo = this.storeWidgetInfo(widget);
-        widget.getConfig().setProperty(PROP_NAME_WIDGET_INFO_ID, String.valueOf(widgetInfo.getId()));
+        widget.getConfig().setProperty(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID, String.valueOf(widgetInfo.getId()));
         this.setWidget(widget);
 
     }
@@ -196,7 +196,7 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
     @Override
     protected void loadWidgetInfo() {
         try {
-            final String widgetInfoId = this.getWidget().getConfig().getProperty(PROP_NAME_WIDGET_INFO_ID);
+            final String widgetInfoId = this.getWidget().getConfig().getProperty(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID);
             if (StringUtils.isNotBlank(widgetInfoId)) {
                 BpmWidgetInfo widgetInfo = this.getBpmWidgetInfoManager().getBpmWidgetInfo(Integer.valueOf(widgetInfoId));
                 this.initSharedParameters(widgetInfo);

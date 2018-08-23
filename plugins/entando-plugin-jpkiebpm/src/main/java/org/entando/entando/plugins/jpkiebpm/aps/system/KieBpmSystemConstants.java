@@ -114,4 +114,6 @@ public interface KieBpmSystemConstants {
     public static final String WIDGET_INFO_PROP_KIE_SOURCE_ID = "kieSourceId";
     public static final String WIDGET_INFO_PROP_OVERRIDE_ID = "overrides";
 
+    public final static String KNOWLEDGE_WORKER = "knowledgeWorker";
+    public final static String LEGAL_WORKER = "legalWorker";
 }

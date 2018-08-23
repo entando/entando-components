@@ -23,6 +23,7 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services;
 
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.model.DatatableWidgetConfigDto;
 import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigRequest;
 
@@ -34,15 +35,15 @@ public interface IKieBpmService {
 
     String BEAN_NAME = "KieBpmService";
 
-    public DatatableWidgetConfigDto getDataTableWIdgetConfig(int configId);
+    public DatatableWidgetConfigDto getDataTableWidgetConfig(int configId);
 
-    public DatatableWidgetConfigDto updateDataTableWIdgetConfig(DatatableWidgetConfigRequest req);
+    public DatatableWidgetConfigDto updateDataTableWidgetConfig(DatatableWidgetConfigRequest req);
 
-    public DatatableWidgetConfigDto deleteDataTableWIdgetConfig(int configId);
+    public DatatableWidgetConfigDto deleteDataTableWidgetConfig(int configId);
 
-    public DatatableWidgetConfigDto chooseForm();
+    public DatatableWidgetConfigDto chooseForm(KieBpmConfig config);
 
-    public DatatableWidgetConfigDto chooseProcessForm();
+    public DatatableWidgetConfigDto chooseProcessForm(KieBpmConfig config);
 
-    public DatatableWidgetConfigDto updateDataTypeWIdgetConfig(DatatableWidgetConfigRequest req);
+    public DatatableWidgetConfigDto updateDataTypeWidgetConfig(KieBpmConfig config, DatatableWidgetConfigRequest req);
 }

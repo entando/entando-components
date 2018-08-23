@@ -5,6 +5,7 @@ import com.agiletec.aps.system.services.group.IGroupManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 
 import java.util.*;
@@ -19,7 +20,8 @@ public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
     protected void loadFieldIntoDatatableFromBpm() throws ApsSystemException {
-        List<KieProcess> processes = formManager.getProcessDefinitionsList();
+        KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
+        List<KieProcess> processes = formManager.getProcessDefinitionsList(config);
         if (!processes.isEmpty()) {
             super.loadDataIntoFieldDatatable(processes);
         }

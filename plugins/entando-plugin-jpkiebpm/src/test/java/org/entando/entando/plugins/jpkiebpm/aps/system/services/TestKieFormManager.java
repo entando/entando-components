@@ -23,22 +23,6 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.KIE_SERVER_BASE_URL;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.KIE_SERVER_PASSWORD;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.KIE_SERVER_USERNAME;
-
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.*;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.plugins.jpkiebpm.KieTestParameters;
 import org.entando.entando.plugins.jpkiebpm.aps.ApsPluginBaseTestCase;
@@ -47,19 +31,22 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KIEAuthentic
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieClient;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 
-/**
- *
- * @author Entando
- */
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.*;
+
 public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTestParameters {
 
+    protected List<KieProcess> processDefinitions;
+    protected List<KieContainer> containers;
+    protected List<KieProcessInstance> processes;
+
+    protected IKieFormManager formManager;
 
     @Override
     public void setUp() throws Exception {
@@ -75,7 +62,7 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
 
         assertEquals(expected, client.getBaseUrl());
         // get manager
-        _formManager = (IKieFormManager) this.getService(IKieFormManager.BEAN_NAME_ID);
+        formManager = (IKieFormManager) this.getService(IKieFormManager.BEAN_NAME_ID);
     }
 
     public void testConfigMarshalling() throws Throwable {
@@ -113,8 +100,8 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
     }
 
     // Test against the DB script!
-    public void testDefaultConfig() {
-        KieBpmConfig cfg = _formManager.getConfig();
+    public void testDefaultConfig() throws ApsSystemException{
+        KieBpmConfig cfg = formManager.getKieServerConfigurations().values().iterator().next();
 
         assertNotNull(cfg);
         assertEquals(Boolean.TRUE, cfg.getActive());
@@ -131,8 +118,9 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
             System.setProperty(KIE_SERVER_BASE_URL, "http://someserver.somehost.com:9090/somecontxt");
             System.setProperty(KIE_SERVER_PASSWORD,"P@ssword");
             System.setProperty(KIE_SERVER_USERNAME, "johnnie");
-            ((KieFormManager)_formManager).setupConfig();
-            KieBpmConfig cfg = _formManager.getConfig();
+            ((KieFormManager) formManager).setupConfig();
+
+            KieBpmConfig cfg = formManager.getKieServerConfigurations().values().iterator().next();
 
             assertNotNull(cfg);
             assertEquals(Boolean.TRUE, cfg.getActive());
@@ -147,21 +135,24 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
             System.getProperties().remove(KIE_SERVER_BASE_URL);
             System.getProperties().remove(KIE_SERVER_PASSWORD);
             System.getProperties().remove(KIE_SERVER_USERNAME);
-            _formManager.deleteConfig("environment-based-kie-config-#0001");
-            ((KieFormManager)_formManager).setupConfig();
-            KieBpmConfig cfg = _formManager.getConfig();
-            testDefaultConfig();
+            formManager.deleteConfig("environment-based-kie-config-#0001");
+            ((KieFormManager) formManager).setupConfig();
         }
     }
 
-    public void testUpdateConfig() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+    public void testAddConfig() throws Throwable {
+
+        KieBpmConfig cfg = getConfigForTests();
 
         try {
-            KieBpmConfig cfg = getConfigForTests();
 
-            _formManager.updateConfig(cfg);
-            KieBpmConfig config = _formManager.getConfig();
+            formManager.addConfig(cfg);
+            HashMap<String, KieBpmConfig> configs = formManager.getKieServerConfigurations();
+            Optional<KieBpmConfig> first = configs.values().stream().filter((found) -> found.getHostname().equals(cfg.getHostname())).findFirst();
+            assertTrue(first.isPresent());
+            KieBpmConfig config=first.get();
+
+
             assertNotNull(config);
             assertEquals(TEST_ENABLED, config.getActive());
             assertEquals(HOSTNAME, config.getHostname());
@@ -174,17 +165,17 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+            formManager.deleteConfig(cfg.getId());
         }
     }
     public void testUpdateConfigWithGetKieServerConfigurations() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+
+        KieBpmConfig cfg = getConfigForTests();
 
         try {
-            KieBpmConfig cfg = getConfigForTests();
 
-            _formManager.updateConfig(cfg);
-            HashMap<String, KieBpmConfig> configs = _formManager.getKieServerConfigurations();
+            formManager.addConfig(cfg);
+            HashMap<String, KieBpmConfig> configs = formManager.getKieServerConfigurations();
             Optional<KieBpmConfig> first = configs.values().stream().filter((found) -> found.getHostname().equals(cfg.getHostname())).findFirst();
             assertTrue(first.isPresent());
             KieBpmConfig config=first.get();
@@ -199,58 +190,62 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+            formManager.deleteConfig(cfg.getId());
         }
     }
 
     public void testListContainers() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+
+        KieBpmConfig config = getConfigForTests();
 
         try {
             // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+
+            formManager.addConfig(config);
             // invoke the manager
-            _containers = _formManager.getContainersList();
-            assertNotNull(_containers);
+            containers = formManager.getContainersList(config);
+            assertNotNull(containers);
             if (TEST_ENABLED) {
-                assertFalse(_containers.isEmpty());
+                assertFalse(containers.isEmpty());
             } else {
-                assertTrue(_containers.isEmpty());
+                assertTrue(containers.isEmpty());
             }
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+            formManager.deleteConfig(config.getId());
         }
     }
 
     public void testListProcessDefinitions() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
         }
         try {
             // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            formManager.addConfig(getConfigForTests());
             // invoke the manager
-            _processDefinitions = _formManager.getProcessDefinitionsList();
-            assertNotNull(_processDefinitions);
+            processDefinitions = formManager.getProcessDefinitionsList(config);
+            assertNotNull(processDefinitions);
             if (TEST_ENABLED) {
-                assertFalse(_processDefinitions.isEmpty());
+                assertFalse(processDefinitions.isEmpty());
 
             } else {
-                assertTrue(_processDefinitions.isEmpty());
+                assertTrue(processDefinitions.isEmpty());
             }
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+            formManager.deleteConfig(config.getId());
         }
     }
 
     public void testProcessInstancesList() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
@@ -260,24 +255,25 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
             final String processId = makeSureProcessDefinitionsListExist();
 
             // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            formManager.addConfig(config);
             // invoke the manager
-            _processes = _formManager.getProcessInstancesList(processId, 0, 5000);
-            assertNotNull(_processes);
+            processes = formManager.getProcessInstancesList(config, processId, 0, 5000);
+            assertNotNull(processes);
             if (TEST_ENABLED) {
-                assertFalse(_processes.isEmpty());
+                assertFalse(processes.isEmpty());
             } else {
-                assertTrue(_processes.isEmpty());
+                assertTrue(processes.isEmpty());
             }
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+            formManager.deleteConfig(config.getId());
         }
     }
 
     public void testProcessForm() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
@@ -288,37 +284,37 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
             final String processId = makeSureProcessDefinitionsListExist();
 
             // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            formManager.addConfig(config);
             // invoke the manager
-            KieProcessFormQueryResult form = _formManager
-                    .getProcessForm(containerId, processId);
+            KieProcessFormQueryResult form = formManager.getProcessForm(config, containerId, processId);
             assertNotNull(form);
 
             String mah = FormToBpmHelper.generateFormJson(form,
                     new HashMap<String, Object>(), containerId, processId);
 
         } finally {
-            _formManager.updateConfig(current);
+            formManager.deleteConfig(config.getId());
         }
     }
 
     public void testGetAllProcessInstancesList() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
         }
         try {
             // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            formManager.addConfig(config);
 
-            List<KieProcessInstance> list = _formManager.getAllProcessInstancesList(null);
+            List<KieProcessInstance> list = formManager.getAllProcessInstancesList(config, null);
             assertNotNull(list);
             assertFalse(list.isEmpty());
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+            formManager.deleteConfig(config.getId());
         }
     }
 
@@ -331,13 +327,13 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         if (!TEST_ENABLED) {
             return "";
         }
-        if (null == _processDefinitions
-                || _processDefinitions.isEmpty()) {
+        if (null == processDefinitions
+                || processDefinitions.isEmpty()) {
             makeSureContainerListExists();
             testListProcessDefinitions();
         }
-        assertFalse(_processDefinitions.isEmpty());
-        return _processDefinitions.get(0).getProcessId();
+        assertFalse(processDefinitions.isEmpty());
+        return processDefinitions.get(0).getProcessId();
     }
 
     /**
@@ -349,12 +345,12 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         if (!TEST_ENABLED) {
             return "";
         }
-        if (null == _containers
-                || _containers.isEmpty()) {
+        if (null == containers
+                || containers.isEmpty()) {
             testListContainers();
         }
-        assertFalse(_containers.isEmpty());
-        return _containers.get(0).getContainerId();
+        assertFalse(containers.isEmpty());
+        return containers.get(0).getContainerId();
     }
 
     /**
@@ -366,13 +362,13 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         if (!TEST_ENABLED) {
             return 0L;
         }
-        if (null == _processes
-                || _processes.isEmpty()) {
+        if (null == processes
+                || processes.isEmpty()) {
             makeSureProcessDefinitionsListExist();
             testProcessInstancesList();
         }
-        assertFalse(_processes.isEmpty());
-        return _processes.get(0).getInstanceId();
+        assertFalse(processes.isEmpty());
+        return processes.get(0).getInstanceId();
     }
 
     protected KieBpmConfig getConfigForTests() {
@@ -390,9 +386,4 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         return cfg;
     }
 
-    protected List<KieProcess> _processDefinitions;
-    protected List<KieContainer> _containers;
-    protected List<KieProcessInstance> _processes;
-
-    protected IKieFormManager _formManager;
 }

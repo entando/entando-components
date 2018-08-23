@@ -6,26 +6,15 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.plugins.jpkiebpm.aps.ApsPluginBaseTestCase;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.*;
+
 import java.util.Date;
 import java.util.List;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import org.entando.entando.plugins.jpkiebpm.aps.ApsPluginBaseTestCase;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortgageDemoTest.createDefaultOverrideForTest;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortgageDemoTest.createOverrideListForTests;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortgageDemoTest.createPlaceholderOverrideForTest;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DropDownOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.IBpmOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.OverrideList;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
 
-/**
- *
- * @author Entando
- */
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortgageDemoTest.*;
+
+
 public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
 
     @Override
