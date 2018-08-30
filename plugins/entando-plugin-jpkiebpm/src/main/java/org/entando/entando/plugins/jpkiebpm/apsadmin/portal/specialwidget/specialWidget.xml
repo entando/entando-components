@@ -129,6 +129,22 @@
             </interceptor-ref>
         </action>
 
+        <action name="chooseKnowledgeSourceForm*" class="jpkiebpmBpmFormWidgetAction" method="chooseKnowledgeSourceForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="changeKnowledgeSourceForm*" class="jpkiebpmBpmFormWidgetAction" method="changeKnowledgeSourceForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+
     </package>
 
 
@@ -165,6 +181,22 @@
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <interceptor-ref name="entandoValidationStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="chooseKnowledgeSourceForm*" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="chooseKnowledgeSourceForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="changeKnowledgeSourceForm*" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="changeKnowledgeSourceForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
 

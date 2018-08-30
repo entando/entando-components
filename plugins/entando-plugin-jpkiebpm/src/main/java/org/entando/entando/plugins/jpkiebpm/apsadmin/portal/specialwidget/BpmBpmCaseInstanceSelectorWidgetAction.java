@@ -49,11 +49,11 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
 
     @Autowired
     private IKieFormManager formManager;
-    private HashMap<String, KieBpmConfig> knowledgeSources;
+    private HashMap<String, KieBpmConfig> knowledgeSource;
     private List<KieContainer> process;
     private String processPath;
 
-    private String knowledgeSourceId;
+    private String knowledgeSourcePath;
 
     private String knowledgeSourceJson;
     private String kieContainerListJson;
@@ -75,8 +75,8 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
     private String updateKnowledgeSource() {
         try {
 
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourceId);
-            this.setKnowledgeSources(this.formManager.getKieServerConfigurations());
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
+            this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
             this.setProcess(this.formManager.getContainersList(config));
 
             this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
@@ -105,9 +105,9 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
             frontEndCaseDatajs.put("container-id", this.getProcessPath());
             this.setFrontEndCaseData(frontEndCaseDatajs.toString());
 
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourceId);
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
 
-            this.setKnowledgeSources(this.formManager.getKieServerConfigurations());
+            this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
             this.setProcess(this.formManager.getContainersList(config));
 
             this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
@@ -133,7 +133,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
                 frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
                 channel = widget.getConfig().getProperty("channel");
 
-                this.setKnowledgeSources(this.formManager.getKieServerConfigurations());
+                this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
                 this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
 
                 if (StringUtils.isNotBlank(frontEndCaseDatain)) {
@@ -144,7 +144,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
                     this.setKnowledgeSourceId(frontEndCaseDatainjs.getString("knowledge-source-id"));
                     this.setProcessPath(frontEndCaseDatainjs.getString("container-id"));
 
-                    KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourceId);
+                    KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
                     this.setProcess(this.formManager.getContainersList(config));
                     this.setChannel(channel);
                 }
@@ -166,12 +166,12 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
         this.caseManager = caseManager;
     }
 
-    public HashMap<String, KieBpmConfig> getKnowledgeSources() {
-        return knowledgeSources;
+    public HashMap<String, KieBpmConfig> getKnowledgeSource() {
+        return knowledgeSource;
     }
 
-    public void setKnowledgeSources(HashMap<String, KieBpmConfig> knowledgeSources) {
-        this.knowledgeSources = knowledgeSources;
+    public void setKnowledgeSource(HashMap<String, KieBpmConfig> knowledgeSource) {
+        this.knowledgeSource = knowledgeSource;
     }
 
     public List<KieContainer> getProcess() {
@@ -215,10 +215,10 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
     }
 
     public String getKnowledgeSourceId() {
-        return knowledgeSourceId;
+        return knowledgeSourcePath;
     }
 
     public void setKnowledgeSourceId(String knowledgeSourceId) {
-        this.knowledgeSourceId = knowledgeSourceId;
+        this.knowledgeSourcePath = knowledgeSourceId;
     }
 }

@@ -28,10 +28,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOver
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,13 +36,16 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.logging.Level;
 
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKieContainerToListToJson;
+
 public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
     private static final Logger _logger = LoggerFactory.getLogger(BpmFormWidgetAction.class);
     private String processId;
     private String containerId;
     private String processPath;
-    private String knowledgeSourceId;
+    private String knowledgeSourcePath;
+    private HashMap<String, KieBpmConfig> knowledgeSource;
 
     private IKieFormManager formManager;
     private IKieFormOverrideManager kieFormOverrideManager;
@@ -54,6 +54,10 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     private IDataObjectManager dataObjectManager;
     private IDataObjectModelManager dataObjectModelManager;
     private II18nManager i18nManager;
+
+    private String knowledgeSourceJson;
+    private String kieContainerListJson;
+    private List<KieProcess> process;
 
     @Override
     public String save() {
@@ -269,11 +273,11 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             String[] param = this.getProcessPath().split("@");
             this.setProcessId(param[0]);
             this.setContainerId(param[1]);
-            this.setKnowledgeSourceId(param[2]);
+            this.setKnowledgeSourcePath(param[2]);
         }
         String kieSourceId = widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
         if (StringUtils.isNotBlank(kieSourceId) && !"null".equalsIgnoreCase(kieSourceId)) {
-            this.setKnowledgeSourceId(kieSourceId);
+            this.setKnowledgeSourcePath(kieSourceId);
         }
         String listOverrrides = widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_OVERRIDE_ID);
         if (StringUtils.isNotBlank(listOverrrides) && !listOverrrides.equals("null")) {
@@ -388,11 +392,17 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         return fileds;
     }
 
-    public List<KieProcess> getProcess() throws ApsSystemException {
-        KieBpmConfig config = this.formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
-        List<KieProcess> list = this.getFormManager().getProcessDefinitionsList(config);
-        return list;
+    public HashMap<String, KieBpmConfig> getKnowledgeSource() {
+
+        try {
+            knowledgeSource = this.formManager.getKieServerConfigurations();
+        }catch(Exception e){
+            _logger.error("Failed to fetch knowledge sources ",e);
+        }
+
+        return knowledgeSource;
     }
+
 
     protected void addFileds(KieProcessFormQueryResult form, List<KieProcessFormField> fileds) {
         if (null != form && null != form.getFields()) {
@@ -426,7 +436,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 //            if (this.getKnowledgeSourceId() == null) {
 //                this.setKnowledgeSourceId(this.getFormManager().getConfig().getId());
 //            }
-            properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID, this.getKnowledgeSourceId());
+            properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID, this.getKnowledgeSourcePath());
 
             if (null != this.getOvrd() && !this.getOvrd().isEmpty()) {
                 String checkedOverrides = StringUtils.join(this.getOvrd(), ",");
@@ -453,6 +463,31 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         }
     }
 
+    public String chooseKnowledgeSourceForm() {
+        return  updateKnowledgeSource();
+    }
+
+    public String changeKnowledgeSourceForm() {
+        return  updateKnowledgeSource();
+    }
+
+    private String updateKnowledgeSource() {
+        try {
+
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
+            this.setProcess(this.formManager.getProcessDefinitionsList(config));
+
+            this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
+            this.setKieContainerListJson(convertKieContainerToListToJson(this.formManager.getContainersList(config)).toString());
+
+        } catch (ApsSystemException t) {
+            _logger.error("Error in chooseKnowledgeSourceForm()", t);
+            return FAILURE;
+        }
+        return SUCCESS;
+
+    }
+
     public String getProcessId() {
         return processId;
     }
@@ -477,12 +512,13 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         this.containerId = containerId;
     }
 
-    public String getKnowledgeSourceId() {
-        return this.knowledgeSourceId;
+
+    public String getKnowledgeSourcePath() {
+        return knowledgeSourcePath;
     }
 
-    public void setKnowledgeSourceId(String knowledgeSourceId) {
-        this.knowledgeSourceId = knowledgeSourceId;
+    public void setKnowledgeSourcePath(String knowledgeSourcePath) {
+        this.knowledgeSourcePath = knowledgeSourcePath;
     }
 
     public String getProcessPath() {
@@ -491,6 +527,22 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
     public void setProcessPath(String processPath) {
         this.processPath = processPath;
+    }
+
+    public List<KieProcess> getProcess() {
+        List<KieProcess> processes = new ArrayList<>();
+        try {
+            KieBpmConfig config = this.formManager.getKieServerConfigurations().get(this.getKnowledgeSourcePath());
+            processes = this.formManager.getProcessDefinitionsList(config);
+        }catch(Exception e){
+            _logger.error("Failed to fetch processes ",e);
+        }
+        return processes;
+    }
+
+
+    public void setProcess(List<KieProcess> process) {
+        this.process = process;
     }
 
     public IKieFormOverrideManager getKieFormOverrideManager() {
@@ -523,6 +575,22 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
     public void setDataObjectManager(IDataObjectManager dataObjectManager) {
         this.dataObjectManager = dataObjectManager;
+    }
+
+    public String getKnowledgeSourceJson() {
+        return knowledgeSourceJson;
+    }
+
+    public void setKnowledgeSourceJson(String knowledgeSourceJson) {
+        this.knowledgeSourceJson = knowledgeSourceJson;
+    }
+
+    public String getKieContainerListJson() {
+        return kieContainerListJson;
+    }
+
+    public void setKieContainerListJson(String kieContainerListJson) {
+        this.kieContainerListJson = kieContainerListJson;
     }
 
     public IDataObjectModelManager getDataObjectModelManager() {
@@ -594,5 +662,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             this.name = name;
         }
     }
+
+
+
 
 }

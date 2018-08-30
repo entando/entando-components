@@ -110,7 +110,7 @@ public class TestPamQueryFormResult extends TestCase {
     public void testPamSevenSimpleFormParse() throws Throwable{
     	
     	try {
-    		String kieProcessFormXML = FileUtils.readFileToString(new File("src/test/resources/examples/xml/jbpm7-simple-process-task-form.xml"));
+    		String kieProcessFormXML = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/jbpm7-scalar-simple-form.xml"));
     		
     		PamProcessQueryFormResult pamSeven = (PamProcessQueryFormResult) JAXBHelper
     				.unmarshall(kieProcessFormXML, PamProcessQueryFormResult.class, true, false);

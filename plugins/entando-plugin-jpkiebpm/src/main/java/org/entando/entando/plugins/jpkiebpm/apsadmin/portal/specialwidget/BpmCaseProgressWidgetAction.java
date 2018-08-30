@@ -54,8 +54,8 @@ public class BpmCaseProgressWidgetAction extends BpmCaseActionBase {
     private String casesDefinitions;
     private List<KieContainer> process;
     private String frontEndMilestonesData;
-    private HashMap<String, KieBpmConfig> knowledgeSources;
-    private String knowledgeSourceId;
+    private HashMap<String, KieBpmConfig> knowledgeSource;
+    private String knowledgeSourcePath;
 
     private String knowledgeSourceJson;
     private String kieContainerListJson;
@@ -80,8 +80,8 @@ public class BpmCaseProgressWidgetAction extends BpmCaseActionBase {
     private String updateKnowledgeSource() {
         try {
 
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourceId);
-            this.setKnowledgeSources(this.formManager.getKieServerConfigurations());
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
+            this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
             this.setProcess(this.formManager.getContainersList(config));
 
             this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
@@ -110,9 +110,9 @@ public class BpmCaseProgressWidgetAction extends BpmCaseActionBase {
             frontEndCaseDatajs.put("container-id", this.getProcessPath());
             this.setFrontEndCaseData(frontEndCaseDatajs.toString());
 
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourceId);
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
 
-            this.setKnowledgeSources(this.formManager.getKieServerConfigurations());
+            this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
             this.setProcess(this.formManager.getContainersList(config));
 
             this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
@@ -145,9 +145,9 @@ public class BpmCaseProgressWidgetAction extends BpmCaseActionBase {
                     this.setFrontEndMilestonesData(frontEndMilestonesDatain);
                     //Add if conf exist
 
-                    KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourceId);
+                    KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
 
-                    this.setKnowledgeSources(this.formManager.getKieServerConfigurations());
+                    this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
                     this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
                     this.setKnowledgeSourceId(getKieIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
                     this.setProcess(this.formManager.getContainersList(config));
@@ -159,7 +159,7 @@ public class BpmCaseProgressWidgetAction extends BpmCaseActionBase {
                     this.setChannel(channel);
 
                 } else {
-                    this.setKnowledgeSources(this.formManager.getKieServerConfigurations());
+                    this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
                     this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
                 }
             }
@@ -210,20 +210,20 @@ public class BpmCaseProgressWidgetAction extends BpmCaseActionBase {
         this.process = process;
     }
 
-    public HashMap<String, KieBpmConfig> getKnowledgeSources() {
-        return knowledgeSources;
+    public HashMap<String, KieBpmConfig> getKnowledgeSource() {
+        return knowledgeSource;
     }
 
-    public void setKnowledgeSources(HashMap<String, KieBpmConfig> knowledgeSources) {
-        this.knowledgeSources = knowledgeSources;
+    public void setKnowledgeSource(HashMap<String, KieBpmConfig> knowledgeSource) {
+        this.knowledgeSource = knowledgeSource;
     }
 
     public String getKnowledgeSourceId() {
-        return knowledgeSourceId;
+        return knowledgeSourcePath;
     }
 
     public void setKnowledgeSourceId(String knowledgeSourceId) {
-        this.knowledgeSourceId = knowledgeSourceId;
+        this.knowledgeSourcePath = knowledgeSourceId;
     }
 
     public String getKieContainerListJson() {
