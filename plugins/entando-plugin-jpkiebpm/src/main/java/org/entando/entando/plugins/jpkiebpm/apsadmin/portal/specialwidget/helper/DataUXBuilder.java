@@ -33,12 +33,15 @@ public class DataUXBuilder {
 
         this.valueMapping.put("InputText", "$data.%s.text");
         this.valueMapping.put("InputTextInteger", "$data.%s.number");
-        this.valueMapping.put("IntegerBox", "$data.%s.number");
-        this.valueMapping.put("CheckBox", "$data.%s.checkbox");
-
-        this.valueMapping.put("DatePicker", "$data.%s.date");
-        this.valueMapping.put("TextBox", "$data.%s.text");
-        this.valueMapping.put("DecimalBox", "$data.%s.number");
+        
+//        this.valueMapping.put("InputText", "$data.%s.text");
+//        this.valueMapping.put("InputTextInteger", "$data.%s.number");
+//        this.valueMapping.put("IntegerBox", "$data.%s.number");
+//        this.valueMapping.put("CheckBox", "$data.%s.checkbox");
+//
+//        this.valueMapping.put("DatePicker", "$data.%s.date");
+//        this.valueMapping.put("TextBox", "$data.%s.text");
+//        this.valueMapping.put("DecimalBox", "$data.%s.number");
     }
 
     public String createDataUx(KieProcessFormQueryResult kpfr, String containerId, String processId, String title) throws Exception {
