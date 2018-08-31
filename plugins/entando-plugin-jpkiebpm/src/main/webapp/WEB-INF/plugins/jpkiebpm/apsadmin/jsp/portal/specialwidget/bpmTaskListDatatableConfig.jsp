@@ -6,6 +6,19 @@
 
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery-ui.js"></script>
 
+<style>
+    .btn-success , .btn-warning, .btn-default {
+        min-width: 170px;
+    }
+
+    #check label {
+        margin-left: 12px;
+    }
+
+    legend.overrides {
+        margin-left: -20px;
+    }
+</style>
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li>
@@ -28,129 +41,162 @@
 <br>
 
 <div class="mb-20">
+    <s:set var="breadcrumbs_pivotPageCode" value="pageCode"/>
 
-<s:set var="breadcrumbs_pivotPageCode" value="pageCode"/>
+    <s:action namespace="/do/Page" name="printPageDetails" executeResult="true" ignoreContextParams="true">
+        <s:param name="selectedNode" value="pageCode"></s:param>
+    </s:action>
 
-<s:action namespace="/do/Page" name="printPageDetails" executeResult="true" ignoreContextParams="true">
-    <s:param name="selectedNode" value="pageCode"></s:param>
-</s:action>
+    <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmTaskListDatatableViewer" class="form-horizontal">
+        <p class="noscreen">
+            <wpsf:hidden name="pageCode"/>
+            <wpsf:hidden name="frame"/>
+            <wpsf:hidden name="widgetTypeCode"/>
+        </p>
 
-<s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmTaskListDatatableViewer" class="form-horizontal">
-    <p class="noscreen">
-        <wpsf:hidden name="pageCode"/>
-        <wpsf:hidden name="frame"/>
-        <wpsf:hidden name="widgetTypeCode"/>
-    </p>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp"/>
+            </div>
+            <div class="panel-body">
+                <p class="h5 margin-small-vertical">
+                    <span class="icon fa fa-puzzle-piece" title="Widget"></span>
+                    <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}"/>
+                </p>
+                <s:if test="hasFieldErrors()">
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                            <span class="pficon pficon-close"></span>
+                        </button>
+                        <span class="pficon pficon-error-circle-o"></span>
+                        <strong><s:text name="message.title.FieldErrors"/></strong>
+                        <ul>
+                            <s:iterator value="fieldErrors">
+                                <s:iterator value="value">
+                                    <li><s:property/></li>
+                                    </s:iterator>
+                                </s:iterator>
+                        </ul>
+                    </div>
+                </s:if>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp"/>
-        </div>
-        <div class="panel-body">
-            <p class="h5 margin-small-vertical">
-                <span class="icon fa fa-puzzle-piece" title="Widget"></span>
-                <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}"/>
-            </p>
-            <s:if test="hasFieldErrors()">
-                <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                        <span class="pficon pficon-close"></span>
-                    </button>
-                    <span class="pficon pficon-error-circle-o"></span>
-                    <strong><s:text name="message.title.FieldErrors"/></strong>
-                    <ul>
-                        <s:iterator value="fieldErrors">
-                            <s:iterator value="value">
-                                <li><s:property/></li>
-                            </s:iterator>
-                        </s:iterator>
-                    </ul>
-                </div>
-            </s:if>
+                <s:set var="isknowledgeSourcePathSetted" value="%{knowledgeSourcePath != null && knowledgeSourcePath != ''}"/>
+                <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
+                <s:set var="isGroupsSetted" value="%{groups != null && groups != ''}"/>
 
-            <s:set var="isknowledgeSourcePathSetted" value="%{knowledgeSourcePath != null && knowledgeSourcePath != ''}"/>
-            <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
-            <s:set var="isGroupsSetted" value="%{groups != null && groups != ''}"/>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-xs-8">
+                            <div class="form-group">
+                                <label for="Knowledge Source"><s:text name="Knowledge Source"/></label>
+                                <div class="input-group">
+                                    <s:select 
+                                        list="knowledgeSource"
+                                        id="knowledgeSourcePath" 
+                                        name="knowledgeSourcePath"
+                                        listKey="value.id"
+                                        listValue="value.name" 
+                                        class="form-control">
+                                    </s:select>
 
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-8 col-md-8 col-xs-8">
-
-                        <div class="form-group">
-                            <label for="Knowledge Source"><s:text name="Knowledge Source"/></label>
-                            <div class="input-group">
-
-                                <s:select list="knowledgeSource" id="knowledgeSourcePath" name="knowledgeSourcePath"
-                                          listKey="value.id"
-                                          listValue="value.name" class="form-control">
-                                </s:select>
                                     <span class="input-group-btn">
                                         <s:if test="#isknowledgeSourcePathSetted">
-                                            <wpsf:submit action="changeKnowledgeSourceForm" value="Change Knowledge Source"
-                                                         cssClass="btn btn-warning"/>
+                                            <wpsf:submit 
+                                                action="changeKnowledgeSourceForm"
+                                                value="Change Knowledge Source"
+                                                cssClass="btn btn-warning"/>
                                         </s:if>
                                         <s:else>
-
-                                            <wpsf:submit action="chooseKnowledgeSourceForm" value="Choose Knowledge Source"
-                                                         cssClass="btn btn-success"/>
+                                            <wpsf:submit
+                                                action="chooseKnowledgeSourceForm"
+                                                value="Choose Knowledge Source"
+                                                cssClass="btn btn-success"
+                                                />
                                         </s:else>
                                     </span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                </div>
+                    <s:if test="#isknowledgeSourcePathSetted">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-xs-8">
+                                <div class="form-group">
+                                    <label for="processPath"><s:text name="Process"/></label>
+                                    <div class="input-group">
+                                        <s:if test="!#isProcessPathSetted">
+                                            <s:select 
+                                                list="process"
+                                                id="processPath" 
+                                                name="processPath"
+                                                listKey="%{processId + '@' + containerId + '@' + kieSourceId}"
+                                                listValue="%{processName + ' @ ' + containerId}"
+                                                class="form-control"
+                                                >
+                                            </s:select>
+                                        </s:if>
+                                        <s:else>
+                                            <s:select
+                                                disabled="true"
+                                                list="process"
+                                                id="processPath" 
+                                                name="processPath"
+                                                listKey="%{processId + '@' + containerId + '@' + kieSourceId}"
+                                                listValue="%{processName + ' @ ' + containerId}"
+                                                class="form-control"
+                                                >
+                                            </s:select>
+                                            <s:hidden name="processPath" />
+                                        </s:else>
 
-                <s:if test="#isknowledgeSourcePathSetted">
-                    <div class="row">
-                        <div class="col-lg-8 col-md-8 col-xs-8">
-
-                            <div class="form-group">
-                                <label class="control-label col-xs-2" for="processPath">
-                                    <s:text name="Process"/>
-                                </label>
-                                <div class="col-xs-5">
-                                    <s:if test="!#isProcessPathSetted">
-                                        <s:select list="process" id="processPath" name="processPath"  listKey="%{processId + '@' + containerId + '@' + kieSourceId}" listValue="%{processName + ' @ ' + containerId}">
-                                        </s:select>
-                                    </s:if>
-                                    <s:else>
-                                        <s:select disabled="true" list="process" id="processPath" name="processPath"  listKey="%{processId + '@' + containerId + '@' + kieSourceId}" listValue="%{processName + ' @ ' + containerId}">
-                                        </s:select>
-                                        <s:hidden name="processPath" />
-
-                                    </s:else>
+                                        <span class="input-group-btn">
+                                            <s:if test="#isProcessPathSetted">
+                                                <wpsf:submit 
+                                                    action="changeForm"
+                                                    value="%{getText('label.changeForm')}" 
+                                                    cssClass="btn btn-warning"
+                                                    />
+                                            </s:if>
+                                            <s:else>
+                                                <wpsf:submit
+                                                    action="chooseForm" 
+                                                    value="%{getText('label.chooseForm')}" 
+                                                    cssClass="btn btn-success" 
+                                                    />
+                                            </s:else>
+                                        </span>
+                                    </div>
                                 </div>
+
+                                <!--override section--> 
+
                                 <s:if test="#isProcessPathSetted">
-                                    <div class="col-xs-2">
-                                        <wpsf:submit action="changeForm" value="%{getText('label.changeForm')}" cssClass="btn btn-warning pull-right" />
-                                    </div>
-                                </s:if>
-                                <s:else>
-                                    <div class="col-xs-2">
-                                        <wpsf:submit action="chooseForm" value="%{getText('label.chooseForm')}" cssClass="btn btn-success pull-right" />
-                                    </div>
-                                </s:else>
-                            </div>
+                                    <legend class="overrides">
+                                        <s:text name="label.override.found" /> test
+                                    </legend>
+                                    <s:set var="ovMap" value="formOverridesMap" />
+                                    <s:iterator var="item" value="#ovMap">
+                                        <s:set var="checked" value="ovrd.contains(#item.value.id)"/>
+                                        <div class="form-group">
 
-                            <s:if test="#isProcessPathSetted">
-                                <legend>
-                                    <s:text name="label.override.found" />
-                                </legend>
-                                <s:set var="ovMap" value="formOverridesMap" />
-                                <s:iterator var="item" value="#ovMap">
-                                    <s:set var="checked" value="ovrd.contains(#item.value.id)"/>
-                                    <div class="form-group">
-                                        <label class="control-label col-xs-2" for="processPath">
-                                            <s:property value="#item.key"/>
+                                            <label class="control-label col-xs-2" for="processPath">
+                                                <s:property value="#item.key"/>
+                                            </label>
+                                            <div class="col-xs-10">
+                                                <input 
+                                                    type="checkbox" class="bootstrap-switch"
+                                                    name="ovrd" 
+                                                    id="bootstrap-switch-state" 
+                                                    value="<s:property value="#item.value.id" />"
+                                                    <s:if test="#checked"> checked="checked" </s:if> 
+                                                        />
 
-                                        </label>
-                                        <div class="col-xs-10">
-                                            <input <s:if test="#checked">checked="checked"</s:if> type="checkbox" id="bootstrap-switch-state" class="bootstrap-switch" name="ovrd" value="<s:property value="#item.value.id" />">
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="well">
+                                        <div class="well">
                                         <s:iterator value="#item.value.overrides.list" var="override" >
                                             <s:if test="#override.type.equals('defaultValueOverride')">
                                                 <b><s:text name="defaultValueOverride" /></b> &nbsp; &nbsp;
@@ -182,14 +228,29 @@
                             <s:text name="Bpm Groups"/>
                         </label>
                         <div class="col-xs-5">
-                            <s:if test="!#isGroupsSetted">
-                                <s:checkboxlist label="Bpm Groups" list="listBpmGroups" value="selectedGroups" name="groups"/>
-                            </s:if>
-                            <s:else>
-                                <s:checkboxlist label="Bpm Groups" list="listBpmGroups" value="selectedGroups" name="groups"/>
+                            <div id="check">
+                                <s:if test="!#isGroupsSetted">
+                                    <s:checkboxlist 
+                                        label="Bpm Groups"
+                                        list="listBpmGroups"
+                                        value="selectedGroups"
+                                        name="groups"
+                                        cssClass="bootstrap-switch" 
 
-                            </s:else>
-                            <s:hidden name="groups"/>
+                                        />
+                                </s:if>
+                                <s:else>
+                                    <s:checkboxlist
+                                        label="Bpm Groups" 
+                                        list="listBpmGroups"
+                                        value="selectedGroups"
+                                        name="groups"
+                                        cssClass="bootstrap-switch" 
+                                        />
+
+                                </s:else>
+                                <s:hidden name="groups"/>
+                            </div>
                         </div>
                     </div>
                     <hr/>
@@ -197,33 +258,33 @@
 
                         <table id="sort" class="grid table table-bordered table-hover">
                             <thead>
-                            <tr>
-                                <th class="text-center table-w-5"><s:text name="label.position"/></th>
-                                <th class="table-w-20"><s:text name="label.colunmsName"/></th>
-                                <th class="text-center table-w-5"><s:text name="label.visible"/></th>
-                                <th class="text-center table-w-20"><s:text name="label.override"/></th>
-                            </tr>
+                                <tr>
+                                    <th class="text-center table-w-5"><s:text name="label.position"/></th>
+                                    <th class="table-w-20"><s:text name="label.colunmsName"/></th>
+                                    <th class="text-center table-w-5"><s:text name="label.visible"/></th>
+                                    <th class="text-center table-w-20"><s:text name="label.override"/></th>
+                                </tr>
                             </thead>
                             <tbody>
 
-                            <s:iterator var="i" status="status" value="fieldsDatatable">
-                                <tr>
+                                <s:iterator var="i" status="status" value="fieldsDatatable">
+                                    <tr>
 
-                                    <td class="index text-center">${i.position}
-                                        <input type="hidden" name="position_${i.name}" value="${i.position}"/>
-                                    </td>
-                                    <td class="field text-center"><s:property value="name"/>
-                                        <input type="hidden" name="field_${name}" value="${i.field}"/>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" name="visible_${i.name}"
-                                               <c:if test="${i.visible}">checked</c:if> >
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="text" name="override_${name}" value="${i.override}"/>
-                                    </td>
-                                </tr>
-                            </s:iterator>
+                                        <td class="index text-center">${i.position}
+                                            <input type="hidden" name="position_${i.name}" value="${i.position}"/>
+                                        </td>
+                                        <td class="field text-center"><s:property value="name"/>
+                                            <input type="hidden" name="field_${name}" value="${i.field}"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="visible_${i.name}"
+                                                   <c:if test="${i.visible}">checked</c:if> >
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="text" name="override_${name}" value="${i.override}"/>
+                                        </td>
+                                    </tr>
+                                </s:iterator>
 
                             </tbody>
                         </table>
@@ -258,7 +319,6 @@
                                     self.append(inputHidden);
                                 });
                             };
-
                             $("#sort tbody").sortable({
                                 opacity: 0.5,
                                 cursor: "move",
@@ -286,3 +346,7 @@
     </div>
 </s:form>
 </div>
+<!--remove class after checkboxlist is run by application--> 
+<script>
+    $("ul").removeClass("bootstrap-switch");
+</script>
