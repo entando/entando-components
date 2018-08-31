@@ -33,7 +33,7 @@ public class DataUXBuilder {
 
         this.valueMapping.put("InputText", "$data.%s.text");
         this.valueMapping.put("InputTextInteger", "$data.%s.number");
-        
+
 //        this.valueMapping.put("InputText", "$data.%s.text");
 //        this.valueMapping.put("InputTextInteger", "$data.%s.number");
 //        this.valueMapping.put("IntegerBox", "$data.%s.number");
