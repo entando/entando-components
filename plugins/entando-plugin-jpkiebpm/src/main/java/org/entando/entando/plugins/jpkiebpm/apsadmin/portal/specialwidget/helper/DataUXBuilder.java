@@ -33,11 +33,12 @@ public class DataUXBuilder {
 
         this.valueMapping.put("InputText", "$data.%s.text");
         this.valueMapping.put("InputTextInteger", "$data.%s.number");
+        this.valueMapping.put("CheckBox", "$data.%s.checkbox");
 
 //        this.valueMapping.put("InputText", "$data.%s.text");
 //        this.valueMapping.put("InputTextInteger", "$data.%s.number");
 //        this.valueMapping.put("IntegerBox", "$data.%s.number");
-//        this.valueMapping.put("CheckBox", "$data.%s.checkbox");
+
 //
 //        this.valueMapping.put("DatePicker", "$data.%s.date");
 //        this.valueMapping.put("TextBox", "$data.%s.text");

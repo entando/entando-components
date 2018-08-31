@@ -178,7 +178,10 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
     protected void validateForm(Map<String, Object> params, KieProcessFormQueryResult kieForm) throws Throwable {
         for (Map.Entry<String, Object> ff : params.entrySet()) {
             String key = ff.getKey();
-            String value = ff.getValue().toString();
+            String value = null;
+            if(ff.getValue()!=null) {
+                value = ff.getValue().toString();
+            }
             Object obj = FormToBpmHelper.validateField(kieForm, key, value);
             if (null != obj) {
                 if (obj instanceof NullFormField) {

@@ -5,6 +5,7 @@ import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -28,7 +29,10 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOver
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,6 +209,17 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             number.setRequired(req);
             entityType.addAttribute(number);
         }
+
+        if (field.getType().equalsIgnoreCase("CheckBox")) {
+            BooleanAttribute bool = (BooleanAttribute) this.getAttributePrototype("Boolean");
+            bool.setName(field.getName());
+            bool.setDefaultLangCode(this.getCurrentLang().getCode());
+            String fieldRequired = KieApiUtil.getFieldProperty(field, "fieldRequired");
+            boolean req = (fieldRequired != null && fieldRequired.equalsIgnoreCase("true"));
+            bool.setRequired(req);
+            entityType.addAttribute(bool);
+        }
+
         try {
             this.processField(field, this.getCurrentLang().getCode());
         } catch (ApsSystemException ex) {

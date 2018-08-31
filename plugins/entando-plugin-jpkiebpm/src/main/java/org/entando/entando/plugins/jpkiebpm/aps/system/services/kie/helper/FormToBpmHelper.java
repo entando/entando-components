@@ -225,7 +225,9 @@ public class FormToBpmHelper {
                 result = Integer.valueOf(value);
             } else if (fieldClass.equals(BOOLEAN)) {
 
-                if (value.equalsIgnoreCase("true")
+                if(value == null){
+                    result = false;
+                }else if (value.equalsIgnoreCase("true")
                         || value.equalsIgnoreCase("false")) {
                     result = Boolean.valueOf(value);
                 } else if ("on".equalsIgnoreCase(value)) {

@@ -101,7 +101,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
     private String updateForm() {
         try {
             JSONObject frontEndCaseDatajs = new JSONObject();
-            frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourceId());
+            frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourcePath());
             frontEndCaseDatajs.put("container-id", this.getProcessPath());
             this.setFrontEndCaseData(frontEndCaseDatajs.toString());
 
@@ -141,7 +141,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
                     this.setFrontEndCaseData(frontEndCaseDatain);
                     JSONObject frontEndCaseDatainjs = new JSONObject(frontEndCaseDatain);
 
-                    this.setKnowledgeSourceId(frontEndCaseDatainjs.getString("knowledge-source-id"));
+                    this.setKnowledgeSourcePath(frontEndCaseDatainjs.getString("knowledge-source-id"));
                     this.setProcessPath(frontEndCaseDatainjs.getString("container-id"));
 
                     KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
@@ -214,11 +214,11 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
         this.formManager = formManager;
     }
 
-    public String getKnowledgeSourceId() {
+    public String getKnowledgeSourcePath() {
         return knowledgeSourcePath;
     }
 
-    public void setKnowledgeSourceId(String knowledgeSourceId) {
-        this.knowledgeSourcePath = knowledgeSourceId;
+    public void setKnowledgeSourcePath(String knowledgeSourcePath) {
+        this.knowledgeSourcePath = knowledgeSourcePath;
     }
 }
