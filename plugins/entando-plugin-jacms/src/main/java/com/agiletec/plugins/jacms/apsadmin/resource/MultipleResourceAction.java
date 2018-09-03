@@ -16,35 +16,44 @@ package com.agiletec.plugins.jacms.apsadmin.resource;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.BaseResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
-import static com.opensymphony.xwork2.Action.SUCCESS;
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Tag;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Metadata;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MultipleResourceAction extends ResourceAction {
-    
-    public final static String DESCR_FIELD = "descr_";
-    public final static String FILE_UPLOAD_FIELD = "fileUpload_";
+
     private static final Logger logger = LoggerFactory.getLogger(MultipleResourceAction.class);
+
     private int fieldCount = 0;
     
     //TODO fileDescriptions should be a Map so that all of the loops in this code can be turned into lookups based on file id or file name.
     private List<String> fileDescriptions;
-    private List<File> fileUpload = new ArrayList<File>();
-    private List<String> fileUploadContentType = new ArrayList<String>();
-    private List<String> fileUploadFileName = new ArrayList<String>();
+    private List<File> fileUpload = new ArrayList<>();
+    private List<String> fileUploadContentType = new ArrayList<>();
+    private List<String> fileUploadFileName = new ArrayList<>();
+    public final static String DESCR_FIELD = "descr_";
+    public final static String FILE_UPLOAD_FIELD = "fileUpload_";
     private List savedId = new ArrayList();
-    
+    private Map<String, String> metadata = new HashMap<>();
+
     @Override
     public void validate() {
         savedId.clear();
@@ -57,7 +66,7 @@ public class MultipleResourceAction extends ResourceAction {
                 logger.debug("File empty for the field {} ", FILE_UPLOAD_FIELD);
                 this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.fileEmpty"));
             }
-            if (this.getFileUploadFileName().size()>0) {
+            if (this.getFileUploadFileName().size() > 0) {
                 ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
                 this.checkRightFileType(resourcePrototype, this.getFileUploadFileName().get(0));
             }
@@ -107,7 +116,7 @@ public class MultipleResourceAction extends ResourceAction {
             }
             this.setMainGroup(resource.getMainGroup());
             this.setStrutsAction(ApsAdminSystemConstants.EDIT);
-
+            this.setMetadata(resource.getMetadata());
         } catch (Throwable t) {
             logger.error("error in edit", t);
             return FAILURE;
@@ -165,6 +174,7 @@ public class MultipleResourceAction extends ResourceAction {
         }
     }
 
+    @Override
     protected boolean isValidType(String docType, String[] rightTypes) {
         boolean isValid = false;
         if (rightTypes.length > 0) {
@@ -195,7 +205,9 @@ public class MultipleResourceAction extends ResourceAction {
                  
                     File file = getFile(index);
                     String filename = "";
+                    Map imgMetadata = new HashMap();
                     if (null != file) {
+                        imgMetadata = getImgMetadata(file);
                         filename= getFileUploadFileName().get(index);
                         resourceFile = new BaseResourceDataBean(file);
                         resourceFile.setFileName(filename);
@@ -210,6 +222,7 @@ public class MultipleResourceAction extends ResourceAction {
                     resourceFile.setMainGroup(getMainGroup());
                     resourceFile.setResourceType(this.getResourceType());
                     resourceFile.setCategories(getCategories());
+                    resourceFile.setMetadata(imgMetadata);
                     baseResourceDataBeanList = new ArrayList<BaseResourceDataBean>();
                     baseResourceDataBeanList.add(resourceFile);
                     try {
@@ -240,9 +253,7 @@ public class MultipleResourceAction extends ResourceAction {
                                 new String[]{fileUploadFileName.get(index)}));
                     }
                 }
-
                 index++;
-
             }
         } catch (Throwable t) {
             logger.error("error in save", t);
@@ -254,6 +265,42 @@ public class MultipleResourceAction extends ResourceAction {
             return FAILURE;
         }
         return SUCCESS;
+    }
+
+    public Map getImgMetadata(File file) {
+        logger.debug("Get image Metadata");
+        Map<String, String> meta = new HashMap<>();
+        ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
+        try {
+            Metadata metadata = ImageMetadataReader.readMetadata(file);
+            String ignoreKeysConf = resourcePrototype.getMetadataIgnoreKeys();
+            String[] ignoreKeys = null;
+            if (null != ignoreKeysConf) {
+                ignoreKeys = ignoreKeysConf.split(",");
+                logger.debug("Metadata ignoreKeys: {}", ignoreKeys);
+            } else {
+                logger.debug("Metadata ignoreKeys not configured");
+            }
+            List<String> ignoreKeysList = new ArrayList<String>();
+            if (null != ignoreKeys) {
+                ignoreKeysList = Arrays.asList(ignoreKeys);
+            }
+            for (Directory directory : metadata.getDirectories()) {
+                for (Tag tag : directory.getTags()) {
+                    if (!ignoreKeysList.contains(tag.getTagName())) {
+                        logger.debug("Add Metadata with key: {}", tag.getTagName());
+                        meta.put(tag.getTagName(), tag.getDescription());
+                    } else {
+                        logger.debug("Skip Metadata key {}", tag.getTagName());
+                    }
+                }
+            }
+        } catch (ImageProcessingException ex) {
+            logger.error("Error reading metadata");
+        } catch (IOException ioex) {
+            logger.error("Error reading file");
+        }
+        return meta;
     }
 
     public String getFileDescription(int i) {
@@ -321,7 +368,7 @@ public class MultipleResourceAction extends ResourceAction {
         this.fileDescriptions = fileDescriptions;
     }
 
-    public List<File> getFileUpload() {        
+    public List<File> getFileUpload() {
         return fileUpload;
     }
 
@@ -350,6 +397,14 @@ public class MultipleResourceAction extends ResourceAction {
 
     public void setFileUploadFileName(List<String> fileUploadFileName) {
         this.fileUploadFileName = fileUploadFileName;
+    }
+
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Map<String, String> metadata) {
+        this.metadata = metadata;
     }
 
 }
