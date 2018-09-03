@@ -35,11 +35,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.ta
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author E.Santoboni
@@ -68,7 +65,7 @@ public class ApiTaskInterface extends KieApiManager {
         fieldMandatory.put("processDefinitionId", Boolean.TRUE);
     }
 
-    public JAXBTask getTask(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
+    public JAXBTask getTask(Properties properties) throws Throwable {
         JAXBTask resTask = null;
         final String idString = properties.getProperty("id");
         final String page = properties.getProperty("page");
@@ -91,7 +88,16 @@ public class ApiTaskInterface extends KieApiManager {
         } catch (NumberFormatException e) {
             throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
         }
-        
+
+        //TODO JPW check this
+        String configId = properties.getProperty("configId");
+        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+        final String information = bpmWidgetInfo.getInformationDraft();
+        final ApsProperties config = new ApsProperties();
+        config.loadFromXml(information);
+        String knowledgetSource = (String)config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
+
         try {
 	        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, "", opt);
 	        for (KieTask task : rawList) {
@@ -110,7 +116,7 @@ public class ApiTaskInterface extends KieApiManager {
         return resTask;
     }
 
-    public JAXBTaskList getUserTask(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
+    public JAXBTaskList getUserTask(Properties properties) throws Throwable {
 
         final String user = properties.getProperty("user");
         HashMap<String, String> opt = new HashMap<>();
@@ -120,8 +126,18 @@ public class ApiTaskInterface extends KieApiManager {
             opt.put("user", user);
         }
 
+        //TODO JPW check this
+        String configId = properties.getProperty("configId");
+        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+        final String information = bpmWidgetInfo.getInformationDraft();
+        final ApsProperties config = new ApsProperties();
+        config.loadFromXml(information);
+        String knowledgetSource = (String)config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
+
+
         List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, "", opt);
-        final JAXBTaskList taskList = new JAXBTaskList();
+        JAXBTaskList taskList = new JAXBTaskList();
         List<JAXBTask> list = new ArrayList<>();
         for (KieTask raw : rawList) {
             JAXBTask task = new JAXBTask(raw);
@@ -135,16 +151,21 @@ public class ApiTaskInterface extends KieApiManager {
         if (taskList.getList().isEmpty()) {
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
         }
+
+        //Filter the user tasks by process id configured on the widget.
+        filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
         return taskList;
     }
 
-    public JAXBTaskList getLegalWorkerTask(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
+    public JAXBTaskList getLegalWorkerTask(Properties properties) throws Throwable {
         HashMap<String, String> opt = new HashMap<>();
         final String pageSize = properties.getProperty("pageSize");
         final String page = properties.getProperty("page");
         final String user = properties.getProperty("user");
         int id; // parameter appended to the original payload
 
+        //TODO JPW check this
+        String configId = properties.getProperty("configId");
         if (StringUtils.isNotBlank(page)) {
             opt.put("page", page);
         }
@@ -153,6 +174,14 @@ public class ApiTaskInterface extends KieApiManager {
         } else {
             opt.put("pageSize", "5000");
         }
+
+        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+        final String information = bpmWidgetInfo.getInformationDraft();
+        final ApsProperties config = new ApsProperties();
+        config.loadFromXml(information);
+        String knowledgetSource = (String)config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
+
 
         List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForUser(bpmConfig, KieBpmSystemConstants.LEGAL_WORKER, opt);
         final JAXBTaskList taskList = new JAXBTaskList();
@@ -167,15 +196,21 @@ public class ApiTaskInterface extends KieApiManager {
                 taskList.setProcessId(task.getProcessDefinitionId());
             }
         }
+
+        //Filter the user tasks by process id configured on the widget.
+        filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
         taskList.setList(list);
         return taskList;
     }
 
-    public JAXBTaskList getKnowledgeWorkerTask(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
+    public JAXBTaskList getKnowledgeWorkerTask(Properties properties) throws Throwable {
         HashMap<String, String> opt = new HashMap<>();
         final String pageSize = properties.getProperty("pageSize");
         final String page = properties.getProperty("page");
         final String user = properties.getProperty("user");
+
+        //TODO JPW check this
+        String configId = properties.getProperty("configId");
         int id; // parameter appended to the original payload
 
         if (StringUtils.isNotBlank(page)) {
@@ -186,6 +221,13 @@ public class ApiTaskInterface extends KieApiManager {
         } else {
             opt.put("pageSize", "5000");
         }
+
+        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+        final String information = bpmWidgetInfo.getInformationDraft();
+        final ApsProperties config = new ApsProperties();
+        config.loadFromXml(information);
+        String knowledgetSource = (String)config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
 
         List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForUser(bpmConfig, KieBpmSystemConstants.KNOWLEDGE_WORKER, opt);
         final JAXBTaskList taskList = new JAXBTaskList();
@@ -200,11 +242,14 @@ public class ApiTaskInterface extends KieApiManager {
                 taskList.setProcessId(task.getProcessDefinitionId());
             }
         }
+
+        //Filter the user tasks by process id configured on the widget.
+        filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
         taskList.setList(list);
         return taskList;
     }
 
-    public String getDiagram(KieBpmConfig bpmConfig, Properties properties) {
+    public String getDiagram(Properties properties) {
         final String configId = properties.getProperty("configId");
         if (null != configId) {
             try {
@@ -213,6 +258,9 @@ public class ApiTaskInterface extends KieApiManager {
                 if (StringUtils.isNotEmpty(information)) {
                     final ApsProperties config = new ApsProperties();
                     config.loadFromXml(information);
+                    String knowledgetSource = (String)config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+                    KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
+
                     final String containerId = config.getProperty("containerId");
                     final String processInstanceId = properties.getProperty("processInstanceId");
                     return this.getKieFormManager().getProcInstDiagramImage(bpmConfig, containerId, processInstanceId);
@@ -228,7 +276,7 @@ public class ApiTaskInterface extends KieApiManager {
 
     }
 
-    public JAXBTaskList getTasks(KieBpmConfig bpmConfig, Properties properties) {
+    public JAXBTaskList getTasks(Properties properties) {
         final String configId = properties.getProperty("configId");
 
         if (null != configId) {
@@ -242,11 +290,18 @@ public class ApiTaskInterface extends KieApiManager {
                     } catch (IOException e) {
                         logger.error("Error load configuration  {} ", e.getMessage());
                     }
-                    final JAXBTaskList taskList = new JAXBTaskList();
+                    String knowledgetSource = (String)config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+                    KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
+
+                    JAXBTaskList taskList = new JAXBTaskList();
                     this.setElementDatatableFieldDefinition(config, taskList);
                     this.setElementList(bpmConfig, config, taskList);
                     taskList.setContainerId(config.getProperty("containerId"));
                     taskList.setProcessId(config.getProperty("processId"));
+
+                    //Filter the user tasks by process id configured on the widget.
+                    filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
+
                     return taskList;
                 }
             } catch (ApsSystemException e) {
@@ -255,59 +310,6 @@ public class ApiTaskInterface extends KieApiManager {
             }
         }
         return null;
-    }
-
-    private void setElementDatatableFieldDefinition(final ApsProperties config, final JAXBTaskList taskList) {
-        final String PREFIX_FIELD = "field_";
-        final String PREFIX_VISIBLE = "visible_";
-        final String PREFIX_OVERRIDE = "override_";
-        final String PREFIX_POSITION = "position_";
-
-        initFieldMandatory();
-        for (final Map.Entry entry : config.entrySet()) {
-            final boolean isPropertyField = ((String) entry.getKey()).startsWith(PREFIX_FIELD);
-            if (isPropertyField) {
-                final String fieldName = ((String) entry.getKey()).replace(PREFIX_FIELD, "").trim();
-                final boolean propertyIsVisible = Boolean.valueOf(config.getProperty(PREFIX_VISIBLE + fieldName));
-                if (propertyIsVisible) {
-                    final DatatableFieldDefinition.Field field = new DatatableFieldDefinition.Field();
-                    String title = config.getProperty(PREFIX_OVERRIDE + fieldName) == null ? fieldName : config.getProperty(PREFIX_OVERRIDE + fieldName);
-                    field.setTitle(title);
-                    field.setData(fieldName);
-                    field.setVisible(Boolean.valueOf(true));
-                    field.setPosition(Byte.parseByte(config.getProperty(PREFIX_POSITION + fieldName)));
-                    taskList.getDatatableFieldDefinition().addField(field);
-
-                } else if (isMandatory(fieldName)) {
-                    final DatatableFieldDefinition.Field field = new DatatableFieldDefinition.Field();
-                    field.setTitle(fieldName);
-                    field.setData(fieldName);
-                    field.setVisible(Boolean.valueOf(false));
-                    field.setPosition(Byte.parseByte(config.getProperty(PREFIX_POSITION + fieldName)));
-                    taskList.getDatatableFieldDefinition().addField(field);
-                }
-            }
-        }
-        Collections.sort(taskList.getDatatableFieldDefinition().getFields(), new Comparator<DatatableFieldDefinition.Field>() {
-            @Override
-            public int compare(DatatableFieldDefinition.Field o1, DatatableFieldDefinition.Field o2) {
-                return o1.getPosition().compareTo(o2.getPosition());
-            }
-        });
-    }
-
-    private boolean isMandatory(String fieldName) {
-        return fieldMandatory.containsKey(fieldName);
-    }
-
-    private void setElementList(KieBpmConfig bpmConfig, final ApsProperties config, final JAXBTaskList taskList) throws ApsSystemException {
-        final String groups = config.getProperty("groups").replace(" ", "");
-        final List<JAXBTask> list = new ArrayList<>();
-        final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, groups, null);
-        for (final KieTask task : rawList) {
-            list.add(new JAXBTask(task));
-        }
-        taskList.setList(list);
     }
 
     public KieTaskDetail getTaskDetail(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
@@ -327,16 +329,27 @@ public class ApiTaskInterface extends KieApiManager {
         return taskDetail;
     }
 
-    public KieApiForm getTaskForm(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
+    public KieApiForm getTaskForm(Properties properties) throws Throwable {
         String containerId = properties.getProperty("containerId");
         String taskIdString = properties.getProperty("taskId");
         String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
         KieApiForm form = null;
+
+        //TODO check this
+        String configId = properties.getProperty("configId");
+        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+        final String information = bpmWidgetInfo.getInformationDraft();
+        final ApsProperties config = new ApsProperties();
+        config.loadFromXml(information);
+        String knowledgetSource = (String)config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
+
         KieProcessFormQueryResult processForm = this.getKieFormManager().getTaskForm(bpmConfig, containerId, Long.valueOf(taskIdString));
 
         JSONObject taskData = this.getKieFormManager().getTaskFormData(bpmConfig, containerId, Long.valueOf(taskIdString), null);
 
-        mergeTaskData(taskData, processForm);
+        JSONObject inputData = taskData.getJSONObject("task-input-data");
+        mergeTaskData(inputData, processForm);
 
         if (null == processForm) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
@@ -445,6 +458,49 @@ public class ApiTaskInterface extends KieApiManager {
         }
     }
 
+    public void mergeTaskData(JSONObject taskData, KieProcessFormQueryResult form) {
+
+        logger.debug("Task data "+taskData.toString());
+
+        KieDataHolder holder = form.getHolders().get(0);
+        String holderValue = holder.getValue();
+        String formName = form.getHolders().get(0).getId();
+        String holderType = holder.getType();
+
+        logger.debug("holderType {}, formName {}", holderValue, formName);
+
+        //If the value of the holderType is base then it represents a primitive and should be processed as scalar data
+        if(holderType!=null && holderType.equals("BASE")){
+            holderValue = null;
+        }
+        Set<String> children = taskData.keySet();
+        String holderTypeName = "";
+        if(holderValue !=null) {
+            String[] splitHolderName = holderValue.split("\\.");
+            holderTypeName = splitHolderName[splitHolderName.length - 1];
+        }
+        JSONObject formChild = null;
+        for(String child : children) {
+            if(child.equals(holderValue) || child.equals("taskInput"+holderTypeName) || child.equals(formName)){
+                formChild = taskData.getJSONObject(child);
+                break;
+            }
+        }
+
+        if (holderValue == null) {
+            // scalar only
+            mergeForm(taskData, form);
+        } if(formChild != null) {
+            mergeForm(formChild, form);
+        }else {
+            for(String child : children) {
+                if(taskData.get(child) instanceof JSONObject) {
+                    mergeTaskData(taskData.getJSONObject(child), form);
+                }
+            }
+        }
+    }
+
     @Override
     public IBpmWidgetInfoManager getBpmWidgetInfoManager() {
         return bpmWidgetInfoManager;
@@ -453,6 +509,59 @@ public class ApiTaskInterface extends KieApiManager {
     @Override
     public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
+    }
+
+    private void setElementDatatableFieldDefinition(final ApsProperties config, JAXBTaskList taskList) {
+        final String PREFIX_FIELD = "field_";
+        final String PREFIX_VISIBLE = "visible_";
+        final String PREFIX_OVERRIDE = "override_";
+        final String PREFIX_POSITION = "position_";
+
+        initFieldMandatory();
+        for (final Map.Entry entry : config.entrySet()) {
+            final boolean isPropertyField = ((String) entry.getKey()).startsWith(PREFIX_FIELD);
+            if (isPropertyField) {
+                final String fieldName = ((String) entry.getKey()).replace(PREFIX_FIELD, "").trim();
+                final boolean propertyIsVisible = Boolean.valueOf(config.getProperty(PREFIX_VISIBLE + fieldName));
+                if (propertyIsVisible) {
+                    final DatatableFieldDefinition.Field field = new DatatableFieldDefinition.Field();
+                    String title = config.getProperty(PREFIX_OVERRIDE + fieldName) == null ? fieldName : config.getProperty(PREFIX_OVERRIDE + fieldName);
+                    field.setTitle(title);
+                    field.setData(fieldName);
+                    field.setVisible(Boolean.valueOf(true));
+                    field.setPosition(Byte.parseByte(config.getProperty(PREFIX_POSITION + fieldName)));
+                    taskList.getDatatableFieldDefinition().addField(field);
+
+                } else if (isMandatory(fieldName)) {
+                    final DatatableFieldDefinition.Field field = new DatatableFieldDefinition.Field();
+                    field.setTitle(fieldName);
+                    field.setData(fieldName);
+                    field.setVisible(Boolean.valueOf(false));
+                    field.setPosition(Byte.parseByte(config.getProperty(PREFIX_POSITION + fieldName)));
+                    taskList.getDatatableFieldDefinition().addField(field);
+                }
+            }
+        }
+        Collections.sort(taskList.getDatatableFieldDefinition().getFields(), new Comparator<DatatableFieldDefinition.Field>() {
+            @Override
+            public int compare(DatatableFieldDefinition.Field o1, DatatableFieldDefinition.Field o2) {
+                return o1.getPosition().compareTo(o2.getPosition());
+            }
+        });
+    }
+
+    private boolean isMandatory(String fieldName) {
+        return fieldMandatory.containsKey(fieldName);
+    }
+
+    private void setElementList(KieBpmConfig bpmConfig, final ApsProperties config, JAXBTaskList taskList) throws ApsSystemException {
+        final String groups = config.getProperty("groups").replace(" ", "");
+        final List<JAXBTask> list = new ArrayList<>();
+        final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, groups, null);
+        for (final KieTask task : rawList) {
+            list.add(new JAXBTask(task));
+        }
+        taskList.setList(list);
     }
 
     private void startTasks(KieBpmConfig bpmConfig, List<KieTask> list, HashMap<String, String> opt) {
@@ -493,46 +602,15 @@ public class ApiTaskInterface extends KieApiManager {
         return input;
     }
 
-    public void mergeTaskData(JSONObject taskData, KieProcessFormQueryResult form) {
-
-        logger.debug("Task data "+taskData.toString());
-
-        String holderType = form.getHolders().get(0).getValue();
-        String formName = form.getHolders().get(0).getId();
-
-        logger.debug("holderType {}, formName {}", holderType, formName);
-
-        Set<String> children = taskData.keySet();
-
-        JSONObject formChild = null;
-        for(String child : children) {
-            if(child.equals(holderType)){
-                formChild = taskData.getJSONObject(child);
-                break;
-            }
-        }
-
-        if (holderType == null) {
-        		// scalar only
-        		mergeForm(taskData, form);
-        } if(formChild != null) {
-            mergeForm(formChild, form);
-        }else {
-            for(String child : children) {
-                if(taskData.get(child) instanceof JSONObject) {
-                    mergeTaskData(taskData.getJSONObject(child), form);
-                }
-            }
-        }
-    }
-
     private void mergeForm(JSONObject taskInputData, KieProcessFormQueryResult form) {
 
         List<KieProcessFormField> fields = form.getFields();
         Map<String, KieProcessFormField> fieldMap  = new HashMap<>();
         for(KieProcessFormField field : fields) {
             if(field.getName().contains("_")){
+                //Store both with and without the underscore. No clear way to know which one is coming back from KIE
                 fieldMap.put(field.getName().split("_")[1], field);
+                fieldMap.put(field.getName(), field);
             }else{
                 fieldMap.put(field.getName(), field);
             }
@@ -552,5 +630,15 @@ public class ApiTaskInterface extends KieApiManager {
                 mergeTaskData(taskInputData, subForm);
             }
         }
+    }
+
+    private void filterTasksByProcessId(JAXBTaskList taskList, String processDefId) {
+
+        List<JAXBTask> filteredTasks = taskList.getList().stream()
+                                        .filter( task -> task.getProcessDefinitionId().equals(processDefId))
+                                        .collect(Collectors.toList());
+
+        taskList.setList(filteredTasks);
+
     }
 }

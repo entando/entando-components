@@ -60,6 +60,48 @@ public class TestApiTaskInterface extends TestCase {
 
     }
 
+    @Test
+    public void testMergeTaskDataSevenZerotwo() throws Throwable{
+
+        String taskDataJson = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/taskDetails.json-jbpm7.0.2.json"));
+        String kieProcessFormXML2 = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/jbpm7-task-complete-form.xml"));
+
+        JSONObject taskData = new JSONObject(taskDataJson);
+        PamProcessQueryFormResult pamSeven2 = (PamProcessQueryFormResult) JAXBHelper
+                .unmarshall(kieProcessFormXML2, PamProcessQueryFormResult.class, true, false);
+
+        KieProcessFormQueryResult form = KieVersionTransformer.pamSevenFormToPamSix(pamSeven2);
+
+        ApiTaskInterface apiTaskInterface = new ApiTaskInterface();
+        apiTaskInterface.mergeTaskData(taskData.getJSONObject("task-input-data"), form);
+
+        String downPayment = getValue(form, "application_downPayment");
+        String amortization =  getValue(form, "application_amortization");
+
+        assertEquals(25000.0, Double.parseDouble(downPayment));
+        assertEquals(10000.0, Double.parseDouble(amortization));
+
+        List<KieProcessFormQueryResult> results = form.getNestedForms();
+
+        String addr = "";
+        String price = "";
+        for(KieProcessFormQueryResult result : results) {
+            String holderName = result.getHolders().get(0).getName();
+
+            if(holderName.equals("Applicant")){
+            }
+
+            if(holderName.equals("Property")) {
+                addr = getValue(result, "property_address");
+                price = getValue(result, "property_price");
+            }
+        }
+
+        assertEquals("Test 123", addr);
+        assertEquals("300000", price);
+
+    }
+
     private String getValue(KieProcessFormQueryResult form, String value) {
 
         String fieldVal = "";
@@ -94,19 +136,51 @@ public class TestApiTaskInterface extends TestCase {
         ApiTaskInterface apiTaskInterface = new ApiTaskInterface();
         apiTaskInterface.mergeTaskData(taskData.getJSONObject("task-input-data"), form);
 
-        String downPayment = "";
+        String age = "";
         for(KieProcessFormField field :  form.getFields()) {
             if(field.getName().equals("age")) {
-                Optional<KieProcessProperty> downPaymentVal = field.getProperties()
+                Optional<KieProcessProperty> ageVal = field.getProperties()
                         .stream()
                         .filter(p -> p.getName().equals("inputBinding"))
                         .findFirst();
-                if(downPaymentVal.isPresent()) {
-                    downPayment = downPaymentVal.get().getValue();
+                if(ageVal.isPresent()) {
+                    age = ageVal.get().getValue();
                 }
 
             }
         }
+    }
+
+    @Test
+    public void testmergeSimpleScalarSevenOhTwo() throws Throwable{
+
+        String taskDataJson = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/taskDetails.scalar.7.0.2.json"));
+        String kieProcessFormXML2 = FileUtils.readFileToString(new File("src/test/resources/examples/bpmSampleFiles/jbpm7-scalar-simple-form-7.0.2.xml"));
+
+        JSONObject taskData = new JSONObject(taskDataJson);
+        PamProcessQueryFormResult pamSeven2 = (PamProcessQueryFormResult) JAXBHelper
+                .unmarshall(kieProcessFormXML2, PamProcessQueryFormResult.class, true, false);
+
+        KieProcessFormQueryResult form = KieVersionTransformer.pamSevenFormToPamSix(pamSeven2);
+
+        ApiTaskInterface apiTaskInterface = new ApiTaskInterface();
+        apiTaskInterface.mergeTaskData(taskData.getJSONObject("task-input-data"), form);
+
+        String age = "";
+        for(KieProcessFormField field :  form.getFields()) {
+            if(field.getName().equals("in_age")) {
+                Optional<KieProcessProperty> ageVal = field.getProperties()
+                        .stream()
+                        .filter(p -> p.getName().equals("inputBinding"))
+                        .findFirst();
+                if(ageVal.isPresent()) {
+                    age = ageVal.get().getValue();
+                }
+
+            }
+        }
+
+        assertEquals("50", age);
     }
 
 }
