@@ -103,6 +103,7 @@ public class ApiTaskInterface extends KieApiManager {
 	        for (KieTask task : rawList) {
 	            if (id == task.getId()) {
 	                resTask = new JAXBTask(task);
+                    task.setConfigId(bpmConfig.getId());
 	                break;
 	            }
 	        }
@@ -141,6 +142,7 @@ public class ApiTaskInterface extends KieApiManager {
         List<JAXBTask> list = new ArrayList<>();
         for (KieTask raw : rawList) {
             JAXBTask task = new JAXBTask(raw);
+            task.setConfigId(bpmConfig.getId());
             list.add(task);
             taskList.setContainerId(task.getContainerId());
             taskList.setOwner(user);
@@ -190,6 +192,7 @@ public class ApiTaskInterface extends KieApiManager {
                 && !rawList.isEmpty()) {
             for (KieTask raw : rawList) {
                 JAXBTask task = new JAXBTask(raw);
+                task.setConfigId(bpmConfig.getId());
                 list.add(task);
                 taskList.setContainerId(task.getContainerId());
                 taskList.setOwner(user);
@@ -236,6 +239,7 @@ public class ApiTaskInterface extends KieApiManager {
                 && !rawList.isEmpty()) {
             for (KieTask raw : rawList) {
                 JAXBTask task = new JAXBTask(raw);
+                task.setConfigId(bpmConfig.getId());
                 list.add(task);
                 taskList.setContainerId(task.getContainerId());
                 taskList.setOwner(user);
@@ -298,7 +302,7 @@ public class ApiTaskInterface extends KieApiManager {
                     this.setElementList(bpmConfig, config, taskList);
                     taskList.setContainerId(config.getProperty("containerId"));
                     taskList.setProcessId(config.getProperty("processId"));
-
+                    taskList.setConfigId(bpmConfig.getId());
                     //Filter the user tasks by process id configured on the widget.
                     filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
 
@@ -362,6 +366,7 @@ public class ApiTaskInterface extends KieApiManager {
             form.setTaskId(taskIdString);
             form.setContainerId(containerId);
             form.setProcessId(processId);
+            form.setConfigId(bpmConfig.getId());
         } catch (Exception e) {
             logger.error("Failed to create kie form ",e);
         }
@@ -388,13 +393,14 @@ public class ApiTaskInterface extends KieApiManager {
         return null;
     }
 
-    public void postTaskForm(KieBpmConfig bpmConfig, final KieApiInputFormTask form) throws Throwable {
+    public void postTaskForm(final KieApiInputFormTask form) throws Throwable {
         if (null == form) {
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Form null", Response.Status.CONFLICT);
         }
         String containerId = null;
         String taskId = null;
         String processId = null;
+        String configId = null;
         Map<String, String> input = new HashMap<>();
         for (KieApiInputFormTask.Field field : form.getFields()) {
         		logger.info(">>> KieApiInputFormTask field {} = {}", field.getName(), field.getValue());
@@ -405,16 +411,31 @@ public class ApiTaskInterface extends KieApiManager {
                 taskId = field.getValue();
             }
             if (field.getName().equalsIgnoreCase("processId")) {
-            		processId = field.getValue();
+                processId = field.getValue();
+            }
+            if (field.getName().equalsIgnoreCase("configId")) {
+                configId = field.getValue();
             }
             input.put(field.getName().replace(KieApiField.FIELD_NAME_PREFIX, ""), field.getValue());
         }
+
+        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+        final String information = bpmWidgetInfo.getInformationDraft();
+        final ApsProperties config = new ApsProperties();
+        config.loadFromXml(information);
+        String knowledgetSource = (String)config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
+
         final String result = this.getKieFormManager().completeHumanFormTask(bpmConfig, containerId, processId, Long.valueOf(taskId), input);
         logger.info("Result {} ", result);
     }
 
-    public void setTaskState(KieBpmConfig bpmConfig, final KiaApiTaskState state) throws Throwable {
+    public void setTaskState(final KiaApiTaskState state) throws Throwable {
         try {
+
+            KieBpmConfig bpmConfig = null;
+
+
             Map<String, String> opt = new HashMap<>();
             opt.put("user", state.getUser());
             KieFormManager.TASK_STATES enumState = KieFormManager.TASK_STATES.COMPLETED;
@@ -435,7 +456,7 @@ public class ApiTaskInterface extends KieApiManager {
         }
     }
 
-    public void putTaskDoc(KieBpmConfig bpmConfig, final KiaApiTaskDoc doc) throws Throwable {
+    public void putTaskDoc(final KiaApiTaskDoc doc) throws Throwable {
         try {
             logger.info("putTaskDoc for task id-{} and resource {}busy", doc.getTaskId(), busy ? "" : "not ");
             while (busy) {
@@ -452,6 +473,9 @@ public class ApiTaskInterface extends KieApiManager {
             input.put("size", Long.valueOf(doc.getSize()));
             input.put("link", doc.getLink());
             input.put("name", doc.getName());
+
+            KieBpmConfig bpmConfig = null;
+
             this.getKieFormManager().submitHumanFormTask(bpmConfig, doc.getContainerId(), doc.getTaskId(), KieFormManager.TASK_STATES.COMPLETED, queryStringParam, input);
         } finally {
             busy = false;
@@ -559,6 +583,7 @@ public class ApiTaskInterface extends KieApiManager {
         final List<JAXBTask> list = new ArrayList<>();
         final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, groups, null);
         for (final KieTask task : rawList) {
+            task.setConfigId(bpmConfig.getId());
             list.add(new JAXBTask(task));
         }
         taskList.setList(list);

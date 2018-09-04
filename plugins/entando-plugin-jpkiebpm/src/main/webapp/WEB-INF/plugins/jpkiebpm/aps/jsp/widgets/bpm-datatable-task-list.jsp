@@ -118,6 +118,8 @@
                 postData.task.fields.push({name: "processId", value: rowData.processDefinitionId});
                 postData.task.fields.push({name: "containerId", value: rowData.containerId});
                 postData.task.fields.push({name: "taskId", value: rowData.id});
+                postData.task.fields.push({name: "configId", value: configId});
+
                 var action = context + "taskForm.json";
                 //console.log(postData);
 
@@ -170,7 +172,7 @@
             });
         };
 
-        var configId = "${id}";
+        var configId =${configId};
 
         var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
         var url = context + "tasks.json?configId=${id}";

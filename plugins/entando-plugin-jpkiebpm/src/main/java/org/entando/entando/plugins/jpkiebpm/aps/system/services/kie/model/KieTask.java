@@ -148,6 +148,14 @@ public class KieTask {
         this.parentId = parentId;
     }
 
+    public String getConfigId() {
+        return configId;
+    }
+
+    public void setConfigId(String configId) {
+        this.configId = configId;
+    }
+
     @XmlElement(name = "task-id")
     private Long id;
 
@@ -189,6 +197,10 @@ public class KieTask {
 
     @XmlElement(name = "task-parent-id")
     private Long parentId;
+
+    @XmlElement(name = "configId")
+    private String configId;
+
 
     @Override
     public String toString() {
