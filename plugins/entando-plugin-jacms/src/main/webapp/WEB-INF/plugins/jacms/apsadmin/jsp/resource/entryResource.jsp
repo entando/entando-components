@@ -403,7 +403,6 @@
             </s:if>
         </div>
     </div>
-</div>
 
 </s:if>
 
@@ -418,31 +417,6 @@
     </div>
 </div>
 </s:form>
-
-<%-- TODO: refactor resource detail
-<s:form action="edit" method="post" cssClass="form-horizontal">
-    <p class="sr-only">
-        <wpsf:hidden name="strutsAction" />
-        <wpsf:hidden name="resourceTypeCode" />
-        <wpsf:hidden name="contentOnSessionMarker" />
-        <s:if test="strutsAction != 1">
-            <wpsf:hidden name="resourceId" />
-        </s:if>
-        <s:if test="#categoryTreeStyleVar == 'request'">
-            <s:iterator value="treeNodesToOpen" var="treeNodeToOpenVar">
-                <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}" />
-            </s:iterator>
-        </s:if>
-        <s:if test="%{lockGroupSelect}">
-            <wpsf:hidden name="mainGroup" />
-        </s:if>
-    </p>
-    <s:if test="strutsAction == 2">
-        <s:set var="referencingContentsId" value="references['jacmsContentManagerUtilizers']" />
-        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/portal/include/referencingContents.jsp" />
-    </s:if>
-</s:form>
---%>
 
 <s:if test="getStrutsAction() == 2 ">
 
