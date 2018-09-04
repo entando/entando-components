@@ -29,6 +29,7 @@
                 <wpsa:actionSubParam name="%{#treeNodeExtraParamName}" value="%{#treeNodeExtraParamValue}" />
                 <wpsa:actionSubParam name="targetNode" value="%{#currentRoot.code}" />
                 <wpsa:actionSubParam name="treeNodeActionMarkerCode" value="open" />
+                <wpsa:actionSubParam name="openCollapsed" value="'true'" />
             </wpsa:actionParam>
             <wpsf:submit cssClass="btn btn-link btn-xs" action="%{#openTreeAction}"
                          type="button" value="%{getText('label.open')}" title="%{getText('label.open')}">
@@ -43,6 +44,7 @@
                 <wpsa:actionSubParam name="%{#treeNodeExtraParamName}" value="%{#treeNodeExtraParamValue}" />
                 <wpsa:actionSubParam name="targetNode" value="%{#currentRoot.code}" />
                 <wpsa:actionSubParam name="treeNodeActionMarkerCode" value="close" />
+                <wpsa:actionSubParam name="openCollapsed" value="'true'" />
             </wpsa:actionParam>
             <wpsf:submit cssClass="btn btn-link btn-xs" action="%{#closeTreeAction}"
                          type="button" value="%{getText('label.close')}" title="%{getText('label.close')}">
@@ -67,12 +69,17 @@
             </s:if>
         </label>
     </td>
-    <td class="text-center">
-        <wpsf:submit action="%{#actionName}" type="button"
-                     title="%{getText('label.join')}" cssClass="btn btn-sm btn-link js_joinCategory">
-            <span class="icon fa fa-plus"></span>
-        </wpsf:submit>
-    </td>
+    <s:if test="%{#skipJoinAction == null || #skipJoinAction.equals('false')}">
+        <td class="text-center">
+            <wpsa:actionParam action="joinCategory" var="joinCategoryActionName" >
+                <wpsa:actionSubParam name="categoryCode" value="%{#currentRoot.code}" />
+            </wpsa:actionParam>
+            <wpsf:submit action="%{#joinCategoryActionName}" type="button"
+                         title="%{getText('label.join')}" cssClass="btn btn-sm btn-link js_joinCategory">
+                <span class="icon fa fa-plus"></span>
+            </wpsf:submit>
+        </td>
+    </s:if>
 </tr>
 
 <s:if test="#currentRoot.children.length > 0">
