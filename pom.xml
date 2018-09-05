@@ -82,7 +82,7 @@
         <sonar.jacoco.reportPaths>${jacoco.ut.execution.data.file}</sonar.jacoco.reportPaths>
         <sonar.surefire.reportsPath>${project.basedir}/target/surefire-reports/</sonar.surefire.reportsPath>
         <sonar.binaries>${project.basedir}/target/classes</sonar.binaries>
-        <sonar.language>java</sonar.language>
+        <!--<sonar.language>java</sonar.language>-->
         <!-- end sonar -->
     </properties>
 
@@ -163,13 +163,6 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.6.201602180812</version>
-                <!--<configuration>-->
-                <!--<sessionId>${project.artifactId}</sessionId>-->
-                <!--<dataFile>${jacoco.ut.execution.data.file}</dataFile>-->
-                <!--<outputDirectory>${project.basedir}/target/jacoco-ut</outputDirectory>-->
-                <!--<destFile>${jacoco.it.execution.data.file}</destFile>-->
-                <!--<append>true</append>-->
-                <!--</configuration>-->
                 <executions>
                     <!--
                         Prepares the property pointing to the JaCoCo runtime agent which
@@ -281,7 +274,6 @@
                 <version>2.12</version>
                 <configuration>
                     <argLine>${surefireArgLine}</argLine>
-                    <!--<argLine>-Xms512m -Xmx2048m</argLine>-->
                     <testFailureIgnore>false</testFailureIgnore>
                     <excludes>
                         <exclude>**/*BaseTestCase*</exclude>
