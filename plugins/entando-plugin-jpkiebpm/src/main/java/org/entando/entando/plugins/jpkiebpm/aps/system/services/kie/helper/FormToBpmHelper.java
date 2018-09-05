@@ -440,7 +440,7 @@ public class FormToBpmHelper {
             if (null == obj || !(obj instanceof JSONObject)) {
                 obj = JsonHelper.findKey(data, "taskInput"+dataModelerEntry.getName());
             }
-            
+
             if (null == obj || !(obj instanceof JSONObject)) {
                 throw new RuntimeException("Unexpected data for key " + dataModelerEntry.getValue());
             }
