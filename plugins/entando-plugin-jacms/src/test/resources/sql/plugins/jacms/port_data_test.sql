@@ -667,8 +667,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 			<attribute name="Checkbox" attributetype="CheckBox" />
 		</attributes>
 	</contenttype>
-</contenttypes>
-');
+</contenttypes>');
 INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'imageDimensions', 'Definition of the resized image dimensions', '<Dimensions>
 	<Dimension>
 		<id>1</id>
@@ -685,8 +684,13 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'imageDimen
 		<dimx>150</dimx>
 		<dimy>150</dimy>
 	</Dimension>
-</Dimensions>
-');
+</Dimensions>');
+INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jacms_resourceMetadataMapping', 'Mapping between resource Metadata and resource attribute fields', '<mapping>
+    <field key="alt">metadataKey1,metadataKey2,metadatakey3,xxx,yyy</field>
+    <field key="description">metadataKeyA,metadataKeyB,JPEG Comment</field>
+    <field key="legend">metadataKeyX,metadataKeyY,metadatakeyX,YYYY,Detected File Type Long Name,WWWWW</field>
+    <field key="title">metadataKeyG,metadataKeyK,metadatakeyF</field>
+</mapping>');
 INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'subIndexDir', 'Name of the sub-directory containing content indexing files', 'index');
 
 

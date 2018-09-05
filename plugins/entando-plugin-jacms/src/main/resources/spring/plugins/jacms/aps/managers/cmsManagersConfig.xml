@@ -14,6 +14,7 @@
     <bean id="jacmsResourceManager" class="com.agiletec.plugins.jacms.aps.system.services.resource.ResourceManager" 
               parent="abstractService" >
         <property name="categoryManager" ref="CategoryManager" />
+		<property name="configManager" ref="BaseConfigManager"/>
 		<property name="cacheWrapper">
 			<bean class="com.agiletec.plugins.jacms.aps.system.services.resource.cache.ResourceManagerCacheWrapper">
 				<property name="springCacheManager" ref="springCacheManager" />
@@ -71,9 +72,7 @@
     
     <bean id="jacmsPublicContentSearcherDAO" class="com.agiletec.plugins.jacms.aps.system.services.content.PublicContentSearcherDAO">
         <property name="dataSource" ref="portDataSource" />
-        <property name="dataSourceClassName">
-            <jee:jndi-lookup jndi-name="java:comp/env/portDataSourceClassName" />
-        </property>
+        <property name="dataSourceClassName"><jee:jndi-lookup jndi-name="java:comp/env/portDataSourceClassName" /></property>
     </bean>
     
     <bean id="jacmsWorkContentSearcherDAO"  class="com.agiletec.plugins.jacms.aps.system.services.content.WorkContentSearcherDAO">
@@ -206,8 +205,6 @@
         <property name="authorizationManager" ref="AuthorizationManager"/>
     </bean>
     
-    
-	
 	<bean id="jacmsHypertextAttribute" class="com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.CmsHypertextAttribute" parent="HypertextAttribute" >
 		<property name="attributeManagerClassName" 
 			value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.HypertextAttributeManager" />
