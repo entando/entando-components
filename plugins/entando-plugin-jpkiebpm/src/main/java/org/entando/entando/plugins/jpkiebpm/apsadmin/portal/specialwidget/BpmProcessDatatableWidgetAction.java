@@ -5,21 +5,32 @@ import com.agiletec.aps.system.services.group.IGroupManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
+
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKieContainerToListToJson;
 
 /**
  *
  */
 public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
 
+
+    private static final Logger logger = LoggerFactory.getLogger(BpmProcessDatatableWidgetAction.class);
     private IKieFormManager formManager;
     private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
+    private String knowledgeSourcePath;
+    private HashMap<String, KieBpmConfig> knowledgeSource;
+
     protected void loadFieldIntoDatatableFromBpm() throws ApsSystemException {
-        List<KieProcess> processes = formManager.getProcessDefinitionsList();
+        KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourcePath());
+        List<KieProcess> processes = formManager.getProcessDefinitionsList(config);
         if (!processes.isEmpty()) {
             super.loadDataIntoFieldDatatable(processes);
         }
@@ -93,4 +104,45 @@ public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
         this.kieFormOverrideManager = kieFormOverrideManager;
     }
 
+    public String getKnowledgeSourcePath() {
+        return knowledgeSourcePath;
+    }
+
+    public void setKnowledgeSourcePath(String knowledgeSourcePath) {
+        this.knowledgeSourcePath = knowledgeSourcePath;
+    }
+
+    public String chooseKnowledgeSourceForm() {
+        return  updateKnowledgeSource();
+    }
+
+    public String changeKnowledgeSourceForm() {
+        return  updateKnowledgeSource();
+    }
+
+    private String updateKnowledgeSource() {
+        try {
+
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
+            this.setProcess(this.formManager.getProcessDefinitionsList(config));
+
+            this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
+            this.setKieContainerListJson(convertKieContainerToListToJson(this.formManager.getContainersList(config)).toString());
+
+        } catch (ApsSystemException t) {
+            logger.error("Error in chooseKnowledgeSourceForm()", t);
+            return FAILURE;
+        }
+        return SUCCESS;
+
+    }
+
+    @Override
+    public HashMap<String, KieBpmConfig> getKnowledgeSource() {
+        return knowledgeSource;
+    }
+
+    public void setKnowledgeSource(HashMap<String, KieBpmConfig> knowledgeSource) {
+        this.knowledgeSource = knowledgeSource;
+    }
 }

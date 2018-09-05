@@ -2,11 +2,14 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util;
 
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import org.apache.commons.lang.StringUtils;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KIEAuthenticationCredentials;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieClient;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFields;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFieldset;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
@@ -201,5 +204,25 @@ public class KieApiUtil {
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.marshal(pObject, sw);
         return sw.toString();
+    }
+
+    /**
+     * Return a KIE CLient given the configuration
+     *
+     * @return
+     */
+    public static KieClient getClientFromConfig(KieBpmConfig config) {
+        KieClient client = null;
+        if (null != config) {
+            KIEAuthenticationCredentials credentials = new KIEAuthenticationCredentials(config.getUsername(), config.getPassword());
+            client = new KieClient();
+            client.setHostname(config.getHostname());
+            client.setPort(config.getPort());
+            client.setSchema(config.getSchema());
+            client.setWebapp(config.getWebapp());
+            client.setCredentials(credentials);
+            client.setTimeoutMsec(config.getTimeoutMsec());
+        }
+        return client;
     }
 }

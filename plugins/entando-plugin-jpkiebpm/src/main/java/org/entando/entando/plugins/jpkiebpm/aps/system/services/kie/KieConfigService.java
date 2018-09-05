@@ -101,7 +101,7 @@ public class KieConfigService implements IKieConfigService {
             KieBpmConfig newConfig = this.buildConfig(configRequest);
             this.getKieFormManager().addConfig(newConfig);
             try {
-                this.getKieFormManager().getContainersList();
+                this.getKieFormManager().getContainersList(newConfig);
             } catch (Exception e) {
                 logger.warn("Added configuration with invalid server connection - {}", configRequest);
                 bindingResult.reject("schema", "Invalid configuration");
@@ -140,10 +140,9 @@ public class KieConfigService implements IKieConfigService {
                 throw new RestRourceNotFoundException(ConfigValidator.ERRCODE_CONFIG_NOT_FOUND, "kie bpm config", configRequest.getId());
             }
             KieBpmConfig newConfig = this.buildConfig(configRequest);
-            this.getKieFormManager().setKieServerConfiguration(configRequest.getId());
             this.getKieFormManager().addConfig(newConfig);
             try {
-                this.getKieFormManager().getContainersList();
+                this.getKieFormManager().getContainersList(newConfig);
             } catch (Exception e) {
                 logger.warn("Modified configuration with invalid server connection - {}", configRequest);
                 bindingResult.reject("schema", "Invalid configuration");
@@ -173,8 +172,7 @@ public class KieConfigService implements IKieConfigService {
         try {
             KieBpmConfig config = this.buildConfig(configDto);
             config.setActive(Boolean.TRUE);
-            this.getKieFormManager().setConfig(config);
-            this.getKieFormManager().getContainersList();
+            this.getKieFormManager().getContainersList(config);
         } catch (Throwable t) {
             logger.error("error checking configuration", t);
             return "FAILURE";
@@ -186,21 +184,18 @@ public class KieConfigService implements IKieConfigService {
     public Map<String, String> testAllServerConfigs() {
         Map<String, String> results = new HashMap<>();
         try {
-            //Save the current Config
-            KieBpmConfig setKieBpmConfig = this.getKieFormManager().getConfig();
+
             HashMap<String, KieBpmConfig> serverConfigurations = this.getKieFormManager().getKieServerConfigurations();
             for (KieBpmConfig config : serverConfigurations.values()) {
-                this.getKieFormManager().setConfig(config);
+
                 try {
-                    this.getKieFormManager().getContainersList();
+                    this.getKieFormManager().getContainersList(config);
                     results.put(config.getId(), "SUCCESS");
                 } catch (ApsSystemException e) {
                     logger.error("Configuration test {} failed!", config.getId(), e);
                     results.put(config.getId(), "FAILURE");
                 }
             }
-            //load the current config
-            this.getKieFormManager().setConfig(setKieBpmConfig);
         } catch (Throwable t) {
             logger.error("error checking configuration", t);
             throw new RestServerError("error checking configuration", t);
@@ -216,37 +211,4 @@ public class KieConfigService implements IKieConfigService {
         this.kieFormManager = kieFormManager;
     }
 
-    public List<KieContainer> getContainerList(){
-
-        List<KieContainer> containers = null;
-        try {
-            containers = this.kieFormManager.getContainersList();
-        }catch(Exception e) {
-            logger.error("Failed to fetch containers ",e);
-            throw new RestServerError("Error fetching containers ", e);
-        }
-
-        return containers;
-    }
-
-    public List<KieProcess> getProcessDefinitionsList() {
-
-        List<KieProcess> processes = null;
-
-        try {
-            processes = this.kieFormManager.getProcessDefinitionsList();
-        }catch(Exception e) {
-            logger.error("Failed to fetch containers ",e);
-            throw new RestServerError("Error fetching containers ", e);
-        }
-
-        return processes;
-
-    }
-
-    public void setConfig(KieServerConfigDto configDto) {
-
-        KieBpmConfig config = this.buildConfig(configDto);
-        this.kieFormManager.setConfig(config);
-    }
 }

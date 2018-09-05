@@ -1,19 +1,19 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.form.override;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.apsadmin.system.BaseAction;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.apsadmin.system.BaseAction;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KieFormOverrideFinderAction extends BaseAction {
 
@@ -62,8 +62,8 @@ public class KieFormOverrideFinderAction extends BaseAction {
 		return newFilters;
 	}
 
-	public List<KieProcess> getProcessList() throws ApsSystemException {
-		List<KieProcess> list = this.getKieFormManager().getProcessDefinitionsList();
+	public List<KieProcess> getProcessList(KieBpmConfig config) throws ApsSystemException {
+		List<KieProcess> list = this.getKieFormManager().getProcessDefinitionsList(config);
 		return list;
 	}
 

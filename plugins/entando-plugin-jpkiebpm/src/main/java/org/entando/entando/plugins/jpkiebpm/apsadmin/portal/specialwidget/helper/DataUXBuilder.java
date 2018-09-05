@@ -5,16 +5,15 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.agiletec.aps.util.FileTextReader;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 
-import com.agiletec.aps.util.FileTextReader;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -26,9 +25,24 @@ public class DataUXBuilder {
     public DataUXBuilder() {
         this.typeMapping.put("InputText", "text");
         this.typeMapping.put("InputTextInteger", "number");
+        this.typeMapping.put("IntegerBox", "number");
+        this.typeMapping.put("CheckBox", "checkbox");
+        this.typeMapping.put("DatePicker", "date");
+        this.typeMapping.put("TextBox", "text");
+        this.typeMapping.put("DecimalBox", "number");
 
         this.valueMapping.put("InputText", "$data.%s.text");
         this.valueMapping.put("InputTextInteger", "$data.%s.number");
+        this.valueMapping.put("CheckBox", "$data.%s.checkbox");
+
+//        this.valueMapping.put("InputText", "$data.%s.text");
+//        this.valueMapping.put("InputTextInteger", "$data.%s.number");
+//        this.valueMapping.put("IntegerBox", "$data.%s.number");
+
+//
+//        this.valueMapping.put("DatePicker", "$data.%s.date");
+//        this.valueMapping.put("TextBox", "$data.%s.text");
+//        this.valueMapping.put("DecimalBox", "$data.%s.number");
     }
 
     public String createDataUx(KieProcessFormQueryResult kpfr, String containerId, String processId, String title) throws Exception {

@@ -23,13 +23,15 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import junit.framework.TestCase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcessForm.kieProcessFormXML;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcessForm.kieProcessFormXML;
 
 /**
  *
@@ -53,7 +55,7 @@ public class TestPayload extends TestCase {
         input.put("application_downPayment", 40000);
         input.put("application_amortization", 10);
 
-        BpmToFormHelper.getParamersMap(kpfq);
+        BpmToFormHelper.getKieFormFields(kpfq);
         String json = FormToBpmHelper.generateFormJson(kpfq, input,
                 "com.redhat.bpms.examples:mortgage:1", // container ID
                 "com.redhat.bpms.examples.mortgage.MortgageApplication"); // process definition ID

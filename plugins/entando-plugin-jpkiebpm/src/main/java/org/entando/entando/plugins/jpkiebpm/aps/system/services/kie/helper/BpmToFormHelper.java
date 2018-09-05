@@ -112,13 +112,13 @@ public class BpmToFormHelper {
         return getField(field, FIELD_REQUIRED);
     }
 
-    private static List<String> getParamersMap(List<String> map, KieProcessFormQueryResult form) throws Throwable {
+    private static List<KieProcessFormField> getKieFormFields(List<KieProcessFormField> fields, KieProcessFormQueryResult form) throws Throwable {
         if (null == form) {
-            return map;
+            return fields;
         }
         if (null != form.getNestedForms()) {
             for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
-                map = getParamersMap(map, subForm);
+                fields = getKieFormFields(fields, subForm);
             }
         }
         // iterate over form data;
@@ -129,23 +129,21 @@ public class BpmToFormHelper {
             if (StringUtils.isBlank(val)) {
                 continue;
             }
-            map.add(val);
+            fields.add(field);
             _logger.info("inserting value in parameters map '{}'", val);
         }
-        return map;
+        return fields;
     }
 
     /**
      * Get the map of the form output bindings of each field
      *
-     * @param map
      * @param form
      * @return
      * @throws Throwable
      */
-    public static List<String> getParamersMap(KieProcessFormQueryResult form) throws Throwable {
-        return getParamersMap(new ArrayList<String>(),
-                form);
+    public static List<KieProcessFormField> getKieFormFields(KieProcessFormQueryResult form) throws Throwable {
+        return getKieFormFields(new ArrayList<KieProcessFormField>(), form);
     }
 
     /**
@@ -312,14 +310,24 @@ public class BpmToFormHelper {
                 || form.getFields().isEmpty()) {
             return;
         }
-        KieDataHolder dataModeler =
-                BpmToFormHelper.getFormDataModelerEntry(form);
+        KieDataHolder dataModeler = BpmToFormHelper.getFormDataModelerEntry(form);
         
         // If dataModeler null... only have scalar values...
         if (dataModeler != null) {
 	        Object obj = JsonHelper.findKey(data, dataModeler.getValue());
-	        if (null == obj
-	                || !(obj instanceof JSONObject)) {
+
+            if (null == obj || !(obj instanceof JSONObject)) {
+                obj = JsonHelper.findKey(data, dataModeler.getOutId());
+            }
+
+            //Brutal hack. PAM API changed and removed the top level references and appended taskInput to the name of the
+            //container. Replace once a proper transform layer is in place
+            if (null == obj || !(obj instanceof JSONObject)) {
+                obj = JsonHelper.findKey(data, "taskInput"+dataModeler.getName());
+            }
+
+
+	        if (null == obj || !(obj instanceof JSONObject)) {
 	            throw new RuntimeException("Unexpected data for key " + dataModeler.getValue());
 	        }
 	        JSONObject section = (JSONObject) obj;

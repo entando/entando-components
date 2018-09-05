@@ -18,7 +18,7 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.tags.InternalServletTag;
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmDatatableWidgetAction;
+import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ public class BpmDatatableInternalServletTag extends InternalServletTag {
     protected void includeWidget(RequestContext reqCtx, ResponseWrapper responseWrapper, Widget widget) throws ServletException, IOException {
 
         if (StringUtils.isNotBlank(this.getWidgetConfigInfoIdVar())) {
-            final String configId = widget.getConfig().getProperty(BpmDatatableWidgetAction.PROP_NAME_WIDGET_INFO_ID);
+            final String configId = widget.getConfig().getProperty(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID);
             this.pageContext.setAttribute(widgetConfigInfoIdVar, configId);
         }
 

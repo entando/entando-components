@@ -3,9 +3,11 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +17,9 @@ import java.util.List;
  */
 public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
 
-    private IKieFormManager formManager;
     private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
-
+    private static final Logger logger = LoggerFactory.getLogger(BpmProcessDatatableWidgetAction.class);
     private String DEMO_USER = "taskUser";
 
 
@@ -26,7 +27,8 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
     protected void loadFieldIntoDatatableFromBpm() throws ApsSystemException {
         HashMap<String, String> opt = new HashMap<>();
         opt.put("user", DEMO_USER);
-        List<KieTask> task = formManager.getHumanTaskList(null, opt);
+        KieBpmConfig config = super.getFormManager().getKieServerConfigurations().get(this.getKnowledgeSourcePath());
+        List<KieTask> task = super.getFormManager().getHumanTaskList(config, null, opt);
         if (!task.isEmpty()) {
             super.loadDataIntoFieldDatatable(task);
         }
@@ -40,17 +42,6 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
     @Override
     public void setGroupManager(IGroupManager groupManager) {
         this.groupManager = groupManager;
-    }
-
-
-    @Override
-    public IKieFormManager getFormManager() {
-        return formManager;
-    }
-
-    @Override
-    public void setFormManager(IKieFormManager formManager) {
-        this.formManager = formManager;
     }
 
     @Override
@@ -72,5 +63,4 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
     public void setKieFormOverrideManager(IKieFormOverrideManager kieFormOverrideManager) {
         this.kieFormOverrideManager = kieFormOverrideManager;
     }
-
 }
