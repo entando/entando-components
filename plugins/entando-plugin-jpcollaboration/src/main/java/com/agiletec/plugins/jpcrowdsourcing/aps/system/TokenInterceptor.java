@@ -21,24 +21,25 @@
  */
 package com.agiletec.plugins.jpcrowdsourcing.aps.system;
 
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
+import org.entando.entando.apsadmin.system.resource.CustomTextProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 public class TokenInterceptor extends org.apache.struts2.interceptor.TokenInterceptor {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(TokenInterceptor.class);
+	private CustomTextProviderFactory textProvider;
 
 	@Override
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
-        String errorMessage = LocalizedTextUtil.findText(this.getClass(), "struts.messages.invalid.token",
+        String errorMessage = textProvider.getLocalizedTextProvider().findText(this.getClass(), "struts.messages.invalid.token",
                 invocation.getInvocationContext().getLocale(),
                 "The form has already been processed or no token was supplied, please try again.", new Object[0]);
-        String message = LocalizedTextUtil.findText(this.getClass(), "struts.messages.invalid.token.message",
+        String message = textProvider.getLocalizedTextProvider().findText(this.getClass(), "struts.messages.invalid.token.message",
                 invocation.getInvocationContext().getLocale(),
                 "Stop double-submission of forms.", new Object[0]);
         if (action instanceof ValidationAware) {
@@ -54,7 +55,12 @@ public class TokenInterceptor extends org.apache.struts2.interceptor.TokenInterc
         }
         return INVALID_TOKEN_CODE;
     }
-	
+
+	@Inject
+	public void setLocalizedTextProvider(CustomTextProviderFactory textProvider) {
+		this.textProvider = textProvider;
+	}
+
 	public void setTypeMessages(String typeMessages) {
 		this._typeMessages = typeMessages;
 	}
