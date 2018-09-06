@@ -8,7 +8,6 @@
  	<package name="jpcontentfeedback_do/jpcontentfeedback/FrontEnd/contentfeedback" namespace="/do/jpcontentfeedback/FrontEnd/contentfeedback" extends="entando-front-default">
 		
 		<interceptors>
-			<interceptor name="japsToken" class="com.agiletec.plugins.jpcontentfeedback.aps.internalservlet.system.TokenInterceptor" />
 			<interceptor name="redirectMessage" class="com.agiletec.plugins.jpcontentfeedback.apsadmin.system.RedirectMessageInterceptor" />
 		</interceptors>
 
@@ -36,8 +35,7 @@
 				<param name="actionName">intro${redirectParams}</param>
     		</result>
 			<result name="invalid.token" type="chain">intro</result>
-			<!-- INIBIZIONE TOKEN 		-->
-			<interceptor-ref name="japsToken" >
+			<interceptor-ref name="entandoToken" >
 				<param name="typeMessages">message</param>
 			</interceptor-ref>
 			<interceptor-ref name="redirectMessage" />
