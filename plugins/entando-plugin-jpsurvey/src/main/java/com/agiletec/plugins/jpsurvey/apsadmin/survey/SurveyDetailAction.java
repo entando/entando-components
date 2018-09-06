@@ -36,13 +36,12 @@ import com.agiletec.plugins.jpsurvey.aps.system.services.collect.IVoterManager;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.ISurveyManager;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Survey;
 
-public class SurveyDetailAction extends BaseAction implements ISurveyDetailAction {
-	
-	@Override
+public class SurveyDetailAction extends BaseAction {
+    
 	public String view() {
 		try {
 			Survey survey = this.getSurvey();
-			boolean isQuestionnarie = this.getQuestionnaire().booleanValue();
+			boolean isQuestionnarie = (null != this.getQuestionnaire()) ? this.getQuestionnaire() : false;
 			if (survey == null || survey.isQuestionnaire() != isQuestionnarie) {
 				String errorMsg = isQuestionnarie ? "Error.questionnairy.notFound" : "Error.poll.notFound";
 				this.addActionError(this.getText(errorMsg));
