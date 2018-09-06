@@ -143,13 +143,12 @@ public class TestChoiceAction extends ApsAdminPluginBaseTestCase {
 			assertNotNull(result);
 			assertEquals(BaseAction.INPUT, result);
 			
-			// invoke with invalid question id, we expect a SQL exception
 			this.initAction("/do/jpsurvey/Survey", "addNewFreeText");
 			this.addParameter("questionId", "-1");
 			this.addParameter("strutsAction", ApsAdminSystemConstants.ADD);
 			result = this.executeAction();
 			assertNotNull(result);
-			assertEquals(BaseAction.FAILURE, result);
+			assertEquals(BaseAction.INPUT, result);
 			
 			// normal operation
 			this.initAction("/do/jpsurvey/Survey", "addNewFreeText");
