@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando.entando.bundles</groupId>
         <artifactId>entando-bundles-parent</artifactId>
-        <version>4.3.4</version>
+        <version>4.3.5</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-widget-navigation_bar_inspinia</artifactId>
@@ -65,7 +65,7 @@
         <!-- <dependency>
                 <groupId>org.entando.entando.bundles.misc</groupId>
                 <artifactId>entando-misc-bootstrap</artifactId>
-                <version>4.3.4</version>
+                <version>4.3.5</version>
                 <type>war</type>
         </dependency> -->
     </dependencies>
