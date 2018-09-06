@@ -103,7 +103,7 @@ public class MultipleResourceAction extends ResourceAction {
 
     @Override
     public String edit() {
-        logger.debug("Edit");
+        logger.debug("Edit in multiple resource action for id {}", this.getResourceId() );
         try {
             savedId.clear();
             ResourceInterface resource = this.loadResource(this.getResourceId());
@@ -149,14 +149,14 @@ public class MultipleResourceAction extends ResourceAction {
     }
 
     public String joinCategory() {
-        logger.debug("joinCategory");
+        logger.debug("JoinCategory in multiple resource action for id {}", this.getResourceId());
         getFileDescriptions();
         fetchMetadataEdit();
         return super.joinCategory();
     }
 
     public String removeCategory() {
-        logger.debug("removeCategory");
+        logger.debug("RemoveCategory in multiple resource action for id {}", this.getResourceId());        
         getFileDescriptions();
         fetchMetadataEdit();
         return super.removeCategory();
@@ -210,7 +210,7 @@ public class MultipleResourceAction extends ResourceAction {
 
     @Override
     public String save() {
-        logger.debug("Save");
+        logger.debug("Save in multiple resource action for id {}", this.getResourceId());
         int index = 0;
         savedId.clear();
         boolean hasError = false;
