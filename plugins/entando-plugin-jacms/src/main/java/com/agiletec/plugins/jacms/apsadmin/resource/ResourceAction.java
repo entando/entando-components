@@ -57,7 +57,7 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
     private int fieldCount = 0;
     private boolean onEditContent = false;
 
- 
+    
     @Override
     public void validate() {
         if (this.isOnEditContent()) {
@@ -432,7 +432,7 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
         return this.getResourceTypeCode();
     }
 
-    public Map<String,String> getMetadata() {
+    public Map<String, String> getMetadata() {
         return metadata;
     }
 
