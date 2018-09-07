@@ -103,6 +103,7 @@ public class MultipleResourceAction extends ResourceAction {
 
     @Override
     public String edit() {
+        logger.debug("Edit in multiple resource action for id {}", this.getResourceId() );
         try {
             savedId.clear();
             ResourceInterface resource = this.loadResource(this.getResourceId());
@@ -148,13 +149,28 @@ public class MultipleResourceAction extends ResourceAction {
     }
 
     public String joinCategory() {
+        logger.debug("JoinCategory in multiple resource action for id {}", this.getResourceId());
         getFileDescriptions();
+        fetchMetadataEdit();
         return super.joinCategory();
     }
 
     public String removeCategory() {
+        logger.debug("RemoveCategory in multiple resource action for id {}", this.getResourceId());        
         getFileDescriptions();
+        fetchMetadataEdit();
         return super.removeCategory();
+    }
+
+    protected void fetchMetadataEdit() {
+        if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
+            try {
+                this.setMetadata(this.loadResource(this.getResourceId()).getMetadata());
+            } catch (Throwable ex) {
+                logger.error("error reading resource {} on fetchMetadataEdit {}", this.getResourceId(), ex);
+            }
+            logger.debug("resource {} metadata size: {}", this.getResourceId(), getMetadata().size());
+        }
     }
 
     protected void checkRightFileType(ResourceInterface resourcePrototype, String fileName) {
@@ -194,6 +210,7 @@ public class MultipleResourceAction extends ResourceAction {
 
     @Override
     public String save() {
+        logger.debug("Save in multiple resource action for id {}", this.getResourceId());
         int index = 0;
         savedId.clear();
         boolean hasError = false;
@@ -202,7 +219,6 @@ public class MultipleResourceAction extends ResourceAction {
                 if (fileDescription.length() > 0) {
                     List<BaseResourceDataBean> baseResourceDataBeanList;
                     BaseResourceDataBean resourceFile = null;
-                 
                     File file = getFile(index);
                     String filename = "";
                     Map imgMetadata = new HashMap();
@@ -222,7 +238,21 @@ public class MultipleResourceAction extends ResourceAction {
                     resourceFile.setMainGroup(getMainGroup());
                     resourceFile.setResourceType(this.getResourceType());
                     resourceFile.setCategories(getCategories());
-                    resourceFile.setMetadata(imgMetadata);
+                    logger.debug("Save method, action {}", this.getStrutsAction());
+                    if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
+                        logger.debug("Edit resource > metadata size: {}", imgMetadata.size());
+                        if (imgMetadata.size() > 0) {
+                            logger.debug("Edit resource > metadata size: {}  -> update the metadata list", imgMetadata.size());
+                            resourceFile.setMetadata(imgMetadata);
+                        } else {
+                            fetchMetadataEdit();
+                            logger.debug("Edit resource > metadata size: 0  -> use previous metadata list", getMetadata());
+                            resourceFile.setMetadata(getMetadata());
+                        }
+                    } else {
+                        resourceFile.setMetadata(imgMetadata);
+                    }
+
                     baseResourceDataBeanList = new ArrayList<BaseResourceDataBean>();
                     baseResourceDataBeanList.add(resourceFile);
                     try {
@@ -245,7 +275,6 @@ public class MultipleResourceAction extends ResourceAction {
                                 logger.debug("Resource saved successfully!");
                             }
                         }
-
                     } catch (ApsSystemException ex) {
                         hasError = true;
                         logger.error("error loading file {} ", fileUploadFileName.get(index), ex);
@@ -312,7 +341,6 @@ public class MultipleResourceAction extends ResourceAction {
     }
     
     protected List<String> getFileDescriptions() {
-
         if (null == fileDescriptions) {
             fileDescriptions = new ArrayList<>();
         }
