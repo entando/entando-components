@@ -31,17 +31,15 @@
     </s:else>
     <li>
         <s:if test="onEditContent">
-            <s:url var="archiveUrlVar" action="findResource">
-                <s:param name="resourceTypeCode" value="resourceTypeCode" />
-                <s:param name="contentOnSessionMarker" value="contentOnSessionMarker" />
-            </s:url>
+            <a href="<s:url action="findResource"><s:param name="resourceTypeCode" value="resourceTypeCode" /><s:param name="contentOnSessionMarker" value="contentOnSessionMarker" /></s:url>">
+                <s:property value="%{getText('breadcrumb.dataAsset.' + resourceTypeCode + '.list')}" />
+            </a>
         </s:if>
         <s:else>
-            <s:url var="archiveUrlVar" action="list"><s:param name="resourceTypeCode" value="resourceTypeCode" /></s:url>
+            <a href="<s:url action="list"><s:param name="resourceTypeCode" value="resourceTypeCode" /></s:url>">
+                <s:property value="%{getText('breadcrumb.dataAsset.' + resourceTypeCode + '.list')}" />
+            </a>
         </s:else>
-        <a href="<s:property value="#archiveUrlVar" />">
-            <s:property value="%{getText('breadcrumb.dataAsset.' + resourceTypeCode + '.list')}" />
-        </a>
     </li>
     <li class="page-title-container">
         <s:if test="getStrutsAction() == 1">

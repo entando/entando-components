@@ -56,11 +56,16 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             assertTrue(resource.isMultiInstance());
             assertEquals(resource.getDescription(), "logo");
             assertEquals(resource.getCategories().size(), 1);
+            assertNotNull(resource.getMetadata());
+            assertEquals(23, resource.getMetadata().size());
+
             resource = this.resourceManager.loadResource("7");
             assertTrue(resource instanceof AttachResource);
             assertFalse(resource.isMultiInstance());
             assertEquals(resource.getDescription(), "configurazione");
             assertEquals(resource.getCategories().size(), 0);
+            assertNotNull(resource.getMetadata());
+            assertEquals(0, resource.getMetadata().size());
         } catch (Throwable t) {
             throw t;
         }
@@ -79,7 +84,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             oldDescr = resource.getDescription();
             String newDescr = "New Description";
             resource.setDescription(newDescr);
-            resource.setCategories(new ArrayList<Category>());
+            resource.setCategories(new ArrayList<>());
             this.resourceManager.updateResource(resource);
             resource = this.resourceManager.loadResource("44");
             assertEquals(resource.getDescription(), newDescr);
@@ -103,7 +108,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         resourceIds = resourceManager.searchResourcesId("Image", "Wrong descr", null, this.getAllGroupCodes());
         assertEquals(0, resourceIds.size());
 
-        List<String> allowedGroups = new ArrayList<String>();
+        List<String> allowedGroups = new ArrayList<>();
         allowedGroups.add("customers");
         resourceIds = resourceManager.searchResourcesId("Image", "", null, allowedGroups);
         assertEquals(1, resourceIds.size());
@@ -113,10 +118,10 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         List<String> resourceIds = this.resourceManager.searchResourcesId("Image", "", "jpg", null, this.getAllGroupCodes());
         assertEquals(3, resourceIds.size());
 
-        resourceIds = this.resourceManager.searchResourcesId("Image", "", "aps", null, this.getAllGroupCodes());
+        resourceIds = this.resourceManager.searchResourcesId("Image", "", "and", null, this.getAllGroupCodes());
         assertEquals(2, resourceIds.size());
 
-        resourceIds = this.resourceManager.searchResourcesId("Image", "", "aps.JPG", null, this.getAllGroupCodes());
+        resourceIds = this.resourceManager.searchResourcesId("Image", "", "ando.JPG", null, this.getAllGroupCodes());
         assertEquals(1, resourceIds.size());
     }
 
@@ -127,7 +132,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         resourceIds = resourceManager.searchResourcesId("Image", null, "wrongCat", this.getAllGroupCodes());
         assertEquals(0, resourceIds.size());
 
-        List<String> allowedGroups = new ArrayList<String>();
+        List<String> allowedGroups = new ArrayList<>();
         allowedGroups.add("customers");
         resourceIds = resourceManager.searchResourcesId("Image", "", "resCat1", allowedGroups);
         assertEquals(0, resourceIds.size());
@@ -154,7 +159,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             assertEquals(resourcesId.size(), 1);
             resourcesId = resourceManager.searchResourcesId(resourceType, resDescrToAdd, categoryCodeToAdd, allowedGroups);
             assertEquals(resourcesId.size(), 1);
-            
+
             res = this.resourceManager.loadResource(resourcesId.get(0));
             assertTrue(res instanceof ImageResource);
             assertEquals(res.getCategories().size(), 1);
@@ -180,7 +185,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         }
     }
 
-    private void testAddRemoveImageResources(String mainGroup) throws Throwable {
+    public void testAddRemoveImageResources(String mainGroup) throws Throwable {
         List<String> allowedGroups = this.getAllGroupCodes();
         ResourceInterface res = null;
         String resDescrToAdd1 = "Entando Logo 1";
@@ -193,7 +198,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         BaseResourceDataBean bean2 = this.getMockBaseResource(resourceType, mainGroup, resDescrToAdd2, categoryCodeToAdd, "entando_logo_2.jpg");
         BaseResourceDataBean bean3 = this.getMockBaseResource(resourceType, mainGroup, resDescrToAdd3, categoryCodeToAdd, "entando_logo_3.jpg");
 
-        List<BaseResourceDataBean> resourceList = new ArrayList<BaseResourceDataBean>();
+        List<BaseResourceDataBean> resourceList = new ArrayList<>();
         resourceList.add(bean1);
         resourceList.add(bean2);
         resourceList.add(bean3);
@@ -213,7 +218,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             assertTrue(res instanceof ImageResource);
             assertEquals(res.getCategories().size(), 1);
             assertEquals(res.getDescription(), resDescrToAdd1);
-            assertEquals(2,res.getMetadata().size());
+            assertEquals(2, res.getMetadata().size());
             assertEquals("value1", res.getMetadata().get("metadata1"));
             assertEquals("value2", res.getMetadata().get("metadata2"));
             ResourceInstance instance0 = ((ImageResource) res).getInstance(0, null);
@@ -282,12 +287,12 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         bean.setDescr(resDescrToAdd);
         bean.setMainGroup(mainGroup);
         bean.setResourceType(resourceType);
-        Map<String, String> metadata = new HashMap<String, String>();
+        Map<String, String> metadata = new HashMap<>();
         metadata.put("metadata1", "value1");
         metadata.put("metadata2", "value2");
         bean.setMetadata(metadata);
         bean.setMimeType("image/jpeg");
-        List<Category> categories = new ArrayList<Category>();
+        List<Category> categories = new ArrayList<>();
         ICategoryManager catManager
                 = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
         Category cat = catManager.getCategory(categoryCodeToAdd);
@@ -306,12 +311,12 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         bean.setMainGroup(mainGroup);
         bean.setResourceType(resourceType);
         bean.setMimeType("image/jpeg");
-        Map<String, String> metadata = new HashMap<String, String>();
+        Map<String, String> metadata = new HashMap<>();
         metadata.put("metadata1", "value1");
         metadata.put("metadata2", "value2");
         metadata.put("Blue TRC", "0000");
         bean.setMetadata(metadata);
-        List<Category> categories = new ArrayList<Category>();
+        List<Category> categories = new ArrayList<>();
         ICategoryManager catManager
                 = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
         Category cat = catManager.getCategory(categoryCodeToAdd);
@@ -392,12 +397,22 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
     }
 
     private List<String> getAllGroupCodes() {
-        List<String> groupCodes = new ArrayList<String>();
-        List<Group> groups = this.groupManager.getGroups();
-        for (int i = 0; i < groups.size(); i++) {
-            groupCodes.add(groups.get(i).getName());
-        }
+        List<String> groupCodes = new ArrayList<>();
+        this.groupManager.getGroups().stream().forEach(group -> groupCodes.add(group.getName()));
         return groupCodes;
+    }
+
+    public void testGetMetadataMapping() throws Exception {
+        Map<String, List<String>> mapping = this.resourceManager.getMetadataMapping();
+        assertNotNull(mapping);
+        assertEquals(4, mapping.size());
+        assertEquals(5, mapping.get("alt").size());
+        assertEquals(3, mapping.get("description").size());
+        assertEquals(6, mapping.get("legend").size());
+        assertEquals("metadatakey3", mapping.get("alt").get(2));
+        assertEquals("metadataKeyA", mapping.get("description").get(0));
+        assertEquals("YYYY", mapping.get("legend").get(3));
+        assertEquals("metadataKeyK", mapping.get("title").get(1));
     }
 
     private void init() throws Exception {
@@ -408,6 +423,5 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             throw new Exception(t);
         }
     }
-
 
 }
