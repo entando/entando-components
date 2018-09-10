@@ -64,8 +64,8 @@
         <test.database.serv.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testServ;create=true</test.database.serv.url>
 
         <spring.version>5.0.5.RELEASE</spring.version>
-        <struts2.version>2.5.10.1</struts2.version>
-        <cxf.version>3.0.4</cxf.version>
+        <struts2.version>2.5.17</struts2.version>
+        <cxf.version>3.0.16</cxf.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- sonar -->
         <sonar.sources>${project.basedir}/src/main</sonar.sources>

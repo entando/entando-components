@@ -23,7 +23,6 @@ package com.agiletec.plugins.jpsurvey.apsadmin.survey;
 
 import com.agiletec.plugins.jpsurvey.apsadmin.ApsAdminPluginBaseTestCase;
 
-import com.agiletec.apsadmin.system.BaseAction;
 import com.opensymphony.xwork2.Action;
 
 public class TestSurveyDetailAction extends ApsAdminPluginBaseTestCase {
@@ -34,7 +33,7 @@ public class TestSurveyDetailAction extends ApsAdminPluginBaseTestCase {
 			this.initAction("/do/jpsurvey/Survey", "view");
 			this.addParameter("surveyId", String.valueOf(1));
 			String result = this.executeAction();
-			assertEquals(BaseAction.FAILURE, result);
+			assertEquals("listSurveys", result);
 			
 			result = this.executeView("admin", 1, false);
 			assertEquals("listSurveys", result);
