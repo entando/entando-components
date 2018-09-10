@@ -108,7 +108,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         resourceIds = resourceManager.searchResourcesId("Image", "Wrong descr", null, this.getAllGroupCodes());
         assertEquals(0, resourceIds.size());
 
-        List<String> allowedGroups = new ArrayList<String>();
+        List<String> allowedGroups = new ArrayList<>();
         allowedGroups.add("customers");
         resourceIds = resourceManager.searchResourcesId("Image", "", null, allowedGroups);
         assertEquals(1, resourceIds.size());
@@ -118,10 +118,10 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         List<String> resourceIds = this.resourceManager.searchResourcesId("Image", "", "jpg", null, this.getAllGroupCodes());
         assertEquals(3, resourceIds.size());
 
-        resourceIds = this.resourceManager.searchResourcesId("Image", "", "aps", null, this.getAllGroupCodes());
+        resourceIds = this.resourceManager.searchResourcesId("Image", "", "and", null, this.getAllGroupCodes());
         assertEquals(2, resourceIds.size());
 
-        resourceIds = this.resourceManager.searchResourcesId("Image", "", "aps.JPG", null, this.getAllGroupCodes());
+        resourceIds = this.resourceManager.searchResourcesId("Image", "", "ando.JPG", null, this.getAllGroupCodes());
         assertEquals(1, resourceIds.size());
     }
 
@@ -132,7 +132,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         resourceIds = resourceManager.searchResourcesId("Image", null, "wrongCat", this.getAllGroupCodes());
         assertEquals(0, resourceIds.size());
 
-        List<String> allowedGroups = new ArrayList<String>();
+        List<String> allowedGroups = new ArrayList<>();
         allowedGroups.add("customers");
         resourceIds = resourceManager.searchResourcesId("Image", "", "resCat1", allowedGroups);
         assertEquals(0, resourceIds.size());
