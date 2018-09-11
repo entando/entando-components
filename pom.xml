@@ -21,7 +21,45 @@
     </organization>
     <profiles>
         <profile>
-            <id>sonar</id>
+            <id>java8</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <version>2.22.0</version>
+                            <configuration>
+                                <argLine>${surefireArgLine}</argLine>
+                                <testFailureIgnore>false</testFailureIgnore>
+                                <excludes>
+                                    <exclude>**/*BaseTestCase*</exclude>
+                                </excludes>
+                                <includes>
+                                    <include>**/AllTests.java</include>
+                                </includes>
+                                <parallel>methods</parallel>
+                                <threadCount>10</threadCount>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>sonarCheck</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>sonarCheck</value>
+                </property>
+            </activation>
             <properties>
                 <!-- sonar -->
                 <sonar.sources>${project.basedir}/src/main</sonar.sources>
@@ -41,7 +79,6 @@
                 <!-- end sonar -->
             </properties>
             <build>
-                <pluginManagement>
                     <plugins>
                         <!-- sonar plugin -->
                         <plugin>
@@ -114,25 +151,7 @@
                             </configuration>
                         </plugin>
                         <!-- end maven dependency-check plugin -->
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <version>2.22.0</version>
-                            <configuration>
-                                <argLine>${surefireArgLine}</argLine>
-                                <testFailureIgnore>false</testFailureIgnore>
-                                <excludes>
-                                    <exclude>**/*BaseTestCase*</exclude>
-                                </excludes>
-                                <includes>
-                                    <include>**/AllTests.java</include>
-                                </includes>
-                                <parallel>methods</parallel>
-                                <threadCount>10</threadCount>
-                            </configuration>
-                        </plugin>
                     </plugins>
-                </pluginManagement>
             </build>
         </profile>
     </profiles>
@@ -184,7 +203,6 @@
         <struts2.version>2.5.17</struts2.version>
         <cxf.version>3.1.12</cxf.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <surefireArgLine>-Xmx2048m</surefireArgLine>
     </properties>
 
     <build>
@@ -315,23 +333,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.0</version>
-                <configuration>
-                    <argLine>${surefireArgLine}</argLine>
-                    <testFailureIgnore>false</testFailureIgnore>
-                    <excludes>
-                        <exclude>**/*BaseTestCase*</exclude>
-                    </excludes>
-                    <includes>
-                        <include>**/AllTests.java</include>
-                    </includes>
-                    <parallel>methods</parallel>
-                    <threadCount>10</threadCount>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
