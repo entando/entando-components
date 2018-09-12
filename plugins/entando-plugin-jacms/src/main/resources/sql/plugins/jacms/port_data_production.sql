@@ -24,3 +24,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jacm
     <field key="title"></field>
 </mapping>');
 INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'subIndexDir', 'Name of the sub-directory containing content indexing files', 'index');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_BACK_TO_EDIT_CONTENT', 'en', 'Back to edit content');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_BACK_TO_EDIT_CONTENT', 'it', 'Torna alla modifica dei contenuti');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_CONTENT_PREVIEW', 'en', 'Content preview');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_CONTENT_PREVIEW', 'it', 'Anteprima contenuto');
