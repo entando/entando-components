@@ -24,13 +24,13 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.util.HashMap;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager.TASK_STATES;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -242,8 +242,6 @@ public interface IKieFormManager {
      * @param state
      * @param queryStringParam
      * @param input
-     * @param opt
-     * @param payload
      * @return
      * @throws Throwable
      */
@@ -295,4 +293,19 @@ public interface IKieFormManager {
     public Map<String, String > getHostNameVersionMap();
 
     public JSONArray getKieServerStatus() throws ApsSystemException;
+
+    public JSONObject getAllCases(KieBpmConfig config, String container, String status) throws ApsSystemException;
+
+    public String startTask(KieBpmConfig config, String payload, String container, String taskId) throws ApsSystemException;
+
+    public String submitTask(KieBpmConfig config, String payload, String container, String taskId) throws ApsSystemException;
+
+    public String completeTask(KieBpmConfig config, String payload, String container, String taskId) throws ApsSystemException;
+
+    public JSONObject getTaskDetails(KieBpmConfig config, String taskId) throws ApsSystemException;
+
+    public String runAdditionalInfoRules(KieBpmConfig config, String jsonBody, String instance) throws ApsSystemException;
+
+    public String executeStartCase(KieBpmConfig config, String json, String container, String instance) throws ApsSystemException;
+
 }

@@ -1133,12 +1133,265 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return serversStatus;
     }
 
+    @Override
+    public String startTask(KieBpmConfig config, String payload, String container, String taskId) throws ApsSystemException {
+
+        logger.info("startTask(container: {}, taskId: {}", container, taskId);
+        Map<String, String> headersMap = new HashMap<>();
+        String result = null;
+        if (!config.getActive()) {
+            return result;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_PUT_HUMAN_TASK_START).resolveParams(container, taskId);
+            // generate client from the current configuration
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            // perform query
+            result = new KieRequestBuilder(client).setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setPayload(payload)
+                    .setDebug(config.getDebug())
+                    .doRequest();
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error task start", t);
+        }
+
+        return result;
+    }
+
+    @Override
+    public String submitTask(KieBpmConfig config, String payload, String container, String taskId) throws ApsSystemException {
+
+        logger.info("submitTask(container: {}, taskId: {}", container, taskId);
+        Map<String, String> headersMap = new HashMap<>();
+        String result = null;
+        if (!config.getActive()) {
+            return result;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_PUT_HUMAN_TASK_OUTPUT).resolveParams(container, taskId);
+            // generate client from the current configuration
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            // perform query
+            result = new KieRequestBuilder(client).setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setPayload(payload)
+                    .setDebug(config.getDebug())
+                    .doRequest();
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error task submit", t);
+        }
+
+        return result;
+    }
+
+    @Override
+    public String completeTask(KieBpmConfig config, String payload, String container, String taskId) throws ApsSystemException {
+
+        logger.info("completeTask(container: {}, taskId: {}", container, taskId);
+        Map<String, String> headersMap = new HashMap<>();
+        String result = null;
+        if (!config.getActive()) {
+            return result;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_PUT_HUMAN_TASK_COMPLETE).resolveParams(container, taskId);
+            // generate client from the current configuration
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            // perform query
+            result = new KieRequestBuilder(client).setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setPayload(payload)
+                    .setDebug(config.getDebug())
+                    .doRequest();
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error task complete", t);
+        }
+
+        return result;
+    }
+
+    @Override
+    public JSONObject getTaskDetails(KieBpmConfig config, String taskId) throws ApsSystemException {
+
+        logger.info("getTaskDetails(taskId: {}", taskId);
+        Map<String, String> headersMap = new HashMap<>();
+        JSONObject result;
+        if (!config.getActive()) {
+            return null;
+        }
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_GET_HUMAN_TASK_DETAILS).resolveParams(taskId);
+            // generate client from the current configuration
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            // perform query
+            String kieResponse = new KieRequestBuilder(client).setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setDebug(config.getDebug())
+                    .doRequest();
+            result = new JSONObject(kieResponse);
+
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error task complete", t);
+        }
+
+
+        return result;
+    }
+
+
+    @Override
+    public JSONObject getAllCases(KieBpmConfig config, String containerId, String status) throws ApsSystemException {
+        HashMap headersMap = new HashMap();
+        Map<String, String> queryStringParam = new HashMap<>();
+
+        String result = null;
+        JSONObject json = null;
+
+        logger.debug("kieFormManager getAllCases called ");
+        try {
+
+
+            if (status != null) {
+                queryStringParam.put("status", status);
+            }
+
+            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_GET_CASES_LIST)).resolveParams(containerId);
+            headersMap.put("Accept", "application/json");
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            result =
+                    (new KieRequestBuilder(client))
+                            .setEndpoint(t)
+                            .setHeaders(headersMap)
+                            .setRequestParams(queryStringParam)
+                            .setDebug(config.getDebug()
+                                    .booleanValue())
+                            .doRequest();
+
+
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                logger.debug("received successful message: ", result);
+
+                List<Map<String, Object>> cases = (List<Map<String, Object>>) json.toMap().get("instances");
+
+                List<Map<String, Object>> updatedCases = new ArrayList<>();
+                for (Map<String, Object> caseMap : cases) {
+
+                    String caseId = (String) caseMap.get("case-id");
+                    JSONObject details = getCaseDetails(config, containerId, caseId);
+                    caseMap.put("case-details", details);
+                    updatedCases.add(caseMap);
+                }
+
+                json.put("instances", updatedCases);
+            } else {
+                logger.debug("received empty case definitions message: ");
+            }
+
+            return json;
+        } catch (Throwable t) {
+            logger.error("Failed to fetch cases ", t);
+            throw new ApsSystemException("Error getting the cases definitions", t);
+        }
+    }
+
+    @Override
+    public String runAdditionalInfoRules(KieBpmConfig config, String jsonBody, String container) throws ApsSystemException {
+        Map<String, String> headersMap = new HashMap<>();
+        String result = null;
+
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_POST_RUN_ADDITIONAL_INFO_RULES).resolveParams(container);
+            // generate client from the current configuration
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            // perform query
+            result = new KieRequestBuilder(client).setEndpoint(ep)
+                    .setHeaders(headersMap).setPayload(jsonBody).setDebug(config.getDebug()).doRequest();
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error running additional file system", t);
+        }
+        return result;
+    }
+
+    @Override
+    public String executeStartCase(KieBpmConfig config, String json, String container, String instance) throws ApsSystemException {
+        Map<String, String> headersMap = new HashMap<>();
+        String result = null;
+
+        try {
+            // process endpoint first
+            Endpoint ep = KieEndpointDictionary.create().get(API_POST_START_CASE).resolveParams(container, instance);
+            // generate client from the current configuration
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            // add header
+            headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
+            headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            // perform query
+            result = new KieRequestBuilder(client).setEndpoint(ep)
+                    .setHeaders(headersMap)
+                    .setPayload(json)
+                    .setDebug(config.getDebug())
+                    .doRequest();
+        } catch (Throwable t) {
+            logger.error("Failed to start case ", t);
+            throw new ApsSystemException("Error starting case", t);
+        }
+        return result;
+    }
+
     public ConfigInterface getConfigManager() {
         return configManager;
     }
 
     public void setConfigManager(ConfigInterface configManager) {
         this.configManager = configManager;
+    }
+
+    public JSONObject getCaseDetails(KieBpmConfig config, String containerId, String caseId) throws ApsSystemException {
+
+        HashMap headersMap = new HashMap();
+        String result = null;
+        JSONObject json = null;
+        try {
+            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_GET_CASE_FILE)).resolveParams(containerId, caseId);
+            headersMap.put("Accept", "application/json");
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            result = (new KieRequestBuilder(client)).setEndpoint(t).setHeaders(headersMap).setDebug(config.getDebug().booleanValue()).doRequest();
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                logger.debug("received successful message: ", result);
+            } else {
+                logger.debug("received empty case definitions message: ");
+            }
+
+            return json;
+        } catch (Throwable t) {
+            logger.error("Failed to fetch case details ", t);
+            throw new ApsSystemException("Error getting the cases definitions", t);
+        }
     }
 
     private IKieFormOverrideManager overrideManager;
