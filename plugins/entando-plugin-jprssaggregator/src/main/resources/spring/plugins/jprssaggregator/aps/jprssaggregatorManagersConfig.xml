@@ -14,6 +14,9 @@
         </property>
         <property name="attributeManagerClassName" 
                   value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.LinkAttributeManager" />
+		<property name="contentManager" ref="jacmsContentManager"/>
+		<property name="linkResolverManager" ref="jacmsLinkResolverManager"/>
+		<property name="pageManager" ref="PageManager"/>
     </bean>
 	
 	<bean id="jprssaggregatorLinkAttributeContentWrapper" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeWrapper" >
