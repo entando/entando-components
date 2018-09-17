@@ -39,7 +39,6 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicContentAuthorizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jpcontentfeedback.aps.internalservlet.feedback.ContentFeedbackAction;
-import com.agiletec.plugins.jpcontentfeedback.aps.internalservlet.system.TokenInterceptor;
 import com.agiletec.plugins.jpcontentfeedback.aps.system.JpcontentfeedbackSystemConstants;
 import com.agiletec.plugins.jpcontentfeedback.aps.system.services.contentfeedback.comment.model.CommentSearchBean;
 import com.agiletec.plugins.jpcontentfeedback.aps.system.services.contentfeedback.comment.model.ICommentSearchBean;
@@ -53,277 +52,278 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import org.entando.entando.aps.system.services.cache.CacheInfoManager;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.apsadmin.system.CustomTokenInterceptor;
 
 public class TestCommentFrontEndAction extends JpContentFeedbackApsAdminBaseTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        this.init();
+    }
 
-	public void testAddDeleteCommentByWidgetConfig() throws Throwable {
-		String contentId = "ART1";
-		try {
-			Content content = this._contentManager.loadContent(contentId, true);
-			CacheInfoManager cacheInfoManager = (CacheInfoManager) ApsWebApplicationUtils.getBean(SystemConstants.CACHE_INFO_MANAGER, this.getRequest());
-			PublicContentAuthorizationInfo authInfo = new PublicContentAuthorizationInfo(content);
-			cacheInfoManager.putInCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + contentId, authInfo);
-			this.setUserOnSession("admin");
-			Widget widget = new Widget();
-			IWidgetTypeManager widgetTypeMan
-					= (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-			WidgetType widgetType = widgetTypeMan.getWidgetType("content_feedback_viewer");
-			widget.setType(widgetType);
-			ApsProperties prop = new ApsProperties();
-			prop.put("contentId", contentId);
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ACTIVE, "true");
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_MODERATED, "false");
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ANONYMOUS, "false");
-			widget.setConfig(prop);
+    public void testAddDeleteCommentByWidgetConfig() throws Throwable {
+        String contentId = "ART1";
+        try {
+            Content content = this._contentManager.loadContent(contentId, true);
+            CacheInfoManager cacheInfoManager = (CacheInfoManager) ApsWebApplicationUtils.getBean(SystemConstants.CACHE_INFO_MANAGER, this.getRequest());
+            PublicContentAuthorizationInfo authInfo = new PublicContentAuthorizationInfo(content);
+            cacheInfoManager.putInCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + contentId, authInfo);
+            this.setUserOnSession("admin");
+            Widget widget = new Widget();
+            IWidgetTypeManager widgetTypeMan
+                    = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+            WidgetType widgetType = widgetTypeMan.getWidgetType("content_feedback_viewer");
+            widget.setType(widgetType);
+            ApsProperties prop = new ApsProperties();
+            prop.put("contentId", contentId);
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ACTIVE, "true");
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_MODERATED, "false");
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ANONYMOUS, "false");
+            widget.setConfig(prop);
 
-			List<String> listaIds = this._commentManager.searchCommentIds(null);
-			assertEquals(0, listaIds.size());
+            List<String> listaIds = this._commentManager.searchCommentIds(null);
+            assertEquals(0, listaIds.size());
 
-			RequestContext e = new RequestContext();
-			e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
-			Lang lang = new Lang();
-			lang.setCode("en");
-			e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
-			this.getRequest().setAttribute(RequestContext.REQCTX, e);
+            RequestContext e = new RequestContext();
+            e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
+            Lang lang = new Lang();
+            lang.setCode("en");
+            e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
+            this.getRequest().setAttribute(RequestContext.REQCTX, e);
 
-			this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insert");
-			this.addParameter("formContentId", contentId);
-			this.addParameter("commentText", "testComment");
+            this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insert");
+            this.addParameter("formContentId", contentId);
+            this.addParameter("commentText", "testComment");
 
-			this.setToken();
+            this.setToken();
 
-			String result1 = this.executeAction();
-			assertEquals(Action.SUCCESS, result1);
+            String result1 = this.executeAction();
+            assertEquals(Action.SUCCESS, result1);
 
-			this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insert");
-			assertEquals(TokenInterceptor.INVALID_TOKEN_CODE, this.executeAction());
+            this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insert");
+            assertEquals(CustomTokenInterceptor.INVALID_TOKEN_CODE, this.executeAction());
 
-			CommentSearchBean searchBean = new CommentSearchBean();
-			searchBean.setComment("Testo ");
-			listaIds = this._commentManager.searchCommentIds(null);
-			assertEquals(1, listaIds.size());
+            CommentSearchBean searchBean = new CommentSearchBean();
+            searchBean.setComment("Testo ");
+            listaIds = this._commentManager.searchCommentIds(null);
+            assertEquals(1, listaIds.size());
 
-			this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "delete");
-			this.addParameter("contentId", listaIds.get(0));
-		} catch (Throwable t) {
-			throw t;
-		} finally {
-			List<String> listaIds = this._commentManager.searchCommentIds(null);
-			for (int i = 0; i < listaIds.size(); i++) {
-				this._commentManager.deleteComment(Integer.parseInt(listaIds.get(i)));
-			}
-		}
-	}
+            this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "delete");
+            this.addParameter("contentId", listaIds.get(0));
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            List<String> listaIds = this._commentManager.searchCommentIds(null);
+            for (int i = 0; i < listaIds.size(); i++) {
+                this._commentManager.deleteComment(Integer.parseInt(listaIds.get(i)));
+            }
+        }
+    }
 
-	private void setToken() {
-		String token = TokenHelper.generateGUID();
-		ActionContext.getContext().setSession(new HashMap<String, Object>());
-		String tokenName = "test_tokenName";
-		String tokenSessionAttributeName = TokenHelper.buildTokenSessionAttributeName(tokenName);
-		ActionContext.getContext().getSession().put(tokenSessionAttributeName, token);
-		this.addParameter(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
-		this.addParameter(tokenName, new String[]{token});
-	}
+    private void setToken() {
+        String token = TokenHelper.generateGUID();
+        ActionContext.getContext().setSession(new HashMap<String, Object>());
+        String tokenName = "test_tokenName";
+        String tokenSessionAttributeName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+        ActionContext.getContext().getSession().put(tokenSessionAttributeName, token);
+        this.addParameter(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
+        this.addParameter(tokenName, new String[]{token});
+    }
 
-	public void testAddContentRatingByShowletConfig() throws Throwable {
-		String contentId = "ART1";
-		try {
-			Content content = this._contentManager.loadContent(contentId, true);
-			CacheInfoManager cacheInfoManager = (CacheInfoManager) ApsWebApplicationUtils.getBean(SystemConstants.CACHE_INFO_MANAGER, this.getRequest());
-			PublicContentAuthorizationInfo authInfo = new PublicContentAuthorizationInfo(content);
-			cacheInfoManager.putInCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + contentId, authInfo);
-			this.setUserOnSession("admin");
-			Widget widget = new Widget();
-			IWidgetTypeManager showletTypeMan
-					= (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-			WidgetType widgetType = showletTypeMan.getWidgetType("content_feedback_viewer");
-			widget.setType(widgetType);
-			ApsProperties prop = new ApsProperties();
-			prop.put("contentId", contentId);
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ACTIVE, "true");
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_MODERATED, "false");
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ANONYMOUS, "false");
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_RATE_COMMENT, "true");
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_RATE_CONTENT, "true");
-			widget.setConfig(prop);
+    public void testAddContentRatingByShowletConfig() throws Throwable {
+        String contentId = "ART1";
+        try {
+            Content content = this._contentManager.loadContent(contentId, true);
+            CacheInfoManager cacheInfoManager = (CacheInfoManager) ApsWebApplicationUtils.getBean(SystemConstants.CACHE_INFO_MANAGER, this.getRequest());
+            PublicContentAuthorizationInfo authInfo = new PublicContentAuthorizationInfo(content);
+            cacheInfoManager.putInCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + contentId, authInfo);
+            this.setUserOnSession("admin");
+            Widget widget = new Widget();
+            IWidgetTypeManager showletTypeMan
+                    = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+            WidgetType widgetType = showletTypeMan.getWidgetType("content_feedback_viewer");
+            widget.setType(widgetType);
+            ApsProperties prop = new ApsProperties();
+            prop.put("contentId", contentId);
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ACTIVE, "true");
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_MODERATED, "false");
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ANONYMOUS, "false");
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_RATE_COMMENT, "true");
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_RATE_CONTENT, "true");
+            widget.setConfig(prop);
 
-			RequestContext e = new RequestContext();
-			e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
-			Lang lang = new Lang();
-			lang.setCode("en");
-			e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
-			this.getRequest().setAttribute(RequestContext.REQCTX, e);
+            RequestContext e = new RequestContext();
+            e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
+            Lang lang = new Lang();
+            lang.setCode("en");
+            e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
+            this.getRequest().setAttribute(RequestContext.REQCTX, e);
 
-			List<String> listaIds = this._commentManager.searchCommentIds(null);
-			assertEquals(0, listaIds.size());
+            List<String> listaIds = this._commentManager.searchCommentIds(null);
+            assertEquals(0, listaIds.size());
 
-			this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insert");
-			this.setToken();
-			this.addParameter("formContentId", "ART1");
-			this.addParameter("title", "testTitle");
-			this.addParameter("commentText", "testComment");
-			String result1 = this.executeAction();
-			assertEquals(Action.SUCCESS, result1);
+            this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insert");
+            this.setToken();
+            this.addParameter("formContentId", "ART1");
+            this.addParameter("title", "testTitle");
+            this.addParameter("commentText", "testComment");
+            String result1 = this.executeAction();
+            assertEquals(Action.SUCCESS, result1);
 
-			this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insert");
-			this.setToken();
-			this.addParameter("formContentId", contentId);
-			this.addParameter("title", "testTitle");
-			this.addParameter("commentText", "testComment");
-			String result2 = this.executeAction();
-			assertEquals(Action.SUCCESS, result2);
+            this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insert");
+            this.setToken();
+            this.addParameter("formContentId", contentId);
+            this.addParameter("title", "testTitle");
+            this.addParameter("commentText", "testComment");
+            String result2 = this.executeAction();
+            assertEquals(Action.SUCCESS, result2);
 
-			CommentSearchBean searchBean = new CommentSearchBean();
-			searchBean.setComment("Testo ");
+            CommentSearchBean searchBean = new CommentSearchBean();
+            searchBean.setComment("Testo ");
 
-			CommentSearchBean sb = new CommentSearchBean();
-			sb.setSort(ICommentSearchBean.SORT_ASC);
-			listaIds = this._commentManager.searchCommentIds(sb);
-			assertEquals(2, listaIds.size());
+            CommentSearchBean sb = new CommentSearchBean();
+            sb.setSort(ICommentSearchBean.SORT_ASC);
+            listaIds = this._commentManager.searchCommentIds(sb);
+            assertEquals(2, listaIds.size());
 
-			// Inserimento votazione su commento 1
-			this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insertCommentVote");
-			this.setToken();
-			this.addParameter("formContentId", contentId);
-			this.addParameter("selectedComment", listaIds.get(0));
-			this.addParameter("vote", 2);
-			result2 = this.executeAction();
-			assertEquals(Action.SUCCESS, result2);
+            // Inserimento votazione su commento 1
+            this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insertCommentVote");
+            this.setToken();
+            this.addParameter("formContentId", contentId);
+            this.addParameter("selectedComment", listaIds.get(0));
+            this.addParameter("vote", 2);
+            result2 = this.executeAction();
+            assertEquals(Action.SUCCESS, result2);
 
-			ContentFeedbackAction action = (ContentFeedbackAction) this.getAction();
-			IRating ratingConten_0 = action.getCommentRating(Integer.parseInt(listaIds.get(0)));
-			assertNotNull(ratingConten_0);
-			assertEquals(1, ratingConten_0.getVoters());
-			assertEquals(2, ratingConten_0.getSumvote());
+            ContentFeedbackAction action = (ContentFeedbackAction) this.getAction();
+            IRating ratingConten_0 = action.getCommentRating(Integer.parseInt(listaIds.get(0)));
+            assertNotNull(ratingConten_0);
+            assertEquals(1, ratingConten_0.getVoters());
+            assertEquals(2, ratingConten_0.getSumvote());
 
-			IRating ratingConten_1 = action.getCommentRating(Integer.parseInt(listaIds.get(1)));
-			assertNull(ratingConten_1);
+            IRating ratingConten_1 = action.getCommentRating(Integer.parseInt(listaIds.get(1)));
+            assertNull(ratingConten_1);
 
-			IRating ratingConten = action.getContentRating();
-			assertNull(ratingConten);
+            IRating ratingConten = action.getContentRating();
+            assertNull(ratingConten);
 
-			// Inserimento votazione su contenuto
-			this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insertVote");
-			this.setToken();
-			this.addParameter("formContentId", contentId);
-			this.addParameter("vote", 4);
-			result2 = this.executeAction();
-			assertEquals(Action.SUCCESS, result2);
+            // Inserimento votazione su contenuto
+            this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insertVote");
+            this.setToken();
+            this.addParameter("formContentId", contentId);
+            this.addParameter("vote", 4);
+            result2 = this.executeAction();
+            assertEquals(Action.SUCCESS, result2);
 
-			ContentFeedbackAction action_1 = (ContentFeedbackAction) this.getAction();
-			ratingConten_0 = action_1.getCommentRating(Integer.parseInt(listaIds.get(0)));
-			assertNotNull(ratingConten_0);
-			assertEquals(1, ratingConten_0.getVoters());
-			assertEquals(2, ratingConten_0.getSumvote());
-		} catch (Throwable t) {
-			throw t;
-		} finally {
-			List<String> listaIds = this._commentManager.searchCommentIds(null);
-			RatingDAO ratingDao = (RatingDAO) ((RatingManager) this._ratingManager).getRatingDAO();
-			for (int i = 0; i < listaIds.size(); i++) {
-				IRating rating = this._ratingManager.getCommentRating(Integer.parseInt(listaIds.get(i)));
-				if (rating != null) {
-					ratingDao.removeRating(rating.getCommentId());
-				}
-				this._commentManager.deleteComment(Integer.parseInt(listaIds.get(i)));
-			}
-			IRating rating = this._ratingManager.getContentRating(contentId);
-			if (rating != null) {
-				((RatingDAO) ratingDao).removeContentRating(rating.getContentId());
-			}
-		}
-	}
+            ContentFeedbackAction action_1 = (ContentFeedbackAction) this.getAction();
+            ratingConten_0 = action_1.getCommentRating(Integer.parseInt(listaIds.get(0)));
+            assertNotNull(ratingConten_0);
+            assertEquals(1, ratingConten_0.getVoters());
+            assertEquals(2, ratingConten_0.getSumvote());
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            List<String> listaIds = this._commentManager.searchCommentIds(null);
+            RatingDAO ratingDao = (RatingDAO) ((RatingManager) this._ratingManager).getRatingDAO();
+            for (int i = 0; i < listaIds.size(); i++) {
+                IRating rating = this._ratingManager.getCommentRating(Integer.parseInt(listaIds.get(i)));
+                if (rating != null) {
+                    ratingDao.removeRating(rating.getCommentId());
+                }
+                this._commentManager.deleteComment(Integer.parseInt(listaIds.get(i)));
+            }
+            IRating rating = this._ratingManager.getContentRating(contentId);
+            if (rating != null) {
+                ((RatingDAO) ratingDao).removeContentRating(rating.getContentId());
+            }
+        }
+    }
 
-	public void testViewContentAndAddCommentByRequest() throws Throwable {
-		String contentId = "ART1";
-		try {
-			Content content = this._contentManager.loadContent(contentId, true);
-			CacheInfoManager cacheInfoManager = (CacheInfoManager) ApsWebApplicationUtils.getBean(SystemConstants.CACHE_INFO_MANAGER, this.getRequest());
-			PublicContentAuthorizationInfo authInfo = new PublicContentAuthorizationInfo(content);
-			cacheInfoManager.putInCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + contentId, authInfo);
-			this.setUserOnSession("admin");
-			this._contentManager.loadContent(contentId, true);
-			Widget showlet = new Widget();
-			IWidgetTypeManager showletTypeMan
-					= (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-			WidgetType WidgetType = showletTypeMan.getWidgetType("content_feedback_viewer");
-			showlet.setType(WidgetType);
-			ApsProperties prop = new ApsProperties();
-			prop.put("contentId", contentId);
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ACTIVE, "true");
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_MODERATED, "false");
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ANONYMOUS, "false");
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_RATE_COMMENT, "true");
-			prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_RATE_CONTENT, "true");
-			showlet.setConfig(prop);
+    public void testViewContentAndAddCommentByRequest() throws Throwable {
+        String contentId = "ART1";
+        try {
+            Content content = this._contentManager.loadContent(contentId, true);
+            CacheInfoManager cacheInfoManager = (CacheInfoManager) ApsWebApplicationUtils.getBean(SystemConstants.CACHE_INFO_MANAGER, this.getRequest());
+            PublicContentAuthorizationInfo authInfo = new PublicContentAuthorizationInfo(content);
+            cacheInfoManager.putInCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + contentId, authInfo);
+            this.setUserOnSession("admin");
+            this._contentManager.loadContent(contentId, true);
+            Widget showlet = new Widget();
+            IWidgetTypeManager showletTypeMan
+                    = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+            WidgetType WidgetType = showletTypeMan.getWidgetType("content_feedback_viewer");
+            showlet.setType(WidgetType);
+            ApsProperties prop = new ApsProperties();
+            prop.put("contentId", contentId);
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ACTIVE, "true");
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_MODERATED, "false");
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_COMMENT_ANONYMOUS, "false");
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_RATE_COMMENT, "true");
+            prop.put(ContentFeedbackWidgetAction.WIDGET_PARAM_RATE_CONTENT, "true");
+            showlet.setConfig(prop);
 
-			RequestContext e = new RequestContext();
-			e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, showlet);
-			Lang lang = new Lang();
-			lang.setCode("en");
-			e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
-			this.getRequest().setAttribute(RequestContext.REQCTX, e);
+            RequestContext e = new RequestContext();
+            e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, showlet);
+            Lang lang = new Lang();
+            lang.setCode("en");
+            e.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
+            this.getRequest().setAttribute(RequestContext.REQCTX, e);
 
-			this.setUserOnSession("admin");
-			this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "intro");
-			this.setToken();
-			this.addParameter("formContentId", contentId);
-			String result = this.executeAction();
-			assertEquals(Action.SUCCESS, result);
+            this.setUserOnSession("admin");
+            this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "intro");
+            this.setToken();
+            this.addParameter("formContentId", contentId);
+            String result = this.executeAction();
+            assertEquals(Action.SUCCESS, result);
 
-			ContentFeedbackAction action = (ContentFeedbackAction) this.getAction();
-			List<String> commentIds = action.getContentCommentIds();
-			assertEquals(0, commentIds.size());
+            ContentFeedbackAction action = (ContentFeedbackAction) this.getAction();
+            List<String> commentIds = action.getContentCommentIds();
+            assertEquals(0, commentIds.size());
 
-			this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insert");
-			this.setToken();
-			this.addParameter("formContentId", contentId);
-			this.addParameter("title", "testTitle");
-			this.addParameter("commentText", "testComment");
-			this.setToken();
-			result = this.executeAction();
-			assertEquals(Action.SUCCESS, result);
+            this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "insert");
+            this.setToken();
+            this.addParameter("formContentId", contentId);
+            this.addParameter("title", "testTitle");
+            this.addParameter("commentText", "testComment");
+            this.setToken();
+            result = this.executeAction();
+            assertEquals(Action.SUCCESS, result);
 
-			this.setUserOnSession("admin");
-			this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "intro");
-			this.setToken();
-			this.addParameter("formContentId", contentId);
-			result = this.executeAction();
-			assertEquals(Action.SUCCESS, result);
+            this.setUserOnSession("admin");
+            this.initAction("/do/jpcontentfeedback/FrontEnd/contentfeedback", "intro");
+            this.setToken();
+            this.addParameter("formContentId", contentId);
+            result = this.executeAction();
+            assertEquals(Action.SUCCESS, result);
 
-			action = (ContentFeedbackAction) this.getAction();
-			action.setCurrentContentId(contentId);
-			commentIds = action.getContentCommentIds();
-			assertEquals(1, commentIds.size());
+            action = (ContentFeedbackAction) this.getAction();
+            action.setCurrentContentId(contentId);
+            commentIds = action.getContentCommentIds();
+            assertEquals(1, commentIds.size());
 
-		} catch (Throwable t) {
-			throw t;
-		} finally {
-			List<String> listaIds = this._commentManager.searchCommentIds(null);
-			for (int i = 0; i < listaIds.size(); i++) {
-				this._commentManager.deleteComment(Integer.parseInt(listaIds.get(i)));
-			}
-		}
-	}
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            List<String> listaIds = this._commentManager.searchCommentIds(null);
+            for (int i = 0; i < listaIds.size(); i++) {
+                this._commentManager.deleteComment(Integer.parseInt(listaIds.get(i)));
+            }
+        }
+    }
 
-	private void init() throws Exception {
-		try {
-			this._commentManager = (ICommentManager) this.getService(JpcontentfeedbackSystemConstants.COMMENTS_MANAGER);
-			this._ratingManager = (IRatingManager) this.getService(JpcontentfeedbackSystemConstants.RATING_MANAGER);
-			this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
-		} catch (Throwable t) {
-			throw new Exception(t);
-		}
-	}
+    private void init() throws Exception {
+        try {
+            this._commentManager = (ICommentManager) this.getService(JpcontentfeedbackSystemConstants.COMMENTS_MANAGER);
+            this._ratingManager = (IRatingManager) this.getService(JpcontentfeedbackSystemConstants.RATING_MANAGER);
+            this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
+        } catch (Throwable t) {
+            throw new Exception(t);
+        }
+    }
 
-	private ICommentManager _commentManager = null;
-	private IRatingManager _ratingManager = null;
-	private IContentManager _contentManager;
+    private ICommentManager _commentManager = null;
+    private IRatingManager _ratingManager = null;
+    private IContentManager _contentManager;
 
 }
