@@ -21,20 +21,13 @@
  */
 package org.entando.entando.plugins.jpseo.aps.tags;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.opensymphony.xwork2.util.ValueStack;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
-
-import org.apache.taglibs.standard.tag.common.core.OutSupport;
-import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
 import org.entando.entando.plugins.jpseo.aps.system.services.metatag.IMetatagCatalog;
 import org.slf4j.Logger;
@@ -46,9 +39,9 @@ import org.slf4j.LoggerFactory;
 public class SeoMetatagCatalogTag extends StrutsBodyTagSupport {
 
     private static final Logger logger = LoggerFactory.getLogger(SeoMetatagCatalogTag.class);
-    
+
     private String var;
-    
+
     @Override
     public int doEndTag() throws JspException {
         try {
@@ -64,7 +57,7 @@ public class SeoMetatagCatalogTag extends StrutsBodyTagSupport {
         }
         return super.doEndTag();
     }
-    
+
     @Override
     public void release() {
         this.var = null;

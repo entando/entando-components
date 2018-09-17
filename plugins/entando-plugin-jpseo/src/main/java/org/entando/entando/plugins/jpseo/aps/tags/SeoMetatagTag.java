@@ -27,7 +27,6 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
-import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,10 +38,11 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.PageMetadata;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.tags.ExtendedTagSupport;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 
-public class SeoMetatagTag extends OutSupport {
+public class SeoMetatagTag extends ExtendedTagSupport {
 
     private static final Logger _logger = LoggerFactory.getLogger(SeoMetatagTag.class);
 
@@ -113,7 +113,7 @@ public class SeoMetatagTag extends OutSupport {
         this._key = null;
         this._var = null;
         this._value = null;
-        super.escapeXml = true;
+        super.setEscapeXml(true);
     }
 
     public String getKey() {
@@ -138,25 +138,6 @@ public class SeoMetatagTag extends OutSupport {
 
     public void setValue(String value) {
         this._value = value;
-    }
-
-    /**
-     * Returns True if the system escape the special characters.
-     *
-     * @return True if the system escape the special characters.
-     */
-    public boolean getEscapeXml() {
-        return super.escapeXml;
-    }
-
-    /**
-     * Set if the system has to escape the special characters.
-     *
-     * @param escapeXml True if the system has to escape the special characters,
-     * else false.
-     */
-    public void setEscapeXml(boolean escapeXml) {
-        super.escapeXml = escapeXml;
     }
 
     private String _key;
