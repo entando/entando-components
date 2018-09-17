@@ -37,7 +37,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.taglibs.standard.tag.common.core.OutSupport;
+import org.entando.entando.aps.tags.ExtendedTagSupport;
 import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
 import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
@@ -47,16 +47,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Tag that handles the printing of the entire metatags section in the page header. 
- * The tag must be inserted in the header of each page template, taking care to set the escapeXml parameter to false. 
- * The tag retrieves the values of the metagags defined in page and print configuration (for each one of them, for the current language) the corresponding value. 
- * In case the value (for each metatag) in the current language is not present, the value in the default language is returned.
+ * Tag that handles the printing of the entire metatags section in the page
+ * header. The tag must be inserted in the header of each page template, taking
+ * care to set the escapeXml parameter to false. The tag retrieves the values of
+ * the metagags defined in page and print configuration (for each one of them,
+ * for the current language) the corresponding value. In case the value (for
+ * each metatag) in the current language is not present, the value in the
+ * default language is returned.
+ *
  * @author E.Santoboni
  */
-public class SeoMetatagsTag extends OutSupport {
+public class SeoMetatagsTag extends ExtendedTagSupport {
 
     private static final Logger logger = LoggerFactory.getLogger(SeoMetatagsTag.class);
-    
+
     private String var;
 
     @Override
@@ -112,9 +116,11 @@ public class SeoMetatagsTag extends OutSupport {
         this.release();
         return EVAL_PAGE;
     }
-    
+
     /**
-     * Print the extracted output, or insert the output in a variable of the page context with the name provided.
+     * Print the extracted output, or insert the output in a variable of the
+     * page context with the name provided.
+     *
      * @param output the extracted output
      * @throws JspException In case of error
      */
@@ -134,11 +140,11 @@ public class SeoMetatagsTag extends OutSupport {
             }
         }
     }
-    
+
     protected void appendMetadata(StringBuilder output, PageMetatag metatag) {
         this.appendMetadata(output, metatag.getKeyAttribute(), metatag.getKey(), metatag.getValue());
     }
-    
+
     protected void appendMetadata(StringBuilder output, String attributeName, String key, String value) {
         if (StringUtils.isBlank(attributeName) || StringUtils.isBlank(key)) {
             return;
@@ -147,11 +153,11 @@ public class SeoMetatagsTag extends OutSupport {
         output.append("<meta ").append(attributeName)
                 .append("=\"").append(key).append("\" content=\"").append(valueToUse).append("\" />").append("\n");
     }
-    
+
     @Override
     public void release() {
         this.var = null;
-        super.escapeXml = true;
+        super.setEscapeXml(true);
     }
 
     public void setVar(String var) {
@@ -160,25 +166,6 @@ public class SeoMetatagsTag extends OutSupport {
 
     protected String getVar() {
         return var;
-    }
-
-    /**
-     * Returns True if the system escape the special characters.
-     *
-     * @return True if the system escape the special characters.
-     */
-    public boolean getEscapeXml() {
-        return super.escapeXml;
-    }
-
-    /**
-     * Set if the system has to escape the special characters.
-     *
-     * @param escapeXml True if the system has to escape the special characters,
-     * else false.
-     */
-    public void setEscapeXml(boolean escapeXml) {
-        super.escapeXml = escapeXml;
     }
 
 }
