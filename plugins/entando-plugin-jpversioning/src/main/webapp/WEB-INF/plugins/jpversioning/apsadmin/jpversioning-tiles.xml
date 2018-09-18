@@ -5,53 +5,53 @@
 
 <tiles-definitions>
 	
-	<definition extends="main.layout" name="admin.jpversioning.resource.trash.Image.list">
+	<definition extends="layout.default" name="admin.jpversioning.resource.trash.Image.list">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/resource/trashImageArchive.jsp" />
 	</definition>
 
-	<definition extends="main.layout" name="admin.jpversioning.resource.trash.Attach.list">
+	<definition extends="layout.default" name="admin.jpversioning.resource.trash.Attach.list">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/resource/trashAttachArchive.jsp" />
 	</definition>
 
-	<definition extends="main.layout" name="admin.jpversioning.content.versioning.list">
+	<definition extends="layout.default" name="admin.jpversioning.content.versioning.list">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/versioning/contentFinding.jsp" />
 	</definition>
 
-	<definition extends="main.layout" name="admin.jpversioning.content.versioning.history">
+	<definition extends="layout.default" name="admin.jpversioning.content.versioning.history">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/versioning/contentHistory.jsp" />
 	</definition>
 
-	<definition extends="main.layout" name="admin.jpversioning.content.versioning.trash">
+	<definition extends="layout.default" name="admin.jpversioning.content.versioning.trash">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/versioning/trashContentVersion.jsp" />
 	</definition>
 
-	<definition extends="main.layout" name="admin.jpversioning.resource.trash.Image.trash">
+	<definition extends="layout.default" name="admin.jpversioning.resource.trash.Image.trash">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/resource/trashResource.jsp" />
 	</definition>
 
-    <definition extends="main.layout" name="admin.jpversioning.resource.trash.Attach.trash">
+    <definition extends="layout.default" name="admin.jpversioning.resource.trash.Attach.trash">
         <put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
         <put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/resource/trashResource.jsp" />
     </definition>
 
-    <definition extends="main.layout" name="admin.jpversioning.content.versioning.viewPreview">
+    <definition extends="layout.default" name="admin.jpversioning.content.versioning.viewPreview">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/versioning/viewPreview.jsp" />
 		<put-attribute name="extraResources" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/common/template/extraresources/viewPreview.jsp" />
 	</definition>
 	
-	<definition extends="main.layout" name="admin.jpversioning.content.versioning.recover">
+	<definition extends="layout.default" name="admin.jpversioning.content.versioning.recover">
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/versioning/recoverContent.jsp" />
 	</definition>
     
-	<definition extends="main.layout" name="admin.jpversioning.Config">
+	<definition extends="layout.default" name="admin.jpversioning.Config">
 		<put-attribute name="title" value="title.jpversioning.config" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/config/versioningSysConfig.jsp" />
 	</definition>

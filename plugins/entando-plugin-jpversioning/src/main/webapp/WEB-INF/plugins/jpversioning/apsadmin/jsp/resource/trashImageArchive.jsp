@@ -41,6 +41,9 @@
                         <s:text name="jpversioning.menu.attaches" />
                     </a>
                 </li>
+                <li>
+                    <a href="<s:url namespace="/do/jpversioning/Config" action="systemParams"></s:url>"><s:text name="jpversioning.menu.config" /></a>
+                </li>
             </ul>
         </div>
     </div>
