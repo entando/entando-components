@@ -27,6 +27,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 import com.agiletec.plugins.jacms.apsadmin.resource.ResourceAction;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Classe action a servizio della gestione attributi risorsa, estensione della
@@ -37,35 +39,47 @@ import com.agiletec.plugins.jacms.apsadmin.resource.ResourceAction;
  * @author E.Santoboni
  */
 public class ExtendedResourceAction extends ResourceAction {
-    
-    private static final Logger _logger = LoggerFactory.getLogger(ExtendedResourceAction.class);
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(ExtendedResourceAction.class);
+    private String contentOnSessionMarker;
+    private String entryContentAnchorDest;
+
     public String entryFindResource() {
         this.setCategoryCode(null);
         return SUCCESS;
     }
-    
+
     @Override
     public String save() {
+        logger.debug("Save in Extended resource action for id {}", this.getResourceId());
+
+        Map imgMetadata = new HashMap();
+        if (null != getFile()) {
+            logger.debug("Read Metadata file is not null");
+            imgMetadata = getImgMetadata(this.getFile());
+        } else {
+            logger.debug("Read Metadata file is null");
+        }
         try {
             if (ApsAdminSystemConstants.ADD == this.getStrutsAction()) {
+                this.setMetadata(imgMetadata);
                 ResourceInterface resource = this.getResourceManager().addResource(this);
                 this.buildEntryContentAnchorDest();
                 ResourceAttributeActionHelper.joinResource(resource, this.getRequest());
             }
         } catch (Throwable t) {
-            _logger.error("error in save", t);
+            logger.error("error in save", t);
             return FAILURE;
         }
         return SUCCESS;
     }
-    
+
     private void buildEntryContentAnchorDest() {
         HttpSession session = this.getRequest().getSession();
         String anchorDest = ResourceAttributeActionHelper.buildEntryContentAnchorDest(session);
         this.setEntryContentAnchorDest(anchorDest);
     }
-    
+
     protected List<String> getGroupCodesForSearch() {
         List<Group> groups = this.getAllowedGroups();
         List<String> codesForSearch = new ArrayList<String>();
@@ -75,7 +89,7 @@ public class ExtendedResourceAction extends ResourceAction {
         }
         return codesForSearch;
     }
-    
+
     @Override
     public List<Group> getAllowedGroups() {
         List<Group> groups = new ArrayList<Group>();
@@ -98,33 +112,29 @@ public class ExtendedResourceAction extends ResourceAction {
         return (Content) this.getRequest().getSession()
                 .getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
     }
-    
+
     public boolean isOnEditContent() {
         super.setOnEditContent(true);
         return true;
     }
-    
+
     public String getContentOnSessionMarker() {
-        return _contentOnSessionMarker;
+        return contentOnSessionMarker;
     }
 
     public void setContentOnSessionMarker(String contentOnSessionMarker) {
-        this._contentOnSessionMarker = contentOnSessionMarker;
+        this.contentOnSessionMarker = contentOnSessionMarker;
     }
-    
+
     public String getEntryContentAnchorDest() {
-        if (null == this._entryContentAnchorDest) {
+        if (null == this.entryContentAnchorDest) {
             this.buildEntryContentAnchorDest();
         }
-        return _entryContentAnchorDest;
+        return entryContentAnchorDest;
     }
 
     protected void setEntryContentAnchorDest(String entryContentAnchorDest) {
-        this._entryContentAnchorDest = entryContentAnchorDest;
+        this.entryContentAnchorDest = entryContentAnchorDest;
     }
-    
-    private String _contentOnSessionMarker;
-    
-    private String _entryContentAnchorDest;
-    
+
 }
