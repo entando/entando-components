@@ -16,6 +16,15 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'imag
 		<dimx>150</dimx>
 		<dimy>150</dimy>
 	</Dimension>
-</Dimensions>
-');
+</Dimensions>');
+INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jacms_resourceMetadataMapping', 'Mapping between resource Metadata and resource attribute fields', '<mapping>
+    <field key="alt"></field>
+    <field key="description"></field>
+    <field key="legend"></field>
+    <field key="title"></field>
+</mapping>');
 INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'subIndexDir', 'Name of the sub-directory containing content indexing files', 'index');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_BACK_TO_EDIT_CONTENT', 'en', 'Back to edit content');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_BACK_TO_EDIT_CONTENT', 'it', 'Torna alla modifica dei contenuti');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_CONTENT_PREVIEW', 'en', 'Content preview');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_CONTENT_PREVIEW', 'it', 'Anteprima contenuto');

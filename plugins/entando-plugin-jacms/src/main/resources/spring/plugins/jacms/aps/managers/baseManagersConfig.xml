@@ -4,13 +4,38 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jee="http://www.springframework.org/schema/jee"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:p="http://www.springframework.org/schema/p"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
 			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd" >
+			http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+			http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 	
+    <bean name="jacmsContentManagerCache" class="java.util.concurrent.ConcurrentHashMap"/>
+    <bean name="jacmsContentModelCache" class="java.util.concurrent.ConcurrentHashMap"/>
+    <bean name="jacmsContentPageMapperCache" class="java.util.concurrent.ConcurrentHashMap"/>
+    <bean name="jacmsResourceManagerCache" class="java.util.concurrent.ConcurrentHashMap"/>
+    
+    <bean id="jacmsExternalCachesContainer" class="org.entando.entando.aps.system.services.cache.ExternalCachesContainer">
+        <property name="caches">
+            <set>
+                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                      p:name="Entando_jacmsContentManager" p:store-ref="jacmsContentManagerCache" />
+                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                      p:name="Entando_ContentModelManager" p:store-ref="jacmsContentModelCache" />
+                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                      p:name="Entando_ContentPageMapperManager" p:store-ref="jacmsContentPageMapperCache" />
+                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                      p:name="Entando_ResourceManager" p:store-ref="jacmsResourceManagerCache" />
+            </set>
+        </property>
+    </bean>
+    
     <bean id="jacmsProtectedResourceProvider" class="org.entando.entando.plugins.jacms.aps.servlet.ProtectedResourceProvider" >
         <property name="resourceManager" ref="jacmsResourceManager" />
         <property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
