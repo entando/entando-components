@@ -50,5 +50,10 @@
 		<put-attribute name="title" value="title.jpversioning.contentHistoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/versioning/recoverContent.jsp" />
 	</definition>
-
+    
+	<definition extends="main.layout" name="admin.jpversioning.Config">
+		<put-attribute name="title" value="title.jpversioning.config" />
+		<put-attribute name="body" value="/WEB-INF/plugins/jpversioning/apsadmin/jsp/config/versioningSysConfig.jsp" />
+	</definition>
+    
 </tiles-definitions>

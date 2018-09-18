@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    
+    <package name="jpversioning_do/jpversioning/Config" namespace="/do/jpversioning/Config" extends="entando-default">
+        
+        <action name="systemParams" class="jpversioningConfigAction" method="configSystemParams">
+            <result type="tiles">admin.jpversioning.Config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+            <interceptor-ref name="redirectMessage" />
+        </action>
+        
+        <action name="updateSystemParams" class="jpversioningConfigAction" method="updateSystemParams">
+            <result type="redirectAction">systemParams</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+            <interceptor-ref name="redirectMessage" />
+        </action>
+        
+    </package>
+    
+</struts>
