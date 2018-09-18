@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+<!DOCTYPE struts PUBLIC 
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN" 
     "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-	
-	<!-- ### jpversioning ### -->
+    
 	<include file="com/agiletec/plugins/jpversioning/apsadmin/resource/resource.xml"/>
 	<include file="com/agiletec/plugins/jpversioning/apsadmin/versioning/versioning.xml"/>
 	<include file="com/agiletec/plugins/jpversioning/apsadmin/content/content.xml"/>
+    
+    <include file="com/agiletec/plugins/jpversioning/apsadmin/config/config.xml" />
 	
 </struts>
