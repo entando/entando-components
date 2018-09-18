@@ -27,7 +27,11 @@ import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AttachAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import org.entando.entando.aps.system.services.searchengine.FacetedContentsResult;
 import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
 
@@ -37,6 +41,11 @@ import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
  * @author E.Santoboni
  */
 public class TestSearchEngineManager extends BaseTestCase {
+
+    private IContentManager contentManager = null;
+    private IResourceManager resourceManager = null;
+    private ICmsSearchEngineManager searchEngineManager = null;
+    private ICategoryManager categoryManager;
 
     @Override
     protected void setUp() throws Exception {
@@ -52,11 +61,11 @@ public class TestSearchEngineManager extends BaseTestCase {
 
     public void testSearchAllContents() throws Throwable {
         try {
-            Thread thread = this._searchEngineManager.startReloadContentsReferences();
+            Thread thread = this.searchEngineManager.startReloadContentsReferences();
             thread.join();
-            Set<String> allowedGroup = new HashSet<String>();
+            Set<String> allowedGroup = new HashSet<>();
             SearchEngineFilter[] filters = {};
-            SearchEngineManager sem = (SearchEngineManager) this._searchEngineManager;
+            SearchEngineManager sem = (SearchEngineManager) this.searchEngineManager;
             List<String> freeContentsId = sem.searchEntityId(filters, null, allowedGroup);
             assertNotNull(freeContentsId);
             allowedGroup.add(Group.ADMINS_GROUP_NAME);
@@ -71,20 +80,20 @@ public class TestSearchEngineManager extends BaseTestCase {
     public void testSearchContentsId_1() throws Throwable {
         try {
             Content content_1 = this.createContent_1();
-            this._searchEngineManager.deleteIndexedEntity(content_1.getId());
-            this._searchEngineManager.addEntityToIndex(content_1);
+            this.searchEngineManager.deleteIndexedEntity(content_1.getId());
+            this.searchEngineManager.addEntityToIndex(content_1);
 
             Content content_2 = this.createContent_2();
-            this._searchEngineManager.deleteIndexedEntity(content_2.getId());
-            this._searchEngineManager.addEntityToIndex(content_2);
+            this.searchEngineManager.deleteIndexedEntity(content_2.getId());
+            this.searchEngineManager.addEntityToIndex(content_2);
 
-            List<String> contentsId = this._searchEngineManager.searchEntityId("it", "San meravigliosa", null);
+            List<String> contentsId = this.searchEngineManager.searchEntityId("it", "San meravigliosa", null);
             assertNotNull(contentsId);
             assertTrue(contentsId.contains(content_1.getId()));
-            contentsId = this._searchEngineManager.searchEntityId("en", "Petersburg wonderful", null);
+            contentsId = this.searchEngineManager.searchEntityId("en", "Petersburg wonderful", null);
             assertNotNull(contentsId);
             assertTrue(contentsId.contains(content_1.getId()));
-            contentsId = this._searchEngineManager.searchEntityId("en", "meravigliosa", null);
+            contentsId = this.searchEngineManager.searchEntityId("en", "meravigliosa", null);
             assertNotNull(contentsId);
             assertFalse(contentsId.contains(content_1.getId()));
         } catch (Throwable t) {
@@ -94,26 +103,26 @@ public class TestSearchEngineManager extends BaseTestCase {
 
     public void testSearchContentsId_2() throws Throwable {
         try {
-            Thread thread = this._searchEngineManager.startReloadContentsReferences();
+            Thread thread = this.searchEngineManager.startReloadContentsReferences();
             thread.join();
 
             Set<String> allowedGroup = new HashSet<String>();
-            List<String> contentsId = this._searchEngineManager.searchEntityId("it", "Corpo coach", allowedGroup);
+            List<String> contentsId = this.searchEngineManager.searchEntityId("it", "Corpo coach", allowedGroup);
             assertNotNull(contentsId);
             assertFalse(contentsId.contains("ART104"));
 
             allowedGroup.add("coach");
-            contentsId = this._searchEngineManager.searchEntityId("it", "testo coach", allowedGroup);
+            contentsId = this.searchEngineManager.searchEntityId("it", "testo coach", allowedGroup);
             assertNotNull(contentsId);
             assertTrue(contentsId.contains("ART104"));//coach content
 
-            contentsId = this._searchEngineManager.searchEntityId("it", "Titolo Evento 4", allowedGroup);
+            contentsId = this.searchEngineManager.searchEntityId("it", "Titolo Evento 4", allowedGroup);
             assertNotNull(contentsId);
             assertTrue(contentsId.contains("EVN194"));//free content
 
             Set<String> allowedGroup2 = new HashSet<String>();
             allowedGroup2.add(Group.ADMINS_GROUP_NAME);
-            contentsId = this._searchEngineManager.searchEntityId("it", "testo coach", allowedGroup2);
+            contentsId = this.searchEngineManager.searchEntityId("it", "testo coach", allowedGroup2);
             assertNotNull(contentsId);
             assertTrue(contentsId.contains("ART104"));//coach content
 
@@ -126,20 +135,20 @@ public class TestSearchEngineManager extends BaseTestCase {
         try {
             Content content_1 = this.createContent_1();
             content_1.setMainGroup(Group.ADMINS_GROUP_NAME);
-            this._searchEngineManager.deleteIndexedEntity(content_1.getId());
-            this._searchEngineManager.addEntityToIndex(content_1);
+            this.searchEngineManager.deleteIndexedEntity(content_1.getId());
+            this.searchEngineManager.addEntityToIndex(content_1);
 
             Content content_2 = this.createContent_2();
-            this._searchEngineManager.deleteIndexedEntity(content_2.getId());
-            this._searchEngineManager.addEntityToIndex(content_2);
+            this.searchEngineManager.deleteIndexedEntity(content_2.getId());
+            this.searchEngineManager.addEntityToIndex(content_2);
 
             List<String> allowedGroup = new ArrayList<String>();
             allowedGroup.add(Group.FREE_GROUP_NAME);
-            List<String> contentsId = this._searchEngineManager.searchEntityId("it", "San meravigliosa", allowedGroup);
+            List<String> contentsId = this.searchEngineManager.searchEntityId("it", "San meravigliosa", allowedGroup);
             assertNotNull(contentsId);
             assertFalse(contentsId.contains(content_1.getId()));
             allowedGroup.add("secondaryGroup");
-            contentsId = this._searchEngineManager.searchEntityId("it", "San meravigliosa", allowedGroup);
+            contentsId = this.searchEngineManager.searchEntityId("it", "San meravigliosa", allowedGroup);
             assertNotNull(contentsId);
             assertTrue(contentsId.contains(content_1.getId()));
         } catch (Throwable t) {
@@ -149,19 +158,19 @@ public class TestSearchEngineManager extends BaseTestCase {
 
     public void testSearchContentsId_4() throws Throwable {
         try {
-            Thread thread = this._searchEngineManager.startReloadContentsReferences();
+            Thread thread = this.searchEngineManager.startReloadContentsReferences();
             thread.join();
-            SearchEngineManager sem = (SearchEngineManager) this._searchEngineManager;
+            SearchEngineManager sem = (SearchEngineManager) this.searchEngineManager;
             SearchEngineFilter filterByType = new SearchEngineFilter(IIndexerDAO.CONTENT_TYPE_FIELD_NAME, "ART");
             SearchEngineFilter[] filters = {filterByType};
-            List<String> allowedGroup = new ArrayList<String>();
+            List<String> allowedGroup = new ArrayList<>();
             allowedGroup.add(Group.FREE_GROUP_NAME);
             List<String> contentsId = sem.searchEntityId(filters, null, allowedGroup);
             assertNotNull(contentsId);
             String[] expected1 = {"ART180", "ART1", "ART187", "ART121"};
             this.verify(contentsId, expected1);
-            Category cat1 = this._categoryManager.getCategory("cat1");
-            List<ITreeNode> categories = new ArrayList<ITreeNode>();
+            Category cat1 = this.categoryManager.getCategory("cat1");
+            List<ITreeNode> categories = new ArrayList<>();
             categories.add(cat1);
             contentsId = sem.searchEntityId(filters, categories, allowedGroup);
             assertNotNull(contentsId);
@@ -174,11 +183,11 @@ public class TestSearchEngineManager extends BaseTestCase {
 
     public void testSearchContentsId_5() throws Throwable {
         try {
-            Thread thread = this._searchEngineManager.startReloadContentsReferences();
+            Thread thread = this.searchEngineManager.startReloadContentsReferences();
             thread.join();
-            SearchEngineManager sem = (SearchEngineManager) this._searchEngineManager;
-            Category general_cat2 = this._categoryManager.getCategory("general_cat2");
-            List<ITreeNode> categories = new ArrayList<ITreeNode>();
+            SearchEngineManager sem = (SearchEngineManager) this.searchEngineManager;
+            Category general_cat2 = this.categoryManager.getCategory("general_cat2");
+            List<ITreeNode> categories = new ArrayList<>();
             categories.add(general_cat2);
             List<String> allowedGroup = new ArrayList<String>();
             allowedGroup.add(Group.FREE_GROUP_NAME);
@@ -189,7 +198,7 @@ public class TestSearchEngineManager extends BaseTestCase {
             contentsId = sem.searchEntityId(null, categories, allowedGroup);
             String[] expected1 = {"ART111", "ART120"};
             this.verify(contentsId, expected1);
-            Category general_cat1 = this._categoryManager.getCategory("general_cat1");
+            Category general_cat1 = this.categoryManager.getCategory("general_cat1");
             categories.add(general_cat1);
             contentsId = sem.searchEntityId(null, categories, allowedGroup);
             assertNotNull(contentsId);
@@ -202,13 +211,13 @@ public class TestSearchEngineManager extends BaseTestCase {
 
     public void testSearchContentsId_6() throws Throwable {
         try {
-            Thread thread = this._searchEngineManager.startReloadContentsReferences();
+            Thread thread = this.searchEngineManager.startReloadContentsReferences();
             thread.join();
-            SearchEngineManager sem = (SearchEngineManager) this._searchEngineManager;
-            Category general = this._categoryManager.getCategory("general");
-            List<ITreeNode> categories = new ArrayList<ITreeNode>();
+            SearchEngineManager sem = (SearchEngineManager) this.searchEngineManager;
+            Category general = this.categoryManager.getCategory("general");
+            List<ITreeNode> categories = new ArrayList<>();
             categories.add(general);
-            List<String> allowedGroup = new ArrayList<String>();
+            List<String> allowedGroup = new ArrayList<>();
             allowedGroup.add(Group.ADMINS_GROUP_NAME);
             List<String> contentsId = sem.searchEntityId(null, categories, allowedGroup);
             assertNotNull(contentsId);
@@ -222,16 +231,16 @@ public class TestSearchEngineManager extends BaseTestCase {
     public void testSearchContentsId_7() throws Throwable {
         try {
             Content content_1 = this.createContent_1();
-            this._searchEngineManager.deleteIndexedEntity(content_1.getId());
-            this._searchEngineManager.addEntityToIndex(content_1);
+            this.searchEngineManager.deleteIndexedEntity(content_1.getId());
+            this.searchEngineManager.addEntityToIndex(content_1);
 
             Content content_2 = this.createContent_2();
-            this._searchEngineManager.deleteIndexedEntity(content_2.getId());
-            this._searchEngineManager.addEntityToIndex(content_2);
+            this.searchEngineManager.deleteIndexedEntity(content_2.getId());
+            this.searchEngineManager.addEntityToIndex(content_2);
 
             Content content_3 = this.createContent_3();
-            this._searchEngineManager.deleteIndexedEntity(content_3.getId());
-            this._searchEngineManager.addEntityToIndex(content_3);
+            this.searchEngineManager.deleteIndexedEntity(content_3.getId());
+            this.searchEngineManager.addEntityToIndex(content_3);
 
             //San Pietroburgo è una città meravigliosa W3C-WAI
             //100
@@ -239,9 +248,9 @@ public class TestSearchEngineManager extends BaseTestCase {
             //101
             //La vita è una cosa meravigliosa
             //103
-            SearchEngineManager sem = (SearchEngineManager) this._searchEngineManager;
+            SearchEngineManager sem = (SearchEngineManager) this.searchEngineManager;
 
-            List<String> allowedGroup = new ArrayList<String>();
+            List<String> allowedGroup = new ArrayList<>();
             allowedGroup.add(Group.FREE_GROUP_NAME);
             SearchEngineFilter filter1 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.ALL_WORDS);
             SearchEngineFilter[] filters1 = {filter1};
@@ -277,10 +286,10 @@ public class TestSearchEngineManager extends BaseTestCase {
 
     public void testFacetedAllContents() throws Throwable {
         try {
-            Thread thread = this._searchEngineManager.startReloadContentsReferences();
+            Thread thread = this.searchEngineManager.startReloadContentsReferences();
             thread.join();
-            SearchEngineManager sem = (SearchEngineManager) this._searchEngineManager;
-            Set<String> allowedGroup = new HashSet<String>();
+            SearchEngineManager sem = (SearchEngineManager) this.searchEngineManager;
+            Set<String> allowedGroup = new HashSet<>();
             allowedGroup.add(Group.ADMINS_GROUP_NAME);
             SearchEngineFilter[] filters = {};
             FacetedContentsResult result = sem.searchFacetedEntities(filters, null, allowedGroup);
@@ -296,13 +305,13 @@ public class TestSearchEngineManager extends BaseTestCase {
 
     public void testSearchFacetedContents_1() throws Throwable {
         try {
-            Thread thread = this._searchEngineManager.startReloadContentsReferences();
+            Thread thread = this.searchEngineManager.startReloadContentsReferences();
             thread.join();
-            SearchEngineManager sem = (SearchEngineManager) this._searchEngineManager;
-            Category general = this._categoryManager.getCategory("general");
-            List<ITreeNode> categories = new ArrayList<ITreeNode>();
+            SearchEngineManager sem = (SearchEngineManager) this.searchEngineManager;
+            Category general = this.categoryManager.getCategory("general");
+            List<ITreeNode> categories = new ArrayList<>();
             categories.add(general);
-            List<String> allowedGroup = new ArrayList<String>();
+            List<String> allowedGroup = new ArrayList<>();
             allowedGroup.add(Group.FREE_GROUP_NAME);
             allowedGroup.add(Group.ADMINS_GROUP_NAME);
             FacetedContentsResult result = sem.searchFacetedEntities(null, categories, allowedGroup);
@@ -335,8 +344,8 @@ public class TestSearchEngineManager extends BaseTestCase {
         text.setText("San Pietroburgo è una città meravigliosa W3C-WAI", "it");
         text.setText("St. Petersburg is a wonderful city", "en");
         content.addAttribute(text);
-        Category category1 = this._categoryManager.getCategory("resCat2");
-        Category category2 = this._categoryManager.getCategory("general_cat3");
+        Category category1 = this.categoryManager.getCategory("resCat2");
+        Category category2 = this.categoryManager.getCategory("general_cat3");
         content.addCategory(category1);
         content.addCategory(category2);
         return content;
@@ -355,8 +364,8 @@ public class TestSearchEngineManager extends BaseTestCase {
         text.setText("Il turismo ha incrementato più del 20 per cento nel 2011-2013, quando la Croazia ha aderito all'Unione europea. Consegienda di questo aumento è una serie di modernizzazione di alloggi di recente costruzione, tra cui circa tre dozzine di ostelli.", "it");
         text.setText("Tourism had shot up more than 20 percent from 2011 to 2013, when Croatia joined the European Union. Accompanying that rise is a raft of modernized and recently built lodgings, including some three dozen hostels.", "en");
         content.addAttribute(text);
-        Category category1 = this._categoryManager.getCategory("resCat1");
-        Category category2 = this._categoryManager.getCategory("general_cat2");
+        Category category1 = this.categoryManager.getCategory("resCat1");
+        Category category2 = this.categoryManager.getCategory("general_cat2");
         content.addCategory(category1);
         content.addCategory(category2);
         return content;
@@ -374,21 +383,50 @@ public class TestSearchEngineManager extends BaseTestCase {
         text.setText("La vita è una cosa meravigliosa", "it");
         text.setText("Life is a wonderful thing", "en");
         content.addAttribute(text);
-        Category category = this._categoryManager.getCategory("general_cat1");
+        Category category = this.categoryManager.getCategory("general_cat1");
         content.addCategory(category);
         return content;
     }
 
+    public void testSearchContentByResource() throws Exception {
+        Content contentForTest = this.contentManager.loadContent("ALL4", true);
+        try {
+            contentForTest.setId(null);
+            AttachAttribute attachAttribute = (AttachAttribute) contentForTest.getAttribute("Attach");
+            ResourceInterface resource = this.resourceManager.loadResource("6");
+            assertNotNull(resource);
+            attachAttribute.setResource(resource, "it");
+            this.contentManager.insertOnLineContent(contentForTest);
+            assertNotNull(contentForTest.getId());
+            super.waitThreads(ICmsSearchEngineManager.RELOAD_THREAD_NAME_PREFIX);
+            List<String> allowedGroup = new ArrayList<>();
+            allowedGroup.add(Group.FREE_GROUP_NAME);
+            SearchEngineFilter filter1 = new SearchEngineFilter("it", "accelerated development", SearchEngineFilter.TextSearchOption.ALL_WORDS);
+            SearchEngineFilter[] filters1 = {filter1};
+            List<String> contentsId = ((SearchEngineManager) this.searchEngineManager).searchEntityId(filters1, null, allowedGroup);
+            assertNotNull(contentsId);
+            assertEquals(1, contentsId.size());
+            assertTrue(contentsId.contains(contentForTest.getId()));
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            Content contentToDelete = this.contentManager.loadContent(contentForTest.getId(), false);
+            if (null != contentToDelete) {
+                this.contentManager.removeOnLineContent(contentToDelete);
+                this.contentManager.deleteContent(contentToDelete);
+            }
+        }
+    }
+
     private void init() throws Exception {
         try {
-            this._searchEngineManager = (ICmsSearchEngineManager) this.getService(JacmsSystemConstants.SEARCH_ENGINE_MANAGER);
-            this._categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
+            this.contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
+            this.resourceManager = (IResourceManager) this.getService(JacmsSystemConstants.RESOURCE_MANAGER);
+            this.searchEngineManager = (ICmsSearchEngineManager) this.getService(JacmsSystemConstants.SEARCH_ENGINE_MANAGER);
+            this.categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
         } catch (Exception e) {
             throw e;
         }
     }
-
-    private ICmsSearchEngineManager _searchEngineManager = null;
-    private ICategoryManager _categoryManager;
 
 }
