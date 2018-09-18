@@ -6,7 +6,7 @@
     <li><s:text name="breadcrumb.integrations.components"/></li>
     <li><s:text name="jpversioning.admin.menu"/></li>
     <li class="page-title-container"><s:text name="title.jpversioning.config" /></li>
-</ol
+</ol>
 
 <div class="page-tabs-header">
     <div class="row">
@@ -39,68 +39,72 @@
         </div>
     </div>
 </div>
-<br>
+<br />
 
-<div id="main">
-    <s:form action="updateSystemParams" class="form-horizontal">
-        <s:if test="hasActionErrors()">
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                    <span class="pficon pficon-close"></span>
-                </button>
-                <span class="pficon pficon-error-circle-o"></span>
-                <strong><s:text name="message.title.ActionErrors" />
-                </strong>
-                <ul class="margin-base-top">
-                    <s:iterator value="actionErrors">
-                        <li><s:property escapeHtml="false" /></li>
+<div class="nav">
+    <!-- Tab panes -->
+    <div class="tab-content margin-large-bottom">
+        <div class="tab-pane active" id="frag-settings">
+        <s:form action="updateSystemParams" cssClass="form-horizontal">
+            <s:if test="hasActionMessages()">
+                <div class="alert alert-success">
+                    <span class="pficon pficon-ok"></span>
+                    <strong><s:text name="messages.confirm" /></strong>
+                    <ul>
+                        <s:iterator value="actionMessages">
+                            <li><s:property escapeHtml="false" /></li>
                         </s:iterator>
-                </ul>
-            </div>
-        </s:if>
-        <s:if test="hasActionMessages()">
-            <div class="alert alert-success">
-                <span class="pficon pficon-ok"></span>
-                <strong><s:text name="messages.confirm" /></strong>
-                <s:iterator value="actionMessages">
-                    <li><s:property escapeHtml="false" /></li>
-                    </s:iterator>
-            </div>
-        </s:if>
-        
-        <div class="form-group">
-            <label class="display-block"><s:text name="jpversioning.label.deleteMidVersions" /></label>
-            <div class="btn-group" data-toggle="buttons">
-                <s:set var="paramName" value="'jpversioning_deleteMidVersions'" />
-                <s:include value="/WEB-INF/apsadmin/jsp/admin/booleanParamBlock.jsp" />
-                <wpsf:hidden name="%{#paramName + externalParamMarker}" value="true"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <s:set var="jpversioning_paramName" value="'jpversioning_contentsToIgnore'" />
-            <label class="control-label col-sm-2 text-right" for="<s:property value="#jpversioning_paramName"/>"><s:text name="jpversioning.label.contentsToIgnore" /></label>
-            <div class="col-sm-9">
-                <wpsf:textfield name="%{#jpversioning_paramName}" id="%{#jpversioning_paramName}" value="%{systemParams.get(#jpversioning_paramName)}" cssClass="form-control" />
-                <wpsf:hidden name="%{#jpversioning_paramName + externalParamMarker}" value="true"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <s:set var="jpversioning_paramName" value="'jpversioning_contentTypesToIgnore'" />
-            <label class="control-label col-sm-2 text-right" for="<s:property value="#jpversioning_paramName"/>"><s:text name="jpversioning.label.contentTypesToIgnore" /></label>
-            <div class="col-sm-9">
-                <wpsf:textfield name="%{#jpversioning_paramName}" id="%{#jpversioning_paramName}" value="%{systemParams.get(#jpversioning_paramName)}" cssClass="form-control" />
-                <wpsf:hidden name="%{#jpversioning_paramName + externalParamMarker}" value="true"/>
-            </div>
-        </div>
-            
-        <div class="col-xs-12">
-            <div class="form-group pull-right">
-                <div class="btn-group">
-                    <wpsf:submit type="button" cssClass="btn btn-primary ">
-                        <s:text name="label.save"/>
-                    </wpsf:submit>
+                    </ul>
                 </div>
+            </s:if>
+            <fieldset class="col-xs-12 margin-large-top">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-3 col-label">
+                            <span class="display-block"><s:text name="jpversioning.label.deleteMidVersions" /></span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                            <s:set var="paramName" value="'jpversioning_deleteMidVersions'" />
+                            <input type="hidden" value="<s:property value="systemParams[#paramName]" />" id="<s:property value="#paramName"/>"
+                                   name="<s:property value="#paramName"/>" />
+                            <input type="checkbox" value="<s:property value="systemParams[#paramName]" />" id="ch_<s:property value="#paramName"/>" class="bootstrap-switch"
+                                   <s:if test="systemParams[#paramName] == 'true'">checked="checked"</s:if> />
+                            <wpsf:hidden name="%{#paramName + externalParamMarker}" value="true"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <s:set var="jpversioning_paramName" value="'jpversioning_contentsToIgnore'" />
+                        <label class="control-label col-sm-2 text-right" for="<s:property value="#jpversioning_paramName"/>"><s:text name="jpversioning.label.contentsToIgnore" /></label>
+                        <div class="col-sm-9">
+                            <wpsf:textfield name="%{#jpversioning_paramName}" id="%{#jpversioning_paramName}" value="%{systemParams.get(#jpversioning_paramName)}" cssClass="form-control" />
+                            <wpsf:hidden name="%{#jpversioning_paramName + externalParamMarker}" value="true"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <s:set var="jpversioning_paramName" value="'jpversioning_contentTypesToIgnore'" />
+                        <label class="control-label col-sm-2 text-right" for="<s:property value="#jpversioning_paramName"/>"><s:text name="jpversioning.label.contentTypesToIgnore" /></label>
+                        <div class="col-sm-9">
+                            <wpsf:textfield name="%{#jpversioning_paramName}" id="%{#jpversioning_paramName}" value="%{systemParams.get(#jpversioning_paramName)}" cssClass="form-control" />
+                            <wpsf:hidden name="%{#jpversioning_paramName + externalParamMarker}" value="true"/>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="col-xs-12">
+                <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
+                    <s:text name="label.save" />
+                </wpsf:submit>
             </div>
+        </s:form>
         </div>
-    </s:form>
+    </div>
 </div>
+
+<script type="application/javascript" >
+    $('input[type="checkbox"][id^="ch_"]').on('switchChange.bootstrapSwitch', function (ev, data) {
+    var id = ev.target.id.substring(3);
+    console.log("id", id);
+    var $element = $('#'+id);
+    $element.attr('value', ''+data);
+    });
+</script>
