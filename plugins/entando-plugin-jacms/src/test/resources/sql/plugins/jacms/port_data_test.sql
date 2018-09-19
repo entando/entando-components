@@ -224,10 +224,13 @@ INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, l
 
 
 
+INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename) VALUES ('6', 'Attach', 'Text resource', 'free', '<?xml version="1.0" encoding="UTF-8"?>
+<resource typecode="Attach" id="6"><descr>Text resource</descr><groups mainGroup="free" /><categories /><masterfile>text_resource.txt</masterfile><instance><size>1</size><filename>text_resource.txt</filename><mimetype>application/txt</mimetype><weight>55 Kb</weight></instance></resource>
+', 'text_resource.txt');
 INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename) VALUES ('7', 'Attach', 'configurazione', 'free', '<?xml version="1.0" encoding="UTF-8"?>
 <resource typecode="Attach" id="7"><descr>configurazione</descr><groups mainGroup="free" /><categories /><masterfile>configurazione.txt</masterfile><instance><size>0</size><filename>configurazione.txt</filename><mimetype>application/msword</mimetype><weight>55 Kb</weight></instance></resource>
 ', 'configurazione.txt');
-INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename) VALUES ('82', 'Image', 'jAPS', 'customers', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename) VALUES ('82', 'Image', 'Entando', 'customers', '<?xml version="1.0" encoding="UTF-8"?>
 <resource typecode="Image" id="82"><descr>Entando</descr><groups mainGroup="customers" /><categories /><masterfile>entando.jpg</masterfile><instance><size>3</size><filename>entando_d3.jpg</filename><mimetype>image/jpeg</mimetype><weight>2 Kb</weight></instance><instance><size>2</size><filename>entando_d2.jpg</filename><mimetype>image/jpeg</mimetype><weight>2 Kb</weight></instance><instance><size>1</size><filename>entando_d1.jpg</filename><mimetype>image/jpeg</mimetype><weight>1 Kb</weight></instance><instance><size>0</size><filename>entando_d0.jpg</filename><mimetype>image/jpeg</mimetype><weight>9 Kb</weight></instance></resource>
 ', 'entando.jpg');
 INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename) VALUES ('22', 'Image', 'Entando Team', 'free', '<?xml version="1.0" encoding="UTF-8"?>
@@ -383,7 +386,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 <contenttypes>
 	<contenttype typecode="ALL" typedescr="Content type with all attribute types" viewpage="announcements_read" listmodel="**NULL**" defaultmodel="**NULL**">
 		<attributes>
-			<attribute name="Attach" attributetype="Attach" />
+			<attribute name="Attach" attributetype="Attach" indexingtype="text" />
 			<attribute name="Boolean" attributetype="Boolean" />
 			<attribute name="CheckBox" attributetype="CheckBox" />
 			<attribute name="Date" attributetype="Date" />
