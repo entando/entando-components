@@ -252,14 +252,14 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
 	}
     
     public void testGetGroupUtilizers() throws Throwable {
-    	assertTrue(this._resourceManager instanceof GroupUtilizer);
-        List<String> utilizers = ((GroupUtilizer) this._resourceManager).getGroupUtilizers(Group.FREE_GROUP_NAME);
-    	assertEquals(3, utilizers.size());
-    	
-        utilizers = ((GroupUtilizer) this._resourceManager).getGroupUtilizers("customers");
-    	assertEquals(1, utilizers.size());
-        String resourceId = utilizers.get(0);
-    	assertEquals("82", resourceId);
+        assertTrue(this.resourceManager instanceof GroupUtilizer);
+        List utilizers = ((GroupUtilizer) this.resourceManager).getGroupUtilizers(Group.FREE_GROUP_NAME);
+        assertEquals(4, utilizers.size());
+
+        utilizers = ((GroupUtilizer) this.resourceManager).getGroupUtilizers("customers");
+        assertEquals(1, utilizers.size());
+        String resourceId = (String) utilizers.get(0);
+        assertEquals("82", resourceId);
     }
     
     private List<String> getAllGroupCodes() {
