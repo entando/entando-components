@@ -19,35 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpversioning.aps.system;
+package com.agiletec.plugins.jpversioning.apsadmin.config;
 
-/**
- * @author G.Cocco
- */
-public interface JpversioningSystemConstants {
+import com.agiletec.apsadmin.admin.BaseAdminAction;
 
-    /**
-     * Nome del servizio che gestisce le risorse cestinate.
-     */
-    public static final String TRASHED_RESOURCE_MANAGER = "jpversioningTrashedResourceManager";
+public class VersioningConfigAction extends BaseAdminAction {
 
-    /**
-     * Nome del servizio che gestisce le risorse cestinate.
-     */
-    public static final String VERSIONING_MANAGER = "jpversioningVersioningManager";
-
-    public final static String TRASHED_IMAGE_RESOURCE_DIR_NAME = "images";
-
-    public final static String TRASHED_ATTACH_RESOURCE_DIR_NAME = "documents";
-
-    public final static String CONFIG_PARAM_DELETE_MID_VERSIONS = "jpversioning_deleteMidVersions";
-
-    public final static String CONFIG_PARAM_CONTENTS_TO_IGNORE = "jpversioning_contentsToIgnore";
-
-    public final static String CONFIG_PARAM_CONTENT_TYPES_TO_IGNORE = "jpversioning_contentTypesToIgnore";
-
-    public final static String CONFIG_PARAM_RESOURCE_TRASH_FOLDER = "jpversioning_resourceTrashRootDiskFolder";
-
-    public final static String DEFAULT_RESOURCE_TRASH_FOLDER_NAME = "jpversioning/trashedresources";
+    @Override
+    public String updateSystemParams() {
+        return this.updateSystemParams(true);
+    }
 
 }
