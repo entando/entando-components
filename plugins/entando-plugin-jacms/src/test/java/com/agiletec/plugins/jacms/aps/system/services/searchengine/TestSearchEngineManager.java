@@ -398,12 +398,11 @@ public class TestSearchEngineManager extends BaseTestCase {
             attachAttribute.setResource(resource, "it");
             this.contentManager.insertOnLineContent(contentForTest);
             assertNotNull(contentForTest.getId());
+            super.waitNotifyingThread();
             super.waitThreads(ICmsSearchEngineManager.RELOAD_THREAD_NAME_PREFIX);
             List<String> allowedGroup = new ArrayList<>();
             allowedGroup.add(Group.FREE_GROUP_NAME);
-            SearchEngineFilter filter1 = new SearchEngineFilter("it", "accelerated development", SearchEngineFilter.TextSearchOption.ALL_WORDS);
-            SearchEngineFilter[] filters1 = {filter1};
-            List<String> contentsId = ((SearchEngineManager) this.searchEngineManager).searchEntityId(filters1, null, allowedGroup);
+            List<String> contentsId = this.searchEngineManager.searchEntityId("it", "accelerated development", allowedGroup);
             assertNotNull(contentsId);
             assertEquals(1, contentsId.size());
             assertTrue(contentsId.contains(contentForTest.getId()));
