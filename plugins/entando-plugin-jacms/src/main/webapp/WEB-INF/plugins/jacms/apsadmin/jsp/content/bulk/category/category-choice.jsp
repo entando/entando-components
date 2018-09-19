@@ -128,8 +128,8 @@
                     </s:if>
                     <s:elseif test="#categoryTreeStyleVar == 'request'">
                         <s:set var="currentRoot" value="showableTree" />
-                        <s:set var="openTreeActionName" value="'entry'" />
-                        <s:set var="closeTreeActionName" value="'entry'" />
+                        <s:set var="openTreeActionName" value="'openCloseTreeOnBulkActions'" />
+                        <s:set var="closeTreeActionName" value="'openCloseTreeOnBulkActions'" />
                         <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilder-request-categories.jsp" />
                     </s:elseif>
                 </tbody>
