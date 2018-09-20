@@ -8,7 +8,6 @@
     <package name="collaboration_do/collaboration/FrontEnd/Idea/NewIdea" namespace="/do/collaboration/FrontEnd/Idea/NewIdea" extends="entando-front-default">
 		
         <interceptors>
-            <interceptor name="entandoToken" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.TokenInterceptor" />
             <interceptor name="loggeduser" class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.system.LoggeduserInterceptor" />
         </interceptors>
         
@@ -125,7 +124,6 @@
     <package name="collaboration_do/collaboration/FrontEnd/Idea" namespace="/do/collaboration/FrontEnd/Idea" extends="entando-front-default">
 		
         <interceptors>
-            <interceptor name="entandoToken" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.TokenInterceptor" />
             <interceptor name="loggeduser" class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.system.LoggeduserInterceptor" />
         </interceptors>
 		
@@ -190,7 +188,6 @@
     <package name="collaboration_do/collaboration/FrontEnd/Idea/Manage" namespace="/do/collaboration/FrontEnd/Idea/Manage" extends="entando-front-default">
 		
         <interceptors>
-            <interceptor name="entandoToken" class="com.agiletec.plugins.jpcrowdsourcing.aps.system.TokenInterceptor" />
             <interceptor name="loggeduser" class="com.agiletec.plugins.jpcrowdsourcing.apsadmin.system.LoggeduserInterceptor" />
         </interceptors>
 		
