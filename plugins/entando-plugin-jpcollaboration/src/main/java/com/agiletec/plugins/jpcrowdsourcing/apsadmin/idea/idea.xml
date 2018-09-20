@@ -5,7 +5,7 @@
 
 <struts>
 
-	<package name="collaboration_do/collaboration/Idea" namespace="/do/collaboration/Idea" extends="entando-default">
+	<package name="collaboration_do/collaboration/Idea" namespace="/do/collaboration/Idea" extends="japs-default">
 
 		<action name="list" class="jpcollaborationIdeaFinderAction">
 	        <result type="tiles">admin.jpcrowdsourcing.idea.list</result>

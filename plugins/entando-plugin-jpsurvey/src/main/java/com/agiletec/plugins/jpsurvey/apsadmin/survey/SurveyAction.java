@@ -42,7 +42,7 @@ import java.util.List;
  * of JSP pages we inherit the parameter 'isQuestionnaire' which tells us in
  * advance whether the _survey is a poll or a questionnaire
  */
-public class SurveyAction extends AbstractSurveyAction {
+public class SurveyAction extends AbstractSurveyAction implements ISurveyAction {
 	
 	@Override
 	public void validate() {
@@ -130,6 +130,7 @@ public class SurveyAction extends AbstractSurveyAction {
 		}
 	}
 	
+	@Override
 	public String addQuestion() {
 		String result = this.saveSurvey();
 		// check the action type
@@ -142,11 +143,13 @@ public class SurveyAction extends AbstractSurveyAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String newSurvey() {
 		this.setStrutsAction(ApsAdminSystemConstants.ADD);
 		return SUCCESS;
 	}
 
+	@Override
 	public boolean isEditable(Integer surveyId) {
 		boolean res = false;
 		try {
@@ -161,6 +164,7 @@ public class SurveyAction extends AbstractSurveyAction {
 		return res;
 	}
 
+	@Override
 	public int getResponseOccurences(Integer questionId) {
 		List<SingleQuestionResponse> responses = null;
 		try {
@@ -179,6 +183,7 @@ public class SurveyAction extends AbstractSurveyAction {
 		}
 	}
 
+	@Override
 	public int getVotersNumber(Integer surveyId) {
 		List<Integer> list = null;
 		try {
@@ -195,11 +200,12 @@ public class SurveyAction extends AbstractSurveyAction {
 		}
 	}
 
+	@Override
 	public String editSurvey() {
 		Survey survey = null;
 		this.setStrutsAction(ApsAdminSystemConstants.EDIT);
 		try {
-            survey = (null != this.getSurveyId()) ? this.getSurveyManager().loadSurvey(this.getSurveyId()) : null;
+			survey = this.getSurveyManager().loadSurvey(this.getSurveyId());
 			if (null == survey) {
 				this.addActionError(this.getText("message.surveyAction.nullSurvey", new String[] {getText("message.jpsurvey.poll.type"), String.valueOf(this.getSurveyId())}));
 				return "listSurveys";
@@ -236,6 +242,7 @@ public class SurveyAction extends AbstractSurveyAction {
 		return this.getGroupManager().getGroups();
 	}
 
+	@Override
 	public String saveSurvey() {
 		Survey survey = null;
 		try {
@@ -296,6 +303,7 @@ public class SurveyAction extends AbstractSurveyAction {
 		return FAILURE;
 	}
 	
+	@Override
 	public String associateSurveyImageEntry() {
 		if (this.getStrutsAction() != ApsAdminSystemConstants.EDIT) {
 			this.addActionError(this.getText("message.surveyAction.sysInvalidStatus"));
@@ -328,6 +336,7 @@ public class SurveyAction extends AbstractSurveyAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String trashSurvey() {
 		Survey survey = null;
 		try {
@@ -345,6 +354,7 @@ public class SurveyAction extends AbstractSurveyAction {
 		return SUCCESS;
 	}
 	
+	@Override
 	public String deleteSurvey() {
 		Survey survey = null;
 		try {
@@ -363,6 +373,7 @@ public class SurveyAction extends AbstractSurveyAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String retireSurvey() {
 		Survey survey = null;
 		try {
@@ -388,6 +399,7 @@ public class SurveyAction extends AbstractSurveyAction {
 		}
 	}
 	
+	@Override
 	public String publishSurvey() {
 		Survey survey = null;
 		try {
@@ -415,6 +427,7 @@ public class SurveyAction extends AbstractSurveyAction {
 		return SUCCESS;
 	}
 	
+	@Override
 	public String editQuestion() {
 		return SUCCESS;
 	}

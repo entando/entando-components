@@ -25,6 +25,7 @@ import java.util.List;
 
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.ApsProperties;
+import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.apsadmin.resource.AbstractResourceAction;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.ISurveyManager;
 
@@ -59,6 +60,13 @@ public class AbstractSurveyAction extends AbstractResourceAction {
 		return this.getLangManager().getLangs();
 	}
 	
+	protected IResourceManager getResourceManager() {
+		return _resourceManager;
+	}
+	public void setResourceManager(IResourceManager resourceManager) {
+		this._resourceManager = resourceManager;
+	}
+	
 	public void setSurveyManager(ISurveyManager surveyManager) {
 		this._surveyManager = surveyManager;
 	}
@@ -66,6 +74,7 @@ public class AbstractSurveyAction extends AbstractResourceAction {
 		return this._surveyManager;
 	}
 	
+	private IResourceManager _resourceManager;
 	private ISurveyManager _surveyManager;
 	
 }

@@ -28,8 +28,9 @@ import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Survey;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.SurveyRecord;
 import com.agiletec.plugins.jpsurvey.apsadmin.survey.helper.SurveyResourceFinderAction;
 
-public class SurveyImageAction extends SurveyResourceFinderAction {
+public class SurveyImageAction extends SurveyResourceFinderAction implements ISurveyImageAction {
 	
+	@Override
 	public String associateSurveyImage() {
 		SurveyRecord survey = null;
 		try {

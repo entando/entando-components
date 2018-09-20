@@ -7,7 +7,11 @@
 	
     <package name="jpwebform_do/jpwebform/Front" namespace="/do/jpwebform/Front" extends="entando-front-default">
 		
-		<action name="new" class="jpwebformUserFormAction" method="createNew">
+		<interceptors>
+			<interceptor name="entandoFrontToken" class="org.entando.entando.plugins.jpwebform.aps.internalservlet.system.TokenInterceptor" />
+		</interceptors>
+		
+    	<action name="new" class="jpwebformUserFormAction" method="createNew">
             <!-- <result name="voidTypeCode" type="chain">listTypes</result> -->
             <result name="notRepeatable" type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/error-notRepeatable.jsp</result>
             <result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${currentStepCode}.jsp</result>
@@ -23,20 +27,20 @@
         <action name="submitStep" class="jpwebformUserFormAction" method="submitStep">
             <result name="input" type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${currentStepCode}.jsp</result>
             <result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${currentStepCode}.jsp</result>
-            <interceptor-ref name="entandoToken" ><param name="typeMessages">message</param></interceptor-ref>
+            <interceptor-ref name="entandoFrontToken" ><param name="typeMessages">message</param></interceptor-ref>
             <interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
         </action>
         
         <action name="previousStep" class="jpwebformUserFormAction" method="previousStep">
             <result name="input" type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${currentStepCode}.jsp</result>
             <result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_${previousStepCode}.jsp</result>
-            <interceptor-ref name="entandoToken" ><param name="typeMessages">message</param></interceptor-ref>
+            <interceptor-ref name="entandoFrontToken" ><param name="typeMessages">message</param></interceptor-ref>
             <interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
         </action>
 		<!--
 		<action name="confirm" class="jpwebformUserFormAction" method="confirm">
             <result type="dispatcher">/WEB-INF/plugins/jpwebform/aps/jsp/internalservlet/form/${currentTypeCode}/${versionType}/entryStep_endPoint.jsp</result>
-            <interceptor-ref name="entandoToken" ><param name="typeMessages">message</param></interceptor-ref>
+            <interceptor-ref name="entandoFrontToken" ><param name="typeMessages">message</param></interceptor-ref>
 			<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
         </action>
 		-->

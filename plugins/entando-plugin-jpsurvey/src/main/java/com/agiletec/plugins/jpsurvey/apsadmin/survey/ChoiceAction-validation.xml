@@ -5,34 +5,43 @@
 <validators>
 
 	<field name="surveyId">
+        <field-validator type="regex">
+        	<param name="regex"><![CDATA["^[1-0]{1}.*"]]></param>
+            <message key="message.surveyAction.sysError"/>
+        </field-validator>
         <field-validator type="int">
             <message key="message.surveyAction.sysError"/>
         </field-validator>
     </field>
     
     <field name="questionId">
-        <field-validator type="int" short-circuit="true">
+        <field-validator type="regex">
+        	<param name="regex"><![CDATA["^[1-0]{1}.*"]]></param>
+            <message key="message.surveyAction.sysError"/>
+        </field-validator>
+        <field-validator type="int">
             <message key="message.surveyAction.sysError"/>
         </field-validator>
     </field>
     
     <field name="choiceId">
+        <field-validator type="regex">
+        	<param name="regex"><![CDATA["^[1-0]{1}.*"]]></param>
+            <message key="message.surveyAction.sysError"/>
+        </field-validator>
         <field-validator type="int">
             <message key="message.surveyAction.sysError"/>
         </field-validator>
     </field>
     
     <field name="strutsAction">
-		<field-validator type="int" short-circuit="true">
-			<message key="message.surveyAction.sysError"/>
-		</field-validator>
-        <field-validator type="required" short-circuit="true">
-        	<message key="message.surveyAction.sysError"/>
+        <field-validator type="regex">
+        	<param name="regex"><![CDATA["^[1-0]{1}.*"]]></param>
+            <message key="message.surveyAction.sysError"/>
         </field-validator>
-         <field-validator type="fieldexpression" short-circuit="true">
-        	<param name="expression"><![CDATA[(strutsAction == 1 || strutsAction == 2 || strutsAction == 4)]]></param>
-			<message key="message.surveyAction.sysError"/>
-		</field-validator>
+        <field-validator type="int">
+            <message key="message.surveyAction.sysError"/>
+        </field-validator>
     </field>
     
 </validators>

@@ -36,11 +36,8 @@ import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Question;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Survey;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.SurveyRecord;
 
-public class QuestionAction extends AbstractSurveyAction {
-    
-	public static final int SINGLE_CHOICE_ID = 1;
-	public static final int MULTIPLE_CHOICE_ID = 0;
-    
+public class QuestionAction extends AbstractSurveyAction implements IQuestionAction {
+	
 	@Override
 	public void validate() {
 		super.validate();
@@ -197,6 +194,7 @@ public class QuestionAction extends AbstractSurveyAction {
 		return SUCCESS;
 	}
 	
+	@Override
 	public String editSingleQuestion() {
 		Question question = null;
 		this.setStrutsAction(ApsAdminSystemConstants.EDIT);

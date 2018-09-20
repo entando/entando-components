@@ -36,7 +36,7 @@ import com.agiletec.plugins.jpsurvey.aps.system.services.collect.model.SingleQue
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Choice;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Question;
 
-public class ChoiceAction extends AbstractSurveyAction {
+public class ChoiceAction extends AbstractSurveyAction implements IChoiceAction {
 	
 	@Override
 	public void validate() {
@@ -146,9 +146,7 @@ public class ChoiceAction extends AbstractSurveyAction {
 		ApsProperties prop = new ApsProperties();
 		this.setStrutsAction(ApsAdminSystemConstants.ADD);
 		try {
-			if (null == this.getQuestionId() 
-                    || null == this.getStrutsAction() 
-                    || null == this.getSurveyManager().loadQuestion(this.getQuestionId())) {
+			if (null == this.getQuestionId() || null == this.getStrutsAction()) {
 				this.addActionError(this.getText("message.surveyAction.cannotProceed"));
 				return INPUT;
 			}

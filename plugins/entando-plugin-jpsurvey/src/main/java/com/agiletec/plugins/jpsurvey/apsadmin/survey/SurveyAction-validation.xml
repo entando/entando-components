@@ -5,19 +5,22 @@
 <validators>
 	
 	<field name="surveyId">
-        <field-validator type="int">
+        <field-validator type="regex">
+        	<param name="regex"><![CDATA["^[1-0]{1}.*"]]></param>
             <message key="message.surveyAction.sysError"/>
         </field-validator>
     </field>
     
     <field name="questionId">
-        <field-validator type="int">
+        <field-validator type="regex">
+        	<param name="regex"><![CDATA["^[1-0]{1}.*"]]></param>
             <message key="message.surveyAction.sysError"/>
         </field-validator>
     </field>
 
 	<field name="strutsAction">
-        <field-validator type="int">
+        <field-validator type="regex">
+        	<param name="regex"><![CDATA["^[1-0]{1}.*"]]></param>
             <message key="message.surveyAction.sysError"/>
         </field-validator>
     </field>
