@@ -55,10 +55,10 @@ public class ContentAdminAction extends BaseAdminAction {
         }
         try {
             Map<String, List<String>> mapping = this.getResourceManager().getMetadataMapping();
-            this.setResourceAltMapping(this.buildCsv(mapping, IResourceManager.ALT_METADATA_MAPPING_KEY));
-            this.setResourceDescriptionMapping(this.buildCsv(mapping, IResourceManager.DESCRIPTION_METADATA_MAPPING_KEY));
-            this.setResourceLegendMapping(this.buildCsv(mapping, IResourceManager.LEGEND_METADATA_MAPPING_KEY));
-            this.setResourceTitleMapping(this.buildCsv(mapping, IResourceManager.TITLE_METADATA_MAPPING_KEY));
+            this.setResourceAltMapping(this.buildCsv(mapping, IResourceManager.ALT_METADATA_KEY));
+            this.setResourceDescriptionMapping(this.buildCsv(mapping, IResourceManager.DESCRIPTION_METADATA_KEY));
+            this.setResourceLegendMapping(this.buildCsv(mapping, IResourceManager.LEGEND_METADATA_KEY));
+            this.setResourceTitleMapping(this.buildCsv(mapping, IResourceManager.TITLE_METADATA_KEY));
         } catch (Throwable t) {
             logger.error("error in configSystemParams", t);
             return FAILURE;
@@ -82,10 +82,10 @@ public class ContentAdminAction extends BaseAdminAction {
         }
         try {
             Map<String, List<String>> mapping = new HashMap<>();
-            this.updateResourceMapping(mapping, this.getResourceAltMapping(), IResourceManager.ALT_METADATA_MAPPING_KEY);
-            this.updateResourceMapping(mapping, this.getResourceDescriptionMapping(), IResourceManager.DESCRIPTION_METADATA_MAPPING_KEY);
-            this.updateResourceMapping(mapping, this.getResourceLegendMapping(), IResourceManager.LEGEND_METADATA_MAPPING_KEY);
-            this.updateResourceMapping(mapping, this.getResourceTitleMapping(), IResourceManager.TITLE_METADATA_MAPPING_KEY);
+            this.updateResourceMapping(mapping, this.getResourceAltMapping(), IResourceManager.ALT_METADATA_KEY);
+            this.updateResourceMapping(mapping, this.getResourceDescriptionMapping(), IResourceManager.DESCRIPTION_METADATA_KEY);
+            this.updateResourceMapping(mapping, this.getResourceLegendMapping(), IResourceManager.LEGEND_METADATA_KEY);
+            this.updateResourceMapping(mapping, this.getResourceTitleMapping(), IResourceManager.TITLE_METADATA_KEY);
             this.getResourceManager().updateMetadataMapping(mapping);
         } catch (Throwable t) {
             logger.error("error in configSystemParams", t);

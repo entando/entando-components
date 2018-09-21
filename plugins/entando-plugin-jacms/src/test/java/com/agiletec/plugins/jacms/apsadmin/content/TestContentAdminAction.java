@@ -83,11 +83,11 @@ public class TestContentAdminAction extends AbstractBaseTestContentAction {
             assertEquals(BaseAction.SUCCESS, result);
             Map<String, List<String>> newMapping = this.resourceManager.getMetadataMapping();
             assertEquals(3, newMapping.size());
-            assertEquals(5, newMapping.get(IResourceManager.ALT_METADATA_MAPPING_KEY).size());
-            assertEquals("metadatakey4", newMapping.get(IResourceManager.ALT_METADATA_MAPPING_KEY).get(3));
-            assertEquals(4, newMapping.get(IResourceManager.DESCRIPTION_METADATA_MAPPING_KEY).size());
-            assertEquals("Component 2", newMapping.get(IResourceManager.DESCRIPTION_METADATA_MAPPING_KEY).get(3));
-            assertEquals(4, newMapping.get(IResourceManager.TITLE_METADATA_MAPPING_KEY).size());
+            assertEquals(5, newMapping.get(IResourceManager.ALT_METADATA_KEY).size());
+            assertEquals("metadatakey4", newMapping.get(IResourceManager.ALT_METADATA_KEY).get(3));
+            assertEquals(4, newMapping.get(IResourceManager.DESCRIPTION_METADATA_KEY).size());
+            assertEquals("Component 2", newMapping.get(IResourceManager.DESCRIPTION_METADATA_KEY).get(3));
+            assertEquals(4, newMapping.get(IResourceManager.TITLE_METADATA_KEY).size());
         } catch (Throwable e) {
             throw e;
         } finally {

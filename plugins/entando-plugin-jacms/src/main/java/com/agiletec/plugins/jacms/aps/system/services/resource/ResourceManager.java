@@ -593,7 +593,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
     }
 
     @Override
-    public Map<String, List<String>> getMetadataMapping() throws ApsSystemException {
+    public Map<String, List<String>> getMetadataMapping() {
         Map<String, List<String>> mapping = new HashMap<>();
         try {
             String xmlConfig = this.getConfigManager().getConfigItem(JacmsSystemConstants.CONFIG_ITEM_RESOURCE_METADATA_MAPPING);
@@ -604,14 +604,12 @@ public class ResourceManager extends AbstractService implements IResourceManager
             jaxbMapping.getFields().stream().forEach(m -> {
                 String key = m.getKey();
                 String csv = m.getValue();
-                if (!StringUtils.isBlank(csv)) {
-                    List<String> metadatas = Arrays.asList(csv.split(","));
-                    mapping.put(key, metadatas);
-                }
+                List<String> metadatas = (!StringUtils.isBlank(csv)) ? Arrays.asList(csv.split(",")) : new ArrayList<>();
+                mapping.put(key, metadatas);
             });
         } catch (Exception e) {
             logger.error("Error Extracting resource metadata mapping", e);
-            throw new ApsSystemException("Error Extracting resource metadata mapping", e);
+            throw new RuntimeException("Error Extracting resource metadata mapping", e);
         }
         return mapping;
     }

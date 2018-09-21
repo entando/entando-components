@@ -24,10 +24,6 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
 public interface ResourceAttributeInterface extends AttributeInterface {
 
     public static final String REFERENCED_RESOURCE_INDICATOR = "ref";
-    public static final String ALT_METADATA_KEY = "alt";
-    public static final String DESCRIPTION_METADATA_KEY = "description";
-    public static final String LEGEND_METADATA_KEY = "legend";
-    public static final String TITLE_METADATA_KEY = "title";
 
     public void setMetadata(String key, String langCode, String value);
 

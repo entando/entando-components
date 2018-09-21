@@ -53,10 +53,10 @@ public class ResourceAttributeHandler extends TextAttributeHandler {
             this.startResource(attributes, qName);
         } else if (qName.equals("metadatas")) {
             this.setIntoMetadatas(true);
-        } else if (qName.equals(ResourceAttributeInterface.ALT_METADATA_KEY)
-                || qName.equals(ResourceAttributeInterface.DESCRIPTION_METADATA_KEY)
-                || qName.equals(ResourceAttributeInterface.LEGEND_METADATA_KEY)
-                || qName.equals(ResourceAttributeInterface.TITLE_METADATA_KEY)) {
+        } else if (qName.equals(IResourceManager.ALT_METADATA_KEY)
+                || qName.equals(IResourceManager.DESCRIPTION_METADATA_KEY)
+                || qName.equals(IResourceManager.LEGEND_METADATA_KEY)
+                || qName.equals(IResourceManager.TITLE_METADATA_KEY)) {
             this.startResourceMetadata(qName, attributes, qName);
         } else {
             super.startAttribute(attributes, qName);
@@ -91,10 +91,10 @@ public class ResourceAttributeHandler extends TextAttributeHandler {
             this.endResource();
         } else if (qName.equals("metadatas")) {
             this.setIntoMetadatas(false);
-        } else if (qName.equals(ResourceAttributeInterface.ALT_METADATA_KEY)
-                || qName.equals(ResourceAttributeInterface.DESCRIPTION_METADATA_KEY)
-                || qName.equals(ResourceAttributeInterface.LEGEND_METADATA_KEY)
-                || qName.equals(ResourceAttributeInterface.TITLE_METADATA_KEY)) {
+        } else if (qName.equals(IResourceManager.ALT_METADATA_KEY)
+                || qName.equals(IResourceManager.DESCRIPTION_METADATA_KEY)
+                || qName.equals(IResourceManager.LEGEND_METADATA_KEY)
+                || qName.equals(IResourceManager.TITLE_METADATA_KEY)) {
             this.endMetadata(qName, textBuffer);
         } else {
             super.endAttribute(qName, textBuffer);

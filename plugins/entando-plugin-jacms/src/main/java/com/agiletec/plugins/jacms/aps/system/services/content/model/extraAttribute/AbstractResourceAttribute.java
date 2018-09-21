@@ -171,35 +171,35 @@ public abstract class AbstractResourceAttribute extends TextAttribute
     }
 
     public Map<String, String> getResourceAltMap() {
-        return this.getMetadataMap(ALT_METADATA_KEY);
+        return this.getMetadataMap(IResourceManager.ALT_METADATA_KEY);
     }
 
     public void setResourceAltMap(Map<String, String> altMap) {
-        this.setMetadataMap(ALT_METADATA_KEY, altMap);
+        this.setMetadataMap(IResourceManager.ALT_METADATA_KEY, altMap);
     }
 
     public Map<String, String> getResourceDescriptionMap() {
-        return this.getMetadataMap(DESCRIPTION_METADATA_KEY);
+        return this.getMetadataMap(IResourceManager.DESCRIPTION_METADATA_KEY);
     }
 
     public void setResourceDescriptionMap(Map<String, String> descriptionMap) {
-        this.setMetadataMap(DESCRIPTION_METADATA_KEY, descriptionMap);
+        this.setMetadataMap(IResourceManager.DESCRIPTION_METADATA_KEY, descriptionMap);
     }
 
     public Map<String, String> getResourceLegendMap() {
-        return this.getMetadataMap(LEGEND_METADATA_KEY);
+        return this.getMetadataMap(IResourceManager.LEGEND_METADATA_KEY);
     }
 
     public void setResourceLegendMap(Map<String, String> legendMap) {
-        this.setMetadataMap(LEGEND_METADATA_KEY, legendMap);
+        this.setMetadataMap(IResourceManager.LEGEND_METADATA_KEY, legendMap);
     }
 
     public Map<String, String> getResourceTitleMap() {
-        return this.getMetadataMap(TITLE_METADATA_KEY);
+        return this.getMetadataMap(IResourceManager.TITLE_METADATA_KEY);
     }
 
     public void setResourceTitleMap(Map<String, String> titleMap) {
-        this.setMetadataMap(TITLE_METADATA_KEY, titleMap);
+        this.setMetadataMap(IResourceManager.TITLE_METADATA_KEY, titleMap);
     }
 
     @Override
