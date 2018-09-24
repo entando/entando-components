@@ -44,10 +44,12 @@ public class TestContentAdminAction extends AbstractBaseTestContentAction {
         assertEquals(IContentManager.STATUS_READY, contentAdminAction.getContentManagerStatus());
         assertEquals(ICmsSearchEngineManager.STATUS_READY, contentAdminAction.getSearcherManagerStatus());
         assertNull(contentAdminAction.getLastReloadInfo());
-        assertEquals("metadataKey1,metadataKey2,metadatakey3,xxx,yyy", contentAdminAction.getResourceAltMapping());
-        assertEquals("metadataKeyA,metadataKeyB,JPEG Comment", contentAdminAction.getResourceDescriptionMapping());
-        assertEquals("metadataKeyX,metadataKeyY,metadatakeyX,YYYY,Detected File Type Long Name,WWWWW", contentAdminAction.getResourceLegendMapping());
-        assertEquals("metadataKeyG,metadataKeyK,metadatakeyF", contentAdminAction.getResourceTitleMapping());
+        Map<String, List<String>> mapping = contentAdminAction.getMapping();
+        assertEquals(4, mapping.size());
+        assertEquals("metadataKey1,metadataKey2,metadatakey3,xxx,yyy", contentAdminAction.buildCsv(IResourceManager.ALT_METADATA_KEY));
+        assertEquals("metadataKeyA,metadataKeyB,JPEG Comment", contentAdminAction.buildCsv(IResourceManager.DESCRIPTION_METADATA_KEY));
+        assertEquals("metadataKeyX,metadataKeyY,metadatakeyX,YYYY,Detected File Type Long Name,WWWWW", contentAdminAction.buildCsv(IResourceManager.LEGEND_METADATA_KEY));
+        assertEquals("metadataKeyG,metadataKeyK,metadatakeyF", contentAdminAction.buildCsv(IResourceManager.TITLE_METADATA_KEY));
     }
 
     public void testReloadContentsIndex() throws Throwable {
@@ -75,14 +77,18 @@ public class TestContentAdminAction extends AbstractBaseTestContentAction {
         try {
             this.initAction("/do/jacms/Content/Admin", "updateSystemParams");
             this.setUserOnSession("admin");
-            super.addParameter("resourceAltMapping", "metadataKey1,metadataKey2,metadatakey3,metadatakey4,metadatakey5");
-            super.addParameter("resourceDescriptionMapping", "newMetadataKeyA,newMetadataKeyB,JPEG Comment,Component 2");
-            super.addParameter("resourceLegendMapping", "");
-            super.addParameter("resourceTitleMapping", "metadataKeyG,metadataKeyK,metadatakeyF,metadatakeyZ");
+            super.addParameter("resourceMetadata_mapping_" + IResourceManager.ALT_METADATA_KEY,
+                    "metadataKey1,metadataKey2,metadatakey3,metadatakey4,metadatakey5");
+            super.addParameter("resourceMetadata_mapping_" + IResourceManager.DESCRIPTION_METADATA_KEY,
+                    "newMetadataKeyA,newMetadataKeyB,JPEG Comment,Component 2");
+            super.addParameter("resourceMetadata_mapping_" + IResourceManager.LEGEND_METADATA_KEY, "");
+            super.addParameter("resourceMetadata_mapping_" + IResourceManager.TITLE_METADATA_KEY, "metadataKeyG,metadataKeyK,metadatakeyF,metadatakeyZ");
+            super.addParameter("metadataKeys", new String[]{IResourceManager.ALT_METADATA_KEY, IResourceManager.DESCRIPTION_METADATA_KEY,
+                IResourceManager.LEGEND_METADATA_KEY, IResourceManager.TITLE_METADATA_KEY});
             String result = this.executeAction();
             assertEquals(BaseAction.SUCCESS, result);
             Map<String, List<String>> newMapping = this.resourceManager.getMetadataMapping();
-            assertEquals(3, newMapping.size());
+            assertEquals(4, newMapping.size());
             assertEquals(5, newMapping.get(IResourceManager.ALT_METADATA_KEY).size());
             assertEquals("metadatakey4", newMapping.get(IResourceManager.ALT_METADATA_KEY).get(3));
             assertEquals(4, newMapping.get(IResourceManager.DESCRIPTION_METADATA_KEY).size());
