@@ -30,7 +30,7 @@ import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Question;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Survey;
 
-public class SurveyFinderAction extends AbstractSurveyAction implements ISurveyFinderAction {
+public class SurveyFinderAction extends AbstractSurveyAction {
 	
 	public List<Integer> getSurveysIds() {
 		List<Integer> list = null;

@@ -36,7 +36,6 @@ import com.agiletec.plugins.jpsurvey.aps.system.services.collect.IResponseManage
 import com.agiletec.plugins.jpsurvey.aps.system.services.collect.IVoterManager;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.ISurveyManager;
 import com.agiletec.plugins.jpsurvey.aps.system.services.survey.model.Survey;
-import com.agiletec.plugins.jpsurvey.apsadmin.survey.SurveyAction;
 import com.opensymphony.xwork2.Action;
 
 public class TestSurveyAction extends ApsAdminPluginBaseTestCase {
@@ -65,7 +64,7 @@ public class TestSurveyAction extends ApsAdminPluginBaseTestCase {
             this.initAction("/do/jpsurvey/Survey", "editSurvey");
             result = this.executeAction();
             assertNotNull(result);
-            assertEquals(BaseAction.FAILURE, result);
+            assertEquals("listSurveys", result);
             // invalid questioannaire
             this.initAction("/do/jpsurvey/Survey", "editSurvey");
             this.addParameter("surveyId", "-1");
@@ -104,7 +103,6 @@ public class TestSurveyAction extends ApsAdminPluginBaseTestCase {
         String result = null;
         Survey poll = this.prepareSurveyForTest(false, false);
         Survey questionnaire = this.prepareSurveyForTest(true, false);
-        SurveyAction action = null;
         try {
             this.setUserOnSession("admin");
             this.getSurveyManager().saveSurvey(poll);
@@ -529,4 +527,5 @@ public class TestSurveyAction extends ApsAdminPluginBaseTestCase {
     private IVoterManager _voterManager;
     private IGroupManager _groupManager;
     private IResourceManager _resourceManager;
+    
 }

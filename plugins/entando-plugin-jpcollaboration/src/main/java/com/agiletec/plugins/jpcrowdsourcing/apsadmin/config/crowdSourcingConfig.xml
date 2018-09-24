@@ -5,7 +5,7 @@
 
 <struts>
 
-	<package name="collaboration_do/collaboration/Config" namespace="/do/collaboration/Config" extends="japs-default">
+	<package name="collaboration_do/collaboration/Config" namespace="/do/collaboration/Config" extends="entando-default">
 
 		<action name="entryConfig" class="jpcollaborationConfigAction" method="entryConfig">
 	        <result type="tiles">admin.jpcrowdsourcing.config.entry</result>

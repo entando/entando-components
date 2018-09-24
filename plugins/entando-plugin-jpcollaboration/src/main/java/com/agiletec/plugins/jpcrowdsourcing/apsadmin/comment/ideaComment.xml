@@ -5,7 +5,7 @@
 
 <struts>
 
-	<package name="collaboration_do/collaboration/Idea/Comment" namespace="/do/collaboration/Idea/Comment" extends="japs-default">
+	<package name="collaboration_do/collaboration/Idea/Comment" namespace="/do/collaboration/Idea/Comment" extends="entando-default">
 
 		<action name="list" class="jpcollaborationIdeaCommentFinderAction">
 	        <result type="tiles">admin.jpcrowdsourcing.idea.comment.list</result>
