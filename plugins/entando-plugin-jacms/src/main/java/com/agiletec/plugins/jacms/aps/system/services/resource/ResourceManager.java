@@ -148,7 +148,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
 
     @Override
     public void init() throws Exception {
-        this.getCacheWrapper().initCache(IResourceManager.STATUS_READY);
+        this.getCacheWrapper().initCache();
         logger.debug("{} ready. Initialized {} resource types", this.getClass().getName(), this.resourceTypes.size());
     }
 
@@ -594,6 +594,10 @@ public class ResourceManager extends AbstractService implements IResourceManager
 
     @Override
     public Map<String, List<String>> getMetadataMapping() {
+        Map<String, List<String>> cachedMapping = this.getCacheWrapper().getMetadataMapping();
+        if (null != cachedMapping) {
+            return cachedMapping;
+        }
         Map<String, List<String>> mapping = new HashMap<>();
         try {
             String xmlConfig = this.getConfigManager().getConfigItem(JacmsSystemConstants.CONFIG_ITEM_RESOURCE_METADATA_MAPPING);
@@ -607,6 +611,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
                 List<String> metadatas = (!StringUtils.isBlank(csv)) ? Arrays.asList(csv.split(",")) : new ArrayList<>();
                 mapping.put(key, metadatas);
             });
+            this.getCacheWrapper().updateMetadataMapping(mapping);
         } catch (Exception e) {
             logger.error("Error Extracting resource metadata mapping", e);
             throw new RuntimeException("Error Extracting resource metadata mapping", e);
@@ -624,6 +629,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
             marshaller.marshal(new JaxbMetadataMapping(mapping), writer);
             String config = writer.toString();
             this.getConfigManager().updateConfigItem(JacmsSystemConstants.CONFIG_ITEM_RESOURCE_METADATA_MAPPING, config);
+            this.getCacheWrapper().updateMetadataMapping(mapping);
         } catch (Exception e) {
             logger.error("Error Updating resource metadata mapping", e);
             throw new ApsSystemException("Error Updating resource metadata mapping", e);
