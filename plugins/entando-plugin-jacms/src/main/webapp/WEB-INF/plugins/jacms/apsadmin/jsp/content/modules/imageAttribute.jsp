@@ -123,15 +123,13 @@
                     
                     <s:iterator var="metadataKeyVar" value="#resourceMetadataKeysVar">
                     <div class="form-group">
-                        <div class="col-xs-2 control-label text-right">
-                            <s:set var="metadataFormFieldNameVar" value="%{#attributeTracer.getFormFieldName(#attribute) + '_metadata_' + #metadataKeyVar}" />
-                            <label class="col-lg-2 col-md-3 col-sm-4 no-padding pr-10 text-right" for="<s:property value="#metadataFormFieldNameVar" />">
-                                <span title="<s:text name="label.img.metadata.long" ><s:param value="#metadataKeyVar" /></s:text>"><s:text name="label.metadata.short" ><s:param value="#metadataKeyVar" /></s:text></span>
-                            </label>
-                            <div class="col-xs-10">
-                                <wpsf:textfield id="%{#metadataFormFieldNameVar}" name="%{#metadataFormFieldNameVar}" 
-                                                value="%{#attribute.getMetadata(#metadataKeyVar, #lang.code)}" maxlength="254" cssClass="form-control" />
-                            </div>
+                        <s:set var="metadataFormFieldNameVar" value="%{#attributeTracer.getFormFieldName(#attribute) + '_metadata_' + #metadataKeyVar}" />
+                        <label class="col-xs-2 control-label text-right" for="<s:property value="#metadataFormFieldNameVar" />">
+                            <span title="<s:text name="label.img.metadata.long" ><s:param value="#metadataKeyVar" /></s:text>"><s:text name="label.metadata.short" ><s:param value="#metadataKeyVar" /></s:text></span>
+                        </label>
+                        <div class="col-xs-10">
+                            <wpsf:textfield id="%{#metadataFormFieldNameVar}" name="%{#metadataFormFieldNameVar}" 
+                                            value="%{#attribute.getMetadata(#metadataKeyVar, #lang.code)}" maxlength="254" cssClass="form-control" />
                         </div>
                     </div>
                     </s:iterator>
