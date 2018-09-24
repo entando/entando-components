@@ -69,12 +69,13 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return this.getMetadataForLang(this.getResourceAltMap(), langCode);
     }
 
+    /*
     @Deprecated
     @Override
     public void setResourceAlt(String text, String langCode) {
         this.getResourceAltMap().put(langCode, text);
     }
-
+     */
     @Override
     public String getResourceDescription() {
         return this.getMetadata(this.getResourceDescriptionMap());
@@ -85,12 +86,13 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return this.getMetadataForLang(this.getResourceDescriptionMap(), langCode);
     }
 
+    /*
     @Deprecated
     @Override
     public void setResourceDescription(String text, String langCode) {
         this.getResourceDescriptionMap().put(langCode, text);
     }
-
+     */
     @Override
     public String getResourceLegend() {
         return this.getMetadata(this.getResourceLegendMap());
@@ -101,12 +103,13 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return this.getMetadataForLang(this.getResourceLegendMap(), langCode);
     }
 
+    /*
     @Deprecated
     @Override
     public void setResourceLegend(String text, String langCode) {
         this.getResourceLegendMap().put(langCode, text);
     }
-
+     */
     @Override
     public String getResourceTitle() {
         return this.getMetadata(this.getResourceTitleMap());
@@ -117,12 +120,13 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return this.getMetadataForLang(this.getResourceTitleMap(), langCode);
     }
 
+    /*
     @Deprecated
     @Override
     public void setResourceTitle(String text, String langCode) {
         this.getResourceTitleMap().put(langCode, text);
     }
-
+     */
     private String getMetadataForLang(Map<String, String> map, String langCode) {
         String text = (String) map.get(langCode);
         if (text == null) {
@@ -150,12 +154,14 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         this.metadatas = metadatas;
     }
 
-    public Map<String, String> getMetadataMap(String key) {
+    private Map<String, String> getMetadataMap(String key, boolean addNewMap) {
         if (this.getMetadatas().containsKey(key)) {
             return this.getMetadatas().get(key);
         } else {
             Map<String, String> map = new HashMap<>();
-            this.getMetadatas().put(key, map);
+            if (addNewMap) {
+                this.getMetadatas().put(key, map);
+            }
             return map;
         }
     }
@@ -165,13 +171,19 @@ public abstract class AbstractResourceAttribute extends TextAttribute
     }
 
     @Override
+    public String getMetadata(String key, String langCode) {
+        Map<String, String> map = this.getMetadataMap(key, false);
+        return map.get(langCode);
+    }
+
+    @Override
     public void setMetadata(String key, String langCode, String value) {
-        Map<String, String> map = this.getMetadataMap(key);
+        Map<String, String> map = this.getMetadataMap(key, true);
         map.put(langCode, value);
     }
 
     public Map<String, String> getResourceAltMap() {
-        return this.getMetadataMap(IResourceManager.ALT_METADATA_KEY);
+        return this.getMetadataMap(IResourceManager.ALT_METADATA_KEY, false);
     }
 
     public void setResourceAltMap(Map<String, String> altMap) {
@@ -179,7 +191,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
     }
 
     public Map<String, String> getResourceDescriptionMap() {
-        return this.getMetadataMap(IResourceManager.DESCRIPTION_METADATA_KEY);
+        return this.getMetadataMap(IResourceManager.DESCRIPTION_METADATA_KEY, false);
     }
 
     public void setResourceDescriptionMap(Map<String, String> descriptionMap) {
@@ -187,7 +199,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
     }
 
     public Map<String, String> getResourceLegendMap() {
-        return this.getMetadataMap(IResourceManager.LEGEND_METADATA_KEY);
+        return this.getMetadataMap(IResourceManager.LEGEND_METADATA_KEY, false);
     }
 
     public void setResourceLegendMap(Map<String, String> legendMap) {
@@ -195,7 +207,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
     }
 
     public Map<String, String> getResourceTitleMap() {
-        return this.getMetadataMap(IResourceManager.TITLE_METADATA_KEY);
+        return this.getMetadataMap(IResourceManager.TITLE_METADATA_KEY, false);
     }
 
     public void setResourceTitleMap(Map<String, String> titleMap) {

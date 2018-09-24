@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -342,6 +343,16 @@ public class ContentAction extends AbstractContentAction {
 
     public String getIconFile(String fileName) {
         return this.getResourceIconUtil().getIconByFilename(fileName);
+    }
+
+    public List<String> getResourceMetadataKeys() {
+        List<String> keys = new ArrayList<>();
+        Map<String, List<String>> mapping = this.getResourceManager().getMetadataMapping();
+        if (null != mapping) {
+            keys.addAll(mapping.keySet());
+            Collections.sort(keys);
+        }
+        return keys;
     }
 
     public Map getReferences() {

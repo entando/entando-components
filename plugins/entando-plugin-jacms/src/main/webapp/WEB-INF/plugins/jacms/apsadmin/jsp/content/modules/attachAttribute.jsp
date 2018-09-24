@@ -1,70 +1,88 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
 <%@ taglib prefix="wpsa" uri="/apsadmin-core" %>
+<%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 <s:set var="currentResource" value="#attribute.resources[#lang.code]" />
 <s:set var="defaultResource" value="#attribute.resource" />
+
+<s:set var="resourceMetadataKeysVar" value="resourceMetadataKeys" />
 
 <%-- default language --%>
 <s:if test="#lang.default">
 	<%-- resource filled --%>
-		<s:if test="#currentResource != null">
-            <s:set var="divClass" value="'no-padding'"/>
-            <s:if test="!(#attributeTracer.monoListElement) || ((#attributeTracer.monoListElement) && (#attributeTracer.compositeElement))">
-                <div class="panel panel-default margin-small-top">
-                <s:set var="divClass" value="''"/>
-            </s:if>
-            <div class="panel-body ${divClass}">
-				    <%-- download --%>
-					<div class="col-xs-12 col-sm-4 col-md-3 col-lg-2 text-center">
-						<a href="<s:property value="#defaultResource.attachPath" />" 
-						  title="<s:text name="label.download" />:&#32;<s:property value="#defaultResource.descr"/>"
-						  class="display-block mt-20 mb-20">
-							<span class="icon fa fa-file-text fa-5x fa-lg" ></span>
-							<span class="sr-only"><s:text name="label.download" />:&#32;
-                                <s:property value="#defaultResource.descr"/>
-                            </span>
-						</a>
-					</div>
-				    <%-- label and input --%>
-					<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10 form-horizontal margin-large-top">
-						<div class="form-group">
-							<div class="col-xs-12">
-							<p>
-								<strong><s:text name="label.description" /></strong>:&nbsp;
-								<s:property value="#defaultResource.description" />
-                                <br>
-	                            <strong><s:text name="label.filename" /></strong>:&nbsp;
-	                            <s:property value="#defaultResource.masterFileName" />
-	                        </p>
-							<label class="col-lg-1 col-md-2 col-sm-3 no-padding text-right pr-10" for="<s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" />">
-   								<s:text name="label.text" />:
-							</label>
-							<div class="col-lg-11 col-md-10 col-sm-9 no-padding">
-							    <s:include value="/WEB-INF/apsadmin/jsp/entity/modules/textAttribute.jsp" />
-							</div>
-							</div>
-						</div>
-						
-			            <s:if test="!(#attributeTracer.monoListElement) || ((#attributeTracer.monoListElement) && (#attributeTracer.compositeElement))">
-		                    <div class="text-right">
-		                        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/removeResourceSubmit.jsp">
-		                            <s:param name="resourceTypeCode">Attach</s:param>
-		                        </s:include>
-		                    </div>
-			            </s:if>
+    <s:if test="#currentResource != null">
+        <s:set var="divClass" value="'no-padding'"/>
+        <s:if test="!(#attributeTracer.monoListElement) || ((#attributeTracer.monoListElement) && (#attributeTracer.compositeElement))">
+            <div class="panel panel-default margin-small-top">
+            <s:set var="divClass" value="''"/>
+        </s:if>
+        <div class="panel-body ${divClass}">
+            <%-- download --%>
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2 text-center">
+                <a href="<s:property value="#defaultResource.attachPath" />" 
+                  title="<s:text name="label.download" />:&#32;<s:property value="#defaultResource.descr"/>"
+                  class="display-block mt-20 mb-20">
+                    <span class="icon fa fa-file-text fa-5x fa-lg" ></span>
+                    <span class="sr-only"><s:text name="label.download" />:&#32;
+                        <s:property value="#defaultResource.descr"/>
+                    </span>
+                </a>
+            </div>
+            <%-- label and input --%>
+            <div class="col-xs-12 col-sm-8 col-md-9 col-lg-10 form-horizontal margin-large-top">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                    <p>
+                        <strong><s:text name="label.description" /></strong>:&nbsp;
+                        <s:property value="#defaultResource.description" />
+                        <br />
+                        <strong><s:text name="label.filename" /></strong>:&nbsp;
+                        <s:property value="#defaultResource.masterFileName" />
+                    </p>
+                    <label class="col-lg-1 col-md-2 col-sm-3 no-padding text-right pr-10" for="<s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" />">
+                        <s:text name="label.text" />:
+                    </label>
+                    <div class="col-lg-11 col-md-10 col-sm-9 no-padding">
+                        <s:include value="/WEB-INF/apsadmin/jsp/entity/modules/textAttribute.jsp" />
+                    </div>
+                    </div>
+                </div>
+                <%--
+                <s:iterator var="metadataKeyVar" value="#resourceMetadataKeysVar">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <s:set var="metadataFormFieldNameVar" value="%{#attributeTracer.getFormFieldName(#attribute) + '_metadata_' + #metadataKeyVar}" />
+                        <label class="col-lg-2 col-md-3 col-sm-4 no-padding pr-10 text-right" for="<s:property value="#metadataFormFieldNameVar" />">
+                            <span title="<s:text name="label.img.metadata.long" ><s:param value="#metadataKeyVar" /></s:text>"><s:text name="label.metadata.short" ><s:param value="#metadataKeyVar" /></s:text></span>
+                        </label>
+                        <div class="col-lg-10 col-md-9 col-sm-8 no-padding">
+                            <wpsf:textfield id="%{#metadataFormFieldNameVar}" name="%{#metadataFormFieldNameVar}" 
+                                            value="%{#attribute.getMetadata(#metadataKeyVar, #lang.code)}" maxlength="254" cssClass="form-control" />
+                        </div>
+                    </div>
+                </div>
+                </s:iterator>
+                --%>
+                <s:if test="!(#attributeTracer.monoListElement) || ((#attributeTracer.monoListElement) && (#attributeTracer.compositeElement))">
+                    <div class="text-right">
+                        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/removeResourceSubmit.jsp">
+                            <s:param name="resourceTypeCode">Attach</s:param>
+                        </s:include>
+                    </div>
+                </s:if>
 
-					</div>
-			</div>
-			<s:if test="!(#attributeTracer.monoListElement) || ((#attributeTracer.monoListElement) && (#attributeTracer.compositeElement))">
-				</div>
-			</s:if>
-		</s:if>
-	<%-- resource empty --%>
-		<s:else>
-			<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/chooseResourceSubmit.jsp">
-				<s:param name="resourceTypeCode">Attach</s:param>
-			</s:include>
-		</s:else>
+            </div>
+        </div>
+        <s:if test="!(#attributeTracer.monoListElement) || ((#attributeTracer.monoListElement) && (#attributeTracer.compositeElement))">
+            </div>
+        </s:if>
+    </s:if>
+    <%-- resource empty --%>
+    <s:else>
+        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/chooseResourceSubmit.jsp">
+            <s:param name="resourceTypeCode">Attach</s:param>
+        </s:include>
+    </s:else>
 </s:if>
 <%-- Not-default lang --%>
 	<s:else>
@@ -92,39 +110,54 @@
 				</s:if>
 					<div class="row panel-body">
 						<%-- download icon + button --%>
-							<div class="col-xs-12 col-sm-3 col-lg-2 text-center">
-								<a href="<s:property value="#langResourceVar.attachPath" />" title="<s:text name="label.download" />:&#32;<s:property value="#langResourceVar.descr"/>">
-									<span class="icon fa fa-file-text fa-5x fa-lg <s:if test="#currentResourceIsEmptyVar"> text-muted </s:if>"></span>
-									<span class="sr-only"><s:text name="label.download" />:&#32;<s:property value="#langResourceVar.descr"/></span>
-								</a>
-							</div>
+                        <div class="col-xs-12 col-sm-3 col-lg-2 text-center">
+                            <a href="<s:property value="#langResourceVar.attachPath" />" title="<s:text name="label.download" />:&#32;<s:property value="#langResourceVar.descr"/>">
+                                <span class="icon fa fa-file-text fa-5x fa-lg <s:if test="#currentResourceIsEmptyVar"> text-muted </s:if>"></span>
+                                <span class="sr-only"><s:text name="label.download" />:&#32;<s:property value="#langResourceVar.descr"/></span>
+                            </a>
+                        </div>
 						<%-- text field --%>
-							<div class="col-xs-12 col-sm-9 col-lg-10 form-horizontal margin-large-top">
-								<div class="form-group">
-									<label class="col-xs-2 control-label text-right" for="<s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" />">
-										<s:text name="label.text" />
-									</label>
-									<div class="col-xs-10">
-										<s:include value="/WEB-INF/apsadmin/jsp/entity/modules/textAttribute.jsp" />
-									</div>
-								</div>
-								
-		                        <%-- choose resource button --%>
-		                        <div class="text-right">
-		                        <s:if test="#currentResourceIsEmptyVar">
-		                            <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/chooseResourceSubmit.jsp">
-		                                <s:param name="resourceTypeCode">Attach</s:param>
-		                                <s:param name="buttonCssClass">btn btn-default</s:param>
-		                            </s:include>
-		                        </s:if>
-		                        <s:else>
-		                        <%-- remove resource button --%>
-		                            <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/removeResourceSubmit.jsp">
-		                                <s:param name="resourceTypeCode">Attach</s:param>
-		                            </s:include>
-		                        </s:else>
-		                        </div>
-							</div>
+                        <div class="col-xs-12 col-sm-9 col-lg-10 form-horizontal margin-large-top">
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label text-right" for="<s:property value="%{#attributeTracer.getFormFieldName(#attribute)}" />">
+                                    <s:text name="label.text" />
+                                </label>
+                                <div class="col-xs-10">
+                                    <s:include value="/WEB-INF/apsadmin/jsp/entity/modules/textAttribute.jsp" />
+                                </div>
+                            </div>
+                            <%--
+                            <s:iterator var="metadataKeyVar" value="#resourceMetadataKeysVar">
+                            <div class="form-group">
+                                <div class="col-xs-2 control-label text-right">
+                                    <s:set var="metadataFormFieldNameVar" value="%{#attributeTracer.getFormFieldName(#attribute) + '_metadata_' + #metadataKeyVar}" />
+                                    <label class="col-lg-2 col-md-3 col-sm-4 no-padding pr-10 text-right" for="<s:property value="#metadataFormFieldNameVar" />">
+                                        <span title="<s:text name="label.img.metadata.long" ><s:param value="#metadataKeyVar" /></s:text>"><s:text name="label.metadata.short" ><s:param value="#metadataKeyVar" /></s:text></span>
+                                    </label>
+                                    <div class="col-xs-10">
+                                        <wpsf:textfield id="%{#metadataFormFieldNameVar}" name="%{#metadataFormFieldNameVar}" 
+                                                        value="%{#attribute.getMetadata(#metadataKeyVar, #lang.code)}" maxlength="254" cssClass="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            </s:iterator>
+                            --%>
+                            <%-- choose resource button --%>
+                            <div class="text-right">
+                            <s:if test="#currentResourceIsEmptyVar">
+                                <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/chooseResourceSubmit.jsp">
+                                    <s:param name="resourceTypeCode">Attach</s:param>
+                                    <s:param name="buttonCssClass">btn btn-default</s:param>
+                                </s:include>
+                            </s:if>
+                            <s:else>
+                            <%-- remove resource button --%>
+                                <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/removeResourceSubmit.jsp">
+                                    <s:param name="resourceTypeCode">Attach</s:param>
+                                </s:include>
+                            </s:else>
+                            </div>
+                        </div>
 					</div>
 				<s:if test="!#attributeIsNestedVar">
 					</div>

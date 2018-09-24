@@ -25,36 +25,34 @@ public interface ResourceAttributeInterface extends AttributeInterface {
 
     public static final String REFERENCED_RESOURCE_INDICATOR = "ref";
 
+    public String getMetadata(String key, String langCode);
+
     public void setMetadata(String key, String langCode, String value);
 
     public String getResourceAlt();
 
     public String getResourceAltForLang(String langCode);
 
-    @Deprecated
-    public void setResourceAlt(String text, String langCode);
-
+    //@Deprecated
+    //public void setResourceAlt(String text, String langCode);
     public String getResourceDescription();
 
     public String getResourceDescriptionForLang(String langCode);
 
-    @Deprecated
-    public void setResourceDescription(String text, String langCode);
-
+    //@Deprecated
+    //public void setResourceDescription(String text, String langCode);
     public String getResourceLegend();
 
     public String getResourceLegendForLang(String langCode);
 
-    @Deprecated
-    public void setResourceLegend(String text, String langCode);
-
+    //@Deprecated
+    //public void setResourceLegend(String text, String langCode);
     public String getResourceTitle();
 
     public String getResourceTitleForLang(String langCode);
 
-    @Deprecated
-    public void setResourceTitle(String text, String langCode);
-
+    //@Deprecated
+    //public void setResourceTitle(String text, String langCode);
     /**
      * Restituisce la risorsa associata all'attributo.
      *
