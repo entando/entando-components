@@ -25,7 +25,9 @@ public interface ResourceAttributeInterface extends AttributeInterface {
 
     public static final String REFERENCED_RESOURCE_INDICATOR = "ref";
 
-    public String getMetadata(String key, String langCode);
+    public String getMetadata(String key);
+
+    public String getMetadataforLang(String key, String langCode);
 
     public void setMetadata(String key, String langCode, String value);
 
