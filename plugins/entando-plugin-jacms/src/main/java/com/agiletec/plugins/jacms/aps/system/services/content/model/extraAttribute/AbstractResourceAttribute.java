@@ -143,7 +143,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
     }
 
     @Override
-    public String getMetadataforLang(String key, String langCode) {
+    public String getMetadataForLang(String key, String langCode) {
         Map<String, String> map = this.getMetadataMap(key, false);
         return map.get(langCode);
     }

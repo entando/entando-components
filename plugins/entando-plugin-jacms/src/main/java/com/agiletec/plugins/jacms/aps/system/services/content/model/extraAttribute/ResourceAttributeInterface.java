@@ -27,7 +27,7 @@ public interface ResourceAttributeInterface extends AttributeInterface {
 
     public String getMetadata(String key);
 
-    public String getMetadataforLang(String key, String langCode);
+    public String getMetadataForLang(String key, String langCode);
 
     public void setMetadata(String key, String langCode, String value);
 
