@@ -102,6 +102,54 @@ public class TestContentAdminAction extends AbstractBaseTestContentAction {
         }
     }
 
+    public void testAddNewMetadata() throws Throwable {
+        Map<String, List<String>> defaultMapping = this.resourceManager.getMetadataMapping();
+        try {
+            this.initAction("/do/jacms/Content/Admin", "addMetadata");
+            this.setUserOnSession("admin");
+            super.addParameter("resourceMetadata_mapping_test_1", "metadataKey1,metadataKey2");
+            super.addParameter("resourceMetadata_mapping_test_2", "newMetadataKeyA,newMetadataKeyB");
+            super.addParameter("metadataKeys", new String[]{"test_1", "test_2"});
+            super.addParameter("metadataKey", "test_3");
+            String result = this.executeAction();
+            ContentAdminAction action = (ContentAdminAction) super.getAction();
+            assertEquals(BaseAction.SUCCESS, result);
+            assertEquals(0, action.getFieldErrors().size());
+            Map<String, List<String>> mappingIntoAction = action.getMapping();
+            assertEquals(3, mappingIntoAction.size());
+            assertEquals(0, mappingIntoAction.get("test_3").size());
+            assertEquals(2, mappingIntoAction.get("test_1").size());
+            assertEquals(2, mappingIntoAction.get("test_2").size());
+        } catch (Throwable e) {
+            throw e;
+        } finally {
+            this.resourceManager.updateMetadataMapping(defaultMapping);
+        }
+    }
+
+    public void testRemoveMetadata() throws Throwable {
+        Map<String, List<String>> defaultMapping = this.resourceManager.getMetadataMapping();
+        try {
+            this.initAction("/do/jacms/Content/Admin", "removeMetadata");
+            this.setUserOnSession("admin");
+            super.addParameter("resourceMetadata_mapping_test_1", "metadataKey1,metadataKey2");
+            super.addParameter("resourceMetadata_mapping_test_2", "newMetadataKeyA,newMetadataKeyB");
+            super.addParameter("metadataKeys", new String[]{"test_1", "test_2"});
+            super.addParameter("metadataKey", "test_1");
+            String result = this.executeAction();
+            ContentAdminAction action = (ContentAdminAction) super.getAction();
+            assertEquals(BaseAction.SUCCESS, result);
+            assertEquals(0, action.getFieldErrors().size());
+            Map<String, List<String>> mappingIntoAction = action.getMapping();
+            assertEquals(1, mappingIntoAction.size());
+            assertEquals(2, mappingIntoAction.get("test_2").size());
+        } catch (Throwable e) {
+            throw e;
+        } finally {
+            this.resourceManager.updateMetadataMapping(defaultMapping);
+        }
+    }
+
     public void testValidateNewMetadata() throws Throwable {
         this.executeValidateNewMetadata("wrongKey_&&");
         this.executeValidateNewMetadata("tes");
