@@ -33,26 +33,18 @@ public interface ResourceAttributeInterface extends AttributeInterface {
 
     public String getResourceAltForLang(String langCode);
 
-    //@Deprecated
-    //public void setResourceAlt(String text, String langCode);
     public String getResourceDescription();
 
     public String getResourceDescriptionForLang(String langCode);
 
-    //@Deprecated
-    //public void setResourceDescription(String text, String langCode);
     public String getResourceLegend();
 
     public String getResourceLegendForLang(String langCode);
 
-    //@Deprecated
-    //public void setResourceLegend(String text, String langCode);
     public String getResourceTitle();
 
     public String getResourceTitleForLang(String langCode);
 
-    //@Deprecated
-    //public void setResourceTitle(String text, String langCode);
     /**
      * Restituisce la risorsa associata all'attributo.
      *
