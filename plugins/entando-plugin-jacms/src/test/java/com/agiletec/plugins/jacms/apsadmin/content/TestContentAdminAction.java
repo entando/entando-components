@@ -84,16 +84,58 @@ public class TestContentAdminAction extends AbstractBaseTestContentAction {
             super.addParameter("resourceMetadata_mapping_" + IResourceManager.LEGEND_METADATA_KEY, "");
             super.addParameter("resourceMetadata_mapping_" + IResourceManager.TITLE_METADATA_KEY, "metadataKeyG,metadataKeyK,metadatakeyF,metadatakeyZ");
             super.addParameter("metadataKeys", new String[]{IResourceManager.ALT_METADATA_KEY, IResourceManager.DESCRIPTION_METADATA_KEY,
-                IResourceManager.LEGEND_METADATA_KEY, IResourceManager.TITLE_METADATA_KEY});
+                IResourceManager.LEGEND_METADATA_KEY, IResourceManager.TITLE_METADATA_KEY, "test_parameter"});
             String result = this.executeAction();
             assertEquals(BaseAction.SUCCESS, result);
             Map<String, List<String>> newMapping = this.resourceManager.getMetadataMapping();
-            assertEquals(4, newMapping.size());
+            assertEquals(5, newMapping.size());
             assertEquals(5, newMapping.get(IResourceManager.ALT_METADATA_KEY).size());
             assertEquals("metadatakey4", newMapping.get(IResourceManager.ALT_METADATA_KEY).get(3));
             assertEquals(4, newMapping.get(IResourceManager.DESCRIPTION_METADATA_KEY).size());
             assertEquals("Component 2", newMapping.get(IResourceManager.DESCRIPTION_METADATA_KEY).get(3));
             assertEquals(4, newMapping.get(IResourceManager.TITLE_METADATA_KEY).size());
+            assertEquals(0, newMapping.get("test_parameter").size());
+        } catch (Throwable e) {
+            throw e;
+        } finally {
+            this.resourceManager.updateMetadataMapping(defaultMapping);
+        }
+    }
+
+    public void testValidateNewMetadata() throws Throwable {
+        this.executeValidateNewMetadata("wrongKey_&&");
+        this.executeValidateNewMetadata(IResourceManager.TITLE_METADATA_KEY);
+    }
+
+    protected void executeValidateNewMetadata(String newWrongMetadata) throws Throwable {
+        Map<String, List<String>> defaultMapping = this.resourceManager.getMetadataMapping();
+        try {
+            this.initAction("/do/jacms/Content/Admin", "addMetadata");
+            this.setUserOnSession("admin");
+            super.addParameter("resourceMetadata_mapping_" + IResourceManager.ALT_METADATA_KEY,
+                    "metadataKey1,metadataKey2,metadatakey3,metadatakey4,metadatakey5");
+            super.addParameter("resourceMetadata_mapping_" + IResourceManager.DESCRIPTION_METADATA_KEY,
+                    "newMetadataKeyA,newMetadataKeyB,JPEG Comment,Component 2");
+            super.addParameter("resourceMetadata_mapping_" + IResourceManager.LEGEND_METADATA_KEY, "");
+            super.addParameter("resourceMetadata_mapping_" + IResourceManager.TITLE_METADATA_KEY,
+                    "metadataKeyG,metadataKeyK,metadatakeyF");
+            super.addParameter("metadataKeys", new String[]{IResourceManager.ALT_METADATA_KEY, IResourceManager.DESCRIPTION_METADATA_KEY,
+                IResourceManager.LEGEND_METADATA_KEY, IResourceManager.TITLE_METADATA_KEY, "test_metadata_1", "test_metadata_2"});
+            super.addParameter("metadataKey", newWrongMetadata);
+            String result = this.executeAction();
+            ContentAdminAction action = (ContentAdminAction) super.getAction();
+            assertEquals(BaseAction.INPUT, result);
+            assertEquals(1, action.getFieldErrors().size());
+            Map<String, List<String>> mappingIntoAction = action.getMapping();
+            assertEquals(6, mappingIntoAction.size());
+            assertEquals(5, mappingIntoAction.get(IResourceManager.ALT_METADATA_KEY).size());
+            assertEquals("metadatakey4", mappingIntoAction.get(IResourceManager.ALT_METADATA_KEY).get(3));
+            assertEquals(4, mappingIntoAction.get(IResourceManager.DESCRIPTION_METADATA_KEY).size());
+            assertEquals("Component 2", mappingIntoAction.get(IResourceManager.DESCRIPTION_METADATA_KEY).get(3));
+            assertEquals(3, mappingIntoAction.get(IResourceManager.TITLE_METADATA_KEY).size());
+            assertEquals(0, mappingIntoAction.get(IResourceManager.LEGEND_METADATA_KEY).size());
+            assertEquals(0, mappingIntoAction.get("test_metadata_1").size());
+            assertEquals(0, mappingIntoAction.get("test_metadata_2").size());
         } catch (Throwable e) {
             throw e;
         } finally {

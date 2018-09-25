@@ -405,7 +405,7 @@
 
     	<action name="addMetadata" class="jacmsContentAdminAction" method="addMetadata" >
 			<result type="tiles">admin.jacms.content.settings</result>
-			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
 		</action>
 
     </package>

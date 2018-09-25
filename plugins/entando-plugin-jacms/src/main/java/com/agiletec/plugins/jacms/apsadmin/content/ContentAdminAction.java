@@ -49,6 +49,17 @@ public class ContentAdminAction extends BaseAdminAction {
     private ICmsSearchEngineManager searchEngineManager;
 
     @Override
+    public void validate() {
+        super.validate();
+        Map<String, List<String>> mapping = this.buildMapping();
+        if (!StringUtils.isBlank(this.getMetadataKey())) {
+            if (mapping.containsKey(this.getMetadataKey().trim())) {
+                this.addFieldError("metadataKey", "error.contentSettings.metadataAlreadyPresent");
+            }
+        }
+    }
+
+    @Override
     public String configSystemParams() {
         String result = super.configSystemParams();
         if (!result.equals(SUCCESS)) {
@@ -91,8 +102,6 @@ public class ContentAdminAction extends BaseAdminAction {
         Map<String, List<String>> newMapping = this.buildMapping();
         if (!StringUtils.isBlank(this.getMetadataKey()) && !newMapping.containsKey(this.getMetadataKey().trim())) {
             newMapping.put(this.getMetadataKey().trim(), new ArrayList<>());
-        } else {
-            // VALIDATION
         }
         return SUCCESS;
     }
