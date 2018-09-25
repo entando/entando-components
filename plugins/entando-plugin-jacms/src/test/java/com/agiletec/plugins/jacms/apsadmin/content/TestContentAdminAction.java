@@ -104,6 +104,8 @@ public class TestContentAdminAction extends AbstractBaseTestContentAction {
 
     public void testValidateNewMetadata() throws Throwable {
         this.executeValidateNewMetadata("wrongKey_&&");
+        this.executeValidateNewMetadata("tes");
+        this.executeValidateNewMetadata("very_long_key_1234567890");
         this.executeValidateNewMetadata(IResourceManager.TITLE_METADATA_KEY);
     }
 

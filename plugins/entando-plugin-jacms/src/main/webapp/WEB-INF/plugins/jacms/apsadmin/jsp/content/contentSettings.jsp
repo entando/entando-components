@@ -43,7 +43,23 @@
                 </s:iterator>
             </div>
         </s:if>
-
+        <s:if test="hasFieldErrors()">
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong><s:text name="message.title.ActionErrors" /></strong>
+                <ul>
+                    <s:iterator value="fieldErrors">
+                        <s:iterator value="value">
+                        <li><s:property escapeHtml="false" /></li>
+                        </s:iterator>
+                    </s:iterator>
+                </ul>
+            </div>
+        </s:if>
+        
         <div class="form-group">
             <div class="col-xs-2 control-label">
                 <span class="display-block"><s:text name="note.reload.contentReferences.start"/></span>
@@ -183,7 +199,7 @@
                 <label class="col-sm-2 section-label" for="new_metatag">
                     <s:text name="jacms.label.addResourceMetadata" />
                     <a role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                       data-placement="top" data-content="<s:text name="jacms.addResourceMetadata.help" />"
+                       data-placement="top" data-content="<s:text name="jacms.help.addResourceMetadata" />"
                        data-original-title="">
                         <span class="fa fa-info-circle"></span>
                     </a>
