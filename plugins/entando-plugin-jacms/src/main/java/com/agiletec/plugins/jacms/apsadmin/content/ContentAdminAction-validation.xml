@@ -9,7 +9,7 @@
 			<param name="minLength">4</param>
 			<param name="maxLength">20</param>
 			<param name="trim">true</param>
-           <message key="stringlength" />
+           <message key="contentSettings.stringlength" />
 		</field-validator>
         <field-validator type="regex" short-circuit="true">
            <param name="regex"><![CDATA[([a-z0-9_])+]]></param>

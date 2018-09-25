@@ -1494,7 +1494,7 @@ public class TestContentManager extends BaseTestCase {
             ImageAttribute attributeToModify = (ImageAttribute) monoListAttribute.getAttributes().get(0);
             attributeToModify.setMetadata(IResourceManager.ALT_METADATA_KEY, "en", "ALT en");
             attributeToModify.setMetadata(IResourceManager.ALT_METADATA_KEY, "it", "ALT it");
-            attributeToModify.setMetadata(IResourceManager.DESCRIPTION_METADATA_KEY, "en", "ALT en");
+            attributeToModify.setMetadata(IResourceManager.DESCRIPTION_METADATA_KEY, "en", "Description en");
             attributeToModify.setMetadata(IResourceManager.LEGEND_METADATA_KEY, "it", "Legend it");
             attributeToModify.setMetadata(IResourceManager.TITLE_METADATA_KEY, "it", "Title it");
             attributeToModify.setMetadata(IResourceManager.TITLE_METADATA_KEY, "en", "Title en");
