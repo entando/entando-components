@@ -185,7 +185,7 @@
                     </div>
                     <div class="col-xs-2">
                         <wpsa:actionParam action="removeMetadata" var="actionNameVar" >
-                            <wpsa:actionSubParam name="metadataKey" value="%{#pageMetatagVar.key}" />
+                            <wpsa:actionSubParam name="metadataKey" value="%{#metadataKeyVar}" />
                         </wpsa:actionParam>
                         <wpsf:submit type="button" action="%{#actionNameVar}" value="%{getText('label.remove')}" title="%{getText('label.remove')}" cssClass="btn btn-danger pull-right">
                             <span class="pficon pficon-delete"></span>
