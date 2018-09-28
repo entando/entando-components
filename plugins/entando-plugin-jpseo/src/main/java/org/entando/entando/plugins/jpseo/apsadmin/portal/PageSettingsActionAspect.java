@@ -25,7 +25,6 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.apsadmin.portal.PageSettingsAction;
-import com.agiletec.apsadmin.system.BaseAction;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -40,8 +39,6 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
@@ -154,65 +151,58 @@ public class PageSettingsActionAspect {
         return "";
     }
 
-    @Around("execution(* com.agiletec.apsadmin.portal.PageSettingsAction.updateSystemParams())")
-    public Object executeUpdateSystemParamsForAjax(ProceedingJoinPoint joinPoint) {
-        return executeUpdateSystemParams(joinPoint);
+    @Before("execution(* com.agiletec.apsadmin.portal.PageSettingsAction.updateSystemParams())")
+    public void executeUpdateSystemParamsForAjax(JoinPoint joinPoint) {
+        this.executeUpdateSystemParams(joinPoint);
     }
 
-    @Around("execution(* com.agiletec.apsadmin.portal.PageSettingsAction.updateSystemParamsForAjax())")
-    public Object executeUpdateSystemParams(ProceedingJoinPoint joinPoint) {
-        Object result = null;
+    @Before("execution(* com.agiletec.apsadmin.portal.PageSettingsAction.updateSystemParamsForAjax())")
+    public void executeUpdateSystemParams(JoinPoint joinPoint) {
         HttpServletRequest request = ServletActionContext.getRequest();
         PageSettingsAction action = (PageSettingsAction) joinPoint.getTarget();
         try {
-            result = joinPoint.proceed();
-            //se il salvataggio va a buon fine, aggiorna l'oggetto
-            if (null != result && result instanceof String) {
-                result = joinPoint.proceed();
-                String robotContent = request.getParameter(PARAM_ROBOT_CONTENT_CODE);
-                String alternativePath = request.getParameter(PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
-                InputStream is = (!StringUtils.isBlank(robotContent))
-                        ? new ByteArrayInputStream(robotContent.getBytes("UTF-8")) : null;
-                if (StringUtils.isBlank(alternativePath)) {
-                    //default PATH
-                    if (null != is) {
-                        this.getStorageManager().saveFile(ROBOT_FILENAME, false, is);
-                    } else {
-                        this.getStorageManager().deleteFile(ROBOT_FILENAME, false);
-                    }
-                } else if (!PageSettingsUtils.isRightPath(alternativePath)) {
-                    action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE,
-                            action.getText("jpseo.error.robotFilePath.invalid", new String[]{alternativePath}));
-                } else if (this.checkPath(alternativePath, action)) {
-                    if (null != is) {
-                        //alternativePath and string
-                        this.saveFile(alternativePath, is, action);
-                    } else {
-                        File file = new File(alternativePath);
-                        try {
-                            if (file.exists()) {
-                                file.delete();
-                            }
-                        } catch (Exception e) {
-                            logger.error("error deleting file {}", alternativePath);
-                        }
-                    }
-                }
-                String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
-                Map<String, String> systemParams = SystemParamsUtils.getParams(xmlParams);
-                if (!StringUtils.isEmpty(alternativePath)) {
-                    systemParams.put(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME, alternativePath);
+            String robotContent = request.getParameter(PARAM_ROBOT_CONTENT_CODE);
+            String alternativePath = request.getParameter(PARAM_ROBOT_ALTERNATIVE_PATH_CODE);
+            InputStream is = (!StringUtils.isBlank(robotContent))
+                    ? new ByteArrayInputStream(robotContent.getBytes("UTF-8")) : null;
+            if (StringUtils.isBlank(alternativePath)) {
+                //default PATH
+                if (null != is) {
+                    this.getStorageManager().saveFile(ROBOT_FILENAME, false, is);
                 } else {
-                    systemParams.remove(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME);
+                    this.getStorageManager().deleteFile(ROBOT_FILENAME, false);
                 }
-                String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, systemParams, true);
-                this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
+            } else if (!PageSettingsUtils.isRightPath(alternativePath)) {
+                action.addFieldError(PARAM_ROBOT_ALTERNATIVE_PATH_CODE,
+                        action.getText("jpseo.error.robotFilePath.invalid", new String[]{alternativePath}));
+            } else if (this.checkPath(alternativePath, action)) {
+                if (null != is) {
+                    //alternativePath and string
+                    this.saveFile(alternativePath, is, action);
+                } else {
+                    File file = new File(alternativePath);
+                    try {
+                        if (file.exists()) {
+                            file.delete();
+                        }
+                    } catch (Exception e) {
+                        logger.error("error deleting file {}", alternativePath);
+                    }
+                }
             }
+            String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
+            Map<String, String> systemParams = SystemParamsUtils.getParams(xmlParams);
+            if (!StringUtils.isEmpty(alternativePath)) {
+                systemParams.put(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME, alternativePath);
+            } else {
+                systemParams.remove(JpseoSystemConstants.ROBOT_ALTERNATIVE_PATH_PARAM_NAME);
+            }
+            String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, systemParams, true);
+            this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
         } catch (Throwable t) {
             logger.error("error updating page settings for seo", t);
-            return BaseAction.FAILURE;
+            action.addActionError("error updating page settings for seo");
         }
-        return result;
     }
 
     private void saveFile(String filePath, InputStream is, PageSettingsAction action) throws IOException {
