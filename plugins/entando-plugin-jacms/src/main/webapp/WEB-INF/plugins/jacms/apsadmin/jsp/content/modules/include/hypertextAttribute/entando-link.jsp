@@ -19,9 +19,13 @@
 		<link rel="stylesheet" href="<wp:resourceURL />administration/css/entando-admin-console-default-theme.css">
 		<link rel="stylesheet" type="text/css" href="<wp:resourceURL />administration/css/pages/settingsPage.css">
 		<link rel="stylesheet" type="text/css" href="<wp:resourceURL />administration/css/jquery-ui.css">
+		<link rel="stylesheet" type="text/css" href="<wp:resourceURL />administration/css/bootstrap.vertical-tabs.min.css"/>
+		<link rel="stylesheet" type="text/css" href="<wp:resourceURL />administration/cropper-js/cropper.min.css"/>
+		<link rel="stylesheet" type="text/css" href="<wp:resourceURL />administration/cropper-js/cropper.min.css"/>
+		<link rel="stylesheet" type="text/css" href="<wp:resourceURL />administration/crop-editor/crop-editor.css"/>
 
 
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- <!--CSS inclusions--> and media queries -->
 		<!--[if lt IE 9]>
 			<script src="<wp:resourceURL />administration/js/html5shiv.js"></script>
 			<script src="<wp:resourceURL />administration/js/respond.min.js"></script>
@@ -35,6 +39,8 @@
 		<script src="<wp:resourceURL />administration/js/bootstrap-switch.min.js"></script>
 		<script src="<wp:resourceURL />administration/js/bootstrap-offcanvas.js"></script>
         <script src="<wp:resourceURL />administration/js/jquery-ui.js"></script>
+		<script src="<wp:resourceURL />administration/cropper-js/cropper.min.js"></script>
+		<script src="<wp:resourceURL />administration/crop-editor/crop-editor.js"></script>
 		<s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-common.jsp" />
 
 		<%-- entando-link stuff --%>
