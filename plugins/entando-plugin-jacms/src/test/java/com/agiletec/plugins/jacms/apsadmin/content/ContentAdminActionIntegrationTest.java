@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * @author E.Mezzano
  */
-public class TestContentAdminAction extends AbstractBaseTestContentAction {
+public class ContentAdminActionIntegrationTest extends AbstractBaseTestContentAction {
 
     private IResourceManager resourceManager;
 
