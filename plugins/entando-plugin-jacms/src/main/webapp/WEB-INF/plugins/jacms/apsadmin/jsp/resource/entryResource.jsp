@@ -76,18 +76,16 @@
 <s:set var="categoryTreeStyleVar">
     <wp:info key="systemParam" paramName="treeStyle_category" />
 </s:set>
-<s:set var="lockGroupSelect" value="%{resourceId != null && resourceId != 0}"></s:set>
-
-
+<s:set var="lockGroupSelect" value="%{resourceId != null}"></s:set>
 <s:form action="save" method="post" enctype="multipart/form-data" cssClass="form-horizontal">
     <wpsf:hidden name="fieldCount" />
     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/inc_fullErrors.jsp" />
-    <p class="sr-only">
+<p class="sr-only">
     <wpsf:hidden name="strutsAction" />
     <wpsf:hidden name="resourceTypeCode" />
     <wpsf:hidden name="contentOnSessionMarker" />
-    <s:iterator value="categoryCodes" var="categoryCode" status="rowstatus">
-        <input type="hidden" name="categoryCodes" value="<s:property value="#categoryCode" />"
+    <s:iterator value="categoryCodes" var="categoryCodeVar" status="rowstatus">
+        <input type="hidden" name="categoryCodes" value="<s:property value="#categoryCodeVar" />"
                id="categoryCodes-<s:property value="#rowstatus.index" />" />
     </s:iterator>
     <s:if test="strutsAction != 1">
@@ -102,7 +100,6 @@
         <wpsf:hidden name="mainGroup" />
     </s:if>
 </p>
-
 
 <%-- mainGroup --%>
 <s:set var="fieldErrorsVar" value="%{fieldErrors['mainGroup']}" />
@@ -135,7 +132,6 @@
 <s:set var="hasFieldErrorVar"
        value="(#uploadFieldErrorsVar != null && !#uploadFieldErrorsVar.isEmpty()) || (#fileNameFieldErrorsVar != null && !#fileNameFieldErrorsVar.isEmpty())" />
 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
-
 
 <fieldset class="margin-base-vertical" id="category-content-block">
     <div class="form-group<s:property value="controlGroupErrorClassVar" />">
@@ -205,15 +201,15 @@
                     </div>
                 </s:iterator>
             </s:if>
-            <s:if test="categoryCodes != null && categoryCodes.size() > 0">
+            <s:if test="%{categoryCodes != null && !categoryCodes.empty}">
                 <ul class="list-inline mt-20">
-                    <s:iterator value="categoryCodes" var="categoryCode">
-                        <s:set var="resourceCategory" value="%{getCategory(#categoryCode)}"></s:set>
-                            <li>
-                                <span class="label label-info">
-                                    <span class="icon fa fa-tag"></span>
-                                    &#32;
-                                    <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
+                    <s:iterator value="categoryCodes" var="categoryCodeVar">
+                        <s:set var="resourceCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
+                        <li>
+                            <span class="label label-info">
+                                <span class="icon fa fa-tag"></span>
+                                &#32;
+                                <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
                                     <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)" />
                                 </abbr>
                                 &#32;
@@ -231,8 +227,6 @@
                     </s:iterator>
                 </ul>
             </s:if>
-
-
         </div>
     </div>
 </fieldset>
@@ -268,7 +262,12 @@
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
             <div class="col-sm-4">
-                <wpsf:textfield name="descr_%{#ctr.count - 1}" maxlength="250" id="descr_%{#ctr.count - 1}" cssClass="form-control file-description" value="%{getFileDescription(#ctr.count - 1)}" />
+                <s:if test="%{'' != getFileDescription(#ctr.count - 1)}" ><s:set var="descriptionFieldVar" value="%{getFileDescription(#ctr.count - 1)}" /></s:if>
+                <s:else>
+                    <s:set var="paramNameVar" value="%{'descr_' + (#ctr.count - 1)}" />
+                    <s:set var="descriptionFieldVar" value="%{#parameters[#paramNameVar][0]}" />
+                </s:else>
+                <wpsf:textfield name="descr_%{#ctr.count - 1}" maxlength="250" id="descr_%{#ctr.count - 1}" cssClass="form-control file-description" value="%{#descriptionFieldVar}" />
                 <s:if test="#fieldHasFieldErrorVar">
                     <span class="help-block text-danger">
                         <s:iterator value="#fieldErrorsVar">
@@ -408,7 +407,6 @@
     </div>
 
 </s:if>
-
 
 <div class="form-horizontal">
     <div class="form-group">
