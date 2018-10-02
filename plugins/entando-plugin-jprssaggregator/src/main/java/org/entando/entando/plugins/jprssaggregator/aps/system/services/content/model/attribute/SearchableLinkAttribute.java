@@ -19,19 +19,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jprssaggregator.aps.system.services.content.model.extraAttribute;
+package org.entando.entando.plugins.jprssaggregator.aps.system.services.content.model.attribute;
 
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute;
 
 /**
- * This class extends the LinkAttribute 
- * and makes it searchable.
+ * This class extends the LinkAttribute and makes it searchable.
  */
 public class SearchableLinkAttribute extends LinkAttribute {
-	
-	@Override
-	public boolean isSearchable() {
-		return true;
-	}
-	
+
+    @Override
+    public boolean isSearchable() {
+        return true;
+    }
+
 }

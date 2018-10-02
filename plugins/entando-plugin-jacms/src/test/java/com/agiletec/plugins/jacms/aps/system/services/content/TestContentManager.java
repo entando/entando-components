@@ -44,10 +44,10 @@ import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AttachAttribute;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.ImageAttribute;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.ResourceAttributeInterface;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AttachAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ImageAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ResourceAttributeInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import org.entando.entando.aps.system.common.entity.model.attribute.EnumeratorMapAttribute;
 

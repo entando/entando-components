@@ -38,7 +38,7 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jpgeoref.aps.system.GeoRefSystemConstants;
-import com.agiletec.plugins.jpgeoref.aps.system.services.content.model.extraAttribute.CoordsAttribute;
+import com.agiletec.plugins.jpgeoref.aps.system.services.content.model.attribute.CoordsAttribute;
 import com.agiletec.plugins.jpgeoref.aps.tags.helper.GeorefInfoBean;
 
 /**

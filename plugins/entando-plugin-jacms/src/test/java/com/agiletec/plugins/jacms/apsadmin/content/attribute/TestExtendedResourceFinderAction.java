@@ -16,7 +16,7 @@ package com.agiletec.plugins.jacms.apsadmin.content.attribute;
 import javax.servlet.http.HttpSession;
 
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.ImageAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ImageAttribute;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.resource.ExtendedResourceFinderAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.resource.ResourceAttributeActionHelper;

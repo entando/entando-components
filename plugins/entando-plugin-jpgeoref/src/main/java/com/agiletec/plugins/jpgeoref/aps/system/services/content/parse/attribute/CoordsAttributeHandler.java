@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpgeoref.aps.system.services.content.parse.extraAttribute;
+package com.agiletec.plugins.jpgeoref.aps.system.services.content.parse.attribute;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.xml.sax.Attributes;
@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 
 import com.agiletec.aps.system.common.entity.parse.attribute.AbstractAttributeHandler;
 import com.agiletec.plugins.jpgeoref.aps.system.GeoRefSystemConstants;
-import com.agiletec.plugins.jpgeoref.aps.system.services.content.model.extraAttribute.CoordsAttribute;
+import com.agiletec.plugins.jpgeoref.aps.system.services.content.model.attribute.CoordsAttribute;
 
 /**
  * @author E.Santoboni

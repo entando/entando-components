@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.plugins.jacms.aps.system.services.content.parse.extraAttribute;
+package com.agiletec.plugins.jacms.aps.system.services.content.parse.attribute;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import com.agiletec.aps.system.common.entity.parse.attribute.TextAttributeHandler;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.ResourceAttributeInterface;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ResourceAttributeInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 

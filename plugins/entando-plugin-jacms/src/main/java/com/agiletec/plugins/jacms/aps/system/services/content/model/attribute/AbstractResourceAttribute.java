@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute;
+package com.agiletec.plugins.jacms.aps.system.services.content.model.attribute;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.CmsAttributeReference;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.util.ICmsAttributeErrorCodes;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.util.ICmsAttributeErrorCodes;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import org.apache.commons.lang3.StringUtils;
@@ -266,11 +266,6 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return attributeElement;
     }
 
-    /*
-    <metadatas>
-        <metadata key="xxxxx" lang="en">value</metadata>
-    </metadatas>
-     */
     protected void addResourceMetadatasElement(Element attributeElement) {
         if (null == this.getMetadatas() || this.getMetadatas().isEmpty()) {
             return;
@@ -382,7 +377,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
             value.setResourceId(resource.getId());
             StringBuilder restResourcePath = new StringBuilder();
             restResourcePath.append(this.getConfigManager().getParam("applicationBaseURL"));
-            restResourcePath.append("api/rs/").append(langCode).append("/jacms/");
+            restResourcePath.append("legacyapi/rs/").append(langCode).append("/jacms/");
             if (this.getType().equals(JacmsSystemConstants.RESOURE_ATTACH_CODE)) {
                 restResourcePath.append("attachment");
             } else {
