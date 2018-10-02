@@ -19,9 +19,18 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.BaseResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import java.io.File;
+import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,62 +45,109 @@ public class MultipleResourceAction extends ResourceAction {
     private static final Logger logger = LoggerFactory.getLogger(MultipleResourceAction.class);
 
     private int fieldCount = 0;
-    
+
     //TODO fileDescriptions should be a Map so that all of the loops in this code can be turned into lookups based on file id or file name.
     private List<String> fileDescriptions;
-    private List<File> fileUpload = new ArrayList<>();
-    private List<String> fileUploadContentType = new ArrayList<>();
-    private List<String> fileUploadFileName = new ArrayList<>();
+    private List<File> fileUpload;
+    private List<String> fileUploadContentType;
+    private List<String> fileUploadFileName;
+    private List<String> base64Image;
+
+    private List<String> fileUploadBase64ImageContentType;
+    private List<String> fileUploadBase64ImageFileName;
+
     public final static String DESCR_FIELD = "descr_";
     public final static String FILE_UPLOAD_FIELD = "fileUpload_";
+
     private List savedId = new ArrayList();
     private Map<String, String> metadata = new HashMap<>();
 
     @Override
     public void validate() {
+        logger.debug("MultipleResourceAction validate");
         savedId.clear();
         if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
+            logger.debug("MultipleResourceAction validate EDIT");
             if (null == getFileDescriptions()) {
                 logger.debug("Description empty for the field {} ", DESCR_FIELD + 0);
                 this.addFieldError(DESCR_FIELD + 0, getText("error.resource.file.descrEmpty"));
+                logger.error("Add error -> descriptions are empty, null == getFileDescriptions()");
             }
-            if (null == getFileUpload()) {
-                logger.debug("File empty for the field {} ", FILE_UPLOAD_FIELD);
-                this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.fileEmpty"));
-            }
-            if (this.getFileUploadFileName().size() > 0) {
-                ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
-                this.checkRightFileType(resourcePrototype, this.getFileUploadFileName().get(0));
+            if (this.isImageUpload()) {
+                if (null != this.getFileUploadBase64ImageFileName()) {
+                    ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
+                    this.checkRightFileType(resourcePrototype, this.getFileUploadBase64ImageFileName().get(0));
+                }
+            } else {
+                if (null != this.getFileUploadFileName()) {
+                    ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
+                    this.checkRightFileType(resourcePrototype, this.getFileUploadFileName().get(0));
+                }
             }
         } else {
 
-            try {
-                for (int i = 0; i < getFileDescriptions().size(); i++) {
-                    if (null == getFileUploadInputStream(i)) {
-                        logger.debug("File void for the field {} ", FILE_UPLOAD_FIELD + i);
-                        this.addFieldError(FILE_UPLOAD_FIELD + i, this.getText("error.resource.file.void"));
-                    }
-                }
-
-            } catch (Throwable ex) {
-                logger.debug("File void for the field {} ", FILE_UPLOAD_FIELD);
-                this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.void"));
-            }
-
-            if (null != getFileUpload()) {
-                validateFileDescriptions();
-                if (null != this.getResourceType()) {
-                    ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
-
-                    this.getFileUploadFileName().forEach(fileName
-                            -> checkRightFileType(resourcePrototype, fileName));
-
-                } else {
-                    logger.debug("Resource Type null for the field {} ", FILE_UPLOAD_FIELD);
-                    this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.genericError"));
-                }
+            if (this.isImageUpload()) {
+                validateImages();
+            } else {
+                validateAttachments();
             }
         }
+    }
+
+    public void validateImages() {
+        logger.debug("MultipleResourceAction validateImages MULTIPLE UPLOAD IMAGES");
+        try {
+            for (int i = 0; i < getFileDescriptions().size(); i++) {
+                if (null == getBase64Image(i)) {
+                    this.addFieldError(FILE_UPLOAD_FIELD + i, this.getText("error.resource.file.void"));
+                    logger.error("Add error -> files in base64 string is empty, null == getBase64Image({})", i);
+                }
+            }
+        } catch (Throwable ex) {
+            this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.void"));
+            logger.error("Add error -> files in base64 string is empty. Exception:\n{}", ex);
+        }
+        if (null != getBase64Image()) {
+            validateFileDescriptions();
+            if (null != this.getResourceType()) {
+                ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
+                this.getBase64Image().forEach(image
+                        -> checkImageFileType(resourcePrototype, image));
+            } else {
+                this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.genericError"));
+                logger.error("Add error -> genericError");
+            }
+        }
+
+    }
+
+    public void validateAttachments() {
+        logger.debug("MultipleResourceAction validateAttachments MULTIPLE UPLOAD FILES");
+        try {
+            for (int i = 0; i < getFileDescriptions().size(); i++) {
+                if (null == getFileUploadInputStream(i)) {
+                    this.addFieldError(FILE_UPLOAD_FIELD + i, this.getText("error.resource.file.void"));
+                    logger.error("Add error -> files is void, null == getFileUploadInputStream({})", i);
+
+                }
+            }
+        } catch (Throwable ex) {
+            this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.void"));
+            logger.error("Add error -> files is void. Exception:\n{}", ex);
+
+        }
+        if (null != getFileUpload()) {
+            validateFileDescriptions();
+            if (null != this.getResourceType()) {
+                ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
+                this.getFileUploadFileName().forEach(fileName
+                        -> checkRightFileType(resourcePrototype, fileName));
+            } else {
+                this.addFieldError(FILE_UPLOAD_FIELD, this.getText("error.resource.file.genericError"));
+                logger.error("Add error -> genericError");
+            }
+        }
+
     }
 
     @Override
@@ -101,12 +157,13 @@ public class MultipleResourceAction extends ResourceAction {
             savedId.clear();
             ResourceInterface resource = this.loadResource(this.getResourceId());
             this.setResourceTypeCode(resource.getType());
-            List fileDescr = new ArrayList<String>();
+            List<String> fileDescr = new ArrayList<>();
             fileDescr.add(resource.getDescription());
             setFileDescriptions(fileDescr);
             List<Category> resCategories = resource.getCategories();
-            for (Category cat : resCategories) {
-                this.getCategoryCodes().add(cat.getCode());
+            for (int i = 0; i < resCategories.size(); i++) {
+                Category resCat = resCategories.get(i);
+                this.getCategoryCodes().add(resCat.getCode());
             }
             this.setMainGroup(resource.getMainGroup());
             this.setStrutsAction(ApsAdminSystemConstants.EDIT);
@@ -141,6 +198,7 @@ public class MultipleResourceAction extends ResourceAction {
         }
     }
 
+    @Override
     public String joinCategory() {
         logger.debug("JoinCategory in multiple resource action for id {}", this.getResourceId());
         getFileDescriptions();
@@ -148,7 +206,7 @@ public class MultipleResourceAction extends ResourceAction {
     }
 
     public String removeCategory() {
-        logger.debug("RemoveCategory in multiple resource action for id {}", this.getResourceId());        
+        logger.debug("RemoveCategory in multiple resource action for id {}", this.getResourceId());
         getFileDescriptions();
         return super.removeCategory();
     }
@@ -167,6 +225,38 @@ public class MultipleResourceAction extends ResourceAction {
         if (!isRight) {
             logger.debug("Check uploaded file type: wrong file format for {} ", fileName);
             this.addFieldError("upload", this.getText("error.resource.file.wrongFormat"));
+            logger.debug("Add error -> image wrongFormat");
+        }
+    }
+
+    protected void checkImageFileType(ResourceInterface resourcePrototype, String imageBase64) {
+        logger.debug("checkImageFileType");
+
+        boolean isRight = false;
+        if (imageBase64.length() > 0) {
+            String partSeparator = ",";
+            if (imageBase64.contains(partSeparator)) {
+                String imgBase64FileType = imageBase64.split(partSeparator)[0];
+                logger.debug("Split string image: File Format {}", imageBase64.split(partSeparator)[0]);
+
+                String imgType = imgBase64FileType.substring(imgBase64FileType.lastIndexOf("/") + 1, imgBase64FileType.indexOf("base64") - 1).trim();
+                logger.debug("imgType {}", imgType);
+
+                String[] types = resourcePrototype.getAllowedFileTypes();
+                isRight = isValidType(imgType, types);
+
+            } else {
+                isRight = false;
+                logger.debug("Add error -> file wrongFormat");
+            }
+
+        } else {
+            isRight = true;
+            logger.debug("checkImageFileType -> file format allowed");
+        }
+        if (!isRight) {
+            this.addFieldError("upload", this.getText("error.resource.file.wrongFormat"));
+            logger.debug("Add error -> file wrongFormat");
         }
     }
 
@@ -188,29 +278,86 @@ public class MultipleResourceAction extends ResourceAction {
         return isValid;
     }
 
+    public boolean isImageUpload() {
+        if (null != this.getBase64Image()) {
+            return true;
+        }
+        return false;
+    }
+
+    public File createImageTempFile(String imageBase64) {
+        logger.debug("createImageTempFile for multiple resource action");
+        File file = null;
+        try {
+            String partSeparator = ",";
+            byte[] decodedImg;
+            if (imageBase64.contains(partSeparator)) {
+                String encodedImg = imageBase64.split(partSeparator)[1];
+                logger.debug("Split string image: File Format {}", imageBase64.split(partSeparator)[0]);
+                decodedImg = Base64.getDecoder().decode(encodedImg.getBytes(StandardCharsets.UTF_8));
+            } else {
+                logger.warn("partSeparator not found");
+                decodedImg = Base64.getDecoder().decode(imageBase64.getBytes(StandardCharsets.UTF_8));
+            }
+
+            String tempDir = System.getProperty("java.io.tmpdir");
+            logger.debug("File tempDir get from System.getProperty(\"java.io.tmpdir\"): {}", tempDir);
+
+            file = File.createTempFile("tmp", null, new File(tempDir));
+
+            logger.debug("Temp File path: {}", file.getAbsolutePath());
+            URI pathUri = new URI("file://" + file.getAbsolutePath());
+
+            Path destinationFile = Paths.get(pathUri);
+            logger.debug("Temp file destinationFile path: {}", destinationFile);
+
+            Files.write(destinationFile, decodedImg);
+
+        } catch (IOException ex1) {
+            logger.error("{}", ex1);
+        } catch (URISyntaxException ex2) {
+            logger.error("{}", ex2);
+        }
+        return file;
+    }
+
     @Override
     public String save() {
         logger.debug("Save in multiple resource action for id {}", this.getResourceId());
         int index = 0;
         savedId.clear();
         boolean hasError = false;
+        boolean deleteTempFile = false;
+        File file = null;
+        String filename = null;
         try {
             for (String fileDescription : getFileDescriptions()) {
                 if (fileDescription.length() > 0) {
                     List<BaseResourceDataBean> baseResourceDataBeanList;
                     BaseResourceDataBean resourceFile = null;
-                    File file = getFile(index);
-                    String filename = "";
+                    if (this.isImageUpload()) {
+                        file = createImageTempFile(getBase64Image().get(index));
+                        deleteTempFile = true;
+                    } else {
+                        file = getFile(index);
+                        deleteTempFile = false;
+                    }
                     Map imgMetadata = new HashMap();
                     if (null != file) {
                         logger.debug("file is not null");
-                        imgMetadata = getImgMetadata(file);
-                        filename= getFileUploadFileName().get(index);
+                        imgMetadata = super.getImgMetadata(file);
                         resourceFile = new BaseResourceDataBean(file);
-                        resourceFile.setFileName(filename);
-                        resourceFile.setMimeType(getFileUploadContentType().get(index));
-                        logger.debug("Save file {} with description {}", filename,fileDescription);
-
+                        if (this.isImageUpload()) {
+                            logger.debug("getFileUploadBase64ImageFileName().get({}): {}", index, getFileUploadBase64ImageFileName().get(index));
+                            logger.debug("getFileUploadBase64ImageContentType().get({}): {}", index, getFileUploadBase64ImageContentType().get(index));
+                            resourceFile.setFileName(getFileUploadBase64ImageFileName().get(index));
+                            resourceFile.setMimeType(getFileUploadBase64ImageContentType().get(index));
+                        } else {
+                            logger.debug("getFileUploadFileName().get({}): {}", index, getFileUploadFileName().get(index));
+                            logger.debug("getFileUploadContentType().get({}): {}", index, getFileUploadFileName().get(index));
+                            resourceFile.setFileName(getFileUploadFileName().get(index));
+                            resourceFile.setMimeType(getFileUploadContentType().get(index));
+                        }
                     } else {
                         logger.debug("file is null");
                         resourceFile = new BaseResourceDataBean();
@@ -238,32 +385,41 @@ public class MultipleResourceAction extends ResourceAction {
                     baseResourceDataBeanList = new ArrayList<BaseResourceDataBean>();
                     baseResourceDataBeanList.add(resourceFile);
                     try {
+                        if (null != fileUploadFileName) {
+                            filename = fileUploadFileName.get(index);
+                        }
                         if (ApsAdminSystemConstants.ADD == this.getStrutsAction()) {
                             logger.debug("Save on action ADD");
                             this.getResourceManager().addResources(baseResourceDataBeanList);
                             this.addActionMessage(this.getText("message.resource.filename.uploaded",
                                     new String[]{filename}));
                             savedId.add(index);
-                            logger.debug("Resource {} saved successfully!", filename);
+                            logger.debug("Resource {} saved successfully!", fileUploadFileName.get(index));
                         } else if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
                             logger.debug("Save on action EDIT");
                             logger.debug("Updating file with description {}", fileDescription);
                             resourceFile.setResourceId(super.getResourceId());
                             this.getResourceManager().updateResource(resourceFile);
-                            if (filename.length()>0) {
+                            if (null != filename) {
                                 logger.debug("Resource {} saved successfully!", filename);
-                            }
-                            else{
+                            } else {
                                 logger.debug("Resource saved successfully!");
                             }
                         }
                     } catch (ApsSystemException ex) {
                         hasError = true;
-                        logger.error("error loading file {} ", fileUploadFileName.get(index), ex);
+                        logger.error("error loading file {} ", filename, ex);
                         this.addFieldError(String.valueOf(index), this.getText("error.resource.filename.uploadError",
-                                new String[]{fileUploadFileName.get(index)}));
+                                new String[]{filename}));
                     }
                 }
+
+                if (deleteTempFile) {
+                    logger.debug("Delete temp file {}", file.getAbsolutePath());
+                    file.delete();
+                    deleteTempFile = false;
+                }
+
                 index++;
             }
         } catch (Throwable t) {
@@ -278,7 +434,6 @@ public class MultipleResourceAction extends ResourceAction {
         return SUCCESS;
     }
 
-    
     public String getFileDescription(int i) {
         if (null != fileDescriptions
                 && !fileDescriptions.isEmpty()) {
@@ -286,7 +441,7 @@ public class MultipleResourceAction extends ResourceAction {
         }
         return "";
     }
-    
+
     protected List<String> getFileDescriptions() {
         if (null == fileDescriptions) {
             fileDescriptions = new ArrayList<>();
@@ -306,6 +461,9 @@ public class MultipleResourceAction extends ResourceAction {
     }
 
     public File getFile(int index) {
+        if (null == fileUpload) {
+            return null;
+        }
         if (fileUpload.size() == 0) {
             return null;
         }
@@ -338,6 +496,11 @@ public class MultipleResourceAction extends ResourceAction {
         this.fieldCount = fieldCount;
     }
 
+    /*
+    public List<String> getFileDescriptions() {
+        return fileDescriptions;
+    }
+     */
     public void setFileDescriptions(List<String> fileDescriptions) {
         this.fileDescriptions = fileDescriptions;
     }
@@ -369,6 +532,29 @@ public class MultipleResourceAction extends ResourceAction {
         return "";
     }
 
+    public List<String> getFileUploadBase64ImageContentType() {
+        return fileUploadBase64ImageContentType;
+    }
+
+    public void setFileUploadBase64ImageContentType(List<String> fileUploadBase64ImageContentType) {
+        this.fileUploadBase64ImageContentType = fileUploadBase64ImageContentType;
+    }
+
+    public List<String> getFileUploadBase64ImageFileName() {
+        return fileUploadBase64ImageFileName;
+    }
+
+    public String getFileUploadBase64ImageFileName(int i) {
+        if (null != fileUploadBase64ImageFileName) {
+            return fileUploadBase64ImageFileName.get(i);
+        }
+        return "";
+    }
+
+    public void setFileUploadBase64ImageFileName(List<String> fileUploadBase64ImageFileName) {
+        this.fileUploadBase64ImageFileName = fileUploadBase64ImageFileName;
+    }
+
     public void setFileUploadFileName(List<String> fileUploadFileName) {
         this.fileUploadFileName = fileUploadFileName;
     }
@@ -381,5 +567,19 @@ public class MultipleResourceAction extends ResourceAction {
         this.metadata = metadata;
     }
 
-}
+    public List<String> getBase64Image() {
+        return base64Image;
+    }
 
+    public void setBase64Image(List<String> base64Image) {
+        this.base64Image = base64Image;
+    }
+
+    public String getBase64Image(int index) {
+        if (base64Image.isEmpty()) {
+            return null;
+        }
+        return base64Image.get(index);
+    }
+
+}
