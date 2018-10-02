@@ -97,12 +97,10 @@
                 </a>
             </label>
             <div class="col-sm-10">
-
-                <s:if test="%{null != content.mainGroup}">
+                <s:if test="%{null != content.mainGroup && content.mainGroup != ''}">
                     <input type="text" readonly="readonly" value="<s:property value="%{getGroup(content.mainGroup).descr}" />" class="form-control">
                 </s:if>
-
-                <s:if test="%{null == content.mainGroup}">
+                <s:else>
                     <div class="input-group">
                         <wpsf:select name="mainGroup" id="contentMainGroup" list="allowedGroups"
                                      headerKey="" headerValue="%{getText('note.choose')}" value="#session.contentGroupOnSession"
@@ -114,7 +112,7 @@
                             </wpsf:submit>
                         </span>
                     </div>
-                </s:if>
+                </s:else>
             </div>
         </div>
 
@@ -126,10 +124,10 @@
             <div class="col-sm-10">
                 <!-- Extra Groups Add -->
                 <div class="input-group">
-                    <wpsf:select 
-                        name="extraGroupNames" headerKey="" id="extraGroups"
-                        multiple="true" list="groups" listKey="name" size="4"
-                        listValue="descr" cssClass="combobox form-control" data-autosave="ignore" />
+                    <wpsf:select
+                            name="extraGroupNames" headerKey="" id="extraGroups"
+                            multiple="true" list="groups" listKey="name" size="4"
+                            listValue="descr" cssClass="combobox form-control" data-autosave="ignore" />
                     <span class="input-group-btn" style="vertical-align: top">
                         <wpsf:submit  type="button" action="joinGroup" cssClass="btn btn-primary">
                             <span class="icon fa fa-plus"></span>
@@ -186,7 +184,7 @@
 
         <ul class="nav nav-tabs tab-togglers" id="tab-togglers">
             <li class="sr-only"><a data-toggle="tab" href="#info_tab"><s:text name="title.contentInfo" /></a></li>
-                <s:iterator value="langs" var="lang" status="langStatusVar">
+            <s:iterator value="langs" var="lang" status="langStatusVar">
                 <li <s:if test="#langStatusVar.first"> class="active" </s:if>>
                     <a data-toggle="tab" href="#<s:property value="#lang.code" />_tab">
                         <s:property value="#lang.descr" />
@@ -198,7 +196,7 @@
         <div class="tab-content mt-20" id="tab-container">
             <s:iterator value="langs" var="lang" status="langStatusVar"><%-- lang iterator --%>
                 <div id="<s:property value="#lang.code" />_tab" class="tab-pane <s:if test="#langStatusVar.first"> active </s:if>"><%-- tab --%>
-                        <h2 class="sr-only">
+                    <h2 class="sr-only">
                         <s:property value="#lang.descr" />
                     </h2>
                     <p class="sr-only">
@@ -226,7 +224,7 @@
                             <s:if test="null != #attribute.description"><s:set var="attributeLabelVar" value="#attribute.description" /></s:if>
                             <s:else><s:set var="attributeLabelVar" value="#attribute.name" /></s:else>
 
-                                <div class="form-group<s:property value="#controlGroupErrorClassVar" />"><%-- form group --%>
+                            <div class="form-group<s:property value="#controlGroupErrorClassVar" />"><%-- form group --%>
                                 <s:if test="#attribute.type == 'List' || #attribute.type == 'Monolist'">
                                     <label class="col-sm-2 control-label"></span>&#32;<s:property value="#attributeLabelVar" />&#32;<s:include value="/WEB-INF/apsadmin/jsp/entity/modules/include/attributeInfo.jsp" /></label>
                                 </s:if>
@@ -335,7 +333,7 @@
                             </div><%-- form group --%>
                         </div><%-- contentedit div --%>
                     </s:iterator><%-- attributes iterator --%>
-                    <%-- preview --%>
+                        <%-- preview --%>
                     <s:if test="%{isComponentInstalled('entando-portal-ui')}">
                         <s:set var="showingPageSelectItems" value="showingPageSelectItems" />
                         <wpsa:actionParam action="preview" var="previewActionName" >
@@ -420,4 +418,4 @@
         $(this).prop('selected', !$(this).prop('selected'));
         return false;
     });
-</script>  
+</script>
