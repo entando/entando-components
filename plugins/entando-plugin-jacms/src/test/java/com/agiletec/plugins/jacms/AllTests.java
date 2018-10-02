@@ -68,8 +68,8 @@ import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer.TestConte
 import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer.TestContentViewerWidgetAction;
 import com.agiletec.plugins.jacms.apsadmin.resource.TestMultipleResourceAction;
 import com.agiletec.plugins.jacms.apsadmin.resource.TestResourceFinderAction;
-import com.agiletec.plugins.jacms.TestJacmsLabelsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttributeTest;
+import com.agiletec.plugins.jacms.aps.system.services.content.parse.attribute.ResourceAttributeHandlerTest;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityAttributeConfigAction;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityManagersAction;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityTypeConfigAction;
@@ -113,6 +113,7 @@ public class AllTests {
         suite.addTestSuite(TestContentManager.class);
         suite.addTest(new JUnit4TestAdapter(ContentManagerTest.class));
         suite.addTest(new JUnit4TestAdapter(AbstractResourceAttributeTest.class));
+        suite.addTest(new JUnit4TestAdapter(ResourceAttributeHandlerTest.class));
 
         suite.addTestSuite(TestPublicContentSearcherDAO.class);
         suite.addTestSuite(TestValidateContent.class);

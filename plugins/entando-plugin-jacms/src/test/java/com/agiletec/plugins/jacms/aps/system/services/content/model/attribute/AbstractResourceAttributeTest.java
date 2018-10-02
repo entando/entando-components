@@ -32,8 +32,6 @@ public class AbstractResourceAttributeTest {
     @Mock
     public ImageResource resource;
 
-    //@Mock
-    //public Map<String, String> textMap;
     @InjectMocks
     private ImageAttribute imageAttribute;
 
