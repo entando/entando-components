@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agiletec.plugins.jpgeoref.aps.system.services.content.model.extraAttribute;
+package com.agiletec.plugins.jpgeoref.aps.system.services.content.model.attribute;
 
 import java.util.ArrayList;
 import java.util.List;

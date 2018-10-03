@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute;
+package com.agiletec.plugins.jacms.aps.system.services.content.model.attribute;
 
 import java.util.List;
 

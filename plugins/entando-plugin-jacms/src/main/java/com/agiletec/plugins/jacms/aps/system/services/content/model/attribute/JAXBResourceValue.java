@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute;
+package com.agiletec.plugins.jacms.aps.system.services.content.model.attribute;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -25,38 +25,42 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {"text", "path", "resourceId", "restResourcePath"})
 @XmlSeeAlso({HashMap.class})
 public class JAXBResourceValue implements Serializable {
-    
+
     public String getText() {
-        return _text;
+        return text;
     }
+
     public void setText(String text) {
-        this._text = text;
+        this.text = text;
     }
-    
+
     public String getPath() {
-        return _path;
+        return path;
     }
+
     public void setPath(String path) {
-        this._path = path;
+        this.path = path;
     }
-    
+
     public String getResourceId() {
-        return _resourceId;
+        return resourceId;
     }
+
     public void setResourceId(String resourceId) {
-        this._resourceId = resourceId;
+        this.resourceId = resourceId;
     }
-	
-	public String getRestResourcePath() {
-		return _restResourcePath;
-	}
-	public void setRestResourcePath(String restResourcePath) {
-		this._restResourcePath = restResourcePath;
-	}
-    
-    private String _text;
-    private String _path;
-    private String _resourceId;
-	private String _restResourcePath;
-    
+
+    public String getRestResourcePath() {
+        return restResourcePath;
+    }
+
+    public void setRestResourcePath(String restResourcePath) {
+        this.restResourcePath = restResourcePath;
+    }
+
+    private String text;
+    private String path;
+    private String resourceId;
+    private String restResourcePath;
+
 }

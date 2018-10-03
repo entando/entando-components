@@ -36,7 +36,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute;
 import org.entando.entando.plugins.jprssaggregator.PluginConfigTestUtils;
 import org.entando.entando.plugins.jprssaggregator.RssAggregatorTestHelper;
 import org.entando.entando.plugins.jprssaggregator.aps.ApsPluginBaseTestCase;
@@ -47,96 +47,97 @@ import org.entando.entando.plugins.jprssaggregator.aps.system.services.aggregato
 import com.rometools.rome.feed.synd.SyndEntry;
 
 /**
- * Before running this test, copy the file src/main/webapp/resources/plugins/jprssaggregator/test_rss.xml
- * inside an instance of Entando and run the server.
- * You must edit the constant TEST_URL inside com.agiletec.plugins.jprssaggregator.PluginConfigTestUtils
+ * Before running this test, copy the file
+ * src/main/webapp/resources/plugins/jprssaggregator/test_rss.xml inside an
+ * instance of Entando and run the server. You must edit the constant TEST_URL
+ * inside com.agiletec.plugins.jprssaggregator.PluginConfigTestUtils
  */
 public class TestRssConverterManager extends ApsPluginBaseTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-		this._testHelper.addContentTypeToConfig();
-		List<String> groups = new ArrayList<String>();
-		groups.add(Group.FREE_GROUP_NAME);
-		EntitySearchFilter[] filters = new EntitySearchFilter[1];
-		filters[0] = new EntitySearchFilter(IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY, false, "RSS", false);
-		List<String> contentsId = _contentManager.loadWorkContentsId(filters, groups);
-		assertEquals(0, contentsId.size());
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        this.init();
+        this._testHelper.addContentTypeToConfig();
+        List<String> groups = new ArrayList<String>();
+        groups.add(Group.FREE_GROUP_NAME);
+        EntitySearchFilter[] filters = new EntitySearchFilter[1];
+        filters[0] = new EntitySearchFilter(IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY, false, "RSS", false);
+        List<String> contentsId = _contentManager.loadWorkContentsId(filters, groups);
+        assertEquals(0, contentsId.size());
+    }
 
-	public void testLoadConfig() {
-		assertNotNull(_rssConverterManager);
-		RssConverterManager converter = (RssConverterManager) _rssConverterManager;
-		Map<String, AggregatorConfig> mapping = converter.getMappingMap();
-		assertEquals(1, mapping.size());
-		assertTrue(mapping.containsKey("RSS"));
-	}
-	
-	public void _testGetRssEntries() throws Throwable {
-		List<SyndEntry> entries = _rssConverterManager.getRssEntries(IRssConverterManager.RSS_2_0, PluginConfigTestUtils.TEST_URL);
-		assertNotNull(entries);
-		assertEquals(3, entries.size());
-	}
-	
-	public void _testGetContents() throws Throwable {
-		String url = PluginConfigTestUtils.TEST_URL;
-		ApsAggregatorItem item = TestAggregatorManagerHelper.createItem(3600, "dummy_descr", url);
-		//_aggregatorManager.addItem(item);
-		List<SyndEntry> entries = _rssConverterManager.getRssEntries(IRssConverterManager.RSS_2_0, url);
-		assertNotNull(entries);
-		List<Content> contents = _rssConverterManager.getContents(item);
-		assertNotNull(contents);
-		assertEquals(entries.size(), contents.size());
-		Content content = contents.get(0);
-		assertEquals("Burnout", content.getDescr());
-		TextAttribute titleAttr = (TextAttribute) content.getAttribute("Title");
-		LinkAttribute  linkAttr = (LinkAttribute) content.getAttribute("Link");
-		HypertextAttribute corpoAttr = (HypertextAttribute) content.getAttribute("TextBody");
-		assertEquals("Burnout", titleAttr.getText());
-		assertEquals("http://www.alistapart.com/articles/burnout/", linkAttr.getSymbolicLink().getUrlDest());
-		assertTrue(corpoAttr.getText().startsWith("Does every day feel like a bad day"));
+    public void testLoadConfig() {
+        assertNotNull(_rssConverterManager);
+        RssConverterManager converter = (RssConverterManager) _rssConverterManager;
+        Map<String, AggregatorConfig> mapping = converter.getMappingMap();
+        assertEquals(1, mapping.size());
+        assertTrue(mapping.containsKey("RSS"));
+    }
 
-		Content content1 = contents.get(2);
-		assertEquals("Descrizione non disponibile", content1.getDescr());
-		TextAttribute titleAttr1 = (TextAttribute) content1.getAttribute("Title");
-		LinkAttribute  linkAttr1 = (LinkAttribute) content1.getAttribute("Link");
-		HypertextAttribute corpoAttr1 = (HypertextAttribute) content1.getAttribute("TextBody");
-		assertEquals("Titolo non disponibile", titleAttr1.getText());
-		assertEquals("http://www.alistapart.com/articles/taking-the-guesswork-out-of-design/", linkAttr1.getSymbolicLink().getUrlDest());
-		assertEquals("Corpo testo non disponibile", corpoAttr1.getText());
-	}
+    public void _testGetRssEntries() throws Throwable {
+        List<SyndEntry> entries = _rssConverterManager.getRssEntries(IRssConverterManager.RSS_2_0, PluginConfigTestUtils.TEST_URL);
+        assertNotNull(entries);
+        assertEquals(3, entries.size());
+    }
 
-	private void init() {
-		this._rssConverterManager = (IRssConverterManager) this.getService(JpRssAggregatorSystemConstants.RSS_CONVERTER_MANAGER);
-		this._aggregatorManager = (IAggregatorManager) this.getService(JpRssAggregatorSystemConstants.AGGREGATOR_MANAGER);
-		this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
-		this._configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
-		this._testHelper = new RssAggregatorTestHelper(this._configManager);
-	}
-	
-	@Override
-	protected void tearDown() throws Exception {
-		try {
-			List<ApsAggregatorItem> items = this._aggregatorManager.getItems();
-			Iterator<ApsAggregatorItem> it = items.iterator();
-			while (it.hasNext()) {
-				ApsAggregatorItem currentItem = it.next();
-				this._aggregatorManager.deleteItem(currentItem.getCode());
-			}
-		} catch (Throwable t) {
-			throw new Exception();
-		} finally {
-			this._testHelper.restoreConfig();
-			super.tearDown();
-		}
-	}
-	
-	private IRssConverterManager _rssConverterManager;
-	private IAggregatorManager _aggregatorManager;
-	private IContentManager _contentManager;
-	private RssAggregatorTestHelper _testHelper;
-	private ConfigInterface _configManager;
-	
+    public void _testGetContents() throws Throwable {
+        String url = PluginConfigTestUtils.TEST_URL;
+        ApsAggregatorItem item = TestAggregatorManagerHelper.createItem(3600, "dummy_descr", url);
+        //_aggregatorManager.addItem(item);
+        List<SyndEntry> entries = _rssConverterManager.getRssEntries(IRssConverterManager.RSS_2_0, url);
+        assertNotNull(entries);
+        List<Content> contents = _rssConverterManager.getContents(item);
+        assertNotNull(contents);
+        assertEquals(entries.size(), contents.size());
+        Content content = contents.get(0);
+        assertEquals("Burnout", content.getDescription());
+        TextAttribute titleAttr = (TextAttribute) content.getAttribute("Title");
+        LinkAttribute linkAttr = (LinkAttribute) content.getAttribute("Link");
+        HypertextAttribute corpoAttr = (HypertextAttribute) content.getAttribute("TextBody");
+        assertEquals("Burnout", titleAttr.getText());
+        assertEquals("http://www.alistapart.com/articles/burnout/", linkAttr.getSymbolicLink().getUrlDest());
+        assertTrue(corpoAttr.getText().startsWith("Does every day feel like a bad day"));
+
+        Content content1 = contents.get(2);
+        assertEquals("Descrizione non disponibile", content1.getDescription());
+        TextAttribute titleAttr1 = (TextAttribute) content1.getAttribute("Title");
+        LinkAttribute linkAttr1 = (LinkAttribute) content1.getAttribute("Link");
+        HypertextAttribute corpoAttr1 = (HypertextAttribute) content1.getAttribute("TextBody");
+        assertEquals("Titolo non disponibile", titleAttr1.getText());
+        assertEquals("http://www.alistapart.com/articles/taking-the-guesswork-out-of-design/", linkAttr1.getSymbolicLink().getUrlDest());
+        assertEquals("Corpo testo non disponibile", corpoAttr1.getText());
+    }
+
+    private void init() {
+        this._rssConverterManager = (IRssConverterManager) this.getService(JpRssAggregatorSystemConstants.RSS_CONVERTER_MANAGER);
+        this._aggregatorManager = (IAggregatorManager) this.getService(JpRssAggregatorSystemConstants.AGGREGATOR_MANAGER);
+        this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
+        this._configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
+        this._testHelper = new RssAggregatorTestHelper(this._configManager);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            List<ApsAggregatorItem> items = this._aggregatorManager.getItems();
+            Iterator<ApsAggregatorItem> it = items.iterator();
+            while (it.hasNext()) {
+                ApsAggregatorItem currentItem = it.next();
+                this._aggregatorManager.deleteItem(currentItem.getCode());
+            }
+        } catch (Throwable t) {
+            throw new Exception();
+        } finally {
+            this._testHelper.restoreConfig();
+            super.tearDown();
+        }
+    }
+
+    private IRssConverterManager _rssConverterManager;
+    private IAggregatorManager _aggregatorManager;
+    private IContentManager _contentManager;
+    private RssAggregatorTestHelper _testHelper;
+    private ConfigInterface _configManager;
+
 }
