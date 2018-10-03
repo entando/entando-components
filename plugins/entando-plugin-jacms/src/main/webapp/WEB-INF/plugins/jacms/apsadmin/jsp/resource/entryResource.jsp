@@ -344,10 +344,10 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight2">
                                     <li>
-                                        <a href="#" class="edit-fields">Edit</a>
+                                        <a href="#" class="edit-fields"><s:text name="cropEditor.label.edit" /></a>
                                     </li>
                                     <li>
-                                        <a href="#" class="delete-fields">Delete</a>
+                                        <a href="#" class="delete-fields"><s:text name="cropEditor.label.delete" /></a>
                                     </li>
                                 </ul>
                             </div>
@@ -528,10 +528,10 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight2">
                             <li>
-                                <a href="#" class="edit-fields">Edit</a>
+                                <a href="#" class="edit-fields"><s:text name="cropEditor.label.edit" /></a>
                             </li>
                             <li>
-                                <a href="#" class="delete-fields">Delete</a>
+                                <a href="#" class="delete-fields"><s:text name="cropEditor.label.delete" /></a>
                             </li>
                         </ul>
                     </div>
