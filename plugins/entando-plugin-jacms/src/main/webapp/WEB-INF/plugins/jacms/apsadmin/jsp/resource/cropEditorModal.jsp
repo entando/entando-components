@@ -1,8 +1,5 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib uri="/aps-core" prefix="wp" %>
-<%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
-<%@ taglib prefix="jacms" uri="/jacms-apsadmin-core" %>
-<%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 
 <div class="modal fade bs-cropping-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
     <div class="modal-dialog modal-xlg" role="document">
@@ -50,10 +47,10 @@
                                             <div class="toolbar-container flex-container space-between">
                                                 <!-- move and crop -->
                                                 <div class="btn-group flex-item">
-                                                    <span class="btn-group__title"><s:text name="cropEditor.label.move"></span>
+                                                    <span class="btn-group__title"><s:text name="cropEditor.label.move" /></span>
                                                     <button type="button" class="btn btn-primary"
                                                             data-method="setDragMode" data-option="move"
-                                                            title="<s:text name="cropEditor.label.move">">
+                                                            title="<s:text name="cropEditor.label.move" />">
                                                         <span class="docs-tooltip" data-toggle="tooltip" title=""
                                                               data-original-title="cropper.setDragMode(&quot;move&quot;)">
                                                             <span class="fa fa-arrows"></span>
@@ -63,10 +60,10 @@
                                                 <div class="divider flex-item"></div>
 
                                                 <div class="btn-group flex-item">
-                                                    <span class="btn-group__title"><s:text name="cropEditor.label.crop"></span>
+                                                    <span class="btn-group__title"><s:text name="cropEditor.label.crop" /></span>
                                                     <button type="button" class="btn btn-primary"
                                                             data-method="setDragMode" data-option="crop"
-                                                            title="<s:text name="cropEditor.label.crop">">
+                                                            title="<s:text name="cropEditor.label.crop" />">
                                                         <span class="docs-tooltip" data-toggle="tooltip" title=""
                                                               data-original-title="cropper.setDragMode(&quot;crop&quot;)">
                                                             <span class="fa fa-crop"></span>
@@ -78,7 +75,7 @@
 
                                                 <!-- scale -->
                                                 <div class="btn-group flex-item">
-                                                    <span class="btn-group__title"><s:text name="cropEditor.label.scale"></span>
+                                                    <span class="btn-group__title"><s:text name="cropEditor.label.scale" /></span>
                                                     <button type="button" class="btn btn-primary"
                                                             data-method="scaleX" data-option="-1">
                                                         <span class="docs-tooltip" data-toggle="tooltip" title=""
@@ -99,7 +96,7 @@
 
                                                 <!-- move -->
                                                 <div class="btn-group flex-item">
-                                                    <span class="btn-group__title"><s:text name="cropEditor.label.move"></span>
+                                                    <span class="btn-group__title"><s:text name="cropEditor.label.move" /></span>
                                                     <button type="button" class="btn btn-primary" data-method="move"
                                                             data-option="-10" data-second-option="0">
                                                         <span class="docs-tooltip" data-toggle="tooltip" title=""
@@ -134,7 +131,7 @@
 
                                                 <!-- rotate -->
                                                 <div class="btn-group flex-item">
-                                                    <span class="btn-group__title"><s:text name="cropEditor.label.rotate"></span>
+                                                    <span class="btn-group__title"><s:text name="cropEditor.label.rotate" /></span>
                                                     <button type="button" class="btn btn-primary"
                                                             data-method="rotate"
                                                             data-option="-45">
@@ -157,7 +154,7 @@
 
                                                 <!-- zoom -->
                                                 <div class="btn-group flex-item">
-                                                    <span class="btn-group__title"><s:text name="cropEditor.label.zoom"></span>
+                                                    <span class="btn-group__title"><s:text name="cropEditor.label.zoom" /></span>
                                                     <button type="button" class="btn btn-primary" data-method="zoom"
                                                             data-option="0.1">
                                                         <span class="docs-tooltip" data-toggle="tooltip" title=""
@@ -178,7 +175,7 @@
 
                                                 <!-- save and cancel -->
                                                 <div class="btn-group flex-item">
-                                                    <span class="btn-group__title"><s:text name="cropEditor.label.save"></span>
+                                                    <span class="btn-group__title"><s:text name="cropEditor.label.save" /></span>
                                                     <button type="button" class="btn btn-primary" data-method="crop">
                                                         <span class="docs-tooltip" data-toggle="tooltip" title=""
                                                               data-original-title="cropper.crop()">
@@ -189,7 +186,7 @@
                                                 <div class="divider flex-item"></div>
 
                                                 <div class="btn-group flex-item">
-                                                    <span class="btn-group__title"><s:text name="cropEditor.label.cancel"></span>
+                                                    <span class="btn-group__title"><s:text name="cropEditor.label.cancel" /></span>
                                                     <button type="button" class="btn btn-primary"
                                                             data-method="remove">
                                                         <span class="docs-tooltip" data-toggle="tooltip" title=""
@@ -208,7 +205,7 @@
                                                         <input type="radio" class="sr-only" id="aspectRatio5"
                                                                name="aspectRatio" value="NaN">
                                                         <span class="docs-tooltip" data-toggle="tooltip" title=""
-                                                              data-original-title="aspectRatio: NaN"><s:text name="cropEditor.label.free"></span>
+                                                              data-original-title="aspectRatio: NaN"><s:text name="cropEditor.label.free" /></span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -222,7 +219,7 @@
                     <div class="col-md-4">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs tabs-left image-navigation">
-                            <li><s:text name="cropEditor.label.listOfImages"></li>
+                            <li><s:text name="cropEditor.label.listOfImages" /></li>
 
                         </ul>
                         <!-- image navigation item blueprint -->
