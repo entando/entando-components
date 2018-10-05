@@ -23,7 +23,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.ResourceAttributeInterface;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ResourceAttributeInterface;
 
 import java.io.File;
 import java.io.IOException;

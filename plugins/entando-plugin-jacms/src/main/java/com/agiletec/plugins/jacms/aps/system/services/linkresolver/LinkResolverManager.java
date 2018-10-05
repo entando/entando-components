@@ -29,7 +29,7 @@ import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AbstractResourceAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.contentpagemapper.IContentPageMapperManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;

@@ -11,14 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute;
+package com.agiletec.plugins.jacms.aps.system.services.content.model.attribute;
 
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBTextAttribute;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
-
 import java.io.Serializable;
 import java.util.HashMap;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
@@ -26,18 +23,19 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * @author E.Santoboni
  */
-@XmlType(propOrder = {"linkValue"})
-@XmlSeeAlso({JAXBLinkValue.class, SymbolicLink.class, HashMap.class})
-public class JAXBLinkAttribute extends JAXBTextAttribute implements Serializable {
-    
-    @XmlElement(name = "link", required = false)
-    public JAXBLinkValue getLinkValue() {
-        return _linkValue;
+@XmlType(propOrder = {"resource"})
+@XmlSeeAlso({JAXBResourceValue.class, HashMap.class})
+public class JAXBResourceAttribute extends JAXBTextAttribute implements Serializable {
+
+    @XmlElement(name = "resource", required = false)
+    public JAXBResourceValue getResource() {
+        return resource;
     }
-    public void setLinkValue(JAXBLinkValue linkValue) {
-        this._linkValue = linkValue;
+
+    public void setResource(JAXBResourceValue resource) {
+        this.resource = resource;
     }
-    
-    private JAXBLinkValue _linkValue;
-    
+
+    private JAXBResourceValue resource;
+
 }

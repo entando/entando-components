@@ -23,7 +23,9 @@ import com.agiletec.plugins.jacms.aps.system.services.content.TestPublicContentS
 import com.agiletec.plugins.jacms.aps.system.services.content.TestValidateContent;
 import com.agiletec.plugins.jacms.aps.system.services.content.authorization.TestContentAuthorization;
 import com.agiletec.plugins.jacms.aps.system.services.content.entity.TestContentEntityManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttributeTest;
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.TestContentDOM;
+import com.agiletec.plugins.jacms.aps.system.services.content.parse.attribute.ResourceAttributeHandlerTest;
 import com.agiletec.plugins.jacms.aps.system.services.content.util.TestContentAttributeIterator;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.TestContentListHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.TestContentViewerHelper;
@@ -41,8 +43,9 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.TestResourceDAO;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.TestResourceDOM;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.TestSearchEngineManager;
 import com.agiletec.plugins.jacms.apsadmin.category.TestTrashReferencedCategory;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentAdminActionIntegrationTest;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentAdminActionTest;
 import com.agiletec.plugins.jacms.apsadmin.content.TestContentAction;
-import com.agiletec.plugins.jacms.apsadmin.content.TestContentAdminAction;
 import com.agiletec.plugins.jacms.apsadmin.content.TestContentFinderAction;
 import com.agiletec.plugins.jacms.apsadmin.content.TestContentGroupAction;
 import com.agiletec.plugins.jacms.apsadmin.content.TestContentInspectionAction;
@@ -68,7 +71,6 @@ import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer.TestConte
 import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer.TestContentViewerWidgetAction;
 import com.agiletec.plugins.jacms.apsadmin.resource.TestMultipleResourceAction;
 import com.agiletec.plugins.jacms.apsadmin.resource.TestResourceFinderAction;
-import com.agiletec.plugins.jacms.TestJacmsLabelsProperties;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityAttributeConfigAction;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityManagersAction;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityTypeConfigAction;
@@ -101,7 +103,7 @@ public class AllTests {
         System.out.println("Test for jACMS plugin");
 
         //
-        suite.addTestSuite(TestContentAdminAction.class);
+        suite.addTestSuite(ContentAdminActionIntegrationTest.class);
         suite.addTestSuite(TestContentAuthorization.class);
         suite.addTestSuite(TestContentBulkCommand.class);
         suite.addTestSuite(TestContentEntityManager.class);
@@ -112,6 +114,8 @@ public class AllTests {
         suite.addTestSuite(TestContentDAO.class);
         suite.addTestSuite(TestContentManager.class);
         suite.addTest(new JUnit4TestAdapter(ContentManagerTest.class));
+        suite.addTest(new JUnit4TestAdapter(AbstractResourceAttributeTest.class));
+        suite.addTest(new JUnit4TestAdapter(ResourceAttributeHandlerTest.class));
 
         suite.addTestSuite(TestPublicContentSearcherDAO.class);
         suite.addTestSuite(TestValidateContent.class);
@@ -152,6 +156,7 @@ public class AllTests {
         suite.addTestSuite(TestTrashReferencedCategory.class);
 
         // Content
+        suite.addTest(new JUnit4TestAdapter(ContentAdminActionTest.class));
         suite.addTestSuite(TestHypertextAttributeAction.class);
         suite.addTestSuite(TestListAttributeAction.class);
         suite.addTestSuite(TestResourceAttributeAction.class);
@@ -206,7 +211,7 @@ public class AllTests {
 
         // ----------------------------------------
         suite.addTestSuite(TestContentPreviewAction.class);
-        
+
         // ----------------------------------------
         suite.addTestSuite(TestJacmsLabelsProperties.class);
 
