@@ -31,11 +31,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.aspectj.lang.JoinPoint;
@@ -138,7 +138,7 @@ public class PageSettingsActionAspect {
         try {
             File file = new File(path);
             if (file.exists()) {
-                return FileUtils.readFileToString(file, CharEncoding.UTF_8);
+                return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
             } else {
                 String message = "File '" + path + "' does not exists";
                 action.addFieldError(PARAM_ROBOT_CONTENT_CODE, message);

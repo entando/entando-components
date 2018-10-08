@@ -29,7 +29,7 @@ import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
 /**
  * @author E.Santoboni
  */
-public class TestPageSettingsAction extends ApsAdminBaseTestCase {
+public class PageSettingsActionIntegrationTest extends ApsAdminBaseTestCase {
 
     private ConfigInterface configManager;
     private IStorageManager storageManager;
