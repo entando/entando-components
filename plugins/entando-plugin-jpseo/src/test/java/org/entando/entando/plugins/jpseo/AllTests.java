@@ -21,27 +21,28 @@
  */
 package org.entando.entando.plugins.jpseo;
 
-
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.entando.entando.plugins.jpseo.aps.system.services.metatag.TestMetatagCatalogue;
-
-import org.entando.entando.plugins.jpseo.apsadmin.content.TestContentAction;
-import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageAction;
-import org.entando.entando.plugins.jpseo.apsadmin.portal.TestPageSettingsAction;
+import org.entando.entando.plugins.jpseo.aps.system.services.metatag.MetatagCatalogueIntegrationTest;
+import org.entando.entando.plugins.jpseo.apsadmin.content.ContentActionIntegrationTest;
+import org.entando.entando.plugins.jpseo.apsadmin.portal.PageActionIntegrationTest;
+import org.entando.entando.plugins.jpseo.apsadmin.portal.PageSettingsActionAspectTest;
+import org.entando.entando.plugins.jpseo.apsadmin.portal.PageSettingsActionIntegrationTest;
 
 public class AllTests {
-	
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Seo plugin");
-        
-		suite.addTestSuite(TestMetatagCatalogue.class);
-        
-		suite.addTestSuite(TestContentAction.class);
-		suite.addTestSuite(TestPageAction.class);
-		suite.addTestSuite(TestPageSettingsAction.class);
-        
-		return suite;
-	}
+
+    public static Test suite() {
+        TestSuite suite = new TestSuite("Seo plugin");
+
+        suite.addTestSuite(MetatagCatalogueIntegrationTest.class);
+
+        suite.addTestSuite(ContentActionIntegrationTest.class);
+        suite.addTestSuite(PageActionIntegrationTest.class);
+        suite.addTestSuite(PageSettingsActionIntegrationTest.class);
+        suite.addTest(new JUnit4TestAdapter(PageSettingsActionAspectTest.class));
+
+        return suite;
+    }
 
 }

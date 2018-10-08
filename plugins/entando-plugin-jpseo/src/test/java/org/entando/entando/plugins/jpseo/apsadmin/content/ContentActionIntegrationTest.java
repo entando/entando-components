@@ -34,7 +34,7 @@ import com.opensymphony.xwork2.Action;
 
 import org.entando.entando.plugins.jpseo.apsadmin.ApsAdminPluginBaseTestCase;
 
-public class TestContentAction extends ApsAdminPluginBaseTestCase {
+public class ContentActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 
 	@Override
 	protected void setUp() throws Exception {
