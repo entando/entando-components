@@ -45,6 +45,7 @@
     </div>
 
     <p class="sr-only">
+        <s:hidden name="contentId" />
         <s:hidden name="versionId" />
         <s:hidden name="backId" />
         <s:hidden name="fromEdit" />
@@ -127,3 +128,4 @@
         </wpsa:subset>
         </s:form>
     </div>
+</div>
