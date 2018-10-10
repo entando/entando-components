@@ -1,0 +1,3 @@
+<div class="ui-dform-div">
+	<input type="submit" name="submit-bpm-form" class="ui-dform-submit btn btn-primary" value="submit">
+</div>

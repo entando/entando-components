@@ -37,7 +37,9 @@ public class AllTests {
         suite.addTestSuite(TestJsonHelper.class);
         suite.addTestSuite(TestKieFormOverrideManager.class);
         suite.addTestSuite(TestBpmOverrides.class);
-
+        suite.addTestSuite(TestBpmOverrides.class);
+        suite.addTestSuite(TestJpkiebpmLabelsProperties.class);
+  
         suite.addTest(new JUnit4TestAdapter(ConfigControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(ConfigControllerUnitTest.class));
 
