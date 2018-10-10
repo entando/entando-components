@@ -59,7 +59,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     private IDataObjectManager _dataObjectManager;
     private IDataObjectModelManager _dataObjectModelManager;
     private II18nManager i18nManager;
-
+    private DataUXBuilder uXBuilder;
+    
     @Override
     public String save() {
         //Widget widget = this.createNewWidget();
@@ -135,7 +136,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             dataModel.setDataType(typeCode);
             //dataModel.setDescription(processId + "_" + containerId); exceeds 50 chars limit
             dataModel.setDescription("Model for " + containerId);
-            DataUXBuilder uXBuilder = new DataUXBuilder();
+            
             String dataUx = uXBuilder.createDataUx(kpfr, containerId, processId, title);
             dataModel.setShape(dataUx);
             this.getDataObjectModelManager().addDataObjectModel(dataModel);
@@ -151,6 +152,14 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
         widget.getConfig().setProperty(PROP_NAME_WIDGET_INFO_ID, String.valueOf(widgetInfo.getId()));
         this.setWidget(widget);
+    }
+
+    public DataUXBuilder getuXBuilder() {
+        return uXBuilder;
+    }
+
+    public void setuXBuilder(DataUXBuilder uXBuilder) {
+        this.uXBuilder = uXBuilder;
     }
 
     private void addAttributesToEntityType(IApsEntity entityType, KieProcessFormQueryResult form) {

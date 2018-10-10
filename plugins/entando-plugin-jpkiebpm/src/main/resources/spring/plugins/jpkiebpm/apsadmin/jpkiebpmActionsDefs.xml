@@ -18,6 +18,12 @@
         <property name="dataObjectManager" ref="DataObjectManager"/>
         <property name="dataObjectModelManager" ref="DataObjectModelManager"/>
         <property name="i18nManager" ref="I18nManager"/>
+        <property name="uXBuilder" ref="jpkiebpmDataUXBuilder" />
+    </bean>
+    
+    <bean id="jpkiebpmDataUXBuilder" 
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder"
+          init-method="init">        
     </bean>
 
     <bean id="jpkiebpmBpmTaskListDatatableWidgetAction"
