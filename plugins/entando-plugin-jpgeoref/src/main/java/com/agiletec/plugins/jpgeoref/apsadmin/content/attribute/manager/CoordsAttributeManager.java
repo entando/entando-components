@@ -27,7 +27,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.apsadmin.system.entity.attribute.manager.AbstractMonoLangAttributeManager;
 import com.agiletec.plugins.jpgeoref.aps.system.GeoRefSystemConstants;
-import com.agiletec.plugins.jpgeoref.aps.system.services.content.model.extraAttribute.CoordsAttribute;
+import com.agiletec.plugins.jpgeoref.aps.system.services.content.model.attribute.CoordsAttribute;
 
 /**
  * @author E.Santoboni

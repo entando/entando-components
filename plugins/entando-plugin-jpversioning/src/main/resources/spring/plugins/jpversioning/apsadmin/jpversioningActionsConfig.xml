@@ -8,5 +8,9 @@
 	<bean id="jpversioningPluginSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
 		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jpversioning/apsadmin/jsp/common/template/subMenu.jsp</value></property>
 	</bean>
+    
+    <bean id="jpversioningConfigAction" scope="prototype"
+              class="com.agiletec.plugins.jpversioning.apsadmin.config.VersioningConfigAction" parent="baseAdminAction">
+    </bean>
 	
 </beans>

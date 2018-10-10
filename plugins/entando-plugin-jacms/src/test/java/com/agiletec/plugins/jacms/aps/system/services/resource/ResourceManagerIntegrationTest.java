@@ -388,7 +388,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
     public void testGetGroupUtilizers() throws Throwable {
         assertTrue(this.resourceManager instanceof GroupUtilizer);
         List utilizers = ((GroupUtilizer) this.resourceManager).getGroupUtilizers(Group.FREE_GROUP_NAME);
-        assertEquals(3, utilizers.size());
+        assertEquals(4, utilizers.size());
 
         utilizers = ((GroupUtilizer) this.resourceManager).getGroupUtilizers("customers");
         assertEquals(1, utilizers.size());
