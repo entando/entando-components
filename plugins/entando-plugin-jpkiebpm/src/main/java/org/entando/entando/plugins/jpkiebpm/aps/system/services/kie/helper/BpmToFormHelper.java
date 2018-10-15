@@ -157,13 +157,20 @@ public class BpmToFormHelper {
      */
     public static KieDataHolder getFormDataModelerEntry(KieProcessFormQueryResult form) throws Throwable {
         if (null == form) {
+            _logger.debug("****** getFormDataModelerEntry form null. return null");
             return null;
         }
 
         final List<KieDataHolder> holders = form.getHolders();
 
         for (KieDataHolder holder : holders) {
+            
+            _logger.debug("****** holder getName {}", holder.getName());
+            _logger.debug("****** holder getType {}", holder.getType());
+
+//            if (holder.getType().equals(DATA_MODELER_ENTRY)) {
             if (holder.getType().equals(DATA_MODELER_ENTRY)) {
+              _logger.debug("****** return holder {}", holder.toString());
                 return holder;
             }
         }

@@ -23,9 +23,11 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
+import java.text.DateFormat;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +46,17 @@ import org.slf4j.LoggerFactory;
  */
 public class FormToBpmHelper {
 
-    private static final Logger _logger = LoggerFactory.getLogger(FormToBpmHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(FormToBpmHelper.class);
 
+    public final static String FIELD_PROCESS_DEFINITION_ID = "processDefinitionId";
+    public final static String FIELD_CONTANER_ID = "containerId";
+
+    public final static String STRING = "java.lang.String";
+    public final static String INTEGER = "java.lang.Integer";
+    public final static String BOOLEAN = "java.lang.Boolean";
+    public final static String DATE = "java.util.Date";
+  
+    
     /**
      * Create a JSON for each section of the form
      *
@@ -67,7 +78,7 @@ public class FormToBpmHelper {
 
                 if (!map.containsKey(section)) {
                     map.put(section, new JSONObject());
-                    _logger.info("added json for section '{}'", section);
+                    logger.info("added json for section '{}'", section);
                 }
             }
         }
@@ -104,16 +115,23 @@ public class FormToBpmHelper {
 	            String field = tok[1];
 	
 	            // select the json
-	            JSONObject json = jmap.get(section);
+	            //json = jmap.get(section);
+                    //logger.debug("****** jmap.get({}): {} ", section,json.toString());
+
 	            // add data
-	            json.put(field, input.get(parameter));
-	            _logger.info("adding field '{}' in section '{}'", field, section);
+	               singles.put(field, input.get(parameter));
+	            logger.info("adding field '{}' in section '{}'", field, section);
+                    logger.debug("****** VALUE: {} ",input.get(parameter));
+                    logger.debug("****** json: {} ", singles.toString());
+
             } else {
             		String field = tok[0];
             		singles.put(field, input.get(parameter));
-            		_logger.info("adding single '{}'", field);
+            		logger.info("adding single '{}'", field);
+                        logger.debug("****** VALUE: {} ", input.get(parameter));
             }
         }
+        
         return singles;
     }
 
@@ -131,7 +149,7 @@ public class FormToBpmHelper {
         }
         JSONObject main = jmap.get(mainDataModelerEntry);
         if (null == main) {
-            _logger.warn("could not find the '{}' JSON", mainDataModelerEntry);
+            logger.warn("could not find the '{}' JSON", mainDataModelerEntry);
             return;
         }
         for (String section : jmap.keySet()) {
@@ -158,18 +176,28 @@ public class FormToBpmHelper {
                                           final Map<String, Object> input,
                                           final String containerId,
                                           final String processDefinitionId) throws Throwable {
+        
+        logger.debug("--------------------------------------");
+
+        logger.debug("generateFormJson for {} {}", containerId, processDefinitionId);
+        logger.debug("input: {}", input.toString());
+        logger.debug("bpmForm: {}", bpmForm.toString());
         JSONObject ajson = new JSONObject();
         List<String> formParams = BpmToFormHelper.getParamersMap(bpmForm);
         Map<String, JSONObject> jmap = createSectionJson(bpmForm, formParams);
         KieDataHolder mainDataHolder = BpmToFormHelper.getFormDataModelerEntry(bpmForm);
+        
+        logger.debug("**** mainDataHolder: {}", mainDataHolder);
 
         // process sections, compose inner json with all data, all components are still separated
-        JSONObject outJSON = buildSections(jmap, input, formParams);
-        
+        logger.debug("****  jmap {}", jmap.toString());
+         JSONObject outJSON = buildSections(jmap, input, formParams);
+        logger.debug("****  outJSON buildSections {}", outJSON.toString());
+
         if (null == mainDataHolder
                 || null == mainDataHolder.getId()
                 || null == mainDataHolder.getValue()) {
-            _logger.warn("cannot find main mainDataHolder OR invalid mainDataHolder detected, aborting");
+            logger.warn("cannot find main mainDataHolder OR invalid mainDataHolder detected, aborting");
         } else {
 	        // prepare application object
 	        buildInternalSection(mainDataHolder.getId(), jmap);
@@ -181,6 +209,9 @@ public class FormToBpmHelper {
         }
         outJSON.put(FIELD_PROCESS_DEFINITION_ID, processDefinitionId);
         outJSON.put(FIELD_CONTANER_ID, containerId);
+        logger.debug("return outJSON.toString() {}",outJSON.toString());
+        logger.debug("--------------------------------------");
+
         return outJSON.toString();
     }
 
@@ -199,11 +230,15 @@ public class FormToBpmHelper {
 
         if (null == bpmForm
                 || StringUtils.isBlank(fieldName)) {
+            logger.debug("1 validateField {}", result);
+
             return result;
         }
         // get the field
         KieProcessFormField field = BpmToFormHelper.getFormField(bpmForm, fieldName);
         if (null == field) {
+            logger.debug("2 validateField NullFormField");
+
             return new NullFormField();
         }
         // check whether the data is mandatory
@@ -211,14 +246,20 @@ public class FormToBpmHelper {
                 BpmToFormHelper.getFieldRequired(field).equalsIgnoreCase("true");
         if (null == value) {
             if (!mandatory) {
+                logger.debug("3 validateField NullFormField");
+
                 return new NullFormField();
             } else {
+                logger.debug("4 validateField {}", result);
+
                 return result;
             }
         }
         // get the data type
         final String fieldClass = BpmToFormHelper.getFieldClass(field);
         if (null == fieldClass) {
+            logger.debug("5validateField {}", result);
+
             return result;
         }
         try {
@@ -231,13 +272,19 @@ public class FormToBpmHelper {
                         || value.equalsIgnoreCase("false")) {
                     result = Boolean.valueOf(value);
                 }
+            }else if (fieldClass.equals(DATE)) {                
+                //YYYY-MM-DD
+                result = java.sql.Date.valueOf(value);
+
             } else {
-                _logger.warn("unknown field class type '{}'", fieldClass);
+                logger.warn("unknown field class type '{}'", fieldClass);
                 result = value;
             }
         } catch (Throwable t) {
             result = null;
         }
+        logger.debug("6 validateField {}'", result);
+     
         return result;
     }
 
@@ -259,7 +306,7 @@ public class FormToBpmHelper {
             Object obj = FormToBpmHelper.validateField(form, key, value);
             if (null != obj) {
                 if (obj instanceof NullFormField) {
-                    _logger.info("the field '{}' is null, but is not mandatory: ignoring", key);
+                    logger.info("the field '{}' is null, but is not mandatory: ignoring", key);
                 } else {
                     output.put(key, obj);
                 }
@@ -487,12 +534,4 @@ public class FormToBpmHelper {
                 dataModelerJson);
         return outputIdJson.toString();
     }
-
-
-    public final static String FIELD_PROCESS_DEFINITION_ID = "processDefinitionId";
-    public final static String FIELD_CONTANER_ID = "containerId";
-
-    public final static String STRING = "java.lang.String";
-    public final static String INTEGER = "java.lang.Integer";
-    public final static String BOOLEAN = "java.lang.Boolean";
 }

@@ -61,6 +61,15 @@ import org.slf4j.LoggerFactory;
 public class BpmTypeFormAction extends AbstractApsEntityAction {
 
     private static final Logger _logger = LoggerFactory.getLogger(BpmTypeFormAction.class);
+    private String _typeCode;
+    private Lang _currentLang;
+    private DataObject _dataObject;
+
+    private IKieFormManager _formManager;
+    private II18nManager _i18nManager;
+    private IDataObjectManager _dataObjectManager;
+    private IDataObjectDispenser _dataObjectDispenser;
+    private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
     @Override
     public void validate() {
@@ -144,9 +153,20 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
             while (iterator.hasNext()) {
                 AttributeInterface attribute = (AttributeInterface) iterator.next();
                 if (null != attribute.getType()) {
-                    final String value = attribute.getName();
 
-                    toBpm.put(attribute.getName(), this.getRequest().getParameter(attribute.getType() + ":" + value));
+                    _logger.debug("attribute.getType {}", attribute.getType());
+                    _logger.debug("attribute.getName {}", attribute.getName());
+                    //String value = null;
+                    //final String value = attribute.getName();
+                    String value = this.getRequest().getParameter(attribute.getName());
+                   
+                    _logger.debug("value {}", value);
+                    _logger.debug("this.getRequest().getParameterMap() {}", this.getRequest().getParameterMap());
+
+                    _logger.debug("toBpm.put {}:{}", attribute.getName(), value);
+
+                    //toBpm.put(attribute.getName(), this.getRequest().getParameter(attribute.getType() + ":" + value));
+                    toBpm.put(attribute.getName(), value);
                 }
             }
             this.validateForm(toBpm, kieForm);
@@ -170,9 +190,19 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
     }
 
     protected void validateForm(Map<String, Object> params, KieProcessFormQueryResult kieForm) throws Throwable {
+        _logger.debug("**************** validateForm ******************");
+        _logger.debug("params.entrySet() {}", params.entrySet());
+
         for (Map.Entry<String, Object> ff : params.entrySet()) {
+
+            _logger.debug("key {} value {}", ff.getKey(), ff.getValue());
+
             String key = ff.getKey();
-            String value = ff.getValue().toString();
+
+            String value = null;
+            if (null != ff.getValue()) {
+                value = ff.getValue().toString();
+            }
             Object obj = FormToBpmHelper.validateField(kieForm, key, value);
             if (null != obj) {
                 if (obj instanceof NullFormField) {
@@ -181,6 +211,8 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
             } else {
                 String msg = String.format("Invalid input '%s' on field '%s'", value, key);
                 this.addFieldError(key, msg);
+                _logger.debug("addFieldError({}, {})", key, msg);
+
                 //validationResult.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT));
             }
         }
@@ -382,14 +414,5 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
     public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
-    private String _typeCode;
-    private Lang _currentLang;
-    private DataObject _dataObject;
-
-    private IKieFormManager _formManager;
-    private II18nManager _i18nManager;
-    private IDataObjectManager _dataObjectManager;
-    private IDataObjectDispenser _dataObjectDispenser;
-    private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
 }

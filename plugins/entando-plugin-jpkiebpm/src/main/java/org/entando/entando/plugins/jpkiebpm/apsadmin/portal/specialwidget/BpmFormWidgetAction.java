@@ -5,6 +5,7 @@ import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -40,7 +41,7 @@ import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper
 
 public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
-    private static final Logger _logger = LoggerFactory.getLogger(BpmFormWidgetAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(BpmFormWidgetAction.class);
     protected String processId;
     protected String containerId;
     protected String processPath;
@@ -163,6 +164,10 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     }
 
     private void addAttributesToEntityType(IApsEntity entityType, KieProcessFormQueryResult form) {
+        logger.debug("*************************************************************************");
+        logger.debug("******* addAttributesToEntityType form {}", form.toString());
+        logger.debug("******* addAttributesToEntityType fields {}",form.getFields().toString());
+        
         if (null != form && null != form.getFields()) {
             if (form.getFields().size() > 0) {
                 try {
@@ -197,7 +202,15 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     }
 
     private void addAttributeToEntityType(IApsEntity entityType, KieProcessFormField field) {
-        if (field.getType().equalsIgnoreCase("InputText")) {
+        logger.debug("AddAttributeToEntityType -> Processing field of type: {} ", field.getType());
+
+        
+        if (field.getType().equalsIgnoreCase("InputText")||
+                field.getType().equalsIgnoreCase("TextArea")||
+                field.getType().equalsIgnoreCase("TextBox"))
+        {
+            logger.debug("Adding Monotext entityType");
+
             MonoTextAttribute text = (MonoTextAttribute) this.getAttributePrototype("Monotext");
             text.setName(field.getName());
             text.setDefaultLangCode(this.getCurrentLang().getCode());
@@ -205,9 +218,14 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             boolean req = (fieldRequired != null && fieldRequired.equalsIgnoreCase("true"));
             text.setRequired(req);
             entityType.addAttribute(text);
+            logger.debug("Monotext field added");
+
         }
-        if (field.getType().equalsIgnoreCase("InputTextInteger")
-                || field.getType().equalsIgnoreCase("InputTextFloat")) {
+        else if (field.getType().equalsIgnoreCase("InputTextInteger")
+                || field.getType().equalsIgnoreCase("InputTextInteger")
+                || field.getType().equalsIgnoreCase("IntegerBox")) {
+            logger.debug("Adding Number to entityType");
+
             NumberAttribute number = (NumberAttribute) this.getAttributePrototype("Number");
             number.setName(field.getName());
             number.setDefaultLangCode(this.getCurrentLang().getCode());
@@ -215,8 +233,22 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             boolean req = (fieldRequired != null && fieldRequired.equalsIgnoreCase("true"));
             number.setRequired(req);
             entityType.addAttribute(number);
+            logger.debug("Number field added");
+
         }
-        try {
+       
+        else if (field.getType().equalsIgnoreCase("DatePicker")) {
+            logger.debug("Adding Date to entityType");
+            DateAttribute date = (DateAttribute) this.getAttributePrototype("Date");
+            date.setName(field.getName());
+            date.setDefaultLangCode(this.getCurrentLang().getCode());
+            String fieldRequired = KieApiUtil.getFieldProperty(field, "fieldRequired");
+            boolean req = (fieldRequired != null && fieldRequired.equalsIgnoreCase("true"));
+            date.setRequired(req);
+            entityType.addAttribute(date);
+            logger.debug("Date field added");
+        }
+     try {
             this.processField(field, this.getCurrentLang().getCode());
         } catch (ApsSystemException ex) {
             java.util.logging.Logger.getLogger(BpmFormWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
@@ -279,7 +311,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         String processId = widgetInfo.getConfigDraft().getProperty(PROP_PROCESS_ID);
         if (StringUtils.isNotBlank(processId) && !processId.equals("null")) {
             String procString = widgetInfo.getConfigDraft().getProperty(PROP_PROCESS_ID) + "@" + widgetInfo.getConfigDraft().getProperty(PROP_CONTAINER_ID) + "@" + widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
-            _logger.info("Setting processPath to {}", procString);
+            logger.info("Setting processPath to {}", procString);
             this.setProcessPath(procString);
             String[] param = this.getProcessPath().split("@");
             this.setProcessId(param[0]);
@@ -313,7 +345,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             }
 
         } catch (ApsSystemException e) {
-            _logger.error("Error loading WidgetInfo", e);
+            logger.error("Error loading WidgetInfo", e);
         }
     }
 
@@ -321,7 +353,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         try {
             //System.out.println("nothing to do");
         } catch (Throwable t) {
-            _logger.error("Error in chooseForm", t);
+            logger.error("Error in chooseForm", t);
             return FAILURE;
         }
         return SUCCESS;
@@ -331,7 +363,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         try {
             this.setProcessPath(null);
         } catch (Throwable t) {
-            _logger.error("Error in changeForm", t);
+            logger.error("Error in changeForm", t);
             return FAILURE;
         }
         return SUCCESS;
@@ -448,7 +480,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             widgetInfo.setInformationDraft(properties.toXml());
             this.updateConfigWidget(widgetInfo, widget);
         } catch (Exception e) {
-            _logger.error("Error save WidgetInfo", e);
+            logger.error("Error save WidgetInfo", e);
             throw e;
         }
         return widgetInfo;
