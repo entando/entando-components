@@ -26,7 +26,6 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helpe
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Model;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Section;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.InputField;
@@ -61,19 +60,25 @@ public class DataUXBuilder implements ServletContextAware {
 
     public void init() throws Exception {
         logger.debug("{} ready.", this.getClass().getName());
-    
+ 
+        this.typeMapping.put("InputText", "text");
+        this.typeMapping.put("InputTextInteger", "number");   
+
         this.typeMapping.put("HTML", "text");
         this.typeMapping.put("TextBox", "text");
         this.typeMapping.put("TextArea", "text");
         this.typeMapping.put("IntegerBox", "number");
         this.typeMapping.put("DecimalBox", "number");
-        this.typeMapping.put("DatePicker", "text");
+        this.typeMapping.put("DatePicker", "java.util.Date");
         this.typeMapping.put("CheckBox", "text");
         this.typeMapping.put("Slider", "number");
         this.typeMapping.put("RadioGroup", "number");
         this.typeMapping.put("MultipleInput", "number");
-        this.typeMapping.put("MultipleSelector", "$data.%s.text");
+        this.typeMapping.put("MultipleSelector", "text");
         this.typeMapping.put("Document", "text");
+        
+        this.valueMapping.put("InputText", "$data.%s.text");
+        this.valueMapping.put("InputTextInteger", "$data.%s.number");
         
         this.valueMapping.put("HTML", "$data.%s.text");
         this.valueMapping.put("TextBox", "$data.%s.text");
@@ -179,7 +184,7 @@ public class DataUXBuilder implements ServletContextAware {
 
         InputField inputField = new InputField();
         String fieldName = field.getName();
-        KieProcessProperty labelProperty = field.getProperty("label");
+        //KieProcessProperty labelProperty = field.getProperty("label");
 
         //String label = (null != labelProperty) ? labelProperty.getValue() : null;
         String fieldTypeHMTL = this.typeMapping.get(field.getType());
@@ -193,8 +198,10 @@ public class DataUXBuilder implements ServletContextAware {
         //String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
         //String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
 
-        inputField.setId(fieldName.replaceAll("\\.", "-"));
+       // inputField.setId(fieldName.replaceAll("\\.", "-"));
+        inputField.setId(field.getId());
         inputField.setName(fieldName);
+     //   inputField.setMandatory(fieldName);
 
         //inputField.setValue(fieldValue);
         inputField.setTypePAM(fieldTypePAM);

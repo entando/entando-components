@@ -573,6 +573,11 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         } catch (Throwable t) {
             logger.error("error retrieving overrides for the form; they will be IGNORED!", t);
         }
+        logger.debug("*** getProcessForm result (kieForm) getFields :     {} ", result.getFields()) ;
+        logger.debug("*** getProcessForm result (kieForm) getHolders:     {} ", result.getHolders());
+        logger.debug("*** getProcessForm result (kieForm) getProperties:  {} ", result.getProperties());
+        logger.debug("*** getProcessForm result (kieForm) getNestedForms: {} ", result.getNestedForms());
+
 
         return result;
     }
@@ -628,6 +633,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             // add header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
+            logger.info("headersMap: {}", headersMap.toString());
+            
             // perform query
             result = new KieRequestBuilder(client).setEndpoint(ep)
                     .setHeaders(headersMap)
@@ -666,8 +673,15 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             return null;
         }
         try {
+            logger.debug("************************************************************************");
+
+            logger.debug("startProcessSubmittingForm input {}", input);
+            logger.debug("startProcessSubmittingForm form fields {}", form.getFields().toString());
+            logger.debug("startProcessSubmittingForm form holders {}", form.getHolders().toString());
             // generate payload
             String payload = FormToBpmHelper.generateFormJson(form, input, containerId, processId);
+            logger.debug("startProcessSubmittingForm payload {}", payload);
+            logger.debug("************************************************************************");
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_POST_PROCESS_START).resolveParams(containerId, processId);
             // generate client from the current configuration
