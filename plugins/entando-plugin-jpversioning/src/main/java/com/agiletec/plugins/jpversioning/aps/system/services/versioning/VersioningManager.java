@@ -179,8 +179,7 @@ public class VersioningManager extends AbstractService implements IVersioningMan
                 ContentRecordVO record = this.getContentManager().loadContentVO(contentId);
                 if (record != null) {
                     ContentVersion versionRecord = this.createContentVersion(record);
-                    //CANCELLAZIONE VERSIONE WORK OBSOLETE
-                    if (versionRecord.isApproved()) {
+                    if (versionRecord.isApproved() && this.isDeleteMidVersions()) {
                         int onlineVersionsToDelete = versionRecord.getOnlineVersion() - 1;
                         this.deleteWorkVersions(versionRecord.getContentId(), onlineVersionsToDelete);
                     }
