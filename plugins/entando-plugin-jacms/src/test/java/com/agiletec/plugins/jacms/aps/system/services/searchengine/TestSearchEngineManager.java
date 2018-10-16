@@ -29,7 +29,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AttachAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AttachAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import org.entando.entando.aps.system.services.searchengine.FacetedContentsResult;
