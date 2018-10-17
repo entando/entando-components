@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
-import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -51,7 +50,10 @@ public class DataUXBuilder implements ServletContextAware {
     private Map<String, String> typeMapping = new HashMap<>();
     private Map<String, String> valueMapping = new HashMap<>();
     private ServletContext servletContext;
-    public static final String TEMPLATE_FOLDER = "/WEB-INF/plugins/jpkiebpm/aps/templates/";
+    
+    // src/main/resources/templates 
+    public static final String TEMPLATE_FOLDER = "/templates/";
+   
     public static final String MAIN_FTL_TEMPLATE = "pageModel.ftl";
 
     public List fields = new ArrayList<InputField>();
@@ -69,7 +71,7 @@ public class DataUXBuilder implements ServletContextAware {
         this.typeMapping.put("TextArea", "text");
         this.typeMapping.put("IntegerBox", "number");
         this.typeMapping.put("DecimalBox", "number");
-        this.typeMapping.put("DatePicker", "java.util.Date");
+        this.typeMapping.put("DatePicker", "text");
         this.typeMapping.put("CheckBox", "text");
         this.typeMapping.put("Slider", "number");
         this.typeMapping.put("RadioGroup", "number");
@@ -96,9 +98,12 @@ public class DataUXBuilder implements ServletContextAware {
 
         cfg.setDefaultEncoding("UTF-8");
        
-        File file = new File(this.getServletContext().getRealPath(TEMPLATE_FOLDER));
+        //File file = new File(this.getServletContext().getRealPath(TEMPLATE_FOLDER));
+        //cfg.setDirectoryForTemplateLoading(file);
+        logger.debug("TEMPLATE_FOLDER: {}",TEMPLATE_FOLDER);
+//        cfg.setClassLoaderForTemplateLoading(getClass().getClassLoader(),TEMPLATE_FOLDER);
+        cfg.setClassForTemplateLoading(this.getClass(), TEMPLATE_FOLDER);
 
-        cfg.setDirectoryForTemplateLoading(file);
         cfg.setDefaultEncoding("UTF-8");        
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         cfg.setLogTemplateExceptions(false);
@@ -193,14 +198,16 @@ public class DataUXBuilder implements ServletContextAware {
         }
         
         String fieldTypePAM = field.getType();
-        //String fieldValueExpr = this.valueMapping.get(field.getType());
+        String fieldValueExpr = this.valueMapping.get(field.getType());
 
         //String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
-        //String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
+        String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
 
        // inputField.setId(fieldName.replaceAll("\\.", "-"));
         inputField.setId(field.getId());
         inputField.setName(fieldName);
+        inputField.setValue(fieldValue);
+
      //   inputField.setMandatory(fieldName);
 
         //inputField.setValue(fieldValue);
