@@ -13,9 +13,9 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
-import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.apsadmin.admin.BaseAdminAction;
+import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +73,7 @@ public class ContentAdminAction extends BaseAdminAction {
     @Override
     public String configSystemParams() {
         String result = super.configSystemParams();
-        this.setAspectRatio(this.getSystemParams().get(SystemConstants.CONFIG_PARAM_ASPECT_RATIO));
+        this.setAspectRatio(this.getSystemParams().get(JacmsSystemConstants.CONFIG_PARAM_ASPECT_RATIO));
         this.setRatio(this.getAspectRatio() != null ? Arrays.asList(this.getAspectRatio().split(";")) : new ArrayList<>());
         if (!result.equals(SUCCESS)) {
             return result;
@@ -278,7 +278,7 @@ public class ContentAdminAction extends BaseAdminAction {
 
     public String getAspectRatio() {
         if (aspectRatio == null) {
-            this.aspectRatio = this.getSystemParams().get(SystemConstants.CONFIG_PARAM_ASPECT_RATIO);
+            this.aspectRatio = this.getSystemParams().get(JacmsSystemConstants.CONFIG_PARAM_ASPECT_RATIO);
         }
         return aspectRatio;
     }
@@ -322,7 +322,7 @@ public class ContentAdminAction extends BaseAdminAction {
         if (this.getRatio() != null && !this.getRatio().isEmpty()) {
             this.setAspectRatio(String.join(";", this.getRatio()));
         }
-        this.getSystemParams().put(SystemConstants.CONFIG_PARAM_ASPECT_RATIO, this.getAspectRatio());
+        this.getSystemParams().put(JacmsSystemConstants.CONFIG_PARAM_ASPECT_RATIO, this.getAspectRatio());
     }
 
     private void validateAspectRatioList() {
