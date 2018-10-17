@@ -28,6 +28,7 @@ public class InputField {
     private String name;
     private String typePAM;
     private String typeHTML;
+    private String value;
 
     public String getId() {
         return id;
@@ -59,5 +60,14 @@ public class InputField {
     public void setTypeHTML(String typeHTML) {
         this.typeHTML = typeHTML;
     }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
 }
 

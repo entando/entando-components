@@ -45,6 +45,9 @@ public class PamFields {
     @XmlElement
     private String nestedForm;
 
+    @XmlElement
+    private String placeHolder;
+
     public String getSerializedFieldClassName() {
         return serializedFieldClassName;
     }
@@ -140,4 +143,13 @@ public class PamFields {
     public void setCode(String code) {
         this.code = code;
     }
+
+    public String getPlaceHolder() {
+        return placeHolder;
+    }
+
+    public void setPlaceHolder(String placeHolder) {
+        this.placeHolder = placeHolder;
+    }
+
 }
