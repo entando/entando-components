@@ -16,7 +16,6 @@ package com.agiletec.plugins.jacms.apsadmin.content;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.apsadmin.admin.BaseAdminAction;
-import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,10 +46,10 @@ public class ContentAdminAction extends BaseAdminAction {
 
     private static final String ASPECT_RATIO_PATTERN = "[0-9]{1,}:[0-9]{1,}";
 
-    private String resourceTitleMapping;
-    private String resourceLegendMapping;
-    private String resourceDescriptionMapping;
-    private String resourceAltMapping;
+    private Map<String, List<String>> mapping;
+    private String metadataKey;
+    private String metadataMapping;
+    private List<String> metadataKeys;
 
     private IContentManager contentManager;
     private IResourceManager resourceManager;
@@ -63,6 +62,12 @@ public class ContentAdminAction extends BaseAdminAction {
     public void validate() {
         super.validate();
         this.validateAspectRatioList();
+        Map<String, List<String>> mapping = this.buildMapping();
+        if (!StringUtils.isBlank(this.getMetadataKey())) {
+            if (mapping.containsKey(this.getMetadataKey().trim())) {
+                this.addFieldError("metadataKey", this.getText("error.contentSettings.metadataAlreadyPresent", new String[]{this.getMetadataKey().trim()}));
+            }
+        }
     }
 
     @Override
@@ -74,11 +79,7 @@ public class ContentAdminAction extends BaseAdminAction {
             return result;
         }
         try {
-            Map<String, List<String>> mapping = this.getResourceManager().getMetadataMapping();
-            this.setResourceAltMapping(this.buildCsv(mapping, IResourceManager.ALT_METADATA_MAPPING_KEY));
-            this.setResourceDescriptionMapping(this.buildCsv(mapping, IResourceManager.DESCRIPTION_METADATA_MAPPING_KEY));
-            this.setResourceLegendMapping(this.buildCsv(mapping, IResourceManager.LEGEND_METADATA_MAPPING_KEY));
-            this.setResourceTitleMapping(this.buildCsv(mapping, IResourceManager.TITLE_METADATA_MAPPING_KEY));
+            this.setMapping(this.getResourceManager().getMetadataMapping());
         } catch (Throwable t) {
             logger.error("error in configSystemParams", t);
             return FAILURE;
@@ -86,8 +87,8 @@ public class ContentAdminAction extends BaseAdminAction {
         return SUCCESS;
     }
 
-    private String buildCsv(Map<String, List<String>> mapping, String key) {
-        List<String> list = mapping.get(key);
+    public String buildCsv(String key) {
+        List<String> list = (null != this.getMapping()) ? this.getMapping().get(key) : null;
         if (null == list) {
             return null;
         }
@@ -101,12 +102,8 @@ public class ContentAdminAction extends BaseAdminAction {
             return result;
         }
         try {
-            Map<String, List<String>> mapping = new HashMap<>();
-            this.updateResourceMapping(mapping, this.getResourceAltMapping(), IResourceManager.ALT_METADATA_MAPPING_KEY);
-            this.updateResourceMapping(mapping, this.getResourceDescriptionMapping(), IResourceManager.DESCRIPTION_METADATA_MAPPING_KEY);
-            this.updateResourceMapping(mapping, this.getResourceLegendMapping(), IResourceManager.LEGEND_METADATA_MAPPING_KEY);
-            this.updateResourceMapping(mapping, this.getResourceTitleMapping(), IResourceManager.TITLE_METADATA_MAPPING_KEY);
-            this.getResourceManager().updateMetadataMapping(mapping);
+            Map<String, List<String>> newMapping = this.buildMapping();
+            this.getResourceManager().updateMetadataMapping(newMapping);
         } catch (Throwable t) {
             logger.error("error in configSystemParams", t);
             return FAILURE;
@@ -114,13 +111,42 @@ public class ContentAdminAction extends BaseAdminAction {
         return SUCCESS;
     }
 
-    private void updateResourceMapping(Map<String, List<String>> mapping, String csv, String key) {
-        List<String> mappingList = (!StringUtils.isBlank(csv)) ? Arrays.asList(csv.split(",")) : null;
-        if (null == mappingList) {
-            mapping.remove(key);
-        } else {
-            mapping.put(key, mappingList);
+    public String addMetadata() {
+        Map<String, List<String>> newMappings = this.buildMapping();
+        if (!StringUtils.isBlank(this.getMetadataKey()) && !newMappings.containsKey(this.getMetadataKey().trim())) {
+            List<String> newMapping = new ArrayList<>();
+            if (!StringUtils.isBlank(this.getMetadataMapping())) {
+                newMapping.addAll(Arrays.asList(this.getMetadataMapping().trim().split(",")));
+            }
+            newMappings.put(this.getMetadataKey().trim(), newMapping);
         }
+        return SUCCESS;
+    }
+
+    public String removeMetadata() {
+        Map<String, List<String>> newMapping = this.buildMapping();
+        if (!StringUtils.isBlank(this.getMetadataKey())) {
+            newMapping.remove(this.getMetadataKey().trim());
+        }
+        return SUCCESS;
+    }
+
+    protected Map<String, List<String>> buildMapping() {
+        Map<String, List<String>> newMapping = new HashMap<>();
+        if (null == this.getMetadataKeys()) {
+            return newMapping;
+        }
+        for (String key : this.getMetadataKeys()) {
+            String csv = this.getRequest().getParameter("resourceMetadata_mapping_" + key);
+            this.updateResourceMapping(newMapping, csv, key);
+        }
+        this.setMapping(newMapping);
+        return newMapping;
+    }
+
+    private void updateResourceMapping(Map<String, List<String>> mapping, String csv, String key) {
+        List<String> mappingList = (!StringUtils.isBlank(csv)) ? Arrays.asList(csv.split(",")) : new ArrayList<>();
+        mapping.put(key, mappingList);
     }
 
     /**
@@ -131,6 +157,7 @@ public class ContentAdminAction extends BaseAdminAction {
      */
     public String reloadContentsIndex() {
         try {
+            this.buildMapping();
             String result = this.configSystemParams();
             if (!result.equals(SUCCESS)) {
                 return result;
@@ -157,6 +184,7 @@ public class ContentAdminAction extends BaseAdminAction {
      */
     public String reloadContentsReference() {
         try {
+            this.buildMapping();
             String result = this.configSystemParams();
             if (!result.equals(SUCCESS)) {
                 return result;
@@ -169,6 +197,15 @@ public class ContentAdminAction extends BaseAdminAction {
             return FAILURE;
         }
         return SUCCESS;
+    }
+
+    public List<String> getResourceMetadataKeys() {
+        List<String> keys = new ArrayList<>();
+        if (null != this.getMapping()) {
+            keys.addAll(this.getMapping().keySet());
+            Collections.sort(keys);
+        }
+        return keys;
     }
 
     public int getContentManagerStatus() {
@@ -199,36 +236,36 @@ public class ContentAdminAction extends BaseAdminAction {
         return this.getSearchEngineManager().getLastReloadInfo();
     }
 
-    public String getResourceTitleMapping() {
-        return resourceTitleMapping;
+    public Map<String, List<String>> getMapping() {
+        return mapping;
     }
 
-    public void setResourceTitleMapping(String resourceTitleMapping) {
-        this.resourceTitleMapping = resourceTitleMapping;
+    public void setMapping(Map<String, List<String>> mapping) {
+        this.mapping = mapping;
     }
 
-    public String getResourceLegendMapping() {
-        return resourceLegendMapping;
+    public String getMetadataKey() {
+        return metadataKey;
     }
 
-    public void setResourceLegendMapping(String resourceLegendMapping) {
-        this.resourceLegendMapping = resourceLegendMapping;
+    public void setMetadataKey(String metadataKey) {
+        this.metadataKey = metadataKey;
     }
 
-    public String getResourceDescriptionMapping() {
-        return resourceDescriptionMapping;
+    public List<String> getMetadataKeys() {
+        return metadataKeys;
     }
 
-    public void setResourceDescriptionMapping(String resourceDescriptionMapping) {
-        this.resourceDescriptionMapping = resourceDescriptionMapping;
+    public String getMetadataMapping() {
+        return metadataMapping;
     }
 
-    public String getResourceAltMapping() {
-        return resourceAltMapping;
+    public void setMetadataMapping(String metadataMapping) {
+        this.metadataMapping = metadataMapping;
     }
 
-    public void setResourceAltMapping(String resourceAltMapping) {
-        this.resourceAltMapping = resourceAltMapping;
+    public void setMetadataKeys(List<String> metadataKeys) {
+        this.metadataKeys = metadataKeys;
     }
 
     protected IContentManager getContentManager() {

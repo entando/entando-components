@@ -23,10 +23,10 @@ import com.agiletec.aps.system.common.entity.model.attribute.JAXBNumberAttribute
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBTextAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.JAXBLinkAttribute;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.JAXBLinkValue;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.JAXBResourceAttribute;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.JAXBResourceValue;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.JAXBLinkAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.JAXBLinkValue;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.JAXBResourceAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.JAXBResourceValue;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -5,10 +5,10 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 	
-	<bean id="jpgeorefCoordsAttribute" class="com.agiletec.plugins.jpgeoref.aps.system.services.content.model.extraAttribute.CoordsAttribute" >
+	<bean id="jpgeorefCoordsAttribute" class="com.agiletec.plugins.jpgeoref.aps.system.services.content.model.attribute.CoordsAttribute" >
 		<property name="type" value="Coords" />
 		<property name="handler" >
-			<bean class="com.agiletec.plugins.jpgeoref.aps.system.services.content.parse.extraAttribute.CoordsAttributeHandler" />
+			<bean class="com.agiletec.plugins.jpgeoref.aps.system.services.content.parse.attribute.CoordsAttributeHandler" />
 		</property>
 		<property name="attributeManagerClassName" 
 			value="com.agiletec.plugins.jpgeoref.apsadmin.content.attribute.manager.CoordsAttributeManager" />
