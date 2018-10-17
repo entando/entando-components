@@ -9,32 +9,38 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSev
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Class to manage transformations between the 6.x and 7.x Kie server formats. In most cases the downstream code
- * in the plugin expects the 6.x beans so going out to Kie we transform from 6 to 7 when required. And coming in we go from
- * 7 back to 6 when needed
+ * Class to manage transformations between the 6.x and 7.x Kie server formats.
+ * In most cases the downstream code in the plugin expects the 6.x beans so
+ * going out to Kie we transform from 6 to 7 when required. And coming in we go
+ * from 7 back to 6 when needed
  */
 public class KieVersionTransformer {
 
     private static Random rand = new Random();
+    private static final Logger logger = LoggerFactory.getLogger(KieVersionTransformer.class);
+
     public static KieProcessFormQueryResult pamSevenFormToPamSix(PamProcessQueryFormResult pamProcessQueryFormResult) {
 
         boolean first = true;
         KieProcessFormQueryResult queryResult = null;
 
         List<String> formModelTypes = new ArrayList<>();
-        for(PamArray array : pamProcessQueryFormResult.getArrays()) {
+        for (PamArray array : pamProcessQueryFormResult.getArrays()) {
             String modelType = array.getModel().getClassName();
             formModelTypes.add(modelType);
         }
 
-        for(PamArray array : pamProcessQueryFormResult.getArrays()) {
-            if(first){
+        for (PamArray array : pamProcessQueryFormResult.getArrays()) {
+            if (first) {
                 queryResult = pamSevenFormToPamSix(array, formModelTypes);
                 first = false;
-            }else{
-                if(queryResult.getNestedForms() ==null) {
+            } else {
+                if (queryResult.getNestedForms() == null) {
                     queryResult.setNestedForms(new ArrayList<>());
                 }
                 queryResult.getNestedForms().add(pamSevenFormToPamSix(array, formModelTypes));
@@ -43,6 +49,7 @@ public class KieVersionTransformer {
 
         return queryResult;
     }
+
     public static KieProcessFormQueryResult pamSevenFormToPamSix(PamArray pamSeven, List<String> formModelTypes) {
 
         KieProcessFormQueryResult result = new KieProcessFormQueryResult();
@@ -57,7 +64,7 @@ public class KieVersionTransformer {
 
         PamModel model = pamSeven.getModel();
 
-        for(PamProperty property : model.getProperties()) {
+        for (PamProperty property : model.getProperties()) {
             String propName = property.getName();
             String className = property.getTypeInfo().getClassName();
             String type = property.getTypeInfo().getType();
@@ -65,17 +72,16 @@ public class KieVersionTransformer {
             //In PAM 6.x the main container entity for each form was marked  as the dataModelerEntry. Downstream the form helper
             //logic depends on this marker. The marker doesn't exist in 7.x so we add manually when the value of the class
             //on the interior property matches the value of a top level entity on one of the other forms.
-            if(formModelTypes.contains(className)) {
+            if (formModelTypes.contains(className)) {
                 type = "dataModelerEntry";
             }
             addDataholder(result, propName, propName, propName, type, className);
         }
 
-        if(result.getFields() == null) {
+        if (result.getFields() == null) {
             result.setFields(new ArrayList<>());
         }
-
-        for(PamFields field : pamSeven.getPamFields()) {
+        for (PamFields field : pamSeven.getPamFields()) {
             String fieldId = field.getId();
             String modelName = pamSeven.getName().toLowerCase();
             String fieldName = field.getName();
@@ -83,16 +89,15 @@ public class KieVersionTransformer {
             String type = field.getStandaloneClassName();
             String code = field.getCode();
             Boolean required = field.getRequired();
-
-            if(code.equals("SubForm")) {
+            Boolean showTime = field.getShowTime();
+            if (code.equals("SubForm")) {
                 //Sub forms will get processed and be nested under the root. This prevents duplicates
                 continue;
             }
-            addField(result, fieldId, modelName, fieldName, label, code, required, type);
+            addField(result, fieldId, modelName, fieldName, label, code, required, type, showTime);
         }
         return result;
     }
-
 
     public static void pamSixFormToPamSeven() {
 
@@ -114,20 +119,19 @@ public class KieVersionTransformer {
         holder.setOutId(outId);
         holder.setType(basicType);
         holder.setValue(value);
-        if(result.getHolders()==null) {
+        if (result.getHolders() == null) {
             result.setHolders(new ArrayList<>());
         }
         result.getHolders().add(holder);
     }
 
-    private static void addField(KieProcessFormQueryResult result, String id, String modelName, String fieldName, String label, String code, Boolean required, String type) {
-
+    private static void addField(KieProcessFormQueryResult result, String id, String modelName, String fieldName, String label, String code, Boolean required, String type, boolean dateTime) {
 
         KieProcessFormField field = new KieProcessFormField();
         field.setProperties(new ArrayList<>());
 
         field.setId(id);
-        field.setName(modelName+"_"+fieldName);
+        field.setName(modelName + "_" + fieldName);
         field.setType(code);
 
         KieProcessProperty prop = new KieProcessProperty();
@@ -135,20 +139,24 @@ public class KieVersionTransformer {
         prop.setValue(label);
         field.getProperties().add(prop);
 
-        KieProcessProperty req =  new KieProcessProperty();
+        KieProcessProperty req = new KieProcessProperty();
         req.setName("fieldRequired");
-        req.setValue(required+"");
+        req.setValue(required + "");
         field.getProperties().add(req);
 
-        KieProcessProperty fieldClass =  new KieProcessProperty();
+        KieProcessProperty fieldClass = new KieProcessProperty();
         fieldClass.setName("fieldClass");
         fieldClass.setValue(type);
         field.getProperties().add(fieldClass);
-
-
+  
+        if (field.getType().equals("DatePicker")) {
+            KieProcessProperty showTime = new KieProcessProperty();
+            showTime.setName("showTime");
+            showTime.setValue(String.valueOf(dateTime));
+            field.getProperties().add(showTime);
+        }
+        
         result.getFields().add(field);
-
-
 
     }
 }

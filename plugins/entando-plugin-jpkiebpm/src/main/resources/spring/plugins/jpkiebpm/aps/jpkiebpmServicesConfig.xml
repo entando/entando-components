@@ -25,8 +25,9 @@
 
     <bean id="KieBpmService" class="org.entando.entando.plugins.jpkiebpm.aps.system.services.KieBpmService" >
         <property name="dtoBuilder" ref="DatatableWidgetConfigDtoBuilder" />
+        <!--property name="uXBuilder" ref="jpkiebpmDataUXBuilder" /-->
         <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager" />
-        <property name="formManager" ref="jpkiebpmsManager" />
+        <property name="formManager" ref="jpkiebpmsManager" />        
     </bean>
 
 </beans>

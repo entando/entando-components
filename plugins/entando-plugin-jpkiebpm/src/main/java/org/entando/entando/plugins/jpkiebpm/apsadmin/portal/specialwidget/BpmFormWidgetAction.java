@@ -36,8 +36,9 @@ import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelM
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming; 
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
@@ -60,6 +61,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     private IDataObjectManager _dataObjectManager;
     private IDataObjectModelManager _dataObjectModelManager;
     private II18nManager i18nManager;
+    
+    @Autowired
     private DataUXBuilder uXBuilder;
     
     @Override

@@ -47,6 +47,9 @@ public class PamFields {
 
     @XmlElement
     private String placeHolder;
+    
+    @XmlElement(required=false)
+    private boolean showTime;
 
     public String getSerializedFieldClassName() {
         return serializedFieldClassName;
@@ -150,6 +153,14 @@ public class PamFields {
 
     public void setPlaceHolder(String placeHolder) {
         this.placeHolder = placeHolder;
+    }
+
+    public boolean getShowTime() {
+        return showTime;
+    }
+
+    public void setShowTime(boolean showTime) {
+        this.showTime = showTime;
     }
 
 }

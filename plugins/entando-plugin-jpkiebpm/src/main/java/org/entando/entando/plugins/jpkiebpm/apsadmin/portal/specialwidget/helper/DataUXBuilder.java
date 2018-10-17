@@ -28,6 +28,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Model;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Section;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePicker;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.InputField;
 
 import java.util.HashMap;
@@ -42,31 +43,33 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import javax.servlet.ServletContext;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
+import org.springframework.stereotype.Service;
 import org.springframework.web.context.ServletContextAware;
 
-public class DataUXBuilder implements ServletContextAware {
+@Service
+public class DataUXBuilder<T extends InputField> implements ServletContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(DataUXBuilder.class);
     private Map<String, String> typeMapping = new HashMap<>();
     private Map<String, String> valueMapping = new HashMap<>();
     private ServletContext servletContext;
-    
+
     // src/main/resources/templates 
     public static final String TEMPLATE_FOLDER = "/templates/";
-   
     public static final String MAIN_FTL_TEMPLATE = "pageModel.ftl";
 
-    public List fields = new ArrayList<InputField>();
+    public List fields = new ArrayList<DatePicker>();
 
     Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
 
     public void init() throws Exception {
         logger.debug("{} ready.", this.getClass().getName());
- 
-        this.typeMapping.put("InputText", "text");
-        this.typeMapping.put("InputTextInteger", "number");   
 
-        this.typeMapping.put("HTML", "text");
+        this.typeMapping.put("InputText", "text");
+        this.typeMapping.put("InputTextInteger", "number");
+
+        //this.typeMapping.put("HTML", "text");
         this.typeMapping.put("TextBox", "text");
         this.typeMapping.put("TextArea", "text");
         this.typeMapping.put("IntegerBox", "number");
@@ -78,11 +81,11 @@ public class DataUXBuilder implements ServletContextAware {
         this.typeMapping.put("MultipleInput", "number");
         this.typeMapping.put("MultipleSelector", "text");
         this.typeMapping.put("Document", "text");
-        
+
         this.valueMapping.put("InputText", "$data.%s.text");
         this.valueMapping.put("InputTextInteger", "$data.%s.number");
-        
-        this.valueMapping.put("HTML", "$data.%s.text");
+
+        //this.valueMapping.put("HTML", "$data.%s.text");
         this.valueMapping.put("TextBox", "$data.%s.text");
         this.valueMapping.put("TextArea", "$data.%s.text");
         this.valueMapping.put("IntegerBox", "$data.%s.number");
@@ -95,16 +98,12 @@ public class DataUXBuilder implements ServletContextAware {
         this.valueMapping.put("MultipleInput", "$data.%s.text");
         this.valueMapping.put("Document", "$data.%s.text");
 
-
         cfg.setDefaultEncoding("UTF-8");
-       
-        //File file = new File(this.getServletContext().getRealPath(TEMPLATE_FOLDER));
-        //cfg.setDirectoryForTemplateLoading(file);
-        logger.debug("TEMPLATE_FOLDER: {}",TEMPLATE_FOLDER);
-//        cfg.setClassLoaderForTemplateLoading(getClass().getClassLoader(),TEMPLATE_FOLDER);
+
+        logger.debug("TEMPLATE_FOLDER: {}", TEMPLATE_FOLDER);
         cfg.setClassForTemplateLoading(this.getClass(), TEMPLATE_FOLDER);
 
-        cfg.setDefaultEncoding("UTF-8");        
+        cfg.setDefaultEncoding("UTF-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         cfg.setLogTemplateExceptions(false);
 
@@ -124,11 +123,11 @@ public class DataUXBuilder implements ServletContextAware {
         model.setTitle(title);
         model.setContainerId(containerId);
         model.setProcessId(processId);
-        root.put("model", model);        
+        root.put("model", model);
         root.put("section", section);
         root.put("fields", fields);
         Writer stringWriter = new StringWriter();
-        template.process(root, stringWriter); 
+        template.process(root, stringWriter);
         return stringWriter.toString();
 
     }
@@ -154,19 +153,18 @@ public class DataUXBuilder implements ServletContextAware {
         return section;
     }
 
-    private List<InputField> addFields(KieProcessFormQueryResult kpfr) throws Exception {
+    private List<T> addFields(KieProcessFormQueryResult kpfr) throws Exception {
 
         List<KieProcessFormField> fields = kpfr.getFields();
 
-        List<InputField> inputFields = new ArrayList<InputField>();
-      
+        List<T> inputFields = new ArrayList<T>();
+
         for (int i = 0; i < fields.size(); i++) {
             KieProcessFormField field = fields.get(i);
             inputFields.add(this.addField(field));
         }
 
         //TODO CHECK SUBFORMS
-        
         List<KieProcessFormQueryResult> subForms = kpfr.getNestedForms();
         if (null != subForms && !subForms.isEmpty()) {
             for (int i = 0; i < subForms.size(); i++) {
@@ -174,47 +172,59 @@ public class DataUXBuilder implements ServletContextAware {
                 inputFields.addAll(this.addFields(form));
             }
         }
-         
+
         return inputFields;
     }
 
-    private InputField addField(KieProcessFormField field) throws Exception {
+    private T addField(KieProcessFormField field) throws Exception {
         logger.debug("------------------------------------");
         logger.debug("Field getId          -> {}", field.getId());
         logger.debug("Field getName        -> {}", field.getName());
         logger.debug("Field getPosition    -> {}", field.getPosition());
         logger.debug("Field getType        -> {}", field.getType());
-        logger.debug("Field getProperties  -> {}", field.getProperties());        
+        logger.debug("Field getProperties -> ");
+        field.getProperties().forEach(p
+                -> logger.debug("  Property name:{} value: {}", p.getName(), p.getValue()));
         logger.debug("------------------------------------");
-
-        InputField inputField = new InputField();
+        T inputField;
+        if (field.getType().equals("DatePicker")) {
+            inputField = (T) new DatePicker();
+            
+        } else {
+            inputField = (T) new InputField();
+        }
         String fieldName = field.getName();
-        //KieProcessProperty labelProperty = field.getProperty("label");
 
         //String label = (null != labelProperty) ? labelProperty.getValue() : null;
         String fieldTypeHMTL = this.typeMapping.get(field.getType());
         if (null == fieldTypeHMTL) {
-            fieldTypeHMTL="text";
+            fieldTypeHMTL = "text";
         }
-        
+
         String fieldTypePAM = field.getType();
         String fieldValueExpr = this.valueMapping.get(field.getType());
-
-        //String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
         String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
 
-       // inputField.setId(fieldName.replaceAll("\\.", "-"));
+        boolean required = Boolean.parseBoolean(field.getProperty("fieldRequired").getValue());
+
         inputField.setId(field.getId());
         inputField.setName(fieldName);
         inputField.setValue(fieldValue);
-
-     //   inputField.setMandatory(fieldName);
-
-        //inputField.setValue(fieldValue);
+        inputField.setRequired(required);
         inputField.setTypePAM(fieldTypePAM);
         inputField.setTypeHTML(fieldTypeHMTL);
+        
+        if (inputField instanceof DatePicker) {
+            DatePicker datePicker = (DatePicker) inputField;
+            
+            boolean showTime = Boolean.parseBoolean(field.getProperty("showTime").getValue());
 
+            datePicker.setShowTime(showTime);
+            return (T) datePicker;
+        }
+        
         return inputField;
+  
     }
 
     public ServletContext getServletContext() {

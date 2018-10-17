@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:context="http://www.springframework.org/schema/context"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+    
     <bean id="jpkiebpmSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer">
         <property name="subMenuFilePath">
             <value>/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/common/layouts/subMenu.jsp</value>
         </property>
     </bean>
 
+    <bean id="jpkiebpmDataUXBuilder" 
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder"
+          init-method="init">        
+    </bean>
+    
     <bean id="jpkiebpmBpmFormWidgetAction"
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmFormWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
@@ -18,12 +25,7 @@
         <property name="dataObjectManager" ref="DataObjectManager"/>
         <property name="dataObjectModelManager" ref="DataObjectModelManager"/>
         <property name="i18nManager" ref="I18nManager"/>
-        <property name="uXBuilder" ref="jpkiebpmDataUXBuilder" />
-    </bean>
-    
-    <bean id="jpkiebpmDataUXBuilder" 
-          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder"
-          init-method="init">        
+        <!--property name="uXBuilder" ref="jpkiebpmDataUXBuilder" /-->
     </bean>
 
     <bean id="jpkiebpmBpmTaskListDatatableWidgetAction"

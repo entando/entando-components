@@ -37,21 +37,22 @@ public interface KieTestParameters {
 //    // THE VALUES BELOW MUST EXIST ON THE BPM !!!
     public final static String USERNAME = "kieserver";
     public final static String PASSWORD = "kieserver1!"; // ansible.serv.run
-
+/*
     public final static String HOSTNAME = "co-client-onboarding-developer.54.36.53.206.xip.io";//192.168.77.235";
     public final static String SCHEMA = "http";
     public final static String WEBAPP = "kie-server";
     public final static Integer PORT = 80;
     public final static Integer TIMEOUT = 1000;
-
+*/
+    
 //    public final static String USERNAME = "krisv";
 //    public final static String PASSWORD = "krisv"; // ansible.serv.run
 //
-//    public final static String HOSTNAME = "localhost";//192.168.77.235";
-//    public final static String SCHEMA = "http";
-//    public final static String WEBAPP = "kie-server";
-//    public final static Integer PORT = 8080;
-//    public final static Integer TIMEOUT = 1000;
+    public final static String HOSTNAME = "localhost";
+    public final static String SCHEMA = "http";
+    public final static String WEBAPP = "kie-server";
+    public final static Integer PORT = 8080;
+    public final static Integer TIMEOUT = 1000;
 
     public final static String TARGET_PROCESS_ID = "com.redhat.bpms.examples.mortgage.MortgageApplication";
 //    public final static String TARGET_CONTAINER_ID = "com.redhat.bpms.examples:mortgage:1";

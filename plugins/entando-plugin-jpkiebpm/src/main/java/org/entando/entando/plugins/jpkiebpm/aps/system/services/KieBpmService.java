@@ -130,7 +130,10 @@ public class KieBpmService implements IKieBpmService {
 
     @Autowired
     private IDtoBuilder<BpmWidgetInfo, DatatableWidgetConfigDto> dtoBuilder;
-
+    
+    @Autowired
+    private DataUXBuilder uXBuilder;
+    
     public IBpmWidgetInfoManager getBpmWidgetInfoManager() {
         return bpmWidgetInfoManager;
     }
@@ -209,6 +212,14 @@ public class KieBpmService implements IKieBpmService {
 
     public void setLangCode(String langCode) {
         this.langCode = langCode;
+    }
+
+    public DataUXBuilder getuXBuilder() {
+        return uXBuilder;
+    }
+
+    public void setuXBuilder(DataUXBuilder uXBuilder) {
+        this.uXBuilder = uXBuilder;
     }
 
     @Override
@@ -448,7 +459,8 @@ public class KieBpmService implements IKieBpmService {
         dataModel.setDataType(typeCode);
         //dataModel.setDescription(processId + "_" + containerId); exceeds 50 chars limit
         dataModel.setDescription("Model for " + containerId);
-        DataUXBuilder uXBuilder = new DataUXBuilder();
+        //DataUXBuilder uXBuilder = new DataUXBuilder();
+                
         String dataUx = uXBuilder.createDataUx(kpfr, containerId, processId, title);
         dataModel.setShape(dataUx);
         this.getDataObjectModelManager().addDataObjectModel(dataModel);
