@@ -73,11 +73,11 @@ public class ContentAdminAction extends BaseAdminAction {
     @Override
     public String configSystemParams() {
         String result = super.configSystemParams();
-        this.setAspectRatio(this.getSystemParams().get(JacmsSystemConstants.CONFIG_PARAM_ASPECT_RATIO));
-        this.setRatio(this.getAspectRatio() != null ? Arrays.asList(this.getAspectRatio().split(";")) : new ArrayList<>());
         if (!result.equals(SUCCESS)) {
             return result;
         }
+        this.setAspectRatio(this.getSystemParams().get(JacmsSystemConstants.CONFIG_PARAM_ASPECT_RATIO));
+        this.setRatio(this.getAspectRatio() != null ? Arrays.asList(this.getAspectRatio().split(";")) : new ArrayList<>());
         try {
             this.setMapping(this.getResourceManager().getMetadataMapping());
         } catch (Throwable t) {
