@@ -23,69 +23,16 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-public class InputField {
-    private String id;
-    private String name;
-    private String typePAM;
-    private String typeHTML;
-    private String value;
-    private boolean required;
-    private String placeholder;
+public class DatePicker extends InputField {
+    private boolean showTime;
+
+    public boolean getShowTime() {
+        return showTime;
+    }
+
+    public void setShowTime(boolean showTime) {
+        this.showTime = showTime;
+    }
     
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTypePAM() {
-        return typePAM;
-    }
-
-    public void setTypePAM(String typePAM) {
-        this.typePAM = typePAM;
-    }
-    public String getTypeHTML() {
-        return typeHTML;
-    }
-
-    public void setTypeHTML(String typeHTML) {
-        this.typeHTML = typeHTML;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public boolean getRequired() {
-        return required;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public String getPlaceholder() {
-        return placeholder;
-    }
-
-    public void setPlaceholder(String placeholder) {
-        this.placeholder = placeholder;
-    }
-
 }
 
