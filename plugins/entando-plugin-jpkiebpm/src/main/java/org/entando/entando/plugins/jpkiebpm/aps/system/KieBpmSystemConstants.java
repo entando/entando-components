@@ -101,9 +101,16 @@ public interface KieBpmSystemConstants {
     public final static String API_POST_CASE_FILE = "API_POST_CASE_FILE";
     public final static String API_DELETE_CASE_FILE = "API_DELETE_CASE_FILE";
     public final static String API_GET_PROCESS_INSTANCE = "API_GET_PROCESS_INSTANCE";
-    
-    
-    
+    public final static String API_GET_HUMAN_TASK_LIST_ADMIN = "API_GET_HUMAN_TASK_LIST_ADMIN";
+    public final static String API_PUT_HUMAN_TASK_START = "API_PUT_HUMAN_TASK_START";
+    public final static String API_PUT_HUMAN_TASK_OUTPUT = "API_PUT_HUMAN_TASK_OUTPUT";
+    public final static String API_PUT_HUMAN_TASK_COMPLETE = "API_PUT_HUMAN_TASK_COMPLETE";
+    public final static String API_GET_HUMAN_TASK_DETAILS = "API_GET_HUMAN_TASK_DETAILS";
+    public final static String API_POST_START_CASE = "API_POST_START_CASE";
+    public final static String API_POST_START_CASE_AUTOMATED = "API_POST_START_CASE_AUTOMATED";
+    public final static String API_POST_START_CASE_MANUAL = "API_POST_START_CASE_MANUAL";
+    public final static String API_ADMIN_GET_CASES = "API_ADMIN_GET_CASES";
+    public final static String API_POST_RUN_ADDITIONAL_INFO_RULES = "API_POST_RUN_ADDITIONAL_INFO_RULES";
 
     public static final String WIDGET_PARAM_DATA_TYPE_CODE = "dataTypeCode";
     public static final String WIDGET_PARAM_DATA_UX_ID = "dataUxId";
@@ -114,4 +121,6 @@ public interface KieBpmSystemConstants {
     public static final String WIDGET_INFO_PROP_KIE_SOURCE_ID = "kieSourceId";
     public static final String WIDGET_INFO_PROP_OVERRIDE_ID = "overrides";
 
+    public final static String KNOWLEDGE_WORKER = "knowledgeWorker";
+    public final static String LEGAL_WORKER = "legalWorker";
 }

@@ -24,11 +24,11 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import org.apache.http.client.utils.URIBuilder;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.DEFAULT_POSRT;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.DEFAULT_SCHEMA;
-
 import org.entando.entando.plugins.jprestapi.aps.core.IClient;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.RequestHelper;
+
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.DEFAULT_POSRT;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.DEFAULT_SCHEMA;
 
 /**
  *
@@ -42,7 +42,7 @@ public class KieClient extends IClient {
 
 
     public KieClient(KIEAuthenticationCredentials credentials) {
-        this._credentials = credentials;
+        this.credentials = credentials;
     }
 
 
@@ -54,65 +54,65 @@ public class KieClient extends IClient {
     public String getBaseUrl() {
         URIBuilder uri = new URIBuilder();
 
-        uri.setScheme(_schema);
-        uri.setHost(_hostname);
-        uri.setPort(_port);
-        return RequestHelper.appendPath(uri.toString(), _webapp);
+        uri.setScheme(schema);
+        uri.setHost(hostname);
+        uri.setPort(port);
+        return RequestHelper.appendPath(uri.toString(), webapp);
     }
 
     public KIEAuthenticationCredentials getCredentials() {
-        return _credentials;
+        return credentials;
     }
 
     public void setCredentials(KIEAuthenticationCredentials credentials) {
-        this._credentials = credentials;
+        this.credentials = credentials;
     }
 
     public String getHostname() {
-        return _hostname;
+        return hostname;
     }
 
     public void setHostname(String hostname) {
-        this._hostname = hostname;
+        this.hostname = hostname;
     }
 
     public String getSchema() {
-        return _schema;
+        return schema;
     }
 
     public void setSchema(String schema) {
-        this._schema = schema;
+        this.schema = schema;
     }
 
     public int getPort() {
-        return _port;
+        return port;
     }
 
     public void setPort(int port) {
-        this._port = port;
+        this.port = port;
     }
 
     public String getWebapp() {
-        return _webapp;
+        return webapp;
     }
 
     public void setWebapp(String webapp) {
-        this._webapp = webapp;
+        this.webapp = webapp;
     }
 
     public Integer getTimeoutMsec() {
-        return _timeoutMsec;
+        return timeoutMsec;
     }
 
     public void setTimeoutMsec(Integer timeoutMsec) {
-        this._timeoutMsec = timeoutMsec;
+        this.timeoutMsec = timeoutMsec;
     }
 
-    private KIEAuthenticationCredentials _credentials;
-    private String _hostname;
-    private String _schema = DEFAULT_SCHEMA;
-    private int _port = DEFAULT_POSRT;
-    private String _webapp;
-    private Integer _timeoutMsec;
+    private KIEAuthenticationCredentials credentials;
+    private String hostname;
+    private String schema = DEFAULT_SCHEMA;
+    private int port = DEFAULT_POSRT;
+    private String webapp;
+    private Integer timeoutMsec;
 
 }

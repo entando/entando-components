@@ -23,8 +23,11 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
+import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import org.apache.commons.lang.StringUtils;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,22 +41,26 @@ import java.util.Map;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 
-/**
- *
- * @author own_strong
- */
-public class CaseManager extends KieFormManager {
+
+public class CaseManager extends AbstractService implements ICaseManager {
 
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
 
-    public JSONObject getCasesDefinitions(String containerId) throws ApsSystemException {
+
+    @Override
+    public void init() throws Exception {
+
+    }
+
+    @Override
+    public JSONObject getCasesDefinitions(KieBpmConfig config, String containerId) throws ApsSystemException {
 
         Map<String, String> headersMap = new HashMap<>();
 
         String result = null;
         JSONObject json = null;
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId)) {
             return json;
         }
         try {
@@ -62,12 +69,12 @@ public class CaseManager extends KieFormManager {
             // add header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -84,7 +91,8 @@ public class CaseManager extends KieFormManager {
         return json;
     }
 
-    public List<String> getCaseInstancesList(String containerId) throws ApsSystemException {
+    @Override
+    public List<String> getCaseInstancesList(KieBpmConfig config, String containerId) throws ApsSystemException {
 
         List<String> casesList = new ArrayList<>();
         Map<String, String> headersMap = new HashMap<>();
@@ -92,7 +100,7 @@ public class CaseManager extends KieFormManager {
         String result;
         JSONObject json = null;
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId)) {
             return casesList;
         }
         try {
@@ -101,12 +109,12 @@ public class CaseManager extends KieFormManager {
             // add header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -129,7 +137,8 @@ public class CaseManager extends KieFormManager {
         return casesList;
     }
 
-    public JSONObject getCaseInstancesDetails(String containerId, String caseID) throws ApsSystemException {
+    @Override
+    public JSONObject getCaseInstancesDetails(KieBpmConfig config, String containerId, String caseID) throws ApsSystemException {
 
         Map<String, String> headersMap = new HashMap<>();
         Map<String, String> param = new HashMap<>();
@@ -137,7 +146,7 @@ public class CaseManager extends KieFormManager {
         String result;
         JSONObject casesDetails = null;
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return casesDetails;
         }
         try {
@@ -150,13 +159,13 @@ public class CaseManager extends KieFormManager {
             param.put(HEADER_CASE_DETAILS_WITHMILESTONES_PARM, HEADER_TRUE);
             param.put(HEADER_CASE_DETAILS_WITHSTAGES_PARM, HEADER_TRUE);
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(param)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -173,7 +182,8 @@ public class CaseManager extends KieFormManager {
         return casesDetails;
     }
 
-    public JSONArray getMilestonesList(String containerId, String caseID) throws ApsSystemException {
+    @Override
+    public JSONArray getMilestonesList(KieBpmConfig config, String containerId, String caseID) throws ApsSystemException {
 
         JSONArray milestonesList = null;
         Map<String, String> headersMap = new HashMap<>();
@@ -182,7 +192,7 @@ public class CaseManager extends KieFormManager {
         String result;
         JSONObject json;
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return milestonesList;
         }
         try {
@@ -192,13 +202,13 @@ public class CaseManager extends KieFormManager {
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             param.put(HEADER_MILESTONES_ACHIEVEDONLY_PARM, HEADER_FALSE);
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(param)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -217,7 +227,8 @@ public class CaseManager extends KieFormManager {
         return milestonesList;
     }
 
-    public JSONArray getCaseComments(String containerId, String caseID) throws ApsSystemException {
+    @Override
+    public JSONArray getCaseComments(KieBpmConfig config, String containerId, String caseID) throws ApsSystemException {
 
         JSONArray commentsList = null;
         JSONObject json;
@@ -225,7 +236,7 @@ public class CaseManager extends KieFormManager {
 
         String result;
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return commentsList;
         }
         try {
@@ -234,12 +245,12 @@ public class CaseManager extends KieFormManager {
             // add header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -257,11 +268,12 @@ public class CaseManager extends KieFormManager {
         return commentsList;
     }
 
-    public boolean postCaseComments(String containerId, String caseID, String comment) throws ApsSystemException {
+    @Override
+    public boolean postCaseComments(KieBpmConfig config, String containerId, String caseID, String comment) throws ApsSystemException {
 
         Map<String, String> headersMap = new HashMap<>();
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return false;
         }
 
@@ -274,14 +286,14 @@ public class CaseManager extends KieFormManager {
             headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
 
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
 
             // perform query
             String result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload("\"" + comment + "\"")
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             return true;
@@ -291,10 +303,11 @@ public class CaseManager extends KieFormManager {
         }
     }
 
-    public boolean updateCaseComments(String containerId, String caseID, String caseCommentId, String comment) throws ApsSystemException {
+    @Override
+    public boolean updateCaseComments(KieBpmConfig config, String containerId, String caseID, String caseCommentId, String comment) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseCommentId) || StringUtils.isBlank(comment)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseCommentId) || StringUtils.isBlank(comment)) {
             return false;
         }
 
@@ -307,14 +320,14 @@ public class CaseManager extends KieFormManager {
             headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
 
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
 
             // perform query
             String result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload("\"" + comment + "\"")
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             return true;
@@ -324,10 +337,11 @@ public class CaseManager extends KieFormManager {
         }
     }
 
-    public boolean deleteCaseComments(String containerId, String caseID, String caseCommentId) throws ApsSystemException {
+    @Override
+    public boolean deleteCaseComments(KieBpmConfig config, String containerId, String caseID, String caseCommentId) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseCommentId)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseCommentId)) {
             return false;
         }
 
@@ -340,13 +354,13 @@ public class CaseManager extends KieFormManager {
             headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
 
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
 
             // perform query
             String result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             return true;
@@ -356,14 +370,15 @@ public class CaseManager extends KieFormManager {
         }
     }
 
-    public JSONObject getCaseRoles(String containerId, String caseID) throws ApsSystemException {
+    @Override
+    public JSONObject getCaseRoles(KieBpmConfig config, String containerId, String caseID) throws ApsSystemException {
 
         JSONObject caseRoles = null;
         Map<String, String> headersMap = new HashMap<>();
 
         String result;
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return caseRoles;
         }
         try {
@@ -372,12 +387,12 @@ public class CaseManager extends KieFormManager {
             // add header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -396,11 +411,12 @@ public class CaseManager extends KieFormManager {
 
     }
 
-    public boolean addCaseRoles(String containerId, String caseID, String caseRoleName, String user, String group) throws ApsSystemException {
+    @Override
+    public boolean addCaseRoles(KieBpmConfig config, String containerId, String caseID, String caseRoleName, String user, String group) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
         Map<String, String> requestParams = new HashMap<>();
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseRoleName) || StringUtils.isBlank(user) || StringUtils.isBlank(group)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseRoleName) || StringUtils.isBlank(user) || StringUtils.isBlank(group)) {
             return false;
         }
 
@@ -415,14 +431,14 @@ public class CaseManager extends KieFormManager {
             requestParams.put(HEADER_CASE_ROLES_GROUP_PARM, group);
 
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
 
             // perform query
             String result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(requestParams)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             return true;
@@ -433,11 +449,12 @@ public class CaseManager extends KieFormManager {
 
     }
 
-    public boolean deleteCaseRoles(String containerId, String caseID, String caseRoleName, String user, String group) throws ApsSystemException {
+    @Override
+    public boolean deleteCaseRoles(KieBpmConfig config, String containerId, String caseID, String caseRoleName, String user, String group) throws ApsSystemException {
         Map<String, String> headersMap = new HashMap<>();
         Map<String, String> requestParams = new HashMap<>();
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseRoleName) || StringUtils.isBlank(user) || StringUtils.isBlank(group)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(caseRoleName) || StringUtils.isBlank(user) || StringUtils.isBlank(group)) {
             return false;
         }
 
@@ -452,14 +469,14 @@ public class CaseManager extends KieFormManager {
             requestParams.put(HEADER_CASE_ROLES_GROUP_PARM, group);
 
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
 
             // perform query
             String result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(requestParams)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             return true;
@@ -469,14 +486,15 @@ public class CaseManager extends KieFormManager {
         }
     }
 
-    public JSONObject getCaseFile(String containerId, String caseID) throws ApsSystemException {
+    @Override
+    public JSONObject getCaseFile(KieBpmConfig config, String containerId, String caseID) throws ApsSystemException {
 
         JSONObject caseFile = null;
         Map<String, String> headersMap = new HashMap<>();
 
         String result;
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID)) {
             return caseFile;
         }
         try {
@@ -485,12 +503,12 @@ public class CaseManager extends KieFormManager {
             // add header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -509,11 +527,12 @@ public class CaseManager extends KieFormManager {
 
     }
 
-    public boolean postCaseFile(String containerId, String caseID, String data) throws ApsSystemException {
+    @Override
+    public boolean postCaseFile(KieBpmConfig config, String containerId, String caseID, String data) throws ApsSystemException {
 
         Map<String, String> headersMap = new HashMap<>();
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(data)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(data)) {
             return false;
         }
 
@@ -528,14 +547,14 @@ public class CaseManager extends KieFormManager {
             headersMap.put(HEADER_KEY_CONTENT_TYPE, HEADER_VALUE_JSON);
 
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
 
             // perform query
             String result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setPayload("" + datajs + "")
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             return true;
@@ -546,12 +565,13 @@ public class CaseManager extends KieFormManager {
 
     }
 
-    public boolean deleteCaseFile(String containerId, String caseID, String dataId) throws ApsSystemException {
+    @Override
+    public boolean deleteCaseFile(KieBpmConfig config, String containerId, String caseID, String dataId) throws ApsSystemException {
 
         Map<String, String> headersMap = new HashMap<>();
         Map<String, String> requestParams = new HashMap<>();
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(dataId)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(caseID) || StringUtils.isBlank(dataId)) {
             return false;
         }
 
@@ -564,14 +584,14 @@ public class CaseManager extends KieFormManager {
             requestParams.put(HEADER_CASE_FILE_DATA_ID_PARM, dataId);
 
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
 
             // perform query
             String result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(requestParams)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             return true;
@@ -582,14 +602,15 @@ public class CaseManager extends KieFormManager {
 
     }
 
-    public JSONObject getProcessInstanceByCorrelationKey(String correlationKey) throws ApsSystemException {
+    @Override
+    public JSONObject getProcessInstanceByCorrelationKey(KieBpmConfig config, String correlationKey) throws ApsSystemException {
 
         JSONObject processInstance = null;
         Map<String, String> headersMap = new HashMap<>();
 
         String result;
 
-        if (!super.getConfig().getActive() || StringUtils.isBlank(correlationKey)) {
+        if (!config.getActive() || StringUtils.isBlank(correlationKey)) {
             return processInstance;
         }
         try {
@@ -598,12 +619,12 @@ public class CaseManager extends KieFormManager {
             // add header
             headersMap.put(HEADER_KEY_ACCEPT, HEADER_VALUE_JSON);
             // generate client from the current configuration
-            KieClient client = super.getCurrentClient();
+            KieClient client = KieApiUtil.getClientFromConfig(config);
             // perform query
             result = (String) new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
-                    .setDebug(super.getConfig().getDebug())
+                    .setDebug(config.getDebug())
                     .doRequest();
 
             if (!result.isEmpty()) {
@@ -621,25 +642,4 @@ public class CaseManager extends KieFormManager {
         return processInstance;
 
     }
-
-    public String getContainerId() {
-        return containerId;
-    }
-
-    public void setContainerId(String containerId) {
-        this.containerId = containerId;
-    }
-
-    public String getCaseID() {
-        return caseID;
-    }
-
-    public void setCaseID(String caseID) {
-        this.caseID = caseID;
-    }
-
-//    private KieBpmConfig config;
-    private String containerId;
-    private String caseID;
-
 }

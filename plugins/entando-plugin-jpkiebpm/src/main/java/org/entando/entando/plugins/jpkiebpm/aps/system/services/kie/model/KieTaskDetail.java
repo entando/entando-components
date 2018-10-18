@@ -191,8 +191,26 @@ public class KieTaskDetail {
     public void setBusinessAdmins(KieBusinessAdmins businessAdmins) {
         this.businessAdmins = businessAdmins;
     }
+    
+    public String getTaskInputData() {
+		return taskInputData;
+	}
 
-    @XmlElement(name = "task-id")
+	public void setTaskInputData(String taskInputData) {
+		this.taskInputData = taskInputData;
+	}
+
+	public String getTaskOutputData() {
+		return taskOutputData;
+	}
+
+	public void setTaskOutputData(String taskOutputData) {
+		this.taskOutputData = taskOutputData;
+	}
+
+
+
+	@XmlElement(name = "task-id")
     private Long id;
 
     @XmlElement(name = "task-priority")
@@ -248,8 +266,13 @@ public class KieTaskDetail {
 
     @XmlElement(name = "business-admins")
     private KieBusinessAdmins businessAdmins;
-
-
+    
+    @XmlElement(name = "task-input-data")
+    private String taskInputData;
+    
+    @XmlElement(name = "task-output-data")
+    private String taskOutputData;
+    
     @XmlRootElement(name = "potential-owners")
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class KiePotentialOwners {
@@ -302,4 +325,6 @@ public class KieTaskDetail {
 
 
     }
+    
+    
 }

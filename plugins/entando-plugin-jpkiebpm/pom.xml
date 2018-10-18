@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-plugins-parent</artifactId>
         <groupId>org.entando.entando.plugins</groupId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>5.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>entando-plugin-jpkiebpm</artifactId>
     <groupId>org.entando.entando.plugins</groupId>
@@ -71,14 +71,14 @@
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jprestapi</artifactId>
-            <version>5.1.0-SNAPSHOT</version>
+            <version>5.0.1-SNAPSHOT</version>
             <type>war</type>
         </dependency>
 
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jprestapi</artifactId>
-            <version>5.1.0-SNAPSHOT</version>
+            <version>5.0.1-SNAPSHOT</version>
             <type>jar</type>
             <classifier>classes</classifier>
             <scope>provided</scope>
@@ -87,7 +87,7 @@
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jprestapi</artifactId>
-            <version>5.1.0-SNAPSHOT</version>
+            <version>5.0.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>test</scope>
             <classifier>tests</classifier>
@@ -99,7 +99,31 @@
             <version>2.13.0</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.kie</groupId>
+            <artifactId>kie-api</artifactId>
+            <version>7.8.0.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kie.server</groupId>
+            <artifactId>kie-server-client</artifactId>
+            <version>7.8.0.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.6</version>
+        </dependency>
+        
     </dependencies>
-
-
+    
 </project>

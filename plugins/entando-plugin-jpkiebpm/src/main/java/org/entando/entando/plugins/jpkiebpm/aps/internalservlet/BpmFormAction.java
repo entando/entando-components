@@ -21,19 +21,6 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -42,21 +29,44 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.BaseAction;
+import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class BpmFormAction extends BaseAction {
 
-	private static final Logger _logger = LoggerFactory.getLogger(BpmFormAction.class);
+	private static final Logger logger = LoggerFactory.getLogger(BpmFormAction.class);
 	private static final String PROP_NAME_PROCESS_ID = "processId";
 	private static final String PROP_NAME_CONTAINER_ID = "containerId";
+	private IKieFormManager formManager;
+	private II18nManager i18nManager;
+	private String containerId;
+	private String processId;
+    private String knowledgeSourceId;
+
+	private KieProcessFormQueryResult form;
+
+	private Map<String, String> formParams = new HashMap<>();
 
 	public String viewForm() {
 		try {
 			this.applyConfigParams();
-			KieProcessFormQueryResult form = this._formManager.getProcessForm(this.getContainerId(), this.getProcessId());
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourceId);
+			KieProcessFormQueryResult form = this.formManager.getProcessForm(config, this.getContainerId(), this.getProcessId());
 			this.setForm(form);
 			this.setLabels(form);
 		} catch (Throwable t) {
-			_logger.error("error in view form", t);
+			logger.error("error in view form", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -79,19 +89,13 @@ public class BpmFormAction extends BaseAction {
 				Object obj = FormToBpmHelper.validateField(this.getForm(), key, value);
 				if (null != obj) {
 					toBpm.put(key, obj);
-					//                    System.out.println("ADDING " +
-					//                            key + ":" +
-					//                            obj + " of class " +
-					//                            obj.getClass().getCanonicalName());
 				} else {
-					//                    System.out.println("could not validate " +
-					//                            key +":" + value);
 					this.addFieldError(key, this.getText("jpkiebpm.input.invalid", new String[]{value}));
 				}
 
 			}
 		} catch (Throwable t) {
-			_logger.error("error validating form!", t);
+			logger.error("error validating form!", t);
 		}
 		return toBpm;
 	}
@@ -99,7 +103,8 @@ public class BpmFormAction extends BaseAction {
 	public String postForm() {
 		try {
 			// reload the form
-			KieProcessFormQueryResult form = this._formManager.getProcessForm(this.getContainerId(), this.getProcessId());
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourceId);
+			KieProcessFormQueryResult form = formManager.getProcessForm(config, this.getContainerId(), this.getProcessId());
 			this.setForm(form);
 			// validate
 			Map<String, Object> toBpm = validateForm();
@@ -108,11 +113,11 @@ public class BpmFormAction extends BaseAction {
 				return INPUT;
 			}
 			// submit form
-			String result = this.getFormManager().startProcessSubmittingForm(this.getForm(), this.getContainerId(), this.getProcessId(), toBpm);
+			String result = formManager.startProcessSubmittingForm(config, this.getForm(), this.getContainerId(), this.getProcessId(), toBpm);
 
 
 		} catch (Throwable t) {
-			_logger.error("error in post form", t);
+			logger.error("error in post form", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -164,36 +169,36 @@ public class BpmFormAction extends BaseAction {
 				this.setContainerId(containerId);
 			} else {
 				//TODO add better log
-				_logger.warn("Found an empty widget configuration");
+				logger.warn("Found an empty widget configuration");
 			}
 		} else {
 			//TODO add better log
-			_logger.warn("No configuration found for widget");
+			logger.warn("No configuration found for widget");
 		}
 	}
 
 	protected IKieFormManager getFormManager() {
-		return _formManager;
+		return formManager;
 	}
 
 	public void setFormManager(IKieFormManager formManager) {
-		this._formManager = formManager;
+		this.formManager = formManager;
 	}
 
 	public String getContainerId() {
-		return _containerId;
+		return containerId;
 	}
 
 	public void setContainerId(String containerId) {
-		this._containerId = containerId;
+		this.containerId = containerId;
 	}
 
 	public String getProcessId() {
-		return _processId;
+		return processId;
 	}
 
 	public void setProcessId(String processId) {
-		this._processId = processId;
+		this.processId = processId;
 	}
 
 	public KieProcessFormQueryResult getForm() {
@@ -220,13 +225,11 @@ public class BpmFormAction extends BaseAction {
 		this.i18nManager = i18nManager;
 	}
 
-	private IKieFormManager _formManager;
-	private II18nManager i18nManager;
+    public String getKnowledgeSourceId() {
+        return knowledgeSourceId;
+    }
 
-	private String _containerId;
-	private String _processId;
-
-	private KieProcessFormQueryResult form;
-
-	private Map<String, String> formParams = new HashMap<>();
+    public void setKnowledgeSourceId(String knowledgeSourceId) {
+        this.knowledgeSourceId = knowledgeSourceId;
+    }
 }

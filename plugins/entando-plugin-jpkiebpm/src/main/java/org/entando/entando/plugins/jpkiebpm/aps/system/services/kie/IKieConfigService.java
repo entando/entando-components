@@ -24,8 +24,6 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
 import org.springframework.validation.BindingResult;
 
@@ -37,7 +35,7 @@ import java.util.Map;
  */
 public interface IKieConfigService {
 
-    public List<KieServerConfigDto> getConfigs(/*RestListRequest requestList*/);
+    public List<KieServerConfigDto> getConfigs();
 
     public KieServerConfigDto getConfig(String configCode);
 
@@ -51,12 +49,6 @@ public interface IKieConfigService {
 
     public Map<String, String> testAllServerConfigs();
 
-    public List<KieContainer> getContainerList();
-
-    public List<KieProcess> getProcessDefinitionsList();
-
     public KieBpmConfig buildConfig(KieServerConfigDto serverConfigDto);
-
-    public void setConfig(KieServerConfigDto configDto);
 
 }

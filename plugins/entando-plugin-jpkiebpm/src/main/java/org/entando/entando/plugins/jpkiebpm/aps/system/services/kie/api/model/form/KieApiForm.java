@@ -23,6 +23,7 @@ public class KieApiForm {
     private String containerId;
     private String processId;
     private String taskId;
+    private String configId;
 
     private static final Logger _logger = LoggerFactory.getLogger(KieApiForm.class);
 
@@ -82,4 +83,11 @@ public class KieApiForm {
         this.taskId = taskId;
     }
 
+    public String getConfigId() {
+        return configId;
+    }
+
+    public void setConfigId(String configId) {
+        this.configId = configId;
+    }
 }

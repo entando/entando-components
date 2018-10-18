@@ -5,6 +5,8 @@
 <jpkie:datatable widgetConfigInfoIdVar="configId"/>
 <c:set var="id" value="${configId}"/>
 
+
+<script src="<wp:resourceURL />administration/js/jquery-2.2.4.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery.validate.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/additional-methods.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery-ui.js"></script>
@@ -88,9 +90,9 @@
 
 
     /* Modal Form*/
-    function openModalForm(event, rowData, context) {
+    function openModalForm(event, configId, rowData, context) {
 
-        var url = context + "taskForm.json?containerId=" + rowData.containerId + "&taskId=" + rowData.id;
+        var url = context + "taskForm.json?configId=" + configId+"&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
 
         $.get(url, function (data) {
             $('#bpm-task-list-modal-form').empty();
@@ -116,6 +118,8 @@
                 postData.task.fields.push({name: "processId", value: rowData.processDefinitionId});
                 postData.task.fields.push({name: "containerId", value: rowData.containerId});
                 postData.task.fields.push({name: "taskId", value: rowData.id});
+                postData.task.fields.push({name: "configId", value: configId});
+
                 var action = context + "taskForm.json";
                 //console.log(postData);
 
@@ -168,7 +172,7 @@
             });
         };
 
-        var configId = "${id}";
+        var configId =${configId};
 
         var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
         var url = context + "tasks.json?configId=${id}";
@@ -181,7 +185,7 @@
                 html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Complete</button>',
                 onClick: function (ev, data) {
 
-                    openModalForm(ev, data, context);
+                    openModalForm(ev, configId, data, context);
                 }
             },
             {

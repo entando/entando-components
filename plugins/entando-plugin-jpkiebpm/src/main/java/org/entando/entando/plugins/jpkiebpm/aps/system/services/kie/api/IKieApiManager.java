@@ -23,29 +23,30 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api;
 
-import java.util.List;
-import java.util.Properties;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBProcessInstanceList;
-
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputForm;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
+
+import java.util.List;
+import java.util.Properties;
 
 public interface IKieApiManager {
 
     KieApiForm getBpmForm(Properties properties) throws Throwable;
 
-    void postBpmForm(KieApiInputForm form) throws Throwable;
+    void postBpmForm(KieBpmConfig bpmConfig, KieApiInputForm form) throws Throwable;
 
-    List<KieProcessInstance> getInstanceProcessesList(Properties properties) throws Throwable;
+    List<KieProcessInstance> getInstanceProcessesList(KieBpmConfig bpmConfig, Properties properties) throws Throwable;
 
-    void postSignal(KieApiSignal signal) throws Throwable;
+    void postSignal(KieBpmConfig bpmConfig, KieApiSignal signal) throws Throwable;
 
-    void startNewProcess(KieApiProcessStart process) throws Throwable;
+    void startNewProcess(KieBpmConfig bpmConfig, KieApiProcessStart process) throws Throwable;
 
-    public List<KieProcessInstance> processList(Properties properties) throws Throwable;
+    public List<KieProcessInstance> processList(KieBpmConfig bpmConfig, Properties properties) throws Throwable;
 
-    public JAXBProcessInstanceList processInstancesDataTable(Properties properties) throws Throwable;
+    public JAXBProcessInstanceList processInstancesDataTable(KieBpmConfig bpmConfig, Properties properties) throws Throwable;
 }
