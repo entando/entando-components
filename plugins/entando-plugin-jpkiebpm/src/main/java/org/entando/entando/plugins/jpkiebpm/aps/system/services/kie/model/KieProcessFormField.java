@@ -24,6 +24,7 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,11 +73,24 @@ public class KieProcessFormField {
 		}
 		for (int i = 0; i < properties.size(); i++) {
 			KieProcessProperty property = properties.get(i);
-			if (property.getName().equals(name)) {
+			if (property.getName().equalsIgnoreCase(name)) {
 				return property;
 			}
 		}
 		return null;
+	}
+
+	public void addProperty(String name, Object value) {
+
+		if(this.properties == null) {
+			this.properties = new ArrayList<>();
+		}
+
+		KieProcessProperty prop = new KieProcessProperty();
+		prop.setName(name);
+		prop.setValue(value.toString());
+
+		this.properties.add(prop);
 	}
 
 	public List<KieProcessProperty> getProperties() {
@@ -97,4 +111,12 @@ public class KieProcessFormField {
 	private String type;
 	@XmlElement(name = "property")
 	private List<KieProcessProperty> properties;
+	
+	@Override
+	public String toString() {
+		return "KieProcessFormField [id=" + id + ", name=" + name + ", position=" + position + ", type=" + type
+				+ ", properties=" + properties + "]";
+	}
+	
+	
 }

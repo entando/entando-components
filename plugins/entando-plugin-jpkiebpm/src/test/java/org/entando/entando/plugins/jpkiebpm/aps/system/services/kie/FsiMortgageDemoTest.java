@@ -23,26 +23,17 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
+import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.TestKieFormManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TEST_ENABLED;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.TestKieFormManager;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager.TASK_STATES.COMPLETED;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstancesQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
 
-/**
- *
- * @author Entando
- */
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager.TASK_STATES.COMPLETED;
+
 public class FsiMortgageDemoTest extends TestKieFormManager {
 
      @Override
@@ -59,122 +50,114 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
 
         assertEquals(expected, client.getBaseUrl());
         // get manager
-        _formManager = (IKieFormManager) this.getService(IKieFormManager.BEAN_NAME_ID);
+        formManager = (IKieFormManager) this.getService(IKieFormManager.BEAN_NAME_ID);
     }
 
 
     // SIGNAL PROCESS WITH ACCOUNT NAME
     public void testSendSignal() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
         final String SIGNAL = "account_registered";
-
+        KieBpmConfig config = getConfigForTests();
         try {
             String containerId = makeSureContainerListExists();
             Long processId = makeSureProcessInstancesListExists();
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
 
-            boolean delivered = _formManager.sendSignal(containerId, String.valueOf(processId), SIGNAL, "\"ddoyle\"", null);
+            boolean delivered = formManager.sendSignal(config, containerId, String.valueOf(processId), SIGNAL, "\"ddoyle\"", null);
             assertTrue(delivered);
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
         }
     }
 
     // GET ENRICHMENT DOCUMENT HUMAN TASK
     public void testHumanTaskList() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
         Map<String, String> opt = new HashMap<String, String>();
 
         opt.put("user", "ddoyle");
 
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
             // invoke the manager
-            _tasks = _formManager.getHumanTaskList("", opt);
-            assertNotNull(_tasks);
+            List<KieTask> tasks = formManager.getHumanTaskList(config, "", opt);
+            assertNotNull(tasks);
             if (TEST_ENABLED) {
-                assertFalse(_tasks.isEmpty());
+                assertFalse(tasks.isEmpty());
             } else {
-                assertTrue(_tasks.isEmpty());
+                assertTrue(tasks.isEmpty());
             }
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
         }
     }
 
 
     public void testProcessDelete() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
 
         try {
             String containerId = makeSureContainerListExists();
             Long processId = makeSureProcessInstancesListExists();
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+            
 
             // test
-            _formManager.deleteProcess(containerId, String.valueOf(processId), null);
+            formManager.deleteProcess(config, containerId, String.valueOf(processId), null);
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+           
         }
     }
 
     //  START NEXT ENRICHMENT DOCUMENT HUMAN TASK (x2)
     public void testSetTaskState() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
         Map<String, String> opt = new HashMap<String, String>();
         String containerId = null;
-        Long taskId = null;
 
         opt.put("user", "ddoyle");
         try {
             containerId = makeSureContainerListExists();
-            taskId = makeSureTasksListExists();
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            List<KieTask> tasks = formManager.getHumanTaskList(config, "", opt);
+            Long taskId = tasks.get(0).getId();
+
             // test
-            _formManager.setTaskState(containerId, String.valueOf(taskId), KieFormManager.TASK_STATES.STARTED, null, opt);
+            formManager.setTaskState(config, containerId, String.valueOf(taskId), KieFormManager.TASK_STATES.STARTED, null, opt);
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+           
         }
     }
 
 
     public void testGetHumanTaskDetail() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
         Map<String, String> opt = new HashMap<String, String>();
         String containerId = null;
-        Long taskId = null;
 
         opt.put("user", "ddoyle");
         try {
             containerId = makeSureContainerListExists();
-            taskId = makeSureTasksListExists();
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            List<KieTask> tasks = formManager.getHumanTaskList(config, "", opt);
+            Long taskId = tasks.get(0).getId();
+
             // test
-            KieTaskDetail form = _formManager.getTaskDetail(containerId, taskId, opt);
+            KieTaskDetail form = formManager.getTaskDetail(config, containerId, taskId, opt);
             assertNotNull(form);
 
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+           
         }
     }
 
     // COMPLETE ENRICH DOCUMENT TASK
     public void _testSubmitHumanFormTask() throws Throwable {
+        KieBpmConfig config = getConfigForTests();
         Map<String, String> reqParams = new HashMap<String, String>();
         String containerId = null;
         Long taskId = null;
@@ -191,116 +174,113 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
         input.put("lastModified", now.getTime());
         try {
             containerId = makeSureContainerListExists();
-            makeSureTasksListExists();
-            KieTask task = getTaskForTestById("Enrichment Upload Document","CreditDocuments");
+            List<KieTask> tasks = formManager.getHumanTaskList(config, "", null);
+
+            KieTask task = getTaskForTestById("Enrichment Upload Document","CreditDocuments", tasks);
             assertNotNull(task);
             taskId = task.getId();
-            _formManager.submitHumanFormTask(
-                    containerId, String.valueOf(taskId), KieFormManager.TASK_STATES.STARTED, reqParams, input);
+            formManager.submitHumanFormTask(config, containerId, String.valueOf(taskId), KieFormManager.TASK_STATES.STARTED, reqParams, input);
         } catch (Throwable t) {
             throw t;
         }
     }
 
     public void testHumanTaskListForAdmin() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
         Map<String, String> opt = new HashMap<String, String>();
 
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+
             // invoke the manager
-            _tasks = _formManager.getHumanTaskListForAdmin("Administrator", null);
-            assertNotNull(_tasks);
+            List<KieTask> tasks = formManager.getHumanTaskListForAdmin(config, "Administrator", null);
+            assertNotNull(tasks);
             if (TEST_ENABLED) {
-                assertFalse(_tasks.isEmpty());
+                assertFalse(tasks.isEmpty());
             } else {
-                assertTrue(_tasks.isEmpty());
+                assertTrue(tasks.isEmpty());
             }
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+           
         }
     }
     public void testHumanTaskListForLegalWorker() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
         Map<String, String> opt = new HashMap<String, String>();
 
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
-            // invoke the manager
-            _tasks = _formManager.getLegalWorkerTaskList(null);
-            assertNotNull(_tasks);
+            List<KieTask> tasks = formManager.getHumanTaskListForUser(config, KieBpmSystemConstants.LEGAL_WORKER, null);
+            assertNotNull(tasks);
             if (TEST_ENABLED) {
-                assertFalse(_tasks.isEmpty());
+                assertFalse(tasks.isEmpty());
             } else {
-                assertTrue(_tasks.isEmpty());
+                assertTrue(tasks.isEmpty());
             }
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+           
         }
     }
 
         public void _testGetCompleteEnrichmentDcumentApprovalTask() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
         Map<String, String> opt = new HashMap<String, String>();
 
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+
+            List<KieTask> tasks = formManager.getHumanTaskList(config, "", opt);
+
             // invoke the manager
-            _formManager.getCompleteEnrichmentDcumentApprovalTask("legalWorker",
+            formManager.getCompleteEnrichmentDcumentApprovalTask(config, "legalWorker",
                     "5fdf1ed1672f5358e70570bd7f50b163",
                     "77", COMPLETED, "review ok", null);
             if (TEST_ENABLED) {
-                assertFalse(_tasks.isEmpty());
+                assertFalse(tasks.isEmpty());
             } else {
-                assertTrue(_tasks.isEmpty());
+                assertTrue(tasks.isEmpty());
             }
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+           
         }
     }
     public void testHumanTaskListForUsers() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
         Map<String, String> opt = new HashMap<String, String>();
 
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+            
             // invoke the manager
-            _tasks = _formManager.getHumanTaskListForUser("ddoyle", null);
-            assertNotNull(_tasks);
+            List<KieTask> tasks = formManager.getHumanTaskListForUser(config, "ddoyle", null);
+            assertNotNull(tasks);
             if (TEST_ENABLED) {
-                assertFalse(_tasks.isEmpty());
+                assertFalse(tasks.isEmpty());
             } else {
-                assertTrue(_tasks.isEmpty());
+                assertTrue(tasks.isEmpty());
             }
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+           
         }
     }
 
 
     public void testGetProcessInstancesWithClientData() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
         Map<String, String> opt = new HashMap<>();
 
         opt.put("page", "0");
         opt.put("pageSize", "100");
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+            
             // invoke the manager
-            KieProcessInstancesQueryResult resp = _formManager.getProcessInstancesWithClientData(null, opt);
+            KieProcessInstancesQueryResult resp = formManager.getProcessInstancesWithClientData(config, null, opt);
             assertNotNull(resp);
             assertNotNull(resp.getInstances());
             assertFalse(resp.getInstances().isEmpty());
@@ -311,7 +291,7 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
         } catch(Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+           
         }
     }
 
@@ -331,31 +311,28 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
         return cfg;
     }
 
-    /**
-     * Make sure that a list of task with at least one element exists
-     * @return
-     * @throws Throwable
-     */
-    protected Long makeSureTasksListExists() throws Throwable {
-        if (null == _tasks
-                || _tasks.isEmpty()) {
-            testHumanTaskList();
-        }
-        assertFalse(_tasks.isEmpty());
-        return _tasks.get(0).getId();
-    }
-
+//    /**
+//     * Make sure that a list of task with at least one element exists
+//     * @return
+//     * @throws Throwable
+//     */
+//    protected Long makeSureTasksListExists(KieBpmConfig) throws Throwable {
+//
+//        List<KieTask> tasks = formManager.getHumanTaskList(config, "", opt);
+//
+//        assertFalse(tasks.isEmpty());
+//        return tasks.get(0).getId();
+//    }
+//
     /**
      *
-     * @param id
      * @return
      * @throws Throwable
      */
-    protected KieTask getTaskForTestById(String name, String subject) throws Throwable {
-        makeSureTasksListExists();
-        for (KieTask task: _tasks) {
-            if (task.getName().equals(name)
-                    || task.getSubject().equals(subject)) {
+    protected KieTask getTaskForTestById(String name, String subject, List<KieTask> tasks) throws Throwable {
+
+        for (KieTask task: tasks) {
+            if (task.getName().equals(name) || task.getSubject().equals(subject)) {
                 return task;
             }
         }
@@ -363,8 +340,6 @@ public class FsiMortgageDemoTest extends TestKieFormManager {
         return null;
     }
 
-    protected List<KieTask> _tasks;
-    private IKieFormManager _formManager;
 
 
 }

@@ -61,10 +61,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IB
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.model.DatatableWidgetConfigDto;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmFormWidgetAction;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
@@ -107,7 +104,6 @@ public class KieBpmService implements IKieBpmService {
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
     @Autowired
-    @Qualifier("jpkiebpmsCaseManager")
     private IKieFormManager formManager;
 
     @Autowired
@@ -223,7 +219,7 @@ public class KieBpmService implements IKieBpmService {
     }
 
     @Override
-    public DatatableWidgetConfigDto getDataTableWIdgetConfig(int configId) {
+    public DatatableWidgetConfigDto getDataTableWidgetConfig(int configId) {
         try {
             BpmWidgetInfo info = this.getBpmWidgetInfoManager().getBpmWidgetInfo(configId);
             return this.getDtoBuilder().convert(info);
@@ -234,7 +230,7 @@ public class KieBpmService implements IKieBpmService {
     }
 
     @Override
-    public DatatableWidgetConfigDto updateDataTableWIdgetConfig(DatatableWidgetConfigRequest req) {
+    public DatatableWidgetConfigDto updateDataTableWidgetConfig(DatatableWidgetConfigRequest req) {
         try {
             BpmWidgetInfo info = this.storeWidgetInfo(req);
             DatatableWidgetConfigDto dto = this.getDtoBuilder().convert(info);
@@ -247,7 +243,7 @@ public class KieBpmService implements IKieBpmService {
     }
 
     @Override
-    public DatatableWidgetConfigDto deleteDataTableWIdgetConfig(int configId) {
+    public DatatableWidgetConfigDto deleteDataTableWidgetConfig(int configId) {
         try {
             BpmWidgetInfo info = this.getBpmWidgetInfoManager().getBpmWidgetInfo(configId);
             this.getBpmWidgetInfoManager().deleteBpmWidgetInfo(configId);
@@ -261,7 +257,7 @@ public class KieBpmService implements IKieBpmService {
     }
 
     @Override
-    public DatatableWidgetConfigDto updateDataTypeWIdgetConfig(DatatableWidgetConfigRequest req) {
+    public DatatableWidgetConfigDto updateDataTypeWidgetConfig(KieBpmConfig config, DatatableWidgetConfigRequest req) {
         try {
             BpmWidgetInfo info = this.storeWidgetInfo(req);
             DatatableWidgetConfigDto dto = this.getDtoBuilder().convert(info);
@@ -269,7 +265,7 @@ public class KieBpmService implements IKieBpmService {
             dto.setContainerId(req.getContainerId());
             dto.setProcessId(req.getProcessId());
             dto.setKnowledgeSourceId(req.getKnowledgeSourceId());
-            this.createDataType(dto);
+            this.createDataType(config, dto);
             this.updateWidgetConfiguration(dto);
             return dto;
         } catch (Throwable t) {
@@ -279,9 +275,9 @@ public class KieBpmService implements IKieBpmService {
     }
 
     @Override
-    public DatatableWidgetConfigDto chooseForm() {
+    public DatatableWidgetConfigDto chooseForm(KieBpmConfig config) {
         try {
-            return this.loadFieldIntoDatatableFromBpm();
+            return this.loadFieldIntoDatatableFromBpm(config);
         } catch (Throwable t) {
             logger.error("error in choose form", t);
             throw new RestServerError("error in chose form", t);
@@ -289,9 +285,9 @@ public class KieBpmService implements IKieBpmService {
     }
 
     @Override
-    public DatatableWidgetConfigDto chooseProcessForm() {
+    public DatatableWidgetConfigDto chooseProcessForm(KieBpmConfig config) {
         try {
-            return this.loadFieldIntoDatatableProcessFromBpm();
+            return this.loadFieldIntoDatatableProcessFromBpm(config);
         } catch (Throwable t) {
             logger.error("error in choose form", t);
             throw new RestServerError("error in chose form", t);
@@ -351,19 +347,19 @@ public class KieBpmService implements IKieBpmService {
         }
     }
 
-    private DatatableWidgetConfigDto loadFieldIntoDatatableFromBpm() throws ApsSystemException {
+    private DatatableWidgetConfigDto loadFieldIntoDatatableFromBpm(KieBpmConfig config) throws ApsSystemException {
         DatatableWidgetConfigDto info = null;
         HashMap<String, String> opt = new HashMap<>();
         opt.put("user", DEMO_USER);
-        List<KieTask> task = formManager.getHumanTaskList(null, opt);
+        List<KieTask> task = formManager.getHumanTaskList(config, null, opt);
         if (!task.isEmpty()) {
             info = this.loadDataIntoFieldDatatable(task);
         }
         return info;
     }
 
-    private DatatableWidgetConfigDto loadFieldIntoDatatableProcessFromBpm() throws ApsSystemException {
-        List<KieProcess> processes = formManager.getProcessDefinitionsList();
+    private DatatableWidgetConfigDto loadFieldIntoDatatableProcessFromBpm(KieBpmConfig config) throws ApsSystemException {
+        List<KieProcess> processes = formManager.getProcessDefinitionsList(config);
         DatatableWidgetConfigDto dto = new DatatableWidgetConfigDto();
         if (!processes.isEmpty()) {
             dto = this.loadDataIntoFieldDatatable(processes);
@@ -416,12 +412,11 @@ public class KieBpmService implements IKieBpmService {
         return fieldsToAdd;
     }
 
-    private void createDataType(DatatableWidgetConfigDto dto) throws Exception {
+    private void createDataType(KieBpmConfig config, DatatableWidgetConfigDto dto) throws Exception {
         String containerId = dto.getContainerId(),
                 processId = dto.getProcessId();
         String title = containerId;
-        KieProcessFormQueryResult kpfr = this.getFormManager()
-                .getProcessForm(containerId, processId);
+        KieProcessFormQueryResult kpfr = this.getFormManager().getProcessForm(config, containerId, processId);
 
         //add missing fields FIXME this should be in the form retrieved
         //kpfr = FSIDemoHelper.addMissinFields(kpfr);
@@ -441,7 +436,7 @@ public class KieBpmService implements IKieBpmService {
             entityType.setTypeDescription(processId + "_" + containerId);
             this.addAttributesToEntityType(entityType, kpfr);
 
-            List<KieProcess> processes = this.getFormManager().getProcessDefinitionsList();
+            List<KieProcess> processes = this.getFormManager().getProcessDefinitionsList(config);
             for (KieProcess proc : processes) {
                 if (proc.getProcessId().equalsIgnoreCase(processId)) {
                     title = proc.getProcessName();
@@ -507,7 +502,7 @@ public class KieBpmService implements IKieBpmService {
     }
 
     private void addAttributeToEntityType(IApsEntity entityType, KieProcessFormField field) {
-        if (field.getType().equalsIgnoreCase("InputText")) {
+        if (field.getType().equalsIgnoreCase("TextBox") || field.getType().equalsIgnoreCase("InputText")) {
             MonoTextAttribute text = (MonoTextAttribute) this.getAttributePrototype("Monotext");
             text.setName(field.getName());
             text.setDefaultLangCode(this.getLangCode());
@@ -516,8 +511,8 @@ public class KieBpmService implements IKieBpmService {
             text.setRequired(req);
             entityType.addAttribute(text);
         }
-        if (field.getType().equalsIgnoreCase("InputTextInteger")
-                || field.getType().equalsIgnoreCase("InputTextFloat")) {
+        if (field.getType().equalsIgnoreCase("IntegerBox") || field.getType().equalsIgnoreCase("InputTextInteger")
+                || field.getType().equalsIgnoreCase("InputTextFloat") || field.getType().equalsIgnoreCase("FloatBox")) {
             NumberAttribute number = (NumberAttribute) this.getAttributePrototype("Number");
             number.setName(field.getName());
             number.setDefaultLangCode(this.getLangCode());

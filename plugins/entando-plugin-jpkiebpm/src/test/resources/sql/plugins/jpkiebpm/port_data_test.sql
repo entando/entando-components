@@ -19,3 +19,18 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_c
       </entry>
    </kieBpmConfigeMap>
 </kiaBpmConfigFactory>');
+
+INSERT INTO widgetcatalog(
+            code, titles, parameters, plugincode, parenttypecode, defaultconfig,
+            locked, maingroup)
+    VALUES ('bpm-datatype-form', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">PAM-Form by DataType</property>
+<property key="it">PAM-Form by DataType</property>
+</properties>', '<config>
+	<parameter name="dataTypeCode">Data Type Code</parameter>
+	<parameter name="dataUxId">Data Ux ID</parameter>
+	<parameter name="widgetInfoId">Widget Info ID</parameter>
+	<action name="jpkiebpmBpmFormWidgetViewerConfig"/>
+</config>', 'jpkiebpm', '', '',
+            1, '');

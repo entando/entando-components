@@ -47,10 +47,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.fo
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.NullFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,7 +112,10 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                 final String processId = config.getProperty("processId");
                 final String overrideList = config.getProperty("overrides");
                 String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
-                KieProcessFormQueryResult processForm = this.getKieFormManager().getProcessForm(containerId, processId);
+
+                //TODO validate this
+                KieBpmConfig bpmConfig = kieFormManager.getKieServerConfigurations().get(configId);
+                KieProcessFormQueryResult processForm = this.getKieFormManager().getProcessForm(bpmConfig, containerId, processId);
                 if (null == processForm) {
                     String msg = String.format("No form found with containerId %s and processId %s does not exist", containerId, processId);
                     throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
@@ -133,11 +133,12 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     }
 
     @Override
-    public void postBpmForm(final KieApiInputForm form) throws ApiException, ApsSystemException {
+    public void postBpmForm(KieBpmConfig config , final KieApiInputForm form) throws ApiException, ApsSystemException {
         if (null == form) {
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Form null", Response.Status.CONFLICT);
         }
-        KieProcessFormQueryResult kieForm = this.getKieFormManager().getProcessForm(form.getContainerId(), form.getProcessId());
+
+        KieProcessFormQueryResult kieForm = this.getKieFormManager().getProcessForm(config, form.getContainerId(), form.getProcessId());
         if (null == kieForm) {
             String msg = String.format("No form found with container_id '%s' and process_id '%s'", form.getContainerId(), form.getProcessId());
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
@@ -152,16 +153,16 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         if (!validationResult.isEmpty()) {
             throw new ApiException(validationResult);
         }
-        this.getKieFormManager().startProcessSubmittingForm(kieForm, form.getContainerId(), form.getProcessId(), toBpm);
+        this.getKieFormManager().startProcessSubmittingForm(config, kieForm, form.getContainerId(), form.getProcessId(), toBpm);
 
     }
 
     @Override
-    public List<KieProcessInstance> getInstanceProcessesList(Properties properties) throws Throwable {
+    public List<KieProcessInstance> getInstanceProcessesList(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
         String processId = properties.getProperty("processId");
 
         try {
-            List<KieProcessInstance> list = this.getKieFormManager().getProcessInstancesList(processId, 0, 5000);
+            List<KieProcessInstance> list = this.getKieFormManager().getProcessInstancesList(bpmConfig, processId, 0, 5000);
             return list;
         } catch (ApsSystemException t) {
             String msg = String.format("No error getting the list of processes of type '{}'", processId);
@@ -170,7 +171,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     }
 
     @Override
-    public List<KieProcessInstance> processList(Properties properties) throws Throwable {
+    public List<KieProcessInstance> processList(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
         final String page = properties.getProperty("page");
         final String pageSize = properties.getProperty("pageSize");
         Map<String, String> opt = new HashMap<String, String>();
@@ -183,7 +184,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                 opt.put("pageSize", pageSize);
             }
             List<KieProcessInstance> list
-                    = this.getKieFormManager().getAllProcessInstancesList(opt);
+                    = this.getKieFormManager().getAllProcessInstancesList(bpmConfig, opt);
             return list;
         } catch (ApsSystemException t) {
             logger.error("Failed to get process list in kie ",t);
@@ -193,7 +194,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     }
 
     @Override
-    public JAXBProcessInstanceList processInstancesDataTable(Properties properties) throws Throwable {
+    public JAXBProcessInstanceList processInstancesDataTable(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
         final String pageString = properties.getProperty("page");
         final String pageSizeString = properties.getProperty("pageSize");
         final String configId = properties.getProperty("configId");
@@ -219,7 +220,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                         }
                         final JAXBProcessInstanceList processList = new JAXBProcessInstanceList();
                         this.setElementDatatableFieldDefinition(config, processList);
-                        this.setElementList(config, processList);
+                        this.setElementList(bpmConfig, config, processList);
                         processList.setContainerId(config.getProperty("containerId"));
                         processList.setProcessId(config.getProperty("processId"));
                         return processList;
@@ -280,18 +281,18 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         return fieldMandatory.containsKey(fieldName);
     }
 
-    private void setElementList(final ApsProperties config, final JAXBProcessInstanceList processList) throws ApsSystemException {
+    private void setElementList(KieBpmConfig bpmConfig, final ApsProperties config, final JAXBProcessInstanceList processList) throws ApsSystemException {
         final String groups = config.getProperty("groups") != null ? config.getProperty("groups").replace(" ", "") : "";
         final String processId = config.getProperty("processId");
         final List<JAXBProcessInstance> list = new ArrayList<>();
-        final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesList(processId, 0, 5000);
+        final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesList(bpmConfig, processId, 0, 5000);
         for (final KieProcessInstance process : rawList) {
             list.add(new JAXBProcessInstance(process));
         }
         processList.setList(list);
     }
 
-    public JAXBProcessInstanceListPlus processInstancesDataTablePlus(Properties properties) throws Throwable {
+    public JAXBProcessInstanceListPlus processInstancesDataTablePlus(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
         final String pageString = properties.getProperty("page");
         final String pageSizeString = properties.getProperty("pageSize");
         final String configId = properties.getProperty("configId");
@@ -331,7 +332,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                     }
                     final JAXBProcessInstanceListPlus processList = new JAXBProcessInstanceListPlus();
                     this.setElementDatatableFieldDefinition(config, processList);
-                    this.setElementList(config, processList, procIstId, opt);
+                    this.setElementList(bpmConfig, config, processList, procIstId, opt);
                     processList.setContainerId(config.getProperty("containerId"));
                     processList.setProcessId(config.getProperty("processId"));
                     return processList;
@@ -387,7 +388,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         });
     }
 
-    private void setElementList(ApsProperties config, JAXBProcessInstanceListPlus processList, String procIstId, Map<String, String> opt) {
+    private void setElementList(KieBpmConfig bpmConfig, ApsProperties config, JAXBProcessInstanceListPlus processList, String procIstId, Map<String, String> opt) {
         try {
             final String processId = config.getProperty("processId");
             final List<JAXBProcessInstancePlus> list = new ArrayList<>();
@@ -396,7 +397,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                 input = new HashMap<>();
                 input.put("processInstanceId", procIstId);
             }
-            final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesWithClientData(input, opt).getInstances();
+            final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesWithClientData(bpmConfig, input, opt).getInstances();
             for (final KieProcessInstance process : rawList) {
                 list.add(new JAXBProcessInstancePlus(process));
             }
@@ -458,14 +459,14 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     }
 
     @Override
-    public void postSignal(KieApiSignal signalObj) throws Throwable {
-        this.getKieFormManager().sendSignal(signalObj.getContainerId(), signalObj.getProcessId(),
+    public void postSignal(KieBpmConfig bpmConfig, KieApiSignal signalObj) throws Throwable {
+        this.getKieFormManager().sendSignal(bpmConfig, signalObj.getContainerId(), signalObj.getProcessId(),
                 signalObj.getSignal(), signalObj.getAccountId(), null);
     }
 
     @Override
-    public void startNewProcess(KieApiProcessStart process) throws Throwable {
-        this.getKieFormManager().startNewProcess(process, null);
+    public void startNewProcess(KieBpmConfig bpmConfig, KieApiProcessStart process) throws Throwable {
+        this.getKieFormManager().startNewProcess(bpmConfig, process, null);
     }
 
     protected II18nManager getI18nManager() {

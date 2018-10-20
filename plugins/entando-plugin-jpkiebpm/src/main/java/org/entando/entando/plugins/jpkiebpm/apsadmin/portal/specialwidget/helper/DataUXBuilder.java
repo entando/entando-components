@@ -23,6 +23,7 @@ THE SOFTWARE.
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
+import com.agiletec.aps.util.FileTextReader;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
@@ -31,6 +32,7 @@ import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePicker;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.InputField;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +75,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.typeMapping.put("TextBox", "text");
         this.typeMapping.put("TextArea", "text");
         this.typeMapping.put("IntegerBox", "number");
+        this.typeMapping.put("CheckBox", "checkbox");
         this.typeMapping.put("DecimalBox", "number");
         this.typeMapping.put("DatePicker", "text");
         this.typeMapping.put("CheckBox", "text");
@@ -84,6 +87,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
 
         this.valueMapping.put("InputText", "$data.%s.text");
         this.valueMapping.put("InputTextInteger", "$data.%s.number");
+        this.valueMapping.put("CheckBox", "$data.%s.checkbox");
 
         //this.valueMapping.put("HTML", "$data.%s.text");
         this.valueMapping.put("TextBox", "$data.%s.text");
@@ -172,6 +176,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 inputFields.addAll(this.addFields(form));
             }
         }
+    }
 
         return inputFields;
     }

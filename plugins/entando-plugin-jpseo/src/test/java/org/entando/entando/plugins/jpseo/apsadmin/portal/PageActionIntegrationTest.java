@@ -39,7 +39,7 @@ import com.opensymphony.xwork2.Action;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 
-public class TestPageAction extends ApsAdminPluginBaseTestCase {
+public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 
 	@Override
 	protected void setUp() throws Exception {

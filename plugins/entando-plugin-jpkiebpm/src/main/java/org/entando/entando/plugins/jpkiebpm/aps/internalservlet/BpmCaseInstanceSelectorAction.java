@@ -23,61 +23,29 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
-import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.page.Widget;
-import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.apsadmin.system.BaseAction;
-import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
-import static com.opensymphony.xwork2.Action.SUCCESS;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.struts2.ServletActionContext;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author own_strong
- */
-public class BpmCaseInstanceSelectorAction extends BaseAction {
+import java.util.List;
+
+public class BpmCaseInstanceSelectorAction extends BpmCaseInstanceActionBase {
 
     private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceSelectorAction.class);
-    private CaseManager caseManager;
+
     private List<String> cases;
-    private String casePath;
-    private String knowledgeSourceId;
-    private String containerid;
-    private String channel;
-    private String channelPath;
 
     public String view() {
-        try {
-
-            String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
-            JSONObject frontEndCaseDataInjs = new JSONObject(frontEndCaseDataIn);
-            String channelIn = extractWidgetConfig("channel");
-            this.setChannel(channelIn);
-
-            this.setKnowledgeSourceId(frontEndCaseDataInjs.getString("knowledge-source-id"));
-            this.setContainerid(frontEndCaseDataInjs.getString("container-id"));
-            this.setChannelPath(this.getChannel());
-
-            this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
-            this.setCases(this.getCaseManager().getCaseInstancesList(this.getContainerid()));
-
-        } catch (ApsSystemException t) {
-            logger.error("Error getting the configuration parameter", t);
-            return FAILURE;
-        }
-
-        return SUCCESS;
+        return updateInstance();
     }
 
     public String selectCaseInstance() {
+        return updateInstance();
+    }
+
+    private String updateInstance() {
         try {
 
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
@@ -89,8 +57,8 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
             this.setContainerid(frontEndCaseDataInjs.getString("container-id"));
             this.setChannelPath(this.getChannel());
 
-            this.getCaseManager().setKieServerConfiguration(this.getKnowledgeSourceId());
-            this.setCases(this.getCaseManager().getCaseInstancesList(this.getContainerid()));
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
+            this.setCases(caseManager.getCaseInstancesList(config, this.getContainerid()));
 
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
@@ -98,42 +66,6 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
         }
 
         return SUCCESS;
-    }
-
-    protected String extractWidgetConfig(String paramName) {
-        String value = null;
-        try {
-            HttpServletRequest request = (null != this.getRequest()) ? this.getRequest() : ServletActionContext.getRequest();
-            RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
-            if (null != reqCtx) {
-                Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
-                if (null != widget) {
-                    ApsProperties config = widget.getConfig();
-                    if (null != config) {
-                        String widgetParam = config.getProperty(paramName);
-                        if (widgetParam != null && widgetParam.trim().length() > 0) {
-                            value = widgetParam.trim();
-                        }
-                    } else {
-                        value = "Null widget config";
-                        logger.error("Null widget config");
-                    }
-                } else {
-                    logger.error("Null widget");
-                }
-            }
-        } catch (Throwable t) {
-            throw new RuntimeException("Error extracting param " + paramName, t);
-        }
-        return value;
-    }
-
-    public CaseManager getCaseManager() {
-        return caseManager;
-    }
-
-    public void setCaseManager(CaseManager caseManager) {
-        this.caseManager = caseManager;
     }
 
     public List<String> getCases() {
@@ -143,45 +75,4 @@ public class BpmCaseInstanceSelectorAction extends BaseAction {
     public void setCases(List<String> cases) {
         this.cases = cases;
     }
-
-    public String getCasePath() {
-        return casePath;
-    }
-
-    public void setCasePath(String casePath) {
-        this.casePath = casePath;
-    }
-
-    public String getKnowledgeSourceId() {
-        return knowledgeSourceId;
-    }
-
-    public void setKnowledgeSourceId(String knowledgeSourceId) {
-        this.knowledgeSourceId = knowledgeSourceId;
-    }
-
-    public String getContainerid() {
-        return containerid;
-    }
-
-    public void setContainerid(String containerid) {
-        this.containerid = containerid;
-    }
-
-    public String getChannelPath() {
-        return channelPath;
-    }
-
-    public void setChannelPath(String channelPath) {
-        this.channelPath = channelPath;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
 }

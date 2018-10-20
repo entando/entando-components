@@ -2,11 +2,14 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util;
 
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import org.apache.commons.lang.StringUtils;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KIEAuthenticationCredentials;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieClient;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFields;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFieldset;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
@@ -45,9 +48,9 @@ public class KieApiUtil {
             final Map<String, KieFormOverride> overrideMap) {
 
         final KieApiFields fields = new KieApiFields();
-        final KieApiFieldset fieldset = new KieApiFieldset(processForm.getHolders().get(0).getId());
+        final KieApiFieldset fieldset = new KieApiFieldset(processForm.getHolders().get(0).getName());
 
-        if (null != processForm.getFields()) {
+        if (null != processForm.getFields() && !processForm.getFields().isEmpty()) {
             for (KieProcessFormField field : processForm.getFields()) {
                 fieldset.getFields().add(createField(field, ii18nManager, langCode, overrideMap));
             }
@@ -175,7 +178,7 @@ public class KieApiUtil {
     public static String getFieldProperty(List<KieProcessProperty> props, String property) {
         if (null != props && StringUtils.isNotBlank(property)) {
             for (KieProcessProperty prop : props) {
-                if (prop.getName().equals(property)) {
+                if (prop.getName().equalsIgnoreCase(property)) {
                     return prop.getValue();
                 }
             }
@@ -186,7 +189,7 @@ public class KieApiUtil {
     public static String getFieldProperty(KieProcessFormField field, String property) {
         if (null != field) {
             for (KieProcessProperty prop : field.getProperties()) {
-                if (prop.getName().equals(property)) {
+                if (prop.getName().equalsIgnoreCase(property)) {
                     return prop.getValue();
                 }
             }
@@ -201,5 +204,25 @@ public class KieApiUtil {
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.marshal(pObject, sw);
         return sw.toString();
+    }
+
+    /**
+     * Return a KIE CLient given the configuration
+     *
+     * @return
+     */
+    public static KieClient getClientFromConfig(KieBpmConfig config) {
+        KieClient client = null;
+        if (null != config) {
+            KIEAuthenticationCredentials credentials = new KIEAuthenticationCredentials(config.getUsername(), config.getPassword());
+            client = new KieClient();
+            client.setHostname(config.getHostname());
+            client.setPort(config.getPort());
+            client.setSchema(config.getSchema());
+            client.setWebapp(config.getWebapp());
+            client.setCredentials(credentials);
+            client.setTimeoutMsec(config.getTimeoutMsec());
+        }
+        return client;
     }
 }

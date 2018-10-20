@@ -23,33 +23,31 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services;
 
-import java.util.List;
-import static org.entando.entando.plugins.jpkiebpm.KieTestParameters.TEST_ENABLED;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author own_strong
- */
+import java.util.List;
+
 public class TestKieCaseManager extends TestKieFormManager {
+
+
+    protected List<String> caseInstancesList;
+    protected CaseManager caseManager;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        _caseManager = (CaseManager) this.getService("jpkiebpmsCaseManager");
+        caseManager = (CaseManager) this.getService("jpkiebpmsCaseManager");
     }
 
     public void testGetCasesDefinitions() throws Throwable {
-        KieBpmConfig current = _caseManager.getConfig();
 
+        KieBpmConfig current = super.getConfigForTests();
         try {
-            // update configuration to reflect test configuration
-            _caseManager.updateConfig(super.getConfigForTests());
             // invoke the manager
-            JSONObject _casesDefinitions = _caseManager.getCasesDefinitions(_containers.get(0).getContainerId());
+            JSONObject _casesDefinitions = caseManager.getCasesDefinitions(current, containers.get(0).getContainerId());
             assertNotNull(_casesDefinitions);
             if (TEST_ENABLED) {
                 assertFalse(_casesDefinitions.length() == 0);
@@ -59,39 +57,35 @@ public class TestKieCaseManager extends TestKieFormManager {
         } catch (Throwable t) {
             throw t;
         } finally {
-            _caseManager.updateConfig(current);
+
         }
     }
 
     public void testGetCaseInstancesList() throws Throwable {
-        KieBpmConfig current = _caseManager.getConfig();
+
+        KieBpmConfig current = super.getConfigForTests();
 
         try {
-            // update configuration to reflect test configuration
-            _caseManager.updateConfig(super.getConfigForTests());
             // invoke the manager
-            _caseInstancesList = _caseManager.getCaseInstancesList(_containers.get(0).getContainerId());
-            assertNotNull(_caseInstancesList);
+            caseInstancesList = caseManager.getCaseInstancesList(current, containers.get(0).getContainerId());
+            assertNotNull(caseInstancesList);
             if (TEST_ENABLED) {
-                assertFalse(_caseInstancesList.isEmpty());
+                assertFalse(caseInstancesList.isEmpty());
             } else {
-                assertTrue(_caseInstancesList.isEmpty());
+                assertTrue(caseInstancesList.isEmpty());
             }
         } catch (Throwable t) {
             throw t;
         } finally {
-            _caseManager.updateConfig(current);
         }
     }
 
     public void testGetMilestonesList() throws Throwable {
-        KieBpmConfig current = _caseManager.getConfig();
+        KieBpmConfig current = super.getConfigForTests();
 
         try {
-            // update configuration to reflect test configuration
-            _caseManager.updateConfig(super.getConfigForTests());
             // invoke the manager
-            JSONArray _MilestonesList = _caseManager.getMilestonesList(_containers.get(0).getContainerId(), _caseInstancesList.get(0));
+            JSONArray _MilestonesList = caseManager.getMilestonesList(current, containers.get(0).getContainerId(), caseInstancesList.get(0));
             assertNotNull(_MilestonesList);
             if (TEST_ENABLED) {
                 assertFalse(_MilestonesList == null);
@@ -101,10 +95,7 @@ public class TestKieCaseManager extends TestKieFormManager {
         } catch (Throwable t) {
             throw t;
         } finally {
-            _caseManager.updateConfig(current);
         }
     }
 
-    protected List<String> _caseInstancesList;
-    protected CaseManager _caseManager;
 }

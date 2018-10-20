@@ -28,7 +28,7 @@ import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
 /**
  * @author E.Santoboni
  */
-public class TestMetatagCatalogue extends BaseTestCase {
+public class MetatagCatalogueIntegrationTest extends BaseTestCase {
     
 	public void testLoadCatalogue() {
         IMetatagCatalog catalogue = super.getApplicationContext().getBean(JpseoSystemConstants.SEO_METATAG_CATALOG, IMetatagCatalog.class);
