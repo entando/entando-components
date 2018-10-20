@@ -12,6 +12,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
@@ -27,16 +28,27 @@ import java.util.List;
 
 public class KieFormOverrideAction extends BaseAction {
 
-	private static final Logger _logger = LoggerFactory.getLogger(KieFormOverrideAction.class);
-	public static final String PROP_NAME_PROCESS_ID = "processId";
-	public static final String PROP_NAME_CONTAINER_ID = "containerId";
+	private static final Logger logger = LoggerFactory.getLogger(KieFormOverrideAction.class);
+
+    private int strutsAction;
+    private KieFormOverride formModel;
+    private int id;
+    private String processPath;
+    private String field;
+    private String placeHolderOverride;
+    private String defaultValueOverride;
+
+    private IKieFormOverrideManager kieFormOverrideManager;
+    private IKieFormManager kieFormManager;
+    private IPageManager pageManager;
+
 
 	public String newModel() {
 		try {
 			this.setStrutsAction(ApsAdminSystemConstants.ADD);
 			this.setFormModel(new KieFormOverride());
 		} catch (Throwable t) {
-			_logger.error("error in new model", t);
+			logger.error("error in new model", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -65,7 +77,7 @@ public class KieFormOverrideAction extends BaseAction {
 			}
 
 		} catch (Throwable t) {
-			_logger.error("error in edit model", t);
+			logger.error("error in edit model", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -80,7 +92,7 @@ public class KieFormOverrideAction extends BaseAction {
 			}
 			this.setProcessPathToController(model);
 		} catch (Throwable t) {
-			_logger.error("error in edit model", t);
+			logger.error("error in edit model", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -101,7 +113,7 @@ public class KieFormOverrideAction extends BaseAction {
 
 			this.setField(this.getFormModel().getField());
 		} catch (Throwable t) {
-			_logger.error("error in choose field", t);
+			logger.error("error in choose field", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -114,7 +126,7 @@ public class KieFormOverrideAction extends BaseAction {
 			this.setPlaceHolderOverride(null);
 			this.setDefaultValueOverride(null);
 		} catch (Throwable t) {
-			_logger.error("error in change form", t);
+			logger.error("error in change form", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -126,7 +138,7 @@ public class KieFormOverrideAction extends BaseAction {
 			this.setPlaceHolderOverride(null);
 			this.setDefaultValueOverride(null);
 		} catch (Throwable t) {
-			_logger.error("error in change field", t);
+			logger.error("error in change field", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -152,7 +164,7 @@ public class KieFormOverrideAction extends BaseAction {
 
 			this.setFormModel(model);
 		} catch (Throwable t) {
-			_logger.error("error in trash model", t);
+			logger.error("error in trash model", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -205,7 +217,7 @@ public class KieFormOverrideAction extends BaseAction {
 				this.getKieFormOverrideManager().updateKieFormOverride(model);
 			}
 		} catch (Throwable t) {
-			_logger.error("error in save model", t);
+			logger.error("error in save model", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -217,14 +229,14 @@ public class KieFormOverrideAction extends BaseAction {
 				this.getKieFormOverrideManager().deleteKieFormOverride(this.getId());
 			}
 		} catch (Throwable t) {
-			_logger.error("error in delete model", t);
+			logger.error("error in delete model", t);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
 
-	public List<KieProcess> getProcessList() throws ApsSystemException {
-		List<KieProcess> list = this.getKieFormManager().getProcessDefinitionsList();
+	public List<KieProcess> getProcessList(KieBpmConfig config) throws ApsSystemException {
+		List<KieProcess> list = this.getKieFormManager().getProcessDefinitionsList(config);
 		return list;
 	}
 
@@ -233,13 +245,15 @@ public class KieFormOverrideAction extends BaseAction {
 		String processId = (params[0]);
 		String containerId = (params[1]);
 		String kieSourceId = params[2];
-		if (!StringUtils.isEmpty(kieSourceId) && !"null".equalsIgnoreCase(kieSourceId)) {
-			this.getKieFormManager().setKieServerConfiguration(kieSourceId);
-		} else {
-			_logger.warn("No kie source id in process path");
+		if (StringUtils.isEmpty(kieSourceId) && !"null".equalsIgnoreCase(kieSourceId)) {
+
+			logger.error("No kie source id in process path");
+            return new ArrayList<>();
 		}
+
+		KieBpmConfig config = kieFormManager.getKieServerConfigurations().get(kieSourceId);
 		
-		KieProcessFormQueryResult form = this.getKieFormManager().getProcessForm(containerId, processId);
+		KieProcessFormQueryResult form = kieFormManager.getProcessForm(config, containerId, processId);
 		List<KieProcessFormField> fileds = new ArrayList<>();
 		this.addFileds(form, fileds);
 		return fileds;
@@ -354,16 +368,5 @@ public class KieFormOverrideAction extends BaseAction {
 		this.pageManager = pageManager;
 	}
 
-	private int strutsAction;
-	private KieFormOverride formModel;
-	private int id;
-	private String processPath;
-	private String field;
-	private String placeHolderOverride;
-	private String defaultValueOverride;
-
-	private IKieFormOverrideManager kieFormOverrideManager;
-	private IKieFormManager kieFormManager;
-	private IPageManager pageManager;
 
 }

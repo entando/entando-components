@@ -23,13 +23,6 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieDataHolder;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
@@ -38,6 +31,10 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.NullFo
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
 
 /**
  * @author Entando
@@ -56,12 +53,14 @@ public class FormToBpmHelper {
      */
     private static Map<String, JSONObject> createSectionJson(
             KieProcessFormQueryResult bpmForm,
-            List<String> fields) throws Throwable {
+            List<KieProcessFormField> fields) throws Throwable {
         Map<String, JSONObject> map = new HashMap<>();
 
         if (null != fields
                 && !fields.isEmpty()) {
-            for (String sectionField : fields) {
+            for (KieProcessFormField kieField : fields) {
+
+                String sectionField = kieField.getName();
                 String[] tok = sectionField.split(SEPARATOR);
                 String section = tok[0];
 
@@ -85,7 +84,8 @@ public class FormToBpmHelper {
      */
     private static JSONObject buildSections(Map<String, JSONObject> jmap,
                                       Map<String, Object> input,
-                                      List<String> formParams) throws Throwable {
+                                      List<KieProcessFormField> formParams,
+                                      boolean scalarForm) throws Throwable {
     		JSONObject singles = new JSONObject();
         if (null == jmap
                 || null == input
@@ -96,29 +96,48 @@ public class FormToBpmHelper {
             return singles;
         }
         
-        for (String parameter : formParams) {
+        for (KieProcessFormField formField : formParams) {
+            String parameter = formField.getName();
             String[] tok = parameter.split(SEPARATOR);
             
             if (tok.length > 1) {
 	            String section = tok[0];
 	            String field = tok[1];
-	
-	            // select the json
-	            JSONObject json = jmap.get(section);
-	            // add data
-	            json.put(field, input.get(parameter));
-	            _logger.info("adding field '{}' in section '{}'", field, section);
+
+                if(!scalarForm) {
+                    // select the json
+                    JSONObject json = jmap.get(section);
+                    // add data
+                    json.put(field, input.get(parameter));
+                }else{
+
+                    //Boolean checkbox values need to get round tripped as false. Without it data erasure can occur
+                    //when a box is un-checked by a user. The input data from the user won't contain a key since the value
+                    //isn't sent by the FE
+                    if(formField.getType().equals("CheckBox") && !input.containsKey(parameter)) {
+                        input.put(parameter, false);
+                    }
+                    singles.put(field, input.get(parameter));
+                }
+                _logger.info("adding field '{}' in section '{}'", field, section);
             } else {
-            		String field = tok[0];
-            		singles.put(field, input.get(parameter));
-            		_logger.info("adding single '{}'", field);
+            	String field = tok[0];
+
+                //Boolean checkbox values need to get round tripped as false. Without it data erasure can occur
+                //when a box is un-checked by a user. The input data from the user won't contain a key since the value
+                //isn't sent by the FE
+                if(formField.getType().equals("CheckBox") && !input.containsKey(parameter)) {
+                    input.put(parameter, false);
+                }
+            	singles.put(field, input.get(parameter));
+            	_logger.info("adding single '{}'", field);
             }
         }
         return singles;
     }
 
     /**
-     * Merge all JSON objects into a unique one containig all data
+     * Merge all JSON objects into a unique one containing all data
      *
      * @param jmap
      * @throws Throwable
@@ -159,12 +178,17 @@ public class FormToBpmHelper {
                                           final String containerId,
                                           final String processDefinitionId) throws Throwable {
         JSONObject ajson = new JSONObject();
-        List<String> formParams = BpmToFormHelper.getParamersMap(bpmForm);
+        List<KieProcessFormField> formParams = BpmToFormHelper.getKieFormFields(bpmForm);
         Map<String, JSONObject> jmap = createSectionJson(bpmForm, formParams);
         KieDataHolder mainDataHolder = BpmToFormHelper.getFormDataModelerEntry(bpmForm);
 
+        boolean scalarForm = false;
+        if(mainDataHolder ==null){
+            scalarForm = true;
+        }
+
         // process sections, compose inner json with all data, all components are still separated
-        JSONObject outJSON = buildSections(jmap, input, formParams);
+        JSONObject outJSON = buildSections(jmap, input, formParams, scalarForm);
         
         if (null == mainDataHolder
                 || null == mainDataHolder.getId()
@@ -227,9 +251,16 @@ public class FormToBpmHelper {
             } else if (fieldClass.equals(INTEGER)) {
                 result = Integer.valueOf(value);
             } else if (fieldClass.equals(BOOLEAN)) {
-                if (value.equalsIgnoreCase("true")
+
+                if(value == null){
+                    result = false;
+                }else if (value.equalsIgnoreCase("true")
                         || value.equalsIgnoreCase("false")) {
                     result = Boolean.valueOf(value);
+                } else if ("on".equalsIgnoreCase(value)) {
+                		result = true;
+                } else if ("off".equalsIgnoreCase(value)) {
+                		result = false;
                 }
             } else {
                 _logger.warn("unknown field class type '{}'", fieldClass);
@@ -259,7 +290,7 @@ public class FormToBpmHelper {
             Object obj = FormToBpmHelper.validateField(form, key, value);
             if (null != obj) {
                 if (obj instanceof NullFormField) {
-                    _logger.info("the field '{}' is null, but is not mandatory: ignoring", key);
+                    _logger.debug("the field '{}' is null, but is not mandatory: ignoring", key);
                 } else {
                     output.put(key, obj);
                 }
@@ -306,8 +337,7 @@ public class FormToBpmHelper {
             final String key = field.getName();
 
             if (StringUtils.isBlank(out)) {
-                System.out.println("SKIPPING " + field.getName());
-//               return;
+                _logger.debug("SKIPPING " + field.getName());
             }
             if (input.containsKey(key)) {
                 json.put(name, input.get(key));
@@ -374,74 +404,88 @@ public class FormToBpmHelper {
      * @param result the result of the process is stored here
      * @throws Throwable
      */
-    public static void modelForm2Json(final KieProcessFormQueryResult form,
+    public static JSONObject modelForm2Json(final KieProcessFormQueryResult form,
                                       final JSONObject data, final Map<String, Object> input, JSONObject result) throws Throwable {
         if (null == form
                 || null == result
                 || null == data
-                || null == input) {
-            return;
+                || null == input
+                || null == form.getFields()
+                || form.getFields().isEmpty()) {
+            return null;
         }
-        if (null != form.getNestedForms()
-                && !form.getNestedForms().isEmpty()) {
+        if (null != form.getNestedForms() && !form.getNestedForms().isEmpty()) {
             for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
                 JSONObject subJson = new JSONObject();
 
                 modelForm2Json(subForm, data, input, subJson);
                 // get the name of the current dataholder
-                KieDataHolder dataModelerEntry =
-                        BpmToFormHelper.getFormDataModelerEntry(subForm);
+                KieDataHolder dataModelerEntry = BpmToFormHelper.getFormDataModelerEntry(subForm);
                 // add child
-                result.put(dataModelerEntry.getOutId(),
-                        subJson);
+                result.put(dataModelerEntry.getOutId(), subJson);
             }
         }
-        // process form fields
-        if (null == form.getFields()
-                || form.getFields().isEmpty()) {
-            return;
-        }
-        KieDataHolder dataModelerEntry =
-                BpmToFormHelper.getFormDataModelerEntry(form);
-        // get related section in data
-        Object obj = JsonHelper.findKey(data, dataModelerEntry.getValue());
-        if (null == obj
-                || !(obj instanceof JSONObject)) {
-            throw new RuntimeException("Unexpected data format for index " +
-                    dataModelerEntry.getValue());
-        }
-        // get the section from the task data with extra fields
-        JSONObject section = (JSONObject) obj;
-        // process fields present in the form structure
-        for (KieProcessFormField field : form.getFields()) {
-            modelField2Json(field, result, dataModelerEntry.getId(), input);
-        }
-        // process extra fields present in the form and add them to the payload
-        final List<String> formFields = Arrays.asList(JSONObject.getNames(result));
-        final List<String> dataFields = Arrays.asList(JSONObject.getNames(section));
 
-        for (String key : dataFields) {
-            final String expectedFieldName =
-                    BpmToFormHelper.generateFieldNameForOutput(key,
-                            dataModelerEntry.getId());
+        KieDataHolder dataModelerEntry = BpmToFormHelper.getFormDataModelerEntry(form);
+        // get related section in data if dataModelerEntry is not null
 
-            if (!formFields.contains(key)) {
-
-                if (input.containsKey(expectedFieldName)) {
-                    Object value = input.get(expectedFieldName);
-
-                    if (null != value) {
-                        result.put(key, input.get(expectedFieldName));
-                    } else {
-                        result.put(key, JSONObject.NULL);
-                    }
-                } else {
-                    // must exists, assign a null value
-                    result.put(key, JSONObject.NULL);
-                }
+        if (dataModelerEntry != null) {
+	        Object obj = JsonHelper.findKey(data, dataModelerEntry.getValue());
+            if (null == obj || !(obj instanceof JSONObject)) {
+                obj = JsonHelper.findKey(data, dataModelerEntry.getOutId());
             }
+
+            //Brutal hack. PAM API changed and removed the top level references and appended taskInput to the name of the
+            //container. Replace once a proper transform layer is in place
+            if (null == obj || !(obj instanceof JSONObject)) {
+                obj = JsonHelper.findKey(data, "taskInput"+dataModelerEntry.getName());
+            }
+
+            if (null == obj || !(obj instanceof JSONObject)) {
+                throw new RuntimeException("Unexpected data for key " + dataModelerEntry.getValue());
+            }
+
+	        // get the section from the task data with extra fields
+	        JSONObject section = (JSONObject) obj;
+	        // process fields present in the form structure
+	        for (KieProcessFormField field : form.getFields()) {
+	            modelField2Json(field, result, dataModelerEntry.getId(), input);
+	        }
+	        // process extra fields present in the form and add them to the payload
+	        final List<String> formFields = Arrays.asList(JSONObject.getNames(result));
+	        final List<String> dataFields = Arrays.asList(JSONObject.getNames(section));
+
+	        for (String key : dataFields) {
+	            final String expectedFieldName =
+	                    BpmToFormHelper.generateFieldNameForOutput(key, dataModelerEntry.getId());
+
+	            if (!formFields.contains(key)) {
+
+	                if (input.containsKey(expectedFieldName)) {
+	                    Object value = input.get(expectedFieldName);
+
+	                    if (null != value) {
+	                        result.put(key, input.get(expectedFieldName));
+	                    } else {
+	                        result.put(key, JSONObject.NULL);
+	                    }
+	                } else {
+	                    // must exists, assign a null value
+	                    result.put(key, JSONObject.NULL);
+	                }
+	            }
+	        }
+        } else {
+	        	// No data modeler entry, just add values directly to result
+        		_logger.debug("Found no dataModelEntry, so generating result directly");
+        		List<KieProcessFormField> formParams = BpmToFormHelper.getKieFormFields(form);
+        		Map<String, JSONObject> jmap = createSectionJson(form, formParams);
+
+	        // process sections, compose inner json with all data, all components are still separated
+        		result = buildSections(jmap, input, formParams, true);
         }
-    }
+        return result;
+    }	
 
     /**
      * Generate the payload of the human task form
@@ -456,36 +500,96 @@ public class FormToBpmHelper {
                                                    final JSONObject task,
                                                    final Map<String, Object> input) throws Throwable {
         JSONObject payload = new JSONObject();
+
+        payload = FormToBpmHelper.modelForm2Json(form, task, input, payload);
+
         // get the modeler entry value to locate data
-        KieDataHolder dataModeler =
-                BpmToFormHelper.getFormDataModelerEntry(form);
-
-        FormToBpmHelper.modelForm2Json(form, task, input, payload);
-        // incapsulate payload in a key with the value of the datamodeler
-        JSONObject dataModelerJson = new JSONObject();
-
-        if (task.get("task-form").equals("FinancialReview")) {
-            JSONObject obj = new JSONObject();
-            if  (((String)input.get("brokerOverride")).equalsIgnoreCase("on")){
-                obj.put("brokerOverrideTaskOutput", "true");
-            }
-            else {
-                obj.put("brokerOverrideTaskOutput", "false");
-            }
-
-            return obj.toString();
-
-        } else {
-            dataModelerJson.put(dataModeler.getValue(), payload);
-        }
-
+        KieDataHolder dataModeler = BpmToFormHelper.getFormDataModelerEntry(form);
 
         // incapsulate with the key with value of the output id
         JSONObject outputIdJson = new JSONObject();
 
-        outputIdJson.put(dataModeler.getOutId(),
-                dataModelerJson);
+        // incapsulate payload in a key with the value of the datamodeler
+        JSONObject dataModelerJson = new JSONObject();
+
+        if (dataModeler != null) {
+            dataModelerJson.put(dataModeler.getValue(), payload);
+            outputIdJson.put(dataModeler.getOutId(), dataModelerJson);
+
+            JSONObject inputData = task.getJSONObject("task-input-data");
+            mergeTaskData(outputIdJson, inputData);
+        } else {
+        		outputIdJson = payload;
+        		_logger.debug("outputIdJson: " + outputIdJson.toString());
+        }
+
         return outputIdJson.toString();
+    }
+
+    //1. Find common top level keys to begin merge since the nesting is different. taskInput is the data from BPM and formOutput is what we plan to send back
+    //2. Merge keys that exist in taskInput back into formOutput so that we round trip all the data
+    //3. Don't overwrite anything.
+    //
+    //This assumes that there is a top level entity that holds all the forms. For example 'taskInputApplication'
+    //and that the merge can occur against the children of that object.
+    private static void mergeTaskData(JSONObject formOutput, JSONObject taskInput) {
+
+        Iterator<String> keys = formOutput.keys();
+        String firstKey = keys.next();
+
+        if(formOutput.get(firstKey) instanceof JSONObject){
+
+            //Process the top level keys in the form to go back to BPM and find the corresponding form in the input data
+            //so that the tree merge can be performed one-to-one
+            Set<String> formChildKeys = formOutput.getJSONObject(firstKey).keySet();
+            for(String formChildKey : formChildKeys) {
+                Object starting = findStartingPoint(formChildKey, taskInput);
+                if(starting !=null && starting instanceof JSONObject) {
+
+                    JSONObject mergePointChild = formOutput.getJSONObject(firstKey).getJSONObject(formChildKey);
+                    mergeDetails(mergePointChild, (JSONObject)starting);
+                }
+            }
+        }
+    }
+
+    //Take the keys from task input (this is the data we get from BPM about the process)
+    // and if you find one that is missing copy it into the output we are sending back to round trip
+    //the data that wasn't user visible. Recursively process pairs so that all of the nested data makes it back.
+    //Only copies missing keys
+    private static void mergeDetails(JSONObject formOutput, JSONObject taskInput) {
+
+        Set<String> keys = taskInput.keySet();
+
+        for(String key : keys) {
+            if(!formOutput.has(key) || formOutput.get(key).equals(JSONObject.NULL)) {
+                formOutput.put(key, taskInput.get(key));
+            }else if(taskInput.get(key) instanceof JSONObject) {
+
+                //Recurse and check for missing child forms (for example property nested under appraisal in the mortgage data)
+                mergeDetails(formOutput.getJSONObject(key), taskInput.getJSONObject(key) );
+            }
+        }
+    }
+
+    //Find a common top level key for a first level child represented by outputKey.
+    private static Object findStartingPoint(String outputKey, JSONObject taskInput){
+
+        Set<String> inputKeys = taskInput.keySet();
+        for(String inputKey : inputKeys) {
+            if(inputKey.equals(outputKey)) {
+                return taskInput.get(inputKey);
+            }
+
+        }
+
+        for(String inputKey : inputKeys) {
+            if (taskInput.get(inputKey) instanceof JSONObject) {
+                return findStartingPoint(outputKey, taskInput.getJSONObject(inputKey));
+            }
+        }
+
+        return  null;
     }
 
 

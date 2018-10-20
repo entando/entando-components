@@ -13,19 +13,18 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
 
 /**
  * @author E.Santoboni
  */
 @XmlRootElement(name = "task")
 @XmlType(propOrder = {"id", "activated", "created", "desc", "name", "owner", "parentId", "priority",
-        "processDefinitionId", "processInstanceId", "skipable", "status", "subject", "containerId", "visible", "override"})
+        "processDefinitionId", "processInstanceId", "skipable", "status", "subject", "containerId", "visible", "override", "configId"})
 public class JAXBTask implements Comparable<JAXBTask> {
 
     public JAXBTask() {
@@ -46,6 +45,7 @@ public class JAXBTask implements Comparable<JAXBTask> {
         this.setStatus(task.getStatus());
         this.setSubject(task.getSubject());
         this.setContainerId(task.getContainerId());
+        this.setConfigId(task.getConfigId());
     }
 
     @XmlElement(name = "activated")
@@ -197,6 +197,15 @@ public class JAXBTask implements Comparable<JAXBTask> {
         this.override = override;
     }
 
+    public String getConfigId() {
+        return configId;
+    }
+
+    @XmlElement(name = "configId")
+    public void setConfigId(String configId) {
+        this.configId = configId;
+    }
+
     private Long _activated;
     private Long _created;
     private String _desc;
@@ -213,5 +222,6 @@ public class JAXBTask implements Comparable<JAXBTask> {
     private String _containerId;
     private Boolean visible;
     private String override;
+    private String configId;
 
 }
