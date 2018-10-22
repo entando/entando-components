@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form id="116648659">
+  <property name="subject" value=""/>
+  <property name="name" value="Appraisal-taskform.form"/>
+  <property name="displayMode" value="default"/>
+  <property name="status" value="0"/>
+  <form id="1458843297">
+    <property name="subject" value=""/>
+    <property name="name" value="MortgageProperty.form"/>
+    <property name="displayMode" value="default"/>
+    <property name="status" value="0"/>
+    <field id="2013333214" name="property_address" position="0" type="InputText">
+      <property name="fieldRequired" value="false"/>
+      <property name="labelCSSClass" value=""/>
+      <property name="labelCSSStyle" value=""/>
+      <property name="label" value="Address"/>
+      <property name="errorMessage" value=""/>
+      <property name="title" value=""/>
+      <property name="readonly" value="false"/>
+      <property name="size" value=""/>
+      <property name="formula" value=""/>
+      <property name="rangeFormula" value=""/>
+      <property name="pattern" value=""/>
+      <property name="styleclass" value=""/>
+      <property name="cssStyle" value=""/>
+      <property name="isHTML" value="false"/>
+      <property name="hideContent" value="false"/>
+      <property name="defaultValueFormula" value=""/>
+      <property name="inputBinding" value="123 Apple Avenue"/>
+      <property name="outputBinding" value="property/address"/>
+      <property name="fieldClass" value="java.lang.String"/>
+    </field>
+    <field id="1518985727" name="property_price" position="1" type="InputTextInteger">
+      <property name="fieldRequired" value="false"/>
+      <property name="labelCSSClass" value=""/>
+      <property name="labelCSSStyle" value=""/>
+      <property name="label" value="Sale Price"/>
+      <property name="errorMessage" value=""/>
+      <property name="title" value=""/>
+      <property name="readonly" value="false"/>
+      <property name="size" value=""/>
+      <property name="formula" value=""/>
+      <property name="rangeFormula" value=""/>
+      <property name="styleclass" value=""/>
+      <property name="cssStyle" value=""/>
+      <property name="defaultValueFormula" value=""/>
+      <property name="inputBinding" value="150000"/>
+      <property name="outputBinding" value="property/price"/>
+      <property name="fieldClass" value="java.lang.Integer"/>
+    </field>
+    <dataHolder id="property" inputId="property" name="#0000A0" outId="property" type="dataModelerEntry" value="com.redhat.bpms.examples.mortgage.Property"/>
+  </form>
+  <form id="36693303">
+    <property name="subject" value=""/>
+    <property name="name" value="MortgageAppraisal.form"/>
+    <property name="displayMode" value="default"/>
+    <property name="status" value="0"/>
+    <field id="473175336" name="appraisal_value" position="0" type="InputTextInteger">
+      <property name="fieldRequired" value="false"/>
+      <property name="labelCSSClass" value=""/>
+      <property name="labelCSSStyle" value=""/>
+      <property name="label" value="Appraisal Value"/>
+      <property name="errorMessage" value=""/>
+      <property name="title" value=""/>
+      <property name="readonly" value="false"/>
+      <property name="size" value=""/>
+      <property name="formula" value=""/>
+      <property name="rangeFormula" value=""/>
+      <property name="styleclass" value=""/>
+      <property name="cssStyle" value=""/>
+      <property name="defaultValueFormula" value=""/>
+      <property name="inputBinding" value="appraisal/value"/>
+      <property name="outputBinding" value="appraisal/value"/>
+      <property name="fieldClass" value="java.lang.Integer"/>
+    </field>
+    <dataHolder id="appraisal" inputId="appraisal" name="#0000A0" outId="appraisal" type="dataModelerEntry" value="com.redhat.bpms.examples.mortgage.Appraisal"/>
+  </form>
+  <dataHolder id="application" inputId="taskInputApplication" name="#0000A0" outId="taskOutputApplication" type="dataModelerEntry" value="com.redhat.bpms.examples.mortgage.Application"/>
+</form>

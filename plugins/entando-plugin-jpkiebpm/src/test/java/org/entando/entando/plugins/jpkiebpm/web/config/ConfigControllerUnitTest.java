@@ -2,8 +2,6 @@ package org.entando.entando.plugins.jpkiebpm.web.config;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static com.jayway.jsonassert.impl.matcher.IsCollectionWithSize.hasSize;
-import static org.hamcrest.CoreMatchers.is;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.IKieBpmService;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieConfigService;
@@ -25,8 +23,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static com.jayway.jsonassert.impl.matcher.IsCollectionWithSize.hasSize;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -208,7 +209,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                 get("/kiebpm/serverConfigs/1/deploymentUnits")
                         .header("Authorization", "Bearer " + accessToken));
 
-        Mockito.verify(kieConfigService, Mockito.times(1)).getContainerList();
+        Mockito.verify(kieFormManager, Mockito.times(1)).getContainersList(any());
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
@@ -227,7 +228,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                 get("/kiebpm/serverConfigs/1/caseDefinitions/test")
                         .header("Authorization", "Bearer " + accessToken));
 
-        Mockito.verify(caseManager, Mockito.times(1)).getCasesDefinitions("test");
+        Mockito.verify(caseManager, Mockito.times(1)).getCasesDefinitions(any(), eq("test"));
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
@@ -242,7 +243,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                 get("/kiebpm/serverConfigs/1/processList")
                         .header("Authorization", "Bearer " + accessToken));
 
-        Mockito.verify(kieConfigService, Mockito.times(1)).getProcessDefinitionsList();
+        Mockito.verify(kieFormManager, Mockito.times(1)).getProcessDefinitionsList(any());
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
@@ -253,7 +254,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
-        when(kieBpmService.getDataTableWIdgetConfig(any(Integer.class))).thenReturn(getWidgetConfig(1));
+        when(kieBpmService.getDataTableWidgetConfig(any(Integer.class))).thenReturn(getWidgetConfig(1));
 
         ResultActions result = mockMvc.perform(
                 get("/kiebpm/datatableWidget/{configId}", "1")
@@ -281,7 +282,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                 + "        \"knowledgeSourceId\": \"4e85caf304e04af1a413836daff70d9520180612T152311942\"\n"
                 + "    }";
         DatatableWidgetConfigDto mock = (DatatableWidgetConfigDto) this.createMetadata(mockJsonResult, DatatableWidgetConfigDto.class);
-        when(kieBpmService.updateDataTableWIdgetConfig(any(DatatableWidgetConfigRequest.class))).thenReturn(mock);
+        when(kieBpmService.updateDataTableWidgetConfig(any(DatatableWidgetConfigRequest.class))).thenReturn(mock);
 
         ResultActions result = mockMvc.perform(
                 put("/kiebpm/datatableWidget/{configId}", "1")

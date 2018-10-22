@@ -23,37 +23,26 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormOverrideManager.DEFAULTVALUE;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormOverrideManager.PLACEHOLDER;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormOverrideManager.VAL1;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormOverrideManager.VAL2;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.entando.entando.plugins.jpkiebpm.KieTestParameters;
 import org.entando.entando.plugins.jpkiebpm.aps.ApsPluginBaseTestCase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DropDownOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.OverrideList;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
 import org.json.JSONObject;
 
-/**
- *
- * @author Entando
- */
+import java.util.*;
+
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormOverrideManager.*;
+
 public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestParameters {
+
+
+    private IKieFormManager formManager;
+    private IKieFormOverrideManager overrideManager;
 
     @Override
     public void setUp() throws Exception {
@@ -69,23 +58,23 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
 
         assertEquals(expected, client.getBaseUrl());
         // get manager
-        _formManager = (IKieFormManager) this.getService(IKieFormManager.BEAN_NAME_ID);
-        assertNotNull(_formManager);
-        _overrideManager = (IKieFormOverrideManager) this.getService(IKieFormOverrideManager.BEAN_ID);
-        assertNotNull(_overrideManager);
+        formManager = (IKieFormManager) this.getService(IKieFormManager.BEAN_NAME_ID);
+        assertNotNull(formManager);
+        overrideManager = (IKieFormOverrideManager) this.getService(IKieFormOverrideManager.BEAN_ID);
+        assertNotNull(overrideManager);
     }
 
     public void testHumanTaskList() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
         }
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+            
             // invoke the manager
-            List<KieTask> list = _formManager.getHumanTaskList("", null);
+            List<KieTask> list = formManager.getHumanTaskList(config, "", null);
             assertNotNull(list);
             if (TEST_ENABLED) {
                 assertFalse(list.isEmpty());
@@ -95,46 +84,46 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+            
         }
     }
 
     public void testGetProcInstDiagramImage() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
         }
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+           
             // invoke the manager
-            String image = _formManager.getProcInstDiagramImage(TARGET_CONTAINER_ID, TARGET_PROCESS_INSTANCE_ID);
+            String image = formManager.getProcInstDiagramImage(config, TARGET_CONTAINER_ID, TARGET_PROCESS_INSTANCE_ID);
             assertNotNull(image);
 
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+            
         }
     }
 
     public void testGetTaskForm() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
         }
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+           
             // invoke the manager
-            List<KieTask> tasks = _formManager.getHumanTaskList("", null);
+            List<KieTask> tasks = formManager.getHumanTaskList(config,  "", null);
             assertNotNull(tasks);
             assertFalse(tasks.isEmpty());
             KieTask task = tasks.get(0);
             // get the form related to the first task
-            KieProcessFormQueryResult form = _formManager.getTaskForm(task.getContainerId(), task.getId());
+            KieProcessFormQueryResult form = formManager.getTaskForm(config,  task.getContainerId(), task.getId());
             assertNotNull(form);
             for (KieProcessFormField field : form.getFields()) {
                 System.out.println("field name:  " + field.getName());
@@ -144,18 +133,18 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
         } catch (Throwable t) {
             throw t;
         } finally {
-            _formManager.updateConfig(current);
+            
         }
     }
 
     public void testProcessForm() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
 
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+           
             // invoke the manager
-            KieProcessFormQueryResult form = _formManager.getProcessForm(TARGET_CONTAINER_ID, TARGET_PROCESS_ID);
+            KieProcessFormQueryResult form = formManager.getProcessForm(config, TARGET_CONTAINER_ID, TARGET_PROCESS_ID);
             if (TEST_ENABLED) {
                 assertNotNull(form);
                 assertNotNull(form.getNestedForms());
@@ -168,13 +157,13 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
                 assertNull(form);
             }
         } finally {
-            _formManager.updateConfig(current);
+            
         }
     }
 
     // Effectively test the mashup of the overrides with the form returned by the BPM
     public void testProcessFormWithOverrides() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
         KieFormOverride kfo1 = new KieFormOverride();
         KieFormOverride kfo2 = new KieFormOverride();
 
@@ -182,8 +171,8 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             return;
         }
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+           
             Date now = new Date();
             final String FORM_FIELD_1 = "applicant_income";
             final String FORM_FIELD_2 = "property_price";
@@ -209,10 +198,10 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             kfo2.setProcessId(TARGET_PROCESS_ID);
 
             // persist overrides
-            _overrideManager.addKieFormOverride(kfo1);
-            _overrideManager.addKieFormOverride(kfo2);
+            overrideManager.addKieFormOverride(kfo1);
+            overrideManager.addKieFormOverride(kfo2);
 
-            KieProcessFormQueryResult form = _formManager.getProcessForm(TARGET_CONTAINER_ID, TARGET_PROCESS_ID);
+            KieProcessFormQueryResult form = formManager.getProcessForm(config, TARGET_CONTAINER_ID, TARGET_PROCESS_ID);
             if (TEST_ENABLED) {
                 assertNotNull(form);
                 assertNotNull(form.getNestedForms());
@@ -250,14 +239,14 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
         } catch (Throwable t) {
             throw t;
         } finally {
-            _overrideManager.deleteKieFormOverride(kfo1.getId());
-            _overrideManager.deleteKieFormOverride(kfo2.getId());
-            _formManager.updateConfig(current);
+            overrideManager.deleteKieFormOverride(kfo1.getId());
+            overrideManager.deleteKieFormOverride(kfo2.getId());
+            
         }
     }
 
     public void testFormSubmit() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
@@ -267,10 +256,8 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
         Map<String, Object> input = createValiDPayloadForTest();
 
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
-            // invoke the manager
-            String processId = _formManager.startProcessSubmittingForm(TARGET_CONTAINER_ID, TARGET_PROCESS_ID, input);
+
+            String processId = formManager.startProcessSubmittingForm(config, TARGET_CONTAINER_ID, TARGET_PROCESS_ID, input);
             if (TEST_ENABLED) {
                 assertNotNull(processId);
                 System.out.println("Process created: " + processId);
@@ -278,41 +265,41 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
                 assertNull(processId);
             }
         } finally {
-            _formManager.updateConfig(current);
+            
         }
     }
 
     public void testGetTaskFormData() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
         }
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+           
             // invoke the manager
-            List<KieTask> tasks = _formManager.getHumanTaskList(null, null);
+            List<KieTask> tasks = formManager.getHumanTaskList(config, null, null);
             assertNotNull(tasks);
             assertFalse(tasks.isEmpty());
             KieTask task = tasks.get(0);
             // get the data form related to the first task
-            JSONObject result = _formManager.getTaskFormData(task.getContainerId(), task.getId(), null);
+            JSONObject result = formManager.getTaskFormData(config, task.getContainerId(), task.getId(), null);
             assertNotNull(result);
         } finally {
-            _formManager.updateConfig(current);
+            
         }
     }
 
     public void testCompleteHumanFormTask() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
         }
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+           
             // create a process that will need correction
 //            String processId = SubmitInvalidForm();
 //            assertNotNull(processId);
@@ -321,7 +308,7 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             String processId = "260";
             // check the tasks for the processes
 
-            KieTask task = _formManager.getHumanTask(processId);
+            KieTask task = formManager.getHumanTask(config, processId);
 
             assertNotNull(task);
             System.out.println("TASK ID: " + task.getId());
@@ -329,13 +316,13 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             System.out.println("PROCESS ID: " + task.getProcessInstanceId());
             System.out.println("PROCESS DEFINITION ID: " + task.getProcessDefinitionId());
             // get answer prototype (to generate the payload to submit)
-            //            KieProcessFormQueryResult answerProto = _formManager
+            //            KieProcessFormQueryResult answerProto = formManager
             //                    .getProcessForm(task.getContainerId(), task.getProcessDefinitionId());
             //            assertNotNull(answerProto);
             // get task data
-            JSONObject task_data = _formManager.getTaskFormData(task.getContainerId(), task.getId(), null);
+            JSONObject task_data = formManager.getTaskFormData(config, task.getContainerId(), task.getId(), null);
 
-            KieProcessFormQueryResult form = _formManager.getTaskForm(task.getContainerId(), task.getId());
+            KieProcessFormQueryResult form = formManager.getTaskForm(config, task.getContainerId(), task.getId());
             /*
 			 * Map<String, Object> result = new HashMap<String, Object>();
 			 * BpmToFormHelper.getHumanTaskFormData(answerProto, task_data,
@@ -350,7 +337,7 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
 			 * FormToBpmHelper.generateHumanTaskFormJson(answerProto, task_data,
 			 * result); System.out.println("PAYLOAD: " + json); // get human
 			 * task form to show to user KieProcessFormQueryResult form =
-			 * _formManager.getTaskForm(task.getContainerId(),
+			 * formManager.getTaskForm(task.getContainerId(),
 			 * String.valueOf(task.getId())); // from the from above we have to
 			 * take the only field that matters (for that task)
              */
@@ -361,12 +348,12 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             System.out.println("PAYLOAD: " + payload);
 
         } finally {
-            _formManager.updateConfig(current);
+            
         }
     }
 
     private String _testSubmitInvalidForm() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return "0";
@@ -376,10 +363,10 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
         Map<String, Object> input = createSuggestIncreaseDownpaymentForTest(); // createCorrectDataTaskForTest();
 
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
+            
+           
             // invoke the manager
-            String processId = _formManager.startProcessSubmittingForm(TARGET_CONTAINER_ID, TARGET_PROCESS_ID, input);
+            String processId = formManager.startProcessSubmittingForm(config, TARGET_CONTAINER_ID, TARGET_PROCESS_ID, input);
             if (TEST_ENABLED) {
                 assertNotNull(processId);
 //                System.out.println("Process created: " + processId);
@@ -388,25 +375,22 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             }
             return processId;
         } finally {
-            _formManager.updateConfig(current);
+            
         }
     }
 
     private void completeHumanFormTask() throws Throwable {
-        KieBpmConfig current = _formManager.getConfig();
+        KieBpmConfig config = getConfigForTests();
 
         if (!TEST_ENABLED) {
             return;
         }
         try {
-            // update configuration to reflect test configuration
-            _formManager.updateConfig(getConfigForTests());
-
+            
             Map<String, String> input = new HashMap<String, String>();
-
-            _formManager.completeHumanFormTask(TARGET_CONTAINER_ID, TARGET_PROCESS_ID, 243l, input);
+            formManager.completeHumanFormTask(config, TARGET_CONTAINER_ID, TARGET_PROCESS_ID, 243l, input);
         } finally {
-            _formManager.updateConfig(current);
+            
         }
     }
 
@@ -497,7 +481,5 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
         return cfg;
     }
 
-    private IKieFormManager _formManager;
-    private IKieFormOverrideManager _overrideManager;
 
 }

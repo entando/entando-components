@@ -1,0 +1,54 @@
+{
+  "task-id" : 37,
+  "task-priority" : 0,
+  "task-name" : "Correct Data",
+  "task-subject" : "",
+  "task-description" : "",
+  "task-type" : null,
+  "task-form" : "DataCorrection",
+  "task-status" : "Reserved",
+  "task-actual-owner" : "pamAdmin",
+  "task-created-by" : "",
+  "task-created-on" : {
+    "java.util.Date" : 1535980542196
+  },
+  "task-activation-time" : {
+    "java.util.Date" : 1535980542196
+  },
+  "task-expiration-time" : null,
+  "task-skippable" : true,
+  "task-workitem-id" : 41,
+  "task-process-instance-id" : 44,
+  "task-parent-id" : -1,
+  "task-process-id" : "com.redhat.bpms.examples.mortgage.MortgageApplication",
+  "task-container-id" : "mortgage_1.0",
+  "task-pot-owners" : null,
+  "task-excl-owners" : null,
+  "task-business-admins" : null,
+  "task-input-data" : {
+    "TaskName" : "DataCorrection",
+    "NodeName" : "Correct Data",
+    "taskInputApplication" : {
+      "validationErrors" : null,
+      "apr" : null,
+      "mortgageAmount" : 275000,
+      "applicant" : {
+        "creditScore" : null,
+        "income" : 123456,
+        "name" : "TTest",
+        "ssn" : 1234567890
+      },
+      "amortization" : 10000,
+      "downPayment" : 25000,
+      "property" : {
+        "price" : 300000,
+        "address" : "Test 123"
+      },
+      "appraisal" : null
+    },
+    "Skippable" : "true",
+    "SwimlaneActorId" : null,
+    "GroupId" : "broker"
+  },
+  "task-output-data" : { }
+}

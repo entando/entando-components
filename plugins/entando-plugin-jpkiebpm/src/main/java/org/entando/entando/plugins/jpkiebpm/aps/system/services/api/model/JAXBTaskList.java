@@ -22,7 +22,7 @@ import java.util.List;
  * @author E.Santoboni
  */
 @XmlRootElement(name = "taskList")
-@XmlType(propOrder = {"owner", "list", "datatableFieldDefinition", "processId", "containerId"})
+@XmlType(propOrder = {"owner", "list", "datatableFieldDefinition", "processId", "containerId", "configId"})
 public class JAXBTaskList {
 
     public JAXBTaskList() {
@@ -59,6 +59,10 @@ public class JAXBTaskList {
         this.containerId = containerId;
     }
 
+    public void setConfigId(String configId) {
+        this.configId = configId;
+    }
+
     @XmlElement(name = "datatable-field-definition")
     public DatatableFieldDefinition getDatatableFieldDefinition() {
         if (this.datatableFieldDefinition == null)
@@ -78,10 +82,15 @@ public class JAXBTaskList {
         return containerId;
     }
 
+    @XmlElement(name = "configId")
+    public String getConfigId() {
+        return configId;
+    }
 
     private String _owner;
     private List<JAXBTask> _list;
     private DatatableFieldDefinition datatableFieldDefinition;
     private String processId;
     private String containerId;
+    private String configId;
 }

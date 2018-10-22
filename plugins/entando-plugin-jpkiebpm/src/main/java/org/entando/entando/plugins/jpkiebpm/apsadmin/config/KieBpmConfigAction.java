@@ -37,23 +37,44 @@ import java.util.HashMap;
 
 public class KieBpmConfigAction extends BaseAction {
 
-    private static final Logger _logger = LoggerFactory.getLogger(KieBpmConfigAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(KieBpmConfigAction.class);
+
+    private IKieFormManager formManager;
+    private CaseManager caseManager;
+
+    private Boolean active;
+    private String id;
+    private String name;
+    private String userName;
+    private String password;
+    private String hostName;
+    private String schema;
+    private Integer port;
+    private String webappName;
+    private Integer timeout;
+    private Boolean debug;
+
+    private HashMap<String, KieBpmConfig> knowledgeSource;
+    private String knowledgeSourceStatus;
+    private String knowledgeSourceTestAllResult;
 
     public String add() {
-        try {
-            KieBpmConfig config = this.getFormManager().getConfig();
-            this.configToModel(config);
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "add");
-            return FAILURE;
-        }
+
+//        //TODO -- JPW
+//        try {
+//            KieBpmConfig config = this.getFormManager().get();
+//            this.configToModel(config);
+//        } catch (Throwable t) {
+//            ApsSystemUtils.logThrowable(t, this, "add");
+//            return FAILURE;
+//        }
         return SUCCESS;
     }
 
     public String edit() {
+        //TODO -- JPW
         try {
             KieBpmConfig config = this.modelToConfig();
-            this.getFormManager().setKieServerConfiguration(config.getId());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "FAILURE");
             return FAILURE;
@@ -64,7 +85,7 @@ public class KieBpmConfigAction extends BaseAction {
     public String list() {
         try {
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
-            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStatus().toString());
+            this.setKnowledgeSourceStatus(this.getFormManager().getKieServerStatus().toString());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "list");
             return FAILURE;
@@ -78,23 +99,25 @@ public class KieBpmConfigAction extends BaseAction {
             this.getFormManager().addConfig(config);
             this.addActionMessage(this.getText("message.config.savedConfirm"));
             try {
-                this.getFormManager().getContainersList();
+                this.getFormManager().getContainersList(config);
                 this.addActionMessage(this.getText("message.config.test.success"));
             } catch (ApsSystemException e) {
-                _logger.error("Configuration test failed!", e);
+                logger.error("Configuration test failed!", e);
                 this.addActionError(this.getText("message.config.test.fail"));
             }
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
 
-            JSONArray serverStat = this.getCaseManager().getKieServerStatus();
+            JSONArray serverStat = this.getFormManager().getKieServerStatus();
             for(int i =0; i<serverStat.length(); i++) {
                 Object obj = serverStat.get(i);
-                if(obj instanceof JSONObject) {
-                    JSONObject details = (JSONObject)obj;
+                if (obj instanceof JSONObject) {
+                    JSONObject details = (JSONObject) obj;
                     String id = details.getString("id");
                     JSONObject conf = details.getJSONObject("config");
-                    String ver = conf.getString("version");
-                    this.getFormManager().getHostNameVersionMap().put(id, ver);
+                    if (conf.has("version")) {
+                        String ver = conf.getString("version");
+                        this.getFormManager().getHostNameVersionMap().put(id, ver);
+                    }
                 }
             }
 
@@ -111,16 +134,16 @@ public class KieBpmConfigAction extends BaseAction {
             // enable plugin by default;
             this.setActive(true);
             KieBpmConfig config = this.modelToConfig();
-            this.getFormManager().setConfig(config);
+
             try {
-                this.getFormManager().getContainersList();
+                this.getFormManager().getContainersList(config);
                 this.addActionMessage(this.getText("message.config.test.success"));
             } catch (ApsSystemException e) {
-                _logger.error("Configuration test failed!", e);
+                logger.error("Configuration test failed!", e);
                 this.addActionError(this.getText("message.config.test.fail"));
             }
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
-            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStatus().toString());
+            this.setKnowledgeSourceStatus(this.getFormManager().getKieServerStatus().toString());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "test");
             return FAILURE;
@@ -131,27 +154,26 @@ public class KieBpmConfigAction extends BaseAction {
     public String testall() {
         try {
             //Save the current Config
-            KieBpmConfig setKieBpmConfig = this.getCaseManager().getConfig();
+
             JSONArray output = new JSONArray();
-            HashMap<String, KieBpmConfig> ServerConfigurations = this.getCaseManager().getKieServerConfigurations();
-            for (String key : ServerConfigurations.keySet()) {
-                this.getCaseManager().setConfig(ServerConfigurations.get(key));
+            HashMap<String, KieBpmConfig> serverConfigurations = this.getFormManager().getKieServerConfigurations();
+            for (String key : serverConfigurations.keySet()) {
+                KieBpmConfig config = serverConfigurations.get(key);
                 JSONObject serverJS = new JSONObject();
                 serverJS.put("kie-server-id", key);
                 try {
-                    this.getCaseManager().getContainersList();
+                    this.getFormManager().getContainersList(config);
                     serverJS.put("passed", true);
 
                 } catch (ApsSystemException e) {
-                    _logger.error("Configuration test failed!", e);
+                    logger.error("Configuration test failed!", e);
                     serverJS.put("passed", false);
                 }
                 output.put(serverJS);
             }
             //load the current config
-            this.getCaseManager().setConfig(setKieBpmConfig);
             this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
-            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStatus().toString());
+            this.setKnowledgeSourceStatus(this.getFormManager().getKieServerStatus().toString());
             this.addActionMessage(this.getText("message.config.test.success"));
             this.setKnowledgeSourceTestAllResult(output.toString());
         } catch (ApsSystemException | JSONException t) {
@@ -165,8 +187,8 @@ public class KieBpmConfigAction extends BaseAction {
         try {
             this.getFormManager().deleteConfig(this.getId());
             this.addActionMessage("Configuration Deleted");
-            this.setKnowledgeSource(this.getFormManager().getKieServerConfigurations());
-            this.setKnowledgeSourceStatus(this.getCaseManager().getKieServerStatus().toString());
+            this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
+            this.setKnowledgeSourceStatus(this.formManager.getKieServerStatus().toString());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "delete");
             return FAILURE;
@@ -209,11 +231,11 @@ public class KieBpmConfigAction extends BaseAction {
     }
 
     public IKieFormManager getFormManager() {
-        return _formManager;
+        return formManager;
     }
 
     public void setFormManager(IKieFormManager formManager) {
-        this._formManager = formManager;
+        this.formManager = formManager;
     }
 
     public CaseManager getCaseManager() {
@@ -225,91 +247,91 @@ public class KieBpmConfigAction extends BaseAction {
     }
 
     public Boolean getActive() {
-        return _active;
+        return active;
     }
 
     public void setActive(Boolean active) {
-        this._active = active;
+        this.active = active;
     }
 
     public String getId() {
-        return _id;
+        return id;
     }
 
     public void setId(String id) {
-        this._id = id;
+        this.id = id;
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
     public void setName(String name) {
-        this._name = name;
+        this.name = name;
     }
 
     public String getUserName() {
-        return _userName;
+        return userName;
     }
 
     public void setUserName(String userName) {
-        this._userName = userName;
+        this.userName = userName;
     }
 
     public String getPassword() {
-        return _password;
+        return password;
     }
 
     public void setPassword(String password) {
-        this._password = password;
+        this.password = password;
     }
 
     public String getHostName() {
-        return _hostName;
+        return hostName;
     }
 
     public void setHostName(String hostName) {
-        this._hostName = hostName;
+        this.hostName = hostName;
     }
 
     public String getSchema() {
-        return _schema;
+        return schema;
     }
 
     public void setSchema(String schema) {
-        this._schema = schema;
+        this.schema = schema;
     }
 
     public Integer getPort() {
-        return _port;
+        return port;
     }
 
     public void setPort(Integer port) {
-        this._port = port;
+        this.port = port;
     }
 
     public String getWebappName() {
-        return _webappName;
+        return webappName;
     }
 
     public void setWebappName(String webappName) {
-        this._webappName = webappName;
+        this.webappName = webappName;
     }
 
     public Integer getTimeout() {
-        return _timeout;
+        return timeout;
     }
 
     public void setTimeout(Integer timeout) {
-        this._timeout = timeout;
+        this.timeout = timeout;
     }
 
     public Boolean getDebug() {
-        return _debug;
+        return debug;
     }
 
     public void setDebug(Boolean debug) {
-        this._debug = debug;
+        this.debug = debug;
     }
 
     public HashMap<String, KieBpmConfig> getKnowledgeSource() {
@@ -336,23 +358,5 @@ public class KieBpmConfigAction extends BaseAction {
         this.knowledgeSourceTestAllResult = knowledgeSourceTestAllResult;
     }
 
-    private IKieFormManager _formManager;
-    private CaseManager caseManager;
 
-    private Boolean _active;
-    private String _id;
-    private String _name;
-    private String _userName;
-    private String _password;
-    private String _hostName;
-    private String _schema;
-    private Integer _port;
-    private String _webappName;
-    private Integer _timeout;
-    private Boolean _debug;
-
-    private HashMap<String, KieBpmConfig> knowledgeSource;
-    private String knowledgeSourceStatus;
-    private String knowledgeSourceTestAllResult;
-;
 }

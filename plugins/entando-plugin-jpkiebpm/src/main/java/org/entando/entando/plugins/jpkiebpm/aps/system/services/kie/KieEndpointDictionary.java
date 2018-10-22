@@ -23,23 +23,11 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
-import java.util.HashMap;
-
 import org.apache.http.HttpStatus;
-
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_CONTAINERS_LIST;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_HUMAN_TASK_LIST;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_DEFINITIONS_LIST;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_INSTANCES_LIST;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_DEFINITION;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_PROCESS_DIAGRAM;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_POST_PROCESS_START;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_DATA_HUMAN_TASK;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_GET_TASK_FORM_DEFINITION;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.API_PUT_HUMAN_TASK;
-
 import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
 import org.entando.entando.plugins.jprestapi.aps.core.IEndpoint;
+
+import java.util.HashMap;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants.*;
 
@@ -94,6 +82,16 @@ public class KieEndpointDictionary {
         
         endpoints.put(API_PUT_COMPLETE_ENRICHMENT_DOCUMENT_APPROVAL_TASK, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/tasks/%s/states/%s", HttpStatus.SC_CREATED, true));
         // /services/rest/server/containers/%s/tasks/%s/states/%s?user=legalWorker&auto-progress=true
+
+        endpoints.put(API_GET_HUMAN_TASK_LIST_ADMIN, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/queries/tasks/instances/admins", HttpStatus.SC_OK));
+        endpoints.put(API_PUT_HUMAN_TASK_START, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/tasks/%s/states/started", HttpStatus.SC_CREATED, true));
+        endpoints.put(API_PUT_HUMAN_TASK_OUTPUT, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/tasks/%s/contents/output", HttpStatus.SC_CREATED, true));
+        endpoints.put(API_PUT_HUMAN_TASK_COMPLETE, new Endpoint(IEndpoint.httpVerb.PUT, "/services/rest/server/containers/%s/tasks/%s/states/completed", HttpStatus.SC_CREATED, true));
+        endpoints.put(API_GET_HUMAN_TASK_DETAILS, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/queries/tasks/instances/%s", HttpStatus.SC_OK));
+        endpoints.put(API_ADMIN_GET_CASES, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/admin/cases/instances?sortOrder=false", HttpStatus.SC_OK));
+        endpoints.put(API_POST_RUN_ADDITIONAL_INFO_RULES, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/containers/instances/%s", HttpStatus.SC_OK, true));
+        endpoints.put(API_POST_START_CASE, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/containers/%s/cases/%s/instances", HttpStatus.SC_CREATED, true));
+
 
 
     }

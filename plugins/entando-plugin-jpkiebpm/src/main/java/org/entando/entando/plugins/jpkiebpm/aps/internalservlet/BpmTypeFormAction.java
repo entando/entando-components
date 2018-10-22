@@ -33,11 +33,6 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
-
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
@@ -48,19 +43,29 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.Bp
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.NullFormField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Implementation for action managing DataObject entity editing operations.
- *
- * @author E.Santoboni
- */
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
 public class BpmTypeFormAction extends AbstractApsEntityAction {
 
     private static final Logger _logger = LoggerFactory.getLogger(BpmTypeFormAction.class);
+
+    private String typeCode;
+    private Lang _currentLang;
+    private DataObject dataObject;
+
+    private IKieFormManager formManager;
+    private II18nManager i18nManager;
+    private IDataObjectManager dataObjectManager;
+    private IDataObjectDispenser dataObjectDispenser;
+    private IBpmWidgetInfoManager bpmWidgetInfoManager;
+
 
     @Override
     public void validate() {
@@ -128,8 +133,9 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
             String processId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID);
             String containerId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID);
             String kieSourceId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
-            this.getFormManager().setKieServerConfiguration(kieSourceId);
-            KieProcessFormQueryResult kieForm = this.getFormManager().getProcessForm(containerId, processId);
+
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(kieSourceId);
+            KieProcessFormQueryResult kieForm = this.getFormManager().getProcessForm(config, containerId, processId);
 
             String username = this.getCurrentUser().getUsername();
             dataObject.setDescription("New Bpm process instance - " + dataObject.getTypeCode());
@@ -155,7 +161,7 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
             }
             //message.setLangCode(this.getCurrentLang().getCode());
             //this.getDataObjectManager().insertOnLineDataObject(dataObject);
-            String procId = this.getFormManager().startNewProcess(containerId, processId, toBpm);
+            String procId = this.getFormManager().startNewProcess(config, containerId, processId, toBpm);
             _logger.info("NEW PROCCESS ID: {}", procId);
             List<String> args = new ArrayList<>();
             args.add(procId);
@@ -172,7 +178,10 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
     protected void validateForm(Map<String, Object> params, KieProcessFormQueryResult kieForm) throws Throwable {
         for (Map.Entry<String, Object> ff : params.entrySet()) {
             String key = ff.getKey();
-            String value = ff.getValue().toString();
+            String value = null;
+            if(ff.getValue()!=null) {
+                value = ff.getValue().toString();
+            }
             Object obj = FormToBpmHelper.validateField(kieForm, key, value);
             if (null != obj) {
                 if (obj instanceof NullFormField) {
@@ -192,17 +201,17 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
      * @return The current session DataObject.
      */
     public DataObject getDataObject() {
-        if (this._dataObject == null) {
+        if (this.dataObject == null) {
             try {
                 String sessionParamName = this.getSessionParamName();
                 HttpServletRequest request = (null != this.getRequest()) ? this.getRequest() : ServletActionContext.getRequest();
-                this._dataObject = (DataObject) request.getSession().getAttribute(sessionParamName);
+                this.dataObject = (DataObject) request.getSession().getAttribute(sessionParamName);
             } catch (Throwable t) {
                 _logger.error("getDataObject", t);
                 throw new RuntimeException("Error finding DataObject", t);
             }
         }
-        return _dataObject;
+        return dataObject;
     }
 
     public String getRenderedForm() {
@@ -236,7 +245,7 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
         } else {
             this.getRequest().getSession().setAttribute(sessionParamName, dataObject);
         }
-        this._dataObject = dataObject;
+        this.dataObject = dataObject;
     }
 
     /**
@@ -318,10 +327,10 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
      * @return The DataObject type search filter.
      */
     public String getTypeCode() {
-        if (null == this._typeCode) {
-            this._typeCode = this.extractTypeCode();
+        if (null == this.typeCode) {
+            this.typeCode = this.extractTypeCode();
         }
-        return _typeCode;
+        return typeCode;
     }
 
     /**
@@ -331,7 +340,7 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
      */
     public void setTypeCode(String typeCode) {
         String extractedTypeCode = this.extractTypeCode();
-        this._typeCode = (null == extractedTypeCode) ? typeCode : extractedTypeCode;
+        this.typeCode = (null == extractedTypeCode) ? typeCode : extractedTypeCode;
     }
 
     /**
@@ -344,35 +353,35 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
     }
 
     protected IKieFormManager getFormManager() {
-        return _formManager;
+        return formManager;
     }
 
     public void setFormManager(IKieFormManager formManager) {
-        this._formManager = formManager;
+        this.formManager = formManager;
     }
 
     protected II18nManager getI18nManager() {
-        return _i18nManager;
+        return i18nManager;
     }
 
     public void setI18nManager(II18nManager i18nManager) {
-        this._i18nManager = i18nManager;
+        this.i18nManager = i18nManager;
     }
 
     protected IDataObjectManager getDataObjectManager() {
-        return _dataObjectManager;
+        return dataObjectManager;
     }
 
     public void setDataObjectManager(IDataObjectManager dataObjectManager) {
-        this._dataObjectManager = dataObjectManager;
+        this.dataObjectManager = dataObjectManager;
     }
 
     public IDataObjectDispenser getDataObjectDispenser() {
-        return _dataObjectDispenser;
+        return dataObjectDispenser;
     }
 
     public void setDataObjectDispenser(IDataObjectDispenser dataObjectDispenser) {
-        this._dataObjectDispenser = dataObjectDispenser;
+        this.dataObjectDispenser = dataObjectDispenser;
     }
 
     public IBpmWidgetInfoManager getBpmWidgetInfoManager() {
@@ -382,14 +391,5 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
     public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
-    private String _typeCode;
-    private Lang _currentLang;
-    private DataObject _dataObject;
-
-    private IKieFormManager _formManager;
-    private II18nManager _i18nManager;
-    private IDataObjectManager _dataObjectManager;
-    private IDataObjectDispenser _dataObjectDispenser;
-    private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
 }
