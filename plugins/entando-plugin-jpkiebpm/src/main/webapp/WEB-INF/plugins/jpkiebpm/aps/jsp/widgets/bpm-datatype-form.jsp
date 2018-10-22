@@ -14,7 +14,9 @@
 <script type="text/javascript" src="<wp:resourceURL />plugins/jpkiebpm/static/js/lib/datetimepicker/moment.min.js"></script>
 <script type="text/javascript" src="<wp:resourceURL />plugins/jpkiebpm/static/js/lib/datetimepicker/bootstrap-datetimepicker.min.js"></script>
 
+
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery-ui.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery.validate.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/lib/dynamic-form/jquery.dform-1.1.0.js"></script>
+
 <wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/DataTypeForm/view" />
