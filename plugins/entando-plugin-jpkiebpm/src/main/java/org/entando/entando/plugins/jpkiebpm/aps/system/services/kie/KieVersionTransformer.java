@@ -143,7 +143,7 @@ public class KieVersionTransformer {
 
         String id = pamSeven.getId();
         addProperty(result, "pamSevenId", id);
-
+        
         PamModel model = pamSeven.getModel();
         String modelName = model.getName();
         String modelerType = "dataModelerEntry";;
@@ -254,7 +254,6 @@ public class KieVersionTransformer {
         KieProcessProperty prop = new KieProcessProperty();
         prop.setName(name);
         prop.setValue(value);
-
         result.getProperties().add(prop);
     }
 
@@ -309,7 +308,7 @@ public class KieVersionTransformer {
             field.getProperties().add(showTime);
         }
         
-        result.getFields().add(field);
+        //result.getFields().add(field);
 
 
         return field;

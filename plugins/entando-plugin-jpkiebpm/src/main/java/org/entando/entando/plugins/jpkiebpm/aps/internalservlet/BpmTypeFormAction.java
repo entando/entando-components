@@ -179,6 +179,8 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
             if(ff.getValue()!=null) {
                 value = ff.getValue().toString();
             }
+            
+            _logger.info("******* field '{}' value {}", key, value);
             Object obj = FormToBpmHelper.validateField(kieForm, key, value);
             if (null != obj) {
                 if (obj instanceof NullFormField) {

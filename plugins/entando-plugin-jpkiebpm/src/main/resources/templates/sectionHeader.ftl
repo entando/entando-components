@@ -1,4 +1,0 @@
-
-
-<div class="ui-dform-div">
-	<fieldset class="ui-dform-fieldset"><legend class="control-label editLabel ui-dform-legend">$i18n.getLabel("JPKIE_FORM_${section.name}")</legend>

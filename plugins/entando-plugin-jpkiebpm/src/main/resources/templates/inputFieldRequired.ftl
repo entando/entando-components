@@ -1,3 +1,1 @@
-<#if field.required == true>
-* 
-</#if>
+<#if field.required == true>* </#if>

@@ -44,8 +44,8 @@ import freemarker.template.TemplateExceptionHandler;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import javax.servlet.ServletContext;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ServletContextAware;
 
@@ -78,7 +78,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.typeMapping.put("CheckBox", "checkbox");
         this.typeMapping.put("DecimalBox", "number");
         this.typeMapping.put("DatePicker", "text");
-        this.typeMapping.put("CheckBox", "text");
+        this.typeMapping.put("CheckBox", "checkbox");
         this.typeMapping.put("Slider", "number");
         this.typeMapping.put("RadioGroup", "number");
         this.typeMapping.put("MultipleInput", "number");
@@ -120,67 +120,92 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     public String createDataUx(KieProcessFormQueryResult kpfr, String containerId, String processId, String title) throws Exception {
         logger.debug("CreateDataUx in DataUXBuilde for containerId {} with processId {} and title {} -> kpfr: {}", containerId, processId, title, kpfr);
         Template template = cfg.getTemplate(MAIN_FTL_TEMPLATE);
-        Section section = this.addSection(kpfr);
-        List fields = this.addFields(kpfr);
+
+        Map<String, Section> sections = this.getSections(kpfr);
+        //   List fields = this.addFields(kpfr);
         Map<String, Object> root = new HashMap<>();
         Model model = new Model();
         model.setTitle(title);
         model.setContainerId(containerId);
         model.setProcessId(processId);
         root.put("model", model);
-        root.put("section", section);
-        root.put("fields", fields);
+        logger.debug("sections {}", sections);
+
+        root.put("sections", sections);
+
+        // root.put("fields", fields);
         Writer stringWriter = new StringWriter();
         template.process(root, stringWriter);
         return stringWriter.toString();
 
     }
 
-    private Section addSection(KieProcessFormQueryResult kpfr) throws Exception {
-        Section section = new Section();
-        if (kpfr.getFields().size() > 0) {
-            String formName = null;
-            if (kpfr.getFields().get(0).getName().contains("_")) {
-                formName = KieApiUtil.getFormNameFromField(kpfr.getFields().get(0));
+    private Map<String, Section> getSections(KieProcessFormQueryResult kpfr) throws Exception {
+
+
+        Map<String, Section> sections = new HashMap<String, Section>();
+        List<T> fields = new ArrayList<T>();
+
+        kpfr.getFields().forEach(field
+                -> {
+            logger.debug("getSections field.getName() {}", field.getName());
+
+            Section tempSection = new Section();
+            String sectionName = null;
+            if (field.getName().contains("_")) {
+                sectionName = KieApiUtil.getFormNameFromField(field);
+                logger.debug("field.getName().contains(\"_\") sectionName = {}", sectionName);
+
             } else {
                 if (KieApiUtil.getFieldProperty(kpfr.getProperties(), "name").contains(".")) {
-                    formName = KieApiUtil.getFieldProperty(kpfr.getProperties(), "name")
+                    sectionName = KieApiUtil.getFieldProperty(kpfr.getProperties(), "name")
                             .substring(0, KieApiUtil.getFieldProperty(kpfr.getProperties(), "name").indexOf("."));
-
+                    logger.debug("field.getName().contains(\".\") sectionName = {}", sectionName);
                 } else {
-                    formName = KieApiUtil.getFieldProperty(kpfr.getProperties(), "name");
+                    sectionName = KieApiUtil.getFieldProperty(kpfr.getProperties(), "name");
+                    logger.debug("field.getName() not contains(\".\") sectionName = {}", sectionName);
                 }
             }
 
-            section.setName(formName);
+            if (null == sectionName) {
+                logger.warn("sectionName is null -> set section name to empty String");
+                sectionName = "";
+            }
+
+            try {
+                fields.add(addField(field));
+            } catch (Exception ex) {
+                logger.error("error adding field {}", ex);
+
+            }
+
+            tempSection.setName(sectionName);
+            tempSection.setFields(fields);
+
+            if (!sections.containsKey(sectionName)) {
+                sections.put(sectionName, tempSection);
+                logger.debug("--> add section with name {}", sectionName);
+            }
+
         }
-        return section;
-    }
-
-    private List<T> addFields(KieProcessFormQueryResult kpfr) throws Exception {
-
-        List<KieProcessFormField> fields = kpfr.getFields();
-
-        List<T> inputFields = new ArrayList<T>();
-
-        for (int i = 0; i < fields.size(); i++) {
-            KieProcessFormField field = fields.get(i);
-            inputFields.add(this.addField(field));
-        }
-
-        //TODO CHECK SUBFORMS
+        );
         List<KieProcessFormQueryResult> subForms = kpfr.getNestedForms();
         if (null != subForms && !subForms.isEmpty()) {
-            for (int i = 0; i < subForms.size(); i++) {
-                KieProcessFormQueryResult form = subForms.get(i);
-                inputFields.addAll(this.addFields(form));
-            }
+            kpfr.getNestedForms().forEach(form
+                    -> {
+
+                try {
+                    sections.putAll(getSections(form));
+                } catch (Exception ex) {
+                    logger.error("error adding getNestedForms {}", ex);
+
+                }
+            });
         }
+        sections.keySet().forEach(k -> logger.debug("return sections : {}", k));
+        return sections;
     }
-
-        return inputFields;
-    }
-
+    
     private T addField(KieProcessFormField field) throws Exception {
         logger.debug("------------------------------------");
         logger.debug("Field getId          -> {}", field.getId());
@@ -194,7 +219,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         T inputField;
         if (field.getType().equals("DatePicker")) {
             inputField = (T) new DatePicker();
-            
+
         } else {
             inputField = (T) new InputField();
         }
@@ -218,18 +243,18 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         inputField.setRequired(required);
         inputField.setTypePAM(fieldTypePAM);
         inputField.setTypeHTML(fieldTypeHMTL);
-        
+
         if (inputField instanceof DatePicker) {
             DatePicker datePicker = (DatePicker) inputField;
-            
+
             boolean showTime = Boolean.parseBoolean(field.getProperty("showTime").getValue());
 
             datePicker.setShowTime(showTime);
             return (T) datePicker;
         }
-        
+
         return inputField;
-  
+
     }
 
     public ServletContext getServletContext() {

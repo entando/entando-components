@@ -23,9 +23,12 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-public class Section {
+import java.util.List;
+
+public class Section<T extends InputField> {
 
     private String name;
+    private List<T> fields;
 
     public String getName() {
         return name;
@@ -34,5 +37,14 @@ public class Section {
     public void setName(String name) {
         this.name = name;
     }    
+
+    public List<T> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<T> fields) {
+        this.fields = fields;
+    }
+    
 }
 
