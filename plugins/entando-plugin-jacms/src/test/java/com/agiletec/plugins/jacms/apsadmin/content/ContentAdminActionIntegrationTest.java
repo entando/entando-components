@@ -158,6 +158,42 @@ public class ContentAdminActionIntegrationTest extends AbstractBaseTestContentAc
         this.executeValidateNewMetadata(IResourceManager.TITLE_METADATA_KEY);
     }
 
+    public void testAddValidAspectRatio() throws Throwable {
+        Map<String, List<String>> defaultMapping = this.resourceManager.getMetadataMapping();
+        try {
+            this.initAction("/do/jacms/Content/Admin", "updateSystemParams");
+            this.setUserOnSession("admin");
+            this.addParameter("ratio", new String[]{"16:9", "4:3"});
+            String result = this.executeAction();
+            ContentAdminAction action = (ContentAdminAction) super.getAction();
+            assertEquals(BaseAction.SUCCESS, result);
+            assertEquals(0, action.getFieldErrors().size());
+            assertEquals("16:9;4:3", action.getAspectRatio());
+            assertEquals(2, action.getRatio().size());
+        } catch (Throwable e) {
+            throw e;
+        } finally {
+            this.resourceManager.updateMetadataMapping(defaultMapping);
+        }
+    }
+
+    public void testAddInvalidAspectRatio() throws Throwable {
+        Map<String, List<String>> defaultMapping = this.resourceManager.getMetadataMapping();
+        try {
+            this.initAction("/do/jacms/Content/Admin", "updateSystemParams");
+            this.setUserOnSession("admin");
+            this.addParameter("ratio", new String[]{"invalid"});
+            String result = this.executeAction();
+            ContentAdminAction action = (ContentAdminAction) super.getAction();
+            assertEquals(BaseAction.INPUT, result);
+            assertEquals(1, action.getFieldErrors().size());
+        } catch (Throwable e) {
+            throw e;
+        } finally {
+            this.resourceManager.updateMetadataMapping(defaultMapping);
+        }
+    }
+
     protected void executeValidateNewMetadata(String newWrongMetadata) throws Throwable {
         Map<String, List<String>> defaultMapping = this.resourceManager.getMetadataMapping();
         try {
