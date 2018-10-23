@@ -1,4 +1,6 @@
-<array>
+<?xml version="1.0" encoding="UTF-8"?>
+<pamFormResult>
+    <array>
     <name>evaluation-taskform.frm</name>
     <model>
         <processName>Evaluation</processName>
@@ -206,3 +208,4 @@
         <placeHolder>BirthDate</placeHolder>
     </fields>
 </array>
+</pamFormResult>
