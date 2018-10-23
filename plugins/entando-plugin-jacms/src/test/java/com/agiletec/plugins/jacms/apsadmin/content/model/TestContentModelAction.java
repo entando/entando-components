@@ -45,8 +45,8 @@ public class TestContentModelAction extends ApsAdminBaseTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
         this.deleteReferencingPage();
+        super.tearDown();
     }
 
     public void testNewModel() throws Throwable {
