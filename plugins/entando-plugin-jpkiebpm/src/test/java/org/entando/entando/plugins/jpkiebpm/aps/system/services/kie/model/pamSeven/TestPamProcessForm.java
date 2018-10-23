@@ -43,12 +43,10 @@ public class TestPamProcessForm extends TestCase {
 
     public void testPAM7ProcessForm() throws Throwable {
         try {
-            String pam7businessProcessForm1 = new String(Files.readAllBytes(Paths.get("src/test/resources/examples/xml/pam-7-test-process-form-1.xml")));
-
-            String pamSevenString = "<pamFormResult>" + pam7businessProcessForm1 + "</pamFormResult>";
+            String pam7businessProcessForm = new String(Files.readAllBytes(Paths.get("src/test/resources/examples/xml/pam-7-test-process-form-1.xml")));
 
             PamProcessQueryFormResult pamResult = (PamProcessQueryFormResult) JAXBHelper
-                    .unmarshall(pamSevenString, PamProcessQueryFormResult.class, true, false);
+                    .unmarshall(pam7businessProcessForm, PamProcessQueryFormResult.class, true, false);
             assertNotNull(pamResult);
 
             List<PamFields> fields = new ArrayList<PamFields>();

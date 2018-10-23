@@ -24,7 +24,6 @@
 package org.entando.entando.plugins.jpkiebpm;
 
 /**
- *
  * These test, even if try to be as agnostic of the process as possible, are
  * tailored to the mortgage demo of Red Hat
  *
@@ -35,7 +34,7 @@ public interface KieTestParameters {
     public final static Boolean TEST_ENABLED = true;
 
 //    // THE VALUES BELOW MUST EXIST ON THE BPM !!!
-    
+
     public final static String USERNAME = "kieserver";
     public final static String PASSWORD = "kieserver1!"; // ansible.serv.run
     public final static String HOSTNAME = "co-client-onboarding-developer.54.36.53.206.xip.io";
@@ -44,7 +43,7 @@ public interface KieTestParameters {
     public final static Integer PORT = 80;
     public final static Integer TIMEOUT = 1000;
 
-    
+
 //    public final static String USERNAME = "krisv";
 //    public final static String PASSWORD = "krisv"; // ansible.serv.run
 
@@ -56,9 +55,10 @@ public interface KieTestParameters {
     public final static Integer PORT = 8080;
     public final static Integer TIMEOUT = 1000;
 */
+
     public final static String TARGET_PROCESS_ID = "com.redhat.bpms.examples.mortgage.MortgageApplication";
     public final static String TARGET_CONTAINER_ID = "mortgage_1.0";
-  //  public final static String TARGET_CONTAINER_ID = "itorders_1.0.0-SNAPSHOT";
+//  public final static String TARGET_CONTAINER_ID = "itorders_1.0.0-SNAPSHOT";
     public final static String TARGET_CASE_ID = "IT-0000000001";
     public final static String TARGET_PROCESS_INSTANCE_ID = "155";
 }

@@ -30,7 +30,7 @@ public class InputField {
     private String typeHTML;
     private String value;
     private boolean required;
-    private String placeholder;
+    private String placeHolder;
     
     public String getId() {
         return id;
@@ -79,12 +79,12 @@ public class InputField {
         this.required = required;
     }
 
-    public String getPlaceholder() {
-        return placeholder;
+    public String getPlaceHolder() {
+        return placeHolder;
     }
 
-    public void setPlaceholder(String placeholder) {
-        this.placeholder = placeholder;
+    public void setPlaceHolder(String placeHolder) {
+        this.placeHolder = placeHolder;
     }
 
 }

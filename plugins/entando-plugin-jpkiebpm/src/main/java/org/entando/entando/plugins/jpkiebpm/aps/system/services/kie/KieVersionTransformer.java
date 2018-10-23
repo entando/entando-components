@@ -202,11 +202,13 @@ public class KieVersionTransformer {
             String code = field.getCode();
             Boolean required = field.getRequired();
             Boolean showTime = field.getShowTime();
+            String placeHolder = field.getPlaceHolder();
+
             if(code.equals("SubForm")) {
                 //Sub forms will get processed and be nested under the root. This prevents duplicates
                 continue;
             }
-            KieProcessFormField builtField = buildField(fieldId, modelName, fieldName, label, code, required, type, showTime);
+            KieProcessFormField builtField = buildField(fieldId, modelName, fieldName, label, code, required, type, showTime, placeHolder);
             if (field.getReadOnly()) {
             		builtField.addProperty("readOnly", true);
             }
@@ -272,8 +274,7 @@ public class KieVersionTransformer {
 
     }
 
-    private static KieProcessFormField buildField(String id, String modelName, String fieldName, String label, String code, Boolean required, String type,boolean dateTime) {
-
+    private static KieProcessFormField buildField(String id, String modelName, String fieldName, String label, String code, Boolean required, String type,boolean dateTime, String placeHolder) {
 
         KieProcessFormField field = new KieProcessFormField();
         field.setProperties(new ArrayList<>());
@@ -300,7 +301,12 @@ public class KieVersionTransformer {
         fieldClass.setName("fieldClass");
         fieldClass.setValue(type);
         field.getProperties().add(fieldClass);
-  
+
+        KieProcessProperty placeHolderProperty =  new KieProcessProperty();
+        placeHolderProperty.setName("placeHolder");
+        placeHolderProperty.setValue(placeHolder);
+        field.getProperties().add(placeHolderProperty);
+
         if (field.getType().equals("DatePicker")) {
             KieProcessProperty showTime = new KieProcessProperty();
             showTime.setName("showTime");

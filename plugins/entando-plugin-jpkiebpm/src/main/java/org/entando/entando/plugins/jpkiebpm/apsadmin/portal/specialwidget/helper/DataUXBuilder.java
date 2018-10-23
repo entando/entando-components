@@ -23,7 +23,6 @@ THE SOFTWARE.
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
-import com.agiletec.aps.util.FileTextReader;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
@@ -32,7 +31,6 @@ import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePicker;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.InputField;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +42,9 @@ import freemarker.template.TemplateExceptionHandler;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import javax.servlet.ServletContext;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.ServletContextAware;
+import org.apache.struts2.util.ServletContextAware;
 
 @Service
 public class DataUXBuilder<T extends InputField> implements ServletContextAware {
@@ -57,11 +54,9 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     private Map<String, String> valueMapping = new HashMap<>();
     private ServletContext servletContext;
 
-    // src/main/resources/templates 
+    // Template folder path src/main/resources/templates
     public static final String TEMPLATE_FOLDER = "/templates/";
     public static final String MAIN_FTL_TEMPLATE = "pageModel.ftl";
-
-    public List fields = new ArrayList<DatePicker>();
 
     Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
 
@@ -71,7 +66,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.typeMapping.put("InputText", "text");
         this.typeMapping.put("InputTextInteger", "number");
 
-        //this.typeMapping.put("HTML", "text");
         this.typeMapping.put("TextBox", "text");
         this.typeMapping.put("TextArea", "text");
         this.typeMapping.put("IntegerBox", "number");
@@ -89,7 +83,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.valueMapping.put("InputTextInteger", "$data.%s.number");
         this.valueMapping.put("CheckBox", "$data.%s.checkbox");
 
-        //this.valueMapping.put("HTML", "$data.%s.text");
         this.valueMapping.put("TextBox", "$data.%s.text");
         this.valueMapping.put("TextArea", "$data.%s.text");
         this.valueMapping.put("IntegerBox", "$data.%s.number");
@@ -122,7 +115,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         Template template = cfg.getTemplate(MAIN_FTL_TEMPLATE);
 
         Map<String, Section> sections = this.getSections(kpfr);
-        //   List fields = this.addFields(kpfr);
         Map<String, Object> root = new HashMap<>();
         Model model = new Model();
         model.setTitle(title);
@@ -133,7 +125,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
 
         root.put("sections", sections);
 
-        // root.put("fields", fields);
         Writer stringWriter = new StringWriter();
         template.process(root, stringWriter);
         return stringWriter.toString();
@@ -227,23 +218,20 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
 
         //String label = (null != labelProperty) ? labelProperty.getValue() : null;
         String fieldTypeHMTL = this.typeMapping.get(field.getType());
-        if (null == fieldTypeHMTL) {
-            fieldTypeHMTL = "text";
-        }
 
         String fieldTypePAM = field.getType();
         String fieldValueExpr = this.valueMapping.get(field.getType());
         String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
 
         boolean required = Boolean.parseBoolean(field.getProperty("fieldRequired").getValue());
-
+        String  placeHolder = field.getProperty("placeHolder").getValue();
         inputField.setId(field.getId());
         inputField.setName(fieldName);
         inputField.setValue(fieldValue);
         inputField.setRequired(required);
         inputField.setTypePAM(fieldTypePAM);
         inputField.setTypeHTML(fieldTypeHMTL);
-
+        inputField.setPlaceHolder(placeHolder);
         if (inputField instanceof DatePicker) {
             DatePicker datePicker = (DatePicker) inputField;
 
