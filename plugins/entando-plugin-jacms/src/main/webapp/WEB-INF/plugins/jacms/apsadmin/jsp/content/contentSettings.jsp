@@ -237,6 +237,37 @@
                 </div>
             </div>
         </fieldset>
+
+        <fieldset class="col-xs-12">
+
+            <h2>
+                <s:text name="jacms.title.contentSetting.cropImage"/>
+            </h2>
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-2">
+                    <div id="add-crop-dim-button">
+                        <button type="button" id="add-crop-dim" class="btn btn-primary">
+                            <s:text name="label.add" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <s:set var="aspectRatioListVar" value="ratio" />
+            <s:iterator var="cropDimVar" value="#aspectRatioListVar" status="status">
+                <div class="form-group">
+                    <div class="col-sm-2 col-sm-offset-2">
+                        <wpsf:textfield name="ratio" maxlength="40" id="ratio_%{#status.count - 1}" cssClass="form-control ratio-conf" value="%{#cropDimVar}" />
+                    </div>
+                    <button type="button" class="btn-danger delete-fields" title="<s:text name="label.delete" />">
+                        <span class="pficon pficon-delete"></span>
+                    </button>
+                </div>
+            </s:iterator>
+            <div id="fields-container" >
+            </div>
+        </fieldset>
+
         <div class="form-group">
             <div class="col-xs-12">
                 <wpsf:submit type="button" cssClass="btn btn-primary pull-right">
@@ -246,3 +277,44 @@
         </div>
     </s:form>
 </div>
+
+<template id="hidden-fields-template">
+    <div class="form-group">
+        <div class="col-sm-2 col-sm-offset-2">
+            <wpsf:textfield name="ratio" maxlength="250" id="newRatio" cssClass="form-control ratio-conf" />
+        </div>
+
+        <button type="button" class="btn-danger delete-fields" title="<s:text name="label.delete" />">
+            <span class="pficon pficon-delete"></span>
+        </button>
+    </div>
+</template>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#add-crop-dim').click(function (e) {
+            e.preventDefault();
+            var numItems = $('.ratio-conf').length;
+
+            var template = $('#hidden-fields-template').html();
+
+            $('#fields-container').append(template);
+
+            var newId = parseInt(numItems);
+            $('#newRatio').val("");
+            $('#newRatio').attr("id", "ratio_" + newId);
+
+
+        });
+        $('.delete-fields').click(function (e) {
+            e.preventDefault();
+            $(this).parent('div').remove();
+        });
+
+        $('#fields-container').on("click", ".delete-fields", function (e) {
+            e.preventDefault();
+            $(this).parent('div').remove();
+        })
+    });
+</script>

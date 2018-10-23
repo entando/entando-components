@@ -13,7 +13,9 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
+import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.apsadmin.admin.BaseAdminAction;
+import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -39,6 +44,8 @@ public class ContentAdminAction extends BaseAdminAction {
 
     private static final Logger logger = LoggerFactory.getLogger(ContentAdminAction.class);
 
+    private static final String ASPECT_RATIO_PATTERN = "[0-9]{1,}:[0-9]{1,}";
+
     private Map<String, List<String>> mapping;
     private String metadataKey;
     private String metadataMapping;
@@ -48,9 +55,13 @@ public class ContentAdminAction extends BaseAdminAction {
     private IResourceManager resourceManager;
     private ICmsSearchEngineManager searchEngineManager;
 
+    private String aspectRatio;
+    private List<String> ratio = new ArrayList<>();
+
     @Override
     public void validate() {
         super.validate();
+        this.validateAspectRatioList();
         Map<String, List<String>> mapping = this.buildMapping();
         if (!StringUtils.isBlank(this.getMetadataKey())) {
             if (mapping.containsKey(this.getMetadataKey().trim())) {
@@ -65,6 +76,8 @@ public class ContentAdminAction extends BaseAdminAction {
         if (!result.equals(SUCCESS)) {
             return result;
         }
+        this.setAspectRatio(this.getSystemParams().get(JacmsSystemConstants.CONFIG_PARAM_ASPECT_RATIO));
+        this.setRatio(this.getAspectRatio() != null ? Arrays.asList(this.getAspectRatio().split(";")) : new ArrayList<>());
         try {
             this.setMapping(this.getResourceManager().getMetadataMapping());
         } catch (Throwable t) {
@@ -263,6 +276,28 @@ public class ContentAdminAction extends BaseAdminAction {
         this.contentManager = contentManager;
     }
 
+    public String getAspectRatio() {
+        if (aspectRatio == null) {
+            this.aspectRatio = this.getSystemParams().get(JacmsSystemConstants.CONFIG_PARAM_ASPECT_RATIO);
+        }
+        return aspectRatio;
+    }
+
+    public void setAspectRatio(String aspectRatio) {
+        this.aspectRatio = aspectRatio;
+    }
+
+    public List<String> getRatio() {
+        if (this.ratio == null) {
+            this.ratio = this.getAspectRatio() != null ? Arrays.asList(this.getAspectRatio().split(";")) : new ArrayList<>();
+        }
+        return ratio;
+    }
+
+    public void setRatio(List<String> ratio) {
+        this.ratio = ratio;
+    }
+
     protected ICmsSearchEngineManager getSearchEngineManager() {
         return searchEngineManager;
     }
@@ -277,6 +312,27 @@ public class ContentAdminAction extends BaseAdminAction {
 
     public void setResourceManager(IResourceManager resourceManager) {
         this.resourceManager = resourceManager;
+    }
+
+    @Override
+    protected void initLocalMap() throws Throwable {
+        String xmlParams = this.getConfigParameter();
+        Map<String, String> systemParams = SystemParamsUtils.getParams(xmlParams);
+        this.setSystemParams(systemParams);
+        if (this.getRatio() != null && !this.getRatio().isEmpty()) {
+            this.setAspectRatio(String.join(";", this.getRatio()));
+        }
+        this.getSystemParams().put(JacmsSystemConstants.CONFIG_PARAM_ASPECT_RATIO, this.getAspectRatio());
+    }
+
+    private void validateAspectRatioList() {
+        Optional.ofNullable(this.getRatio()).ifPresent(list -> list.forEach(elem -> {
+            Pattern p = Pattern.compile(ASPECT_RATIO_PATTERN);
+            Matcher m = p.matcher(elem);
+            if (!m.matches()) {
+                this.addFieldError("ratio", this.getText("error.contentSettings.aspectRatio.invalidFormat", new String[]{elem}));
+            }
+        }));
     }
 
 }

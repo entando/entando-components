@@ -22,6 +22,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import com.opensymphony.xwork2.TextProvider;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,9 @@ public class ContentAdminActionTest {
 
     private static final String CONFIG_MAPPING
             = "<Params><Param name=\"param_1\">value_1</Param><Param name=\"param_2\">value_2</Param></Params>";
+
+    private static final String ASPECT_RATIO_PARAMS
+            = "<Params><ExtraParams><Param name=\"aspect_ratio\">16:9;2:3</Param></ExtraParams></Params>";
 
     @Mock
     private HttpServletRequest request;
@@ -243,4 +247,39 @@ public class ContentAdminActionTest {
         Mockito.verify(contentManager, Mockito.times(1)).reloadEntitiesReferences(null);
     }
 
+    @Test
+    public void testValidAspectRatioParams() throws Exception {
+        List<String> ratio = Arrays.asList("16:9", "4:3");
+        action.setRatio(ratio);
+        action.validate();
+        Assert.assertFalse(action.hasErrors());
+    }
+
+    @Test
+    public void testInvalidAspectRatioParams() throws Exception {
+        List<String> ratio = Arrays.asList("invalid");
+        action.setRatio(ratio);
+        action.validate();
+        Assert.assertTrue(action.hasErrors());
+    }
+
+    @Test
+    public void testAspectRatioUpdate() throws Exception {
+        when(configManager.getConfigItem(ArgumentMatchers.anyString())).thenReturn(CONFIG_PARAMETER);
+        Enumeration mockedEnumerator = Mockito.mock(Enumeration.class);
+        when(mockedEnumerator.hasMoreElements()).thenReturn(false);
+        when(request.getParameterNames()).thenReturn(mockedEnumerator);
+        List<String> ratio = Arrays.asList("16:9", "4:3");
+        action.setRatio(ratio);
+        String result = action.updateSystemParams();
+        Assert.assertEquals(BaseAction.SUCCESS, result);
+        Assert.assertEquals("16:9;4:3", action.getAspectRatio());
+    }
+
+    @Test
+    public void testAspectRatioFromParams() throws Throwable {
+        when(configManager.getConfigItem(ArgumentMatchers.anyString())).thenReturn(ASPECT_RATIO_PARAMS);
+        action.initLocalMap();
+        Assert.assertEquals("16:9;2:3", action.getAspectRatio());
+    }
 }

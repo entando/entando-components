@@ -17,6 +17,8 @@ import com.agiletec.aps.system.SystemConstants;
 
 public class JacmsSystemConstants {
 
+    public static final String CONFIG_PARAM_ASPECT_RATIO = "aspect_ratio";
+
     /**
      * Name of the service for contents handling.
      */
