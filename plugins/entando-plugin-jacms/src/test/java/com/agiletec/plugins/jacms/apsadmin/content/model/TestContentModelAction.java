@@ -334,7 +334,6 @@ public class TestContentModelAction extends ApsAdminBaseTestCase {
         page.setGroup(root.getGroup());
 
         PageMetadata pageMetadata = new PageMetadata();
-        pageMetadata.setGroup(root.getGroup());
         pageMetadata.setMimeType("text/html");
         pageMetadata.setModel(root.getModel());
         pageMetadata.setTitles(page.getTitles());
