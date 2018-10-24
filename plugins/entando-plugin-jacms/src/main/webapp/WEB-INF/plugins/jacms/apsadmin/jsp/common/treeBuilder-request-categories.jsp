@@ -62,10 +62,12 @@
 		</label>
     </td>
 	<td class="text-center">
-		<wpsf:submit action="%{#actionName}" type="button" 
-		   title="%{getText('label.join')}" cssClass="btn btn-sm btn-link js_joinCategory">
-		   <span class="icon fa fa-plus"></span>
-		</wpsf:submit>
+		<s:if test="%{!#currentRoot.isRoot()}">
+			<wpsf:submit action="%{#actionName}" type="button" 
+			   title="%{getText('label.join')}" cssClass="btn btn-sm btn-link js_joinCategory">
+			   <span class="icon fa fa-plus"></span>
+			</wpsf:submit>
+		</s:if>
 	</td>
 </tr>
 
