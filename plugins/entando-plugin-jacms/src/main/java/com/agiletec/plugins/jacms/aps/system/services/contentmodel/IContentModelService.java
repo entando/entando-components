@@ -23,7 +23,10 @@ public interface IContentModelService {
 
     public void removeContentModel(Long modelId);
 
+    @Deprecated
     public Map<String, List<String>> getPageReferences(Long modelId);
+
+    public List<ContentModelReference> getContentModelReferences(Long modelId);
 
     public ContentModelDto updateContentModel(ContentModelRequest contentModelRequest);
 
