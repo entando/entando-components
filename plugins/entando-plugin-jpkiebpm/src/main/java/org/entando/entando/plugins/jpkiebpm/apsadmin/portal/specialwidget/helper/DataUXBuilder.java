@@ -28,7 +28,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Model;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Section;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePicker;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePickerField;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.InputField;
 
 import java.util.HashMap;
@@ -42,9 +42,15 @@ import freemarker.template.TemplateExceptionHandler;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.servlet.ServletContext;
 import org.springframework.stereotype.Service;
 import org.apache.struts2.util.ServletContextAware;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.MultipleSelectorField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.SelectField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.SelectOption;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.TextField;
 
 @Service
 public class DataUXBuilder<T extends InputField> implements ServletContextAware {
@@ -56,7 +62,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
 
     // Template folder path src/main/resources/templates
     public static final String TEMPLATE_FOLDER = "/templates/";
-    public static final String MAIN_FTL_TEMPLATE = "pageModel.ftl";
+    public static final String MAIN_FTL_TEMPLATE = "PageModel.ftl";
 
     Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
 
@@ -65,14 +71,13 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
 
         this.typeMapping.put("InputText", "text");
         this.typeMapping.put("InputTextInteger", "number");
-
         this.typeMapping.put("TextBox", "text");
         this.typeMapping.put("TextArea", "text");
         this.typeMapping.put("IntegerBox", "number");
-        this.typeMapping.put("CheckBox", "checkbox");
         this.typeMapping.put("DecimalBox", "number");
         this.typeMapping.put("DatePicker", "text");
         this.typeMapping.put("CheckBox", "checkbox");
+        this.typeMapping.put("ListBox", "text");
         this.typeMapping.put("Slider", "number");
         this.typeMapping.put("RadioGroup", "number");
         this.typeMapping.put("MultipleInput", "number");
@@ -81,16 +86,15 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
 
         this.valueMapping.put("InputText", "$data.%s.text");
         this.valueMapping.put("InputTextInteger", "$data.%s.number");
-        this.valueMapping.put("CheckBox", "$data.%s.checkbox");
-
+        this.valueMapping.put("CheckBox", "$data.%s.boolean");
         this.valueMapping.put("TextBox", "$data.%s.text");
         this.valueMapping.put("TextArea", "$data.%s.text");
         this.valueMapping.put("IntegerBox", "$data.%s.number");
         this.valueMapping.put("DecimalBox", "$data.%s.number");
         this.valueMapping.put("DatePicker", "$data.%s.text");
-        this.valueMapping.put("CheckBox", "$data.%s.text");
         this.valueMapping.put("Slider", "$data.%s.number");
         this.valueMapping.put("RadioGroup", "$data.%s.number");
+        this.valueMapping.put("ListBox", "$data.%s.text");
         this.valueMapping.put("MultipleSelector", "$data.%s.text");
         this.valueMapping.put("MultipleInput", "$data.%s.text");
         this.valueMapping.put("Document", "$data.%s.text");
@@ -132,7 +136,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     }
 
     private Map<String, Section> getSections(KieProcessFormQueryResult kpfr) throws Exception {
-
 
         Map<String, Section> sections = new HashMap<String, Section>();
         List<T> fields = new ArrayList<T>();
@@ -196,7 +199,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         sections.keySet().forEach(k -> logger.debug("return sections : {}", k));
         return sections;
     }
-    
+
     private T addField(KieProcessFormField field) throws Exception {
         logger.debug("------------------------------------");
         logger.debug("Field getId          -> {}", field.getId());
@@ -207,38 +210,101 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         field.getProperties().forEach(p
                 -> logger.debug("  Property name:{} value: {}", p.getName(), p.getValue()));
         logger.debug("------------------------------------");
+
         T inputField;
-        if (field.getType().equals("DatePicker")) {
-            inputField = (T) new DatePicker();
+        switch (field.getType()) {
+            case "TextBox":
+            case "TextArea":
+            case "IntegerBox":
+            case "InputText":
+            case "InputTextInteger":
+                inputField = (T) new TextField();
+                break;
+            case "ListBox":
+                inputField = (T) new SelectField();
+                break;
+            case "DatePicker":
+                inputField = (T) new DatePickerField();
+                break;
+            case "MultipleSelector":
+                inputField = (T) new MultipleSelectorField();
+                break;
+            case "CheckBox":
+                inputField = (T) new InputField();
+                break;
+            default:
+                inputField = (T) new InputField();
 
-        } else {
-            inputField = (T) new InputField();
         }
+
         String fieldName = field.getName();
-
-        //String label = (null != labelProperty) ? labelProperty.getValue() : null;
         String fieldTypeHMTL = this.typeMapping.get(field.getType());
-
         String fieldTypePAM = field.getType();
         String fieldValueExpr = this.valueMapping.get(field.getType());
         String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
 
         boolean required = Boolean.parseBoolean(field.getProperty("fieldRequired").getValue());
-        String  placeHolder = field.getProperty("placeHolder").getValue();
+        String placeHolder = field.getProperty("placeHolder").getValue();
         inputField.setId(field.getId());
         inputField.setName(fieldName);
         inputField.setValue(fieldValue);
         inputField.setRequired(required);
         inputField.setTypePAM(fieldTypePAM);
         inputField.setTypeHTML(fieldTypeHMTL);
-        inputField.setPlaceHolder(placeHolder);
-        if (inputField instanceof DatePicker) {
-            DatePicker datePicker = (DatePicker) inputField;
 
+        if (inputField instanceof DatePickerField) {
+            DatePickerField datePicker = (DatePickerField) inputField;
             boolean showTime = Boolean.parseBoolean(field.getProperty("showTime").getValue());
-
             datePicker.setShowTime(showTime);
-            return (T) datePicker;
+        }
+        if (inputField instanceof SelectField) {
+            SelectField select = (SelectField) inputField;
+            String optionsString = field.getProperty("options").getValue();
+            List<String> optionsValues = Arrays.asList(optionsString.split(","));
+            List<SelectOption> selectOption = new ArrayList<SelectOption>();
+            for (String f : optionsValues) {
+                String[] split = f.split("=");
+                SelectOption opt = new SelectOption();
+                opt.setName(split[0]);
+                opt.setValue(split[1]);
+                selectOption.add(opt);
+            }
+            select.setOptions(selectOption);
+
+            boolean addEmptyOption = Boolean.parseBoolean(field.getProperty("addEmptyOption").getValue());
+            String defaultValue = field.getProperty("defaultValue").getValue();
+
+            select.setDefaultValue(defaultValue);
+            select.setAddEmptyOption(addEmptyOption);
+        }
+        if (inputField instanceof MultipleSelectorField) {
+            MultipleSelectorField multipleSelector = (MultipleSelectorField) inputField;
+            String optionsString = field.getProperty("listOfValues").getValue();
+
+            boolean allowClearSelection = Boolean.parseBoolean(field.getProperty("allowClearSelection").getValue());
+            boolean allowFilter = Boolean.parseBoolean(field.getProperty("allowFilter").getValue());
+            int maxElementsOnTitle = Integer.parseInt(field.getProperty("maxElementsOnTitle").getValue());
+            int maxDropdownElements = Integer.parseInt(field.getProperty("maxDropdownElements").getValue());
+            List<String> optionsValues = Arrays.asList(optionsString.split(","));
+            List<SelectOption> selectOption = new ArrayList<SelectOption>();
+            for (String f : optionsValues) {
+                SelectOption opt = new SelectOption();
+                opt.setName(f);
+                opt.setValue(f);
+                selectOption.add(opt);
+            }
+
+            multipleSelector.setOptions(selectOption);
+            multipleSelector.setMaxDropdownElements(maxDropdownElements);
+            multipleSelector.setMaxElementsOnTitle(maxElementsOnTitle);
+            multipleSelector.setAllowClearSelection(allowClearSelection);
+            multipleSelector.setAllowFilter(allowFilter);
+
+        }
+
+        if (inputField instanceof TextField) {
+            TextField textField = (TextField) inputField;
+            textField.setPlaceHolder(placeHolder);
         }
 
         return inputField;

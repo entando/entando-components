@@ -56,6 +56,7 @@ public class FormToBpmHelper {
     public final static String INTEGER = "java.lang.Integer";
     public final static String BOOLEAN = "java.lang.Boolean";
     public final static String DATE = "java.util.Date";
+    public final static String LIST = "java.util.List";
 
     /**
      * Create a JSON for each section of the form
@@ -109,6 +110,7 @@ public class FormToBpmHelper {
                 || formParams.isEmpty()) {
             return singles;
         }
+        logger.debug("INPUT KEYS:  {}",input.keySet().toString());
 
         for (KieProcessFormField formField : formParams) {
             String parameter = formField.getName();
@@ -123,9 +125,7 @@ public class FormToBpmHelper {
                     JSONObject json = jmap.get(section);
                     // add data
                     json.put(field, input.get(parameter));
-                    
-                    logger.info("! scalarForm {}",json.toString()) ;
-                    
+                                     
                 } else {
 
                     //Boolean checkbox values need to get round tripped as false. Without it data erasure can occur
@@ -147,7 +147,7 @@ public class FormToBpmHelper {
                     input.put(parameter, false);
                 }
                 singles.put(field, input.get(parameter));
-                logger.info("adding single '{}'", field);
+                logger.info("adding single '{}' value '{}'", field, input.get(parameter));
             }
         }
         return singles;
@@ -250,11 +250,26 @@ public class FormToBpmHelper {
         // check whether the data is mandatory
         final boolean mandatory
                 = BpmToFormHelper.getFieldRequired(field).equalsIgnoreCase("true");
+        
+        logger.debug("the field {} is mandatory {}" ,field.getName(), mandatory);
+        
+        logger.debug("the field {} value {}", field.getName(), value);
+        
         if (null == value) {
             if (!mandatory) {
+                logger.debug("not mandatory {} return NullFormField()", mandatory);
+              
                 return new NullFormField();
             } else {
+                logger.debug("mandatory {} return {}", result);
+
                 return result;
+            }
+        }
+        if (value.equals("") || value.equals("null")){
+            
+            if (!mandatory) {
+                return new NullFormField();
             }
         }
         // get the data type
@@ -283,13 +298,19 @@ public class FormToBpmHelper {
                 //Date Format YYYY-MM-DD
                 result = java.sql.Date.valueOf(value);
 
-            } else {
+            }
+            else if (fieldClass.equals(LIST)) {                
+                result = value;
+
+            }else {
                 logger.warn("unknown field class type '{}'", fieldClass);
                 result = value;
             }
         } catch (Throwable t) {
             result = null;
         }
+        logger.warn("return result '{}'", result);
+
         return result;
     }
 
@@ -307,7 +328,9 @@ public class FormToBpmHelper {
         for (Map.Entry<String, String> ff : input.entrySet()) {
             String key = ff.getKey();
             String value = ff.getValue();
-
+            logger.debug("validate failed {} with value {}", key ,value); 
+            
+            
             Object obj = FormToBpmHelper.validateField(form, key, value);
             if (null != obj) {
                 if (obj instanceof NullFormField) {

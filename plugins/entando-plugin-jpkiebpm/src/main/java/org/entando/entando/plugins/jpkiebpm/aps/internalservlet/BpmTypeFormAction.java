@@ -50,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+
 public class BpmTypeFormAction extends AbstractApsEntityAction {
 
     private static final Logger _logger = LoggerFactory.getLogger(BpmTypeFormAction.class);
@@ -146,10 +147,15 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
 
             while (iterator.hasNext()) {
                 AttributeInterface attribute = (AttributeInterface) iterator.next();
+                _logger.debug("SAVE attribute.getName() {}", attribute.getName());
                 if (null != attribute.getType()) {
                     final String value = attribute.getName();
+                    _logger.debug("SAVE attribute.getType() {}:{}", attribute.getType(),value );
 
                     toBpm.put(attribute.getName(), this.getRequest().getParameter(attribute.getType() + ":" + value));
+                }
+                else {
+                    _logger.debug("SAVE attribute.getType() NULL");
                 }
             }
             this.validateForm(toBpm, kieForm);
@@ -176,29 +182,37 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
         for (Map.Entry<String, Object> ff : params.entrySet()) {
             String key = ff.getKey();
             String value = null;
-            if(ff.getValue()!=null) {
+            if (ff.getValue() != null) {
                 value = ff.getValue().toString();
             }
-            
-            _logger.info("******* field '{}' value {}", key, value);
+
+            _logger.debug("******* field '{}' value {}", key, value);
             Object obj = FormToBpmHelper.validateField(kieForm, key, value);
             if (null != obj) {
                 if (obj instanceof NullFormField) {
-                    _logger.info("the field '{}' is null, but is not mandatory: ignoring", key);
+                    _logger.debug("the field '{}' is null (NullFormField), but is not mandatory: ignoring", key);
+                } else {
+                    _logger.debug("the field '{}' is  NOT null, but is not NullFormField", key);
+                    if (value.isEmpty()) {
+                        _logger.debug("Invalid input '{}' on field '{}'", value, key);
+                        String msg = String.format("Invalid input '%s' on field '%s'", value, key);
+                        this.addFieldError(key, msg);
+                    }
                 }
             } else {
+                _logger.debug("Invalid input '{}' on field '{}'", value, key);
                 String msg = String.format("Invalid input '%s' on field '%s'", value, key);
                 this.addFieldError(key, msg);
+
                 //validationResult.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT));
             }
+            }
         }
-    }
-
-    /**
-     * Returns the current session DataObject.
-     *
-     * @return The current session DataObject.
-     */
+        /**
+         * Returns the current session DataObject.
+         *
+         * @return The current session DataObject.
+         */
     public DataObject getDataObject() {
         if (this.dataObject == null) {
             try {
