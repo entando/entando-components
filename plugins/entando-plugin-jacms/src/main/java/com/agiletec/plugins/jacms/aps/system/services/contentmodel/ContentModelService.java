@@ -205,6 +205,7 @@ public class ContentModelService implements IContentModelService {
     }
 
     @Override
+    @Deprecated
     public Map<String, List<String>> getPageReferences(Long modelId) {
         ContentModel contentModel = this.getContentModelManager().getContentModel(modelId);
         if (null == contentModel) {
@@ -215,6 +216,7 @@ public class ContentModelService implements IContentModelService {
         return referencingPages;
     }
 
+    @Deprecated
     private Map<String, List<String>> getReferencingPages(Long modelId) {
         Map<String, List<IPage>> refs = this.getContentModelManager().getReferencingPages(modelId);
         Map<String, List<String>> dtoReferences = new HashMap<>();
@@ -222,6 +224,16 @@ public class ContentModelService implements IContentModelService {
             refs.entrySet().stream().forEach(e -> e.getValue().stream().forEach(v -> dtoReferences.put(e.getKey(), e.getValue().stream().map(ee -> ee.getCode()).collect(Collectors.toList()))));
         }
         return dtoReferences;
+    }
+
+    @Override
+    public List<ContentModelReference> getContentModelReferences(Long modelId) {
+        ContentModel contentModel = this.getContentModelManager().getContentModel(modelId);
+        if (null == contentModel) {
+            logger.info("contentModel {} does not exists", modelId);
+            throw new RestRourceNotFoundException(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND, "contentModel", String.valueOf(modelId));
+        }
+        return this.getContentModelManager().getContentModelReferences(modelId);
     }
 
     @Override
@@ -260,8 +272,8 @@ public class ContentModelService implements IContentModelService {
 
     protected BeanPropertyBindingResult validateForDelete(ContentModel contentModel) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(contentModel, "contentModel");
-        Map<String, List<IPage>> referencingPages = this.getContentModelManager().getReferencingPages(contentModel.getId());
-        if (!referencingPages.isEmpty()) {
+        List<ContentModelReference> references = this.getContentModelManager().getContentModelReferences(contentModel.getId());
+        if (!references.isEmpty()) {
             errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_REFERENCES, null, "contetntmodel.page.references");
         }
         return errors;
