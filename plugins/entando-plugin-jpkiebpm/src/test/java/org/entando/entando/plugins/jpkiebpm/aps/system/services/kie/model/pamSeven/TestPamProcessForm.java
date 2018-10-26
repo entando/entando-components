@@ -57,7 +57,7 @@ public class TestPamProcessForm extends TestCase {
                 );
             });
 
-            assertEquals(4, fields.size());
+            assertEquals(6, fields.size());
                        
             assertEquals("Employee", fields.get(0).getLabel());
             assertEquals("employee", fields.get(0).getName());
@@ -81,12 +81,26 @@ public class TestPamProcessForm extends TestCase {
             assertEquals("IntegerBox", fields.get(2).getCode());
             assertFalse(fields.get(2).getRequired());
 
-            assertEquals("BirthDate", fields.get(3).getLabel());
-            assertEquals("birthDate", fields.get(3).getName());
-            assertEquals("birthDate", fields.get(3).getBinding());
-            assertEquals("java.util.Date", fields.get(3).getStandaloneClassName());
-            assertEquals("DatePicker", fields.get(3).getCode());
+            assertEquals("CheckBox1", fields.get(3).getLabel());
+            assertEquals("checkBox1", fields.get(3).getName());
+            assertEquals("checkBox1", fields.get(3).getBinding());
+            assertEquals("java.lang.Boolean", fields.get(3).getStandaloneClassName());
+            assertEquals("CheckBox", fields.get(3).getCode());
             assertFalse(fields.get(3).getRequired());
+
+            assertEquals("ListBox", fields.get(4).getLabel());
+            assertEquals("listBox1", fields.get(4).getName());
+            assertEquals("listBox1", fields.get(4).getBinding());
+            assertEquals("java.lang.String", fields.get(4).getStandaloneClassName());
+            assertEquals("ListBox", fields.get(4).getCode());
+            assertFalse(fields.get(4).getRequired());
+
+            assertEquals("BirthDate", fields.get(5).getLabel());
+            assertEquals("birthDate", fields.get(5).getName());
+            assertEquals("birthDate", fields.get(5).getBinding());
+            assertEquals("java.util.Date", fields.get(5).getStandaloneClassName());
+            assertEquals("DatePicker", fields.get(5).getCode());
+            assertFalse(fields.get(5).getRequired());
             
         } catch (Throwable t) {
             throw t;

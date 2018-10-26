@@ -23,59 +23,35 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-public class InputField {
-    private String id;
-    private String name;
-    private String typePAM;
-    private String typeHTML;
-    private String value;
-    private boolean required;
+import java.util.List;
+
+public class SelectField extends InputField {
+    private List<SelectOption> options;
+    private boolean addEmptyOption;
+    private String defaultValue;
+    public List<SelectOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<SelectOption> options) {
+        this.options = options;
+    }
+
+    public boolean isAddEmptyOption() {
+        return addEmptyOption;
+    }
+
+    public void setAddEmptyOption(boolean addEmptyOption) {
+        this.addEmptyOption = addEmptyOption;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
     
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTypePAM() {
-        return typePAM;
-    }
-
-    public void setTypePAM(String typePAM) {
-        this.typePAM = typePAM;
-    }
-    public String getTypeHTML() {
-        return typeHTML;
-    }
-
-    public void setTypeHTML(String typeHTML) {
-        this.typeHTML = typeHTML;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public boolean getRequired() {
-        return required;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
 }
+

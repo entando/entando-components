@@ -23,59 +23,55 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-public class InputField {
-    private String id;
-    private String name;
-    private String typePAM;
-    private String typeHTML;
-    private String value;
-    private boolean required;
+import java.util.List;
+
+public class MultipleSelectorField extends InputField {
+    private List<SelectOption> options;
+    private int maxElementsOnTitle;
+    private int maxDropdownElements;
+    private boolean allowClearSelection;   
+    private boolean allowFilter;
+           
+    public List<SelectOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<SelectOption> options) {
+        this.options = options;
+    }
+
+    public int getMaxElementsOnTitle() {
+        return maxElementsOnTitle;
+    }
+
+    public void setMaxElementsOnTitle(int maxElementsOnTitle) {
+        this.maxElementsOnTitle = maxElementsOnTitle;
+    }
+
+    public int getMaxDropdownElements() {
+        return maxDropdownElements;
+    }
+
+    public void setMaxDropdownElements(int maxDropdownElements) {
+        this.maxDropdownElements = maxDropdownElements;
+    }
+
+    public boolean isAllowClearSelection() {
+        return allowClearSelection;
+    }
+
+    public void setAllowClearSelection(boolean allowClearSelection) {
+        this.allowClearSelection = allowClearSelection;
+    }
+
+    public boolean isAllowFilter() {
+        return allowFilter;
+    }
+
+    public void setAllowFilter(boolean allowFilter) {
+        this.allowFilter = allowFilter;
+    }
+
     
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTypePAM() {
-        return typePAM;
-    }
-
-    public void setTypePAM(String typePAM) {
-        this.typePAM = typePAM;
-    }
-    public String getTypeHTML() {
-        return typeHTML;
-    }
-
-    public void setTypeHTML(String typeHTML) {
-        this.typeHTML = typeHTML;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public boolean getRequired() {
-        return required;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
 }
+

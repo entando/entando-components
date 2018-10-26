@@ -23,7 +23,7 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-public class DatePicker extends InputField {
+public class DatePickerField extends TextField {
     private boolean showTime;
 
     public boolean getShowTime() {

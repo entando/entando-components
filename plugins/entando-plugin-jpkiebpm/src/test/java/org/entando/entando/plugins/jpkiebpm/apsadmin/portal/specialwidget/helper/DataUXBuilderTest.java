@@ -45,10 +45,10 @@ public class DataUXBuilderTest extends TestCase {
             assertTrue(htmlForm.contains("<input type=\"hidden\" id=\"containerId\" name=\"containerId\" class=\"ui-dform-hidden\" value=\"CONTAINER_ID\""));
 
             //TextBox field Checks
-            assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_740177746345817E11\" name=\"$data.employee.type:employee\" labelkey=\"JPKIE_employee\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Employee\" value=\"$data.employee.text\">"));
+            assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_740177746345817E11\" name=\"$data.employee.type:employee\" labelkey=\"JPKIE_employee\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Employee\" value=\"$data.employee.text\">\n"));
 
             //TextArea field Checks
-            assertTrue(htmlForm.contains("<textarea rows=\"4\" cols=\"50\" id=\"field_282038126127015E11\" name=\"$data.reason.type:reason\" labelkey=\"JPKIE_reason\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Reason\">$data.reason.text</textarea>"));
+            assertTrue(htmlForm.contains("<textarea rows=\"4\" cols=\"50\" id=\"field_282038126127015E11\" name=\"$data.reason.type:reason\" labelkey=\"JPKIE_reason\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Reason\" >$data.reason.text</textarea>"));
 
             //Number field Checks
             assertTrue(htmlForm.contains("<input type=\"number\" id=\"field_0897\" name=\"$data.performance.type:performance\" labelkey=\"JPKIE_performance\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Performance\" value=\"$data.performance.number\">"));
@@ -56,9 +56,19 @@ public class DataUXBuilderTest extends TestCase {
             //DatePicker Checks
             assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_8289\" name=\"$data.birthDate.type:birthDate\" labelkey=\"JPKIE_birthDate\" class=\"form-control date-picker\" aria-required=\"true\" placeholder=\"BirthDate\" value=\"$data.birthDate.text\">"));
             assertTrue(htmlForm.contains("$(\"#datepicker_field_8289\").datetimepicker"));
-            assertTrue(htmlForm.contains("format: 'YYYY-MM-DD'"));
+            assertTrue(htmlForm.contains("format: 'YYYY-MM-DD hh:mm'"));
             assertTrue(htmlForm.contains("showTodayButton: true"));
             assertTrue(htmlForm.contains("allowInputToggle: true"));
+
+            //CheckBox Checks
+            assertTrue(htmlForm.contains("<input type=\"checkbox\" id=\"field_4192\" name=\"$data.checkBox1.type:checkBox1\" labelkey=\"JPKIE_checkBox1\" class=\"ui-widget \" aria-required=\"true\" value=\"true\">"));
+
+            //ListBox Checks
+            assertTrue(htmlForm.contains("<select id=\"field_3229\" name=\"$data.listBox1.type:listBox1\" class=\"form-control\" >"));
+            assertTrue(htmlForm.contains("<option></option>"));
+            assertTrue(htmlForm.contains("<option value=\"val1\">Value 1</option>"));
+            assertTrue(htmlForm.contains("<option selected value=\"val2\">Value 2</option>"));
+            assertTrue(htmlForm.contains("<option value=\"val3\">Value 3</option>"));
 
         } catch (Exception e) {
             e.printStackTrace();

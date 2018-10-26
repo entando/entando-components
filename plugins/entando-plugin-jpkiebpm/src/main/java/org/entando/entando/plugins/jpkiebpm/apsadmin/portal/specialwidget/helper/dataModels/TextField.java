@@ -23,59 +23,16 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-public class InputField {
-    private String id;
-    private String name;
-    private String typePAM;
-    private String typeHTML;
-    private String value;
-    private boolean required;
-    
-    public String getId() {
-        return id;
+public class TextField extends InputField{
+    private String placeHolder;
+        
+    public String getPlaceHolder() {
+        return placeHolder;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTypePAM() {
-        return typePAM;
-    }
-
-    public void setTypePAM(String typePAM) {
-        this.typePAM = typePAM;
-    }
-    public String getTypeHTML() {
-        return typeHTML;
-    }
-
-    public void setTypeHTML(String typeHTML) {
-        this.typeHTML = typeHTML;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public boolean getRequired() {
-        return required;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
+    public void setPlaceHolder(String placeHolder) {
+        this.placeHolder = placeHolder;
     }
 
 }
+

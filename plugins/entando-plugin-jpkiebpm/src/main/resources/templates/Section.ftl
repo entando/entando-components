@@ -3,54 +3,55 @@
         <#if section.name??>
         <legend class="control-label editLabel ui-dform-legend">
             $i18n.getLabel("JPKIE_FORM_${section.name}")
-        </legend>
+            </legend>
         <#else> 
         </#if>
-<#if section.fields??>
-        <#list section.fields as field>
-                <div class="fields">
+        <#if section.fields??>
+            <#list section.fields as field>
+        <div class="fields">
                 <#switch field.typePAM>
                 <#case "TextBox">
-                    <#include "/inputFieldTextBox.ftl">
+                    <#include "/InputFieldTextBox.ftl">
                     <#break>
                 <#case "TextArea">
-                    <#include "/inputFieldTextArea.ftl">
+                    <#include "/InputFieldTextArea.ftl">
                     <#break>
                 <#case "DatePicker">
-                    <#include "/inputFieldDatePicker.ftl">
+                    <#include "/InputFieldDatePicker.ftl">
                     <#break>
                 <#case "IntegerBox">
-                    <#include "/inputFieldTextBox.ftl">
+                    <#include "/InputFieldTextBox.ftl">
                     <#break>
                 <#case "DecimalBox">
-                    <#include "/inputFieldTextBox.ftl">
+                    <#include "/InputFieldTextBox.ftl">
                     <#break>
                 <#case "CheckBox">
-                    <#include "/inputFieldTextBox.ftl">
+                    <#include "/InputFieldCheckBox.ftl">
                     <#break>
                 <#case "Slider">
-                    <#include "/inputFieldTextBox.ftl">
+                    <#include "/InputFieldTextBox.ftl">
                     <#break>
                 <#case "RadioGroup">
-                    <#include "/inputFieldTextBox.ftl">
+                    <#include "/InputFieldTextBox.ftl">
+                    <#break>
+                <#case "ListBox">
+                    <#include "/InputFieldListBox.ftl">
                     <#break>
                 <#case "MultipleSelector">
-                    <#include "/inputFieldTextBox.ftl">
+                    <#include "/InputFieldMultipleSelector.ftl">
                     <#break>
                 <#case "MultipleInput">
-                    <#include "/inputFieldTextBox.ftl">
+                    <#include "/InputFieldTextBox.ftl">
                     <#break>
                 <#case "Document">
-                    <#include "/inputFieldTextBox.ftl">
+                    <#include "/InputFieldTextBox.ftl">
                     <#break>      
                 <#default>
-                    <#include "/inputFieldTextBox.ftl">
+                    <#include "/InputFieldTextBox.ftl">
                     <#break>
                 </#switch>
-                </div>
-        </#list>
-        <#else>
-
-            </#if>
+            </div>
+            </#list>
+        </#if>
         </fieldset>
     </div>
