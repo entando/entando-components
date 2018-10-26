@@ -23,11 +23,9 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
-import java.text.DateFormat;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
+import java.text.SimpleDateFormat;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePickerField;
 
 public class FormToBpmHelper {
 
@@ -110,7 +109,7 @@ public class FormToBpmHelper {
                 || formParams.isEmpty()) {
             return singles;
         }
-        logger.debug("INPUT KEYS:  {}",input.keySet().toString());
+        logger.debug("INPUT KEYS:  {}", input.keySet().toString());
 
         for (KieProcessFormField formField : formParams) {
             String parameter = formField.getName();
@@ -125,7 +124,7 @@ public class FormToBpmHelper {
                     JSONObject json = jmap.get(section);
                     // add data
                     json.put(field, input.get(parameter));
-                                     
+
                 } else {
 
                     //Boolean checkbox values need to get round tripped as false. Without it data erasure can occur
@@ -250,15 +249,15 @@ public class FormToBpmHelper {
         // check whether the data is mandatory
         final boolean mandatory
                 = BpmToFormHelper.getFieldRequired(field).equalsIgnoreCase("true");
-        
-        logger.debug("the field {} is mandatory {}" ,field.getName(), mandatory);
-        
+
+        logger.debug("the field {} is mandatory {}", field.getName(), mandatory);
+
         logger.debug("the field {} value {}", field.getName(), value);
-        
+
         if (null == value) {
             if (!mandatory) {
                 logger.debug("not mandatory {} return NullFormField()", mandatory);
-              
+
                 return new NullFormField();
             } else {
                 logger.debug("mandatory {} return {}", result);
@@ -266,8 +265,8 @@ public class FormToBpmHelper {
                 return result;
             }
         }
-        if (value.equals("") || value.equals("null")){
-            
+        if (value.equals("") || value.equals("null")) {
+
             if (!mandatory) {
                 return new NullFormField();
             }
@@ -295,14 +294,19 @@ public class FormToBpmHelper {
                     result = false;
                 }
             } else if (fieldClass.equals(DATE)) {
-                //Date Format YYYY-MM-DD
-                result = java.sql.Date.valueOf(value);
+                //Date Format YYYY-MM-DD or YYYY-MM-DD hh:mm 
+                SimpleDateFormat dateFormat = null;
+                if (field.getProperty("showTime").getValue().equals("true")) {
+                    dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                } else {
+                    dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                }
+                result = dateFormat.parse(value);
 
-            }
-            else if (fieldClass.equals(LIST)) {                
+            } else if (fieldClass.equals(LIST)) {
                 result = value;
 
-            }else {
+            } else {
                 logger.warn("unknown field class type '{}'", fieldClass);
                 result = value;
             }
@@ -328,9 +332,8 @@ public class FormToBpmHelper {
         for (Map.Entry<String, String> ff : input.entrySet()) {
             String key = ff.getKey();
             String value = ff.getValue();
-            logger.debug("validate failed {} with value {}", key ,value); 
-            
-            
+            logger.debug("validate failed {} with value {}", key, value);
+
             Object obj = FormToBpmHelper.validateField(form, key, value);
             if (null != obj) {
                 if (obj instanceof NullFormField) {
