@@ -252,28 +252,28 @@
                         </div>
                     </s:iterator>
                 </s:if>
-                <s:if test="categoryCodes != null && categoryCodes.size() > 0">
+                <s:if test="%{categoryCodes != null && !categoryCodes.empty}">
                     <ul class="list-inline mt-20">
-                        <s:iterator value="categoryCodes" var="categoryCode">
-                            <s:set var="resourceCategory" value="%{getCategory(#categoryCode)}"></s:set>
+                        <s:iterator value="categoryCodes" var="categoryCodeVar">
+                            <s:set var="resourceCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
                             <li>
-                                <span class="label label-info">
-                                    <span class="icon fa fa-tag"></span>
-                                    &#32;
-                                    <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
-                                        <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)" />
-                                    </abbr>
-                                    &#32;
-                                    <wpsa:actionParam action="removeCategory" var="actionName">
-                                        <wpsa:actionSubParam name="categoryCode" value="%{#resourceCategory.code}" />
-                                    </wpsa:actionParam>
-                                    <wpsf:submit type="button" action="%{#actionName}"
-                                        title="%{getText('label.remove') + ' ' + #resourceCategory.defaultFullTitle}"
-                                        cssClass="btn btn-link">
-                                        <span class="pficon pficon-close white"></span>
-                                        <span class="sr-only">x</span>
-                                    </wpsf:submit>
-                                </span>
+                            <span class="label label-info">
+                                <span class="icon fa fa-tag"></span>
+                                &#32;
+                                <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
+                                    <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)"/>
+                                </abbr>
+                                &#32;
+                                <wpsa:actionParam action="removeCategory" var="actionName">
+                                    <wpsa:actionSubParam name="categoryCode" value="%{#resourceCategory.code}"/>
+                                </wpsa:actionParam>
+                                <wpsf:submit type="button" action="%{#actionName}"
+                                             title="%{getText('label.remove') + ' ' + #resourceCategory.defaultFullTitle}"
+                                             cssClass="btn btn-link">
+                                    <span class="pficon pficon-close white"></span>
+                                    <span class="sr-only">x</span>
+                                </wpsf:submit>
+                            </span>
                             </li>
                         </s:iterator>
                     </ul>
