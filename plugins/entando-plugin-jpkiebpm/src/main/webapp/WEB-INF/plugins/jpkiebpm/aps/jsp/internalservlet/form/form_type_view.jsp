@@ -14,4 +14,24 @@
     </div>
 
 </s:if>
+
+<s:if test="hasFieldErrors()">
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+            <span class="pficon pficon-close"></span>
+        </button>
+        <span class="pficon pficon-error-circle-o"></span>
+        <strong>
+            <s:text name="message.title.FieldErrors" />
+        </strong>
+        <ul class="margin-base-top">
+            <s:iterator value="fieldErrors">
+                <s:iterator value="value">
+                    <li><s:property escapeHtml="false" /></li>
+                    </s:iterator>
+                </s:iterator>
+        </ul>
+    </div>
+</s:if>
+
 <s:property value="renderedForm" escapeHtml="false" />

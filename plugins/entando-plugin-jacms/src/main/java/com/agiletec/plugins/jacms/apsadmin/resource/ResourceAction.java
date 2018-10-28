@@ -51,7 +51,7 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
     private String _resourceId;
     private String _descr;
     private String _mainGroup;
-    private List<String> _categoryCodes = new ArrayList<String>();
+    private List<String> _categoryCodes = new ArrayList<>();
 
     private File _file;
     private String _contentType;
@@ -64,7 +64,6 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
     private int fieldCount = 0;
     private boolean onEditContent = false;
 
-    
     @Override
     public void validate() {
         if (this.isOnEditContent()) {
@@ -94,9 +93,12 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
     }
 
     protected void checkRightFileType(ResourceInterface resourcePrototype) {
+        this.checkRightFileType(resourcePrototype, this.getFileName());
+    }
+
+    protected void checkRightFileType(ResourceInterface resourcePrototype, String fileName) {
         boolean isRight = false;
-        if (this.getFileName().length() > 0) {
-            String fileName = this.getFileName();
+        if (fileName.length() > 0) {
             String docType = fileName.substring(fileName.lastIndexOf('.') + 1).trim();
             String[] types = resourcePrototype.getAllowedFileTypes();
             isRight = this.isValidType(docType, types);
@@ -104,7 +106,7 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
             isRight = true;
         }
         if (!isRight) {
-            this.addFieldError("upload", this.getText("error.resource.file.wrongFormat"));
+            this.addFieldError("upload", this.getText("error.resource.file.wrongFormat", new String[]{fileName}));
         }
     }
 
@@ -196,7 +198,7 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
     public String save() {
         logger.debug("Save in resource action for id {}", this.getResourceId());
         try {
-            
+
             Map imgMetadata = new HashMap();
             if (null != getFile()) {
                 logger.debug("Read Metadata file is not null");
@@ -218,7 +220,7 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
             } else {
                 this.setMetadata(imgMetadata);
             }
-                    
+
             if (ApsAdminSystemConstants.ADD == this.getStrutsAction()) {
                 this.getResourceManager().addResource(this);
             } else if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
@@ -468,6 +470,7 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
         return this.getResourceTypeCode();
     }
 
+    @Override
     public Map<String, String> getMetadata() {
         return metadata;
     }
@@ -507,7 +510,11 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
     public void setOnEditContent(boolean onEditContent) {
         this.onEditContent = onEditContent;
     }
-    
+
+    public boolean isContentListAttribute() {
+        return false;
+    }
+
     protected Map getImgMetadata(File file) {
         logger.debug("Get image Metadata in Resource Action");
         Map<String, String> meta = new HashMap<>();
@@ -554,4 +561,5 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
             logger.debug("resource {} metadata size: {}", this.getResourceId(), getMetadata().size());
         }
     }
+    
 }
