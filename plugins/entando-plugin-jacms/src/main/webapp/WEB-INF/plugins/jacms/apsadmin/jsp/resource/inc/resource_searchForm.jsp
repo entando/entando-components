@@ -2,7 +2,7 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 <s:set var="categoryTreeStyleVar" ><wp:info key="systemParam" paramName="treeStyle_category" /></s:set>
-<s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp" />
+<%--<s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp" />--%>
 
 <s:form action="search" cssClass="form-horizontal" role="search">
     <p class="sr-only">
@@ -95,14 +95,6 @@
                                                 </s:elseif>
                                             </tbody>
                                         </table>
-                                        <script>
-                                            <s:if test="%{#categoryTreeStyleVar == 'classic'}">
-                                            $('.table-treegrid').treegrid(null, false);
-                                            </s:if>
-                                            <s:else>
-                                            $('.table-treegrid').treegrid(null, true);
-                                            </s:else>
-                                        </script>
                                     </div>
                                 </div>
                             </div>
