@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.resource;
 
+import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
 import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
@@ -135,11 +136,27 @@ public class ResourceFinderAction extends AbstractResourceAction {
         this._imageDimensionManager = imageDimensionManager;
     }
     
+    public boolean isOpenCollapsed() {
+        boolean hasFilterByCat = false;
+        if (null != this.getCategoryCode()) {
+            Category category = this.getCategoryManager().getCategory(this.getCategoryCode());
+            hasFilterByCat = (null != category && !category.isRoot());
+        }
+        return (this.openCollapsed || hasFilterByCat
+                || !StringUtils.isBlank(this.getFileName())
+                || !StringUtils.isBlank(this.getOwnerGroupName()));
+    }
+
+    public void setOpenCollapsed(boolean openCollapsed) {
+        this.openCollapsed = openCollapsed;
+    }
+    
     private String _text;
     private String _fileName;
     private String _ownerGroupName;
     private String _categoryCode;
     private ResourceIconUtil _resourceIconUtil;
     private IImageDimensionReader _imageDimensionManager;
+    private boolean openCollapsed = false;
     
 }

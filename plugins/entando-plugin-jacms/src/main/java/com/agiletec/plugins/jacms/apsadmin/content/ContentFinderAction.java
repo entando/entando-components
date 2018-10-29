@@ -59,6 +59,24 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction {
 
 	private static final int DEFAULT_LASTUPDATE_RESPONSE_SIZE = 5;
 
+        public boolean isOpenCollapsed() {
+            boolean hasFilterByCat = false;
+            if (null != this.getCategoryCode()) {
+                Category category = this.getCategoryManager().getCategory(this.getCategoryCode());
+                hasFilterByCat = (null != category && !category.isRoot());
+            }
+            return (this.openCollapsed
+                    || (super.isAddedAttributeFilter())
+                    || !StringUtils.isBlank(this.getContentType())
+                    || hasFilterByCat
+                    || !StringUtils.isBlank(this.getState())
+                    || !StringUtils.isBlank(this.getOwnerGroupName()));
+        }
+
+        public void setOpenCollapsed(boolean openCollapsed) {
+            this.openCollapsed = openCollapsed;
+        }
+        
 	public ContentsStatusResponse getContentsStatusResponse() {
 		ContentsStatusResponse response = null;
 		try {
@@ -966,6 +984,8 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction {
 	private String _actionCode = null;
 
 	private String pagerName = AdminPagerTagHelper.DEFAULT_PAGER_NAME;
+        
+        private boolean openCollapsed = false;
 
 	private IContentManager _contentManager;
 	private IGroupManager _groupManager;
