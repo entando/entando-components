@@ -7,7 +7,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestF
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestJsonHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieContainer;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcessForm;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.TestPamProcessForm;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcesseInstance;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcesses;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieTask;
@@ -16,6 +16,8 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.overri
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcessForm;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilderTest;
 import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerIntegrationTest;
 import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerUnitTest;
 
@@ -30,6 +32,7 @@ public class AllTests {
         suite.addTestSuite(TestKieProcesseInstance.class);
         suite.addTestSuite(TestKieTask.class);
         suite.addTestSuite(TestKieForm.class);
+        suite.addTestSuite(TestPamProcessForm.class);
         suite.addTestSuite(TestKieProcessForm.class);
         suite.addTestSuite(TestPayload.class);
         suite.addTestSuite(TestBpmToFormHelper.class);
@@ -37,6 +40,8 @@ public class AllTests {
         suite.addTestSuite(TestJsonHelper.class);
         suite.addTestSuite(TestKieFormOverrideManager.class);
         suite.addTestSuite(TestBpmOverrides.class);
+        suite.addTestSuite(TestBpmOverrides.class);
+        suite.addTestSuite(DataUXBuilderTest.class);
 
         suite.addTest(new JUnit4TestAdapter(ConfigControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(ConfigControllerUnitTest.class));

@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class PamTypeInfo {
 
     @XmlElement
-    Boolean multiple;
+    private Boolean multiple;
 
     @XmlElement
     private String className;
