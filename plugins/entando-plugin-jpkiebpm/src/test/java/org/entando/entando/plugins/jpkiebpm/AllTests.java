@@ -41,7 +41,6 @@ public class AllTests {
         suite.addTestSuite(TestKieFormOverrideManager.class);
         suite.addTestSuite(TestBpmOverrides.class);
         suite.addTestSuite(TestBpmOverrides.class);
-        suite.addTestSuite(TestJpkiebpmLabelsProperties.class);
         suite.addTestSuite(DataUXBuilderTest.class);
 
         suite.addTest(new JUnit4TestAdapter(ConfigControllerIntegrationTest.class));
