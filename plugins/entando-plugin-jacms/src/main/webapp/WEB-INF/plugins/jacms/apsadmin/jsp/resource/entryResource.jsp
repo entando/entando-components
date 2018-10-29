@@ -184,15 +184,15 @@
             </div>
             <div class="col-xs-10">
                 <script src="<wp:resourceURL />administration/js/entando-typeahead-tree.js"></script>
-                <s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp"/>
+                <s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp" />
 
                 <s:set var="useAjax" value="true" />
-                <s:set var="selectedTreeNode" value="selectedNode"/>
-                <s:set var="currentRoot" value="categoryRoot"/>
+                        <s:set var="selectedTreeNode" value="selectedNode" />
+                        <s:set var="currentRoot" value="categoryRoot" />
                 <s:set var="joinCategoryEndpoint" value="'joinCategory'"/>
                 <s:set var="loadTreeActionName" value="''"/>
-                <s:set var="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'"/>
-                <s:set var="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'"/>
+                            <s:set var="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
+                            <s:set var="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
                 <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/categoryTreeTable.jsp" />
 
                 <s:if test="extraGroups.size() != 0">
@@ -225,11 +225,11 @@
                         <ul class="list-inline mt-20">
                             <s:iterator value="categoryCodes" var="categoryCodeVar">
                                 <s:set var="resourceCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
-                                    <li>
-                                        <span class="label label-info">
-                                            <span class="icon fa fa-tag"></span>
-                                            &#32;
-                                            <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
+                                <li>
+                                    <span class="label label-info">
+                                        <span class="icon fa fa-tag"></span>
+                                        &#32;
+                                        <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
                                             <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)"/>
                                         </abbr>
                                         &#32;
