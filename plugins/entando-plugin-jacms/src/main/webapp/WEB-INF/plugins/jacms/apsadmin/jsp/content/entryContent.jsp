@@ -362,6 +362,7 @@
                                                 <s:text name="label.preview" />
                                             </wpsf:submit>
                                         </span>
+
                                     </div>
                                 </s:if>
                                 <s:else>

@@ -16,6 +16,7 @@
 <s:set var="isHidden" value="%{#selectedTreeNode == null || (#selectedTreeNode != #currentRoot.code)}" ></s:set>
 <s:set var="isSelected" value="%{#currentRoot.code == #selectedTreeNode}" ></s:set>
 
+
 <tr id="${currentRoot.code}" data-parent="#${currentRoot.parent.code}" 
     class="treeRow <s:if test="%{#currentRoot.code != 'home' && #isHidden}">collapsed childrenNodes</s:if> tree_node_flag ${liClassName}" >
         <td class="treegrid-node pointer">
