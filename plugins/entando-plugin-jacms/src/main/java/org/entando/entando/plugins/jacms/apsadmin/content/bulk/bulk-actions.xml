@@ -174,7 +174,18 @@
             <result type="tiles">admin.jacms.content.bulkCategory.entryChoice</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
-
+        
+        <action name="openCloseTreeOnBulkActions*" class="jacmsContentCategoryBulkAction" method="entry" >
+            <result name="list" type="chain">
+                <param name="namespace">/do/jacms/Content</param>
+                <param name="actionName">results</param>
+            </result>
+            <result type="tiles">admin.jacms.content.bulkCategory.entryChoice</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">editContents</param>
+            </interceptor-ref>
+        </action>
+        
     	<action name="join*" class="jacmsContentCategoryBulkAction" method="join">
             <result type="tiles">admin.jacms.content.bulkCategory.entryChoice</result>
         	<interceptor-ref name="entandoDefaultStack">

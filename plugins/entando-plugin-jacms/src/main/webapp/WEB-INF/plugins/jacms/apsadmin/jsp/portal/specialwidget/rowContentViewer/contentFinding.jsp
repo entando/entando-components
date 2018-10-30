@@ -116,7 +116,7 @@
                                 </div>
 
 
-                                <div id="collapseOne" class="panel-collapse collapse">
+                                <div id="collapseOne" class="panel-collapse collapse <s:if test="%{#attr['openCollapsed'] || #attr['openCollapsed'].equals('\\'true\\'') || openCollapsed}">in</s:if>">
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <label for="contentType" class="control-label col-sm-2 text-right">
