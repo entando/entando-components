@@ -78,7 +78,7 @@
                                     <a data-toggle="collapse" data-parent="#accordion-markup" href="#collapseOne"><s:text name="label.search.advanced"/></a>
                                 </p>
                             </div>
-                            <div id="collapseOne" class="panel-collapse collapse <s:if test="%{#attr['openCollapsed'] || #attr['openCollapsed'].equals('\\'true\\'') || openCollapsed}">in</s:if>">
+                        <div id="collapseOne" class="panel-collapse collapse <s:if test="%{#attr['openCollapsed'] || #attr['openCollapsed'].equals('\\'true\\'') || openCollapsed}">in</s:if>">
                                 <div class="panel-body">
 
                                     <div id="search-advanced"
