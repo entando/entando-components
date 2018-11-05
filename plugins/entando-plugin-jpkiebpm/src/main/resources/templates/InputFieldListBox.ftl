@@ -10,7 +10,7 @@
                     </#if>
                     <#if field.options??>
                     <#list field.options as option>                    
-                        <option <#include "/OptionDefaultValue.ftl">value="${option.value}">${option.name}</option>
+                        <option <#include "/ListBoxOptionDefaultValue.ftl">value="${option.value}">${option.name}</option>
                     </#list>
                     </#if>
                 </select>

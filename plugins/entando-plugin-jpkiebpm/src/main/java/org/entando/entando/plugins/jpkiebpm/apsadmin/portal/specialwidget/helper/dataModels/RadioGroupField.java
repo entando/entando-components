@@ -25,24 +25,16 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helpe
 
 import java.util.List;
 
-public class SelectField extends InputField {
-    private List<SelectOption> options;
-    private boolean addEmptyOption;
+public class RadioGroupField extends InputField {
+    private List<Option> options;
+    private boolean inline;
     private String defaultValue;
-    public List<SelectOption> getOptions() {
+    public List<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(List<SelectOption> options) {
+    public void setOptions(List<Option> options) {
         this.options = options;
-    }
-
-    public boolean isAddEmptyOption() {
-        return addEmptyOption;
-    }
-
-    public void setAddEmptyOption(boolean addEmptyOption) {
-        this.addEmptyOption = addEmptyOption;
     }
 
     public String getDefaultValue() {
@@ -51,6 +43,14 @@ public class SelectField extends InputField {
 
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
+    }
+
+    public boolean isInline() {
+        return inline;
+    }
+
+    public void setInline(boolean inline) {
+        this.inline = inline;
     }
     
 }
