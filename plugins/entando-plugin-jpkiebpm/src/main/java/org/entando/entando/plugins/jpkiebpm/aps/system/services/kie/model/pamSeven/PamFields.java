@@ -54,15 +54,13 @@ public class PamFields {
     @XmlElement(required=false)
     private boolean showTime;
 
-    
     //Multiple Select Fields
-        
     @XmlElement(required = false)
     private List<String> listOfValues;
 
     @XmlElement(required = false)   
     private int maxDropdownElements;
-    
+   
     @XmlElement(required = false)
     private int maxElementsOnTitle;
     
@@ -72,13 +70,25 @@ public class PamFields {
     @XmlElement(required = false)
     private boolean  allowClearSelection;
     
-    //List Box Fields (Html Select)
+    //Common List Box Fields (Html Select) and RadioGroup Fields 
 
     @XmlElement(required = false)
     private List<PamFieldsOptions> options;
-    private boolean addEmptyOption;
+
+    @XmlElement(required = false)
     private String defaultValue;
     
+    //List Box Fields (Html Select)
+
+    @XmlElement(required = false)
+    private boolean addEmptyOption;
+    
+    //RadioGroup Fields 
+
+    @XmlElement(required = false)
+    private boolean inline;
+    
+       
     public String getSerializedFieldClassName() {
         return serializedFieldClassName;
     }
@@ -253,6 +263,14 @@ public class PamFields {
 
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
+    }
+
+    public boolean isInline() {
+        return inline;
+    }
+
+    public void setInline(boolean inline) {
+        this.inline = inline;
     }
 
 }
