@@ -66,24 +66,32 @@
 								         </th>
 									</tr>
 								</thead>
-								<tbody>
-									<s:set var="inputFieldName" value="'selectedNode'" />
-									<s:set var="selectedTreeNode" value="selectedNode" />
-									<s:set var="liClassName" value="'page'" />
-									<s:set var="treeItemIconName" value="'fa-folder'" />
-	
-		                            <wpsa:groupsByPermission permission="managePages" var="groupsByPermission" />
-		                            <s:if test="#pageTreeStyleVar == 'classic'">
-		                                <s:set var="currentRoot" value="allowedTreeRootNode" />
-		                                <s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
-		                            </s:if>
-		                            <s:elseif test="#pageTreeStyleVar == 'request'">
-										<s:set var="treeNodeActionMarkerCode" value="treeNodeActionMarkerCode" />
-										<s:set var="targetNode" value="%{parentPageCode}" />
-										<s:set var="treeNodesToOpen" value="treeNodesToOpen" />
-										<s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-submit.jsp" />
-									</s:elseif>
-							    </tbody>
+                                                                <tbody>
+                                                                    <s:set var="inputFieldName" value="'selectedNode'" />
+                                                                    <s:set var="selectedTreeNode" value="selectedNode" />
+                                                                    <s:set var="liClassName" value="'page'" />
+                                                                    <s:set var="treeItemIconName" value="'fa-folder'" />
+
+                                                                    <wpsa:groupsByPermission permission="managePages" var="groupsByPermission" />
+                                                                    <s:if test="#pageTreeStyleVar == 'classic'">
+                                                                        <s:set var="currentRoot" value="allowedTreeRootNode" />
+                                                                        <s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
+                                                                    </s:if>
+                                                                    <s:elseif test="#pageTreeStyleVar == 'request'">
+                                                                        <s:set var="treeNodeActionMarkerCode" value="treeNodeActionMarkerCode" />
+                                                                        <s:set var="targetNode" value="%{parentPageCode}" />
+                                                                        <s:set var="treeNodesToOpen" value="treeNodesToOpen" />
+                                                                        <s:set var="currentRoot" value="showableTree" />
+                                                                        <s:set var="contentOnSessionMarker" value="%{contentOnSessionMarker}" />
+                                                                        <s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder-request-submits.jsp" />
+                                                                        <style>
+                                                                            .table-treegrid span.collapse-icon, .table-treegrid span.expand-icon {
+                                                                                cursor: pointer;
+                                                                                display: none;
+                                                                            }
+                                                                        </style>
+                                                                    </s:elseif>
+                                                                </tbody>
 							</table>
 					    </div>
 				    </div>
