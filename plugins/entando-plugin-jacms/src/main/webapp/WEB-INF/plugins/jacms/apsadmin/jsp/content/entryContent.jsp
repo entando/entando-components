@@ -16,12 +16,7 @@
         </a>
     </li>
     <li class="page-title-container">
-        <s:if test="getStrutsAction() == 1">
-            <s:text name="label.add" />
-        </s:if>
-        <s:else>
-            <s:text name="label.edit" />
-        </s:else>
+       <s:text name="label.add" />
     </li>
 </ol>
 
