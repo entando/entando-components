@@ -136,10 +136,13 @@ public class ContentAction extends AbstractContentAction {
 	public String joinGroup() {
 		this.updateContentOnSession();
 		try {
-			String extraGroupName = this.getExtraGroupName();
-			Group group = this.getGroupManager().getGroup(extraGroupName);
-			if (null != group) {
-				this.getContent().addGroup(extraGroupName);
+			//This is a multi-select and will return a comma delimited list of selected values
+			List<String> extraGroupNames = this.getExtraGroupNames();
+			for (String extraGroupName : extraGroupNames) {
+				Group group = this.getGroupManager().getGroup(extraGroupName);
+				if (null != group) {
+					this.getContent().addGroup(extraGroupName);
+				}
 			}
 		} catch (Throwable t) {
 			_logger.error("error in joinGroup", t);
@@ -157,10 +160,12 @@ public class ContentAction extends AbstractContentAction {
 	public String removeGroup() {
 		this.updateContentOnSession();
 		try {
-			String extraGroupName = this.getExtraGroupName();
-			Group group = this.getGroupManager().getGroup(extraGroupName);
-			if (null != group) {
-				this.getContent().getGroups().remove(group.getName());
+			List<String> extraGroupNames = this.getExtraGroupNames();
+			for (String extraGroupName : extraGroupNames) {
+				Group group = this.getGroupManager().getGroup(extraGroupName);
+				if (null != group) {
+					this.getContent().getGroups().remove(group.getName());
+				}
 			}
 		} catch (Throwable t) {
 			_logger.error("error in removeGroup", t);
@@ -356,12 +361,12 @@ public class ContentAction extends AbstractContentAction {
 		this._contentId = contentId;
 	}
 
-	public String getExtraGroupName() {
-		return _extraGroupName;
+	public List<String> getExtraGroupNames() {
+		return extraGroupNames;
 	}
 
-	public void setExtraGroupName(String extraGroupName) {
-		this._extraGroupName = extraGroupName;
+	public void setExtraGroupNames(List<String> extraGroupNames) {
+		this.extraGroupNames = extraGroupNames;
 	}
 
 	public boolean isCopyPublicVersion() {
@@ -387,7 +392,7 @@ public class ContentAction extends AbstractContentAction {
 
 	private String _contentId;
 
-	private String _extraGroupName;
+	private List<String> extraGroupNames = new ArrayList<>();
 
 	private boolean _copyPublicVersion;
 

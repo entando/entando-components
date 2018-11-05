@@ -352,7 +352,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			assertTrue(contentOnEdit.getGroups().contains("helpdesk"));
 
 			this.initContentAction("/do/jacms/Content", "removeGroup", contentOnSessionMarker);
-			this.addParameter("extraGroupName", "customers");
+			this.addParameter("extraGroupNames", "customers");
 			this.addParameter("descr", contentOnEdit.getDescription());
 			result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
@@ -432,7 +432,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 
 		this.executeEdit(contentId, "admin");
 		String groupToAdd = "coach";
-		String extraGroupFieldName = "extraGroupName";
+		String extraGroupFieldName = "extraGroupNames";
 		Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(0, contentOnSession.getGroups().size());
@@ -516,7 +516,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			assertTrue(contentOnSession.getGroups().contains(groupToRemove));
 
 			this.initContentAction("/do/jacms/Content", "removeGroup", contentOnSessionMarker);
-			this.addParameter("extraGroupName", groupToRemove);
+			this.addParameter("extraGroupNames", groupToRemove);
 			String result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
 
