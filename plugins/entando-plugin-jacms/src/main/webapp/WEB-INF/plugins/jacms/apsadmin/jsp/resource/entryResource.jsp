@@ -139,7 +139,7 @@
                 <s:set var="selectedTreeNode" value="selectedNode"/>
                 <s:set var="currentRoot" value="categoryRoot"/>
                 <s:set var="joinCategoryEndpoint" value="'joinCategory'"/>
-                <s:set var="loadTreeActionName" value="''"/>
+                <s:set var="loadTreeActionName" value="'edit.action'"/>
                 <s:set var="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'"/>
                 <s:set var="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'"/>
                 <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/categoryTreeTable.jsp" />
