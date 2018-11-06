@@ -146,7 +146,8 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 			String result = this.executeSave(params, "admin");
 			assertEquals(Action.INPUT, result);
 			Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
-			assertEquals(4, fieldErrors.size());
+			assertEquals(5, fieldErrors.size());
+			assertTrue(fieldErrors.containsKey("pageCode"));
 			assertTrue(fieldErrors.containsKey("model"));
 			assertTrue(fieldErrors.containsKey("group"));
 			assertTrue(fieldErrors.containsKey("langit"));
@@ -157,7 +158,8 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 			result = this.executeSave(params, "admin");
 			assertEquals(Action.INPUT, result);
 			fieldErrors = this.getAction().getFieldErrors();
-			assertEquals(2, fieldErrors.size());
+			assertEquals(3, fieldErrors.size());
+			assertTrue(fieldErrors.containsKey("pageCode"));
 			assertTrue(fieldErrors.containsKey("group"));
 			assertTrue(fieldErrors.containsKey("langen"));
 
