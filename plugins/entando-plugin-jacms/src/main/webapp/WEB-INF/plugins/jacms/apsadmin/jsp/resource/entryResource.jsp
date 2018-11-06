@@ -84,17 +84,8 @@
         <wpsf:hidden name="strutsAction"/>
         <wpsf:hidden name="resourceTypeCode"/>
         <wpsf:hidden name="contentOnSessionMarker"/>
-        <s:iterator value="categoryCodes" var="categoryCodeVar" status="rowstatus">
-            <input type="hidden" name="categoryCodes" value="<s:property value="#categoryCodeVar" />"
-                   id="categoryCodes-<s:property value="#rowstatus.index" />"/>
-        </s:iterator>
         <s:if test="strutsAction != 1">
             <wpsf:hidden name="resourceId"/>
-        </s:if>
-        <s:if test="#categoryTreeStyleVar == 'request'">
-            <s:iterator value="treeNodesToOpen" var="treeNodeToOpenVar">
-                <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/>
-            </s:iterator>
         </s:if>
         <s:if test="%{lockGroupSelect}">
             <wpsf:hidden name="mainGroup"/>
@@ -142,51 +133,17 @@
             </div>
             <div class="col-xs-10">
                 <script src="<wp:resourceURL />administration/js/entando-typeahead-tree.js"></script>
-                <s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp"/>
-                <table id="categoryTree"
-                       class="table table-bordered table-hover table-treegrid ${categoryTreeStyleVar}">
-                    <thead>
-                    <tr>
-                        <th>
-                            <s:text name="label.category.tree"/>
-                            <s:if test="#categoryTreeStyleVar == 'classic'">
-                                <button type="button" class="btn-no-button expand-button" id="expandAll">
-                                    <i class="fa fa-plus-square-o treeInteractionButtons" aria-hidden="true"></i>
-                                    &#32;
-                                    <s:text name="label.category.expandAll"/>
-                                </button>
-                                <button type="button" class="btn-no-button" id="collapseAll">
-                                    <i class="fa fa-minus-square-o treeInteractionButtons" aria-hidden="true"></i>
-                                    &#32;
-                                    <s:text name="label.category.collapseAll"/>
-                                </button>
-                            </s:if>
-                        </th>
-                        <th class="text-center table-w-10">
-                            <s:text name="label.category.join"/>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <s:set var="selectedTreeNode" value="selectedNode"/>
-                    <s:set var="currentRoot" value="categoryRoot"/>
-                    <s:set var="inputFieldName" value="'categoryCode'"/>
-                    <s:set var="selectedTreeNode" value="categoryCode"/>
-                    <s:set var="liClassName" value="'category'"/>
-                    <s:set var="treeItemIconName" value="'fa-folder'"/>
-                    <s:if test="%{#categoryTreeStyleVar == 'classic'}">
-                        <s:set var="currentRoot" value="%{allowedTreeRootNode}"/>
-                        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp"/>
-                    </s:if>
-                    <s:elseif test="%{#categoryTreeStyleVar == 'request'}">
-                        <s:set var="currentRoot" value="%{showableTree}"/>
-                        <s:set var="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'"/>
-                        <s:set var="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'"/>
-                        <s:include
-                                value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilder-request-categories.jsp"/>
-                    </s:elseif>
-                    </tbody>
-                </table>
+                <%--<s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp"/>--%>
+
+                <s:set var="useAjax" value="true" />
+                <s:set var="selectedTreeNode" value="selectedNode"/>
+                <s:set var="currentRoot" value="categoryRoot"/>
+                <s:set var="joinCategoryEndpoint" value="'joinCategory'"/>
+                <s:set var="loadTreeActionName" value="'edit.action'"/>
+                <s:set var="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'"/>
+                <s:set var="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'"/>
+                <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/categoryTreeTable.jsp" />
+
                 <s:if test="extraGroups.size() != 0">
                     <s:iterator value="extraGroups" var="groupName">
                         <wpsa:actionParam action="removeExtraGroup" var="actionName">
@@ -203,40 +160,47 @@
                         </div>
                     </s:iterator>
                 </s:if>
-                <s:if test="%{categoryCodes != null && !categoryCodes.empty}">
-                    <ul class="list-inline mt-20">
-                        <s:iterator value="categoryCodes" var="categoryCodeVar">
-                            <s:set var="resourceCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
-                            <li>
-                            <span class="label label-info">
-                                <span class="icon fa fa-tag"></span>
-                                &#32;
-                                <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
-                                    <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)"/>
-                                </abbr>
-                                &#32;
-                                <wpsa:actionParam action="removeCategory" var="actionName">
-                                    <wpsa:actionSubParam name="categoryCode" value="%{#resourceCategory.code}"/>
-                                </wpsa:actionParam>
-                                <wpsf:submit type="button" action="%{#actionName}"
-                                             title="%{getText('label.remove') + ' ' + #resourceCategory.defaultFullTitle}"
-                                             cssClass="btn btn-link">
-                                    <span class="pficon pficon-close white"></span>
-                                    <span class="sr-only">x</span>
-                                </wpsf:submit>
-                            </span>
-                            </li>
-                        </s:iterator>
-                    </ul>
-                </s:if>
+                
+                <span id="categoryList">
 
+                    <p class="sr-only">
+                        <s:iterator value="categoryCodes" var="categoryCodeVar" status="rowstatus">
+                            <input type="hidden" name="categoryCodes" value="<s:property value="#categoryCodeVar" />"
+                                   id="categoryCodes-<s:property value="#rowstatus.index" />"/>
+                        </s:iterator>
+                    </p>
+
+                    <s:if test="%{categoryCodes != null && !categoryCodes.empty}">
+                        <ul class="list-inline mt-20">
+                            <s:iterator value="categoryCodes" var="categoryCodeVar">
+                                <s:set var="resourceCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
+                                    <li>
+                                        <span class="label label-info">
+                                            <span class="icon fa fa-tag"></span>
+                                            &#32;
+                                            <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
+                                            <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)"/>
+                                        </abbr>
+                                        &#32;
+                                        <button type="button" class="btn btn-link"
+                                                onclick="categoriesAjax.removeCategory('removeCategory', '<s:property value="#resourceCategory.code"/>')"
+                                                title="<s:property value="%{getText('label.remove') + ' ' + #resourceCategory.defaultFullTitle}" />">
+                                            <span class="pficon pficon-close white"></span>
+                                            <span class="sr-only">x</span>
+                                        </button>
+                                    </span>
+                                </li>
+                            </s:iterator>
+                        </ul>
+                    </s:if>
+                </span>
 
             </div>
         </div>
     </fieldset>
     <br>
 
-    <s:if test="getStrutsAction() == 1 ">
+    <s:if test="%{ (getStrutsAction() == 1 and !isOnEditContent()) or (getStrutsAction() == 1 and isContentListAttribute() and isOnEditContent())}">
         <div class="form-group">
             <div class="col-sm-5 col-sm-offset-2">
                 <div id="add-resource-button">
@@ -313,7 +277,7 @@
                     <s:label id="fileUpload_%{#ctr.count -1}_label" for="fileUpload_%{#ctr.count -1}"
                              class="btn btn-default" key="label.button-choose-file"/>
                     <s:file name="fileUpload" id="fileUpload_%{#ctr.count -1}" cssClass="input-file-button"
-                            label="label.file"/>
+                            label="label.file" multiple="true"/>
                     <span id="fileUpload_<s:property value="#fieldIdVar" />_selected">
                 <s:text name="label.no-file-selected"/>
             </span>
@@ -332,12 +296,14 @@
                     </s:if>
                 </div>
 
-                <s:if test="#ctr.count -1 > 0 ">
+                <s:if test="%{resourceTypeCode == 'Attach'}">
+
                     <button type="button" class="btn-danger delete-fields "
                             title="<s:text name="label.remove-fileinput" />"
                     ><span class="fa fa-times white"></span>
                     </button>
                 </s:if>
+
 
                 <s:if test="%{resourceTypeCode == 'Image'}">
                     <div class="col-sm-1">
@@ -370,15 +336,17 @@
     <div class="modal-dialog modal-xlg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="<s:text name="cropEditor.button.close"/>">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="<s:text name="cropEditor.button.close"/>">
                     <s:text name="cropEditor.button.close"/>
                     <span class="fa fa-times"></span>
                 </button>
-                <h4 class="modal-title"><s:text name="cropEditor.label.editImage"/> <span class="image-name"></span></h4>
+                <h4 class="modal-title"><s:text name="cropEditor.label.editImage"/> <span class="image-name"></span>
+                </h4>
             </div>
             <div class="container-fluid no-padding">
                 <div class="row">
-                    <s:if test="%{isOnEditContent() && !isContentListAttribute()}">
+                    <s:if test="%{(getStrutsAction() == 2) or (isOnEditContent() && !isContentListAttribute())}">
                     <div class="col-md-8 col-md-offset-2">
                         </s:if>
                         <s:else>
@@ -411,13 +379,93 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-4">
+                                                <div class="docs-data">
+                                                    <div class="field-group row">
+                                                        <div class="col-md-6 col">
+                                                            <span class="dimensions-label">
+                                                              <label class="-text" for="dataX">X</label>
+                                                            </span>
+                                                            <input type="text" class="form-control dataX"
+                                                                   placeholder="x" disabled>
+                                                            <span class="text-append">
+                                                              <span class="-text">px</span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-md-6 col">
+                                                            <span class="dimensions-label">
+                                                              <label class="-text" for="dataY">Y</label>
+                                                            </span>
+                                                            <input type="text" class="form-control dataY"
+                                                                   placeholder="y" disabled>
+                                                            <span class="text-append">
+                                                              <span class="-text">px</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="field-group row">
+                                                        <div class="col-md-6 col">
+                                                            <span class="dimensions-label">
+                                                              <label class="-text" for="dataWidth">Width</label>
+                                                            </span>
+                                                            <input type="text" class="form-control dataWidth"
+                                                                   placeholder="width" disabled>
+                                                            <span class="text-append">
+                                                              <span class="-text">px</span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-md-6 col">
+                                                            <span class="dimensions-label">
+                                                              <label class="-text" for="dataHeight">Height</label>
+                                                            </span>
+                                                            <input type="text" class="form-control dataHeight"
+                                                                   placeholder="height" disabled>
+                                                            <span class="text-append">
+                                                            <span class="-text">px</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="field-group row">
+                                                        <div class="col-md-6 col">
+                                                            <span class="dimensions-label">
+                                                              <label class="-text"
+                                                                     for="dataScaleX">ScaleX</label>
+                                                            </span>
+                                                            <input type="text" class="form-control dataScaleX"
+                                                                   placeholder="scaleX" disabled>
+                                                        </div>
+                                                        <div class="col-md-6 col">
+                                                            <span class="dimensions-label">
+                                                              <label class="-text"
+                                                                     for="dataScaleY">ScaleY</label>
+                                                            </span>
+                                                            <input type="text" class="form-control dataScaleY"
+                                                                   placeholder="scaleY" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="field-group field-group-full">
+                                                        <span class="dimensions-label">
+                                                          <label class="-text"
+                                                                 for="dataRotate">Rotate</label>
+                                                        </span>
+                                                        <input type="text" class="form-control dataRotate"
+                                                               placeholder="rotate" disabled>
+                                                        <span class="text-append">
+                                                          <span class="">deg</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="row flex-container">
                                             <div class="col-md-8">
                                                 <div class="toolbar-container flex-container space-between">
                                                     <!-- scale -->
                                                     <div class="btn-group flex-item">
-                                                        <span class="btn-group__title"><s:text name="cropEditor.label.flip"/></span>
+                                                        <span class="btn-group__title"><s:text
+                                                                name="cropEditor.label.flip"/></span>
                                                         <button type="button" class="btn btn-primary"
                                                                 data-method="scaleX" data-option="-1"
                                                                 title="Flip Horizontal">
@@ -440,7 +488,8 @@
 
                                                     <!-- move -->
                                                     <div class="btn-group flex-item">
-                                                        <span class="btn-group__title"><s:text name="cropEditor.label.move"/> </span>
+                                                        <span class="btn-group__title"><s:text
+                                                                name="cropEditor.label.move"/> </span>
                                                         <button type="button" class="btn btn-primary" data-method="move"
                                                                 data-option="-10" data-second-option="0"
                                                                 title="Move Left">
@@ -479,7 +528,8 @@
 
                                                     <!-- rotate -->
                                                     <div class="btn-group flex-item">
-                                                        <span class="btn-group__title"><s:text name="cropEditor.label.rotate"/></span>
+                                                        <span class="btn-group__title"><s:text
+                                                                name="cropEditor.label.rotate"/></span>
                                                         <button type="button" class="btn btn-primary"
                                                                 data-method="rotate"
                                                                 data-option="-45" title="Rotate Left">
@@ -502,7 +552,8 @@
 
                                                     <!-- zoom -->
                                                     <div class="btn-group flex-item">
-                                                        <span class="btn-group__title"><s:text name="cropEditor.label.zoom"/></span>
+                                                        <span class="btn-group__title"><s:text
+                                                                name="cropEditor.label.zoom"/></span>
                                                         <button type="button" class="btn btn-primary" data-method="zoom"
                                                                 data-option="0.1" title="Zoom In">
                                                     <span class="docs-tooltip" data-toggle="tooltip" title=""
@@ -523,7 +574,8 @@
 
                                                     <!-- save and cancel -->
                                                     <div class="btn-group flex-item">
-                                                        <span class="btn-group__title"><s:text name="cropEditor.label.crop"/></span>
+                                                        <span class="btn-group__title"><s:text
+                                                                name="cropEditor.label.crop"/></span>
                                                         <button type="button" class="btn btn-primary" data-method="crop"
                                                                 title="<s:text name="cropEditor.label.crop"/>">
                                                     <span class="docs-tooltip" data-toggle="tooltip" title=""
@@ -535,7 +587,8 @@
                                                     <div class="divider flex-item"></div>
 
                                                     <div class="btn-group flex-item">
-                                                        <span class="btn-group__title"><s:text name="cropEditor.label.cancel"/></span>
+                                                        <span class="btn-group__title"><s:text
+                                                                name="cropEditor.label.cancel"/></span>
                                                         <button type="button" class="btn btn-primary"
                                                                 data-method="remove"
                                                                 title="Remove">
@@ -555,7 +608,8 @@
                                                             <input type="radio" class="sr-only" id="aspectRatio5"
                                                                    name="aspectRatio" value="NaN">
                                                             <span class="docs-tooltip" data-toggle="tooltip" title=""
-                                                                  data-original-title="aspectRatio: NaN"><s:text name="cropEditor.label.free"/></span>
+                                                                  data-original-title="aspectRatio: NaN"><s:text
+                                                                    name="cropEditor.label.free"/></span>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -567,7 +621,7 @@
                             </div>
                         </div>
 
-                        <s:if test="%{isOnEditContent() && !isContentListAttribute()}">
+                        <s:if test="%{(getStrutsAction() == 2) or (isOnEditContent() && !isContentListAttribute())}">
                         </s:if>
                         <s:else>
                             <div class="col-md-4">
@@ -633,6 +687,14 @@
             <tbody>
         </table>
     </div>
+
+    <s:set var="resourceToShowVar" value="%{loadResource(resourceId)}"/>
+    <span
+            id="imageUrl"
+            data-value="<s:property value="%{#resourceToShowVar.getImagePath(0)}"/>"
+            class="hidden"
+    >
+    </span>
 </s:if>
 
 <div class="toast-pf alert alert-success alert-dismissable toast-crop-editor-success toast-success-blueprint hidden">
@@ -643,41 +705,19 @@
     <span class="toast-message"><s:text name="cropEditor.label.cropCreated"/> </span>
 </div>
 
-<s:if test="%{isOnEditContent() && !isContentListAttribute()}">
+<%--(getStrutsAction() == 2 this comparision checks if current action is to edit already uploaded image--%>
+<s:if test="%{(getStrutsAction() == 2) or (isOnEditContent() && !isContentListAttribute())}">
     <span class="hidden singleImageUpload"></span>
 </s:if>
 
 <s:if test="%{resourceTypeCode == 'Image'}">
     <span class="hidden image_cropper_enabled"></span>
 </s:if>
-<s:else>
-    <%--If This is not Image upload action enable basic resource fields--%>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#add-fields').click(function (e) {
-                e.preventDefault();
-                var numItems = $('.file-description').length;
-                var template = $('#hidden-fields-template').html();
-                $('#fields-container').append(template);
-                var newId = parseInt(numItems);
-                $('#newDescr').attr("name", "descr_" + newId);
-                $('#newDescr').attr("id", "descr_" + newId);
-                $('#newFileUpload_label').attr("for", "fileUpload_" + newId);
-                $('#newFileUpload_label').attr("id", "fileUpload_label_" + newId);
-                $('#newFileUpload_selected').attr("id", "fileUpload_" + newId + "_selected");
-                $('#newFileUpload').attr("id", "fileUpload_" + newId);
-            });
-            $('.delete-fields').click(function (e) {
-                e.preventDefault();
-                $(this).parent('div').remove();
-            });
-            $('#fields-container').on("click", ".delete-fields", function (e) {
-                e.preventDefault();
-                $(this).parent('div').remove();
-            })
-        });
-    </script>
-</s:else>
+
+<s:if test="%{resourceTypeCode == 'Attach'}">
+    <span class="hidden attachment_upload_enabled"></span>
+</s:if>
+
 
 <template id="hidden-fields-template">
 
@@ -711,11 +751,20 @@
             <div class="col-sm-4">
                 <label id="newFileUpload_label" for="newFileUpload" class="btn btn-default">
                     <s:text name="label.button-choose-file"/></label>
-                <s:file name="fileUpload" id="newFileUpload" cssClass="input-file-button" label="label.file"/>
+                <s:file name="fileUpload" id="newFileUpload" cssClass="input-file-button" label="label.file"
+                        multiple="true"/>
                 <span id="newFileUpload_selected"><s:text name="label.no-file-selected"/>
                 </span>
             </div>
         </div>
+
+        <s:if test="%{resourceTypeCode == 'Attach'}">
+            <button type="button" class="btn-danger delete-fields "
+                    title="<s:text name="label.remove-fileinput" />"
+            ><span class="fa fa-times white"></span>
+            </button>
+        </s:if>
+
         <s:if test="%{resourceTypeCode == 'Image'}">
 
             <div class="col-sm-1">

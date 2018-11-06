@@ -233,7 +233,7 @@
             <result type="redirectAction">
             	<param name="actionName">entryContent</param>
             	<param name="categoryCode">${categoryCode}</param>
-				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+		<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
             </result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
@@ -242,6 +242,8 @@
            	<result type="redirectAction">
 				<param name="actionName">entryContent</param>
 				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+                                <!-- Following parameter is necessary otherwise removing a category will collapse the tree -->
+                                <param name="treeNodesToOpen">${treeNodesToOpen}</param>
 			</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
