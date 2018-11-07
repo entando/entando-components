@@ -3,7 +3,7 @@
 <!--CSS inclusions-->
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/patternfly/css/patternfly.min.css">
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/patternfly/css/patternfly-additions.min.css">
-<link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/entando-kie-form-plugin.css">
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/entando-bootstrap-select.css">
 
 <!--JS inclusions-->

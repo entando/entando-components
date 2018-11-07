@@ -1,0 +1,14 @@
+.bootstrap-select>.dropdown-toggle {
+    min-height: 20px !important;
+}
+
+.radioInline{
+    display: inline;
+    clear: both;
+    padding-right: 5px;
+}
+
+.radioNotInline{
+    display: block;
+    clear: both;
+}

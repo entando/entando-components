@@ -5,7 +5,7 @@
                 <#include "/FieldRequired.ftl">$i18n.getLabel("JPKIE_${field.name}")
                 </label>  
            
-            <select id="selectpicker_${field.id}" name="Monolist:${field.name}" class="form-control" multiple >
+                <select id="selectpicker_${field.id}" name="Monolist:${field.name}" class="form-control" multiple >
                         <#if field.options??>
                         <#list field.options as option>                    
                         <option value="${option.value}">${option.name}</option>
