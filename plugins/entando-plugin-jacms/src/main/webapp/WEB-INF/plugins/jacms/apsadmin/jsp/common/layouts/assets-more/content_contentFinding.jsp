@@ -13,7 +13,8 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        var isTreeOnRequest = <s:property value="#pageTreeStyleVar == 'request'"/>;
+        var treeStyle = '<wp:info key="systemParam" paramName="treeStyle_category" />';
+        var isTreeOnRequest = (treeStyle === 'request') ? true : false;
         $('.table-treegrid').treegrid(null, isTreeOnRequest);
         $(".treeRow ").on("click", function (event) {
             $(".treeRow").removeClass("active");
@@ -34,7 +35,10 @@
         });
 
         var selectedNode = $(".table-treegrid .subTreeToggler:checked");
-        $(selectedNode).closest(".treeRow").addClass("active").removeClass("hidden").addClass("collapsed");
+        if (isTreeOnRequest)
+            $(selectedNode).closest(".treeRow").addClass("active").removeClass("hidden");
+        else
+            $(selectedNode).closest(".treeRow").addClass("active").removeClass("hidden").addClass("collapsed");
 
     <s:if test="strutsAction != 2" >
         generateCodeFromTitle("lang<wp:info key="defaultLang" />", 'categoryCode');
@@ -48,23 +52,29 @@
             scrollX: true,
             scrollCollapse: true,
             paging: false,
-            fixedColumns: true,
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('DataTables', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('DataTables'));
+            },
             "colVis": {
                 "buttonText": '<s:text name="title.searchResultOptions" />&#32;',
                 "sAlign": "right"
             },
             columnDefs: [
                 {width: 50, targets: 0},
-                {width: 200, "targets": [1, 2, 3, 4, 7, 8, 9], },
+                {width: 200, "targets": [1, 2, 3, 4, 7], },
+                {width: 115, "targets": [8, 9], },
                 {width: 80, "targets": [5, 6, 10], }
 
             ],
             fixedColumns: {
                 leftColumns: 2,
                 rightColumns: 1,
-                iLeftColumns: 2,
-                iRightColumns: 1
             }
+
         });
 
         /* Selezione colonne tabella visibili */
