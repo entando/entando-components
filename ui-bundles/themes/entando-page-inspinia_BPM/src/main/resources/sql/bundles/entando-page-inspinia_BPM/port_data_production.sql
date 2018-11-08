@@ -86,16 +86,146 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
               <@c.import url="/WEB-INF/aps/jsp/models/inc/content_inline_editing.jsp" />
               <@c.import url="/WEB-INF/aps/jsp/models/inc/header-inclusions.jsp" />
 
+       <script>
+            $(document).ready(function () {
+                var showHeaderAt = 100;
+                var win = $(window),
+                        body = $('body');
+                if (win.width() > 400) {
+                    win.on('scroll', function (e) {
+                        if (win.scrollTop() > showHeaderAt) {
+                            body.addClass('fixed');
+                        } else {
+                            body.removeClass('fixed');
+                        }
+                    });
+                }
+            });
+        </script>
+    
+    <style>
+    .header-fixed {
+        background-color: #292c2f;
+        box-shadow: 0 1px 1px #ccc;
+        padding: 20px 40px;
+        height: 80px;
+        color: #ffffff;
+        box-sizing: border-box;
+        top: -100px;
+        -webkit-transition: top 0.3s;
+        transition: top 0.3s;
+    }
 
-        <style type="text/css">
-            .row {
-                padding-top:20px;
-                padding-bottom:10px;
-                border-bottom:2px solid #e7eaec;
-                margin-right: 0 !important;
-                margin-left: 0 !important;
-            }
-        </style>
+    .header-fixed .header-limiter {
+
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .header-fixed-placeholder {
+        height: 80px;
+        display: none;
+    }
+
+    .header-fixed .header-limiter h1 {
+        float: left;
+        line-height: 40px;
+        margin: 0;
+    }
+
+    .header-fixed .header-limiter h1 span {
+        color: #fff;
+    }
+
+    .header-fixed .header-limiter a {
+        color: #da3333;
+        text-decoration: none;
+    }
+
+    .header-fixed .header-limiter nav {
+        font: 16px Arial, Helvetica, sans-serif;
+        line-height: 40px;
+        float: right;
+    }
+
+    .header-fixed .header-limiter nav a {
+        display: inline-block;
+        padding: 0 5px;
+        text-decoration: none;
+        color: #ffffff;
+        opacity: 0.9;
+    }
+
+    .header-fixed .header-limiter nav a:hover {
+        opacity: 1;
+    }
+
+    .header-fixed .header-limiter nav a.selected {
+        color: #608bd2;
+        pointer-events: none;
+        opacity: 1;
+    }
+
+    body.fixed .header-fixed {
+        padding: 10px 40px;
+        height: 50px;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+    body.fixed .header-fixed-placeholder {
+        display: block;
+    }
+
+    body.fixed .header-fixed .header-limiter h1 {
+        font-size: 24px;
+        line-height: 30px;
+    }
+
+    body.fixed .header-fixed .header-limiter nav {
+        line-height: 28px;
+        font-size: 13px;
+    }
+
+    @media all and (max-width: 600px) {
+        .header-fixed {
+            padding: 20px 0;
+            height: 75px;
+        }
+
+        .header-fixed .header-limiter h1 {
+            float: none;
+            margin: -8px 0 10px;
+            text-align: center;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .header-fixed .header-limiter nav {
+            line-height: 1;
+            float: none;
+        }
+
+        .header-fixed .header-limiter nav a {
+            font-size: 13px;
+        }
+
+        body.fixed .header-fixed {
+            display: none;
+        }
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        height: 1500px;
+    }
+
+    </style>
+
     </head>
     <body class="pace-done">
         <div class="pace pace-inactive">
