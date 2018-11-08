@@ -135,7 +135,7 @@
                     <div class="mt-20">
                         <s:iterator value="content.groups" var="groupName">
                             <wpsa:actionParam action="removeGroup" var="actionName" >
-                                <wpsa:actionSubParam name="extraGroupNames" value="%{#groupName}" />
+                                <wpsa:actionSubParam name="groupToRemove" value="%{#groupName}" />
                             </wpsa:actionParam>
 
                             <div class="label label-default label-tag label-sm">
