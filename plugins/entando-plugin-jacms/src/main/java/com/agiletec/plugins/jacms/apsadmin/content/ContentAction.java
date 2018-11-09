@@ -136,14 +136,14 @@ public class ContentAction extends AbstractContentAction {
 	public String joinGroup() {
 		this.updateContentOnSession();
 		try {
-			//This is a multi-select and will return a comma delimited list of selected values
-			List<String> extraGroupNames = this.getExtraGroupNames();
 			for (String extraGroupName : extraGroupNames) {
 				Group group = this.getGroupManager().getGroup(extraGroupName);
 				if (null != group) {
 					this.getContent().addGroup(extraGroupName);
 				}
 			}
+                        // we want to clear the group selection after the join
+                        extraGroupNames.clear();
 		} catch (Throwable t) {
 			_logger.error("error in joinGroup", t);
 			return FAILURE;
@@ -160,12 +160,13 @@ public class ContentAction extends AbstractContentAction {
 	public String removeGroup() {
 		this.updateContentOnSession();
 		try {
-			List<String> extraGroupNames = this.getExtraGroupNames();
-			for (String extraGroupName : extraGroupNames) {
-				Group group = this.getGroupManager().getGroup(extraGroupName);
-				if (null != group) {
-					this.getContent().getGroups().remove(group.getName());
-				}
+			// NOTE: previously the extraGroupNames variable was reused
+                        // also for group removal. It is necessary to have a separate
+                        // variable for this, in order to avoid conflicting with the
+                        // joinGroup() method. See EN-2166.
+			Group group = this.getGroupManager().getGroup(groupToRemove);
+			if (null != group) {
+				this.getContent().getGroups().remove(group.getName());
 			}
 		} catch (Throwable t) {
 			_logger.error("error in removeGroup", t);
@@ -369,6 +370,14 @@ public class ContentAction extends AbstractContentAction {
 		this.extraGroupNames = extraGroupNames;
 	}
 
+	public String getGroupToRemove() {
+		return groupToRemove;
+	}
+
+	public void setGroupToRemove(String groupToRemove) {
+		this.groupToRemove = groupToRemove;
+	}
+
 	public boolean isCopyPublicVersion() {
 		return _copyPublicVersion;
 	}
@@ -393,6 +402,8 @@ public class ContentAction extends AbstractContentAction {
 	private String _contentId;
 
 	private List<String> extraGroupNames = new ArrayList<>();
+        
+        private String groupToRemove;
 
 	private boolean _copyPublicVersion;
 
