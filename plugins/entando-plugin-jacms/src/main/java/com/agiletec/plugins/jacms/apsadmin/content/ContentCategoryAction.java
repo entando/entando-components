@@ -13,8 +13,6 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +21,6 @@ import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.apsadmin.system.AbstractTreeAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
-import com.opensymphony.xwork2.Action;
 
 /**
  * Action class that manages the category tree operation on content finding GUI interface and the relationships between content and categories.
@@ -32,23 +29,6 @@ import com.opensymphony.xwork2.Action;
 public class ContentCategoryAction extends AbstractTreeAction {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ContentCategoryAction.class);
-	
-	@Override
-	public String buildTree() {
-		try {
-			String result = super.buildTree();
-			if (!result.equals(Action.SUCCESS)) return result;
-			Set<String> targets = this.getTreeNodesToOpen();
-			String marker = this.getTreeNodeActionMarkerCode();
-			if (null == marker && null != this.getCategoryCode() && !targets.contains(this.getCategoryCode())) {
-				targets.add(this.getCategoryCode());
-			}
-		} catch (Throwable t) {
-			_logger.error("error in buildTree", t);
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
 	
 	/**
 	 * Performs the action of adding of a category to the content.

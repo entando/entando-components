@@ -35,10 +35,7 @@
         });
 
         var selectedNode = $(".table-treegrid .subTreeToggler:checked");
-        if (isTreeOnRequest)
-            $(selectedNode).closest(".treeRow").addClass("active").removeClass("hidden");
-        else
-            $(selectedNode).closest(".treeRow").addClass("active").removeClass("hidden").addClass("collapsed");
+        $(selectedNode).closest(".treeRow").addClass("active");
 
     <s:if test="strutsAction != 2" >
         generateCodeFromTitle("lang<wp:info key="defaultLang" />", 'categoryCode');
