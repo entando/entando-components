@@ -34,7 +34,7 @@
         });
 
         var selectedNode = $(".table-treegrid .subTreeToggler:checked");
-        $(selectedNode).closest(".treeRow").addClass("active").removeClass("hidden").addClass("collapsed");
+        $(selectedNode).closest(".treeRow").addClass("active");
 
     <s:if test="strutsAction != 2" >
         generateCodeFromTitle("lang<wp:info key="defaultLang" />", 'categoryCode');

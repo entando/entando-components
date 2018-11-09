@@ -234,6 +234,7 @@
             	<param name="actionName">entryContent</param>
             	<param name="categoryCode">${categoryCode}</param>
 		<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+                <param name="treeNodesToOpen">${treeNodesToOpen}</param>
             </result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
