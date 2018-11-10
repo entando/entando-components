@@ -243,7 +243,9 @@
                                             <div class="col-sm-9">
                                                 <s:action name="showCategoryTreeOnContentFinding"
                                                           namespace="/do/jacms/Content" ignoreContextParams="true"
-                                                          executeResult="true"></s:action>
+                                                          executeResult="true">
+                                                    <s:param name="treeNodesToOpen" value="#parameters['treeNodesToOpen']" />
+                                                </s:action>
                                                 </div>
                                             </div>
                                         </div>
