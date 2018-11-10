@@ -6,12 +6,16 @@
 <s:set var="categoryTreeStyleVar" ><wp:info key="systemParam" paramName="treeStyle_category" /></s:set>
 
 <s:if test="#categoryTreeStyleVar == 'request'">
-	<p class="sr-only">
-		<s:iterator value="treeNodesToOpen" var="treeNodeToOpenVar">
-		<wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}" />
-	</s:iterator>
-</p>
+    <p class="sr-only">
+        <s:iterator value="treeNodesToOpen" var="treeNodeToOpenVar">
+            <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}" />
+        </s:iterator>
+    </p>
 </s:if>
+<s:elseif test="#categoryTreeStyleVar == 'classic'">
+    <s:set var="treeIdVar" value="'categoryTree'" />
+    <s:include value="/WEB-INF/apsadmin/jsp/common/treeClassicNodesState.jsp" />
+</s:elseif>
 
 <div class="table-responsive">
 	<table id="categoryTree" class="table table-bordered table-hover table-treegrid">
@@ -75,4 +79,3 @@
 		</s:iterator>
     </ul>
 </s:if>
-
