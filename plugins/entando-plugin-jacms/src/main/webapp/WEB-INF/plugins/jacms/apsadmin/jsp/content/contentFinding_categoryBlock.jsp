@@ -11,6 +11,10 @@
         </s:iterator>
     </p>
 </s:if>
+<s:elseif test="#categoryTreeStyleVar == 'classic'">
+    <s:set var="treeIdVar" value="'categoryTree'" />
+    <s:include value="/WEB-INF/apsadmin/jsp/common/treeClassicNodesState.jsp" />
+</s:elseif>
 
 <div class="table-responsive">
     <table id="categoryTree" class="table table-bordered table-hover table-treegrid ${categoryTreeStyleVar}">
