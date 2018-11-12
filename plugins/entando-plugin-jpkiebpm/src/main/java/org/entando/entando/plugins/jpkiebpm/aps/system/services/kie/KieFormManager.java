@@ -387,7 +387,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(opt)
-                    .setDebug(true)
+                    .setDebug(config.getDebug())
                     .doRequest(KieTaskDetail.class);
             // unfold returned object to get the payload
             if (null != result) {
@@ -445,14 +445,12 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             KieClient client = KieApiUtil.getClientFromConfig(config);
                             result = new KieRequestBuilder(client)
                     .setEndpoint(ep)
-                    .setUnmarshalOptions(false, true)
                     .setDebug(config.getDebug())
                     .doRequest();
 
         } catch (Throwable t) {
             throw new ApsSystemException("Error getting the process diagram", t);
         }
-        logger.debug("-----------------------------------------------");
         return result;
     }
 
