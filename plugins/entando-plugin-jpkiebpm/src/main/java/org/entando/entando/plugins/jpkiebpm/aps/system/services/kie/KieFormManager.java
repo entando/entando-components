@@ -56,18 +56,13 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
     private Map<String, String> hostNameVersionMap = new HashMap<>();
 
-
 //    public final static String KNOWLEDGE_WORKER = "knowledgeWorker";
 //    public final static String LEGAL_WORKER = "legalWorker";
 //
-
     //TODO -- JPW
     //1. Refactor request pattern
     //
-
-
     //TODO JPW -- Remove?
-
     private ConfigInterface configManager;
 
     @Override
@@ -83,8 +78,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         //
         //Known issue here is that if one config goes bad you get none of them. TODO
         try {
-            KieBpmConfig fromEnvironment= EnvironmentBasedConfigHelper.fromEnvironment();
-            if(fromEnvironment!=null){
+            KieBpmConfig fromEnvironment = EnvironmentBasedConfigHelper.fromEnvironment();
+            if (fromEnvironment != null) {
                 addConfig(fromEnvironment);
             }
         } catch (Exception e) {
@@ -392,7 +387,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setEndpoint(ep)
                     .setHeaders(headersMap)
                     .setRequestParams(opt)
-                    .setDebug(config.getDebug())
+                    .setDebug(true)
                     .doRequest(KieTaskDetail.class);
             // unfold returned object to get the payload
             if (null != result) {
@@ -406,23 +401,58 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public String getProcInstDiagramImage(KieBpmConfig config, String containerId, String processId) throws ApsSystemException {
+        return getProcInstDiagramImage(config,
+                 containerId, processId,
+                 null);
+    }
+
+    @Override
+    public String getProcInstDiagramImage(KieBpmConfig config, String containerId, String processId, Long pInstanceId) throws ApsSystemException {
         String result = null;
         if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(processId)) {
             return result;
         }
         try {
+            String ver = this.hostNameVersionMap.get(config.getId());
+            logger.info("server version {} ", ver);
+            boolean versionSix = ver != null && ver.startsWith("6");
+
             // process endpoint first
-            Endpoint ep = KieEndpointDictionary.create().get(API_GET_PROCESS_DIAGRAM).resolveParams(containerId, processId);
-            // generate client from the current configuration
+            String endPoint = "";
+
+            if (versionSix) {
+                endPoint = API_GET_PROCESS_DIAGRAM_BPM6;
+            } else {
+                if (pInstanceId != null) {
+                    endPoint = API_GET_PROCESS_INSTANCE_DIAGRAM;
+                } else {
+                    endPoint = API_GET_PROCESS_DIAGRAM;
+                }
+            }
+
+            Endpoint ep = KieEndpointDictionary.create().get(endPoint);
+
+            if (versionSix) {
+                ep.resolveParams(containerId, processId);
+            } else {
+                if (pInstanceId != null) {
+                    ep.resolveParams(containerId, pInstanceId.toString());
+                } else {
+                    ep.resolveParams(containerId);
+                }
+            }
+
             KieClient client = KieApiUtil.getClientFromConfig(config);
-            // perform query
-            result = new KieRequestBuilder(client)
+                            result = new KieRequestBuilder(client)
                     .setEndpoint(ep)
+                    .setUnmarshalOptions(false, true)
                     .setDebug(config.getDebug())
                     .doRequest();
+
         } catch (Throwable t) {
             throw new ApsSystemException("Error getting the process diagram", t);
         }
+        logger.debug("-----------------------------------------------");
         return result;
     }
 
@@ -443,15 +473,14 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             logger.info("server version {} ", ver);
             boolean versionSix = ver != null && ver.startsWith("6");
             String pamSevenString = "";
-            if(versionSix) {
+            if (versionSix) {
                 // perform query
                 form = (KieProcessFormQueryResult) new KieRequestBuilder(client)
                         .setEndpoint(ep)
                         .setUnmarshalOptions(false, true)
                         .setDebug(config.getDebug())
                         .doRequest(KieProcessFormQueryResult.class);
-            }
-            else {
+            } else {
 
                 //Fetch a string. PAM 7 returns bad xml missing wrapper data
                 pamSevenString = new KieRequestBuilder(client)
@@ -474,7 +503,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
         } catch (Throwable t) {
 
-            logger.error("Error getting the human task form ",t);
+            logger.error("Error getting the human task form ", t);
             throw new ApsSystemException("Error getting the human task form", t);
         }
         return form;
@@ -721,8 +750,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             //Change the first letter of the key to lower case so that it matches the form response. This is getting capitalized
             //elsewhere because the same string is used for display in a form. To be refactored
             Map<String, Object> fixedKeys = new HashMap<>();
-            for(Map.Entry entry : map.entrySet()) {
-                fixedKeys.put(StringUtils.uncapitalize((String)entry.getKey()), entry.getValue());
+            for (Map.Entry entry : map.entrySet()) {
+                fixedKeys.put(StringUtils.uncapitalize((String) entry.getKey()), entry.getValue());
             }
             completeHumanFormTask(config, containerId, taskId, form, taskData, fixedKeys);
 
@@ -759,7 +788,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     .setDebug(config.getDebug())
                     .doRequest();
         } catch (Throwable t) {
-            logger.error("failed to complete human task ",t);
+            logger.error("failed to complete human task ", t);
             throw new ApsSystemException("Error completing the task", t);
         }
         return result;
@@ -1010,8 +1039,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
-
-
 //    public ConfigInterface getConfigManager() {
 //        return configManager;
 //    }
@@ -1019,7 +1046,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 //    public void setConfigManager(ConfigInterface configManager) {
 //        this.configManager = configManager;
 //    }
-
     public IKieFormOverrideManager getOverrideManager() {
         return overrideManager;
     }
@@ -1046,7 +1072,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 //    public void setKiaBpmConfigFactory(KiaBpmConfigFactory kiaBpmConfigFactory) {
 //        this.kiaBpmConfigFactory = kiaBpmConfigFactory;
 //    }
-
     public Map<String, String> getHostNameVersionMap() {
         return this.hostNameVersionMap;
     }
@@ -1253,10 +1278,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             throw new ApsSystemException("Error task complete", t);
         }
 
-
         return result;
     }
-
 
     @Override
     public JSONObject getAllCases(KieBpmConfig config, String containerId, String status) throws ApsSystemException {
@@ -1269,7 +1292,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         logger.debug("kieFormManager getAllCases called ");
         try {
 
-
             if (status != null) {
                 queryStringParam.put("status", status);
             }
@@ -1277,15 +1299,14 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_GET_CASES_LIST)).resolveParams(containerId);
             headersMap.put("Accept", "application/json");
             KieClient client = KieApiUtil.getClientFromConfig(config);
-            result =
-                    (new KieRequestBuilder(client))
+            result
+                    = (new KieRequestBuilder(client))
                             .setEndpoint(t)
                             .setHeaders(headersMap)
                             .setRequestParams(queryStringParam)
                             .setDebug(config.getDebug()
                                     .booleanValue())
                             .doRequest();
-
 
             if (!result.isEmpty()) {
                 json = new JSONObject(result);
