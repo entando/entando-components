@@ -45,6 +45,7 @@ import com.agiletec.plugins.jacms.aps.system.services.searchengine.TestSearchEng
 import com.agiletec.plugins.jacms.apsadmin.category.TestTrashReferencedCategory;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentAdminActionIntegrationTest;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentAdminActionTest;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentCategoryActionIntegrationTest;
 import com.agiletec.plugins.jacms.apsadmin.content.TestContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.TestContentFinderAction;
 import com.agiletec.plugins.jacms.apsadmin.content.TestContentGroupAction;
@@ -104,6 +105,7 @@ public class AllTests {
 
         //
         suite.addTestSuite(ContentAdminActionIntegrationTest.class);
+        suite.addTestSuite(ContentCategoryActionIntegrationTest.class);
         suite.addTestSuite(TestContentAuthorization.class);
         suite.addTestSuite(TestContentBulkCommand.class);
         suite.addTestSuite(TestContentEntityManager.class);

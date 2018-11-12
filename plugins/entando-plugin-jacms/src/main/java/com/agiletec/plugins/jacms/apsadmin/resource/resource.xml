@@ -123,18 +123,4 @@
         
     </package>
     
-    <package name="jacms_do/jacms/Resource/Porting22" namespace="/do/jacms/Resource/Porting22" extends="entando-default">
-    	
-        <action name="intro" class="jacmsPortingResource22Action" method="showResources">
-            <result type="tiles">admin.jacms.resource.porting22.intro</result>
-            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
-        </action>
-        
-        <action name="executeRefresh" class="jacmsPortingResource22Action" method="executeRefresh">
-            <result type="tiles">admin.jacms.resource.porting22.execute</result>
-            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
-        </action>
-        
-    </package>
-    
 </struts>
