@@ -65,7 +65,6 @@
         <module>app-views/entando-app-view-newsletter-default</module>
         <module>app-views/entando-app-view-avatar-default</module>
         <module>app-views/entando-app-view-cmstagcloud-default</module>
-        <module>app-views/entando-app-view-tokenapi-default</module>
         <module>app-views/entando-app-view-blog-default</module>
     </modules>
     <properties>
