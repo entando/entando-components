@@ -50,7 +50,6 @@
         <module>entando-plugin-jpcontentfeedback</module>
         <module>entando-plugin-jpcmstagcloud</module>
         <!-- <module>entando-plugin-jpmyportalplus</module> -->
-        <module>entando-plugin-jptokenapi</module>
         <!--
         <module>entando-plugin-jpfrontshortcut</module>
         <module>entando-plugin-jpehcache</module>-->
@@ -59,7 +58,6 @@
                 <module>entando-plugin-jps3awsclient</module>
                 <module>entando-plugin-jpsolrclient</module>
                 <module>entando-plugin-jpcomponentinstaller</module>
-                <module>entando-plugin-jpoauthclient</module>
                 <module>entando-plugin-jpweatherforecast</module>
                 <module>entando-plugin-jpmailgun</module>
         <module>entando-plugin-jpfileattribute</module>-->
@@ -72,9 +70,7 @@
         <module>entando-plugin-jprestapi</module>
         <module>entando-plugin-jpkiebpm</module>
         <module>entando-plugin-jpinfinispan</module>
-
         <module>entando-plugin-jpwebmail</module>
-
         <module>entando-plugin-jpseo</module>
     </modules>
     <profiles>
