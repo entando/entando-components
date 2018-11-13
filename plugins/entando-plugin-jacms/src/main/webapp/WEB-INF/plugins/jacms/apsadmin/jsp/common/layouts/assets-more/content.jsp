@@ -99,7 +99,7 @@ $(function() {
 	});
 	
 	var selectedNode = $(".table-treegrid .subTreeToggler:checked");
-	$(selectedNode).closest(".treeRow").addClass("active").removeClass("hidden").addClass("collapsed");
+	$(selectedNode).closest(".treeRow").addClass("active");
 </s:if>
 <s:elseif test="%{#categoryTreeStyleVar == 'request'}">
         $('.table-treegrid').treegrid(null, true);
