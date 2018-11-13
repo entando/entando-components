@@ -29,8 +29,9 @@ $(document).ready(function () {
     }
 
     // MetisMenu
-    $('#side-menu').metisMenu();
-
+    if ($("#side-menu").length) {
+        $('#side-menu').metisMenu();
+    }
     // Collapse ibox function
     $('.collapse-link').on('click', function () {
         var ibox = $(this).closest('div.ibox');
@@ -70,10 +71,12 @@ $(document).ready(function () {
     });
 
     // Run menu of canvas
-    $('body.canvas-menu .sidebar-collapse').slimScroll({
-        height: '100%',
-        railOpacity: 0.9
-    });
+    if ($("#side-menu").length) {
+        $('body.canvas-menu .sidebar-collapse').slimScroll({
+            height: '100%',
+            railOpacity: 0.9
+        });
+    }
 
     // Open close right sidebar
     $('.right-sidebar-toggle').on('click', function () {
@@ -81,11 +84,13 @@ $(document).ready(function () {
     });
 
     // Initialize slimscroll for right sidebar
-    $('.sidebar-container').slimScroll({
-        height: '100%',
-        railOpacity: 0.4,
-        wheelStep: 10
-    });
+    if ($("#side-menu").length) {
+        $('.sidebar-container').slimScroll({
+            height: '100%',
+            railOpacity: 0.4,
+            wheelStep: 10
+        });
+    }
 
     // Open close small chat
     $('.open-small-chat').on('click', function () {
@@ -94,10 +99,12 @@ $(document).ready(function () {
     });
 
     // Initialize slimscroll for small chat
-    $('.small-chat-box .content').slimScroll({
-        height: '234px',
-        railOpacity: 0.4
-    });
+    if ($("#side-menu").length) {
+        $('.small-chat-box .content').slimScroll({
+            height: '234px',
+            railOpacity: 0.4
+        });
+    }
 
     // Small todo handler
     $('.check-link').on('click', function () {
@@ -183,15 +190,17 @@ $(document).ready(function () {
         }
     });
 
-    $("[data-toggle=popover]")
-            .popover();
-
+    if ($("#side-menu").length) {
+        $("[data-toggle=popover]")
+                .popover();
+    }
     // Add slimscroll to element
-    $('.full-height-scroll').slimscroll({
-        height: '100%'
-    })
+    if ($("#side-menu").length) {
+        $('.full-height-scroll').slimscroll({
+            height: '100%'
+        })
+    }
 });
-
 
 // Minimalize menu when screen is less than 768px
 $(window).bind("resize", function () {
