@@ -1,6 +1,6 @@
 INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('entando-page-inspinia_BPM', 'Inspinia - BPM Case Management widgets', '<frames>
 	<frame pos="0">
-		<descr>Header sample</descr>
+		<descr>bpm-case-instance-selector</descr>
 		<sketch x1="0" y1="0" x2="11" y2="0" />
 		<defaultWidget code="bpm-case-instance-selector">
 			<properties>
@@ -82,220 +82,61 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
         <meta name="author" content="" />
         <link rel="icon" href="<@wp.info key="systemParam" paramName="applicationBaseURL" />
               favicon.png" type="image/png" />
-          
               <@c.import url="/WEB-INF/aps/jsp/models/inc/content_inline_editing.jsp" />
               <@c.import url="/WEB-INF/aps/jsp/models/inc/header-inclusions.jsp" />
-
-       <script>
-            $(document).ready(function () {
-                var showHeaderAt = 100;
-                var win = $(window),
-                        body = $('body');
-                if (win.width() > 400) {
-                    win.on('scroll', function (e) {
-                        if (win.scrollTop() > showHeaderAt) {
-                            body.addClass('fixed');
-                        } else {
-                            body.removeClass('fixed');
-                        }
-                    });
-                }
-            });
-        </script>
-    
-    <style>
-    .header-fixed {
-        background-color: #292c2f;
-        box-shadow: 0 1px 1px #ccc;
-        padding: 20px 40px;
-        height: 80px;
-        color: #ffffff;
-        box-sizing: border-box;
-        top: -100px;
-        -webkit-transition: top 0.3s;
-        transition: top 0.3s;
-    }
-
-    .header-fixed .header-limiter {
-
-        text-align: center;
-        margin: 0 auto;
-    }
-
-    .header-fixed-placeholder {
-        height: 80px;
-        display: none;
-    }
-
-    .header-fixed .header-limiter h1 {
-        float: left;
-        line-height: 40px;
-        margin: 0;
-    }
-
-    .header-fixed .header-limiter h1 span {
-        color: #fff;
-    }
-
-    .header-fixed .header-limiter a {
-        color: #da3333;
-        text-decoration: none;
-    }
-
-    .header-fixed .header-limiter nav {
-        font: 16px Arial, Helvetica, sans-serif;
-        line-height: 40px;
-        float: right;
-    }
-
-    .header-fixed .header-limiter nav a {
-        display: inline-block;
-        padding: 0 5px;
-        text-decoration: none;
-        color: #ffffff;
-        opacity: 0.9;
-    }
-
-    .header-fixed .header-limiter nav a:hover {
-        opacity: 1;
-    }
-
-    .header-fixed .header-limiter nav a.selected {
-        color: #608bd2;
-        pointer-events: none;
-        opacity: 1;
-    }
-
-    body.fixed .header-fixed {
-        padding: 10px 40px;
-        height: 50px;
-        position: fixed;
-        width: 100%;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
-
-    body.fixed .header-fixed-placeholder {
-        display: block;
-    }
-
-    body.fixed .header-fixed .header-limiter h1 {
-        font-size: 24px;
-        line-height: 30px;
-    }
-
-    body.fixed .header-fixed .header-limiter nav {
-        line-height: 28px;
-        font-size: 13px;
-    }
-
-    @media all and (max-width: 600px) {
-        .header-fixed {
-            padding: 20px 0;
-            height: 75px;
-        }
-
-        .header-fixed .header-limiter h1 {
-            float: none;
-            margin: -8px 0 10px;
-            text-align: center;
-            font-size: 24px;
-            line-height: 1;
-        }
-
-        .header-fixed .header-limiter nav {
-            line-height: 1;
-            float: none;
-        }
-
-        .header-fixed .header-limiter nav a {
-            font-size: 13px;
-        }
-
-        body.fixed .header-fixed {
-            display: none;
-        }
-    }
-
-    body {
-        margin: 0;
-        padding: 0;
-        height: 1500px;
-    }
-
-    </style>
-
     </head>
-    <body class="pace-done">
+    <body class="bpm-inspinia">
         <div class="pace pace-inactive">
             <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
                 <div class="pace-progress-inner"></div>
             </div>
             <div class="pace-activity"></div>
         </div>
-        <div id="wrapper">
-            <div id="page-wrapper" class="gray-bg dashbard-1">
-                <div class="row white-bg">
-                    <div class="col-md-3">&nbsp;</div>
-                    <div class="col-md-6">
-                        <div class="white-bg">
-                            <@wp.show frame=0 />
-                        </div>
-                    </div>
-                    <div class="col-md-3">&nbsp;</div>
+        <header class="header-fixed">
+            <div class="header-limiter">
+                <h1>
+                    <a href="#">Kie<span>Workbench</span></a>
+                </h1>
+                <span class=" text-right user-logged">Kie Admin</span>
+            </div>
+        </header>
+        <div  class="container-bpm" style="margin:10px;">
+            <div class="row ">
+                <div class="col-md-12">
+                    <@wp.show frame=0 />
                 </div>
+            </div>
 
-                <div class="row white-bg">
-                    <div class="col-md-12">
-                        <div class="white-bg">
-                            <@wp.show frame=1 />
-                        </div>
-                    </div>
+            <div class="row white-bg">
+                <div class="col-md-12">
+                    <@wp.show frame=1 />
                 </div>
-
-                <div class="row white-bg">
-                    <div class="col-md-12">
-                        <div class="white-bg">
-                            <@wp.show frame=2 />
-                        </div>
-                    </div>
+            </div>
+            <div class="row white-bg">
+                <div class="col-md-12">
+                    <@wp.show frame=2 />
                 </div>
-
-                <div class="row white-bg">
-                    <div class="col-md-6">
-                        <div class="white-bg">
-                            <@wp.show frame=3 />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="white-bg">
-                            <@wp.show frame=4 />
-                        </div>
-                    </div>
+            </div>
+            <div class="row white-bg">
+                <div class="col-md-6">
+                    <@wp.show frame=3 />
                 </div>
-
-                <div class="row white-bg">
-                    <div class="col-md-12">
-                        <div class="white-bg">
-                            <@wp.show frame=5 />
-                        </div>
-                    </div>
+                <div class="col-md-6">
+                    <@wp.show frame=4 />
                 </div>
-
-                <div class="row white-bg">
-                    <div class="col-md-6">
-                        <div class="white-bg">
-                            <@wp.show frame=6 />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="white-bg">
-                            <@wp.show frame=7 />
-                        </div>
-                    </div>
+            </div>
+            <div class="row white-bg">
+                <div class="col-md-12">
+                    <@wp.show frame=5 />
                 </div>
-
+            </div>
+            <div class="row white-bg">
+                <div class="col-md-6">
+                    <@wp.show frame=6 />
+                </div>
+                <div class="col-md-6">
+                    <@wp.show frame=7 />
+                </div>
             </div>
         </div>
     </body>

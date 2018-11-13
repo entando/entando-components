@@ -8,7 +8,6 @@
     String cId = java.util.UUID.randomUUID().toString();
 %>
 
-
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 <s:if test="#request['bpmcss']==null">
     <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jbpm-widget-ext.css" rel="stylesheet">
@@ -32,13 +31,17 @@
 </s:if>
 
 
-<div class="ibox" id="<%=cId%>" ng-controller="CaseFileController as vm">
-    <div class="ibox-title"></div>
-    <div class="ibox-content">
-
-        <div class="panel-heading">
-            <h3 class="panel-title">Case Instance File</h3>
+<div  class="ibox float-e-margins"  id="<%=cId%>" ng-controller="CaseFileController as vm">
+    <div class="ibox-title">
+        <h5>Case Instance File</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link"> 
+                <i class="fa fa-chevron-up"></i> 
+            </a> 
+            <a class="close-link"> <i class="fa fa-times"></i> </a> 
         </div>
+    </div>
+    <div class="ibox-content">
         <div class="panel-body" style="min-height:400px">
             <div ng-jsoneditor ng-model="vm.mod.caseFile" options="{}"></div>
             <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceFile/updateData.action"/>" method="post" class="form-horizontal" >
@@ -60,12 +63,20 @@
                 <h4>Data id (key) to be deleted</h4>
                 <s:textfield name="dataId" id="dataId" cssClass="form-control"/>
 
-                <wpsf:submit type="button" action="updateData" name="updateData" cssClass="btn btn-sm btn-link" >
-                    <small>Edit</small>
+                <wpsf:submit
+                    type="button" 
+                    action="updateData" 
+                    name="updateData" 
+                    cssClass="btn btn-warning btn-sm" 
+                    >Edit
                 </wpsf:submit>
 
-                <wpsf:submit type="button" action="deleteData" name="deleteData" ccsClass="btn btn-link"  >
-                    <small>Remove</small>
+                <wpsf:submit 
+                    type="button" 
+                    action="deleteData" 
+                    name="deleteData" 
+                    cssClass="btn btn-default btn-sm" 
+                    >Remove
                 </wpsf:submit>
             </form>
 
