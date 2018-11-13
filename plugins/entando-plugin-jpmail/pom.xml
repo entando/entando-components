@@ -57,7 +57,7 @@
         <dependency>
             <groupId>com.jgeppert.struts2.jquery</groupId>
             <artifactId>struts2-jquery-grid-plugin</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>com.jgeppert.struts2.jquery</groupId>
             <artifactId>struts2-jquery-richtext-plugin</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>com.jgeppert.struts2.jquery</groupId>
             <artifactId>struts2-jquery-tree-plugin</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -105,7 +105,7 @@
         <dependency>
             <groupId>com.jgeppert.struts2.jquery</groupId>
             <artifactId>struts2-jquery-mobile-plugin</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>

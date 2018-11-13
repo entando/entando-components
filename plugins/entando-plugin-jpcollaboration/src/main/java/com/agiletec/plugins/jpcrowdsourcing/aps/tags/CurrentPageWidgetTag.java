@@ -25,7 +25,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,169 +37,161 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+import org.entando.entando.aps.tags.ExtendedTagSupport;
 
 /**
- * Returns informations about the showlet where the tag resides.
- * The "param" attribute acceptes the following values:
- * - "code" returns the code of the associated showlet type (empty if none associated)<br/>
- * - "title" returns the name of the associated showlet type (empty if none associated)<br/>
- * - "config" returns the value of the configuration parameter declared in the "configParam" attribute<br/>
- * To obtain information about a showlet placed in a frame other than the current, use the "frame" attribute.
+ * Returns informations about the showlet where the tag resides. The "param"
+ * attribute acceptes the following values: - "code" returns the code of the
+ * associated showlet type (empty if none associated)<br/>
+ * - "title" returns the name of the associated showlet type (empty if none
+ * associated)<br/>
+ * - "config" returns the value of the configuration parameter declared in the
+ * "configParam" attribute<br/>
+ * To obtain information about a showlet placed in a frame other than the
+ * current, use the "frame" attribute.
+ *
  * @author E.Santoboni - E.Mezzano
  */
 @SuppressWarnings("serial")
-public class CurrentPageWidgetTag extends OutSupport {
+public class CurrentPageWidgetTag extends ExtendedTagSupport {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(CurrentPageWidgetTag.class);
+    private static final Logger _logger = LoggerFactory.getLogger(CurrentPageWidgetTag.class);
 
-	@Override
-	public int doStartTag() throws JspException {
-		try {
-			Widget showlet = this.extractShowlet();
-			if (null == showlet) return super.doStartTag();
-			String value = null;
-			if ("code".equals(this.getParam())) {
-				value = showlet.getType().getCode();
-			} else if ("title".equals(this.getParam())) {
-				value = this.extractTitle(showlet);
-			} else if ("config".equals(this.getParam())) {
-				ApsProperties config = showlet.getConfig();
-				if (null != config) {
-					value = config.getProperty(this.getConfigParam());
-				}
-			}
-			if (null != value) {
-				String var = this.getVar();
-				if (null == var || "".equals(var)) {
-					if (this.getEscapeXml()) {
-						out(this.pageContext, this.getEscapeXml(), value);
-					} else {
-						this.pageContext.getOut().print(value);
-					}
-				} else {
-					this.pageContext.setAttribute(this.getVar(), value);
-				}
-			}
-		} catch (Throwable t) {
-			String msg = "Error detected during showlet preprocessing";
-			_logger.error("error in doEndTag", t);
-			throw new JspException(msg, t);
-		}
-		return super.doStartTag();
-	}
+    @Override
+    public int doStartTag() throws JspException {
+        try {
+            Widget showlet = this.extractShowlet();
+            if (null == showlet) {
+                return super.doStartTag();
+            }
+            String value = null;
+            if ("code".equals(this.getParam())) {
+                value = showlet.getType().getCode();
+            } else if ("title".equals(this.getParam())) {
+                value = this.extractTitle(showlet);
+            } else if ("config".equals(this.getParam())) {
+                ApsProperties config = showlet.getConfig();
+                if (null != config) {
+                    value = config.getProperty(this.getConfigParam());
+                }
+            }
+            if (null != value) {
+                String var = this.getVar();
+                if (null == var || "".equals(var)) {
+                    if (this.getEscapeXml()) {
+                        out(this.pageContext, this.getEscapeXml(), value);
+                    } else {
+                        this.pageContext.getOut().print(value);
+                    }
+                } else {
+                    this.pageContext.setAttribute(this.getVar(), value);
+                }
+            }
+        } catch (Throwable t) {
+            String msg = "Error detected during showlet preprocessing";
+            _logger.error("error in doEndTag", t);
+            throw new JspException(msg, t);
+        }
+        return super.doStartTag();
+    }
 
-	private String extractTitle(Widget showlet) {
-		ServletRequest request = this.pageContext.getRequest();
-		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
-		Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-		WidgetType type = showlet.getType();
-		String value = type.getTitles().getProperty(currentLang.getCode());
-		if (null == value || value.trim().length() == 0) {
-			ILangManager langManager =
-				(ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
-			Lang defaultLang = langManager.getDefaultLang();
-			value = type.getTitles().getProperty(defaultLang.getCode());
-		}
-		return value;
-	}
+    private String extractTitle(Widget showlet) {
+        ServletRequest request = this.pageContext.getRequest();
+        RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
+        Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+        WidgetType type = showlet.getType();
+        String value = type.getTitles().getProperty(currentLang.getCode());
+        if (null == value || value.trim().length() == 0) {
+            ILangManager langManager
+                    = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
+            Lang defaultLang = langManager.getDefaultLang();
+            value = type.getTitles().getProperty(defaultLang.getCode());
+        }
+        return value;
+    }
 
-	private Widget extractShowlet() {
-		ServletRequest req =  this.pageContext.getRequest();
-		RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
-		Widget showlet = null;
-		if (this.getFrame() < 0 && StringUtils.isBlank(this.getWidget())) {
-			showlet = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_WIDGET));
-		} else {
-			IPage currentPage = (IPage) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_PAGE));
-			Widget[] showlets = currentPage.getWidgets();
-			if (this.getFrame() >= 0) {
-				if (showlets.length > this.getFrame()) {
-					showlet = showlets[this.getFrame()];
-				}
-			} else {
-				for (int i = 0; i < showlets.length; i++) {
-					Widget currentWidget = showlets[i];
-					if (null != currentWidget && currentWidget.getType().getCode().equals(this.getWidget())) {
-						showlet = currentWidget;
-						break;
-					}
-				}
-			}
-		}
-		return showlet;
-	}
+    private Widget extractShowlet() {
+        ServletRequest req = this.pageContext.getRequest();
+        RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
+        Widget showlet = null;
+        if (this.getFrame() < 0 && StringUtils.isBlank(this.getWidget())) {
+            showlet = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_WIDGET));
+        } else {
+            IPage currentPage = (IPage) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_PAGE));
+            Widget[] showlets = currentPage.getWidgets();
+            if (this.getFrame() >= 0) {
+                if (showlets.length > this.getFrame()) {
+                    showlet = showlets[this.getFrame()];
+                }
+            } else {
+                for (int i = 0; i < showlets.length; i++) {
+                    Widget currentWidget = showlets[i];
+                    if (null != currentWidget && currentWidget.getType().getCode().equals(this.getWidget())) {
+                        showlet = currentWidget;
+                        break;
+                    }
+                }
+            }
+        }
+        return showlet;
+    }
 
-	@Override
-	public void release() {
-		super.release();
-		this._param = null;
-		this._configParam = null;
-		this._var = null;
-		this._frame = -1;
-		this._widget = null;
-		super.escapeXml = true;
+    @Override
+    public void release() {
+        super.release();
+        this._param = null;
+        this._configParam = null;
+        this._var = null;
+        this._frame = -1;
+        this._widget = null;
+        super.setEscapeXml(true);;
+    }
 
-	}
+    public String getParam() {
+        return _param;
+    }
 
-	public String getParam() {
-		return _param;
-	}
-	public void setParam(String param) {
-		this._param = param;
-	}
+    public void setParam(String param) {
+        this._param = param;
+    }
 
-	public String getConfigParam() {
-		return _configParam;
-	}
-	public void setConfigParam(String configParam) {
-		this._configParam = configParam;
-	}
+    public String getConfigParam() {
+        return _configParam;
+    }
 
-	public String getVar() {
-		return _var;
-	}
-	public void setVar(String var) {
-		this._var = var;
-	}
+    public void setConfigParam(String configParam) {
+        this._configParam = configParam;
+    }
 
-	public int getFrame() {
-		return _frame;
-	}
-	public void setFrame(int frame) {
-		this._frame = frame;
-	}
+    public String getVar() {
+        return _var;
+    }
 
-	/**
-	 * Checks if the special characters must be escaped
-	 * @return True if the special characters must be escaped
-	 */
-	public boolean getEscapeXml() {
-		return super.escapeXml;
-	}
+    public void setVar(String var) {
+        this._var = var;
+    }
 
-	/**
-	 * Toggles the escape of the special characters of the result.
-	 * @param escapeXml True to perform the escaping, false otherwise.
-	 */
-	public void setEscapeXml(boolean escapeXml) {
-		super.escapeXml = escapeXml;
-	}
+    public int getFrame() {
+        return _frame;
+    }
 
+    public void setFrame(int frame) {
+        this._frame = frame;
+    }
 
-	public String getWidget() {
-		return _widget;
-	}
-	public void setWidget(String widget) {
-		this._widget = widget;
-	}
+    public String getWidget() {
+        return _widget;
+    }
 
+    public void setWidget(String widget) {
+        this._widget = widget;
+    }
 
+    private String _param;
+    private String _configParam;
+    private String _var;
 
-	private String _param;
-	private String _configParam;
-	private String _var;
-
-	private int _frame = -1;
-	private String _widget;
+    private int _frame = -1;
+    private String _widget;
 
 }
