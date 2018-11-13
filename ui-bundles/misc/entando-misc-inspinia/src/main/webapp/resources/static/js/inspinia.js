@@ -4,9 +4,7 @@
  *   version 2.7.1
  *
  */
-
 $(document).ready(function () {
-
 //  header scroll added to page model entando-page-inspinia_BPM
     var showHeaderAt = 100;
     var win = $(window),
@@ -316,4 +314,3 @@ function WinMove() {
             })
             .disableSelection();
 }
-
