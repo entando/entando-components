@@ -1,0 +1,8 @@
+.error{
+    color:red;
+    font-weight: normal;
+}
+
+.paginate_button {
+    padding: 2px !important;
+}

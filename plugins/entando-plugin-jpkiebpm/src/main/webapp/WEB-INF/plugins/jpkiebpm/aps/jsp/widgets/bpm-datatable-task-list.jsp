@@ -42,13 +42,11 @@
             src.forEach(function (value) {
                 html += "<li>" + value + "</li>";
             });
-        }
-        else if (Array.isArray(src[label])) {
+        } else if (Array.isArray(src[label])) {
             src[label].forEach(function (value) {
                 html += "<li>" + value + "</li>";
             });
-        }
-        else {
+        } else {
             html += "<li>" + (src[label] === undefined ? "" : src[label]) + "</li>";
         }
         html += "</ul>"
@@ -57,24 +55,24 @@
 
     function getTemplateTaskDetail(data) {
         var template =
-            "<tr><td>Task id</td><td>" + data['task-id'] + "</td></tr>\n" +
-            "<tr><td>Task name</td><td>" + data['task-name'] + "</td></tr>\n" +
-            "<tr><td>Task form</td><td>" + data['task-form'] + "</td></tr>\n" +
-            "<tr><td>Task priority</td><td>" + data['task-priority'] + "</td></tr>\n" +
-            "<tr><td>Task status</td><td>" + data['task-status'] + "</td></tr>\n" +
-            "<tr><td>Actual Owner</td><td>" + data['task-actual-owner'] + "</td></tr>\n" +
-            "<tr><td>Created by</td><td>" + data['task-created-by'] + "</td></tr>\n" +
-            "<tr><td>Created On</td><td>" + data['task-created-on'] + "</td></tr>\n" +
-            "<tr><td>Expiration Time</td><td>" + data['task-expiration-time'] + "</td></tr>\n" +
-            "<tr><td>Skippable</td><td>" + data['task-skippable'] + "</td></tr>\n" +
-            "<tr><td>Workitem Id</td><td>" + data['task-workitem-id'] + "</td></tr>\n" +
-            "<tr><td>Process Instance</td><td>" + data['task-process-instance-id'] + "</td></tr>\n" +
-            "<tr><td>Process Definition</td><td>" + data['task-process-id'] + "</td></tr>\n" +
-            "<tr><td>Parent Id</td><td>" + data['task-parent-id'] + "</td></tr>\n" +
-            "<tr><td>Deployment Unit</td><td>" + data['task-container-id'] + "</td></tr>\n" +
-            "<tr><td>Potential Owners</td><td>" + getHtmlListFragment(data['potential-owners'], 'task-pot-owners') + "</td></tr>\n" +
-            "<tr><td>Excluded Owner</td><td>" + getHtmlListFragment(data['excluded-owners'], 'task-exc-owners') + "</td></tr>\n" +
-            "<tr><td>Business Admin</td><td>" + getHtmlListFragment(data['business-admins'], 'task-business-admins') + "</td></tr>";
+                "<tr><td>Task id</td><td>" + data['task-id'] + "</td></tr>\n" +
+                "<tr><td>Task name</td><td>" + data['task-name'] + "</td></tr>\n" +
+                "<tr><td>Task form</td><td>" + data['task-form'] + "</td></tr>\n" +
+                "<tr><td>Task priority</td><td>" + data['task-priority'] + "</td></tr>\n" +
+                "<tr><td>Task status</td><td>" + data['task-status'] + "</td></tr>\n" +
+                "<tr><td>Actual Owner</td><td>" + data['task-actual-owner'] + "</td></tr>\n" +
+                "<tr><td>Created by</td><td>" + data['task-created-by'] + "</td></tr>\n" +
+                "<tr><td>Created On</td><td>" + data['task-created-on'] + "</td></tr>\n" +
+                "<tr><td>Expiration Time</td><td>" + data['task-expiration-time'] + "</td></tr>\n" +
+                "<tr><td>Skippable</td><td>" + data['task-skippable'] + "</td></tr>\n" +
+                "<tr><td>Workitem Id</td><td>" + data['task-workitem-id'] + "</td></tr>\n" +
+                "<tr><td>Process Instance</td><td>" + data['task-process-instance-id'] + "</td></tr>\n" +
+                "<tr><td>Process Definition</td><td>" + data['task-process-id'] + "</td></tr>\n" +
+                "<tr><td>Parent Id</td><td>" + data['task-parent-id'] + "</td></tr>\n" +
+                "<tr><td>Deployment Unit</td><td>" + data['task-container-id'] + "</td></tr>\n" +
+                "<tr><td>Potential Owners</td><td>" + getHtmlListFragment(data['potential-owners'], 'task-pot-owners') + "</td></tr>\n" +
+                "<tr><td>Excluded Owner</td><td>" + getHtmlListFragment(data['excluded-owners'], 'task-exc-owners') + "</td></tr>\n" +
+                "<tr><td>Business Admin</td><td>" + getHtmlListFragment(data['business-admins'], 'task-business-admins') + "</td></tr>";
         return template;
     }
 
@@ -92,7 +90,7 @@
     /* Modal Form*/
     function openModalForm(event, configId, rowData, context) {
 
-        var url = context + "taskForm.json?configId=" + configId+"&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
+        var url = context + "taskForm.json?configId=" + configId + "&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
 
         $.get(url, function (data) {
             $('#bpm-task-list-modal-form').empty();
@@ -225,16 +223,29 @@
     });
 </script>
 
-<table id="data-table-task-list" class="display nowrap" cellspacing="0" width="100%"></table>
+<div  class="ibox float-e-margins" >
+    <div class="ibox-title">
+        <h5>Tasks list </h5>
+        <div class="ibox-tools">
+            <a class="collapse-link"> 
+                <i class="fa fa-chevron-up"></i> 
+            </a> 
+            <a class="close-link"> <i class="fa fa-times"></i> </a> 
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table id="data-table-task-list" class="display nowrap" cellspacing="0" width="100%"></table>
 
-<div id="bpm-task-list-modal-data">
-    <table id="bpm-task-list-modal-data-table" class="table table-hover no-margins">
-        <tbody id="bpm-task-list-modal-data-table-tbody"></tbody>
-    </table>
-</div>
+        <div id="bpm-task-list-modal-data">
+            <table id="bpm-task-list-modal-data-table" class="table table-hover no-margins">
+                <tbody id="bpm-task-list-modal-data-table-tbody"></tbody>
+            </table>
+        </div>
 
-<div id="bpm-task-list-modal-form"/>
+        <div id="bpm-task-list-modal-form"/>
 
-<div id="bpm-task-list-modal-diagram">
-    <img id="bpm-task-list-modal-diagram-data" class="img-responsive"/>
-</div>
+        <div id="bpm-task-list-modal-diagram">
+            <img id="bpm-task-list-modal-diagram-data" class="img-responsive"/>
+        </div>
+
+    </div>
