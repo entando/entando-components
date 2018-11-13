@@ -10,93 +10,78 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <link rel="icon" href="<wp:info key="systemParam" paramName="applicationBaseURL" />
-              favicon.png" type="image/png" />
-
-        <c:import url="/WEB-INF/aps/jsp/models/inc/content_inline_editing.jsp" />
-        <c:import url="/WEB-INF/aps/jsp/models/inc/header-inclusions.jsp" />
-
-
-        <style type="text/css">
-            .row {
-                padding-top:20px;
-                padding-bottom:10px;
-                border-bottom:2px solid #e7eaec;
-                margin-right: 0 !important;
-                margin-left: 0 !important;
-            }
-        </style>
-    </head>
-    <body class="pace-done">
-        <div class="pace pace-inactive">
-            <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
-                <div class="pace-progress-inner"></div>
-            </div>
-            <div class="pace-activity"></div>
+        <link 
+            rel="icon"
+            href="<wp:info key="systemParam" paramName="applicationBaseURL" />
+            favicon.png" 
+            type="image/png"
+            />
+    <c:import url="/WEB-INF/aps/jsp/models/inc/content_inline_editing.jsp" />
+    <c:import url="/WEB-INF/aps/jsp/models/inc/header-inclusions.jsp" />
+</head>
+<body class="bpm-inspinia">
+    <div class="pace pace-inactive">
+        <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+            <div class="pace-progress-inner"></div>
         </div>
-        <div id="wrapper">
-            <div id="page-wrapper" class="gray-bg dashbard-1">
-                <div class="row white-bg">
-                    <div class="col-md-3">&nbsp;</div>
-                    <div class="col-md-6">
-                        <div class="white-bg">
-                            <wp:show frame="0"/>
-                        </div>
-                    </div>
-                    <div class="col-md-3">&nbsp;</div>
-                </div>
+        <div class="pace-activity"></div>
+    </div>
+    <header class="header-fixed">
+        <div class="header-limiter">
+            <h1>
+                <a href="#">Kie<span>Workbench</span></a>
+            </h1>
+            <span class=" text-right user-logged">Kie Admin</span>
+        </div>
+    </header>
 
-                <div class="row white-bg">
-                    <div class="col-md-12">
-                        <div class="white-bg">
-                            <wp:show frame="1" />
-                        </div>
-                    </div>
-                </div>
+    <div  class="container-bpm" style="margin:10px;">
 
-                <div class="row white-bg">
-                    <div class="col-md-12">
-                        <div class="white-bg">
-                            <wp:show frame="2" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row white-bg">
-                    <div class="col-md-6">
-                        <div class="white-bg">
-                            <wp:show frame="3" />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="white-bg">
-                            <wp:show frame="4" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row white-bg">
-                    <div class="col-md-12">
-                        <div class="white-bg">
-                            <wp:show frame="5" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row white-bg">
-                    <div class="col-md-6">
-                        <div class="white-bg">
-                            <wp:show frame="6" />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="white-bg">
-                            <wp:show frame="7" />
-                        </div>
-                    </div>
-                </div>
-
+        <div class="row ">
+            <div class="col-md-12">
+                <wp:show frame="0" />
             </div>
         </div>
-    </body>
+
+        <div class="row ">
+            <div class="col-md-12">
+                <wp:show frame="1"/>
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="col-md-12">
+                <wp:show frame="2" />
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="col-md-6">
+                <wp:show frame="3" />
+            </div>
+            <div class="col-md-6">
+                <wp:show frame="4" />
+            </div>
+        </div>
+
+
+        <div class="row ">
+            <div class="col-md-12">
+
+                <wp:show frame="5" />
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="col-md-6">
+                <wp:show frame="6" />
+            </div>
+
+            <div class="col-md-6">
+                <wp:show frame="7" />
+            </div>
+        </div>
+
+    </div>
+</body>
 </html>
