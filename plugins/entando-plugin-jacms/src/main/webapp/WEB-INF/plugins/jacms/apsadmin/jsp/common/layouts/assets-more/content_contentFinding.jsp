@@ -34,7 +34,7 @@
         });
 
         var selectedNode = $(".table-treegrid .subTreeToggler:checked");
-        $(selectedNode).closest(".treeRow").addClass("active").removeClass("hidden").addClass("collapsed");
+        $(selectedNode).closest(".treeRow").addClass("active");
 
     <s:if test="strutsAction != 2" >
         generateCodeFromTitle("lang<wp:info key="defaultLang" />", 'categoryCode');
@@ -48,6 +48,7 @@
             scrollX: true,
             scrollCollapse: true,
             paging: false,
+            fixedColumns: true,
             "colVis": {
                 "buttonText": '<s:text name="title.searchResultOptions" />&#32;',
                 "sAlign": "right"
@@ -55,12 +56,14 @@
             columnDefs: [
                 {width: 50, targets: 0},
                 {width: 200, "targets": [1, 2, 3, 4, 7, 8, 9], },
-                {width: 100, "targets": [5, 6, 10], }
+                {width: 80, "targets": [5, 6, 10], }
 
             ],
             fixedColumns: {
                 leftColumns: 2,
                 rightColumns: 1,
+                iLeftColumns: 2,
+                iRightColumns: 1
             }
         });
 

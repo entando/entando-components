@@ -136,11 +136,14 @@ public class ContentAction extends AbstractContentAction {
 	public String joinGroup() {
 		this.updateContentOnSession();
 		try {
-			String extraGroupName = this.getExtraGroupName();
-			Group group = this.getGroupManager().getGroup(extraGroupName);
-			if (null != group) {
-				this.getContent().addGroup(extraGroupName);
+			for (String extraGroupName : extraGroupNames) {
+				Group group = this.getGroupManager().getGroup(extraGroupName);
+				if (null != group) {
+					this.getContent().addGroup(extraGroupName);
+				}
 			}
+                        // we want to clear the group selection after the join
+                        extraGroupNames.clear();
 		} catch (Throwable t) {
 			_logger.error("error in joinGroup", t);
 			return FAILURE;
@@ -157,8 +160,11 @@ public class ContentAction extends AbstractContentAction {
 	public String removeGroup() {
 		this.updateContentOnSession();
 		try {
-			String extraGroupName = this.getExtraGroupName();
-			Group group = this.getGroupManager().getGroup(extraGroupName);
+			// NOTE: previously the extraGroupNames variable was reused
+                        // also for group removal. It is necessary to have a separate
+                        // variable for this, in order to avoid conflicting with the
+                        // joinGroup() method. See EN-2166.
+			Group group = this.getGroupManager().getGroup(groupToRemove);
 			if (null != group) {
 				this.getContent().getGroups().remove(group.getName());
 			}
@@ -356,12 +362,20 @@ public class ContentAction extends AbstractContentAction {
 		this._contentId = contentId;
 	}
 
-	public String getExtraGroupName() {
-		return _extraGroupName;
+	public List<String> getExtraGroupNames() {
+		return extraGroupNames;
 	}
 
-	public void setExtraGroupName(String extraGroupName) {
-		this._extraGroupName = extraGroupName;
+	public void setExtraGroupNames(List<String> extraGroupNames) {
+		this.extraGroupNames = extraGroupNames;
+	}
+
+	public String getGroupToRemove() {
+		return groupToRemove;
+	}
+
+	public void setGroupToRemove(String groupToRemove) {
+		this.groupToRemove = groupToRemove;
 	}
 
 	public boolean isCopyPublicVersion() {
@@ -387,7 +401,9 @@ public class ContentAction extends AbstractContentAction {
 
 	private String _contentId;
 
-	private String _extraGroupName;
+	private List<String> extraGroupNames = new ArrayList<>();
+        
+        private String groupToRemove;
 
 	private boolean _copyPublicVersion;
 

@@ -57,7 +57,7 @@ public class TestPamProcessForm extends TestCase {
                 );
             });
 
-            assertEquals(6, fields.size());
+            assertEquals(8, fields.size());
                        
             assertEquals("Employee", fields.get(0).getLabel());
             assertEquals("employee", fields.get(0).getName());
@@ -101,7 +101,23 @@ public class TestPamProcessForm extends TestCase {
             assertEquals("java.util.Date", fields.get(5).getStandaloneClassName());
             assertEquals("DatePicker", fields.get(5).getCode());
             assertFalse(fields.get(5).getRequired());
-            
+
+            assertEquals("RadioGroupInline", fields.get(6).getLabel());
+            assertEquals("radioGroupInline", fields.get(6).getName());
+            assertEquals("radioGroupInline", fields.get(6).getBinding());
+            assertEquals("java.lang.String", fields.get(6).getStandaloneClassName());
+            assertEquals("RadioGroup", fields.get(6).getCode());
+            assertTrue(fields.get(6).isInline());
+
+            assertFalse(fields.get(6).getRequired());
+
+            assertEquals("RadioGroup", fields.get(7).getLabel());
+            assertEquals("radioGroup", fields.get(7).getName());
+            assertEquals("radioGroup", fields.get(7).getBinding());
+            assertEquals("java.lang.String", fields.get(7).getStandaloneClassName());
+            assertEquals("RadioGroup", fields.get(7).getCode());
+            assertFalse(fields.get(7).getRequired());
+
         } catch (Throwable t) {
             throw t;
         }

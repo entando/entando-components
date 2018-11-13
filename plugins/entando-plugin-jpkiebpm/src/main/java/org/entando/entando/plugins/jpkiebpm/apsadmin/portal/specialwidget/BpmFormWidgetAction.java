@@ -233,7 +233,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         if (field.getType().equalsIgnoreCase("TextBox")
                 || (field.getType().equalsIgnoreCase("TextArea"))
                 || (field.getType().equalsIgnoreCase("InputText"))
-                || (field.getType().equalsIgnoreCase("ListBox"))) {
+                || (field.getType().equalsIgnoreCase("ListBox"))
+                || (field.getType().equalsIgnoreCase("RadioGroup"))) {
             MonoTextAttribute text = (MonoTextAttribute) this.getAttributePrototype("Monotext");
             text.setName(field.getName());
             text.setDefaultLangCode(this.getCurrentLang().getCode());

@@ -48,8 +48,9 @@ import org.springframework.stereotype.Service;
 import org.apache.struts2.util.ServletContextAware;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.MultipleSelectorField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.SelectField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.SelectOption;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.ListBoxField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Option;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.RadioGroupField;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.TextField;
 
 @Service
@@ -79,7 +80,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.typeMapping.put("CheckBox", "checkbox");
         this.typeMapping.put("ListBox", "text");
         this.typeMapping.put("Slider", "number");
-        this.typeMapping.put("RadioGroup", "number");
+        this.typeMapping.put("RadioGroup", "radio");
         this.typeMapping.put("MultipleInput", "number");
         this.typeMapping.put("MultipleSelector", "text");
         this.typeMapping.put("Document", "text");
@@ -93,7 +94,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.valueMapping.put("DecimalBox", "$data.%s.number");
         this.valueMapping.put("DatePicker", "$data.%s.text");
         this.valueMapping.put("Slider", "$data.%s.number");
-        this.valueMapping.put("RadioGroup", "$data.%s.number");
+        this.valueMapping.put("RadioGroup", "$data.%s.text");
         this.valueMapping.put("ListBox", "$data.%s.text");
         this.valueMapping.put("MultipleSelector", "$data.%s.text");
         this.valueMapping.put("MultipleInput", "$data.%s.text");
@@ -221,7 +222,10 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 inputField = (T) new TextField();
                 break;
             case "ListBox":
-                inputField = (T) new SelectField();
+                inputField = (T) new ListBoxField();
+                break;
+            case "RadioGroup":
+                inputField = (T) new RadioGroupField();
                 break;
             case "DatePicker":
                 inputField = (T) new DatePickerField();
@@ -257,14 +261,14 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             boolean showTime = Boolean.parseBoolean(field.getProperty("showTime").getValue());
             datePicker.setShowTime(showTime);
         }
-        if (inputField instanceof SelectField) {
-            SelectField select = (SelectField) inputField;
+        if (inputField instanceof ListBoxField) {
+            ListBoxField select = (ListBoxField) inputField;
             String optionsString = field.getProperty("options").getValue();
             List<String> optionsValues = Arrays.asList(optionsString.split(","));
-            List<SelectOption> selectOption = new ArrayList<SelectOption>();
+            List<Option> selectOption = new ArrayList<Option>();
             for (String f : optionsValues) {
                 String[] split = f.split("=");
-                SelectOption opt = new SelectOption();
+                Option opt = new Option();
                 opt.setName(split[0]);
                 opt.setValue(split[1]);
                 selectOption.add(opt);
@@ -277,6 +281,26 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             select.setDefaultValue(defaultValue);
             select.setAddEmptyOption(addEmptyOption);
         }
+        if (inputField instanceof RadioGroupField) {
+            RadioGroupField select = (RadioGroupField) inputField;
+            String optionsString = field.getProperty("options").getValue();
+            List<String> optionsValues = Arrays.asList(optionsString.split(","));
+            List<Option> radioOptions = new ArrayList<Option>();
+            for (String f : optionsValues) {
+                String[] split = f.split("=");
+                Option opt = new Option();
+                opt.setName(split[0]);
+                opt.setValue(split[1]);
+                radioOptions.add(opt);
+            }
+            select.setOptions(radioOptions);
+
+            boolean inline = Boolean.parseBoolean(field.getProperty("inline").getValue());
+            String defaultValue = field.getProperty("defaultValue").getValue();
+
+            select.setDefaultValue(defaultValue);
+            select.setInline(inline);
+        }
         if (inputField instanceof MultipleSelectorField) {
             MultipleSelectorField multipleSelector = (MultipleSelectorField) inputField;
             String optionsString = field.getProperty("listOfValues").getValue();
@@ -286,9 +310,9 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             int maxElementsOnTitle = Integer.parseInt(field.getProperty("maxElementsOnTitle").getValue());
             int maxDropdownElements = Integer.parseInt(field.getProperty("maxDropdownElements").getValue());
             List<String> optionsValues = Arrays.asList(optionsString.split(","));
-            List<SelectOption> selectOption = new ArrayList<SelectOption>();
+            List<Option> selectOption = new ArrayList<Option>();
             for (String f : optionsValues) {
-                SelectOption opt = new SelectOption();
+                Option opt = new Option();
                 opt.setName(f);
                 opt.setValue(f);
                 selectOption.add(opt);
