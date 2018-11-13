@@ -37,6 +37,9 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  */
 public class ResourceManagerIntegrationTest extends BaseTestCase {
 
+    private IResourceManager resourceManager;
+    private IGroupManager groupManager;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -73,7 +76,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             oldDescr = resource.getDescription();
             String newDescr = "New Description";
             resource.setDescription(newDescr);
-            resource.setCategories(new ArrayList<Category>());
+            resource.setCategories(new ArrayList<>());
             this.resourceManager.updateResource(resource);
             resource = this.resourceManager.loadResource("44");
             assertEquals(resource.getDescription(), newDescr);
@@ -97,7 +100,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         resourceIds = resourceManager.searchResourcesId("Image", "Wrong descr", null, this.getAllGroupCodes());
         assertEquals(0, resourceIds.size());
 
-        List<String> allowedGroups = new ArrayList<String>();
+        List<String> allowedGroups = new ArrayList<>();
         allowedGroups.add("customers");
         resourceIds = resourceManager.searchResourcesId("Image", "", null, allowedGroups);
         assertEquals(1, resourceIds.size());
@@ -107,10 +110,10 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         List<String> resourceIds = this.resourceManager.searchResourcesId("Image", "", "jpg", null, this.getAllGroupCodes());
         assertEquals(3, resourceIds.size());
 
-        resourceIds = this.resourceManager.searchResourcesId("Image", "", "aps", null, this.getAllGroupCodes());
+        resourceIds = this.resourceManager.searchResourcesId("Image", "", "and", null, this.getAllGroupCodes());
         assertEquals(2, resourceIds.size());
 
-        resourceIds = this.resourceManager.searchResourcesId("Image", "", "aps.JPG", null, this.getAllGroupCodes());
+        resourceIds = this.resourceManager.searchResourcesId("Image", "", "ando.JPG", null, this.getAllGroupCodes());
         assertEquals(1, resourceIds.size());
     }
 
@@ -121,7 +124,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         resourceIds = resourceManager.searchResourcesId("Image", null, "wrongCat", this.getAllGroupCodes());
         assertEquals(0, resourceIds.size());
 
-        List<String> allowedGroups = new ArrayList<String>();
+        List<String> allowedGroups = new ArrayList<>();
         allowedGroups.add("customers");
         resourceIds = resourceManager.searchResourcesId("Image", "", "resCat1", allowedGroups);
         assertEquals(0, resourceIds.size());
@@ -148,6 +151,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             assertEquals(resourcesId.size(), 1);
             resourcesId = resourceManager.searchResourcesId(resourceType, resDescrToAdd, categoryCodeToAdd, allowedGroups);
             assertEquals(resourcesId.size(), 1);
+
             res = this.resourceManager.loadResource(resourcesId.get(0));
             assertTrue(res instanceof ImageResource);
             assertEquals(res.getCategories().size(), 1);
@@ -182,7 +186,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         bean.setMainGroup(mainGroup);
         bean.setResourceType(resourceType);
         bean.setMimeType("image/jpeg");
-        List<Category> categories = new ArrayList<Category>();
+        List<Category> categories = new ArrayList<>();
         ICategoryManager catManager
                 = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
         Category cat = catManager.getCategory(categoryCodeToAdd);
@@ -263,11 +267,8 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
     }
 
     private List<String> getAllGroupCodes() {
-        List<String> groupCodes = new ArrayList<String>();
-        List<Group> groups = this.groupManager.getGroups();
-        for (int i = 0; i < groups.size(); i++) {
-            groupCodes.add(groups.get(i).getName());
-        }
+        List<String> groupCodes = new ArrayList<>();
+        this.groupManager.getGroups().stream().forEach(group -> groupCodes.add(group.getName()));
         return groupCodes;
     }
 
@@ -279,8 +280,5 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             throw new Exception(t);
         }
     }
-
-    private IResourceManager resourceManager;
-    private IGroupManager groupManager;
 
 }
