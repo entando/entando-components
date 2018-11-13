@@ -100,17 +100,19 @@
                     <tr>
                         <th>
                             <s:text name="label.category.tree"/>
-                            <button type="button" class="btn-no-button expand-button"
-                                    id="expandAll">
-                                <span class="fa fa-plus-square-o treeInteractionButtons"
-                                      aria-hidden="true"></span>&#32;
-                                <s:text name="label.category.expandAll"/>
-                            </button>
-                            <button type="button" class="btn-no-button" id="collapseAll">
-                                <span class="fa fa-minus-square-o treeInteractionButtons"
-                                      aria-hidden="true"></span>&#32;
-                                <s:text name="label.category.collapseAll"/>
-                            </button>
+                            <s:if test="%{#categoryTreeStyleVar == 'classic'}">
+                                <button type="button" class="btn-no-button expand-button"
+                                        id="expandAll">
+                                    <span class="fa fa-plus-square-o treeInteractionButtons"
+                                          aria-hidden="true"></span>&#32;
+                                    <s:text name="label.category.expandAll"/>
+                                </button>
+                                <button type="button" class="btn-no-button" id="collapseAll">
+                                    <span class="fa fa-minus-square-o treeInteractionButtons"
+                                          aria-hidden="true"></span>&#32;
+                                    <s:text name="label.category.collapseAll"/>
+                                </button>
+                            </s:if>
                         </th>
                         <th class="text-center w4perc">
                             <s:text name="label.category.join" />
