@@ -46,7 +46,7 @@
             <a class="close-link"> <i class="fa fa-times"></i> </a> 
         </div>
     </div>
-
+    <s:if test="%{null != caseInstanceDetails}">
     <div class="ibox-content">
         <div class="row">
             <div class="col-lg-12">
@@ -77,6 +77,7 @@
             </div>
         </div>
     </div>
+    </s:if>
 </div>
 
 
