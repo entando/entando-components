@@ -160,15 +160,6 @@
 		<put-attribute name="body" value="/WEB-INF/plugins/jacms/apsadmin/jsp/resource/detailResource.jsp" />
 	</definition>
 
-	<definition extends="layout.default" name="admin.jacms.resource.porting22.intro">
-		<put-attribute name="title" value="title.resourceManagement" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jacms/apsadmin/jsp/resource/introPorting22.jsp" />
-	</definition>
-	<definition extends="layout.default" name="admin.jacms.resource.porting22.execute">
-		<put-attribute name="title" value="title.resourceManagement" />
-		<put-attribute name="body" value="/WEB-INF/plugins/jacms/apsadmin/jsp/resource/executePorting22.jsp" />
-	</definition>
-
 	<!-- ********* FINE Area Gestione Risorse ********* -->
 
     <!-- ********* INIZIO Area Amministrazione Contenuti ********* -->
