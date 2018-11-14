@@ -41,6 +41,7 @@
             <a class="close-link"> <i class="fa fa-times"></i> </a> 
         </div>
     </div>
+    <s:if test="%{null != casefile}">
     <div class="ibox-content">
         <div class="panel-body" style="min-height:400px">
             <div ng-jsoneditor ng-model="vm.mod.caseFile" options="{}"></div>
@@ -82,6 +83,7 @@
 
         </div>
     </div>
+    </s:if>
 </div>    
 
 

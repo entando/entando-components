@@ -33,6 +33,7 @@
             <a class="close-link"> <i class="fa fa-times"></i> </a> 
         </div>
     </div>
+    <s:if test="%{null != comments}">
     <div class="ibox-content">
         <div class="chat-activity-list">
             <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceComments/updateComment.action"/>" method="post" class="form-horizontal" ng-repeat="comment in vm.mod.comments track by comment.id" >
@@ -107,6 +108,7 @@
             </form>
         </div>
     </div>
+    </s:if>
 </div>
 
 <script type="text/javascript">

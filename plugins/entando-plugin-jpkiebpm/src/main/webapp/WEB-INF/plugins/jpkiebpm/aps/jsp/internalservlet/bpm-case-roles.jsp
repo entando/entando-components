@@ -35,6 +35,7 @@ String cId = java.util.UUID.randomUUID().toString();
             <a class="close-link"> <i class="fa fa-times"></i> </a> 
         </div>
     </div>
+    <s:if test="%{null != roles}">
     <div class="ibox-content">
         <div class="row">
             <div class="col-sm-6 m-b-xs">
@@ -115,6 +116,7 @@ String cId = java.util.UUID.randomUUID().toString();
             </table>
         </div>
     </div>
+    </s:if>
 </div>
 
 <script type="text/javascript">
