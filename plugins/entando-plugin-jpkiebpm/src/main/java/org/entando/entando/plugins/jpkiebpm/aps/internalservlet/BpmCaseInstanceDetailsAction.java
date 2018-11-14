@@ -45,7 +45,7 @@ public class BpmCaseInstanceDetailsAction extends BpmCaseInstanceActionBase {
             this.setChannel(channelIn);
             KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
             if (null == config) {
-                logger.warn("Null KieBpmConfig - Check the configuration");
+                logger.warn("Null configuration");
                 return SUCCESS;
             }
             this.setCaseInstanceDetails(this.getCaseManager().getCaseInstancesDetails(config, this.getContainerid(), this.getCasePath()).toString());

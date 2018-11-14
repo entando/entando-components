@@ -41,15 +41,17 @@ public class BpmCaseInstanceCommentsAction extends BpmCaseInstanceActionBase {
             this.setFrontEndCaseData(frontEndCaseDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-
             KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
+            if (null == config) {
+                logger.warn("Null configuration");
+                this.setErrorCode(ERROR_NULL_CONFIG);
+                return SUCCESS;
+            }
             this.setComments(this.getCaseManager().getCaseComments(config, this.getContainerid(), this.getCasePath()).toString());
-
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
             return FAILURE;
         }
-
         return SUCCESS;
     }
 
