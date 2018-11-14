@@ -17,3 +17,7 @@ WITH (
 );
 ALTER TABLE public.jpkiebpm_kieformoverride
   OWNER TO agile;
+
+-- EN-2205
+ALTER TABLE public.jpkiebpm_kieformoverride ADD COLUMN sourceid text;
+ALTER TABLE public.jpkiebpm_kieformoverride ADD COLUMN widgetinfo_id integer;

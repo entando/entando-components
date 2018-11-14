@@ -1,8 +1,3 @@
-/*
- *
- * <Your licensing text here>
- *
- */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo;
 
 import com.agiletec.aps.system.common.AbstractService;
@@ -18,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 
 public class BpmWidgetInfoManager extends AbstractService implements IBpmWidgetInfoManager, PageChangedObserver {
 
@@ -154,29 +150,44 @@ public class BpmWidgetInfoManager extends AbstractService implements IBpmWidgetI
     protected IBpmWidgetInfoDAO getBpmWidgetInfoDAO() {
         return _bpmWidgetInfoDAO;
     }
+        
+    public IKieFormOverrideManager getKieFormOverrideManager() {
+        return _kieFormOverrideManager;
+    }
+
+    public void setKieFormOverrideManager(IKieFormOverrideManager kieFormOverrideManager) {
+        this._kieFormOverrideManager = kieFormOverrideManager;
+    }
 
     private IKeyGeneratorManager _keyGeneratorManager;
     private IBpmWidgetInfoDAO _bpmWidgetInfoDAO;
+    private IKieFormOverrideManager _kieFormOverrideManager;
 
     @Override
     public void updateFromPageChanged(PageChangedEvent event) {
         if (event.getOperationCode() == PageChangedEvent.REMOVE_OPERATION_CODE) {
-            this.getBpmWidgetInfoDAO().removeBpmWidgetInfo(event.getPage().getCode());
+            List<BpmWidgetInfo> bpmWidgetInfos = this.getBpmWidgetInfoDAO().searchBpmWidgetInfo(event.getPage().getCode());
+            if (null != bpmWidgetInfos) {
+                for (BpmWidgetInfo bpmWidgetInfo : bpmWidgetInfos) {
+                    this.removeBpmWidgetInfo(bpmWidgetInfo.getId());
+                }
+            }
         } else if (event.getOperationCode() == PageChangedEvent.EDIT_FRAME_OPERATION_CODE &&
                 event.getEventType().equals(PageChangedEvent.EVENT_TYPE_REMOVE_WIDGET)) {
             List<BpmWidgetInfo> bpmWidgetInfoList = this.getBpmWidgetInfoDAO().searchBpmWidgetInfo(event.getPage().getCode(), event.getFramePosition());
             if (null != bpmWidgetInfoList) {
 
                 for (final BpmWidgetInfo bpmWidgetInfo : bpmWidgetInfoList) {
-
-                    bpmWidgetInfo.setInformationDraft(null);
-                    bpmWidgetInfo.setFramePosDraft(null);
-                    this.getBpmWidgetInfoDAO().updateBpmWidgetInfo(bpmWidgetInfo);
+                    if(bpmWidgetInfo.getInformationOnline() == null) {
+                        // draft-only page: we can remove the widget info
+                        this.removeBpmWidgetInfo(bpmWidgetInfo.getId());
+                    } else {
+                        bpmWidgetInfo.setInformationDraft(null);
+                        bpmWidgetInfo.setFramePosDraft(null);
+                        this.getBpmWidgetInfoDAO().updateBpmWidgetInfo(bpmWidgetInfo);
+                    }
                 }
-
             }
-
-
         } else if (event.getOperationCode() == PageChangedEvent.EDIT_FRAME_OPERATION_CODE &&
                 event.getEventType().equals(PageChangedEvent.EVENT_TYPE_MOVE_WIDGET)) {
             List<BpmWidgetInfo> listBpmWidgetInfo = this.getBpmWidgetInfoDAO().searchBpmWidgetInfo(event.getPage().getCode(), event.getFramePosition());
@@ -198,7 +209,7 @@ public class BpmWidgetInfoManager extends AbstractService implements IBpmWidgetI
                         bpmWidgetInfo.setFramePosOnline(bpmWidgetInfo.getFramePosDraft());
                         this.getBpmWidgetInfoDAO().updateBpmWidgetInfo(bpmWidgetInfo);
                     } else {
-                        this.getBpmWidgetInfoDAO().removeBpmWidgetInfo(bpmWidgetInfo.getId());
+                        this.removeBpmWidgetInfo(bpmWidgetInfo.getId());
                     }
                 }
             }
@@ -230,10 +241,20 @@ public class BpmWidgetInfoManager extends AbstractService implements IBpmWidgetI
                     bpmWidgetInfo.setFramePosDraft(bpmWidgetInfo.getFramePosOnline());
                     this.getBpmWidgetInfoDAO().updateBpmWidgetInfo(bpmWidgetInfo);
                 } else {
-                    this._bpmWidgetInfoDAO.removeBpmWidgetInfo(bpmWidgetInfo.getId());
+                    this.removeBpmWidgetInfo(bpmWidgetInfo.getId());
                 }
             }
 
+        }
+    }
+    
+    private void removeBpmWidgetInfo(int bpmWidgetInfoId) {
+        try {
+            this._kieFormOverrideManager.deleteWidgetKieFormOverrides(bpmWidgetInfoId);
+            this._bpmWidgetInfoDAO.removeBpmWidgetInfo(bpmWidgetInfoId);
+        } catch (ApsSystemException e) {
+            _logger.error("Error deleting bpmWidgetInfo {}", bpmWidgetInfoId, e);
+            throw new RuntimeException("Error deleting bpmWidgetInfo", e);
         }
     }
 }
