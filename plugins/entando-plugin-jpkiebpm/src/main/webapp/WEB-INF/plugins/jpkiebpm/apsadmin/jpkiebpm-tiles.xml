@@ -32,21 +32,6 @@
         <put-attribute name="title" value="kiebpm"/>
         <put-attribute name="body" value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/config/config-kie-server-list.jsp"/>
     </definition>
-
-    <definition extends="layout.default" name="admin.jpkiebpm.formoverride.list">
-        <put-attribute name="title" value="kiebpm"/>
-        <put-attribute name="body" value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/formoverride/list.jsp"/>
-    </definition>
-
-    <definition extends="layout.default" name="admin.jpkiebpm.formoverride.entry">
-        <put-attribute name="title" value="kiebpm"/>
-        <put-attribute name="body" value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/formoverride/entry.jsp"/>
-    </definition>
-
-    <definition extends="layout.default" name="admin.jpkiebpm.formoverride.trash">
-        <put-attribute name="title" value="kiebpm"/>
-        <put-attribute name="body" value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/formoverride/trash.jsp"/>
-    </definition>
     
     <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmCaseProgress.config">
         <put-attribute name="title" value="Kiebpm Case Progress"/>
