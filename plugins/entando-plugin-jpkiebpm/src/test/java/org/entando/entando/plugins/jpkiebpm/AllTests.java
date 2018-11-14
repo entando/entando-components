@@ -17,6 +17,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.overri
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcessForm;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.TestBpmFormWidgetAction;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilderTest;
 import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerIntegrationTest;
 import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerUnitTest;
@@ -39,6 +40,7 @@ public class AllTests {
         suite.addTestSuite(TestFormToBpmHelper.class);
         suite.addTestSuite(TestJsonHelper.class);
         suite.addTestSuite(TestKieFormOverrideManager.class);
+        suite.addTestSuite(TestBpmFormWidgetAction.class);
         suite.addTestSuite(TestBpmOverrides.class);
         suite.addTestSuite(TestBpmOverrides.class);
         suite.addTestSuite(DataUXBuilderTest.class);

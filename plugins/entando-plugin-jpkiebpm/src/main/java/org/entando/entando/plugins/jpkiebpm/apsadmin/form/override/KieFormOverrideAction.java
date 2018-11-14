@@ -105,7 +105,7 @@ public class KieFormOverrideAction extends BaseAction {
 			String processId = params[0];
 			String containerId = params[1];
 
-			List<KieFormOverride> result = this.getKieFormOverrideManager().getFormOverrides(containerId, processId, this.getFormModel().getField());
+			List<KieFormOverride> result = this.getKieFormOverrideManager().getFormOverrides(containerId, processId);
 			if (null != result && !result.isEmpty()) {
 				this.addActionError(this.getText("jpkie.formModel.present"));
 				return INPUT;
@@ -264,13 +264,13 @@ public class KieFormOverrideAction extends BaseAction {
 			String[] params = this.getProcessPath().split("@");
 			kieFormOverride.setProcessId(params[0]);
 			kieFormOverride.setContainerId(params[1]);
-			kieFormOverride.set_sourceId(params[2]);
+			kieFormOverride.setSourceId(params[2]);
 		}
 	}
 
 	protected void setProcessPathToController(KieFormOverride kieFormOverride) {
 		if (null != kieFormOverride) {
-			String procString = kieFormOverride.getProcessId() + "@" + kieFormOverride.getContainerId() + "@" + kieFormOverride.get_sourceId();
+			String procString = kieFormOverride.getProcessId() + "@" + kieFormOverride.getContainerId() + "@" + kieFormOverride.getSourceId();
 			this.setProcessPath(procString);
 		}
 	}

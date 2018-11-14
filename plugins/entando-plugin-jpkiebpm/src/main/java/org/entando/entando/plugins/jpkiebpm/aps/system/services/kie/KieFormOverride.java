@@ -20,7 +20,7 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
-*/
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import java.util.Date;
@@ -48,50 +48,63 @@ public class KieFormOverride {
         this.getOverrides().addOverride(override);
     }
 
-	public int getId() {
-		return _id;
-	}
-	public void setId(int id) {
-		this._id = id;
-	}
+    public int getId() {
+        return _id;
+    }
 
-	public Date getDate() {
-		return _date;
-	}
-	public void setDate(Date date) {
-		this._date = date;
-	}
+    public void setId(int id) {
+        this._id = id;
+    }
 
-	public String getField() {
-		return _field;
-	}
-	public void setField(String field) {
-		this._field = field;
-	}
+    public int getWidgetInfoId() {
+        return _widgetInfoId;
+    }
 
-	public String getContainerId() {
-		return _containerId;
-	}
-	public void setContainerId(String containerId) {
-		this._containerId = containerId;
-	}
+    public void setWidgetInfoId(int _widgetInfoId) {
+        this._widgetInfoId = _widgetInfoId;
+    }
 
-	public String getProcessId() {
-		return _processId;
-	}
-	public void setProcessId(String processId) {
-		this._processId = processId;
-	}
+    public Date getDate() {
+        return _date;
+    }
 
-    public String get_sourceId() {
-		return _sourceId;
-	}
+    public void setDate(Date date) {
+        this._date = date;
+    }
 
-	public void set_sourceId(String _sourceId) {
-		this._sourceId = _sourceId;
-	}
+    public String getField() {
+        return _field;
+    }
 
-	public OverrideList getOverrides() {
+    public void setField(String field) {
+        this._field = field;
+    }
+
+    public String getContainerId() {
+        return _containerId;
+    }
+
+    public void setContainerId(String containerId) {
+        this._containerId = containerId;
+    }
+
+    public String getProcessId() {
+        return _processId;
+    }
+
+    public void setProcessId(String processId) {
+        this._processId = processId;
+    }
+
+    public String getSourceId() {
+        return _sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this._sourceId = sourceId;
+    }
+
+    public OverrideList getOverrides() {
         return _overrides;
     }
 
@@ -99,13 +112,24 @@ public class KieFormOverride {
         this._overrides = overrides;
     }
 
-	private int _id;
-	private Date _date;
-	private String _field;
-	private String _containerId;
-	private String _processId;
-	private String _sourceId;
+    public boolean isActive() {
+        return _active;
+    }
+
+    public void setActive(boolean active) {
+        this._active = active;
+    }
+
+    private int _id;
+    private int _widgetInfoId;
+    private Date _date;
+    private String _field;
+    private String _containerId;
+    private String _processId;
+    private String _sourceId;
+    private boolean _active;
+
     // this object is de/serialized automatically
-	private OverrideList _overrides;
+    private OverrideList _overrides;
 
 }
