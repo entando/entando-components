@@ -212,6 +212,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("pageCode", temporaryPage.getCode());
         this.addParameter("frame", "0");
         assertEquals(Action.SUCCESS, this.executeAction());
+        this.waitNotifyingThread();
         assertNull(bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId));
         assertTrue(kieFormOverrideManager.getFormOverrides(widgetInfoId).isEmpty());
     }

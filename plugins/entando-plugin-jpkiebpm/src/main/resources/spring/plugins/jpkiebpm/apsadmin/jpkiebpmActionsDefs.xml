@@ -53,21 +53,6 @@
         <property name="caseManager" ref="jpkiebpmsCaseManager"/>
     </bean>
 
-    <bean id="jpkiebpmFormOverrideAction"
-          class="org.entando.entando.plugins.jpkiebpm.apsadmin.form.override.KieFormOverrideAction"
-          parent="abstractBaseAction" scope="prototype">
-        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
-        <property name="kieFormManager" ref="jpkiebpmsManager"/>
-        <property name="pageManager" ref="PageManager"/>
-    </bean>
-
-    <bean id="jpkiebpmFormOverrideFinderAction"
-          class="org.entando.entando.plugins.jpkiebpm.apsadmin.form.override.KieFormOverrideFinderAction"
-          parent="abstractBaseAction" scope="prototype">
-        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
-        <property name="kieFormManager" ref="jpkiebpmsManager"/>
-    </bean>
-
     <bean id="jpkiebpmBpmCaseProgressWidgetAction"
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseProgressWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
