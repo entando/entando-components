@@ -44,6 +44,7 @@
             </a> 
         </div>
     </div>
+    <s:if test="%{null != milestones}">
     <div class="ibox-content" style="display: block;">
         <div class="row">
             <div class="col-lg-8 col-md-6 col-sm-12">
@@ -69,6 +70,7 @@
                     </div>
                 </div>-->
     </div>
+    </s:if>
 </div>    
 
 <script>

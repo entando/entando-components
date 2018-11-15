@@ -31,7 +31,7 @@
         <div class="ibox-content">
             <div class="panel-body">
                 <div class="row">
-                    <label class="control-label " for="processPath">List of case instances </label>
+                    <label class="control-label" for="processPath">List of case instances</label>
                     <s:select
                         list="cases" 
                         id="casePath" 
@@ -39,6 +39,8 @@
                         cssClass="form-control"
                         >
                     </s:select>
+                    <s:if test="%{errorCode == 1}">No Kie server configuration found</s:if>
+                    <s:if test="%{errorCode == 2}">No instaces availables - check the configuration</s:if>
                     <br/>
                     <wpsf:submit 
                         type="button" 

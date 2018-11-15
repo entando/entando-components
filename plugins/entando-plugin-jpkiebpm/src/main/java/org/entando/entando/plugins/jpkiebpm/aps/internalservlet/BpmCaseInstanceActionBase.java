@@ -37,9 +37,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 
-public abstract class BpmCaseInstanceActionBase extends BaseAction{
+public abstract class BpmCaseInstanceActionBase extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceActionBase.class);
+
+    public static final int ERROR_NULL_CONFIG = 1;
+    public static final int ERROR_EMPTY_CASES = 2;
 
     @Autowired
     protected CaseManager caseManager;
@@ -52,6 +55,8 @@ public abstract class BpmCaseInstanceActionBase extends BaseAction{
     private String containerid;
     private String casePath;
     private String channelPath;
+
+    private int errorCode;
 
     //Helper classes
     protected String extractWidgetConfig(String paramName) {
@@ -146,5 +151,12 @@ public abstract class BpmCaseInstanceActionBase extends BaseAction{
         this.formManager = formManager;
     }
 
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
+    }
 
 }
