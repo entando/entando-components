@@ -12,10 +12,14 @@ public abstract class BpmCaseActionBase  extends SimpleWidgetConfigAction {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmBpmCaseInstanceActionsWidgetAction.class);
 
+    public static final int ERROR_NULL_CONFIG = 1;
+    
     private String channel;
     private List<Integer> channels;
     private String frontEndCaseData;
 
+    private int errorCode;
+    
     @Override
     public String init() {
         String result = super.init();
@@ -63,5 +67,13 @@ public abstract class BpmCaseActionBase  extends SimpleWidgetConfigAction {
 
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
     }
 }

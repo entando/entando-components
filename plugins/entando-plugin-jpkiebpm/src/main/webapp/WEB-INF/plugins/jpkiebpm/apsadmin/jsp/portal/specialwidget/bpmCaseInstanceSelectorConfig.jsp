@@ -74,6 +74,12 @@
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
                 <s:set var="isChannelSetted" value="%{channel != null && channel != ''}"/>
 
+                <s:if test="%{errorCode == 1}">
+                    <div class="alert alert-warning col-xs-8">
+                        <span class="icon fa fa-warning"></span>
+                        Kie server configuration not found. Please select a new one.
+                    </div>
+                </s:if>
 
                 <div class="container-fluid">
                     <div class="row">
