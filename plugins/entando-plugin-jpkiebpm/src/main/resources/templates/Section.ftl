@@ -32,7 +32,7 @@
                     <#include "/InputFieldTextBox.ftl">
                     <#break>
                 <#case "RadioGroup">
-                    <#include "/InputFieldTextBox.ftl">
+                    <#include "/InputFieldRadioGroup.ftl">
                     <#break>
                 <#case "ListBox">
                     <#include "/InputFieldListBox.ftl">

@@ -37,6 +37,8 @@ public class DataUXBuilderTest extends TestCase {
             KieProcessFormQueryResult kpfqr = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
             String htmlForm = dataUXBuilder.createDataUx(kpfqr, CONTAINER_ID, PROCESS_ID, TITLE);
 
+            System.out.println(htmlForm);
+
             //Title Check
             assertTrue(htmlForm.contains("<h3 class=\"control-label editLabel\" id=\"JPKIE_TITLE_Title\">$i18n.getLabel(\"JPKIE_TITLE_Title\")</h3>\n"));
 
@@ -69,6 +71,17 @@ public class DataUXBuilderTest extends TestCase {
             assertTrue(htmlForm.contains("<option value=\"val1\">Value 1</option>"));
             assertTrue(htmlForm.contains("<option selected value=\"val2\">Value 2</option>"));
             assertTrue(htmlForm.contains("<option value=\"val3\">Value 3</option>"));
+
+            //RadioGroup Checks
+            assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"1\" > radio1</div>"));
+            assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"2\" > radio2</div>"));
+            assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"3\" checked > radio3</div>"));
+            assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"1inline\" checked > Radio1 Inline</div>"));
+            assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"2inline\" > Radio2 Inline</div>"));
+            assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"3inline\" > Radio3 Inline</div>"));
+
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

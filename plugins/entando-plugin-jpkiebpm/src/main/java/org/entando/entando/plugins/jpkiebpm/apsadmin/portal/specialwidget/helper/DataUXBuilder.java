@@ -48,8 +48,9 @@ import org.springframework.stereotype.Service;
 import org.apache.struts2.util.ServletContextAware;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.MultipleSelectorField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.SelectField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.SelectOption;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.ListBoxField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Option;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.RadioGroupField;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.TextField;
 
 @Service
@@ -79,7 +80,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.typeMapping.put("CheckBox", "checkbox");
         this.typeMapping.put("ListBox", "text");
         this.typeMapping.put("Slider", "number");
-        this.typeMapping.put("RadioGroup", "number");
+        this.typeMapping.put("RadioGroup", "radio");
         this.typeMapping.put("MultipleInput", "number");
         this.typeMapping.put("MultipleSelector", "text");
         this.typeMapping.put("Document", "text");
@@ -93,7 +94,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.valueMapping.put("DecimalBox", "$data.%s.number");
         this.valueMapping.put("DatePicker", "$data.%s.text");
         this.valueMapping.put("Slider", "$data.%s.number");
-        this.valueMapping.put("RadioGroup", "$data.%s.number");
+        this.valueMapping.put("RadioGroup", "$data.%s.text");
         this.valueMapping.put("ListBox", "$data.%s.text");
         this.valueMapping.put("MultipleSelector", "$data.%s.text");
         this.valueMapping.put("MultipleInput", "$data.%s.text");
@@ -214,28 +215,51 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         T inputField;
         switch (field.getType()) {
             case "TextBox":
+                logger.debug("{} recognized as TextBox, inputField set to TextField",field.getName());
+                inputField = (T) new TextField();
+                break;
             case "TextArea":
+                logger.debug("{} recognized as TextArea, inputField set to TextArea", field.getName());
+                inputField = (T) new TextField();
+                break;
             case "IntegerBox":
+                logger.debug("{} recognized as IntegerBox, inputField set to IntegerBox", field.getName());
+                inputField = (T) new TextField();
+                break;
             case "InputText":
+                logger.debug("{} recognized as InputText, inputField set to InputText", field.getName());
+                inputField = (T) new TextField();
+                break;
             case "InputTextInteger":
+                logger.debug("{} recognized as InputTextInteger, inputField set to InputTextInteger", field.getName());
                 inputField = (T) new TextField();
                 break;
             case "ListBox":
-                inputField = (T) new SelectField();
+                logger.debug("{} recognized as ListBox, inputField set to ListBox", field.getName());
+                inputField = (T) new ListBoxField();
+                break;
+            case "RadioGroup":
+                logger.debug("{} recognized as RadioGroup, inputField set to RadioGroup", field.getName());
+                inputField = (T) new RadioGroupField();
                 break;
             case "DatePicker":
+                logger.debug("{} recognized as DatePicker, inputField set to DatePicker", field.getName());
                 inputField = (T) new DatePickerField();
                 break;
             case "MultipleSelector":
+                logger.debug("{} recognized as MultipleSelector, inputField set to MultipleSelector", field.getName());
                 inputField = (T) new MultipleSelectorField();
                 break;
             case "CheckBox":
+                logger.debug("{} recognized as CheckBox, inputField set to CheckBox", field.getName());
                 inputField = (T) new InputField();
                 break;
             default:
+                logger.debug("{} inputField not recognized, inputField set to default InputField", field.getName());
                 inputField = (T) new InputField();
 
         }
+        logger.info("adding default properties to inputField");
 
         String fieldName = field.getName();
         String fieldTypeHMTL = this.typeMapping.get(field.getType());
@@ -253,18 +277,22 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         inputField.setTypeHTML(fieldTypeHMTL);
 
         if (inputField instanceof DatePickerField) {
+            logger.debug("inputField instanceof DatePickerField, adding custom properties");
+
             DatePickerField datePicker = (DatePickerField) inputField;
             boolean showTime = Boolean.parseBoolean(field.getProperty("showTime").getValue());
             datePicker.setShowTime(showTime);
         }
-        if (inputField instanceof SelectField) {
-            SelectField select = (SelectField) inputField;
+        if (inputField instanceof ListBoxField) {
+            logger.debug("inputField instanceof ListBoxField, adding custom properties");
+
+            ListBoxField select = (ListBoxField) inputField;
             String optionsString = field.getProperty("options").getValue();
             List<String> optionsValues = Arrays.asList(optionsString.split(","));
-            List<SelectOption> selectOption = new ArrayList<SelectOption>();
+            List<Option> selectOption = new ArrayList<Option>();
             for (String f : optionsValues) {
                 String[] split = f.split("=");
-                SelectOption opt = new SelectOption();
+                Option opt = new Option();
                 opt.setName(split[0]);
                 opt.setValue(split[1]);
                 selectOption.add(opt);
@@ -277,7 +305,30 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             select.setDefaultValue(defaultValue);
             select.setAddEmptyOption(addEmptyOption);
         }
+        if (inputField instanceof RadioGroupField) {
+            logger.debug("inputField instanceof RadioGroupField, adding custom properties");
+
+            RadioGroupField select = (RadioGroupField) inputField;
+            String optionsString = field.getProperty("options").getValue();
+            List<String> optionsValues = Arrays.asList(optionsString.split(","));
+            List<Option> radioOptions = new ArrayList<Option>();
+            for (String f : optionsValues) {
+                String[] split = f.split("=");
+                Option opt = new Option();
+                opt.setName(split[0]);
+                opt.setValue(split[1]);
+                radioOptions.add(opt);
+            }
+            select.setOptions(radioOptions);
+
+            boolean inline = Boolean.parseBoolean(field.getProperty("inline").getValue());
+            String defaultValue = field.getProperty("defaultValue").getValue();
+
+            select.setDefaultValue(defaultValue);
+            select.setInline(inline);
+        }
         if (inputField instanceof MultipleSelectorField) {
+            logger.debug("inputField instanceof MultipleSelectorField, adding custom properties");
             MultipleSelectorField multipleSelector = (MultipleSelectorField) inputField;
             String optionsString = field.getProperty("listOfValues").getValue();
 
@@ -286,9 +337,9 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             int maxElementsOnTitle = Integer.parseInt(field.getProperty("maxElementsOnTitle").getValue());
             int maxDropdownElements = Integer.parseInt(field.getProperty("maxDropdownElements").getValue());
             List<String> optionsValues = Arrays.asList(optionsString.split(","));
-            List<SelectOption> selectOption = new ArrayList<SelectOption>();
+            List<Option> selectOption = new ArrayList<Option>();
             for (String f : optionsValues) {
-                SelectOption opt = new SelectOption();
+                Option opt = new Option();
                 opt.setName(f);
                 opt.setValue(f);
                 selectOption.add(opt);
@@ -303,6 +354,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         }
 
         if (inputField instanceof TextField) {
+            logger.debug("inputField instanceof TextField, adding custom properties");
             TextField textField = (TextField) inputField;
             textField.setPlaceHolder(placeHolder);
         }
