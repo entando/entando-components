@@ -307,6 +307,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         pageMetadata.setMimeType("text/html");
         pageMetadata.setModel(root.getModel());
         pageMetadata.setTitles(page.getTitles());
+        pageMetadata.setGroup(page.getGroup());
         page.setMetadata(pageMetadata);
 
         this.pageManager.addPage(page);
