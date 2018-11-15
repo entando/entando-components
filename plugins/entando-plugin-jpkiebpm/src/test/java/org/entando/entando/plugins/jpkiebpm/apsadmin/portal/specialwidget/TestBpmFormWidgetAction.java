@@ -30,7 +30,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IB
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverrideVO;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverrideInEditing;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
@@ -121,7 +121,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("overrides[0].placeHolderValue", "placeholder1");
         assertEquals(Action.SUCCESS, this.executeActionWithMockedKieServer());
         assertEquals(2, getAction().getOverrides().size());
-        KieFormOverrideVO ovr = getAction().getOverrides().get(0);
+        KieFormOverrideInEditing ovr = getAction().getOverrides().get(0);
         assertEquals("employee", ovr.getField());
         assertEquals("default1", ovr.getDefaultValue());
         assertEquals("placeholder1", ovr.getPlaceHolderValue());
@@ -147,11 +147,11 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         assertEquals("1", getAction().getKnowledgeSourcePath());
         assertEquals("process1@container1@1", getAction().getProcessPath());
         assertEquals(2, getAction().getOverrides().size());
-        KieFormOverrideVO ovr1 = getAction().getOverrides().get(0);
+        KieFormOverrideInEditing ovr1 = getAction().getOverrides().get(0);
         assertEquals(1, (int) ovr1.getId());
         assertEquals("employee", ovr1.getField());
         assertEquals("default1", ovr1.getDefaultValue());
-        KieFormOverrideVO ovr2 = getAction().getOverrides().get(1);
+        KieFormOverrideInEditing ovr2 = getAction().getOverrides().get(1);
         assertEquals(2, (int) ovr2.getId());
         assertEquals("reason", ovr2.getField());
         assertEquals("default2", ovr2.getDefaultValue());
@@ -166,7 +166,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("overrides[1].placeHolderValue", "placeholder2");
         assertEquals(Action.SUCCESS, this.executeAction());
         assertEquals(1, getAction().getOverrides().size());
-        KieFormOverrideVO modOvr = getAction().getOverrides().get(0);
+        KieFormOverrideInEditing modOvr = getAction().getOverrides().get(0);
         assertEquals(2, (int) modOvr.getId());
         assertEquals("reason", modOvr.getField());
         assertEquals("default2-MOD", modOvr.getDefaultValue());
