@@ -20,6 +20,7 @@
         <developerConnection>scm:git:git@github.com:entando/entando-components.git</developerConnection>
         <url>https://github.com/entando/entando-components</url>
     <tag>5.0.1-SNAPSHOT</tag>
+    </scm>
     <organization>
         <name>Entando Inc.</name>
         <url>http://www.entando.com/</url>
