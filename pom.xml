@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.entando.entando.components</groupId>
     <artifactId>entando-components</artifactId>
-    <version>5.0.2-SNAPSHOT</version>
+    <version>5.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Entando: Components</name>
     <description>Components for Entando</description>
@@ -19,7 +19,7 @@
         <connection>scm:git:git@github.com:entando/entando-components.git</connection>
         <developerConnection>scm:git:git@github.com:entando/entando-components.git</developerConnection>
         <url>https://github.com/entando/entando-components</url>
-    <tag>v5.0.2-dev</tag>
+    <tag>5.0.1-SNAPSHOT</tag>
     </scm>
     <organization>
         <name>Entando Inc.</name>

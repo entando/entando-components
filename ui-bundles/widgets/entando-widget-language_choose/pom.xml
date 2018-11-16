@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando.entando.bundles</groupId>
         <artifactId>entando-bundles-parent</artifactId>
-        <version>5.0.2-SNAPSHOT</version>
+        <version>5.0.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-widget-language_choose</artifactId>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.entando.entando.bundles.misc</groupId>
             <artifactId>entando-misc-bootstrap</artifactId>
-            <version>5.0.2-SNAPSHOT</version>
+            <version>5.0.1-SNAPSHOT</version>
             <type>war</type>
         </dependency>
     </dependencies>
