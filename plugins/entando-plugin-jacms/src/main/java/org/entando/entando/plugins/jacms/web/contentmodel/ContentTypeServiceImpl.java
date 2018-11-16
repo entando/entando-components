@@ -1,4 +1,4 @@
-package com.agiletec.plugins.jacms.aps.system.services.contentmodel;
+package org.entando.entando.plugins.jacms.web.contentmodel;
 
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
 import org.entando.entando.web.common.model.*;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class ContentTypeService implements IContentTypeService {
+public class ContentTypeServiceImpl implements ContentTypeService {
 
     // TODO Replace with DB persistence
     private Map<Long, ContentTypeDto> tmpMap = new HashMap<>();
@@ -22,14 +22,14 @@ public class ContentTypeService implements IContentTypeService {
     }
 
     @Override
-    public PagedMetadata<ContentTypeDto> findAll(RestListRequest listRequest) {
+    public PagedMetadata<ContentTypeDto> findMany(RestListRequest listRequest) {
         List<ContentTypeDto> result = new ArrayList<>(tmpMap.values());
         return new PagedMetadata<>(listRequest, result, result.size());
     }
 
     @Override
-    public ContentTypeDto findById(Long id) {
-        return tmpMap.get(id);
+    public Optional<ContentTypeDto> findById(Long id) {
+        return Optional.ofNullable(tmpMap.get(id));
     }
 
     @Override
