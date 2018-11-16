@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando.entando.components</groupId>
         <artifactId>entando-components</artifactId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.0.1</version>
     </parent>
     <groupId>org.entando.entando.plugins</groupId>
     <artifactId>entando-plugins-parent</artifactId>
@@ -140,13 +140,13 @@
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-engine</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-engine</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.1</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -154,13 +154,13 @@
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-admin-console</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-admin-console</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.1</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -168,13 +168,13 @@
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-portal-ui</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-portal-ui</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.1</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-bundles-parent</artifactId>
         <groupId>org.entando.entando.bundles</groupId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.0.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-app-view-addressbook-default</artifactId>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jpaddressbook</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.1</version>
             <type>war</type>
         </dependency>
     </dependencies>

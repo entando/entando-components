@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-plugins-parent</artifactId>
         <groupId>org.entando.entando.plugins</groupId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.0.1</version>
     </parent>
     <artifactId>entando-plugin-jpmail</artifactId>
     <groupId>org.entando.entando.plugins</groupId>

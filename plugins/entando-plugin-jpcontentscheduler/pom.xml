@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-plugins-parent</artifactId>
         <groupId>org.entando.entando.plugins</groupId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.0.1</version>
     </parent>
     <artifactId>entando-plugin-jpcontentscheduler</artifactId>
     <groupId>org.entando.entando.plugins</groupId>
@@ -56,14 +56,14 @@
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jacms</artifactId>
-            <version>5.0.1-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+            <version>5.0.1</version><!-- version. Don't remove this comment. -->
             <type>war</type>
         </dependency>
 
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jacms</artifactId>
-            <version>5.0.1-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+            <version>5.0.1</version><!-- version. Don't remove this comment. -->
             <type>jar</type>
             <classifier>classes</classifier>
             <scope>provided</scope>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jacms</artifactId>
-            <version>5.0.1-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+            <version>5.0.1</version><!-- version. Don't remove this comment. -->
             <type>jar</type>
             <classifier>tests</classifier>
             <scope>test</scope>
@@ -81,14 +81,14 @@
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jpmail</artifactId>
-            <version>5.0.1-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+            <version>5.0.1</version><!-- version. Don't remove this comment. -->
             <type>war</type>
         </dependency>
 
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jpmail</artifactId>
-            <version>5.0.1-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+            <version>5.0.1</version><!-- version. Don't remove this comment. -->
             <type>jar</type>
             <classifier>classes</classifier>
             <scope>provided</scope>
@@ -97,7 +97,7 @@
         <dependency>
             <groupId>org.entando.entando.plugins</groupId>
             <artifactId>entando-plugin-jpmail</artifactId>
-            <version>5.0.1-SNAPSHOT</version><!-- version. Don't remove this comment. -->
+            <version>5.0.1</version><!-- version. Don't remove this comment. -->
             <type>jar</type>
             <classifier>tests</classifier>
             <scope>test</scope>
