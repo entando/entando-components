@@ -94,6 +94,9 @@
                 <parameter key="taskId" required="true">
                     <description>The task Id</description>
                 </parameter>
+                <parameter key="configId" required="true">
+                    <description>The widget info Id</description>
+                </parameter>
             </parameters>
         </method>
         <method httpMethod="POST" active="true">

@@ -14,15 +14,10 @@ import java.util.*;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKieContainerToListToJson;
 
-/**
- *
- */
 public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
-
 
     private static final Logger logger = LoggerFactory.getLogger(BpmProcessDatatableWidgetAction.class);
     private IKieFormManager formManager;
-    private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
     private String knowledgeSourcePath;
@@ -92,16 +87,6 @@ public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
     @Override
     public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
-    }
-
-    @Override
-    public IKieFormOverrideManager getKieFormOverrideManager() {
-        return kieFormOverrideManager;
-    }
-
-    @Override
-    public void setKieFormOverrideManager(IKieFormOverrideManager kieFormOverrideManager) {
-        this.kieFormOverrideManager = kieFormOverrideManager;
     }
 
     public String getKnowledgeSourcePath() {
