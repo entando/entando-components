@@ -216,7 +216,9 @@ public class KieVersionTransformer {
             //MultipleSelector properties
             List<String> options =  field.getListOfValues();
          
-           
+            //RadioGroup properties
+            Boolean inline = field.isInline();
+
             //ListBox properties
             List<PamFieldsOptions>  optionsList = field.getOptions();
             if (null!=optionsList) {
@@ -239,7 +241,7 @@ public class KieVersionTransformer {
             KieProcessFormField builtField = buildField(fieldId, 
                     modelName, fieldName, label, code, required, type, showTime, placeHolder,
                     options, maxElementsOnTitle, maxDropdownElements, allowClearSelection, allowFilter,
-                    addEmptyOption, defaultValue);
+                    addEmptyOption, defaultValue, inline);
        
             if (field.getReadOnly()) {
                 builtField.addProperty("readOnly", true);
@@ -320,7 +322,8 @@ public class KieVersionTransformer {
                                                     boolean allowClearSelection,
                                                     boolean allowFilter,
                                                     boolean addEmptyOption,
-                                                    String defaultValue) {
+                                                    String defaultValue,
+                                                    boolean inline) {
 
         KieProcessFormField field = new KieProcessFormField();
         field.setProperties(new ArrayList<>());
@@ -378,6 +381,26 @@ public class KieVersionTransformer {
             defaultValueProperty.setValue(String.valueOf(defaultValue));
             field.getProperties().add(defaultValueProperty);
 
+
+        }
+        
+        if (field.getType().equals("RadioGroup")) {
+            KieProcessProperty optionsProperty = new KieProcessProperty();
+            optionsProperty.setName("options");
+            String collect = options.stream().collect(Collectors.joining(","));
+
+            optionsProperty.setValue(collect);
+            field.getProperties().add(optionsProperty);
+
+            KieProcessProperty inlineProperty = new KieProcessProperty();
+            inlineProperty.setName("inline");
+            inlineProperty.setValue(String.valueOf(inline));
+            field.getProperties().add(inlineProperty);
+
+            KieProcessProperty defaultValueProperty = new KieProcessProperty();
+            defaultValueProperty.setName("defaultValue");
+            defaultValueProperty.setValue(String.valueOf(defaultValue));
+            field.getProperties().add(defaultValueProperty);
 
         }
         
