@@ -13,6 +13,7 @@ import java.net.*;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(value = "/plugins/cms/content-types")
 public class ContentTypeResourceController implements ContentTypeResource {
 
     private final ContentTypeService contentTypeService;
@@ -27,9 +28,8 @@ public class ContentTypeResourceController implements ContentTypeResource {
     public ResponseEntity<ContentTypeDto> create(@Valid @RequestBody ContentTypeDto contentType) throws URISyntaxException {
         ContentTypeDto result = contentTypeService.save(contentType);
 
-        return ResponseEntity
-                .created(new URI("/plugins/cms/content-types/" + result.getId()))
-                .body(result);
+        return ResponseEntity.created(new URI("/plugins/cms/content-types/" + result.getId()))
+                             .body(result);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
         Optional<ContentTypeDto> maybeContentType = contentTypeService.findById(id);
 
         return maybeContentType.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                               .orElse(ResponseEntity.notFound().build());
     }
 
     @Override
