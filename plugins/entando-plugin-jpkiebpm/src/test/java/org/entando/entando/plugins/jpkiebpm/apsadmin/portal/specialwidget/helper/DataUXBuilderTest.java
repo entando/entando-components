@@ -23,7 +23,6 @@ public class DataUXBuilderTest extends TestCase {
     private static String CONTAINER_ID = "CONTAINER_ID";
     private static String PROCESS_ID = "PROCESS_ID";
     private static String TITLE = "Title";
-
     private IKieFormOverrideManager mockedFormOverrideManager;
 
     @Override
@@ -44,7 +43,7 @@ public class DataUXBuilderTest extends TestCase {
 
         try {
             DataUXBuilder dataUXBuilder = getDataUXBuilder();
-            
+
             String filePath = "src/test/resources/examples/xml/pam-7-test-process-form-1.xml";
 
             String pam7businessProcessForm = new String(Files.readAllBytes(Paths.get(filePath)));

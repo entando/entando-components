@@ -23,25 +23,35 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-public class SelectOption {
-    private String name;
-    private String value;
+import java.util.List;
+
+public class ListBoxField extends InputField {
+    private List<Option> options;
+    private boolean addEmptyOption;
+    private String defaultValue;
+    public List<Option> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<Option> options) {
+        this.options = options;
+    }
+
+    public boolean isAddEmptyOption() {
+        return addEmptyOption;
+    }
+
+    public void setAddEmptyOption(boolean addEmptyOption) {
+        this.addEmptyOption = addEmptyOption;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
     
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
 }
 

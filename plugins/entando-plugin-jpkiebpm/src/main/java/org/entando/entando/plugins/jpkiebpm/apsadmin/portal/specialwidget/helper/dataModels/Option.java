@@ -23,55 +23,25 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-import java.util.List;
-
-public class MultipleSelectorField extends InputField {
-    private List<Option> options;
-    private int maxElementsOnTitle;
-    private int maxDropdownElements;
-    private boolean allowClearSelection;   
-    private boolean allowFilter;
-           
-    public List<Option> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<Option> options) {
-        this.options = options;
-    }
-
-    public int getMaxElementsOnTitle() {
-        return maxElementsOnTitle;
-    }
-
-    public void setMaxElementsOnTitle(int maxElementsOnTitle) {
-        this.maxElementsOnTitle = maxElementsOnTitle;
-    }
-
-    public int getMaxDropdownElements() {
-        return maxDropdownElements;
-    }
-
-    public void setMaxDropdownElements(int maxDropdownElements) {
-        this.maxDropdownElements = maxDropdownElements;
-    }
-
-    public boolean isAllowClearSelection() {
-        return allowClearSelection;
-    }
-
-    public void setAllowClearSelection(boolean allowClearSelection) {
-        this.allowClearSelection = allowClearSelection;
-    }
-
-    public boolean isAllowFilter() {
-        return allowFilter;
-    }
-
-    public void setAllowFilter(boolean allowFilter) {
-        this.allowFilter = allowFilter;
-    }
-
+public class Option {
+    private String name;
+    private String value;
     
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
 }
 
