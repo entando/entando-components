@@ -82,25 +82,30 @@ public class KieVersionTransformer {
         String parentDataHolderOutId = queryResult.getHolders().get(0).getOutId();
         for (String fieldId : fieldIdOrder) {
 
-            if (count == 0) {
-                queryResult = pamSevenFormToPamSix(fieldToForms.get(fieldId), formModelTypes);
-                queryResult.getHolders().get(0).setOutId(parentDataHolderOutId);
-            }
+            PamArray pamArray = fieldToForms.get(fieldId);
+            
+            if (pamArray != null) {
 
-            if (count > 0) {
-                if (queryResult.getNestedForms() == null) {
-                    queryResult.setNestedForms(new ArrayList<>());
+                if (count == 0) {
+                    queryResult = pamSevenFormToPamSix(pamArray, formModelTypes);
+                    queryResult.getHolders().get(0).setOutId(parentDataHolderOutId);
                 }
-                queryResult.getNestedForms().add(pamSevenFormToPamSix(fieldToForms.get(fieldId), formModelTypes));
-            }
 
-            count++;
+                if (count > 0) {
+                    if (queryResult.getNestedForms() == null) {
+                        queryResult.setNestedForms(new ArrayList<>());
+                    }
+                    queryResult.getNestedForms().add(pamSevenFormToPamSix(pamArray, formModelTypes));
+                }
+
+                count++;
+            }
         }
         return queryResult;
     }
 
     private static void buildFormOrder(PamArray array, List<String> fieldIdOrder, Map<String, PamArray> nestedFormMap) {
-
+        
         List<PamFields> fields = array.getPamFields();
         Map<String, PamFields> fieldMap = new HashMap<>();
         for (PamFields field : fields) {
@@ -128,8 +133,11 @@ public class KieVersionTransformer {
 
                                 PamFields field = fieldMap.get(fieldId);
                                 if (!field.getReadOnly()) {
-                                    fieldIdOrder.add(fieldId);
-                                    buildFormOrder(nestedFormMap.get(fieldId), fieldIdOrder, nestedFormMap);
+                                    PamArray nestedArray = nestedFormMap.get(fieldId);
+                                    if(nestedArray != null) {
+                                        fieldIdOrder.add(fieldId);
+                                        buildFormOrder(nestedArray, fieldIdOrder, nestedFormMap);
+                                    }
                                 }
                             }
                         }
@@ -140,7 +148,7 @@ public class KieVersionTransformer {
     }
 
     public static KieProcessFormQueryResult pamSevenFormToPamSix(PamArray pamSeven, List<String> formModelTypes) {
-
+        
         KieProcessFormQueryResult result = new KieProcessFormQueryResult();
 
         result.setId(rand.nextLong());

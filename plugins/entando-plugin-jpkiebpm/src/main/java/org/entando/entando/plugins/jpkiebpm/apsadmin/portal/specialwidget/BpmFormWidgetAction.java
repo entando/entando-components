@@ -134,7 +134,17 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
         List<WidgetTypeParameter> parameters = widget.getType().getTypeParameters();
         setPropertyWidget(parameters, widget);
-        BpmWidgetInfo widgetInfo = this.storeWidgetInfo(widget);
+
+        String widgetInfoId = widget.getConfig().getProperty(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID);
+        BpmWidgetInfo widgetInfo;
+        if (widgetInfoId == null) {
+            widgetInfo = this.storeWidgetInfo(widget);
+        } else {
+            // we want to keep old widget online information and modify widget draft information
+            BpmWidgetInfo oldWidgetInfo = this.getBpmWidgetInfoManager().getBpmWidgetInfo(Integer.valueOf(widgetInfoId));
+            widgetInfo = this.storeWidgetInfo(widget, oldWidgetInfo);
+        }
+
         this.storeKieFormOverrides(widgetInfo.getId());
 
         WidgetType type = widget.getType();
@@ -189,7 +199,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             //dataModel.setDescription(processId + "_" + containerId); exceeds 50 chars limit
             dataModel.setDescription("Model for " + containerId);
 
-            String dataUx = uXBuilder.createDataUx(kpfr, containerId, processId, title);
+            String dataUx = uXBuilder.createDataUx(kpfr, widgetInfo.getId(), containerId, processId, title);
             dataModel.setShape(dataUx);
             this.getDataObjectModelManager().addDataObjectModel(dataModel);
 
@@ -381,7 +391,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     }
 
     private void loadKieFormOverrides(int widgetInfoId) throws ApsSystemException {
-        List<KieFormOverride> formOverrides = kieFormOverrideManager.getFormOverrides(widgetInfoId);
+        List<KieFormOverride> formOverrides = kieFormOverrideManager.getFormOverrides(widgetInfoId, false);
         if (!formOverrides.isEmpty()) {
             if (overrides == null) {
                 overrides = new ArrayList<>();
@@ -405,8 +415,8 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             logger.error("Error loading WidgetInfo", e);
         }
     }
- 
-   public String chooseForm() {
+
+    public String chooseForm() {
         try {
             overrides = new ArrayList<>();
         } catch (Throwable t) {
@@ -481,9 +491,11 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     }
 
     protected BpmWidgetInfo storeWidgetInfo(Widget widget) throws Exception {
-        BpmWidgetInfo widgetInfo = null;
+        return storeWidgetInfo(widget, new BpmWidgetInfo());
+    }
+
+    protected BpmWidgetInfo storeWidgetInfo(Widget widget, BpmWidgetInfo widgetInfo) throws Exception {
         try {
-            widgetInfo = new BpmWidgetInfo();
             widgetInfo.setFramePosDraft(this.getFrame());
             widgetInfo.setPageCode(this.getPageCode());
             String[] param = this.getProcessPath().split("@");
@@ -497,18 +509,19 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
             widgetInfo.setInformationDraft(properties.toXml());
             this.updateConfigWidget(widgetInfo, widget);
+            return widgetInfo;
         } catch (Exception e) {
             logger.error("Error save WidgetInfo", e);
             throw e;
         }
-        return widgetInfo;
     }
 
     private void storeKieFormOverrides(int widgetInfoId) throws Exception {
 
         // Delete old overrides
         FieldSearchFilter widgetInfoFilter = new FieldSearchFilter("widgetInfoId", (Integer) widgetInfoId, false);
-        List<Integer> oldWidgetOverrides = kieFormOverrideManager.searchKieFormOverrides(new FieldSearchFilter[]{widgetInfoFilter});
+        FieldSearchFilter draftFilter = new FieldSearchFilter("online", (Integer) 0, false);
+        List<Integer> oldWidgetOverrides = kieFormOverrideManager.searchKieFormOverrides(new FieldSearchFilter[]{widgetInfoFilter, draftFilter});
         if (overrides != null) {
             List<Integer> editedOverrides = overrides.stream().filter(o -> o.getId() != null).map(o -> o.getId()).collect(Collectors.toList());
             oldWidgetOverrides.removeAll(editedOverrides); // keeps only overrides to delete

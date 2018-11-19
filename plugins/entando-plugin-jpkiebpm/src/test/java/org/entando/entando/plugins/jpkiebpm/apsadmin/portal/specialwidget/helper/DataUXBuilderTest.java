@@ -10,23 +10,41 @@ import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
+import java.util.ArrayList;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 public class DataUXBuilderTest extends TestCase {
 
     private final static transient Logger logger = Logger.getLogger(DataUXBuilderTest.class);
 
-
     private static String CONTAINER_ID = "CONTAINER_ID";
     private static String PROCESS_ID = "PROCESS_ID";
     private static String TITLE = "Title";
 
+    private IKieFormOverrideManager mockedFormOverrideManager;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        this.mockedFormOverrideManager = mock(IKieFormOverrideManager.class);
+        when(mockedFormOverrideManager.getFormOverrides(any(Integer.class), any(Boolean.class))).thenReturn(new ArrayList<>());
+    }
+
+    private DataUXBuilder getDataUXBuilder() throws Exception {
+        DataUXBuilder dataUXBuilder = new DataUXBuilder();
+        dataUXBuilder.setFormOverrideManager(mockedFormOverrideManager);
+        dataUXBuilder.init();
+        return dataUXBuilder;
+    }
+
     public void testSimpleForms() throws Throwable {
 
         try {
-            DataUXBuilder dataUXBuilder = new DataUXBuilder();
-            dataUXBuilder.init();
-
+            DataUXBuilder dataUXBuilder = getDataUXBuilder();
+            
             String filePath = "src/test/resources/examples/xml/pam-7-test-process-form-1.xml";
 
             String pam7businessProcessForm = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -35,7 +53,9 @@ public class DataUXBuilderTest extends TestCase {
                     .unmarshall(pam7businessProcessForm, PamProcessQueryFormResult.class, true, false);
             assertNotNull(pamResult);
             KieProcessFormQueryResult kpfqr = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
-            String htmlForm = dataUXBuilder.createDataUx(kpfqr, CONTAINER_ID, PROCESS_ID, TITLE);
+            String htmlForm = dataUXBuilder.createDataUx(kpfqr, 0, CONTAINER_ID, PROCESS_ID, TITLE);
+
+            System.out.println(htmlForm);
 
             //Title Check
             assertTrue(htmlForm.contains("<h3 class=\"control-label editLabel\" id=\"JPKIE_TITLE_Title\">$i18n.getLabel(\"JPKIE_TITLE_Title\")</h3>\n"));
@@ -70,29 +90,32 @@ public class DataUXBuilderTest extends TestCase {
             assertTrue(htmlForm.contains("<option selected value=\"val2\">Value 2</option>"));
             assertTrue(htmlForm.contains("<option value=\"val3\">Value 3</option>"));
 
+            //RadioGroup Checks
+            assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"1\" > radio1</div>"));
+            assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"2\" > radio2</div>"));
+            assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"3\" checked > radio3</div>"));
+            assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"1inline\" checked > Radio1 Inline</div>"));
+            assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"2inline\" > Radio2 Inline</div>"));
+            assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"3inline\" > Radio3 Inline</div>"));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-
     public void testFormWithNestedForms() throws Throwable {
         try {
-            DataUXBuilder dataUXBuilder = new DataUXBuilder();
-            dataUXBuilder.init();
+            DataUXBuilder dataUXBuilder = getDataUXBuilder();
 
             String filePath = "src/test/resources/examples/xml/jbpm7-mortgage-process-form.xml";
 
-
             String pam7businessProcessForm = new String(Files.readAllBytes(Paths.get(filePath)));
-
 
             PamProcessQueryFormResult pamResult = (PamProcessQueryFormResult) JAXBHelper
                     .unmarshall(pam7businessProcessForm, PamProcessQueryFormResult.class, true, false);
             assertNotNull(pamResult);
             KieProcessFormQueryResult kpfqr = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
-            String htmlForm = dataUXBuilder.createDataUx(kpfqr, CONTAINER_ID, PROCESS_ID, TITLE);
+            String htmlForm = dataUXBuilder.createDataUx(kpfqr, 0, CONTAINER_ID, PROCESS_ID, TITLE);
 
             //Title Check
             assertTrue(htmlForm.contains("<h3 class=\"control-label editLabel\" id=\"JPKIE_TITLE_Title\">$i18n.getLabel(\"JPKIE_TITLE_Title\")</h3>\n"));

@@ -103,6 +103,7 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 			int index = 1;
 			stat.setInt(index++, kieFormOverride.getId());
 			stat.setInt(index++, kieFormOverride.getWidgetInfoId());
+                        stat.setBoolean(index++, kieFormOverride.isOnline());
 			Timestamp dateTimestamp = new Timestamp(kieFormOverride.getDate().getTime());
 			stat.setTimestamp(index++, dateTimestamp);
 			stat.setString(index++, kieFormOverride.getField());
@@ -174,6 +175,7 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 			int index = 1;
 
 			stat.setInt(index++, kieFormOverride.getWidgetInfoId());
+			stat.setBoolean(index++, kieFormOverride.isOnline());
 			Timestamp dateTimestamp = new Timestamp(kieFormOverride.getDate().getTime());
 			stat.setTimestamp(index++, dateTimestamp);
 			stat.setString(index++, kieFormOverride.getField());
@@ -270,6 +272,7 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 			kieFormOverride = new KieFormOverride();
 			kieFormOverride.setId(res.getInt("id"));
 			kieFormOverride.setWidgetInfoId(res.getInt("widgetinfoid"));
+                        kieFormOverride.setOnline(res.getBoolean("online"));
 			Timestamp dateValue = res.getTimestamp("date");
 			if (null != dateValue) {
 				kieFormOverride.setDate(new Date(dateValue.getTime()));
@@ -288,13 +291,13 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 		return kieFormOverride;
 	}
 
-	private static final String ADD_KIEFORMOVERRIDE = "INSERT INTO jpkiebpm_kieformoverride (id, widgetinfoid, date, field, containerid, processid, sourceid, active, override) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String ADD_KIEFORMOVERRIDE = "INSERT INTO jpkiebpm_kieformoverride (id, widgetinfoid, online, date, field, containerid, processid, sourceid, active, override) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	private static final String UPDATE_KIEFORMOVERRIDE = "UPDATE jpkiebpm_kieformoverride SET widgetinfoid=?, date=?, field=?, containerid=?, processid=?, sourceid=?, active=?, override=? WHERE id = ?";
+	private static final String UPDATE_KIEFORMOVERRIDE = "UPDATE jpkiebpm_kieformoverride SET widgetinfoid=?, online=?, date=?, field=?, containerid=?, processid=?, sourceid=?, active=?, override=? WHERE id = ?";
 
 	private static final String DELETE_KIEFORMOVERRIDE = "DELETE FROM jpkiebpm_kieformoverride WHERE id = ?";
 
-	private static final String LOAD_KIEFORMOVERRIDE = "SELECT id, widgetinfoid, date, field, containerid, processid, sourceid, active, override FROM jpkiebpm_kieformoverride WHERE id = ?";
+	private static final String LOAD_KIEFORMOVERRIDE = "SELECT id, widgetinfoid, online, date, field, containerid, processid, sourceid, active, override FROM jpkiebpm_kieformoverride WHERE id = ?";
 
 	private static final String LOAD_KIEFORMOVERRIDES_ID = "SELECT id FROM jpkiebpm_kieformoverride";
 

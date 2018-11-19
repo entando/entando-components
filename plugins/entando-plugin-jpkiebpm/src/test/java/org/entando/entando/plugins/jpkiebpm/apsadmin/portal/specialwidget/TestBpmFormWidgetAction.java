@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
@@ -134,6 +135,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("overrides[1].defaultValue", "default2");
         this.addParameter("overrides[1].placeHolderValue", "placeholder2");
         assertEquals("configure", this.executeActionWithMockedKieServer());
+        this.waitNotifyingThread();
 
         // Reopen the widget settings
         this.initAction("/do/Page/SpecialWidget", "jpkiebpmBpmFormWidgetViewerConfig");
@@ -143,6 +145,11 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         assertEquals(Action.SUCCESS, this.executeAction());
         int widgetInfoId = getWidgetInfoId();
         assertTrue(widgetInfoId > 0);
+        List<KieFormOverride> onlineOverrides = this.kieFormOverrideManager.getFormOverrides(widgetInfoId, true);
+        List<KieFormOverride> draftOverrides = this.kieFormOverrideManager.getFormOverrides(widgetInfoId, false);
+        assertTrue(onlineOverrides.isEmpty());
+        assertEquals(2, draftOverrides.size());
+        assertEquals(2, draftOverrides.get(0).getOverrides().getList().size());
         assertEquals(2, getAction().getKnowledgeSource().size());
         assertEquals("1", getAction().getKnowledgeSourcePath());
         assertEquals("process1@container1@1", getAction().getProcessPath());
@@ -186,6 +193,24 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("overrides[0].defaultValue", "default2-MOD");
         this.addParameter("overrides[0].placeHolderValue", "placeholder2-MOD");
         assertEquals("configure", this.executeActionWithMockedKieServer());
+        this.waitNotifyingThread();
+        
+        // Publish the page
+        this.pageManager.setPageOnline(temporaryPage.getCode());
+        this.waitNotifyingThread();
+        // check online overrides
+        onlineOverrides = this.kieFormOverrideManager.getFormOverrides(widgetInfoId, true);
+        assertEquals(1, onlineOverrides.size());
+        KieFormOverride onlineOverride = onlineOverrides.get(0);
+        assertEquals(2, onlineOverride.getOverrides().getList().size());
+        assertTrue(onlineOverride.isOnline());
+        // check draft overrides
+        draftOverrides = this.kieFormOverrideManager.getFormOverrides(widgetInfoId, false);
+        assertEquals(1, draftOverrides.size());
+        KieFormOverride draftOverride = draftOverrides.get(0);
+        assertEquals(2, draftOverride.getOverrides().getList().size());
+        assertFalse(draftOverride.isOnline());        
+        assertNotSame(onlineOverride.getId(), draftOverride.getId());
 
         // Reopen widget settings and check modifications
         this.initAction("/do/Page/SpecialWidget", "jpkiebpmBpmFormWidgetViewerConfig");
@@ -194,9 +219,6 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("frame", "0");
         assertEquals(Action.SUCCESS, this.executeAction());
         assertEquals(widgetInfoId, getWidgetInfoId());
-        List<KieFormOverride> overrides = getAction().getKieFormOverrideManager().getFormOverrides(widgetInfoId);
-        assertEquals(1, overrides.size());
-        assertEquals(2, overrides.get(0).getOverrides().getList().size());
         assertEquals(1, getAction().getOverrides().size());
         ovr = getAction().getOverrides().get(0);
         assertEquals(2, (int) ovr.getId());
@@ -204,23 +226,71 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         assertEquals("default2-MOD", ovr.getDefaultValue());
         assertEquals("placeholder2-MOD", ovr.getPlaceHolderValue());
         assertFalse(ovr.isActive());
+        BpmWidgetInfo widgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId);
+        assertNotNull(widgetInfo.getInformationOnline());
+        assertNotNull(widgetInfo.getInformationDraft());
+        
+        // Save the draft widget modifying the active flag
+        this.initAction("/do/bpm/Page/SpecialWidget/BpmFormViewer", "save");
+        this.addParameter("pageCode", temporaryPage.getCode());
+        this.addParameter("widgetTypeCode", "bpm-datatype-form");
+        this.addParameter("frame", "0");
+        this.addParameter("knowledgeSourcePath", "1");
+        this.addParameter("processPath", "process1@container1@1");
+        this.addParameter("overrides[0].id", "2");
+        this.addParameter("overrides[0].active", "true"); // this is modified
+        this.addParameter("overrides[0].field", "reason");
+        this.addParameter("overrides[0].defaultValue", "default2-MOD");
+        this.addParameter("overrides[0].placeHolderValue", "placeholder2-MOD");
+        assertEquals("configure", this.executeActionWithMockedKieServer());
+        this.waitNotifyingThread();
+        onlineOverrides = this.kieFormOverrideManager.getFormOverrides(widgetInfoId, true);
+        assertEquals(1, onlineOverrides.size());
+        onlineOverride = onlineOverrides.get(0);
+        assertFalse(onlineOverride.isActive());
+        draftOverrides = this.kieFormOverrideManager.getFormOverrides(widgetInfoId, false);
+        assertEquals(1, draftOverrides.size());
+        draftOverride = draftOverrides.get(0);
+        assertTrue(draftOverride.isActive());
+        widgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId);
+        assertNotNull(widgetInfo.getInformationOnline());
+        assertNotNull(widgetInfo.getInformationDraft());
+        
+        // Restore the published widget
+        this.initAction("/do/rs/Page", "restoreOnlineConfig");
+        this.addParameter("pageCode", temporaryPage.getCode());
+        assertEquals(Action.SUCCESS, this.executeAction());
+        onlineOverrides = kieFormOverrideManager.getFormOverrides(widgetInfoId, true);
+        draftOverrides = kieFormOverrideManager.getFormOverrides(widgetInfoId, false);
+        assertEquals(1, onlineOverrides.size());
+        assertEquals(1, draftOverrides.size());
+        assertNotNull(widgetInfo.getInformationOnline());
+        assertNotNull(widgetInfo.getInformationDraft());
 
-        // Delete the widget (this must delete the related overrides)
+        // Delete the widget (this must delete the related draft overrides)
         assertNotNull(bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId));
-        assertEquals(1, kieFormOverrideManager.getFormOverrides(widgetInfoId).size());
+        assertEquals(1, kieFormOverrideManager.getFormOverrides(widgetInfoId, true).size());
         this.initAction("/do/rs/Page", "deleteWidget");
         this.addParameter("pageCode", temporaryPage.getCode());
         this.addParameter("frame", "0");
         assertEquals(Action.SUCCESS, this.executeAction());
         this.waitNotifyingThread();
-        assertNull(bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId));
-        assertTrue(kieFormOverrideManager.getFormOverrides(widgetInfoId).isEmpty());
+        widgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId);
+        assertNotNull(widgetInfo);
+        assertNull(widgetInfo.getInformationDraft());
+        assertTrue(kieFormOverrideManager.getFormOverrides(widgetInfoId, false).isEmpty());
+        assertEquals(1, kieFormOverrideManager.getFormOverrides(widgetInfoId, true).size());
+        
+        // Publish the page (this must delete the related online overrides)
+        this.pageManager.setPageOnline(temporaryPage.getCode());
+        this.waitNotifyingThread();
+        assertTrue(kieFormOverrideManager.getFormOverrides(widgetInfoId, true).isEmpty());
     }
 
     private int getWidgetInfoId() {
         return Integer.parseInt(getAction().getWidget().getConfig().getProperty(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID));
     }
-
+    
     /**
      * Initialize a new action keeping the parameters of the previous action.
      */
