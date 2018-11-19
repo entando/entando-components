@@ -173,18 +173,6 @@
         <module>plugins</module>
         <module>ui-bundles</module>
     </modules>
-    <distributionManagement>
-        <repository>
-            <id>nexus-release</id>
-            <name>Releases</name>
-            <url>${maven-repository-url-release}</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshot</id>
-            <name>Snapshot</name>
-            <url>${maven-repository-url-snapshot}</url>
-        </snapshotRepository>
-    </distributionManagement>
     <properties>
         <!--
         <test.database.driver>org.postgresql.Driver</test.database.driver>
