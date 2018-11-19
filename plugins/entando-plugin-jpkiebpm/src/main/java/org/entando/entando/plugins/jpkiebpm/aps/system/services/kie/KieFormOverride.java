@@ -1,25 +1,15 @@
 /*
-* The MIT License
-*
-* Copyright 2017 Entando Inc..
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
+ * Copyright 2017-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
@@ -27,11 +17,20 @@ import java.util.Date;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.IBpmOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.OverrideList;
 
-/**
- *
- * @author Entando
- */
 public class KieFormOverride {
+
+    private int id;
+    private int widgetInfoId;
+    private Date date;
+    private String field;
+    private String containerId;
+    private String processId;
+    private String sourceId;
+    private boolean active;
+    private boolean online;
+
+    // this object is de/serialized automatically
+    private OverrideList overrides;
 
     /**
      * Add an overried to the current field
@@ -49,87 +48,83 @@ public class KieFormOverride {
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     public void setId(int id) {
-        this._id = id;
+        this.id = id;
     }
 
     public int getWidgetInfoId() {
-        return _widgetInfoId;
+        return widgetInfoId;
     }
 
     public void setWidgetInfoId(int _widgetInfoId) {
-        this._widgetInfoId = _widgetInfoId;
+        this.widgetInfoId = _widgetInfoId;
     }
 
     public Date getDate() {
-        return _date;
+        return date;
     }
 
     public void setDate(Date date) {
-        this._date = date;
+        this.date = date;
     }
 
     public String getField() {
-        return _field;
+        return field;
     }
 
     public void setField(String field) {
-        this._field = field;
+        this.field = field;
     }
 
     public String getContainerId() {
-        return _containerId;
+        return containerId;
     }
 
     public void setContainerId(String containerId) {
-        this._containerId = containerId;
+        this.containerId = containerId;
     }
 
     public String getProcessId() {
-        return _processId;
+        return processId;
     }
 
     public void setProcessId(String processId) {
-        this._processId = processId;
+        this.processId = processId;
     }
 
     public String getSourceId() {
-        return _sourceId;
+        return sourceId;
     }
 
     public void setSourceId(String sourceId) {
-        this._sourceId = sourceId;
+        this.sourceId = sourceId;
     }
 
     public OverrideList getOverrides() {
-        return _overrides;
+        return overrides;
     }
 
     public void setOverrides(OverrideList overrides) {
-        this._overrides = overrides;
+        this.overrides = overrides;
     }
 
     public boolean isActive() {
-        return _active;
+        return active;
     }
 
     public void setActive(boolean active) {
-        this._active = active;
+        this.active = active;
     }
 
-    private int _id;
-    private int _widgetInfoId;
-    private Date _date;
-    private String _field;
-    private String _containerId;
-    private String _processId;
-    private String _sourceId;
-    private boolean _active;
+    public boolean isOnline() {
+        return online;
+    }
 
-    // this object is de/serialized automatically
-    private OverrideList _overrides;
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
 
 }

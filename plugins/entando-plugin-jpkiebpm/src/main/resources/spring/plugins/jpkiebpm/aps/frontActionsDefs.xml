@@ -18,7 +18,8 @@
         <property name="dataObjectManager" ref="DataObjectManager" />
         <property name="dataObjectDispenser" ref="DataObjectDispenserManager" />
         <property name="formManager" ref="jpkiebpmsManager" />
-		<property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
+        <property name="formOverrideManager" ref="jpkiebpmFormOverrideManager" />
+	<property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
         <property name="i18nManager" ref="I18nManager" />
     </bean>
     
