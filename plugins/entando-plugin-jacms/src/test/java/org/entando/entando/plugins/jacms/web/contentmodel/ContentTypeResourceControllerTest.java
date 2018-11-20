@@ -107,11 +107,11 @@ public class ContentTypeResourceControllerTest {
                 .withCode("ABC")
                 .build();
 
-        when(service.save(requestContentType)).thenReturn(createdContentType);
+        when(service.create(requestContentType)).thenReturn(createdContentType);
 
 
         ResponseEntity<ContentTypeDto> response = controller.create(requestContentType);
-        verify(service).save(requestContentType);
+        verify(service).create(requestContentType);
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -135,13 +135,10 @@ public class ContentTypeResourceControllerTest {
     public void updateExistingContentTypeShouldCallServiceShouldReturnOk() {
         ContentTypeDto requestContentType = new ContentTypeDtoBuilder().withId(376L).build();
 
-
-        when(service.save(requestContentType)).thenReturn(requestContentType);
-
+        when(service.update(requestContentType)).thenReturn(requestContentType);
 
         ResponseEntity<ContentTypeDto> response = controller.update(requestContentType);
-        verify(service).save(requestContentType);
-
+        verify(service).update(requestContentType);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();

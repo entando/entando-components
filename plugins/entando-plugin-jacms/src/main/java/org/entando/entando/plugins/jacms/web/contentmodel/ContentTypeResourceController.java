@@ -26,7 +26,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<ContentTypeDto> create(@Valid @RequestBody ContentTypeDto contentType) throws URISyntaxException {
-        ContentTypeDto result = contentTypeService.save(contentType);
+        ContentTypeDto result = contentTypeService.create(contentType);
 
         return ResponseEntity.created(new URI("/plugins/cms/content-types/" + result.getId()))
                              .body(result);
@@ -58,6 +58,6 @@ public class ContentTypeResourceController implements ContentTypeResource {
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<ContentTypeDto> update(@Valid @RequestBody ContentTypeDto contentType) {
-        return ResponseEntity.ok(contentTypeService.save(contentType));
+        return ResponseEntity.ok(contentTypeService.update(contentType));
     }
 }

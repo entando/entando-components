@@ -14,7 +14,15 @@ public class ContentTypeServiceImpl implements ContentTypeService {
     private Long nextId = 1L;
 
     @Override
-    public ContentTypeDto save(ContentTypeDto entity) {
+    public ContentTypeDto create(ContentTypeDto entity) {
+        tmpMap.put(nextId, entity);
+        entity.setId(nextId);
+        nextId++;
+        return entity;
+    }
+
+    @Override
+    public ContentTypeDto update(ContentTypeDto entity) {
         tmpMap.put(nextId, entity);
         entity.setId(nextId);
         nextId++;

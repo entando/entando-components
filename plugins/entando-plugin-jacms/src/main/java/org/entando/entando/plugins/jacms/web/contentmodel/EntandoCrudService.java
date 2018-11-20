@@ -6,7 +6,9 @@ import java.util.Optional;
 
 public interface EntandoCrudService<T, ID> {
 
-    T save(T entity);
+    T create(T entity);
+
+    T update(T entity);
 
     PagedMetadata<T> findMany(RestListRequest listRequest);
 
