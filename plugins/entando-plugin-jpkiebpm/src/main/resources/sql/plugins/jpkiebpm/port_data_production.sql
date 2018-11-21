@@ -52,8 +52,10 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-progress-status', '<?xml version="1.
 <property key="it">PAM-Case stato del processo</property>
 </properties>', '<config>
         <parameter name="channel">channel</parameter>
-	<parameter name="frontEndMilestonesData">frontEndMilestonesData</parameter>
-	<action name="jpkiebpmBpmCaseProgressWidgetViewerConfig"/>
+	<parameter name="showMilestones">showMilestones</parameter>
+	<parameter name="showNumberOfTasks">showNumberOfTasks</parameter>
+	<parameter name="progressBarType">progressBarType</parameter>
+<action name="jpkiebpmBpmCaseProgressWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
 INSERT INTO widgetcatalog VALUES ('bpm-case-instance-selector', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
