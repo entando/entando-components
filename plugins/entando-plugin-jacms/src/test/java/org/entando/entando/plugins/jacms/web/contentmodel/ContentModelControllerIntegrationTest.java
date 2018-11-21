@@ -1,12 +1,12 @@
-package org.entando.entando.web.plugins.jacms.contentmodel;
+package org.entando.entando.plugins.jacms.web.contentmodel;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
-import org.entando.entando.web.plugins.jacms.contentmodel.model.ContentModelRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,6 +165,8 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                         .param("typeCode", "EVN")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.payload").isNotEmpty());
+        result.andExpect(jsonPath("$.payload.$content").isNotEmpty());
     }
 
     @Test
@@ -189,7 +191,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
-            ContentModelRequest request = new ContentModelRequest();
+            ContentModelDto request = new ContentModelDto();
             request.setId(modelId);
             request.setContentType("ART");
             request.setDescr("testCrudContentModel");
@@ -263,7 +265,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
-            ContentModelRequest request = new ContentModelRequest();
+            ContentModelDto request = new ContentModelDto();
             request.setId(modelId);
             request.setContentType("XXX");
             request.setDescr("testChangeContentType");
@@ -298,7 +300,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
-            ContentModelRequest request = new ContentModelRequest();
+            ContentModelDto request = new ContentModelDto();
             request.setId(modelId);
             request.setContentType("ART");
             request.setDescr("testChangeContentType");

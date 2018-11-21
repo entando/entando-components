@@ -26,7 +26,7 @@ import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModelReference;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelReference;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.opensymphony.xwork2.Action;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;

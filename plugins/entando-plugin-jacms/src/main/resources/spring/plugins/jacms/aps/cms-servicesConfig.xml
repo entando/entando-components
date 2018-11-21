@@ -40,13 +40,6 @@
         <property name="contentManager" ref="jacmsContentManager" />
     </bean>
 
-    <bean id="ContentModelService" class="com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModelService" >
-        <property name="contentModelManager" ref="jacmsContentModelManager" />
-        <property name="contentManager" ref="jacmsContentManager" />
-        <property name="dictionaryProvider" ref="ContentModelDictionaryProvider" />
-        <property name="pageDtoBuilder" ref="PageDtoBuilder" />
-    </bean>
-
-    <context:component-scan base-package="org.entando.entando.plugins.jacms.web.contentmodel" />
+    <context:component-scan base-package="org.entando.entando.plugins.jacms.web.contentmodel, org.entando.entando.plugins.jacms.aps.system.services.contentmodel" />
 
 </beans>

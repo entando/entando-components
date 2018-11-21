@@ -21,7 +21,7 @@ import org.entando.entando.plugins.jacms.web.contentmodel.ContentModelController
 import org.entando.entando.plugins.jacms.web.page.PageConfigurationControllerIntegrationTest;
 import org.entando.entando.plugins.jacms.web.page.PageConfigurationControllerWidgetsIntegrationTest;
 import org.entando.entando.plugins.jacms.web.page.PageControllerIntegrationTest;
-import org.entando.entando.web.plugins.jacms.contentmodel.ContentModelControllerIntegrationTest;
+import org.entando.entando.plugins.jacms.web.contentmodel.ContentModelControllerIntegrationTest;
 
 public class ControllersAllTests extends TestCase {
 

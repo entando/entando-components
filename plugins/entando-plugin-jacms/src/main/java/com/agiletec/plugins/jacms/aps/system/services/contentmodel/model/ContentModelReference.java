@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.plugins.jacms.aps.system.services.contentmodel;
+package com.agiletec.plugins.jacms.aps.system.services.contentmodel.model;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * VO for representing a reference to a ContentModel inside a page widget.
+ * Represents a reference to a ContentModel inside a page widget.
  */
 public class ContentModelReference implements Serializable {
 

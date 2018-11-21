@@ -1,93 +1,68 @@
-package com.agiletec.plugins.jacms.aps.system.services.contentmodel;
+/*
+ * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+package org.entando.entando.plugins.jacms.aps.system.services.contentmodel;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.annotation.PostConstruct;
-
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelReference;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.dictionary.ContentModelDictionaryProvider;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.utils.ContentModelUtils;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
-import org.entando.entando.aps.system.services.page.model.PageDtoBuilder;
 import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.plugins.jacms.contentmodel.model.ContentModelRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 
-public class ContentModelService implements IContentModelService {
+@Service
+public class ContentModelServiceImpl implements ContentModelService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private IContentModelManager contentModelManager;
-    private IDtoBuilder<ContentModel, ContentModelDto> dtoBuilder;
-    private ContentModelDictionaryProvider dictionaryProvider;
-    private IContentManager contentManager;
-    private PageDtoBuilder pageDtoBuilder;
+    private final IContentManager contentManager;
+    private final IContentModelManager contentModelManager;
+    private final ContentModelDictionaryProvider dictionaryProvider;
+    private final IDtoBuilder<ContentModel, ContentModelDto> dtoBuilder;
 
-    protected IContentModelManager getContentModelManager() {
-        return contentModelManager;
-    }
-
-    public void setContentModelManager(IContentModelManager contentModelManager) {
-        this.contentModelManager = contentModelManager;
-    }
-
-    protected IDtoBuilder<ContentModel, ContentModelDto> getDtoBuilder() {
-        return dtoBuilder;
-    }
-
-    public void setDtoBuilder(IDtoBuilder<ContentModel, ContentModelDto> dtoBuilder) {
-        this.dtoBuilder = dtoBuilder;
-    }
-
-    protected ContentModelDictionaryProvider getDictionaryProvider() {
-        return dictionaryProvider;
-    }
-
-    public void setDictionaryProvider(ContentModelDictionaryProvider dictionaryProvider) {
-        this.dictionaryProvider = dictionaryProvider;
-    }
-
-    protected IContentManager getContentManager() {
-        return contentManager;
-    }
-
-    public void setContentManager(IContentManager contentManager) {
+    @Autowired
+    public ContentModelServiceImpl(IContentManager contentManager, IContentModelManager contentModelManager, ContentModelDictionaryProvider dictionaryProvider) {
         this.contentManager = contentManager;
-    }
+        this.contentModelManager = contentModelManager;
+        this.dictionaryProvider = dictionaryProvider;
 
-    protected PageDtoBuilder getPageDtoBuilder() {
-        return pageDtoBuilder;
-    }
-
-    public void setPageDtoBuilder(PageDtoBuilder pageDtoBuilder) {
-        this.pageDtoBuilder = pageDtoBuilder;
-    }
-
-    @PostConstruct
-    public void setUp() {
-        this.setDtoBuilder(new DtoBuilder<ContentModel, ContentModelDto>() {
+        this.dtoBuilder = new DtoBuilder<ContentModel, ContentModelDto>() {
 
             @Override
             protected ContentModelDto toDto(ContentModel src) {
@@ -99,13 +74,13 @@ public class ContentModelService implements IContentModelService {
                 dto.setStylesheet(src.getStylesheet());
                 return dto;
             }
-        });
+        };
     }
 
     @Override
-    public PagedMetadata<ContentModelDto> getContentModels(RestListRequest requestList) {
+    public PagedMetadata<ContentModelDto> findMany(RestListRequest requestList) {
 
-        List<ContentModel> contentModels = this.getContentModelManager().getContentModels();
+        List<ContentModel> contentModels = this.contentModelManager.getContentModels();
 
         Stream<ContentModel> stream = contentModels.stream();
 
@@ -125,7 +100,7 @@ public class ContentModelService implements IContentModelService {
 
         //page
         List<ContentModel> subList = requestList.getSublist(contentModels);
-        List<ContentModelDto> dtoSlice = this.getDtoBuilder().convert(subList);
+        List<ContentModelDto> dtoSlice = this.dtoBuilder.convert(subList);
         SearcherDaoPaginatedResult<ContentModelDto> paginatedResult = new SearcherDaoPaginatedResult(contentModels.size(), dtoSlice);
         PagedMetadata<ContentModelDto> pagedMetadata = new PagedMetadata<>(requestList, paginatedResult);
         pagedMetadata.setBody(dtoSlice);
@@ -134,61 +109,71 @@ public class ContentModelService implements IContentModelService {
 
     @Override
     public ContentModelDto getContentModel(Long modelId) {
-        ContentModel contentModel = this.getContentModelManager().getContentModel(modelId);
+        ContentModel contentModel = this.contentModelManager.getContentModel(modelId);
         if (null == contentModel) {
             logger.warn("no contentModel found with id {}", modelId);
             throw new RestRourceNotFoundException(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND, "contentModel", String.valueOf(modelId));
         }
-        ContentModelDto dto = this.getDtoBuilder().convert(contentModel);
+        ContentModelDto dto = this.dtoBuilder.convert(contentModel);
         return dto;
     }
 
     @Override
-    public ContentModelDto addContentModel(ContentModelRequest contentModelReq) {
+    public Optional<ContentModelDto> findById(Long modelId) {
+        ContentModelDto dto = null;
+        ContentModel contentModel = this.contentModelManager.getContentModel(modelId);
+        if (contentModel != null) {
+            dto = this.dtoBuilder.convert(contentModel);
+        }
+        return Optional.ofNullable(dto);
+    }
+
+    @Override
+    public ContentModelDto create(ContentModelDto entity) {
         try {
-            ContentModel contentModel = this.createContentModel(contentModelReq);
+            ContentModel contentModel = this.createContentModel(entity);
             BeanPropertyBindingResult validationResult = this.validateForAdd(contentModel);
             if (validationResult.hasErrors()) {
                 throw new ValidationConflictException(validationResult);
             }
-            this.getContentModelManager().addContentModel(contentModel);
-            ContentModelDto dto = this.getDtoBuilder().convert(contentModel);
+            this.contentModelManager.addContentModel(contentModel);
+            ContentModelDto dto = this.dtoBuilder.convert(contentModel);
             return dto;
         } catch (ApsSystemException e) {
-            logger.error("Error adding a content model", e);
-            throw new RestServerError("error in add content model", e);
+            logger.error("Error saving a content model", e);
+            throw new RestServerError("Error saving a content model", e);
         }
     }
 
     @Override
-    public ContentModelDto updateContentModel(ContentModelRequest contentModelRequest) {
+    public ContentModelDto update(ContentModelDto entity) {
         try {
-            long modelId = contentModelRequest.getId();
-            ContentModel contentModel = this.getContentModelManager().getContentModel(contentModelRequest.getId());
+            long modelId = entity.getId();
+            ContentModel contentModel = this.contentModelManager.getContentModel(entity.getId());
             if (null == contentModel) {
                 logger.warn("no contentModel found with id {}", modelId);
                 throw new RestRourceNotFoundException(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND, "contentModel", String.valueOf(modelId));
             }
 
-            BeanPropertyBindingResult validationResult = this.validateForUpdate(contentModelRequest, contentModel);
+            BeanPropertyBindingResult validationResult = this.validateForUpdate(entity, contentModel);
             if (validationResult.hasErrors()) {
                 throw new ValidationConflictException(validationResult);
             }
-            this.copyProperties(contentModelRequest, contentModel);
+            this.copyProperties(entity, contentModel);
 
-            this.getContentModelManager().updateContentModel(contentModel);
-            ContentModelDto dto = this.getDtoBuilder().convert(contentModel);
+            this.contentModelManager.updateContentModel(contentModel);
+            ContentModelDto dto = this.dtoBuilder.convert(contentModel);
             return dto;
         } catch (ApsSystemException e) {
-            logger.error("Error updating a content model", e);
-            throw new RestServerError("error in update content model", e);
+            logger.error("Error saving a content model", e);
+            throw new RestServerError("Error saving a content model", e);
         }
     }
 
     @Override
-    public void removeContentModel(Long modelId) {
+    public void delete(Long modelId) {
         try {
-            ContentModel contentModel = this.getContentModelManager().getContentModel(modelId);
+            ContentModel contentModel = this.contentModelManager.getContentModel(modelId);
             if (null == contentModel) {
                 logger.info("contentModel {} does not exists", modelId);
                 return;
@@ -197,7 +182,7 @@ public class ContentModelService implements IContentModelService {
             if (validationResult.hasErrors()) {
                 throw new ValidationConflictException(validationResult);
             }
-            this.getContentModelManager().removeContentModel(contentModel);
+            this.contentModelManager.removeContentModel(contentModel);
         } catch (ApsSystemException e) {
             logger.error("Error in delete contentModel {}", modelId, e);
             throw new RestServerError("error in delete contentModel", e);
@@ -205,57 +190,35 @@ public class ContentModelService implements IContentModelService {
     }
 
     @Override
-    @Deprecated
-    public Map<String, List<String>> getPageReferences(Long modelId) {
-        ContentModel contentModel = this.getContentModelManager().getContentModel(modelId);
-        if (null == contentModel) {
-            logger.info("contentModel {} does not exists", modelId);
-            throw new RestRourceNotFoundException(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND, "contentModel", String.valueOf(modelId));
-        }
-        Map<String, List<String>> referencingPages = this.getReferencingPages(modelId);
-        return referencingPages;
-    }
-
-    @Deprecated
-    private Map<String, List<String>> getReferencingPages(Long modelId) {
-        Map<String, List<IPage>> refs = this.getContentModelManager().getReferencingPages(modelId);
-        Map<String, List<String>> dtoReferences = new HashMap<>();
-        if (null != refs && !refs.isEmpty()) {
-            refs.entrySet().stream().forEach(e -> e.getValue().stream().forEach(v -> dtoReferences.put(e.getKey(), e.getValue().stream().map(ee -> ee.getCode()).collect(Collectors.toList()))));
-        }
-        return dtoReferences;
-    }
-
-    @Override
     public List<ContentModelReference> getContentModelReferences(Long modelId) {
-        ContentModel contentModel = this.getContentModelManager().getContentModel(modelId);
+        ContentModel contentModel = this.contentModelManager.getContentModel(modelId);
         if (null == contentModel) {
             logger.info("contentModel {} does not exists", modelId);
             throw new RestRourceNotFoundException(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND, "contentModel", String.valueOf(modelId));
         }
-        return this.getContentModelManager().getContentModelReferences(modelId);
+        return this.contentModelManager.getContentModelReferences(modelId);
     }
 
     @Override
     public IEntityModelDictionary getContentModelDictionary(String typeCode) {
         if (StringUtils.isBlank(typeCode)) {
-            return this.getDictionaryProvider().buildDictionary();
+            return this.dictionaryProvider.buildDictionary();
         }
-        IApsEntity prototype = this.getContentManager().getEntityPrototype(typeCode);
+        IApsEntity prototype = this.contentManager.getEntityPrototype(typeCode);
         if (null == prototype) {
             logger.warn("no contentModel found with id {}", typeCode);
             throw new RestRourceNotFoundException(ContentModelValidator.ERRCODE_CONTENTMODEL_TYPECODE_NOT_FOUND, "contentType", typeCode);
         }
-        return this.getDictionaryProvider().buildDictionary(prototype);
+        return this.dictionaryProvider.buildDictionary(prototype);
     }
 
-    protected ContentModel createContentModel(ContentModelRequest src) {
+    protected ContentModel createContentModel(ContentModelDto src) {
         ContentModel contentModel = new ContentModel();
         this.copyProperties(src, contentModel);
         return contentModel;
     }
 
-    protected void copyProperties(ContentModelRequest src, ContentModel dest) {
+    protected void copyProperties(ContentModelDto src, ContentModel dest) {
         dest.setContentShape(src.getContentShape());
         dest.setContentType(src.getContentType());
         dest.setDescription(src.getDescr());
@@ -272,14 +235,14 @@ public class ContentModelService implements IContentModelService {
 
     protected BeanPropertyBindingResult validateForDelete(ContentModel contentModel) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(contentModel, "contentModel");
-        List<ContentModelReference> references = this.getContentModelManager().getContentModelReferences(contentModel.getId());
+        List<ContentModelReference> references = this.contentModelManager.getContentModelReferences(contentModel.getId());
         if (!references.isEmpty()) {
-            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_REFERENCES, null, "contetntmodel.page.references");
+            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_REFERENCES, null, "contentmodel.page.references");
         }
         return errors;
     }
 
-    protected BeanPropertyBindingResult validateForUpdate(ContentModelRequest request, ContentModel contentModel) {
+    protected BeanPropertyBindingResult validateForUpdate(ContentModelDto request, ContentModel contentModel) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(contentModel, "contentModel");
         this.validateContentTypeIsEquals(request.getContentType(), contentModel.getContentType(), errors);
         this.validateContentType(contentModel, errors);
@@ -289,19 +252,19 @@ public class ContentModelService implements IContentModelService {
     protected void validateContentTypeIsEquals(String newContentType, String existingConentType, BeanPropertyBindingResult errors) {
         if (!newContentType.equals(existingConentType)) {
             Object[] args = {existingConentType, newContentType};
-            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_CANNOT_UPDATE_CONTENT_TYPE, args, "contetntmodel.contentType.locked");
+            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_CANNOT_UPDATE_CONTENT_TYPE, args, "contentmodel.contentType.locked");
         }
     }
 
     protected void validateIdIsUnique(ContentModel contentModel, BeanPropertyBindingResult errors) {
         long modelId = contentModel.getId();
 
-        ContentModel dummyModel = this.getContentModelManager().getContentModel(modelId);
+        ContentModel dummyModel = this.contentModelManager.getContentModel(modelId);
         if (dummyModel != null) {
             Object[] args = {String.valueOf(modelId)};
-            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_ALREADY_EXISTS, args, "contetntmodel.id.already.present");
+            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_ALREADY_EXISTS, args, "contentmodel.id.already.present");
         }
-        SmallEntityType utilizer = this.getContentModelManager().getDefaultUtilizer(modelId);
+        SmallEntityType utilizer = this.contentModelManager.getDefaultUtilizer(modelId);
         if (null != utilizer && !utilizer.getCode().equals(contentModel.getContentType())) {
             Object[] args = {String.valueOf(modelId), utilizer.getDescription()};
             errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_WRONG_UTILIZER, args, "contentModel.id.wrongUtilizer");
@@ -311,11 +274,9 @@ public class ContentModelService implements IContentModelService {
     protected void validateContentType(ContentModel contentModel, BeanPropertyBindingResult errors) {
         String contentType = contentModel.getContentType();
 
-        if (!this.getContentManager().getSmallContentTypesMap().containsKey(contentType)) {
+        if (!this.contentManager.getSmallContentTypesMap().containsKey(contentType)) {
             Object[] args = {contentType};
             errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_TYPECODE_NOT_FOUND, args, "contentModel.contentType.notFound");
         }
-
     }
-
 }
