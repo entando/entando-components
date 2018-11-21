@@ -11,7 +11,7 @@ String cId = java.util.UUID.randomUUID().toString();
 </s:if>
 
 <s:if test="#request['angular']==null">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
+    <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/angular.min.js"></script>
     <s:set var="angular" value="true" scope="request"/>
 </s:if>
 
@@ -36,40 +36,48 @@ String cId = java.util.UUID.randomUUID().toString();
         <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
     </s:if>
 </form>
+<div  class="ibox float-e-margins">
 
-<s:if test="caseInstanceMilestones!=null">
-    <div  id="<%=cId%>" ng-controller="ProgressBarCtrl as vm" class="ibox">
-        <script type="text/ng-template" id="basic-tpl">                    
-            <h5 >{{vm.ui.instanceName()}}<br><small ng-show="vm.ui.showNumberOfTasks()">Tasks {{vm.ui.countAchievedMilestones()}} of {{vm.ui.countVisibleMilestones()}}</small></h5>
-            <div class="progress progress-labeled">
-            <div ng-style="{width: vm.ui.totalCaseCompletedPercentage() + '%'}" ng-class="vm.ui.milestoneCompletedStyles()"
-            class="progress-bar">
-            <span>{{vm.ui.totalCaseCompletedPercentage()+'%'}}</span>
-            </div>
-            </div>
-        </script>
-
-        <script type="text/ng-template" id="stacked-tpl">
-            <h5 >{{vm.ui.instanceName()}}</h5>
-            <div class="progress progress-labeled">
-            <div ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" ng-class="{'progress-bar-success':vm.ui.milestoneComplete(ms) }"
-            class="progress-bar">
-            <span>{{vm.ui.milestoneComplete(ms)?"COMPLETED":"IN PROGRESS"}}</span>
-            </div>
-            </div>
-            <div class="progress progress-labels" ng-show="vm.ui.showMilestonesLabels()">
-            <span ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" class="progress-bar progress-bar-label">
-            {{ms["milestone-name"]}}
-            </span>
-            </div>
-        </script>
-        <div class="ibox-content">
-            <progress-bar options='<s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="false"/>' case-data='{"milestones":<s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="false"/>}'></progress-bar>
+    <div class="ibox-title">
+        <h5>Case progress status</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+            <a class="close-link"> <i class="fa fa-times"></i> </a>
         </div>
-
-
-
     </div>
+    <s:if test="%{null != caseInstanceMilestones}">
+        <div class="ibox-content">
+            <div  id="<%=cId%>" ng-controller="ProgressBarCtrl as vm" class="ibox float-e-margins" >
+                <script type="text/ng-template" id="basic-tpl">
+                    <h5><small ng-show="vm.ui.showNumberOfTasks()">Tasks {{vm.ui.countAchievedMilestones()}} of {{vm.ui.countVisibleMilestones()}}</small></h5>
+                    <div class="progress progress-labeled">
+                    <div ng-style="{width: vm.ui.totalCaseCompletedPercentage() + '%'}" ng-class="vm.ui.milestoneCompletedStyles()"class="progress-bar">
+                    <span>{{vm.ui.totalCaseCompletedPercentage()+'%'}}</span>
+                    </div>
+                    </div>
+                </script>
+                <script type="text/ng-template" id="stacked-tpl">
+                    <h5><small ng-show="vm.ui.showNumberOfTasks()">Tasks {{vm.ui.countAchievedMilestones()}} of {{vm.ui.countVisibleMilestones()}}</small></h5>
+                    <div class="progress progress-labeled">
+                    <div ng-repeat="ms in vm.ui.filterVisibleMiletones()"ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" ng-class="{'progress-bar-success':vm.ui.milestoneComplete(ms) }" class="progress-bar">
+                    <span>{{vm.ui.milestoneComplete(ms)?"COMPLETED":"IN PROGRESS"}}</span>
+                    </div>
+                    </div>
+                    <div class="progress progress-labels" ng-show="vm.ui.showMilestonesLabels()">
+                    <span ng-repeat="ms in vm.ui.filterVisibleMiletones()" ng-style="{width: ((100/vm.ui.countVisibleMilestones()) + '%')}" class="progress-bar progress-bar-label">
+                    {{ms["milestone-name"]}}
+                    </span>
+                    </div>
+                </script>
+                <progress-bar options='<s:property value="frontEndMilestonesData" escapeHtml="false" escapeJavaScript="false"/>' case-data='<s:property value="caseInstanceMilestones" escapeHtml="false" escapeJavaScript="false"/>'></progress-bar>
+            </div>
+        </div>
+    </s:if>
+
+</div>
+<s:if test="%{null != caseInstanceMilestones}">
     <script type="text/javascript">
         (function () {
             bootBpmProgressBarComponents('<%=cId%>');
