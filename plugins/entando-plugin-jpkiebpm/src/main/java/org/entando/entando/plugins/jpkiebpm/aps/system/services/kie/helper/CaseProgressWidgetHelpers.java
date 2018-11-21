@@ -30,88 +30,65 @@ import java.util.List;
 import java.util.UUID;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author own_strong
- */
 public class CaseProgressWidgetHelpers {
 
-    private static final Logger logger = LoggerFactory.getLogger(BpmToFormHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(CaseProgressWidgetHelpers.class);
 
-    public static String getContainerIDfromfrontEndMilestonesData(String frontEndMilestonesData) {
-        String containerID = null;
+    public static JSONObject generateUiJson(final String progressBarType, final boolean showMilestones, final boolean showNumberOfTasks) {
+        logger.debug("generated ui progressBarType:  {}", progressBarType);
+        logger.debug("generated ui showMilestones:  {}", showMilestones);
+        logger.debug("generated ui showNumberOfTasks:  {}", showNumberOfTasks);
 
-        try {
-            JSONObject frontEndMilestonesDataJSON = new JSONObject(frontEndMilestonesData);
-            containerID = frontEndMilestonesDataJSON.getString("container-id");
+        JSONObject result = new JSONObject();
 
-        } catch (JSONException t) {
-            logger.error("Front end Milestones Data json can not be recognised");
+        JSONObject ui = new JSONObject();
+        ui.put("progress-bar-type", progressBarType);
+
+        JSONArray additionalSettings = new JSONArray();
+        if (showMilestones){
+            additionalSettings.put("show-milestones");
         }
-
-        return containerID;
+        if (showNumberOfTasks) {
+            additionalSettings.put("show-number-of-tasks");
+        }
+        ui.put("additionalSettings", additionalSettings);
+        result.put("ui", ui);
+        logger.debug("return ui generated json: {}",result.toString() );
+        return result;
     }
 
-    public static String getKieIDfromfrontEndMilestonesData(String frontEndMilestonesData) {
-        String knowledgeSourceID = null;
-
-        try {
-            JSONObject frontEndMilestonesDataJSON = new JSONObject(frontEndMilestonesData);
-            knowledgeSourceID = frontEndMilestonesDataJSON.getString("knowledge-source-id");
-
-        } catch (JSONException t) {
-            logger.error("Front end Milestones Data json can not be recognised");
-        }
-
-        return knowledgeSourceID;
-    }
-
-    public static String updatefrontEndMilestonesDataMilestones(String currentMilestonesData, String newMilestonesData) {
-
-        JSONObject currentMilestonesDataJson = null;
-        JSONArray newMilestonesDataJsonar = null;
+    public static JSONObject updateFrontEndMilestones(JSONObject currentMilestonesDataJson) {
+        JSONObject result = new JSONObject();
         JSONArray updatedMilestones = new JSONArray();
-
-        try {
-            currentMilestonesDataJson = new JSONObject(currentMilestonesData);
-        } catch (JSONException t) {
-            throw new RuntimeException("Error parsing json " + currentMilestonesData, t);
-        }
-        try {
-            newMilestonesDataJsonar = new JSONArray(newMilestonesData);
-        } catch (JSONException t) {
-            throw new RuntimeException("Error parsing json " + newMilestonesData, t);
-        }
-        JSONArray milestones = currentMilestonesDataJson.getJSONArray("milestones");
-
-        for (int i = 0; i < milestones.length(); i++) {
-
-            JSONObject iMilestone = milestones.getJSONObject(i);
-            String iMilestoneName = iMilestone.getString("milestone-name");
-
-            for (int j = 0; j < newMilestonesDataJsonar.length(); j++) {
-
-                JSONObject jMilestones = newMilestonesDataJsonar.getJSONObject(j);
-                String jMilestoneName = jMilestones.getString("milestone-name");
-
-                if (jMilestoneName.equals(iMilestoneName)) {
-                    iMilestone.put("milestone-name", jMilestones.getString("milestone-name"));
-                    iMilestone.put("milestone-id", jMilestones.getString("milestone-id"));
-                    iMilestone.put("milestone-achieved", jMilestones.getBoolean("milestone-achieved"));
-                    iMilestone.put("milestone-achieved-at", jMilestones.get("milestone-achieved-at").toString());
-                    iMilestone.put("milestone-status", jMilestones.getString("milestone-status"));
-                }
+        JSONArray milestones = null;
+        if (null!=currentMilestonesDataJson){
+            if (!(currentMilestonesDataJson.isNull("milestones"))) {
+                logger.debug("currentMilestonesData: ", currentMilestonesDataJson.toString());
+                milestones = currentMilestonesDataJson.getJSONArray("milestones");
             }
-            updatedMilestones.put(iMilestone);
         }
-        currentMilestonesDataJson.put("milestones", updatedMilestones);
-
-        return updatedMilestones.toString();
+        if (null != milestones) {
+            int milestonesLength = milestones.length();
+            int percentage = Math.round(100 / milestonesLength);
+            int lastItemPercentage  = Math.round(100 - (percentage * (milestonesLength-1)));
+            for (int i = 0; i < milestones.length(); i++) {
+                JSONObject iMilestone = milestones.getJSONObject(i);
+                iMilestone.put("visible", true);
+                if (i == milestones.length()-1) {
+                    iMilestone.put("percentage", lastItemPercentage);
+                } else {
+                    iMilestone.put("percentage", percentage);
+                }
+                updatedMilestones.put(iMilestone);
+            }
+            currentMilestonesDataJson.put("milestones", updatedMilestones);
+            result.put("milestones",updatedMilestones);
+        }
+        return result;
     }
 
     public static JSONArray convertKieContainerToListToJson(List<KieContainer> kieContainerList) {
@@ -131,19 +108,18 @@ public class CaseProgressWidgetHelpers {
 
     public static String generateNewUUID() {
         LocalDateTime currentDateTime = LocalDate.now().atTime(LocalTime.now());
-//        String uuid = UUID.randomUUID().toString().replace("-", "").replace(":", "").replace(".", "");
         String uuid = UUID.randomUUID().toString() + currentDateTime.toString();
         uuid = uuid.replace("-", "").replace(":", "").replace(".", "").replace("{", "").replace("}", "");
         return uuid;
     }
-    
+
     public static String getProcessIdFromProcessInstanceJson(JSONObject processInstanceJson) {
         String processId = processInstanceJson.getString("process-id");
         return processId;
     }
-    
-    public static Long getProcessInstanceIdFromProcessInstanceJson(JSONObject processInstanceJson){          
-        Long processInstanceId = processInstanceJson.getLong("process-instance-id");        
+
+    public static Long getProcessInstanceIdFromProcessInstanceJson(JSONObject processInstanceJson) {
+        Long processInstanceId = processInstanceJson.getLong("process-instance-id");
         return processInstanceId;
     }
 }

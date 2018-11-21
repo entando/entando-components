@@ -23,153 +23,68 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
+import java.util.Arrays;
+import java.util.HashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.CaseManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.json.JSONArray;
 
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.*;
-
-/**
- *
- * @author own_strong
- */
 public class BpmCaseProgressWidgetAction extends BpmCaseActionBase {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmCaseProgressWidgetAction.class);
 
     private CaseManager caseManager;
-    private KieFormManager formManager;
-    private String processPath;
-    private String casesDefinitions;
-    private List<KieContainer> process;
-    private String frontEndMilestonesData;
-    private HashMap<String, KieBpmConfig> knowledgeSource;
-    private String knowledgeSourcePath;
 
-    private String knowledgeSourceJson;
-    private String kieContainerListJson;
+    @Autowired
+    private IKieFormManager formManager;
 
-    private String channel;
-    private List<Integer> channels;
-
+    private Boolean showMilestones;
+    private String progressBarType;
+    private Boolean showNumberOfTasks;
+    private HashMap<String, String> progressBarTypes;
+    private static String PROGRESS_BAR_BASIC ="basic";
+    private static String PROGRESS_BAR_STACKED = "stacked";
+    
     @Override
     public String init() {
         String result = super.init();
+        initProgressBarTypes();
         return result;
     }
-
-    public String chooseKnowledgeSourceForm() {
-        return  updateKnowledgeSource();
-    }
-
-    public String changeKnowledgeSourceForm() {
-        return  updateKnowledgeSource();
-    }
-
-    private String updateKnowledgeSource() {
-        try {
-
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
-            this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
-            this.setProcess(this.formManager.getContainersList(config));
-
-            this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
-            this.setKieContainerListJson(convertKieContainerToListToJson(this.formManager.getContainersList(config)).toString());
-
-        } catch (ApsSystemException t) {
-            logger.error("Error in chooseKnowledgeSourceForm()", t);
-            return FAILURE;
-        }
-        return SUCCESS;
-
-    }
-
-    public String chooseForm() {
-        return updateForm();
-    }
-
-    public String changeForm() {
-        return updateForm();
-    }
-
-    private String updateForm() {
-        try {
-            JSONObject frontEndCaseDatajs = new JSONObject();
-            frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourceId());
-            frontEndCaseDatajs.put("container-id", this.getProcessPath());
-            this.setFrontEndCaseData(frontEndCaseDatajs.toString());
-
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
-
-            this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
-            this.setProcess(this.formManager.getContainersList(config));
-
-            this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
-            this.setKieContainerListJson(convertKieContainerToListToJson(this.formManager.getContainersList(config)).toString());
-
-        } catch (ApsSystemException t) {
-            logger.error("Error in changeForm()", t);
-            return FAILURE;
-        }
-        return SUCCESS;
-    }
-
+    
     @Override
     protected String extractInitConfig() {
         String result = super.extractInitConfig();
-
-        try {
-
-            Widget widget = this.getWidget();
-            String frontEndMilestonesDatain;
-            String channel;
-
-            if (widget != null) {
-                this.setWidgetTypeCode(this.getWidget().getType().getCode());
-                frontEndMilestonesDatain = widget.getConfig().getProperty("frontEndMilestonesData");
-                channel = widget.getConfig().getProperty("channel");
-
-                if (StringUtils.isNotBlank(frontEndMilestonesDatain)) {
-
-                    this.setFrontEndMilestonesData(frontEndMilestonesDatain);
-                    //Add if conf exist
-
-                    KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
-
-                    this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
-                    this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
-                    this.setKnowledgeSourceId(getKieIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
-                    this.setProcess(this.formManager.getContainersList(config));
-                    this.setKieContainerListJson(convertKieContainerToListToJson(this.formManager.getContainersList(config)).toString());
-                    //Add if Container exist
-                    this.setProcessPath(getContainerIDfromfrontEndMilestonesData(frontEndMilestonesDatain));
-
-                    this.setCasesDefinitions(this.getCaseManager().getCasesDefinitions(config, this.getProcessPath()).toString());
-                    this.setChannel(channel);
-
-                } else {
-                    this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
-                    this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
-                }
-            }
-        } catch (ApsSystemException ex) {
-            Logger.getLogger(BpmCaseProgressWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
+        Widget widget = this.getWidget();
+        if (widget != null) {
+            String channel = widget.getConfig().getProperty("channel");
+            String progressBarType = widget.getConfig().getProperty("progressBarType");
+            String showMilestones = widget.getConfig().getProperty("showMilestones");
+            String showNumberOfTasks = widget.getConfig().getProperty("showNumberOfTasks");
+            this.setChannel(channel);
+            this.setProgressBarType(progressBarType);
+            this.setShowMilestones(Boolean.valueOf(showMilestones));
+            this.setShowNumberOfTasks(Boolean.valueOf(showNumberOfTasks));
+            this.setWidgetTypeCode(this.getWidget().getType().getCode());
+        } else {
+            logger.warn(" widget is null in extraction ");
         }
-
         return result;
     }
-
+    
+    private void initProgressBarTypes(){
+        progressBarTypes= new HashMap<>();
+        progressBarTypes.put(PROGRESS_BAR_BASIC, PROGRESS_BAR_BASIC);
+        progressBarTypes.put(PROGRESS_BAR_STACKED, PROGRESS_BAR_STACKED);
+    }
+    
     public CaseManager getCaseManager() {
         return caseManager;
     }
@@ -178,68 +93,44 @@ public class BpmCaseProgressWidgetAction extends BpmCaseActionBase {
         this.caseManager = caseManager;
     }
 
-    public String getProcessPath() {
-        return processPath;
+    public IKieFormManager getFormManager() {
+        return formManager;
     }
 
-    public void setProcessPath(String processPath) {
-        this.processPath = processPath;
+    public void setFormManager(IKieFormManager formManager) {
+        this.formManager = formManager;
     }
 
-    public String getCasesDefinitions() {
-        return casesDefinitions;
+    public boolean isShowMilestones() {
+        return showMilestones;
     }
 
-    public void setCasesDefinitions(String casesDefinitions) {
-        this.casesDefinitions = casesDefinitions;
+    public void setShowMilestones(boolean showMilestones) {
+        this.showMilestones = showMilestones;
     }
 
-    public String getFrontEndMilestonesData() {
-        return frontEndMilestonesData;
+    public String getProgressBarType() {
+        return progressBarType;
     }
 
-    public void setFrontEndMilestonesData(String frontEndMilestonesData) {
-        this.frontEndMilestonesData = frontEndMilestonesData;
+    public void setProgressBarType(String progressBarType) {
+        this.progressBarType = progressBarType;
     }
 
-    public List<KieContainer> getProcess() {
-        return process;
+    public boolean isShowNumberOfTasks() {
+        return showNumberOfTasks;
     }
 
-    public void setProcess(List<KieContainer> process) {
-        this.process = process;
+    public void setShowNumberOfTasks(boolean showNumberOfTasks) {
+        this.showNumberOfTasks = showNumberOfTasks;
     }
 
-    public HashMap<String, KieBpmConfig> getKnowledgeSource() {
-        return knowledgeSource;
+    public HashMap<String, String> getProgressBarTypes() {
+        return progressBarTypes;
     }
 
-    public void setKnowledgeSource(HashMap<String, KieBpmConfig> knowledgeSource) {
-        this.knowledgeSource = knowledgeSource;
-    }
-
-    public String getKnowledgeSourceId() {
-        return knowledgeSourcePath;
-    }
-
-    public void setKnowledgeSourceId(String knowledgeSourceId) {
-        this.knowledgeSourcePath = knowledgeSourceId;
-    }
-
-    public String getKieContainerListJson() {
-        return kieContainerListJson;
-    }
-
-    public void setKieContainerListJson(String kieContainerListJson) {
-        this.kieContainerListJson = kieContainerListJson;
-    }
-
-    public String getKnowledgeSourceJson() {
-        return knowledgeSourceJson;
-    }
-
-    public void setKnowledgeSourceJson(String knowledgeSourceJson) {
-        this.knowledgeSourceJson = knowledgeSourceJson;
+    public void setProgressBarTypes(HashMap<String, String> progressBarTypes) {
+        this.progressBarTypes = progressBarTypes;
     }
 
 }
