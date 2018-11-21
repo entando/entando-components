@@ -1,8 +1,3 @@
-/*
- *
- * <Your licensing text here>
- *
- */
 package org.entando.entando.plugins.jpkiebpm.aps.system.init.servdb;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -18,6 +13,11 @@ public class KieFormOverride {
 		dataType = DataType.INTEGER,
 		 canBeNull=false, id = true)
 	private int _id;
+        
+	@DatabaseField(columnName = "widgetinfoid",
+		dataType = DataType.INTEGER,
+		 canBeNull=false)
+	private int _widgetInfoId;
 
 	@DatabaseField(columnName = "date",
 			dataType = DataType.DATE,
@@ -39,11 +39,25 @@ public class KieFormOverride {
 		 canBeNull=false)
 	private String _processId;
 
+	@DatabaseField(columnName = "sourceid",
+		dataType = DataType.LONG_STRING,
+		 canBeNull=false)
+	private String _sourceid;
+
 	@DatabaseField(columnName = "override",
 		dataType = DataType.LONG_STRING,
 		 canBeNull=false)
 	private String _override;
 
+	@DatabaseField(columnName = "active",
+		dataType = DataType.BOOLEAN,
+		 canBeNull=false)
+	private boolean _active;
 
-public static final String TABLE_NAME = "jpkiebpm_kieformoverride";
+	@DatabaseField(columnName = "online",
+		dataType = DataType.BOOLEAN,
+		 canBeNull=false)
+	private boolean _online;
+
+	public static final String TABLE_NAME = "jpkiebpm_kieformoverride";
 }

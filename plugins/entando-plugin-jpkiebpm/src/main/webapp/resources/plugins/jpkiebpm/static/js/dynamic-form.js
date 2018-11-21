@@ -175,11 +175,18 @@ org.entando.form.DynamicForm = function (jKIE) {
 
 org.entando.form.loadFrom = function (url) {
 
-    $.get(url, function (data) {
-        var jsonKie = data.response.result;
-        org.entando.form.urlRequest = jsonKie;
-        jsonKie.mainForm.method = "post";
-        org.entando.form.dynamicForm = new org.entando.form.DynamicForm(jsonKie);
-        $("#bpm-form").dform(org.entando.form.dynamicForm.json);
+    $.ajax({
+        method: 'GET',
+        headers: {
+            Accept: "application/json"
+        },
+        url: url,
+        success: function (data) {
+            var jsonKie = data.response.result;
+            org.entando.form.urlRequest = jsonKie;
+            jsonKie.mainForm.method = "post";
+            org.entando.form.dynamicForm = new org.entando.form.DynamicForm(jsonKie);
+            $("#bpm-form").dform(org.entando.form.dynamicForm.json);
+        }
     });
-}
+};

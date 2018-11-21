@@ -310,7 +310,6 @@ public class ApiTaskInterface extends KieApiManager {
                 }
             } catch (ApsSystemException e) {
                 logger.error("Error {}", e);
-
             }
         }
         return null;
@@ -339,9 +338,9 @@ public class ApiTaskInterface extends KieApiManager {
         String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
         KieApiForm form = null;
 
-        //TODO check this
         String configId = properties.getProperty("configId");
-        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+        int widgetInfoId = Integer.parseInt(configId);
+        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId);
         final String information = bpmWidgetInfo.getInformationDraft();
         final ApsProperties config = new ApsProperties();
         config.loadFromXml(information);
@@ -362,7 +361,7 @@ public class ApiTaskInterface extends KieApiManager {
         String processId = processForm.getHolders().get(0).getValue();
         try {
             this.setLabels(processForm, langCode);
-            form = KieApiUtil.createForm(processForm, this.getI18nManager(), langCode, this.getFormOverridesMap(containerId, processId, null));
+            form = KieApiUtil.createForm(processForm, this.getI18nManager(), langCode, this.getFormOverridesMap(widgetInfoId));
             form.setTaskId(taskIdString);
             form.setContainerId(containerId);
             form.setProcessId(processId);
@@ -579,14 +578,17 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     private void setElementList(KieBpmConfig bpmConfig, final ApsProperties config, JAXBTaskList taskList) throws ApsSystemException {
-        final String groups = config.getProperty("groups").replace(" ", "");
-        final List<JAXBTask> list = new ArrayList<>();
-        final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, groups, null);
-        for (final KieTask task : rawList) {
-            task.setConfigId(bpmConfig.getId());
-            list.add(new JAXBTask(task));
+        String groups = config.getProperty("groups");
+        if (groups != null) {
+            groups = groups.replace(" ", "");
+            final List<JAXBTask> list = new ArrayList<>();
+            final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, groups, null);
+            for (final KieTask task : rawList) {
+                task.setConfigId(bpmConfig.getId());
+                list.add(new JAXBTask(task));
+            }
+            taskList.setList(list);
         }
-        taskList.setList(list);
     }
 
     private void startTasks(KieBpmConfig bpmConfig, List<KieTask> list, HashMap<String, String> opt) {
@@ -658,12 +660,11 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     private void filterTasksByProcessId(JAXBTaskList taskList, String processDefId) {
-
-        List<JAXBTask> filteredTasks = taskList.getList().stream()
-                                        .filter( task -> task.getProcessDefinitionId().equals(processDefId))
-                                        .collect(Collectors.toList());
-
-        taskList.setList(filteredTasks);
-
+        if (taskList.getList() != null) {
+            List<JAXBTask> filteredTasks = taskList.getList().stream()
+                    .filter(task -> task.getProcessDefinitionId().equals(processDefId))
+                    .collect(Collectors.toList());
+            taskList.setList(filteredTasks);
+        }
     }
 }
