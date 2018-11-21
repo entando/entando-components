@@ -27,6 +27,7 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
         KieFormOverride kfo
                 = new KieFormOverride();
         int widgetInfoId = 1;
+        boolean online = true;
         String containerId = "containerId";
         Date now = new Date();
         String formField = "down_payments";
@@ -37,6 +38,7 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
 
         try {
             kfo.setWidgetInfoId(widgetInfoId);
+            kfo.setOnline(online);
             kfo.setContainerId(containerId);
             kfo.setDate(now);
             kfo.setField(formField);
@@ -53,6 +55,7 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
             assertNotNull(ver);
             assertNotSame(kfo, ver);
             assertEquals(widgetInfoId, ver.getWidgetInfoId());
+            assertEquals(online, ver.isOnline());
             assertEquals(containerId, ver.getContainerId());
             assertTrue(now.before(ver.getDate())); // date updated on every update
             assertEquals(formField, ver.getField());
@@ -100,6 +103,7 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
                 = new KieFormOverride();
         try {
             int widgetInfoId = 1;
+            boolean online = true;
             String containerId = "containerId";
             Date now = new Date();
             String formField1 = "down_payments";
@@ -112,6 +116,7 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
             // field 1 - default value override for 'down_payments'
             ol.addOverride(createDefaultOverrideForTest());
             kfo1.setWidgetInfoId(widgetInfoId);
+            kfo1.setOnline(online);
             kfo1.setContainerId(containerId);
             kfo1.setDate(now);
             kfo1.setField(formField1);
@@ -125,6 +130,7 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
             // field 2 - placeholder override for 'down_payments'
             ol.addOverride(createPlaceholderOverrideForTest());
             kfo2.setWidgetInfoId(widgetInfoId);
+            kfo2.setOnline(online);
             kfo2.setContainerId(containerId);
             kfo2.setDate(now);
             kfo2.setField(formField2);
@@ -137,7 +143,7 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
             _overrideManager.addKieFormOverride(kfo1);
             _overrideManager.addKieFormOverride(kfo2);
 
-            List<KieFormOverride> list = _overrideManager.getFormOverrides(widgetInfoId, containerId, processId, sourceId);
+            List<KieFormOverride> list = _overrideManager.getFormOverrides(widgetInfoId, online, containerId, processId, sourceId);
             assertNotNull(list);
             assertFalse(list.isEmpty());
             assertEquals(2,
@@ -147,7 +153,7 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
             testEqualsOverrides(kfo2,
                     list.get(1));
 
-            list = _overrideManager.getFormOverrides(widgetInfoId);
+            list = _overrideManager.getFormOverrides(widgetInfoId, online);
             assertEquals(2, list.size());
         } finally {
             _overrideManager.deleteKieFormOverride(kfo1.getId());
@@ -174,6 +180,8 @@ public class TestKieFormOverrideManager extends ApsPluginBaseTestCase {
                 ver.getSourceId());
         assertEquals(original.getWidgetInfoId(),
                 ver.getWidgetInfoId());
+        assertEquals(original.isOnline(),
+                ver.isOnline());
         assertEquals(original.isActive(),
                 ver.isActive());
         List<IBpmOverride> lo = original.getOverrides().getList();

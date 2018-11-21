@@ -102,6 +102,18 @@ public class KieFormOverrideManager extends AbstractService implements IKieFormO
             }
         }
     }
+    
+    @Override
+    public void deleteWidgetKieFormOverrides(int widgetInfoId, boolean online) throws ApsSystemException {
+        FieldSearchFilter widgetInfoIdFilter = new FieldSearchFilter("widgetInfoId", (Integer) widgetInfoId, false);
+        FieldSearchFilter onlineFilter = new FieldSearchFilter("online", (Integer) (online ? 1 : 0), false);
+        List<Integer> ids = searchKieFormOverrides(new FieldSearchFilter[]{widgetInfoIdFilter, onlineFilter});
+        if (null != ids) {
+            for (Integer id : ids) {
+                deleteKieFormOverride(id);
+            }
+        }
+    }
 
     @Override
     @Deprecated
@@ -124,25 +136,26 @@ public class KieFormOverrideManager extends AbstractService implements IKieFormO
     }
 
     @Override
-    public List<KieFormOverride> getFormOverrides(int widgetInfoId, String containerId, String processId, String sourceId) throws ApsSystemException {
-        return getFormOverrides(widgetInfoId, containerId, processId, sourceId, null);
+    public List<KieFormOverride> getFormOverrides(int widgetInfoId, boolean online, String containerId, String processId, String sourceId) throws ApsSystemException {
+        return getFormOverrides(widgetInfoId, online, containerId, processId, sourceId, null);
     }
 
     @Override
-    public List<KieFormOverride> getFormOverrides(int widgetInfoId) throws ApsSystemException {
-        return getFormOverrides(widgetInfoId, null, null, null, null);
+    public List<KieFormOverride> getFormOverrides(int widgetInfoId, boolean online) throws ApsSystemException {
+        return getFormOverrides(widgetInfoId, online, null, null, null, null);
     }
 
     @Override
-    public List<KieFormOverride> getFormOverrides(int widgetInfoId, String containerId, String processId, String sourceId, String field) throws ApsSystemException {
-        FieldSearchFilter[] filters = buildFilters(widgetInfoId, containerId, processId, sourceId, field);
+    public List<KieFormOverride> getFormOverrides(int widgetInfoId, boolean online, String containerId, String processId, String sourceId, String field) throws ApsSystemException {
+        FieldSearchFilter[] filters = buildFilters(widgetInfoId, online, containerId, processId, sourceId, field);
         return getKieFormOverridesFromFilters(filters);
     }
 
-    private FieldSearchFilter[] buildFilters(int widgetInfoId, String containerId, String processId, String sourceId, String field) {
+    private FieldSearchFilter[] buildFilters(int widgetInfoId, boolean online, String containerId, String processId, String sourceId, String field) {
         List<FieldSearchFilter> filters = new ArrayList<>();
 
         filters.add(new FieldSearchFilter("widgetInfoId", (Integer) widgetInfoId, false));
+        filters.add(new FieldSearchFilter("online", (Integer) (online ? 1 : 0), false));
 
         if (containerId != null) {
             filters.add(new FieldSearchFilter("containerId", containerId, true));

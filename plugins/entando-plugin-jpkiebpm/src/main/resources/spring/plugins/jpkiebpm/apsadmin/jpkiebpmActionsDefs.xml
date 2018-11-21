@@ -13,7 +13,8 @@
 
     <bean id="jpkiebpmDataUXBuilder" 
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder"
-          init-method="init">        
+          init-method="init">
+        <property name="formOverrideManager" ref="jpkiebpmFormOverrideManager"/>
     </bean>
     
     <bean id="jpkiebpmBpmFormWidgetAction"

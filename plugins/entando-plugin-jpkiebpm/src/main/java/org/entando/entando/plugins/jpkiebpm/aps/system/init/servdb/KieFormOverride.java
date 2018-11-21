@@ -54,5 +54,10 @@ public class KieFormOverride {
 		 canBeNull=false)
 	private boolean _active;
 
+	@DatabaseField(columnName = "online",
+		dataType = DataType.BOOLEAN,
+		 canBeNull=false)
+	private boolean _online;
+
 	public static final String TABLE_NAME = "jpkiebpm_kieformoverride";
 }
