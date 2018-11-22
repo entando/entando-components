@@ -1,0 +1,13 @@
+<i18nLabel>
+  <key>PORTAL_TITLE</key>
+  <labels>
+    <label>
+      <langCode>en</langCode>
+      <value><![CDATA[My Portal]]></value>
+    </label>
+    <label>
+      <langCode>it</langCode>
+      <value><![CDATA[Il Mio Portale]]></value>
+    </label>
+  </labels>
+</i18nLabel>
