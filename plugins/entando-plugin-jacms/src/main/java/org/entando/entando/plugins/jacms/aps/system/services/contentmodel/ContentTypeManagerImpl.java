@@ -1,7 +1,6 @@
-package org.entando.entando.plugins.jacms.web.contentmodel;
+package org.entando.entando.plugins.jacms.aps.system.services.contentmodel;
 
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
-import org.entando.entando.plugins.jacms.aps.system.services.contentmodel.ContentTypeManager;
 import org.entando.entando.web.common.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,37 +8,37 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ContentTypeServiceImpl implements ContentTypeService {
+public class ContentTypeManagerImpl implements ContentTypeManager {
 
-    private final ContentTypeManager contentTypeManager;
+    private final ContentTypeDao contentTypeDao;
 
     @Autowired
-    public ContentTypeServiceImpl(ContentTypeManager contentTypeManager) {
-        this.contentTypeManager = contentTypeManager;
+    public ContentTypeManagerImpl(ContentTypeDao contentTypeDao) {
+        this.contentTypeDao = contentTypeDao;
     }
 
     @Override
     public ContentTypeDto create(ContentTypeDto entity) {
-        return contentTypeManager.create(entity);
+        return contentTypeDao.create(entity);
     }
 
     @Override
     public ContentTypeDto update(ContentTypeDto entity) {
-        return contentTypeManager.update(entity);
+        return contentTypeDao.update(entity);
     }
 
     @Override
     public PagedMetadata<ContentTypeDto> findMany(RestListRequest listRequest) {
-        return contentTypeManager.findMany(listRequest);
+        return contentTypeDao.list();
     }
 
     @Override
     public Optional<ContentTypeDto> findById(Long id) {
-        return contentTypeManager.findById(id);
+        return contentTypeDao.findById(id);
     }
 
     @Override
     public void delete(Long id) {
-        contentTypeManager.delete(id);
+        contentTypeDao.delete(id);
     }
 }

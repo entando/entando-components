@@ -1,15 +1,13 @@
 package com.agiletec.plugins.jacms.aps.system.services.contentmodel.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.entando.entando.plugins.jacms.aps.system.init.portdb.enums.DefaultContentModel;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import java.util.*;
 
-/**
- * ContentType
- */
 @Validated
 public class ContentTypeDto {
     @JsonProperty("attributes")
@@ -19,41 +17,11 @@ public class ContentTypeDto {
     @JsonProperty("code")
     private String code = null;
 
-    /**
-     * Gets or Sets defaultContentModel
-     */
-    public enum DefaultContentModelEnum {
-        FULL("Full"),
-        LISTS("Lists");
-
-        private String value;
-
-        DefaultContentModelEnum(String value) {
-            this.value = value;
-        }
-
-        @Override
-        @JsonValue
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        @JsonCreator
-        public static DefaultContentModelEnum fromValue(String text) {
-            for (DefaultContentModelEnum b : DefaultContentModelEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-    }
-
     @JsonProperty("defaultContentModel")
-    private DefaultContentModelEnum defaultContentModel = null;
+    private DefaultContentModel defaultContentModel = null;
 
     @JsonProperty("defaultContentModelList")
-    private DefaultContentModelEnum defaultContentModelList = null;
+    private DefaultContentModel defaultContentModelList = null;
 
     @JsonProperty("id")
     private Long id = null;
@@ -74,12 +42,7 @@ public class ContentTypeDto {
         return this;
     }
 
-    /**
-     * Get attributes
-     *
-     * @return attributes
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public List<AttributeDto> getAttributes() {
         return attributes;
@@ -94,12 +57,7 @@ public class ContentTypeDto {
         return this;
     }
 
-    /**
-     * Get code
-     *
-     * @return code
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getCode() {
         return code;
     }
@@ -108,43 +66,31 @@ public class ContentTypeDto {
         this.code = code;
     }
 
-    public ContentTypeDto defaultContentModel(DefaultContentModelEnum defaultContentModel) {
+    public ContentTypeDto defaultContentModel(DefaultContentModel defaultContentModel) {
         this.defaultContentModel = defaultContentModel;
         return this;
     }
 
-    /**
-     * Get defaultContentModel
-     *
-     * @return defaultContentModel
-     **/
-    @ApiModelProperty(value = "")
-    public DefaultContentModelEnum getDefaultContentModel() {
+    @ApiModelProperty
+    public DefaultContentModel getDefaultContentModel() {
         return defaultContentModel;
     }
 
-    public void setDefaultContentModel(DefaultContentModelEnum defaultContentModel) {
+    public void setDefaultContentModel(DefaultContentModel defaultContentModel) {
         this.defaultContentModel = defaultContentModel;
     }
 
-    public ContentTypeDto defaultContentModelList(DefaultContentModelEnum defaultContentModelList) {
+    public ContentTypeDto defaultContentModelList(DefaultContentModel defaultContentModelList) {
         this.defaultContentModelList = defaultContentModelList;
         return this;
     }
 
-    /**
-     * Get defaultContentModelList
-     *
-     * @return defaultContentModelList
-     **/
-    @ApiModelProperty(value = "")
-
-
-    public DefaultContentModelEnum getDefaultContentModelList() {
+    @ApiModelProperty
+    public DefaultContentModel getDefaultContentModelList() {
         return defaultContentModelList;
     }
 
-    public void setDefaultContentModelList(DefaultContentModelEnum defaultContentModelList) {
+    public void setDefaultContentModelList(DefaultContentModel defaultContentModelList) {
         this.defaultContentModelList = defaultContentModelList;
     }
 
@@ -153,12 +99,7 @@ public class ContentTypeDto {
         return this;
     }
 
-    /**
-     * Get id
-     *
-     * @return id
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public Long getId() {
         return id;
     }
@@ -172,12 +113,7 @@ public class ContentTypeDto {
         return this;
     }
 
-    /**
-     * Get name
-     *
-     * @return name
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getName() {
         return name;
     }
@@ -211,17 +147,15 @@ public class ContentTypeDto {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class ContentType {\n");
 
-        sb.append("    attributes: ").append(toIndentedString(attributes)).append("\n");
-        sb.append("    code: ").append(toIndentedString(code)).append("\n");
-        sb.append("    defaultContentModel: ").append(toIndentedString(defaultContentModel)).append("\n");
-        sb.append("    defaultContentModelList: ").append(toIndentedString(defaultContentModelList)).append("\n");
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("}");
-        return sb.toString();
+        return "class ContentType {\n" +
+                "    attributes: " + toIndentedString(attributes) + "\n" +
+                "    code: " + toIndentedString(code) + "\n" +
+                "    defaultContentModel: " + toIndentedString(defaultContentModel) + "\n" +
+                "    defaultContentModelList: " + toIndentedString(defaultContentModelList) + "\n" +
+                "    id: " + toIndentedString(id) + "\n" +
+                "    name: " + toIndentedString(name) + "\n" +
+                "}";
     }
 
     /**

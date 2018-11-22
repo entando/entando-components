@@ -82,6 +82,12 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-engine</artifactId>
             <type>jar</type>

@@ -11,6 +11,7 @@
 		<tableMapping>
 			<datasource name="portDataSource">
 				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.ContentModel</class>
+				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.ContentType</class>
 				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.Content</class>
 				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.Resource</class>
 				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.ResourceRelation</class>

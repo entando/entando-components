@@ -3,6 +3,7 @@ package org.entando.entando.plugins.jacms.web.contentmodel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.entando.entando.plugins.jacms.aps.system.init.portdb.enums.DefaultContentModel;
 import org.entando.entando.plugins.jacms.web.TestWebMvcConfig;
 import org.entando.entando.plugins.jacms.web.contentmodel.util.ContentTypeDtoBuilder;
 import org.junit.*;
@@ -19,6 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
+import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -41,6 +43,10 @@ public class ContentTypeResourceIntegrationTest {
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
                                  .build();
+    }
+
+    private Long generateNextId() {
+        return new Random().nextLong();
     }
 
     @Test
@@ -67,7 +73,13 @@ public class ContentTypeResourceIntegrationTest {
 
     @Test
     public void testCreateContentType() throws Exception {
-        ContentTypeDto contentType = new ContentTypeDtoBuilder().withCode("ABC").build();
+        ContentTypeDto contentType = new ContentTypeDtoBuilder()
+                .withId(generateNextId())
+                .withCode("ABC")
+                .withName("My content type")
+                .withDefaultContentModel(DefaultContentModel.FULL)
+                .withDefaultContentModel(DefaultContentModel.LISTS)
+                .build();
 
         mockMvc.perform(
                 post("/plugins/cms/content-types")
@@ -116,7 +128,7 @@ public class ContentTypeResourceIntegrationTest {
     @Test
     public void testGetContentType() throws Exception {
         mockMvc.perform(
-                get("/plugins/cms/content-types/9999")
+                get("/plugins/cms/content-types/" + Long.MAX_VALUE)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound())
@@ -138,7 +150,11 @@ public class ContentTypeResourceIntegrationTest {
     }
 
     private ContentTypeDto createContentTypeDto() throws Exception {
-        ContentTypeDto contentType = new ContentTypeDtoBuilder().withCode("ABC").build();
+        ContentTypeDto contentType = new ContentTypeDtoBuilder()
+                .withId(generateNextId())
+                .withName("New content type")
+                .withCode("ABC")
+                .build();
 
         MvcResult mvcResult = mockMvc.perform(
                 post("/plugins/cms/content-types")

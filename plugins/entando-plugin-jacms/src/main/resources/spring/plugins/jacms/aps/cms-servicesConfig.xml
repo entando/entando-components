@@ -40,6 +40,6 @@
         <property name="contentManager" ref="jacmsContentManager" />
     </bean>
 
-    <context:component-scan base-package="org.entando.entando.plugins.jacms.web.contentmodel, org.entando.entando.plugins.jacms.aps.system.services.contentmodel" />
+    <context:component-scan base-package="org.entando.entando.plugins.jacms"  />
 
 </beans>
