@@ -33,7 +33,6 @@
         <module>entando-plugin-jpuserreg</module>
         <module>entando-plugin-jpaddressbook</module>
         <module>entando-plugin-jpnewsletter</module>
-        <module>entando-plugin-jpsurvey</module>
         <module>entando-plugin-jpavatar</module>
         <module>entando-plugin-jpactionlogger</module>
         <module>entando-plugin-jpgeoref</module>
