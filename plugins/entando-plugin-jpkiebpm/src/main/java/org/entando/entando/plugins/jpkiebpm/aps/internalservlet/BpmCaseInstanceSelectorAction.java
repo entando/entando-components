@@ -55,12 +55,8 @@ public class BpmCaseInstanceSelectorAction extends BpmCaseInstanceActionBase {
             this.setKnowledgeSourceId(frontEndCaseDataInjs.getString("knowledge-source-id"));
             this.setContainerid(frontEndCaseDataInjs.getString("container-id"));
             this.setChannelPath(this.getChannel());
-            KieBpmConfig config = this.formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
-            if (null == config) {
-                logger.warn("Null KieBpmConfig - Check the configuration");
-                this.setErrorCode(ERROR_NULL_CONFIG);
-                return SUCCESS;
-            }
+            KieBpmConfig config = this.formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());           
+
             List<String> cases = this.caseManager.getCaseInstancesList(config, this.getContainerid());
             if (null == cases || cases.isEmpty()) {
                 logger.warn("No instances found - Check the configuration");

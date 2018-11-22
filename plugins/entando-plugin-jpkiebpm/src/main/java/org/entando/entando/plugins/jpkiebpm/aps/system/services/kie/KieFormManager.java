@@ -145,7 +145,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException {
         try {
             String xml = this.getConfigManager().getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
-
             if (xml == null) {
                 return new HashMap<String, KieBpmConfig>();
             }
@@ -1012,14 +1011,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
 
 
-//    public ConfigInterface getConfigManager() {
-//        return configManager;
-//    }
-//
-//    public void setConfigManager(ConfigInterface configManager) {
-//        this.configManager = configManager;
-//    }
-
     public IKieFormOverrideManager getOverrideManager() {
         return overrideManager;
     }
@@ -1027,25 +1018,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public void setOverrideManager(IKieFormOverrideManager overrideManager) {
         this.overrideManager = overrideManager;
     }
-
-//    @Override
-//    public KieBpmConfig getConfig() {
-//        return config;
-//    }
-//
-//    @Override
-//    public void setConfig(KieBpmConfig config) {
-//        this.config = config;
-//    }
-//
-//    public KiaBpmConfigFactory getKiaBpmConfigFactory() {
-//        kiaBpmConfigFactory = new KiaBpmConfigFactory();
-//        return kiaBpmConfigFactory;
-//    }
-//
-//    public void setKiaBpmConfigFactory(KiaBpmConfigFactory kiaBpmConfigFactory) {
-//        this.kiaBpmConfigFactory = kiaBpmConfigFactory;
-//    }
 
     public Map<String, String> getHostNameVersionMap() {
         return this.hostNameVersionMap;
@@ -1367,6 +1339,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     public void setConfigManager(ConfigInterface configManager) {
+        logger.debug("configManager: {}",configManager);
         this.configManager = configManager;
     }
 

@@ -42,16 +42,14 @@ public class BpmCaseProgressAction extends BpmCaseInstanceActionBase {
 
     public String view() {
         try {
+            if (!isKieServerConfigurationValid()) {
+                return SUCCESS;
+            }
             String frontEndMilestonesDataIn = extractWidgetConfig("frontEndMilestonesData");
             this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
-            if (null == config) {
-                logger.warn("Null configuration");
-                this.setErrorCode(ERROR_NULL_CONFIG);
-                return SUCCESS;
-            }
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());            
             String updatedMilestones = this.getCaseManager().getMilestonesList(config, this.getContainerid(), this.getCasePath()).toString();
             this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(this.getFrontEndMilestonesData(), updatedMilestones));
             //TODO JPW -- Necessary?

@@ -37,11 +37,13 @@ public class BpmProcessDiagramAction extends BpmCaseInstanceActionBase {
 
     public String view() {
         try {
+            if (!isKieServerConfigurationValid()) {
+                return SUCCESS;
+            }
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-
 
             KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
             String processInstanceid = getProcessInstanceIdFromProcessInstanceJson(caseManager.getProcessInstanceByCorrelationKey(config, this.getCasePath()));

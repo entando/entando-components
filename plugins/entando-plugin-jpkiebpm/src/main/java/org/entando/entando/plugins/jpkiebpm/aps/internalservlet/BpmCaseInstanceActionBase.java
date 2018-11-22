@@ -25,6 +25,7 @@ package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.BaseAction;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 
 public abstract class BpmCaseInstanceActionBase extends BaseAction {
 
@@ -58,7 +60,50 @@ public abstract class BpmCaseInstanceActionBase extends BaseAction {
 
     private int errorCode;
 
-    //Helper classes
+    public BpmCaseInstanceActionBase() {
+    }
+
+    //Constructor added for testing purpose
+    public BpmCaseInstanceActionBase(final CaseManager caseManager, 
+                                     final KieFormManager formManager, 
+                                     final String frontEndCaseData, 
+                                     final String channel, 
+                                     final String knowledgeSourceId, 
+                                     final String containerid, 
+                                     final String casePath, 
+                                     final String channelPath) {
+        this.caseManager = caseManager;
+        this.formManager = formManager;
+        this.frontEndCaseData = frontEndCaseData;
+        this.channel = channel;
+        this.knowledgeSourceId = knowledgeSourceId;
+        this.containerid = containerid;
+        this.casePath = casePath;
+        this.channelPath = channelPath;
+
+    }
+    
+    //Helper methods
+    public boolean isKieServerConfigurationValid() {
+        logger.debug("--------------------------------------------");
+
+        logger.debug("Check Configuration for knowledgeSourceId {}", this.getKnowledgeSourceId());
+        KieBpmConfig config;
+        try {
+            config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());            
+            if (null == config) {
+                logger.warn("The configuration is null, return false");
+                this.setErrorCode(ERROR_NULL_CONFIG);
+                return false;
+            }
+        } catch (ApsSystemException ex) {
+            logger.error("Error reading the configuration", ex);
+            return false;
+        }
+        logger.debug("The configuration is valid, return true");
+        return true;
+    }
+
     protected String extractWidgetConfig(String paramName) {
         String value = null;
         try {
