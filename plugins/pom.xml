@@ -49,7 +49,6 @@
         <module>entando-plugin-jpcmstagcloud</module>
         <!-- <module>entando-plugin-jpmyportalplus</module> -->
         <!--
-        <module>entando-plugin-jpfrontshortcut</module>
         <module>entando-plugin-jpehcache</module>-->
         <!--
                 <module>entando-plugin-jps3awsclient</module>
