@@ -173,8 +173,8 @@ public class ContentTypeDaoImpl extends AbstractDAO implements ContentTypeDao {
         contentType.setId(res.getLong(1));
         contentType.setCode(res.getString(2));
         contentType.setName(res.getString(3));
-        contentType.defaultContentModel(DefaultContentModel.fromValue(res.getString(4).toUpperCase()));
-        contentType.defaultContentModelList(DefaultContentModel.fromValue(res.getString(5).toUpperCase()));
+        contentType.defaultContentModel(DefaultContentModel.fromValue(res.getString(4)));
+        contentType.defaultContentModelList(DefaultContentModel.fromValue(res.getString(5)));
         return contentType;
     }
 }
