@@ -38,6 +38,9 @@ public class BpmCaseProgressAction extends BpmCaseInstanceActionBase {
 
     public String view() {
         try {
+            if (!isKieServerConfigurationValid()) {
+                return SUCCESS;
+            }
             String channelIn = extractWidgetConfig("channel");
             String progressBarType= extractWidgetConfig("progressBarType");
             String showNumberOfTasks = extractWidgetConfig("showNumberOfTasks");
@@ -48,12 +51,6 @@ public class BpmCaseProgressAction extends BpmCaseInstanceActionBase {
 
             KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
             
-            if (null == config) {
-                logger.warn("Null configuration");
-                this.setErrorCode(ERROR_NULL_CONFIG);
-                return SUCCESS;
-            }
-
             if (this.getCasePath() == null) {
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(config, this.getContainerid()).get(0));
             }

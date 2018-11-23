@@ -29,8 +29,10 @@ import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModel
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.plugins.jacms.contentmodel.model.ContentModelRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,36 +77,36 @@ public class ContentModelController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getContentModels(RestListRequest requestList) throws JsonProcessingException {
+    public ResponseEntity<PagedRestResponse<ContentModelDto>> getContentModels(RestListRequest requestList) throws JsonProcessingException {
         this.getContentModelValidator().validateRestListRequest(requestList, ContentModelDto.class);
         PagedMetadata<ContentModelDto> result = this.getContentModelService().getContentModels(requestList);
         this.getContentModelValidator().validateRestListResult(requestList, result);
         logger.debug("loading contentModel list -> {}", result);
-        return new ResponseEntity<>(new RestResponse(result.getBody(), null, result), HttpStatus.OK);
+        return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{modelId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getContentModel(@PathVariable Long modelId) {
+    public ResponseEntity<SimpleRestResponse<ContentModelDto>> getContentModel(@PathVariable Long modelId) {
         logger.debug("loading contentModel {}", modelId);
         ContentModelDto model = this.getContentModelService().getContentModel(modelId);
-        return new ResponseEntity<>(new RestResponse(model), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(model), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> addContentModel(@Valid @RequestBody ContentModelRequest contentModel, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<ContentModelDto>> addContentModel(@Valid @RequestBody ContentModelRequest contentModel, BindingResult bindingResult) throws ApsSystemException {
         logger.debug("adding content model");
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
         ContentModelDto dto = this.getContentModelService().addContentModel(contentModel);
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{modelId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> updateContentModel(@PathVariable Long modelId, @Valid @RequestBody ContentModelRequest contentModelRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<ContentModelDto>> updateContentModel(@PathVariable Long modelId, @Valid @RequestBody ContentModelRequest contentModelRequest, BindingResult bindingResult) {
         logger.debug("updating contentModel {}", modelId);
         //field validations
         if (bindingResult.hasErrors()) {
@@ -115,33 +117,33 @@ public class ContentModelController {
             throw new ValidationGenericException(bindingResult);
         }
         ContentModelDto role = this.getContentModelService().updateContentModel(contentModelRequest);
-        return new ResponseEntity<>(new RestResponse(role), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(role), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{modelId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> deleteContentModel(@PathVariable Long modelId) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteContentModel(@PathVariable Long modelId) throws ApsSystemException {
         logger.info("deleting content model {}", modelId);
         this.getContentModelService().removeContentModel(modelId);
         Map<String, String> result = new HashMap<>();
         result.put("modelId", String.valueOf(modelId));
-        return new ResponseEntity<>(new RestResponse(result), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(result), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{modelId}/pagereferences", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getReferences(@PathVariable Long modelId) {
+    public ResponseEntity<SimpleRestResponse<Map<String, List<String>>>> getReferences(@PathVariable Long modelId) {
         logger.debug("loading contentModel references for model {}", modelId);
         Map<String, List<String>> references = this.getContentModelService().getPageReferences(modelId);
-        return new ResponseEntity<>(new RestResponse(references), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(references), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/dictionary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getDictionary(@RequestParam(value = "typeCode", required = false) String typeCode) {
+    public ResponseEntity<SimpleRestResponse<IEntityModelDictionary>> getDictionary(@RequestParam(value = "typeCode", required = false) String typeCode) {
         logger.debug("loading contentModel dictionary for type {}", typeCode);
         IEntityModelDictionary dictionary = this.getContentModelService().getContentModelDictionary(typeCode);
-        return new ResponseEntity<>(new RestResponse(dictionary), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dictionary), HttpStatus.OK);
     }
 
 }
