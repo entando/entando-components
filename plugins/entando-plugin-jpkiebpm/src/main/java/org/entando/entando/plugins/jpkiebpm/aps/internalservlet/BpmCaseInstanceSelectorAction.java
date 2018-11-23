@@ -24,6 +24,7 @@
 package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.ArrayList;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class BpmCaseInstanceSelectorAction extends BpmCaseInstanceActionBase {
 
     private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceSelectorAction.class);
 
-    private List<String> cases;
+    private List<String> cases = new ArrayList<>();
 
     public String view() {
         return updateInstance();
@@ -47,24 +48,26 @@ public class BpmCaseInstanceSelectorAction extends BpmCaseInstanceActionBase {
 
     private String updateInstance() {
         try {
-
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             JSONObject frontEndCaseDataInjs = new JSONObject(frontEndCaseDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-
             this.setKnowledgeSourceId(frontEndCaseDataInjs.getString("knowledge-source-id"));
             this.setContainerid(frontEndCaseDataInjs.getString("container-id"));
             this.setChannelPath(this.getChannel());
+            KieBpmConfig config = this.formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());           
 
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
-            this.setCases(caseManager.getCaseInstancesList(config, this.getContainerid()));
-
+            List<String> cases = this.caseManager.getCaseInstancesList(config, this.getContainerid());
+            if (null == cases || cases.isEmpty()) {
+                logger.warn("No instances found - Check the configuration");
+                this.setErrorCode(ERROR_EMPTY_CASES);
+                return SUCCESS;
+            }
+            this.setCases(cases);
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
             return FAILURE;
         }
-
         return SUCCESS;
     }
 
@@ -75,4 +78,5 @@ public class BpmCaseInstanceSelectorAction extends BpmCaseInstanceActionBase {
     public void setCases(List<String> cases) {
         this.cases = cases;
     }
+
 }

@@ -1032,13 +1032,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return result;
     }
 
-//    public ConfigInterface getConfigManager() {
-//        return configManager;
-//    }
-//
-//    public void setConfigManager(ConfigInterface configManager) {
-//        this.configManager = configManager;
-//    }
     public IKieFormOverrideManager getOverrideManager() {
         return overrideManager;
     }
@@ -1047,24 +1040,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         this.overrideManager = overrideManager;
     }
 
-//    @Override
-//    public KieBpmConfig getConfig() {
-//        return config;
-//    }
-//
-//    @Override
-//    public void setConfig(KieBpmConfig config) {
-//        this.config = config;
-//    }
-//
-//    public KiaBpmConfigFactory getKiaBpmConfigFactory() {
-//        kiaBpmConfigFactory = new KiaBpmConfigFactory();
-//        return kiaBpmConfigFactory;
-//    }
-//
-//    public void setKiaBpmConfigFactory(KiaBpmConfigFactory kiaBpmConfigFactory) {
-//        this.kiaBpmConfigFactory = kiaBpmConfigFactory;
-//    }
     public Map<String, String> getHostNameVersionMap() {
         return this.hostNameVersionMap;
     }
@@ -1271,8 +1246,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             throw new ApsSystemException("Error task complete", t);
         }
 
+
         return result;
     }
+
 
     @Override
     public JSONObject getAllCases(KieBpmConfig config, String containerId, String status) throws ApsSystemException {
@@ -1285,6 +1262,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         logger.debug("kieFormManager getAllCases called ");
         try {
 
+
             if (status != null) {
                 queryStringParam.put("status", status);
             }
@@ -1292,14 +1270,15 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_GET_CASES_LIST)).resolveParams(containerId);
             headersMap.put("Accept", "application/json");
             KieClient client = KieApiUtil.getClientFromConfig(config);
-            result
-                    = (new KieRequestBuilder(client))
+            result =
+                    (new KieRequestBuilder(client))
                             .setEndpoint(t)
                             .setHeaders(headersMap)
                             .setRequestParams(queryStringParam)
                             .setDebug(config.getDebug()
                                     .booleanValue())
                             .doRequest();
+
 
             if (!result.isEmpty()) {
                 json = new JSONObject(result);

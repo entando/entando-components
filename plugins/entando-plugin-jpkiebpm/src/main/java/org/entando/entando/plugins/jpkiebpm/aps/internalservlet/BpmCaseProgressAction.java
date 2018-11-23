@@ -42,25 +42,24 @@ public class BpmCaseProgressAction extends BpmCaseInstanceActionBase {
 
     public String view() {
         try {
-
+            if (!isKieServerConfigurationValid()) {
+                return SUCCESS;
+            }
             String frontEndMilestonesDataIn = extractWidgetConfig("frontEndMilestonesData");
             this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());            
             String updatedMilestones = this.getCaseManager().getMilestonesList(config, this.getContainerid(), this.getCasePath()).toString();
             this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(this.getFrontEndMilestonesData(), updatedMilestones));
-
             //TODO JPW -- Necessary?
-            if(this.getCasePath() == null) {
+            if (this.getCasePath() == null) {
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(config, this.getContainerid()).get(0));
             }
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
             return FAILURE;
         }
-
         return SUCCESS;
     }
 

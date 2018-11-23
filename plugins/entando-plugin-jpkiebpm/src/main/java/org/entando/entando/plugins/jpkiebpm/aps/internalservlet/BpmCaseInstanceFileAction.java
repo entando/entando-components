@@ -41,19 +41,20 @@ public class BpmCaseInstanceFileAction extends BpmCaseInstanceActionBase {
 
     public String view() {
         try {
+            if (!isKieServerConfigurationValid()) {
+                return SUCCESS;
+            }       
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
             this.setFrontEndCaseData(frontEndCaseDataIn);
             String channelIn = extractWidgetConfig("channel");
             this.setChannel(channelIn);
-
             KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
+     
             this.setCasefile(this.getCaseManager().getCaseFile(config, this.getContainerid(), this.getCasePath()).toString());
-
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
             return FAILURE;
         }
-
         return SUCCESS;
     }
 
