@@ -14,45 +14,18 @@
 package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
 import com.agiletec.aps.system.common.tree.ITreeNode;
-import org.entando.entando.aps.system.services.searchengine.FacetedContentsResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.lucene.document.DateTools;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexNotFoundException;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.MatchAllDocsQuery;
-import org.apache.lucene.search.PhraseQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TermRangeQuery;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.SimpleFSDirectory;
+import org.apache.lucene.document.*;
+import org.apache.lucene.index.*;
+import org.apache.lucene.search.*;
+import org.apache.lucene.store.*;
 import org.apache.lucene.util.BytesRef;
-import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.aps.system.services.searchengine.*;
+import org.slf4j.*;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * Data Access Object dedita alle operazioni di ricerca 
@@ -61,8 +34,10 @@ import org.slf4j.LoggerFactory;
  */
 public class SearcherDAO implements ISearcherDAO {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(SearcherDAO.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(SearcherDAO.class);
+
+	private File indexDir;
+
 	/**
 	 * Inizializzazione del searcher.
 	 * @param dir La cartella locale contenitore dei dati persistenti.
@@ -70,11 +45,11 @@ public class SearcherDAO implements ISearcherDAO {
 	 */
 	@Override
 	public void init(File dir) throws ApsSystemException {
-		this._indexDir = dir;
+		this.indexDir = dir;
 	}
 	
 	private IndexSearcher getSearcher() throws IOException {
-		FSDirectory directory = new SimpleFSDirectory(_indexDir);
+		FSDirectory directory = new SimpleFSDirectory(indexDir.toPath());
 		IndexReader reader = DirectoryReader.open(directory);
 		IndexSearcher searcher = new IndexSearcher(reader);
 		return searcher;
@@ -130,7 +105,7 @@ public class SearcherDAO implements ISearcherDAO {
 			} else {
 				query = this.createQuery(filters, categories, allowedGroups);
 			}
-			TopDocs topDocs = searcher.search(query, null, 1000);
+			TopDocs topDocs = searcher.search(query, 1000);
 			ScoreDoc[] scoreDocs = topDocs.scoreDocs;
 			Map<String, Integer> occurrences = new HashMap<String, Integer>();
 			if (scoreDocs.length > 0) {
@@ -160,9 +135,9 @@ public class SearcherDAO implements ISearcherDAO {
 			result.setOccurrences(occurrences);
 			result.setContentsId(contentsId);
     	} catch (IndexNotFoundException inf) {
-			_logger.error("no index was found in the Directory", inf);
+			logger.error("no index was found in the Directory", inf);
     	} catch (Throwable t) {
-			_logger.error("Error extracting documents", t);
+			logger.error("Error extracting documents", t);
     		throw new ApsSystemException("Error extracting documents", t);
     	} finally {
     		this.releaseResources(searcher);
@@ -172,7 +147,7 @@ public class SearcherDAO implements ISearcherDAO {
 	
 	protected Query createQuery(SearchEngineFilter[] filters, 
 			Collection<ITreeNode> categories, Collection<String> allowedGroups) {
-		BooleanQuery mainQuery = new BooleanQuery();
+        BooleanQuery.Builder mainQuery = new BooleanQuery.Builder();
 		if (filters != null && filters.length > 0) {
 			for (int i = 0; i < filters.length; i++) {
 				SearchEngineFilter filter = filters[i];
@@ -187,17 +162,17 @@ public class SearcherDAO implements ISearcherDAO {
 			if (!allowedGroups.contains(Group.FREE_GROUP_NAME)) {
 				allowedGroups.add(Group.FREE_GROUP_NAME);
 			}
-			BooleanQuery groupsQuery = new BooleanQuery();
+			BooleanQuery.Builder groupsQuery = new BooleanQuery.Builder();
 			Iterator<String> iterGroups = allowedGroups.iterator();
 			while (iterGroups.hasNext()) {
 				String group = iterGroups.next();
 				TermQuery groupQuery = new TermQuery(new Term(IIndexerDAO.CONTENT_GROUP_FIELD_NAME, group));
 				groupsQuery.add(groupQuery, BooleanClause.Occur.SHOULD);
 			}
-			mainQuery.add(groupsQuery, BooleanClause.Occur.MUST);
+			mainQuery.add(groupsQuery.build(), BooleanClause.Occur.MUST);
 		}
 		if (null != categories && !categories.isEmpty()) {
-			BooleanQuery categoriesQuery = new BooleanQuery();
+			BooleanQuery.Builder categoriesQuery = new BooleanQuery.Builder();
 			Iterator<ITreeNode> cateIter = categories.iterator();
 			while (cateIter.hasNext()) {
 				ITreeNode category = cateIter.next();
@@ -205,13 +180,13 @@ public class SearcherDAO implements ISearcherDAO {
 				TermQuery categoryQuery = new TermQuery(new Term(IIndexerDAO.CONTENT_CATEGORY_FIELD_NAME, path));
 				categoriesQuery.add(categoryQuery, BooleanClause.Occur.MUST);
 			}
-			mainQuery.add(categoriesQuery, BooleanClause.Occur.MUST);
+			mainQuery.add(categoriesQuery.build(), BooleanClause.Occur.MUST);
 		}
-		return mainQuery;
+		return mainQuery.build();
 	}
     
 	private Query createQuery(SearchEngineFilter filter) {
-		BooleanQuery fieldQuery = new BooleanQuery();
+		BooleanQuery.Builder fieldQuery = new BooleanQuery.Builder();
 		String key = filter.getKey();
 		String attachmentKey = key + IIndexerDAO.ATTACHMENT_FIELD_SUFFIX;
 		Object value = filter.getValue();
@@ -234,31 +209,31 @@ public class SearcherDAO implements ISearcherDAO {
 						TermQuery term = new TermQuery(new Term(key, values[i].toLowerCase()));
 						//NOTE: search lower case....
 						if (filter.isIncludeAttachments()) {
-							BooleanQuery compositeQuery = new BooleanQuery();
+							BooleanQuery.Builder compositeQuery = new BooleanQuery.Builder();
 							compositeQuery.add(term, BooleanClause.Occur.SHOULD);
 							TermQuery termAttachment = new TermQuery(new Term(attachmentKey, values[i].toLowerCase()));
 							compositeQuery.add(termAttachment, BooleanClause.Occur.SHOULD);
-							fieldQuery.add(compositeQuery, bc);
+							fieldQuery.add(compositeQuery.build(), bc);
 						} else {
 							fieldQuery.add(term, bc);
 						}
 					}
 				} else {
-					PhraseQuery phraseQuery = new PhraseQuery();
+					PhraseQuery.Builder phraseQuery = new PhraseQuery.Builder();
 					for (int i = 0; i < values.length; i++) {
 						//NOTE: search lower case....
 						phraseQuery.add(new Term(key, values[i].toLowerCase()));
 					}
 					if (filter.isIncludeAttachments()) {
-						fieldQuery.add(phraseQuery, BooleanClause.Occur.SHOULD);
-						PhraseQuery phraseQuery2 = new PhraseQuery();
+						fieldQuery.add(phraseQuery.build(), BooleanClause.Occur.SHOULD);
+						PhraseQuery.Builder phraseQuery2 = new PhraseQuery.Builder();
 						for (int i = 0; i < values.length; i++) {
 							//NOTE: search lower case....
 							phraseQuery2.add(new Term(attachmentKey, values[i].toLowerCase()));
 						}
-						fieldQuery.add(phraseQuery2, BooleanClause.Occur.SHOULD);
+						fieldQuery.add(phraseQuery2.build(), BooleanClause.Occur.SHOULD);
 					} else {
-						return phraseQuery;
+						return phraseQuery.build();
 					}
 				}
 			} else if (value instanceof Date) {
@@ -292,14 +267,13 @@ public class SearcherDAO implements ISearcherDAO {
 				fieldQuery.add(range, BooleanClause.Occur.MUST);
 			}
 		}
-		return fieldQuery;
+		return fieldQuery.build();
 	}
 	
 	@Override
     public void close() {
     	// nothing to do
     }
-    
-    private File _indexDir;
+
     
 }

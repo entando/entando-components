@@ -1,25 +1,13 @@
-/*
- *
- * <Your licensing text here>
- *
- */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.OverrideList;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
+
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
 
 public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormOverrideDAO {
 
@@ -107,11 +95,15 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 			stat = conn.prepareStatement(ADD_KIEFORMOVERRIDE);
 			int index = 1;
 			stat.setInt(index++, kieFormOverride.getId());
+			stat.setInt(index++, kieFormOverride.getWidgetInfoId());
+                        stat.setBoolean(index++, kieFormOverride.isOnline());
 			Timestamp dateTimestamp = new Timestamp(kieFormOverride.getDate().getTime());
 			stat.setTimestamp(index++, dateTimestamp);
 			stat.setString(index++, kieFormOverride.getField());
 			stat.setString(index++, kieFormOverride.getContainerId());
 			stat.setString(index++, kieFormOverride.getProcessId());
+			stat.setString(index++, kieFormOverride.getSourceId());
+                        stat.setBoolean(index++, kieFormOverride.isActive());
 			String txt = JAXBHelper.marshall(kieFormOverride.getOverrides(), true, false);
 			stat.setString(index++, txt);
 			stat.executeUpdate();
@@ -175,11 +167,15 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 			stat = conn.prepareStatement(UPDATE_KIEFORMOVERRIDE);
 			int index = 1;
 
+			stat.setInt(index++, kieFormOverride.getWidgetInfoId());
+			stat.setBoolean(index++, kieFormOverride.isOnline());
 			Timestamp dateTimestamp = new Timestamp(kieFormOverride.getDate().getTime());
 			stat.setTimestamp(index++, dateTimestamp);
 			stat.setString(index++, kieFormOverride.getField());
 			stat.setString(index++, kieFormOverride.getContainerId());
 			stat.setString(index++, kieFormOverride.getProcessId());
+			stat.setString(index++, kieFormOverride.getSourceId());
+			stat.setBoolean(index++, kieFormOverride.isActive());
 			String txt = JAXBHelper.marshall(kieFormOverride.getOverrides(), true, false);
 			stat.setString(index++, txt);
 			stat.setInt(index++, kieFormOverride.getId());
@@ -268,6 +264,8 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 		try {
 			kieFormOverride = new KieFormOverride();
 			kieFormOverride.setId(res.getInt("id"));
+			kieFormOverride.setWidgetInfoId(res.getInt("widgetinfoid"));
+                        kieFormOverride.setOnline(res.getBoolean("online"));
 			Timestamp dateValue = res.getTimestamp("date");
 			if (null != dateValue) {
 				kieFormOverride.setDate(new Date(dateValue.getTime()));
@@ -275,6 +273,8 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 			kieFormOverride.setField(res.getString("field"));
 			kieFormOverride.setContainerId(res.getString("containerid"));
 			kieFormOverride.setProcessId(res.getString("processid"));
+			kieFormOverride.setSourceId(res.getString("sourceid"));
+                        kieFormOverride.setActive(res.getBoolean("active"));
 			String txt = res.getString("override");
 			OverrideList ol = (OverrideList) JAXBHelper.unmarshall(txt, OverrideList.class, true, false);
 			kieFormOverride.setOverrides(ol);
@@ -284,13 +284,13 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 		return kieFormOverride;
 	}
 
-	private static final String ADD_KIEFORMOVERRIDE = "INSERT INTO jpkiebpm_kieformoverride (id, date, field, containerid, processid, override ) VALUES (?, ?, ?, ?, ?, ? )";
+	private static final String ADD_KIEFORMOVERRIDE = "INSERT INTO jpkiebpm_kieformoverride (id, widgetinfoid, online, date, field, containerid, processid, sourceid, active, override) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	private static final String UPDATE_KIEFORMOVERRIDE = "UPDATE jpkiebpm_kieformoverride SET  date=?,  field=?,  containerid=?,  processid=?, override=? WHERE id = ?";
+	private static final String UPDATE_KIEFORMOVERRIDE = "UPDATE jpkiebpm_kieformoverride SET widgetinfoid=?, online=?, date=?, field=?, containerid=?, processid=?, sourceid=?, active=?, override=? WHERE id = ?";
 
 	private static final String DELETE_KIEFORMOVERRIDE = "DELETE FROM jpkiebpm_kieformoverride WHERE id = ?";
 
-	private static final String LOAD_KIEFORMOVERRIDE = "SELECT id, date, field, containerid, processid, override  FROM jpkiebpm_kieformoverride WHERE id = ?";
+	private static final String LOAD_KIEFORMOVERRIDE = "SELECT id, widgetinfoid, online, date, field, containerid, processid, sourceid, active, override FROM jpkiebpm_kieformoverride WHERE id = ?";
 
 	private static final String LOAD_KIEFORMOVERRIDES_ID = "SELECT id FROM jpkiebpm_kieformoverride";
 

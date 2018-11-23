@@ -21,9 +21,7 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.*;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
@@ -36,18 +34,14 @@ import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
-import org.entando.entando.aps.system.services.dataobjectdispenser.DataObjectRenderizationInfo;
-import org.entando.entando.aps.system.services.dataobjectdispenser.IDataObjectDispenser;
+import org.entando.entando.aps.system.services.dataobjectdispenser.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.NullFormField;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
+import org.slf4j.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -60,6 +54,7 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
     private DataObject dataObject;
 
     private IKieFormManager formManager;
+    private IKieFormOverrideManager formOverrideManager;
     private II18nManager i18nManager;
     private IDataObjectManager dataObjectManager;
     private IDataObjectDispenser dataObjectDispenser;
@@ -150,11 +145,10 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
                 _logger.debug("SAVE attribute.getName() {}", attribute.getName());
                 if (null != attribute.getType()) {
                     final String value = attribute.getName();
-                    _logger.debug("SAVE attribute.getType() {}:{}", attribute.getType(),value );
+                    _logger.debug("SAVE attribute.getType() {}:{}", attribute.getType(), value);
 
                     toBpm.put(attribute.getName(), this.getRequest().getParameter(attribute.getType() + ":" + value));
-                }
-                else {
+                } else {
                     _logger.debug("SAVE attribute.getType() NULL");
                 }
             }
@@ -206,13 +200,14 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
 
                 //validationResult.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT));
             }
-            }
         }
-        /**
-         * Returns the current session DataObject.
-         *
-         * @return The current session DataObject.
-         */
+    }
+
+    /**
+     * Returns the current session DataObject.
+     *
+     * @return The current session DataObject.
+     */
     public DataObject getDataObject() {
         if (this.dataObject == null) {
             try {
@@ -371,6 +366,14 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
 
     public void setFormManager(IKieFormManager formManager) {
         this.formManager = formManager;
+    }
+
+    public IKieFormOverrideManager getFormOverrideManager() {
+        return formOverrideManager;
+    }
+
+    public void setFormOverrideManager(IKieFormOverrideManager formOverrideManager) {
+        this.formOverrideManager = formOverrideManager;
     }
 
     protected II18nManager getI18nManager() {

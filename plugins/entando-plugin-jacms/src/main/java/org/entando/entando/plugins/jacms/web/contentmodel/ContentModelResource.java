@@ -14,31 +14,17 @@
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
 import com.agiletec.aps.system.services.role.Permission;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelReference;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import java.util.List;
-import java.util.Map;
-import javax.validation.Valid;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import io.swagger.annotations.*;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.entando.entando.web.common.annotation.RestAccessControl;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.RestResponse;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.entando.entando.web.common.model.*;
+import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.*;
 
 @Api(tags={ "content-model-controller" })
 @ApiResponses({
@@ -56,7 +42,7 @@ public interface ContentModelResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<RestResponse<PagedMetadata<ContentModelDto>>> getContentModels(RestListRequest requestList);
+    ResponseEntity<PagedRestResponse<ContentModelDto>> getContentModels(RestListRequest requestList);
     
     @ApiOperation(value = "Retrieves a content model")
     @ApiResponses(value = {
@@ -65,7 +51,7 @@ public interface ContentModelResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/{modelId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<RestResponse<ContentModelDto>> getContentModel(@PathVariable Long modelId);
+    ResponseEntity<SimpleRestResponse<ContentModelDto>> getContentModel(@PathVariable Long modelId);
     
     @ApiOperation(value = "Adds a new content model")
     @ApiResponses({
@@ -73,7 +59,7 @@ public interface ContentModelResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<RestResponse<ContentModelDto>> addContentModel(@Valid @RequestBody ContentModelDto contentModel, BindingResult bindingResult);
+    ResponseEntity<SimpleRestResponse<ContentModelDto>> addContentModel(@Valid @RequestBody ContentModelDto contentModel, BindingResult bindingResult);
     
     @ApiOperation(value = "Updates an existing content model")
     @ApiResponses({
@@ -81,7 +67,7 @@ public interface ContentModelResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PutMapping(value = "/{modelId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<RestResponse<ContentModelDto>> updateContentModel(@PathVariable Long modelId, @Valid @RequestBody ContentModelDto contentModelRequest, BindingResult bindingResult);
+    ResponseEntity<SimpleRestResponse<ContentModelDto>> updateContentModel(@PathVariable Long modelId, @Valid @RequestBody ContentModelDto contentModelRequest, BindingResult bindingResult);
     
     @ApiOperation(value = "Deletes a content model")
     @ApiResponses({
@@ -89,7 +75,7 @@ public interface ContentModelResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @DeleteMapping(value = "/{modelId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<RestResponse<Map<String, String>>> deleteContentModel(@PathVariable Long modelId);
+    ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteContentModel(@PathVariable Long modelId);
     
     @ApiOperation(value = "Returns the references (pages and widgets) of a content model")
     @ApiResponses({
@@ -97,7 +83,7 @@ public interface ContentModelResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/{modelId}/pagereferences", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<RestResponse<List<ContentModelReference>>> getReferences(@PathVariable Long modelId);
+    ResponseEntity<SimpleRestResponse<List<ContentModelReference>>> getReferences(@PathVariable Long modelId);
     
     @ApiOperation(value = "Returns dictionary containing Velocity instructions for the editor")
     @ApiResponses({
@@ -105,5 +91,5 @@ public interface ContentModelResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/dictionary", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<RestResponse<IEntityModelDictionary>> getDictionary(@RequestParam(value = "typeCode", required = false) String typeCode);
+    ResponseEntity<SimpleRestResponse<IEntityModelDictionary>> getDictionary(@RequestParam(value = "typeCode", required = false) String typeCode);
 }

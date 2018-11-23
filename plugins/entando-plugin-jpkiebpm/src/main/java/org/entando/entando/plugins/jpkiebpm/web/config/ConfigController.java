@@ -28,34 +28,22 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.IKieBpmService;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.model.DatatableWidgetConfigDto;
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
 import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigRequest;
 import org.entando.entando.web.common.annotation.RestAccessControl;
-import org.entando.entando.web.common.exceptions.ValidationConflictException;
-import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.RestError;
-import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.exceptions.*;
+import org.entando.entando.web.common.model.*;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.*;
+import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class ConfigController {
@@ -106,19 +94,19 @@ public class ConfigController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/serverConfigs", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getConfigs() throws JsonProcessingException {
+    public ResponseEntity<SimpleRestResponse<List<KieServerConfigDto>>> getConfigs() throws JsonProcessingException {
 
         List<KieServerConfigDto> result = this.getKieConfigService().getConfigs();
 
         logger.debug("Main Response -> {}", result);
-        return new ResponseEntity<>(new RestResponse(result), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(result), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getConfig(@PathVariable String configCode) {
+    public ResponseEntity<SimpleRestResponse<KieServerConfigDto>> getConfig(@PathVariable String configCode) {
         KieServerConfigDto group = this.getKieConfigService().getConfig(configCode);
-        return new ResponseEntity<>(new RestResponse(group), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(group), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
@@ -166,35 +154,35 @@ public class ConfigController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> deleteConfig(@PathVariable String configCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteConfig(@PathVariable String configCode) throws ApsSystemException {
         logger.info("deleting {}", configCode);
         this.getKieConfigService().removeConfig(configCode);
         Map<String, String> result = new HashMap<>();
         result.put("code", configCode);
-        return new ResponseEntity<>(new RestResponse(result), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(result), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/testServerConfigs", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> testConfig(@Valid @RequestBody KieServerConfigDto configRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> testConfig(@Valid @RequestBody KieServerConfigDto configRequest, BindingResult bindingResult) {
         logger.info("test server {}", configRequest);
         String testResult = this.getKieConfigService().testServerConfigs(configRequest);
         Map<String, String> result = new HashMap<>();
         result.put("result", testResult);
-        return new ResponseEntity<>(new RestResponse(result), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(result), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/testAllServerConfigs", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> testAllConfig(@Valid @RequestBody KieServerConfigDto configRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> testAllConfig(@Valid @RequestBody KieServerConfigDto configRequest, BindingResult bindingResult) {
         logger.info("test all servers");
         Map<String, String> testResult = this.getKieConfigService().testAllServerConfigs();
-        return new ResponseEntity<>(new RestResponse(testResult), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(testResult), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/deploymentUnits", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getDeploymentUnits(@PathVariable String configCode) {
+    public ResponseEntity<SimpleRestResponse<List<KieContainer>>> getDeploymentUnits(@PathVariable String configCode) {
 
         List<KieContainer> containers = null;
         try {
@@ -205,12 +193,12 @@ public class ConfigController {
             logger.error("Failed to fetch container ids ", e);
         }
 
-        return new ResponseEntity<>(new RestResponse(containers), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(containers), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/processList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getProcessList(@PathVariable String configCode) {
+    public ResponseEntity<SimpleRestResponse<List<KieProcess>>> getProcessList(@PathVariable String configCode) {
 
         List<KieProcess> processes = new ArrayList<KieProcess>();
         try {
@@ -222,12 +210,12 @@ public class ConfigController {
             logger.error("Failed to fetch container ids ", e);
         }
 
-        return new ResponseEntity<>(new RestResponse(processes), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(processes), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/caseDefinitions/{deploymentUnit:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getCaseDefinitions(@PathVariable String configCode, @PathVariable String deploymentUnit) {
+    public ResponseEntity<SimpleRestResponse<Map<String, Object>>> getCaseDefinitions(@PathVariable String configCode, @PathVariable String deploymentUnit) {
 
         JSONObject cases = null;
         try {
@@ -242,12 +230,12 @@ public class ConfigController {
         if (cases == null) {
             cases = new JSONObject();
         }
-        return new ResponseEntity<>(new RestResponse(cases.toMap()), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(cases.toMap()), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/serverConfigs/{configCode}/processesList/{processId:.+}/overrides", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getProcessOverrides(@PathVariable String configCode, @PathVariable String processId) {
+    public ResponseEntity<SimpleRestResponse<List<KieFormOverride>>> getProcessOverrides(@PathVariable String configCode, @PathVariable String processId) {
 
         List<KieFormOverride> overrides = new ArrayList<>();
         try {
@@ -256,31 +244,31 @@ public class ConfigController {
             logger.error("Failed to fetch container ids ", e);
         }
 
-        return new ResponseEntity<>(new RestResponse(overrides), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(overrides), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/{configId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getDataTableWIdgetConfig(@PathVariable int configId) {
+    public ResponseEntity<SimpleRestResponse<DatatableWidgetConfigDto>> getDataTableWIdgetConfig(@PathVariable int configId) {
         logger.debug("loading datatable widget config with id -> {}", configId);
 
         DatatableWidgetConfigDto dto = this.getKieBpmService().getDataTableWidgetConfig(configId);
         logger.debug("Main Result -> {}", dto);
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> createDataTableWIdgetConfig(@RequestBody DatatableWidgetConfigRequest req) {
+    public ResponseEntity<SimpleRestResponse<DatatableWidgetConfigDto>> createDataTableWIdgetConfig(@RequestBody DatatableWidgetConfigRequest req) {
         logger.debug("adding datatable widget config -> {}", req);
         DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTableWidgetConfig(req);
         logger.debug("Main Result -> {}", dto);
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/{configId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> updateDataTableWIdgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
+    public ResponseEntity<SimpleRestResponse<DatatableWidgetConfigDto>> updateDataTableWIdgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
         logger.debug("updating datatable widget config -> {}", req);
         if (configId != req.getId()) {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(configId, "configId");
@@ -289,21 +277,21 @@ public class ConfigController {
         }
         DatatableWidgetConfigDto dto = this.getKieBpmService().updateDataTableWidgetConfig(req);
         logger.debug("Main Result -> {}", dto);
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/{configId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> deleteDataTableWIdgetConfig(@PathVariable int configId) {
+    public ResponseEntity<SimpleRestResponse<DatatableWidgetConfigDto>> deleteDataTableWIdgetConfig(@PathVariable int configId) {
         logger.debug("deleting datatable widget config with id -> {}", configId);
         DatatableWidgetConfigDto dto = this.getKieBpmService().deleteDataTableWidgetConfig(configId);
         logger.debug("Main Result -> {}", dto);
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatypeWidget/{configId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> createDataTypeWidgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
+    public ResponseEntity<SimpleRestResponse<DatatableWidgetConfigDto>> createDataTypeWidgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
         logger.debug("adding datatype widget config -> {}", req);
 
         DatatableWidgetConfigDto dto = null;
@@ -314,12 +302,12 @@ public class ConfigController {
             logger.error("failed to create data type widget config ",e);
         }
         logger.debug("Main Result -> {}", dto);
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatypeWidget/{configId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> updateDataTypeWidgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
+    public ResponseEntity<SimpleRestResponse<DatatableWidgetConfigDto>> updateDataTypeWidgetConfig(@PathVariable int configId, @RequestBody DatatableWidgetConfigRequest req) {
         logger.debug("updating datatype widget config -> {}", req);
         if (configId != req.getId()) {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(configId, "configId");
@@ -336,12 +324,12 @@ public class ConfigController {
             logger.error("Failed to update data type widget config ",e);
         }
         logger.debug("Main Result -> {}", dto);
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/{configId}/form", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> chooseForm(@PathVariable int configId) {
+    public ResponseEntity<SimpleRestResponse<DatatableWidgetConfigDto>> chooseForm(@PathVariable int configId) {
         logger.debug("loading task list");
         DatatableWidgetConfigDto dto = null;
         try {
@@ -351,12 +339,12 @@ public class ConfigController {
             logger.error("Failed to choose form ",e);
         }
         logger.debug("Main Result -> {}", dto);
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/kiebpm/datatableWidget/{configId}/processform", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> chooseProcessForm(@PathVariable int configId) {
+    public ResponseEntity<SimpleRestResponse<DatatableWidgetConfigDto>> chooseProcessForm(@PathVariable int configId) {
         logger.debug("loading process list");
 
         DatatableWidgetConfigDto dto = null;
@@ -367,6 +355,6 @@ public class ConfigController {
         }catch(Exception e) {
             logger.error("Failed to choose process form ",e);
         }
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 }

@@ -136,7 +136,7 @@
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
-
+        
         <action name="changeKnowledgeSourceForm*" class="jpkiebpmBpmFormWidgetAction" method="changeKnowledgeSourceForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
@@ -144,7 +144,22 @@
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
-
+        
+        <action name="addFormOverride" class="jpkiebpmBpmFormWidgetAction" method="addFormOverride">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="deleteFormOverride*" class="jpkiebpmBpmFormWidgetAction" method="deleteFormOverride">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
     </package>
 
 

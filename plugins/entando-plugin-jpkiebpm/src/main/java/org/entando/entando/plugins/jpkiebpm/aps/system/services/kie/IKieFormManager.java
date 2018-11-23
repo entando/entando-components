@@ -27,12 +27,9 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager.TASK_STATES;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Entando
@@ -158,6 +155,18 @@ public interface IKieFormManager {
      * @throws ApsSystemException
      */
     String getProcInstDiagramImage(KieBpmConfig config, String containerId, String processId) throws ApsSystemException;
+
+
+    
+    /**
+     * Get the process diagram
+     *
+     * @param containerId
+     * @param processId
+     * @return
+     * @throws ApsSystemException
+     */
+    String getProcInstDiagramImage(KieBpmConfig config, String containerId, String processId, Long pInstanceId) throws ApsSystemException;
 
     /**
      * Get the data of the current task

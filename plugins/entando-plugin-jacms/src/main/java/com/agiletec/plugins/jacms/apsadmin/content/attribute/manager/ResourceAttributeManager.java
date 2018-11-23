@@ -13,8 +13,7 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute.manager;
 
-import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
-import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.*;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -24,10 +23,10 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.Ab
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.util.ICmsAttributeErrorCodes;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.opensymphony.xwork2.ActionSupport;
-import java.util.List;
-import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Classe manager degli attributi tipo risorsa (Image o Attach).
@@ -40,18 +39,21 @@ public class ResourceAttributeManager extends TextAttributeManager {
     protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
         super.updateAttribute(attribute, tracer, request);
         IResourceManager resourceManager = (IResourceManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.RESOURCE_MANAGER, request);
+        AbstractResourceAttribute resourceAttribute = (AbstractResourceAttribute) attribute;
+        if (null != resourceAttribute.getMetadatas()) {
+            resourceAttribute.getMetadatas().clear();
+        }
         Map<String, List<String>> mapping = resourceManager.getMetadataMapping();
         if (null == mapping || mapping.isEmpty()) {
             return;
         }
-        AbstractResourceAttribute resourceAttribute = (AbstractResourceAttribute) attribute;
         List<Lang> langs = this.getLangManager().getLangs();
         for (Lang currentLang : langs) {
             tracer.setLang(currentLang);
             String formFieldPrefix = tracer.getFormFieldName(attribute) + "_metadata_";
             mapping.keySet().stream().forEach(key -> {
                 String value = request.getParameter(formFieldPrefix + key);
-                if (null != value) {
+                if (!StringUtils.isBlank(value)) {
                     resourceAttribute.setMetadata(key, currentLang.getCode(), value);
                 }
             });

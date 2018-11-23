@@ -4,25 +4,17 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
+import org.slf4j.*;
 
 import java.util.*;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKieContainerToListToJson;
 
-/**
- *
- */
 public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
-
 
     private static final Logger logger = LoggerFactory.getLogger(BpmProcessDatatableWidgetAction.class);
     private IKieFormManager formManager;
-    private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
 
     private String knowledgeSourcePath;
@@ -92,16 +84,6 @@ public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
     @Override
     public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
-    }
-
-    @Override
-    public IKieFormOverrideManager getKieFormOverrideManager() {
-        return kieFormOverrideManager;
-    }
-
-    @Override
-    public void setKieFormOverrideManager(IKieFormOverrideManager kieFormOverrideManager) {
-        this.kieFormOverrideManager = kieFormOverrideManager;
     }
 
     public String getKnowledgeSourcePath() {

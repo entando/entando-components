@@ -1,25 +1,14 @@
 package org.entando.entando.plugins.jpkiebpm;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormOverrideManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestBpmToFormHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestFormToBpmHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestJsonHelper;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieContainer;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.TestPamProcessForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcesseInstance;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcesses;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieTask;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestPayload;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.TestBpmOverrides;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcessForm;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.TestPamProcessForm;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.TestBpmFormWidgetAction;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilderTest;
-import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerIntegrationTest;
-import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerUnitTest;
+import org.entando.entando.plugins.jpkiebpm.web.config.*;
 
 public class AllTests {
 
@@ -39,6 +28,7 @@ public class AllTests {
         suite.addTestSuite(TestFormToBpmHelper.class);
         suite.addTestSuite(TestJsonHelper.class);
         suite.addTestSuite(TestKieFormOverrideManager.class);
+        suite.addTestSuite(TestBpmFormWidgetAction.class);
         suite.addTestSuite(TestBpmOverrides.class);
         suite.addTestSuite(TestBpmOverrides.class);
         suite.addTestSuite(TestJpkiebpmLabelsProperties.class);

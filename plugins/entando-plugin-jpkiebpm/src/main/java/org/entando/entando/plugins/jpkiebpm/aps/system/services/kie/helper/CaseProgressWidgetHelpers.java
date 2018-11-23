@@ -23,17 +23,12 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.UUID;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.json.*;
+import org.slf4j.*;
+
+import java.time.*;
+import java.util.*;
 
 /**
  *
@@ -137,10 +132,13 @@ public class CaseProgressWidgetHelpers {
         return uuid;
     }
     
-    public static String getProcessInstanceIdFromProcessInstanceJson(JSONObject processInstanceJson){
-        
-        String processid = processInstanceJson.getString("process-id");
-        
-        return processid;
+    public static String getProcessIdFromProcessInstanceJson(JSONObject processInstanceJson) {
+        String processId = processInstanceJson.getString("process-id");
+        return processId;
+    }
+    
+    public static Long getProcessInstanceIdFromProcessInstanceJson(JSONObject processInstanceJson){          
+        Long processInstanceId = processInstanceJson.getLong("process-instance-id");        
+        return processInstanceId;
     }
 }

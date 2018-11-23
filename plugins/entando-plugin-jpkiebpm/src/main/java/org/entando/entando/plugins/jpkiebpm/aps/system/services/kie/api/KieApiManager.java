@@ -27,29 +27,19 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
-import com.agiletec.aps.system.services.lang.ILangManager;
-import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.lang.*;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
-import org.entando.entando.aps.system.services.api.model.ApiError;
-import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.aps.system.services.api.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiSignal;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -72,16 +62,12 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         fieldMandatory.put("processDefinitionId", Boolean.TRUE);
     }
 
-    protected Map<String, KieFormOverride> getFormOverridesMap(String containerId, String processId, String overrides) throws ApsSystemException {
+    protected Map<String, KieFormOverride> getFormOverridesMap(int widgetInfoId) throws ApsSystemException {
         Map<String, KieFormOverride> map = new HashMap<>();
-        String[] overridesList = new String[0];
-        if (null != overrides) {
-            overridesList = overrides.split(",");
-        }
-        List<KieFormOverride> overrideList = this.getKieFormOverrideManager().getFormOverrides(containerId, processId);
+        List<KieFormOverride> overrideList = this.getKieFormOverrideManager().getFormOverrides(widgetInfoId, true);
         if (null != overrideList) {
             for (KieFormOverride override : overrideList) {
-                if (ArrayUtils.contains(overridesList, String.valueOf(override.getId()))) {
+                if (override.isActive()) {
                     map.put(override.getField(), override);
                 }
             }
@@ -96,7 +82,8 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         final String configId = properties.getProperty("configId");
 
         if (null != configId) {
-            final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+            Integer widgetInfoId = Integer.parseInt(configId);
+            final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId);
 
             final String information = bpmWidgetInfo.getInformationOnline();
             if (StringUtils.isNotEmpty(information)) {
@@ -108,13 +95,17 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                     logger.error("Error load configuration  {} ", e.getMessage());
                 }
 
-                final String containerId = config.getProperty("containerId");
-                final String processId = config.getProperty("processId");
-                final String overrideList = config.getProperty("overrides");
+                String containerId = config.getProperty("containerId");
+                String processId = config.getProperty("processId");
+                String sourceId = config.getProperty("kieSourceId");
                 String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
 
-                //TODO validate this
-                KieBpmConfig bpmConfig = kieFormManager.getKieServerConfigurations().get(configId);
+                KieBpmConfig bpmConfig = kieFormManager.getKieServerConfigurations().get(sourceId);
+                if(bpmConfig == null){
+                    String msg = String.format("Kie server configuration '%s' not found", sourceId);
+                    throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
+                }
+                
                 KieProcessFormQueryResult processForm = this.getKieFormManager().getProcessForm(bpmConfig, containerId, processId);
                 if (null == processForm) {
                     String msg = String.format("No form found with containerId %s and processId %s does not exist", containerId, processId);
@@ -122,11 +113,10 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                 }
 
                 this.setLabels(processForm, langCode);
-                form = KieApiUtil.createForm(processForm, this.getI18nManager(), langCode, this.getFormOverridesMap(containerId, processId, overrideList));
+                form = KieApiUtil.createForm(processForm, this.getI18nManager(), langCode, this.getFormOverridesMap(widgetInfoId));
                 form.setProcessId(processId);
                 form.setContainerId(containerId);
             }
-
         }
 
         return form;
