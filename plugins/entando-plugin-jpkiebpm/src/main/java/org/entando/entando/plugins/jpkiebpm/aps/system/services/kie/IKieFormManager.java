@@ -159,6 +159,18 @@ public interface IKieFormManager {
      */
     String getProcInstDiagramImage(KieBpmConfig config, String containerId, String processId) throws ApsSystemException;
 
+
+    
+    /**
+     * Get the process diagram
+     *
+     * @param containerId
+     * @param processId
+     * @return
+     * @throws ApsSystemException
+     */
+    String getProcInstDiagramImage(KieBpmConfig config, String containerId, String processId, Long pInstanceId) throws ApsSystemException;
+
     /**
      * Get the data of the current task
      *

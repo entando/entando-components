@@ -17,6 +17,21 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_c
             <webapp>kie-server</webapp>
          </value>
       </entry>
+      <entry>
+         <key>2</key>
+         <value>
+            <active>true</active>
+            <id>2</id>
+            <name>test2</name>
+            <username>krisv</username>
+            <password>krisv</password>
+            <hostname>localhost</hostname>
+            <schema>http</schema>
+            <port>8082</port>
+            <timeout>1000</timeout>
+            <webapp>kie-server</webapp>
+         </value>
+      </entry>
    </kieBpmConfigeMap>
 </kiaBpmConfigFactory>');
 

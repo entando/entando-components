@@ -37,6 +37,7 @@
           class="org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfoManager"
           parent="abstractService">
         <property name="keyGeneratorManager" ref="KeyGeneratorManager"/>
+        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
         <property name="bpmWidgetInfoDAO" ref="jpkiebpmBpmWidgetInfoDAO"/>
     </bean>
 

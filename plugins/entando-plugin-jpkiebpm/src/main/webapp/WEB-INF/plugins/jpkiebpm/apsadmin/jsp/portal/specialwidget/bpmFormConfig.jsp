@@ -162,47 +162,69 @@
                                     </div>
                                 </div>
 
-                                <s:if test="#isProcessPathSetted">
+                                <s:if test="%{#isProcessPathSetted && fields != null && !fields.isEmpty()}">
                                     <legend class="overrides">
-                                        <s:text name="label.override.found" />
+                                        <s:text name="label.override" />
                                     </legend>
-                                    <s:set var="ovMap" value="formOverridesMap" />
-                                    <s:iterator var="item" value="#ovMap">
-                                        <s:set var="checked" value="ovrd.contains(#item.value.id)"/>
-                                        <div class="form-group">
-                                            <label class="control-label col-xs-2" for="processPath">
-                                                <s:property value="#item.key"/>
-
-                                            </label>
-                                            <div class="col-xs-10">
-                                                <input 
-                                                    <s:if 
-                                                        test="#checked">checked="checked"</s:if> 
-                                                        type="checkbox" 
-                                                        id="bootstrap-switch-state"
-                                                        class="bootstrap-switch"
-                                                        name="ovrd" value="<s:property value="#item.value.id" />"
-                                                    >
-                                            </div>
-                                        </div>
-
+                                    
+                                    <wpsf:submit action="addFormOverride" type="button" cssClass="btn btn-success pull-right">
+                                        <s:text name="label.add" />
+                                    </wpsf:submit>
+                                    
+                                    <div class="clearfix"></div>
+                                    <br/>
+                                    
+                                    <s:iterator value="overrides" var="override" status="iteration">
+                                        
+                                        <s:hidden name="overrides[%{#iteration.index}].id" />
+                                        
                                         <div class="well">
-                                            <s:iterator value="#item.value.overrides.list" var="override" >
-                                                <s:if test="#override.type.equals('defaultValueOverride')">
-                                                    <b><s:text name="defaultValueOverride" /></b> &nbsp; &nbsp;
-                                                    <s:property value="#override.defaultValue"/>
-                                                </s:if>
-                                                <br>
-                                                <s:elseif test="#override.type.equals('placeHolderOverride')">
-                                                    <b><s:text name="placeHolderOverride" /></b>  &nbsp; &nbsp;
-                                                    <s:property value="#override.placeHolder"/>
-                                                </s:elseif>
-                                                <s:else>
-                                                    <code>
-                                                        TODO: <s:property value="#override.type"/>
-                                                    </code>
-                                                </s:else>
-                                            </s:iterator>
+
+                                            <wpsa:actionParam action="deleteFormOverride" var="deleteFormOverrideActionName" >
+                                                <wpsa:actionSubParam name="overrideToDeleteIndex" value="%{#iteration.index}" />
+                                            </wpsa:actionParam>
+                                            <wpsf:submit action="%{#deleteFormOverrideActionName}" type="button" cssClass="btn btn-danger pull-right">
+                                                <s:text name="label.remove" />
+                                            </wpsf:submit>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="field">
+                                                    <s:text name="formModel.field" />
+                                                    <i class="fa fa-asterisk required-icon"></i>
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <s:select list="fields" id="formModel_field"
+                                                              name="overrides[%{#iteration.index}].field"
+                                                              listKey="%{name}" listValue="%{name}" ></s:select>
+                                                    <s:set var="fieldErrorsVar" value="%{fieldErrors['overrides[' + #iteration.index + '].field']}"/>
+                                                    <s:set var="fieldHasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()"/>
+                                                    <s:if test="#fieldHasFieldErrorVar">
+                                                        <div class="text-danger">
+                                                            <s:iterator value="%{#fieldErrorsVar}">
+                                                                <s:property escapeHtml="false"/>
+                                                                &#32;
+                                                            </s:iterator>
+                                                        </div>
+                                                    </s:if>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <wpsf:checkbox name="%{'overrides[' + #iteration.index + '].active'}" id="%{'active_' + #iteration.index }" cssClass="bootstrap-switch" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="placeHolderOverride">
+                                                    <s:text name="placeHolderOverride" />
+                                                </label>
+                                                <s:textfield name="overrides[%{#iteration.index}].placeHolderValue" />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="defaultValueOverride">
+                                                    <s:text name="defaultValueOverride" />
+                                                </label>
+                                                <s:textfield name="overrides[%{#iteration.index}].defaultValue" />
+                                            </div>	            
                                         </div>
                                     </s:iterator>
                                 </s:if>

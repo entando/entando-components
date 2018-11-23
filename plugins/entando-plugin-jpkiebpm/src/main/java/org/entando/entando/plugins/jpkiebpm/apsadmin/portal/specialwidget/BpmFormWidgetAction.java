@@ -1,29 +1,19 @@
 /*
-The MIT License
-
-Copyright 2018 Entando Inc..
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
+ * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -65,11 +55,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverrideInEditing;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKieContainerToListToJson;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
+
     private static final Logger logger = LoggerFactory.getLogger(BpmFormWidgetAction.class);
     private String processId;
     private String containerId;
@@ -79,21 +74,40 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     private IKieFormManager formManager;
     private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
-    private Set<Integer> ovrd;
     private IDataObjectManager dataObjectManager;
     private IDataObjectModelManager dataObjectModelManager;
     private II18nManager i18nManager;
     private String knowledgeSourceJson;
     private String kieContainerListJson;
     private List<KieProcess> process;
+    private List<KieFormOverrideInEditing> overrides;
+    private Integer overrideToDeleteIndex;
 
     @Autowired
     private DataUXBuilder uXBuilder;
 
     @Override
     public String save() {
-        //Widget widget = this.createNewWidget();
+        validateOnSave();
+        if (!this.getFieldErrors().isEmpty()) {
+            return INPUT;
+        }
         return super.save();
+    }
+
+    private void validateOnSave() {
+        if (overrides != null) {
+            List<String> usedFields = new ArrayList<>();
+            int index = 0;
+            for (KieFormOverrideInEditing override : overrides) {
+                if (usedFields.contains(override.getField())) {
+                    String msg = this.getText("error.override.field.alreadyUsed", new String[]{override.getField()});
+                    this.addFieldError("overrides[" + index + "].field", msg);
+                }
+                usedFields.add(override.getField());
+                index++;
+            }
+        }
     }
 
     protected void setPropertyWidget(final List<WidgetTypeParameter> parameters, final Widget widget) {
@@ -108,10 +122,30 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
     @Override
     protected void createValuedShowlet() throws Exception {
-        Widget widget = this.createNewWidget();
+        // If the widget is not new we need to retrieve the widgetInfoId but not
+        // the WidgetInfo itself (because we are overwriting it) so here we call
+        // super.extractInitConfig() instead of this.extractInitConfig()
+        super.extractInitConfig();
+
+        Widget widget = getWidget();
+        if (widget == null) {
+            this.createNewWidget();
+        }
+
         List<WidgetTypeParameter> parameters = widget.getType().getTypeParameters();
         setPropertyWidget(parameters, widget);
-        BpmWidgetInfo widgetInfo = this.storeWidgetInfo(widget);
+
+        String widgetInfoId = widget.getConfig().getProperty(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID);
+        BpmWidgetInfo widgetInfo;
+        if (widgetInfoId == null) {
+            widgetInfo = this.storeWidgetInfo(widget);
+        } else {
+            // we want to keep old widget online information and modify widget draft information
+            BpmWidgetInfo oldWidgetInfo = this.getBpmWidgetInfoManager().getBpmWidgetInfo(Integer.valueOf(widgetInfoId));
+            widgetInfo = this.storeWidgetInfo(widget, oldWidgetInfo);
+        }
+
+        this.storeKieFormOverrides(widgetInfo.getId());
 
         WidgetType type = widget.getType();
         if (type.hasParameter(KieBpmSystemConstants.WIDGET_PARAM_DATA_TYPE_CODE)
@@ -165,7 +199,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             //dataModel.setDescription(processId + "_" + containerId); exceeds 50 chars limit
             dataModel.setDescription("Model for " + containerId);
 
-            String dataUx = uXBuilder.createDataUx(kpfr, containerId, processId, title);
+            String dataUx = uXBuilder.createDataUx(kpfr, widgetInfo.getId(), containerId, processId, title);
             dataModel.setShape(dataUx);
             this.getDataObjectModelManager().addDataObjectModel(dataModel);
 
@@ -214,7 +248,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
                 }
             }
             for (KieProcessFormField field : form.getFields()) {
-                logger.debug ("addAttributeToEntityType {}", field.getName());
+                logger.debug("addAttributeToEntityType {}", field.getName());
                 this.addAttributeToEntityType(entityType, field);
             }
             if (null != form.getNestedForms()) {
@@ -227,7 +261,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     }
 
     private void addAttributeToEntityType(IApsEntity entityType, KieProcessFormField field) {
-        String fieldRequired = KieApiUtil.getFieldProperty(field, "fieldRequired").toString();
+        String fieldRequired = KieApiUtil.getFieldProperty(field, "fieldRequired");
         boolean req = (fieldRequired != null && fieldRequired.equalsIgnoreCase("true"));
 
         if (field.getType().equalsIgnoreCase("TextBox")
@@ -265,18 +299,18 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             entityType.addAttribute(date);
         }
         if (field.getType().equalsIgnoreCase("MultipleSelector")) {
-            
+
             MonoTextAttribute text = (MonoTextAttribute) this.getAttributePrototype("Monotext");
             text.setName(field.getName());
             text.setDefaultLangCode(this.getCurrentLang().getCode());
             text.setRequired(req);
-            
-            MonoListAttribute list = (MonoListAttribute) this.getAttributePrototype("Monolist");            
+
+            MonoListAttribute list = (MonoListAttribute) this.getAttributePrototype("Monolist");
             list.setName(field.getName());
             list.setDefaultLangCode(this.getCurrentLang().getCode());
             list.setNestedAttributeType(text);
             list.setRequired(req);
-       
+
             entityType.addAttribute(list);
         }
 
@@ -288,7 +322,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     }
 
     private void processField(KieProcessFormField field, String langCode) throws ApsSystemException {
-        String bpmLabel = KieApiUtil.getFieldProperty(field, "label").toString();
+        String bpmLabel = KieApiUtil.getFieldProperty(field, "label");
         if (org.apache.commons.lang.StringUtils.isNotBlank(bpmLabel)) {
             String fieldName = KieApiUtil.getI18nLabelProperty(field);
             if (null == this.getI18nManager().getLabel(fieldName, langCode)) {
@@ -339,7 +373,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         return result;
     }
 
-    protected void initSharedParameters(final BpmWidgetInfo widgetInfo) {
+    protected void initSharedParameters(final BpmWidgetInfo widgetInfo) throws ApsSystemException {
         String processId = widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID);
         if (StringUtils.isNotBlank(processId) && !processId.equals("null")) {
             String procString = widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID) + "@" + widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID) + "@" + widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
@@ -354,12 +388,17 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         if (StringUtils.isNotBlank(kieSourceId) && !"null".equalsIgnoreCase(kieSourceId)) {
             this.setKnowledgeSourcePath(kieSourceId);
         }
-        String listOverrrides = widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_OVERRIDE_ID);
-        if (StringUtils.isNotBlank(listOverrrides) && !listOverrrides.equals("null")) {
-            String[] idStrings = listOverrrides.split(",");
-            this.setOvrd(new HashSet<Integer>());
-            for (String string : idStrings) {
-                this.getOvrd().add(new Integer(string));
+        this.loadKieFormOverrides(widgetInfo.getId());
+    }
+
+    private void loadKieFormOverrides(int widgetInfoId) throws ApsSystemException {
+        List<KieFormOverride> formOverrides = kieFormOverrideManager.getFormOverrides(widgetInfoId, false);
+        if (!formOverrides.isEmpty()) {
+            if (overrides == null) {
+                overrides = new ArrayList<>();
+            }
+            for (KieFormOverride formOverride : formOverrides) {
+                overrides.add(new KieFormOverrideInEditing(formOverride));
             }
         }
     }
@@ -370,12 +409,9 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             if (StringUtils.isNotBlank(widgetInfoId)) {
                 BpmWidgetInfo widgetInfo = this.getBpmWidgetInfoManager().getBpmWidgetInfo(Integer.valueOf(widgetInfoId));
                 if (null != widgetInfo) {
-
                     this.initSharedParameters(widgetInfo);
-
                 }
             }
-
         } catch (ApsSystemException e) {
             logger.error("Error loading WidgetInfo", e);
         }
@@ -383,7 +419,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
     public String chooseForm() {
         try {
-            //System.out.println("nothing to do");
+            overrides = new ArrayList<>();
         } catch (Throwable t) {
             logger.error("Error in chooseForm", t);
             return FAILURE;
@@ -394,46 +430,12 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     public String changeForm() {
         try {
             this.setProcessPath(null);
+            overrides = null;
         } catch (Throwable t) {
             logger.error("Error in changeForm", t);
             return FAILURE;
         }
         return SUCCESS;
-    }
-
-    public Map<String, KieFormOverride> getFormOverridesMap() throws ApsSystemException {
-        Map<String, KieFormOverride> map = new HashMap<>();
-        List<Integer> ids = this.getOverrideList();
-        if (null != ids) {
-            for (Integer id : ids) {
-                KieFormOverride override = this.getKieFormOverride(id);
-                map.put(override.getField(), override);
-            }
-        }
-        return map;
-    }
-
-    @SuppressWarnings("rawtypes")
-    public List<Integer> getOverrideList() throws ApsSystemException {
-        List<Integer> list = new ArrayList<>();
-        EntitySearchFilter[] filters = this.createSearchFilters();
-        list = this.getKieFormOverrideManager().searchKieFormOverrides(filters);
-        return list;
-    }
-
-    @SuppressWarnings("rawtypes")
-    private EntitySearchFilter[] createSearchFilters() {
-        EntitySearchFilter[] filters = new EntitySearchFilter[0];
-        if (StringUtils.isNotBlank(this.getProcessPath())) {
-            String[] params = this.getProcessPath().split("@");
-            String processId = params[0];
-            String containerId = params[1];
-            EntitySearchFilter processIdFilter = new EntitySearchFilter("processId", false, processId, true);
-            EntitySearchFilter containerIdFilter = new EntitySearchFilter("containerId", false, containerId, true);
-            filters = this.addFilter(filters, processIdFilter);
-            filters = this.addFilter(filters, containerIdFilter);
-        }
-        return filters;
     }
 
     @SuppressWarnings("rawtypes")
@@ -454,17 +456,15 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
     public List<KieProcessFormField> getFields() throws ApsSystemException {
         String[] params = this.getProcessPath().split("@");
-        String processId = (params[0]);
-        String containerId = (params[1]);
-
-        //TODO -- JPW will this always be present?
+        String processId = params[0];
+        String containerId = params[1];
         String kieSourceId = params[2];
 
         KieBpmConfig config = this.formManager.getKieServerConfigurations().get(kieSourceId);
         KieProcessFormQueryResult form = this.getFormManager().getProcessForm(config, containerId, processId);
-        List<KieProcessFormField> fileds = new ArrayList<>();
-        this.addFileds(form, fileds);
-        return fileds;
+        List<KieProcessFormField> fields = new ArrayList<>();
+        this.addFields(form, fields);
+        return fields;
     }
 
     public HashMap<String, KieBpmConfig> getKnowledgeSource() {
@@ -478,52 +478,107 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         return knowledgeSource;
     }
 
-    protected void addFileds(KieProcessFormQueryResult form, List<KieProcessFormField> fileds) {
+    protected void addFields(KieProcessFormQueryResult form, List<KieProcessFormField> fields) {
         if (null != form && null != form.getFields()) {
             for (KieProcessFormField kieProcessFormField : form.getFields()) {
-                fileds.add(kieProcessFormField);
+                fields.add(kieProcessFormField);
             }
             if (null != form.getNestedForms()) {
                 for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
-                    this.addFileds(subForm, fileds);
+                    this.addFields(subForm, fields);
                 }
             }
         }
     }
 
     protected BpmWidgetInfo storeWidgetInfo(Widget widget) throws Exception {
-        BpmWidgetInfo widgetInfo = null;
+        return storeWidgetInfo(widget, new BpmWidgetInfo());
+    }
+
+    protected BpmWidgetInfo storeWidgetInfo(Widget widget, BpmWidgetInfo widgetInfo) throws Exception {
         try {
-            widgetInfo = new BpmWidgetInfo();
             widgetInfo.setFramePosDraft(this.getFrame());
             widgetInfo.setPageCode(this.getPageCode());
             String[] param = this.getProcessPath().split("@");
             String procId = param[0];
             String contId = param[1];
-            String overridesId = null;
             widgetInfo.setWidgetType(widget.getType().getCode());
             ApsProperties properties = new ApsProperties();
             properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID, procId);
             properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID, contId);
-
-            //TODO -- JPW can this be null here? Should always be set by this point?
-//            if (this.getKnowledgeSourceId() == null) {
-//                this.setKnowledgeSourceId(this.getFormManager().getConfig().getId());
-//            }
             properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID, this.getKnowledgeSourcePath());
 
-            if (null != this.getOvrd() && !this.getOvrd().isEmpty()) {
-                String checkedOverrides = StringUtils.join(this.getOvrd(), ",");
-                overridesId = checkedOverrides;
-                properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_OVERRIDE_ID, overridesId);
-            }
             widgetInfo.setInformationDraft(properties.toXml());
             this.updateConfigWidget(widgetInfo, widget);
+            return widgetInfo;
         } catch (Exception e) {
             logger.error("Error save WidgetInfo", e);
             throw e;
         }
-        return widgetInfo;
+    }
+
+    private void storeKieFormOverrides(int widgetInfoId) throws Exception {
+
+        // Delete old overrides
+        FieldSearchFilter widgetInfoFilter = new FieldSearchFilter("widgetInfoId", (Integer) widgetInfoId, false);
+        FieldSearchFilter draftFilter = new FieldSearchFilter("online", (Integer) 0, false);
+        List<Integer> oldWidgetOverrides = kieFormOverrideManager.searchKieFormOverrides(new FieldSearchFilter[]{widgetInfoFilter, draftFilter});
+        if (overrides != null) {
+            List<Integer> editedOverrides = overrides.stream().filter(o -> o.getId() != null).map(o -> o.getId()).collect(Collectors.toList());
+            oldWidgetOverrides.removeAll(editedOverrides); // keeps only overrides to delete
+        }
+        for (int id : oldWidgetOverrides) {
+            kieFormOverrideManager.deleteKieFormOverride(id);
+        }
+
+        // Save edited/new overrides
+        if (overrides != null) {
+            String[] param = this.getProcessPath().split("@");
+            String procId = param[0];
+            String contId = param[1];
+            for (KieFormOverrideInEditing overrideInEditing : overrides) {
+                KieFormOverride oldData = null;
+                if (overrideInEditing.getId() != null) {
+                    oldData = kieFormOverrideManager.getKieFormOverride(overrideInEditing.getId());
+                }
+
+                KieFormOverride newData = getEditedKieFormOverride(oldData, overrideInEditing, widgetInfoId, procId, contId);
+                if (oldData == null) {
+                    kieFormOverrideManager.addKieFormOverride(newData);
+                } else {
+                    kieFormOverrideManager.updateKieFormOverride(newData);
+                }
+            }
+        }
+    }
+
+    private KieFormOverride getEditedKieFormOverride(KieFormOverride oldData, KieFormOverrideInEditing overrideInEditing, int widgetInfoId, String processId, String containerId) {
+        KieFormOverride kieFormOverride;
+        if (oldData == null) {
+            kieFormOverride = new KieFormOverride();
+            kieFormOverride.setDate(new Date());
+        } else {
+            kieFormOverride = oldData;
+            kieFormOverride.getOverrides().getList().clear();
+        }
+        kieFormOverride.setActive(overrideInEditing.isActive());
+        kieFormOverride.setField(overrideInEditing.getField());
+        kieFormOverride.setContainerId(containerId);
+        kieFormOverride.setProcessId(processId);
+        kieFormOverride.setSourceId(this.getKnowledgeSourcePath());
+        kieFormOverride.setWidgetInfoId(widgetInfoId);
+
+        if (!StringUtils.isBlank(overrideInEditing.getDefaultValue())) {
+            DefaultValueOverride override = new DefaultValueOverride();
+            override.setDefaultValue(overrideInEditing.getDefaultValue());
+            kieFormOverride.addOverride(override);
+        }
+        if (!StringUtils.isBlank(overrideInEditing.getPlaceHolderValue())) {
+            PlaceHolderOverride override = new PlaceHolderOverride();
+            override.setPlaceHolder(overrideInEditing.getPlaceHolderValue());
+            kieFormOverride.addOverride(override);
+        }
+        return kieFormOverride;
     }
 
     protected void updateConfigWidget(final BpmWidgetInfo widgetInfo, final Widget widget) throws ApsSystemException {
@@ -625,14 +680,6 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
         this.kieFormOverrideManager = kieFormOverrideManager;
     }
 
-    public Set<Integer> getOvrd() {
-        return ovrd;
-    }
-
-    public void setOvrd(Set<Integer> ovrd) {
-        this.ovrd = ovrd;
-    }
-
     public IBpmWidgetInfoManager getBpmWidgetInfoManager() {
         return bpmWidgetInfoManager;
     }
@@ -679,6 +726,47 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
 
     public void setI18nManager(II18nManager i18nManager) {
         this.i18nManager = i18nManager;
+    }
+
+    public String addFormOverride() {
+        try {
+            if (overrides == null) {
+                overrides = new ArrayList<>();
+            }
+            overrides.add(new KieFormOverrideInEditing());
+        } catch (Throwable t) {
+            logger.error("Error in addFormOverride", t);
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+
+    public List<KieFormOverrideInEditing> getOverrides() {
+        return overrides;
+    }
+
+    public void setOverrides(List<KieFormOverrideInEditing> overrides) {
+        this.overrides = overrides;
+    }
+
+    public Integer getOverrideToDeleteIndex() {
+        return overrideToDeleteIndex;
+    }
+
+    public void setOverrideToDeleteIndex(Integer overrideToDeleteIndex) {
+        this.overrideToDeleteIndex = overrideToDeleteIndex;
+    }
+
+    public String deleteFormOverride() {
+        try {
+            if (overrideToDeleteIndex != null) {
+                overrides.remove((int) overrideToDeleteIndex);
+            }
+        } catch (Throwable t) {
+            logger.error("Error in deleteOverride", t);
+            return FAILURE;
+        }
+        return SUCCESS;
     }
 
     public static class FieldDatatable {

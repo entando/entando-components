@@ -24,6 +24,17 @@ import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ResourceAttributeInterface;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.*;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.SimpleFSLockFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,32 +42,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.DateTools;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.IntField;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.SimpleFSLockFactory;
-import org.apache.lucene.util.Version;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Data Access Object dedita alla indicizzazione di documenti.
- * @author E.Santoboni
  */
 public class IndexerDAO implements IIndexerDAO {
 
 	private static final Logger _logger = LoggerFactory.getLogger(IndexerDAO.class);
-	
+
+	private Directory dir;
+	private ILangManager langManager;
+
 	/**
 	 * Inizializzazione dell'indicizzatore.
 	 * @param dir La cartella locale contenitore dei dati persistenti.
@@ -65,8 +60,7 @@ public class IndexerDAO implements IIndexerDAO {
 	@Override
 	public void init(File dir) throws ApsSystemException {
 		try {
-			this._dir = FSDirectory.open(dir);
-			this._dir.setLockFactory(new SimpleFSLockFactory(dir));
+			this.dir = FSDirectory.open(dir.toPath(), SimpleFSLockFactory.INSTANCE);
 		} catch (Throwable t) {
 			_logger.error("Error creating directory", t);
 			throw new ApsSystemException("Error creating directory", t);
@@ -78,7 +72,7 @@ public class IndexerDAO implements IIndexerDAO {
 	public synchronized void add(IApsEntity entity) throws ApsSystemException {
 		IndexWriter writer = null;
 		try {
-			writer = new IndexWriter(this._dir, this.getIndexWriterConfig());
+			writer = new IndexWriter(this.dir, this.getIndexWriterConfig());
 			Document document = this.createDocument(entity);
             writer.addDocument(document);
         } catch (Throwable t) {
@@ -182,7 +176,12 @@ public class IndexerDAO implements IIndexerDAO {
 						field = new TextField(name, 
 								DateTools.timeToString(info.getDate().getTime(), DateTools.Resolution.MINUTE), Field.Store.YES);
 					} else if (null != info.getBigDecimal()) {
-						field = new IntField(name, info.getBigDecimal().intValue(), Field.Store.YES);
+						int value = info.getBigDecimal().intValue();
+						field = new IntPoint(name, value);
+
+						//For int points a separate stored field must be added for future indexed search
+						StoredField stored = new StoredField(name, value);
+						document.add(stored);
 					} else {
 						field = new TextField(name, info.getString(), Field.Store.YES);
 					}
@@ -201,7 +200,7 @@ public class IndexerDAO implements IIndexerDAO {
     @Override
 	public synchronized void delete(String name, String value) throws ApsSystemException {
         try {
-            IndexWriter writer = new IndexWriter(this._dir, this.getIndexWriterConfig());
+            IndexWriter writer = new IndexWriter(this.dir, this.getIndexWriterConfig());
             writer.deleteDocuments(new Term(name, value));
             writer.close();
         } catch (IOException e) {
@@ -220,19 +219,15 @@ public class IndexerDAO implements IIndexerDAO {
     }
 	
 	private IndexWriterConfig getIndexWriterConfig() {
-		return new IndexWriterConfig(Version.LUCENE_4_10_4, this.getAnalyzer());
+		return new IndexWriterConfig(this.getAnalyzer());
 	}
     
 	protected ILangManager getLangManager() {
-		return _langManager;
+		return langManager;
 	}
 	@Override
 	public void setLangManager(ILangManager langManager) {
-		this._langManager = langManager;
+		this.langManager = langManager;
 	}
-	
-    private Directory _dir;
-	
-    private ILangManager _langManager;
-    
+
 }
