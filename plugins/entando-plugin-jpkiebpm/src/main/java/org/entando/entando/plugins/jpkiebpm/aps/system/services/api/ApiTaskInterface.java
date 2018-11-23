@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -267,13 +268,18 @@ public class ApiTaskInterface extends KieApiManager {
 
                     final String containerId = config.getProperty("containerId");
                     final String processInstanceId = properties.getProperty("processInstanceId");
+                                     
+                    /*TODO add here the logic to call the method below (getProcInstDiagramImage) with the pInstanceID (number) 
+                        set to show the current step of the task
+                    */
                     return this.getKieFormManager().getProcInstDiagramImage(bpmConfig, containerId, processInstanceId);
                 }
             } catch (ApsSystemException e) {
                 logger.error("Error {}", e.getMessage());
-
             } catch (IOException e) {
                 logger.error("Error load configuration  {} ", e.getMessage());
+            } catch (Throwable ex) {
+                logger.error("Error {}", ex);                
             }
         }
         return "";
