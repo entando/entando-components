@@ -1,7 +1,9 @@
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
 import io.swagger.annotations.*;
+import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,7 @@ public interface ContentTypeResource {
             @ApiResponse(code = 401, message = "Unauthorized"),
             @ApiResponse(code = 403, message = "Forbidden") })
     @GetMapping
+    @RestAccessControl(permission = Permission.SUPERUSER)
     ResponseEntity<PagedMetadata<ContentTypeDto>> list(RestListRequest listRequest);
 
 

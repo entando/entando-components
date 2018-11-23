@@ -23,22 +23,22 @@ public class ContentTypeDaoImpl extends AbstractDAO implements ContentTypeDao {
 
     private static final Logger logger =  LoggerFactory.getLogger(ContentTypeDaoImpl.class);
 
-    private static final String DELETE_SQL = "DELETE FROM ContentTypes WHERE \"id\" = ? ";
+    private static final String DELETE_SQL = "DELETE FROM ContentTypes WHERE id = ? ";
 
     private static final String CREATE_SQL =
-            "INSERT INTO contenttypes (\"id\", \"code\", \"name\", \"default_content_model\", \"default_content_model_list\") " +
+            "INSERT INTO contenttypes (id, code, name, default_content_model, default_content_model_list) " +
                     "VALUES (? , ? , ? , ? , ?)";
 
     private static final String UPDATE_SQL =
             "UPDATE contenttypes " +
-                    "SET \"code\" = ?, \"name\" = ?, \"default_content_model\" = ?, \"default_content_model_list\" = ? " +
-                    "WHERE \"id\" = ?";
+                    "SET code = ?, name = ?, default_content_model = ?, default_content_model_list = ? " +
+                    "WHERE id = ?";
 
-    private static final String FIND_ALL_SQL = "SELECT \"id\", \"code\", \"name\", \"default_content_model\", \"default_content_model_list\" " +
+    private static final String FIND_ALL_SQL = "SELECT id, code, name, default_content_model, default_content_model_list " +
             "FROM contenttypes";
 
-    private static final String FIND_ONE_SQL = "SELECT \"id\", \"code\", \"name\", \"default_content_model\", \"default_content_model_list\" " +
-            "FROM contenttypes WHERE \"id\" = ?";
+    private static final String FIND_ONE_SQL = "SELECT id, code, name, default_content_model, default_content_model_list " +
+            "FROM contenttypes WHERE id = ?";
 
     @Override
     public ContentTypeDto create(ContentTypeDto model) {

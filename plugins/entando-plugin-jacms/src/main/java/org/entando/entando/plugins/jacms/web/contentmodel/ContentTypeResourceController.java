@@ -40,7 +40,6 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
-    @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<PagedMetadata<ContentTypeDto>> list(RestListRequest listRequest) {
         PagedMetadata<ContentTypeDto> result = contentTypeService.findMany(listRequest);
         return ResponseEntity.ok(result);

@@ -1,11 +1,11 @@
 package org.entando.entando.plugins.jacms.web;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.db.DerbyEmbeddedDatabaseType;
 import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.spring.*;
 import com.j256.ormlite.support.ConnectionSource;
+import org.entando.entando.aps.system.init.util.ApsDerbyEmbeddedDatabaseType;
 import org.entando.entando.plugins.jacms.aps.system.init.portdb.ContentType;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.embedded.*;
@@ -36,7 +36,7 @@ public class TestWebMvcConfig implements WebMvcConfigurer {
     }
     @Bean
     DataSourceConnectionSource connectionSource(DataSource portDataSource) throws SQLException {
-        return new DataSourceConnectionSource(portDataSource, new DerbyEmbeddedDatabaseType());
+        return new DataSourceConnectionSource(portDataSource, new ApsDerbyEmbeddedDatabaseType());
     }
 
     @Bean
