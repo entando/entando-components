@@ -24,11 +24,13 @@
 package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getProcessIdFromProcessInstanceJson;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getProcessInstanceIdFromProcessInstanceJson;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTaskDetail;
 
 public class BpmProcessDiagramAction extends BpmCaseInstanceActionBase {
 
@@ -46,9 +48,21 @@ public class BpmProcessDiagramAction extends BpmCaseInstanceActionBase {
             this.setChannel(channelIn);
 
             KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
-            String processInstanceid = getProcessInstanceIdFromProcessInstanceJson(caseManager.getProcessInstanceByCorrelationKey(config, this.getCasePath()));
-            this.setDiagram(this.formManager.getProcInstDiagramImage(config, this.getContainerid(), processInstanceid));
+            
+            
+            Long processInstanceId = null;
+            
+            if (null!=config) {
+                processInstanceId = getProcessInstanceIdFromProcessInstanceJson(caseManager.getProcessInstanceByCorrelationKey(config, this.getCasePath()));
+           
+                String processId = getProcessIdFromProcessInstanceJson(caseManager.getProcessInstanceByCorrelationKey(config, this.getCasePath()));
 
+                if (null != processInstanceId) {
+                    this.setDiagram(this.formManager.getProcInstDiagramImage(config, this.getContainerid(), processId, processInstanceId));
+                } else {
+                    this.setDiagram(this.formManager.getProcInstDiagramImage(config, this.getContainerid(), processId));
+                }
+            }
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
             return FAILURE;
