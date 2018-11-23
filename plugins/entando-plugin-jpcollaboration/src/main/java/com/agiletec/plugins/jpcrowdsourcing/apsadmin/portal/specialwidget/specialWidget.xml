@@ -16,6 +16,17 @@
 
 	<package name="collaboration_do/collaboration/Page/SpecialWidget/IdeaInstanceViewer" namespace="/do/collaboration/Page/SpecialWidget/IdeaInstanceViewer" extends="entando-default">
 
+		<global-results>
+    		<result name="pageTree" type="chain">
+    			<param name="namespace">/do/Page</param>
+    			<param name="actionName">viewTree</param>
+    		</result>
+    		<result name="configure" type="chain">
+            	<param name="namespace">/do/Page</param>
+    			<param name="actionName">configure</param>
+            </result>
+		</global-results>
+
 		<action name="configInstance" class="jpcollaborationIdeaInstanceWidgetAction" method="save">
         	<result name="input" type="tiles">admin.jpcrowdsourcing.page.widget.publish-instance.config</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
@@ -27,7 +38,5 @@
         </action>
 
 	</package>
-
-
-
+    
 </struts>
