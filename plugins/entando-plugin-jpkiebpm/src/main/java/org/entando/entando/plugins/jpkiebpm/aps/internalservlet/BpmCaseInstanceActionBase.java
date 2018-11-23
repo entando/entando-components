@@ -59,38 +59,16 @@ public abstract class BpmCaseInstanceActionBase extends BaseAction {
     private String channelPath;
 
     private int errorCode;
-
-    public BpmCaseInstanceActionBase() {
-    }
-
-    //Constructor added for testing purpose
-    public BpmCaseInstanceActionBase(final CaseManager caseManager, 
-                                     final KieFormManager formManager, 
-                                     final String frontEndCaseData, 
-                                     final String channel, 
-                                     final String knowledgeSourceId, 
-                                     final String containerid, 
-                                     final String casePath, 
-                                     final String channelPath) {
-        this.caseManager = caseManager;
-        this.formManager = formManager;
-        this.frontEndCaseData = frontEndCaseData;
-        this.channel = channel;
-        this.knowledgeSourceId = knowledgeSourceId;
-        this.containerid = containerid;
-        this.casePath = casePath;
-        this.channelPath = channelPath;
-
-    }
     
     //Helper methods
     public boolean isKieServerConfigurationValid() {
-        logger.debug("--------------------------------------------");
-
         logger.debug("Check Configuration for knowledgeSourceId {}", this.getKnowledgeSourceId());
-        KieBpmConfig config;
+        KieBpmConfig config=null;
         try {
-            config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());            
+            if (null!=this.getKnowledgeSourceId())
+            {
+                config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
+            }            
             if (null == config) {
                 logger.warn("The configuration is null, return false");
                 this.setErrorCode(ERROR_NULL_CONFIG);

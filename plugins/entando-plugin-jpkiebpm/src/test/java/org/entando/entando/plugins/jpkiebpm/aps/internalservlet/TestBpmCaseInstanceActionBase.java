@@ -45,21 +45,16 @@ import org.mockito.MockitoAnnotations;
 public class TestBpmCaseInstanceActionBase extends TestCase{
 
     @Mock
-    private HashMap<String, KieBpmConfig> serverConfigurations;
-
-    @Mock
     private KieBpmConfig kieBpmConfig;
 
     @Mock
     private BaseConfigManager configManager;
 
-    @InjectMocks
+    @Mock
     private KieFormManager formManager;
 
     @InjectMocks
-    private CaseManager caseManager;
-
-    private BpmCaseInstanceActionBase bpmCaseInstanceActionBase;
+    private BpmCaseInstanceChartAction bpmCaseInstanceActionBase = new BpmCaseInstanceChartAction();
 
     private static String KNOWLEDGE_SOURCE_ID = "knowlege-source-id";
     private static String CONTAINER_ID = "container-id";
@@ -73,45 +68,24 @@ public class TestBpmCaseInstanceActionBase extends TestCase{
         MockitoAnnotations.initMocks(this);
         String filePath = "src/test/resources/examples/xml/kie-bpm-configuration-test.xml";
         xmlConf = new String(Files.readAllBytes(Paths.get(filePath)));
-
     }
 
     @Test
     public void testIsKieServerConfigurationNotValid() throws ApsSystemException {
-        this.bpmCaseInstanceActionBase = new BpmCaseInstanceActionBase(
-                caseManager,
-                formManager,
-                "",
-                "1",
-                KNOWLEDGE_SOURCE_ID,
-                CONTAINER_ID,
-                CASE_PATH,
-                CHANNEL_PATH
-        ) {
-        };
-
-        when(formManager.getKieServerConfigurations()).thenReturn(null);
+        when(formManager.getKieServerConfigurations()).thenReturn(new HashMap<String, KieBpmConfig>());
         boolean valid = bpmCaseInstanceActionBase.isKieServerConfigurationValid();
         assertFalse(valid);
     }
 
     @Test
     public void testIsKieServerConfigurationValid() throws ApsSystemException {
+        HashMap<String, KieBpmConfig> serverConfigurations = new HashMap();
+        bpmCaseInstanceActionBase.setKnowledgeSourceId(KNOWLEDGE_SOURCE_ID);
         serverConfigurations.put(KNOWLEDGE_SOURCE_ID, kieBpmConfig);
-        formManager.setConfigManager(configManager);
+        when(formManager.getKieServerConfigurations()).thenReturn(serverConfigurations);
         when(configManager.getConfigItem(anyString())).thenReturn(xmlConf);
-        this.bpmCaseInstanceActionBase = new BpmCaseInstanceActionBase(
-                caseManager,
-                formManager,
-                "",
-                "1",
-                KNOWLEDGE_SOURCE_ID,
-                CONTAINER_ID,
-                CASE_PATH,
-                CHANNEL_PATH
-        ) {
-        };
-        boolean valid = bpmCaseInstanceActionBase.isKieServerConfigurationValid();
+        when(formManager.getConfigManager()).thenReturn(configManager);
+         boolean valid = bpmCaseInstanceActionBase.isKieServerConfigurationValid();
         assertTrue(valid);
     }
 
