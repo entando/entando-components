@@ -137,10 +137,13 @@ public class CaseProgressWidgetHelpers {
         return uuid;
     }
     
-    public static String getProcessInstanceIdFromProcessInstanceJson(JSONObject processInstanceJson){
-        
-        String processid = processInstanceJson.getString("process-id");
-        
-        return processid;
+    public static String getProcessIdFromProcessInstanceJson(JSONObject processInstanceJson) {
+        String processId = processInstanceJson.getString("process-id");
+        return processId;
+    }
+    
+    public static Long getProcessInstanceIdFromProcessInstanceJson(JSONObject processInstanceJson){          
+        Long processInstanceId = processInstanceJson.getLong("process-instance-id");        
+        return processInstanceId;
     }
 }
