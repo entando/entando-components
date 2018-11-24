@@ -45,7 +45,7 @@
     <s:action namespace="/do/Page" name="printPageDetails" executeResult="true" ignoreContextParams="true">
         <s:param name="selectedNode" value="pageCode"></s:param>
     </s:action>
-    <s:form action="configListViewer" namespace="/do/collaboration/Page/SpecialWidget/IdeaInstanceViewer">
+    <s:form action="changeInstance" namespace="/do/collaboration/Page/SpecialWidget/IdeaInstanceViewer">
         <p class="noscreen">
             <wpsf:hidden name="pageCode" />
             <wpsf:hidden name="frame" />
@@ -56,20 +56,11 @@
                 <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp" />
             </div>
             <div class="panel-body">
-            
                 <h2 class="h5 margin-small-vertical">
                     <label class="sr-only"><s:text name="name.widget" /></label>
                     <span class="icon fa fa-puzzle-piece" title="<s:text name="name.widget" />"></span>&#32;
                     <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}" />
                 </h2>
-            <%--
-                <legend>
-                    <span class="control-label label-group-name">
-                        <span class="icon fa fa-puzzle-piece" title="Widget"></span>
-                        <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}" />
-                    </span>
-                </legend>
-             --%>
                 <s:if test="showlet.config['instanceCode'] == null">
                     <fieldset class="col-xs-12 no-padding">
                     <legend><s:text name="jpcrowdsourcing.ideaInstance.ideaList"/></legend>

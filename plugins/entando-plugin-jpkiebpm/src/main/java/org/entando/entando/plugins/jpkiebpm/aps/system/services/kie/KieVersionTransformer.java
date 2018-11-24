@@ -82,25 +82,30 @@ public class KieVersionTransformer {
         String parentDataHolderOutId = queryResult.getHolders().get(0).getOutId();
         for (String fieldId : fieldIdOrder) {
 
-            if (count == 0) {
-                queryResult = pamSevenFormToPamSix(fieldToForms.get(fieldId), formModelTypes);
-                queryResult.getHolders().get(0).setOutId(parentDataHolderOutId);
-            }
+            PamArray pamArray = fieldToForms.get(fieldId);
+            
+            if (pamArray != null) {
 
-            if (count > 0) {
-                if (queryResult.getNestedForms() == null) {
-                    queryResult.setNestedForms(new ArrayList<>());
+                if (count == 0) {
+                    queryResult = pamSevenFormToPamSix(pamArray, formModelTypes);
+                    queryResult.getHolders().get(0).setOutId(parentDataHolderOutId);
                 }
-                queryResult.getNestedForms().add(pamSevenFormToPamSix(fieldToForms.get(fieldId), formModelTypes));
-            }
 
-            count++;
+                if (count > 0) {
+                    if (queryResult.getNestedForms() == null) {
+                        queryResult.setNestedForms(new ArrayList<>());
+                    }
+                    queryResult.getNestedForms().add(pamSevenFormToPamSix(pamArray, formModelTypes));
+                }
+
+                count++;
+            }
         }
         return queryResult;
     }
 
     private static void buildFormOrder(PamArray array, List<String> fieldIdOrder, Map<String, PamArray> nestedFormMap) {
-
+        
         List<PamFields> fields = array.getPamFields();
         Map<String, PamFields> fieldMap = new HashMap<>();
         for (PamFields field : fields) {
@@ -128,8 +133,11 @@ public class KieVersionTransformer {
 
                                 PamFields field = fieldMap.get(fieldId);
                                 if (!field.getReadOnly()) {
-                                    fieldIdOrder.add(fieldId);
-                                    buildFormOrder(nestedFormMap.get(fieldId), fieldIdOrder, nestedFormMap);
+                                    PamArray nestedArray = nestedFormMap.get(fieldId);
+                                    if(nestedArray != null) {
+                                        fieldIdOrder.add(fieldId);
+                                        buildFormOrder(nestedArray, fieldIdOrder, nestedFormMap);
+                                    }
                                 }
                             }
                         }
@@ -140,7 +148,7 @@ public class KieVersionTransformer {
     }
 
     public static KieProcessFormQueryResult pamSevenFormToPamSix(PamArray pamSeven, List<String> formModelTypes) {
-
+        
         KieProcessFormQueryResult result = new KieProcessFormQueryResult();
 
         result.setId(rand.nextLong());
@@ -216,7 +224,9 @@ public class KieVersionTransformer {
             //MultipleSelector properties
             List<String> options =  field.getListOfValues();
          
-           
+            //RadioGroup properties
+            Boolean inline = field.isInline();
+
             //ListBox properties
             List<PamFieldsOptions>  optionsList = field.getOptions();
             if (null!=optionsList) {
@@ -239,7 +249,7 @@ public class KieVersionTransformer {
             KieProcessFormField builtField = buildField(fieldId, 
                     modelName, fieldName, label, code, required, type, showTime, placeHolder,
                     options, maxElementsOnTitle, maxDropdownElements, allowClearSelection, allowFilter,
-                    addEmptyOption, defaultValue);
+                    addEmptyOption, defaultValue, inline);
        
             if (field.getReadOnly()) {
                 builtField.addProperty("readOnly", true);
@@ -320,7 +330,8 @@ public class KieVersionTransformer {
                                                     boolean allowClearSelection,
                                                     boolean allowFilter,
                                                     boolean addEmptyOption,
-                                                    String defaultValue) {
+                                                    String defaultValue,
+                                                    boolean inline) {
 
         KieProcessFormField field = new KieProcessFormField();
         field.setProperties(new ArrayList<>());
@@ -378,6 +389,26 @@ public class KieVersionTransformer {
             defaultValueProperty.setValue(String.valueOf(defaultValue));
             field.getProperties().add(defaultValueProperty);
 
+
+        }
+        
+        if (field.getType().equals("RadioGroup")) {
+            KieProcessProperty optionsProperty = new KieProcessProperty();
+            optionsProperty.setName("options");
+            String collect = options.stream().collect(Collectors.joining(","));
+
+            optionsProperty.setValue(collect);
+            field.getProperties().add(optionsProperty);
+
+            KieProcessProperty inlineProperty = new KieProcessProperty();
+            inlineProperty.setName("inline");
+            inlineProperty.setValue(String.valueOf(inline));
+            field.getProperties().add(inlineProperty);
+
+            KieProcessProperty defaultValueProperty = new KieProcessProperty();
+            defaultValueProperty.setName("defaultValue");
+            defaultValueProperty.setValue(String.valueOf(defaultValue));
+            field.getProperties().add(defaultValueProperty);
 
         }
         

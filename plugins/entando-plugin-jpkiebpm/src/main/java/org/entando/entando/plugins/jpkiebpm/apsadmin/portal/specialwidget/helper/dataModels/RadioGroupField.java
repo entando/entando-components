@@ -25,13 +25,10 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helpe
 
 import java.util.List;
 
-public class MultipleSelectorField extends InputField {
+public class RadioGroupField extends InputField {
     private List<Option> options;
-    private int maxElementsOnTitle;
-    private int maxDropdownElements;
-    private boolean allowClearSelection;   
-    private boolean allowFilter;
-           
+    private boolean inline;
+    private String defaultValue;
     public List<Option> getOptions() {
         return options;
     }
@@ -40,38 +37,21 @@ public class MultipleSelectorField extends InputField {
         this.options = options;
     }
 
-    public int getMaxElementsOnTitle() {
-        return maxElementsOnTitle;
+    public String getDefaultValue() {
+        return defaultValue;
     }
 
-    public void setMaxElementsOnTitle(int maxElementsOnTitle) {
-        this.maxElementsOnTitle = maxElementsOnTitle;
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
-    public int getMaxDropdownElements() {
-        return maxDropdownElements;
+    public boolean isInline() {
+        return inline;
     }
 
-    public void setMaxDropdownElements(int maxDropdownElements) {
-        this.maxDropdownElements = maxDropdownElements;
+    public void setInline(boolean inline) {
+        this.inline = inline;
     }
-
-    public boolean isAllowClearSelection() {
-        return allowClearSelection;
-    }
-
-    public void setAllowClearSelection(boolean allowClearSelection) {
-        this.allowClearSelection = allowClearSelection;
-    }
-
-    public boolean isAllowFilter() {
-        return allowFilter;
-    }
-
-    public void setAllowFilter(boolean allowFilter) {
-        this.allowFilter = allowFilter;
-    }
-
     
 }
 

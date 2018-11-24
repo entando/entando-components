@@ -19,7 +19,7 @@
 </ol>
 <div class="page-tabs-header">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <h1 class="page-title-container">
                 <s:text name="jpkiebpm.admin.menu.config" />
                 <span class="pull-right">
@@ -28,25 +28,6 @@
                     </a>
                 </span>
             </h1>
-        </div>
-        <div class="col-sm-6">
-            <ul class="nav nav-tabs nav-justified nav-tabs-pattern" id="frag-tab">
-                <li class="active">
-                    <a href="<s:url action="list" namespace="/do/jpkiebpm/Config" />" role="tab"> 
-                        list
-                    </a>
-                </li>
-                <!--                <li>
-                                    <a href="<s:url action="edit" namespace="/do/jpkiebpm/Config" />" role="tab"> 
-                <s:text name="label.kie.settings" />
-            </a>
-        </li>-->
-                <li>
-                    <a href="<s:url action="list" namespace="/do/jpkiebpm/form/override"/>" role="tab"> 
-                        <s:text name="label.kie.list" />
-                    </a>
-                </li>
-            </ul>
         </div>
     </div>
 </div>

@@ -43,19 +43,27 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Function;
 import javax.servlet.ServletContext;
 import org.springframework.stereotype.Service;
 import org.apache.struts2.util.ServletContextAware;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.IBpmOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.MultipleSelectorField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.SelectField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.SelectOption;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.ListBoxField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Option;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.RadioGroupField;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.TextField;
 
 @Service
 public class DataUXBuilder<T extends InputField> implements ServletContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(DataUXBuilder.class);
+    
+    private IKieFormOverrideManager formOverrideManager;
     private Map<String, String> typeMapping = new HashMap<>();
     private Map<String, String> valueMapping = new HashMap<>();
     private ServletContext servletContext;
@@ -79,7 +87,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.typeMapping.put("CheckBox", "checkbox");
         this.typeMapping.put("ListBox", "text");
         this.typeMapping.put("Slider", "number");
-        this.typeMapping.put("RadioGroup", "number");
+        this.typeMapping.put("RadioGroup", "radio");
         this.typeMapping.put("MultipleInput", "number");
         this.typeMapping.put("MultipleSelector", "text");
         this.typeMapping.put("Document", "text");
@@ -93,7 +101,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.valueMapping.put("DecimalBox", "$data.%s.number");
         this.valueMapping.put("DatePicker", "$data.%s.text");
         this.valueMapping.put("Slider", "$data.%s.number");
-        this.valueMapping.put("RadioGroup", "$data.%s.number");
+        this.valueMapping.put("RadioGroup", "$data.%s.text");
         this.valueMapping.put("ListBox", "$data.%s.text");
         this.valueMapping.put("MultipleSelector", "$data.%s.text");
         this.valueMapping.put("MultipleInput", "$data.%s.text");
@@ -114,11 +122,11 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
 
     }
 
-    public String createDataUx(KieProcessFormQueryResult kpfr, String containerId, String processId, String title) throws Exception {
+    public String createDataUx(KieProcessFormQueryResult kpfr, int widgetInfoId, String containerId, String processId, String title) throws Exception {
         logger.debug("CreateDataUx in DataUXBuilde for containerId {} with processId {} and title {} -> kpfr: {}", containerId, processId, title, kpfr);
         Template template = cfg.getTemplate(MAIN_FTL_TEMPLATE);
-
-        Map<String, Section> sections = this.getSections(kpfr);
+        Map<String, KieFormOverride> formOverridesMap = getFormOverridesMap(widgetInfoId);        
+        Map<String, Section> sections = this.getSections(kpfr, formOverridesMap);
         Map<String, Object> root = new HashMap<>();
         Model model = new Model();
         model.setTitle(title);
@@ -135,7 +143,18 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
 
     }
 
-    private Map<String, Section> getSections(KieProcessFormQueryResult kpfr) throws Exception {
+    private Map<String, KieFormOverride> getFormOverridesMap(int widgetInfoId) throws Exception {
+        Map<String, KieFormOverride> formOverridesMap = new HashMap<>();
+        List<KieFormOverride> overrides = formOverrideManager.getFormOverrides(widgetInfoId, false);
+        for (KieFormOverride override : overrides) {
+            if (override.isActive()) {
+                formOverridesMap.put(override.getField(), override);
+            }
+        }
+        return formOverridesMap;
+    }
+    
+    private Map<String, Section> getSections(KieProcessFormQueryResult kpfr, Map<String, KieFormOverride> formOverridesMap) throws Exception {
 
         Map<String, Section> sections = new HashMap<String, Section>();
         List<T> fields = new ArrayList<T>();
@@ -167,10 +186,9 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             }
 
             try {
-                fields.add(addField(field));
+                fields.add(addField(field, formOverridesMap.get(field.getName())));
             } catch (Exception ex) {
                 logger.error("error adding field {}", ex);
-
             }
 
             tempSection.setName(sectionName);
@@ -185,14 +203,11 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         );
         List<KieProcessFormQueryResult> subForms = kpfr.getNestedForms();
         if (null != subForms && !subForms.isEmpty()) {
-            kpfr.getNestedForms().forEach(form
-                    -> {
-
+            kpfr.getNestedForms().forEach(form -> {
                 try {
-                    sections.putAll(getSections(form));
+                    sections.putAll(getSections(form, formOverridesMap));
                 } catch (Exception ex) {
                     logger.error("error adding getNestedForms {}", ex);
-
                 }
             });
         }
@@ -200,7 +215,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         return sections;
     }
 
-    private T addField(KieProcessFormField field) throws Exception {
+    private T addField(KieProcessFormField field, KieFormOverride formOverride) throws Exception {
         logger.debug("------------------------------------");
         logger.debug("Field getId          -> {}", field.getId());
         logger.debug("Field getName        -> {}", field.getName());
@@ -214,28 +229,50 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         T inputField;
         switch (field.getType()) {
             case "TextBox":
+                logger.debug("{} recognized as TextBox, inputField set to TextField",field.getName());
+                inputField = (T) new TextField();
+                break;
             case "TextArea":
+                logger.debug("{} recognized as TextArea, inputField set to TextArea", field.getName());
+                inputField = (T) new TextField();
+                break;
             case "IntegerBox":
+                logger.debug("{} recognized as IntegerBox, inputField set to IntegerBox", field.getName());
+                inputField = (T) new TextField();
+                break;
             case "InputText":
+                logger.debug("{} recognized as InputText, inputField set to InputText", field.getName());
+                inputField = (T) new TextField();
+                break;
             case "InputTextInteger":
+                logger.debug("{} recognized as InputTextInteger, inputField set to InputTextInteger", field.getName());
                 inputField = (T) new TextField();
                 break;
             case "ListBox":
-                inputField = (T) new SelectField();
+                logger.debug("{} recognized as ListBox, inputField set to ListBox", field.getName());
+                inputField = (T) new ListBoxField();
+                break;
+            case "RadioGroup":
+                logger.debug("{} recognized as RadioGroup, inputField set to RadioGroup", field.getName());
+                inputField = (T) new RadioGroupField();
                 break;
             case "DatePicker":
+                logger.debug("{} recognized as DatePicker, inputField set to DatePicker", field.getName());
                 inputField = (T) new DatePickerField();
                 break;
             case "MultipleSelector":
+                logger.debug("{} recognized as MultipleSelector, inputField set to MultipleSelector", field.getName());
                 inputField = (T) new MultipleSelectorField();
                 break;
             case "CheckBox":
+                logger.debug("{} recognized as CheckBox, inputField set to CheckBox", field.getName());
                 inputField = (T) new InputField();
                 break;
             default:
+                logger.debug("{} inputField not recognized, inputField set to default InputField", field.getName());
                 inputField = (T) new InputField();
-
         }
+        logger.info("adding default properties to inputField");
 
         String fieldName = field.getName();
         String fieldTypeHMTL = this.typeMapping.get(field.getType());
@@ -253,18 +290,22 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         inputField.setTypeHTML(fieldTypeHMTL);
 
         if (inputField instanceof DatePickerField) {
+            logger.debug("inputField instanceof DatePickerField, adding custom properties");
+
             DatePickerField datePicker = (DatePickerField) inputField;
             boolean showTime = Boolean.parseBoolean(field.getProperty("showTime").getValue());
             datePicker.setShowTime(showTime);
         }
-        if (inputField instanceof SelectField) {
-            SelectField select = (SelectField) inputField;
+        if (inputField instanceof ListBoxField) {
+            logger.debug("inputField instanceof ListBoxField, adding custom properties");
+
+            ListBoxField select = (ListBoxField) inputField;
             String optionsString = field.getProperty("options").getValue();
             List<String> optionsValues = Arrays.asList(optionsString.split(","));
-            List<SelectOption> selectOption = new ArrayList<SelectOption>();
+            List<Option> selectOption = new ArrayList<Option>();
             for (String f : optionsValues) {
                 String[] split = f.split("=");
-                SelectOption opt = new SelectOption();
+                Option opt = new Option();
                 opt.setName(split[0]);
                 opt.setValue(split[1]);
                 selectOption.add(opt);
@@ -277,7 +318,30 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             select.setDefaultValue(defaultValue);
             select.setAddEmptyOption(addEmptyOption);
         }
+        if (inputField instanceof RadioGroupField) {
+            logger.debug("inputField instanceof RadioGroupField, adding custom properties");
+
+            RadioGroupField select = (RadioGroupField) inputField;
+            String optionsString = field.getProperty("options").getValue();
+            List<String> optionsValues = Arrays.asList(optionsString.split(","));
+            List<Option> radioOptions = new ArrayList<Option>();
+            for (String f : optionsValues) {
+                String[] split = f.split("=");
+                Option opt = new Option();
+                opt.setName(split[0]);
+                opt.setValue(split[1]);
+                radioOptions.add(opt);
+            }
+            select.setOptions(radioOptions);
+
+            boolean inline = Boolean.parseBoolean(field.getProperty("inline").getValue());
+            String defaultValue = field.getProperty("defaultValue").getValue();
+
+            select.setDefaultValue(defaultValue);
+            select.setInline(inline);
+        }
         if (inputField instanceof MultipleSelectorField) {
+            logger.debug("inputField instanceof MultipleSelectorField, adding custom properties");
             MultipleSelectorField multipleSelector = (MultipleSelectorField) inputField;
             String optionsString = field.getProperty("listOfValues").getValue();
 
@@ -286,9 +350,9 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             int maxElementsOnTitle = Integer.parseInt(field.getProperty("maxElementsOnTitle").getValue());
             int maxDropdownElements = Integer.parseInt(field.getProperty("maxDropdownElements").getValue());
             List<String> optionsValues = Arrays.asList(optionsString.split(","));
-            List<SelectOption> selectOption = new ArrayList<SelectOption>();
+            List<Option> selectOption = new ArrayList<Option>();
             for (String f : optionsValues) {
-                SelectOption opt = new SelectOption();
+                Option opt = new Option();
                 opt.setName(f);
                 opt.setValue(f);
                 selectOption.add(opt);
@@ -299,18 +363,44 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             multipleSelector.setMaxElementsOnTitle(maxElementsOnTitle);
             multipleSelector.setAllowClearSelection(allowClearSelection);
             multipleSelector.setAllowFilter(allowFilter);
-
         }
 
         if (inputField instanceof TextField) {
+            logger.debug("inputField instanceof TextField, adding custom properties");
             TextField textField = (TextField) inputField;
             textField.setPlaceHolder(placeHolder);
+            if(formOverride != null) {
+                String placeHolderOverride = getOverrideProperty(formOverride, PlaceHolderOverride.class, p -> p.getPlaceHolder());
+                if(placeHolderOverride != null) {
+                    textField.setPlaceHolder(placeHolderOverride);
+                }
+            }
         }
 
+        if(formOverride != null) {
+            String defaultValueOverride = getOverrideProperty(formOverride, DefaultValueOverride.class, d -> d.getDefaultValue());
+            if(defaultValueOverride != null) {
+                inputField.setValue(defaultValueOverride);
+            }
+        }
+        
         return inputField;
-
     }
-
+    
+    private <T extends IBpmOverride> String getOverrideProperty(KieFormOverride formOverride, Class<T> type, Function<T, String> getOverrideProperty) {
+        if (formOverride != null && formOverride.getOverrides() != null) {
+            List<IBpmOverride> overrides = formOverride.getOverrides().getList();
+            if (overrides != null) {
+                for (IBpmOverride override : overrides) {
+                    if (type.isInstance(override)) {
+                        return getOverrideProperty.apply((T) override);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
     public ServletContext getServletContext() {
         return servletContext;
     }
@@ -318,5 +408,13 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     @Override
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
+    }
+    
+    public IKieFormOverrideManager getFormOverrideManager() {
+        return formOverrideManager;
+    }
+
+    public void setFormOverrideManager(IKieFormOverrideManager formOverrideManager) {
+        this.formOverrideManager = formOverrideManager;
     }
 }

@@ -33,7 +33,7 @@
                     <className>java.lang.Boolean</className>
                     <type>BASE</type>
                 </typeInfo>
-                <name>checkBox</name>
+                <name>checkBox1</name>
             </properties>
             <properties>
                 <metaData>
@@ -89,7 +89,7 @@
                     <className>java.lang.Object</className>
                     <type>OBJECT</type>
                 </typeInfo>
-                <name>multipleSelector1</name>
+                <name>multipleSelector</name>
             </properties>
             <properties>
                 <metaData>
@@ -221,6 +221,38 @@
                 <properties></properties>
                 <height>12</height>
             </rows>
+            <rows>
+                <layoutColumns>
+                    <layoutComponents>
+                        <dragTypeName>org.kie.workbench.common.forms.editor.client.editor.rendering.EditorFieldLayoutComponent</dragTypeName>
+                        <properties>
+                            <field_id>field_4983</field_id>
+                            <form_id>d1e6dd47-b24c-4f93-ba25-337832926113</form_id>
+                        </properties>
+                    </layoutComponents>
+                    <properties></properties>
+                    <span>12</span>
+                    <height>12</height>
+                </layoutColumns>
+                <properties></properties>
+                <height>12</height>
+            </rows>
+            <rows>
+                <layoutColumns>
+                    <layoutComponents>
+                        <dragTypeName>org.kie.workbench.common.forms.editor.client.editor.rendering.EditorFieldLayoutComponent</dragTypeName>
+                        <properties>
+                            <field_id>field_4858</field_id>
+                            <form_id>d1e6dd47-b24c-4f93-ba25-337832926113</form_id>
+                        </properties>
+                    </layoutComponents>
+                    <properties></properties>
+                    <span>12</span>
+                    <height>12</height>
+                </layoutColumns>
+                <properties></properties>
+                <height>12</height>
+            </rows>
             <version>2</version>
         </layoutTemplate>
         <fields>
@@ -321,6 +353,62 @@
             <name>birthDate</name>
             <id>field_8289</id>
             <placeHolder>BirthDate</placeHolder>
+        </fields>
+        <fields>
+            <serializedFieldClassName>org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.selectors.radioGroup.definition.StringRadioGroupFieldDefinition</serializedFieldClassName>
+            <validateOnChange>true</validateOnChange>
+            <code>RadioGroup</code>
+            <defaultValue>1inline</defaultValue>
+            <binding>radioGroupInline</binding>
+            <readOnly>false</readOnly>
+            <standaloneClassName>java.lang.String</standaloneClassName>
+            <label>RadioGroupInline</label>
+            <required>false</required>
+            <helpMessage/>
+            <inline>true</inline>
+            <options>
+                <text>Radio1 Inline</text>
+                <value>1inline</value>
+            </options>
+            <options>
+                <text>Radio2 Inline</text>
+                <value>2inline</value>
+            </options>
+            <options>
+                <text>Radio3 Inline</text>
+                <value>3inline</value>
+            </options>
+            <name>radioGroupInline</name>
+            <dataProvider/>
+            <id>field_4858</id>
+        </fields>
+        <fields>
+            <serializedFieldClassName>org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.selectors.radioGroup.definition.StringRadioGroupFieldDefinition</serializedFieldClassName>
+            <validateOnChange>true</validateOnChange>
+            <code>RadioGroup</code>
+            <defaultValue>3</defaultValue>
+            <binding>radioGroup</binding>
+            <readOnly>false</readOnly>
+            <standaloneClassName>java.lang.String</standaloneClassName>
+            <label>RadioGroup</label>
+            <required>false</required>
+            <helpMessage/>
+            <inline>false</inline>
+            <options>
+                <text>radio1</text>
+                <value>1</value>
+            </options>
+            <options>
+                <text>radio2</text>
+                <value>2</value>
+            </options>
+            <options>
+                <text>radio3</text>
+                <value>3</value>
+            </options>
+            <name>radioGroup</name>
+            <dataProvider/>
+            <id>field_4983</id>
         </fields>
     </array>
 </pamFormResult>

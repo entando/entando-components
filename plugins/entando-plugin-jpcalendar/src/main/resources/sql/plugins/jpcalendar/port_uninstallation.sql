@@ -1,1 +1,0 @@
-DELETE FROM sysconfig WHERE item = 'jpcalendar_Config';
