@@ -25,6 +25,7 @@ package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.BaseAction;
@@ -36,10 +37,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 
-public abstract class BpmCaseInstanceActionBase extends BaseAction{
+public abstract class BpmCaseInstanceActionBase extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceActionBase.class);
+
+    public static final int ERROR_NULL_CONFIG = 1;
+    public static final int ERROR_EMPTY_CASES = 2;
 
     @Autowired
     protected CaseManager caseManager;
@@ -53,7 +58,30 @@ public abstract class BpmCaseInstanceActionBase extends BaseAction{
     private String casePath;
     private String channelPath;
 
-    //Helper classes
+    private int errorCode;
+    
+    //Helper methods
+    public boolean isKieServerConfigurationValid() {
+        logger.debug("Check Configuration for knowledgeSourceId {}", this.getKnowledgeSourceId());
+        KieBpmConfig config=null;
+        try {
+            if (null!=this.getKnowledgeSourceId())
+            {
+                config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
+            }            
+            if (null == config) {
+                logger.warn("The configuration is null, return false");
+                this.setErrorCode(ERROR_NULL_CONFIG);
+                return false;
+            }
+        } catch (ApsSystemException ex) {
+            logger.error("Error reading the configuration", ex);
+            return false;
+        }
+        logger.debug("The configuration is valid, return true");
+        return true;
+    }
+
     protected String extractWidgetConfig(String paramName) {
         String value = null;
         try {
@@ -146,5 +174,12 @@ public abstract class BpmCaseInstanceActionBase extends BaseAction{
         this.formManager = formManager;
     }
 
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
+    }
 
 }
