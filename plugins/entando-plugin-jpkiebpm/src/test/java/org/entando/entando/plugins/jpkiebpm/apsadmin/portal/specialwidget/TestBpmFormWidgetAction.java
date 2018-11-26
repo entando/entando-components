@@ -20,14 +20,9 @@ import com.opensymphony.xwork2.Action;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 
 public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
 
@@ -181,7 +176,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("overrides[0].placeHolderValue", "placeholder2-MOD");
         assertEquals("configure", this.executeActionWithMockedKieServer());
         this.waitNotifyingThread();
-        
+
         // Publish the page
         this.pageManager.setPageOnline(temporaryPage.getCode());
         this.waitNotifyingThread();
@@ -196,7 +191,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         assertEquals(1, draftOverrides.size());
         KieFormOverride draftOverride = draftOverrides.get(0);
         assertEquals(2, draftOverride.getOverrides().getList().size());
-        assertFalse(draftOverride.isOnline());        
+        assertFalse(draftOverride.isOnline());
         assertNotSame(onlineOverride.getId(), draftOverride.getId());
 
         // Reopen widget settings and check modifications
@@ -216,7 +211,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         BpmWidgetInfo widgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId);
         assertNotNull(widgetInfo.getInformationOnline());
         assertNotNull(widgetInfo.getInformationDraft());
-        
+
         // Save the draft widget modifying the active flag
         this.initAction("/do/bpm/Page/SpecialWidget/BpmFormViewer", "save");
         this.addParameter("pageCode", temporaryPage.getCode());
@@ -242,7 +237,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         widgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId);
         assertNotNull(widgetInfo.getInformationOnline());
         assertNotNull(widgetInfo.getInformationDraft());
-        
+
         // Restore the published widget
         this.initAction("/do/rs/Page", "restoreOnlineConfig");
         this.addParameter("pageCode", temporaryPage.getCode());
@@ -267,7 +262,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         assertNull(widgetInfo.getInformationDraft());
         assertTrue(kieFormOverrideManager.getFormOverrides(widgetInfoId, false).isEmpty());
         assertEquals(1, kieFormOverrideManager.getFormOverrides(widgetInfoId, true).size());
-        
+
         // Publish the page (this must delete the related online overrides)
         this.pageManager.setPageOnline(temporaryPage.getCode());
         this.waitNotifyingThread();
@@ -277,7 +272,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
     private int getWidgetInfoId() {
         return Integer.parseInt(getAction().getWidget().getConfig().getProperty(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID));
     }
-    
+
     /**
      * Initialize a new action keeping the parameters of the previous action.
      */
@@ -289,64 +284,10 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
     }
 
     private String executeActionWithMockedKieServer() throws Throwable {
-        mockKieConnectionMethods();
-        return this.executeAction();
-    }
-
-    private void mockKieConnectionMethods() throws Throwable {
         IKieFormManager formManager = getAction().getFormManager();
-        IKieFormManager formManagerSpy = spy(formManager);
+        IKieFormManager formManagerSpy = SpyKieFormManagerUtil.getSpiedKieFormManager(formManager);
         getAction().setFormManager(formManagerSpy);
-
-        KieProcess kieProcess = new KieProcess();
-        kieProcess.setContainerId("container1");
-        kieProcess.setProcessId("process1");
-        kieProcess.setKieSourceId("1");
-        kieProcess.setProcessName("name1");
-        kieProcess.setProcessVersion("1");
-        kieProcess.setPackageName("org.entando");
-
-        doReturn(Collections.singletonList(kieProcess)).when(formManagerSpy).getProcessDefinitionsList(any());
-
-        KieContainer kieContainer = new KieContainer();
-        kieContainer.setContainerId("container1");
-        doReturn(Collections.singletonList(kieContainer)).when(formManagerSpy).getContainersList(any());
-
-        doReturn(getFakeKieProcessFormQueryResult()).when(formManagerSpy).getProcessForm(any(), any(), any());
-    }
-
-    private KieProcessFormQueryResult getFakeKieProcessFormQueryResult() {
-        KieProcessFormQueryResult result = new KieProcessFormQueryResult();
-
-        List<KieProcessFormField> fields = new ArrayList<>();
-        result.setFields(fields);
-
-        KieProcessFormField field1 = getFakeKieProcessFormField("employee", true);
-        field1.setType("TextBox");
-        fields.add(field1);
-
-        KieProcessFormField field2 = getFakeKieProcessFormField("reason", true);
-        field2.setType("TextArea");
-        fields.add(field2);
-
-        return result;
-    }
-
-    private KieProcessFormField getFakeKieProcessFormField(String name, boolean required) {
-        KieProcessFormField field = new KieProcessFormField();
-        field.setId(name);
-        field.setName(name);
-        List<KieProcessProperty> properties = new ArrayList<>();
-        KieProcessProperty requiredProp = new KieProcessProperty();
-        requiredProp.setName("fieldRequired");
-        requiredProp.setValue(String.valueOf(required));
-        properties.add(requiredProp);
-        KieProcessProperty placeHolderProp = new KieProcessProperty();
-        placeHolderProp.setName("placeHolder");
-        placeHolderProp.setValue(name);
-        properties.add(placeHolderProp);
-        field.setProperties(properties);
-        return field;
+        return this.executeAction();
     }
 
     private Page createTemporaryPage(String pageCode) throws Exception {

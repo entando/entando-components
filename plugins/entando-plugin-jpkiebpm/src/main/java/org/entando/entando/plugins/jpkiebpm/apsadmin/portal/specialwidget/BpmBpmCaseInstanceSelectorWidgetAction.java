@@ -141,10 +141,16 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
                     this.setFrontEndCaseData(frontEndCaseDatain);
                     JSONObject frontEndCaseDatainjs = new JSONObject(frontEndCaseDatain);
 
-                    this.setKnowledgeSourcePath(frontEndCaseDatainjs.getString("knowledge-source-id"));
+                    String configuredSourceId = frontEndCaseDatainjs.getString("knowledge-source-id");
+                    KieBpmConfig config = formManager.getKieServerConfigurations().get(configuredSourceId);
+                    if(config == null) {
+                        logger.warn("Null KieBpmConfig - Check the configuration");
+                        this.setErrorCode(ERROR_NULL_CONFIG);
+                        return result;                        
+                    }
+                    this.setKnowledgeSourcePath(configuredSourceId);
+                    
                     this.setProcessPath(frontEndCaseDatainjs.getString("container-id"));
-
-                    KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
                     this.setProcess(this.formManager.getContainersList(config));
                     this.setChannel(channel);
                 }

@@ -96,14 +96,14 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 			int index = 1;
 			stat.setInt(index++, kieFormOverride.getId());
 			stat.setInt(index++, kieFormOverride.getWidgetInfoId());
-                        stat.setBoolean(index++, kieFormOverride.isOnline());
+                        stat.setInt(index++, kieFormOverride.isOnline() ? 1 : 0);
 			Timestamp dateTimestamp = new Timestamp(kieFormOverride.getDate().getTime());
 			stat.setTimestamp(index++, dateTimestamp);
 			stat.setString(index++, kieFormOverride.getField());
 			stat.setString(index++, kieFormOverride.getContainerId());
 			stat.setString(index++, kieFormOverride.getProcessId());
 			stat.setString(index++, kieFormOverride.getSourceId());
-                        stat.setBoolean(index++, kieFormOverride.isActive());
+                        stat.setInt(index++, kieFormOverride.isActive() ? 1 : 0);
 			String txt = JAXBHelper.marshall(kieFormOverride.getOverrides(), true, false);
 			stat.setString(index++, txt);
 			stat.executeUpdate();
@@ -168,14 +168,14 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 			int index = 1;
 
 			stat.setInt(index++, kieFormOverride.getWidgetInfoId());
-			stat.setBoolean(index++, kieFormOverride.isOnline());
+			stat.setInt(index++, kieFormOverride.isOnline() ? 1 : 0);
 			Timestamp dateTimestamp = new Timestamp(kieFormOverride.getDate().getTime());
 			stat.setTimestamp(index++, dateTimestamp);
 			stat.setString(index++, kieFormOverride.getField());
 			stat.setString(index++, kieFormOverride.getContainerId());
 			stat.setString(index++, kieFormOverride.getProcessId());
 			stat.setString(index++, kieFormOverride.getSourceId());
-			stat.setBoolean(index++, kieFormOverride.isActive());
+			stat.setInt(index++, kieFormOverride.isActive() ? 1 : 0);
 			String txt = JAXBHelper.marshall(kieFormOverride.getOverrides(), true, false);
 			stat.setString(index++, txt);
 			stat.setInt(index++, kieFormOverride.getId());
@@ -265,7 +265,7 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 			kieFormOverride = new KieFormOverride();
 			kieFormOverride.setId(res.getInt("id"));
 			kieFormOverride.setWidgetInfoId(res.getInt("widgetinfoid"));
-                        kieFormOverride.setOnline(res.getBoolean("online"));
+                        kieFormOverride.setOnline(res.getInt("online") == 1);
 			Timestamp dateValue = res.getTimestamp("date");
 			if (null != dateValue) {
 				kieFormOverride.setDate(new Date(dateValue.getTime()));
@@ -274,7 +274,7 @@ public class KieFormOverrideDAO extends AbstractSearcherDAO implements IKieFormO
 			kieFormOverride.setContainerId(res.getString("containerid"));
 			kieFormOverride.setProcessId(res.getString("processid"));
 			kieFormOverride.setSourceId(res.getString("sourceid"));
-                        kieFormOverride.setActive(res.getBoolean("active"));
+                        kieFormOverride.setActive(res.getInt("active") == 1);
 			String txt = res.getString("override");
 			OverrideList ol = (OverrideList) JAXBHelper.unmarshall(txt, OverrideList.class, true, false);
 			kieFormOverride.setOverrides(ol);

@@ -6,6 +6,7 @@ plugins/entando-plugin-*/target/
 plugins/entando-plugin-*/nb-configuration.xml
 plugins/entando-plugin-*/derby.log
 plugins/entando-plugin-*/nbactions.xml
+plugins/entando-plugin-jpkiebpm/entando-dev.log
 **/overlays/
 .classpath
 .project

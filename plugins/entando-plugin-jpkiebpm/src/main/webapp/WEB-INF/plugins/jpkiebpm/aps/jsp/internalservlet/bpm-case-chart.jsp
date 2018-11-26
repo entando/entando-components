@@ -6,6 +6,7 @@
 <%
     String cId = java.util.UUID.randomUUID().toString();
 %>
+
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 <s:if  test="#request['bpmcss']==null">
     <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jbpm-widget-ext.css" rel="stylesheet">
@@ -21,6 +22,7 @@
     <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/Chart.min.js"></script>
     <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jbpm-charts.js"></script>
     <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/angular-chart.min.js"></script>
+
     <s:set var="bpmCharts" value="true" scope="request"/>
 </s:if>
 
@@ -81,6 +83,9 @@
         angular.element(document).ready(function () {
             angular.bootstrap(document.getElementById('<%=cId%>'), ['<%=cId%>']);
         });
+
     </s:if>
     })();
 </script>
+
+

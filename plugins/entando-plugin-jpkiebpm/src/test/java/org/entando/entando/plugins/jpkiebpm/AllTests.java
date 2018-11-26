@@ -6,9 +6,10 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.TestBpmOverrides;
 import org.entando.entando.plugins.jpkiebpm.aps.internalservlet.TestBpmCaseInstanceActionBase;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestCaseProgressWidgetHelpers;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.TestPamProcessForm;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.TestBpmFormWidgetAction;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilderTest;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.TestDataUXBuilder;
 import org.entando.entando.plugins.jpkiebpm.web.config.*;
 
 public class AllTests {
@@ -16,7 +17,7 @@ public class AllTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("KIE-BPM connector test");
 
-//		suite.addTestSuite(TestKieFormManager.class);
+//	suite.addTestSuite(TestKieFormManager.class);
         suite.addTestSuite(TestKieContainer.class);
         suite.addTestSuite(TestKieProcesses.class);
         suite.addTestSuite(TestKieProcesseInstance.class);
@@ -33,9 +34,9 @@ public class AllTests {
         suite.addTestSuite(TestBpmOverrides.class);
         suite.addTestSuite(TestBpmOverrides.class);
         suite.addTestSuite(TestJpkiebpmLabelsProperties.class);
-        suite.addTestSuite(DataUXBuilderTest.class);
+        suite.addTestSuite(TestDataUXBuilder.class);
         suite.addTestSuite(TestBpmCaseInstanceActionBase.class);
-
+        suite.addTestSuite(TestCaseProgressWidgetHelpers.class);
 
         suite.addTest(new JUnit4TestAdapter(ConfigControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(ConfigControllerUnitTest.class));

@@ -49,3 +49,15 @@ INSERT INTO widgetcatalog(
 	<action name="jpkiebpmBpmFormWidgetViewerConfig"/>
 </config>', 'jpkiebpm', '', '',
             1, '');
+
+INSERT INTO widgetcatalog(
+            code, titles, parameters, plugincode, parenttypecode, defaultconfig,
+            locked, maingroup) VALUES ('bpm-case-instance-selector', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">PAM-Case instance selector</property>
+<property key="it">Selettore di istanza Case PAM</property>
+</properties>', '<config>
+        <parameter name="channel">channel</parameter>
+	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
+	<action name="jpkiebpmBpmCaseInstanceSelectorWidgetViewerConfig"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);

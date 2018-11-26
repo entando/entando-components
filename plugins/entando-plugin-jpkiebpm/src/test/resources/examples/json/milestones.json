@@ -1,0 +1,21 @@
+{
+  "milestones" : [ {
+    "milestone-name" : "Milestone 2",
+    "milestone-id" : "4",
+    "milestone-achieved" : true,
+    "milestone-achieved-at" : 1541751636922,
+    "milestone-status" : "Completed"
+  }, {
+    "milestone-name" : "Milestone 1",
+    "milestone-id" : "_5DF9B265-4140-42B1-B34B-2A85ED6DBFBF",
+    "milestone-achieved" : false,
+    "milestone-achieved-at" : null,
+    "milestone-status" : "Available"
+  }, {
+    "milestone-name" : "Milestone 3",
+    "milestone-id" : "_AA3A4A87-9512-40CD-A573-D2913D67FBA4",
+    "milestone-achieved" : false,
+    "milestone-achieved-at" : null,
+    "milestone-status" : "Available"
+  } ]
+}

@@ -24,16 +24,12 @@
 package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.json.JSONObject;
 
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.updatefrontEndMilestonesDataMilestones;
-
-/**
- *
- * @author own_strong
- */
 public class BpmCaseProgressAction extends BpmCaseInstanceActionBase {
 
     private static final Logger logger = LoggerFactory.getLogger(BpmCaseProgressAction.class);
@@ -45,17 +41,31 @@ public class BpmCaseProgressAction extends BpmCaseInstanceActionBase {
             if (!isKieServerConfigurationValid()) {
                 return SUCCESS;
             }
-            String frontEndMilestonesDataIn = extractWidgetConfig("frontEndMilestonesData");
-            this.setFrontEndMilestonesData(frontEndMilestonesDataIn);
             String channelIn = extractWidgetConfig("channel");
+            String progressBarType= extractWidgetConfig("progressBarType");
+            String showNumberOfTasks = extractWidgetConfig("showNumberOfTasks");
+            String showMilestones = extractWidgetConfig("showMilestones");
+            
             this.setChannel(channelIn);
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());            
-            String updatedMilestones = this.getCaseManager().getMilestonesList(config, this.getContainerid(), this.getCasePath()).toString();
-            this.setCaseInstanceMilestones(updatefrontEndMilestonesDataMilestones(this.getFrontEndMilestonesData(), updatedMilestones));
-            //TODO JPW -- Necessary?
+            this.setChannelPath(this.getChannel());
+
+            KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
+            
             if (this.getCasePath() == null) {
                 this.setCasePath(this.getCaseManager().getCaseInstancesList(config, this.getContainerid()).get(0));
             }
+
+            JSONObject milestonesList = new JSONObject();
+            milestonesList.put("milestones",this.getCaseManager().getMilestonesList(config, this.getContainerid(), this.getCasePath()));            
+            JSONObject generateUiJson = CaseProgressWidgetHelpers.generateUiJson(progressBarType,Boolean.valueOf(showMilestones),Boolean.valueOf(showNumberOfTasks));
+            JSONObject updatedMilestonesJson = CaseProgressWidgetHelpers.updateFrontEndMilestones(milestonesList);
+            JSONObject frontEndMilestonesData = new JSONObject();
+            frontEndMilestonesData.put("ui",generateUiJson.get("ui"));            
+            frontEndMilestonesData.put("milestones",updatedMilestonesJson.get("milestones"));            
+            
+            this.setFrontEndMilestonesData(frontEndMilestonesData.toString());
+            this.setCaseInstanceMilestones(updatedMilestonesJson.toString());
+            
         } catch (ApsSystemException t) {
             logger.error("Error getting the configuration parameter", t);
             return FAILURE;
