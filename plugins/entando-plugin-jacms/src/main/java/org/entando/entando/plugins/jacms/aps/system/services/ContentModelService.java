@@ -11,13 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.plugins.jacms.aps.system.services.contentmodel;
+package org.entando.entando.plugins.jacms.aps.system.services;
+
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 
 import java.util.List;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelReference;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
-import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
-import org.entando.entando.plugins.jacms.web.contentmodel.EntandoCrudService;
 
 public interface ContentModelService extends EntandoCrudService<ContentModelDto, Long> {
     

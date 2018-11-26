@@ -1,125 +1,49 @@
 package com.agiletec.plugins.jacms.aps.system.services.contentmodel.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.entando.entando.plugins.jacms.aps.system.init.portdb.enums.AttributeType;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import java.util.*;
 
-/**
- * AttributeDto
- */
 @Validated
 public class AttributeDto {
     @JsonProperty("id")
-    private Long id = null;
-
-    /**
-     * Gets or Sets type
-     */
-    public enum TypeEnum {
-        ATTACH("Attach"),
-
-        AUTHOR("Author"),
-
-        BOOLEAN("Boolean"),
-
-        CHECKBOX("CheckBox"),
-
-        COMPOSITE("Composite"),
-
-        COORDS("Coords"),
-
-        DATE("Date"),
-
-        ENUMERATOR("Enumerator"),
-
-        ENUMERATORMAP("EnumeratorMap"),
-
-        HYPERTEXT("Hypertext"),
-
-        IMAGE("Image"),
-
-        LINK("Link"),
-
-        LIST("List"),
-
-        LONGTEXT("Longtext"),
-
-        MONOLIST("Monolist"),
-
-        MONOTEXT("Monotext"),
-
-        NUMBER("Number"),
-
-        TEXT("Text"),
-
-        THREESTATE("ThreeState"),
-
-        TIME("Time"),
-
-        TIMESTAMP("Timestamp");
-
-        private String value;
-
-        TypeEnum(String value) {
-            this.value = value;
-        }
-
-        @Override
-        @JsonValue
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        @JsonCreator
-        public static TypeEnum fromValue(String text) {
-            for (TypeEnum b : TypeEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-    }
+    private Long id;
 
     @JsonProperty("type")
-    private TypeEnum type = null;
+    private AttributeType type;
 
     @JsonProperty("code")
-    private String code = null;
+    private String code;
 
     @JsonProperty("name")
-    private String name = null;
+    private String name;
 
     @JsonProperty("mandatory")
-    private Boolean mandatory = null;
+    private Boolean mandatory;
 
     @JsonProperty("searchable")
-    private Boolean searchable = null;
+    private Boolean searchable;
 
     @JsonProperty("filterable")
-    private Boolean filterable = null;
+    private Boolean filterable;
 
     @JsonProperty("contentType")
-    private ContentTypeDto contentType = null;
+    private ContentTypeDto contentType;
 
     @JsonProperty("attributeRoles")
     @Valid
-    private List<AttributeRoleDto> attributeRoles = null;
+    private List<AttributeRoleDto> attributeRoles;
 
     public AttributeDto id(Long id) {
         this.id = id;
         return this;
     }
 
-    /**
-     * Get id
-     *
-     * @return id
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty()
     public Long getId() {
         return id;
     }
@@ -128,22 +52,17 @@ public class AttributeDto {
         this.id = id;
     }
 
-    public AttributeDto type(TypeEnum type) {
+    public AttributeDto type(AttributeType type) {
         this.type = type;
         return this;
     }
 
-    /**
-     * Get type
-     *
-     * @return type
-     **/
-    @ApiModelProperty(value = "")
-    public TypeEnum getType() {
+    @ApiModelProperty()
+    public AttributeType getType() {
         return type;
     }
 
-    public void setType(TypeEnum type) {
+    public void setType(AttributeType type) {
         this.type = type;
     }
 
@@ -152,12 +71,7 @@ public class AttributeDto {
         return this;
     }
 
-    /**
-     * Get code
-     *
-     * @return code
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty()
     public String getCode() {
         return code;
     }
@@ -171,12 +85,7 @@ public class AttributeDto {
         return this;
     }
 
-    /**
-     * Get name
-     *
-     * @return name
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty()
     public String getName() {
         return name;
     }
@@ -190,12 +99,7 @@ public class AttributeDto {
         return this;
     }
 
-    /**
-     * Get mandatory
-     *
-     * @return mandatory
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty()
     public Boolean isMandatory() {
         return mandatory;
     }
@@ -209,12 +113,7 @@ public class AttributeDto {
         return this;
     }
 
-    /**
-     * Get searchable
-     *
-     * @return searchable
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty()
     public Boolean isSearchable() {
         return searchable;
     }
@@ -228,12 +127,7 @@ public class AttributeDto {
         return this;
     }
 
-    /**
-     * Get filterable
-     *
-     * @return filterable
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty()
     public Boolean isFilterable() {
         return filterable;
     }
@@ -247,12 +141,7 @@ public class AttributeDto {
         return this;
     }
 
-    /**
-     * Get contentType
-     *
-     * @return contentType
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty()
 
     @Valid
     public ContentTypeDto getContentType() {
@@ -270,18 +159,13 @@ public class AttributeDto {
 
     public AttributeDto addRolesItem(AttributeRoleDto rolesItem) {
         if (this.attributeRoles == null) {
-            this.attributeRoles = new ArrayList<AttributeRoleDto>();
+            this.attributeRoles = new ArrayList<>();
         }
         this.attributeRoles.add(rolesItem);
         return this;
     }
 
-    /**
-     * Get attributeRoles
-     *
-     * @return attributeRoles
-     **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty()
 
     @Valid
     public List<AttributeRoleDto> getAttributeRoles() {
@@ -320,20 +204,17 @@ public class AttributeDto {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class AttributeDto {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    type: ").append(toIndentedString(type)).append("\n");
-        sb.append("    code: ").append(toIndentedString(code)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("    mandatory: ").append(toIndentedString(mandatory)).append("\n");
-        sb.append("    searchable: ").append(toIndentedString(searchable)).append("\n");
-        sb.append("    filterable: ").append(toIndentedString(filterable)).append("\n");
-        sb.append("    contentType: ").append(toIndentedString(contentType)).append("\n");
-        sb.append("    attributeRoles: ").append(toIndentedString(attributeRoles)).append("\n");
-        sb.append("}");
-        return sb.toString();
+        return "class AttributeDto {\n" +
+                "    id: " + toIndentedString(id) + "\n" +
+                "    type: " + toIndentedString(type) + "\n" +
+                "    code: " + toIndentedString(code) + "\n" +
+                "    name: " + toIndentedString(name) + "\n" +
+                "    mandatory: " + toIndentedString(mandatory) + "\n" +
+                "    searchable: " + toIndentedString(searchable) + "\n" +
+                "    filterable: " + toIndentedString(filterable) + "\n" +
+                "    contentType: " + toIndentedString(contentType) + "\n" +
+                "    attributeRoles: " + toIndentedString(attributeRoles) + "\n" +
+                "}";
     }
 
     /**

@@ -1,4 +1,4 @@
-package org.entando.entando.plugins.jacms.aps.system.services.contentmodel;
+package org.entando.entando.plugins.jacms.aps.system.persistence;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -23,7 +23,7 @@ public class ContentTypeDaoImpl extends AbstractDAO implements ContentTypeDao {
 
     private static final Logger logger =  LoggerFactory.getLogger(ContentTypeDaoImpl.class);
 
-    private static final String DELETE_SQL = "DELETE FROM ContentTypes WHERE id = ? ";
+    private static final String DELETE_SQL = "DELETE FROM contenttypes WHERE id = ? ";
 
     private static final String CREATE_SQL =
             "INSERT INTO contenttypes (id, code, name, default_content_model, default_content_model_list) " +
@@ -113,7 +113,6 @@ public class ContentTypeDaoImpl extends AbstractDAO implements ContentTypeDao {
     }
 
     public Optional<ContentTypeDto> findById(Long id) {
-
         ContentTypeDto contentType = null;
 
         Connection conn = null;

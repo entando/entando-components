@@ -15,7 +15,7 @@ package org.entando.entando.plugins.jacms.web.contentmodel;
 
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
-import org.entando.entando.plugins.jacms.aps.system.services.contentmodel.ContentModelService;
+import org.entando.entando.plugins.jacms.aps.system.services.ContentModelService;
 import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.*;

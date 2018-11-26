@@ -1,6 +1,7 @@
-package org.entando.entando.plugins.jacms.aps.system.services.contentmodel;
+package org.entando.entando.plugins.jacms.aps.system.managers;
 
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
+import org.entando.entando.plugins.jacms.aps.system.persistence.ContentTypeDao;
 import org.entando.entando.web.common.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

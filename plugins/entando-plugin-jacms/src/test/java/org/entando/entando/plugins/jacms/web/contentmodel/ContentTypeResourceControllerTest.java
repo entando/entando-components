@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
+import org.entando.entando.plugins.jacms.aps.system.services.ContentTypeService;
 import org.entando.entando.plugins.jacms.web.contentmodel.util.*;
 import org.entando.entando.web.common.model.*;
 import org.junit.*;

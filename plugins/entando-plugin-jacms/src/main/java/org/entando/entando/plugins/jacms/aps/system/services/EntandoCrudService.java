@@ -1,4 +1,4 @@
-package org.entando.entando.plugins.jacms.web.contentmodel;
+package org.entando.entando.plugins.jacms.aps.system.services;
 
 import org.entando.entando.web.common.model.*;
 

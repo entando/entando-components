@@ -1,12 +1,11 @@
 package org.entando.entando.plugins.jpkiebpm;
 
 import junit.framework.*;
+import org.entando.entando.plugins.jpkiebpm.aps.internalservlet.TestBpmCaseInstanceActionBase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.TestKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.TestBpmOverrides;
-import org.entando.entando.plugins.jpkiebpm.aps.internalservlet.TestBpmCaseInstanceActionBase;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestCaseProgressWidgetHelpers;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.TestPamProcessForm;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.TestBpmFormWidgetAction;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.TestDataUXBuilder;

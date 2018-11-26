@@ -1,19 +1,19 @@
 package org.entando.entando.plugins.jacms.web;
 
+import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.spring.*;
 import com.j256.ormlite.support.ConnectionSource;
 import org.entando.entando.aps.system.init.util.ApsDerbyEmbeddedDatabaseType;
-import org.entando.entando.plugins.jacms.aps.system.init.portdb.ContentType;
+import org.entando.entando.plugins.jacms.aps.system.init.portdb.*;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.embedded.*;
 import org.springframework.web.servlet.config.annotation.*;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.Collections;
 
 @EnableWebMvc
 @Configuration
@@ -50,11 +50,19 @@ public class TestWebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    TableCreator tableCreator(ConnectionSource connectionSource, Dao<ContentType, Long> componentTypeDao)
-            throws SQLException {
+    Dao<Attribute, Long> attributeDao(ConnectionSource connectionSource) throws SQLException {
+        return DaoFactory.createDao(connectionSource, Attribute.class);
+    }
+
+    @Bean
+    TableCreator tableCreator(
+            ConnectionSource connectionSource,
+            Dao<ContentType, Long> componentTypeDao,
+            Dao<Attribute, Long> attributeDao
+        ) throws SQLException {
 
         TableCreator tableCreator = new TableCreator(connectionSource,
-                Collections.singletonList(componentTypeDao));
+                ImmutableList.of(componentTypeDao, attributeDao));
         System.setProperty(TableCreator.AUTO_CREATE_TABLES, "true");
 
         tableCreator.initialize();
