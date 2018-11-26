@@ -16,9 +16,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class DataUXBuilderTest extends TestCase {
+public class TestDataUXBuilder extends TestCase {
 
-    private final static transient Logger logger = Logger.getLogger(DataUXBuilderTest.class);
+    private final static transient Logger logger = Logger.getLogger(TestDataUXBuilder.class);
 
     private static String CONTAINER_ID = "CONTAINER_ID";
     private static String PROCESS_ID = "PROCESS_ID";

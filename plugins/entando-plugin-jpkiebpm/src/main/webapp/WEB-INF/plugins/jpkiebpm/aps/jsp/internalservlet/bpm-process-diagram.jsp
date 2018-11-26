@@ -7,7 +7,6 @@
     String cId = java.util.UUID.randomUUID().toString();
 %>
 
-<%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 <s:if test="#request['svgfix']==null">
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function () {
@@ -29,31 +28,33 @@
     <div class="ibox-title">
         <h5>Case Instance Diagram</h5>
         <div class="ibox-tools">
-            <a class="collapse-link"> 
-                <i class="fa fa-chevron-up"></i> 
-            </a> 
-            <a class="close-link"> <i class="fa fa-times"></i> </a> 
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+            <a class="close-link"> <i class="fa fa-times"></i> </a>
         </div>
     </div>
-    <div class="ibox-content">
-        <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/ProcessDiagram/view.action"/>" method="post" class="form-horizontal" >
-            <s:if test="casePath != null">
-                <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
-            </s:if>
-            <s:if test="knowledgeSourceId != null">
-                <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
-            </s:if>
-            <s:if test="containerid != null">
-                <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
-            </s:if>
-            <s:if test="channelPath != null">
-                <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
-            </s:if>
-        </form>
-        <s:if test="diagram != null">
+
+    <s:if test="%{null != diagram}">
+        <div class="ibox-content">
+            <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/ProcessDiagram/view.action"/>" method="post" class="form-horizontal" >
+                <s:if test="casePath != null">
+                    <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
+                </s:if>
+                <s:if test="knowledgeSourceId != null">
+                    <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
+                </s:if>
+                <s:if test="containerid != null">
+                    <s:hidden name="containerid" escapeHtml="false" escapeJavaScript="false"/>
+                </s:if>
+                <s:if test="channelPath != null">
+                    <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
+                </s:if>
+            </form>
             <s:property value="diagram" escapeHtml="false" escapeJavaScript="false"/>
-        </s:if>
-    </div>
+        </div>
+    </s:if>
+
 </div>
 </div>
 </div>
