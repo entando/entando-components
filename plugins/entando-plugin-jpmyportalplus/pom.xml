@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-plugins-parent</artifactId>
         <groupId>org.entando.entando.plugins</groupId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.0.2</version>
     </parent>
     <artifactId>entando-plugin-jpmyportalplus</artifactId>
     <groupId>org.entando.entando.plugins</groupId>
@@ -61,43 +61,43 @@
         <dependency>
             <groupId>org.entando.entando.bundles.misc</groupId>
             <artifactId>entando-misc-bootstrap</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.2</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.misc</groupId>
             <artifactId>entando-misc-jquery-ui</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.2</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-language_choose</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.2</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-search_form</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.2</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-navigation_bar</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.2</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-login_form</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.2</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.contents</groupId>
             <artifactId>entando-content-generic</artifactId>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.2</version>
             <type>war</type>
         </dependency>
 

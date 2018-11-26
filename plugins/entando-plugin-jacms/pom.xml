@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-plugins-parent</artifactId>
         <groupId>org.entando.entando.plugins</groupId>
-        <version>5.0.2-SNAPSHOT</version>
+        <version>5.0.2</version>
     </parent>
     <artifactId>entando-plugin-jacms</artifactId>
     <groupId>org.entando.entando.plugins</groupId>
@@ -85,7 +85,7 @@
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-engine</artifactId>
             <type>jar</type>
-            <version>5.0.1-SNAPSHOT</version>
+            <version>5.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.cxf</groupId>
