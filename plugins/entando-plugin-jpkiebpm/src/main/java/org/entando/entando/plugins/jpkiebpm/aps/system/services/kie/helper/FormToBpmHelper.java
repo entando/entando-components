@@ -42,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePickerField;
 
 public class FormToBpmHelper {
 
@@ -112,28 +111,31 @@ public class FormToBpmHelper {
         logger.debug("INPUT KEYS:  {}", input.keySet().toString());
 
         for (KieProcessFormField formField : formParams) {
+
+            logger.debug("Processing formField {} of type {}: ",formField, formField.getType());
+ 
             String parameter = formField.getName();
             String[] tok = parameter.split(SEPARATOR);
 
             if (tok.length > 1) {
                 String section = tok[0];
                 String field = tok[1];
+                //Boolean checkbox values need to get round tripped as false. Without it data erasure can occur
+                //when a box is un-checked by a user. The input data from the user won't contain a key since the value
+                //isn't sent by the FE
+                if (formField.getType().equals("CheckBox") && !input.containsKey(parameter)) {
+                    input.put(parameter, false);
+                    logger.debug("add input parameter {} with value false {}" , parameter);
 
+                }
                 if (!scalarForm) {
                     // select the json
                     JSONObject json = jmap.get(section);
                     // add data
-                    json.put(field, input.get(parameter));
+                    json.put(field, input.get(parameter));                    
 
                 } else {
-
-                    //Boolean checkbox values need to get round tripped as false. Without it data erasure can occur
-                    //when a box is un-checked by a user. The input data from the user won't contain a key since the value
-                    //isn't sent by the FE
-                    if (formField.getType().equals("CheckBox") && !input.containsKey(parameter)) {
-                        input.put(parameter, false);
-                    }
-                    singles.put(field, input.get(parameter));
+                    singles.put(field, input.get(parameter));                    
                 }
                 logger.info("adding field '{}' in section '{}'", field, section);
             } else {
@@ -142,12 +144,17 @@ public class FormToBpmHelper {
                 //Boolean checkbox values need to get round tripped as false. Without it data erasure can occur
                 //when a box is un-checked by a user. The input data from the user won't contain a key since the value
                 //isn't sent by the FE
-                if (formField.getType().equals("CheckBox") && !input.containsKey(parameter)) {
+                if ((formField.getType().equals("CheckBox") && !input.containsKey(parameter))
+                    ||((formField.getType().equals("CheckBox") && input.get(parameter) == null))){
+                    logger.debug("set {} to false ", parameter);
+
                     input.put(parameter, false);
                 }
+
                 singles.put(field, input.get(parameter));
                 logger.info("adding single '{}' value '{}'", field, input.get(parameter));
             }
+
         }
         return singles;
     }
@@ -252,7 +259,7 @@ public class FormToBpmHelper {
 
         logger.debug("the field {} is mandatory {}", field.getName(), mandatory);
 
-        logger.debug("the field {} value {}", field.getName(), value);
+        logger.debug("the field {} have value {}", field.getName(), value);
 
         if (null == value) {
             if (!mandatory) {
@@ -277,12 +284,13 @@ public class FormToBpmHelper {
             return result;
         }
         try {
+            logger.debug("{} is {}", field, fieldClass.toString());
+
             if (fieldClass.equals(STRING)) {
                 result = String.valueOf(value);
             } else if (fieldClass.equals(INTEGER)) {
                 result = Integer.valueOf(value);
             } else if (fieldClass.equals(BOOLEAN)) {
-
                 if (value == null) {
                     result = false;
                 } else if (value.equalsIgnoreCase("true")
@@ -332,7 +340,7 @@ public class FormToBpmHelper {
         for (Map.Entry<String, String> ff : input.entrySet()) {
             String key = ff.getKey();
             String value = ff.getValue();
-            logger.debug("validate failed {} with value {}", key, value);
+            logger.debug("validate field {} with value {}", key, value);
 
             Object obj = FormToBpmHelper.validateField(form, key, value);
             if (null != obj) {
