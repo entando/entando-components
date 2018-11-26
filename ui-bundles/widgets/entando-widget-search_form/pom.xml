@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando.entando.bundles</groupId>
         <artifactId>entando-bundles-parent</artifactId>
-        <version>5.0.2</version>
+        <version>5.0.3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-widget-search_form</artifactId>
