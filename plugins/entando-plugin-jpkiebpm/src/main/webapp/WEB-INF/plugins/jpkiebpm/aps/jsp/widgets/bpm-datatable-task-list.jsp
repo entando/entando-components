@@ -76,14 +76,18 @@
         return template;
     }
 
+    var windowWidth = $(window).width();
+    var windowHeight = $(window).height();
 
     var optModal = {
         //appendTo: "#data-table-active",
-        minWidth: 500,
+        width: windowWidth - 100,
+        height: windowHeight - 100,
         modal: true,
         show: {effect: "fadego", duration: 800},
         resizable: true,
-        position: {my: "center top", at: "center top+10%"}
+        position: {my: "center", at: "center", of: window}
+
     }
 
 
@@ -245,7 +249,7 @@
         <div id="bpm-task-list-modal-form"/>
 
         <div id="bpm-task-list-modal-diagram">
-            <img id="bpm-task-list-modal-diagram-data" class="img-responsive"/>
+            <img id="bpm-task-list-modal-diagram-data" />
         </div>
 
     </div>
