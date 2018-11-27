@@ -7,7 +7,6 @@
     String cId = java.util.UUID.randomUUID().toString();
 %>
 
-<%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 <s:if test="#request['svgfix']==null">
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function () {
@@ -29,10 +28,10 @@
     <div class="ibox-title">
         <h5>Case Instance Diagram</h5>
         <div class="ibox-tools">
-            <a class="collapse-link"> 
-                <i class="fa fa-chevron-up"></i> 
-            </a> 
-            <a class="close-link"> <i class="fa fa-times"></i> </a> 
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+            <a class="close-link"> <i class="fa fa-times"></i> </a>
         </div>
     </div>
     <div class="ibox-content">
