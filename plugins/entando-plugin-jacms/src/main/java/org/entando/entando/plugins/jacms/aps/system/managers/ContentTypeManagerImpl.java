@@ -11,35 +11,35 @@ import java.util.Optional;
 @Service
 public class ContentTypeManagerImpl implements ContentTypeManager {
 
-    private final ContentTypeDao contentTypeDao;
+    private final ContentTypeDao dao;
 
     @Autowired
-    public ContentTypeManagerImpl(ContentTypeDao contentTypeDao) {
-        this.contentTypeDao = contentTypeDao;
+    public ContentTypeManagerImpl(ContentTypeDao dao) {
+        this.dao = dao;
     }
 
     @Override
     public ContentTypeDto create(ContentTypeDto entity) {
-        return contentTypeDao.create(entity);
+        return dao.create(entity);
     }
 
     @Override
     public ContentTypeDto update(ContentTypeDto entity) {
-        return contentTypeDao.update(entity);
+        return dao.update(entity);
     }
 
     @Override
     public PagedMetadata<ContentTypeDto> findMany(RestListRequest listRequest) {
-        return contentTypeDao.list();
+        return dao.list();
     }
 
     @Override
     public Optional<ContentTypeDto> findById(Long id) {
-        return contentTypeDao.findById(id);
+        return dao.findById(id);
     }
 
     @Override
     public void delete(Long id) {
-        contentTypeDao.delete(id);
+        dao.delete(id);
     }
 }

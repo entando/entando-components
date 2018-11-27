@@ -17,17 +17,17 @@ import java.util.Optional;
 @RequestMapping(value = "/plugins/cms/content-types")
 public class ContentTypeResourceController implements ContentTypeResource {
 
-    private final ContentTypeService contentTypeService;
+    private final ContentTypeService service;
 
     @Autowired
-    public ContentTypeResourceController(ContentTypeService contentTypeService) {
-        this.contentTypeService = contentTypeService;
+    public ContentTypeResourceController(ContentTypeService service) {
+        this.service = service;
     }
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<ContentTypeDto> create(@Valid @RequestBody ContentTypeDto contentType) throws URISyntaxException {
-        ContentTypeDto result = contentTypeService.create(contentType);
+        ContentTypeDto result = service.create(contentType);
 
         return ResponseEntity.created(new URI("/plugins/cms/content-types/" + result.getId()))
                              .body(result);
@@ -36,21 +36,21 @@ public class ContentTypeResourceController implements ContentTypeResource {
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        contentTypeService.delete(id);
+        service.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<PagedMetadata<ContentTypeDto>> list(RestListRequest listRequest) {
-        PagedMetadata<ContentTypeDto> result = contentTypeService.findMany(listRequest);
+        PagedMetadata<ContentTypeDto> result = service.findMany(listRequest);
         return ResponseEntity.ok(result);
     }
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<ContentTypeDto> get(@PathVariable("id") Long id) {
-        Optional<ContentTypeDto> maybeContentType = contentTypeService.findById(id);
+        Optional<ContentTypeDto> maybeContentType = service.findById(id);
 
         return maybeContentType.map(ResponseEntity::ok)
                                .orElse(ResponseEntity.notFound().build());
@@ -59,6 +59,6 @@ public class ContentTypeResourceController implements ContentTypeResource {
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<ContentTypeDto> update(@Valid @RequestBody ContentTypeDto contentType) {
-        return ResponseEntity.ok(contentTypeService.update(contentType));
+        return ResponseEntity.ok(service.update(contentType));
     }
 }

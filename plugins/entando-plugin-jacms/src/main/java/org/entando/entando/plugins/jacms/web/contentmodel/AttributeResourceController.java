@@ -15,16 +15,16 @@ import java.util.Optional;
 @RequestMapping(value = "/plugins/cms/attributes")
 public class AttributeResourceController implements AttributeResource {
 
-    private final AttributeService attributeService;
+    private final AttributeService service;
 
     @Autowired
-    public AttributeResourceController(AttributeService attributeService) {
-        this.attributeService = attributeService;
+    public AttributeResourceController(AttributeService service) {
+        this.service = service;
     }
 
     @Override
     public ResponseEntity<AttributeDto> create(@Valid @RequestBody AttributeDto attribute) throws URISyntaxException {
-        AttributeDto result = attributeService.create(attribute);
+        AttributeDto result = service.create(attribute);
 
         return ResponseEntity.created(new URI("/plugins/cms/attributes/" + result.getId()))
                 .body(result);
@@ -32,13 +32,13 @@ public class AttributeResourceController implements AttributeResource {
 
     @Override
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        attributeService.delete(id);
+        service.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @Override
     public ResponseEntity<AttributeDto> get(@PathVariable("id") Long id) {
-        Optional<AttributeDto> maybeContentType = attributeService.findById(id);
+        Optional<AttributeDto> maybeContentType = service.findById(id);
 
         return maybeContentType.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -46,12 +46,12 @@ public class AttributeResourceController implements AttributeResource {
 
     @Override
     public ResponseEntity<AttributeDto> update(@Valid @RequestBody AttributeDto attribute) {
-        return ResponseEntity.ok(attributeService.update(attribute));
+        return ResponseEntity.ok(service.update(attribute));
     }
 
     @Override
     public ResponseEntity<PagedMetadata<AttributeDto>> list(RestListRequest listRequest) {
-        PagedMetadata<AttributeDto> result = attributeService.findMany(listRequest);
+        PagedMetadata<AttributeDto> result = service.findMany(listRequest);
         return ResponseEntity.ok(result);
     }
 }

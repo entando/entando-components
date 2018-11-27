@@ -11,36 +11,36 @@ import java.util.Optional;
 @Service
 public class AttributeServiceImpl implements AttributeService {
 
-    private final AttributeManager attributeManager;
+    private final AttributeManager manager;
 
     @Autowired
-    public AttributeServiceImpl(AttributeManager attributeManager) {
-        this.attributeManager = attributeManager;
+    public AttributeServiceImpl(AttributeManager manager) {
+        this.manager = manager;
     }
 
     @Override
     public AttributeDto create(AttributeDto entity) {
-        return attributeManager.create(entity);
+        return manager.create(entity);
     }
 
     @Override
     public AttributeDto update(AttributeDto entity) {
-        return attributeManager.update(entity);
+        return manager.update(entity);
     }
 
     @Override
     public PagedMetadata<AttributeDto> findMany(RestListRequest listRequest) {
-        return attributeManager.findMany(listRequest);
+        return manager.findMany(listRequest);
     }
 
     @Override
     public Optional<AttributeDto> findById(Long id) {
-        return attributeManager.findById(id);
+        return manager.findById(id);
     }
 
     @Override
     public void delete(Long id) {
-        attributeManager.delete(id);
+        manager.delete(id);
     }
 
 }

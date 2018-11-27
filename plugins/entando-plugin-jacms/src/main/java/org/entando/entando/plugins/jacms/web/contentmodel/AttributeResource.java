@@ -11,7 +11,7 @@ import java.net.URISyntaxException;
 
 public interface AttributeResource {
 
-    @ApiOperation(value = "createAttribute", nickname = "createAttributeUsingPOST", notes = "", response = AttributeDto.class, tags={ "attribute-resource-controller", })
+    @ApiOperation(value = "createAttribute", nickname = "createAttributeUsingPOST", response = AttributeDto.class, tags={ "attribute-resource-controller", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = AttributeDto.class),
             @ApiResponse(code = 201, message = "Created"),
@@ -21,7 +21,7 @@ public interface AttributeResource {
     @PostMapping
     ResponseEntity<AttributeDto> create(@ApiParam(value = "attribute", required = true) @Valid @RequestBody AttributeDto attribute) throws URISyntaxException;
 
-    @ApiOperation(value = "deleteAttribute", nickname = "deleteAttributeUsingDELETE", notes = "", tags={ "attribute-resource-controller", })
+    @ApiOperation(value = "deleteAttribute", nickname = "deleteAttributeUsingDELETE", tags={ "attribute-resource-controller", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "No Content"),
@@ -31,7 +31,7 @@ public interface AttributeResource {
     ResponseEntity<Void> delete(@ApiParam(value = "id", required = true) @PathVariable("id") Long id);
 
 
-    @ApiOperation(value = "getAllAttributes", nickname = "getAllAttributesUsingGET", notes = "", response = AttributeDto.class, responseContainer = "List", tags={ "attribute-resource-controller", })
+    @ApiOperation(value = "getAllAttributes", nickname = "getAllAttributesUsingGET", response = AttributeDto.class, responseContainer = "List", tags={ "attribute-resource-controller", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = AttributeDto.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "Unauthorized"),
@@ -41,7 +41,7 @@ public interface AttributeResource {
     ResponseEntity<PagedMetadata<AttributeDto>> list(RestListRequest listRequest);
 
 
-    @ApiOperation(value = "getAttribute", nickname = "getAttributeUsingGET", notes = "", response = AttributeDto.class, tags={ "attribute-resource-controller", })
+    @ApiOperation(value = "getAttribute", nickname = "getAttributeUsingGET", response = AttributeDto.class, tags={ "attribute-resource-controller", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = AttributeDto.class),
             @ApiResponse(code = 401, message = "Unauthorized"),
@@ -51,7 +51,7 @@ public interface AttributeResource {
     ResponseEntity<AttributeDto> get(@ApiParam(value = "id", required = true) @PathVariable("id") Long id);
 
 
-    @ApiOperation(value = "updateAttribute", nickname = "updateAttributeUsingPUT", notes = "", response = AttributeDto.class, tags={ "attribute-resource-controller", })
+    @ApiOperation(value = "updateAttribute", nickname = "updateAttributeUsingPUT", response = AttributeDto.class, tags={ "attribute-resource-controller", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = AttributeDto.class),
             @ApiResponse(code = 201, message = "Created"),

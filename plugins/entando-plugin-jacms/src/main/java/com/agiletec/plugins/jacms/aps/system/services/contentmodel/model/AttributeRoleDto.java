@@ -2,6 +2,7 @@ package com.agiletec.plugins.jacms.aps.system.services.contentmodel.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.entando.entando.plugins.jacms.aps.system.persistence.Identifiable;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -11,7 +12,7 @@ import java.util.Objects;
  * AttributeRole
  */
 @Validated
-public class AttributeRoleDto {
+public class AttributeRoleDto implements Identifiable<Long> {
     @JsonProperty("attribute")
     private AttributeDto attribute = null;
 

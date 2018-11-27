@@ -55,14 +55,20 @@ public class TestWebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    Dao<AttributeRole, Long> attributeRoleDao(ConnectionSource connectionSource) throws SQLException {
+        return DaoFactory.createDao(connectionSource, AttributeRole.class);
+    }
+
+    @Bean
     TableCreator tableCreator(
             ConnectionSource connectionSource,
             Dao<ContentType, Long> componentTypeDao,
+            Dao<AttributeRole, Long> attributeRoleDao,
             Dao<Attribute, Long> attributeDao
         ) throws SQLException {
 
         TableCreator tableCreator = new TableCreator(connectionSource,
-                ImmutableList.of(componentTypeDao, attributeDao));
+                ImmutableList.of(componentTypeDao, attributeRoleDao, attributeDao));
         System.setProperty(TableCreator.AUTO_CREATE_TABLES, "true");
 
         tableCreator.initialize();

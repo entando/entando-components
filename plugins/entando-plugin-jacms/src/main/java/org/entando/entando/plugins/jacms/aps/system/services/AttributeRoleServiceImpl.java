@@ -1,7 +1,7 @@
 package org.entando.entando.plugins.jacms.aps.system.services;
 
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
-import org.entando.entando.plugins.jacms.aps.system.managers.ContentTypeManager;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.AttributeRoleDto;
+import org.entando.entando.plugins.jacms.aps.system.managers.AttributeRoleManager;
 import org.entando.entando.web.common.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,32 +9,32 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ContentTypeServiceImpl implements ContentTypeService {
+public class AttributeRoleServiceImpl implements AttributeRoleService {
 
-    private final ContentTypeManager manager;
+    private final AttributeRoleManager manager;
 
     @Autowired
-    public ContentTypeServiceImpl(ContentTypeManager manager) {
+    public AttributeRoleServiceImpl(AttributeRoleManager manager) {
         this.manager = manager;
     }
 
     @Override
-    public ContentTypeDto create(ContentTypeDto entity) {
+    public AttributeRoleDto create(AttributeRoleDto entity) {
         return manager.create(entity);
     }
 
     @Override
-    public ContentTypeDto update(ContentTypeDto entity) {
+    public AttributeRoleDto update(AttributeRoleDto entity) {
         return manager.update(entity);
     }
 
     @Override
-    public PagedMetadata<ContentTypeDto> findMany(RestListRequest listRequest) {
+    public PagedMetadata<AttributeRoleDto> findMany(RestListRequest listRequest) {
         return manager.findMany(listRequest);
     }
 
     @Override
-    public Optional<ContentTypeDto> findById(Long id) {
+    public Optional<AttributeRoleDto> findById(Long id) {
         return manager.findById(id);
     }
 
