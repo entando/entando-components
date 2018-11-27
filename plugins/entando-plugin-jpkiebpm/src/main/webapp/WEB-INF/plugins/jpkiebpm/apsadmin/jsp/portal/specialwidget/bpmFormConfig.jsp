@@ -162,7 +162,7 @@
                                     </div>
                                 </div>
 
-                                <s:if test="#isProcessPathSetted">
+                                <s:if test="%{#isProcessPathSetted && fields != null && !fields.isEmpty()}">
                                     <legend class="overrides">
                                         <s:text name="label.override" />
                                     </legend>

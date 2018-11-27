@@ -27,6 +27,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -50,6 +51,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.stream.Collectors;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
 
 public class BpmTypeFormAction extends AbstractApsEntityAction {
 
@@ -60,6 +65,7 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
     private DataObject dataObject;
 
     private IKieFormManager formManager;
+    private IKieFormOverrideManager formOverrideManager;
     private II18nManager i18nManager;
     private IDataObjectManager dataObjectManager;
     private IDataObjectDispenser dataObjectDispenser;
@@ -150,11 +156,10 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
                 _logger.debug("SAVE attribute.getName() {}", attribute.getName());
                 if (null != attribute.getType()) {
                     final String value = attribute.getName();
-                    _logger.debug("SAVE attribute.getType() {}:{}", attribute.getType(),value );
+                    _logger.debug("SAVE attribute.getType() {}:{}", attribute.getType(), value);
 
                     toBpm.put(attribute.getName(), this.getRequest().getParameter(attribute.getType() + ":" + value));
-                }
-                else {
+                } else {
                     _logger.debug("SAVE attribute.getType() NULL");
                 }
             }
@@ -206,13 +211,14 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
 
                 //validationResult.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT));
             }
-            }
         }
-        /**
-         * Returns the current session DataObject.
-         *
-         * @return The current session DataObject.
-         */
+    }
+
+    /**
+     * Returns the current session DataObject.
+     *
+     * @return The current session DataObject.
+     */
     public DataObject getDataObject() {
         if (this.dataObject == null) {
             try {
@@ -371,6 +377,14 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
 
     public void setFormManager(IKieFormManager formManager) {
         this.formManager = formManager;
+    }
+
+    public IKieFormOverrideManager getFormOverrideManager() {
+        return formOverrideManager;
+    }
+
+    public void setFormOverrideManager(IKieFormOverrideManager formOverrideManager) {
+        this.formOverrideManager = formOverrideManager;
     }
 
     protected II18nManager getI18nManager() {

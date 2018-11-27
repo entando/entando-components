@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 
 public class BpmWidgetInfoManager extends AbstractService implements IBpmWidgetInfoManager, PageChangedObserver {
 
@@ -184,7 +185,12 @@ public class BpmWidgetInfoManager extends AbstractService implements IBpmWidgetI
                     } else {
                         bpmWidgetInfo.setInformationDraft(null);
                         bpmWidgetInfo.setFramePosDraft(null);
-                        this.getBpmWidgetInfoDAO().updateBpmWidgetInfo(bpmWidgetInfo);
+                        this.getBpmWidgetInfoDAO().updateBpmWidgetInfo(bpmWidgetInfo);                        
+                    }
+
+                    // draft-version removed --> remove draft overrides
+                    for (KieFormOverride override : getWidgetOverrides(bpmWidgetInfo.getId(), false)) {
+                        deleteOverride(override.getId());
                     }
                 }
             }
@@ -208,6 +214,16 @@ public class BpmWidgetInfoManager extends AbstractService implements IBpmWidgetI
                         bpmWidgetInfo.setInformationOnline(bpmWidgetInfo.getInformationDraft());
                         bpmWidgetInfo.setFramePosOnline(bpmWidgetInfo.getFramePosDraft());
                         this.getBpmWidgetInfoDAO().updateBpmWidgetInfo(bpmWidgetInfo);
+                        
+                        // remove old online overrides and copy draft overrides into online
+                        for (KieFormOverride override : getAllWidgetOverrides(bpmWidgetInfo.getId())) {
+                            if (override.isOnline()) {
+                                deleteOverride(override.getId());
+                            } else {
+                                override.setOnline(true);
+                                addOverride(override);
+                            }
+                        }
                     } else {
                         this.removeBpmWidgetInfo(bpmWidgetInfo.getId());
                     }
@@ -223,6 +239,11 @@ public class BpmWidgetInfoManager extends AbstractService implements IBpmWidgetI
                         bpmWidgetInfo.setInformationOnline(null);
                         bpmWidgetInfo.setFramePosOnline(null);
                         this.getBpmWidgetInfoDAO().updateBpmWidgetInfo(bpmWidgetInfo);
+                        
+                        // delete online overrides
+                        for (KieFormOverride override : getWidgetOverrides(bpmWidgetInfo.getId(), true)) {
+                            deleteOverride(override.getId());
+                        }
                     }
                 }
             }
@@ -240,11 +261,55 @@ public class BpmWidgetInfoManager extends AbstractService implements IBpmWidgetI
                     bpmWidgetInfo.setInformationDraft(bpmWidgetInfo.getInformationOnline());
                     bpmWidgetInfo.setFramePosDraft(bpmWidgetInfo.getFramePosOnline());
                     this.getBpmWidgetInfoDAO().updateBpmWidgetInfo(bpmWidgetInfo);
+                    
+                    // delete draft overrides and copy online overrides into draft
+                    for (KieFormOverride override : getAllWidgetOverrides(bpmWidgetInfo.getId())) {
+                        if(override.isOnline()) {
+                            override.setOnline(false);
+                            addOverride(override);
+                        } else {
+                            deleteOverride(override.getId());
+                        }
+                    }
                 } else {
                     this.removeBpmWidgetInfo(bpmWidgetInfo.getId());
                 }
             }
 
+        }
+    }
+    
+    private List<KieFormOverride> getWidgetOverrides(int bpmWidgetInfoId, boolean online) {
+        try {
+            return this._kieFormOverrideManager.getFormOverrides(bpmWidgetInfoId, online);
+        } catch (ApsSystemException e) {
+            _logger.error("Error while retrieving bpmWidgetInfo {} overrides", bpmWidgetInfoId, e);
+            throw new RuntimeException("Error while retrieving bpmWidgetInfo overrides", e);
+        }
+    }
+    
+    private List<KieFormOverride> getAllWidgetOverrides(int bpmWidgetInfoId) {
+        List<KieFormOverride> allWidgetOverrides = new ArrayList<>();
+        allWidgetOverrides.addAll(getWidgetOverrides(bpmWidgetInfoId, true));
+        allWidgetOverrides.addAll(getWidgetOverrides(bpmWidgetInfoId, false));
+        return allWidgetOverrides;
+    }
+    
+    private void deleteOverride(int id) {
+        try {
+            this._kieFormOverrideManager.deleteKieFormOverride(id);
+        } catch (ApsSystemException e) {
+            _logger.error("Error while deleting form override {}", id, e);
+            throw new RuntimeException("Error while deleting form override", e);
+        }
+    }
+    
+    private void addOverride(KieFormOverride override) {
+        try {
+            this._kieFormOverrideManager.addKieFormOverride(override);
+        } catch (ApsSystemException e) {
+            _logger.error("Error while inserting new form override", e);
+            throw new RuntimeException("Error while inserting new form override", e);
         }
     }
     

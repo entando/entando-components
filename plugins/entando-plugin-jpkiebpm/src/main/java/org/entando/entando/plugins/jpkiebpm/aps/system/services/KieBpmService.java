@@ -54,7 +54,6 @@ import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
@@ -68,7 +67,6 @@ import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper
 import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  *
@@ -456,7 +454,7 @@ public class KieBpmService implements IKieBpmService {
         dataModel.setDescription("Model for " + containerId);
         //DataUXBuilder uXBuilder = new DataUXBuilder();
                 
-        String dataUx = uXBuilder.createDataUx(kpfr, containerId, processId, title);
+        String dataUx = uXBuilder.createDataUx(kpfr, dto.getId(), containerId, processId, title);
         dataModel.setShape(dataUx);
         this.getDataObjectModelManager().addDataObjectModel(dataModel);
 
