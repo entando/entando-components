@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentModelService;
@@ -27,8 +28,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
+import org.entando.entando.web.common.annotation.RestAccessControl;
+import org.springframework.http.MediaType;
 
 @RestController
+@RequestMapping(value = "/plugins/cms/contentmodels")
 public class ContentModelResourceController implements ContentModelResource {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -43,6 +47,8 @@ public class ContentModelResourceController implements ContentModelResource {
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<PagedRestResponse<ContentModelDto>> getContentModels(RestListRequest requestList) {
         this.contentModelValidator.validateRestListRequest(requestList, ContentModelDto.class);
         PagedMetadata<ContentModelDto> result = contentModelService.findMany(requestList);
@@ -52,6 +58,8 @@ public class ContentModelResourceController implements ContentModelResource {
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/{modelId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<SimpleRestResponse<ContentModelDto>> getContentModel(@PathVariable Long modelId) {
         logger.debug("loading contentModel {}", modelId);
         ContentModelDto contentModel = contentModelService.getContentModel(modelId);
@@ -59,6 +67,8 @@ public class ContentModelResourceController implements ContentModelResource {
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<SimpleRestResponse<ContentModelDto>> addContentModel(@Valid @RequestBody ContentModelDto contentModel, BindingResult bindingResult) {
         logger.debug("adding content model");
         if (bindingResult.hasErrors()) {
@@ -69,6 +79,8 @@ public class ContentModelResourceController implements ContentModelResource {
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/{modelId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
     public ResponseEntity<SimpleRestResponse<ContentModelDto>> updateContentModel(@PathVariable Long modelId, @Valid @RequestBody ContentModelDto contentModel, BindingResult bindingResult) {
         logger.debug("updating contentModel {}", modelId);
 
@@ -86,6 +98,8 @@ public class ContentModelResourceController implements ContentModelResource {
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/{modelId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
     public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteContentModel(@PathVariable Long modelId) {
         logger.info("deleting content model {}", modelId);
         contentModelService.delete(modelId);
@@ -94,6 +108,8 @@ public class ContentModelResourceController implements ContentModelResource {
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/{modelId}/pagereferences", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<SimpleRestResponse<List<ContentModelReference>>> getReferences(@PathVariable Long modelId) {
         logger.debug("loading contentModel references for model {}", modelId);
         List<ContentModelReference> references = contentModelService.getContentModelReferences(modelId);
@@ -101,6 +117,8 @@ public class ContentModelResourceController implements ContentModelResource {
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/dictionary", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<SimpleRestResponse<IEntityModelDictionary>> getDictionary(@RequestParam(value = "typeCode", required = false) String typeCode) {
         logger.debug("loading contentModel dictionary for type {}", typeCode);
         IEntityModelDictionary dictionary = contentModelService.getContentModelDictionary(typeCode);

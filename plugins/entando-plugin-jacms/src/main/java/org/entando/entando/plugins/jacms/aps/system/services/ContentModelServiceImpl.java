@@ -258,7 +258,7 @@ public class ContentModelServiceImpl implements ContentModelService {
         SmallEntityType utilizer = this.contentModelManager.getDefaultUtilizer(modelId);
         if (null != utilizer && !utilizer.getCode().equals(contentModel.getContentType())) {
             Object[] args = {String.valueOf(modelId), utilizer.getDescription()};
-            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_WRONG_UTILIZER, args, "contentModel.id.wrongUtilizer");
+            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_WRONG_UTILIZER, args, "contentmodel.id.wrongUtilizer");
         }
     }
 
@@ -267,7 +267,7 @@ public class ContentModelServiceImpl implements ContentModelService {
 
         if (!this.contentManager.getSmallContentTypesMap().containsKey(contentType)) {
             Object[] args = {contentType};
-            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_TYPECODE_NOT_FOUND, args, "contentModel.contentType.notFound");
+            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_TYPECODE_NOT_FOUND, args, "contentmodel.contentType.notFound");
         }
     }
 }
