@@ -15,52 +15,39 @@ package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.*;
 
 /**
- * Classe astratta di base per l'implementazione di oggetti Risorsa
- * Multi-Istanza.
- *
- * @author E.Santoboni
+ * Base abstract class for the implementation of multi instance resource objects.
  */
 public abstract class AbstractMultiInstanceResource extends AbstractResource {
 
-    private static final Logger _logger = LoggerFactory.getLogger(AbstractMultiInstanceResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractMultiInstanceResource.class);
 
     private Map<String, ResourceInstance> instances;
 
     /**
-     * Inizializza la mappa delle istanze della risorsa.
+     * Initializes the map of instances of the resource
      */
     public AbstractMultiInstanceResource() {
         super();
-        this.instances = new HashMap<String, ResourceInstance>();
+        instances = new HashMap<>();
     }
 
     @Override
     public void deleteResourceInstances() throws ApsSystemException {
         try {
-            Collection<ResourceInstance> instances = this.getInstances().values();
-            Iterator<ResourceInstance> instancesIter = instances.iterator();
-            while (instancesIter.hasNext()) {
-                ResourceInstance currentInstance = instancesIter.next();
+            Collection<ResourceInstance> resources = instances.values();
+            for (ResourceInstance currentInstance : resources) {
                 String fileName = currentInstance.getFileName();
                 String subPath = this.getDiskSubFolder() + fileName;
                 this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
             }
         } catch (Throwable t) {
-            _logger.error("Error on deleting resource instances", t);
+            logger.error("Error on deleting resource instances", t);
             throw new ApsSystemException("Error on deleting resource instances", t);
         }
     }
@@ -84,13 +71,12 @@ public abstract class AbstractMultiInstanceResource extends AbstractResource {
      */
     @Override
     public String getXML() {
-        ResourceDOM resourceDom = this.getResourceDOM();
-        List<ResourceInstance> instances = new ArrayList<ResourceInstance>(this.getInstances().values());
-        for (int i = 0; i < instances.size(); i++) {
-            ResourceInstance currentInstance = instances.get(i);
+        ResourceDOM resourceDom = getResourceDOM();
+        List<ResourceInstance> resources = new ArrayList<>(instances.values());
+        for (ResourceInstance currentInstance : resources) {
             resourceDom.addInstance(currentInstance.getJDOMElement());
         }
-        Map metadata = getMetadata();
+        Map<String, String> metadata = getMetadata();
         if (null != metadata) {
             resourceDom.addMetadata(metadata);
         }
@@ -109,36 +95,34 @@ public abstract class AbstractMultiInstanceResource extends AbstractResource {
      * @return Il nome corretto del file.
      * @deprecated Use getNewInstanceFileName
      */
+    @Deprecated
     public abstract String getInstanceFileName(String masterFileName, int size, String langCode);
 
     /**
-     * Restituisce il nome corretto del file con cui un'istanza di una risorsa
-     * viene salvata nel sistema.
-     *
-     * @param masterFileName Il nome del file principale da cui ricavare
-     * l'istanza.
-     * @param size Il size dell'istanza della risorsa multiInstanza.
-     * @param langCode Il codice lingua dell'istanza della risorsa
-     * multiInstanza.
-     * @return Il nome corretto del file.
+     * Returns the correct name of a resource to be saved in the system.
+     * @param masterFileName Original file name
+     * @param size Order number of the file being saved
+     * @param langCode Language code of file being saved
+     * @return Correct name to save file
      */
-    protected String getNewInstanceFileName(String masterFileName, int size, String langCode) {
-        StringBuilder fileName = null;
-        do {
-            String baseName = super.getNewUniqueFileName(masterFileName);
-            fileName = new StringBuilder(baseName);
-            String extension = super.getFileExtension(masterFileName);
-            if (size >= 0) {
-                fileName.append("_d").append(size);
-            }
-            if (langCode != null) {
-                fileName.append("_").append(langCode);
-            }
-            if (StringUtils.isNotEmpty(extension)) {
-                fileName.append(".").append(extension);
-            }
-        } while (this.exists(fileName.toString()));
-        return fileName.toString();
+    String getNewInstanceFileName(String masterFileName, int size, String langCode) {
+        String baseName = FilenameUtils.getBaseName(masterFileName);
+        String extension = FilenameUtils.getExtension(masterFileName);
+
+        String suffix = "";
+
+        if (size >= 0) {
+            suffix += "_d" + size;
+        }
+
+        if (langCode != null) {
+            suffix += "_" + langCode;
+        }
+
+        return createFilePlusExtensionName(
+                getMultiFileUniqueBaseName(baseName, suffix, extension),
+                extension
+        );
     }
 
     /**
@@ -158,7 +142,7 @@ public abstract class AbstractMultiInstanceResource extends AbstractResource {
      * @return La mappa delle istanze della risorsa.
      */
     public Map<String, ResourceInstance> getInstances() {
-        return this.instances;
+        return instances;
     }
 
 }
