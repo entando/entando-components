@@ -23,11 +23,15 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieVersionTransformer;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.NullFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.json.JSONObject;
 
@@ -36,6 +40,9 @@ import org.json.JSONObject;
  * @author Entando
  */
 public class TestFormToBpmHelper extends TestCase {
+
+    private static String CONTAINER_ID ="container-id";
+    private static String PROCESS_ID ="process-id";
 
     public void testValidationInteger() throws Throwable {
         KieProcessFormQueryResult kpfq = (KieProcessFormQueryResult) JAXBHelper
@@ -125,7 +132,32 @@ public class TestFormToBpmHelper extends TestCase {
         assertNull(result);
     }
 
+    public void testBuildSectionWithCheckBox() throws Throwable {
+        String filePath = "src/test/resources/examples/xml/pam-7-test-process-form-2.xml";
+        String pam7businessProcessForm = new String(Files.readAllBytes(Paths.get(filePath)));
 
+        PamProcessQueryFormResult pamResult = (PamProcessQueryFormResult) JAXBHelper
+                .unmarshall(pam7businessProcessForm, PamProcessQueryFormResult.class, true, false);
+
+        assertNotNull(pamResult);
+        KieProcessFormQueryResult form = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
+
+        Map<String, Object> input = createValiDPayloadForTestWithBooleanValues();
+
+        String formJson = FormToBpmHelper.generateFormJson(form, input, CONTAINER_ID,PROCESS_ID);
+        assertNotNull(formJson);
+
+        JSONObject jsonObject=  new JSONObject(formJson);
+        assertTrue(formJson.contains("\"checkBox1\":true"));
+        assertTrue(formJson.contains("\"checkBox2\":false"));
+
+        assertTrue(jsonObject.has("checkBox1"));
+        assertEquals(true,
+                jsonObject.get("checkBox1"));
+        assertTrue(jsonObject.has("checkBox2"));
+        assertEquals(false,
+                jsonObject.get("checkBox2"));
+    }
 
     public void testModelForm2Json() throws Throwable {
         JSONObject json = new JSONObject();
@@ -272,6 +304,14 @@ public class TestFormToBpmHelper extends TestCase {
 
         return input;
     }
+
+    private Map<String, Object> createValiDPayloadForTestWithBooleanValues() {
+        Map<String, Object> input = new HashMap<String, Object>();
+        input.put("checkBox1", true);
+        input.put("checkBox2", false);
+        return input;
+    }
+
 
     public final static String KIE_PROCESS_FORM_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><form id=\"1849151362\">\n" +
             "<property name=\"subject\" value=\"\"/>\n" +
