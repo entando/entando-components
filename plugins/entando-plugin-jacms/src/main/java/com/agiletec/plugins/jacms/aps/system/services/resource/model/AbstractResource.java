@@ -17,31 +17,17 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
+import org.springframework.util.Assert;
 
-/**
- * Classe astratta di base per gli oggetti Resource.
- *
- * @author W.Ambu - E.Santoboni
- */
+import java.io.*;
+import java.util.*;
+
 public abstract class AbstractResource implements ResourceInterface, Serializable {
 
-    private static final Logger _logger = LoggerFactory.getLogger(AbstractResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractResource.class);
 
     private String id;
     private String typeCode;
@@ -119,23 +105,19 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     }
 
     /**
-     * Restituisce la descrizione della risorsa.
-     *
-     * @return La descrizione della risorsa.
      * @deprecated use getDescription method
      */
     @Override
+    @Deprecated
     public String getDescr() {
         return this.getDescription();
     }
 
     /**
-     * Setta la descrizione della risorsa.
-     *
-     * @param descr La descrizione della risorsa.
      * @deprecated use setDescription method
      */
     @Override
+    @Deprecated
     public void setDescr(String descr) {
         this.setDescription(descr);
     }
@@ -314,28 +296,28 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 
     @Override
     public ResourceInterface getResourcePrototype() {
-        AbstractResource prototype = null;
+        AbstractResource prototype;
         try {
             Class resourceClass = Class.forName(this.getClass().getName());
             prototype = (AbstractResource) resourceClass.newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException t) {
-            throw new RuntimeException("Errore in creazione prototipo "
-                    + "Risorsa tipo '" + this.getType() + "'", t);
+            throw new RuntimeException("Error in creation of prototype of resource type"
+                    + " '" + typeCode + "'", t);
         }
         prototype.setId("");
-        prototype.setType(this.getType());
+        prototype.setType(typeCode);
         prototype.setDescription("");
         prototype.setMainGroup("");
         prototype.setMasterFileName("");
         prototype.setCategories(new ArrayList<>());
-        prototype.setFolder(this.getFolder());
-        prototype.setProtectedBaseURL(this.getProtectedBaseURL());
-        prototype.setAllowedExtensions(this.getAllowedExtensions());
-        prototype.setStorageManager(this.getStorageManager());
+        prototype.setFolder(folder);
+        prototype.setProtectedBaseURL(protectedBaseURL);
+        prototype.setAllowedExtensions(allowedExtensions);
+        prototype.setStorageManager(storageManager);
         prototype.setCreationDate(null);
         prototype.setLastModified(null);
         prototype.setMetadata(new HashMap<>());
-        prototype.setMetadataIgnoreKeys(this.getMetadataIgnoreKeys());
+        prototype.setMetadataIgnoreKeys(metadataIgnoreKeys);
         return prototype;
     }
 
@@ -347,14 +329,13 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
      */
     protected ResourceDOM getResourceDOM() {
         ResourceDOM resourceDom = this.getNewResourceDOM();
-        resourceDom.setTypeCode(this.getType());
-        resourceDom.setId(this.getId());
-        resourceDom.setDescription(this.getDescription());
-        resourceDom.setMainGroup(this.getMainGroup());
-        resourceDom.setMasterFileName(this.getMasterFileName());
-        if (null != this.getCategories()) {
-            for (int i = 0; i < this.getCategories().size(); i++) {
-                Category cat = (Category) this.getCategories().get(i);
+        resourceDom.setTypeCode(typeCode);
+        resourceDom.setId(id);
+        resourceDom.setDescription(description);
+        resourceDom.setMainGroup(mainGroup);
+        resourceDom.setMasterFileName(masterFileName);
+        if (categories != null) {
+            for (Category cat : categories) {
                 resourceDom.addCategory(cat.getCode());
             }
         }
@@ -366,10 +347,9 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     }
 
     protected String getDiskSubFolder() {
-        StringBuilder diskFolder = new StringBuilder(this.getFolder());
+        StringBuilder diskFolder = new StringBuilder(folder);
         if (this.isProtectedResource()) {
-            //PROTECTED Resource
-            diskFolder.append(this.getMainGroup()).append("/");
+            diskFolder.append(mainGroup).append("/");
         }
         return diskFolder.toString();
     }
@@ -387,6 +367,7 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
      * @return Il nome file corretto.
      * @deprecated from jAPS 2.1
      */
+    @Deprecated
     protected String getRevisedInstanceFileName(String masterFileName) {
         String instanceFileName = masterFileName.replaceAll("[^ _.a-zA-Z0-9]", "");
         instanceFileName = instanceFileName.trim().replace(' ', '_');
@@ -406,45 +387,45 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
      * @return Il path del file relativo all'istanza.
      */
     protected String getUrlPath(ResourceInstance instance) {
-        if (null == instance) {
+        if (instance == null) {
             return null;
         }
         StringBuilder urlPath = new StringBuilder();
         if (this.isProtectedResource()) {
             //PATH di richiamo della servlet di autorizzazione
             //Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/
-            String DEF = "def";
-            urlPath.append(this.getProtectedBaseURL());
+            final String def = "def";
+            urlPath.append(protectedBaseURL);
             if (!urlPath.toString().endsWith("/")) {
                 urlPath.append("/");
             }
-            urlPath.append(this.getId()).append("/");
+            urlPath.append(id).append("/");
             if (instance.getSize() < 0) {
-                urlPath.append(DEF);
+                urlPath.append(def);
             } else {
                 urlPath.append(instance.getSize());
             }
             urlPath.append("/");
             if (instance.getLangCode() == null) {
-                urlPath.append(DEF);
+                urlPath.append(def);
             } else {
                 urlPath.append(instance.getLangCode());
             }
             urlPath.append("/");
         } else {
-            StringBuilder subFolder = new StringBuilder(this.getFolder());
+            StringBuilder subFolder = new StringBuilder(folder);
             if (!subFolder.toString().endsWith("/")) {
                 subFolder.append("/");
             }
             subFolder.append(instance.getFileName());
-            String path = this.getStorageManager().getResourceUrl(subFolder.toString(), false);
+            String path = storageManager.getResourceUrl(subFolder.toString(), false);
             urlPath.append(path);
         }
         return urlPath.toString();
     }
 
     protected boolean isProtectedResource() {
-        return (!Group.FREE_GROUP_NAME.equals(this.getMainGroup()));
+        return (!Group.FREE_GROUP_NAME.equals(mainGroup));
     }
 
     protected File saveTempFile(String filename, InputStream is) throws ApsSystemException, IOException {
@@ -453,14 +434,14 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         FileOutputStream outStream = null;
         try {
             byte[] buffer = new byte[1024];
-            int length = -1;
+            int length;
             outStream = new FileOutputStream(filePath);
             while ((length = is.read(buffer)) != -1) {
                 outStream.write(buffer, 0, length);
                 outStream.flush();
             }
         } catch (Throwable t) {
-            _logger.error("Error on saving temporary file '{}'", filename, t);
+            logger.error("Error on saving temporary file '{}'", filename, t);
             throw new ApsSystemException("Error on saving temporary file", t);
         } finally {
             if (null != outStream) {
@@ -473,19 +454,39 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         return new File(filePath);
     }
 
-    protected String getNewUniqueFileName(String masterFileName) {
-        int index = (null != masterFileName) ? masterFileName.lastIndexOf('.') : -1;
-        String baseName = (index > 0) ? masterFileName.substring(0, index) : masterFileName;
-        baseName += System.currentTimeMillis();
-        return DigestUtils.md5Hex(baseName);
+    String getUniqueBaseName(String originalFileName) {
+        Assert.hasLength(originalFileName, "File name must not be null or empty");
+
+        String baseName = FilenameUtils.getBaseName(originalFileName);
+        String extension = FilenameUtils.getExtension(originalFileName);
+
+        String suggestedName = baseName;
+        int fileOrder = 1;
+        while(exists(createFilePlusExtensionName(suggestedName, extension))) {
+            suggestedName = baseName + '_' +fileOrder;
+            fileOrder ++;
+        }
+
+        return suggestedName;
     }
 
-    protected String getFileExtension(String fileName) {
-        int index = (null != fileName) ? fileName.lastIndexOf('.') : -1;
-        if (index < 0) {
-            return "";
+    String getMultiFileUniqueBaseName(String baseName, String suffix, String extension) {
+        Assert.hasLength(baseName, "base name of file can't be null or empty");
+        Assert.notNull(suffix, "file suffix can't be null");
+
+        String suggestedName = baseName + suffix;
+
+        int fileOrder = 1;
+        while(exists(createFilePlusExtensionName(suggestedName, extension))) {
+            suggestedName = baseName + '_' + fileOrder + suffix;
+            fileOrder ++;
         }
-        return fileName.substring(index + 1).trim();
+
+        return suggestedName;
+    }
+
+    String createFilePlusExtensionName(String baseName, String extension) {
+        return extension == null ? baseName : baseName + '.' + extension;
     }
 
     protected boolean exists(String instanceFileName) {
@@ -493,7 +494,7 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
             String subPath = this.getDiskSubFolder() + instanceFileName;
             return this.getStorageManager().exists(subPath, this.isProtectedResource());
         } catch (Throwable t) {
-            _logger.error("Error testing existing file '{}'", instanceFileName, t);
+            logger.error("Error testing existing file '{}'", instanceFileName, t);
             throw new RuntimeException("Error testing existing file", t);
         }
     }

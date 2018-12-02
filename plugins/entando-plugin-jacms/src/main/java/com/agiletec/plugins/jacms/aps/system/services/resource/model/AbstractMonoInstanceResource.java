@@ -15,22 +15,21 @@ package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.*;
 
 import java.io.InputStream;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * Classe astratta di base per l'implementazione 
- * di oggetti Risorsa composti da una singola istanza.
- * @author E.Santoboni
+ * Base abstract class for implementation of single instance resource objects.
  */
 public abstract class AbstractMonoInstanceResource extends AbstractResource {
 
-	private static final Logger _logger = LoggerFactory.getLogger(AbstractMonoInstanceResource.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(AbstractMonoInstanceResource.class);
+
+	private ResourceInstance instance;
+
 	/**
      * Implementazione del metodo isMultiInstance() di AbstractResource.
      * Restituisce sempre false in quanto questa classe astratta è 
@@ -49,12 +48,12 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 	
 	@Override
 	public InputStream getResourceStream() {
-		ResourceInstance instance = this.getInstance();
-		String subPath = super.getDiskSubFolder() + instance.getFileName();
+		ResourceInstance resourceInstance = instance;
+		String subPath = super.getDiskSubFolder() + resourceInstance.getFileName();
 		try {
 			return this.getStorageManager().getStream(subPath, this.isProtectedResource());
 		} catch (Throwable t) {
-			_logger.error("Error on extracting resource Stream", t);
+			logger.error("Error on extracting resource Stream", t);
 			throw new RuntimeException("Error on extracting resource Stream", t);
 		}
 	}
@@ -62,15 +61,15 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 	@Override
 	public void deleteResourceInstances() throws ApsSystemException {
 		try {
-			if (null == this.getInstance()) {
-				_logger.debug("Null instance for resource {}", this.getId());
+			if (instance == null) {
+				logger.debug("Null instance for resource {}", getId());
 				return;
 			}
-			String docName = this.getInstance().getFileName();
+			String docName = instance.getFileName();
 		    String subPath = this.getDiskSubFolder() + docName;
 			this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
 		} catch (Throwable t) {
-			_logger.error("Error on deleting resource instances", t);
+			logger.error("Error on deleting resource instances", t);
 			throw new ApsSystemException("Error on deleting resource instances", t);
 		}
 	}
@@ -81,7 +80,7 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
      */
 	@Override
 	public void addInstance(ResourceInstance instance) {
-    	this._instance = instance;
+    	this.instance = instance;
     }
     
     /**
@@ -89,7 +88,7 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
      * @return L'istanza della risorsa.
      */
     public ResourceInstance getInstance() {
-    	return _instance ;
+    	return instance;
     }
 	
 	@Override
@@ -100,23 +99,18 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
     @Override
 	public String getXML() {
         ResourceDOM resourceDom = this.getResourceDOM();
-        resourceDom.addInstance(this.getInstance().getJDOMElement());
+        resourceDom.addInstance(instance.getJDOMElement());
         return resourceDom.getXMLDocument();
     }
     
-    protected String getNewInstanceFileName(String masterFileName) throws Throwable {
-		StringBuilder fileName = null;
-		do {
-			String baseName = super.getNewUniqueFileName(masterFileName);
-			fileName = new StringBuilder(baseName);
-			String extension = super.getFileExtension(masterFileName);
-			if (StringUtils.isNotEmpty(extension)) {
-				fileName.append(".").append(extension);
-			}
-		} while (this.exists(fileName.toString()));
-    	return fileName.toString();
+    String getNewInstanceFileName(String masterFileName) throws Throwable {
+		String baseName = getUniqueBaseName(masterFileName);
+
+		String extension = FilenameUtils.getExtension(masterFileName);
+		if (StringUtils.isNotEmpty(extension)) {
+			baseName += "." + extension;
+		}
+
+    	return baseName;
 	}
-    
-	private ResourceInstance _instance;
-	
 }
