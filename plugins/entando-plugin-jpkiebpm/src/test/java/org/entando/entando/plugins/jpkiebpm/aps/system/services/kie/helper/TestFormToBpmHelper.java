@@ -23,11 +23,15 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieVersionTransformer;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.NullFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.json.JSONObject;
 
@@ -36,6 +40,9 @@ import org.json.JSONObject;
  * @author Entando
  */
 public class TestFormToBpmHelper extends TestCase {
+
+    private static String CONTAINER_ID ="container-id";
+    private static String PROCESS_ID ="process-id";
 
     public void testValidationInteger() throws Throwable {
         KieProcessFormQueryResult kpfq = (KieProcessFormQueryResult) JAXBHelper
@@ -125,7 +132,84 @@ public class TestFormToBpmHelper extends TestCase {
         assertNull(result);
     }
 
+    public void testBuildSectionWithCheckBoxFields() throws Throwable {
+        String filePath1 = "src/test/resources/examples/xml/pam-7-test-process-form-checkbox.xml";
+        String pam7businessProcessForm1 = new String(Files.readAllBytes(Paths.get(filePath1)));
 
+        PamProcessQueryFormResult pamResult1 = (PamProcessQueryFormResult) JAXBHelper
+                .unmarshall(pam7businessProcessForm1, PamProcessQueryFormResult.class, true, false);
+
+        String filePath2 = "src/test/resources/examples/xml/pam-7-test-process-form-checkbox-section.xml";
+        String pam7businessProcessForm2 = new String(Files.readAllBytes(Paths.get(filePath2)));
+
+        PamProcessQueryFormResult pamResult2 = (PamProcessQueryFormResult) JAXBHelper
+                .unmarshall(pam7businessProcessForm2, PamProcessQueryFormResult.class, true, false);
+
+        assertNotNull(pamResult1);
+        KieProcessFormQueryResult form1 = KieVersionTransformer.pamSevenFormToPamSix(pamResult1);
+        assertNotNull(pamResult2);
+        KieProcessFormQueryResult form2 = KieVersionTransformer.pamSevenFormToPamSix(pamResult2);
+
+        Map<String, Object> input1 = createValiDPayloadForTestWithBooleanValues1();
+        String formJson = FormToBpmHelper.generateFormJson(form1, input1, CONTAINER_ID,PROCESS_ID);
+        assertNotNull(formJson);
+        JSONObject jsonObject=  new JSONObject(formJson);
+        assertTrue(formJson.contains("\"checkBox1\":true"));
+        assertTrue(formJson.contains("\"checkBox2\":false"));
+        assertTrue(jsonObject.has("checkBox1"));
+        assertEquals(true,
+                jsonObject.get("checkBox1"));
+        assertTrue(jsonObject.has("checkBox2"));
+        assertEquals(false,
+                jsonObject.get("checkBox2"));
+
+
+        Map<String, Object> input2 = createValiDPayloadForTestWithBooleanValues2();
+        formJson = FormToBpmHelper.generateFormJson(form2, input2, CONTAINER_ID,PROCESS_ID);
+        assertNotNull(formJson);
+        jsonObject=  new JSONObject(formJson);
+        JSONObject nestedForm = jsonObject.getJSONObject("application")
+                .getJSONObject("com.myspace.test_app.Application")
+                .getJSONObject("nestedForm");
+        assertTrue(formJson.contains("\"checkBox1\":true"));
+        assertTrue(formJson.contains("\"checkBox2\":false"));
+        assertTrue(nestedForm.has("checkBox1"));
+        assertEquals(true,
+                nestedForm.get("checkBox1"));
+        assertTrue(nestedForm.has("checkBox2"));
+        assertEquals(false,
+                nestedForm.get("checkBox2"));
+
+        Map<String, Object> input3 = createValiDPayloadForTestWithBooleanValues3();
+        formJson = FormToBpmHelper.generateFormJson(form1, input3, CONTAINER_ID,PROCESS_ID);
+        assertNotNull(formJson);
+        jsonObject=  new JSONObject(formJson);
+        assertTrue(formJson.contains("\"checkBox1\":true"));
+        assertTrue(formJson.contains("\"checkBox2\":false"));
+        assertTrue(jsonObject.has("checkBox1"));
+        assertEquals(true,
+                jsonObject.get("checkBox1"));
+        assertTrue(jsonObject.has("checkBox2"));
+        assertEquals(false,
+                jsonObject.get("checkBox2"));
+
+        Map<String, Object> input4 = createValiDPayloadForTestWithBooleanValues4();
+        formJson = FormToBpmHelper.generateFormJson(form2, input4, CONTAINER_ID,PROCESS_ID);
+        assertNotNull(formJson);
+        jsonObject=  new JSONObject(formJson);
+        nestedForm = jsonObject.getJSONObject("application")
+                .getJSONObject("com.myspace.test_app.Application")
+                .getJSONObject("nestedForm");
+        assertTrue(formJson.contains("\"checkBox1\":true"));
+        assertTrue(formJson.contains("\"checkBox2\":false"));
+        assertTrue(nestedForm.has("checkBox1"));
+        assertEquals(true,
+                nestedForm.get("checkBox1"));
+        assertTrue(nestedForm.has("checkBox2"));
+        assertEquals(false,
+                nestedForm.get("checkBox2"));
+
+    }
 
     public void testModelForm2Json() throws Throwable {
         JSONObject json = new JSONObject();
@@ -270,6 +354,31 @@ public class TestFormToBpmHelper extends TestCase {
         input.put("application_apr", 11);
         input.put("applicant_creditScore", 381);
 
+        return input;
+    }
+
+    private Map<String, Object> createValiDPayloadForTestWithBooleanValues1() {
+        Map<String, Object> input = new HashMap<String, Object>();
+        input.put("checkBox1", true);
+        input.put("checkBox2", false);
+        return input;
+    }
+
+    private Map<String, Object> createValiDPayloadForTestWithBooleanValues2() {
+        Map<String, Object> input = new HashMap<String, Object>();
+        input.put("nestedForm_checkBox1", true);
+        input.put("nestedForm_checkBox2", false);
+        return input;
+    }
+
+    private Map<String, Object> createValiDPayloadForTestWithBooleanValues3() {
+        Map<String, Object> input = new HashMap<String, Object>();
+        input.put("checkBox1", true);
+        return input;
+    }
+    private Map<String, Object> createValiDPayloadForTestWithBooleanValues4() {
+        Map<String, Object> input = new HashMap<String, Object>();
+        input.put("nestedForm_checkBox1", true);
         return input;
     }
 
