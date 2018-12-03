@@ -7,20 +7,27 @@ import org.entando.entando.plugins.jacms.aps.system.persistence.Identifiable;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.*;
 
 @Validated
 public class AttributeDto implements Identifiable<Long> {
+
     @JsonProperty("id")
+    @NotNull
     private Long id;
 
     @JsonProperty("type")
+    @NotNull
     private AttributeType type;
 
     @JsonProperty("code")
+    @Size(min = 3, max = 3, message = "string.size.invalid")
+    @NotNull
     private String code;
 
     @JsonProperty("name")
+    @Size(min = 3, max = 30)
     private String name;
 
     @JsonProperty("mandatory")
@@ -31,9 +38,6 @@ public class AttributeDto implements Identifiable<Long> {
 
     @JsonProperty("filterable")
     private Boolean filterable;
-
-    @JsonProperty("contentType")
-    private ContentTypeDto contentType;
 
     @JsonProperty("attributeRoles")
     @Valid
@@ -137,22 +141,6 @@ public class AttributeDto implements Identifiable<Long> {
         this.filterable = filterable;
     }
 
-    public AttributeDto contentType(ContentTypeDto contentType) {
-        this.contentType = contentType;
-        return this;
-    }
-
-    @ApiModelProperty()
-
-    @Valid
-    public ContentTypeDto getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(ContentTypeDto contentType) {
-        this.contentType = contentType;
-    }
-
     public AttributeDto roles(List<AttributeRoleDto> attributeRoles) {
         this.attributeRoles = attributeRoles;
         return this;
@@ -194,13 +182,12 @@ public class AttributeDto implements Identifiable<Long> {
                 Objects.equals(this.mandatory, attribute.mandatory) &&
                 Objects.equals(this.searchable, attribute.searchable) &&
                 Objects.equals(this.filterable, attribute.filterable) &&
-                Objects.equals(this.contentType, attribute.contentType) &&
                 Objects.equals(this.attributeRoles, attribute.attributeRoles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, code, name, mandatory, searchable, filterable, contentType, attributeRoles);
+        return Objects.hash(id, type, code, name, mandatory, searchable, filterable, attributeRoles);
     }
 
     @Override
@@ -213,7 +200,6 @@ public class AttributeDto implements Identifiable<Long> {
                 "    mandatory: " + toIndentedString(mandatory) + "\n" +
                 "    searchable: " + toIndentedString(searchable) + "\n" +
                 "    filterable: " + toIndentedString(filterable) + "\n" +
-                "    contentType: " + toIndentedString(contentType) + "\n" +
                 "    attributeRoles: " + toIndentedString(attributeRoles) + "\n" +
                 "}";
     }
@@ -229,4 +215,3 @@ public class AttributeDto implements Identifiable<Long> {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

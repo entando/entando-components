@@ -22,7 +22,7 @@ public class Attribute {
     @DatabaseField(columnName = "code",
             dataType = DataType.STRING,
             width = 3,
-            canBeNull = false)
+            canBeNull = true)
     private String code;
 
     @DatabaseField(columnName = "name",

@@ -8,7 +8,10 @@ import com.j256.ormlite.spring.*;
 import com.j256.ormlite.support.ConnectionSource;
 import org.entando.entando.aps.system.init.util.ApsDerbyEmbeddedDatabaseType;
 import org.entando.entando.plugins.jacms.aps.system.init.portdb.*;
+import org.entando.entando.web.common.handlers.RestExceptionHandler;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.datasource.embedded.*;
 import org.springframework.web.servlet.config.annotation.*;
 
@@ -74,5 +77,22 @@ public class TestWebMvcConfig implements WebMvcConfigurer {
         tableCreator.initialize();
 
         return tableCreator;
+    }
+
+    @Bean
+    MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setUseCodeAsDefaultMessage(true);
+        messageSource.setFallbackToSystemLocale(true);
+        messageSource.setBasename("rest/messages");
+
+        return messageSource;
+    }
+
+    @Bean
+    RestExceptionHandler restExceptionHandler(MessageSource messageSource) {
+        RestExceptionHandler restExceptionHandler = new RestExceptionHandler();
+        restExceptionHandler.setMessageSource(messageSource);
+        return restExceptionHandler;
     }
 }

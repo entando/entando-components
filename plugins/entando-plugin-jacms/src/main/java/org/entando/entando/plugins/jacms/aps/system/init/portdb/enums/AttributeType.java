@@ -19,7 +19,7 @@ public enum AttributeType {
 
     ENUMERATOR("Enumerator"),
 
-    ENUMERATORMAP("EnumeratorMap"),
+    ENUMERATOR_MAP("EnumeratorMap"),
 
     HYPERTEXT("Hypertext"),
 
@@ -39,7 +39,7 @@ public enum AttributeType {
 
     TEXT("Text"),
 
-    THREESTATE("ThreeState"),
+    THREE_STATE("ThreeState"),
 
     TIME("Time"),
 

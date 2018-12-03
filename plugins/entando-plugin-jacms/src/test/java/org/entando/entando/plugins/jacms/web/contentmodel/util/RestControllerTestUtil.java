@@ -25,4 +25,8 @@ public class RestControllerTestUtil {
         pagedMetadata.setBody(allResults);
         return pagedMetadata;
     }
+
+    public static Long generateNextId() {
+        return Math.abs(new Random().nextLong());
+    }
 }

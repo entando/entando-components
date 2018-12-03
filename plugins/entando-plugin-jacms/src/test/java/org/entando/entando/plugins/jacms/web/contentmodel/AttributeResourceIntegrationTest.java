@@ -20,9 +20,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
-import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.entando.entando.plugins.jacms.web.contentmodel.util.RestControllerTestUtil.generateNextId;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -43,10 +43,6 @@ public class AttributeResourceIntegrationTest {
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
                 .build();
-    }
-
-    private Long generateNextId() {
-        return new Random().nextLong();
     }
 
     @Test

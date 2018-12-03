@@ -7,28 +7,38 @@ import org.entando.entando.plugins.jacms.aps.system.persistence.Identifiable;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.*;
 
 @Validated
 public class ContentTypeDto implements Identifiable<Long> {
-    @JsonProperty("attributes")
-    @Valid
-    private List<AttributeDto> attributes = null;
-
-    @JsonProperty("code")
-    private String code = null;
-
-    @JsonProperty("defaultContentModel")
-    private DefaultContentModel defaultContentModel = null;
-
-    @JsonProperty("defaultContentModelList")
-    private DefaultContentModel defaultContentModelList = null;
 
     @JsonProperty("id")
-    private Long id = null;
+    @Min(value = 0, message = "field.min")
+    @NotNull(message = "field.notNull")
+    private Long id;
+
+    @JsonProperty("code")
+    @Size(min = 3, max = 3, message = "string.size.invalid")
+    @NotNull(message = "field.notNull")
+    private String code;
+
+    @JsonProperty("defaultContentModel")
+    @NotNull(message = "field.notNull")
+    private DefaultContentModel defaultContentModel;
+
+    @JsonProperty("defaultContentModelList")
+    @NotNull(message = "field.notNull")
+    private DefaultContentModel defaultContentModelList;
 
     @JsonProperty("name")
-    private String name = null;
+    @Size(min = 3, max = 30, message = "string.size.invalid")
+    @NotNull(message = "field.notNull")
+    private String name;
+
+    @JsonProperty("attributes")
+    @Valid
+    private List<AttributeDto> attributes;
 
     public ContentTypeDto attributes(List<AttributeDto> attributes) {
         this.attributes = attributes;
@@ -104,7 +114,6 @@ public class ContentTypeDto implements Identifiable<Long> {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -118,11 +127,9 @@ public class ContentTypeDto implements Identifiable<Long> {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
 
     @Override
     public boolean equals(Object o) {
