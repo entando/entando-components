@@ -19,6 +19,7 @@ import junit.framework.TestSuite;
 import org.entando.entando.plugins.jpkiebpm.aps.internalservlet.TestBpmCaseInstanceActionBase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestCaseProgressWidgetHelpers;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.TestKieProcessForm;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmFormWidgetActionUnitTest;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.TestBpmFormWidgetAction;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.TestDataUXBuilder;
 import org.entando.entando.plugins.jpkiebpm.web.config.ConfigControllerIntegrationTest;
@@ -52,6 +53,7 @@ public class AllTests {
 	
 	suite.addTest(new JUnit4TestAdapter(ConfigControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(ConfigControllerUnitTest.class));
+        suite.addTest(new JUnit4TestAdapter(BpmFormWidgetActionUnitTest.class));
 
         return suite;
     }
