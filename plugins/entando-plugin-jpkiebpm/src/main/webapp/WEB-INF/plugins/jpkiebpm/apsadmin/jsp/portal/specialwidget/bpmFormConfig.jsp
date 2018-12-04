@@ -84,24 +84,28 @@
                                 <label for="Knowledge Source"><s:text name="Knowledge Source"/></label>
                                 <div class="input-group">
                                     <s:select 
+                                        disabled="#isknowledgeSourcePathSetted"
                                         list="knowledgeSource" 
                                         id="knowledgeSourcePath" 
                                         name="knowledgeSourcePath"
                                         listKey="value.id"
                                         listValue="value.name" class="form-control">
                                     </s:select>
+                                    <s:if test="#isknowledgeSourcePathSetted">
+                                        <s:hidden name="knowledgeSourcePath" />
+                                    </s:if>
                                     <span class="input-group-btn">
                                         <s:if test="#isknowledgeSourcePathSetted">
                                             <wpsf:submit 
                                                 action="changeKnowledgeSourceForm" 
-                                                value="Change Knowledge Source"
+                                                value="%{getText('label.changeKnowledgeSource')}"
                                                 cssClass="btn btn-warning"
                                                 />
                                         </s:if>
                                         <s:else>
                                             <wpsf:submit 
                                                 action="chooseKnowledgeSourceForm" 
-                                                value="Choose Knowledge Source"
+                                                value="%{getText('label.chooseKnowledgeSource')}"
                                                 cssClass="btn btn-success"
                                                 />
                                         </s:else>
@@ -120,29 +124,18 @@
                                         <s:text name="Process"/>
                                     </label>
                                     <div class="input-group">
-                                        <s:if test="!#isProcessPathSetted">
-                                            <s:select
-                                                list="process" 
-                                                id="processPath" 
-                                                name="processPath" 
-                                                listKey="%{processId + '@' + containerId + '@' + kieSourceId}"
-                                                listValue="%{processName + ' @ ' + containerId}"
-                                                class="form-control">
-                                            </s:select>
-                                        </s:if>
-                                        <s:else>
-                                            <s:select 
-                                                disabled="true" 
-                                                list="process" 
-                                                id="processPath"
-                                                name="processPath" 
-                                                listKey="%{processId + '@' + containerId + '@' + kieSourceId}"
-                                                listValue="%{processName + ' @ ' + containerId}"
-                                                class="form-control">
-                                            </s:select>
+                                        <s:select 
+                                            disabled="#isProcessPathSetted"
+                                            list="process" 
+                                            id="processPath"
+                                            name="processPath" 
+                                            listKey="%{processId + '@' + containerId + '@' + kieSourceId}"
+                                            listValue="%{processName + ' @ ' + containerId}"
+                                            class="form-control">
+                                        </s:select>
+                                        <s:if test="#isProcessPathSetted">
                                             <s:hidden name="processPath" />
-
-                                        </s:else>
+                                        </s:if>
                                         <span class="input-group-btn">
                                             <s:if test="#isProcessPathSetted">
                                                 <wpsf:submit

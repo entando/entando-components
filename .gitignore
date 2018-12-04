@@ -13,4 +13,5 @@ plugins/entando-plugin-*/nbactions.xml
 .DS_STORE
 .idea
 *.iml
+plugins/entando-plugin-jpkiebpm/entando-dev.log
 
