@@ -86,6 +86,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("knowledgeSourcePath", "1");
         assertEquals(Action.SUCCESS, this.executeActionWithMockedKieServer());
         assertEquals("1", getAction().getKnowledgeSourcePath());
+        assertNotNull(getAction().getKnowledgeSourcePath());
         assertEquals(1, getAction().getProcess().size());
         assertNull(getAction().getProcessPath());
 
