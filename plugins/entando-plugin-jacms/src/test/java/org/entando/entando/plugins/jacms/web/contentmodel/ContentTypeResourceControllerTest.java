@@ -1,17 +1,19 @@
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentTypeService;
-import org.entando.entando.plugins.jacms.web.contentmodel.util.*;
+import org.entando.entando.plugins.jacms.web.contentmodel.util.RestControllerTestUtil;
 import org.entando.entando.web.common.model.*;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.*;
+import org.springframework.validation.BindingResult;
 
 import java.net.URISyntaxException;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.entando.entando.plugins.jacms.web.contentmodel.util.RestControllerTestUtil.createNonEmptyPagedMetadata;
@@ -25,6 +27,9 @@ public class ContentTypeResourceControllerTest {
 
     @Mock
     private ContentTypeService service;
+
+    @Mock
+    private BindingResult bindingResult;
 
     @Before
     public void setup() {
@@ -40,7 +45,7 @@ public class ContentTypeResourceControllerTest {
         when(service.findMany(listRequest)).thenReturn(RestControllerTestUtil.EMPTY_PAGED_METADATA);
 
 
-        ResponseEntity<PagedMetadata<ContentTypeDto>> response = controller.list(listRequest);
+        ResponseEntity<PagedMetadata<EntityTypeShortDto>> response = controller.list(listRequest);
         verify(service).findMany(listRequest);
 
 
@@ -52,13 +57,13 @@ public class ContentTypeResourceControllerTest {
     @Test
     public void listShouldReturnAllItems() {
         RestListRequest listRequest = new RestListRequest();
-        PagedMetadata<ContentTypeDto> pagedMetadata = createNonEmptyPagedMetadata();
+        PagedMetadata<EntityTypeShortDto> pagedMetadata = createNonEmptyPagedMetadata();
 
 
         when(service.findMany(listRequest)).thenReturn(pagedMetadata);
 
 
-        ResponseEntity<PagedMetadata<ContentTypeDto>> response = controller.list(listRequest);
+        ResponseEntity<PagedMetadata<EntityTypeShortDto>> response = controller.list(listRequest);
         verify(service).findMany(listRequest);
 
 
@@ -74,7 +79,7 @@ public class ContentTypeResourceControllerTest {
     @Test
     public void getNonExistingContentTypeReturnsNotFound() {
         ResponseEntity<ContentTypeDto> response = controller.get(null);
-        verify(service).findById(null);
+        verify(service).findOne(null);
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -83,12 +88,14 @@ public class ContentTypeResourceControllerTest {
 
     @Test
     public void getExistingContentTypeReturnsContentType() {
-        ContentTypeDto expectedContentType = new ContentTypeDtoBuilder().withId(123L).build();
-        when(service.findById(123L)).thenReturn(Optional.of(expectedContentType));
+        ContentType contentType = new ContentType();
+        contentType.setTypeCode("ABC");
+        ContentTypeDto expectedContentType = new ContentTypeDto(contentType, Collections.emptyList());
+        when(service.findOne("ABC")).thenReturn(Optional.of(expectedContentType));
 
 
-        ResponseEntity<ContentTypeDto> response = controller.get(123L);
-        verify(service).findById(123L);
+        ResponseEntity<ContentTypeDto> response = controller.get("ABC");
+        verify(service).findOne("ABC");
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -98,34 +105,32 @@ public class ContentTypeResourceControllerTest {
 
     @Test
     public void createValidContentTypeReturnsElementWithNewId() throws URISyntaxException {
-        ContentTypeDto requestContentType = new ContentTypeDtoBuilder()
-                .withId(null)
-                .withCode("ABC")
-                .build();
+        ContentType contentType = new ContentType();
+        contentType.setTypeCode("ABC");
+        ContentTypeDtoRequest requestContentType = new ContentTypeDtoRequest(contentType, Collections.emptyList());
 
-        ContentTypeDto createdContentType = new ContentTypeDtoBuilder()
-                .withId(789L)
-                .withCode("ABC")
-                .build();
+        ContentType createdContentType = new ContentType();
+        createdContentType.setTypeCode("ABC");
+        ContentTypeDto createdContentTypeDto =
+                new ContentTypeDto(createdContentType, Collections.emptyList());
 
-        when(service.create(requestContentType)).thenReturn(createdContentType);
+        when(service.create(requestContentType, bindingResult)).thenReturn(createdContentTypeDto);
 
 
-        ResponseEntity<ContentTypeDto> response = controller.create(requestContentType);
-        verify(service).create(requestContentType);
+        ResponseEntity<ContentTypeDto> response = controller.create(requestContentType, bindingResult);
+        verify(service).create(requestContentType, bindingResult);
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getCode()).isEqualTo("ABC");
-        assertThat(response.getBody().getId()).isEqualTo(789L);
     }
 
 
     @Test
     public void deleteContentTypeShouldCallServiceAndReturnOkStatus() {
-        ResponseEntity<Void> response = controller.delete(345L);
-        verify(service).delete(345L);
+        ResponseEntity<Void> response = controller.delete("ABC");
+        verify(service).delete("ABC");
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -134,15 +139,20 @@ public class ContentTypeResourceControllerTest {
 
     @Test
     public void updateExistingContentTypeShouldCallServiceShouldReturnOk() {
-        ContentTypeDto requestContentType = new ContentTypeDtoBuilder().withId(376L).build();
+        ContentType contentType = new ContentType();
+        contentType.setTypeCode("ABC");
+        ContentTypeDtoRequest requestContentType =
+                new ContentTypeDtoRequest(contentType, Collections.emptyList());
 
-        when(service.update(requestContentType)).thenReturn(requestContentType);
+        ContentTypeDto contentTypeDto = new ContentTypeDto(contentType, Collections.emptyList());
 
-        ResponseEntity<ContentTypeDto> response = controller.update(requestContentType);
-        verify(service).update(requestContentType);
+        when(service.update(requestContentType, bindingResult)).thenReturn(contentTypeDto);
+
+        ResponseEntity<ContentTypeDto> response = controller.update(requestContentType, bindingResult);
+        verify(service).update(requestContentType, bindingResult);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getId()).isEqualTo(376L);
+        assertThat(response.getBody().getCode()).isEqualTo("ABC");
     }
 }

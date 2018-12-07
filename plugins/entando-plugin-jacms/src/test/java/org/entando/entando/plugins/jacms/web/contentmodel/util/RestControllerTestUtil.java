@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.jacms.web.contentmodel.util;
 
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 
 import java.util.*;
@@ -12,16 +13,16 @@ public class RestControllerTestUtil {
     private static class EmptyMetadata<E> extends PagedMetadata<E> {
         @Override
         public List<E> getBody() {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
-    public static PagedMetadata<ContentTypeDto> createNonEmptyPagedMetadata() {
-        PagedMetadata<ContentTypeDto> pagedMetadata = new PagedMetadata<>();
-        List<ContentTypeDto> allResults = new ArrayList<>();
-        allResults.add(new ContentTypeDtoBuilder().withId(1L).build());
-        allResults.add(new ContentTypeDtoBuilder().withId(2L).build());
-        allResults.add(new ContentTypeDtoBuilder().withId(3L).build());
+    public static PagedMetadata<EntityTypeShortDto> createNonEmptyPagedMetadata() {
+        PagedMetadata<EntityTypeShortDto> pagedMetadata = new PagedMetadata<>();
+        List<EntityTypeShortDto> allResults = new ArrayList<>();
+        allResults.add(new EntityTypeShortDto());
+        allResults.add(new EntityTypeShortDto());
+        allResults.add(new EntityTypeShortDto());
         pagedMetadata.setBody(allResults);
         return pagedMetadata;
     }
