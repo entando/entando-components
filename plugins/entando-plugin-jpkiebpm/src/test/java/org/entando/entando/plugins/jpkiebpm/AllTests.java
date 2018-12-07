@@ -7,7 +7,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.TestBpmOverrides;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.TestPamProcessForm;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.TestBpmFormWidgetAction;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.*;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.TestDataUXBuilder;
 import org.entando.entando.plugins.jpkiebpm.web.config.*;
 
@@ -39,6 +39,7 @@ public class AllTests {
 
         suite.addTest(new JUnit4TestAdapter(ConfigControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(ConfigControllerUnitTest.class));
+        suite.addTest(new JUnit4TestAdapter(BpmFormWidgetActionUnitTest.class));
 
         return suite;
     }

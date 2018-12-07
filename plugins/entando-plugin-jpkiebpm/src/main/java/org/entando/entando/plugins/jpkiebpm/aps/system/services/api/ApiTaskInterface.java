@@ -245,7 +245,7 @@ public class ApiTaskInterface extends KieApiManager {
         return taskList;
     }
 
-    public String getDiagram(Properties properties) {
+    public String getDiagram(Properties properties) {        
         final String configId = properties.getProperty("configId");
         if (null != configId) {
             try {
@@ -256,13 +256,8 @@ public class ApiTaskInterface extends KieApiManager {
                     config.loadFromXml(information);
                     String knowledgetSource = (String)config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
                     KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
-
                     final String containerId = config.getProperty("containerId");
                     final String processInstanceId = properties.getProperty("processInstanceId");
-                                     
-                    /*TODO add here the logic to call the method below (getProcInstDiagramImage) with the pInstanceID (number) 
-                        set to show the current step of the task
-                    */
                     return this.getKieFormManager().getProcInstDiagramImage(bpmConfig, containerId, processInstanceId);
                 }
             } catch (ApsSystemException e) {

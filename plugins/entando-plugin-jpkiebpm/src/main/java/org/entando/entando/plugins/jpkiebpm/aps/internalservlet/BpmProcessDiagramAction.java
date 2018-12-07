@@ -24,6 +24,7 @@
 package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getProcessInstanceIdFromProcessInstanceJson;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.slf4j.*;
 
@@ -46,19 +47,13 @@ public class BpmProcessDiagramAction extends BpmCaseInstanceActionBase {
             this.setChannel(channelIn);
 
             KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
-            
-            
-            Long processInstanceId = null;
-            
-            if (null!=config) {
-                processInstanceId = getProcessInstanceIdFromProcessInstanceJson(caseManager.getProcessInstanceByCorrelationKey(config, this.getCasePath()));
-           
-                String processId = getProcessIdFromProcessInstanceJson(caseManager.getProcessInstanceByCorrelationKey(config, this.getCasePath()));
 
+            if (null!=config) {
+                String processInstanceId = String.valueOf(getProcessInstanceIdFromProcessInstanceJson(caseManager.getProcessInstanceByCorrelationKey(config, this.getCasePath())));
                 if (null != processInstanceId) {
-                    this.setDiagram(this.formManager.getProcInstDiagramImage(config, this.getContainerid(), processId, processInstanceId));
+                    this.setDiagram(this.formManager.getProcInstDiagramImage(config, this.getContainerid(), processInstanceId));
                 } else {
-                    this.setDiagram(this.formManager.getProcInstDiagramImage(config, this.getContainerid(), processId));
+                    this.setDiagram(this.formManager.getProcInstDiagramImage(config, this.getContainerid()));
                 }
             }
         } catch (ApsSystemException t) {

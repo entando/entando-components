@@ -395,22 +395,26 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public String getProcInstDiagramImage(KieBpmConfig config, String containerId, String processId) throws ApsSystemException {
+    public String getProcInstDiagramImage(KieBpmConfig config, String containerId) throws ApsSystemException {
         return getProcInstDiagramImage(config,
-                 containerId, processId,
+                 containerId, 
                  null);
     }
 
     @Override
-    public String getProcInstDiagramImage(KieBpmConfig config, String containerId, String processId, Long pInstanceId) throws ApsSystemException {
+    public String getProcInstDiagramImage(KieBpmConfig config, String containerId,  String pInstanceId) throws ApsSystemException {
         String result = null;
-        if (!config.getActive() || StringUtils.isBlank(containerId) || StringUtils.isBlank(processId)) {
+        if (!config.getActive() || StringUtils.isBlank(containerId)) {
             return result;
         }
         try {
             String ver = this.hostNameVersionMap.get(config.getId());
             logger.info("server version {} ", ver);
-            boolean versionSix = ver != null && ver.startsWith("6");
+            boolean versionSix = false ;
+                    if  ((ver != null) && ver.startsWith("6")) {
+                        versionSix=true;
+                    }
+            logger.debug("Is server Version Six {} ", versionSix);
 
             // process endpoint first
             String endPoint = "";
@@ -426,19 +430,19 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             }
 
             Endpoint ep = KieEndpointDictionary.create().get(endPoint);
-
+          
             if (versionSix) {
-                ep.resolveParams(containerId, processId);
+                ep.resolveParams(containerId, pInstanceId);
             } else {
                 if (pInstanceId != null) {
-                    ep.resolveParams(containerId, pInstanceId.toString());
+                    ep.resolveParams(containerId, String.valueOf(pInstanceId));
                 } else {
                     ep.resolveParams(containerId);
                 }
             }
 
             KieClient client = KieApiUtil.getClientFromConfig(config);
-                            result = new KieRequestBuilder(client)
+            result = new KieRequestBuilder(client)
                     .setEndpoint(ep)
                     .setDebug(config.getDebug())
                     .doRequest();
@@ -1221,8 +1225,12 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public JSONObject getTaskDetails(KieBpmConfig config, String taskId) throws ApsSystemException {
+        
+        
+        logger.info("---------------------------------------------");
 
-        logger.info("getTaskDetails(taskId: {}", taskId);
+        logger.info("getTaskDetails (config: {}", config.toString());
+        logger.info("getTaskDetails taskId: {}", taskId);
         Map<String, String> headersMap = new HashMap<>();
         JSONObject result;
         if (!config.getActive()) {

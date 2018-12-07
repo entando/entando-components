@@ -150,11 +150,10 @@ public interface IKieFormManager {
      * Get the process diagram
      *
      * @param containerId
-     * @param processId
      * @return
      * @throws ApsSystemException
      */
-    String getProcInstDiagramImage(KieBpmConfig config, String containerId, String processId) throws ApsSystemException;
+    String getProcInstDiagramImage(KieBpmConfig config, String containerId) throws ApsSystemException;
 
 
     
@@ -166,7 +165,7 @@ public interface IKieFormManager {
      * @return
      * @throws ApsSystemException
      */
-    String getProcInstDiagramImage(KieBpmConfig config, String containerId, String processId, Long pInstanceId) throws ApsSystemException;
+    String getProcInstDiagramImage(KieBpmConfig config, String containerId, String pInstanceId) throws ApsSystemException;
 
     /**
      * Get the data of the current task
