@@ -593,16 +593,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
     }
 
     public String chooseKnowledgeSourceForm() {
-        return updateKnowledgeSource();
-    }
-
-    public String changeKnowledgeSourceForm() {
-        return updateKnowledgeSource();
-    }
-
-    private String updateKnowledgeSource() {
         try {
-
             KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
             this.setProcess(this.formManager.getProcessDefinitionsList(config));
 
@@ -614,7 +605,17 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction {
             return FAILURE;
         }
         return SUCCESS;
+    }
 
+    public String changeKnowledgeSourceForm() {
+        try {
+            this.setKnowledgeSourcePath(null);
+            changeForm();
+        } catch (Throwable t) {
+            logger.error("Error in changeKnowledgeSourceForm", t);
+            return FAILURE;
+        }
+        return SUCCESS;
     }
 
     public String getProcessId() {
