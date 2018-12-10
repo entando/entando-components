@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <package name="jpiot_do/FrontEnd/jpiot/IotListDevices" namespace="/do/FrontEnd/jpiot/IotListDevices" extends="entando-front-default">
+		
+		<global-results>
+			<result name="failure" type="guiFragment">
+				<param name="code">jpiot_is_front_IotListDevices_error</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpiot/aps/jsp/internalservlet/iotlistdevices/frontend-iotListDevices-error.jsp</param>
+			</result>
+    	</global-results>
+		
+    	<action name="list" class="jpiotIotListDevicesFinderFrontEndAction">
+    		<result type="guiFragment">
+				<param name="code">jpiot_is_front_IotListDevices_list</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpiot/aps/jsp/internalservlet/iotlistdevices/frontend-iotListDevices-list.jsp</param>
+			</result>
+			<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+    	<action name="search" class="jpiotIotListDevicesFinderFrontEndAction">
+            <result type="guiFragment">
+				<param name="code">jpiot_is_front_IotListDevices_list</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpiot/aps/jsp/internalservlet/iotlistdevices/frontend-iotListDevices-list.jsp</param>
+			</result>
+			<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+    	
+        <action name="new" class="jpiotIotListDevicesFrontEndAction" method="newIotListDevices">
+            <result type="guiFragment">
+				<param name="code">jpiot_is_front_IotListDevices_entry</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpiot/aps/jsp/internalservlet/iotlistdevices/frontend-iotListDevices-entry.jsp</param>
+			</result>
+			<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+    	
+        <action name="edit" class="jpiotIotListDevicesFrontEndAction" method="edit">
+            <result type="guiFragment">
+				<param name="code">jpiot_is_front_IotListDevices_entry</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpiot/aps/jsp/internalservlet/iotlistdevices/frontend-iotListDevices-entry.jsp</param>
+			</result>
+			<result name="input" type="frontRedirectAction">
+				<param name="actionName">list</param>
+			</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+        <action name="save" class="jpiotIotListDevicesFrontEndAction" method="save">
+        	<result name="input" type="guiFragment">
+				<param name="code">jpiot_is_front_IotListDevices_entry</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpiot/aps/jsp/internalservlet/iotlistdevices/frontend-iotListDevices-entry.jsp</param>
+			</result>
+			<result type="frontRedirectAction">
+				<param name="actionName">list</param>
+			</result>
+        	<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+        </action>
+		
+    	<action name="trash" class="jpiotIotListDevicesFrontEndAction" method="trash">
+            <result type="guiFragment">
+				<param name="code">jpiot_is_front_IotListDevices_trash</param>
+				<param name="jspLocation">/WEB-INF/plugins/jpiot/aps/jsp/internalservlet/iotlistdevices/frontend-iotListDevices-trash.jsp</param>
+			</result>
+			<result name="input" type="frontRedirectAction">
+				<param name="actionName">list</param>
+			</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+    	<action name="delete" class="jpiotIotListDevicesFrontEndAction" method="delete">
+        	<result type="frontRedirectAction">
+				<param name="actionName">list</param>
+			</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+    	
+    </package>
+   
+</struts>

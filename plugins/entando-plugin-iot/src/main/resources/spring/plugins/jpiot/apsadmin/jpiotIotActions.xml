@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd" >
+
+
+	<bean id="jpiotIotConfigPluginSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jpiot/apsadmin/jsp/common/layouts/subMenu.jsp</value></property>
+	</bean>
+
+
+<!-- Config --> 
+
+<bean id="jpiotIotConfigFinderAction" scope="prototype"
+			class="org.entando.entando.plugins.jpiot.apsadmin.iotconfig.IotConfigFinderAction"
+			parent="abstractBaseAction" >
+		<property name="iotConfigManager" ref="jpiotIotConfigManager" />
+	</bean>
+
+	<bean id="jpiotIotConfigAction" scope="prototype"
+			class="org.entando.entando.plugins.jpiot.apsadmin.iotconfig.IotConfigAction"
+			parent="abstractBaseAction" >
+		<property name="iotConfigManager" ref="jpiotIotConfigManager" />
+	</bean>
+
+
+	<!-- INTERNAL_SERVLET -->
+	<bean id="jpiotIotConfigFinderFrontEndAction" scope="prototype"
+			class="org.entando.entando.plugins.jpiot.aps.internalservlet.iotconfig.IotConfigFinderFrontEndAction"
+			parent="abstractBaseAction" >
+		<property name="iotConfigManager" ref="jpiotIotConfigManager" />
+	</bean>
+
+	<bean id="jpiotIotConfigFrontEndAction" scope="prototype"
+			class="org.entando.entando.plugins.jpiot.aps.internalservlet.iotconfig.IotConfigFrontEndAction"
+			parent="abstractBaseAction" >
+		<property name="iotConfigManager" ref="jpiotIotConfigManager" />
+	</bean>
+
+	<bean id="jpiotIotConfigConfigAction" class="org.entando.entando.plugins.jpiot.apsadmin.portal.specialwidget.iotconfig.IotConfigConfigAction"
+		parent="simpleWidgetAction" scope="prototype">
+		<property name="iotConfigManager" ref="jpiotIotConfigManager" />
+	</bean>
+
+
+
+<!-- List Devices -->
+
+
+
+
+	<bean id="jpiotIotListDevicesFinderAction" scope="prototype"
+			class="org.entando.entando.plugins.jpiot.apsadmin.iotlistdevices.IotListDevicesFinderAction"
+			parent="abstractBaseAction" >
+		<property name="iotListDevicesManager" ref="jpiotIotListDevicesManager" />
+	</bean>
+
+	<bean id="jpiotIotListDevicesAction" scope="prototype"
+			class="org.entando.entando.plugins.jpiot.apsadmin.iotlistdevices.IotListDevicesAction"
+			parent="abstractBaseAction" >
+		<property name="iotListDevicesManager" ref="jpiotIotListDevicesManager" />
+	</bean>
+
+
+	<!-- INTERNAL_SERVLET -->
+	<bean id="jpiotIotListDevicesFinderFrontEndAction" scope="prototype"
+			class="org.entando.entando.plugins.jpiot.aps.internalservlet.iotlistdevices.IotListDevicesFinderFrontEndAction"
+			parent="abstractBaseAction" >
+		<property name="iotListDevicesManager" ref="jpiotIotListDevicesManager" />
+	</bean>
+
+	<bean id="jpiotIotListDevicesFrontEndAction" scope="prototype"
+			class="org.entando.entando.plugins.jpiot.aps.internalservlet.iotlistdevices.IotListDevicesFrontEndAction"
+			parent="abstractBaseAction" >
+		<property name="iotListDevicesManager" ref="jpiotIotListDevicesManager" />
+	</bean>
+
+	<bean id="jpiotIotListDevicesConfigAction" class="org.entando.entando.plugins.jpiot.apsadmin.portal.specialwidget.iotlistdevices.IotListDevicesConfigAction"
+		parent="simpleWidgetAction" scope="prototype">
+		<property name="iotListDevicesManager" ref="jpiotIotListDevicesManager" />
+	</bean>
+
+
+
+
+</beans>

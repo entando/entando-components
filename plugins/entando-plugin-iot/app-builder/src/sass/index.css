@@ -1,0 +1,38 @@
+.PluginStatus .PluginStatus--list-elem-label {
+  display: inline-block;
+  min-width: 200px; }
+
+.PluginStatus .PluginStatus--css-test {
+  height: 2px !important; }
+
+.PluginStatus .PluginStatus--list-elem__success {
+  color: green; }
+
+.PluginStatus .PluginStatus--list-elem__failure {
+  color: red; }
+
+.TableListDevices {
+  padding: 1em; }
+
+.TableListDevicesForm__required-fields {
+  margin-top: 1em;
+  font-size: 14px; }
+
+.TableListDevicesForm__container-data {
+  border: 0px solid;
+  margin-top: 1em;
+  padding: 1em; }
+
+.TableListDevicesForm__widget-title {
+  background: #f5f5f5; }
+
+.TableListDevicesForm__description {
+  padding: 2em; }
+
+.TableListDevicesForm__line {
+  border-top: 1px solid #d1d1d1;
+  border-bottom: 1px solid #d1d1d1; }
+
+.TableListDevicesForm__input-group {
+  width: 100%;
+  border: 0px solid red; }

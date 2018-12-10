@@ -1,0 +1,72 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+<validators>
+    <field name="widgetTitle">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+			<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">50</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+	    </field>
+    <field name="datasource">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+			<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">50</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+	    </field>
+    <field name="context">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+			<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">50</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+	    </field>
+    <field name="download">
+        <field-validator type="required" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+			<field-validator type="int" short-circuit="true">
+			<param name="max">1</param>
+           	<message key="error.IotListDevices.download.max" />
+		</field-validator>
+	    </field>
+    <field name="filter">
+        <field-validator type="required" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+			<field-validator type="int" short-circuit="true">
+			<param name="max">1</param>
+           	<message key="error.IotListDevices.filter.max" />
+		</field-validator>
+	    </field>
+    <field name="allColumns">
+        <field-validator type="required" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+			<field-validator type="int" short-circuit="true">
+			<param name="max">1</param>
+           	<message key="error.IotListDevices.allColumns.max" />
+		</field-validator>
+	    </field>
+    <field name="columns">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+			<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">255</param>
+			<param name="trim">true</param>
+           <message key="stringlength" />
+		</field-validator>
+	    </field>
+</validators>

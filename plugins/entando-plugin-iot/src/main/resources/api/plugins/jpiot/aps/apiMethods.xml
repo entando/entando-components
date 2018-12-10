@@ -1,0 +1,51 @@
+<apiMethodDefinitions>
+
+	<resource name="iotConfigs">
+        <description>Return the iotConfig list</description>
+        <source pluginCode="jpiot">plugins</source>
+		<method httpMethod="GET" active="true" canSpawnOthers="true">
+			<description>Return the iotConfigs list</description>
+			<springBean name="jpiotIotConfigManager" method="getIotConfigsForApi" />
+			<responseClass>org.entando.entando.plugins.jpiot.aps.system.services.iotconfig.api.IotConfigListResponse</responseClass>
+			<!-- 
+			<parameters>
+			</parameters>
+			-->
+		</method>
+	</resource>
+  
+    <resource name="iotConfig">
+        <description>The iotConfig</description>
+        <source pluginCode="jpiot">plugins</source>
+        <method httpMethod="GET" active="true" canSpawnOthers="true">
+            <description>Return a iotConfig by id</description>
+            <springBean name="jpiotIotConfigManager" method="getIotConfigForApi" />
+            <responseClass>org.entando.entando.plugins.jpiot.aps.system.services.iotconfig.api.IotConfigResponse</responseClass>
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The id of the iotConfig to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Add a iotConfig</description>
+            <springBean name="jpiotIotConfigManager" method="addIotConfigForApi" />
+            <expectedType>org.entando.entando.plugins.jpiot.aps.system.services.iotconfig.api.JAXBIotConfig</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Update a iotConfig</description>
+            <springBean name="jpiotIotConfigManager" method="updateIotConfigForApi" />
+            <expectedType>org.entando.entando.plugins.jpiot.aps.system.services.iotconfig.api.JAXBIotConfig</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Delete a iotConfig by id</description>
+            <springBean name="jpiotIotConfigManager" method="deleteIotConfigForApi" />
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The id of the iotConfig to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+	
+</apiMethodDefinitions>

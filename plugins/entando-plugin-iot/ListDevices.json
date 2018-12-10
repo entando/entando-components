@@ -1,0 +1,64 @@
+{
+  "packageName": "org.entando.entando.plugins.jpiot",
+  "model": {
+    "name": "IotListDevices",
+    "fields": [{
+        "name": "widgetTitle",
+        "type": "string",
+        "required": true,
+        "length": 50,
+        "primaryKey": false
+      },
+      {
+        "name": "datasource",
+        "type": "string",
+        "required": true,
+        "length": 50,
+        "primaryKey": false
+      },
+      {
+        "name": "context",
+        "type": "string",
+        "required": true,
+        "length": 50,
+        "primaryKey": false
+      },
+      {
+        "name": "download",
+        "type": "int",
+        "required": true,
+        "length": 1,
+        "primaryKey": false
+      },
+      {
+        "name": "filter",
+        "type": "int",
+        "required": true,
+        "length": 1,
+        "primaryKey": false
+      },
+      {
+        "name": "allColumns",
+        "type": "int",
+        "required": true,
+        "length": 1,
+        "primaryKey": false
+      },
+      {
+        "name": "columns",
+        "type": "string",
+        "required": true,
+        "length": 255,
+        "primaryKey": false
+      }
+    ]
+  },
+  "assets": {
+    "rest": true,
+    "cxf": true,
+    "specialWidget": true,
+    "internalServlet": true,
+    "adminConsole": true,
+    "adminConsoleProducer": null
+  }
+}

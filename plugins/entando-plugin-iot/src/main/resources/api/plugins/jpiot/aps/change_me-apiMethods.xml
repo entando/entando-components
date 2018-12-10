@@ -1,0 +1,51 @@
+<apiMethodDefinitions>
+
+	<resource name="iotListDevicess">
+        <description>Return the iotListDevices list</description>
+        <source pluginCode="jpiot">plugins</source>
+		<method httpMethod="GET" active="true" canSpawnOthers="true">
+			<description>Return the iotListDevicess list</description>
+			<springBean name="jpiotIotListDevicesManager" method="getIotListDevicessForApi" />
+			<responseClass>org.entando.entando.plugins.jpiot.aps.system.services.iotlistdevices.api.IotListDevicesListResponse</responseClass>
+			<!-- 
+			<parameters>
+			</parameters>
+			-->
+		</method>
+	</resource>
+  
+    <resource name="iotListDevices">
+        <description>The iotListDevices</description>
+        <source pluginCode="jpiot">plugins</source>
+        <method httpMethod="GET" active="true" canSpawnOthers="true">
+            <description>Return a iotListDevices by id</description>
+            <springBean name="jpiotIotListDevicesManager" method="getIotListDevicesForApi" />
+            <responseClass>org.entando.entando.plugins.jpiot.aps.system.services.iotlistdevices.api.IotListDevicesResponse</responseClass>
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The id of the iotListDevices to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Add a iotListDevices</description>
+            <springBean name="jpiotIotListDevicesManager" method="addIotListDevicesForApi" />
+            <expectedType>org.entando.entando.plugins.jpiot.aps.system.services.iotlistdevices.api.JAXBIotListDevices</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Update a iotListDevices</description>
+            <springBean name="jpiotIotListDevicesManager" method="updateIotListDevicesForApi" />
+            <expectedType>org.entando.entando.plugins.jpiot.aps.system.services.iotlistdevices.api.JAXBIotListDevices</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Delete a iotListDevices by id</description>
+            <springBean name="jpiotIotListDevicesManager" method="deleteIotListDevicesForApi" />
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The id of the iotListDevices to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+	
+</apiMethodDefinitions>

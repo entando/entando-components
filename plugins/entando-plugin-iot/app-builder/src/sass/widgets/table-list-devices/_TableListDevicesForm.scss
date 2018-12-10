@@ -1,0 +1,31 @@
+.TableListDevicesForm {
+
+  &__required-fields {
+    margin-top: 1em;
+    font-size: 14px;
+  }
+
+  &__container-data {
+    border: 0px solid;
+    margin-top: 1em;
+    padding: 1em;
+  }
+
+  &__widget-title {
+    background: #f5f5f5;
+  }
+
+  &__description {
+    padding: 2em;
+  }
+
+  &__line {
+    border-top: 1px solid #d1d1d1;
+    border-bottom: 1px solid #d1d1d1;
+  }
+
+  &__input-group {
+    width: 100%;
+    border: 0px solid red;
+  }
+}
