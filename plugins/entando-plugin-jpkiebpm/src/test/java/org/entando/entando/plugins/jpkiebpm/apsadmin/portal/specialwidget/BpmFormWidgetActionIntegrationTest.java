@@ -32,7 +32,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverr
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverrideInEditing;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.SpyKieFormManagerUtil;
 
-public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
+public class BpmFormWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
 
     private IKieFormOverrideManager kieFormOverrideManager;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
@@ -133,7 +133,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("pageCode", temporaryPage.getCode());
         this.addParameter("widgetTypeCode", "bpm-datatype-form");
         this.addParameter("frame", "0");
-        assertEquals(Action.SUCCESS, this.executeAction());
+        assertEquals(Action.SUCCESS, this.executeActionWithMockedKieServer());
         int widgetInfoId = getWidgetInfoId();
         assertTrue(widgetInfoId > 0);
         List<KieFormOverride> onlineOverrides = this.kieFormOverrideManager.getFormOverrides(widgetInfoId, true);
@@ -162,7 +162,9 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("overrides[1].field", "reason");
         this.addParameter("overrides[1].defaultValue", "default2-MOD");
         this.addParameter("overrides[1].placeHolderValue", "placeholder2");
-        assertEquals(Action.SUCCESS, this.executeAction());
+        this.addParameter("knowledgeSourcePath", "1");
+        this.addParameter("processPath", "process1@container1@1");
+        assertEquals(Action.SUCCESS, this.executeActionWithMockedKieServer());
         assertEquals(1, getAction().getOverrides().size());
         KieFormOverrideInEditing modOvr = getAction().getOverrides().get(0);
         assertEquals(2, (int) modOvr.getId());
@@ -208,7 +210,7 @@ public class TestBpmFormWidgetAction extends ApsAdminBaseTestCase {
         this.addParameter("pageCode", temporaryPage.getCode());
         this.addParameter("widgetTypeCode", "bpm-datatype-form");
         this.addParameter("frame", "0");
-        assertEquals(Action.SUCCESS, this.executeAction());
+        assertEquals(Action.SUCCESS, this.executeActionWithMockedKieServer());
         assertEquals(widgetInfoId, getWidgetInfoId());
         assertEquals(1, getAction().getOverrides().size());
         ovr = getAction().getOverrides().get(0);

@@ -10,6 +10,7 @@
         <action name="jpkiebpmBpmFormWidgetViewerConfig" class="jpkiebpmBpmFormWidgetAction" method="init">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
@@ -17,6 +18,7 @@
         <action name="jpkiebpmBpmTaskListDatatableWidgetViewerConfig" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="init">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
@@ -24,6 +26,7 @@
         <action name="jpkiebpmBpmProcessDatatableWidgetViewerConfig" class="jpkiebpmBpmProcessDatatableWidgetAction" method="init">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
@@ -38,6 +41,7 @@
         <action name="jpkiebpmBpmCaseInstanceSelectorWidgetViewerConfig" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="init">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
@@ -96,20 +100,21 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmFormViewer" namespace="/do/bpm/Page/SpecialWidget/BpmFormViewer" extends="entando-default">
 
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="chooseForm*" class="jpkiebpmBpmFormWidgetAction" method="chooseForm">
+        <action name="chooseForm*" class="jpkiebpmBpmFormWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -118,6 +123,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -125,6 +131,7 @@
         <action name="save" class="jpkiebpmBpmFormWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <interceptor-ref name="entandoValidationStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
@@ -133,6 +140,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -141,6 +149,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -149,6 +158,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -157,6 +167,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmForm.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -166,20 +177,21 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmTaskListDatatableViewer" namespace="/do/bpm/Page/SpecialWidget/BpmTaskListDatatableViewer" extends="entando-default">
 
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="chooseForm*" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="chooseForm">
+        <action name="chooseForm*" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -188,6 +200,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -195,6 +208,7 @@
         <action name="save" class="jpkiebpmBpmTaskListDatatableWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <interceptor-ref name="entandoValidationStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
@@ -203,6 +217,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -211,6 +226,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmTaskListDatatable.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -220,20 +236,39 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmProcessDatatableViewer" namespace="/do/bpm/Page/SpecialWidget/BpmProcessDatatableViewer" extends="entando-default">
 
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="chooseForm*" class="jpkiebpmBpmProcessDatatableWidgetAction" method="chooseForm">
+        <action name="chooseKnowledgeSourceForm*" class="jpkiebpmBpmProcessDatatableWidgetAction" method="chooseKnowledgeSourceForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="changeKnowledgeSourceForm*" class="jpkiebpmBpmProcessDatatableWidgetAction" method="changeKnowledgeSourceForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
+                <param name="requestAuth.requiredPermission">superuser</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="chooseForm*" class="jpkiebpmBpmProcessDatatableWidgetAction" method="chooseForm">
+            <result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
+            <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -242,6 +277,7 @@
             <result type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
             <interceptor-ref name="entandoDefaultStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">superuser</param>
             </interceptor-ref>
         </action>
@@ -249,6 +285,7 @@
         <action name="save" class="jpkiebpmBpmProcessDatatableWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDatatable.config</result>
             <interceptor-ref name="entandoValidationStack">
+                <param name="chain.includeParameters">actionErrors</param>
                 <param name="requestAuth.requiredPermission">managePages</param>
             </interceptor-ref>
         </action>
@@ -258,17 +295,17 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseProgressViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseProgressViewer" extends="entando-default">
 
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="chooseForm*" class="jpkiebpmBpmCaseProgressWidgetAction" method="chooseForm">
+        <action name="chooseForm*" class="jpkiebpmBpmCaseProgressWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseProgress.config</result>
             <interceptor-ref name="entandoDefaultStack">
@@ -312,17 +349,17 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceSelectorViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceSelectorViewer" extends="entando-default">
 
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="chooseForm*" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="chooseForm">
+        <action name="chooseForm*" class="jpkiebpmBpmCaseInstanceSelectorWidgetAction" method="chooseForm">
             <result type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceSelector.config</result>
             <interceptor-ref name="entandoDefaultStack">
@@ -366,17 +403,17 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceCommentsViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceCommentsViewer" extends="entando-default">
         
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="save" class="jpkiebpmBpmCaseInstanceCommentsWidgetAction" method="save">
+        <action name="save" class="jpkiebpmBpmCaseInstanceCommentsWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceComments.config</result>
             <interceptor-ref name="entandoValidationStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
@@ -389,17 +426,17 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceDetailsViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceDetailsViewer" extends="entando-default">
         
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="save" class="jpkiebpmBpmCaseInstanceDetailsWidgetAction" method="save">
+        <action name="save" class="jpkiebpmBpmCaseInstanceDetailsWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceDetails.config</result>
             <interceptor-ref name="entandoValidationStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
@@ -411,17 +448,17 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceActionsViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceActionsViewer" extends="entando-default">
         
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="save" class="jpkiebpmBpmCaseInstanceActionsWidgetAction" method="save">
+        <action name="save" class="jpkiebpmBpmCaseInstanceActionsWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceActions.config</result>
             <interceptor-ref name="entandoValidationStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
@@ -433,17 +470,17 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceRoleViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceRoleViewer" extends="entando-default">
         
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="save" class="jpkiebpmBpmCaseInstanceRolesWidgetAction" method="save">
+        <action name="save" class="jpkiebpmBpmCaseInstanceRolesWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceRoles.config</result>
             <interceptor-ref name="entandoValidationStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
@@ -455,17 +492,17 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceChartViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceChartViewer" extends="entando-default">
         
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="save" class="jpkiebpmBpmCaseInstanceChartWidgetAction" method="save">
+        <action name="save" class="jpkiebpmBpmCaseInstanceChartWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceChart.config</result>
             <interceptor-ref name="entandoValidationStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
@@ -477,17 +514,17 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmProcessDiagramViewer" namespace="/do/bpm/Page/SpecialWidget/BpmProcessDiagramViewer" extends="entando-default">
         
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="save" class="jpkiebpmBpmProcessDiagramWidgetAction" method="save">
+        <action name="save" class="jpkiebpmBpmProcessDiagramWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmProcessDiagram.config</result>
             <interceptor-ref name="entandoValidationStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
@@ -499,17 +536,17 @@
     <package name="jpkiebpm_do/bmp/Page/SpecialWidget/BpmCaseInstanceFileViewer" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceFileViewer" extends="entando-default">
         
         <global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
-		<action name="save" class="jpkiebpmBpmCaseInstanceFileWidgetAction" method="save">
+        <action name="save" class="jpkiebpmBpmCaseInstanceFileWidgetAction" method="save">
             <result name="input" type="tiles">admin.jpkiebpm.page.widget.bpmCaseInstanceFile.config</result>
             <interceptor-ref name="entandoValidationStack">
                 <param name="requestAuth.requiredPermission">managePages</param>
