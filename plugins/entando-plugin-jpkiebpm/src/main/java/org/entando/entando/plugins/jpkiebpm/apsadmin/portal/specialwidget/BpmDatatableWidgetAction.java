@@ -2,7 +2,6 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang3.StringUtils;
@@ -15,12 +14,9 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.*;
 
-/**
- *
- */
 public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction implements Serializable {
 
-    private static final Logger _logger = LoggerFactory.getLogger(BpmDatatableWidgetAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(BpmDatatableWidgetAction.class);
 
     protected List<String> selectedGroups = new ArrayList<>();
     protected final List<String> checkedField = new ArrayList<>();
@@ -32,13 +28,11 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
     protected final String PREFIX_OVERRIDE = "override_";
     protected final String PREFIX_POSITION = "position_";
     protected String groups;
-    protected IGroupManager groupManager;
-
 
     public String getGroups() {
         return groups;
     }
-
+    
     public void setGroups(String groups) {
         this.groups = groups;
     }
@@ -53,19 +47,17 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
 
     public List<String> getListBpmGroups() {
         final List<String> listGroups = new ArrayList<>();
-        for (final Group gr : this.groupManager.getGroups()) {
+        for (Group gr : this.getGroupManager().getGroups()) {
             if (gr.getName().startsWith(PREFIX_BPM_GROUP)) {
                 listGroups.add(gr.getName().replace(PREFIX_BPM_GROUP, "").trim());
             }
         }
         return listGroups;
-
-
     }
 
     public List<String> getCheckedField() {
         final List<String> visible = new ArrayList<>();
-        for (Iterator iterator = this.fieldsDatatable.iterator(); iterator.hasNext(); ) {
+        for (Iterator iterator = this.fieldsDatatable.iterator(); iterator.hasNext();) {
             final FieldDatatable fd = (FieldDatatable) iterator.next();
             if (fd.getVisible()) {
                 visible.add(PREFIX_VISIBLE + fd.getName());
@@ -73,7 +65,6 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
         }
         return visible;
     }
-
 
     public List<FieldDatatable> getFieldsDatatable() throws ApsSystemException {
 
@@ -83,7 +74,6 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
 
         return this.fieldsDatatable;
     }
-
 
     protected abstract void loadFieldIntoDatatableFromBpm() throws ApsSystemException;
 
@@ -99,7 +89,6 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
             fd.setVisible(Boolean.valueOf(true));
             fd.setOverride("");
             this.fieldsDatatable.add(fd);
-
         }
     }
 
@@ -107,7 +96,7 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
         properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID, procId);
         properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID, contId);
         if (sourceId != null) {
-        		properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID, sourceId);
+            properties.put(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID, sourceId);
         }
         if (this.getGroups() != null) {
             properties.put(PROP_BPM_GROUP, this.getGroups());
@@ -117,7 +106,6 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
             properties.put(PREFIX_VISIBLE + field.getName(), Boolean.toString(field.getVisible()));
             properties.put(PREFIX_OVERRIDE + field.getName(), field.getOverride());
             properties.put(PREFIX_POSITION + field.getName(), Byte.toString(field.getPosition()));
-
         }
     }
 
@@ -133,7 +121,7 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
             final String contId = param[1];
             String sourceId = null;
             if (param.length > 2) {
-            		sourceId = param[2];
+                sourceId = param[2];
             }
             widgetInfo.setWidgetType(widget.getType().getCode());
             ApsProperties properties = new ApsProperties();
@@ -141,7 +129,7 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
             widgetInfo.setInformationDraft(properties.toXml());
             this.updateConfigWidget(widgetInfo, widget);
         } catch (Exception e) {
-            _logger.error("Error in save WidgetInfo", e);
+            logger.error("Error in save WidgetInfo", e);
 
         }
         return widgetInfo;
@@ -149,19 +137,19 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
 
     @Override
     public String chooseForm() {
+        String response = super.chooseForm();
         try {
             this.loadFieldIntoDatatableFromBpm();
-        } catch (Exception t) {
-            _logger.error("Error in chooseForm", t);
-            return FAILURE;
+        } catch (ApsSystemException t) {
+            logger.error("Error in chooseForm", t);
         }
-        return SUCCESS;
+        return response;
     }
 
     @Override
     protected void createValuedShowlet() throws Exception {
-        _logger.info("Method createValuedShowlet");
-        for (final Enumeration enumeration = this.getRequest().getParameterNames(); enumeration.hasMoreElements(); ) {
+        logger.info("Method createValuedShowlet");
+        for (final Enumeration enumeration = this.getRequest().getParameterNames(); enumeration.hasMoreElements();) {
             final String key = (String) enumeration.nextElement();
 
             if (key.startsWith(PREFIX_FIELD)) {
@@ -190,7 +178,6 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
         BpmWidgetInfo widgetInfo = this.storeWidgetInfo(widget);
         widget.getConfig().setProperty(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID, String.valueOf(widgetInfo.getId()));
         this.setWidget(widget);
-
     }
 
     @Override
@@ -220,12 +207,10 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
                         return o1.getPosition().compareTo(o2.getPosition());
                     }
                 });
-
-
             }
 
         } catch (ApsSystemException e) {
-            _logger.error("Error loading WidgetInfo", e);
+            logger.error("Error loading WidgetInfo", e);
         }
     }
 
