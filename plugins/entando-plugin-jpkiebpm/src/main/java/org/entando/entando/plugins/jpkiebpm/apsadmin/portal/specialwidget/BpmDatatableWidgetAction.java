@@ -142,6 +142,7 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
             this.loadFieldIntoDatatableFromBpm();
         } catch (ApsSystemException t) {
             logger.error("Error in chooseForm", t);
+            return FAILURE;
         }
         return response;
     }
