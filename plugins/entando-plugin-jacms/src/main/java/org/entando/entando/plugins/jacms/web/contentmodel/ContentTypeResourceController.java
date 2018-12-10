@@ -40,7 +40,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<Void> delete(@PathVariable("id") String code) {
+    public ResponseEntity<Void> delete(@PathVariable("code") String code) {
         service.delete(code);
         return ResponseEntity.ok().build();
     }

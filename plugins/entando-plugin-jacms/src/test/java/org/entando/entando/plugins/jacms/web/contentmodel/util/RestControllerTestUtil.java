@@ -1,6 +1,5 @@
 package org.entando.entando.plugins.jacms.web.contentmodel.util;
 
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
 
-@RequestMapping(value = "/plugins/cms/content-types")
+@RequestMapping(value = ContentTypeResourceController.BASE_URL)
 public interface ContentTypeResource {
 
     @ApiOperation(value = "createContentType", nickname = "createContentTypeUsingPOST", response = ContentTypeDto.class, tags={ "content-type-resource-controller", })

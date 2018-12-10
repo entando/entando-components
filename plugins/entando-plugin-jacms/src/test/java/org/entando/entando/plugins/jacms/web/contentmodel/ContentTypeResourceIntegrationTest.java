@@ -4,29 +4,14 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
-import org.entando.entando.plugins.jacms.aps.system.init.portdb.enums.DefaultContentModel;
-import org.entando.entando.plugins.jacms.web.TestWebMvcConfig;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
-import org.junit.*;
-import org.junit.runner.RunWith;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.servlet.ServletContext;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.entando.entando.plugins.jacms.web.contentmodel.ContentTypeResourceController.BASE_URL;
-import static org.entando.entando.plugins.jacms.web.contentmodel.util.RestControllerTestUtil.generateNextId;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegrationTest {
@@ -49,28 +34,27 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andReturn();
     }
 
-//    @Test
-//    public void testCreateContentType() throws Exception {
-//        ContentTypeDto contentType = new ContentTypeDtoBuilder()
-//                .withId(generateNextId())
-//                .withCode("ABC")
-//                .withName("My content type")
-//                .withDefaultContentModel(DefaultContentModel.FULL)
-//                .withDefaultContentModelList(DefaultContentModel.LISTS)
-//                .build();
-//
-//        mockMvc.perform(
-//                post("/plugins/cms/content-types")
-//                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-//                        .content(jsonMapper.writeValueAsString(contentType))
-//                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andExpect(status().isCreated())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-//                .andExpect(jsonPath("$.code").value("ABC"))
-//                .andExpect(jsonPath("$.id").isNotEmpty())
-//                .andReturn();
-//    }
-//
+    @Test
+    public void testCreateContentType() throws Exception {
+        deleteContentType("MCT");
+
+        ContentType contentType = new ContentType();
+        contentType.setTypeCode("MCT");
+        contentType.setDescription("My content type");
+        ContentTypeDtoRequest contentTypeRequest = new ContentTypeDtoRequest(contentType);
+        contentTypeRequest.setName("Content request");
+
+        mockMvc.perform(
+                post(BASE_URL).contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(jsonMapper.writeValueAsString(contentTypeRequest))
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+//                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.code").value("MCT"))
+                .andReturn();
+    }
+
 //    @Test
 //    public void testUpdateContentType() throws Exception {
 //        ContentTypeDto createdContentType = createContentTypeDto();
@@ -90,19 +74,18 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 //                .andReturn();
 //    }
 //
-//    @Test
-//    public void testDeleteContentType() throws Exception {
-//        ContentTypeDto createdContentType = createContentTypeDto();
-//
-//        mockMvc.perform(
-//                delete("/plugins/cms/content-types/" + createdContentType.getId())
-//                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-//                        .content(jsonMapper.writeValueAsString(createdContentType))
-//                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                        .andExpect(status().isOk())
-//                .andReturn();
-//    }
-//
+    @Test
+    public void testDeleteContentType() throws Exception {
+
+        mockMvc.perform(
+                delete(BASE_URL + "/RST")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+//                        .andDo(print())
+                        .andExpect(status().isOk())
+                .andReturn();
+    }
+
 //    @Test
 //    public void testGetContentType() throws Exception {
 //        mockMvc.perform(
@@ -149,4 +132,15 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 //        return jsonMapper.readerFor(ContentTypeDto.class).readValue(
 //                mvcResult.getResponse().getContentAsString());
 //    }
+
+    private void deleteContentType(String code) throws Exception {
+
+        mockMvc.perform(
+                delete(BASE_URL + "/" + code)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+    }
 }
