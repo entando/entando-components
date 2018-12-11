@@ -1,30 +1,21 @@
 /*
- * The MIT License
+ * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
  *
- * Copyright 2018 Entando Inc..
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
+import com.opensymphony.xwork2.Preparable;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
@@ -34,10 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.logging.*;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKieContainerToListToJson;
 
-public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
+public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase implements BpmSourceAndProcessSelector<KieContainer>, Preparable {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BpmBpmCaseInstanceSelectorWidgetAction.class);
 
@@ -45,7 +40,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
 
     @Autowired
     private IKieFormManager formManager;
-    private HashMap<String, KieBpmConfig> knowledgeSource;
+    private Map<String, KieBpmConfig> knowledgeSource;
     private List<KieContainer> process;
     private String processPath;
 
@@ -54,61 +49,54 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
     private String knowledgeSourceJson;
     private String kieContainerListJson;
 
+    private BpmSourceAndProcessSelectorHelper<BpmBpmCaseInstanceSelectorWidgetAction, KieContainer> selectorHelper;
+
+    /**
+     * This method is called before each action.
+     */
     @Override
-    public String init() {
-        String result = super.init();
-        return result;
+    public void prepare() throws ApsSystemException {
+        selectorHelper = new BpmSourceAndProcessSelectorHelper<>(this);
     }
 
+    @Override
     public String chooseKnowledgeSourceForm() {
-        return  updateKnowledgeSource();
-    }
-
-    public String changeKnowledgeSourceForm() {
-        return  updateKnowledgeSource();
-    }
-
-    private String updateKnowledgeSource() {
         try {
-
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
-            this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
-            this.setProcess(this.formManager.getContainersList(config));
-
-            this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
-            this.setKieContainerListJson(convertKieContainerToListToJson(this.formManager.getContainersList(config)).toString());
-
+            selectorHelper.loadProcesses();
         } catch (ApsSystemException t) {
-            logger.error("Error in chooseKnowledgeSourceForm()", t);
+            logger.error("Error in chooseKnowledgeSourceForm", t);
             return FAILURE;
         }
         return SUCCESS;
-
     }
 
+    @Override
+    public String changeKnowledgeSourceForm() {
+        knowledgeSourcePath = null;
+        processPath = null;
+        return SUCCESS;
+    }
+
+    @Override
     public String chooseForm() {
-        return updateForm();
-    }
-
-    public String changeForm() {
-       return updateForm();
-    }
-
-    private String updateForm() {
         try {
+            selectorHelper.loadProcesses();
             JSONObject frontEndCaseDatajs = new JSONObject();
             frontEndCaseDatajs.put("knowledge-source-id", this.getKnowledgeSourcePath());
             frontEndCaseDatajs.put("container-id", this.getProcessPath());
             this.setFrontEndCaseData(frontEndCaseDatajs.toString());
+        } catch (ApsSystemException t) {
+            logger.error("Error in chooseForm", t);
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
 
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(knowledgeSourcePath);
-
-            this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
-            this.setProcess(this.formManager.getContainersList(config));
-
-            this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
-            this.setKieContainerListJson(convertKieContainerToListToJson(this.formManager.getContainersList(config)).toString());
-
+    @Override
+    public String changeForm() {
+        try {
+            processPath = null;
+            selectorHelper.loadProcesses();
         } catch (ApsSystemException t) {
             logger.error("Error in changeForm()", t);
             return FAILURE;
@@ -129,7 +117,6 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
                 frontEndCaseDatain = widget.getConfig().getProperty("frontEndCaseData");
                 channel = widget.getConfig().getProperty("channel");
 
-                this.setKnowledgeSource(this.formManager.getKieServerConfigurations());
                 this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
 
                 if (StringUtils.isNotBlank(frontEndCaseDatain)) {
@@ -138,17 +125,11 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
                     JSONObject frontEndCaseDatainjs = new JSONObject(frontEndCaseDatain);
 
                     String configuredSourceId = frontEndCaseDatainjs.getString("knowledge-source-id");
-                    KieBpmConfig config = formManager.getKieServerConfigurations().get(configuredSourceId);
-                    if(config == null) {
-                        logger.warn("Null KieBpmConfig - Check the configuration");
-                        this.setErrorCode(ERROR_NULL_CONFIG);
-                        return result;                        
-                    }
                     this.setKnowledgeSourcePath(configuredSourceId);
-                    
-                    this.setProcessPath(frontEndCaseDatainjs.getString("container-id"));
-                    this.setProcess(this.formManager.getContainersList(config));
-                    this.setChannel(channel);
+                    if (selectorHelper.loadProcesses()) {
+                        this.setProcessPath(frontEndCaseDatainjs.getString("container-id"));
+                        this.setChannel(channel);
+                    }
                 }
             } else {
                 logger.warn(" widget is null in extraction ");
@@ -160,6 +141,14 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
         return result;
     }
 
+    @Override
+    public void loadProcesses(KieBpmConfig config) throws ApsSystemException {
+        List<KieContainer> containers = this.formManager.getContainersList(config);
+        this.setProcess(containers);
+        this.setKnowledgeSourceJson(this.formManager.getKieServerStatus().toString());
+        this.setKieContainerListJson(convertKieContainerToListToJson(containers).toString());
+    }
+
     public CaseManager getCaseManager() {
         return caseManager;
     }
@@ -168,26 +157,32 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
         this.caseManager = caseManager;
     }
 
-    public HashMap<String, KieBpmConfig> getKnowledgeSource() {
+    @Override
+    public Map<String, KieBpmConfig> getKnowledgeSource() {
         return knowledgeSource;
     }
 
-    public void setKnowledgeSource(HashMap<String, KieBpmConfig> knowledgeSource) {
-        this.knowledgeSource = knowledgeSource;
+    @Override
+    public void setKnowledgeSource(Map<String, KieBpmConfig> sources) {
+        this.knowledgeSource = sources;
     }
 
+    @Override
     public List<KieContainer> getProcess() {
         return process;
     }
 
+    @Override
     public void setProcess(List<KieContainer> process) {
         this.process = process;
     }
 
+    @Override
     public String getProcessPath() {
         return processPath;
     }
 
+    @Override
     public void setProcessPath(String processPath) {
         this.processPath = processPath;
     }
@@ -208,6 +203,7 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
         this.kieContainerListJson = kieContainerListJson;
     }
 
+    @Override
     public IKieFormManager getFormManager() {
         return formManager;
     }
@@ -216,10 +212,12 @@ public class BpmBpmCaseInstanceSelectorWidgetAction extends BpmCaseActionBase {
         this.formManager = formManager;
     }
 
+    @Override
     public String getKnowledgeSourcePath() {
         return knowledgeSourcePath;
     }
 
+    @Override
     public void setKnowledgeSourcePath(String knowledgeSourcePath) {
         this.knowledgeSourcePath = knowledgeSourcePath;
     }

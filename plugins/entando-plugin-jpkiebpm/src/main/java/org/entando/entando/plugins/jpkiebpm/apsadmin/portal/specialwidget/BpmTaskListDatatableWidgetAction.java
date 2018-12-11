@@ -5,13 +5,17 @@ import com.agiletec.aps.system.services.group.IGroupManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.slf4j.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
 
-    private IBpmWidgetInfoManager bpmWidgetInfoManager;
     private static final Logger logger = LoggerFactory.getLogger(BpmProcessDatatableWidgetAction.class);
+
     private String DEMO_USER = "taskUser";
 
     @Override
@@ -23,25 +27,5 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
         if (!task.isEmpty()) {
             super.loadDataIntoFieldDatatable(task);
         }
-    }
-
-    @Override
-    public IGroupManager getGroupManager() {
-        return groupManager;
-    }
-
-    @Override
-    public void setGroupManager(IGroupManager groupManager) {
-        this.groupManager = groupManager;
-    }
-
-    @Override
-    public IBpmWidgetInfoManager getBpmWidgetInfoManager() {
-        return bpmWidgetInfoManager;
-    }
-
-    @Override
-    public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
-        this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 }
