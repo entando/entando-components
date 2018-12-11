@@ -6,6 +6,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.*;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.*;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.dictionary.ContentModelDictionaryProvider;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import org.assertj.core.api.Condition;
 import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentModelServiceImpl;
@@ -19,8 +20,6 @@ import org.springframework.validation.ObjectError;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -49,12 +48,12 @@ public class ContentModelServiceImplTest {
         fillMockedContentTypesMap();
 
         when(contentModelManager.getContentModel(anyLong()))
-                .thenAnswer(invocation -> mockedContentModels.get((long) invocation.getArgument(0)));
+                .thenAnswer(invocation -> mockedContentModels.get(invocation.getArgument(0)));
         when(contentModelManager.getContentModels()).thenReturn(new ArrayList<>(mockedContentModels.values()));
 
         when(contentManager.getSmallContentTypesMap()).thenReturn(mockedContentTypes);
 
-        when(contentModelManager.getContentModelReferences(1l))
+        when(contentModelManager.getContentModelReferences(1L))
                 .thenReturn(Collections.singletonList(new ContentModelReference()));
 
         dictionaryProvider.setContentMap(new ArrayList<>());
@@ -89,19 +88,19 @@ public class ContentModelServiceImplTest {
         req.setDirection(FieldSearchFilter.DESC_ORDER);
         PagedMetadata<ContentModelDto> res = contentModelService.findMany(req);
         assertThat(res.getBody()).isNotNull().hasSize(3);
-        assertThat(res.getBody().stream().map(cm -> cm.getContentType()))
+        assertThat(res.getBody().stream().map(ContentModelDto::getContentType))
                 .containsExactly("CCC", "BBB", "AAA");
     }
 
     @Test
     public void shouldFindOne() {
-        assertThat(contentModelService.getContentModel(1l)).isNotNull();
+        assertThat(contentModelService.getContentModel(1L)).isNotNull();
     }
 
     @Test(expected = RestRourceNotFoundException.class)
     public void shouldFailWithNotFound() {
         try {
-            contentModelService.getContentModel(20l);
+            contentModelService.getContentModel(20L);
         } catch (RestRourceNotFoundException ex) {
             assertThat(ex.getErrorCode()).isEqualTo(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND);
             throw ex;
@@ -110,23 +109,28 @@ public class ContentModelServiceImplTest {
 
     @Test
     public void shouldFindOneUsingOptional() {
-        long id = 1l;
-        Optional<ContentModelDto> result = contentModelService.findById(id);
-        assertTrue(result.isPresent());
-        assertThat(result.get().getId()).isEqualTo(id);
+        long id = 1L;
+        Optional<ContentModelDto> maybeResult = contentModelService.findById(id);
+        assertThat(maybeResult).isPresent();
+
+        Condition<ContentModelDto> hasIdExpected = new Condition<>(
+                model -> model.getId() == id, "id equal"
+        );
+
+        assertThat(maybeResult).hasValueSatisfying(hasIdExpected);
     }
 
     @Test
     public void shouldFindNothingUsingOptional() {
-        Optional<ContentModelDto> result = contentModelService.findById(20l);
-        assertFalse(result.isPresent());
+        Optional<ContentModelDto> result = contentModelService.findById(20L);
+        assertThat(result).isPresent();
     }
 
     @Test
     public void shouldCreateContentModel() {
         ContentModelDto contentModelToCreate = new ContentModelDto();
         contentModelToCreate.setContentType("AAA");
-        contentModelToCreate.setId(4l);
+        contentModelToCreate.setId(4L);
 
         ContentModelDto result = contentModelService.create(contentModelToCreate);
         assertThat(result.getId()).isEqualTo(contentModelToCreate.getId());
@@ -139,7 +143,7 @@ public class ContentModelServiceImplTest {
             ContentModelDto contentModelToCreate = new ContentModelDto();
 
             // Existing content model id
-            long id = 1l;
+            long id = 1L;
 
             // Content type not found
             contentModelToCreate.setContentType("XXX");
@@ -167,7 +171,7 @@ public class ContentModelServiceImplTest {
 
     @Test
     public void shouldUpdateContentModel() {
-        long id = 1l;
+        long id = 1L;
         ContentModelDto contentModelToUpdate = new ContentModelDto();
         contentModelToUpdate.setId(id);
         contentModelToUpdate.setContentType("AAA");
@@ -184,7 +188,7 @@ public class ContentModelServiceImplTest {
     @Test(expected = RestRourceNotFoundException.class)
     public void shouldFailUpdatingContentModelBecauseNotFound() {
         try {
-            long id = 20l; // inexistent content model
+            long id = 20L; // inexistent content model
             ContentModelDto contentModelToUpdate = new ContentModelDto();
             contentModelToUpdate.setId(id);
             contentModelService.update(contentModelToUpdate);
@@ -197,7 +201,7 @@ public class ContentModelServiceImplTest {
     @Test(expected = ValidationConflictException.class)
     public void shouldFailUpdatingContentModelBecauseInvalidContentType() {
         try {
-            long id = 1l;
+            long id = 1L;
             ContentModelDto contentModelToUpdate = new ContentModelDto();
             contentModelToUpdate.setId(id);
             contentModelToUpdate.setContentType("BBB");
@@ -213,7 +217,7 @@ public class ContentModelServiceImplTest {
     @Test(expected = ValidationConflictException.class)
     public void shouldFailUpdatingContentModelBecauseContentTypeNotFound() {
         try {
-            long id = 3l;
+            long id = 3L;
             ContentModelDto contentModelToUpdate = new ContentModelDto();
             contentModelToUpdate.setId(id);
             contentModelToUpdate.setContentType("CCC");
@@ -228,13 +232,13 @@ public class ContentModelServiceImplTest {
 
     @Test
     public void shoudlDeleteContentModel() {
-        contentModelService.delete(2l);
+        contentModelService.delete(2L);
     }
 
     @Test(expected = ValidationConflictException.class)
     public void shoudlFailDeletingContentModel() {
         try {
-            contentModelService.delete(1l);
+            contentModelService.delete(1L);
         } catch (ValidationConflictException ex) {
             List<ObjectError> errors = ex.getBindingResult().getAllErrors();
             assertThat(errors).isNotNull().hasSize(1);
@@ -245,14 +249,14 @@ public class ContentModelServiceImplTest {
 
     @Test
     public void shouldReturnReferences() {
-        assertThat(contentModelService.getContentModelReferences(1l))
+        assertThat(contentModelService.getContentModelReferences(1L))
                 .isNotNull().hasSize(1);
     }
 
     @Test(expected = RestRourceNotFoundException.class)
     public void shouldFailReturningReferences() {
         try {
-            contentModelService.getContentModelReferences(20l);
+            contentModelService.getContentModelReferences(20L);
         } catch (RestRourceNotFoundException ex) {
             assertThat(ex.getErrorCode()).isEqualTo(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND);
             throw ex;
@@ -268,15 +272,11 @@ public class ContentModelServiceImplTest {
         assertThat(dictionary).isNotNull();
     }
 
-    public void shouldFailReturningDictionary() {
-
-    }
-
     private void fillMockedContentModelsMap() {
         this.mockedContentModels = new HashMap<>();
-        addMockedContentModel(1l, "AAA");
-        addMockedContentModel(2l, "BBB");
-        addMockedContentModel(3l, "CCC");
+        addMockedContentModel(1L, "AAA");
+        addMockedContentModel(2L, "BBB");
+        addMockedContentModel(3L, "CCC");
     }
 
     private void addMockedContentModel(long id, String contentType) {

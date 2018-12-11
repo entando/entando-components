@@ -1,5 +1,6 @@
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentTypeService;
@@ -88,9 +89,9 @@ public class ContentTypeResourceControllerTest {
 
     @Test
     public void getExistingContentTypeReturnsContentType() {
-        ContentType contentType = new ContentType();
-        contentType.setTypeCode("ABC");
-        ContentTypeDto expectedContentType = new ContentTypeDto(contentType, Collections.emptyList());
+        Content content = new Content();
+        content.setTypeCode("ABC");
+        ContentTypeDto expectedContentType = new ContentTypeDto(content, Collections.emptyList());
         when(service.findOne("ABC")).thenReturn(Optional.of(expectedContentType));
 
 
@@ -105,14 +106,12 @@ public class ContentTypeResourceControllerTest {
 
     @Test
     public void createValidContentTypeReturnsElementWithNewId() throws URISyntaxException {
-        ContentType contentType = new ContentType();
-        contentType.setTypeCode("ABC");
-        ContentTypeDtoRequest requestContentType = new ContentTypeDtoRequest(contentType, Collections.emptyList());
+        Content content = new Content();
+        content.setTypeCode("ABC");
+        ContentTypeDtoRequest requestContentType = new ContentTypeDtoRequest(content, Collections.emptyList());
 
-        ContentType createdContentType = new ContentType();
-        createdContentType.setTypeCode("ABC");
         ContentTypeDto createdContentTypeDto =
-                new ContentTypeDto(createdContentType, Collections.emptyList());
+                new ContentTypeDto(content, Collections.emptyList());
 
         when(service.create(requestContentType, bindingResult)).thenReturn(createdContentTypeDto);
 
@@ -139,12 +138,12 @@ public class ContentTypeResourceControllerTest {
 
     @Test
     public void updateExistingContentTypeShouldCallServiceShouldReturnOk() {
-        ContentType contentType = new ContentType();
-        contentType.setTypeCode("ABC");
+        Content content = new Content();
+        content.setTypeCode("ABC");
         ContentTypeDtoRequest requestContentType =
-                new ContentTypeDtoRequest(contentType, Collections.emptyList());
+                new ContentTypeDtoRequest(content, Collections.emptyList());
 
-        ContentTypeDto contentTypeDto = new ContentTypeDto(contentType, Collections.emptyList());
+        ContentTypeDto contentTypeDto = new ContentTypeDto(content, Collections.emptyList());
 
         when(service.update(requestContentType, bindingResult)).thenReturn(contentTypeDto);
 

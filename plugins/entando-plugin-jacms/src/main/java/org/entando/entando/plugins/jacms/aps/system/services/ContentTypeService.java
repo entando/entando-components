@@ -11,19 +11,19 @@ import org.springframework.validation.BindingResult;
 import java.util.Optional;
 
 @Service
-public class ContentTypeService extends AbstractEntityTypeService<IContentType, ContentTypeDto> {
+public class ContentTypeService extends AbstractEntityTypeService<IContent, ContentTypeDto> {
 
     private static final String CONTENT_MODEL_MANAGER = "jacmsContentManager";
 
 
     @Override
-    protected IDtoBuilder<IContentType, ContentTypeDto> getEntityTypeFullDtoBuilder(
+    protected IDtoBuilder<IContent, ContentTypeDto> getEntityTypeFullDtoBuilder(
             IEntityManager masterManager) {
         return new ContentTypeDtoBuilder(masterManager.getAttributeRoles());
     }
 
     public ContentTypeDto create(ContentTypeDtoRequest contentType, BindingResult bindingResult) {
-        return super.addEntityType(CONTENT_MODEL_MANAGER, contentType, bindingResult);
+        return addEntityType(CONTENT_MODEL_MANAGER, contentType, bindingResult);
     }
 
     public void delete(String code) {
@@ -31,14 +31,14 @@ public class ContentTypeService extends AbstractEntityTypeService<IContentType, 
     }
 
     public PagedMetadata<org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto> findMany(RestListRequest listRequest) {
-        return super.getShortEntityTypes(CONTENT_MODEL_MANAGER, listRequest);
+        return getShortEntityTypes(CONTENT_MODEL_MANAGER, listRequest);
     }
 
     public Optional<ContentTypeDto> findOne(String code) {
         return Optional.ofNullable(super.getFullEntityType(CONTENT_MODEL_MANAGER, code));
     }
 
-    public ContentTypeDto update(ContentTypeDtoRequest contentType, BindingResult bindingResult) {
-        return super.updateEntityType(CONTENT_MODEL_MANAGER, contentType, bindingResult);
+    public ContentTypeDto update(ContentTypeDtoRequest contentTypeRequest, BindingResult bindingResult) {
+        return updateEntityType(CONTENT_MODEL_MANAGER, contentTypeRequest, bindingResult);
     }
 }

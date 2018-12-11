@@ -13,15 +13,13 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.agiletec.aps.system.common.entity.model.ApsEntity;
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.*;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentDOM;
-import org.entando.entando.plugins.jacms.aps.system.services.IContentType;
+import org.entando.entando.plugins.jacms.aps.system.services.IContent;
+
+import java.util.Date;
+import java.util.regex.*;
 
 /**
  * Rappresenta un contenuto informativo. 
@@ -31,7 +29,7 @@ import org.entando.entando.plugins.jacms.aps.system.services.IContentType;
  * mediante richiesta al servizio, che lo otterrà mediante clonazione del prototipo
  * precedentemente costruito.
  */
-public class Content extends ApsEntity implements IContentType {
+public class Content extends ApsEntity implements IContent {
 
 	private String status;
 	private boolean onLine;
@@ -88,7 +86,7 @@ public class Content extends ApsEntity implements IContentType {
 	 * @return Lo stato del contenuto.
 	 */
 	public String getStatus() {
-		return this.status;
+		return status;
 	}
 	
 	/**
@@ -105,7 +103,7 @@ public class Content extends ApsEntity implements IContentType {
 	 * @return Il codice pagina dedicata alla visualizzazione del contenuto.
 	 */
 	public String getViewPage() {
-		return this.viewPage;
+		return viewPage;
 	}
 	
 	/**
@@ -124,7 +122,7 @@ public class Content extends ApsEntity implements IContentType {
 	 * @return Il modello per la visualizzazione del contenuto in lista.
 	 */
 	public String getListModel() {
-		return this.listModel;
+		return listModel;
 	}
 	
 	/**
@@ -144,7 +142,7 @@ public class Content extends ApsEntity implements IContentType {
 	 * @return Il modello per la visualizzazione completa del contenuto.
 	 */
 	public String getDefaultModel() {
-		return this.defaultModel;
+		return defaultModel;
 	}
 	
 	/**
@@ -162,21 +160,21 @@ public class Content extends ApsEntity implements IContentType {
 		Content content = (Content) super.getEntityPrototype();
 		content.setStatus(STATUS_NEW);
 		content.setVersion(INIT_VERSION);
-		content.setViewPage(this.getViewPage());
-		content.setListModel(this.getListModel());
-		content.setDefaultModel(this.getDefaultModel());
+		content.setViewPage(viewPage);
+		content.setListModel(listModel);
+		content.setDefaultModel(defaultModel);
 		return content;
 	}
 	
 	@Override
 	protected IApsEntityDOM getBuildJDOM() {
 		ContentDOM contentDOM = (ContentDOM) super.getBuildJDOM();
-		contentDOM.setStatus(this.getStatus());
-		contentDOM.setVersion(this.getVersion());
-		contentDOM.setFirstEditor(this.getFirstEditor());
-        contentDOM.setLastEditor(this.getLastEditor());
-        contentDOM.setCreationDate(this.getCreated());
-        contentDOM.setModifyDate(this.getLastModified());
+		contentDOM.setStatus(status);
+		contentDOM.setVersion(version);
+		contentDOM.setFirstEditor(firstEditor);
+        contentDOM.setLastEditor(lastEditor);
+        contentDOM.setCreationDate(created);
+        contentDOM.setModifyDate(lastModified);
         return contentDOM;
 	}
 	
@@ -185,7 +183,7 @@ public class Content extends ApsEntity implements IContentType {
 	 * @return Returns the onLine.
 	 */
 	public boolean isOnLine() {
-		return this.onLine;
+		return onLine;
 	}
 	
 	/**
@@ -213,6 +211,7 @@ public class Content extends ApsEntity implements IContentType {
 	public String getVersion() {
 		return version;
 	}
+
 	public void setVersion(String version) {
 		Pattern pattern = Pattern.compile("\\d+\\.\\d+");
 		Matcher matcher = pattern.matcher(version);
@@ -231,8 +230,10 @@ public class Content extends ApsEntity implements IContentType {
 	}
 	
 	protected void updateVersionId() {
-		String prevVersionId = this.getVersion();
-		if (null == prevVersionId) prevVersionId = INIT_VERSION;
+		String prevVersionId = version;
+
+		if (prevVersionId == null) prevVersionId = INIT_VERSION;
+
 		String[] item = this.getVersionItems(prevVersionId);
 		int workVersion = Integer.parseInt(item[1]);
 		int newWorkVersion = workVersion + 1;
@@ -241,8 +242,10 @@ public class Content extends ApsEntity implements IContentType {
 	}
 	
 	protected void updateVersionIdOnPublishing() {
-		String prevVersionId = this.getVersion();
-		if (null == prevVersionId) prevVersionId = INIT_VERSION;
+		String prevVersionId = version;
+
+		if (prevVersionId == null) prevVersionId = INIT_VERSION;
+
 		String[] item = this.getVersionItems(prevVersionId);
 		int onlineVersion = Integer.parseInt(item[0]);
 		int newOnlineVersion = onlineVersion + 1;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.*;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeFullDto;
 import org.entando.entando.plugins.jacms.aps.system.init.portdb.enums.DefaultContentModel;
-import org.entando.entando.plugins.jacms.aps.system.services.IContentType;
+import org.entando.entando.plugins.jacms.aps.system.services.IContent;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
@@ -20,7 +20,9 @@ public class ContentTypeDto extends EntityTypeFullDto {
     @JsonProperty("defaultContentModelList")
     private DefaultContentModel defaultContentModelList;
 
-    public ContentTypeDto(IContentType src, List<AttributeRole> roles) {
+    public ContentTypeDto() { super();}
+
+    public ContentTypeDto(IContent src, List<AttributeRole> roles) {
         super(src, roles);
     }
 
