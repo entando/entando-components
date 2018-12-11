@@ -11,6 +11,14 @@
 .PluginStatus .PluginStatus--list-elem__failure {
   color: red; }
 
+.DataSourceForm__input-group {
+  width: 100%;
+  border: 0px solid red; }
+
+.ContextForm__input-group {
+  width: 100%;
+  border: 0px solid red; }
+
 .TableListDevices {
   padding: 1em; }
   .TableListDevices__tab-content {

@@ -15,6 +15,8 @@ import RenderTextInput from "ui/common/form/RenderTextInput";
 import RenderSelectInput from "ui/common/form/RenderSelectInput";
 import SwitchRenderer from "ui/common/form/SwitchRenderer";
 import FormLabel from "ui/common/form/FormLabel";
+import DataSourceForm from "ui/widgets/common/form/Components/DataSourceForm";
+import ContextForm from "ui/widgets/common/form/Components/ContextForm";
 
 const maxLength30 = maxLength(30);
 const minLength3 = maxLength(3);
@@ -78,34 +80,6 @@ class TableListDevicesFormBody extends Component {
           }
           alignClass="text-left"
           validate={[required, minLength3, maxLength30]}
-        />
-      </InputGroup>
-    );
-  }
-  renderDataSource() {
-    const selectOptionsDataSource = [
-      {
-        value: "entando-iot-server",
-        text: "Entando IoT Server"
-      }
-    ];
-    return (
-      <InputGroup className="TableListDevicesForm__input-group">
-        <Field
-          component={RenderSelectInput}
-          options={selectOptionsDataSource}
-          defaultOptionId="plugin.chooseAnOptionDataSource"
-          label={
-            <FormLabel
-              labelId="plugin.datasource"
-              helpId="plugin.datasource.help"
-              required
-            />
-          }
-          labelSize={4}
-          alignClass="text-left"
-          name="datasource"
-          validate={[required]}
         />
       </InputGroup>
     );
@@ -376,11 +350,15 @@ class TableListDevicesFormBody extends Component {
                   className="TableListDevicesForm__container-data TableListDevicesForm__line"
                 >
                   <Row>
-                    <Col xs={6}>{this.renderDataSource()}</Col>
+                    <Col xs={6}>
+                      <DataSourceForm />
+                    </Col>
                     <Col xs={6}>{this.renderDownlodable()}</Col>
                   </Row>
                   <Row>
-                    <Col xs={6}>{this.renderContext()}</Col>
+                    <Col xs={6}>
+                      <ContextForm />
+                    </Col>
                     <Col xs={6}>{this.renderFiltrable()}</Col>
                   </Row>
                 </Col>
@@ -425,7 +403,7 @@ class TableListDevicesFormBody extends Component {
               </Row>
               <Row>
                 <Col xs={1} />
-                <Col xs={10} className="TableListDevicesForm__line-bottom" />
+                <Col xs={10} className="TableListDevicesForm__line-bottomA" />
                 <Col xs={1} />
               </Row>
               <Row>
