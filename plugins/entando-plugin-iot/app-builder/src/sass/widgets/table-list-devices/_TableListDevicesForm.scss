@@ -2,13 +2,20 @@
 
   &__required-fields {
     margin-top: 1em;
-    font-size: 14px;
+    font-size: 12px;
+
   }
 
   &__container-data {
     border: 0px solid;
     margin-top: 1em;
     padding: 1em;
+  }
+
+  &__container-data--disabled {
+    margin-top: 1em;
+    padding: 1em;
+    color: #8b8d8f ;
   }
 
   &__widget-title {
@@ -27,5 +34,12 @@
   &__input-group {
     width: 100%;
     border: 0px solid red;
+  }
+
+  &__no-padding-right {
+    padding-right: 0px;
+  }
+  &__line-bottom {
+    border-bottom: 1px solid #d1d1d1;
   }
 }

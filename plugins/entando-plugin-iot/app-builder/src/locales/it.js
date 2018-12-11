@@ -33,6 +33,7 @@ export default {
     'plugin.table.deviceBrand': 'Device Brand',
     'plugin.table.expirationGuarantee': 'Expiration of the Guarantee',
     'common.save': 'Salva',
+    'common.cancel': 'Cancella',
     'common.channel': 'Channel',
     'common.knowledgeSource': 'Knowledge Source',
     'common.deploymentUnit': 'Deployment Unit',
