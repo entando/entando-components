@@ -47,8 +47,13 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="5">
-		<descr>Task Tables</descr>
+		<descr>Process Diagram</descr>
 		<sketch x1="0" y1="7" x2="11" y2="10" />
+		<defaultWidget code="bpm-process-diagram">
+			<properties>
+				<property key="channel">1</property>
+			</properties>
+		</defaultWidget>
 	</frame>
 	<frame pos="6">
 		<descr>Chart</descr>
@@ -60,7 +65,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="7">
-		<descr>Process Diagram</descr>
+		<descr>Case file</descr>
 		<sketch x1="6" y1="11" x2="11" y2="14" />
 		<defaultWidget code="bpm-case-file">
 			<properties>
