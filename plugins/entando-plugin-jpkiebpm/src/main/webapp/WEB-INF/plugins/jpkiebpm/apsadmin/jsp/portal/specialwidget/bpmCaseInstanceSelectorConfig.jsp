@@ -3,11 +3,6 @@
 <%@ taglib uri="/apsadmin-form" prefix="wpsf" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
-
-<script src="<wp:resourceURL />plugins/jpkiebpm/administration/js/jbpm-component-config.js"></script>-->
-
-
 
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li>
@@ -38,6 +33,8 @@
     </s:action>
 
     <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceSelectorViewer" class="form-horizontal">
+        <s:include value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/common/errors.jsp"/>
+
         <p class="noscreen">
             <wpsf:hidden name="pageCode"/>
             <wpsf:hidden name="frame"/>
@@ -74,38 +71,10 @@
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
                 <s:set var="isChannelSetted" value="%{channel != null && channel != ''}"/>
 
-                <s:if test="%{errorCode == 1}">
-                    <div class="alert alert-warning col-xs-8">
-                        <span class="icon fa fa-warning"></span>
-                        Kie server configuration not found. Please select a new one.
-                    </div>
-                </s:if>
-
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-xs-8">
-
-                            <div class="form-group">
-                                <label for="Knowledge Source"><s:text name="Knowledge Source"/></label>
-                                <div class="input-group">
-
-                                    <s:select list="knowledgeSource" id="knowledgeSourcePath" name="knowledgeSourcePath"  
-                                              listKey="value.id"
-                                              listValue="value.name" class="form-control">
-                                    </s:select>
-                                    <span class="input-group-btn">
-                                        <s:if test="#isknowledgeSourcePathSetted">
-                                            <wpsf:submit action="changeKnowledgeSourceForm" value="Change Knowledge Source"
-                                                         cssClass="btn btn-warning"/>
-                                        </s:if>
-                                        <s:else>
-
-                                            <wpsf:submit action="chooseKnowledgeSourceForm" value="Choose Knowledge Source"
-                                                         cssClass="btn btn-success"/>
-                                        </s:else>
-                                    </span>
-                                </div>
-                            </div>
+                            <s:include value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/common/knowledge-source-select.jsp"/>
                         </div>
 
                     </div>
@@ -117,11 +86,14 @@
                                 <div class="form-group">
                                     <label for="Deployment Unit"><s:text name="Deployment Unit"/></label>
                                     <div class="input-group">
-
-                                        <s:select list="process" id="container-id" name="processPath"  
+                                        <s:select list="process" id="container-id" name="processPath"
+                                                  disabled="#isProcessPathSetted"
                                                   listKey="containerId"
                                                   listValue="containerId" class="form-control">
-                                        </s:select>                                        
+                                        </s:select>
+                                        <s:if test="#isProcessPathSetted">
+                                            <s:hidden name="processPath" />
+                                        </s:if>
                                         <span class="input-group-btn">
                                             <s:if test="#isProcessPathSetted">
                                                 <wpsf:submit action="changeForm" value="Change Deployment Unit"

@@ -34,6 +34,8 @@ import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.RequestHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpServerErrorException;
 
 
 /**
@@ -392,7 +394,7 @@ public abstract class RequestBuilder implements IRequestBuilder {
                     String body = IOUtils.toString(ris, "UTF-8");
                     logger.info("unexpected status: {} \n Body: {}",response.getStatusLine().getStatusCode(),body);
                 }
-                throw new RuntimeException("Unexpected HTTP status returned: " + code);
+                throw new HttpServerErrorException(HttpStatus.valueOf(code), "Unexpected HTTP status returned: " + code);
             }
         }
         return ris;
