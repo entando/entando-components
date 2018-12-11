@@ -38,15 +38,14 @@
     <div class="tab-pane active" id="frag-list">
 
         <div class="col-xs-12 mb-20">
-
             <div class="form-group">
                 <div class="col-xs-6">
-                    <a href="<s:url action="testall" namespace="/do/jpkiebpm/Config" />" class="btn btn-warning"> 
+                    <a href="<s:url action="testall" namespace="/do/jpkiebpm/Config" />" class="btn btn-warning">
                         <s:text name="Test All" />
                     </a>
                 </div>
                 <div class="col-xs-6">
-                    <a href="<s:url action="addConf" namespace="/do/jpkiebpm/Config" />" class="btn btn-primary pull-right"> 
+                    <a href="<s:url action="addConf" namespace="/do/jpkiebpm/Config" />" class="btn btn-primary pull-right">
                         <s:text name="Add Configuration" />
                     </a>
                 </div>
@@ -84,14 +83,9 @@
                 </div>
             </s:if>
 
-
             <div class="container-fluid container-cards-pf"  ng-controller="CaseServersController as vm" ng-app="caseServersApp">
                 <div class="row row-cards-pf">
-
-
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" ng-repeat="ks in vm.data.servers track by ks.id">
-
-
                         <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
                             <div class="card-pf-title">
                                 <div class="dropdown pull-right dropdown-kebab-pf">
@@ -134,20 +128,13 @@
                                         <span class="fa" ng-class="{'fa-check':ks.config.active , 'fa-times': !ks.config.active }"></span>
                                     </div>
                                 </div>
-                                <%--<p class="card-pf-info text-center">
-                                <strong>ID </strong>${value.id}</p>--%>
                                 <p class="card-pf-info">
                                     <strong>Debug</strong>  {{ks.config.debug ? "Active" : "Disabled"}}
                                 </p>
                                 <p class="card-pf-info">
                                     <strong>Version</strong> {{ks.status.result['kie-server-info'].version}}
                                 </p>
-                                <%--<p class="card-pf-info text-center">
-
-                                            <strong>Connection Timeout</strong> ${value.timeoutMsec}
-                                        </p>--%>
                                 <p class="card-pf-info">
-
                                     <strong>Address</strong>{{ks.config.schema+"://" + ks.config.hostname+":"+ks.config.port+"/"+ks.config.webapp}}
                                 </p>
                             </div>
@@ -157,83 +144,64 @@
                                 <p class="card-pf-info" ng-if="ks.status">
                                     <span ng-repeat="capability in ks.status.result['kie-server-info'].capabilities" class="label label-default" style="display:inline-block; padding-top:0; padding-bottom:0; line-height:1.5em;margin-right: 2px;">{{capability}}</span>
                                 </p>
-
                             </div>
-
                         </div>
                     </div>
 
-
                 </div>
                 <!--Action messages-->
-                <s:iterator value="knowledgeSource"> 
+                <s:iterator value="knowledgeSource">
 
 
                     <script type="text/ng-template" id="srv-${value.id}">
                         <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal" >
-                            <input type="hidden" name="active" id="active" value="${value.active}"/>
+                            <input type="hidden" name="active" id="active" value="${value.active}" />
                             <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
-                            <input type="hidden" name="id" id="id" value="${value.id}"/>
-                            <input type="hidden" name="name" id="name" value="${value.name}"/>
-                            <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
-                            <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
-                            <input type="hidden" name="port" id="port" value="${value.port}"/>
-                            <input type="hidden" name="webappName" id="webappName" value="${value.webapp}"/>
-                            <input type="hidden" name="userName" id="userName" value="${value.username}"/>
-                            <input type="hidden" name="password" id="password" value="${value.password}"/>
-                            <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}"/>
-                            <li>
-                            <wpsf:submit name="testinlist" type="button" action="testinlist"
-                                         cssClass="btn btn-link">
-                                <s:text name="TEST" />
-                            </wpsf:submit>
-                            </li>
-                            <li>             
-                            <wpsf:submit name="edit" type="button" action="edit"
-                                         cssClass="btn btn-link">
-                                <s:text name="EDIT" />
-                            </wpsf:submit>
+                                   <input type="hidden" name="id" id="id" value="${value.id}"/>
+                                   <input type="hidden" name="name" id="name" value="${value.name}"/>
+                                   <input type="hidden" name="hostName" id="hostName" value="${value.hostname}"/>
+                                   <input type="hidden" name="schema" id="schema" value="${value.schema}"/>
+                                   <input type="hidden" name="port" id="port" value="${value.port}"/>
+                                   <input type="hidden" name="webappName" id="webappName" value="${value.webapp}" />
+                                   <input type="hidden" name="userName" id="userName" value="${value.username}"                                                                  />
+                            <input type="hidden" name="password" id="password" value="${value.password}" />
+                            <input type="hidden" name="timeout" id="timeout" value="${value.timeoutMsec}" />
+                                   <li>
+                                <wpsf:submit name="testinlist" type="button" action="testinlist"
+                                             cssClass="btn btn-link">
+                                    <s:text name="TEST" />
+                                </wpsf:submit>
                             </li>
                             <li>
-                            <wpsf:submit name="delete" type="button" action="delete"
-                                         cssClass="btn btn-link">
-                                <s:text name="REMOVE" />
-                            </wpsf:submit>
-
+                                <wpsf:submit name="edit" type="button" action="edit"
+                                             cssClass="btn btn-link">
+                                    <s:text name="EDIT" />
+                                </wpsf:submit>
                             </li>
-                        </s:form>
-                    </script>
-
-                </s:iterator>
+                            <li>
+                                <wpsf:submit name="delete" type="button" action="delete"
+                                             cssClass="btn btn-link">
+                                    <s:text name="REMOVE" />
+                                </wpsf:submit>
+                            </li>
+                            </s:form>
+                            </script>
+                        </s:iterator>
+                </div>
             </div>
-
-
         </div>
+    </div>
 
-        <br />
-        <br />
+    <div class="tab-pane" id="frag-settings">
+    </div>
+    <script type="text/javascript">
+        var allServerTest = undefined;
         <s:if test="knowledgeSourceTestAllResult != null">
-            <s:property value="knowledgeSourceTestAllResult" escapeJavaScript="false" escapeHtml="false"/>
+        allServerTest = <s:property value="knowledgeSourceTestAllResult" escapeJavaScript="false" escapeHtml="false"/>;
         </s:if>
 
-    </div>
-</div>
-
-<div class="tab-pane" id="frag-settings">
-</div>
-<script type="text/javascript">
-
-    var allServerTest = undefined;
-    <s:if test="knowledgeSourceTestAllResult != null">
-    allServerTest = <s:property value="knowledgeSourceTestAllResult" escapeJavaScript="false" escapeHtml="false"/>;
-    </s:if>
-
-
-
-    <s:if test="knowledgeSourceStatus != null">
-    var knowledgeSourceStatus = <s:property value="knowledgeSourceStatus" escapeJavaScript="false" escapeHtml="false"/>;
-    bootBpmComponent(knowledgeSourceStatus, allServerTest);
-    </s:if>
-
-
-</script>
+        <s:if test="knowledgeSourceStatus != null">
+        var knowledgeSourceStatus = <s:property value="knowledgeSourceStatus" escapeJavaScript="false" escapeHtml="false"/>;
+        bootBpmComponent(knowledgeSourceStatus, allServerTest);
+        </s:if>
+    </script>
