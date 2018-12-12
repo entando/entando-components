@@ -1,6 +1,6 @@
 INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('entando-page-inspinia_BPM', 'Inspinia - BPM Case Management widgets', '<frames>
 	<frame pos="0">
-		<descr>bpm-case-instance-selector</descr>
+		<descr>Case instance selector</descr>
 		<sketch x1="0" y1="0" x2="11" y2="0" />
 		<defaultWidget code="bpm-case-instance-selector">
 			<properties>
@@ -19,7 +19,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="2">
-		<descr>Case Progress Bar</descr>
+		<descr>Case progress status</descr>
 		<sketch x1="0" y1="2" x2="11" y2="2" />
 		<defaultWidget code="bpm-case-progress-status">
 			<properties>
@@ -29,7 +29,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="3">
-		<descr>Rules</descr>
+		<descr>Case roles</descr>
 		<sketch x1="0" y1="3" x2="5" y2="6" />
 		<defaultWidget code="bpm-case-roles">
 			<properties>
@@ -38,7 +38,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="4">
-		<descr>Comments</descr>
+		<descr>Case comments</descr>
 		<sketch x1="6" y1="3" x2="11" y2="6" />
 		<defaultWidget code="bpm-case-comments">
 			<properties>
@@ -47,7 +47,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="5">
-		<descr>Process Diagram</descr>
+		<descr>Process diagram</descr>
 		<sketch x1="0" y1="7" x2="11" y2="10" />
 		<defaultWidget code="bpm-process-diagram">
 			<properties>
@@ -56,7 +56,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="6">
-		<descr>Chart</descr>
+		<descr>Case chart</descr>
 		<sketch x1="0" y1="11" x2="5" y2="14" />
 		<defaultWidget code="bpm-case-chart">
 			<properties>
