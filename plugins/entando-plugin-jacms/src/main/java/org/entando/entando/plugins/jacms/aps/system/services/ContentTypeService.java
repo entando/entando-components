@@ -41,4 +41,8 @@ public class ContentTypeService extends AbstractEntityTypeService<IContent, Cont
     public ContentTypeDto update(ContentTypeDtoRequest contentTypeRequest, BindingResult bindingResult) {
         return updateEntityType(CONTENT_MODEL_MANAGER, contentTypeRequest, bindingResult);
     }
+
+    public PagedMetadata<String> findManyAttributes(RestListRequest requestList) {
+        return getAttributeTypes(CONTENT_MODEL_MANAGER, requestList);
+    }
 }

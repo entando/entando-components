@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.entando.entando.plugins.jacms.web.contentmodel.ContentTypeResourceController.BASE_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -28,7 +27,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     @Test
     public void testGetReturnsList() throws Exception {
         mockMvc.perform(
-                get(BASE_URL)
+                get("/plugins/cms/contentTypes")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andDo(print())
@@ -52,7 +51,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         contentTypeRequest.setName("Content request");
 
         mockMvc.perform(
-                post(BASE_URL).contentType(MediaType.APPLICATION_JSON_UTF8)
+                post("/plugins/cms/contentTypes")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(jsonMapper.writeValueAsString(contentTypeRequest))
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andDo(print())
@@ -68,7 +68,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         createdContentType.setName("MyContentType");
 
-        mockMvc.perform(put(BASE_URL)
+        mockMvc.perform(put("/plugins/cms/contentTypes")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonMapper.writeValueAsString(createdContentType))
                 .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -83,7 +83,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     public void testDeleteContentType() throws Exception {
 
         mockMvc.perform(
-                delete(BASE_URL + "/RST")
+                delete("/plugins/cms/contentTypes/RST")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                        .andDo(print())
@@ -96,7 +96,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         deleteContentType("MCT");
 
         mockMvc.perform(
-                get(BASE_URL + "/MCT")
+                get("/plugins/cms/contentTypes/MCT")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound())
@@ -106,7 +106,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         ContentTypeDto createdContentTypeDto = createContentTypeDto();
 
         MvcResult mvcResult = mockMvc.perform(
-                get(BASE_URL + "/" + createdContentTypeDto.getCode())
+                get("/plugins/cms/contentTypes/" + createdContentTypeDto.getCode())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
@@ -130,7 +130,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         contentTypeRequest.setName("Content request");
 
         MvcResult mvcResult = mockMvc.perform(
-                post(BASE_URL).contentType(MediaType.APPLICATION_JSON_UTF8)
+                post("/plugins/cms/contentTypes")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(jsonMapper.writeValueAsString(contentTypeRequest))
                         .accept(MediaType.APPLICATION_JSON_UTF8)).andReturn();
 
@@ -145,7 +146,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     private void deleteContentType(String code) throws Exception {
 
         mockMvc.perform(
-                delete(BASE_URL + "/" + code)
+                delete("/plugins/cms/contentTypes/" + code)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
