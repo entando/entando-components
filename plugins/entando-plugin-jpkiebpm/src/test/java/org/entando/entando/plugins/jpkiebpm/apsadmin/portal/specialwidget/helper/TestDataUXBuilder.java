@@ -10,8 +10,12 @@ import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
 import static org.mockito.Mockito.mock;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -20,9 +24,11 @@ public class TestDataUXBuilder extends TestCase {
 
     private final static transient Logger logger = Logger.getLogger(TestDataUXBuilder.class);
 
-    private static String CONTAINER_ID = "CONTAINER_ID";
-    private static String PROCESS_ID = "PROCESS_ID";
-    private static String TITLE = "Title";
+    private static final String CONTAINER_ID = "CONTAINER_ID";
+    private static final String PROCESS_ID = "PROCESS_ID";
+    private static final String TITLE = "Title";
+    private static final String TEST_VALUE = "TEST_VALUE";
+    private static final String TEST_PLACEHOLDER = "TEST_PLACEHOLDER";
 
     private IKieFormOverrideManager mockedFormOverrideManager;
 
@@ -30,7 +36,25 @@ public class TestDataUXBuilder extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         this.mockedFormOverrideManager = mock(IKieFormOverrideManager.class);
-        when(mockedFormOverrideManager.getFormOverrides(any(Integer.class), any(Boolean.class))).thenReturn(new ArrayList<>());
+        List<KieFormOverride> overrides = Arrays.asList(getFormOverride());
+        when(mockedFormOverrideManager.getFormOverrides(any(Integer.class), any(Boolean.class))).thenReturn(overrides);
+    }
+
+    private KieFormOverride getFormOverride() {
+        KieFormOverride override = new KieFormOverride();
+
+        override.setField("employee");
+        override.setActive(true);
+
+        PlaceHolderOverride placeHolderOverride = new PlaceHolderOverride();
+        placeHolderOverride.setPlaceHolder(TEST_PLACEHOLDER);
+        override.addOverride(placeHolderOverride);
+
+        DefaultValueOverride defaultValueOverride = new DefaultValueOverride();
+        defaultValueOverride.setDefaultValue(TEST_VALUE);
+        override.addOverride(defaultValueOverride);
+
+        return override;
     }
 
     private DataUXBuilder getDataUXBuilder() throws Exception {
@@ -42,65 +66,61 @@ public class TestDataUXBuilder extends TestCase {
 
     public void testSimpleForms() throws Throwable {
 
-        try {
-            DataUXBuilder dataUXBuilder = getDataUXBuilder();
-            
-            String filePath = "src/test/resources/examples/xml/pam-7-test-process-form-1.xml";
+        DataUXBuilder dataUXBuilder = getDataUXBuilder();
 
-            String pam7businessProcessForm = new String(Files.readAllBytes(Paths.get(filePath)));
+        String filePath = "src/test/resources/examples/xml/pam-7-test-process-form-1.xml";
 
-            PamProcessQueryFormResult pamResult = (PamProcessQueryFormResult) JAXBHelper
-                    .unmarshall(pam7businessProcessForm, PamProcessQueryFormResult.class, true, false);
-            assertNotNull(pamResult);
-            KieProcessFormQueryResult kpfqr = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
-            String htmlForm = dataUXBuilder.createDataUx(kpfqr, 0, CONTAINER_ID, PROCESS_ID, TITLE);
+        String pam7businessProcessForm = new String(Files.readAllBytes(Paths.get(filePath)));
 
-            System.out.println(htmlForm);
+        PamProcessQueryFormResult pamResult = (PamProcessQueryFormResult) JAXBHelper
+                .unmarshall(pam7businessProcessForm, PamProcessQueryFormResult.class, true, false);
+        assertNotNull(pamResult);
+        KieProcessFormQueryResult kpfqr = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
+        String htmlForm = dataUXBuilder.createDataUx(kpfqr, 0, CONTAINER_ID, PROCESS_ID, TITLE);
 
-            //Title Check
-            assertTrue(htmlForm.contains("<h3 class=\"control-label editLabel\" id=\"JPKIE_TITLE_Title\">$i18n.getLabel(\"JPKIE_TITLE_Title\")</h3>\n"));
+        System.out.println(htmlForm);
 
-            //Hidden Fields Check
-            assertTrue(htmlForm.contains("<input type=\"hidden\" id=\"processId\" name=\"processId\" class=\"ui-dform-hidden\" value=\"PROCESS_ID\""));
-            assertTrue(htmlForm.contains("<input type=\"hidden\" id=\"containerId\" name=\"containerId\" class=\"ui-dform-hidden\" value=\"CONTAINER_ID\""));
+        //Title Check
+        assertTrue(htmlForm.contains("<h3 class=\"control-label editLabel\" id=\"JPKIE_TITLE_Title\">$i18n.getLabel(\"JPKIE_TITLE_Title\")</h3>\n"));
 
-            //TextBox field Checks
-            assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_740177746345817E11\" name=\"$data.employee.type:employee\" labelkey=\"JPKIE_employee\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Employee\" value=\"$data.employee.text\">\n"));
+        //Hidden Fields Check
+        assertTrue(htmlForm.contains("<input type=\"hidden\" id=\"processId\" name=\"processId\" class=\"ui-dform-hidden\" value=\"PROCESS_ID\""));
+        assertTrue(htmlForm.contains("<input type=\"hidden\" id=\"containerId\" name=\"containerId\" class=\"ui-dform-hidden\" value=\"CONTAINER_ID\""));
 
-            //TextArea field Checks
-            assertTrue(htmlForm.contains("<textarea rows=\"4\" cols=\"50\" id=\"field_282038126127015E11\" name=\"$data.reason.type:reason\" labelkey=\"JPKIE_reason\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Reason\" >$data.reason.text</textarea>"));
+        //TextBox field Checks + form override Checks
+        assertTrue(htmlForm.contains(TEST_PLACEHOLDER + "</label>"));
+        assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_740177746345817E11\" name=\"$data.employee.type:employee\" labelkey=\"JPKIE_employee\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Employee\" value=\"" + TEST_VALUE + "\">\n"));
 
-            //Number field Checks
-            assertTrue(htmlForm.contains("<input type=\"number\" id=\"field_0897\" name=\"$data.performance.type:performance\" labelkey=\"JPKIE_performance\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Performance\" value=\"$data.performance.number\">"));
+        //TextArea field Checks
+        assertTrue(htmlForm.contains("<textarea rows=\"4\" cols=\"50\" id=\"field_282038126127015E11\" name=\"$data.reason.type:reason\" labelkey=\"JPKIE_reason\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Reason\" >$data.reason.text</textarea>"));
 
-            //DatePicker Checks
-            assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_8289\" name=\"$data.birthDate.type:birthDate\" labelkey=\"JPKIE_birthDate\" class=\"form-control date-picker\" aria-required=\"true\" placeholder=\"BirthDate\" value=\"$data.birthDate.text\">"));
-            assertTrue(htmlForm.contains("$(\"#datepicker_field_8289\").datetimepicker"));
-            assertTrue(htmlForm.contains("format: 'YYYY-MM-DD hh:mm'"));
-            assertTrue(htmlForm.contains("showTodayButton: true"));
-            assertTrue(htmlForm.contains("allowInputToggle: true"));
+        //Number field Checks
+        assertTrue(htmlForm.contains("<input type=\"number\" id=\"field_0897\" name=\"$data.performance.type:performance\" labelkey=\"JPKIE_performance\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Performance\" value=\"$data.performance.number\">"));
 
-            //CheckBox Checks
-            assertTrue(htmlForm.contains("<input type=\"checkbox\" id=\"field_4192\" name=\"$data.checkBox1.type:checkBox1\" labelkey=\"JPKIE_checkBox1\" class=\"ui-widget \" aria-required=\"true\" value=\"true\">"));
+        //DatePicker Checks
+        assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_8289\" name=\"$data.birthDate.type:birthDate\" labelkey=\"JPKIE_birthDate\" class=\"form-control date-picker\" aria-required=\"true\" placeholder=\"BirthDate\" value=\"$data.birthDate.text\">"));
+        assertTrue(htmlForm.contains("$(\"#datepicker_field_8289\").datetimepicker"));
+        assertTrue(htmlForm.contains("format: 'YYYY-MM-DD hh:mm'"));
+        assertTrue(htmlForm.contains("showTodayButton: true"));
+        assertTrue(htmlForm.contains("allowInputToggle: true"));
 
-            //ListBox Checks
-            assertTrue(htmlForm.contains("<select id=\"field_3229\" name=\"$data.listBox1.type:listBox1\" class=\"form-control\" >"));
-            assertTrue(htmlForm.contains("<option></option>"));
-            assertTrue(htmlForm.contains("<option value=\"val1\">Value 1</option>"));
-            assertTrue(htmlForm.contains("<option selected value=\"val2\">Value 2</option>"));
-            assertTrue(htmlForm.contains("<option value=\"val3\">Value 3</option>"));
+        //CheckBox Checks
+        assertTrue(htmlForm.contains("<input type=\"checkbox\" id=\"field_4192\" name=\"$data.checkBox1.type:checkBox1\" labelkey=\"JPKIE_checkBox1\" class=\"ui-widget \" aria-required=\"true\" value=\"true\">"));
 
-            //RadioGroup Checks
-            assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"1\" > radio1</div>"));
-            assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"2\" > radio2</div>"));
-            assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"3\" checked > radio3</div>"));
-            assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"1inline\" checked > Radio1 Inline</div>"));
-            assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"2inline\" > Radio2 Inline</div>"));
-            assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"3inline\" > Radio3 Inline</div>"));
+        //ListBox Checks
+        assertTrue(htmlForm.contains("<select id=\"field_3229\" name=\"$data.listBox1.type:listBox1\" class=\"form-control\" >"));
+        assertTrue(htmlForm.contains("<option></option>"));
+        assertTrue(htmlForm.contains("<option value=\"val1\">Value 1</option>"));
+        assertTrue(htmlForm.contains("<option selected value=\"val2\">Value 2</option>"));
+        assertTrue(htmlForm.contains("<option value=\"val3\">Value 3</option>"));
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //RadioGroup Checks
+        assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"1\" > radio1</div>"));
+        assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"2\" > radio2</div>"));
+        assertTrue(htmlForm.contains("<div class=\"radioNotInline\"><input type=\"radio\" id=\"field_4983\" name=\"$data.radioGroup.type:radioGroup\" class=\"ui-widget\" aria-required=\"true\" value=\"3\" checked > radio3</div>"));
+        assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"1inline\" checked > Radio1 Inline</div>"));
+        assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"2inline\" > Radio2 Inline</div>"));
+        assertTrue(htmlForm.contains("<div class=\"radioInline\"><input type=\"radio\" id=\"field_4858\" name=\"$data.radioGroupInline.type:radioGroupInline\" class=\"ui-widget\" aria-required=\"true\" value=\"3inline\" > Radio3 Inline</div>"));
     }
 
     public void testFormWithNestedForms() throws Throwable {
