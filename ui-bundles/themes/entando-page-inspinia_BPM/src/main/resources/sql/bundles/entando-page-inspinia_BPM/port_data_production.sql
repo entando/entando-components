@@ -19,7 +19,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="2">
-		<descr>Progress Bar basic with label on center</descr>
+		<descr>Case Progress Bar</descr>
 		<sketch x1="0" y1="2" x2="11" y2="2" />
 		<defaultWidget code="bpm-case-progress-status">
 			<properties>
