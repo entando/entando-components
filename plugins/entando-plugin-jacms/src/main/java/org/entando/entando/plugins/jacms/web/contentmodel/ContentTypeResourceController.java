@@ -2,12 +2,13 @@ package org.entando.entando.plugins.jacms.web.contentmodel;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import com.google.common.collect.ImmutableMap;
 import org.entando.entando.aps.system.services.entity.model.*;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentTypeService;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,10 @@ import java.util.*;
 
 @RestController
 public class ContentTypeResourceController implements ContentTypeResource {
+
+    private static final String CONTENT_TYPE_CODE = "contentTypeCode";
+    private static final String ATTRIBUTE_CODE = "attributeCode";
+    private static final String MOVEMENT = "movement";
 
     private final ContentTypeService service;
 
@@ -84,49 +89,116 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getContentTypeAttributeType(String attributeTypeCode) {
-        return null;
+    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getContentTypeAttributeType(
+            String attributeTypeCode) {
+
+        AttributeTypeDto attributeTypeDto = service.getAttributeType(attributeTypeCode);
+
+        return ResponseEntity.ok(new SimpleRestResponse<>(attributeTypeDto));
     }
 
     @Override
-    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> getContentTypeAttribute(String contentTypeCode, String attributeCode) {
-        return null;
+    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> getContentTypeAttribute(
+            String contentTypeCode,
+            String attributeCode) {
+
+        EntityTypeAttributeFullDto dto = service.getContentTypeAttribute(contentTypeCode, attributeCode);
+
+        Map<String, String> metadata = ImmutableMap.of(
+                CONTENT_TYPE_CODE, contentTypeCode
+        );
+
+        return ResponseEntity.ok(new RestResponse<>(dto, metadata));
     }
 
     @Override
-    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> addContentTypeAttribute(String contentTypeCode, EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult) {
-        return null;
+    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> addContentTypeAttribute(
+            String contentTypeCode,
+            EntityTypeAttributeFullDto bodyRequest,
+            BindingResult bindingResult) {
+
+        EntityTypeAttributeFullDto dto = service.addContentTypeAttribute(contentTypeCode, bodyRequest, bindingResult);
+
+        Map<String, String> metadata = ImmutableMap.of(
+                CONTENT_TYPE_CODE, contentTypeCode
+        );
+        return new ResponseEntity<>(new RestResponse<>(dto, metadata), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> updateContentTypeAttribute(String contentTypeCode, String attributeCode, EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult) {
-        return null;
+    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> updateContentTypeAttribute(
+            String contentTypeCode,
+            String attributeCode,
+            EntityTypeAttributeFullDto bodyRequest,
+            BindingResult bindingResult) {
+
+        EntityTypeAttributeFullDto dto = service.updateContentTypeAttribute(contentTypeCode, bodyRequest, bindingResult);
+
+        Map<String, String> metadata = ImmutableMap.of(
+                CONTENT_TYPE_CODE, contentTypeCode
+        );
+
+        return new ResponseEntity<>(new RestResponse<>(dto, metadata), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<Map>> deleteContentTypeAttribute(String contentTypeCode, String attributeCode) {
-        return null;
+    public ResponseEntity<SimpleRestResponse<Map>> deleteContentTypeAttribute(
+            String contentTypeCode,
+            String attributeCode) {
+
+        service.deleteContentTypeAttribute(contentTypeCode, attributeCode);
+
+        Map<String, String> metadata = ImmutableMap.of(
+                CONTENT_TYPE_CODE, contentTypeCode,
+                ATTRIBUTE_CODE, attributeCode
+        );
+
+        return new ResponseEntity<>(new SimpleRestResponse<>(metadata), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(String contentTypeCode) {
-        return null;
+
+        service.reloadContentTypeReferences(contentTypeCode);
+
+        Map<String, String> result = ImmutableMap.of(
+                "status", "success",
+                CONTENT_TYPE_CODE, contentTypeCode
+        );
+
+        return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
     @Override
     public ResponseEntity<SimpleRestResponse<EntityTypesStatusDto>> extractStatus() {
-        return null;
+        EntityTypesStatusDto status = service.getContentTypesRefreshStatus();
+        return ResponseEntity.ok(new SimpleRestResponse<>(status));
     }
 
     @Override
     public ResponseEntity<SimpleRestResponse<Map>> moveContentTypeAttributeUp(String contentTypeCode, String attributeCode) {
-        return null;
+
+        service.moveContentTypeAttributeUp(contentTypeCode, attributeCode);
+
+        Map<String, String> metadata = ImmutableMap.of(
+                CONTENT_TYPE_CODE, contentTypeCode,
+                ATTRIBUTE_CODE, attributeCode,
+                MOVEMENT, "UP"
+        );
+
+        return ResponseEntity.ok(new SimpleRestResponse<>(metadata));
     }
 
     @Override
     public ResponseEntity<SimpleRestResponse<Map>> moveContentTypeAttributeDown(String contentTypeCode, String attributeCode) {
-        return null;
+        service.moveContentTypeAttributeDown(contentTypeCode, attributeCode);
+
+        Map<String, String> metadata = ImmutableMap.of(
+                CONTENT_TYPE_CODE, contentTypeCode,
+                ATTRIBUTE_CODE, attributeCode,
+                MOVEMENT, "DOWN"
+        );
+
+        return ResponseEntity.ok(new SimpleRestResponse<>(metadata));
     }
-
-
 }
