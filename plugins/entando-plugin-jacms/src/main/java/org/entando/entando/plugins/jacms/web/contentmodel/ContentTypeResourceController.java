@@ -90,7 +90,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     @Override
     public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getContentTypeAttributeType(
-            String attributeTypeCode) {
+            @PathVariable String attributeTypeCode) {
 
         AttributeTypeDto attributeTypeDto = service.getAttributeType(attributeTypeCode);
 
@@ -99,8 +99,8 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     @Override
     public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> getContentTypeAttribute(
-            String contentTypeCode,
-            String attributeCode) {
+            @PathVariable String contentTypeCode,
+            @PathVariable String attributeCode) {
 
         EntityTypeAttributeFullDto dto = service.getContentTypeAttribute(contentTypeCode, attributeCode);
 
@@ -113,8 +113,8 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     @Override
     public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> addContentTypeAttribute(
-            String contentTypeCode,
-            EntityTypeAttributeFullDto bodyRequest,
+            @PathVariable String contentTypeCode,
+            @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
             BindingResult bindingResult) {
 
         EntityTypeAttributeFullDto dto = service.addContentTypeAttribute(contentTypeCode, bodyRequest, bindingResult);
@@ -127,9 +127,9 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     @Override
     public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> updateContentTypeAttribute(
-            String contentTypeCode,
-            String attributeCode,
-            EntityTypeAttributeFullDto bodyRequest,
+            @PathVariable String contentTypeCode,
+            @PathVariable String attributeCode,
+            @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
             BindingResult bindingResult) {
 
         EntityTypeAttributeFullDto dto = service.updateContentTypeAttribute(contentTypeCode, bodyRequest, bindingResult);
@@ -143,8 +143,8 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     @Override
     public ResponseEntity<SimpleRestResponse<Map>> deleteContentTypeAttribute(
-            String contentTypeCode,
-            String attributeCode) {
+            @PathVariable String contentTypeCode,
+            @PathVariable String attributeCode) {
 
         service.deleteContentTypeAttribute(contentTypeCode, attributeCode);
 
@@ -157,7 +157,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(String contentTypeCode) {
+    public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(@PathVariable String contentTypeCode) {
 
         service.reloadContentTypeReferences(contentTypeCode);
 
@@ -176,7 +176,9 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<Map>> moveContentTypeAttributeUp(String contentTypeCode, String attributeCode) {
+    public ResponseEntity<SimpleRestResponse<Map>> moveContentTypeAttributeUp(
+            @PathVariable String contentTypeCode,
+            @PathVariable String attributeCode) {
 
         service.moveContentTypeAttributeUp(contentTypeCode, attributeCode);
 
@@ -190,7 +192,9 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<Map>> moveContentTypeAttributeDown(String contentTypeCode, String attributeCode) {
+    public ResponseEntity<SimpleRestResponse<Map>> moveContentTypeAttributeDown(
+            @PathVariable String contentTypeCode,
+            @PathVariable String attributeCode) {
         service.moveContentTypeAttributeDown(contentTypeCode, attributeCode);
 
         Map<String, String> metadata = ImmutableMap.of(

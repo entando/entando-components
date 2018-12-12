@@ -1,28 +1,28 @@
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
-import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.common.model.RestResponse;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegrationTest {
 
     private ObjectMapper jsonMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-    @Autowired
-    private IContentManager contentManager;
 
     @Test
     public void testGetReturnsList() throws Exception {
@@ -64,7 +64,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
     @Test
     public void testUpdateContentType() throws Exception {
-        ContentTypeDto createdContentType = createContentTypeDto();
+        ContentTypeDto createdContentType = createContentType();
 
         createdContentType.setName("MyContentType");
 
@@ -103,7 +103,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andReturn();
 
 
-        ContentTypeDto createdContentTypeDto = createContentTypeDto();
+        ContentTypeDto createdContentTypeDto = createContentType();
 
         MvcResult mvcResult = mockMvc.perform(
                 get("/plugins/cms/contentTypes/" + createdContentTypeDto.getCode())
@@ -117,7 +117,99 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         assertThat(contentTypeDto).isEqualToComparingFieldByField(createdContentTypeDto);
     }
 
-    private ContentTypeDto createContentTypeDto() throws Exception {
+    @Test
+    public void testGetAllAttributes() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+//                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath(
+                        "$.payload",
+                        containsInAnyOrder(
+                                "Attach","Boolean","CheckBox","Composite","Date","Enumerator",
+                                "EnumeratorMap","Hypertext","Image","Link","List","Longtext",
+                                "Monolist", "Monotext","Number","Text","ThreeState","Timestamp")))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/Text")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Text"))
+                .andReturn();
+    }
+
+    @Test
+    public void testCreateContentTypeAttribute() throws Exception {
+        ContentTypeDto contentType = createContentType();
+
+        EntityTypeAttributeFullDto attribute = new EntityTypeAttributeFullDto();
+        attribute.setCode("MyAttribute");
+        attribute.setType("Text");
+        attribute.setName("My test attribute");
+
+        mockMvc.perform(
+                post("/plugins/cms/contentTypes/" +
+                        contentType.getCode() +
+                        "/attribute")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(jsonMapper.writeValueAsString(attribute))
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.metaData.contentTypeCode").value(contentType.getCode()))
+                .andExpect(jsonPath("$.payload.code").value(attribute.getCode()))
+                .andExpect(jsonPath("$.payload.type").value(attribute.getType()))
+                .andExpect(jsonPath("$.payload.name").value(attribute.getName()))
+                .andReturn();
+    }
+
+
+    @Test
+    public void testGetAttributeFromContentType() throws Exception {
+        EntityTypeAttributeFullDto contentTypeAttribute = createContentTypeAttribute();
+
+        mockMvc.perform(
+                get("/plugins/cms/contentTypes/MCT/attribute/" + contentTypeAttribute.getCode())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("MyAttribute"))
+                .andReturn();
+    }
+
+
+    @Test
+    public void testUpdateAttributeFromContentType() throws Exception {
+        EntityTypeAttributeFullDto contentTypeAttribute = createContentTypeAttribute();
+
+        contentTypeAttribute.setName("My New Name");
+
+        mockMvc.perform(
+                put("/plugins/cms/contentTypes/MCT/attribute/" + contentTypeAttribute.getCode())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(jsonMapper.writeValueAsString(contentTypeAttribute))
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.name").value("My New Name"))
+                .andReturn();
+    }
+
+    private ContentTypeDto createContentType() throws Exception {
         deleteContentType("MCT");
 
         Content content = new Content();
@@ -138,9 +230,42 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         return stringToContentTypeDto(mvcResult);
     }
 
+    private EntityTypeAttributeFullDto createContentTypeAttribute() throws Exception {
+        ContentTypeDto contentType = createContentType();
+
+        EntityTypeAttributeFullDto attribute = new EntityTypeAttributeFullDto();
+        attribute.setCode("MyAttribute");
+        attribute.setType("Text");
+
+        MvcResult mvcResult = mockMvc.perform(
+                post("/plugins/cms/contentTypes/" +
+                        contentType.getCode() +
+                        "/attribute")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(jsonMapper.writeValueAsString(attribute))
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
+
+        return stringToEntityTypeDto(mvcResult);
+    }
+
     private ContentTypeDto stringToContentTypeDto(MvcResult mvcResult) throws IOException {
         return jsonMapper.readerFor(ContentTypeDto.class).readValue(
                 mvcResult.getResponse().getContentAsString());
+    }
+
+    private EntityTypeAttributeFullDto stringToEntityTypeDto(MvcResult mvcResult) throws IOException {
+        RestResponse<Map<String, String>, Map> restResponse =
+                jsonMapper.readerFor(RestResponse.class)
+                        .readValue(mvcResult.getResponse().getContentAsString());
+
+        Map<String, String> payload = restResponse.getPayload();
+
+        EntityTypeAttributeFullDto result = new EntityTypeAttributeFullDto();
+        result.setCode(payload.get("code"));
+        result.setType(payload.get("type"));
+
+        return result;
     }
 
     private void deleteContentType(String code) throws Exception {
