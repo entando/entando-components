@@ -105,14 +105,14 @@ public interface ContentTypeResource {
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @GetMapping("/plugins/cms/contentTypes/{contentTypeCode}/attribute/{attributeCode}")
+    @GetMapping("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}")
     ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> getContentTypeAttribute(
             @PathVariable String contentTypeCode,
             @PathVariable String attributeCode);
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @PostMapping("/plugins/cms/contentTypes/{contentTypeCode}/attribute")
+    @PostMapping("/plugins/cms/contentTypes/{contentTypeCode}/attributes")
     ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> addContentTypeAttribute(
             @PathVariable String contentTypeCode,
             @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
@@ -120,7 +120,7 @@ public interface ContentTypeResource {
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @PutMapping("/plugins/cms/contentTypes/{contentTypeCode}/attribute/{attributeCode}")
+    @PutMapping("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}")
     ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> updateContentTypeAttribute(
             @PathVariable String contentTypeCode,
             @PathVariable String attributeCode,
@@ -129,7 +129,7 @@ public interface ContentTypeResource {
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @DeleteMapping("/plugins/cms/contentTypes/{contentTypeCode}/attribute/{attributeCode}")
+    @DeleteMapping("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}")
     ResponseEntity<SimpleRestResponse<Map>> deleteContentTypeAttribute(
             @PathVariable String contentTypeCode,
             @PathVariable String attributeCode);
@@ -151,14 +151,14 @@ public interface ContentTypeResource {
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @PutMapping("/plugins/cms/contentTypes/{contentTypeCode}/attribute/{attributeCode}/moveUp")
+    @PutMapping("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}/moveUp")
     ResponseEntity<SimpleRestResponse<Map>> moveContentTypeAttributeUp(
             @PathVariable String contentTypeCode,
             @PathVariable String attributeCode);
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @PutMapping("/plugins/cms/contentTypes/{contentTypeCode}/attribute/{attributeCode}/moveDown")
+    @PutMapping("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}/moveDown")
     ResponseEntity<SimpleRestResponse<Map>> moveContentTypeAttributeDown(
             @PathVariable String contentTypeCode,
             @PathVariable String attributeCode);
