@@ -1,0 +1,32 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+.classpath
+.project
+.settings/
+.idea/
+
+*.iml
+target/
+
+
+# dependencies
+app-builder/node_modules
+
+# testing
+app-builder/coverage
+
+# production
+app-builder/dist
+app-builder/build
+app-builder/pluginBuild
+
+# misc
+app-builder/.DS_Store
+app-builder/.env.local
+app-builder/.env.development.local
+app-builder/.env.test.local
+app-builder/.env.production.local
+
+app-builder/npm-debug.log*
+app-builder/yarn-debug.log*
+app-builder/yarn-error.log*
