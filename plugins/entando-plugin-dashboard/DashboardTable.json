@@ -1,7 +1,7 @@
 {
-  "packageName": "org.entando.entando.plugins.jpiot",
+  "packageName": "org.entando.entando.plugins.dashboard",
   "model": {
-    "name": "IotListDevices",
+    "name": "DashboardTable",
     "fields": [{
         "name": "widgetTitle",
         "type": "string",

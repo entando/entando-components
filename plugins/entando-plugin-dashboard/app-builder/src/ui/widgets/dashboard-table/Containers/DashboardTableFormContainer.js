@@ -3,7 +3,7 @@ import {initialize, change} from "redux-form";
 
 import {fetchServerConfigList} from "state/main/actions";
 
-import TableListDevicesForm from "ui/widgets/table-list-devices/Components/TableListDevicesForm";
+import DashboardTableForm from "ui/widgets/dashboard-table/Components/DashboardTableForm";
 
 const mapDispatchToProps = dispatch => ({
   onWillMount: () => {
@@ -33,9 +33,9 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-const TableListDevicesFormContainer = connect(
+const DashboardTableFormContainer = connect(
   null,
   mapDispatchToProps
-)(TableListDevicesForm);
+)(DashboardTableForm);
 
-export default TableListDevicesFormContainer;
+export default DashboardTableFormContainer;

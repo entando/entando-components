@@ -2,9 +2,9 @@ export default {
   locale: "en",
   messages: {
     "PluginStatus.test": "ok",
-    "menu.itemLabel": "Entando IoT Plugin",
-    "plugin.title": "Entando IoT Plugin",
-    "plugin.iotSetting": "IoT Setting",
+    "menu.itemLabel": "Entando Dashboard Plugin",
+    "plugin.title": "Entando Dashboard Plugin",
+    "plugin.dashboardSetting": "Dashboard Setting",
     "plugin.settings": "Settings",
     "plugin.info": "Info",
     "plugin.fieldsRequired": "Required Fields",
@@ -15,7 +15,7 @@ export default {
     "plugin.kindOfContext": "Kind of Context",
     "plugin.kindOfContext.help": "Help Kind of Context",
     "plugin.table.description":
-      "This widget shows in your page a Table List of IoT Devices. To configure it you have to choose the Data Source and the Kind of Context. After that you can configure settings. The final outpout will be a table list of the IoT devices in your network.",
+      "This widget shows in your page a Table List of gather data. To configure it you have to choose the Data Source and the Kind of Context. After that you can configure settings. The final outpout will be a table list of the IoT devices in your network.",
     "plugin.table.widgetTitle": "Widget Title",
     "plugin.table.widgetTitle.help": "help",
     "plugin.table.downlodable": "Make table downlodable",

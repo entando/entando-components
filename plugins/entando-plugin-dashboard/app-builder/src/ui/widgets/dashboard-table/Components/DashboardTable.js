@@ -8,16 +8,16 @@ import {
   TabPane
 } from "patternfly-react";
 
-import InfoContainer from "ui/widgets/table-list-devices/Containers/InfoContainer";
-import TableListDevicesFormContainer from "ui/widgets/table-list-devices/Containers/TableListDevicesFormContainer";
+import InfoContainer from "ui/widgets/dashboard-table/Containers/InfoContainer";
+import DashboardTableFormContainer from "ui/widgets/dashboard-table/Containers/DashboardTableFormContainer";
 
-class TableListDevices extends Component {
+class DashboardTable extends Component {
   render() {
     return (
-      <div className="TableListDevices">
+      <div className="DashboardTable">
         <TabContainer
           id={1}
-          className="TableListDevices__tabs-container"
+          className="DashboardTable__tabs-container"
           defaultActiveKey={1}
         >
           <div>
@@ -29,9 +29,9 @@ class TableListDevices extends Component {
                 <FormattedMessage id="plugin.info" />
               </NavItem>
             </Nav>
-            <TabContent className="TableListDevices__tab-content">
+            <TabContent className="DashboardTable__tab-content">
               <TabPane eventKey={1}>
-                <TableListDevicesFormContainer />
+                <DashboardTableFormContainer />
               </TabPane>
               <TabPane eventKey={2}>
                 <InfoContainer />
@@ -44,4 +44,4 @@ class TableListDevices extends Component {
   }
 }
 
-export default TableListDevices;
+export default DashboardTable;

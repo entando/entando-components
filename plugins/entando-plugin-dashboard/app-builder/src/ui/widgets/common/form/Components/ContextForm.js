@@ -27,7 +27,7 @@ const ContextForm = ({contexts}) => {
           />
         }
         labelSize={4}
-        alignClass="text-left TableListDevicesForm__no-padding-right"
+        alignClass="text-left DashboardTableForm__no-padding-right"
         name="kindContext"
         validate={[required]}
       />

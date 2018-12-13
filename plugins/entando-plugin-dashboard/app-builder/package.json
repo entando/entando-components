@@ -1,7 +1,7 @@
 {
-  "name": "entando-plugin-iot",
+  "name": "entando-plugin-dashboard",
   "version": "0.1.0",
-  "repository": "https://github.com/entando/entando-components/plugins/entando-plugin-iot",
+  "repository": "https://github.com/entando/entando-components/plugins/entando-plugin-dashboard",
   "private": true,
   "dependencies": {
     "@entando/apimanager": "^2.3.0",
@@ -30,7 +30,8 @@
     "jest": "20.0.4",
     "node-sass-chokidar": "0.0.3",
     "object-assign": "4.1.1",
-    "patternfly-react": "^2.25.3",
+    "patternfly": "3.57.1",
+    "patternfly-react": "^1.19.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
     "promise": "8.0.1",
@@ -40,6 +41,7 @@
     "react-dev-utils": "^4.2.1",
     "react-dom": "^16.2.0",
     "react-intl": "^2.7.2",
+    "react-patternfly": "^1.0.0",
     "react-redux": "^5.1.1",
     "redux": "^3.7.2",
     "redux-form": "^7.4.2",
@@ -77,6 +79,10 @@
     "fs-extra": "^3.0.1",
     "npm-run": "^4.1.2",
     "react-test-renderer": "^16.2.0"
+  },
+  "peerDependencies": {
+    "react-intl": "^2.7.2",
+    "patternfly-react": "^1.19.1"
   },
   "jest": {
     "collectCoverageFrom": [

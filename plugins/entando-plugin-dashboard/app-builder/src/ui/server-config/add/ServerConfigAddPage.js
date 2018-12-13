@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
-import { Row, Col, Grid, Breadcrumb } from 'patternfly-react';
+import React, {Component} from "react";
+import PropTypes from "prop-types";
+import {FormattedMessage} from "react-intl";
+import {Row, Col, Grid, Breadcrumb} from "patternfly-react";
 
-import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
-import ServerConfigFormContainer from 'ui/server-config/common/ServerConfigFormContainer';
-import PageTitle from 'ui/PageTitle';
+import FormattedMessageLocal from "ui/i18n/FormattedMessage";
+import ServerConfigFormContainer from "ui/server-config/common/ServerConfigFormContainer";
+import PageTitle from "ui/PageTitle";
 
 class ServerConfigAddPage extends Component {
   componentWillMount() {
-    const { onWillMount } = this.props;
+    const {onWillMount} = this.props;
     if (onWillMount) {
       onWillMount(this.props);
     }
@@ -31,7 +31,7 @@ class ServerConfigAddPage extends Component {
                 <FormattedMessageLocal id="plugin.title" />
               </Breadcrumb.Item>
               <Breadcrumb.Item active>
-                <FormattedMessageLocal id="plugin.iotSetting" />
+                <FormattedMessageLocal id="plugin.dashboardSetting" />
               </Breadcrumb.Item>
             </Breadcrumb>
           </Col>
@@ -52,11 +52,11 @@ class ServerConfigAddPage extends Component {
 }
 
 ServerConfigAddPage.propTypes = {
-  onWillMount: PropTypes.func,
+  onWillMount: PropTypes.func
 };
 
 ServerConfigAddPage.defaultProps = {
-  onWillMount: null,
+  onWillMount: null
 };
 
 export default ServerConfigAddPage;

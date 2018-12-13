@@ -25,7 +25,7 @@ const rowRequired = messageId => (
   <Row>
     <Col xs={1} />
     <Col xs={10}>
-      <div className="TableListDevicesForm__required-fields text-right">
+      <div className="DashboardTableForm__required-fields text-right">
         *<FormattedMessage id={messageId} />
       </div>
     </Col>
@@ -49,7 +49,7 @@ const rowCommon = (messageId, func, classContainer, classDataMessage) => (
   </Row>
 );
 
-class TableListDevicesFormBody extends Component {
+class DashboardTableFormBody extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -66,10 +66,10 @@ class TableListDevicesFormBody extends Component {
 
   renderWidgetTitle() {
     return (
-      <InputGroup className="TableListDevicesForm__input-group">
+      <InputGroup className="DashboardTableForm__input-group">
         <Field
           component={RenderTextInput}
-          className="TableListDevicesForm__input-title"
+          className="DashboardTableForm__input-title"
           name="title"
           label={
             <FormLabel
@@ -86,7 +86,7 @@ class TableListDevicesFormBody extends Component {
   }
   renderDownlodable() {
     return (
-      <FormGroup className="TableListDevicesForm__input-group">
+      <FormGroup className="DashboardTableForm__input-group">
         <Col smOffset={2} sm={10}>
           <div className="checkbox">
             <label>
@@ -114,7 +114,7 @@ class TableListDevicesFormBody extends Component {
       }
     ];
     return (
-      <InputGroup className="TableListDevicesForm__input-group">
+      <InputGroup className="DashboardTableForm__input-group">
         <Field
           component={RenderSelectInput}
           options={selectOptionsContext}
@@ -127,7 +127,7 @@ class TableListDevicesFormBody extends Component {
             />
           }
           labelSize={4}
-          alignClass="text-left TableListDevicesForm__no-padding-right"
+          alignClass="text-left DashboardTableForm__no-padding-right"
           name="kindContext"
           validate={[required]}
         />
@@ -136,7 +136,7 @@ class TableListDevicesFormBody extends Component {
   }
   renderFiltrable() {
     return (
-      <FormGroup className="TableListDevicesForm__input-group">
+      <FormGroup className="DashboardTableForm__input-group">
         <Col smOffset={2} sm={10}>
           <div className="checkbox">
             <label>
@@ -152,7 +152,7 @@ class TableListDevicesFormBody extends Component {
   }
   renderColumnInformation() {
     return (
-      <InputGroup className="TableListDevicesForm__input-group">
+      <InputGroup className="DashboardTableForm__input-group">
         <div className="form-group">
           <Col xs={4} className="text-left">
             <ControlLabel htmlFor="allColumns">
@@ -178,13 +178,13 @@ class TableListDevicesFormBody extends Component {
         xs={10}
         className={
           this.state.toggleAllColums
-            ? "TableListDevicesForm__container-data--disabled"
-            : "TableListDevicesForm__container-data"
+            ? "DashboardTableForm__container-data--disabled"
+            : "DashboardTableForm__container-data"
         }
       >
         <Row>
           <Col xs={4}>
-            <FormGroup className="TableListDevicesForm__input-group">
+            <FormGroup className="DashboardTableForm__input-group">
               <Col xs={10}>
                 <div className="checkbox">
                   <label>
@@ -206,7 +206,7 @@ class TableListDevicesFormBody extends Component {
             1/12/201
           </Col>
           <Col xs={4}>
-            <FormGroup className="TableListDevicesForm__input-group">
+            <FormGroup className="DashboardTableForm__input-group">
               <Col xs={10}>
                 <div className="checkbox">
                   <label>
@@ -227,7 +227,7 @@ class TableListDevicesFormBody extends Component {
             </FormGroup>
           </Col>
           <Col xs={4}>
-            <FormGroup className="TableListDevicesForm__input-group">
+            <FormGroup className="DashboardTableForm__input-group">
               <Col xs={10}>
                 <div className="checkbox">
                   <label>
@@ -250,7 +250,7 @@ class TableListDevicesFormBody extends Component {
         </Row>
         <Row>
           <Col xs={4}>
-            <FormGroup className="TableListDevicesForm__input-group">
+            <FormGroup className="DashboardTableForm__input-group">
               <Col xs={10}>
                 <div className="checkbox">
                   <label>
@@ -269,7 +269,7 @@ class TableListDevicesFormBody extends Component {
             </FormGroup>
           </Col>
           <Col xs={4}>
-            <FormGroup className="TableListDevicesForm__input-group">
+            <FormGroup className="DashboardTableForm__input-group">
               <Col xs={10}>
                 <div className="checkbox">
                   <label>
@@ -288,7 +288,7 @@ class TableListDevicesFormBody extends Component {
             </FormGroup>
           </Col>
           <Col xs={4}>
-            <FormGroup className="TableListDevicesForm__input-group">
+            <FormGroup className="DashboardTableForm__input-group">
               <Col xs={10}>
                 <div className="checkbox">
                   <label>
@@ -320,7 +320,7 @@ class TableListDevicesFormBody extends Component {
     return (
       <form
         onSubmit={handleSubmit}
-        className="TableListDevicesForm form-horizontal"
+        className="DashboardTableForm form-horizontal"
       >
         <Row>
           <Col xs={12}>
@@ -329,19 +329,19 @@ class TableListDevicesFormBody extends Component {
               {rowCommon(
                 "plugin.table.description",
                 null,
-                "TableListDevicesForm__container-data",
-                "TableListDevicesForm__description"
+                "DashboardTableForm__container-data",
+                "DashboardTableForm__description"
               )}
               {rowCommon(
                 null,
                 this.renderWidgetTitle,
-                "TableListDevicesForm__container-data TableListDevicesForm__widget-title"
+                "DashboardTableForm__container-data DashboardTableForm__widget-title"
               )}
               <Row>
                 <Col xs={1} />
                 <Col
                   xs={10}
-                  className="TableListDevicesForm__container-data TableListDevicesForm__line"
+                  className="DashboardTableForm__container-data DashboardTableForm__line"
                 >
                   <Row>
                     <Col xs={6}>
@@ -360,7 +360,7 @@ class TableListDevicesFormBody extends Component {
               </Row>
               <Row>
                 <Col xs={1} />
-                <Col xs={10} className="TableListDevicesForm__container-data">
+                <Col xs={10} className="DashboardTableForm__container-data">
                   <Row>
                     <Col xs={6}>{this.renderColumnInformation()}</Col>
                   </Row>
@@ -373,13 +373,13 @@ class TableListDevicesFormBody extends Component {
                   xs={10}
                   className={
                     this.state.toggleAllColums
-                      ? "TableListDevicesForm__container-data--disabled"
-                      : "TableListDevicesForm__container-data"
+                      ? "DashboardTableForm__container-data--disabled"
+                      : "DashboardTableForm__container-data"
                   }
                 >
                   <Row>
                     <Col xs={6}>
-                      <div className="TableListDevicesForm__more-information">
+                      <div className="DashboardTableForm__more-information">
                         <strong>
                           <FormattedMessage id="plugin.table.moreInformation" />
                         </strong>
@@ -397,7 +397,7 @@ class TableListDevicesFormBody extends Component {
               </Row>
               <Row>
                 <Col xs={1} />
-                <Col xs={10} className="TableListDevicesForm__line-bottom" />
+                <Col xs={10} className="DashboardTableForm__line-bottom" />
                 <Col xs={1} />
               </Row>
               <Row>
@@ -435,7 +435,7 @@ class TableListDevicesFormBody extends Component {
   }
 }
 
-TableListDevicesFormBody.propTypes = {
+DashboardTableFormBody.propTypes = {
   handleSubmit: PropTypes.func,
   onWillMount: PropTypes.func,
   onChangeToggleColumns: PropTypes.func.isRequired,
@@ -443,14 +443,14 @@ TableListDevicesFormBody.propTypes = {
   submitting: PropTypes.bool
 };
 
-TableListDevicesFormBody.defaultProps = {
+DashboardTableFormBody.defaultProps = {
   invalid: false,
   submitting: false,
   handleSubmit: null,
   onWillMount: () => ({})
 };
-const TableListDevicesForm = reduxForm({
+const DashboardTableForm = reduxForm({
   form: "form-list-devices"
-})(TableListDevicesFormBody);
+})(DashboardTableFormBody);
 
-export default TableListDevicesForm;
+export default DashboardTableForm;

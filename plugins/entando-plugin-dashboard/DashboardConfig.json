@@ -1,32 +1,20 @@
 {
-  "packageName": "org.entando.entando.plugins.jpiot",
+  "packageName": "org.entando.entando.plugins.dashboard",
   "model": {
-    "name": "IotConfig",
+    "name": "DashboardConfig",
     "fields": [{
-      "name": "name",
+      "name": "serverDescription",
       "type": "string",
       "required": true,
-      "length": 50,
+      "length": 30,
       "primaryKey": false
-    }, {
-      "name": "hostname",
+    },{
+      "name": "URI",
       "type": "string",
       "required": true,
-      "length": 50,
+      "length": 255,
       "primaryKey": false
-    }, {
-      "name": "port",
-      "type": "int",
-      "required": false,
-      "length": null,
-      "primaryKey": false
-    }, {
-      "name": "webapp",
-      "type": "string",
-      "required": true,
-      "length": 50,
-      "primaryKey": false
-    }, {
+    },    {
       "name": "username",
       "type": "string",
       "required": false,
@@ -43,6 +31,12 @@
       "type": "string",
       "required": false,
       "length": 255,
+      "primaryKey": false
+    },{
+      "name": "time",
+      "type": "int",
+      "required": false,
+      "length": 5,
       "primaryKey": false
     }]
   },

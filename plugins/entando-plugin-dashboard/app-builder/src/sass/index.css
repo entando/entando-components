@@ -19,44 +19,44 @@
   width: 100%;
   border: 0px solid red; }
 
-.TableListDevices {
+.DashboardTable {
   padding: 1em; }
-  .TableListDevices__tab-content {
+  .DashboardTable__tab-content {
     border: 1px solid #ddd;
     margin-top: -1px;
     margin-right: -1px; }
 
-.TableListDevicesForm__required-fields {
+.DashboardTableForm__required-fields {
   margin-top: 1em;
   font-size: 12px; }
 
-.TableListDevicesForm__container-data {
+.DashboardTableForm__container-data {
   border: 0px solid;
   margin-top: 1em;
   padding: 1em; }
 
-.TableListDevicesForm__container-data--disabled {
+.DashboardTableForm__container-data--disabled {
   margin-top: 1em;
   padding: 1em;
   color: #8b8d8f;
   display: none; }
 
-.TableListDevicesForm__widget-title {
+.DashboardTableForm__widget-title {
   background: #f5f5f5; }
 
-.TableListDevicesForm__description {
+.DashboardTableForm__description {
   padding: 2em; }
 
-.TableListDevicesForm__line {
+.DashboardTableForm__line {
   border-top: 1px solid #d1d1d1;
   border-bottom: 1px solid #d1d1d1; }
 
-.TableListDevicesForm__input-group {
+.DashboardTableForm__input-group {
   width: 100%;
   border: 0px solid red; }
 
-.TableListDevicesForm__no-padding-right {
+.DashboardTableForm__no-padding-right {
   padding-right: 0px; }
 
-.TableListDevicesForm__line-bottom {
+.DashboardTableForm__line-bottom {
   border-bottom: 1px solid #d1d1d1; }
