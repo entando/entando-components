@@ -5,6 +5,7 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentTypeService;
 import org.entando.entando.plugins.jacms.web.contentmodel.util.RestControllerTestUtil;
+import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentTypeValidator;
 import org.entando.entando.web.common.model.*;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -32,9 +33,12 @@ public class ContentTypeResourceControllerTest {
     @Mock
     private BindingResult bindingResult;
 
+    @Mock
+    private ContentTypeValidator validator;
+
     @Before
     public void setup() {
-        controller = new ContentTypeResourceController(service);
+        controller = new ContentTypeResourceController(service, validator);
     }
 
 
@@ -46,13 +50,13 @@ public class ContentTypeResourceControllerTest {
         when(service.findMany(listRequest)).thenReturn(RestControllerTestUtil.EMPTY_PAGED_METADATA);
 
 
-        ResponseEntity<PagedMetadata<EntityTypeShortDto>> response = controller.list(listRequest);
+        ResponseEntity<PagedRestResponse<EntityTypeShortDto>> response = controller.list(listRequest);
         verify(service).findMany(listRequest);
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getBody()).isEmpty();
+        assertThat(response.getBody().getPayload()).isEmpty();
     }
 
     @Test
@@ -64,13 +68,13 @@ public class ContentTypeResourceControllerTest {
         when(service.findMany(listRequest)).thenReturn(pagedMetadata);
 
 
-        ResponseEntity<PagedMetadata<EntityTypeShortDto>> response = controller.list(listRequest);
+        ResponseEntity<PagedRestResponse<EntityTypeShortDto>> response = controller.list(listRequest);
         verify(service).findMany(listRequest);
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getBody())
+        assertThat(response.getBody().getPayload())
                 .isNotEmpty()
                 .hasSize(3)
                 .isEqualTo(pagedMetadata.getBody());

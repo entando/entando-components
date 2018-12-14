@@ -18,6 +18,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegrationTest {
@@ -30,10 +31,10 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 get("/plugins/cms/contentTypes")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.pageSize").value("100"))
+                .andExpect(jsonPath("$.metaData.pageSize").value("100"))
                 .andReturn();
     }
 
@@ -109,6 +110,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 get("/plugins/cms/contentTypes/{code}", createdContentTypeDto.getCode())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 

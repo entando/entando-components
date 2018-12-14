@@ -31,7 +31,7 @@ public class ContentTypeService extends AbstractEntityTypeService<IContent, Cont
         super.deleteEntityType(CONTENT_MODEL_MANAGER, code);
     }
 
-    public PagedMetadata<org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto> findMany(RestListRequest listRequest) {
+    public PagedMetadata<EntityTypeShortDto> findMany(RestListRequest listRequest) {
         return getShortEntityTypes(CONTENT_MODEL_MANAGER, listRequest);
     }
 

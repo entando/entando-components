@@ -3,10 +3,14 @@ package org.entando.entando.plugins.jacms.web.contentmodel;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.entity.model.*;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentTypeService;
+import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentTypeValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
+import org.entando.entando.web.common.exceptions.*;
 import org.entando.entando.web.common.model.*;
+import org.entando.entando.web.userprofile.validator.ProfileTypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
@@ -24,10 +28,12 @@ public class ContentTypeResourceController implements ContentTypeResource {
     private static final String MOVEMENT = "movement";
 
     private final ContentTypeService service;
+    private final ContentTypeValidator validator;
 
     @Autowired
-    public ContentTypeResourceController(ContentTypeService service) {
+    public ContentTypeResourceController(ContentTypeService service, ContentTypeValidator validator) {
         this.service = service;
+        this.validator = validator;
     }
 
     @Override
@@ -37,6 +43,10 @@ public class ContentTypeResourceController implements ContentTypeResource {
             BindingResult bindingResult)
             throws URISyntaxException {
 
+        validator.validate(contentType, bindingResult);
+        if(bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
         ContentTypeDto result = service.create(contentType, bindingResult);
 
         return ResponseEntity.created(
@@ -54,11 +64,11 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<PagedMetadata<EntityTypeShortDto>> list(
-            RestListRequest listRequest) {
-
+    public ResponseEntity<PagedRestResponse<EntityTypeShortDto>> list(RestListRequest listRequest) {
+        validator.validateRestListRequest(listRequest, ContentTypeDto.class);
         PagedMetadata<EntityTypeShortDto> result = service.findMany(listRequest);
-        return ResponseEntity.ok(result);
+        validator.validateRestListResult(listRequest, result);
+        return ResponseEntity.ok(new PagedRestResponse<>(result));
     }
 
     @Override
@@ -85,7 +95,10 @@ public class ContentTypeResourceController implements ContentTypeResource {
     @Override
     public ResponseEntity<PagedRestResponse<String>> getContentTypeAttributeTypes(
             RestListRequest requestList) {
-        return ResponseEntity.ok(new PagedRestResponse<>(service.findManyAttributes(requestList)));
+        validator.validateRestListRequest(requestList, AttributeTypeDto.class);
+        PagedMetadata<String> attributes = service.findManyAttributes(requestList);
+        validator.validateRestListResult(requestList, attributes);
+        return ResponseEntity.ok(new PagedRestResponse<>(attributes));
     }
 
     @Override
@@ -117,6 +130,10 @@ public class ContentTypeResourceController implements ContentTypeResource {
             @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
             BindingResult bindingResult) {
 
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+
         EntityTypeAttributeFullDto dto = service.addContentTypeAttribute(contentTypeCode, bodyRequest, bindingResult);
 
         Map<String, String> metadata = ImmutableMap.of(
@@ -131,6 +148,13 @@ public class ContentTypeResourceController implements ContentTypeResource {
             @PathVariable String attributeCode,
             @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
             BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        } else if (!StringUtils.equals(attributeCode, bodyRequest.getCode())) {
+            bindingResult.rejectValue("code", ProfileTypeValidator.ERRCODE_URINAME_MISMATCH, new String[]{attributeCode, bodyRequest.getCode()}, "entityType.attribute.code.mismatch");
+            throw new ValidationConflictException(bindingResult);
+        }
 
         EntityTypeAttributeFullDto dto = service.updateContentTypeAttribute(contentTypeCode, bodyRequest, bindingResult);
 
