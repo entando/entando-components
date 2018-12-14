@@ -5,12 +5,14 @@ import widgetConfig from "state/widgetConfig/reducer";
 import {
   SET_SERVER_CONFIG_LIST,
   REMOVE_SERVER_CONFIG,
-  SET_CONTEXT_LIST
+  SET_DATASOURCE_LIST,
+  SET_DATASOURCE_COLUMNS,
+  SET_DATASOURCE_DATA
 } from "./types";
 
 const reduxStatus = () => "works";
 
-const serverConfig = (state = [], action = {}) => {
+const dashboardConfig = (state = [], action = {}) => {
   switch (action.type) {
     case SET_SERVER_CONFIG_LIST:
       return action.payload.configList;
@@ -21,10 +23,31 @@ const serverConfig = (state = [], action = {}) => {
   }
 };
 
-const contextList = (state = [], action = {}) => {
+const datasourceList = (state = [], action = {}) => {
   switch (action.type) {
-    case SET_CONTEXT_LIST:
-      return action.payload.contextList;
+    case SET_DATASOURCE_LIST:
+      return action.payload.datasourceList;
+    default:
+      return state;
+  }
+};
+
+const datasourceColumns = (state = [], action = {}) => {
+  switch (action.type) {
+    case SET_DATASOURCE_COLUMNS:
+      const {columns} = action.payload;
+      return columns.reduce((acc, item) => {
+        acc[item] = item;
+        return acc;
+      }, {});
+    default:
+      return state;
+  }
+};
+const datasourceData = (state = [], action = {}) => {
+  switch (action.type) {
+    case SET_DATASOURCE_DATA:
+      return action.payload.data;
     default:
       return state;
   }
@@ -32,7 +55,9 @@ const contextList = (state = [], action = {}) => {
 
 export default combineReducers({
   reduxStatus,
-  serverConfig,
+  dashboardConfig,
   widgetConfig,
-  contextList
+  datasourceList,
+  datasourceColumns,
+  datasourceData
 });

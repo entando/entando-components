@@ -39,30 +39,42 @@ export const DEVICE4 = {
   information: "Parcheggi Piazza Matteoti"
 };
 
-export const SERVER_CONFIG_LIST = [
+export const DASHBOARD_CONFIG_LIST = [
   {
     active: false,
+    debug: false,
     id: "6ce983ca69c5448599328173084710ef20180504T094803416",
     name: "Entando IoT Server Devices",
     username: "admin",
     password: "passwordAdmin",
-    hostName: "entando.iot.com",
+    hostName: "http://entando.iot.com:3303/iot",
     token: "token-code",
-    port: 80,
-    webappName: "iotDevices",
-    timeout: null
+    timeout: 300
   }
 ];
 
-export const CONTEXT_PARKING = {
+export const DATASOURCE_PARKING = {
   id: "parking",
-  description: "IOT Parking Area",
-  devicesNumber: 4,
-  devices: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
+  datasource: "IOT Parking Area",
+  datasourceUri: "parking/devices/",
+  status: "ok"
 };
 
-export const SERVER_CONFIG_LIST_CONTEXT = {
-  "6ce983ca69c5448599328173084710ef20180504T094803416": {
-    context: [CONTEXT_PARKING]
-  }
+export const DATASOURCE_PARKING_DATA = {
+  id: "parking",
+  columns: [
+    "status",
+    "inUse",
+    "batteryLevel",
+    "deviceCode",
+    "deviceBrand",
+    "expirationGuarantee",
+    "coordinates",
+    "information"
+  ],
+  data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
+};
+
+export const DASHBOARD_LIST_DATASOURCE = {
+  "6ce983ca69c5448599328173084710ef20180504T094803416": [DATASOURCE_PARKING]
 };

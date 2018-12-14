@@ -1,14 +1,15 @@
 import {makeMockRequest, METHODS} from "@entando/apimanager";
 import {
-  SERVER_CONFIG_LIST,
-  SERVER_CONFIG_LIST_CONTEXT
-} from "mocks/serverConfigs";
+  DASHBOARD_CONFIG_LIST,
+  DASHBOARD_LIST_DATASOURCE,
+  DATASOURCE_PARKING_DATA
+} from "mocks/dashboardConfigs";
 
 export const getServerConfigs = () =>
   makeMockRequest({
     uri: "/api/dashboard/serverConfigs",
     method: METHODS.GET,
-    mockResponse: SERVER_CONFIG_LIST,
+    mockResponse: DASHBOARD_CONFIG_LIST,
     useAuthentication: false
   });
 
@@ -38,18 +39,18 @@ export const deleteServerConfig = serverConfigId =>
     useAuthentication: false
   });
 
-export const getContexts = configId =>
+export const getDatasources = configId =>
   makeMockRequest({
-    uri: `/api/dashboard/serverConfig/${configId}/contexts`,
+    uri: `/api/dashboard/serverConfig/${configId}/datasources`,
     method: METHODS.GET,
-    mockResponse: SERVER_CONFIG_LIST_CONTEXT[configId].context,
+    mockResponse: DASHBOARD_LIST_DATASOURCE[configId],
     useAuthentication: false
   });
 
-export const getContext = (configId, contextId) =>
+export const getDatasourceData = (configId, datasourceId, type) =>
   makeMockRequest({
-    uri: `/api/dashboard/serverConfig/${configId}/context/${contextId}`,
+    uri: `/api/dashboard/serverConfig/${configId}/datasource/${datasourceId}/${type}`,
     method: METHODS.GET,
-    mockResponse: SERVER_CONFIG_LIST_CONTEXT[contextId],
+    mockResponse: DATASOURCE_PARKING_DATA[type],
     useAuthentication: false
   });

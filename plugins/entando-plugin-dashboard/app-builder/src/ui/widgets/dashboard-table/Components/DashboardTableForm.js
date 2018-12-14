@@ -12,11 +12,10 @@ import {
 } from "patternfly-react";
 import FormattedMessage from "ui/i18n/FormattedMessage";
 import RenderTextInput from "ui/common/form/RenderTextInput";
-import RenderSelectInput from "ui/common/form/RenderSelectInput";
 import SwitchRenderer from "ui/common/form/SwitchRenderer";
 import FormLabel from "ui/common/form/FormLabel";
-import DataSourceFormContainer from "ui/widgets/common/form/Containers/DataSourceFormContainer";
-import ContextFormContainer from "ui/widgets/common/form/Containers/ContextFormContainer";
+import ServerNameFormContainer from "ui/widgets/common/form/Containers/ServerNameFormContainer";
+import DatasourceFormContainer from "ui/widgets/common/form/Containers/DatasourceFormContainer";
 
 const maxLength30 = maxLength(30);
 const minLength3 = minLength(3);
@@ -100,38 +99,6 @@ class DashboardTableFormBody extends Component {
           </div>
         </Col>
       </FormGroup>
-    );
-  }
-  renderContext() {
-    const selectOptionsContext = [
-      {
-        value: "parking",
-        text: "Parking"
-      },
-      {
-        value: "bikeSharing",
-        text: "Bike Sharking"
-      }
-    ];
-    return (
-      <InputGroup className="DashboardTableForm__input-group">
-        <Field
-          component={RenderSelectInput}
-          options={selectOptionsContext}
-          defaultOptionId="plugin.chooseAnOptionContext"
-          label={
-            <FormLabel
-              labelId="plugin.kindOfContext"
-              helpId="plugin.kindOfContext.help"
-              required
-            />
-          }
-          labelSize={4}
-          alignClass="text-left DashboardTableForm__no-padding-right"
-          name="kindContext"
-          validate={[required]}
-        />
-      </InputGroup>
     );
   }
   renderFiltrable() {
@@ -345,13 +312,13 @@ class DashboardTableFormBody extends Component {
                 >
                   <Row>
                     <Col xs={6}>
-                      <DataSourceFormContainer />
+                      <ServerNameFormContainer />
                     </Col>
                     <Col xs={6}>{this.renderDownlodable()}</Col>
                   </Row>
                   <Row>
                     <Col xs={6}>
-                      <ContextFormContainer />
+                      <DatasourceFormContainer />
                     </Col>
                     <Col xs={6}>{this.renderFiltrable()}</Col>
                   </Row>

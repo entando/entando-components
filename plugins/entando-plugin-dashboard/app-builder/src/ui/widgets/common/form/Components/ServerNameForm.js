@@ -6,36 +6,36 @@ import {InputGroup} from "patternfly-react";
 import RenderSelectInput from "ui/common/form/RenderSelectInput";
 import FormLabel from "ui/common/form/FormLabel";
 
-const DataSourceForm = ({datasources, onChange}) => {
-  const selectOptionsDataSource = datasources.map(m => ({
+const ServerNameForm = ({serverNames, onChange}) => {
+  const selectOptionsServerName = serverNames.map(m => ({
     value: m.id,
     text: m.name
   }));
   return (
-    <InputGroup className="DataSourceForm__input-group">
+    <InputGroup className="ServerNameForm__input-group">
       <Field
         component={RenderSelectInput}
         onChange={onChange}
-        options={selectOptionsDataSource}
-        defaultOptionId="plugin.chooseAnOptionDataSource"
+        options={selectOptionsServerName}
+        defaultOptionId="plugin.chooseAnOptionServerName"
         label={
           <FormLabel
-            labelId="plugin.datasource"
-            helpId="plugin.datasource.help"
+            labelId="plugin.serverName"
+            helpId="plugin.serverName.help"
             required
           />
         }
         labelSize={4}
         alignClass="text-left"
-        name="datasource"
+        name="serverName"
         validate={[required]}
       />
     </InputGroup>
   );
 };
 
-DataSourceForm.propTypes = {
-  datasources: PropTypes.arrayOf(
+ServerNameForm.propTypes = {
+  serverNames: PropTypes.arrayOf(
     PropTypes.shape({
       text: PropTypes.string,
       value: PropTypes.string
@@ -44,4 +44,4 @@ DataSourceForm.propTypes = {
   onChange: PropTypes.func.isRequired
 };
 
-export default DataSourceForm;
+export default ServerNameForm;

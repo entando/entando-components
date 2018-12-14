@@ -23,6 +23,7 @@ import "patternfly/dist/css/patternfly.min.css";
 import "patternfly/dist/css/patternfly-additions.min.css";
 
 import DashboardTable from "ui/widgets/dashboard-table/Components/DashboardTable";
+import DashboardConfigAddPage from "ui/widgets/dashboard-config/Components/add/DashboardConfigAddPage";
 
 const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
   acc[`plugin.${plugin.id}.${key}`] = enLocale.messages[key];
@@ -39,6 +40,16 @@ export default ReactDOM.render(
         <Row>
           <Col xs={12}>
             <PluginContainer titleId="plugin.title" helpId="ConfigPage.help" />
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <DashboardConfigAddPage />
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <hr />
           </Col>
         </Row>
         <Row>

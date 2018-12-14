@@ -6,36 +6,36 @@ import {InputGroup} from "patternfly-react";
 import RenderSelectInput from "ui/common/form/RenderSelectInput";
 import FormLabel from "ui/common/form/FormLabel";
 
-const ContextForm = ({contexts}) => {
-  const selectOptionsContext = contexts.map(m => ({
+const DatasourceForm = ({datasources}) => {
+  const selectOptionsDatasource = datasources.map(m => ({
     value: m.id,
-    text: m.description
+    text: m.datasource
   }));
 
   return (
-    <InputGroup className="ContextForm__input-group">
+    <InputGroup className="DatasourceForm__input-group">
       <Field
         component={RenderSelectInput}
-        disabled={contexts.length === 0 ? true : false}
-        options={selectOptionsContext}
-        defaultOptionId="plugin.chooseAnOptionContext"
+        disabled={datasources.length === 0 ? true : false}
+        options={selectOptionsDatasource}
+        defaultOptionId="plugin.chooseAnOptionDatasource"
         label={
           <FormLabel
-            labelId="plugin.kindOfContext"
-            helpId="plugin.kindOfContext.help"
+            labelId="plugin.datasource"
+            helpId="plugin.datasource.help"
             required
           />
         }
         labelSize={4}
         alignClass="text-left DashboardTableForm__no-padding-right"
-        name="kindContext"
+        name="datasource"
         validate={[required]}
       />
     </InputGroup>
   );
 };
 
-ContextForm.propTypes = {
-  contexts: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+DatasourceForm.propTypes = {
+  datasources: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 };
-export default ContextForm;
+export default DatasourceForm;

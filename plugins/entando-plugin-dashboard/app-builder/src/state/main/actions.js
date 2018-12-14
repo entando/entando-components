@@ -7,13 +7,18 @@ import {
   deleteServerConfig,
   postServerConfig,
   putServerConfig,
-  getContexts
-} from "api/serverConfig";
+  getDatasources,
+  getDatasourceData
+} from "api/dashboardConfig";
 import {
   SET_SERVER_CONFIG_LIST,
   REMOVE_SERVER_CONFIG,
-  SET_CONTEXT_LIST
+  SET_DATASOURCE_LIST,
+  SET_DATASOURCE_DATA
 } from "./types";
+
+const DATASOURCE_PROPERTY_DATA = "data";
+const DATASOURCE_PROPERTY_COLUMNS = "columns";
 
 export const setServerConfigList = configList => ({
   type: SET_SERVER_CONFIG_LIST,
@@ -29,10 +34,24 @@ export const removeServerConfigSync = configId => ({
   }
 });
 
-export const setContextList = contextList => ({
-  type: SET_CONTEXT_LIST,
+export const setDatasourceList = datasourceList => ({
+  type: SET_DATASOURCE_LIST,
   payload: {
-    contextList
+    datasourceList
+  }
+});
+
+export const setDatasourceColumns = columns => ({
+  type: SET_DATASOURCE_DATA,
+  payload: {
+    columns
+  }
+});
+
+export const setDatasourceData = data => ({
+  type: SET_DATASOURCE_DATA,
+  payload: {
+    data
   }
 });
 
@@ -91,13 +110,13 @@ export const updateServerConfig = serverConfig => dispatch =>
     });
   });
 
-export const fecthContextList = configId => dispatch =>
+export const fecthDatasourceList = configId => dispatch =>
   new Promise(resolve => {
     if (configId) {
-      getContexts(configId).then(response => {
+      getDatasources(configId).then(response => {
         response.json().then(json => {
           if (response.ok) {
-            dispatch(setContextList(json.payload));
+            dispatch(setDatasourceList(json.payload));
             resolve();
           } else {
             dispatch(addErrors(json.errors.map(e => e.message)));
@@ -109,7 +128,43 @@ export const fecthContextList = configId => dispatch =>
         });
       });
     } else {
-      dispatch(setContextList([]));
+      dispatch(setDatasourceList([]));
       resolve();
     }
   });
+
+const wrapApiCallFetchDatasource = (apiCall, actionCreator) => (
+  ...args
+) => dispatch =>
+  new Promise(resolve => {
+    apiCall(...args).then(response => {
+      response.json().then(json => {
+        if (response.ok) {
+          dispatch(actionCreator(json.payload[args[2]]));
+          resolve();
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          resolve();
+        }
+      });
+    });
+  });
+
+export const fetchDatasourceData = (configId, datasourceId) => dispatch =>
+  dispatch(
+    wrapApiCallFetchDatasource(getDatasourceData, setDatasourceData)(
+      configId,
+      datasourceId,
+      DATASOURCE_PROPERTY_DATA
+    )
+  );
+
+export const fetchDatasourceColumns = (configId, datasourceId) => dispatch =>
+  dispatch(
+    wrapApiCallFetchDatasource(getDatasourceData, setDatasourceData)(
+      configId,
+      datasourceId,
+      DATASOURCE_PROPERTY_COLUMNS
+    )
+  );

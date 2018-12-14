@@ -11,11 +11,11 @@
 .PluginStatus .PluginStatus--list-elem__failure {
   color: red; }
 
-.DataSourceForm__input-group {
+.ServerNameForm__input-group {
   width: 100%;
   border: 0px solid red; }
 
-.ContextForm__input-group {
+.DatasourceForm__input-group {
   width: 100%;
   border: 0px solid red; }
 

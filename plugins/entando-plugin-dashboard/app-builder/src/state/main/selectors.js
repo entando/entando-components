@@ -11,12 +11,12 @@ export const getReduxStatus = createSelector(
 
 export const getServerConfigList = createSelector(
   [getLocalState],
-  localState => localState.serverConfig
+  localState => localState.dashboardConfig
 );
 
-export const getContextList = createSelector(
+export const getDatasourceList = createSelector(
   [getLocalState],
-  localState => localState.contextList
+  localState => localState.datasourceList
 );
 
 export const getPluginPage = createSelector(
