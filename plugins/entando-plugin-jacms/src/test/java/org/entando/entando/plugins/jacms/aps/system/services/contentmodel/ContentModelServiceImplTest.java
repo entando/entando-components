@@ -123,7 +123,7 @@ public class ContentModelServiceImplTest {
     @Test
     public void shouldFindNothingUsingOptional() {
         Optional<ContentModelDto> result = contentModelService.findById(20L);
-        assertThat(result).isPresent();
+        assertThat(result).isEmpty();
     }
 
     @Test

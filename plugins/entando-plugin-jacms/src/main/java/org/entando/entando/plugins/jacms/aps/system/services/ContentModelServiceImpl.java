@@ -20,7 +20,6 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.*;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.dictionary.ContentModelDictionaryProvider;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.utils.ContentModelUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.*;
 import org.entando.entando.aps.system.services.*;
@@ -34,8 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.*;
+import org.entando.entando.plugins.jacms.aps.system.services.contentmodel.ContentModelRequestListProcessor;
 
 @Service
 public class ContentModelServiceImpl implements ContentModelService {
@@ -71,28 +69,14 @@ public class ContentModelServiceImpl implements ContentModelService {
     @Override
     public PagedMetadata<ContentModelDto> findMany(RestListRequest requestList) {
 
-        List<ContentModel> contentModels = this.contentModelManager.getContentModels();
-
-        Stream<ContentModel> stream = contentModels.stream();
-
-        //filter
-        List<Predicate<ContentModel>> filters = ContentModelUtils.getPredicates(requestList);
-        for (Predicate<ContentModel> predicate : filters) {
-            stream = stream.filter(predicate);
-        }
-
-        //sort
-        Comparator<ContentModel> comparator = ContentModelUtils.getComparator(requestList.getSort(), requestList.getDirection());
-        if (null != comparator) {
-            stream = stream.sorted(comparator);
-        }
-
-        contentModels = stream.collect(Collectors.toList());
+        List<ContentModel> contentModels = new ContentModelRequestListProcessor(
+                requestList, this.contentModelManager.getContentModels())
+                .filterAndSort().toList();
 
         //page
         List<ContentModel> subList = requestList.getSublist(contentModels);
         List<ContentModelDto> dtoSlice = this.dtoBuilder.convert(subList);
-        SearcherDaoPaginatedResult<ContentModelDto> paginatedResult = new SearcherDaoPaginatedResult(contentModels.size(), dtoSlice);
+        SearcherDaoPaginatedResult<ContentModelDto> paginatedResult = new SearcherDaoPaginatedResult<>(contentModels.size(), dtoSlice);
         PagedMetadata<ContentModelDto> pagedMetadata = new PagedMetadata<>(requestList, paginatedResult);
         pagedMetadata.setBody(dtoSlice);
         return pagedMetadata;
