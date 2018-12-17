@@ -83,7 +83,7 @@ public class ContentTypeResourceControllerTest {
 
     @Test
     public void getNonExistingContentTypeReturnsNotFound() {
-        ResponseEntity<ContentTypeDto> response = controller.get(null);
+        ResponseEntity<SimpleRestResponse<ContentTypeDto>> response = controller.get(null);
         verify(service).findOne(null);
 
 
@@ -99,12 +99,13 @@ public class ContentTypeResourceControllerTest {
         when(service.findOne("ABC")).thenReturn(Optional.of(expectedContentType));
 
 
-        ResponseEntity<ContentTypeDto> response = controller.get("ABC");
+        ResponseEntity<SimpleRestResponse<ContentTypeDto>> response = controller.get("ABC");
         verify(service).findOne("ABC");
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(expectedContentType);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getPayload()).isEqualTo(expectedContentType);
     }
 
 
@@ -120,13 +121,13 @@ public class ContentTypeResourceControllerTest {
         when(service.create(requestContentType, bindingResult)).thenReturn(createdContentTypeDto);
 
 
-        ResponseEntity<ContentTypeDto> response = controller.create(requestContentType, bindingResult);
+        ResponseEntity<SimpleRestResponse<ContentTypeDto>> response = controller.create(requestContentType, bindingResult);
         verify(service).create(requestContentType, bindingResult);
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getCode()).isEqualTo("ABC");
+        assertThat(response.getBody().getPayload().getCode()).isEqualTo("ABC");
     }
 
 
@@ -151,11 +152,11 @@ public class ContentTypeResourceControllerTest {
 
         when(service.update(requestContentType, bindingResult)).thenReturn(contentTypeDto);
 
-        ResponseEntity<ContentTypeDto> response = controller.update(requestContentType, bindingResult);
+        ResponseEntity<SimpleRestResponse<ContentTypeDto>> response = controller.update(requestContentType, bindingResult);
         verify(service).update(requestContentType, bindingResult);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getCode()).isEqualTo("ABC");
+        assertThat(response.getBody().getPayload().getCode()).isEqualTo("ABC");
     }
 }
