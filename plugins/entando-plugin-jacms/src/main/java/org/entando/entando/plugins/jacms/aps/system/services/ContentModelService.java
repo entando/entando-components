@@ -15,10 +15,11 @@ package org.entando.entando.plugins.jacms.aps.system.services;
 
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
+import org.entando.entando.web.common.model.*;
 
-import java.util.List;
+import java.util.*;
 
-public interface ContentModelService extends EntandoCrudService<ContentModelDto, Long> {
+public interface ContentModelService {
     
     String BEAN_NAME = "ContentModelService";
     
@@ -27,4 +28,14 @@ public interface ContentModelService extends EntandoCrudService<ContentModelDto,
     List<ContentModelReference> getContentModelReferences(Long modelId);
     
     IEntityModelDictionary getContentModelDictionary(String typeCode);
+
+    ContentModelDto create(ContentModelDto entity);
+
+    ContentModelDto update(ContentModelDto entity);
+
+    PagedMetadata<ContentModelDto> findMany(RestListRequest listRequest);
+
+    Optional<ContentModelDto> findById(Long id);
+
+    void delete(Long id);
 }
