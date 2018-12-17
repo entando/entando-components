@@ -38,7 +38,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<ContentTypeDto> create(
+    public ResponseEntity<SimpleRestResponse<ContentTypeDto>> create(
             @Valid @RequestBody ContentTypeDtoRequest contentType,
             BindingResult bindingResult)
             throws URISyntaxException {
@@ -51,7 +51,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
         return ResponseEntity.created(
                 new URI("/plugins/contentTypes/" + result.getCode()))
-                .body(result);
+                .body(new SimpleRestResponse<>(result));
     }
 
     @Override
@@ -73,22 +73,24 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<ContentTypeDto> get(
+    public ResponseEntity<SimpleRestResponse<ContentTypeDto>> get(
             @PathVariable("code") String code) {
 
         Optional<ContentTypeDto> maybeContentType = service.findOne(code);
 
-        return maybeContentType.map(ResponseEntity::ok)
-                               .orElse(ResponseEntity.notFound().build());
+        return maybeContentType.map(contentTypeDto ->
+                                        ResponseEntity.ok(new SimpleRestResponse<>(contentTypeDto)))
+                               .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<ContentTypeDto> update(
+    public ResponseEntity<SimpleRestResponse<ContentTypeDto>> update(
             @Valid @RequestBody ContentTypeDtoRequest contentType,
             BindingResult bindingResult) {
 
-        return ResponseEntity.ok(service.update(contentType, bindingResult));
+        ContentTypeDto updated = service.update(contentType, bindingResult);
+        return ResponseEntity.ok(new SimpleRestResponse<>(updated));
     }
 
 

@@ -28,7 +28,7 @@ public interface ContentTypeResource {
             @ApiResponse(code = 401, message = "Unauthorized"),
             @ApiResponse(code = 403, message = "Forbidden") })
     @PostMapping("/plugins/cms/contentTypes")
-    ResponseEntity<ContentTypeDto> create(
+    ResponseEntity<SimpleRestResponse<ContentTypeDto>> create(
             @ApiParam(value = "contentType", required = true) @Valid @RequestBody ContentTypeDtoRequest contentType,
             BindingResult bindingResult
     ) throws URISyntaxException;
@@ -73,7 +73,7 @@ public interface ContentTypeResource {
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 404, message = "Not Found") })
     @GetMapping("/plugins/cms/contentTypes/{code}")
-    ResponseEntity<ContentTypeDto> get(@ApiParam(value = "code", required = true) @PathVariable("code") String id);
+    ResponseEntity<SimpleRestResponse<ContentTypeDto>> get(@ApiParam(value = "code", required = true) @PathVariable("code") String id);
 
 
     @ApiOperation(
@@ -88,7 +88,7 @@ public interface ContentTypeResource {
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 404, message = "Not Found") })
     @PutMapping("/plugins/cms/contentTypes")
-    ResponseEntity<ContentTypeDto> update(
+    ResponseEntity<SimpleRestResponse<ContentTypeDto>> update(
             @ApiParam(value = "contentType", required = true) @Valid @RequestBody ContentTypeDtoRequest contentType,
             BindingResult bindingResult);
 
