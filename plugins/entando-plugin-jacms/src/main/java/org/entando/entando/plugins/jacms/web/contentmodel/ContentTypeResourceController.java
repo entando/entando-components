@@ -196,6 +196,20 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
+    public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(
+            @Valid @RequestBody ContentTypeRefreshRequest bodyRequest, BindingResult bindingResult) {
+
+        Map<String, Integer> status = service.reloadProfileTypesReferences(bodyRequest.getProfileTypeCodes());
+
+        Map<String, Object> result = ImmutableMap.of(
+                "result", "success",
+                "contentTypeCodes", status
+        );
+
+        return ResponseEntity.ok(new SimpleRestResponse<>(result));
+    }
+
+    @Override
     public ResponseEntity<SimpleRestResponse<EntityTypesStatusDto>> extractStatus() {
         EntityTypesStatusDto status = service.getContentTypesRefreshStatus();
         return ResponseEntity.ok(new SimpleRestResponse<>(status));

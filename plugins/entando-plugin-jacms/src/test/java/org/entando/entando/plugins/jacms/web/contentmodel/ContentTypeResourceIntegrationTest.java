@@ -1,5 +1,6 @@
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -8,7 +9,8 @@ import com.google.common.collect.ImmutableList;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.common.model.RestResponse;
-import org.junit.Test;
+import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.junit.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -25,10 +27,19 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
     private ObjectMapper jsonMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
+    private String accessToken;
+
+    @Before
+    public void setupTest() {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        accessToken = mockOAuthInterceptor(user);
+    }
+
     @Test
     public void testGetReturnsList() throws Exception {
         mockMvc.perform(
                 get("/plugins/cms/contentTypes")
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
@@ -53,6 +64,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 post("/plugins/cms/contentTypes")
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(jsonMapper.writeValueAsString(contentTypeRequest))
                         .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -70,6 +82,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         createdContentType.setName("MyContentType");
 
         mockMvc.perform(put("/plugins/cms/contentTypes")
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonMapper.writeValueAsString(createdContentType))
                 .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -85,6 +98,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 delete("/plugins/cms/contentTypes/{code}", "RST")
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                        .andDo(print())
@@ -98,6 +112,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 get("/plugins/cms/contentTypes/{code}", "MCT")
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound())
@@ -108,6 +123,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         MvcResult mvcResult = mockMvc.perform(
                 get("/plugins/cms/contentTypes/{code}", createdContentTypeDto.getCode())
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
@@ -123,6 +139,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     public void testGetAllAttributes() throws Exception {
         mockMvc.perform(
                 get("/plugins/cms/contentTypeAttributes")
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andDo(print())
@@ -141,6 +158,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     public void testGetAttribute() throws Exception {
         mockMvc.perform(
                 get("/plugins/cms/contentTypeAttributes/{code}", "Text")
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andDo(print())
@@ -161,6 +179,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 post("/plugins/cms/contentTypes/{code}/attributes", contentType.getCode())
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(jsonMapper.writeValueAsString(attribute))
                         .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -182,6 +201,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
                         "MCT", contentTypeAttribute.getCode())
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andDo(print())
@@ -201,6 +221,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 put("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
                         "MCT", contentTypeAttribute.getCode())
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(jsonMapper.writeValueAsString(contentTypeAttribute))
                         .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -218,6 +239,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}", 
                         "MCT", attribute.getCode())
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
@@ -226,6 +248,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 delete("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
                         "MCT", attribute.getCode())
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andDo(print())
@@ -236,6 +259,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
                         "MCT", attribute.getCode())
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound())
@@ -243,13 +267,29 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testReloadReferences() throws Exception {
+    public void testRefreshContentType() throws Exception {
         ContentTypeDto contentType = createContentType();
 
         mockMvc.perform(
                 post("/plugins/cms/contentTypes/refresh/{contentTypeCode}", contentType.getCode())
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    public void testReloadReferences() throws Exception {
+        ContentTypeRefreshRequest bodyRequest = new ContentTypeRefreshRequest();
+
+        mockMvc.perform(
+                post("/plugins/cms/contentTypesStatus")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .content(jsonMapper.writeValueAsString(bodyRequest))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
     }
@@ -258,6 +298,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     public void testExtractStatus() throws Exception {
         mockMvc.perform(
                 get("/plugins/cms/contentTypesStatus")
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andDo(print())
@@ -274,6 +315,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 put("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}/moveUp",
                         "MCT", code)
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andDo(print())
@@ -292,6 +334,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 put("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}/moveDown",
                         "MCT", code)
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andDo(print())
@@ -315,6 +358,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         MvcResult mvcResult = mockMvc.perform(
                 post("/plugins/cms/contentTypes")
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(jsonMapper.writeValueAsString(contentTypeRequest))
                         .accept(MediaType.APPLICATION_JSON_UTF8)).andReturn();
@@ -344,6 +388,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         MvcResult mvcResult = mockMvc.perform(
                 post("/plugins/cms/contentTypes/{contentCode}/attributes", contentType.getCode())
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(jsonMapper.writeValueAsString(attribute))
                         .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -382,6 +427,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 delete("/plugins/cms/contentTypes/{code}", code)
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())

@@ -139,11 +139,11 @@ public interface ContentTypeResource {
     @PostMapping("/plugins/cms/contentTypes/refresh/{contentTypeCode}")
     ResponseEntity<SimpleRestResponse<Map>> reloadReferences(@PathVariable String contentTypeCode);
 
-//    @RestAccessControl(permission = Permission.SUPERUSER)
-//    @PostMapping("/plugins/cms/contentTypesStatus")
-//    ResponseEntity<SimpleRestResponse<Map>> reloadReferences(
-//            @Valid @RequestBody ContentTypeRefreshRequest bodyRequest,
-//            BindingResult bindingResult);
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @PostMapping("/plugins/cms/contentTypesStatus")
+    ResponseEntity<SimpleRestResponse<Map>> reloadReferences(
+            @Valid @RequestBody ContentTypeRefreshRequest bodyRequest,
+            BindingResult bindingResult);
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/plugins/cms/contentTypesStatus")

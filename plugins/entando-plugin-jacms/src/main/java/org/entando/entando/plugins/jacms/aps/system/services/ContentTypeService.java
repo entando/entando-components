@@ -9,7 +9,7 @@ import org.entando.entando.web.common.model.*;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ContentTypeService extends AbstractEntityTypeService<IContent, ContentTypeDto> {
@@ -89,5 +89,9 @@ public class ContentTypeService extends AbstractEntityTypeService<IContent, Cont
 
     public void moveContentTypeAttributeDown(String contentTypeCode, String attributeCode) {
         moveEntityAttribute(CONTENT_MODEL_MANAGER, contentTypeCode, attributeCode, false);
+    }
+
+    public Map<String, Integer> reloadProfileTypesReferences(List<String> profileTypeCodes) {
+        return reloadEntityTypesReferences(CONTENT_MODEL_MANAGER, profileTypeCodes);
     }
 }
