@@ -59,7 +59,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 //                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.code").value("MCT"))
+                .andExpect(jsonPath("$.payload.code").value("MCT"))
                 .andReturn();
     }
 
@@ -75,8 +75,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(createdContentType.getCode()))
-                .andExpect(jsonPath("$.name").value("MyContentType"))
+                .andExpect(jsonPath("$.payload.code").value(createdContentType.getCode()))
+                .andExpect(jsonPath("$.payload.name").value("MyContentType"))
                 .andReturn();
     }
 
@@ -353,8 +353,15 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     }
 
     private ContentTypeDto stringToContentTypeDto(MvcResult mvcResult) throws IOException {
-        return jsonMapper.readerFor(ContentTypeDto.class).readValue(
-                mvcResult.getResponse().getContentAsString());
+        RestResponse<Map<String, String>, Map> restResponse =
+                jsonMapper.readerFor(RestResponse.class)
+                        .readValue(mvcResult.getResponse().getContentAsString());
+
+        Map<String, String> payload = restResponse.getPayload();
+
+        return new ContentTypeDto()
+                .name(payload.get("name"))
+                .code(payload.get("code"));
     }
 
     private EntityTypeAttributeFullDto stringToEntityTypeDto(MvcResult mvcResult) throws IOException {
