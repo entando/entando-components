@@ -73,7 +73,8 @@ public interface ContentTypeResource {
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 404, message = "Not Found") })
     @GetMapping("/plugins/cms/contentTypes/{code}")
-    ResponseEntity<SimpleRestResponse<ContentTypeDto>> get(@ApiParam(value = "code", required = true) @PathVariable("code") String id);
+    ResponseEntity<SimpleRestResponse<ContentTypeDto>> get(
+            @ApiParam(value = "code", required = true) @PathVariable("code") String id);
 
 
     @ApiOperation(
@@ -99,9 +100,9 @@ public interface ContentTypeResource {
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @GetMapping("/plugins/cms/contentTypeAttributes/{attributeTypeCode}")
-    ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getContentTypeAttributeType(
-            @PathVariable String attributeTypeCode);
+    @GetMapping("/plugins/cms/contentTypeAttributes/{attributeCode}")
+    ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getContentTypeAttribute(
+            @PathVariable String attributeCode);
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)
@@ -115,7 +116,7 @@ public interface ContentTypeResource {
     @PostMapping("/plugins/cms/contentTypes/{contentTypeCode}/attributes")
     ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> addContentTypeAttribute(
             @PathVariable String contentTypeCode,
-            @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
+            @Valid @RequestBody EntityTypeAttributeFullDto attribute,
             BindingResult bindingResult);
 
 
@@ -124,7 +125,7 @@ public interface ContentTypeResource {
     ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> updateContentTypeAttribute(
             @PathVariable String contentTypeCode,
             @PathVariable String attributeCode,
-            @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
+            @Valid @RequestBody EntityTypeAttributeFullDto attribute,
             BindingResult bindingResult);
 
 
@@ -142,12 +143,12 @@ public interface ContentTypeResource {
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PostMapping("/plugins/cms/contentTypesStatus")
     ResponseEntity<SimpleRestResponse<Map>> reloadReferences(
-            @Valid @RequestBody ContentTypeRefreshRequest bodyRequest,
+            @Valid @RequestBody ContentTypeRefreshRequest refreshRequest,
             BindingResult bindingResult);
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/plugins/cms/contentTypesStatus")
-    ResponseEntity<SimpleRestResponse<EntityTypesStatusDto>> extractStatus();
+    ResponseEntity<SimpleRestResponse<EntityTypesStatusDto>> getStatus();
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)

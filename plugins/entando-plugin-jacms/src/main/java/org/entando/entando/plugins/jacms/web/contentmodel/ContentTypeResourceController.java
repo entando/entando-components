@@ -10,7 +10,7 @@ import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentTypeV
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.*;
 import org.entando.entando.web.common.model.*;
-import org.entando.entando.web.userprofile.validator.ProfileTypeValidator;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
@@ -20,8 +20,12 @@ import javax.validation.Valid;
 import java.net.*;
 import java.util.*;
 
+import static org.entando.entando.web.entity.validator.AbstractEntityTypeValidator.ERRCODE_URINAME_MISMATCH;
+
 @RestController
 public class ContentTypeResourceController implements ContentTypeResource {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String CONTENT_TYPE_CODE = "contentTypeCode";
     private static final String ATTRIBUTE_CODE = "attributeCode";
@@ -31,7 +35,8 @@ public class ContentTypeResourceController implements ContentTypeResource {
     private final ContentTypeValidator validator;
 
     @Autowired
-    public ContentTypeResourceController(ContentTypeService service, ContentTypeValidator validator) {
+    public ContentTypeResourceController(ContentTypeService service,
+                                         ContentTypeValidator validator) {
         this.service = service;
         this.validator = validator;
     }
@@ -39,14 +44,11 @@ public class ContentTypeResourceController implements ContentTypeResource {
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<ContentTypeDto>> create(
-            @Valid @RequestBody ContentTypeDtoRequest contentType,
-            BindingResult bindingResult)
+            @Valid @RequestBody ContentTypeDtoRequest contentType, BindingResult bindingResult)
             throws URISyntaxException {
+        logger.debug("REST request - create content type: {}", contentType);
 
-        validator.validate(contentType, bindingResult);
-        if(bindingResult.hasErrors()) {
-            throw new ValidationGenericException(bindingResult);
-        }
+        validateCreate(contentType, bindingResult);
         ContentTypeDto result = service.create(contentType, bindingResult);
 
         return ResponseEntity.created(
@@ -54,9 +56,17 @@ public class ContentTypeResourceController implements ContentTypeResource {
                 .body(new SimpleRestResponse<>(result));
     }
 
+    private void validateCreate(ContentTypeDtoRequest contentType, BindingResult bindingResult) {
+        validator.validate(contentType, bindingResult);
+        if(bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+    }
+
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<Void> delete(@PathVariable("code") String code) {
+        logger.debug("REST request - delete content type {}", code);
 
         service.delete(code);
         return ResponseEntity.ok().build();
@@ -65,6 +75,8 @@ public class ContentTypeResourceController implements ContentTypeResource {
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<PagedRestResponse<EntityTypeShortDto>> list(RestListRequest listRequest) {
+        logger.debug("REST request - get all content types {}", listRequest);
+
         validator.validateRestListRequest(listRequest, ContentTypeDto.class);
         PagedMetadata<EntityTypeShortDto> result = service.findMany(listRequest);
         validator.validateRestListResult(listRequest, result);
@@ -76,6 +88,8 @@ public class ContentTypeResourceController implements ContentTypeResource {
     public ResponseEntity<SimpleRestResponse<ContentTypeDto>> get(
             @PathVariable("code") String code) {
 
+        logger.debug("REST request - get content type {}", code);
+
         Optional<ContentTypeDto> maybeContentType = service.findOne(code);
 
         return maybeContentType.map(contentTypeDto ->
@@ -86,8 +100,8 @@ public class ContentTypeResourceController implements ContentTypeResource {
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<ContentTypeDto>> update(
-            @Valid @RequestBody ContentTypeDtoRequest contentType,
-            BindingResult bindingResult) {
+            @Valid @RequestBody ContentTypeDtoRequest contentType, BindingResult bindingResult) {
+        logger.debug("REST request - update content type {}", contentType);
 
         ContentTypeDto updated = service.update(contentType, bindingResult);
         return ResponseEntity.ok(new SimpleRestResponse<>(updated));
@@ -95,8 +109,11 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<PagedRestResponse<String>> getContentTypeAttributeTypes(
             RestListRequest requestList) {
+        logger.debug("REST request - list all content type attributes {}", requestList);
+
         validator.validateRestListRequest(requestList, AttributeTypeDto.class);
         PagedMetadata<String> attributes = service.findManyAttributes(requestList);
         validator.validateRestListResult(requestList, attributes);
@@ -104,61 +121,68 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getContentTypeAttributeType(
-            @PathVariable String attributeTypeCode) {
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getContentTypeAttribute(
+            @PathVariable String attributeCode) {
+        logger.debug("REST request - get content type attributes {}", attributeCode);
 
-        AttributeTypeDto attributeTypeDto = service.getAttributeType(attributeTypeCode);
+        AttributeTypeDto attributeTypeDto = service.getAttributeType(attributeCode);
 
         return ResponseEntity.ok(new SimpleRestResponse<>(attributeTypeDto));
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> getContentTypeAttribute(
-            @PathVariable String contentTypeCode,
-            @PathVariable String attributeCode) {
+            @PathVariable String contentTypeCode, @PathVariable String attributeCode) {
 
-        EntityTypeAttributeFullDto dto = service.getContentTypeAttribute(contentTypeCode, attributeCode);
+        logger.debug("REST request - get content type {} attribute {}",
+                contentTypeCode, attributeCode);
 
-        Map<String, String> metadata = ImmutableMap.of(
-                CONTENT_TYPE_CODE, contentTypeCode
-        );
+        EntityTypeAttributeFullDto dto = service.getContentTypeAttribute(
+                contentTypeCode, attributeCode);
+
+        Map<String, String> metadata = ImmutableMap.of(CONTENT_TYPE_CODE, contentTypeCode);
 
         return ResponseEntity.ok(new RestResponse<>(dto, metadata));
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> addContentTypeAttribute(
             @PathVariable String contentTypeCode,
-            @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
+            @Valid @RequestBody EntityTypeAttributeFullDto attribute,
             BindingResult bindingResult) {
+
+        logger.debug("REST request - create content type {} attribute {}",
+                contentTypeCode, attribute);
 
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
 
-        EntityTypeAttributeFullDto dto = service.addContentTypeAttribute(contentTypeCode, bodyRequest, bindingResult);
+        EntityTypeAttributeFullDto dto = service.addContentTypeAttribute(
+                contentTypeCode, attribute, bindingResult);
 
-        Map<String, String> metadata = ImmutableMap.of(
-                CONTENT_TYPE_CODE, contentTypeCode
-        );
+        Map<String, String> metadata = ImmutableMap.of(CONTENT_TYPE_CODE, contentTypeCode);
         return new ResponseEntity<>(new RestResponse<>(dto, metadata), HttpStatus.OK);
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> updateContentTypeAttribute(
             @PathVariable String contentTypeCode,
             @PathVariable String attributeCode,
-            @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
+            @Valid @RequestBody EntityTypeAttributeFullDto attribute,
             BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            throw new ValidationGenericException(bindingResult);
-        } else if (!StringUtils.equals(attributeCode, bodyRequest.getCode())) {
-            bindingResult.rejectValue("code", ProfileTypeValidator.ERRCODE_URINAME_MISMATCH, new String[]{attributeCode, bodyRequest.getCode()}, "entityType.attribute.code.mismatch");
-            throw new ValidationConflictException(bindingResult);
-        }
+        logger.debug("REST request - update content type {} attribute {} with {}",
+                contentTypeCode, attributeCode, attribute);
 
-        EntityTypeAttributeFullDto dto = service.updateContentTypeAttribute(contentTypeCode, bodyRequest, bindingResult);
+        validateUpdate(attributeCode, attribute, bindingResult);
+
+        EntityTypeAttributeFullDto dto = service.updateContentTypeAttribute(
+                contentTypeCode, attribute, bindingResult);
 
         Map<String, String> metadata = ImmutableMap.of(
                 CONTENT_TYPE_CODE, contentTypeCode
@@ -167,10 +191,31 @@ public class ContentTypeResourceController implements ContentTypeResource {
         return new ResponseEntity<>(new RestResponse<>(dto, metadata), HttpStatus.OK);
     }
 
+    private void validateUpdate(@PathVariable String attributeCode,
+                                @RequestBody @Valid EntityTypeAttributeFullDto attribute,
+                                BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+
+        if (!StringUtils.equals(attributeCode, attribute.getCode())) {
+
+            bindingResult.rejectValue("code", ERRCODE_URINAME_MISMATCH,
+                    new String[]{attributeCode, attribute.getCode()},
+                    "entityType.attribute.code.mismatch");
+
+            throw new ValidationConflictException(bindingResult);
+        }
+    }
+
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<Map>> deleteContentTypeAttribute(
-            @PathVariable String contentTypeCode,
-            @PathVariable String attributeCode) {
+            @PathVariable String contentTypeCode, @PathVariable String attributeCode) {
+
+        logger.debug("REST request - delete content type {} attribute {}",
+                contentTypeCode, attributeCode);
 
         service.deleteContentTypeAttribute(contentTypeCode, attributeCode);
 
@@ -183,7 +228,11 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(@PathVariable String contentTypeCode) {
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(
+            @PathVariable String contentTypeCode) {
+
+        logger.debug("REST request - reload content type references {}", contentTypeCode);
 
         service.reloadContentTypeReferences(contentTypeCode);
 
@@ -196,10 +245,15 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(
-            @Valid @RequestBody ContentTypeRefreshRequest bodyRequest, BindingResult bindingResult) {
+            @Valid @RequestBody ContentTypeRefreshRequest refreshRequest,
+            BindingResult bindingResult) {
 
-        Map<String, Integer> status = service.reloadProfileTypesReferences(bodyRequest.getProfileTypeCodes());
+        logger.debug("REST request - reload content type references {}", refreshRequest);
+
+        Map<String, Integer> status = service.reloadProfileTypesReferences(
+                refreshRequest.getProfileTypeCodes());
 
         Map<String, Object> result = ImmutableMap.of(
                 "result", "success",
@@ -210,15 +264,21 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<EntityTypesStatusDto>> extractStatus() {
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    public ResponseEntity<SimpleRestResponse<EntityTypesStatusDto>> getStatus() {
+        logger.debug("REST request - get content types status");
+
         EntityTypesStatusDto status = service.getContentTypesRefreshStatus();
         return ResponseEntity.ok(new SimpleRestResponse<>(status));
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<Map>> moveContentTypeAttributeUp(
-            @PathVariable String contentTypeCode,
-            @PathVariable String attributeCode) {
+            @PathVariable String contentTypeCode, @PathVariable String attributeCode) {
+
+        logger.debug("REST request - move up content type {} attribute {}",
+                contentTypeCode, attributeCode);
 
         service.moveContentTypeAttributeUp(contentTypeCode, attributeCode);
 
@@ -232,9 +292,13 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<Map>> moveContentTypeAttributeDown(
-            @PathVariable String contentTypeCode,
-            @PathVariable String attributeCode) {
+            @PathVariable String contentTypeCode, @PathVariable String attributeCode) {
+
+        logger.debug("REST request - move down content type {} attribute {}",
+                contentTypeCode, attributeCode);
+
         service.moveContentTypeAttributeDown(contentTypeCode, attributeCode);
 
         Map<String, String> metadata = ImmutableMap.of(
