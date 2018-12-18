@@ -35,11 +35,12 @@ const datasourceList = (state = [], action = {}) => {
 const datasourceColumns = (state = [], action = {}) => {
   switch (action.type) {
     case SET_DATASOURCE_COLUMNS:
-      const {columns} = action.payload;
-      return columns.reduce((acc, item) => {
-        acc[item] = item;
-        return acc;
-      }, {});
+      // const {columns} = action.payload;
+      // return columns.reduce((acc, item) => {
+      //   acc[item] = item;
+      //   return acc;
+      // }, {});
+      return action.payload.columns;
     default:
       return state;
   }

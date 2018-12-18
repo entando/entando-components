@@ -6,7 +6,7 @@ import {InputGroup} from "patternfly-react";
 import RenderSelectInput from "ui/common/form/RenderSelectInput";
 import FormLabel from "ui/common/form/FormLabel";
 
-const DatasourceForm = ({datasources}) => {
+const DatasourceForm = ({datasources, onChange}) => {
   const selectOptionsDatasource = datasources.map(m => ({
     value: m.id,
     text: m.datasource
@@ -16,6 +16,7 @@ const DatasourceForm = ({datasources}) => {
     <InputGroup className="DatasourceForm__input-group">
       <Field
         component={RenderSelectInput}
+        onChange={(ev, value) => onChange(value)}
         disabled={datasources.length === 0 ? true : false}
         options={selectOptionsDatasource}
         defaultOptionId="plugin.chooseAnOptionDatasource"
@@ -36,6 +37,7 @@ const DatasourceForm = ({datasources}) => {
 };
 
 DatasourceForm.propTypes = {
-  datasources: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  datasources: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  onChange: PropTypes.func.isRequired
 };
 export default DatasourceForm;

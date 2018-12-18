@@ -60,3 +60,25 @@
 
 .DashboardTableForm__line-bottom {
   border-bottom: 1px solid #d1d1d1; }
+
+.DashboardTableColumns {
+  overflow-x: auto; }
+  .DashboardTableColumns__th-default-label {
+    text-align: center;
+    border-right: 1px solid #d1d1d1;
+    background: #ffffff; }
+  .DashboardTableColumns__th-editable-label {
+    text-align: center; }
+  .DashboardTableColumns__th-editable-label:hover {
+    cursor: pointer; }
+  .DashboardTableColumns__table-th {
+    text-align: center; }
+  .DashboardTableColumns__input {
+    border: 0px;
+    text-align: left;
+    background-color: #fafafa;
+    width: 65%; }
+  .DashboardTableColumns__container-input {
+    border: 0px solid; }
+  .DashboardTableColumns__container-input--error {
+    color: #c00; }

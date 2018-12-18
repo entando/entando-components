@@ -28,6 +28,7 @@ app-builder/.env.test.local
 app-builder/.env.production.local
 
 app-builder/package-lock.json
+app-builder/package-lock*
 app-builder/yarn.lock
 
 app-builder/npm-debug.log*

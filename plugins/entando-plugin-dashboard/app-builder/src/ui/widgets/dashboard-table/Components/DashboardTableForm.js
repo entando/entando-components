@@ -16,6 +16,7 @@ import SwitchRenderer from "ui/common/form/SwitchRenderer";
 import FormLabel from "ui/common/form/FormLabel";
 import ServerNameFormContainer from "ui/widgets/common/form/Containers/ServerNameFormContainer";
 import DatasourceFormContainer from "ui/widgets/common/form/Containers/DatasourceFormContainer";
+import DashboardTableColumnsContainer from "ui/widgets/dashboard-table/Containers/DashboardTableColumnsContainer";
 
 const maxLength30 = maxLength(30);
 const minLength3 = minLength(3);
@@ -79,6 +80,7 @@ class DashboardTableFormBody extends Component {
           }
           alignClass="text-left"
           validate={[required, minLength3, maxLength30]}
+          append={<FormattedMessage id="plugin.table.requirement" />}
         />
       </InputGroup>
     );
@@ -139,147 +141,9 @@ class DashboardTableFormBody extends Component {
       </InputGroup>
     );
   }
-  renderColumnDetail() {
-    return (
-      <Col
-        xs={10}
-        className={
-          this.state.toggleAllColums
-            ? "DashboardTableForm__container-data--disabled"
-            : "DashboardTableForm__container-data"
-        }
-      >
-        <Row>
-          <Col xs={4}>
-            <FormGroup className="DashboardTableForm__input-group">
-              <Col xs={10}>
-                <div className="checkbox">
-                  <label>
-                    <Field
-                      component="input"
-                      type="checkbox"
-                      name="deviceStatus"
-                      disabled={this.state.toggleAllColums}
-                    />
-                    <strong>
-                      <FormattedMessage id="plugin.table.deviceStatus" />
-                    </strong>
-                    <br />
-                    <FormattedMessage id="plugin.table.deviceStatus.help" />
-                  </label>
-                </div>
-              </Col>
-            </FormGroup>
-            1/12/201
-          </Col>
-          <Col xs={4}>
-            <FormGroup className="DashboardTableForm__input-group">
-              <Col xs={10}>
-                <div className="checkbox">
-                  <label>
-                    <Field
-                      component="input"
-                      type="checkbox"
-                      name="deviceUse"
-                      disabled={this.state.toggleAllColums}
-                    />
-                    <strong>
-                      <FormattedMessage id="plugin.table.deviceUse" />
-                    </strong>
-                    <br />
-                    <FormattedMessage id="plugin.table.deviceUse.help" />
-                  </label>
-                </div>
-              </Col>
-            </FormGroup>
-          </Col>
-          <Col xs={4}>
-            <FormGroup className="DashboardTableForm__input-group">
-              <Col xs={10}>
-                <div className="checkbox">
-                  <label>
-                    <Field
-                      component="input"
-                      type="checkbox"
-                      name="batteryLevel"
-                      disabled={this.state.toggleAllColums}
-                    />
-                    <strong>
-                      <FormattedMessage id="plugin.table.batteryLevel" />
-                    </strong>
-                    <br />
-                    <FormattedMessage id="plugin.table.batteryLevel.help" />
-                  </label>
-                </div>
-              </Col>
-            </FormGroup>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={4}>
-            <FormGroup className="DashboardTableForm__input-group">
-              <Col xs={10}>
-                <div className="checkbox">
-                  <label>
-                    <Field
-                      component="input"
-                      type="checkbox"
-                      name="deviceCode"
-                      disabled={this.state.toggleAllColums}
-                    />
-                    <strong>
-                      <FormattedMessage id="plugin.table.deviceCode" />
-                    </strong>
-                  </label>
-                </div>
-              </Col>
-            </FormGroup>
-          </Col>
-          <Col xs={4}>
-            <FormGroup className="DashboardTableForm__input-group">
-              <Col xs={10}>
-                <div className="checkbox">
-                  <label>
-                    <Field
-                      component="input"
-                      type="checkbox"
-                      name="deviceBrand"
-                      disabled={this.state.toggleAllColums}
-                    />
-                    <strong>
-                      <FormattedMessage id="plugin.table.deviceBrand" />
-                    </strong>
-                  </label>
-                </div>
-              </Col>
-            </FormGroup>
-          </Col>
-          <Col xs={4}>
-            <FormGroup className="DashboardTableForm__input-group">
-              <Col xs={10}>
-                <div className="checkbox">
-                  <label>
-                    <Field
-                      component="input"
-                      type="checkbox"
-                      name="expirationGuarantee"
-                      disabled={this.state.toggleAllColums}
-                    />
-                    <strong>
-                      <FormattedMessage id="plugin.table.expirationGuarantee" />
-                    </strong>
-                  </label>
-                </div>
-              </Col>
-            </FormGroup>
-          </Col>
-        </Row>
-      </Col>
-    );
-  }
+
   handleChange(ev, newValue) {
     this.setState({toggleAllColums: !this.state.toggleAllColums});
-    this.props.onChangeToggleColumns(newValue);
   }
 
   render() {
@@ -345,7 +209,7 @@ class DashboardTableFormBody extends Component {
                   }
                 >
                   <Row>
-                    <Col xs={6}>
+                    <Col xs={8}>
                       <div className="DashboardTableForm__more-information">
                         <strong>
                           <FormattedMessage id="plugin.table.moreInformation" />
@@ -360,7 +224,17 @@ class DashboardTableFormBody extends Component {
               </Row>
               <Row>
                 <Col xs={1} />
-                {this.renderColumnDetail()}
+                <Col
+                  xs={10}
+                  className={
+                    this.state.toggleAllColums
+                      ? "DashboardTableForm__container-data--disabled"
+                      : "DashboardTableForm__container-data"
+                  }
+                >
+                  <DashboardTableColumnsContainer />
+                </Col>
+                <Col xs={1} />
               </Row>
               <Row>
                 <Col xs={1} />
@@ -403,21 +277,18 @@ class DashboardTableFormBody extends Component {
 }
 
 DashboardTableFormBody.propTypes = {
-  handleSubmit: PropTypes.func,
-  onWillMount: PropTypes.func,
-  onChangeToggleColumns: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  onWillMount: PropTypes.func.isRequired,
   invalid: PropTypes.bool,
   submitting: PropTypes.bool
 };
 
 DashboardTableFormBody.defaultProps = {
   invalid: false,
-  submitting: false,
-  handleSubmit: null,
-  onWillMount: () => ({})
+  submitting: false
 };
 const DashboardTableForm = reduxForm({
-  form: "form-list-devices"
+  form: "form-dashboard-table"
 })(DashboardTableFormBody);
 
 export default DashboardTableForm;

@@ -47,10 +47,27 @@ export const getDatasources = configId =>
     useAuthentication: false
   });
 
-export const getDatasourceData = (configId, datasourceId, type) =>
+export const getDatasourceData = (
+  configId,
+  datasourceId,
+  type,
+  page = {page: 1, pageSize: 0}
+) =>
+  makeMockRequest(
+    {
+      uri: `/api/dashboard/serverConfig/${configId}/datasource/${datasourceId}/${type}`,
+      method: METHODS.GET,
+      mockResponse: DATASOURCE_PARKING_DATA[type],
+      useAuthentication: false
+    },
+    page
+  );
+
+export const putDatasourceColumn = (configId, datasourceId, columns) =>
   makeMockRequest({
-    uri: `/api/dashboard/serverConfig/${configId}/datasource/${datasourceId}/${type}`,
-    method: METHODS.GET,
-    mockResponse: DATASOURCE_PARKING_DATA[type],
+    uri: `/api/dashboard/serverConfig/${configId}/datasource/${datasourceId}/columns`,
+    method: METHODS.PUT,
+    body: columns,
+    mockResponse: columns,
     useAuthentication: false
   });

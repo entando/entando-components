@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {Col, ControlLabel} from 'patternfly-react';
+import React from "react";
+import PropTypes from "prop-types";
+import {Col, ControlLabel} from "patternfly-react";
 
 const RenderTextInput = ({
   input,
@@ -9,30 +9,36 @@ const RenderTextInput = ({
   labelSize,
   alignClass,
   placeholder,
-  meta: {
-    touched,
-    error
-  },
+  meta: {touched, error},
   help,
   disabled,
   type
 }) => {
-  const containerClasses = (touched && error)
-    ? 'form-group has-error'
-    : 'form-group';
+  const containerClasses =
+    touched && error ? "form-group has-error" : "form-group";
 
-  return (<div className={containerClasses}>
-    <Col className={alignClass} xs={labelSize}>
-      <ControlLabel htmlFor={input.name}>
-        {label}
-        {help}
-      </ControlLabel>
-    </Col>
-    <Col xs={12 - labelSize}>
-      <input {...input} type={type} id={input.name} placeholder={placeholder} className="form-control RenderTextInput" disabled={disabled}/> {append && <span className="AppendedLabel">{append}</span>}
-      {touched && ((error && <span className="help-block">{error}</span>))}
-    </Col>
-  </div>);
+  return (
+    <div className={containerClasses}>
+      <Col className={alignClass} xs={labelSize}>
+        <ControlLabel htmlFor={input.name}>
+          {label}
+          {help}
+        </ControlLabel>
+      </Col>
+      <Col xs={12 - labelSize}>
+        <input
+          {...input}
+          type={type}
+          id={input.name}
+          placeholder={placeholder}
+          className="form-control RenderTextInput"
+          disabled={disabled}
+        />{" "}
+        {append && <span className="AppendedLabel">{append}</span>}
+        {touched && (error && <span className="help-block">{error}</span>)}
+      </Col>
+    </div>
+  );
 };
 
 RenderTextInput.propTypes = {
@@ -50,14 +56,14 @@ RenderTextInput.propTypes = {
 
 RenderTextInput.defaultProps = {
   input: {},
-  label: '',
-  placeholder: '',
+  label: "",
+  placeholder: "",
   meta: {},
   help: null,
   disabled: false,
-  type: 'text',
+  type: "text",
   labelSize: 2,
-  append: '',
-  alignClass: 'text-right'
+  append: "",
+  alignClass: "text-right"
 };
 export default RenderTextInput;

@@ -1,0 +1,34 @@
+.DashboardTableColumns {
+  overflow-x: auto;
+
+  &__th-default-label {
+    text-align: center;
+    border-right: 1px solid #d1d1d1;
+    background: #ffffff;
+  }
+
+  &__th-editable-label {
+    text-align: center;
+  }
+
+  &__th-editable-label:hover {
+    cursor: pointer;
+  }
+
+  &__table-th{
+    text-align: center;
+  }
+  &__input {
+    border: 0px;
+    text-align: left;
+    background-color: #fafafa;
+    width: 65%;
+  }
+
+  &__container-input {
+    border: 0px solid;
+  }
+  &__container-input--error {
+    color: #c00;
+  }
+}

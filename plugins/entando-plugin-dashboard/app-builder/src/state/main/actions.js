@@ -1,6 +1,7 @@
 import {getRoute, getParams, getSearchParams, gotoRoute} from "@entando/router";
 import {addToast, addErrors, TOAST_ERROR} from "@entando/messages";
 import {formattedText} from "@entando/utils";
+import {formValueSelector, change} from "redux-form";
 
 import {
   getServerConfigs,
@@ -8,13 +9,15 @@ import {
   postServerConfig,
   putServerConfig,
   getDatasources,
-  getDatasourceData
+  getDatasourceData,
+  putDatasourceColumn
 } from "api/dashboardConfig";
 import {
   SET_SERVER_CONFIG_LIST,
   REMOVE_SERVER_CONFIG,
   SET_DATASOURCE_LIST,
-  SET_DATASOURCE_DATA
+  SET_DATASOURCE_DATA,
+  SET_DATASOURCE_COLUMNS
 } from "./types";
 
 const DATASOURCE_PROPERTY_DATA = "data";
@@ -42,7 +45,7 @@ export const setDatasourceList = datasourceList => ({
 });
 
 export const setDatasourceColumns = columns => ({
-  type: SET_DATASOURCE_DATA,
+  type: SET_DATASOURCE_COLUMNS,
   payload: {
     columns
   }
@@ -140,8 +143,8 @@ const wrapApiCallFetchDatasource = (apiCall, actionCreator) => (
     apiCall(...args).then(response => {
       response.json().then(json => {
         if (response.ok) {
-          dispatch(actionCreator(json.payload[args[2]]));
-          resolve();
+          dispatch(actionCreator(json.payload));
+          resolve(json.payload);
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
           dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
@@ -150,6 +153,26 @@ const wrapApiCallFetchDatasource = (apiCall, actionCreator) => (
       });
     });
   });
+
+export const fetchDatasourceColumns = (formName, field, datasourceId) => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const selector = formValueSelector(formName);
+  const configId = selector(state, field);
+  dispatch(
+    wrapApiCallFetchDatasource(getDatasourceData, setDatasourceColumns)(
+      configId,
+      datasourceId,
+      DATASOURCE_PROPERTY_COLUMNS
+    )
+  ).then(columns => {
+    columns.forEach(item => {
+      dispatch(change(formName, `columns[${item.key}]`, item.value));
+    });
+  });
+};
 
 export const fetchDatasourceData = (configId, datasourceId) => dispatch =>
   dispatch(
@@ -160,11 +183,25 @@ export const fetchDatasourceData = (configId, datasourceId) => dispatch =>
     )
   );
 
-export const fetchDatasourceColumns = (configId, datasourceId) => dispatch =>
-  dispatch(
-    wrapApiCallFetchDatasource(getDatasourceData, setDatasourceData)(
-      configId,
-      datasourceId,
-      DATASOURCE_PROPERTY_COLUMNS
-    )
-  );
+export const updateDatasourceColumns = (formName, columns) => (
+  dispatch,
+  getState
+) =>
+  new Promise(resolve => {
+    const state = getState();
+    const selector = formValueSelector(formName);
+    const configId = selector(state, "serverName");
+    const datasourceId = selector(state, "datasource");
+    putDatasourceColumn(configId, datasourceId, columns).then(response => {
+      response.json().then(json => {
+        if (response.ok) {
+          dispatch(setDatasourceColumns(columns));
+          resolve();
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          resolve();
+        }
+      });
+    });
+  });

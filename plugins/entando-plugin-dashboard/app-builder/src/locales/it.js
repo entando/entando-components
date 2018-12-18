@@ -15,17 +15,21 @@ export default {
     "plugin.datasource": "Data Source",
     "plugin.datasource.help": "Help Data Source",
     "plugin.table.description":
-      "This widget shows in your page a Table List of gather data. To configure it you have to choose the Data Source and the Kind of Context. After that you can configure settings. The final outpout will be a table list of the IoT devices in your network.",
+      "This widget shows in your page a Table List of items. To configure it you have to choose the Server Name and a Data Server Name. After that you can configure settings. The final outpout will be a table list of the items.",
     "plugin.table.widgetTitle": "Widget Title",
     "plugin.table.widgetTitle.help": "help",
+    "plugin.table.requirement":
+      "letters, numbers, symbols, min 3 and max 30 characters",
     "plugin.table.downlodable": "Make table downlodable",
     "plugin.table.downlodable.format": "(format as CSV, XLS, XLSX, PDF)",
     "plugin.table.filterable": "Make filterable",
     "plugin.table.allColumns": "All columns and Information",
+    "plugin.table.column.default.label": "Default columns labels",
+    "plugin.table.column.customizable.label": "Customizable columns labels",
     "plugin.table.moreInformation":
-      "Select one or more items information to show on table list",
+      "Manage the coloumns order and edit the labels coloumn names hold-on to move coloumn, double click to edit labels.",
     "plugin.table.moreInformation.choose":
-      "You can add and remove these info after too",
+      "hold-on to move coloumn, double click to edit labels.",
     "plugin.table.deviceStatus": "Device Status",
     "plugin.table.deviceStatus.help": "eg. Ok or Warning",
     "plugin.table.deviceUse": "Device in Use",

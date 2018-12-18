@@ -19,6 +19,11 @@ export const getDatasourceList = createSelector(
   localState => localState.datasourceList
 );
 
+export const getDatasourceColumns = createSelector(
+  getLocalState,
+  localState => localState.datasourceColumns
+);
+
 export const getPluginPage = createSelector(
   [getSearchParams],
   searchParams => searchParams.pluginPage || ""

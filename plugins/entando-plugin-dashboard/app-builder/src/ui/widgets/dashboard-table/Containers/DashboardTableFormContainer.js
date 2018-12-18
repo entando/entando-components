@@ -1,32 +1,17 @@
 import {connect} from "react-redux";
-import {initialize, change} from "redux-form";
-
 import {fetchServerConfigList} from "state/main/actions";
 
 import DashboardTableForm from "ui/widgets/dashboard-table/Components/DashboardTableForm";
 
+const mapStateToProps = () => ({
+  initialValues: {
+    allColumns: true
+  }
+});
+
 const mapDispatchToProps = dispatch => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList());
-    dispatch(
-      initialize("form-list-devices", {
-        allColumns: true
-      })
-    );
-  },
-  onChangeToggleColumns: value => {
-    if (value) {
-      [
-        "deviceStatus",
-        "deviceUse",
-        "batteryLevel",
-        "deviceCode",
-        "deviceBrand",
-        "expirationGuarantee"
-      ].forEach(item => {
-        dispatch(change("form-list-devices", item, false));
-      });
-    }
   },
   onSubmit: values => {
     console.log("values", values);
@@ -34,7 +19,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const DashboardTableFormContainer = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(DashboardTableForm);
 
