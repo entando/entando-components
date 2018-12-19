@@ -3,6 +3,8 @@ import {addToast, addErrors, TOAST_ERROR} from "@entando/messages";
 import {formattedText} from "@entando/utils";
 import {formValueSelector, change} from "redux-form";
 
+import {getPageConfiguration, getLanguages} from "api/appBuilder";
+
 import {
   getServerConfigs,
   deleteServerConfig,
@@ -13,6 +15,8 @@ import {
   putDatasourceColumn
 } from "api/dashboardConfig";
 import {
+  SET_INFO_PAGE,
+  SET_LANGUAGES,
   SET_SERVER_CONFIG_LIST,
   REMOVE_SERVER_CONFIG,
   SET_DATASOURCE_LIST,
@@ -22,6 +26,20 @@ import {
 
 const DATASOURCE_PROPERTY_DATA = "data";
 const DATASOURCE_PROPERTY_COLUMNS = "columns";
+
+export const setInfoPage = info => ({
+  type: SET_INFO_PAGE,
+  payload: {
+    info
+  }
+});
+
+export const setLanguages = languages => ({
+  type: SET_LANGUAGES,
+  payload: {
+    languages
+  }
+});
 
 export const setServerConfigList = configList => ({
   type: SET_SERVER_CONFIG_LIST,
@@ -65,6 +83,36 @@ export const gotoPluginPage = pluginPage => (dispatch, getState) => {
   const searchParams = getSearchParams(state);
   gotoRoute(route, params, {...searchParams, pluginPage});
 };
+
+export const fetchPageInformation = pageCode => dispatch =>
+  new Promise(resolve => {
+    getPageConfiguration(pageCode).then(response => {
+      response.json().then(json => {
+        if (response.ok) {
+          dispatch(setInfoPage(json.payload));
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          resolve();
+        }
+      });
+    });
+  });
+
+export const fetchLanguages = () => dispatch =>
+  new Promise(resolve => {
+    getLanguages().then(response => {
+      response.json().then(json => {
+        if (response.ok) {
+          dispatch(setLanguages(json.payload));
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          resolve();
+        }
+      });
+    });
+  });
 
 export const fetchServerConfigList = () => dispatch =>
   new Promise(resolve => {

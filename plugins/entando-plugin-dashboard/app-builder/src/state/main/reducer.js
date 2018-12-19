@@ -1,8 +1,8 @@
 import {combineReducers} from "redux";
 
-import widgetConfig from "state/widgetConfig/reducer";
-
 import {
+  SET_INFO_PAGE,
+  SET_LANGUAGES,
   SET_SERVER_CONFIG_LIST,
   REMOVE_SERVER_CONFIG,
   SET_DATASOURCE_LIST,
@@ -11,6 +11,24 @@ import {
 } from "./types";
 
 const reduxStatus = () => "works";
+
+const infoPage = (state = {}, action = {}) => {
+  switch (action.type) {
+    case SET_INFO_PAGE:
+      return action.payload.info;
+    default:
+      return state;
+  }
+};
+
+const languages = (state = [], action = {}) => {
+  switch (action.type) {
+    case SET_LANGUAGES:
+      return action.payload.languages;
+    default:
+      return state;
+  }
+};
 
 const dashboardConfig = (state = [], action = {}) => {
   switch (action.type) {
@@ -35,11 +53,6 @@ const datasourceList = (state = [], action = {}) => {
 const datasourceColumns = (state = [], action = {}) => {
   switch (action.type) {
     case SET_DATASOURCE_COLUMNS:
-      // const {columns} = action.payload;
-      // return columns.reduce((acc, item) => {
-      //   acc[item] = item;
-      //   return acc;
-      // }, {});
       return action.payload.columns;
     default:
       return state;
@@ -56,8 +69,11 @@ const datasourceData = (state = [], action = {}) => {
 
 export default combineReducers({
   reduxStatus,
+  appBuilder: combineReducers({
+    infoPage,
+    languages
+  }),
   dashboardConfig,
-  widgetConfig,
   datasourceList,
   datasourceColumns,
   datasourceData

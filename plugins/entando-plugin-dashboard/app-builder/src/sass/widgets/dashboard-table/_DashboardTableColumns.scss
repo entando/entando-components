@@ -10,6 +10,15 @@
   &__th-editable-label {
     text-align: center;
   }
+  &__th-editable-label:after {
+    font-family: FontAwesome;
+    content: "\f142 \f142";
+    float: left;
+    position: relative;
+    top: -20px;
+    height: 0px;
+    color: #c4c4c4;
+  }
 
   &__th-editable-label:hover {
     cursor: pointer;

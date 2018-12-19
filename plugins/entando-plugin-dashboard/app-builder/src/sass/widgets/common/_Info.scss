@@ -1,0 +1,29 @@
+.Info {
+  &__container-data {
+    border: 0px solid;
+    margin-top: 1em;
+    padding: 1em;
+  }
+
+  &__description {
+  padding: 2em;
+  }
+
+  &__container-data-information {
+    padding: 1em;
+    border: 0px solid;
+  }
+
+  &__table {
+    display: table;
+  }
+  &__table-row {
+    display: table-row;
+  }
+  &__table-cell {
+    display: table-cell;
+    padding:1em;
+
+  }
+
+}

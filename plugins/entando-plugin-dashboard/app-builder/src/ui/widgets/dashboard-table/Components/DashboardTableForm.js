@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 import {Field, reduxForm} from "redux-form";
-import {required, minLength, maxLength} from "@entando/utils";
 import {
   InputGroup,
   FormGroup,
@@ -11,15 +10,11 @@ import {
   ControlLabel
 } from "patternfly-react";
 import FormattedMessage from "ui/i18n/FormattedMessage";
-import RenderTextInput from "ui/common/form/RenderTextInput";
 import SwitchRenderer from "ui/common/form/SwitchRenderer";
-import FormLabel from "ui/common/form/FormLabel";
 import ServerNameFormContainer from "ui/widgets/common/form/Containers/ServerNameFormContainer";
 import DatasourceFormContainer from "ui/widgets/common/form/Containers/DatasourceFormContainer";
 import DashboardTableColumnsContainer from "ui/widgets/dashboard-table/Containers/DashboardTableColumnsContainer";
-
-const maxLength30 = maxLength(30);
-const minLength3 = minLength(3);
+import DashboardWidgetTitle from "ui/widgets/common/Components/DashboardWidgetTitle";
 
 const rowRequired = messageId => (
   <Row>
@@ -62,28 +57,6 @@ class DashboardTableFormBody extends Component {
     if (this.props.onWillMount) {
       this.props.onWillMount();
     }
-  }
-
-  renderWidgetTitle() {
-    return (
-      <InputGroup className="DashboardTableForm__input-group">
-        <Field
-          component={RenderTextInput}
-          className="DashboardTableForm__input-title"
-          name="title"
-          label={
-            <FormLabel
-              labelId="plugin.table.widgetTitle"
-              helpId="plugin.table.widgetTitle.help"
-              required
-            />
-          }
-          alignClass="text-left"
-          validate={[required, minLength3, maxLength30]}
-          append={<FormattedMessage id="plugin.table.requirement" />}
-        />
-      </InputGroup>
-    );
   }
   renderDownlodable() {
     return (
@@ -163,11 +136,17 @@ class DashboardTableFormBody extends Component {
                 "DashboardTableForm__container-data",
                 "DashboardTableForm__description"
               )}
-              {rowCommon(
-                null,
-                this.renderWidgetTitle,
-                "DashboardTableForm__container-data DashboardTableForm__widget-title"
-              )}
+              <Row>
+                <Col xs={1} />
+                <Col
+                  xs={10}
+                  className="DashboardTableForm__container-data DashboardTableForm__widget-title"
+                >
+                  <DashboardWidgetTitle languages={this.props.languages} />
+                </Col>
+                <Col xs={1} />
+              </Row>
+
               <Row>
                 <Col xs={1} />
                 <Col

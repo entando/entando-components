@@ -53,7 +53,7 @@ const SortableList = SortableContainer(({items}) => {
                   key={`item-${index}`}
                   className="DashboardTableColumns__th-default-label"
                 >
-                  {item.value}
+                  {item.key}
                 </th>
               ))}
             </tr>
@@ -97,7 +97,7 @@ class DashboardTableColumns extends Component {
           formValues={this.props.formValues}
           lockAxis="x"
           axis="x"
-          pressDelay={200}
+          pressDelay={100}
           onSortEnd={this.onMoveHandler}
         />
       </div>

@@ -8,7 +8,7 @@ import {
   TabPane
 } from "patternfly-react";
 
-import InfoContainer from "ui/widgets/dashboard-table/Containers/InfoContainer";
+import InfoContainer from "ui/widgets/common/Containers/InfoContainer";
 import DashboardTableFormContainer from "ui/widgets/dashboard-table/Containers/DashboardTableFormContainer";
 
 class DashboardTable extends Component {

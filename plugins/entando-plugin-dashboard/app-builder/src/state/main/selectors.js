@@ -4,6 +4,20 @@ import {name as id} from "../../../package.json";
 
 export const getLocalState = state => state.plugins[id];
 
+export const getAppbuilder = createSelector(
+  [getLocalState],
+  localState => localState.appBuilder
+);
+
+export const getInfoPage = createSelector(
+  [getAppbuilder],
+  ab => ab.infoPage
+);
+export const getLanguages = createSelector(
+  [getAppbuilder],
+  ab => ab.languages
+);
+
 export const getReduxStatus = createSelector(
   [getLocalState],
   localState => localState.reduxStatus

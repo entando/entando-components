@@ -7,7 +7,7 @@ import {
 
 export const getServerConfigs = () =>
   makeMockRequest({
-    uri: "/api/dashboard/serverConfigs",
+    uri: "/api/plugin/dashboard/serverConfigs",
     method: METHODS.GET,
     mockResponse: DASHBOARD_CONFIG_LIST,
     useAuthentication: false
@@ -15,7 +15,7 @@ export const getServerConfigs = () =>
 
 export const postServerConfig = serverConfig =>
   makeMockRequest({
-    uri: "/api/dashboard/serverConfigs",
+    uri: "/api/plugin/dashboard/serverConfigs",
     method: METHODS.POST,
     body: serverConfig,
     mockResponse: {...serverConfig},
@@ -24,7 +24,7 @@ export const postServerConfig = serverConfig =>
 
 export const putServerConfig = serverConfig =>
   makeMockRequest({
-    uri: `/api/dashboard/serverConfigs/${serverConfig.id}`,
+    uri: `/api/plugin/dashboard/serverConfigs/${serverConfig.id}`,
     method: METHODS.PUT,
     body: serverConfig,
     mockResponse: {...serverConfig},
@@ -33,7 +33,7 @@ export const putServerConfig = serverConfig =>
 
 export const deleteServerConfig = serverConfigId =>
   makeMockRequest({
-    uri: `/api/dashboard/serverConfigs/${serverConfigId}`,
+    uri: `/api/plugin/dashboard/serverConfigs/${serverConfigId}`,
     method: METHODS.DELETE,
     mockResponse: {},
     useAuthentication: false
@@ -41,7 +41,7 @@ export const deleteServerConfig = serverConfigId =>
 
 export const getDatasources = configId =>
   makeMockRequest({
-    uri: `/api/dashboard/serverConfig/${configId}/datasources`,
+    uri: `/api/plugin/dashboard/serverConfig/${configId}/datasources`,
     method: METHODS.GET,
     mockResponse: DASHBOARD_LIST_DATASOURCE[configId],
     useAuthentication: false
@@ -55,7 +55,7 @@ export const getDatasourceData = (
 ) =>
   makeMockRequest(
     {
-      uri: `/api/dashboard/serverConfig/${configId}/datasource/${datasourceId}/${type}`,
+      uri: `/api/plugin/dashboard/serverConfig/${configId}/datasource/${datasourceId}/${type}`,
       method: METHODS.GET,
       mockResponse: DATASOURCE_PARKING_DATA[type],
       useAuthentication: false
@@ -65,7 +65,7 @@ export const getDatasourceData = (
 
 export const putDatasourceColumn = (configId, datasourceId, columns) =>
   makeMockRequest({
-    uri: `/api/dashboard/serverConfig/${configId}/datasource/${datasourceId}/columns`,
+    uri: `/api/plugin/dashboard/serverConfig/${configId}/datasource/${datasourceId}/columns`,
     method: METHODS.PUT,
     body: columns,
     mockResponse: columns,
