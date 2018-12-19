@@ -349,18 +349,16 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             logger.debug("inputField instanceof TextField, adding custom properties");
             TextField textField = (TextField) inputField;
             textField.setPlaceHolder(placeHolder);
-            if(formOverride != null) {
-                String placeHolderOverride = getOverrideProperty(formOverride, PlaceHolderOverride.class, p -> p.getPlaceHolder());
-                if(placeHolderOverride != null) {
-                    textField.setPlaceHolder(placeHolderOverride);
-                }
-            }
         }
 
         if(formOverride != null) {
             String defaultValueOverride = getOverrideProperty(formOverride, DefaultValueOverride.class, d -> d.getDefaultValue());
             if(defaultValueOverride != null) {
                 inputField.setValue(defaultValueOverride);
+            }
+            String placeHolderOverride = getOverrideProperty(formOverride, PlaceHolderOverride.class, p -> p.getPlaceHolder());
+            if (placeHolderOverride != null) {
+                inputField.setLabel(placeHolderOverride);
             }
         }
         

@@ -29,12 +29,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
 
 /**
- *
- * @author Entando
+ * NOTE: currently this overrides the field label, not the field placeholder.
  */
-@XmlRootElement(name="placeHolderOverride")
+@XmlRootElement(name = "placeHolderOverride")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PlaceHolderOverride extends AbstractBpmOverride {
+
+    private String placeHolder;
+
+    public final static String OVERRIDE_TYPE_NAME = "placeHolderOverride";
 
     @Override
     public KieProcessProperty toKieProperty() {
@@ -57,9 +60,4 @@ public class PlaceHolderOverride extends AbstractBpmOverride {
     public void setPlaceHolder(String placeHolder) {
         this.placeHolder = placeHolder;
     }
-
-    private String placeHolder;
-
-    public final static String OVERRIDE_TYPE_NAME = "placeHolderOverride";
-
 }

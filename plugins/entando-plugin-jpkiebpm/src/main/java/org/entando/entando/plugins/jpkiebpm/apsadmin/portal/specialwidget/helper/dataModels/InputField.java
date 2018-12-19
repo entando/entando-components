@@ -24,13 +24,15 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
 public class InputField {
+
     private String id;
     private String name;
+    private String label;
     private String typePAM;
     private String typeHTML;
     private String value;
     private boolean required;
-    
+
     public String getId() {
         return id;
     }
@@ -41,6 +43,14 @@ public class InputField {
 
     public String getName() {
         return name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public void setName(String name) {
@@ -54,6 +64,7 @@ public class InputField {
     public void setTypePAM(String typePAM) {
         this.typePAM = typePAM;
     }
+
     public String getTypeHTML() {
         return typeHTML;
     }

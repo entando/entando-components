@@ -2,7 +2,7 @@
     <div class="col-md-5">
         <div class="ui-dform-div form-group">
             <label id="JPKIE_${field.name}" for="jpkieformparam_${field.name}" class="editLabel">
-                <#include "/FieldRequired.ftl">$i18n.getLabel("JPKIE_${field.name}")
+                <#include "/FieldLabel.ftl">
             </label>
             <div class="input-group">
             <#if field.options??>
