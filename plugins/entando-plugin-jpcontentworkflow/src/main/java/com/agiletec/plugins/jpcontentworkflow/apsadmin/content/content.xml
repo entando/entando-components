@@ -104,6 +104,11 @@
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
         
+        <action name="configureMainGroup" class="jpcontentworkflowContentAction" method="configureMainGroup">
+            <result type="tiles">admin.jacms.content.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
         <action name="joinGroup" class="jpcontentworkflowContentAction" method="joinGroup">
             <result type="tiles">admin.jacms.content.entry</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
