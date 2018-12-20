@@ -1,15 +1,14 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
 import junit.framework.TestCase;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieVersionTransformer;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.apache.log4j.Logger;
-
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
@@ -18,6 +17,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.overri
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
 import static org.mockito.Mockito.mock;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class TestDataUXBuilder extends TestCase {

@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.contentmodel;
 
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelReference;
 import java.util.ArrayList;
 import java.util.List;
 

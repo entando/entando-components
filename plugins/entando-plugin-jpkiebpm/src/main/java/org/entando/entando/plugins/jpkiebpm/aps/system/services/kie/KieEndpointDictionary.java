@@ -24,8 +24,7 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import org.apache.http.HttpStatus;
-import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
-import org.entando.entando.plugins.jprestapi.aps.core.IEndpoint;
+import org.entando.entando.plugins.jprestapi.aps.core.*;
 
 import java.util.HashMap;
 

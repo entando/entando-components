@@ -13,14 +13,13 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.agiletec.aps.system.common.entity.model.ApsEntity;
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.*;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentDOM;
+import org.entando.entando.plugins.jacms.aps.system.services.IContent;
+
+import java.util.Date;
+import java.util.regex.*;
 
 /**
  * Rappresenta un contenuto informativo. 
@@ -29,16 +28,65 @@ import com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentDOM;
  * dei contenuti; in tutte le altre occasioni un contenuto deve essere istanziato 
  * mediante richiesta al servizio, che lo otterrà mediante clonazione del prototipo
  * precedentemente costruito.
- * @author M.Diana - E.Santoboni
  */
-public class Content extends ApsEntity {
-	
+public class Content extends ApsEntity implements IContent {
+
+	private String status;
+	private boolean onLine;
+	private String viewPage;
+	private String listModel;
+	private String defaultModel;
+
+	private Date created;
+	private Date lastModified;
+
+	private String version;
+	private String firstEditor;
+	private String lastEditor;
+
+	/**
+	 * La descrizione dello stato del nuovo contenuto.
+	 */
+	@Deprecated
+	public static final String STATES_NEW = "Nuovo";
+
+	public static final String STATUS_NEW = "NEW";
+
+	/**
+	 * La descrizione dello stato del contenuto in bozza.
+	 */
+	@Deprecated
+	public static final String STATES_DRAFT = "Bozza";
+
+	public static final String STATUS_DRAFT = "DRAFT";
+
+	/**
+	 * La descrizione dello stato del contenuto pronto.
+	 */
+	@Deprecated
+	public static final String STATES_READY = "Pronto";
+
+	public static final String STATUS_READY = "READY";
+
+	public static final String STATUS_PUBLIC = "PUBLIC";
+
+	/**
+	 * L'array delle descrizioni assegnabili
+	 * direttamente da utenti redattori di contenuti.
+	 */
+	@Deprecated
+	public static final String[] STATES = {STATES_DRAFT, STATES_READY};
+
+	public static final String[] AVAILABLE_STATUS = {STATUS_DRAFT, STATUS_READY};
+
+	public static final String INIT_VERSION = "0.0";
+
 	/**
 	 * Restituisce lo stato del contenuto.
 	 * @return Lo stato del contenuto.
 	 */
 	public String getStatus() {
-		return this._status;
+		return status;
 	}
 	
 	/**
@@ -46,7 +94,7 @@ public class Content extends ApsEntity {
 	 * @param status Lo stato del contenuto.
 	 */
 	public void setStatus(String status) {
-		this._status = status;
+		this.status = status;
 	}
 	
 	/**
@@ -55,7 +103,7 @@ public class Content extends ApsEntity {
 	 * @return Il codice pagina dedicata alla visualizzazione del contenuto.
 	 */
 	public String getViewPage() {
-		return this._viewPage;
+		return viewPage;
 	}
 	
 	/**
@@ -64,7 +112,7 @@ public class Content extends ApsEntity {
 	 * @param viewPage Il codice pagina dedicata alla visualizzazione del contenuto.
 	 */
 	public void setViewPage(String viewPage) {
-		this._viewPage = viewPage;
+		this.viewPage = viewPage;
 	}	
 	
 	/**
@@ -74,7 +122,7 @@ public class Content extends ApsEntity {
 	 * @return Il modello per la visualizzazione del contenuto in lista.
 	 */
 	public String getListModel() {
-		return this._listModel;
+		return listModel;
 	}
 	
 	/**
@@ -84,7 +132,7 @@ public class Content extends ApsEntity {
 	 * @param listModel Il modello per la visualizzazione del contenuto in lista.
 	 */
 	public void setListModel(String listModel) {
-		this._listModel = listModel;
+		this.listModel = listModel;
 	}	
 	
 	/**
@@ -94,7 +142,7 @@ public class Content extends ApsEntity {
 	 * @return Il modello per la visualizzazione completa del contenuto.
 	 */
 	public String getDefaultModel() {
-		return this._defaultModel;
+		return defaultModel;
 	}
 	
 	/**
@@ -104,7 +152,7 @@ public class Content extends ApsEntity {
 	 * @param defaultModel Il modello per la visualizzazione completa del contenuto.
 	 */
 	public void setDefaultModel(String defaultModel) {
-		this._defaultModel = defaultModel;	
+		this.defaultModel = defaultModel;
 	}
 	
 	@Override
@@ -112,21 +160,21 @@ public class Content extends ApsEntity {
 		Content content = (Content) super.getEntityPrototype();
 		content.setStatus(STATUS_NEW);
 		content.setVersion(INIT_VERSION);
-		content.setViewPage(this.getViewPage());
-		content.setListModel(this.getListModel());
-		content.setDefaultModel(this.getDefaultModel());
+		content.setViewPage(viewPage);
+		content.setListModel(listModel);
+		content.setDefaultModel(defaultModel);
 		return content;
 	}
 	
 	@Override
 	protected IApsEntityDOM getBuildJDOM() {
 		ContentDOM contentDOM = (ContentDOM) super.getBuildJDOM();
-		contentDOM.setStatus(this.getStatus());
-		contentDOM.setVersion(this.getVersion());
-		contentDOM.setFirstEditor(this.getFirstEditor());
-        contentDOM.setLastEditor(this.getLastEditor());
-        contentDOM.setCreationDate(this.getCreated());
-        contentDOM.setModifyDate(this.getLastModified());
+		contentDOM.setStatus(status);
+		contentDOM.setVersion(version);
+		contentDOM.setFirstEditor(firstEditor);
+        contentDOM.setLastEditor(lastEditor);
+        contentDOM.setCreationDate(created);
+        contentDOM.setModifyDate(lastModified);
         return contentDOM;
 	}
 	
@@ -135,7 +183,7 @@ public class Content extends ApsEntity {
 	 * @return Returns the onLine.
 	 */
 	public boolean isOnLine() {
-		return this._onLine;
+		return onLine;
 	}
 	
 	/**
@@ -143,33 +191,34 @@ public class Content extends ApsEntity {
 	 * @param onLine The onLine to set.
 	 */
 	public void setOnLine(boolean onLine) {
-		this._onLine = onLine;
+		this.onLine = onLine;
 	}
 	
 	public Date getCreated() {
-		return _created;
+		return created;
 	}
 	public void setCreated(Date created) {
-		this._created = created;
+		this.created = created;
 	}
 	
 	public Date getLastModified() {
-		return _lastModified;
+		return lastModified;
 	}
 	public void setLastModified(Date lastModified) {
-		this._lastModified = lastModified;
+		this.lastModified = lastModified;
 	}
 	
 	public String getVersion() {
-		return _version;
+		return version;
 	}
+
 	public void setVersion(String version) {
 		Pattern pattern = Pattern.compile("\\d+\\.\\d+");
 		Matcher matcher = pattern.matcher(version);
 		if (!matcher.matches()) {
 			throw new RuntimeException("Invalid content version");
 		}
-		this._version = version;
+		this.version = version;
 	}
 	
 	public void incrementVersion(boolean approve) {
@@ -181,8 +230,10 @@ public class Content extends ApsEntity {
 	}
 	
 	protected void updateVersionId() {
-		String prevVersionId = this.getVersion();
-		if (null == prevVersionId) prevVersionId = INIT_VERSION;
+		String prevVersionId = version;
+
+		if (prevVersionId == null) prevVersionId = INIT_VERSION;
+
 		String[] item = this.getVersionItems(prevVersionId);
 		int workVersion = Integer.parseInt(item[1]);
 		int newWorkVersion = workVersion + 1;
@@ -191,8 +242,10 @@ public class Content extends ApsEntity {
 	}
 	
 	protected void updateVersionIdOnPublishing() {
-		String prevVersionId = this.getVersion();
-		if (null == prevVersionId) prevVersionId = INIT_VERSION;
+		String prevVersionId = version;
+
+		if (prevVersionId == null) prevVersionId = INIT_VERSION;
+
 		String[] item = this.getVersionItems(prevVersionId);
 		int onlineVersion = Integer.parseInt(item[0]);
 		int newOnlineVersion = onlineVersion + 1;
@@ -205,67 +258,16 @@ public class Content extends ApsEntity {
 	}
 	
 	public String getFirstEditor() {
-		return _firstEditor;
+		return firstEditor;
 	}
 	public void setFirstEditor(String firstEditor) {
-		this._firstEditor = firstEditor;
+		this.firstEditor = firstEditor;
 	}
 	
 	public String getLastEditor() {
-		return _lastEditor;
+		return lastEditor;
 	}
 	public void setLastEditor(String lastEditor) {
-		this._lastEditor = lastEditor;
+		this.lastEditor = lastEditor;
 	}
-	
-	private String _status;
-	private boolean _onLine;
-	private String _viewPage;
-	private String _listModel;
-	private String _defaultModel;
-	
-	private Date _created;
-	private Date _lastModified;
-	
-	private String _version;
-	private String _firstEditor;
-	private String _lastEditor;
-	
-	/**
-	 * La descrizione dello stato del nuovo contenuto.
-	 */
-	@Deprecated
-	public static final String STATES_NEW = "Nuovo";
-	
-	public static final String STATUS_NEW = "NEW";
-	
-	/**
-	 * La descrizione dello stato del contenuto in bozza.
-	 */
-	@Deprecated
-	public static final String STATES_DRAFT = "Bozza";
-	
-	public static final String STATUS_DRAFT = "DRAFT";
-	
-	/**
-	 * La descrizione dello stato del contenuto pronto.
-	 */
-	@Deprecated
-	public static final String STATES_READY = "Pronto";
-	
-	public static final String STATUS_READY = "READY";
-	
-	public static final String STATUS_PUBLIC = "PUBLIC";
-	
-	/**
-	 * L'array delle descrizioni assegnabili 
-	 * direttamente da utenti redattori di contenuti.
-	 */
-	@Deprecated
-	public static final String[] STATES = {STATES_DRAFT, STATES_READY};
-	
-	public static final String[] AVAILABLE_STATUS = {STATUS_DRAFT, STATUS_READY};
-	
-	public static final String INIT_VERSION = "0.0";
-	
 }

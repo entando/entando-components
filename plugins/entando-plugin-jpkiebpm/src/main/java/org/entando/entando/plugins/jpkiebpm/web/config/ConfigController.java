@@ -28,35 +28,22 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.IKieBpmService;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.model.DatatableWidgetConfigDto;
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
 import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigRequest;
 import org.entando.entando.web.common.annotation.RestAccessControl;
-import org.entando.entando.web.common.exceptions.ValidationConflictException;
-import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.RestError;
-import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.exceptions.*;
+import org.entando.entando.web.common.model.*;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.*;
+import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.entando.entando.web.common.model.SimpleRestResponse;
+import java.util.*;
 
 @RestController
 public class ConfigController {

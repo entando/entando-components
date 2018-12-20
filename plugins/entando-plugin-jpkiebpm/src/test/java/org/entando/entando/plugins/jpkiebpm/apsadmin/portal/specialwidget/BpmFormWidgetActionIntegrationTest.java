@@ -14,23 +14,15 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.page.Page;
-import com.agiletec.aps.system.services.page.PageMetadata;
+import com.agiletec.aps.system.services.page.*;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.opensymphony.xwork2.Action;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverrideInEditing;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.SpyKieFormManagerUtil;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BpmFormWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
 

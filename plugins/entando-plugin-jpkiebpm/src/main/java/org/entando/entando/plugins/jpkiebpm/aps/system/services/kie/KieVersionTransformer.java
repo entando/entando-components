@@ -1,16 +1,12 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieDataHolder;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.*;
+import org.slf4j.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class to manage transformations between the 6.x and 7.x Kie server formats.

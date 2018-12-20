@@ -1,20 +1,15 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo;
 
-import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.*;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
-import com.agiletec.aps.system.services.page.events.PageChangedEvent;
-import com.agiletec.aps.system.services.page.events.PageChangedObserver;
+import com.agiletec.aps.system.services.page.events.*;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.event.BpmWidgetInfoChangedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
+import org.slf4j.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import java.util.*;
 
 public class BpmWidgetInfoManager extends AbstractService implements IBpmWidgetInfoManager, PageChangedObserver {
 

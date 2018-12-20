@@ -4,18 +4,17 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.opensymphony.xwork2.Action;
-import java.util.HashMap;
-import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.json.JSONArray;
-import org.junit.Before;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import static org.mockito.Mockito.when;
+import org.junit.*;
+import org.mockito.*;
+
+import java.util.HashMap;
+
 import static junit.framework.TestCase.assertEquals;
 import static org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmCaseActionBase.ERROR_NULL_CONFIG;
+import static org.mockito.Mockito.when;
 
 public class BpmBpmCaseInstanceSelectorWidgetActionUnitTest {
 

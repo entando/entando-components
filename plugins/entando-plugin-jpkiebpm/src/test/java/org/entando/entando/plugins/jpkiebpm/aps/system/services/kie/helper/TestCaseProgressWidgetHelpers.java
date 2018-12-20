@@ -25,13 +25,10 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
 import junit.framework.TestCase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.*;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.*;
+import java.util.*;
 
 public class TestCaseProgressWidgetHelpers extends TestCase {
 

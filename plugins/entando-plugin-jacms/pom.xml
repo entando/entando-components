@@ -7,7 +7,6 @@
         <version>5.1.0-SNAPSHOT</version>
     </parent>
     <artifactId>entando-plugin-jacms</artifactId>
-    <groupId>org.entando.entando.plugins</groupId>
     <packaging>war</packaging>
     <name>Entando Plugin: CMS</name>
     <description>Allows registered users to manage dynamic contents and digital assets</description>

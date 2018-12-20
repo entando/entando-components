@@ -13,43 +13,37 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.system;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.apsadmin.system.entity.type.EntityTypesAction;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
+import org.slf4j.*;
 
-/**
- * @author E.Santoboni
- */
 public class ContentTypesAction extends EntityTypesAction implements IContentReferencesReloadingAction {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ContentTypesAction.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(ContentTypesAction.class);
+
+	private transient ICmsSearchEngineManager searchEngineManager;
+
 	@Override
 	public String reloadContentsIndexes() {
 		try {
 			this.getSearchEngineManager().startReloadContentsReferences();
-			_logger.info("Reload context index started");
+			logger.info("Reload context index started");
 		} catch (Throwable t) {
-			_logger.error("error in reloadContentsIndexs", t);
-			//ApsSystemUtils.logThrowable(t, this, "reloadContentsIndexs");
+			logger.error("error in reloadContentsIndexs", t);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
 	
 	public int getSearcherManagerStatus() {
-		return this.getSearchEngineManager().getStatus();
+		return searchEngineManager.getStatus();
 	}
 	
 	protected ICmsSearchEngineManager getSearchEngineManager() {
-		return _searchEngineManager;
+		return searchEngineManager;
 	}
+
 	public void setSearchEngineManager(ICmsSearchEngineManager searchEngineManager) {
-		this._searchEngineManager = searchEngineManager;
+		this.searchEngineManager = searchEngineManager;
 	}
-	
-	private ICmsSearchEngineManager _searchEngineManager;
-	
 }

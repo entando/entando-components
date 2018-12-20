@@ -4,8 +4,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.plugins.jpkiebpm.aps.ApsPluginBaseTestCase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.MortgageDemoTest.*;
 

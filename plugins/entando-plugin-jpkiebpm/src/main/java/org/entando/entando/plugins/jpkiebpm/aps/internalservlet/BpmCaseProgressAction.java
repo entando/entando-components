@@ -26,9 +26,8 @@ package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.json.JSONObject;
+import org.slf4j.*;
 
 public class BpmCaseProgressAction extends BpmCaseInstanceActionBase {
 

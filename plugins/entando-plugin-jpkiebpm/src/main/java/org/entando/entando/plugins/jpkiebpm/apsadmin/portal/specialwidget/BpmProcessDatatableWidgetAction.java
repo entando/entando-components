@@ -1,6 +1,11 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.group.IGroupManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
+import org.slf4j.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
