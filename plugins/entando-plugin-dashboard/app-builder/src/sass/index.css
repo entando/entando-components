@@ -118,3 +118,33 @@
     border: 0px solid; }
   .DashboardTableColumns__container-input--error {
     color: #c00; }
+
+.DashboardConfig {
+  border: 0px solid; }
+  .DashboardConfig__form {
+    border: 0px solid;
+    padding: 2em;
+    margin-top: 6em; }
+  .DashboardConfig__form legend {
+    font-size: 12px; }
+  .DashboardConfig__server-configure {
+    margin-bottom: 1em; }
+  .DashboardConfig__list-datasource {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 1em; }
+  .DashboardConfig__btn-save {
+    margin-left: 3em; }
+
+.DashboardConfigDatasource {
+  border: 0px solid;
+  margin-bottom: 3em; }
+  .DashboardConfigDatasource__table {
+    margin-top: 1em; }
+  .DashboardConfigDatasource__table.table {
+    margin-bottom: 0px; }
+
+.DashboardConfigDatasourceStatus {
+  border: 0px solid; }
+  .DashboardConfigDatasourceStatus__test-btn {
+    margin-left: 1em; }

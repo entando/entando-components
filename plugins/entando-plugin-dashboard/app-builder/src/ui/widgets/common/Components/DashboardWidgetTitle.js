@@ -31,7 +31,6 @@ const DashboardWidgetTitle = ({languages}) => {
                 component={RenderTextInput}
                 className="DashboardWidgetTitle__input-title"
                 name={lang.code}
-                DashboardWidgetTitle
                 label={
                   <FormLabel
                     labelId="plugin.table.widgetTitle"

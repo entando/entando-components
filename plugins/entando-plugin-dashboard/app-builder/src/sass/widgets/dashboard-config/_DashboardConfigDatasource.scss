@@ -1,0 +1,10 @@
+.DashboardConfigDatasource {
+  border:0px solid;
+  margin-bottom: 3em;
+  &__table {
+    margin-top: 1em;
+  }
+  &__table.table {
+    margin-bottom: 0px;
+  }
+}

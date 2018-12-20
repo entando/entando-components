@@ -1,0 +1,28 @@
+.DashboardConfig {
+  border: 0px solid;
+
+  &__form {
+    border: 0px solid;
+    padding: 2em;
+    margin-top: 6em;
+  }
+
+&__form legend {
+    font-size: 12px;
+  }
+
+
+  &__server-configure {
+    margin-bottom: 1em;
+  }
+
+  &__list-datasource {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 1em;
+  }
+
+  &__btn-save {
+    margin-left: 3em;
+  }
+}
