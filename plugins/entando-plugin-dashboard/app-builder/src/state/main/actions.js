@@ -41,10 +41,10 @@ export const setLanguages = languages => ({
   }
 });
 
-export const setServerConfigList = configList => ({
+export const setServerConfigList = serverList => ({
   type: SET_SERVER_CONFIG_LIST,
   payload: {
-    configList
+    serverList
   }
 });
 

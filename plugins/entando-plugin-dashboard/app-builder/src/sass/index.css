@@ -148,3 +148,6 @@
   border: 0px solid; }
   .DashboardConfigDatasourceStatus__test-btn {
     margin-left: 1em; }
+
+.DashboardConfigPage__btn-tests {
+  margin-left: 2em; }

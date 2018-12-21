@@ -1,7 +1,7 @@
 import {connect} from "react-redux";
 import {formValueSelector} from "redux-form";
 
-import DashboardConfigForm from "ui/widgets/dashboard-config/Components/common/DashboardConfigForm";
+import DashboardConfigForm from "ui/dashboard-config/common/Components/DashboardConfigForm";
 
 const selector = formValueSelector("dashboard-config-form");
 

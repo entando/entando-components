@@ -19,6 +19,9 @@ export default {
     "common.configureOnThefly": "Configure on-the-fly publishing",
     "common.SEO": "SEO: When available, use extra titles",
     "common.add": "Add",
+    "common.edit": "Edit",
+    "common.test": "Test",
+    "common.remove": "Remove",
     "plugin.fieldsRequired": "Required Fields",
     "plugin.chooseAnOptionServerName": "Select Server Name",
     "plugin.chooseAnOptionDatasource": "Select Data Source",
@@ -47,6 +50,7 @@ export default {
     "plugin.config.settings": "General Settings",
     "plugin.config.serverConfigure":
       "Check your Server to configure these fields",
+    "plugin.config.server": "Server",
     "plugin.config.serverDescription": "Server Description",
     "plugin.config.serverURI": "Server URI",
     "plugin.config.username": "User name",
@@ -60,6 +64,12 @@ export default {
     "plugin.config.datasourceURIExample":
       "http://wwww.example.com:8080 or /api/resources",
     "plugin.config.testConnection": "Test Connection",
-    "plugin.config.datasourceStatus": "Datasource Status"
+    "plugin.config.datasourceStatus": "Datasource Status",
+    "plugin.config.testServers": "Test Servers",
+    "plugin.config.addServer": "Add Server",
+    "plugin.config.active": "Active",
+    "plugin.config.debug": "Debug",
+    "plugin.config.enable": "Enable",
+    "plugin.config.disabled": "Disable"
   }
 };

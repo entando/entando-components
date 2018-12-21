@@ -33,7 +33,7 @@ const languages = (state = [], action = {}) => {
 const dashboardConfig = (state = [], action = {}) => {
   switch (action.type) {
     case SET_SERVER_CONFIG_LIST:
-      return action.payload.configList;
+      return action.payload.serverList;
     case REMOVE_SERVER_CONFIG:
       return state.filter(config => config.id !== action.payload.configId);
     default:

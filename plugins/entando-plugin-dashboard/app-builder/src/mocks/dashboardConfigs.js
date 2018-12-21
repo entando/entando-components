@@ -47,7 +47,7 @@ export const DASHBOARD_CONFIG_LIST = [
     name: "Entando IoT Server Devices",
     username: "admin",
     password: "passwordAdmin",
-    hostName: "http://entando.iot.com:3303/iot",
+    uri: "http://entando.iot.com:3303/iot",
     token: "token-code",
     timeout: 300
   }

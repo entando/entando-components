@@ -13,6 +13,9 @@ export default {
     "common.title": "Titolo",
     "common.active": "Attivo",
     "common.debug": "Debug",
+    "common.edit": "Edit",
+    "common.test": "Test",
+    "common.remove": "Remove",
     "common.ownerGroup": "Grouppo Proprietario",
     "common.viewOnlyGroup": "View only Groups",
     "common.pageModel": "Modello di pagina",
@@ -48,6 +51,7 @@ export default {
     "plugin.config.settings": "General Settings",
     "plugin.config.serverConfigure":
       "Check your Server to configure these fields",
+    "plugin.config.server": "Server",
     "plugin.config.serverDescription": "Server Description",
     "plugin.config.serverURI": "Server URI",
     "plugin.config.username": "User name",
@@ -61,6 +65,12 @@ export default {
     "plugin.config.datasourceURIExample":
       "http://wwww.example.com:8080 or /api/resources",
     "plugin.config.testConnection": "Test Connection",
-    "plugin.config.datasourceStatus": "Datasource Status"
+    "plugin.config.datasourceStatus": "Datasource Status",
+    "plugin.config.testServers": "Test Servers",
+    "plugin.config.addServer": "Aggiungi Server",
+    "plugin.config.active": "Active",
+    "plugin.config.debug": "Debug",
+    "plugin.config.enable": "Enable",
+    "plugin.config.disabled": "Disable"
   }
 };

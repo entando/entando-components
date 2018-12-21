@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 
-import DashboardConfigDatasourceStatus from "ui/widgets/dashboard-config/Components/common/DashboardConfigDatasourceStatus";
+import DashboardConfigDatasourceStatus from "ui/dashboard-config/common/Components/DashboardConfigDatasourceStatus";
 
 const mapDispatchToProps = () => ({
   testConnection: () => {

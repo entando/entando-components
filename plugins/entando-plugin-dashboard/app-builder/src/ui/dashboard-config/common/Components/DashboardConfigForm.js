@@ -16,7 +16,7 @@ import SwitchRenderer from "ui/common/form/SwitchRenderer";
 import RenderTextInput from "ui/common/form/RenderTextInput";
 import FormLabel from "ui/common/form/FormLabel";
 
-import DashboardConfigDatasource from "ui/widgets/dashboard-config/Components/common/DashboardConfigDatasource";
+import DashboardConfigDatasource from "ui/dashboard-config/common/Components/DashboardConfigDatasource";
 
 const maxLength30 = maxLength(30);
 const minLength3 = minLength(3);

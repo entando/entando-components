@@ -3,7 +3,7 @@ import {Row, Col, Button, Icon} from "patternfly-react";
 
 import FormattedMessageLocal from "ui/i18n/FormattedMessage";
 
-import DashboardConfigDatasourceStatusContainer from "ui/widgets/dashboard-config/Containers/common/DashboardConfigDatasourceStatusContainer";
+import DashboardConfigDatasourceStatusContainer from "ui/dashboard-config/common/Containers/DashboardConfigDatasourceStatusContainer";
 
 const addDatasource = (fields, value) => {
   if (value.name !== undefined && value.uri !== undefined) {
