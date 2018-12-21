@@ -20,6 +20,7 @@
               <jsp:include page="inc/lesscss-active/lesscss.jsp" />
               <jsp:include page="inc/models-common-utils.jsp" />
               <jsp:include page="inc/content_inline_editing.jsp" />
+              <jsp:include page="inc/header-inclusions.jsp" />
 
     </head>
 

@@ -114,6 +114,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
               <@c.import url="/WEB-INF/aps/jsp/models/inc/lesscss-active/lesscss.jsp" />
               <@c.import url="/WEB-INF/aps/jsp/models/inc/models-common-utils.jsp" />
 	      <@c.import url="/WEB-INF/aps/jsp/models/inc/content_inline_editing.jsp" />
+	      <@c.import url="/WEB-INF/aps/jsp/models/inc/header-inclusions.jsp" />
     </head>
     <body>
         <div class="navbar navbar-fixed-top">
