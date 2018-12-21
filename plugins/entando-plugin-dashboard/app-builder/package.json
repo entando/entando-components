@@ -83,7 +83,11 @@
   },
   "peerDependencies": {
     "react-intl": "^2.7.2",
-    "patternfly-react": "^1.19.1"
+    "patternfly-react": "^1.19.1",
+    "redux-form": "^7.4.2",
+    "react-dom": "16.2.0",
+    "fbjs": "0.8.16",
+    "patternfly": "3.57.1"
   },
   "jest": {
     "collectCoverageFrom": [

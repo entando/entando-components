@@ -1,0 +1,15 @@
+<shortcut-def>
+	<shortcuts>
+		<shortcut id="dashboard.DashboardConfig.shortCut" requiredPermission="superuser" menusection="plugins" source="dashboard">
+			<description key="dashboard.DashboardConfig.shortCut.list.shortDesc">DashboardConfig list</description>
+			<longdesc key="dashboard.DashboardConfig.shortCut.list.longDesc">
+				<![CDATA[DashboardConfig shortCut longDesc ]]>
+			</longdesc>
+			<url>
+				<param name="namespace">/do/dashboard/DashboardConfig</param>
+				<param name="actionName">list</param>
+			</url>
+		</shortcut>
+	</shortcuts>
+	
+</shortcut-def>

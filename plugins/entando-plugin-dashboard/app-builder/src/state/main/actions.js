@@ -81,6 +81,9 @@ export const gotoPluginPage = pluginPage => (dispatch, getState) => {
   const route = getRoute(state);
   const params = getParams(state);
   const searchParams = getSearchParams(state);
+  console.log("gotoPluginPage pluginPage", pluginPage);
+  console.log("gotoPluginPage route", route);
+  console.log("gotoRoute", gotoRoute);
   gotoRoute(route, params, {...searchParams, pluginPage});
 };
 
