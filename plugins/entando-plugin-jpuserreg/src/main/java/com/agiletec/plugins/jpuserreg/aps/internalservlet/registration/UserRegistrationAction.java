@@ -21,11 +21,7 @@
  */
 package com.agiletec.plugins.jpuserreg.aps.internalservlet.registration;
 
-import java.util.Collection;
-
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.*;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -37,18 +33,29 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
 import com.agiletec.plugins.jpuserreg.aps.JpUserRegSystemConstants;
 import com.agiletec.plugins.jpuserreg.aps.system.services.userreg.IUserRegManager;
-
-import java.util.List;
-
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
+import java.util.*;
+
 /**
  * Action to manage User Account Registration Requests
- * @author S.Puddu, E.Mezzano, G.Cocco
  */
 public class UserRegistrationAction extends AbstractApsEntityAction {
-	
+
+	public static final String SESSION_PARAM_NAME_REQ_PROFILE = "jpuserreg_userRegSessionParam";
+
+	private IUserRegManager userRegManager;
+	private IUserManager userManager;
+	private IUserProfileManager userProfileManager;
+	private II18nManager i18NManager;
+
+	private String emailAttrName;
+	private String profileTypeCode;
+	private String username;
+	private String emailConfirm;
+	private boolean privacyPolicyAgreement = false;
+
 	@Override
 	public void validate() {
 		try {
@@ -70,14 +77,15 @@ public class UserRegistrationAction extends AbstractApsEntityAction {
 	
 	@Override
 	public String createNew() {
-		String profileTypeCode = this.getProfileTypeCode();
+		String newProfileTypeCode = getProfileTypeCode();
 		try {
 			boolean allowed = false;
-			if (profileTypeCode != null) {
-				IUserProfile userProfile = (IUserProfile) this.getUserProfileManager().getProfileType(profileTypeCode);
+			if (newProfileTypeCode != null) {
+				IUserProfile userProfile = userProfileManager.getProfileType(newProfileTypeCode);
 				if (userProfile != null) {
 					if (userProfile.getAttributeByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL) == null) {// Verifica che contenga l'attributo della mail
-						ApsSystemUtils.getLogger().warn("Registration attempt with profile " + profileTypeCode + " missing email address");
+						ApsSystemUtils.getLogger().warn(
+								"Registration attempt with profile {} missing email address", newProfileTypeCode);
 					} else {
 						userProfile.disableAttributes(JpUserRegSystemConstants.ATTRIBUTE_DISABLING_CODE_ON_REGISTRATION);
 						this.setUserProfile(userProfile);
@@ -103,8 +111,7 @@ public class UserRegistrationAction extends AbstractApsEntityAction {
 		}
 		try {
 			List<AttributeInterface> attributes = userProfile.getAttributeList();
-			for (int i = 0; i < attributes.size(); i++) {
-				AttributeInterface attribute = attributes.get(i);
+			for (AttributeInterface attribute : attributes) {
 				String attributeLabelKey = "userprofile_" + userProfile.getTypeCode() + "_" + attribute.getName();
 				if (null == this.getI18nManager().getLabelGroup(attributeLabelKey)) {
 					String attributeDescription = attribute.getDescription();
@@ -155,7 +162,7 @@ public class UserRegistrationAction extends AbstractApsEntityAction {
 			IUserProfile userProfile = this.getUserProfile();
 			if (userProfile!=null) {
 				userProfile.setId(this.getUsername().trim());
-				this._userRegManager.regAccount(userProfile);
+				userRegManager.regAccount(userProfile);
 				this.setUserProfile(null);
 			} else {
 				return "expired";
@@ -192,13 +199,10 @@ public class UserRegistrationAction extends AbstractApsEntityAction {
 	
 	/**
 	 * check if user exist
-	 * @param username
 	 * @return true if exist a user with this username, false if user not exist.
-	 * @throws Throwable In error case.
 	 */
 	protected boolean existsUser(String username) throws Throwable {
-		boolean exists = (username!=null && username.trim().length()>=0 && this.getUserManager().getUser(username.trim())!=null);
-		return exists;
+		return (username != null) && (userManager.getUser(username.trim()) != null);
 	}
 
 	private void checkEmailAddress() throws ApsSystemException {
@@ -216,7 +220,7 @@ public class UserRegistrationAction extends AbstractApsEntityAction {
 	private boolean verifyEmailAlreadyInUse(String email) throws ApsSystemException {
 		try {
 			Collection<String> usernames = this.getUserRegManager().getUsernamesByEmail(email);
-			if (usernames.size()>0) {
+			if (!usernames.isEmpty()) {
 				return true;
 			}
 		} catch (ApsSystemException e) {
@@ -244,90 +248,78 @@ public class UserRegistrationAction extends AbstractApsEntityAction {
 	}
 
 	public String getEmailAttrName() {
-		if (this._emailAttrName==null) {
+		if (emailAttrName == null) {
 			AttributeInterface attribute = this.getUserProfile().getAttributeByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL);
-			if (attribute!=null) {
-				this._emailAttrName = attribute.getName();
+			if (attribute != null) {
+				emailAttrName = attribute.getName();
 			}
 		}
-		return this._emailAttrName;
+		return emailAttrName;
 	}
 
 	public String getProfileTypeCode() {
-		if (null==this._profileTypeCode) {
-			this._profileTypeCode = this.extractTypeCode();
-			if (this._profileTypeCode==null) {
-				this._profileTypeCode = SystemConstants.DEFAULT_PROFILE_TYPE_CODE;
-			}
+		if (profileTypeCode == null) {
+			profileTypeCode = extractTypeCode();
 		}
-		return _profileTypeCode;
+
+		if (profileTypeCode == null) {
+			profileTypeCode = SystemConstants.DEFAULT_PROFILE_TYPE_CODE;
+		}
+
+		return profileTypeCode;
 	}
 
 	public void setProfileTypeCode(String profileTypeCode) {
 		String showletTypeCode = this.extractTypeCode();
-		this._profileTypeCode = (null==showletTypeCode) ? profileTypeCode : showletTypeCode;
+		this.profileTypeCode = (showletTypeCode == null) ? profileTypeCode : showletTypeCode;
 	}
 
 	public void setUsername(String username) {
-		this._username = username;
+		this.username = username;
 	}
 	public String getUsername() {
-		return _username;
+		return username;
 	}
 
 	public void setEmailConfirm(String emailConfirm) {
-		this._emailConfirm = emailConfirm;
+		this.emailConfirm = emailConfirm;
 	}
 	public String getEmailConfirm() {
-		return _emailConfirm;
+		return emailConfirm;
 	}
 
 	public void setPrivacyPolicyAgreement(boolean privacyPolicyAgreement) {
-		this._privacyPolicyAgreement = privacyPolicyAgreement;
+		this.privacyPolicyAgreement = privacyPolicyAgreement;
 	}
 	public boolean isPrivacyPolicyAgreement() {
-		return _privacyPolicyAgreement;
+		return privacyPolicyAgreement;
 	}
 
 	protected IUserRegManager getUserRegManager() {
-		return _userRegManager;
+		return userRegManager;
 	}
 	public void setUserRegManager(IUserRegManager userRegManager) {
-		this._userRegManager = userRegManager;
+		this.userRegManager = userRegManager;
 	}
 
 	protected IUserProfileManager getUserProfileManager() {
-		return _userProfileManager;
+		return userProfileManager;
 	}
 	public void setUserProfileManager(IUserProfileManager userProfileManager) {
-		this._userProfileManager = userProfileManager;
+		this.userProfileManager = userProfileManager;
 	}
 
 	protected IUserManager getUserManager() {
-		return _userManager;
+		return userManager;
 	}
 	public void setUserManager(IUserManager userManager) {
-		this._userManager = userManager;
+		this.userManager = userManager;
 	}
 
 	protected II18nManager getI18nManager() {
-		return _i18nManager;
+		return i18NManager;
 	}
 	public void setI18nManager(II18nManager i18nManager) {
-		this._i18nManager = i18nManager;
+		this.i18NManager = i18nManager;
 	}
-
-	private String _emailAttrName;
-	private String _profileTypeCode;
-	private String _username;
-	private String _emailConfirm;
-	private boolean _privacyPolicyAgreement = false;
-
-	private IUserRegManager _userRegManager;
-	private IUserManager _userManager;
-	private IUserProfileManager _userProfileManager;
-	private II18nManager _i18nManager;
-	
-	public static final String SESSION_PARAM_NAME_REQ_PROFILE = "jpuserreg_userRegSessionParam";
-
 }
