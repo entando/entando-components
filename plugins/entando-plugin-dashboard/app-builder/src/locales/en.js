@@ -40,6 +40,8 @@ export default {
     "plugin.table.filterable": "Make filterable",
     "plugin.table.allColumns": "All columns and Information",
     "plugin.table.column.default.label": "Default columns labels",
+    "plugin.table.column.tooltip.show": "Click to show this column",
+    "plugin.table.column.tooltip.hidden": "Click to hidden this column",
     "plugin.table.column.customizable.label": "Customizable columns labels",
     "plugin.table.moreInformation":
       "Manage the coloumns order and edit the labels coloumn names",

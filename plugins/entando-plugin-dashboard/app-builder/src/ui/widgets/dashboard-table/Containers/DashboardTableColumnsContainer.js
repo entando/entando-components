@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 
-import {updateDatasourceColumns} from "state/main/actions";
+import {updateDatasourceColumns, showHideColumn} from "state/main/actions";
 
 import {getDatasourceColumns} from "state/main/selectors";
 
@@ -12,7 +12,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onMoveColumn: columns =>
-    dispatch(updateDatasourceColumns("form-dashboard-table", columns))
+    dispatch(updateDatasourceColumns("form-dashboard-table", columns)),
+
+  onShowHideColumn: key => dispatch(showHideColumn(key))
 });
 const DashboardTableColumnsContainer = connect(
   mapStateToProps,

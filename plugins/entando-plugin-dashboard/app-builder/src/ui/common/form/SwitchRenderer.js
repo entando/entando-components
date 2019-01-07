@@ -1,13 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {Switch} from 'patternfly-react';
+import React from "react";
+import PropTypes from "prop-types";
+import {Switch} from "patternfly-react";
 
-const SwitchRenderer = ({input, trueValue, falseValue}) => {
-  const switchValue = input.value === 'true' || input.value === true || input.value === trueValue;
-  return (<Switch {...input} value={switchValue} onChange={(el, val) => input.onChange(
-      val
-      ? trueValue
-      : falseValue)}/>);
+const SwitchRenderer = ({input, trueValue, falseValue, disabled}) => {
+  const switchValue =
+    input.value === "true" || input.value === true || input.value === trueValue;
+  return (
+    <Switch
+      disabled={disabled}
+      {...input}
+      value={switchValue}
+      onChange={(el, val) => input.onChange(val ? trueValue : falseValue)}
+    />
+  );
 };
 
 SwitchRenderer.propTypes = {

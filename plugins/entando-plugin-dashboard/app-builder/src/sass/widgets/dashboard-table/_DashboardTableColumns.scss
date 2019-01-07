@@ -10,6 +10,14 @@
   &__th-editable-label {
     text-align: center;
   }
+  &__th-editable-label-container {
+    border:0px solid;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+  }
+
+
   &__th-editable-label:after {
     font-family: FontAwesome;
     content: "\f142 \f142";
@@ -36,8 +44,29 @@
 
   &__container-input {
     border: 0px solid;
+    width: auto;
+
   }
   &__container-input--error {
     color: #c00;
+  }
+
+  &__th-column-show:after {
+    font-family: FontAwesome;
+    content: "\f06e";
+    cursor: pointer;
+    float: right;
+    position: relative;
+
+
+  }
+  &__th-column-hidden:after {
+    font-family: FontAwesome;
+    content: "\f070";
+    cursor: pointer;
+    float: right;
+    position: relative;
+
+
   }
 }

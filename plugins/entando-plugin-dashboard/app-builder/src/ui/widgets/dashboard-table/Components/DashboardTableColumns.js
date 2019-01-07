@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {Field, FormSection} from "redux-form";
 import {maxLength} from "@entando/utils";
 import FormattedMessage from "ui/i18n/FormattedMessage";
+import {OverlayTrigger, Tooltip} from "patternfly-react";
 
 import {
   SortableContainer,
@@ -30,13 +31,38 @@ const renderField = ({input, meta: {touched, error}}) => {
   );
 };
 
-const SortableItem = SortableElement(({item}) => (
+const SortableItem = SortableElement(({item, showColumnHandler}) => (
   <th className="DashboardTableColumns__th-editable-label">
-    <Field component={renderField} name={item.key} validate={[maxLength15]} />
+    <div className="DashboardTableColumns__th-editable-label-container">
+      <Field component={renderField} name={item.key} validate={[maxLength15]} />
+      {showColumn(item, showColumnHandler)}
+    </div>
   </th>
 ));
 
-const SortableList = SortableContainer(({items}) => {
+const showColumn = (item, onClickHandler) => (
+  <OverlayTrigger
+    overlay={
+      <Tooltip id={item.key}>
+        <FormattedMessage
+          id={`plugin.table.column.tooltip.${item.hidden ? "show" : "hidden"}`}
+        />
+      </Tooltip>
+    }
+    placement="top"
+    trigger={["hover"]}
+    rootClose={false}
+  >
+    <i
+      className={`DashboardTableColumns__th-column-${
+        item.hidden ? "hidden" : "show"
+      }`}
+      onClick={() => onClickHandler(item.key)}
+    />
+  </OverlayTrigger>
+);
+
+const SortableList = SortableContainer(({items, showColumnHandler}) => {
   return (
     <FormSection name="columns">
       <div className="DashboardTableColumns__container_columns">
@@ -68,7 +94,12 @@ const SortableList = SortableContainer(({items}) => {
           <thead>
             <tr>
               {items.map((item, index) => (
-                <SortableItem key={`item-${index}`} index={index} item={item} />
+                <SortableItem
+                  key={`item-${index}`}
+                  index={index}
+                  item={item}
+                  showColumnHandler={showColumnHandler}
+                />
               ))}
             </tr>
           </thead>
@@ -94,6 +125,7 @@ class DashboardTableColumns extends Component {
       <div className="DashboardTableColumns">
         <SortableList
           items={this.props.columns}
+          showColumnHandler={this.props.onShowHideColumn}
           formValues={this.props.formValues}
           lockAxis="x"
           axis="x"
@@ -107,7 +139,8 @@ class DashboardTableColumns extends Component {
 
 DashboardTableColumns.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  onMoveColumn: PropTypes.func.isRequired
+  onMoveColumn: PropTypes.func.isRequired,
+  onShowHideColumn: PropTypes.func.isRequired
 };
 
 export default DashboardTableColumns;

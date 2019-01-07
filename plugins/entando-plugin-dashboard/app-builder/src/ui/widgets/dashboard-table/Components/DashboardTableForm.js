@@ -108,6 +108,7 @@ class DashboardTableFormBody extends Component {
               component={SwitchRenderer}
               name="allColumns"
               onChange={this.handleChange}
+              disabled={this.props.datasource ? false : true}
             />
           </Col>
         </div>

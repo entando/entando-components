@@ -63,14 +63,14 @@ export const DATASOURCE_PARKING = {
 export const DATASOURCE_PARKING_DATA = {
   id: "parking",
   columns: [
-    {key: "status", value: "status"},
-    {key: "inUse", value: "inUse"},
-    {key: "batteryLevel", value: "batteryLevel"},
-    {key: "deviceCode", value: "deviceCode"},
-    {key: "deviceBrand", value: "deviceBrand"},
-    {key: "expirationGuarantee", value: "expirationG."},
-    {key: "coordinates", value: "coordinates"},
-    {key: "information", value: "information"}
+    {key: "status", value: "status", hidden: false},
+    {key: "inUse", value: "inUse", hidden: false},
+    {key: "batteryLevel", value: "batteryLevel", hidden: false},
+    {key: "deviceCode", value: "deviceCode", hidden: false},
+    {key: "deviceBrand", value: "deviceBrand", hidden: false},
+    {key: "expirationGuarantee", value: "expirationG.", hidden: true},
+    {key: "coordinates", value: "coordinates", hidden: false},
+    {key: "information", value: "information", hidden: false}
   ],
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };

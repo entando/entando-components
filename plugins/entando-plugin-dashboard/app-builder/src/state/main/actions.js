@@ -21,7 +21,8 @@ import {
   REMOVE_SERVER_CONFIG,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_DATA,
-  SET_DATASOURCE_COLUMNS
+  SET_DATASOURCE_COLUMNS,
+  SET_SHOW_HIDE_COLUMN
 } from "./types";
 
 const DATASOURCE_PROPERTY_DATA = "data";
@@ -69,6 +70,13 @@ export const setDatasourceColumns = columns => ({
   }
 });
 
+export const setShowHideColumn = column => ({
+  type: SET_SHOW_HIDE_COLUMN,
+  payload: {
+    column
+  }
+});
+
 export const setDatasourceData = data => ({
   type: SET_DATASOURCE_DATA,
   payload: {
@@ -81,9 +89,6 @@ export const gotoPluginPage = pluginPage => (dispatch, getState) => {
   const route = getRoute(state);
   const params = getParams(state);
   const searchParams = getSearchParams(state);
-  console.log("gotoPluginPage pluginPage", pluginPage);
-  console.log("gotoPluginPage route", route);
-  console.log("gotoRoute", gotoRoute);
   gotoRoute(route, params, {...searchParams, pluginPage});
 };
 
@@ -256,3 +261,8 @@ export const updateDatasourceColumns = (formName, columns) => (
       });
     });
   });
+
+export const showHideColumn = key => dispatch => {
+  console.log("Show Hide Column ", key);
+  dispatch(setShowHideColumn(key));
+};

@@ -40,6 +40,8 @@ export default {
     "plugin.table.downlodable.format": "(formati CSV, XLS, XLSX, PDF)",
     "plugin.table.filterable": "Rendi tabella filtrabile",
     "plugin.table.allColumns": "Mostra tutte le colonne e le informazioni",
+    "plugin.table.column.tooltip.show": "Click to show this column",
+    "plugin.table.column.tooltip.hidden": "Click to hidden this column",
     "plugin.table.column.default.label": "Nomi Colonne Default",
     "plugin.table.column.customizable.label": "Nomi Colonne personalizzabili",
     "plugin.table.moreInformation":
