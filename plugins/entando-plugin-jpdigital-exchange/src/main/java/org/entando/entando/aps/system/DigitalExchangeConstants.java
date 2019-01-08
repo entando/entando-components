@@ -13,7 +13,10 @@
  */
 package org.entando.entando.aps.system;
 
-public interface DigitalExchangeConstants {
+public final class DigitalExchangeConstants {
+
+    private DigitalExchangeConstants() {
+    }
 
     public static final String CONFIG_ITEM_DIGITAL_EXCHANGES = "digitalExchanges";
     public static final String CONFIG_ITEM_DIGITAL_EXCHANGE_CATEGORIES = "digitalExchangeCategories";

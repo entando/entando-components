@@ -156,6 +156,16 @@ public class DigitalExchangesClientTest {
         verifyResilience(result.getErrors());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testSingleResponseFailureForUnexistingDE() {
+
+        SimpleDigitalExchangeCall<String> call = new SimpleDigitalExchangeCall<>(
+                HttpMethod.GET, new ParameterizedTypeReference<SimpleRestResponse<String>>() {
+        }, "test");
+
+        client.getSingleResponse("Unexisting DE", call);
+    }
+
     private <T> void verifyResilience(List<RestError> errors) {
         assertEquals(6, errors.stream()
                 .map(e -> e.getCode()).distinct().count());

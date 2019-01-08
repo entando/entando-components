@@ -85,6 +85,10 @@ public class DigitalExchangesClientImpl implements DigitalExchangesClient {
 
     @Override
     public <R extends RestResponse<?, ?>, C> R getSingleResponse(String digitalExchangeName, DigitalExchangeCall<R, C> call) {
-        return getSingleResponse(digitalExchangesManager.findByName(digitalExchangeName).get(), call);
+
+        DigitalExchange digitalExchange = digitalExchangesManager.findByName(digitalExchangeName).
+                orElseThrow(() -> new IllegalArgumentException("DigitalExchange " + digitalExchangeName + " not found"));
+        
+        return getSingleResponse(digitalExchange, call);
     }
 }
