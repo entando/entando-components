@@ -27,8 +27,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.Ab
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.TestContentDOM;
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.attribute.ResourceAttributeHandlerTest;
 import com.agiletec.plugins.jacms.aps.system.services.content.util.TestContentAttributeIterator;
-import com.agiletec.plugins.jacms.aps.system.services.content.widget.TestContentListHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.widget.TestContentViewerHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelperIntegrationTest;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentViewerHelperIntegrationTest;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModelManagerIntegrationTest;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModelManagerTest;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.TestContentModelDAO;
@@ -111,8 +111,8 @@ public class AllTests {
         suite.addTestSuite(TestContentBulkCommand.class);
         suite.addTestSuite(TestContentEntityManager.class);
         suite.addTestSuite(TestContentDOM.class);
-        suite.addTestSuite(TestContentListHelper.class);
-        suite.addTestSuite(TestContentViewerHelper.class);
+        suite.addTestSuite(ContentListHelperIntegrationTest.class);
+        suite.addTestSuite(ContentViewerHelperIntegrationTest.class);
         suite.addTestSuite(TestContentAttributeIterator.class);
         suite.addTestSuite(TestContentDAO.class);
         suite.addTestSuite(TestContentManager.class);
