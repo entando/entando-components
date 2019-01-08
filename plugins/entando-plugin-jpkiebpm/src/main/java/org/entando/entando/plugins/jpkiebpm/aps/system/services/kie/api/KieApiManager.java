@@ -52,7 +52,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
 
     private static final Logger logger = LoggerFactory.getLogger(KieApiManager.class);
 
-    private HashMap<String, Boolean> fieldMandatory;
+    private Map<String, Boolean> fieldMandatory;
     private II18nManager i18nManager;
     private ILangManager langManager;
     private IKieFormManager kieFormManager;
