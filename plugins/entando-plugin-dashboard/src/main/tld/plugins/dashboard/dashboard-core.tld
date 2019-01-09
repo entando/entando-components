@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+  <description><![CDATA["dashboard core tag library"]]></description>
+  <display-name>"dashboard core tag library"</display-name>
+  <tlib-version>2.2</tlib-version>
+  <short-name>dashboard</short-name>
+  <uri>/dashboard-core</uri>
+	
+	<tag>
+		<description>Loads and returns the list of the DashboardTables available in the system.</description>
+		<name>dashboardTables</name>
+		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardTableListTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The name of the variable setted in the pagecontext.</description>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<description>Loads and returns an DashboardTable given a key.</description>
+		<name>dashboardTable</name>
+		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardTableTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>Identifier of the DashboardTable to load</description>
+			<name>key</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The name of the variable setted in the pagecontext.</description>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+</taglib>

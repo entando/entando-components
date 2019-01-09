@@ -1,4 +1,4 @@
-import {makeMockRequest, METHODS} from "@entando/apimanager";
+import {makeMockRequest, makeRequest, METHODS} from "@entando/apimanager";
 import {PAGE_CONFIGURATION, LANGUAGES} from "mocks/appBuilder";
 
 export const getPageConfiguration = pageCode =>
@@ -15,4 +15,13 @@ export const getLanguages = () =>
     method: METHODS.GET,
     mockResponse: LANGUAGES,
     useAuthentication: false
+  });
+
+export const putPageWidget = (pageCode, frameId, configItem) =>
+  makeRequest({
+    uri: `/api/pages/${pageCode}/widgets/${frameId}`,
+    method: METHODS.PUT,
+    body: configItem,
+    mockResponse: configItem,
+    useAuthentication: true
   });

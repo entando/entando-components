@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import PluginStatusContainer from 'ui/plugin-status/containers/PluginStatusContainer';
+import PluginStatusContainer from "ui/plugin-status/containers/PluginStatusContainer";
 
 const Plugin = () => (
   <div className="EntandoPlugin EntandoPluginTemplate">

@@ -12,5 +12,6 @@
 	<include file="org/entando/entando/plugins/aps/system/dashboard.xml"/>
 	 -->
    <include file="org/entando/entando/plugins/dashboard/apsadmin/dashboardconfig/dashboardConfig.xml"/>
+   <include file="org/entando/entando/plugins/dashboard/apsadmin/portal/specialwidget/dashboardtable/dashboardTableSpecialWidget.xml"/>
 
 </struts>

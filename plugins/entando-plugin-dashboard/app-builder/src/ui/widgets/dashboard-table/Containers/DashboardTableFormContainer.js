@@ -1,7 +1,11 @@
 import {connect} from "react-redux";
 import {formValueSelector} from "redux-form";
 
-import {fetchServerConfigList, fetchLanguages} from "state/main/actions";
+import {
+  fetchServerConfigList,
+  fetchLanguages,
+  saveConfigDashboardTable
+} from "state/main/actions";
 
 import {getLanguages} from "state/main/selectors";
 
@@ -23,7 +27,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchLanguages());
   },
   onSubmit: values => {
-    console.log("values", values);
+    dispatch(saveConfigDashboardTable(values));
   }
 });
 

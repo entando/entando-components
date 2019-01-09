@@ -6,6 +6,7 @@
 		<tableMapping>
 			<datasource name="servDataSource">
 				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardConfig</class>
+				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardTable</class>
 			</datasource>
 		</tableMapping>
 		<environment code="production">
