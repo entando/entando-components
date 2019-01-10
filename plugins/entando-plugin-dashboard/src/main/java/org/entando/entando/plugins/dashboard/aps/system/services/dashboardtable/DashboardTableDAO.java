@@ -39,7 +39,7 @@ public class DashboardTableDAO extends AbstractSearcherDAO implements IDashboard
 
     @Override
     protected String getMasterTableName() {
-        return "dashboard_dashboardtable";
+        return "dashboard_table";
     }
 
     @Override

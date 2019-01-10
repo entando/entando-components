@@ -1,11 +1,7 @@
 import {connect} from "react-redux";
 import {formValueSelector} from "redux-form";
 
-import {
-  fetchServerConfigList,
-  fetchLanguages,
-  saveConfigDashboardTable
-} from "state/main/actions";
+import {fetchServerConfigList, fetchLanguages} from "state/main/actions";
 
 import {getLanguages} from "state/main/selectors";
 
@@ -21,13 +17,15 @@ const mapStateToProps = state => ({
   datasource: selector(state, "datasource")
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList());
     dispatch(fetchLanguages());
   },
-  onSubmit: values => {
-    dispatch(saveConfigDashboardTable(values));
+  onSubmit: data => {
+    const transformedData = {...data};
+    transformedData.allColumns = data.allColumns ? "true" : "false";
+    ownProps.onSubmit();
   }
 });
 

@@ -16,12 +16,3 @@ export const getLanguages = () =>
     mockResponse: LANGUAGES,
     useAuthentication: false
   });
-
-export const putPageWidget = (pageCode, frameId, configItem) =>
-  makeRequest({
-    uri: `/api/pages/${pageCode}/widgets/${frameId}`,
-    method: METHODS.PUT,
-    body: configItem,
-    mockResponse: configItem,
-    useAuthentication: true
-  });

@@ -13,6 +13,7 @@ import DashboardTableFormContainer from "ui/widgets/dashboard-table/Containers/D
 
 class DashboardTable extends Component {
   render() {
+    console.log("props", this.props);
     return (
       <div className="DashboardTable">
         <TabContainer
@@ -31,7 +32,7 @@ class DashboardTable extends Component {
             </Nav>
             <TabContent className="DashboardTable__tab-content">
               <TabPane eventKey={1}>
-                <DashboardTableFormContainer />
+                <DashboardTableFormContainer onSubmit={this.props.onSubmit} />
               </TabPane>
               <TabPane eventKey={2}>
                 <InfoContainer />
