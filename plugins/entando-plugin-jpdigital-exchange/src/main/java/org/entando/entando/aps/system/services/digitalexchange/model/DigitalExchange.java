@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,6 +28,12 @@ import org.springframework.validation.annotation.Validated;
 @ApiModel
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DigitalExchange {
+
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "digitalExchange.id.invalid")
+    @Size(min = 3, max = 20, message = "string.size.invalid")
+    @JsonProperty("id")
+    @XmlElement
+    private String id;
 
     @NotNull(message = "digitalExchange.name.required")
     @Size(min = 3, max = 20, message = "string.size.invalid")
@@ -56,6 +63,14 @@ public class DigitalExchange {
     @JsonProperty("secret")
     @XmlElement(name = "secret")
     private String clientSecret;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

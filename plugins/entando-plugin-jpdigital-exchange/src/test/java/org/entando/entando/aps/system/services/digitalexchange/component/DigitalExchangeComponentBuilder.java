@@ -26,13 +26,22 @@ public class DigitalExchangeComponentBuilder {
     public DigitalExchangeComponentBuilder() {
     }
 
-    public DigitalExchangeComponentBuilder(String name) {
-        setName(name);
+    public DigitalExchangeComponentBuilder(String id) {
+        this(id, id);
+    }
+
+    public DigitalExchangeComponentBuilder(String id, String name) {
+        setId(id);
+        setName(id);
+    }
+
+    public final DigitalExchangeComponentBuilder setId(String id) {
+        component.setId(id);
+        return this;
     }
 
     public final DigitalExchangeComponentBuilder setName(String name) {
         component.setName(name);
-        component.setId(name);
         return this;
     }
 

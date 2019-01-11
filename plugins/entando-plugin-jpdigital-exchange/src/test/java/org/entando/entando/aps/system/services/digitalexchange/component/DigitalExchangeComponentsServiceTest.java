@@ -13,6 +13,8 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.component;
 
+import java.util.Arrays;
+import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
@@ -22,17 +24,24 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.FilterOperator;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DigitalExchangeComponentsServiceTest {
 
-    private static final String DE_1 = "DE 1";
-    private static final String DE_2 = "DE 2";
     private static final String[] COMPONENTS_1 = new String[]{"A", "B", "C", "F", "I", "M", "N", "P"};
     private static final String[] COMPONENTS_2 = new String[]{"D", "E", "G", "H", "L", "O"};
+
+    @Mock
+    private DigitalExchangesService exchangesService;
 
     private DigitalExchangeComponentsServiceImpl service;
 
@@ -40,12 +49,15 @@ public class DigitalExchangeComponentsServiceTest {
     public void setUp() {
         DigitalExchangesClientMocker clientMocker = new DigitalExchangesClientMocker();
         clientMocker.getDigitalExchangesMocker()
-                .addDigitalExchange(DE_1, DigitalExchangeComponentsMocker.mock(COMPONENTS_1))
-                .addDigitalExchange(DE_2, DigitalExchangeComponentsMocker.mock(COMPONENTS_2));
+                .addDigitalExchange(DE_1_ID, DigitalExchangeComponentsMocker.mock(COMPONENTS_1))
+                .addDigitalExchange(DE_2_ID, DigitalExchangeComponentsMocker.mock(COMPONENTS_2));
 
         DigitalExchangesClient mockedClient = clientMocker.build();
 
-        service = new DigitalExchangeComponentsServiceImpl(mockedClient);
+        when(exchangesService.findById(DE_1_ID)).thenReturn(getDE1());
+        when(exchangesService.findById(DE_2_ID)).thenReturn(getDE2());
+
+        service = new DigitalExchangeComponentsServiceImpl(mockedClient, exchangesService);
     }
 
     @Test
@@ -57,32 +69,32 @@ public class DigitalExchangeComponentsServiceTest {
 
         listRequest.setPage(1);
         new PageVerifier(service.getComponents(listRequest))
-                .contains(DE_1, "A")
-                .contains(DE_1, "B")
-                .contains(DE_1, "C");
+                .contains(DE_1_NAME, "A")
+                .contains(DE_1_NAME, "B")
+                .contains(DE_1_NAME, "C");
 
         listRequest.setPage(2);
         new PageVerifier(service.getComponents(listRequest))
-                .contains(DE_2, "D")
-                .contains(DE_2, "E")
-                .contains(DE_1, "F");
+                .contains(DE_2_NAME, "D")
+                .contains(DE_2_NAME, "E")
+                .contains(DE_1_NAME, "F");
 
         listRequest.setPage(3);
         new PageVerifier(service.getComponents(listRequest))
-                .contains(DE_2, "G")
-                .contains(DE_2, "H")
-                .contains(DE_1, "I");
+                .contains(DE_2_NAME, "G")
+                .contains(DE_2_NAME, "H")
+                .contains(DE_1_NAME, "I");
 
         listRequest.setPage(4);
         new PageVerifier(service.getComponents(listRequest))
-                .contains(DE_2, "L")
-                .contains(DE_1, "M")
-                .contains(DE_1, "N");
+                .contains(DE_2_NAME, "L")
+                .contains(DE_1_NAME, "M")
+                .contains(DE_1_NAME, "N");
 
         listRequest.setPage(5);
         new PageVerifier(service.getComponents(listRequest))
-                .contains(DE_2, "O")
-                .contains(DE_1, "P");
+                .contains(DE_2_NAME, "O")
+                .contains(DE_1_NAME, "P");
     }
 
     @Test

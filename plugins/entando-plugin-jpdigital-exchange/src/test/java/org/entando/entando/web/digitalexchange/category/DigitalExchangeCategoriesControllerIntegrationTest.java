@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 @ActiveProfiles("DEcategoriesTest")
 public class DigitalExchangeCategoriesControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -45,8 +46,8 @@ public class DigitalExchangeCategoriesControllerIntegrationTest extends Abstract
         @Primary
         public DigitalExchangeOAuth2RestTemplateFactory getRestTemplateFactory() {
             return new DigitalExchangesMocker()
-                    .addDigitalExchange("DE 1", new SimpleRestResponse<>(Arrays.asList("pageModels", "fragments", "unsupportedType1")))
-                    .addDigitalExchange("DE 2", new SimpleRestResponse<>(Arrays.asList("pageModels", "widgets", "unsupportedType2")))
+                    .addDigitalExchange(DE_1_ID, new SimpleRestResponse<>(Arrays.asList("pageModels", "fragments", "unsupportedType1")))
+                    .addDigitalExchange(DE_2_ID, new SimpleRestResponse<>(Arrays.asList("pageModels", "widgets", "unsupportedType2")))
                     .initMocks();
         }
     }

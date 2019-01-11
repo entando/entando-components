@@ -31,6 +31,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 @ActiveProfiles("DEcomponentsTest")
 public class DigitalExchangeComponentsControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -40,8 +41,6 @@ public class DigitalExchangeComponentsControllerIntegrationTest extends Abstract
     private static final String LAST_UPDATE_B = "2018-12-01 12:00:00";
     private static final String LAST_UPDATE_D = "2018-10-01 00:00:00";
 
-    private static final String DE_1 = "DE 1";
-    private static final String DE_2 = "DE 2";
     private static final String[] COMPONENTS_1 = new String[]{"A", "C", "E"};
     private static final DigitalExchangeComponent[] COMPONENTS_2 = new DigitalExchangeComponent[]{getComponentB(), getComponentD()};
 
@@ -53,8 +52,8 @@ public class DigitalExchangeComponentsControllerIntegrationTest extends Abstract
         @Primary
         public DigitalExchangeOAuth2RestTemplateFactory getRestTemplateFactory() {
             return new DigitalExchangesMocker()
-                    .addDigitalExchange(DE_1, DigitalExchangeComponentsMocker.mock(COMPONENTS_1))
-                    .addDigitalExchange(DE_2, DigitalExchangeComponentsMocker.mock(COMPONENTS_2))
+                    .addDigitalExchange(DE_1_ID, DigitalExchangeComponentsMocker.mock(COMPONENTS_1))
+                    .addDigitalExchange(DE_2_ID, DigitalExchangeComponentsMocker.mock(COMPONENTS_2))
                     .initMocks();
         }
     }
@@ -74,11 +73,11 @@ public class DigitalExchangeComponentsControllerIntegrationTest extends Abstract
                 .andExpect(jsonPath("$.metaData.totalItems", is(COMPONENTS_1.length + COMPONENTS_2.length)))
                 .andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.payload[0].name", is("A")))
-                .andExpect(jsonPath("$.payload[0].digitalExchange", is(DE_1)))
+                .andExpect(jsonPath("$.payload[0].digitalExchange", is(DE_1_NAME)))
                 .andExpect(jsonPath("$.payload[1].name", is("B")))
-                .andExpect(jsonPath("$.payload[1].digitalExchange", is(DE_2)))
+                .andExpect(jsonPath("$.payload[1].digitalExchange", is(DE_2_NAME)))
                 .andExpect(jsonPath("$.payload[2].name", is("C")))
-                .andExpect(jsonPath("$.payload[2].digitalExchange", is(DE_1)));
+                .andExpect(jsonPath("$.payload[2].digitalExchange", is(DE_1_NAME)));
     }
 
     @Test
@@ -92,7 +91,7 @@ public class DigitalExchangeComponentsControllerIntegrationTest extends Abstract
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload", hasSize(1)))
                 .andExpect(jsonPath("$.payload[0].name", is("B")))
-                .andExpect(jsonPath("$.payload[0].digitalExchange", is(DE_2)));
+                .andExpect(jsonPath("$.payload[0].digitalExchange", is(DE_2_NAME)));
     }
 
     @Test
@@ -106,7 +105,7 @@ public class DigitalExchangeComponentsControllerIntegrationTest extends Abstract
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload", hasSize(1)))
                 .andExpect(jsonPath("$.payload[0].name", is("D")))
-                .andExpect(jsonPath("$.payload[0].digitalExchange", is(DE_2)));
+                .andExpect(jsonPath("$.payload[0].digitalExchange", is(DE_2_NAME)));
     }
 
     private static DigitalExchangeComponent getComponentB() {

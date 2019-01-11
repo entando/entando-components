@@ -22,15 +22,15 @@ public interface DigitalExchangesService {
 
     List<DigitalExchange> getDigitalExchanges();
 
-    DigitalExchange findByName(String name);
+    DigitalExchange findById(String id);
 
     DigitalExchange create(DigitalExchange digitalExchange);
 
     DigitalExchange update(DigitalExchange digitalExchange);
 
-    void delete(String digitalExchangeName);
+    void delete(String digitalExchangeId);
 
-    List<RestError> test(String digitalExchangeName);
+    List<RestError> test(String digitalExchangeId);
 
     Map<String, List<RestError>> testAll();
 }

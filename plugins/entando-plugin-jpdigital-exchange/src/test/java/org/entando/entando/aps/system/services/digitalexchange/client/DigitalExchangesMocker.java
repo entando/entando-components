@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.model.RestResponse;
 import org.springframework.core.ParameterizedTypeReference;
@@ -29,6 +30,7 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 /**
  * Helper class that can be used to fake the behavior of a set of a DE instances
@@ -68,41 +70,45 @@ public class DigitalExchangesMocker {
         return exchanges;
     }
 
-    private DigitalExchange getDigitalExchange(String name) {
-        return getDigitalExchange(name, String.format("https://de%s.entando.com/", exchanges.size() + 1));
-    }
-
-    private DigitalExchange getDigitalExchange(String name, String url) {
-        DigitalExchange digitalExchange = new DigitalExchange();
-        digitalExchange.setName(name);
-        digitalExchange.setUrl(url);
-        digitalExchange.setTimeout(500);
-        digitalExchange.setActive(true);
+    private DigitalExchange getDigitalExchange(String id) {
+        DigitalExchange digitalExchange;
+        switch (id) {
+            case DE_1_ID:
+                digitalExchange = getDE1();
+                break;
+            case DE_2_ID:
+                digitalExchange = getDE2();
+                break;
+            default:
+                digitalExchange = DigitalExchangeTestUtils.getDigitalExchange(id, id + " Name");
+                break;
+        }
+        digitalExchange.setUrl(String.format("https://de%s.entando.com/", exchanges.size() + 1));
         return digitalExchange;
     }
 
-    public DigitalExchangesMocker addDigitalExchange(String name, RestResponse<?, ?> result) {
-        return addDigitalExchange(name, (request) -> result, null);
+    public DigitalExchangesMocker addDigitalExchange(String id, RestResponse<?, ?> result) {
+        return addDigitalExchange(id, (request) -> result, null);
     }
 
-    public DigitalExchangesMocker addDigitalExchange(String name, Runnable runnable) {
-        return addDigitalExchange(name, runnable, null);
+    public DigitalExchangesMocker addDigitalExchange(String id, Runnable runnable) {
+        return addDigitalExchange(id, runnable, null);
     }
 
-    public DigitalExchangesMocker addDigitalExchange(String name, Runnable runnable, Consumer<DigitalExchange> deConsumer) {
-        return addDigitalExchange(name, (request) -> {
+    public DigitalExchangesMocker addDigitalExchange(String id, Runnable runnable, Consumer<DigitalExchange> deConsumer) {
+        return addDigitalExchange(id, (request) -> {
             runnable.run();
             return null;
         }, deConsumer);
     }
 
-    public DigitalExchangesMocker addDigitalExchange(String name, Function<DigitalExchangeMockedRequest, RestResponse<?, ?>> function) {
-        return addDigitalExchange(name, function, null);
+    public DigitalExchangesMocker addDigitalExchange(String id, Function<DigitalExchangeMockedRequest, RestResponse<?, ?>> function) {
+        return addDigitalExchange(id, function, null);
     }
 
-    public DigitalExchangesMocker addDigitalExchange(String name, Function<DigitalExchangeMockedRequest, RestResponse<?, ?>> function, Consumer<DigitalExchange> deConsumer) {
+    public DigitalExchangesMocker addDigitalExchange(String id, Function<DigitalExchangeMockedRequest, RestResponse<?, ?>> function, Consumer<DigitalExchange> deConsumer) {
 
-        DigitalExchange digitalExchange = getDigitalExchange(name);
+        DigitalExchange digitalExchange = getDigitalExchange(id);
         if (deConsumer != null) {
             deConsumer.accept(digitalExchange);
         }

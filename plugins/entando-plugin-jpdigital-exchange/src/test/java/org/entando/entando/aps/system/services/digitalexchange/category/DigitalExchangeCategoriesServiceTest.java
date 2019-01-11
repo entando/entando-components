@@ -28,6 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 public class DigitalExchangeCategoriesServiceTest {
 
@@ -75,8 +76,8 @@ public class DigitalExchangeCategoriesServiceTest {
 
         clientMocker = new DigitalExchangesClientMocker();
         clientMocker.getDigitalExchangesMocker()
-                .addDigitalExchange("DE 1", new SimpleRestResponse<>(de1Categories))
-                .addDigitalExchange("DE 2", new SimpleRestResponse<>(de2Categories));
+                .addDigitalExchange(DE_1_ID, new SimpleRestResponse<>(de1Categories))
+                .addDigitalExchange(DE_2_ID, new SimpleRestResponse<>(de2Categories));
 
         client = clientMocker.build();
     }

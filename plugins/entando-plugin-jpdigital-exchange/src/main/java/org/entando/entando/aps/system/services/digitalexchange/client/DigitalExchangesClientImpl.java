@@ -74,20 +74,20 @@ public class DigitalExchangesClientImpl implements DigitalExchangesClient {
 
     private <R extends RestResponse<?, ?>, C> CompletableFuture<Pair<String, R>> getSingleResponseAsync(DigitalExchange digitalExchange, DigitalExchangeCall<R, C> call) {
         return CompletableFuture.supplyAsync(()
-                -> ImmutablePair.of(digitalExchange.getName(), getSingleResponse(digitalExchange, call)));
+                -> ImmutablePair.of(digitalExchange.getId(), getSingleResponse(digitalExchange, call)));
     }
 
     @Override
     public <R extends RestResponse<?, ?>, C> R getSingleResponse(DigitalExchange digitalExchange, DigitalExchangeCall<R, C> call) {
-        OAuth2RestTemplate restTemplate = digitalExchangesManager.getRestTemplate(digitalExchange.getName());
+        OAuth2RestTemplate restTemplate = digitalExchangesManager.getRestTemplate(digitalExchange.getId());
         return new DigitalExchangeCallExecutor<>(messageSource, digitalExchange, restTemplate, call).getResponse();
     }
 
     @Override
-    public <R extends RestResponse<?, ?>, C> R getSingleResponse(String digitalExchangeName, DigitalExchangeCall<R, C> call) {
+    public <R extends RestResponse<?, ?>, C> R getSingleResponse(String digitalExchangeId, DigitalExchangeCall<R, C> call) {
 
-        DigitalExchange digitalExchange = digitalExchangesManager.findByName(digitalExchangeName).
-                orElseThrow(() -> new IllegalArgumentException("DigitalExchange " + digitalExchangeName + " not found"));
+        DigitalExchange digitalExchange = digitalExchangesManager.findById(digitalExchangeId).
+                orElseThrow(() -> new IllegalArgumentException("DigitalExchange " + digitalExchangeId + " not found"));
         
         return getSingleResponse(digitalExchange, call);
     }

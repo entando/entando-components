@@ -54,8 +54,8 @@ public interface DigitalExchangesResource {
         @ApiResponse(code = 404, message = "Not Found")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @GetMapping(value = "/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<DigitalExchange>> get(@PathVariable("name") String name);
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<SimpleRestResponse<DigitalExchange>> get(@PathVariable("id") String id);
 
     @ApiOperation(value = "Returns the list of all Digital Exchange configurations")
     @ApiResponses({
@@ -71,8 +71,8 @@ public interface DigitalExchangesResource {
         @ApiResponse(code = 404, message = "Not Found")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @PutMapping(value = "/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<DigitalExchange>> update(@PathVariable("name") String name, @Valid @RequestBody DigitalExchange digitalExchange, BindingResult bindingResult);
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<SimpleRestResponse<DigitalExchange>> update(@PathVariable("id") String id, @Valid @RequestBody DigitalExchange digitalExchange, BindingResult bindingResult);
 
     @ApiOperation(value = "Delete a Digital Exchange configuration")
     @ApiResponses({
@@ -80,8 +80,8 @@ public interface DigitalExchangesResource {
         @ApiResponse(code = 404, message = "Not Found")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @DeleteMapping(value = "/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<String>> delete(@PathVariable("name") String name);
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<SimpleRestResponse<String>> delete(@PathVariable("id") String id);
     
     @ApiOperation(value = "Test the connection to all Digital Exchange instances")
     @ApiResponses({
@@ -97,6 +97,6 @@ public interface DigitalExchangesResource {
         @ApiResponse(code = 404, message = "Not Found")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @GetMapping(value = "/test/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<String>> test(@PathVariable("name") String name);
+    @GetMapping(value = "/test/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<SimpleRestResponse<String>> test(@PathVariable("id") String id);
 }
