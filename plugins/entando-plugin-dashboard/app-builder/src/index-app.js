@@ -22,9 +22,13 @@ import "./sass/index.css";
 import "patternfly/dist/css/patternfly.min.css";
 import "patternfly/dist/css/patternfly-additions.min.css";
 
-import DashboardTable from "ui/widgets/dashboard-table/Components/DashboardTable";
-import DashboardConfigAddPage from "ui/dashboard-config/add/Components/DashboardConfigAddPage";
-import DashboardConfigPageContainer from "ui/dashboard-config/list/Containers/DashboardConfigPageContainer";
+import DashboardWidgetConfigPage from "ui/widgets/common/components/DashboardWidgetConfigPage";
+import DashboardConfigAddPage from "ui/dashboard-config/add/components/DashboardConfigAddPage";
+
+import DashboardConfigPageContainer from "ui/dashboard-config/list/containers/DashboardConfigPageContainer";
+
+import DashboardTableFormContainer from "ui/widgets/dashboard-table/containers/DashboardTableFormContainer";
+import DashboardLineChartFormContainer from "ui/widgets/charts/line-chart/containers/DashboardLineChartFormContainer";
 
 const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
   acc[`plugin.${plugin.id}.${key}`] = enLocale.messages[key];
@@ -38,6 +42,13 @@ export default ReactDOM.render(
   <Provider store={store}>
     <IntlProvider locale={enLocale.locale} messages={mappedMessages}>
       <Grid fluid>
+        <Row>
+          <Col xs={12}>
+            <DashboardWidgetConfigPage>
+              <DashboardLineChartFormContainer />
+            </DashboardWidgetConfigPage>
+          </Col>
+        </Row>
         <Row>
           <Col xs={12}>
             <PluginContainer titleId="plugin.title" helpId="ConfigPage.help" />
@@ -58,9 +69,12 @@ export default ReactDOM.render(
             <hr />
           </Col>
         </Row>
+
         <Row>
           <Col xs={12}>
-            <DashboardTable />
+            <DashboardWidgetConfigPage>
+              <DashboardTableFormContainer />
+            </DashboardWidgetConfigPage>
           </Col>
         </Row>
       </Grid>

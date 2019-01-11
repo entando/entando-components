@@ -72,6 +72,9 @@ export default {
     "plugin.config.active": "Active",
     "plugin.config.debug": "Debug",
     "plugin.config.enable": "Enable",
-    "plugin.config.disabled": "Disable"
+    "plugin.config.disabled": "Disable",
+    "plugin.charts.firstStep": "First Step",
+    "plugin.charts.secondStep": "Second Step",
+    "plugin.charts.thirdStep": "Third Step"
   }
 };

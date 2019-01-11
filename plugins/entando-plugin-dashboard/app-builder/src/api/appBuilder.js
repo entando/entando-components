@@ -1,4 +1,4 @@
-import {makeMockRequest, makeRequest, METHODS} from "@entando/apimanager";
+import {makeMockRequest, METHODS} from "@entando/apimanager";
 import {PAGE_CONFIGURATION, LANGUAGES} from "mocks/appBuilder";
 
 export const getPageConfiguration = pageCode =>

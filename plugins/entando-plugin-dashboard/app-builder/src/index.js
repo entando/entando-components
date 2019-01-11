@@ -1,7 +1,7 @@
 import {config} from "@entando/apimanager";
 
-import uiComponent from "ui/dashboard-config/common/Containers/SubRouterContainer";
-import DashboardTable from "ui/widgets/dashboard-table/Components/DashboardTable";
+import uiComponent from "ui/dashboard-config/common/containers/SubRouterContainer";
+import DashboardTable from "ui/widgets/dashboard-table/components/DashboardTable";
 
 import reducer from "state/main/reducer";
 

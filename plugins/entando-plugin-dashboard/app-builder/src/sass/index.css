@@ -40,6 +40,13 @@
   width: 100%;
   padding-top: 1em; }
 
+.DashboardWidgetConfigPage {
+  padding: 1em; }
+  .DashboardWidgetConfigPage__tab-content {
+    border: 1px solid #ddd;
+    margin-top: -1px;
+    margin-right: -1px; }
+
 .ServerNameForm__input-group {
   width: 100%;
   border: 0px solid red; }
@@ -47,13 +54,6 @@
 .DatasourceForm__input-group {
   width: 100%;
   border: 0px solid red; }
-
-.DashboardTable {
-  padding: 1em; }
-  .DashboardTable__tab-content {
-    border: 1px solid #ddd;
-    margin-top: -1px;
-    margin-right: -1px; }
 
 .DashboardTableForm__required-fields {
   margin-top: 1em;
@@ -169,3 +169,20 @@
 
 .DashboardConfigPage__btn-tests {
   margin-left: 2em; }
+
+.ChartSteps__step a {
+  cursor: default !important; }
+
+.ChartFirstStep__container-datasource {
+  margin-top: 2em; }
+
+.DashboardLineChart__data-container {
+  border: 0px solid;
+  height: 90%; }
+
+.DashboardLineChart__btn-container {
+  border: 0px solid;
+  margin-top: 2em; }
+
+.DashboardLineChart__btn-back {
+  margin-right: 3em; }

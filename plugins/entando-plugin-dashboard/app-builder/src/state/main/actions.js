@@ -1,18 +1,9 @@
 import {getRoute, getParams, getSearchParams, gotoRoute} from "@entando/router";
-import {
-  addToast,
-  addErrors,
-  TOAST_ERROR,
-  TOAST_SUCCESS
-} from "@entando/messages";
+import {addToast, addErrors, TOAST_ERROR} from "@entando/messages";
 import {formattedText} from "@entando/utils";
 import {formValueSelector, change} from "redux-form";
 
-import {
-  getPageConfiguration,
-  getLanguages,
-  putPageWidget
-} from "api/appBuilder";
+import {getPageConfiguration, getLanguages} from "api/appBuilder";
 
 import {
   getServerConfigs,
@@ -274,38 +265,4 @@ export const updateDatasourceColumns = (formName, columns) => (
 export const showHideColumn = key => dispatch => {
   console.log("Show Hide Column ", key);
   dispatch(setShowHideColumn(key));
-};
-
-export const saveConfigDashboardTable = values => (dispatch, getState) => {
-  new Promise(resolve => {
-    const state = getState();
-    const params = getParams(state);
-    console.log("values", values);
-    const configItem = {
-      code: params.widgetCode,
-      config: {
-        id: "1"
-      }
-    };
-    const pageCode = params.pageCode;
-    const frameId = params.framePos;
-
-    console.log("pageCode", pageCode);
-    console.log("frameId", frameId);
-    putPageWidget(pageCode, frameId, configItem).then(response => {
-      response.json().then(json => {
-        if (response.ok) {
-          console.log("configurazione salvata");
-          dispatch(addToast("Save configuration", TOAST_SUCCESS));
-          // const ROUTE_PAGE_CONFIG = "pageConfiguration";
-          // gotoRoute(ROUTE_PAGE_CONFIG, {pageCode});
-          resolve();
-        } else {
-          dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
-          resolve();
-        }
-      });
-    });
-  });
 };

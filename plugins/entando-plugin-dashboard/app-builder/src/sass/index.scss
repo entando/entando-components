@@ -2,9 +2,9 @@
 
 @import 'widgets/common/Info';
 @import 'widgets/common/DashboardWidgetTitle';
+@import 'widgets/common/DashboardWidgetConfigPage';
 @import 'widgets/common/form/ServerNameForm';
 @import 'widgets/common/form/DatasourceForm';
-@import 'widgets/dashboard-table/DashboardTable';
 @import 'widgets/dashboard-table/DashboardTableForm';
 @import 'widgets/dashboard-table/DashboardTableColumns';
 
@@ -13,3 +13,8 @@
 @import 'dashboard-config/DashboardConfigDatasource';
 @import 'dashboard-config/DashboardConfigDatasourceStatus';
 @import 'dashboard-config/DashboardConfigPage';
+
+@import 'widgets/charts/common/ChartSteps';
+@import 'widgets/charts/common/ChartFirstStep';
+
+@import 'widgets/charts/line-chart/DashboardLineChart'; 
