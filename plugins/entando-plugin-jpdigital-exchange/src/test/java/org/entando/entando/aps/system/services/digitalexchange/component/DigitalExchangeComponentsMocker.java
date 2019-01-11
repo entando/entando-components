@@ -28,12 +28,12 @@ import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponen
 
 public class DigitalExchangeComponentsMocker {
 
-    public static Function<DigitalExchangeMockedRequest, RestResponse<?, ?>> mock(String... names) {
+    public static Function<DigitalExchangeMockedRequest, RestResponse<?, ?>> mock(String... ids) {
 
         return request -> {
             Stream<DigitalExchangeComponent> stream
-                    = Arrays.stream(names).map(name
-                            -> new DigitalExchangeComponentBuilder(name)
+                    = Arrays.stream(ids).map(id
+                            -> new DigitalExchangeComponentBuilder(id)
                             .setLastUpdate(new Date()).build());
 
             return mock(request, stream);

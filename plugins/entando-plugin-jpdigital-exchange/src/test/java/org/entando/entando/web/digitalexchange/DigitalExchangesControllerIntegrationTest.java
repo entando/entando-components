@@ -13,6 +13,8 @@
  */
 package org.entando.entando.web.digitalexchange;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.util.ArrayList;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
@@ -31,6 +33,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.ResourceAccessException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -41,6 +44,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 @ActiveProfiles("DEconfigTest")
 public class DigitalExchangesControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -58,9 +62,9 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
         @Primary
         public DigitalExchangeOAuth2RestTemplateFactory getRestTemplateFactory() {
             return new DigitalExchangesMocker()
-                    .addDigitalExchange("DE 1", new SimpleRestResponse<>(
-                            ImmutableMap.of("DE 1", new ArrayList<>())))
-                    .addDigitalExchange("DE 2", () -> {
+                    .addDigitalExchange(DE_1_ID, new SimpleRestResponse<>(
+                            ImmutableMap.of(DE_1_ID, new ArrayList<>())))
+                    .addDigitalExchange(DE_2_ID, () -> {
                         throw new ResourceAccessException("Connection Refused");
                     })
                     .initMocks();
@@ -76,17 +80,18 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
                 .andExpect(jsonPath("$.metaData").isEmpty())
                 .andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.payload", hasSize(2)))
-                .andExpect(jsonPath("$.payload[0].name", is("DE 1")));
+                .andExpect(jsonPath("$.payload[0].id", is(DE_1_ID)))
+                .andExpect(jsonPath("$.payload[0].name", is(DE_1_NAME)));
     }
 
     @Test
     public void testCRUDDigitalExchange() throws Exception {
 
-        String digitalExchangeName = "New DE";
+        String digitalExchangeId = NEW_DE_ID;
 
         try {
             // Create
-            DigitalExchange digitalExchange = getDigitalExchange(digitalExchangeName);
+            DigitalExchange digitalExchange = getNewDE();
 
             ResultActions result = createAuthRequest(post(BASE_URL))
                     .setContent(digitalExchange).execute();
@@ -94,46 +99,71 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.metaData").isEmpty())
                     .andExpect(jsonPath("$.errors").isEmpty())
-                    .andExpect(jsonPath("$.payload.name", is(digitalExchangeName)));
+                    .andExpect(jsonPath("$.payload.id", is(digitalExchangeId)));
 
             // Read
-            result = createAuthRequest(get(BASE_URL + "/{name}", digitalExchangeName)).execute();
+            result = createAuthRequest(get(BASE_URL + "/{id}", digitalExchangeId)).execute();
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.metaData").isEmpty())
                     .andExpect(jsonPath("$.errors").isEmpty())
-                    .andExpect(jsonPath("$.payload.name", is(digitalExchangeName)));
+                    .andExpect(jsonPath("$.payload.id", is(digitalExchangeId)));
 
             // Update
             String url = "http://www.entando.com/";
             digitalExchange.setUrl(url);
-            result = createAuthRequest(put(BASE_URL + "/{name}", digitalExchangeName))
+            result = createAuthRequest(put(BASE_URL + "/{id}", digitalExchangeId))
                     .setContent(digitalExchange).execute();
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.metaData").isEmpty())
                     .andExpect(jsonPath("$.errors").isEmpty())
-                    .andExpect(jsonPath("$.payload.name", is(digitalExchangeName)))
+                    .andExpect(jsonPath("$.payload.id", is(digitalExchangeId)))
                     .andExpect(jsonPath("$.payload.url", is(url)));
 
             // Delete
-            result = createAuthRequest(delete(BASE_URL + "/{name}", digitalExchangeName)).execute();
+            result = createAuthRequest(delete(BASE_URL + "/{id}", digitalExchangeId)).execute();
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.metaData").isEmpty())
                     .andExpect(jsonPath("$.errors").isEmpty())
-                    .andExpect(jsonPath("$.payload", is(digitalExchangeName)));
+                    .andExpect(jsonPath("$.payload", is(digitalExchangeId)));
         } catch (Exception ex) {
-            digitalExchangeService.delete(digitalExchangeName);
+            digitalExchangeService.delete(digitalExchangeId);
             throw ex;
         }
+    }
+
+    @Test
+    public void shouldCreateDigitalExchangeGeneratingId() throws Exception {
+
+        DigitalExchange digitalExchange = getDigitalExchange(null, NEW_DE_NAME);
+
+        ResultActions result = createAuthRequest(post(BASE_URL))
+                .setContent(digitalExchange).execute();
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.metaData").isEmpty())
+                .andExpect(jsonPath("$.errors").isEmpty())
+                .andExpect(jsonPath("$.payload.name", is(NEW_DE_NAME)));
+
+        String jsonResponse = result.andReturn().getResponse().getContentAsString();
+
+        SimpleRestResponse<DigitalExchange> response = new ObjectMapper()
+                .readValue(jsonResponse, new TypeReference<SimpleRestResponse<DigitalExchange>>() {
+                });
+
+        String generatedId = response.getPayload().getId();
+        assertThat(generatedId).isNotNull().hasSize(20);
+
+        digitalExchangeService.delete(generatedId);
     }
 
     @Test
     public void shouldFailCreatingDigitalExchangeBecauseAlreadyExists() throws Exception {
 
         ResultActions result = createAuthRequest(post(BASE_URL))
-                .setContent(getDigitalExchange("DE 1")).execute();
+                .setContent(getDE1()).execute();
 
         result.andExpect(status().isConflict())
                 .andExpect(jsonPath("$.metaData").isEmpty())
@@ -142,9 +172,36 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
     }
 
     @Test
+    public void shouldFailCreatingDigitalExchangeBecauseNameAlreadyTaken() throws Exception {
+        DigitalExchange digitalExchange = getDigitalExchange(null, DE_1_NAME);
+
+        ResultActions result = createAuthRequest(post(BASE_URL))
+                .setContent(digitalExchange).execute();
+
+        result.andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.metaData").isEmpty())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].code", is(DigitalExchangeValidator.ERRCODE_DIGITAL_EXCHANGE_NAME_TAKEN)));
+    }
+
+    @Test
+    public void shouldFailRenamingIfNameAlreadyTaken() throws Exception {
+
+        DigitalExchange digitalExchange = getDigitalExchange(DE_1_ID, DE_2_NAME);
+
+        ResultActions result = createAuthRequest(put(BASE_URL + "/{id}", DE_1_ID))
+                .setContent(digitalExchange).execute();
+
+        result.andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.metaData").isEmpty())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].code", is(DigitalExchangeValidator.ERRCODE_DIGITAL_EXCHANGE_NAME_TAKEN)));
+    }
+
+    @Test
     public void shouldFailFindingDigitalExchange() throws Exception {
 
-        ResultActions result = createAuthRequest(get(BASE_URL + "/{name}", "Inexistent DE")).execute();
+        ResultActions result = createAuthRequest(get(BASE_URL + "/{id}", INEXISTENT_DE_ID)).execute();
 
         result.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.metaData").isEmpty())
@@ -156,9 +213,9 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
     @Test
     public void shouldFailUpdatingDigitalExchangeBecauseNotFound() throws Exception {
 
-        DigitalExchange digitalExchange = getDigitalExchange("Inexistent DE");
+        DigitalExchange digitalExchange = getInexistentDE();
 
-        ResultActions result = createAuthRequest(put(BASE_URL + "/{name}", digitalExchange.getName()))
+        ResultActions result = createAuthRequest(put(BASE_URL + "/{id}", digitalExchange.getId()))
                 .setContent(digitalExchange).execute();
 
         result.andExpect(status().isNotFound())
@@ -171,7 +228,7 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
     @Test
     public void shouldFailDeletingDigitalExchangeBecauseNotFound() throws Exception {
 
-        ResultActions result = createAuthRequest(delete(BASE_URL + "/{name}", "Inexistent DE")).execute();
+        ResultActions result = createAuthRequest(delete(BASE_URL + "/{id}", INEXISTENT_DE_ID)).execute();
 
         result.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.metaData").isEmpty())
@@ -184,7 +241,7 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
     public void shouldTestInstance() throws Exception {
 
         // working instance
-        ResultActions result = createAuthRequest(get(BASE_URL + "/test/{name}", "DE 1")).execute();
+        ResultActions result = createAuthRequest(get(BASE_URL + "/test/{id}", DE_1_ID)).execute();
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.metaData").isEmpty())
@@ -192,7 +249,7 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
                 .andExpect(jsonPath("$.payload", is("OK")));
 
         // unreachable instance
-        result = createAuthRequest(get(BASE_URL + "/test/{name}", "DE 2")).execute();
+        result = createAuthRequest(get(BASE_URL + "/test/{id}", DE_2_ID)).execute();
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.metaData").isEmpty())
@@ -207,14 +264,7 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.metaData").isEmpty())
                 .andExpect(jsonPath("$.errors").isEmpty())
-                .andExpect(jsonPath("$.payload", hasEntry(is("DE 1"), emptyArray())))
-                .andExpect(jsonPath("$.payload", hasEntry(is("DE 2"), hasSize(1))));
-    }
-
-    private DigitalExchange getDigitalExchange(String name) {
-        DigitalExchange digitalExchange = new DigitalExchange();
-        digitalExchange.setName(name);
-        digitalExchange.setUrl("http://www.entando.com");
-        return digitalExchange;
+                .andExpect(jsonPath("$.payload", hasEntry(is(DE_1_ID), emptyArray())))
+                .andExpect(jsonPath("$.payload", hasEntry(is(DE_2_ID), hasSize(1))));
     }
 }

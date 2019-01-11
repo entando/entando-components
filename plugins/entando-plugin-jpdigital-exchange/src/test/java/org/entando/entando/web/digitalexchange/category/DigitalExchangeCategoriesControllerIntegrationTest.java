@@ -45,8 +45,8 @@ public class DigitalExchangeCategoriesControllerIntegrationTest extends Abstract
         @Primary
         public DigitalExchangeOAuth2RestTemplateFactory getRestTemplateFactory() {
             return new DigitalExchangesMocker()
-                    .addDigitalExchange("DE 1", new SimpleRestResponse<>(Arrays.asList("pageModels", "fragments", "unsupportedType1")))
-                    .addDigitalExchange("DE 2", new SimpleRestResponse<>(Arrays.asList("pageModels", "widgets", "unsupportedType2")))
+                    .addDigitalExchange("DE_1", new SimpleRestResponse<>(Arrays.asList("pageModels", "fragments", "unsupportedType1")))
+                    .addDigitalExchange("DE_2", new SimpleRestResponse<>(Arrays.asList("pageModels", "widgets", "unsupportedType2")))
                     .initMocks();
         }
     }

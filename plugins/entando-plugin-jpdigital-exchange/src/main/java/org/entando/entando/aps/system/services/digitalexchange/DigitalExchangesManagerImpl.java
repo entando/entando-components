@@ -21,12 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.DataBindingException;
 import javax.xml.bind.JAXB;
+import org.apache.commons.lang.RandomStringUtils;
 import org.entando.entando.aps.system.DigitalExchangeConstants;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,8 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 
 @Service
 public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
+
+    private static final int ID_LENGTH = 20;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -74,32 +78,36 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
 
     @Override
     public DigitalExchange create(DigitalExchange digitalExchange) {
-        if (!findByName(digitalExchange.getName()).isPresent()) {
-            exchanges.add(digitalExchange);
-            updateDigitalExchangesConfig();
-            if (digitalExchange.isActive()) {
-                addRestTemplate(digitalExchange);
-            }
-            return digitalExchange;
+
+        if (digitalExchange.getId() == null) {
+            digitalExchange.setId(RandomStringUtils.randomAlphanumeric(ID_LENGTH));
+        } else if (findById(digitalExchange.getId()).isPresent()) {
+            throw new IllegalArgumentException("DigitalExchange " + digitalExchange.getId() + " already exists");
         }
-        return null;
+
+        exchanges.add(digitalExchange);
+        updateDigitalExchangesConfig();
+        if (digitalExchange.isActive()) {
+            addRestTemplate(digitalExchange);
+        }
+        return digitalExchange;
     }
 
     @Override
-    public Optional<DigitalExchange> findByName(String digitalExchangeName) {
+    public Optional<DigitalExchange> findById(String digitalExchangeId) {
         return exchanges.stream()
-                .filter(de -> digitalExchangeName.equals(de.getName()))
+                .filter(de -> de.getId().equals(digitalExchangeId))
                 .findFirst();
     }
 
     @Override
     public DigitalExchange update(DigitalExchange digitalExchange) {
-        OptionalInt index = getIndex(digitalExchange.getName());
+        OptionalInt index = getIndex(digitalExchange.getId());
         if (index.isPresent()) {
             exchanges.replaceAll(de -> {
-                if (de.getName().equals(digitalExchange.getName())) {
+                if (de.getId().equals(digitalExchange.getId())) {
                     updateDigitalExchangesConfig();
-                    templates.remove(digitalExchange.getName());
+                    templates.remove(digitalExchange.getId());
                     if (digitalExchange.isActive()) {
                         addRestTemplate(digitalExchange);
                     }
@@ -113,24 +121,24 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
     }
 
     @Override
-    public void delete(String digitalExchangeName) {
-        getIndex(digitalExchangeName)
+    public void delete(String digitalExchangeId) {
+        getIndex(digitalExchangeId)
                 .ifPresent(i -> {
                     exchanges.remove(i);
                     updateDigitalExchangesConfig();
-                    templates.remove(digitalExchangeName);
+                    templates.remove(digitalExchangeId);
                 });
     }
 
-    private OptionalInt getIndex(String digitalExchangeName) {
+    private OptionalInt getIndex(String digitalExchangeId) {
         return IntStream.range(0, exchanges.size())
-                .filter(i -> digitalExchangeName.equals(exchanges.get(i).getName()))
+                .filter(i -> exchanges.get(i).getId().equals(digitalExchangeId))
                 .findFirst();
     }
 
     @Override
-    public OAuth2RestTemplate getRestTemplate(String digitalExchangeName) {
-        return templates.get(digitalExchangeName);
+    public OAuth2RestTemplate getRestTemplate(String digitalExchangeId) {
+        return templates.get(digitalExchangeId);
     }
 
     private void loadDigitalExchanges() {
@@ -152,10 +160,10 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
     private void addRestTemplate(DigitalExchange digitalExchange) {
         OAuth2RestTemplate template = restTemplateFactory.createOAuth2RestTemplate(digitalExchange);
         if (template != null) {
-            templates.put(digitalExchange.getName(), template);
+            templates.put(digitalExchange.getId(), template);
         } else {
-            logger.error("Error creating OAuth2RestTemplate for DigitalExchange {}. This instance will be disabled.",
-                    digitalExchange.getName());
+            logger.error("Error creating OAuth2RestTemplate for DigitalExchange {} ({}). This instance will be disabled.",
+                    digitalExchange.getId(), digitalExchange.getName());
             digitalExchange.setActive(false);
             update(digitalExchange);
         }

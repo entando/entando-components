@@ -53,21 +53,24 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
     }
 
     @Override
-    public DigitalExchange findByName(String name) {
-        return manager.findByName(name).orElseThrow(()
-                -> new RestRourceNotFoundException(ERRCODE_DIGITAL_EXCHANGE_NOT_FOUND, DIGITAL_EXCHANGE_LABEL, name));
+    public DigitalExchange findById(String id) {
+        return manager.findById(id).orElseThrow(()
+                -> new RestRourceNotFoundException(ERRCODE_DIGITAL_EXCHANGE_NOT_FOUND, DIGITAL_EXCHANGE_LABEL, id));
     }
 
     @Override
     public DigitalExchange create(DigitalExchange digitalExchange) {
 
-        manager.findByName(digitalExchange.getName())
-                .ifPresent(de -> {
-                    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(digitalExchange, DIGITAL_EXCHANGE_LABEL);
-                    errors.reject(ERRCODE_DIGITAL_EXCHANGE_ALREADY_EXISTS, null, "digitalExchange.exists");
-                    throw new ValidationConflictException(errors);
-                });
+        if (digitalExchange.getId() != null) {
+            manager.findById(digitalExchange.getId())
+                    .ifPresent(de -> {
+                        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(digitalExchange, DIGITAL_EXCHANGE_LABEL);
+                        errors.reject(ERRCODE_DIGITAL_EXCHANGE_ALREADY_EXISTS, new Object[]{digitalExchange.getId()}, "digitalExchange.exists");
+                        throw new ValidationConflictException(errors);
+                    });
+        }
 
+        validateName(digitalExchange);
         validateURL(digitalExchange);
 
         return manager.create(digitalExchange);
@@ -75,20 +78,23 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
 
     @Override
     public DigitalExchange update(DigitalExchange digitalExchange) {
-        findByName(digitalExchange.getName());
+        DigitalExchange oldDigitalExchange = findById(digitalExchange.getId());
+        if (!oldDigitalExchange.getName().equals(digitalExchange.getName())) {
+            validateName(digitalExchange);
+        }
         validateURL(digitalExchange);
         return manager.update(digitalExchange);
     }
 
     @Override
-    public void delete(String digitalExchangeName) {
-        findByName(digitalExchangeName);
-        manager.delete(digitalExchangeName);
+    public void delete(String digitalExchangeId) {
+        findById(digitalExchangeId);
+        manager.delete(digitalExchangeId);
     }
 
     @Override
-    public List<RestError> test(String digitalExchangeName) {
-        DigitalExchange digitalExchange = findByName(digitalExchangeName);
+    public List<RestError> test(String digitalExchangeId) {
+        DigitalExchange digitalExchange = findById(digitalExchangeId);
 
         SimpleDigitalExchangeCall<Map<String, List<RestError>>> call = new SimpleDigitalExchangeCall<>(
                 HttpMethod.GET, new ParameterizedTypeReference<SimpleRestResponse<Map<String, List<RestError>>>>() {
@@ -100,6 +106,18 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
     @Override
     public Map<String, List<RestError>> testAll() {
         return client.getCombinedResult(new TestExchangesCall());
+    }
+
+    private void validateName(DigitalExchange digitalExchange) {
+
+        if (getDigitalExchanges().stream()
+                .filter(de -> digitalExchange.getName().equals(de.getName()))
+                .findAny().isPresent()) {
+
+            BeanPropertyBindingResult errors = new BeanPropertyBindingResult(digitalExchange, DIGITAL_EXCHANGE_LABEL);
+            errors.reject(ERRCODE_DIGITAL_EXCHANGE_NAME_TAKEN, new Object[]{digitalExchange.getName()}, "digitalExchange.name.taken");
+            throw new ValidationConflictException(errors);
+        }
     }
 
     private void validateURL(DigitalExchange digitalExchange) {

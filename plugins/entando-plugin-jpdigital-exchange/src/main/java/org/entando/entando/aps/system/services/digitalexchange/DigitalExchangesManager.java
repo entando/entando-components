@@ -25,11 +25,11 @@ public interface DigitalExchangesManager extends RefreshableBean {
 
     DigitalExchange create(DigitalExchange digitalExchange);
 
-    Optional<DigitalExchange> findByName(String digitalExchangeName);
+    Optional<DigitalExchange> findById(String digitalExchangeId);
 
     DigitalExchange update(DigitalExchange digitalExchange);
 
-    void delete(String digitalExchangeName);
+    void delete(String digitalExchangeId);
 
-    OAuth2RestTemplate getRestTemplate(String digitalExchangeName);
+    OAuth2RestTemplate getRestTemplate(String digitalExchangeId);
 }

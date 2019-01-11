@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.digitalexchange.component;
 
 import java.util.List;
 import org.entando.entando.aps.system.services.RequestListProcessor;
+import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.aps.system.services.digitalexchange.client.PagedDigitalExchangeCall;
 import org.entando.entando.aps.system.services.digitalexchange.model.ResilientPagedMetadata;
@@ -29,27 +30,34 @@ import org.springframework.core.ParameterizedTypeReference;
 public class DigitalExchangeComponentsServiceImpl implements DigitalExchangeComponentsService {
 
     private final DigitalExchangesClient client;
+    private final DigitalExchangesService exchangesService;
 
     @Autowired
-    public DigitalExchangeComponentsServiceImpl(DigitalExchangesClient client) {
+    public DigitalExchangeComponentsServiceImpl(DigitalExchangesClient client,
+            DigitalExchangesService exchangesService) {
         this.client = client;
+        this.exchangesService = exchangesService;
     }
 
     @Override
     public ResilientPagedMetadata<DigitalExchangeComponent> getComponents(RestListRequest requestList) {
-        return client.getCombinedResult(new ComponentsCall(requestList));
+        return client.getCombinedResult(new ComponentsCall(exchangesService, requestList));
     }
 
     private static class ComponentsCall extends PagedDigitalExchangeCall<DigitalExchangeComponent> {
 
-        public ComponentsCall(RestListRequest requestList) {
+        private final DigitalExchangesService exchangesService;
+
+        public ComponentsCall(DigitalExchangesService exchangesService, RestListRequest requestList) {
             super(requestList, new ParameterizedTypeReference<PagedRestResponse<DigitalExchangeComponent>>() {
             }, "digitalExchange", "components");
+            this.exchangesService = exchangesService;
         }
 
         @Override
-        protected void preprocessResponse(String exchangeName, PagedRestResponse<DigitalExchangeComponent> response) {
+        protected void preprocessResponse(String exchangeId, PagedRestResponse<DigitalExchangeComponent> response) {
             if (response.getErrors().isEmpty()) {
+                String exchangeName = exchangesService.findById(exchangeId).getName();
                 response.getPayload().forEach(de -> de.setDigitalExchange(exchangeName));
             }
         }

@@ -75,8 +75,8 @@ public class DigitalExchangeCategoriesServiceTest {
 
         clientMocker = new DigitalExchangesClientMocker();
         clientMocker.getDigitalExchangesMocker()
-                .addDigitalExchange("DE 1", new SimpleRestResponse<>(de1Categories))
-                .addDigitalExchange("DE 2", new SimpleRestResponse<>(de2Categories));
+                .addDigitalExchange("DE_1", new SimpleRestResponse<>(de1Categories))
+                .addDigitalExchange("DE_2", new SimpleRestResponse<>(de2Categories));
 
         client = clientMocker.build();
     }

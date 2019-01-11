@@ -37,11 +37,9 @@ import static org.mockito.Mockito.when;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 public class DigitalExchangesServiceTest {
-
-    private static final String DE_1 = "DE 1";
-    private static final String INEXISTENT_DE = "Inexistent DE";
 
     @Mock
     private DigitalExchangesManager manager;
@@ -67,23 +65,23 @@ public class DigitalExchangesServiceTest {
 
     @Test
     public void shouldFindDigitalExchange() {
-        assertNotNull(service.findByName(DE_1));
+        assertNotNull(service.findById(DE_1_ID));
     }
 
     @Test(expected = RestRourceNotFoundException.class)
     public void shouldFindNothing() {
-        service.findByName(INEXISTENT_DE);
+        service.findById(INEXISTENT_DE_ID);
     }
 
     @Test
     public void shouldAddDigitalExchange() {
-        service.create(getDigitalExchange("DE 2"));
+        service.create(getDE2());
     }
 
     @Test(expected = ValidationConflictException.class)
     public void shouldFailAddingDigitalExchange() {
         try {
-            service.create(getDigitalExchange(DE_1));
+            service.create(getDE1());
         } catch (ValidationConflictException ex) {
             assertEquals(1, ex.getBindingResult().getErrorCount());
             assertEquals(DigitalExchangeValidator.ERRCODE_DIGITAL_EXCHANGE_ALREADY_EXISTS,
@@ -94,28 +92,28 @@ public class DigitalExchangesServiceTest {
 
     @Test
     public void shouldUpdateDigitalExchange() {
-        service.update(getDigitalExchange(DE_1));
+        service.update(getDE1());
     }
 
     @Test(expected = RestRourceNotFoundException.class)
     public void shouldFailUpdatingDigitalExchange() {
-        service.update(getDigitalExchange(INEXISTENT_DE));
+        service.update(getInexistentDE());
     }
 
     @Test
     public void shouldDeleteDigitalExchange() {
-        service.delete(DE_1);
+        service.delete(DE_1_ID);
     }
 
     @Test(expected = RestRourceNotFoundException.class)
     public void shouldFailDeletingDigitalExchange() {
-        service.delete(INEXISTENT_DE);
+        service.delete(INEXISTENT_DE_ID);
     }
 
     @Test(expected = ValidationConflictException.class)
     public void shouldFailCreatingDigitalExchangeWithInvalidURL() {
         try {
-            DigitalExchange digitalExchange = getDigitalExchange("New DE");
+            DigitalExchange digitalExchange = getNewDE();
             digitalExchange.setUrl("invalid-url");
             service.create(digitalExchange);
         } catch (ValidationConflictException ex) {
@@ -128,7 +126,7 @@ public class DigitalExchangesServiceTest {
 
     @Test
     public void shouldTestInstance() {
-        assertThat(service.test(DE_1)).isEmpty();
+        assertThat(service.test(DE_1_ID)).isEmpty();
     }
 
     @Test
@@ -138,14 +136,14 @@ public class DigitalExchangesServiceTest {
 
     private void mockManager() {
 
-        List<DigitalExchange> exchanges = Arrays.asList(getDigitalExchange(DE_1));
+        List<DigitalExchange> exchanges = Arrays.asList(getDE1());
 
         when(manager.getDigitalExchanges()).thenReturn(exchanges);
 
-        when(manager.findByName(any(String.class)))
+        when(manager.findById(any(String.class)))
                 .thenAnswer(invocation -> {
-                    String name = invocation.getArgument(0);
-                    return exchanges.stream().filter(de -> de.getName().equals(name)).findFirst();
+                    String id = invocation.getArgument(0);
+                    return exchanges.stream().filter(de -> de.getId().equals(id)).findFirst();
                 });
     }
 
@@ -154,14 +152,7 @@ public class DigitalExchangesServiceTest {
                 .thenReturn(new SimpleRestResponse<>(ImmutableMap.of("OK", new ArrayList<>())));
 
         Map<String, List<RestError>> testAllResult = new HashMap<>();
-        testAllResult.put(DE_1, new ArrayList<>());
+        testAllResult.put(DE_1_ID, new ArrayList<>());
         when(client.getCombinedResult(any())).thenReturn(testAllResult);
-    }
-
-    private DigitalExchange getDigitalExchange(String name) {
-        DigitalExchange digitalExchange = new DigitalExchange();
-        digitalExchange.setName(name);
-        digitalExchange.setUrl("https://de1.entando.com/");
-        return digitalExchange;
     }
 }
