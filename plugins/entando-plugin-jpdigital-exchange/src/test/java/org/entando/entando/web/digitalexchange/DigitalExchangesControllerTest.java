@@ -73,19 +73,6 @@ public class DigitalExchangesControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldCreateDigitalExchangeWithGivenId() throws Exception {
-
-        ResultActions result = createAuthRequest(post(BASE_URL))
-                .setContent(getNewDE()).execute();
-
-        result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.metaData").isEmpty())
-                .andExpect(jsonPath("$.errors").isEmpty())
-                .andExpect(jsonPath("$.payload.id", is(NEW_DE_ID)))
-                .andExpect(jsonPath("$.payload.name", is(NEW_DE_NAME)));
-    }
-
-    @Test
     public void shouldFailCreatingDigitalExchangeBecauseNameIsEmpty() throws Exception {
 
         ResultActions result = createAuthRequest(post(BASE_URL))

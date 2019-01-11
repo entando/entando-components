@@ -61,15 +61,6 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
     @Override
     public DigitalExchange create(DigitalExchange digitalExchange) {
 
-        if (digitalExchange.getId() != null) {
-            manager.findById(digitalExchange.getId())
-                    .ifPresent(de -> {
-                        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(digitalExchange, DIGITAL_EXCHANGE_LABEL);
-                        errors.reject(ERRCODE_DIGITAL_EXCHANGE_ALREADY_EXISTS, new Object[]{digitalExchange.getId()}, "digitalExchange.exists");
-                        throw new ValidationConflictException(errors);
-                    });
-        }
-
         validateName(digitalExchange);
         validateURL(digitalExchange);
 
@@ -111,8 +102,7 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
     private void validateName(DigitalExchange digitalExchange) {
 
         if (getDigitalExchanges().stream()
-                .filter(de -> digitalExchange.getName().equals(de.getName()))
-                .findAny().isPresent()) {
+                .anyMatch(de -> digitalExchange.getName().equals(de.getName()))) {
 
             BeanPropertyBindingResult errors = new BeanPropertyBindingResult(digitalExchange, DIGITAL_EXCHANGE_LABEL);
             errors.reject(ERRCODE_DIGITAL_EXCHANGE_NAME_TAKEN, new Object[]{digitalExchange.getName()}, "digitalExchange.name.taken");

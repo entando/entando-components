@@ -108,28 +108,27 @@ public class DigitalExchangesManagerTest {
     @Test
     public void shouldAddDigitalExchange() {
 
-        assertThat(manager.create(getDE2()))
+        DigitalExchange digitalExchange = manager.create(getNewDE());
+        
+        assertThat(digitalExchange)
                 .isNotNull()
                 .extracting(DigitalExchange::getId, DigitalExchange::getName)
-                .containsExactly(DE_2_ID, DE_2_NAME);
+                .containsExactly(digitalExchange.getId(), NEW_DE_NAME);
 
         assertThat(manager.getRestTemplate(DE_1_ID)).isNotNull();
-        assertThat(manager.getRestTemplate(DE_2_ID)).isNotNull();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotAddExistingDigitalExchange() {
-        manager.create(getDE1());
+        assertThat(manager.getRestTemplate(digitalExchange.getId())).isNotNull();
     }
 
     @Test
     public void shouldNotAddDisabledDigitalExchangeTemplateOnCreate() {
-        DigitalExchange digitalExchange = getDE2();
+        DigitalExchange digitalExchange = getNewDE();
         digitalExchange.setActive(false);
 
-        assertThat(manager.create(digitalExchange)).isNotNull();
-        assertTrue(manager.findById(DE_2_ID).isPresent());
-        assertThat(manager.getRestTemplate(DE_2_ID)).isNull();
+        digitalExchange = manager.create(digitalExchange);
+        
+        assertThat(digitalExchange).isNotNull();
+        assertTrue(manager.findById(digitalExchange.getId()).isPresent());
+        assertThat(manager.getRestTemplate(digitalExchange.getId())).isNull();
     }
 
     @Test
@@ -174,10 +173,10 @@ public class DigitalExchangesManagerTest {
 
         when(restTemplateFactory.createOAuth2RestTemplate(any())).thenReturn(null);
 
-        manager.create(getDE2());
-        assertTrue(manager.findById(DE_2_ID).isPresent());
-        assertFalse(manager.findById(DE_2_ID).get().isActive());
-        assertThat(manager.getRestTemplate(DE_2_ID)).isNull();
+        DigitalExchange newDE = manager.create(getNewDE());
+        assertTrue(manager.findById(newDE.getId()).isPresent());
+        assertFalse(manager.findById(newDE.getId()).get().isActive());
+        assertThat(manager.getRestTemplate(newDE.getId())).isNull();
     }
 
     private void mockRestTemplateFactory() {

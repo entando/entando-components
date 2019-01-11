@@ -87,7 +87,7 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
     @Test
     public void testCRUDDigitalExchange() throws Exception {
 
-        String digitalExchangeId = NEW_DE_ID;
+        String generatedId = null;
 
         try {
             // Create
@@ -99,76 +99,66 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.metaData").isEmpty())
                     .andExpect(jsonPath("$.errors").isEmpty())
-                    .andExpect(jsonPath("$.payload.id", is(digitalExchangeId)));
+                    .andExpect(jsonPath("$.payload.name", is(digitalExchange.getName())));
+
+            String jsonResponse = result.andReturn().getResponse().getContentAsString();
+
+            SimpleRestResponse<DigitalExchange> response = new ObjectMapper()
+                    .readValue(jsonResponse, new TypeReference<SimpleRestResponse<DigitalExchange>>() {
+                    });
+
+            generatedId = response.getPayload().getId();
+            assertThat(generatedId).isNotNull().hasSize(20);
+            digitalExchange.setId(generatedId);
 
             // Read
-            result = createAuthRequest(get(BASE_URL + "/{id}", digitalExchangeId)).execute();
+            result = createAuthRequest(get(BASE_URL + "/{id}", generatedId)).execute();
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.metaData").isEmpty())
                     .andExpect(jsonPath("$.errors").isEmpty())
-                    .andExpect(jsonPath("$.payload.id", is(digitalExchangeId)));
+                    .andExpect(jsonPath("$.payload.id", is(generatedId)));
 
             // Update
             String url = "http://www.entando.com/";
             digitalExchange.setUrl(url);
-            result = createAuthRequest(put(BASE_URL + "/{id}", digitalExchangeId))
+            result = createAuthRequest(put(BASE_URL + "/{id}", generatedId))
                     .setContent(digitalExchange).execute();
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.metaData").isEmpty())
                     .andExpect(jsonPath("$.errors").isEmpty())
-                    .andExpect(jsonPath("$.payload.id", is(digitalExchangeId)))
+                    .andExpect(jsonPath("$.payload.id", is(generatedId)))
                     .andExpect(jsonPath("$.payload.url", is(url)));
 
             // Delete
-            result = createAuthRequest(delete(BASE_URL + "/{id}", digitalExchangeId)).execute();
+            result = createAuthRequest(delete(BASE_URL + "/{id}", generatedId)).execute();
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.metaData").isEmpty())
                     .andExpect(jsonPath("$.errors").isEmpty())
-                    .andExpect(jsonPath("$.payload", is(digitalExchangeId)));
+                    .andExpect(jsonPath("$.payload", is(generatedId)));
+
         } catch (Exception ex) {
-            digitalExchangeService.delete(digitalExchangeId);
+            if (generatedId != null) {
+                digitalExchangeService.delete(generatedId);
+            }
             throw ex;
         }
     }
 
     @Test
-    public void shouldCreateDigitalExchangeGeneratingId() throws Exception {
+    public void shouldFailCreatingDigitalExchangeWithGivenId() throws Exception {
 
-        DigitalExchange digitalExchange = getDigitalExchange(null, NEW_DE_NAME);
+        DigitalExchange digitalExchange = getDigitalExchange("chosen_id", NEW_DE_NAME);
 
         ResultActions result = createAuthRequest(post(BASE_URL))
                 .setContent(digitalExchange).execute();
 
-        result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.metaData").isEmpty())
-                .andExpect(jsonPath("$.errors").isEmpty())
-                .andExpect(jsonPath("$.payload.name", is(NEW_DE_NAME)));
-
-        String jsonResponse = result.andReturn().getResponse().getContentAsString();
-
-        SimpleRestResponse<DigitalExchange> response = new ObjectMapper()
-                .readValue(jsonResponse, new TypeReference<SimpleRestResponse<DigitalExchange>>() {
-                });
-
-        String generatedId = response.getPayload().getId();
-        assertThat(generatedId).isNotNull().hasSize(20);
-
-        digitalExchangeService.delete(generatedId);
-    }
-
-    @Test
-    public void shouldFailCreatingDigitalExchangeBecauseAlreadyExists() throws Exception {
-
-        ResultActions result = createAuthRequest(post(BASE_URL))
-                .setContent(getDE1()).execute();
-
-        result.andExpect(status().isConflict())
+        result.andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.metaData").isEmpty())
                 .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.errors[0].code", is(DigitalExchangeValidator.ERRCODE_DIGITAL_EXCHANGE_ALREADY_EXISTS)));
+                .andExpect(jsonPath("$.errors[0].code", is(DigitalExchangeValidator.ERRCODE_DIGITAL_EXCHANGE_ID_AUTOGENERATED)));
     }
 
     @Test

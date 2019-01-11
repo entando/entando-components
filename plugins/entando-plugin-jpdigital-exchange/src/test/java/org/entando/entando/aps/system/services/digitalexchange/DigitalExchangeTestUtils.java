@@ -23,7 +23,6 @@ public final class DigitalExchangeTestUtils {
     public static final String DE_2_ID = "DE_2";
     public static final String DE_2_NAME = "DigitalExchange 2";
 
-    public static final String NEW_DE_ID = "NEW_DE";
     public static final String NEW_DE_NAME = "New DigitalExchange";
 
     public static final String INEXISTENT_DE_ID = "Inexistent_DE";
@@ -42,13 +41,17 @@ public final class DigitalExchangeTestUtils {
     }
 
     public static DigitalExchange getNewDE() {
-        return getDigitalExchange(NEW_DE_ID, NEW_DE_NAME);
+        return getDigitalExchange(NEW_DE_NAME);
     }
 
     public static DigitalExchange getInexistentDE() {
         return getDigitalExchange(INEXISTENT_DE_ID, INEXISTENT_DE_ID);
     }
 
+    public static DigitalExchange getDigitalExchange(String name) {
+        return getDigitalExchange(null, name);
+    }
+    
     public static DigitalExchange getDigitalExchange(String id, String name) {
         DigitalExchange digitalExchange = new DigitalExchange();
         digitalExchange.setId(id);

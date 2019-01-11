@@ -78,11 +78,7 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
     @Override
     public DigitalExchange create(DigitalExchange digitalExchange) {
 
-        if (digitalExchange.getId() == null) {
-            digitalExchange.setId(RandomStringUtils.randomAlphanumeric(ID_LENGTH));
-        } else if (findById(digitalExchange.getId()).isPresent()) {
-            throw new IllegalArgumentException("DigitalExchange " + digitalExchange.getId() + " already exists");
-        }
+        digitalExchange.setId(RandomStringUtils.randomAlphanumeric(ID_LENGTH));
 
         exchanges.add(digitalExchange);
         updateDigitalExchangesConfig();

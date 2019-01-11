@@ -78,18 +78,6 @@ public class DigitalExchangesServiceTest {
         service.create(getDE2());
     }
 
-    @Test(expected = ValidationConflictException.class)
-    public void shouldFailAddingDigitalExchange() {
-        try {
-            service.create(getDE1());
-        } catch (ValidationConflictException ex) {
-            assertEquals(1, ex.getBindingResult().getErrorCount());
-            assertEquals(DigitalExchangeValidator.ERRCODE_DIGITAL_EXCHANGE_ALREADY_EXISTS,
-                    ex.getBindingResult().getAllErrors().get(0).getCode());
-            throw ex;
-        }
-    }
-
     @Test
     public void shouldUpdateDigitalExchange() {
         service.update(getDE1());
