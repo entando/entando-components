@@ -22,13 +22,12 @@ import "./sass/index.css";
 import "patternfly/dist/css/patternfly.min.css";
 import "patternfly/dist/css/patternfly-additions.min.css";
 
-import DashboardWidgetConfigPage from "ui/widgets/common/components/DashboardWidgetConfigPage";
 import DashboardConfigAddPage from "ui/dashboard-config/add/components/DashboardConfigAddPage";
 
 import DashboardConfigPageContainer from "ui/dashboard-config/list/containers/DashboardConfigPageContainer";
 
-import DashboardTableFormContainer from "ui/widgets/dashboard-table/containers/DashboardTableFormContainer";
-import DashboardLineChartFormContainer from "ui/widgets/charts/line-chart/containers/DashboardLineChartFormContainer";
+import DashboardTable from "ui/widgets/dashboard-table/components/DashboardTable";
+import DashboardLineChart from "ui/widgets/charts/line-chart/components/DashboardLineChart";
 
 const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
   acc[`plugin.${plugin.id}.${key}`] = enLocale.messages[key];
@@ -44,9 +43,7 @@ export default ReactDOM.render(
       <Grid fluid>
         <Row>
           <Col xs={12}>
-            <DashboardWidgetConfigPage>
-              <DashboardLineChartFormContainer />
-            </DashboardWidgetConfigPage>
+            <DashboardLineChart />
           </Col>
         </Row>
         <Row>
@@ -69,12 +66,9 @@ export default ReactDOM.render(
             <hr />
           </Col>
         </Row>
-
         <Row>
           <Col xs={12}>
-            <DashboardWidgetConfigPage>
-              <DashboardTableFormContainer />
-            </DashboardWidgetConfigPage>
+            <DashboardTable />
           </Col>
         </Row>
       </Grid>

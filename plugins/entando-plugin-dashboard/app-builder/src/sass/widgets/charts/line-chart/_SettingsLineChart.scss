@@ -1,0 +1,23 @@
+.SettingsLineChart {
+  .row {
+    border: 0px solid;
+  }
+  .SettingsLineChart__x-axis {
+    border: 0px solid;
+    min-height: 200px;
+  }
+  .SettingsLineChart__y-axis {
+    border: 0px solid;
+    min-height: 200px;
+  }
+  .SettingsLineChart__y2-axis {
+    border: 0px solid;
+    min-height: 200px;
+  }
+
+  &__form-group {
+    border: 0px solid;
+    min-height: 60px;
+  }
+
+}

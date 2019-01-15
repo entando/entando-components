@@ -1,11 +1,11 @@
 import React from "react";
 
 import DashboardWidgetConfigPage from "ui/widgets/common/components/DashboardWidgetConfigPage";
-import DashboardTableFormContainer from "ui/widgets/dashboard-table/containers/DashboardTableFormContainer";
+import DashboardLineChartFormContainer from "ui/widgets/charts/line-chart/containers/DashboardLineChartFormContainer";
 
 const DashboardLineChart = ({onSubmit}) => (
   <DashboardWidgetConfigPage>
-    <DashboardTableFormContainer onSubmit={onSubmit} />
+    <DashboardLineChartFormContainer onSubmit={onSubmit} />
   </DashboardWidgetConfigPage>
 );
 

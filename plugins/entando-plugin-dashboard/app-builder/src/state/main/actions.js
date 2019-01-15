@@ -84,6 +84,8 @@ export const setDatasourceData = data => ({
   }
 });
 
+// thunk
+
 export const gotoPluginPage = pluginPage => (dispatch, getState) => {
   const state = getState();
   const route = getRoute(state);
@@ -266,3 +268,7 @@ export const showHideColumn = key => dispatch => {
   console.log("Show Hide Column ", key);
   dispatch(setShowHideColumn(key));
 };
+
+/*
+ Widget Chart thunk
+*/

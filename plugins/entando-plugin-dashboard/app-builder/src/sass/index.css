@@ -176,9 +176,20 @@
 .ChartFirstStep__container-datasource {
   margin-top: 2em; }
 
+.DashboardLineChart .wizard-pf-main {
+  padding: 3em; }
+
+.DashboardLineChart .wizard-pf-row {
+  height: none;
+  max-height: none;
+  width: 100%; }
+
 .DashboardLineChart__data-container {
-  border: 0px solid;
-  height: 90%; }
+  border: 0px solid; }
+
+.DashboardLineChart__data-contents {
+  border: 0px solid red;
+  height: 600px; }
 
 .DashboardLineChart__btn-container {
   border: 0px solid;
@@ -186,3 +197,40 @@
 
 .DashboardLineChart__btn-back {
   margin-right: 3em; }
+
+.ChartSecondStep__preview-text-chart-container {
+  border: 0px solid;
+  margin-bottom: 1em;
+  font-size: 14px;
+  padding-left: 0 !important; }
+
+.ChartSecondStep__preview-text-type-chart {
+  margin-left: 5px;
+  font-weight: bold; }
+
+.ChartSecondStep__preview-chart {
+  border: 0px solid;
+  padding: 0 !important; }
+
+.ChartSecondStep__settings-container {
+  border: 0px solid;
+  margin-top: 1em; }
+
+.SettingsLineChart .row {
+  border: 0px solid; }
+
+.SettingsLineChart .SettingsLineChart__x-axis {
+  border: 0px solid;
+  min-height: 200px; }
+
+.SettingsLineChart .SettingsLineChart__y-axis {
+  border: 0px solid;
+  min-height: 200px; }
+
+.SettingsLineChart .SettingsLineChart__y2-axis {
+  border: 0px solid;
+  min-height: 200px; }
+
+.SettingsLineChart__form-group {
+  border: 0px solid;
+  min-height: 60px; }

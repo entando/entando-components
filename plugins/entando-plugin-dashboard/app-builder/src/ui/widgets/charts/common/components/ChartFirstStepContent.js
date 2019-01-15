@@ -10,15 +10,12 @@ class ChartFirstStepContent extends Component {
     return (
       <div className="ChartFirstStep">
         <Row>
-          <Col xs={1} />
-          <Col xs={10} className="ChartFirstStep__widget-title">
+          <Col xs={12} className="ChartFirstStep__widget-title">
             <DashboardWidgetTitleContainer />
           </Col>
-          <Col xs={1} />
         </Row>
         <Row>
-          <Col xs={1} />
-          <Col xs={10} className="ChartFirstStep__container-datasource">
+          <Col xs={12} className="ChartFirstStep__container-datasource">
             <Row>
               <Col xs={12}>
                 <ServerNameFormContainer labelSize={2} />
@@ -30,7 +27,6 @@ class ChartFirstStepContent extends Component {
               </Col>
             </Row>
           </Col>
-          <Col xs={1} />
         </Row>
       </div>
     );

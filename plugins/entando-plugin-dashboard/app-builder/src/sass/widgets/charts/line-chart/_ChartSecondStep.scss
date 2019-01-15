@@ -1,0 +1,24 @@
+.ChartSecondStep {
+  &__row-preview-text-chart {
+
+  }
+  &__preview-text-chart-container {
+    border:0px solid;
+    margin-bottom: 1em;
+    font-size: 14px;
+    padding-left: 0 !important;
+  }
+  &__preview-text-type-chart {
+    margin-left: 5px;
+    font-weight: bold;
+  }
+  &__preview-chart {
+    border:0px solid;
+    padding: 0!important;
+  }
+  &__settings-container {
+    border: 0px solid;
+    margin-top: 1em;
+
+  }
+}

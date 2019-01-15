@@ -76,6 +76,15 @@ export default {
     "plugin.config.disabled": "Disable",
     "plugin.charts.firstStep": "First Step",
     "plugin.charts.secondStep": "Second Step",
-    "plugin.charts.thirdStep": "Third Step"
+    "plugin.charts.thirdStep": "Third Step",
+    "plugin.charts.previewChart.label": "You have selected",
+    "plugin.charts.previewChart.label.chartType": "{chart}",
+    "plugin.chart.invertAxisXtoY": "Invert ad rotate Value Y to X",
+    "plugin.chart.Xaxis": "X-Axis",
+    "plugin.chart.Yaxis": "Y-Axis",
+    "plugin.chart.Y2axis": "Y2-Axis",
+    "plugin.chart.labelXaxis": "Label X-Axis",
+    "plugin.chart.labelYaxis": "Label Y-Axis",
+    "plugin.chart.Y2axis.help": ""
   }
 };
