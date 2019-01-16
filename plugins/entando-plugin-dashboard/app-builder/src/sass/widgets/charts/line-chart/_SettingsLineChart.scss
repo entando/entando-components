@@ -2,22 +2,17 @@
   .row {
     border: 0px solid;
   }
-  .SettingsLineChart__x-axis {
+  &__col {
     border: 0px solid;
     min-height: 200px;
   }
-  .SettingsLineChart__y-axis {
-    border: 0px solid;
-    min-height: 200px;
-  }
-  .SettingsLineChart__y2-axis {
-    border: 0px solid;
-    min-height: 200px;
-  }
-
   &__form-group {
     border: 0px solid;
     min-height: 60px;
+  }
+  &__timeformat-container {
+    border: 0px solid;
+    padding-left: 1.5em;
   }
 
 }

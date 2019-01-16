@@ -65,11 +65,9 @@ class Chart extends Component {
 
   updateChart() {
     const {config} = this.props;
-    const {className, type, defaultConfig} = CHART_CONFIG[this.props.type];
-
+    const {type, defaultConfig} = CHART_CONFIG[this.props.type];
     c3.generate({
       bindto: "#chart",
-      className: {className},
       data: {
         columns: this.props.columns,
         type: type
@@ -79,7 +77,8 @@ class Chart extends Component {
     });
   }
   render() {
-    return <div id="chart" />;
+    const {className} = CHART_CONFIG[this.props.type];
+    return <div id="chart" className={className} />;
   }
 }
 export default Chart;

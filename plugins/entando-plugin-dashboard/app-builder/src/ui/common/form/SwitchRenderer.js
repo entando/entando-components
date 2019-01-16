@@ -2,15 +2,28 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Switch} from "patternfly-react";
 
-const SwitchRenderer = ({input, trueValue, falseValue, disabled}) => {
+const SwitchRenderer = ({
+  input,
+  trueValue,
+  falseValue,
+  disabled,
+  className
+}) => {
   const switchValue =
     input.value === "true" || input.value === true || input.value === trueValue;
+
+  let wrapperClass = "wrapper";
+  if (className) {
+    wrapperClass = `${wrapperClass} ${className}`;
+  }
+
   return (
     <Switch
       disabled={disabled}
       {...input}
       value={switchValue}
       onChange={(el, val) => input.onChange(val ? trueValue : falseValue)}
+      wrapperClass={wrapperClass}
     />
   );
 };

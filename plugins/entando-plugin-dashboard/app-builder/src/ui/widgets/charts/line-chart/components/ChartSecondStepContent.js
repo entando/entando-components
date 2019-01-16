@@ -35,7 +35,7 @@ class ChartSecondStepContent extends Component {
             <Chart
               type={type}
               columns={data}
-              config={{axis: {rotated: rotated}}}
+              config={{axis: {rotated: rotated}, size: {height: 250}}}
             />
           </Col>
         </Row>

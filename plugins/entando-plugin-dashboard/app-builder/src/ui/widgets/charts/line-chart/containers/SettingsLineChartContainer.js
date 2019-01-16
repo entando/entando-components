@@ -6,7 +6,8 @@ import SettingsLineChart from "../components/SettingsLineChart";
 const selector = formValueSelector("form-dashboard-line-chart");
 
 const mapStateToProps = state => ({
-  axisY2Show: selector(state, "axis.y2.show")
+  axisY2Show: selector(state, "axis.y2.show"),
+  axisXType: selector(state, "axis.x.type")
 });
 
 const SettingsLineChartContainer = connect(

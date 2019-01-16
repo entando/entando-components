@@ -189,7 +189,7 @@
 
 .DashboardLineChart__data-contents {
   border: 0px solid red;
-  height: 600px; }
+  height: 700px; }
 
 .DashboardLineChart__btn-container {
   border: 0px solid;
@@ -214,23 +214,19 @@
 
 .ChartSecondStep__settings-container {
   border: 0px solid;
-  margin-top: 1em; }
+  margin-top: 0px; }
 
 .SettingsLineChart .row {
   border: 0px solid; }
 
-.SettingsLineChart .SettingsLineChart__x-axis {
-  border: 0px solid;
-  min-height: 200px; }
-
-.SettingsLineChart .SettingsLineChart__y-axis {
-  border: 0px solid;
-  min-height: 200px; }
-
-.SettingsLineChart .SettingsLineChart__y2-axis {
+.SettingsLineChart__col {
   border: 0px solid;
   min-height: 200px; }
 
 .SettingsLineChart__form-group {
   border: 0px solid;
   min-height: 60px; }
+
+.SettingsLineChart__timeformat-container {
+  border: 0px solid;
+  padding-left: 1.5em; }

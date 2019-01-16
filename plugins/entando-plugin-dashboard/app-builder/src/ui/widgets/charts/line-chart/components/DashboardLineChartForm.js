@@ -13,7 +13,7 @@ class DashboardLineChartFormBody extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeSubStepIndex: 0
+      activeSubStepIndex: 1
     };
     this.onNextButtonClick = this.onNextButtonClick.bind(this);
     this.onBackButtonClick = this.onBackButtonClick.bind(this);

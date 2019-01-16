@@ -85,6 +85,9 @@ export default {
     "plugin.chart.Y2axis": "Y2-Axis",
     "plugin.chart.labelXaxis": "Label X-Axis",
     "plugin.chart.labelYaxis": "Label Y-Axis",
-    "plugin.chart.Y2axis.help": ""
+    "plugin.chart.Y2axis.help": "",
+    "plugin.chart.timeFormat-Y-M-D": "anno-mese-giorno",
+    "plugin.chart.timeFormat-D-M-Y": "giorno-mese-anno",
+    "plugin.chart.timeFormat-M-D-Y": "mese-giorno-anno"
   }
 };
