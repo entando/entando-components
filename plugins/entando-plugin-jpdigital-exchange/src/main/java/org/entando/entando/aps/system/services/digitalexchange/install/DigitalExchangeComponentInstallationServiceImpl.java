@@ -19,13 +19,12 @@ import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExch
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 @Service
 public class DigitalExchangeComponentInstallationServiceImpl implements DigitalExchangeComponentInstallationService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeComponentInstallationServiceImpl.class);
 
     private final DigitalExchangeComponentInstallationDAO dao;
     private final ComponentInstaller componentInstaller;
@@ -64,7 +63,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         ComponentInstallationJob job = new ComponentInstallationJob();
         job.setId(RandomStringUtils.randomAlphanumeric(20));
         job.setComponent(componentName);
-        job.setDigitalExchange(digitalExchange.getName());
+        job.setDigitalExchange(digitalExchange.getId());
         job.setStatus(InstallationStatus.CREATED);
 
         return job;

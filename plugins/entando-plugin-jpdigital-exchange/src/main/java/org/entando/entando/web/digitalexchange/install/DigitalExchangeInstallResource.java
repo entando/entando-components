@@ -14,15 +14,37 @@
  */
 package org.entando.entando.web.digitalexchange.install;
 
+import com.agiletec.aps.system.services.role.Permission;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallationJob;
+import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@Api(tags = {"digital-exchange", "installation"})
 @RequestMapping(value = "/digitalExchange")
 public interface DigitalExchangeInstallResource {
-
+    
+    @ApiOperation(value = "Starts component installation job")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK")
+    })
+    @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "{exchange}/install/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
     SimpleRestResponse<String> install(@PathVariable("exchange") String digitalExchangeId, @PathVariable("component") String componentName);
+
+
+    @ApiOperation(value = "Checks installation job status")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK")
+    })
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping(value = "/install/{jobId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    SimpleRestResponse<ComponentInstallationJob> getJob(@PathVariable("jobId") String jobId);
 }

@@ -18,6 +18,7 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -29,17 +30,24 @@ import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeBaseCall;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.context.ServletContextAware;
 
 @org.springframework.stereotype.Component
 public class ComponentInstaller implements ServletContextAware {
 
+    private static final Logger logger = LoggerFactory.getLogger(ComponentInstaller.class);
+
     protected static final String COMPONENTS_DIR = "de_components";
+    protected static final boolean PROTECTED_RESOURCE = true;
 
     private final DigitalExchangesClient client;
     private final IStorageManager storageManager;
@@ -63,11 +71,11 @@ public class ComponentInstaller implements ServletContextAware {
         int currentStep = 0;
 
         downloadComponent(job);
-        job.setProgress(currentStep++ / steps);
+        job.setProgress(++currentStep / steps);
         updater.accept(job);
 
         installComponent(job);
-        job.setProgress(currentStep++ / steps);
+        job.setProgress(++currentStep / steps);
         updater.accept(job);
 
         reloadSystem();
@@ -84,15 +92,18 @@ public class ComponentInstaller implements ServletContextAware {
 
             tempZipPath = Files.createTempFile(job.getComponent(), "");
 
-            // TODO: retrieve zip from DE
-            try (InputStream in = ComponentInstaller.class.getClassLoader().getResourceAsStream("test_widget.zip")) {
+            DigitalExchangeBaseCall call = new DigitalExchangeBaseCall(
+                    HttpMethod.GET, "digitalExchange", "components", job.getComponent());
+
+            try (InputStream in = client.getStreamResponse(job.getDigitalExchange(), call)) {
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
             }
 
             createComponentsDir();
             extractZip(tempZipPath);
 
-        } catch (ApsSystemException | IOException ex) {
+        } catch (ApsSystemException | IOException | UncheckedIOException ex) {
+            logger.error("Error while downloading component", ex);
             throw new InstallationException("Unable to save component", ex);
         } finally {
             if (tempZipPath != null) {
@@ -102,8 +113,8 @@ public class ComponentInstaller implements ServletContextAware {
     }
 
     private void createComponentsDir() throws ApsSystemException {
-        if (!storageManager.exists(COMPONENTS_DIR, true)) {
-            storageManager.createDirectory(COMPONENTS_DIR, true);
+        if (!storageManager.exists(COMPONENTS_DIR, PROTECTED_RESOURCE)) {
+            storageManager.createDirectory(COMPONENTS_DIR, PROTECTED_RESOURCE);
         }
     }
 
@@ -117,11 +128,12 @@ public class ComponentInstaller implements ServletContextAware {
                 String path = COMPONENTS_DIR + File.separator + entry.getName();
 
                 if (!entry.isDirectory()) {
-                    storageManager.saveFile(path, true, zip.getInputStream(entry));
-                } else if (!storageManager.exists(path, true)) {
-                    storageManager.createDirectory(path, true);
+                    storageManager.saveFile(path, PROTECTED_RESOURCE, zip.getInputStream(entry));
+                } else if (!storageManager.exists(path, PROTECTED_RESOURCE)) {
+                    storageManager.createDirectory(path, PROTECTED_RESOURCE);
                 }
             } catch (ApsSystemException | IOException ex) {
+                logger.error("Error while extracting zip file", ex);
                 throw new InstallationException("Unable to extract zip file", ex);
             }
         });
@@ -139,8 +151,11 @@ public class ComponentInstaller implements ServletContextAware {
             databaseManager.initComponentDefaultResources(component, systemInstallationReport, true);
 
             initializerManager.saveReport(systemInstallationReport);
+            
+            initializerManager.executeComponentPostInitProcesses(component, systemInstallationReport);
 
         } catch (ApsSystemException ex) {
+            logger.error("Error during component installation", ex);
             throw new InstallationException("Unable to install component", ex);
         }
     }
@@ -150,25 +165,27 @@ public class ComponentInstaller implements ServletContextAware {
         String componentDefinitionPath = COMPONENTS_DIR + File.separator
                 + componentCode + File.separator + "component.xml";
 
-        if (!storageManager.exists(componentDefinitionPath, true)) {
+        if (!storageManager.exists(componentDefinitionPath, PROTECTED_RESOURCE)) {
             throw new InstallationException("component.xml not found for " + componentCode);
         }
 
-        try (InputStream in = storageManager.getStream(componentDefinitionPath, true)) {
+        try (InputStream in = storageManager.getStream(componentDefinitionPath, PROTECTED_RESOURCE)) {
             Document document = new SAXBuilder().build(in);
             Component component = new Component(document.getRootElement(), new HashMap<>());
             component.getEnvironments().replaceAll((key, value)
                     -> new DigitalExchangeComponentEnvironment(storageManager, value));
             return component;
         } catch (Throwable t) {
+            logger.error("Error during component defintion parsing", t);
             throw new InstallationException("Unable to parse component.xml for " + componentCode);
         }
     }
 
-    private void reloadSystem() {
+    protected void reloadSystem() {
         try {
             ApsWebApplicationUtils.executeSystemRefresh(servletContext);
         } catch (Throwable t) {
+            logger.error("Error during system reloading", t);
             throw new InstallationException("Unable to reload the system after the installation");
         }
     }

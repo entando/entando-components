@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.client;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import org.entando.entando.web.common.model.Filter;
@@ -28,9 +29,15 @@ import org.springframework.http.HttpMethod;
  */
 public class DigitalExchangeMockedRequest {
 
-    private HttpMethod method;
     private Map<String, String> urlParams;
-    private HttpEntity entity;
+    private String endpoint;
+    private HttpMethod method;
+    private HttpEntity<?> entity;
+
+    public DigitalExchangeMockedRequest(String url, String baseUrl) {
+        setEndpoint(url, baseUrl);
+        setURLParameters(url);
+    }
 
     public HttpMethod getMethod() {
         return method;
@@ -43,11 +50,6 @@ public class DigitalExchangeMockedRequest {
 
     public Map<String, String> getUrlParams() {
         return urlParams;
-    }
-
-    public DigitalExchangeMockedRequest setUrlParams(Map<String, String> urlParams) {
-        this.urlParams = urlParams;
-        return this;
     }
 
     public RestListRequest getRestListRequest() {
@@ -91,12 +93,36 @@ public class DigitalExchangeMockedRequest {
         return filters.values().toArray(new Filter[filters.size()]);
     }
 
-    public HttpEntity getEntity() {
+    public HttpEntity<?> getEntity() {
         return entity;
     }
 
-    public DigitalExchangeMockedRequest setEntity(HttpEntity entity) {
+    public DigitalExchangeMockedRequest setEntity(HttpEntity<?> entity) {
         this.entity = entity;
         return this;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    private void setEndpoint(String url, String baseUrl) {
+        endpoint = url.substring((baseUrl + "api").length(), url.length());
+        int questionMarkPosition = url.indexOf("?");
+        if (questionMarkPosition != -1) {
+            endpoint = endpoint.substring(0, questionMarkPosition);
+        }
+    }
+
+    private void setURLParameters(String url) {
+        urlParams = new HashMap<>();
+        int questionMarkPosition = url.indexOf("?");
+        if (questionMarkPosition != -1) {
+            String query = url.substring(questionMarkPosition + 1);
+            for (String queryPart : query.split("&")) {
+                String[] split = queryPart.split("=");
+                urlParams.put(split[0], split[1]);
+            }
+        }
     }
 }

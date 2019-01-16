@@ -41,4 +41,9 @@ public class DigitalExchangeInstallResourceController implements DigitalExchange
         ComponentInstallationJob job = installationService.install(digitalExchange, componentName);
         return new SimpleRestResponse<>(job.getId());
     }
+
+    @Override
+    public SimpleRestResponse<ComponentInstallationJob> getJob(@PathVariable("jobId") String jobId) {
+        return new SimpleRestResponse<>(installationService.checkInstallationStatus(jobId));
+    }
 }

@@ -38,7 +38,7 @@ public class ComponentResource extends AbstractResource {
     @Override
     public InputStream getInputStream() throws IOException {
         try {
-            return storageManager.getStream(path, true);
+            return storageManager.getStream(path, ComponentInstaller.PROTECTED_RESOURCE);
         } catch (ApsSystemException ex) {
             throw new IOException(ex);
         }

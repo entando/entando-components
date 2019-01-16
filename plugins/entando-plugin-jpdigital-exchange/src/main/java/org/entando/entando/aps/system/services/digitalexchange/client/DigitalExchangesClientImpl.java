@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.client;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -85,10 +86,18 @@ public class DigitalExchangesClientImpl implements DigitalExchangesClient {
 
     @Override
     public <R extends RestResponse<?, ?>, C> R getSingleResponse(String digitalExchangeId, DigitalExchangeCall<R, C> call) {
+        return getSingleResponse(getDigitalExchange(digitalExchangeId), call);
+    }
 
-        DigitalExchange digitalExchange = digitalExchangesManager.findById(digitalExchangeId).
+    @Override
+    public InputStream getStreamResponse(String digitalExchangeId, DigitalExchangeBaseCall call) {
+        DigitalExchange digitalExchange = getDigitalExchange(digitalExchangeId);
+        OAuth2RestTemplate restTemplate = digitalExchangesManager.getRestTemplate(digitalExchange.getId());
+        return new DigitalExchangeStreamCallExecutor(messageSource, digitalExchange, restTemplate, call).getResponse();
+    }
+
+    private DigitalExchange getDigitalExchange(String digitalExchangeId) {
+        return digitalExchangesManager.findById(digitalExchangeId).
                 orElseThrow(() -> new IllegalArgumentException("DigitalExchange " + digitalExchangeId + " not found"));
-        
-        return getSingleResponse(digitalExchange, call);
     }
 }

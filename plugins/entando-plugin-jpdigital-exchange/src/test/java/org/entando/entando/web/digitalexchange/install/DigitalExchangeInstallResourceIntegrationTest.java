@@ -13,10 +13,17 @@
  */
 package org.entando.entando.web.digitalexchange.install;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import org.entando.entando.aps.system.init.IInitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesMocker;
+import org.entando.entando.aps.system.services.digitalexchange.install.ComponentZipUtil;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,25 +31,57 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.entando.entando.aps.system.services.widgettype.IWidgetService;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallationJob;
+import org.entando.entando.aps.system.services.digitalexchange.install.InstallationStatus;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
+import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.junit.After;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import org.springframework.core.io.Resource;
 
 @ActiveProfiles("DEinstallTest")
 public class DigitalExchangeInstallResourceIntegrationTest extends AbstractControllerIntegrationTest {
 
     private static final String BASE_URL = "/digitalExchange";
 
+    private static File tempZipFile;
+
+    @BeforeClass
+    public static void setupZip() {
+        tempZipFile = ComponentZipUtil.getTestWidgetZip();
+    }
+
+    @AfterClass
+    public static void deleteZip() {
+        if (tempZipFile != null) {
+            tempZipFile.delete();
+        }
+    }
+
     @Autowired
     private IWidgetService widgetService;
 
     @Autowired
+    private IStorageManager storageManager;
+
+    @Autowired
     private IInitializerManager initializerManager;
+
+    @After
+    public void cleanup() throws Exception {
+        storageManager.deleteDirectory("de_components", true);
+    }
 
     @Configuration
     @Profile("DEinstallTest")
@@ -52,7 +91,14 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         @Primary
         public DigitalExchangeOAuth2RestTemplateFactory getRestTemplateFactory() {
             return new DigitalExchangesMocker()
-                    .addDigitalExchange(DE_1_ID, () -> {
+                    .addDigitalExchange(DE_1_ID, (request) -> {
+                        Resource resource = mock(Resource.class);
+                        try {
+                            when(resource.getInputStream()).thenReturn(new FileInputStream(tempZipFile));
+                        } catch (IOException ex) {
+                            throw new UncheckedIOException(ex);
+                        }
+                        return resource;
                     })
                     .initMocks();
         }
@@ -69,21 +115,58 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                 .andExpect(jsonPath("$.metaData").isEmpty())
                 .andExpect(jsonPath("$.payload").isString());
 
-        // TODO: This is temporary
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ex) {
+        String jsonResponse = result.andReturn().getResponse().getContentAsString();
+
+        SimpleRestResponse<String> response = new ObjectMapper()
+                .readValue(jsonResponse, new TypeReference<SimpleRestResponse<String>>() {
+                });
+
+        String jobId = response.getPayload();
+        assertThat(jobId).hasSize(20);
+
+        InstallationStatus status = InstallationStatus.CREATED;
+        int attempts = 0;
+        while (status != InstallationStatus.COMPLETED && attempts < 10) {
+            status = checkJobStatus(jobId);
+            assertThat(status).isNotEqualTo(InstallationStatus.ERROR);
+            attempts++;
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+            }
         }
+
+        assertThat(status).isEqualTo(InstallationStatus.COMPLETED);
 
         SystemInstallationReport report = initializerManager.getCurrentReport();
 
         assertThat(report.getComponentReport(componentCode, false))
-                .isNotNull();
-                //.matches(cr -> cr.getStatus() == SystemInstallationReport.Status.OK);
+                .isNotNull()
+                .matches(cr -> cr.getStatus() == SystemInstallationReport.Status.OK);
 
         assertThat(widgetService.getWidget(componentCode))
                 .isNotNull();
 
-        //widgetService.removeWidget(componentCode);
+        widgetService.removeWidget(componentCode);
+    }
+
+    private InstallationStatus checkJobStatus(String jobId) throws Exception {
+
+        ResultActions result = createAuthRequest(get(BASE_URL + "/install/{jobId}", jobId)).execute();
+
+        result.andExpect(jsonPath("$.errors").isEmpty())
+                .andExpect(jsonPath("$.metaData").isEmpty());
+
+        String jsonResponse = result.andReturn().getResponse().getContentAsString();
+
+        SimpleRestResponse<ComponentInstallationJob> response = new ObjectMapper()
+                .readValue(jsonResponse, new TypeReference<SimpleRestResponse<ComponentInstallationJob>>() {
+                });
+
+        ComponentInstallationJob job = response.getPayload();
+
+        assertThat(job.getProgress()).isBetween(0d, 1d);
+
+        return job.getStatus();
     }
 }
