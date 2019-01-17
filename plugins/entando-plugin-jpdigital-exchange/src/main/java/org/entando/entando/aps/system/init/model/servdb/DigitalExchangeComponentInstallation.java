@@ -22,21 +22,28 @@ public class DigitalExchangeComponentInstallation {
 
     public static final String TABLE_NAME = "digital_exchange_installation";
 
-    @DatabaseField(columnName = "id", dataType = DataType.STRING, canBeNull = false, id = true, width = 20)
+    public static final String COL_ID = "id";
+    public static final String COL_DIGITAL_EXCHANGE = "digital_exchange";
+    public static final String COL_COMPONENT = "component";
+    public static final String COL_PROGRESS = "progress";
+    public static final String COL_STATUS = "status";
+    public static final String COL_ERROR_MESSAGE = "error_message";
+
+    @DatabaseField(columnName = COL_ID, dataType = DataType.STRING, canBeNull = false, id = true, width = 20)
     private String id;
 
-    @DatabaseField(columnName = "digital_exchange", dataType = DataType.STRING, canBeNull = false)
+    @DatabaseField(columnName = COL_DIGITAL_EXCHANGE, dataType = DataType.STRING, canBeNull = false)
     private String digitalExchange;
 
-    @DatabaseField(columnName = "component", dataType = DataType.STRING, canBeNull = false)
+    @DatabaseField(columnName = COL_COMPONENT, dataType = DataType.STRING, canBeNull = false)
     private String component;
 
-    @DatabaseField(columnName = "progress", dataType = DataType.INTEGER, canBeNull = false)
+    @DatabaseField(columnName = COL_PROGRESS, dataType = DataType.INTEGER, canBeNull = false)
     private int progress;
 
-    @DatabaseField(columnName = "status", dataType = DataType.STRING, canBeNull = false)
+    @DatabaseField(columnName = COL_STATUS, dataType = DataType.STRING, canBeNull = false)
     private String status;
 
-    @DatabaseField(columnName = "error_message", dataType = DataType.STRING)
+    @DatabaseField(columnName = COL_ERROR_MESSAGE, dataType = DataType.STRING)
     private String errorMessage;
 }

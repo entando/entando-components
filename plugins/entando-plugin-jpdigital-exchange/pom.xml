@@ -45,31 +45,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.entando.entando.plugins</groupId>
-            <artifactId>entando-plugin-jacms</artifactId>
-            <version>${project.parent.version}</version>
-            <type>war</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.entando.entando.plugins</groupId>
-            <artifactId>entando-plugin-jacms</artifactId>
-            <version>${project.parent.version}</version>
-            <type>jar</type>
-            <classifier>classes</classifier>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.entando.entando.plugins</groupId>
-            <artifactId>entando-plugin-jacms</artifactId>
-            <version>${project.parent.version}</version>
-            <type>jar</type>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>

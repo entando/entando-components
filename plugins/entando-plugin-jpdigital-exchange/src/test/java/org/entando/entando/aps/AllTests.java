@@ -22,12 +22,15 @@ import org.entando.entando.aps.system.services.digitalexchange.category.DigitalE
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactoryTest;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClientTest;
 import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentsServiceTest;
+import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallerTest;
+import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeComponentInstallationServiceTest;
 import org.entando.entando.web.digitalexchange.DigitalExchangesControllerIntegrationTest;
 import org.entando.entando.web.digitalexchange.DigitalExchangesControllerTest;
 import org.entando.entando.web.digitalexchange.category.DigitalExchangeCategoriesControllerIntegrationTest;
 import org.entando.entando.web.digitalexchange.category.DigitalExchangeCategoriesControllerTest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponentsControllerIntegrationTest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponentsControllerTest;
+import org.entando.entando.web.digitalexchange.install.DigitalExchangeInstallResourceIntegrationTest;
 
 public class AllTests {
 
@@ -37,6 +40,7 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(DigitalExchangesClientTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangesManagerTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeOAuth2RestTemplateFactoryTest.class));
+        suite.addTest(new JUnit4TestAdapter(ComponentInstallerTest.class));
 
         addServicesTests(suite);
         addControllersTests(suite);
@@ -49,6 +53,7 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(DigitalExchangesServiceTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeComponentsServiceTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeCategoriesServiceTest.class));
+        suite.addTest(new JUnit4TestAdapter(DigitalExchangeComponentInstallationServiceTest.class));
     }
 
     private static void addControllersTests(TestSuite suite) {
@@ -61,5 +66,7 @@ public class AllTests {
 
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeCategoriesControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeCategoriesControllerTest.class));
+
+        suite.addTest(new JUnit4TestAdapter(DigitalExchangeInstallResourceIntegrationTest.class));
     }
 }

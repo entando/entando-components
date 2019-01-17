@@ -24,15 +24,27 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import static org.entando.entando.aps.system.init.model.servdb.DigitalExchangeComponentInstallation.*;
 
 @Component
 public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO implements DigitalExchangeComponentInstallationDAO {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String INSERT_JOB = "INSERT INTO digital_exchange_installation(id, digital_exchange, component, progress, status, error_message) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String SELECT_JOB = "SELECT id, digital_exchange, component, progress, status, error_message FROM digital_exchange_installation WHERE id = ?";
-    private static final String UPDATE_JOB = "UPDATE digital_exchange_installation SET digital_exchange = ?, component = ?, progress = ?, status = ?, error_message = ? WHERE id = ?";
+    private static final String ALL_COLS = String.join(", ",
+            COL_ID, COL_DIGITAL_EXCHANGE, COL_COMPONENT, COL_PROGRESS, COL_STATUS, COL_ERROR_MESSAGE);
+
+    private static final String INSERT_JOB = String.format(
+            "INSERT INTO %s (%s) VALUES (?, ?, ?, ?, ?, ?)",
+            TABLE_NAME, ALL_COLS);
+
+    private static final String SELECT_JOB = String.format(
+            "SELECT %s FROM %s WHERE %s = ?",
+            ALL_COLS, TABLE_NAME, COL_ID);
+
+    private static final String UPDATE_JOB = String.format(
+            "UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?",
+            TABLE_NAME, COL_DIGITAL_EXCHANGE, COL_COMPONENT, COL_PROGRESS, COL_STATUS, COL_ERROR_MESSAGE, COL_ID);
 
     @Autowired
     @Qualifier("servDataSource")
@@ -40,7 +52,7 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
     public void setDataSource(DataSource dataSource) {
         super.setDataSource(dataSource);
     }
-    
+
     @Override
     public void createComponentInstallationJob(ComponentInstallationJob job) {
         try (Connection conn = getConnection();
@@ -74,12 +86,12 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
 
                     ComponentInstallationJob job = new ComponentInstallationJob();
 
-                    job.setId(rs.getString("id"));
-                    job.setDigitalExchange(rs.getString("digital_exchange"));
-                    job.setComponent(rs.getString("component"));
-                    job.setProgress(rs.getInt("progress"));
-                    job.setStatus(InstallationStatus.valueOf(rs.getString("status")));
-                    job.setErrorMessage(rs.getString("error_message"));
+                    job.setId(rs.getString(COL_ID));
+                    job.setDigitalExchange(rs.getString(COL_DIGITAL_EXCHANGE));
+                    job.setComponent(rs.getString(COL_COMPONENT));
+                    job.setProgress(rs.getInt(COL_PROGRESS));
+                    job.setStatus(InstallationStatus.valueOf(rs.getString(COL_STATUS)));
+                    job.setErrorMessage(rs.getString(COL_ERROR_MESSAGE));
 
                     return Optional.of(job);
 

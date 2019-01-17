@@ -93,7 +93,7 @@ public class ComponentInstaller implements ServletContextAware {
             tempZipPath = Files.createTempFile(job.getComponent(), "");
 
             DigitalExchangeBaseCall call = new DigitalExchangeBaseCall(
-                    HttpMethod.GET, "digitalExchange", "components", job.getComponent());
+                    HttpMethod.GET, "digitalExchange", "components", job.getComponent(), "packages");
 
             try (InputStream in = client.getStreamResponse(job.getDigitalExchange(), call)) {
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
