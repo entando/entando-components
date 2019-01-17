@@ -21,6 +21,7 @@ import plugin from "./index";
 import "./sass/index.css";
 import "patternfly/dist/css/patternfly.min.css";
 import "patternfly/dist/css/patternfly-additions.min.css";
+import "react-bootstrap-typeahead/css/Typeahead.css";
 
 import DashboardConfigAddPage from "ui/dashboard-config/add/components/DashboardConfigAddPage";
 

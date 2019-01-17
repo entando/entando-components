@@ -7,9 +7,13 @@ import {
   ControlLabel,
   FieldLevelHelp
 } from "patternfly-react";
+
+import {Typeahead} from "react-bootstrap-typeahead";
+
 import {formattedText, required, minLength, maxLength} from "@entando/utils";
 import FormattedMessage from "ui/i18n/FormattedMessage";
 import SwitchRenderer from "ui/common/form/SwitchRenderer";
+import RenderMultiSelectInput from "ui/common/form/RenderMultiSelectInput";
 
 import {inputTextField} from "ui/widgets/charts/helper/renderFields";
 
@@ -22,6 +26,7 @@ const wrapInputTextField = (name, label, append, disabled = false) => {
       name={name}
       component={inputTextField}
       label={label}
+      react-bootstrap-typeahead
       validate={[required, minLength3, maxLength30]}
       disabled={disabled}
       append={formattedText(append)}
@@ -95,6 +100,20 @@ class SettingsLineChart extends Component {
   }
 
   rederAxisY() {
+    const options = [
+      {value: "chocolate", label: "Chocolate"},
+      {value: "strawberry", label: "Strawberry"},
+      {value: "vanilla", label: "Vanilla"},
+      {value: "status", label: "Status"},
+      {value: "inUse", label: "In Use"},
+      {value: "batteryLevel", label: "Battery Level"},
+      {value: "deviceCode", label: "Device Code"},
+      {value: "deviceBrand", label: "Device Brand"},
+      {value: "expirationGuarantee", label: "Expiration Guarantee"},
+      {value: "coordinates", label: "Coordinates"},
+      {value: "information", label: "Information"}
+    ];
+
     return (
       <Col xs={2} className="SettingsLineChart__col">
         <FormGroup className="SettingsLineChart__form-group">
@@ -107,18 +126,16 @@ class SettingsLineChart extends Component {
           "plugin.chart.labelYaxis",
           "plugin.table.requirement"
         )}
-        <FormGroup>
-          <Field
-            name="data.columns"
-            component="select"
-            className="form-control"
-          >
-            <option value="col1">col1</option>
-            <option value="col2">col2</option>
-            <option value="col3">col3</option>
-            <option value="col4">col4</option>
-          </Field>
-        </FormGroup>
+
+        <Field
+          component={RenderMultiSelectInput}
+          name="columns"
+          align="right"
+          multiple={true}
+          options={options}
+          maxHeight="150px"
+          className="SettingsLineChart__selector-multi"
+        />
       </Col>
     );
   }

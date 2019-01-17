@@ -15,4 +15,28 @@
     padding-left: 1.5em;
   }
 
+  &__selector-multi:before {
+    content: '\25BE' !important;
+    position: absolute;
+    right: 5px;
+    top: 3px;
+}
+
+&__selector-multi:after {
+    content: '\25BE' !important;
+    position: absolute;
+    right: 5px;
+    top: 3px;
+}
+
+  &__selector-multi .form-control.rbt-input-multi.rbt-input {
+    overflow: visible;
+    border: 1px solid #bbb;
+  }
+
+  &__selector-multi .form-control.rbt-input-multi.rbt-input .rbt-input-wrapper{
+    position: absolute;
+    top: 35px;
+  }
+
 }

@@ -1,7 +1,6 @@
 import React from "react";
 import {FormGroup, ControlLabel} from "patternfly-react";
 import FormattedMessage from "ui/i18n/FormattedMessage";
-import {formattedText} from "@entando/utils";
 
 export const inputTextField = ({
   input,

@@ -11,6 +11,7 @@ import itLocale from "locales/it";
 import {name as id} from "../package.json";
 
 import "./sass/index.css";
+import "react-bootstrap-typeahead/css/Typeahead.css";
 
 import {setCurrentLocale} from "@entando/utils";
 setCurrentLocale(enLocale);
