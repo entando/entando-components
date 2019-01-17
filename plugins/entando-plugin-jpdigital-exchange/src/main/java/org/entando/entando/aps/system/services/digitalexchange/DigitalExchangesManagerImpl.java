@@ -101,7 +101,6 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
         if (index.isPresent()) {
             exchanges.replaceAll(de -> {
                 if (de.getId().equals(digitalExchange.getId())) {
-                    updateDigitalExchangesConfig();
                     templates.remove(digitalExchange.getId());
                     if (digitalExchange.isActive()) {
                         addRestTemplate(digitalExchange);
@@ -110,6 +109,7 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
                 }
                 return de;
             });
+            updateDigitalExchangesConfig();
             return digitalExchange;
         }
         return null;
