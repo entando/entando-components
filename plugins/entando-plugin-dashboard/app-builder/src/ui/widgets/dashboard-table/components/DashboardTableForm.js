@@ -162,7 +162,7 @@ class DashboardTableFormBody extends Component {
                   </Row>
                   <Row>
                     <Col xs={6}>
-                      <DatasourceFormContainer />
+                      <DatasourceFormContainer formName="form-dashboard-table" />
                     </Col>
                     <Col xs={6}>{this.renderFiltrable()}</Col>
                   </Row>

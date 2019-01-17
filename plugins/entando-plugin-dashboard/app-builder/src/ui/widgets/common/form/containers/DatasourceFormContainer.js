@@ -10,11 +10,9 @@ const mapStateToProps = state => ({
   datasources: getDatasourceList(state)
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   onChange: value => {
-    dispatch(
-      fetchDatasourceColumns("form-dashboard-table", "serverName", value)
-    );
+    dispatch(fetchDatasourceColumns(ownProps.formName, "serverName", value));
   }
 });
 

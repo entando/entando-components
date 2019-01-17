@@ -101,19 +101,12 @@ class SettingsLineChart extends Component {
   }
 
   rederAxisY() {
-    const options = [
-      {value: "chocolate", label: "Chocolate"},
-      {value: "strawberry", label: "Strawberry"},
-      {value: "vanilla", label: "Vanilla"},
-      {value: "status", label: "Status"},
-      {value: "inUse", label: "In Use"},
-      {value: "batteryLevel", label: "Battery Level"},
-      {value: "deviceCode", label: "Device Code"},
-      {value: "deviceBrand", label: "Device Brand"},
-      {value: "expirationGuarantee", label: "Expiration Guarantee"},
-      {value: "coordinates", label: "Coordinates"},
-      {value: "information", label: "Information"}
-    ];
+    const {optionColumnsY} = this.props;
+    console.log("optionColumnsY", optionColumnsY);
+    console.log(
+      "optionColumnsY - map",
+      optionColumnsY.map(m => ({key: m.key, label: m.value}))
+    );
 
     return (
       <Col xs={4} className="SettingsLineChart__col">
@@ -133,7 +126,7 @@ class SettingsLineChart extends Component {
           name="selectedColumns"
           align="right"
           multiple={true}
-          options={options}
+          options={optionColumnsY.map(m => ({key: m.key, label: m.value}))}
           maxHeight="150px"
           className="SettingsLineChart__selector-multi"
         />

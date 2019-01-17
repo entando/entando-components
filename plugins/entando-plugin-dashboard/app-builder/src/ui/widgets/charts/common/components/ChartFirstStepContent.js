@@ -23,7 +23,10 @@ class ChartFirstStepContent extends Component {
             </Row>
             <Row>
               <Col xs={12}>
-                <DatasourceFormContainer labelSize={2} />
+                <DatasourceFormContainer
+                  labelSize={2}
+                  formName="form-dashboard-line-chart"
+                />
               </Col>
             </Row>
           </Col>
