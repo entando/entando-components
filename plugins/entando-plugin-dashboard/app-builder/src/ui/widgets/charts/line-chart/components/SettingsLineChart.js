@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Field} from "redux-form";
+import {Field, FieldArray} from "redux-form";
 import {
   Row,
   Col,
@@ -8,12 +8,12 @@ import {
   FieldLevelHelp
 } from "patternfly-react";
 
-import {Typeahead} from "react-bootstrap-typeahead";
-
 import {formattedText, required, minLength, maxLength} from "@entando/utils";
 import FormattedMessage from "ui/i18n/FormattedMessage";
 import SwitchRenderer from "ui/common/form/SwitchRenderer";
 import RenderMultiSelectInput from "ui/common/form/RenderMultiSelectInput";
+
+import ColumnTokenArray from "ui/widgets/charts/common/components/ColumnTokenArray";
 
 import {inputTextField} from "ui/widgets/charts/helper/renderFields";
 
@@ -74,10 +74,11 @@ class SettingsLineChart extends Component {
       </div>
     );
   }
+  Info;
 
   rederAxisX() {
     return (
-      <Col xs={2} className="SettingsLineChart__col">
+      <Col xs={4} className="SettingsLineChart__col">
         <FormGroup className="SettingsLineChart__form-group">
           <ControlLabel>
             <FormattedMessage id="plugin.chart.Xaxis" />
@@ -115,7 +116,7 @@ class SettingsLineChart extends Component {
     ];
 
     return (
-      <Col xs={2} className="SettingsLineChart__col">
+      <Col xs={4} className="SettingsLineChart__col">
         <FormGroup className="SettingsLineChart__form-group">
           <ControlLabel>
             <FormattedMessage id="plugin.chart.Yaxis" />
@@ -129,13 +130,21 @@ class SettingsLineChart extends Component {
 
         <Field
           component={RenderMultiSelectInput}
-          name="columns"
+          name="selectedColumns"
           align="right"
           multiple={true}
           options={options}
           maxHeight="150px"
           className="SettingsLineChart__selector-multi"
         />
+        {this.props.selectedColumns.length > 0 ? (
+          <FieldArray
+            className="SettingsLineChart__column-selected"
+            name="columns"
+            component={ColumnTokenArray}
+            columns={this.props.selectedColumns}
+          />
+        ) : null}
       </Col>
     );
   }
@@ -164,8 +173,7 @@ class SettingsLineChart extends Component {
         <Row>
           {this.rederAxisX()}
           {this.rederAxisY()}
-
-          <Col xs={2} className="SettingsLineChart__col">
+          <Col xs={4} className="SettingsLineChart__col">
             <FormGroup className="SettingsLineChart__form-group">
               <ControlLabel>
                 <FormattedMessage id="plugin.chart.Y2axis" />

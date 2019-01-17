@@ -8,33 +8,51 @@ const RenderMultiSelectInput = ({
   className,
   maxHeight
 }) => {
+  // const MyCustomToken = tokenContainer(props => {
+  //   console.log("MyCustomToken props", props);
+  //   return (
+  //     <div
+  //       {...props}
+  //       onClick={event => {
+  //         props.onRemove();
+  //         event.stopPropagation();
+  //         props.onClickCustom(event);
+  //       }}
+  //       className="rbt-token rbt-token-removeable RenderMultiSelectInput__custom-token"
+  //       tabIndex={0}
+  //     >
+  //       {props.children}
+  //       <span onClick={() => props.onRemove()}>
+  //         <i className="fa fa-times crossButton" />
+  //       </span>
+  //     </div>
+  //   );
+  // });
+
   return (
     <Typeahead
       {...input}
       align={align}
       multiple
-      renderToken={(option, props, index) => {
-        console.log("rendeToken option", option);
-        console.log("rendeToken props", props);
-        console.log("rendeToken index", index);
-        return (
-          <Token key={index} onRemove={props.onRemove}>
-            {option.label}
-          </Token>
-        );
-      }}
+      // renderToken={(option, props, index) => {
+      //   return (
+      //     <MyCustomToken
+      //       key={index}
+      //       onRemove={props.onRemove}
+      //       onClickCustom={event => {
+      //         console.log("onClickCustom ", event);
+      //       }}
+      //     >
+      //       {`${option.label}`}
+      //     </MyCustomToken>
+      //   );
+      // }}
       options={options}
       maxHeight={maxHeight}
       className={className}
-      selectHintOnEnter
       onBlur={() => {}}
-      onInputChange={input => {
-        console.log("onInputChange", input);
-      }}
       onChange={val => {
-        console.log("val", val);
-        const value = val.map(x => x.value);
-        console.log("value", value);
+        const value = val.map(x => ({...x}));
         input.onChange(value);
       }}
     />

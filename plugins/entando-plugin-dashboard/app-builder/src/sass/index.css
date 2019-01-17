@@ -176,6 +176,18 @@
 .ChartFirstStep__container-datasource {
   margin-top: 2em; }
 
+.ColumnToken {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: auto; }
+  .ColumnToken__column {
+    margin: 3px; }
+  .ColumnToken__btn-remove {
+    cursor: pointer; }
+
 .DashboardLineChart .wizard-pf-main {
   padding: 3em; }
 
@@ -244,9 +256,11 @@
   top: 3px; }
 
 .SettingsLineChart__selector-multi .form-control.rbt-input-multi.rbt-input {
-  overflow: visible;
-  border: 1px solid #bbb; }
+  border: 1px solid #bbb;
+  min-height: 26px;
+  height: auto; }
 
-.SettingsLineChart__selector-multi .form-control.rbt-input-multi.rbt-input .rbt-input-wrapper {
-  position: absolute;
-  top: 35px; }
+.SettingsLineChart__column-selected {
+  border: 0px solid;
+  margin-top: 1em;
+  max-height: 100px; }

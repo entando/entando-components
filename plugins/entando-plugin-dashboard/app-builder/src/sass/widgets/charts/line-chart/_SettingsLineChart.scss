@@ -8,7 +8,7 @@
   }
   &__form-group {
     border: 0px solid;
-    min-height: 60px;
+     min-height: 60px;
   }
   &__timeformat-container {
     border: 0px solid;
@@ -29,14 +29,21 @@
     top: 3px;
 }
 
-  &__selector-multi .form-control.rbt-input-multi.rbt-input {
-    overflow: visible;
+&__selector-multi .form-control.rbt-input-multi.rbt-input {
+    //overflow: visible;
     border: 1px solid #bbb;
-  }
+    min-height: 26px;
+    height: auto;
+}
 
-  &__selector-multi .form-control.rbt-input-multi.rbt-input .rbt-input-wrapper{
-    position: absolute;
-    top: 35px;
-  }
+&__selector-multi .form-control.rbt-input-multi.rbt-input .rbt-input-wrapper{
+    // position: absolute;
+    // top: 35px;
+}
+&__column-selected {
+  border:0px solid;
+  margin-top: 1em;
+  max-height: 100px;
 
+}
 }
