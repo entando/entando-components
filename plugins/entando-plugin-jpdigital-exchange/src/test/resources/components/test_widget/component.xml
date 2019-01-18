@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
-    <code>jpdigital-exchange</code>
-    <description>Entando DigitalExchange Plugin</description>
+    <code>test_widget</code>
+    <description>Test Widget</description>
+    <dependencies>
+    </dependencies>
     <installation>
         <tableMapping>
             <datasource name="portDataSource">
             </datasource>
             <datasource name="servDataSource">
-                <class>org.entando.entando.aps.system.init.model.servdb.DigitalExchangeComponentInstallation</class>
             </datasource>
         </tableMapping>
         <environment code="production">
-            <defaultSqlResources>
-                <datasource name="portDataSource">
-                    classpath:sql/plugins/digitalExchange/port_data_production.sql
-                </datasource>
-            </defaultSqlResources>
         </environment>
         <environment code="test">
             <defaultSqlResources>
                 <datasource name="portDataSource">
-                    classpath:sql/plugins/digitalExchange/port_data_test.sql
+                    test_widget/port_data_test.sql
                 </datasource>
             </defaultSqlResources>
         </environment>
@@ -28,8 +24,12 @@
     <uninstallation>
         <sqlResources>
             <datasource name="portDataSource">
-                classpath:sql/plugins/digitalExchange/port_uninstallation.sql
+                test_widget/port_uninstallation.sql
+            </datasource>
+            <datasource name="servDataSource">
             </datasource>
         </sqlResources>
+        <resources>
+        </resources>
     </uninstallation>
 </component>

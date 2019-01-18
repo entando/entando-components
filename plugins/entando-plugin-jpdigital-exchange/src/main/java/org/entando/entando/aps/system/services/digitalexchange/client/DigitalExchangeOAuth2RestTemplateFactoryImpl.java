@@ -29,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Component
 public class DigitalExchangeOAuth2RestTemplateFactoryImpl implements DigitalExchangeOAuth2RestTemplateFactory {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeOAuth2RestTemplateFactoryImpl.class);
 
     private static final int DEFAULT_TIMEOUT = 10000;
 

@@ -14,28 +14,21 @@
 package org.entando.entando.aps.system.services.digitalexchange.client;
 
 import java.util.Map;
-import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.model.RestResponse;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * Contains all the information necessary for querying a specific Digital
- * Exchange endpoint (HTTP method, response type, path) and provides the logic
- * necessary for combining multiple responses provided by the same endpoint of
- * different Digital Exchange instances.
+ * Base class containing the information necessary to query a specific Digital
+ * Exchange endpoint, parse its response and combine multiple responses provided
+ * by the same endpoint of different Digital Exchange instances.
  *
  * @param <R> the type of each DE response
  * @param <C> the type of the combined response
  */
-public abstract class DigitalExchangeCall<R extends RestResponse<?, ?>, C> {
+public abstract class DigitalExchangeCall<R extends RestResponse<?, ?>, C> extends DigitalExchangeBaseCall {
 
-    private final HttpMethod method;
     private final ParameterizedTypeReference<R> parameterizedTypeReference;
-    private final String[] urlSegments;
-    private HttpEntity<?> entity;
 
     /**
      * @param method e.g. GET, POST, ...
@@ -51,24 +44,8 @@ public abstract class DigitalExchangeCall<R extends RestResponse<?, ?>, C> {
             ParameterizedTypeReference<R> parameterizedTypeReference,
             String... urlSegments) {
 
-        this.method = method;
+        super(method, urlSegments);
         this.parameterizedTypeReference = parameterizedTypeReference;
-
-        this.urlSegments = new String[urlSegments.length + 1];
-        this.urlSegments[0] = "api";
-        System.arraycopy(urlSegments, 0, this.urlSegments, 1, urlSegments.length);
-    }
-
-    public HttpMethod getMethod() {
-        return method;
-    }
-
-    public HttpEntity<?> getEntity() {
-        return entity;
-    }
-
-    public void setEntity(HttpEntity<?> entity) {
-        this.entity = entity;
     }
 
     public ParameterizedTypeReference<R> getParameterizedTypeReference() {
@@ -77,14 +54,6 @@ public abstract class DigitalExchangeCall<R extends RestResponse<?, ?>, C> {
 
     protected boolean isResponseParsable(R response) {
         return response != null;
-    }
-
-    protected String getURL(DigitalExchange digitalExchange) {
-        return UriComponentsBuilder
-                .fromHttpUrl(digitalExchange.getUrl())
-                .pathSegment(urlSegments)
-                .build(false) // disable encoding: it will be done by RestTemplate
-                .toUriString();
     }
 
     protected abstract R getEmptyRestResponse();

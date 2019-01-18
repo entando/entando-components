@@ -13,12 +13,17 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.client;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.apache.commons.io.IOUtils;
 import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesManager;
 import org.entando.entando.aps.system.services.digitalexchange.model.ResilientPagedMetadata;
@@ -29,8 +34,8 @@ import org.entando.entando.aps.system.services.digitalexchange.model.ResilientLi
 import org.entando.entando.web.common.model.RestError;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.SimpleRestResponse;
-import org.entando.entando.web.common.model.RestResponse;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.context.MessageSource;
@@ -46,11 +51,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.InjectMocks;
 
-import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 import static org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClientImpl.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DigitalExchangesClientTest {
 
@@ -68,8 +75,8 @@ public class DigitalExchangesClientTest {
         MockitoAnnotations.initMocks(this);
 
         DigitalExchangesMocker mocker = new DigitalExchangesMocker()
-                .addDigitalExchange("DE 1", buildWorkingDE("A", "C"))
-                .addDigitalExchange("DE 2", buildWorkingDE("B", "D"))
+                .addDigitalExchange(DE_1_ID, buildWorkingDE("A", "C"))
+                .addDigitalExchange(DE_2_ID, buildWorkingDE("B", "D"))
                 .addDigitalExchange("Broken DE", () -> {
                     throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "This instance is broken");
                 })
@@ -96,13 +103,21 @@ public class DigitalExchangesClientTest {
         DigitalExchangeOAuth2RestTemplateFactory restTemplateFactory = mocker.initMocks();
 
         when(manager.getDigitalExchanges()).thenReturn(mocker.getFakeExchanges());
+        when(manager.findById(any())).thenAnswer(invocation -> {
+            return mocker.getFakeExchanges().stream()
+                    .filter(de -> de.getId().equals(invocation.getArgument(0)))
+                    .findFirst();
+        });
         OAuth2RestTemplate restTemplate = restTemplateFactory.createOAuth2RestTemplate(null);
         when(manager.getRestTemplate(any())).thenReturn(restTemplate);
         when(messageSource.getMessage(any(), any(), any())).thenReturn("Mocked Message");
     }
 
-    private Function<DigitalExchangeMockedRequest, RestResponse<?, ?>> buildWorkingDE(String... values) {
+    private Function<DigitalExchangeMockedRequest, ?> buildWorkingDE(String... values) {
         return request -> {
+            if ("/stream".equals(request.getEndpoint())) {
+                return getMockedStreamResource("stream");
+            }
             switch (request.getMethod()) {
                 case GET:
                     PagedMetadata<String> pagedMetadata = new PagedMetadata<>(new RestListRequest(), Arrays.asList(values), 2);
@@ -112,6 +127,18 @@ public class DigitalExchangesClientTest {
             }
             return null;
         };
+    }
+
+    private Resource getMockedStreamResource(String streamData) {
+        Resource resource = mock(Resource.class);
+
+        try {
+            when(resource.getInputStream())
+                    .thenReturn(new ByteArrayInputStream(streamData.getBytes(StandardCharsets.UTF_8)));
+        } catch (IOException ex) {
+        }
+
+        return resource;
     }
 
     @Test
@@ -164,6 +191,15 @@ public class DigitalExchangesClientTest {
         }, "test");
 
         client.getSingleResponse("Unexisting DE", call);
+    }
+
+    @Test
+    public void testStreamResponse() throws IOException {
+
+        DigitalExchangeBaseCall call = new DigitalExchangeBaseCall(HttpMethod.GET, "stream");
+        try (InputStream in = client.getStreamResponse(DE_1_ID, call)) {
+            assertEquals("stream", IOUtils.toString(in, StandardCharsets.UTF_8));
+        }
     }
 
     private <T> void verifyResilience(List<RestError> errors) {

@@ -36,7 +36,7 @@ public class DigitalExchangeCategoriesServiceImpl implements DigitalExchangeCate
 
     public static final String ERRCODE_DE_CATEGORIES_CONFIG_NOT_FOUND = "1";
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeCategoriesServiceImpl.class);
 
     private final ConfigInterface configManager;
     private final DigitalExchangesClient client;
