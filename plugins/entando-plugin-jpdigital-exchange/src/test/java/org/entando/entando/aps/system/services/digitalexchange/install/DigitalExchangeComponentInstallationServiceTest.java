@@ -47,7 +47,7 @@ public class DigitalExchangeComponentInstallationServiceTest {
 
         try {
             Thread.sleep(500);
-        } catch (InterruptedException ex) {
+        } catch (InterruptedException ignored) {
         }
 
         assertThat(job.getStatus()).isEqualTo(InstallationStatus.ERROR);

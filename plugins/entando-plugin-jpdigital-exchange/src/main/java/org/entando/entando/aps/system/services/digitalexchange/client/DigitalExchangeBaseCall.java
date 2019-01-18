@@ -18,6 +18,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.util.UriComponentsBuilder;
 
+/**
+ * Contains all the information necessary for querying a specific Digital
+ * Exchange endpoint (HTTP method, URL segments, entity sent as payload). This
+ * class should be used for describing a call in which it is necessary to
+ * retrieve the raw response (InputStream), while it subclasses should be used
+ * when it is necessary to parse a response into a specific class and/or combine
+ * the result of multiple requests.
+ */
 public class DigitalExchangeBaseCall {
 
     private final HttpMethod method;

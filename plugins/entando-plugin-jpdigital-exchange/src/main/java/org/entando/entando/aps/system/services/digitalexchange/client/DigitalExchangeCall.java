@@ -19,10 +19,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 
 /**
- * Contains all the information necessary for querying a specific Digital
- * Exchange endpoint (HTTP method, response type, path) and provides the logic
- * necessary for combining multiple responses provided by the same endpoint of
- * different Digital Exchange instances.
+ * Base class containing the information necessary to query a specific Digital
+ * Exchange endpoint, parse its response and combine multiple responses provided
+ * by the same endpoint of different Digital Exchange instances.
  *
  * @param <R> the type of each DE response
  * @param <C> the type of the combined response

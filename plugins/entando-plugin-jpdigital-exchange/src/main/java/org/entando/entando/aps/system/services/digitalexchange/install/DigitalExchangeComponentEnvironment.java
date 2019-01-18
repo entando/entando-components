@@ -37,7 +37,9 @@ public class DigitalExchangeComponentEnvironment implements ComponentEnvironment
         if (null == path) {
             return null;
         }
-        return new ComponentResource(storageManager, path);
+        return new ComponentResource(storageManager, path,
+                String.format("sqlResource for %s (%s)",
+                        componentEnvironment.getCode(), datasourceName));
     }
 
     @Override

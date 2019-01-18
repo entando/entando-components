@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import static org.entando.entando.aps.system.init.model.servdb.DigitalExchangeComponentInstallation.*;
 
@@ -47,10 +46,8 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
             TABLE_NAME, COL_DIGITAL_EXCHANGE, COL_COMPONENT, COL_PROGRESS, COL_STATUS, COL_ERROR_MESSAGE, COL_ID);
 
     @Autowired
-    @Qualifier("servDataSource")
-    @Override
-    public void setDataSource(DataSource dataSource) {
-        super.setDataSource(dataSource);
+    public DigitalExchangeComponentInstallationDAOImpl(DataSource servDataSource) {
+        super.setDataSource(servDataSource);
     }
 
     @Override

@@ -20,19 +20,27 @@ import java.io.InputStream;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.springframework.core.io.AbstractResource;
 
+/**
+ * Resource implementation handling resources internally managed by the
+ * StorageManager. It is used in the installation process as an alternative to
+ * loading the resources from the classpath (as done by the default
+ * ComponentModule implementation).
+ */
 public class ComponentResource extends AbstractResource {
 
     private final IStorageManager storageManager;
     private final String path;
+    private final String description;
 
-    public ComponentResource(IStorageManager storageManager, String subpath) {
+    public ComponentResource(IStorageManager storageManager, String subpath, String description) {
         this.storageManager = storageManager;
         this.path = ComponentInstaller.COMPONENTS_DIR + File.separator + subpath;
+        this.description = description;
     }
 
     @Override
     public String getDescription() {
-        return "";
+        return description;
     }
 
     @Override

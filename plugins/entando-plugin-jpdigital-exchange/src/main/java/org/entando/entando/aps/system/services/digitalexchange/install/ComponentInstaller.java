@@ -22,8 +22,10 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.servlet.ServletContext;
 import org.entando.entando.aps.system.init.DatabaseManager;
@@ -107,7 +109,10 @@ public class ComponentInstaller implements ServletContextAware {
             throw new InstallationException("Unable to save component", ex);
         } finally {
             if (tempZipPath != null) {
-                tempZipPath.toFile().delete();
+                if (!tempZipPath.toFile().delete()) {
+                    logger.warn("Unable to delete temporary zip file {}",
+                            tempZipPath.toFile().getAbsolutePath());
+                }
             }
         }
     }
@@ -120,11 +125,10 @@ public class ComponentInstaller implements ServletContextAware {
 
     private void extractZip(Path tempZipPath) throws IOException {
 
-        ZipFile zip = new ZipFile(tempZipPath.toFile());
+        try (ZipFile zip = new ZipFile(tempZipPath.toFile())) {
 
-        zip.stream().forEach(entry -> {
+            for (ZipEntry entry : Collections.list(zip.entries())) {
 
-            try {
                 String path = COMPONENTS_DIR + File.separator + entry.getName();
 
                 if (!entry.isDirectory()) {
@@ -132,11 +136,11 @@ public class ComponentInstaller implements ServletContextAware {
                 } else if (!storageManager.exists(path, PROTECTED_RESOURCE)) {
                     storageManager.createDirectory(path, PROTECTED_RESOURCE);
                 }
-            } catch (ApsSystemException | IOException ex) {
-                logger.error("Error while extracting zip file", ex);
-                throw new InstallationException("Unable to extract zip file", ex);
             }
-        });
+        } catch (ApsSystemException | IOException ex) {
+            logger.error("Error while extracting zip file", ex);
+            throw new InstallationException("Unable to extract zip file", ex);
+        }
     }
 
     private void installComponent(ComponentInstallationJob job) {
@@ -151,7 +155,7 @@ public class ComponentInstaller implements ServletContextAware {
             databaseManager.initComponentDefaultResources(component, systemInstallationReport, true);
 
             initializerManager.saveReport(systemInstallationReport);
-            
+
             initializerManager.executeComponentPostInitProcesses(component, systemInstallationReport);
 
         } catch (ApsSystemException ex) {

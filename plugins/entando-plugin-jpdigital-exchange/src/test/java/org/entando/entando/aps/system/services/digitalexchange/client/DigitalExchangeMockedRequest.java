@@ -107,7 +107,7 @@ public class DigitalExchangeMockedRequest {
     }
 
     private void setEndpoint(String url, String baseUrl) {
-        endpoint = url.substring((baseUrl + "api").length(), url.length());
+        endpoint = url.substring((baseUrl + "api").length());
         int questionMarkPosition = url.indexOf("?");
         if (questionMarkPosition != -1) {
             endpoint = endpoint.substring(0, questionMarkPosition);

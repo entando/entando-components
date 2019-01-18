@@ -35,20 +35,20 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallationJob;
 import org.entando.entando.aps.system.services.digitalexchange.install.InstallationStatus;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.junit.After;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.springframework.core.io.Resource;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 @ActiveProfiles("DEinstallTest")
 public class DigitalExchangeInstallResourceIntegrationTest extends AbstractControllerIntegrationTest {
@@ -132,7 +132,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
             attempts++;
             try {
                 Thread.sleep(500);
-            } catch (InterruptedException ex) {
+            } catch (InterruptedException ignored) {
             }
         }
 

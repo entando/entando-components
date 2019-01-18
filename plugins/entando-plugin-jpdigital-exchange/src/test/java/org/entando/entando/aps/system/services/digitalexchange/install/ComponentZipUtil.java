@@ -47,7 +47,7 @@ public class ComponentZipUtil {
                     String entryName = component + "/" + file;
                     zos.putNextEntry(new ZipEntry(entryName));
 
-                    String filePath = String.format("components/" + entryName);
+                    String filePath = "components/" + entryName;
 
                     try (InputStream in = ComponentZipUtil.class.getClassLoader().getResourceAsStream(filePath)) {
                         IOUtils.copy(in, zos);
