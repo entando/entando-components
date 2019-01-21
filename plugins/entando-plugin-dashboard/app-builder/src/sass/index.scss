@@ -17,7 +17,10 @@
 @import 'widgets/charts/common/ChartSteps';
 @import 'widgets/charts/common/ChartFirstStep';
 @import 'widgets/charts/common/ColumnToken';
+@import 'widgets/charts/common/FieldArrayDropDownMultiple';
 
 @import 'widgets/charts/line-chart/DashboardLineChart';
 @import 'widgets/charts/line-chart/ChartSecondStep';
 @import 'widgets/charts/line-chart/SettingsLineChart';
+
+@import 'common/form/DropdownMultiple';

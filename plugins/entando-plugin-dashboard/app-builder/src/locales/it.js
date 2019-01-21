@@ -16,6 +16,7 @@ export default {
     "common.edit": "Edit",
     "common.test": "Test",
     "common.remove": "Remove",
+    "common.DropdownMultiple.notFound": "Not Found",
     "common.ownerGroup": "Grouppo Proprietario",
     "common.viewOnlyGroup": "View only Groups",
     "common.pageModel": "Modello di pagina",
@@ -88,6 +89,8 @@ export default {
     "plugin.chart.Y2axis.help": "",
     "plugin.chart.timeFormat-Y-M-D": "anno-mese-giorno",
     "plugin.chart.timeFormat-D-M-Y": "giorno-mese-anno",
-    "plugin.chart.timeFormat-M-D-Y": "mese-giorno-anno"
+    "plugin.chart.timeFormat-M-D-Y": "mese-giorno-anno",
+    "plugin.chart.dropDownMulti.titleHelper": "Column",
+    "plugin.chart.dropDownMulti.title": "Select Column"
   }
 };

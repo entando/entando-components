@@ -11,9 +11,8 @@ import {
 import {formattedText, required, minLength, maxLength} from "@entando/utils";
 import FormattedMessage from "ui/i18n/FormattedMessage";
 import SwitchRenderer from "ui/common/form/SwitchRenderer";
-import RenderMultiSelectInput from "ui/common/form/RenderMultiSelectInput";
 
-import ColumnTokenArray from "ui/widgets/charts/common/components/ColumnTokenArray";
+import FieldArrayDropDownMultiple from "ui/widgets/charts/common/components/FieldArrayDropDownMultiple";
 
 import {inputTextField} from "ui/widgets/charts/helper/renderFields";
 
@@ -35,6 +34,19 @@ const wrapInputTextField = (name, label, append, disabled = false) => {
 };
 
 class SettingsLineChart extends Component {
+  constructor(props) {
+    super(props);
+    this.toogleSelected = this.toogleSelected.bind(this);
+  }
+
+  toogleSelected(id, key) {
+    let temp = this.state.columnsY.find(f => f.key === key);
+    temp.selected = !temp.selected;
+    this.setState(prevState => ({
+      columnsY: [...prevState.columnsY, ...temp]
+    }));
+  }
+
   chooseTimeFormat() {
     return (
       <div className="SettingsLineChart__timeformat-container">
@@ -74,7 +86,6 @@ class SettingsLineChart extends Component {
       </div>
     );
   }
-  Info;
 
   rederAxisX() {
     return (
@@ -101,12 +112,7 @@ class SettingsLineChart extends Component {
   }
 
   rederAxisY() {
-    const {optionColumnsY} = this.props;
-    console.log("optionColumnsY", optionColumnsY);
-    console.log(
-      "optionColumnsY - map",
-      optionColumnsY.map(m => ({key: m.key, label: m.value}))
-    );
+    const {optionColumns, optionColumnYSelected} = this.props;
 
     return (
       <Col xs={4} className="SettingsLineChart__col">
@@ -120,24 +126,49 @@ class SettingsLineChart extends Component {
           "plugin.chart.labelYaxis",
           "plugin.table.requirement"
         )}
-
-        <Field
-          component={RenderMultiSelectInput}
-          name="selectedColumns"
-          align="right"
-          multiple={true}
-          options={optionColumnsY.map(m => ({key: m.key, label: m.value}))}
-          maxHeight="150px"
-          className="SettingsLineChart__selector-multi"
+        <FieldArray
+          className="SettingsLineChart__column-selected"
+          name="columns.y"
+          component={FieldArrayDropDownMultiple}
+          optionColumns={optionColumns}
+          optionColumnYSelected={optionColumnYSelected}
         />
-        {this.props.selectedColumns.length > 0 ? (
-          <FieldArray
-            className="SettingsLineChart__column-selected"
-            name="columns"
-            component={ColumnTokenArray}
-            columns={this.props.selectedColumns}
+      </Col>
+    );
+  }
+
+  rederAxisY2() {
+    const {optionColumns, optionColumnY2Selected} = this.props;
+    return (
+      <Col xs={4} className="SettingsLineChart__col">
+        <FormGroup className="SettingsLineChart__form-group">
+          <ControlLabel>
+            <FormattedMessage id="plugin.chart.Y2axis" />
+            <FieldLevelHelp
+              content={<FormattedMessage id="plugin.chart.Y2axis.help" />}
+              close="true"
+            />
+          </ControlLabel>
+          <Field
+            component={SwitchRenderer}
+            name="axis.y2.show"
+            className="pull-right"
           />
-        ) : null}
+        </FormGroup>
+        {wrapInputTextField(
+          "axis.y2.label",
+          "plugin.chart.labelY2axis",
+          "plugin.table.requirement",
+          !this.props.axisY2Show
+        )}
+
+        <FieldArray
+          className="SettingsLineChart__column-selected"
+          name="columns.y2"
+          component={FieldArrayDropDownMultiple}
+          optionColumns={optionColumns}
+          optionColumnYSelected={optionColumnY2Selected}
+        />
       </Col>
     );
   }
@@ -166,28 +197,7 @@ class SettingsLineChart extends Component {
         <Row>
           {this.rederAxisX()}
           {this.rederAxisY()}
-          <Col xs={4} className="SettingsLineChart__col">
-            <FormGroup className="SettingsLineChart__form-group">
-              <ControlLabel>
-                <FormattedMessage id="plugin.chart.Y2axis" />
-                <FieldLevelHelp
-                  content={<FormattedMessage id="plugin.chart.Y2axis.help" />}
-                  close="true"
-                />
-              </ControlLabel>
-              <Field
-                component={SwitchRenderer}
-                name="axis.y2.show"
-                className="pull-right"
-              />
-            </FormGroup>
-            {wrapInputTextField(
-              "axis.y2.label",
-              "plugin.chart.labelY2axis",
-              "plugin.table.requirement",
-              !this.props.axisY2Show
-            )}
-          </Col>
+          {this.rederAxisY2()}
         </Row>
       </div>
     );

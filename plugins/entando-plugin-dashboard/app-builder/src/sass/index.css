@@ -46,6 +46,8 @@
     border: 1px solid #ddd;
     margin-top: -1px;
     margin-right: -1px; }
+  .DashboardWidgetConfigPage__tabs-container .nav.nav-tabs li {
+    background-color: #f8f8f8; }
 
 .ServerNameForm__input-group {
   width: 100%;
@@ -188,6 +190,21 @@
   .ColumnToken__btn-remove {
     cursor: pointer; }
 
+.FieldArrayDropDownMultiple__token-container {
+  border: 0px solid;
+  margin-top: 1em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start; }
+
+.FieldArrayDropDownMultiple__token {
+  margin: 2px; }
+
+.FieldArrayDropDownMultiple__token-clear.label {
+  padding-right: 0; }
+
 .DashboardLineChart .wizard-pf-main {
   padding: 3em; }
 
@@ -201,7 +218,7 @@
 
 .DashboardLineChart__data-contents {
   border: 0px solid red;
-  height: 700px; }
+  height: 670px; }
 
 .DashboardLineChart__btn-container {
   border: 0px solid;
@@ -264,3 +281,105 @@
   border: 0px solid;
   margin-top: 1em;
   max-height: 100px; }
+
+.DropdownMultiple {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  width: auto; }
+  .DropdownMultiple .dd-header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    line-height: 20px;
+    border: 1px solid #dfdfdf;
+    border-radius: 1px;
+    cursor: default;
+    position: relative;
+    background-color: #fff; }
+  .DropdownMultiple .dd-header span {
+    margin-right: 20px; }
+  .DropdownMultiple .dd-header-title {
+    font-weight: 300;
+    margin: 2px 30px 2px 20px; }
+  .DropdownMultiple .dd-header .angle-down {
+    color: #000;
+    margin-right: 5px; }
+  .DropdownMultiple .dd-header .angle-up {
+    color: #000;
+    margin-right: 5px; }
+  .DropdownMultiple .dd-list-search {
+    width: 100%;
+    padding: 5px; }
+  .DropdownMultiple .dd-list-search input {
+    width: 95%;
+    border-right: none; }
+  .DropdownMultiple .dd-list-search .input-group .form-control:hover {
+    border-color: #bbb;
+    box-shadow: none; }
+  .DropdownMultiple .dd-list-search .input-group .form-control:focus {
+    border-color: #bbb;
+    box-shadow: none; }
+  .DropdownMultiple .dd-list-search-clear {
+    border-top: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    height: 100%;
+    position: absolute;
+    right: 25px;
+    width: 5%;
+    padding-top: 3px; }
+  .DropdownMultiple .dd-list {
+    z-index: 10;
+    position: absolute;
+    width: 100%;
+    border: 1px solid #dfdfdf;
+    border-top: none;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 2px 5px -1px #e8e8e8;
+    box-shadow: 0 2px 5px -1px #e8e8e8;
+    padding: 15px 0;
+    max-height: 215px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch; }
+  .DropdownMultiple .dd-list-item {
+    width: 100%;
+    font-size: 1.5rem;
+    padding: 8px 10px;
+    line-height: 1.6rem;
+    cursor: default;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis; }
+  .DropdownMultiple .dd-list-item.selected {
+    color: #fff;
+    background-color: #0088ce; }
+  .DropdownMultiple .dd-list-item:hover {
+    color: #fff;
+    background-color: #cce7f5; }
+  .DropdownMultiple .dd-list-item .check {
+    float: right; }
+  .DropdownMultiple .dd-wrapper-single {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    width: 265px; }
+  .DropdownMultiple .dd-wrapper-single .dd-header {
+    border: 1px solid #ccc; }
+  .DropdownMultiple .dd-wrapper-single .dd-header .dd-header-name {
+    font-weight: 400; }
+  .DropdownMultiple .dd-wrapper-single .dd-list {
+    border: 1px solid #ccc;
+    border-top: none; }

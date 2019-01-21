@@ -22,6 +22,7 @@ export default {
     "common.edit": "Edit",
     "common.test": "Test",
     "common.remove": "Remove",
+    "common.DropdownMultiple.notFound": "Not Found",
     "plugin.fieldsRequired": "Required Fields",
     "plugin.chooseAnOptionServerName": "Select Server Name",
     "plugin.chooseAnOptionDatasource": "Select Data Source",
@@ -88,6 +89,8 @@ export default {
     "plugin.chart.Y2axis.help": "help",
     "plugin.chart.timeFormat-Y-M-D": "year-month-day",
     "plugin.chart.timeFormat-D-M-Y": "day-month-year",
-    "plugin.chart.timeFormat-M-D-Y": "month-day-year"
+    "plugin.chart.timeFormat-M-D-Y": "month-day-year",
+    "plugin.chart.dropDownMulti.titleHelper": "Column",
+    "plugin.chart.dropDownMulti.title": "Select Column"
   }
 };

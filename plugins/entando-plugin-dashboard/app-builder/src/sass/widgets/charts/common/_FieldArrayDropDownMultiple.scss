@@ -1,0 +1,20 @@
+.FieldArrayDropDownMultiple {
+
+
+
+  &__token-container {
+    border: 0px solid;
+    margin-top: 1em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  &__token {
+    margin:2px;
+  }
+  &__token-clear.label {
+    padding-right: 0;
+  }
+}

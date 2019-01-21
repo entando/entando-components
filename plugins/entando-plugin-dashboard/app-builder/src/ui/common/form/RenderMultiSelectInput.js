@@ -6,10 +6,17 @@ const RenderMultiSelectInput = ({
   options,
   align,
   className,
-  maxHeight
+  maxHeight,
+  disabled
 }) => {
   // const MyCustomToken = tokenContainer(props => {
   //   console.log("MyCustomToken props", props);
+  //   const {stateClickRemoveToken, isTokenRemoved, onRemove} = props;
+  //   if (stateClickRemoveToken) {
+  //     onRemove();
+  //     isTokenRemoved(true);
+  //   }
+  //
   //   return (
   //     <div
   //       {...props}
@@ -38,7 +45,9 @@ const RenderMultiSelectInput = ({
       //   return (
       //     <MyCustomToken
       //       key={index}
-      //       onRemove={props.onRemove}
+      //       onRemove={() => props.onRemove(index)}
+      //       stateClickRemoveToken={stateClickRemoveToken}
+      //       isTokenRemoved={isTokenRemoved}
       //       onClickCustom={event => {
       //         console.log("onClickCustom ", event);
       //       }}
@@ -55,6 +64,7 @@ const RenderMultiSelectInput = ({
         const value = val.map(x => ({...x}));
         input.onChange(value);
       }}
+      disabled={disabled}
     />
   );
 };
