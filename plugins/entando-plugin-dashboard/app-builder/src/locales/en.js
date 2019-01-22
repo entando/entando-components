@@ -91,6 +91,18 @@ export default {
     "plugin.chart.timeFormat-D-M-Y": "day-month-year",
     "plugin.chart.timeFormat-M-D-Y": "month-day-year",
     "plugin.chart.dropDownMulti.titleHelper": "Column",
-    "plugin.chart.dropDownMulti.title": "Select Column"
+    "plugin.chart.dropDownMulti.title": "Select Column",
+    "plugin.chart.generalSettings": "General Settings",
+    "plugin.chart.chartSize": "Chart Size",
+    "plugin.chart.padding": "Padding",
+    "plugin.chart.interactiveChart": "Interactive Chart",
+    "plugin.chart.height": "Height",
+    "plugin.chart.width": "Width",
+    "plugin.chart.top": "Top",
+    "plugin.chart.bottom": "Bottom",
+    "plugin.chart.right": "Right",
+    "plugin.chart.left": "Left",
+    "plugin.chart.showDetailMouseClick": "Show details on mouse click",
+    "plugin.chart.legendPosition": "Legend Position"
   }
 };

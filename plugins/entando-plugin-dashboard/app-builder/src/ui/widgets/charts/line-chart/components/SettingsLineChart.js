@@ -25,7 +25,6 @@ const wrapInputTextField = (name, label, append, disabled = false) => {
       name={name}
       component={inputTextField}
       label={label}
-      react-bootstrap-typeahead
       validate={[required, minLength3, maxLength30]}
       disabled={disabled}
       append={formattedText(append)}

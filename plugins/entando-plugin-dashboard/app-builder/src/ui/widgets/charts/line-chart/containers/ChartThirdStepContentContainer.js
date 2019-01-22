@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 import {formValueSelector} from "redux-form";
-import ChartSecondStepContent from "ui/widgets/charts/common/components/ChartSecondStepContent";
+import ChartThirdStepContent from "ui/widgets/charts/common/components/ChartThirdStepContent";
 
 const selector = formValueSelector("form-dashboard-line-chart");
 
@@ -11,8 +11,8 @@ const mapStateToProps = (state, ownProps) => ({
   axis: {rotated: selector(state, "axis.rotated")}
 });
 
-const ChartSecondStepContentContainer = connect(
+const ChartThirdStepContentContainer = connect(
   mapStateToProps,
   null
-)(ChartSecondStepContent);
-export default ChartSecondStepContentContainer;
+)(ChartThirdStepContent);
+export default ChartThirdStepContentContainer;

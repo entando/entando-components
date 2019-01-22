@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import PropTypes from "prop-types";
 import "patternfly/dist/js/patternfly-settings";
 import "patternfly/dist/js/patternfly-settings-charts";
 import c3 from "c3";
@@ -64,10 +65,10 @@ class Chart extends Component {
   }
 
   updateChart() {
-    const {config} = this.props;
+    const {idChart, config} = this.props;
     const {type, defaultConfig} = CHART_CONFIG[this.props.type];
     c3.generate({
-      bindto: "#chart",
+      bindto: `#${idChart}`,
       data: {
         columns: this.props.columns,
         type: type
@@ -78,7 +79,14 @@ class Chart extends Component {
   }
   render() {
     const {className} = CHART_CONFIG[this.props.type];
-    return <div id="chart" className={className} />;
+    const {idChart} = this.props;
+    return <div id={idChart} className={className} />;
   }
 }
+Chart.propTypes = {
+  idChart: PropTypes.string
+};
+Chart.defaultProps = {
+  idChart: "chart"
+};
 export default Chart;

@@ -1,5 +1,5 @@
 import {connect} from "react-redux";
-import {formValueSelector} from "redux-form";
+import {formValueSelector, getFormSyncErrors} from "redux-form";
 
 import {fetchServerConfigList} from "state/main/actions";
 
@@ -8,7 +8,8 @@ import DashboardLineChartForm from "ui/widgets/charts/line-chart/components/Dash
 const selector = formValueSelector("form-dashboard-line-chart");
 
 const mapStateToProps = state => ({
-  datasource: selector(state, "datasource")
+  datasource: selector(state, "datasource"),
+  formSyncErrors: getFormSyncErrors("form-dashboard-line-chart")(state)
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

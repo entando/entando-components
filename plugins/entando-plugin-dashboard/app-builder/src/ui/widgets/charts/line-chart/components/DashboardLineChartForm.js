@@ -6,6 +6,7 @@ import {Button, Icon, Wizard} from "patternfly-react";
 import ChartSteps from "ui/widgets/charts/common/components/ChartSteps";
 import ChartFirstStepContent from "ui/widgets/charts/common/components/ChartFirstStepContent";
 import ChartSecondStepContentContainer from "ui/widgets/charts/line-chart/containers/ChartSecondStepContentContainer";
+import ChartThirdStepContentContainer from "ui/widgets/charts/line-chart/containers/ChartThirdStepContentContainer";
 
 const data = {columns: [["data1", 10, 30, 10, 20, 40, 50]]};
 
@@ -13,7 +14,7 @@ class DashboardLineChartFormBody extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeSubStepIndex: 0
+      activeSubStepIndex: 2
     };
     this.onNextButtonClick = this.onNextButtonClick.bind(this);
     this.onBackButtonClick = this.onBackButtonClick.bind(this);
@@ -45,13 +46,63 @@ class DashboardLineChartFormBody extends Component {
 
   renderButtons() {
     const {activeSubStepIndex} = this.state;
+    const {formSyncErrors} = this.props;
     let disabledButtonNext = true;
     switch (activeSubStepIndex) {
       case 0: {
+        if (
+          !formSyncErrors.title &&
+          !formSyncErrors.serverName &&
+          !formSyncErrors.datasource
+        ) {
+          disabledButtonNext = false;
+        }
+        break;
+      }
+      case 1: {
+        disabledButtonNext = false;
+        break;
       }
       default:
-        return disabledButtonNext;
+        break;
     }
+    return (
+      <div className="DashboardLineChart__btn-container">
+        <Button bsStyle="default" className="btn-cancel" onClick={this.close}>
+          Cancel
+        </Button>
+
+        {activeSubStepIndex < 2 && (
+          <Button
+            bsStyle="primary"
+            onClick={this.onNextButtonClick}
+            className="pull-right"
+            disabled={disabledButtonNext}
+          >
+            Next&nbsp;
+            <Icon type="fa" name="angle-right" />
+          </Button>
+        )}
+
+        {activeSubStepIndex === 2 && (
+          <Button bsStyle="primary" onClick={this.close} className="pull-right">
+            Save&nbsp;
+            <Icon type="fa" name="angle-right" />
+          </Button>
+        )}
+        {activeSubStepIndex > 0 && (
+          <Button
+            bsStyle="default"
+            disabled={activeSubStepIndex === 0}
+            onClick={this.onBackButtonClick}
+            className="DashboardLineChart__btn-back pull-right"
+          >
+            <Icon type="fa" name="angle-left" />
+            &nbsp; Back
+          </Button>
+        )}
+      </div>
+    );
   }
 
   render() {
@@ -95,52 +146,14 @@ class DashboardLineChartFormBody extends Component {
                       activeStepIndex={2}
                       activeSubStepIndex={activeSubStepIndex}
                     >
-                      TERZO STEP
+                      <ChartThirdStepContentContainer
+                        type="LINE_CHART"
+                        data={data.columns}
+                        labelChartPreview="Line Chart"
+                      />
                     </Wizard.Contents>
                   </div>
-
-                  <div className="DashboardLineChart__btn-container">
-                    <Button
-                      bsStyle="default"
-                      className="btn-cancel"
-                      onClick={this.close}
-                    >
-                      Cancel
-                    </Button>
-
-                    {activeSubStepIndex < 2 && (
-                      <Button
-                        bsStyle="primary"
-                        onClick={this.onNextButtonClick}
-                        className="pull-right"
-                      >
-                        Next&nbsp;
-                        <Icon type="fa" name="angle-right" />
-                      </Button>
-                    )}
-
-                    {activeSubStepIndex === 2 && (
-                      <Button
-                        bsStyle="primary"
-                        onClick={this.close}
-                        className="pull-right"
-                      >
-                        Save&nbsp;
-                        <Icon type="fa" name="angle-right" />
-                      </Button>
-                    )}
-                    {activeSubStepIndex > 0 && (
-                      <Button
-                        bsStyle="default"
-                        disabled={activeSubStepIndex === 0}
-                        onClick={this.onBackButtonClick}
-                        className="DashboardLineChart__btn-back pull-right"
-                      >
-                        <Icon type="fa" name="angle-left" />
-                        &nbsp; Back
-                      </Button>
-                    )}
-                  </div>
+                  {this.renderButtons()}
                 </div>
               </form>
             </Wizard.Main>

@@ -1,10 +1,8 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 import {Row, Col} from "patternfly-react";
-import FormattedMessage from "ui/i18n/FormattedMessage";
-
-import Chart from "ui/widgets/charts/helper/Chart";
 import SettingsLineChartContainer from "ui/widgets/charts/line-chart/containers/SettingsLineChartContainer";
+import PreviewChartSelected from "ui/widgets/charts/common/components/PreviewChartSelected";
 
 class ChartSecondStepContent extends Component {
   render() {
@@ -16,29 +14,14 @@ class ChartSecondStepContent extends Component {
     } = this.props;
     return (
       <div className="ChartSecondStep">
-        <Row className="ChartSecondStep__row-preview-text-chart">
-          <Col
-            xs={12}
-            className="ChartSecondStep__preview-text-chart-container"
-          >
-            <FormattedMessage id="plugin.charts.previewChart.label" />
-            <span className="ChartSecondStep__preview-text-type-chart">
-              <FormattedMessage
-                id="plugin.charts.previewChart.label.chartType"
-                values={{chart: labelChartPreview}}
-              />
-            </span>
-          </Col>
-        </Row>
-        <Row className="ChartSecondStep__row-preview-chart">
-          <Col xs={12} className="ChartSecondStep__preview-chart">
-            <Chart
-              type={type}
-              columns={data}
-              config={{axis: {rotated: rotated}, size: {height: 250}}}
-            />
-          </Col>
-        </Row>
+        <PreviewChartSelected
+          idChart="chart-linear-second-step"
+          type={type}
+          data={data}
+          labelChartPreview={labelChartPreview}
+          axisRotated={rotated}
+          heightChart={250}
+        />
         <Row>
           <Col xs={12} className="ChartSecondStep__settings-container">
             <SettingsLineChartContainer />

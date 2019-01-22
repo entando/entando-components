@@ -205,6 +205,92 @@
 .FieldArrayDropDownMultiple__token-clear.label {
   padding-right: 0; }
 
+.ChartSecondStep__settings-container {
+  border: 0px solid;
+  margin-top: 0px; }
+
+.ChartThirdStep__settings-container {
+  border: 0px solid;
+  margin-top: 0px; }
+
+.PreviewChartSelected__preview-text-chart-container {
+  border: 0px solid;
+  margin-bottom: 1em;
+  font-size: 14px;
+  padding-left: 0 !important; }
+
+.PreviewChartSelected__preview-text-type-chart {
+  margin-left: 5px;
+  font-weight: bold; }
+
+.PreviewChartSelected__preview-chart {
+  border: 0px solid;
+  padding: 0 !important; }
+
+.PreviewChartSelected__settings-container {
+  border: 0px solid;
+  margin-top: 0px; }
+
+.GeneralSettings__title {
+  font-size: 16px;
+  font-weight: bold; }
+
+.GeneralSettings__field-form-group.form-group {
+  border: 0 solid;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start; }
+
+.GeneralSettings__field-form-group input[type=number]::-webkit-inner-spin-button {
+  opacity: 1;
+  height: 2.5em; }
+
+.GeneralSettings__field-form-group input[type=number] {
+  text-align: center; }
+
+.GeneralSettings__field-form-group.form-group .control-label {
+  margin-top: 5px;
+  margin-right: 30px; }
+
+.GeneralSettings__field-form-group.form-group.GeneralSettings__field-width label.control-label {
+  margin-right: 31px; }
+
+.GeneralSettings__field-form-group.form-group.GeneralSettings__field-bottom label.control-label {
+  margin-right: 8px; }
+
+.GeneralSettings__field-form-group.form-group.GeneralSettings__field-left label.control-label {
+  margin-right: 38px; }
+
+.GeneralSettings__input-number {
+  border-top: 1px solid #bbb;
+  border-left: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  border-right: 0;
+  width: 5em;
+  height: 2.5em;
+  margin-left: 1em; }
+
+.GeneralSettings__input-number:focus {
+  border-top: 1px solid #bbb;
+  border-left: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  box-shadow: none; }
+
+.GeneralSettings__input-number:hover {
+  border-top: 1px solid #bbb;
+  border-left: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  box-shadow: none; }
+
+.GeneralSettings__input-number-addon {
+  border-top: 1px solid #bbb;
+  border-right: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  padding-top: 5px;
+  width: 2em;
+  margin-left: -1px; }
+
 .DashboardLineChart .wizard-pf-main {
   padding: 3em; }
 
@@ -226,24 +312,6 @@
 
 .DashboardLineChart__btn-back {
   margin-right: 3em; }
-
-.ChartSecondStep__preview-text-chart-container {
-  border: 0px solid;
-  margin-bottom: 1em;
-  font-size: 14px;
-  padding-left: 0 !important; }
-
-.ChartSecondStep__preview-text-type-chart {
-  margin-left: 5px;
-  font-weight: bold; }
-
-.ChartSecondStep__preview-chart {
-  border: 0px solid;
-  padding: 0 !important; }
-
-.ChartSecondStep__settings-container {
-  border: 0px solid;
-  margin-top: 0px; }
 
 .SettingsLineChart .row {
   border: 0px solid; }

@@ -4,6 +4,7 @@ import FormattedMessage from "ui/i18n/FormattedMessage";
 
 export const inputTextField = ({
   input,
+  type,
   meta: {touched, error},
   label,
   append,
@@ -16,7 +17,7 @@ export const inputTextField = ({
     <input
       {...input}
       id={input.name}
-      type="text"
+      type={type || "text"}
       className="form-control"
       disabled={disabled}
     />
