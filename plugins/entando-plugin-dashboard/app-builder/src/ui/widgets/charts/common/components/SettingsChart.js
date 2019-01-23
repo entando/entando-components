@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import PropTypes from "prop-types";
 import {Field, FieldArray} from "redux-form";
 import {
   Row,
@@ -20,35 +21,26 @@ const maxLength30 = maxLength(30);
 const minLength3 = minLength(3);
 
 const wrapInputTextField = (name, label, append, disabled = false) => {
+  const validate = [required, minLength3, maxLength30];
+  if (disabled) {
+    validate.shift();
+  }
   return (
     <Field
       name={name}
       component={inputTextField}
       label={label}
-      validate={[required, minLength3, maxLength30]}
+      validate={validate}
       disabled={disabled}
       append={formattedText(append)}
     />
   );
 };
 
-class SettingsLineChart extends Component {
-  constructor(props) {
-    super(props);
-    this.toogleSelected = this.toogleSelected.bind(this);
-  }
-
-  toogleSelected(id, key) {
-    let temp = this.state.columnsY.find(f => f.key === key);
-    temp.selected = !temp.selected;
-    this.setState(prevState => ({
-      columnsY: [...prevState.columnsY, ...temp]
-    }));
-  }
-
+class SettingsChart extends Component {
   chooseTimeFormat() {
     return (
-      <div className="SettingsLineChart__timeformat-container">
+      <div className="SettingsChart__timeformat-container">
         <div className="radio">
           <label>
             <Field
@@ -88,8 +80,8 @@ class SettingsLineChart extends Component {
 
   rederAxisX() {
     return (
-      <Col xs={4} className="SettingsLineChart__col">
-        <FormGroup className="SettingsLineChart__form-group">
+      <Col xs={4} className="SettingsChart__col">
+        <FormGroup className="SettingsChart__form-group">
           <ControlLabel>
             <FormattedMessage id="plugin.chart.Xaxis" />
           </ControlLabel>
@@ -114,8 +106,8 @@ class SettingsLineChart extends Component {
     const {optionColumns, optionColumnYSelected} = this.props;
 
     return (
-      <Col xs={4} className="SettingsLineChart__col">
-        <FormGroup className="SettingsLineChart__form-group">
+      <Col xs={4} className="SettingsChart__col">
+        <FormGroup className="SettingsChart__form-group">
           <ControlLabel>
             <FormattedMessage id="plugin.chart.Yaxis" />
           </ControlLabel>
@@ -126,7 +118,7 @@ class SettingsLineChart extends Component {
           "plugin.table.requirement"
         )}
         <FieldArray
-          className="SettingsLineChart__column-selected"
+          className="SettingsChart__column-selected"
           name="columns.y"
           component={FieldArrayDropDownMultiple}
           optionColumns={optionColumns}
@@ -139,8 +131,8 @@ class SettingsLineChart extends Component {
   rederAxisY2() {
     const {optionColumns, optionColumnY2Selected} = this.props;
     return (
-      <Col xs={4} className="SettingsLineChart__col">
-        <FormGroup className="SettingsLineChart__form-group">
+      <Col xs={4} className="SettingsChart__col">
+        <FormGroup className="SettingsChart__form-group">
           <ControlLabel>
             <FormattedMessage id="plugin.chart.Y2axis" />
             <FieldLevelHelp
@@ -162,7 +154,7 @@ class SettingsLineChart extends Component {
         )}
 
         <FieldArray
-          className="SettingsLineChart__column-selected"
+          className="SettingsChart__column-selected"
           name="columns.y2"
           component={FieldArrayDropDownMultiple}
           optionColumns={optionColumns}
@@ -174,10 +166,10 @@ class SettingsLineChart extends Component {
 
   render() {
     return (
-      <div className="SettingsLineChart">
+      <div className="SettingsChart">
         <Row>
           <Col xs={12}>
-            <FormGroup className="SettingsLineChart__input-group">
+            <FormGroup className="SettingsChart__input-group">
               <div className="checkbox">
                 <label>
                   <Field
@@ -202,4 +194,15 @@ class SettingsLineChart extends Component {
     );
   }
 }
-export default SettingsLineChart;
+
+SettingsChart.propTypes = {
+  optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  axisY2Show: PropTypes.bool.isRequired,
+  axisXType: PropTypes.string.isRequired,
+  selectedColumnsY: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  selectedColumnsY2: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  optionColumnYSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  optionColumnY2Selected: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+};
+
+export default SettingsChart;

@@ -3,13 +3,13 @@ import {formValueSelector, getFormSyncErrors} from "redux-form";
 
 import {fetchServerConfigList} from "state/main/actions";
 
-import DashboardLineChartForm from "ui/widgets/charts/line-chart/components/DashboardLineChartForm";
+import DashboardBarChartForm from "ui/widgets/charts/bar-chart/components/DashboardBarChartForm";
 
-const selector = formValueSelector("form-dashboard-line-chart");
+const selector = formValueSelector("form-dashboard-bar-chart");
 
 const mapStateToProps = state => ({
   datasource: selector(state, "datasource"),
-  formSyncErrors: getFormSyncErrors("form-dashboard-line-chart")(state),
+  formSyncErrors: getFormSyncErrors("form-dashboard-bar-chart")(state),
   initialValues: {
     axis: {
       x: {type: "indexed"},
@@ -57,9 +57,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   }
 });
 
-const DashboardLineChartFormContainer = connect(
+const DashboardBarChartFormContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(DashboardLineChartForm);
+)(DashboardBarChartForm);
 
-export default DashboardLineChartFormContainer;
+export default DashboardBarChartFormContainer;

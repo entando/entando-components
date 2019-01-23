@@ -10,9 +10,9 @@ import ChartThirdStepContentContainer from "ui/widgets/charts/common/containers/
 
 const data = {columns: [["data1", 10, 30, 10, 20, 40, 50]]};
 
-const FORM_NAME = "form-dashboard-line-chart";
+const FORM_NAME = "form-dashboard-bar-chart";
 
-class DashboardLineChartFormBody extends Component {
+class DashboardBarChartFormBody extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -72,7 +72,7 @@ class DashboardLineChartFormBody extends Component {
         break;
     }
     return (
-      <div className="DashboardLineChart__btn-container">
+      <div className="DashboardBarChart__btn-container">
         <Button bsStyle="default" className="btn-cancel" onClick={this.close}>
           Cancel
         </Button>
@@ -100,7 +100,7 @@ class DashboardLineChartFormBody extends Component {
             bsStyle="default"
             disabled={activeSubStepIndex === 0}
             onClick={this.onBackButtonClick}
-            className="DashboardLineChart__btn-back pull-right"
+            className="DashboardBarChart__btn-back pull-right"
           >
             <Icon type="fa" name="angle-left" />
             &nbsp; Back
@@ -114,14 +114,14 @@ class DashboardLineChartFormBody extends Component {
     const {activeSubStepIndex} = this.state;
     const {handleSubmit} = this.props;
     return (
-      <Wizard className="DashboardLineChart">
+      <Wizard className="DashboardBarChart">
         <Wizard.Body>
           <Wizard.Steps steps={<ChartSteps stepIndex={activeSubStepIndex} />} />
           <Wizard.Row>
             <Wizard.Main>
               <form onSubmit={handleSubmit}>
-                <div className="DashboardLineChart__data-container">
-                  <div className="DashboardLineChart__data-contents">
+                <div className="DashboardBarChart__data-container">
+                  <div className="DashboardBarChart__data-contents">
                     <Wizard.Contents
                       key={0}
                       stepIndex={0}
@@ -140,9 +140,9 @@ class DashboardLineChartFormBody extends Component {
                       activeSubStepIndex={activeSubStepIndex}
                     >
                       <ChartSecondStepContentContainer
-                        type="LINE_CHART"
+                        type="BAR_CHART"
                         data={data.columns}
-                        labelChartPreview="Line Chart"
+                        labelChartPreview="Bar Chart"
                         formName={FORM_NAME}
                       />
                     </Wizard.Contents>
@@ -154,9 +154,9 @@ class DashboardLineChartFormBody extends Component {
                       activeSubStepIndex={activeSubStepIndex}
                     >
                       <ChartThirdStepContentContainer
-                        type="LINE_CHART"
+                        type="BAR_CHART"
                         data={data.columns}
-                        labelChartPreview="Line Chart"
+                        labelChartPreview="Bar Chart"
                         formName={FORM_NAME}
                       />
                     </Wizard.Contents>
@@ -171,19 +171,19 @@ class DashboardLineChartFormBody extends Component {
     );
   }
 }
-DashboardLineChartFormBody.propTypes = {
+DashboardBarChartFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
   invalid: PropTypes.bool,
   submitting: PropTypes.bool
 };
 
-DashboardLineChartFormBody.defaultProps = {
+DashboardBarChartFormBody.defaultProps = {
   invalid: false,
   submitting: false
 };
-const DashboardLineChartForm = reduxForm({
+const DashboardBarChartForm = reduxForm({
   form: FORM_NAME
-})(DashboardLineChartFormBody);
+})(DashboardBarChartFormBody);
 
-export default DashboardLineChartForm;
+export default DashboardBarChartForm;

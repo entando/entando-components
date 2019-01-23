@@ -1,12 +1,14 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 import {Row, Col} from "patternfly-react";
-import SettingsLineChartContainer from "ui/widgets/charts/line-chart/containers/SettingsLineChartContainer";
+import {uniqueId} from "lodash";
+import SettingsChartContainer from "ui/widgets/charts/common/containers/SettingsChartContainer";
 import PreviewChartSelected from "ui/widgets/charts/common/components/PreviewChartSelected";
 
 class ChartSecondStepContent extends Component {
   render() {
     const {
+      formName,
       type,
       data,
       labelChartPreview,
@@ -15,7 +17,7 @@ class ChartSecondStepContent extends Component {
     return (
       <div className="ChartSecondStep">
         <PreviewChartSelected
-          idChart="chart-linear-second-step"
+          idChart={`chart-linear-second-step-${uniqueId()}`}
           type={type}
           data={data}
           labelChartPreview={labelChartPreview}
@@ -24,7 +26,7 @@ class ChartSecondStepContent extends Component {
         />
         <Row>
           <Col xs={12} className="ChartSecondStep__settings-container">
-            <SettingsLineChartContainer />
+            <SettingsChartContainer formName={formName} />
           </Col>
         </Row>
       </div>

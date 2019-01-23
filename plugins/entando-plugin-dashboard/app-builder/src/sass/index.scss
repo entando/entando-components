@@ -22,8 +22,10 @@
 @import 'widgets/charts/common/ChartThirdStep';
 @import 'widgets/charts/common/PreviewChartSelected';
 @import 'widgets/charts/common/GeneralSettings';
+@import 'widgets/charts/common/SettingsChart';
 
 @import 'widgets/charts/line-chart/DashboardLineChart';
-@import 'widgets/charts/line-chart/SettingsLineChart';
+
+@import 'widgets/charts/bar-chart/DashboardBarChart';
 
 @import 'common/form/DropdownMultiple';

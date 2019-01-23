@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 import {Row, Col} from "patternfly-react";
+import {uniqueId} from "lodash";
 import PreviewChartSelected from "ui/widgets/charts/common/components/PreviewChartSelected";
 import GeneralSettingsContainer from "ui/widgets/charts/common/containers/GeneralSettingsContainer";
 class ChartThirdStepContent extends Component {
@@ -14,7 +15,7 @@ class ChartThirdStepContent extends Component {
     return (
       <div className="ChartThirdStep">
         <PreviewChartSelected
-          idChart="chart-linear-third-step"
+          idChart={`chart-linear-second-step-${uniqueId()}`}
           type={type}
           data={data}
           labelChartPreview={labelChartPreview}

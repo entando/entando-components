@@ -1,4 +1,18 @@
 .GeneralSettings {
+  padding: 3em;
+
+  .bootstrap-switch-label {
+    visibility: hidden;
+  }
+
+  .row:not(:first-child) {
+    padding: 1em;
+  }
+
+  .row:last-child {
+    padding: 0;
+  }
+
   &__title {
     font-size: 16px;
     font-weight: bold;
@@ -26,17 +40,15 @@
     margin-right: 30px;
   }
 
-&__field-form-group.form-group.GeneralSettings__field-width
-  label.control-label{
+  &__field-form-group.form-group label.GeneralSettings__field-width.control-label {
     margin-right: 31px;
   }
-&__field-form-group.form-group.GeneralSettings__field-bottom
-  label.control-label{
+
+  &__field-form-group.form-group label.GeneralSettings__field-bottom.control-label {
     margin-right: 8px;
   }
 
-&__field-form-group.form-group.GeneralSettings__field-left
-  label.control-label{
+  &__field-form-group.form-group label.GeneralSettings__field-left.control-label {
     margin-right: 38px;
   }
 
@@ -45,7 +57,7 @@
     border-left: 1px solid #bbb;
     border-bottom: 1px solid #bbb;
     border-right: 0;
-    width: 5em;
+    width: 4em;
     height: 2.5em;
     margin-left: 1em;
   }

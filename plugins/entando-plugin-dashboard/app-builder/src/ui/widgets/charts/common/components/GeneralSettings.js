@@ -1,9 +1,14 @@
 import React, {Component} from "react";
-import PropTypes from "prop-types";
 import {Field} from "redux-form";
-import {Row, Col, FormGroup, ControlLabel} from "patternfly-react";
-
+import {
+  Row,
+  Col,
+  FormGroup,
+  ControlLabel,
+  FieldLevelHelp
+} from "patternfly-react";
 import FormattedMessage from "ui/i18n/FormattedMessage";
+import SwitchRenderer from "ui/common/form/SwitchRenderer";
 
 const renderField = ({input, label, min, max, direction, className}) => {
   return (
@@ -20,7 +25,7 @@ const renderField = ({input, label, min, max, direction, className}) => {
         max={max}
         dir={direction}
       />
-      <div class="GeneralSettings__input-number-addon">PX</div>
+      <div className="GeneralSettings__input-number-addon">PX</div>
     </FormGroup>
   );
 };
@@ -69,13 +74,13 @@ class GeneralSettings extends Component {
               className="GeneralSettings__field-height"
             />
           </Col>
-          <Col xs={4} className="GeneralSettings__col">
+          <Col xs={6} className="GeneralSettings__col">
             <Row>
-              <Col xs={5}>
+              <Col xs={6}>
                 <Field
                   type="number"
                   component={renderField}
-                  name="size.top"
+                  name="padding.top"
                   label="plugin.chart.top"
                   min="0"
                   max="9999"
@@ -83,11 +88,11 @@ class GeneralSettings extends Component {
                   className="GeneralSettings__field-top"
                 />
               </Col>
-              <Col xs={5}>
+              <Col xs={6}>
                 <Field
                   type="number"
                   component={renderField}
-                  name="size.right"
+                  name="padding.right"
                   label="plugin.chart.right"
                   min="0"
                   max="9999"
@@ -111,13 +116,13 @@ class GeneralSettings extends Component {
               className="GeneralSettings__field-width"
             />
           </Col>
-          <Col xs={4} className="GeneralSettings__col">
+          <Col xs={6} className="GeneralSettings__col">
             <Row>
-              <Col xs={5}>
+              <Col xs={6}>
                 <Field
                   type="number"
                   component={renderField}
-                  name="size.bottom"
+                  name="padding.bottom"
                   label="plugin.chart.bottom"
                   min="0"
                   max="9999"
@@ -125,11 +130,11 @@ class GeneralSettings extends Component {
                   className="GeneralSettings__field-bottom"
                 />
               </Col>
-              <Col xs={5}>
+              <Col xs={6}>
                 <Field
                   type="number"
                   component={renderField}
-                  name="size.left"
+                  name="padding.left"
                   label="plugin.chart.left"
                   min="0"
                   max="9999"
@@ -138,6 +143,61 @@ class GeneralSettings extends Component {
                 />
               </Col>
             </Row>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} className="GeneralSettings__col">
+            <FormGroup className="GeneralSettings__form-group">
+              <ControlLabel>
+                <strong>
+                  <FormattedMessage id="plugin.chart.interactiveChart" />
+                </strong>
+                <FieldLevelHelp
+                  content={<FormattedMessage id="plugin.chart.Y2axis.help" />}
+                  close="true"
+                />
+              </ControlLabel>
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={4} className="GeneralSettings__col">
+            <FormGroup className="GeneralSettings__form-group">
+              <ControlLabel>
+                <FormattedMessage id="plugin.chart.showDetailMouseClick" />
+              </ControlLabel>
+              &nbsp;&nbsp;
+              <Field component={SwitchRenderer} name="iteraction.enabled" />
+            </FormGroup>
+          </Col>
+          <Col xs={2} className="GeneralSettings__col">
+            <FormGroup className="GeneralSettings__form-group">
+              <ControlLabel>
+                <FormattedMessage id="plugin.chart.legendPosition" />
+              </ControlLabel>
+            </FormGroup>
+          </Col>
+          <Col xs={4} className="GeneralSettings__col">
+            <FormGroup className="GeneralSettings__form-group">
+              <label className="radio-inline">
+                <Field
+                  component="input"
+                  type="radio"
+                  name="legend.position"
+                  value="bottom"
+                />
+                <FormattedMessage id="plugin.chart.bottom" />
+              </label>
+              <label className="radio-inline">
+                <Field
+                  component="input"
+                  type="radio"
+                  name="legend.position"
+                  value="right"
+                />
+                <FormattedMessage id="plugin.chart.right" />
+              </label>
+            </FormGroup>
           </Col>
         </Row>
       </div>

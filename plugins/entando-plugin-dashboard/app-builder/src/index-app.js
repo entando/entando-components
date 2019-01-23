@@ -29,6 +29,7 @@ import DashboardConfigPageContainer from "ui/dashboard-config/list/containers/Da
 
 import DashboardTable from "ui/widgets/dashboard-table/components/DashboardTable";
 import DashboardLineChart from "ui/widgets/charts/line-chart/components/DashboardLineChart";
+import DashboardBarChart from "ui/widgets/charts/bar-chart/components/DashboardBarChart";
 
 const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
   acc[`plugin.${plugin.id}.${key}`] = enLocale.messages[key];
@@ -42,6 +43,11 @@ export default ReactDOM.render(
   <Provider store={store}>
     <IntlProvider locale={enLocale.locale} messages={mappedMessages}>
       <Grid fluid>
+        <Row>
+          <Col xs={12}>
+            <DashboardBarChart />
+          </Col>
+        </Row>
         <Row>
           <Col xs={12}>
             <DashboardLineChart />

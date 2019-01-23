@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "patternfly/dist/js/patternfly-settings";
 import "patternfly/dist/js/patternfly-settings-charts";
 import c3 from "c3";
+import {isEqual} from "lodash";
 
 const {patternfly} = window;
 const c3ChartDefaults = patternfly.c3ChartDefaults();
@@ -54,14 +55,15 @@ const CHART_CONFIG = {
 
 class Chart extends Component {
   componentDidMount() {
-    // When the component mounts the first time we update
-    // the chart.
+    // When the component mounts the first time we update the chart.
     this.updateChart();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     // When we receive a new prop then we update the chart again.
-    this.updateChart();
+    if (!isEqual(prevProps, this.props)) {
+      this.updateChart();
+    }
   }
 
   updateChart() {

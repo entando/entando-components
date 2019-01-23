@@ -1,0 +1,59 @@
+.SettingsChart {
+  padding: 3em;
+
+  .bootstrap-switch-label {
+    visibility: hidden;
+  }
+
+
+  .row:not(:first-child) {
+    padding: 1em;
+  }
+
+  &__col {
+    border: 0 solid;
+    min-height: 200px;
+  }
+
+  &__form-group {
+    border: 0 solid;
+    min-height: 60px;
+  }
+
+  &__timeformat-container {
+    border: 0 solid;
+    padding-left: 1.5em;
+  }
+
+  &__selector-multi:before {
+    content: '\25BE' !important;
+    position: absolute;
+    right: 5px;
+    top: 3px;
+  }
+
+  &__selector-multi:after {
+    content: '\25BE' !important;
+    position: absolute;
+    right: 5px;
+    top: 3px;
+  }
+
+  &__selector-multi .form-control.rbt-input-multi.rbt-input {
+    //overflow: visible;
+    border: 1px solid #bbb;
+    min-height: 26px;
+    height: auto;
+  }
+
+  &__selector-multi .form-control.rbt-input-multi.rbt-input .rbt-input-wrapper {
+    // position: absolute;
+    // top: 35px;
+  }
+
+  &__column-selected {
+    border: 0 solid;
+    margin-top: 1em;
+    max-height: 100px;
+  }
+}

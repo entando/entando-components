@@ -231,65 +231,96 @@
   border: 0px solid;
   margin-top: 0px; }
 
-.GeneralSettings__title {
-  font-size: 16px;
-  font-weight: bold; }
+.GeneralSettings {
+  padding: 3em; }
+  .GeneralSettings .bootstrap-switch-label {
+    visibility: hidden; }
+  .GeneralSettings .row:not(:first-child) {
+    padding: 1em; }
+  .GeneralSettings .row:last-child {
+    padding: 0; }
+  .GeneralSettings__title {
+    font-size: 16px;
+    font-weight: bold; }
+  .GeneralSettings__field-form-group.form-group {
+    border: 0 solid;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start; }
+  .GeneralSettings__field-form-group input[type=number]::-webkit-inner-spin-button {
+    opacity: 1;
+    height: 2.5em; }
+  .GeneralSettings__field-form-group input[type=number] {
+    text-align: center; }
+  .GeneralSettings__field-form-group.form-group .control-label {
+    margin-top: 5px;
+    margin-right: 30px; }
+  .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-width.control-label {
+    margin-right: 31px; }
+  .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-bottom.control-label {
+    margin-right: 8px; }
+  .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-left.control-label {
+    margin-right: 38px; }
+  .GeneralSettings__input-number {
+    border-top: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    border-right: 0;
+    width: 4em;
+    height: 2.5em;
+    margin-left: 1em; }
+  .GeneralSettings__input-number:focus {
+    border-top: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    box-shadow: none; }
+  .GeneralSettings__input-number:hover {
+    border-top: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    box-shadow: none; }
+  .GeneralSettings__input-number-addon {
+    border-top: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    padding-top: 5px;
+    width: 2em;
+    margin-left: -1px; }
 
-.GeneralSettings__field-form-group.form-group {
-  border: 0 solid;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start; }
-
-.GeneralSettings__field-form-group input[type=number]::-webkit-inner-spin-button {
-  opacity: 1;
-  height: 2.5em; }
-
-.GeneralSettings__field-form-group input[type=number] {
-  text-align: center; }
-
-.GeneralSettings__field-form-group.form-group .control-label {
-  margin-top: 5px;
-  margin-right: 30px; }
-
-.GeneralSettings__field-form-group.form-group.GeneralSettings__field-width label.control-label {
-  margin-right: 31px; }
-
-.GeneralSettings__field-form-group.form-group.GeneralSettings__field-bottom label.control-label {
-  margin-right: 8px; }
-
-.GeneralSettings__field-form-group.form-group.GeneralSettings__field-left label.control-label {
-  margin-right: 38px; }
-
-.GeneralSettings__input-number {
-  border-top: 1px solid #bbb;
-  border-left: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
-  border-right: 0;
-  width: 5em;
-  height: 2.5em;
-  margin-left: 1em; }
-
-.GeneralSettings__input-number:focus {
-  border-top: 1px solid #bbb;
-  border-left: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
-  box-shadow: none; }
-
-.GeneralSettings__input-number:hover {
-  border-top: 1px solid #bbb;
-  border-left: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
-  box-shadow: none; }
-
-.GeneralSettings__input-number-addon {
-  border-top: 1px solid #bbb;
-  border-right: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
-  padding-top: 5px;
-  width: 2em;
-  margin-left: -1px; }
+.SettingsChart {
+  padding: 3em; }
+  .SettingsChart .bootstrap-switch-label {
+    visibility: hidden; }
+  .SettingsChart .row:not(:first-child) {
+    padding: 1em; }
+  .SettingsChart__col {
+    border: 0 solid;
+    min-height: 200px; }
+  .SettingsChart__form-group {
+    border: 0 solid;
+    min-height: 60px; }
+  .SettingsChart__timeformat-container {
+    border: 0 solid;
+    padding-left: 1.5em; }
+  .SettingsChart__selector-multi:before {
+    content: '\25BE' !important;
+    position: absolute;
+    right: 5px;
+    top: 3px; }
+  .SettingsChart__selector-multi:after {
+    content: '\25BE' !important;
+    position: absolute;
+    right: 5px;
+    top: 3px; }
+  .SettingsChart__selector-multi .form-control.rbt-input-multi.rbt-input {
+    border: 1px solid #bbb;
+    min-height: 26px;
+    height: auto; }
+  .SettingsChart__column-selected {
+    border: 0 solid;
+    margin-top: 1em;
+    max-height: 100px; }
 
 .DashboardLineChart .wizard-pf-main {
   padding: 3em; }
@@ -313,42 +344,27 @@
 .DashboardLineChart__btn-back {
   margin-right: 3em; }
 
-.SettingsLineChart .row {
+.DashboardBarChart .wizard-pf-main {
+  padding: 3em; }
+
+.DashboardBarChart .wizard-pf-row {
+  height: none;
+  max-height: none;
+  width: 100%; }
+
+.DashboardBarChart__data-container {
   border: 0px solid; }
 
-.SettingsLineChart__col {
+.DashboardBarChart__data-contents {
+  border: 0px solid red;
+  height: 670px; }
+
+.DashboardBarChart__btn-container {
   border: 0px solid;
-  min-height: 200px; }
+  margin-top: 2em; }
 
-.SettingsLineChart__form-group {
-  border: 0px solid;
-  min-height: 60px; }
-
-.SettingsLineChart__timeformat-container {
-  border: 0px solid;
-  padding-left: 1.5em; }
-
-.SettingsLineChart__selector-multi:before {
-  content: '\25BE' !important;
-  position: absolute;
-  right: 5px;
-  top: 3px; }
-
-.SettingsLineChart__selector-multi:after {
-  content: '\25BE' !important;
-  position: absolute;
-  right: 5px;
-  top: 3px; }
-
-.SettingsLineChart__selector-multi .form-control.rbt-input-multi.rbt-input {
-  border: 1px solid #bbb;
-  min-height: 26px;
-  height: auto; }
-
-.SettingsLineChart__column-selected {
-  border: 0px solid;
-  margin-top: 1em;
-  max-height: 100px; }
+.DashboardBarChart__btn-back {
+  margin-right: 3em; }
 
 .DropdownMultiple {
   -webkit-user-select: none;

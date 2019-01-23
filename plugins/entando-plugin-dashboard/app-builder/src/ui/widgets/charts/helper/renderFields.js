@@ -4,20 +4,19 @@ import FormattedMessage from "ui/i18n/FormattedMessage";
 
 export const inputTextField = ({
   input,
-  type,
   meta: {touched, error},
   label,
   append,
   disabled
 }) => (
-  <FormGroup>
+  <FormGroup validationState={touched && error ? "error" : null}>
     <ControlLabel htmlFor={input.name}>
       <FormattedMessage id={label} />
     </ControlLabel>
     <input
       {...input}
       id={input.name}
-      type={type || "text"}
+      type="text"
       className="form-control"
       disabled={disabled}
     />
