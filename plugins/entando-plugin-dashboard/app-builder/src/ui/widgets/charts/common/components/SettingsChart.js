@@ -122,7 +122,7 @@ class SettingsChart extends Component {
           name="columns.y"
           component={FieldArrayDropDownMultiple}
           optionColumns={optionColumns}
-          optionColumnYSelected={optionColumnYSelected}
+          optionColumnSelected={optionColumnYSelected}
         />
       </Col>
     );
@@ -158,7 +158,7 @@ class SettingsChart extends Component {
           name="columns.y2"
           component={FieldArrayDropDownMultiple}
           optionColumns={optionColumns}
-          optionColumnYSelected={optionColumnY2Selected}
+          optionColumnSelected={optionColumnY2Selected}
         />
       </Col>
     );

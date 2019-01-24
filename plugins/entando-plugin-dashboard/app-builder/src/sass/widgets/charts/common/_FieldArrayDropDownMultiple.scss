@@ -1,9 +1,6 @@
 .FieldArrayDropDownMultiple {
-
-
-
   &__token-container {
-    border: 0px solid;
+    border: 0 solid;
     margin-top: 1em;
     display: flex;
     flex-direction: row;
@@ -11,9 +8,12 @@
     justify-content: flex-start;
     align-items: flex-start;
   }
+
   &__token {
-    margin:2px;
+    margin: 2px;
+    padding: 2px;
   }
+
   &__token-clear.label {
     padding-right: 0;
   }

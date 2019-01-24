@@ -1,7 +1,3 @@
-
-
-
-
 .DropdownMultiple {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -26,7 +22,6 @@
     cursor: default;
     position: relative;
     background-color: #fff;
-
   }
 
   .dd-header span {
@@ -51,32 +46,35 @@
   .dd-list-search {
     width: 100%;
     padding: 5px;
+    border: 0 solid;
   }
 
   .dd-list-search input {
     width: 95%;
     border-right: none;
+    height: auto;
+    padding: 0;
   }
 
-  .dd-list-search .input-group .form-control:hover{
+  .dd-list-search .input-group .form-control:hover {
     border-color: #bbb;
-    box-shadow:none;
+    box-shadow: none;
   }
-  .dd-list-search .input-group .form-control:focus{
+
+  .dd-list-search .input-group .form-control:focus {
     border-color: #bbb;
-    box-shadow:none;
+    box-shadow: none;
   }
 
   .dd-list-search-clear {
-    border-top:  1px solid #bbb ;
-    border-right:   1px solid #bbb ;
-    border-bottom:  1px solid #bbb ;
-    height: 100%;
+    border-top: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
     position: absolute;
-    right: 25px;
+    right: 24px;
     width: 5%;
-    padding-top: 3px;
-
+    height: 100%;
+    text-align: center;
   }
 
   .dd-list {

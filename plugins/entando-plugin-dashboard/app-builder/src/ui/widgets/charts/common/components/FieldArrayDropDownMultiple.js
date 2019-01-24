@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import PropTypes from "prop-types";
 import DropdownMultiple from "ui/common/form/DropdownMultiple";
 import {formattedText} from "@entando/utils";
 
@@ -6,16 +7,16 @@ class FieldArrayDropDownMultiple extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columnsY: props.optionColumns || []
+      columns: props.optionColumns || []
     };
     this.toogleSelected = this.toogleSelected.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, state) {
     const {optionColumns} = nextProps;
-    if (optionColumns.length > 0 && state.columnsY.length === 0) {
+    if (optionColumns.length > 0 && state.columns.length === 0) {
       return {
-        columnsY: optionColumns.map((m, index) => ({
+        columns: optionColumns.map((m, index) => ({
           id: index,
           key: m.key,
           label: m.value,
@@ -27,41 +28,44 @@ class FieldArrayDropDownMultiple extends Component {
   }
 
   toogleSelected(id, key) {
-    let temp = this.state.columnsY.find(f => f.key === key);
+    let temp = this.state.columns.find(f => f.key === key);
     temp.selected = !temp.selected;
     this.setState(prevState => ({
-      columnsY: [...prevState.columnsY, ...temp]
+      columns: [...prevState.columns, ...temp]
     }));
     if (temp.selected) {
       this.props.fields.push(temp);
     } else {
-      const {optionColumnYSelected} = this.props;
-      optionColumnYSelected
-        .map((m, index) => (m.key === key ? index : id))
+      const {optionColumnSelected} = this.props;
+      optionColumnSelected
+        .map((m, index) => (m.key === key ? index : -1))
         .forEach(index => {
-          this.props.fields.remove(index);
+          if (index > -1) {
+            this.props.fields.remove(index);
+          }
         });
     }
   }
 
   render() {
-    const {optionColumnYSelected} = this.props;
+    const {optionColumnSelected, className} = this.props;
+    let classNames = `FieldArrayDropDownMultiple ${className}`;
     return (
-      <div className="FieldArrayDropDownMultiple">
+      <div className={classNames}>
         <div className="FieldArrayDropDownMultiple__dropdown">
           <DropdownMultiple
             titleHelper={formattedText(
               "plugin.chart.dropDownMulti.titleHelper"
             )}
             title={formattedText("plugin.chart.dropDownMulti.title")}
-            list={this.state.columnsY}
+            list={this.state.columns}
             toggleItem={this.toogleSelected}
             searchValue=""
             searchNotFound={formattedText("common.DropdownMultiple.notFound")}
           />
         </div>
         <div className="FieldArrayDropDownMultiple__token-container">
-          {optionColumnYSelected.map((item, index) => {
+          {optionColumnSelected.map((item, index) => {
             return (
               <div className="FieldArrayDropDownMultiple__token" key={index}>
                 <span className="label label-info FieldArrayDropDownMultiple__token-clear">
@@ -81,5 +85,21 @@ class FieldArrayDropDownMultiple extends Component {
     );
   }
 }
+
+const COLUMN_TYPE = {
+  key: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  label: PropTypes.string
+};
+
+FieldArrayDropDownMultiple.propTypes = {
+  className: PropTypes.string,
+  optionColumn: PropTypes.arrayOf(PropTypes.shape(COLUMN_TYPE)),
+  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({}))
+};
+FieldArrayDropDownMultiple.defaultProps = {
+  className: "",
+  optionColumns: [],
+  optionColumnSelected: []
+};
 
 export default FieldArrayDropDownMultiple;

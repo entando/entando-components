@@ -191,7 +191,7 @@
     cursor: pointer; }
 
 .FieldArrayDropDownMultiple__token-container {
-  border: 0px solid;
+  border: 0 solid;
   margin-top: 1em;
   display: flex;
   flex-direction: row;
@@ -200,7 +200,8 @@
   align-items: flex-start; }
 
 .FieldArrayDropDownMultiple__token {
-  margin: 2px; }
+  margin: 2px;
+  padding: 2px; }
 
 .FieldArrayDropDownMultiple__token-clear.label {
   padding-right: 0; }
@@ -213,23 +214,19 @@
   border: 0px solid;
   margin-top: 0px; }
 
-.PreviewChartSelected__preview-text-chart-container {
-  border: 0px solid;
-  margin-bottom: 1em;
-  font-size: 14px;
-  padding-left: 0 !important; }
-
-.PreviewChartSelected__preview-text-type-chart {
-  margin-left: 5px;
-  font-weight: bold; }
-
-.PreviewChartSelected__preview-chart {
-  border: 0px solid;
-  padding: 0 !important; }
-
-.PreviewChartSelected__settings-container {
-  border: 0px solid;
-  margin-top: 0px; }
+.PreviewChartSelected {
+  border: 0 solid; }
+  .PreviewChartSelected__preview-text-chart-container {
+    border: 0 solid;
+    margin-bottom: 1em;
+    font-size: 14px;
+    padding-left: 0 !important; }
+  .PreviewChartSelected__preview-text-type-chart {
+    margin-left: 5px;
+    font-weight: bold; }
+  .PreviewChartSelected__preview-chart {
+    border: 0 solid;
+    padding: 0 !important; }
 
 .GeneralSettings {
   padding: 3em; }
@@ -366,6 +363,56 @@
 .DashboardBarChart__btn-back {
   margin-right: 3em; }
 
+.DashboardDonutChart .wizard-pf-main {
+  padding: 3em; }
+
+.DashboardDonutChart .wizard-pf-row {
+  height: none;
+  max-height: none;
+  width: 100%; }
+
+.DashboardDonutChart__data-container {
+  border: 0 solid; }
+
+.DashboardDonutChart__data-contents {
+  border: 0 solid red;
+  height: 670px; }
+
+.DashboardDonutChart__btn-container {
+  border: 0 solid;
+  margin-top: 2em; }
+
+.DashboardDonutChart__btn-back {
+  margin-right: 3em; }
+
+.SettingsChartDonut {
+  padding: 3em;
+  border: 0 solid;
+  min-width: 600px;
+  position: absolute;
+  top: -240px;
+  left: 33%; }
+  .SettingsChartDonut .row:not(:first-child) {
+    padding: 1em; }
+  .SettingsChartDonut__col {
+    border: 0 solid;
+    min-height: 200px; }
+  .SettingsChartDonut__form-group {
+    border: 0 solid;
+    min-height: 60px; }
+  .SettingsChartDonut__selector-multi:after {
+    content: '\25BE' !important;
+    position: absolute;
+    right: 5px;
+    top: 3px; }
+  .SettingsChartDonut__selector-multi .form-control.rbt-input-multi.rbt-input {
+    border: 1px solid #bbb;
+    min-height: 26px;
+    height: auto; }
+  .SettingsChartDonut__column-selected {
+    border: 0 solid;
+    max-height: 250px; }
+
 .DropdownMultiple {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -402,10 +449,13 @@
     margin-right: 5px; }
   .DropdownMultiple .dd-list-search {
     width: 100%;
-    padding: 5px; }
+    padding: 5px;
+    border: 0 solid; }
   .DropdownMultiple .dd-list-search input {
     width: 95%;
-    border-right: none; }
+    border-right: none;
+    height: auto;
+    padding: 0; }
   .DropdownMultiple .dd-list-search .input-group .form-control:hover {
     border-color: #bbb;
     box-shadow: none; }
@@ -416,11 +466,11 @@
     border-top: 1px solid #bbb;
     border-right: 1px solid #bbb;
     border-bottom: 1px solid #bbb;
-    height: 100%;
     position: absolute;
-    right: 25px;
+    right: 24px;
     width: 5%;
-    padding-top: 3px; }
+    height: 100%;
+    text-align: center; }
   .DropdownMultiple .dd-list {
     z-index: 10;
     position: absolute;

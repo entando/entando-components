@@ -103,6 +103,8 @@ export default {
     "plugin.chart.right": "Right",
     "plugin.chart.left": "Left",
     "plugin.chart.showDetailMouseClick": "Show details on mouse click",
-    "plugin.chart.legendPosition": "Legend Position"
+    "plugin.chart.legendPosition": "Legend Position",
+    "plugin.chart.values": "Values",
+    "plugin.chart.thickness": "Thickness"
   }
 };

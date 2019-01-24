@@ -119,7 +119,7 @@ class DropdownMultiple extends Component {
                     onClick={this.clearSearch}
                   />
                 </span>
-                <span className="input-group-addon" id="basic-search">
+                <span className="input-group-addon">
                   <i className="fa fa-search" aria-hidden="true" />
                 </span>
               </div>

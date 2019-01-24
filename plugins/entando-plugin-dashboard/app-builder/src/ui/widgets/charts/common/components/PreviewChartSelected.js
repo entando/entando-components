@@ -11,7 +11,9 @@ const PreviewChartSelected = ({
   idChart,
   data,
   axisRotated,
-  heightChart
+  heightChart,
+  widthChart,
+  columnSize
 }) => (
   <Grid fluid className="PreviewChartSelected">
     <Row className="PreviewChartSelected__row-preview-text-chart">
@@ -29,12 +31,15 @@ const PreviewChartSelected = ({
       </Col>
     </Row>
     <Row className="PreviewChartSelected__row-preview-chart">
-      <Col xs={12} className="PreviewChartSelected__preview-chart">
+      <Col xs={columnSize} className="PreviewChartSelected__preview-chart">
         <Chart
           idChart={idChart}
           type={type}
           columns={data}
-          config={{axis: {rotated: axisRotated}, size: {height: heightChart}}}
+          config={{
+            axis: {rotated: axisRotated},
+            size: {height: heightChart, width: widthChart}
+          }}
         />
       </Col>
     </Row>
@@ -48,12 +53,15 @@ PreviewChartSelected.propTypes = {
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
   ).isRequired,
   axisRotated: PropTypes.bool,
-  heightChart: PropTypes.number
+  heightChart: PropTypes.number,
+  columnSize: PropTypes.number
 };
 
 PreviewChartSelected.defaultProps = {
   axisRotated: false,
-  heightChart: 250
+  heightChart: 250,
+  widthChart: null,
+  columnSize: 12
 };
 
 export default PreviewChartSelected;
