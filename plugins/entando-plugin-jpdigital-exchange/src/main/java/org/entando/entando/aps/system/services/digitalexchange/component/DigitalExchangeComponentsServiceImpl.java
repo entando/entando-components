@@ -14,6 +14,8 @@
 package org.entando.entando.aps.system.services.digitalexchange.component;
 
 import java.util.List;
+import org.entando.entando.aps.system.init.IInitializerManager;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
@@ -31,17 +33,28 @@ public class DigitalExchangeComponentsServiceImpl implements DigitalExchangeComp
 
     private final DigitalExchangesClient client;
     private final DigitalExchangesService exchangesService;
+    private final IInitializerManager initializerManager;
 
     @Autowired
     public DigitalExchangeComponentsServiceImpl(DigitalExchangesClient client,
-            DigitalExchangesService exchangesService) {
+            DigitalExchangesService exchangesService,
+            IInitializerManager initializerManager) {
         this.client = client;
         this.exchangesService = exchangesService;
+        this.initializerManager = initializerManager;
     }
 
     @Override
     public ResilientPagedMetadata<DigitalExchangeComponent> getComponents(RestListRequest requestList) {
-        return client.getCombinedResult(new ComponentsCall(exchangesService, requestList));
+        ResilientPagedMetadata<DigitalExchangeComponent> combinedResult = client.getCombinedResult(new ComponentsCall(exchangesService, requestList));
+
+        // Fill installed fields
+        SystemInstallationReport installationReport = initializerManager.getCurrentReport();
+        combinedResult.getBody().forEach(component -> {
+            component.setInstalled(installationReport.getComponentReport(component.getId(), false) != null);
+        });
+
+        return combinedResult;
     }
 
     private static class ComponentsCall extends PagedDigitalExchangeCall<DigitalExchangeComponent> {
