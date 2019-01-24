@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.digitalexchange.install;
 
+import com.agiletec.aps.system.services.i18n.I18nManager;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -24,6 +25,7 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesMocker;
 import org.entando.entando.aps.system.services.digitalexchange.install.ComponentZipUtil;
+import org.entando.entando.aps.system.services.pagemodel.IPageModelService;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,17 +57,22 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
     private static final String BASE_URL = "/digitalExchange";
 
-    private static File tempZipFile;
+    private static File tempWidgetZipFile;
+    private static File tempPageModelZipFile;
 
     @BeforeClass
     public static void setupZip() {
-        tempZipFile = ComponentZipUtil.getTestWidgetZip();
+        tempWidgetZipFile = ComponentZipUtil.getTestWidgetZip();
+        tempPageModelZipFile = ComponentZipUtil.getTestPageModelZip();
     }
 
     @AfterClass
     public static void deleteZip() {
-        if (tempZipFile != null) {
-            tempZipFile.delete();
+        if (tempWidgetZipFile != null) {
+            tempWidgetZipFile.delete();
+        }
+        if (tempPageModelZipFile != null) {
+            tempPageModelZipFile.delete();
         }
     }
 
@@ -78,9 +85,16 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
     @Autowired
     private IInitializerManager initializerManager;
 
+    @Autowired
+    private IPageModelService pageModelService;
+
+    @Autowired
+    private I18nManager i18nManager;
+
     @After
     public void cleanup() throws Exception {
-        storageManager.deleteDirectory("de_components", true);
+        storageManager.deleteDirectory("components", true);
+        storageManager.deleteDirectory("components", false);
     }
 
     @Configuration
@@ -94,7 +108,11 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                     .addDigitalExchange(DE_1_ID, (request) -> {
                         Resource resource = mock(Resource.class);
                         try {
-                            when(resource.getInputStream()).thenReturn(new FileInputStream(tempZipFile));
+                            if (request.getEndpoint().contains("test_widget")) {
+                                when(resource.getInputStream()).thenReturn(new FileInputStream(tempWidgetZipFile));
+                            } else {
+                                when(resource.getInputStream()).thenReturn(new FileInputStream(tempPageModelZipFile));
+                            }
                         } catch (IOException ex) {
                             throw new UncheckedIOException(ex);
                         }
@@ -105,9 +123,32 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
     }
 
     @Test
-    public void shouldStartInstallationJob() throws Exception {
+    public void shouldInstallWidget() throws Exception {
 
         String componentCode = "test_widget";
+
+        installAndCheckForCompletion(componentCode);
+
+        assertThat(widgetService.getWidget(componentCode)).isNotNull();
+
+        widgetService.removeWidget(componentCode);
+    }
+
+    @Test
+    public void shouldInstallPageModel() throws Exception {
+
+        String componentCode = "test_page_model";
+
+        installAndCheckForCompletion(componentCode);
+
+        assertThat(pageModelService.getPageModel(componentCode)).isNotNull();
+        assertThat(i18nManager.getLabel("TEST_LABEL", "en")).isEqualTo("Test label");
+        assertThat(storageManager.exists("components/test_page_model/test.css", false)).isTrue();
+
+        pageModelService.removePageModel(componentCode);
+    }
+
+    private void installAndCheckForCompletion(String componentCode) throws Exception {
 
         ResultActions result = createAuthRequest(get(BASE_URL + "/{exchange}/install/{component}", DE_1_ID, componentCode)).execute();
 
@@ -143,11 +184,6 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         assertThat(report.getComponentReport(componentCode, false))
                 .isNotNull()
                 .matches(cr -> cr.getStatus() == SystemInstallationReport.Status.OK);
-
-        assertThat(widgetService.getWidget(componentCode))
-                .isNotNull();
-
-        widgetService.removeWidget(componentCode);
     }
 
     private InstallationStatus checkJobStatus(String jobId) throws Exception {

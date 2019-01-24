@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commands>
+    <map>
+        <entry>
+            <key>createLabel</key>
+            <value>@labelController.addLabelGroup(#fromJson(@componentStorageManager.getProtectedStream('%s'), T(org.entando.entando.web.label.LabelRequest)))</value>
+        </entry>
+        <entry>
+            <key>createContentType</key>
+            <value>@contentTypeResourceController.create(#fromJson(@componentStorageManager.getProtectedStream('%s'), T(com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest)), #bindingResult())</value>
+        </entry>
+        <entry>
+            <key>createContentModel</key>
+            <value>@contentModelResourceController.addContentModel(#fromXml(@componentStorageManager.getProtectedStream('%s'), T(com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto)), #bindingResult())</value>
+        </entry>
+    </map>
+</commands>

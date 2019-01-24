@@ -14,10 +14,8 @@
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.springframework.core.io.AbstractResource;
 
 /**
@@ -28,13 +26,13 @@ import org.springframework.core.io.AbstractResource;
  */
 public class ComponentResource extends AbstractResource {
 
-    private final IStorageManager storageManager;
+    private final ComponentStorageManager storageManager;
     private final String path;
     private final String description;
 
-    public ComponentResource(IStorageManager storageManager, String subpath, String description) {
+    public ComponentResource(ComponentStorageManager storageManager, String subpath, String description) {
         this.storageManager = storageManager;
-        this.path = ComponentInstaller.COMPONENTS_DIR + File.separator + subpath;
+        this.path = subpath;
         this.description = description;
     }
 
@@ -46,7 +44,7 @@ public class ComponentResource extends AbstractResource {
     @Override
     public InputStream getInputStream() throws IOException {
         try {
-            return storageManager.getStream(path, ComponentInstaller.PROTECTED_RESOURCE);
+            return storageManager.getProtectedStream(path);
         } catch (ApsSystemException ex) {
             throw new IOException(ex);
         }

@@ -47,7 +47,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         CompletableFuture.runAsync(() -> {
             try {
                 componentInstaller.install(job, dao::updateComponentInstallationJob);
-            } catch (InstallationException ex) {
+            } catch (Throwable ex) {
                 logger.error("Error while installing " + componentName, ex);
                 job.setStatus(InstallationStatus.ERROR);
                 job.setErrorMessage(ex.getMessage());
