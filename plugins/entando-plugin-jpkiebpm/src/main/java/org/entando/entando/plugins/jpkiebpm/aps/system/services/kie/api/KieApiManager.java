@@ -48,10 +48,19 @@ import java.util.logging.Level;
 
 public class KieApiManager extends AbstractService implements IKieApiManager {
 
+    private static final String NO_ERROR_GETTING_THE_LIST_OF_PROCESSES = "No error getting the list of processes";
+
     private static final Logger logger = LoggerFactory.getLogger(KieApiManager.class);
 
+    private Map<String, Boolean> fieldMandatory;
+    private II18nManager i18nManager;
+    private ILangManager langManager;
+    private IKieFormManager kieFormManager;
+    private IKieFormOverrideManager kieFormOverrideManager;
+    private IBpmWidgetInfoManager bpmWidgetInfoManager;
+
     @Override
-    public void init() throws Exception {
+    public void init() {
         /**/
     }
 
@@ -82,7 +91,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         final String configId = properties.getProperty("configId");
 
         if (null != configId) {
-            Integer widgetInfoId = Integer.parseInt(configId);
+            int widgetInfoId = Integer.parseInt(configId);
             final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId);
 
             final String information = bpmWidgetInfo.getInformationOnline();
@@ -152,10 +161,9 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         String processId = properties.getProperty("processId");
 
         try {
-            List<KieProcessInstance> list = this.getKieFormManager().getProcessInstancesList(bpmConfig, processId, 0, 5000);
-            return list;
+            return kieFormManager.getProcessInstancesList(bpmConfig, processId, 0, 5000);
         } catch (ApsSystemException t) {
-            String msg = String.format("No error getting the list of processes of type '{}'", processId);
+            String msg = String.format("No error getting the list of processes of type '%s'", processId);
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
@@ -164,7 +172,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     public List<KieProcessInstance> processList(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
         final String page = properties.getProperty("page");
         final String pageSize = properties.getProperty("pageSize");
-        Map<String, String> opt = new HashMap<String, String>();
+        Map<String, String> opt = new HashMap<>();
 
         try {
             if (StringUtils.isNotBlank(page)) {
@@ -173,29 +181,19 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             if (StringUtils.isNotBlank(pageSize)) {
                 opt.put("pageSize", pageSize);
             }
-            List<KieProcessInstance> list
-                    = this.getKieFormManager().getAllProcessInstancesList(bpmConfig, opt);
-            return list;
+            return kieFormManager.getAllProcessInstancesList(bpmConfig, opt);
         } catch (ApsSystemException t) {
             logger.error("Failed to get process list in kie ",t);
-            String msg = String.format("No error getting the list of processes");
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
+                    NO_ERROR_GETTING_THE_LIST_OF_PROCESSES,
+                    Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     public JAXBProcessInstanceList processInstancesDataTable(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
-        final String pageString = properties.getProperty("page");
-        final String pageSizeString = properties.getProperty("pageSize");
         final String configId = properties.getProperty("configId");
-        int page = 0, pageSize = 5000;
         try {
-            if (StringUtils.isNotBlank(pageString)) {
-                page = Integer.valueOf(pageString);
-            }
-            if (StringUtils.isNotBlank(pageSizeString)) {
-                pageSize = Integer.valueOf(pageSizeString);
-            }
 
             if (null != configId) {
                 try {
@@ -223,8 +221,9 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             return null;
         } catch (Throwable t) {
             logger.error("Failed to get process instances data table ",t);
-            String msg = String.format("No error getting the list of processes");
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
+                    NO_ERROR_GETTING_THE_LIST_OF_PROCESSES,
+                    Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -239,13 +238,13 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             final boolean isPropertyField = ((String) entry.getKey()).startsWith(PREFIX_FIELD);
             if (isPropertyField) {
                 final String fieldName = ((String) entry.getKey()).replace(PREFIX_FIELD, "").trim();
-                final boolean propertyIsVisible = Boolean.valueOf(config.getProperty(PREFIX_VISIBLE + fieldName));
+                final boolean propertyIsVisible = Boolean.parseBoolean(config.getProperty(PREFIX_VISIBLE + fieldName));
                 if (propertyIsVisible) {
                     final DatatableFieldDefinition.Field field = new DatatableFieldDefinition.Field();
                     String title = config.getProperty(PREFIX_OVERRIDE + fieldName) == null ? fieldName : config.getProperty(PREFIX_OVERRIDE + fieldName);
                     field.setTitle(title);
                     field.setData(fieldName);
-                    field.setVisible(Boolean.valueOf(true));
+                    field.setVisible(Boolean.TRUE);
                     field.setPosition(Byte.parseByte(config.getProperty(PREFIX_POSITION + fieldName)));
                     processList.getDatatableFieldDefinition().addField(field);
 
@@ -253,18 +252,15 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                     final DatatableFieldDefinition.Field field = new DatatableFieldDefinition.Field();
                     field.setTitle(fieldName);
                     field.setData(fieldName);
-                    field.setVisible(Boolean.valueOf(false));
+                    field.setVisible(Boolean.FALSE);
                     field.setPosition(Byte.parseByte(config.getProperty(PREFIX_POSITION + fieldName)));
                     processList.getDatatableFieldDefinition().addField(field);
                 }
             }
         }
-        Collections.sort(processList.getDatatableFieldDefinition().getFields(), new Comparator<DatatableFieldDefinition.Field>() {
-            @Override
-            public int compare(DatatableFieldDefinition.Field o1, DatatableFieldDefinition.Field o2) {
-                return o1.getPosition().compareTo(o2.getPosition());
-            }
-        });
+        processList.getDatatableFieldDefinition()
+                .getFields()
+                .sort(Comparator.comparing(DatatableFieldDefinition.Field::getPosition));
     }
 
     private boolean isMandatory(String fieldName) {
@@ -272,7 +268,6 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     }
 
     private void setElementList(KieBpmConfig bpmConfig, final ApsProperties config, final JAXBProcessInstanceList processList) throws ApsSystemException {
-        final String groups = config.getProperty("groups") != null ? config.getProperty("groups").replace(" ", "") : "";
         final String processId = config.getProperty("processId");
         final List<JAXBProcessInstance> list = new ArrayList<>();
         final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesList(bpmConfig, processId, 0, 5000);
@@ -288,7 +283,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         final String configId = properties.getProperty("configId");
         final String procIstId = properties.getProperty("processInstanceId");
 
-        Map<String, String> opt = new HashMap();
+        Map<String, String> opt = new HashMap<>();
 
         try {
             if (StringUtils.isNotBlank(pageString)) {
@@ -322,7 +317,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                     }
                     final JAXBProcessInstanceListPlus processList = new JAXBProcessInstanceListPlus();
                     this.setElementDatatableFieldDefinition(config, processList);
-                    this.setElementList(bpmConfig, config, processList, procIstId, opt);
+                    this.setElementList(bpmConfig, processList, procIstId, opt);
                     processList.setContainerId(config.getProperty("containerId"));
                     processList.setProcessId(config.getProperty("processId"));
                     return processList;
@@ -334,8 +329,9 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             return null;
         } catch (Throwable t) {
             logger.error("Failed to get processInstancesDataTablePlus ",t);
-            String msg = String.format("No error getting the list of processes");
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
+                    NO_ERROR_GETTING_THE_LIST_OF_PROCESSES,
+                    Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -350,13 +346,13 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             final boolean isPropertyField = ((String) entry.getKey()).startsWith(PREFIX_FIELD);
             if (isPropertyField) {
                 final String fieldName = ((String) entry.getKey()).replace(PREFIX_FIELD, "").trim();
-                final boolean propertyIsVisible = Boolean.valueOf(config.getProperty(PREFIX_VISIBLE + fieldName));
+                final boolean propertyIsVisible = Boolean.parseBoolean(config.getProperty(PREFIX_VISIBLE + fieldName));
                 if (propertyIsVisible) {
                     final DatatableFieldDefinition.Field field = new DatatableFieldDefinition.Field();
                     String title = config.getProperty(PREFIX_OVERRIDE + fieldName) == null ? fieldName : config.getProperty(PREFIX_OVERRIDE + fieldName);
                     field.setTitle(title);
                     field.setData(fieldName);
-                    field.setVisible(Boolean.valueOf(true));
+                    field.setVisible(Boolean.TRUE);
                     field.setPosition(Byte.parseByte(config.getProperty(PREFIX_POSITION + fieldName)));
                     processList.getDatatableFieldDefinition().addField(field);
 
@@ -364,23 +360,20 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                     final DatatableFieldDefinition.Field field = new DatatableFieldDefinition.Field();
                     field.setTitle(fieldName);
                     field.setData(fieldName);
-                    field.setVisible(Boolean.valueOf(false));
+                    field.setVisible(Boolean.FALSE);
                     field.setPosition(Byte.parseByte(config.getProperty(PREFIX_POSITION + fieldName)));
                     processList.getDatatableFieldDefinition().addField(field);
                 }
             }
         }
-        Collections.sort(processList.getDatatableFieldDefinition().getFields(), new Comparator<DatatableFieldDefinition.Field>() {
-            @Override
-            public int compare(DatatableFieldDefinition.Field o1, DatatableFieldDefinition.Field o2) {
-                return o1.getPosition().compareTo(o2.getPosition());
-            }
-        });
+        processList.getDatatableFieldDefinition()
+                .getFields()
+                .sort(Comparator.comparing(DatatableFieldDefinition.Field::getPosition));
     }
 
-    private void setElementList(KieBpmConfig bpmConfig, ApsProperties config, JAXBProcessInstanceListPlus processList, String procIstId, Map<String, String> opt) {
+    private void setElementList(KieBpmConfig bpmConfig, JAXBProcessInstanceListPlus processList, String procIstId,
+                                Map<String, String> opt) {
         try {
-            final String processId = config.getProperty("processId");
             final List<JAXBProcessInstancePlus> list = new ArrayList<>();
             Map<String, String> input = null;
             if (procIstId != null) {
@@ -498,12 +491,4 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     public void setBpmWidgetInfoManager(IBpmWidgetInfoManager bpmWidgetInfoManager) {
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
-
-    private HashMap<String, Boolean> fieldMandatory;
-    private II18nManager i18nManager;
-    private ILangManager langManager;
-    private IKieFormManager kieFormManager;
-    private IKieFormOverrideManager kieFormOverrideManager;
-    private IBpmWidgetInfoManager bpmWidgetInfoManager;
-
 }
