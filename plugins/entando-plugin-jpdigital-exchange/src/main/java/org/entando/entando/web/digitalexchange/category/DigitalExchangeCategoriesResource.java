@@ -22,6 +22,7 @@ import java.util.List;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -35,5 +36,5 @@ public interface DigitalExchangeCategoriesResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    SimpleRestResponse<List<String>> getCategories();
+    ResponseEntity<SimpleRestResponse<List<String>>> getCategories();
 }

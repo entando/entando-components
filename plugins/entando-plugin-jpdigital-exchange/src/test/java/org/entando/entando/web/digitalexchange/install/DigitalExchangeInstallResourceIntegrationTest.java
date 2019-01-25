@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Collections;
 import org.entando.entando.aps.system.init.IInitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
@@ -27,6 +28,9 @@ import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExc
 import org.entando.entando.aps.system.services.digitalexchange.install.ComponentZipUtil;
 import org.entando.entando.aps.system.services.pagemodel.IPageModelService;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -106,20 +110,31 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         public DigitalExchangeOAuth2RestTemplateFactory getRestTemplateFactory() {
             return new DigitalExchangesMocker()
                     .addDigitalExchange(DE_1_ID, (request) -> {
-                        Resource resource = mock(Resource.class);
                         try {
-                            if (request.getEndpoint().contains("test_widget")) {
-                                when(resource.getInputStream()).thenReturn(new FileInputStream(tempWidgetZipFile));
+                            if (request.getEndpoint().contains("packages")) {
+                                Resource resource = mock(Resource.class);
+                                if (request.getEndpoint().contains("test_widget")) {
+                                    when(resource.getInputStream()).thenReturn(new FileInputStream(tempWidgetZipFile));
+                                } else {
+                                    when(resource.getInputStream()).thenReturn(new FileInputStream(tempPageModelZipFile));
+                                }
+                                return resource;
                             } else {
-                                when(resource.getInputStream()).thenReturn(new FileInputStream(tempPageModelZipFile));
+                                return getComponentInfoResponse();
                             }
                         } catch (IOException ex) {
                             throw new UncheckedIOException(ex);
                         }
-                        return resource;
                     })
                     .initMocks();
         }
+    }
+
+    private static PagedRestResponse<DigitalExchangeComponent> getComponentInfoResponse() {
+        PagedMetadata<DigitalExchangeComponent> pagedMetadata = new PagedMetadata<>();
+        DigitalExchangeComponent component = new DigitalExchangeComponent();
+        pagedMetadata.setBody(Collections.singletonList(component));
+        return new PagedRestResponse<>(pagedMetadata);
     }
 
     @Test
@@ -148,51 +163,53 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         pageModelService.removePageModel(componentCode);
     }
 
-    private void installAndCheckForCompletion(String componentCode) throws Exception {
+    private void installAndCheckForCompletion(String componentId) throws Exception {
 
-        ResultActions result = createAuthRequest(get(BASE_URL + "/{exchange}/install/{component}", DE_1_ID, componentCode)).execute();
+        ResultActions result = createAuthRequest(get(BASE_URL + "/{exchange}/install/{component}", DE_1_ID, componentId)).execute();
 
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty())
-                .andExpect(jsonPath("$.payload").isString());
+                .andExpect(jsonPath("$.payload").isNotEmpty());
 
-        String jsonResponse = result.andReturn().getResponse().getContentAsString();
-
-        SimpleRestResponse<String> response = new ObjectMapper()
-                .readValue(jsonResponse, new TypeReference<SimpleRestResponse<String>>() {
-                });
-
-        String jobId = response.getPayload();
-        assertThat(jobId).hasSize(20);
+        parseJob(result);
 
         InstallationStatus status = InstallationStatus.CREATED;
         int attempts = 0;
         while (status != InstallationStatus.COMPLETED && attempts < 10) {
-            status = checkJobStatus(jobId);
+            status = checkJobStatus(componentId);
             assertThat(status).isNotEqualTo(InstallationStatus.ERROR);
             attempts++;
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ignored) {
-            }
         }
 
         assertThat(status).isEqualTo(InstallationStatus.COMPLETED);
 
         SystemInstallationReport report = initializerManager.getCurrentReport();
 
-        assertThat(report.getComponentReport(componentCode, false))
+        assertThat(report.getComponentReport(componentId, false))
                 .isNotNull()
                 .matches(cr -> cr.getStatus() == SystemInstallationReport.Status.OK);
     }
 
-    private InstallationStatus checkJobStatus(String jobId) throws Exception {
+    private InstallationStatus checkJobStatus(String componentId) throws Exception {
 
-        ResultActions result = createAuthRequest(get(BASE_URL + "/install/{jobId}", jobId)).execute();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ignored) {
+        }
+
+        ResultActions result = createAuthRequest(get(BASE_URL + "/install/{componentId}", componentId)).execute();
 
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty());
 
+        ComponentInstallationJob job = parseJob(result);
+
+        assertThat(job.getProgress()).isBetween(0d, 1d);
+
+        return job.getStatus();
+    }
+
+    private ComponentInstallationJob parseJob(ResultActions result) throws IOException {
         String jsonResponse = result.andReturn().getResponse().getContentAsString();
 
         SimpleRestResponse<ComponentInstallationJob> response = new ObjectMapper()
@@ -201,8 +218,10 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         ComponentInstallationJob job = response.getPayload();
 
-        assertThat(job.getProgress()).isBetween(0d, 1d);
+        assertThat(job.getDigitalExchange()).isNotNull();
+        assertThat(job.getStarted()).isNotNull();
+        assertThat(job.getUser()).isEqualTo("jack_bauer");
 
-        return job.getStatus();
+        return job;
     }
 }

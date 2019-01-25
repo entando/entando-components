@@ -13,11 +13,9 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
-import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
-
 public interface DigitalExchangeComponentInstallationService {
-    
-    ComponentInstallationJob install(DigitalExchange digitalExchange, String componentName);
-    
-    ComponentInstallationJob checkInstallationStatus(String jobId);
+
+    ComponentInstallationJob install(String exchangeId, String componentId, String username);
+
+    ComponentInstallationJob checkInstallationStatus(String componentId);
 }

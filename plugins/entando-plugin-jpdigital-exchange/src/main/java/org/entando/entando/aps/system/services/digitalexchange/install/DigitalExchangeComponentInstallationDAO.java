@@ -19,9 +19,7 @@ public interface DigitalExchangeComponentInstallationDAO {
 
     void createComponentInstallationJob(ComponentInstallationJob job);
 
-    Optional<ComponentInstallationJob> fingById(String id);
+    Optional<ComponentInstallationJob> findLast(String componentId);
 
     void updateComponentInstallationJob(ComponentInstallationJob job);
-
-    void deleteComponentInstallationJob(ComponentInstallationJob job);
 }

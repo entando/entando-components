@@ -23,6 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -30,13 +32,21 @@ import javax.servlet.ServletContext;
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeBaseCall;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
+import org.entando.entando.aps.system.services.digitalexchange.client.PagedDigitalExchangeCall;
+import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentListProcessor;
+import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.context.ServletContextAware;
 
@@ -66,16 +76,20 @@ public class ComponentInstaller implements ServletContextAware {
         this.commandExecutor = commandExecutor;
     }
 
-    public void install(ComponentInstallationJob job, Consumer<ComponentInstallationJob> updater) {
+    public void install(ComponentInstallationJob job, Consumer<ComponentInstallationJob> updater) throws InstallationException {
 
-        double steps = 5;
+        double steps = 6;
         int currentStep = 0;
+        
+        fillComponentInfo(job);
+        job.setProgress(++currentStep / steps);
+        updater.accept(job);
 
         downloadComponent(job);
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
-        ComponentDescriptor component = parseComponentDescriptor(job.getComponent());
+        ComponentDescriptor component = parseComponentDescriptor(job.getComponentId());
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
@@ -90,7 +104,41 @@ public class ComponentInstaller implements ServletContextAware {
         reloadSystem();
         job.setProgress(1);
         job.setStatus(InstallationStatus.COMPLETED);
+        job.setEnded(new Date());
         updater.accept(job);
+    }
+
+    private void fillComponentInfo(ComponentInstallationJob job) {
+
+        RestListRequest requestList = new RestListRequest();
+        requestList.setPage(1);
+        requestList.setPageSize(1);
+        Filter componentIdFilter = new Filter("id", job.getComponentId());
+        requestList.setFilters(new Filter[]{componentIdFilter});
+
+        PagedDigitalExchangeCall<DigitalExchangeComponent> call = new PagedDigitalExchangeCall<DigitalExchangeComponent>(
+                requestList, new ParameterizedTypeReference<PagedRestResponse<DigitalExchangeComponent>>() {
+        }, "digitalExchange", "components") {
+
+            @Override
+            protected RequestListProcessor<DigitalExchangeComponent> getRequestListProcessor(
+                    RestListRequest request, List<DigitalExchangeComponent> joinedList) {
+                return new DigitalExchangeComponentListProcessor(request, joinedList);
+            }
+        };
+
+        PagedRestResponse<DigitalExchangeComponent> response
+                = client.getSingleResponse(job.getDigitalExchange(), call);
+
+        List<DigitalExchangeComponent> components = response.getPayload();
+
+        if (components.size() != 1) {
+            throw new InstallationException("Found " + components.size() + " components for " + job.getComponentId());
+        }
+        
+        DigitalExchangeComponent component = components.get(0);
+        job.setComponentName(component.getName());
+        job.setComponentVersion(component.getVersion());
     }
 
     private void downloadComponent(ComponentInstallationJob job) {
@@ -99,16 +147,16 @@ public class ComponentInstaller implements ServletContextAware {
 
         try {
 
-            tempZipPath = Files.createTempFile(job.getComponent(), "");
+            tempZipPath = Files.createTempFile(job.getComponentId(), "");
 
             DigitalExchangeBaseCall call = new DigitalExchangeBaseCall(
-                    HttpMethod.GET, "digitalExchange", "components", job.getComponent(), "packages");
+                    HttpMethod.GET, "digitalExchange", "components", job.getComponentId(), "packages");
 
             try (InputStream in = client.getStreamResponse(job.getDigitalExchange(), call)) {
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            extractZip(tempZipPath, job.getComponent());
+            extractZip(tempZipPath, job.getComponentId());
 
         } catch (IOException | UncheckedIOException ex) {
             logger.error("Error while downloading component", ex);

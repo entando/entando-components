@@ -13,37 +13,47 @@
  */
 package org.entando.entando.web.digitalexchange.install;
 
-import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
+import com.agiletec.aps.system.services.user.UserDetails;
+import java.net.URI;
+import java.net.URISyntaxException;
+import javax.servlet.http.HttpServletRequest;
 import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallationJob;
 import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeComponentInstallationService;
-import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class DigitalExchangeInstallResourceController implements DigitalExchangeInstallResource {
 
-    private final DigitalExchangesService exchangesService;
     private final DigitalExchangeComponentInstallationService installationService;
 
     @Autowired
-    public DigitalExchangeInstallResourceController(DigitalExchangesService exchangesService,
-            DigitalExchangeComponentInstallationService service) {
-        this.exchangesService = exchangesService;
+    public DigitalExchangeInstallResourceController(DigitalExchangeComponentInstallationService service) {
         this.installationService = service;
     }
 
     @Override
-    public SimpleRestResponse<String> install(@PathVariable("exchange") String digitalExchangeId, @PathVariable("component") String componentName) {
-        DigitalExchange digitalExchange = exchangesService.findById(digitalExchangeId);
-        ComponentInstallationJob job = installationService.install(digitalExchange, componentName);
-        return new SimpleRestResponse<>(job.getId());
+    public ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> install(@PathVariable("exchange") String exchangeId,
+            @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException {
+
+        UserDetails currentUser = (UserDetails) request.getSession().getAttribute("user");
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        ComponentInstallationJob job = installationService.install(exchangeId, componentId, currentUser.getUsername());
+
+        return ResponseEntity.created(
+                new URI("/plugins/digitalExchange/install/" + componentId))
+                .body(new SimpleRestResponse<>(job));
     }
 
     @Override
-    public SimpleRestResponse<ComponentInstallationJob> getJob(@PathVariable("jobId") String jobId) {
-        return new SimpleRestResponse<>(installationService.checkInstallationStatus(jobId));
+    public ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> getLastJob(@PathVariable("component") String componentId) {
+        return ResponseEntity.ok(new SimpleRestResponse<>(installationService.checkInstallationStatus(componentId)));
     }
 }

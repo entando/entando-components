@@ -18,10 +18,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Collections;
 import java.util.function.Consumer;
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
 import org.entando.entando.web.label.LabelController;
 import org.springframework.context.ApplicationContext;
 import org.junit.AfterClass;
@@ -98,10 +102,12 @@ public class ComponentInstallerTest {
         commandExecutor.setApplicationContext(applicationContext);
 
         job = new ComponentInstallationJob();
-        job.setComponent("test_page_model");
+        job.setDigitalExchange("DE");
+        job.setComponentId("test_page_model");
 
-        when(client.getStreamResponse(any(), any()))
-                .thenReturn(new FileInputStream(tempZipFile));
+        when(client.getStreamResponse(any(), any())).thenReturn(new FileInputStream(tempZipFile));
+
+        when(client.getSingleResponse(any(String.class), any())).thenReturn(getComponentInfoResponse());
 
         when(storageManager.getProtectedStream(endsWith("component.xml")))
                 .thenReturn(getClass().getClassLoader().getResourceAsStream("components/test_page_model/component.xml"));
@@ -120,23 +126,30 @@ public class ComponentInstallerTest {
         doNothing().when(installer).reloadSystem();
     }
 
+    private PagedRestResponse<DigitalExchangeComponent> getComponentInfoResponse() {
+        PagedMetadata<DigitalExchangeComponent> pagedMetadata = new PagedMetadata<>();
+        DigitalExchangeComponent component = new DigitalExchangeComponent();
+        pagedMetadata.setBody(Collections.singletonList(component));
+        return new PagedRestResponse<>(pagedMetadata);
+    }
+
     @Test
     public void shouldInstallComponent() throws ApsSystemException, IOException {
 
         installer.install(job, jobConsumer);
 
         ArgumentCaptor<ComponentInstallationJob> jobCaptor = ArgumentCaptor.forClass(ComponentInstallationJob.class);
-        verify(jobConsumer, times(5)).accept(jobCaptor.capture());
+        verify(jobConsumer, times(6)).accept(jobCaptor.capture());
         assertThat(jobCaptor.getValue().getProgress()).isEqualTo(1);
         assertThat(jobCaptor.getValue().getStatus()).isEqualTo(InstallationStatus.COMPLETED);
 
         ArgumentCaptor<String> protectedFileCaptor = ArgumentCaptor.forClass(String.class);
         verify(storageManager, times(4)).saveProtectedFile(protectedFileCaptor.capture(), any());
-        assertThat(protectedFileCaptor.getAllValues()).allMatch(v -> v.startsWith(job.getComponent()));
+        assertThat(protectedFileCaptor.getAllValues()).allMatch(v -> v.startsWith(job.getComponentId()));
 
         ArgumentCaptor<String> resourceFileCaptor = ArgumentCaptor.forClass(String.class);
         verify(storageManager, times(1)).saveResourceFile(resourceFileCaptor.capture(), any());
-        assertThat(resourceFileCaptor.getAllValues()).allMatch(v -> v.startsWith(job.getComponent()));
+        assertThat(resourceFileCaptor.getAllValues()).allMatch(v -> v.startsWith(job.getComponentId()));
 
         verify(databaseManager, times(1)).initComponentDatabases(any(), any(), anyBoolean());
         verify(databaseManager, times(1)).initComponentDefaultResources(any(), any(), anyBoolean());

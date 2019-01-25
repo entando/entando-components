@@ -13,19 +13,26 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
-import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
+import org.entando.entando.web.common.exceptions.ValidationConflictException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DigitalExchangeComponentInstallationServiceTest {
+
+    @Mock
+    private DigitalExchangesService exchangesService;
 
     @Mock
     private DigitalExchangeComponentInstallationDAO dao;
@@ -39,11 +46,14 @@ public class DigitalExchangeComponentInstallationServiceTest {
     @Test
     public void testJobFailure() {
 
+        when(exchangesService.findById(DE_1_ID)).thenReturn(getDE1());
+
         String errorMsg = "error_msg";
         doThrow(new InstallationException(errorMsg)).when(componentInstaller).install(any(), any());
 
-        ComponentInstallationJob job = service.install(new DigitalExchange(), "test");
+        ComponentInstallationJob job = service.install(DE_1_ID, "test", "admin");
         assertThat(job).isNotNull();
+        assertThat(job.getId()).hasSize(20);
 
         try {
             Thread.sleep(500);
@@ -52,5 +62,15 @@ public class DigitalExchangeComponentInstallationServiceTest {
 
         assertThat(job.getStatus()).isEqualTo(InstallationStatus.ERROR);
         assertThat(job.getErrorMessage()).isEqualTo(errorMsg);
+    }
+
+    @Test(expected = ValidationConflictException.class)
+    public void testAlreadyRunning() {
+
+        ComponentInstallationJob job = new ComponentInstallationJob();
+        job.setStatus(InstallationStatus.IN_PROGRESS);
+        when(dao.findLast("test")).thenReturn(Optional.of(job));
+
+        service.install(DE_1_ID, "test", "admin");
     }
 }
