@@ -7,27 +7,10 @@ import GeneralSettings from "ui/widgets/charts/common/components/GeneralSettings
 
 const DONUT_CHART = "DONUT_CHART";
 const GAUGE_CHART = "GAUGE_CHART";
+const PIE_CHART = "PIE_CHART";
 const options = {
-  widthChart: type => {
-    switch (type) {
-      case DONUT_CHART:
-        return 400;
-      case GAUGE_CHART:
-        return 400;
-      default:
-        return null;
-    }
-  },
-  columnSize: type => {
-    switch (type) {
-      case DONUT_CHART:
-        return 4;
-      case GAUGE_CHART:
-        return 4;
-      default:
-        return 12;
-    }
-  }
+  columnSize: type =>
+    [DONUT_CHART, GAUGE_CHART, PIE_CHART].includes(type) ? 4 : 12
 };
 
 const ChartThirdStepContent = ({
@@ -38,7 +21,6 @@ const ChartThirdStepContent = ({
   rotated,
   chart
 }) => {
-  const widthChart = options.widthChart(typeChart);
   const columnSize = options.columnSize(typeChart);
   return (
     <div className="ChartThirdStep">
@@ -49,7 +31,6 @@ const ChartThirdStepContent = ({
         labelChartPreview={labelChartPreview}
         axisRotated={rotated}
         heightChart={250}
-        widthChart={widthChart}
         columnSize={columnSize}
       />
       <Row>

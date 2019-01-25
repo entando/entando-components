@@ -1,0 +1,29 @@
+.DashboardPieChart {
+  .wizard-pf-main {
+    padding: 3em;
+  }
+
+  .wizard-pf-row {
+    height: none;
+    max-height: none;
+    width: 100%;
+  }
+
+  &__data-container {
+    border: 0 solid;
+  }
+
+  &__data-contents {
+    border: 0 solid red;
+    height: 670px;
+  }
+
+  &__btn-container {
+    border: 0 solid;
+    margin-top: 2em;
+  }
+
+  &__btn-back {
+    margin-right: 3em;
+  }
+}

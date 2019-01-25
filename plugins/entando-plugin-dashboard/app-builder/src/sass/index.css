@@ -236,7 +236,7 @@
     padding: 1em; }
   .GeneralSettings .row:last-child {
     padding-bottom: 0;
-    border: 0 solid red; }
+    border: 0px solid red; }
   .GeneralSettings__title {
     font-size: 16px;
     font-weight: bold; }
@@ -290,15 +290,19 @@
   .GeneralSettings__general-settings-container.DONUT_CHART {
     border: 0 solid red;
     position: absolute;
-    top: -290px;
-    left: 335px; }
+    top: -240px;
+    left: 33%;
+    width: 60%; }
   .GeneralSettings__general-settings-container.GAUGE_CHART {
-    border: 0 solid red;
+    border: 0px solid red;
     position: absolute;
-    top: -290px;
-    left: 390px; }
-  .GeneralSettings__general-settings-container.DONUT_CHART {
+    top: -240px;
+    left: 33%;
+    width: 60%; }
+  .GeneralSettings__general-settings-container.PIE_CHART {
     border: 0 solid;
+    top: -240px;
+    left: 33%;
     width: 60%; }
   .GeneralSettings__general-settings-container.DONUT_CHART .form-group {
     border: 0 solid; }
@@ -457,7 +461,7 @@
 
 .SettingsChartGauge {
   padding: 3em;
-  border: 0px solid;
+  border: 0 solid;
   min-width: 600px;
   position: absolute;
   top: -240px;
@@ -480,6 +484,56 @@
     min-height: 26px;
     height: auto; }
   .SettingsChartGauge__column-selected {
+    border: 0 solid;
+    max-height: 250px; }
+
+.DashboardPieChart .wizard-pf-main {
+  padding: 3em; }
+
+.DashboardPieChart .wizard-pf-row {
+  height: none;
+  max-height: none;
+  width: 100%; }
+
+.DashboardPieChart__data-container {
+  border: 0 solid; }
+
+.DashboardPieChart__data-contents {
+  border: 0 solid red;
+  height: 670px; }
+
+.DashboardPieChart__btn-container {
+  border: 0 solid;
+  margin-top: 2em; }
+
+.DashboardPieChart__btn-back {
+  margin-right: 3em; }
+
+.SettingsChartPie {
+  padding: 3em;
+  border: 0px solid;
+  min-width: 600px;
+  position: absolute;
+  top: -240px;
+  left: 33%; }
+  .SettingsChartPie .row:not(:first-child) {
+    padding: 1em; }
+  .SettingsChartPie__col {
+    border: 0 solid;
+    min-height: 200px; }
+  .SettingsChartPie__form-group {
+    border: 0 solid;
+    min-height: 60px; }
+  .SettingsChartPie__selector-multi:after {
+    content: '\25BE' !important;
+    position: absolute;
+    right: 5px;
+    top: 3px; }
+  .SettingsChartPie__selector-multi .form-control.rbt-input-multi.rbt-input {
+    border: 1px solid #bbb;
+    min-height: 26px;
+    height: auto; }
+  .SettingsChartPie__column-selected {
     border: 0 solid;
     max-height: 250px; }
 

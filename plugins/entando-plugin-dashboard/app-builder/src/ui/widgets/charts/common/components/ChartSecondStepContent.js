@@ -4,35 +4,29 @@ import {Row, Col} from "patternfly-react";
 import {uniqueId} from "lodash";
 import SettingsChartContainer from "ui/widgets/charts/common/containers/SettingsChartContainer";
 import SettingsChartDonutContainer from "ui/widgets/charts/donut-chart/containers/SettingsChartDonutContainer";
+import SettingsChartGaugeContainer from "ui/widgets/charts/gauge-chart/containers/SettingsChartGaugeContainer";
+import SettingsChartPieContainer from "ui/widgets/charts/pie-chart/containers/SettingsChartPieContainer";
 import PreviewChartSelected from "ui/widgets/charts/common/components/PreviewChartSelected";
 
 const DONUT_CHART = "DONUT_CHART";
+const GAUGE_CHART = "GAUGE_CHART";
+const PIE_CHART = "PIE_CHART";
 
 const options = {
   render: (type, formName) => {
     switch (type) {
       case DONUT_CHART:
         return <SettingsChartDonutContainer formName={formName} />;
+      case GAUGE_CHART:
+        return <SettingsChartGaugeContainer formName={formName} />;
+      case PIE_CHART:
+        return <SettingsChartPieContainer formName={formName} />;
       default:
         return <SettingsChartContainer formName={formName} />;
     }
   },
-  widthChart: type => {
-    switch (type) {
-      case DONUT_CHART:
-        return 400;
-      default:
-        return null;
-    }
-  },
-  columnSize: type => {
-    switch (type) {
-      case DONUT_CHART:
-        return 4;
-      default:
-        return 12;
-    }
-  }
+  columnSize: type =>
+    [DONUT_CHART, GAUGE_CHART, PIE_CHART].includes(type) ? 4 : 12
 };
 const ChartSecondStepContent = ({
   formName,
@@ -42,7 +36,6 @@ const ChartSecondStepContent = ({
   rotated
 }) => {
   const render = options.render(typeChart, formName);
-  const widthChart = options.widthChart(typeChart);
   const columnSize = options.columnSize(typeChart);
   return (
     <div className="ChartSecondStep">
@@ -53,7 +46,6 @@ const ChartSecondStepContent = ({
         labelChartPreview={labelChartPreview}
         axisRotated={rotated}
         heightChart={250}
-        widthChart={widthChart}
         columnSize={columnSize}
       />
       <Row>

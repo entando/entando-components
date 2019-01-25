@@ -7,12 +7,12 @@ import FormattedMessage from "ui/i18n/FormattedMessage";
 
 import FieldArrayDropDownMultiple from "ui/widgets/charts/common/components/FieldArrayDropDownMultiple";
 
-const SettingsChartDonut = ({optionColumns, optionColumnSelected}) => {
+const SettingsChartGauge = ({optionColumns, optionColumnSelected}) => {
   return (
-    <div className="SettingsChartDonut">
+    <div className="SettingsChartGauge">
       <Row>
-        <Col xs={1} className="SettingsChartDonut__col">
-          <FormGroup className="SettingsChartDonut__form-group">
+        <Col xs={1} className="SettingsChartGauge__col">
+          <FormGroup className="SettingsChartGauge__form-group">
             <ControlLabel>
               <strong>
                 <FormattedMessage id="plugin.chart.values" />
@@ -20,9 +20,9 @@ const SettingsChartDonut = ({optionColumns, optionColumnSelected}) => {
             </ControlLabel>
           </FormGroup>
         </Col>
-        <Col xs={11} className="SettingsChartDonut__col">
+        <Col xs={11} className="SettingsChartGauge__col">
           <FieldArray
-            className="SettingsChartDonut__column-selected"
+            className="SettingsChartGauge__column-selected"
             name="columns"
             component={FieldArrayDropDownMultiple}
             optionColumns={optionColumns}
@@ -34,9 +34,9 @@ const SettingsChartDonut = ({optionColumns, optionColumnSelected}) => {
   );
 };
 
-SettingsChartDonut.propTypes = {
+SettingsChartGauge.propTypes = {
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 };
 
-export default SettingsChartDonut;
+export default SettingsChartGauge;

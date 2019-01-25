@@ -32,6 +32,7 @@ import DashboardLineChart from "ui/widgets/charts/line-chart/components/Dashboar
 import DashboardBarChart from "ui/widgets/charts/bar-chart/components/DashboardBarChart";
 import DashboardDonutChart from "ui/widgets/charts/donut-chart/components/DashboardDonutChart";
 import DashboardGaugeChart from "ui/widgets/charts/gauge-chart/components/DashboardGaugeChart";
+import DashboardPieChart from "ui/widgets/charts/pie-chart/components/DashboardPieChart";
 
 const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
   acc[`plugin.${plugin.id}.${key}`] = enLocale.messages[key];
@@ -45,6 +46,11 @@ export default ReactDOM.render(
   <Provider store={store}>
     <IntlProvider locale={enLocale.locale} messages={mappedMessages}>
       <Grid fluid>
+        <Row>
+          <Col xs={12}>
+            <DashboardPieChart />
+          </Col>
+        </Row>
         <Row>
           <Col xs={12}>
             <DashboardGaugeChart />

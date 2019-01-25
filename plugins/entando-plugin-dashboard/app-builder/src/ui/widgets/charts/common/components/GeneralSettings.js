@@ -47,53 +47,53 @@ const renderField = ({
   );
 };
 
-const GeneralSettings = ({typeChart, chart}) => {
-  const renderGauge =
-    chart === "gauge" ? (
+const renderGauge = chart => (
+  <Row>
+    <Col xs={6}>
       <Row>
-        <Col xs={6}>
+        <Col xs={12}>
+          <label className="GeneralSettings__title">
+            <FormattedMessage id="plugin.chart.gauge" />
+          </label>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={6} className="GeneralSettings__col">
           <Row>
-            <Col xs={12}>
-              <label className="GeneralSettings__title">
-                <FormattedMessage id="plugin.chart.gauge" />
-              </label>
+            <Col xs={6}>
+              <Field
+                type="number"
+                component={renderField}
+                name={`${chart}.min`}
+                label="plugin.chart.min"
+                min="0"
+                max="100"
+                direction="rtl"
+                className="GeneralSettings__field-bottom"
+                validate={[required]}
+              />
             </Col>
-          </Row>
-          <Row>
-            <Col xs={6} className="GeneralSettings__col">
-              <Row>
-                <Col xs={6}>
-                  <Field
-                    type="number"
-                    component={renderField}
-                    name={`${chart}.min`}
-                    label="plugin.chart.min"
-                    min="0"
-                    max="100"
-                    direction="rtl"
-                    className="GeneralSettings__field-bottom"
-                    validate={[required]}
-                  />
-                </Col>
-                <Col xs={6}>
-                  <Field
-                    type="number"
-                    component={renderField}
-                    name={`${chart}.max`}
-                    label="plugin.chart.max"
-                    min="1"
-                    max="100"
-                    direction="rtl"
-                    className="GeneralSettings__field-left"
-                    validate={[required]}
-                  />
-                </Col>
-              </Row>
+            <Col xs={6}>
+              <Field
+                type="number"
+                component={renderField}
+                name={`${chart}.max`}
+                label="plugin.chart.max"
+                min="1"
+                max="100"
+                direction="rtl"
+                className="GeneralSettings__field-left"
+                validate={[required]}
+              />
             </Col>
           </Row>
         </Col>
       </Row>
-    ) : null;
+    </Col>
+  </Row>
+);
+
+const GeneralSettings = ({typeChart, chart}) => {
   return (
     <div className="GeneralSettings">
       <Grid
@@ -231,7 +231,7 @@ const GeneralSettings = ({typeChart, chart}) => {
         fluid
         className={`GeneralSettings__interactive-chart-container ${typeChart}`}
       >
-        {renderGauge}
+        {chart === "gauge" ? renderGauge(chart) : null}
         <Row>
           <Col xs={12} className="GeneralSettings__col">
             <FormGroup className="GeneralSettings__form-group">
