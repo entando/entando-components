@@ -8,11 +8,11 @@ import ChartFirstStepContent from "ui/widgets/charts/common/components/ChartFirs
 import ChartSecondStepContent from "ui/widgets/charts/common/components/ChartSecondStepContent";
 import ChartThirdStepContent from "ui/widgets/charts/common/components/ChartThirdStepContent";
 
-const data = {columns: [["data1", 10, 30, 10, 20, 40, 50]]};
+const data = {columns: [["data", 91.4]]};
 
-const FORM_NAME = "form-dashboard-bar-chart";
+const FORM_NAME = "form-dashboard-gauge-chart";
 
-class DashboardBarChartFormBody extends Component {
+class DashboardGaugeChartFormBody extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -72,7 +72,7 @@ class DashboardBarChartFormBody extends Component {
         break;
     }
     return (
-      <div className="DashboardBarChart__btn-container">
+      <div className="DashboardGaugeChart__btn-container">
         <Button bsStyle="default" className="btn-cancel" onClick={this.close}>
           Cancel
         </Button>
@@ -100,7 +100,7 @@ class DashboardBarChartFormBody extends Component {
             bsStyle="default"
             disabled={activeSubStepIndex === 0}
             onClick={this.onBackButtonClick}
-            className="DashboardBarChart__btn-back pull-right"
+            className="DashboardGaugeChart__btn-back pull-right"
           >
             <Icon type="fa" name="angle-left" />
             &nbsp; Back
@@ -112,19 +112,16 @@ class DashboardBarChartFormBody extends Component {
 
   render() {
     const {activeSubStepIndex} = this.state;
-    const {
-      handleSubmit,
-      axis: {rotated}
-    } = this.props;
+    const {handleSubmit, chart} = this.props;
     return (
-      <Wizard className="DashboardBarChart">
+      <Wizard className="DashboardGaugeChart">
         <Wizard.Body>
           <Wizard.Steps steps={<ChartSteps stepIndex={activeSubStepIndex} />} />
           <Wizard.Row>
             <Wizard.Main>
               <form onSubmit={handleSubmit}>
-                <div className="DashboardBarChart__data-container">
-                  <div className="DashboardBarChart__data-contents">
+                <div className="DashboardGaugeChart__data-container">
+                  <div className="DashboardGaugeChart__data-contents">
                     <Wizard.Contents
                       key={0}
                       stepIndex={0}
@@ -143,11 +140,10 @@ class DashboardBarChartFormBody extends Component {
                       activeSubStepIndex={activeSubStepIndex}
                     >
                       <ChartSecondStepContent
-                        typeChart="BAR_CHART"
+                        typeChart="GAUGE_CHART"
                         data={data.columns}
-                        labelChartPreview="Bar Chart"
+                        labelChartPreview="Gauge Chart"
                         formName={FORM_NAME}
-                        rotated={rotated}
                       />
                     </Wizard.Contents>
                     <Wizard.Contents
@@ -158,11 +154,11 @@ class DashboardBarChartFormBody extends Component {
                       activeSubStepIndex={activeSubStepIndex}
                     >
                       <ChartThirdStepContent
-                        typeChart="BAR_CHART"
+                        typeChart="GAUGE_CHART"
                         data={data.columns}
-                        labelChartPreview="Bar Chart"
+                        labelChartPreview="Gauge Chart"
                         formName={FORM_NAME}
-                        rotated={rotated}
+                        chart={chart}
                       />
                     </Wizard.Contents>
                   </div>
@@ -176,19 +172,19 @@ class DashboardBarChartFormBody extends Component {
     );
   }
 }
-DashboardBarChartFormBody.propTypes = {
+DashboardGaugeChartFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
   invalid: PropTypes.bool,
   submitting: PropTypes.bool
 };
 
-DashboardBarChartFormBody.defaultProps = {
+DashboardGaugeChartFormBody.defaultProps = {
   invalid: false,
   submitting: false
 };
-const DashboardBarChartForm = reduxForm({
+const DashboardGaugeChartForm = reduxForm({
   form: FORM_NAME
-})(DashboardBarChartFormBody);
+})(DashboardGaugeChartFormBody);
 
-export default DashboardBarChartForm;
+export default DashboardGaugeChartForm;

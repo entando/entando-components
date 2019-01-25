@@ -3,16 +3,15 @@ import {formValueSelector, getFormSyncErrors} from "redux-form";
 
 import {fetchServerConfigList} from "state/main/actions";
 
-import DashboardDonutChartForm from "ui/widgets/charts/donut-chart/components/DashboardDonutChartForm";
+import DashboardGaugeChartForm from "ui/widgets/charts/gauge-chart/components/DashboardGaugeChartForm";
 
 const mapStateToProps = state => {
-  const formName = "form-dashboard-donut-chart";
+  const formName = "form-dashboard-gauge-chart";
   const selector = formValueSelector(formName);
-  const rotated = selector(state, "axis.rotated");
 
   return {
     initialValues: {
-      chart: "donut",
+      chart: "gauge",
       axis: {
         rotated: false,
         x: {type: "indexed"},
@@ -25,7 +24,6 @@ const mapStateToProps = state => {
     },
     chart: selector(state, "chart"),
     datasource: selector(state, "datasource"),
-    axis: {rotated: rotated},
     formSyncErrors: getFormSyncErrors(formName)(state)
   };
 };
@@ -65,9 +63,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   }
 });
 
-const DashboardDonutChartFormContainer = connect(
+const DashboardGaugeChartFormContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(DashboardDonutChartForm);
+)(DashboardGaugeChartForm);
 
-export default DashboardDonutChartFormContainer;
+export default DashboardGaugeChartFormContainer;

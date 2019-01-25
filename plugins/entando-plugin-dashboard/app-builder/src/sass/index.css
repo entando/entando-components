@@ -235,7 +235,8 @@
   .GeneralSettings .row:not(:first-child) {
     padding: 1em; }
   .GeneralSettings .row:last-child {
-    padding: 0; }
+    padding-bottom: 0;
+    border: 0 solid red; }
   .GeneralSettings__title {
     font-size: 16px;
     font-weight: bold; }
@@ -259,6 +260,8 @@
     margin-right: 8px; }
   .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-left.control-label {
     margin-right: 38px; }
+  .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-thickness.control-label {
+    margin-right: 10px; }
   .GeneralSettings__input-number {
     border-top: 1px solid #bbb;
     border-left: 1px solid #bbb;
@@ -284,6 +287,23 @@
     padding-top: 5px;
     width: 2em;
     margin-left: -1px; }
+  .GeneralSettings__general-settings-container.DONUT_CHART {
+    border: 0 solid red;
+    position: absolute;
+    top: -290px;
+    left: 335px; }
+  .GeneralSettings__general-settings-container.GAUGE_CHART {
+    border: 0 solid red;
+    position: absolute;
+    top: -290px;
+    left: 390px; }
+  .GeneralSettings__general-settings-container.DONUT_CHART {
+    border: 0 solid;
+    width: 60%; }
+  .GeneralSettings__general-settings-container.DONUT_CHART .form-group {
+    border: 0 solid; }
+  .GeneralSettings__interactive-chart-container {
+    border: 0 solid; }
 
 .SettingsChart {
   padding: 3em; }
@@ -410,6 +430,56 @@
     min-height: 26px;
     height: auto; }
   .SettingsChartDonut__column-selected {
+    border: 0 solid;
+    max-height: 250px; }
+
+.DashboardGaugeChart .wizard-pf-main {
+  padding: 3em; }
+
+.DashboardGaugeChart .wizard-pf-row {
+  height: none;
+  max-height: none;
+  width: 100%; }
+
+.DashboardGaugeChart__data-container {
+  border: 0 solid; }
+
+.DashboardGaugeChart__data-contents {
+  border: 0 solid red;
+  height: 670px; }
+
+.DashboardGaugeChart__btn-container {
+  border: 0 solid;
+  margin-top: 2em; }
+
+.DashboardGaugeChart__btn-back {
+  margin-right: 3em; }
+
+.SettingsChartGauge {
+  padding: 3em;
+  border: 0px solid;
+  min-width: 600px;
+  position: absolute;
+  top: -240px;
+  left: 33%; }
+  .SettingsChartGauge .row:not(:first-child) {
+    padding: 1em; }
+  .SettingsChartGauge__col {
+    border: 0 solid;
+    min-height: 200px; }
+  .SettingsChartGauge__form-group {
+    border: 0 solid;
+    min-height: 60px; }
+  .SettingsChartGauge__selector-multi:after {
+    content: '\25BE' !important;
+    position: absolute;
+    right: 5px;
+    top: 3px; }
+  .SettingsChartGauge__selector-multi .form-control.rbt-input-multi.rbt-input {
+    border: 1px solid #bbb;
+    min-height: 26px;
+    height: auto; }
+  .SettingsChartGauge__column-selected {
     border: 0 solid;
     max-height: 250px; }
 

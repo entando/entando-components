@@ -5,8 +5,8 @@ import {Button, Icon, Wizard} from "patternfly-react";
 
 import ChartSteps from "ui/widgets/charts/common/components/ChartSteps";
 import ChartFirstStepContent from "ui/widgets/charts/common/components/ChartFirstStepContent";
-import ChartSecondStepContentContainer from "ui/widgets/charts/common/containers/ChartSecondStepContentContainer";
-import ChartThirdStepContentContainer from "ui/widgets/charts/common/containers/ChartThirdStepContentContainer";
+import ChartSecondStepContent from "ui/widgets/charts/common/components/ChartSecondStepContent";
+import ChartThirdStepContent from "ui/widgets/charts/common/components/ChartThirdStepContent";
 
 const data = {columns: [["data1", 30], ["data2", 120]]};
 
@@ -112,7 +112,11 @@ class DashboardDonutChartFormBody extends Component {
 
   render() {
     const {activeSubStepIndex} = this.state;
-    const {handleSubmit} = this.props;
+    const {
+      handleSubmit,
+      axis: {rotated},
+      chart
+    } = this.props;
     return (
       <Wizard className="DashboardDonutChart">
         <Wizard.Body>
@@ -139,11 +143,12 @@ class DashboardDonutChartFormBody extends Component {
                       activeStepIndex={1}
                       activeSubStepIndex={activeSubStepIndex}
                     >
-                      <ChartSecondStepContentContainer
-                        type="DONUT_CHART"
+                      <ChartSecondStepContent
+                        typeChart="DONUT_CHART"
                         data={data.columns}
                         labelChartPreview="Donut Chart"
                         formName={FORM_NAME}
+                        rotated={rotated}
                       />
                     </Wizard.Contents>
                     <Wizard.Contents
@@ -153,11 +158,13 @@ class DashboardDonutChartFormBody extends Component {
                       activeStepIndex={2}
                       activeSubStepIndex={activeSubStepIndex}
                     >
-                      <ChartThirdStepContentContainer
-                        type="DONUT_CHART"
+                      <ChartThirdStepContent
+                        typeChart="DONUT_CHART"
                         data={data.columns}
                         labelChartPreview="Donut Chart"
                         formName={FORM_NAME}
+                        rotated={rotated}
+                        chart={chart}
                       />
                     </Wizard.Contents>
                   </div>

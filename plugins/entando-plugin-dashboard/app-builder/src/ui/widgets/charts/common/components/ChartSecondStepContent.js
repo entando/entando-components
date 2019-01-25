@@ -36,19 +36,19 @@ const options = {
 };
 const ChartSecondStepContent = ({
   formName,
-  type,
+  typeChart,
   data,
   labelChartPreview,
-  axis: {rotated}
+  rotated
 }) => {
-  const render = options.render(type, formName);
-  const widthChart = options.widthChart(type);
-  const columnSize = options.columnSize(type);
+  const render = options.render(typeChart, formName);
+  const widthChart = options.widthChart(typeChart);
+  const columnSize = options.columnSize(typeChart);
   return (
     <div className="ChartSecondStep">
       <PreviewChartSelected
         idChart={`chart-second-step-${uniqueId()}`}
-        type={type}
+        type={typeChart}
         data={data}
         labelChartPreview={labelChartPreview}
         axisRotated={rotated}
@@ -66,7 +66,7 @@ const ChartSecondStepContent = ({
 };
 
 ChartSecondStepContent.propTypes = {
-  type: PropTypes.string.isRequired,
+  typeChart: PropTypes.string.isRequired,
   labelChartPreview: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
@@ -74,12 +74,6 @@ ChartSecondStepContent.propTypes = {
   axis: PropTypes.shape({
     rotated: PropTypes.bool
   })
-};
-
-ChartSecondStepContent.defaultProps = {
-  axix: {
-    rotated: false
-  }
 };
 
 export default ChartSecondStepContent;

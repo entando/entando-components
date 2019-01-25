@@ -15,10 +15,31 @@ import SwitchRenderer from "ui/common/form/SwitchRenderer";
 
 import FieldArrayDropDownMultiple from "ui/widgets/charts/common/components/FieldArrayDropDownMultiple";
 
-import {inputTextField} from "ui/widgets/charts/helper/renderFields";
-
 const maxLength30 = maxLength(30);
 const minLength3 = minLength(3);
+
+const inputTextField = ({
+  input,
+  meta: {touched, error},
+  label,
+  append,
+  disabled
+}) => (
+  <FormGroup validationState={touched && error ? "error" : null}>
+    <ControlLabel htmlFor={input.name}>
+      <FormattedMessage id={label} />
+    </ControlLabel>
+    <input
+      {...input}
+      id={input.name}
+      type="text"
+      className="form-control"
+      disabled={disabled}
+    />
+    {append && <span className="AppendedLabel">{append}</span>}
+    {touched && error && <span className="help-block">{error}</span>}
+  </FormGroup>
+);
 
 const wrapInputTextField = (name, label, append, disabled = false) => {
   const validate = [required, minLength3, maxLength30];

@@ -10,7 +10,8 @@
   }
 
   .row:last-child {
-    padding: 0;
+    padding-bottom: 0;
+    border: 0 solid red;
   }
 
   &__title {
@@ -52,6 +53,10 @@
     margin-right: 38px;
   }
 
+  &__field-form-group.form-group label.GeneralSettings__field-thickness.control-label {
+    margin-right: 10px;
+  }
+
   &__input-number {
     border-top: 1px solid #bbb;
     border-left: 1px solid #bbb;
@@ -83,5 +88,32 @@
     padding-top: 5px;
     width: 2em;
     margin-left: -1px;
+  }
+
+  &__general-settings-container.DONUT_CHART {
+    border: 0 solid red;
+    position: absolute;
+    top: -290px;
+    left: 335px;
+  }
+
+  &__general-settings-container.GAUGE_CHART {
+    border: 0 solid red;
+    position: absolute;
+    top: -290px;
+    left: 390px;
+  }
+
+  &__general-settings-container.DONUT_CHART {
+    border: 0 solid;
+    width: 60%;
+  }
+
+  &__general-settings-container.DONUT_CHART .form-group {
+    border: 0 solid;
+  }
+
+  &__interactive-chart-container {
+    border: 0 solid;
   }
 }

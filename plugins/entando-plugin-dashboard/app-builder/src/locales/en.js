@@ -93,6 +93,7 @@ export default {
     "plugin.chart.dropDownMulti.titleHelper": "Column",
     "plugin.chart.dropDownMulti.title": "Select Column",
     "plugin.chart.generalSettings": "General Settings",
+    "plugin.chart.gauge": "Gauge Value",
     "plugin.chart.chartSize": "Chart Size",
     "plugin.chart.padding": "Padding",
     "plugin.chart.interactiveChart": "Interactive Chart",
@@ -105,6 +106,8 @@ export default {
     "plugin.chart.showDetailMouseClick": "Show details on mouse click",
     "plugin.chart.legendPosition": "Legend Position",
     "plugin.chart.values": "Values",
-    "plugin.chart.thickness": "Thickness"
+    "plugin.chart.thickness": "Thickness",
+    "plugin.chart.min": "Min",
+    "plugin.chart.max": "Max"
   }
 };

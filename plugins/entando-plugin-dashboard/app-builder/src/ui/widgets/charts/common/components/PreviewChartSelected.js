@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {Grid, Row, Col} from "patternfly-react";
 import FormattedMessage from "ui/i18n/FormattedMessage";
 
-import Chart from "ui/widgets/charts/helper/Chart";
+import Chart from "ui/widgets/charts/common/components/Chart";
 
 const PreviewChartSelected = ({
   type,

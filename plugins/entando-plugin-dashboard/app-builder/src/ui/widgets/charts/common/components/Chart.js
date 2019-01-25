@@ -27,6 +27,15 @@ const CHART_CONFIG = {
     className: "donut-chart-pf",
     defaultConfig: c3ChartDefaults.getDefaultDonutConfig()
   },
+  GAUGE_CHART: {
+    type: "gauge",
+    displayName: "GauceChart",
+    className: "gauge-chart-pf",
+    defaultConfig: {
+      ...c3ChartDefaults.getDefaultDonutConfig(),
+      gauge: {width: 50}
+    }
+  },
   LINE_CHART: {
     type: "line",
     displayName: "LineChart",

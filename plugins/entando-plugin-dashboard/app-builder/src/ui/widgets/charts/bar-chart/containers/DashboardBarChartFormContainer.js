@@ -10,8 +10,12 @@ const selector = formValueSelector("form-dashboard-bar-chart");
 const mapStateToProps = state => ({
   datasource: selector(state, "datasource"),
   formSyncErrors: getFormSyncErrors("form-dashboard-bar-chart")(state),
+  axis: {rotated: selector(state, "axis.rotated")},
+  chart: selector(state, "chart"),
   initialValues: {
     axis: {
+      chart: "bar",
+      rotated: false,
       x: {type: "indexed"},
       y2: {show: false}
     },

@@ -6,19 +6,13 @@ import PreviewChartSelected from "ui/widgets/charts/common/components/PreviewCha
 import GeneralSettings from "ui/widgets/charts/common/components/GeneralSettings";
 
 const DONUT_CHART = "DONUT_CHART";
-
+const GAUGE_CHART = "GAUGE_CHART";
 const options = {
-  render: (type, formName) => {
-    switch (type) {
-      case DONUT_CHART:
-        return <GeneralSettings />;
-      default:
-        return <GeneralSettings />;
-    }
-  },
   widthChart: type => {
     switch (type) {
       case DONUT_CHART:
+        return 400;
+      case GAUGE_CHART:
         return 400;
       default:
         return null;
@@ -28,6 +22,8 @@ const options = {
     switch (type) {
       case DONUT_CHART:
         return 4;
+      case GAUGE_CHART:
+        return 4;
       default:
         return 12;
     }
@@ -36,19 +32,19 @@ const options = {
 
 const ChartThirdStepContent = ({
   formName,
-  type,
+  typeChart,
   data,
   labelChartPreview,
-  axis: {rotated}
+  rotated,
+  chart
 }) => {
-  const render = options.render(type, formName);
-  const widthChart = options.widthChart(type);
-  const columnSize = options.columnSize(type);
+  const widthChart = options.widthChart(typeChart);
+  const columnSize = options.columnSize(typeChart);
   return (
     <div className="ChartThirdStep">
       <PreviewChartSelected
         idChart={`chart-second-step-${uniqueId()}`}
-        type={type}
+        type={typeChart}
         data={data}
         labelChartPreview={labelChartPreview}
         axisRotated={rotated}
@@ -58,7 +54,7 @@ const ChartThirdStepContent = ({
       />
       <Row>
         <Col xs={12} className="ChartThirdStep__settings-container">
-          {render}
+          <GeneralSettings typeChart={typeChart} chart={chart} />
         </Col>
       </Row>
     </div>
@@ -66,14 +62,18 @@ const ChartThirdStepContent = ({
 };
 
 ChartThirdStepContent.propTypes = {
-  type: PropTypes.string.isRequired,
+  typeChart: PropTypes.string.isRequired,
   labelChartPreview: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
   ).isRequired,
   axis: PropTypes.shape({
     rotated: PropTypes.bool
-  }).isRequired
+  })
+};
+
+ChartThirdStepContent.defaultProps = {
+  rotated: false
 };
 
 export default ChartThirdStepContent;
