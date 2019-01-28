@@ -127,7 +127,7 @@
             <bean class="com.agiletec.plugins.jacms.aps.system.services.searchengine.SearchEngineDAOFactory" 
                               init-method="init">
                 <property name="indexDiskRootFolder">
-                    <jee:jndi-lookup jndi-name="java:comp/env/indexDiskRootFolder" />
+                    <value>${indexDiskRootFolder}</value>
                 </property>
                 <property name="configManager" ref="BaseConfigManager"/>
                 <property name="langManager" ref="LangManager" />
