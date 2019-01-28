@@ -60,14 +60,23 @@ class DropdownMultiple extends Component {
 
   searchListValue(ev) {
     const searchValue = ev.target.value;
-    const {searchNotFound} = this.props;
+    const {searchNotFound, caseSensitiveSearch} = this.props;
     this.setState(() => {
       let listValue = [];
       if (searchValue.length <= 1) {
-        listValue = this.props.list.filter(f => f.label.includes(searchValue));
+        listValue = this.props.list.filter(f =>
+          caseSensitiveSearch
+            ? f.label.includes(searchValue)
+            : f.label.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        if (listValue) {
+          listValue.push({id: 0, key: "notFound", label: searchNotFound});
+        }
       } else {
         const search = this.props.list.find(f =>
-          f.label.startsWith(searchValue)
+          caseSensitiveSearch
+            ? f.label.startsWith(searchValue)
+            : f.label.toLowerCase().startsWith(searchValue.toLowerCase())
         );
         search
           ? listValue.push(search)
@@ -141,13 +150,21 @@ class DropdownMultiple extends Component {
   }
 }
 
+const COLUMN_TYPE = {
+  id: PropTypes.number,
+  key: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  label: PropTypes.string,
+  selected: PropTypes.bool
+};
+
 DropdownMultiple.propTypes = {
   titleHelper: PropTypes.string,
   title: PropTypes.string,
-  list: PropTypes.arrayOf(PropTypes.shape({})),
+  list: PropTypes.arrayOf(PropTypes.shape(COLUMN_TYPE)),
   toggleItem: PropTypes.func,
   searchValue: PropTypes.string,
-  searchNotFound: PropTypes.string
+  searchNotFound: PropTypes.string,
+  caseSensitiveSearch: PropTypes.bool
 };
 
 DropdownMultiple.defaultProps = {
@@ -156,7 +173,8 @@ DropdownMultiple.defaultProps = {
   list: [],
   toggleItem: () => {},
   searchValue: "",
-  searchNotFound: "Not Found"
+  searchNotFound: "Not Found",
+  caseSensitiveSearch: true
 };
 
 export default DropdownMultiple;

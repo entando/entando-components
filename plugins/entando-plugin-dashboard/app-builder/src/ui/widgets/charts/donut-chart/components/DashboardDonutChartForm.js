@@ -63,7 +63,7 @@ class DashboardDonutChartFormBody extends Component {
       }
       case 1: {
         disabledButtonNext = true;
-        if (!formSyncErrors.axis) {
+        if (!formSyncErrors.columns) {
           disabledButtonNext = false;
         }
         break;

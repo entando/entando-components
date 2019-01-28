@@ -13,7 +13,7 @@ import {formattedText, required, minLength, maxLength} from "@entando/utils";
 import FormattedMessage from "ui/i18n/FormattedMessage";
 import SwitchRenderer from "ui/common/form/SwitchRenderer";
 
-import FieldArrayDropDownMultiple from "ui/widgets/charts/common/components/FieldArrayDropDownMultiple";
+import FieldArrayDropDownMultiple from "ui/common/FieldArrayDropDownMultiple";
 
 const maxLength30 = maxLength(30);
 const minLength3 = minLength(3);

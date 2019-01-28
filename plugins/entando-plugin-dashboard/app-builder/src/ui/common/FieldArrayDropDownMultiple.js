@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-import DropdownMultiple from "ui/common/form/DropdownMultiple";
+import DropdownMultiple from "ui/common/DropdownMultiple";
 import {formattedText} from "@entando/utils";
 
 class FieldArrayDropDownMultiple extends Component {
@@ -48,7 +48,11 @@ class FieldArrayDropDownMultiple extends Component {
   }
 
   render() {
-    const {optionColumnSelected, className} = this.props;
+    const {
+      optionColumnSelected,
+      className,
+      meta: {error}
+    } = this.props;
     let classNames = `FieldArrayDropDownMultiple ${className}`;
     return (
       <div className={classNames}>
@@ -80,6 +84,7 @@ class FieldArrayDropDownMultiple extends Component {
               </div>
             );
           })}
+          {error && <span className="help-block">{error}</span>}
         </div>
       </div>
     );
@@ -94,7 +99,11 @@ const COLUMN_TYPE = {
 FieldArrayDropDownMultiple.propTypes = {
   className: PropTypes.string,
   optionColumn: PropTypes.arrayOf(PropTypes.shape(COLUMN_TYPE)),
-  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({}))
+  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})),
+  fields: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+    remove: PropTypes.func.isRequired
+  }).isRequired
 };
 FieldArrayDropDownMultiple.defaultProps = {
   className: "",
