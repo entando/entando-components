@@ -141,18 +141,20 @@ public class ContentViewerHelperTest {
     public void getRenderizationInfo() throws Exception {
         ContentModel model = Mockito.mock(ContentModel.class);
         when(this.contentModelManager.getContentModel(Mockito.anyLong())).thenReturn(model);
+        when(this.contentManager.getDefaultModel(Mockito.anyString())).thenReturn("68");
         when(model.getStylesheet()).thenReturn(null);
         when(model.getContentShape()).thenReturn("Body of content model");
         when(this.contentDispenser.getRenderizationInfo(Mockito.anyString(),
                 Mockito.anyLong(), Mockito.anyString(), Mockito.any(RequestContext.class), Mockito.anyBoolean())).thenReturn(null);
-        String renderedContent = this.contentViewerHelper.getRenderedContent("ART123", "15", reqCtx);
+        String renderedContent = this.contentViewerHelper.getRenderedContent("ART124", "default", reqCtx);
         Assert.assertNotNull(renderedContent);
         Assert.assertTrue(StringUtils.isBlank(renderedContent));
-        Mockito.verify(contentDispenser, Mockito.times(1)).getRenderizationInfo("ART123", 15, "en", reqCtx, true);
+        Mockito.verify(contentDispenser, Mockito.times(1)).getRenderizationInfo("ART123", 68, "en", reqCtx, true);
         Mockito.verify(contentDispenser, Mockito.times(0)).resolveLinks(Mockito.any(ContentRenderizationInfo.class), Mockito.any(RequestContext.class));
         Mockito.verify(reqCtx, Mockito.times(1)).getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
         Mockito.verify(reqCtx, Mockito.times(1)).getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
         Mockito.verify(reqCtx, Mockito.times(0)).getExtraParam(SystemConstants.EXTRAPAR_HEAD_INFO_CONTAINER);
+        Mockito.verify(contentManager, Mockito.times(1)).getDefaultModel("ART124");
     }
 
     @Test
