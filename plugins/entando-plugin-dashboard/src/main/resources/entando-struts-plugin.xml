@@ -13,5 +13,9 @@
 	 -->
    <include file="org/entando/entando/plugins/dashboard/apsadmin/dashboardconfig/dashboardConfig.xml"/>
    <include file="org/entando/entando/plugins/dashboard/apsadmin/portal/specialwidget/dashboardtable/dashboardTableSpecialWidget.xml"/>
-
+   <include file="org/entando/entando/plugins/dashboard/apsadmin/portal/specialwidget/dashboardlinechart/dashboardLineChartSpecialWidget.xml"/>
+   <include file="org/entando/entando/plugins/dashboard/apsadmin/portal/specialwidget/dashboardbarchart/dashboardBarChartSpecialWidget.xml"/>
+   <include file="org/entando/entando/plugins/dashboard/apsadmin/portal/specialwidget/dashboarddonutchart/dashboardDonutChartSpecialWidget.xml"/>
+   <include file="org/entando/entando/plugins/dashboard/apsadmin/portal/specialwidget/dashboardgaugechart/dashboardGaugeChartSpecialWidget.xml"/>
+   <include file="org/entando/entando/plugins/dashboard/apsadmin/portal/specialwidget/dashboardpiechart/dashboardPieChartSpecialWidget.xml"/>
 </struts>

@@ -5,18 +5,17 @@
  */
 package org.entando.entando.plugins.dashboard.web.dashboardtable;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.IDashboardTableService;
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.model.DashboardTableDto;
-import org.entando.entando.plugins.dashboard.web.dashboardtable.model.DashboardTableRequest;
-import org.entando.entando.plugins.dashboard.web.dashboardtable.validator.DashboardTableValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.common.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.IDashboardTableService;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.model.DashboardTableDto;
+import org.entando.entando.plugins.dashboard.web.dashboardtable.model.DashboardTableRequest;
+import org.entando.entando.plugins.dashboard.web.dashboardtable.validator.DashboardTableValidator;
 
 @RestController
 @RequestMapping(value = "/dashboard/dashboardTables")
@@ -60,7 +60,7 @@ public class DashboardTableController {
 
     @RestAccessControl(permission = "superuser")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedRestResponse<PagedMetadata<DashboardTableDto>>> getDashboardTables(RestListRequest requestList) throws JsonProcessingException {
+    public ResponseEntity<PagedRestResponse<PagedMetadata<DashboardTableDto>> > getDashboardTables(RestListRequest requestList) throws JsonProcessingException {
         this.getDashboardTableValidator().validateRestListRequest(requestList, DashboardTableDto.class);
         PagedMetadata<DashboardTableDto> result = this.getDashboardTableService().getDashboardTables(requestList);
         this.getDashboardTableValidator().validateRestListResult(requestList, result);
@@ -71,7 +71,7 @@ public class DashboardTableController {
     @RestAccessControl(permission = "superuser")
     @RequestMapping(value = "/{dashboardTableId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<DashboardTableDto>> getDashboardTable(@PathVariable String dashboardTableId) {
-        DashboardTableDto dashboardTable = this.getDashboardTableService().getDashboardTable(Integer.valueOf(dashboardTableId));
+		DashboardTableDto dashboardTable = this.getDashboardTableService().getDashboardTable(Integer.valueOf(dashboardTableId));
         return new ResponseEntity<>(new SimpleRestResponse(dashboardTable), HttpStatus.OK);
     }
 

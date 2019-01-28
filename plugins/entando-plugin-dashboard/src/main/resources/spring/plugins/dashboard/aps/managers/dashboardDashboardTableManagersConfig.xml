@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
 
-    <bean id="dashboardDashboardTableDAO"
-          class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.DashboardTableDAO">
-        <property name="dataSource" ref="servDataSource"/>
+	<bean id="dashboardDashboardTableDAO" class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.DashboardTableDAO">
+		<property name="dataSource" ref="servDataSource" />
+	</bean>
+
+	<bean id="dashboardDashboardTableManager" class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.DashboardTableManager"
+		parent="abstractService">
+		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+		<property name="dashboardTableDAO" ref="dashboardDashboardTableDAO" />
+	</bean>
+	
+    <bean id="dashboardDashboardTableService" class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.DashboardTableService" >
+        <property name="dashboardTableManager" ref="dashboardDashboardTableManager" />
     </bean>
-
-    <bean id="dashboardDashboardTableManager"
-          class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.DashboardTableManager"
-          parent="abstractService">
-        <property name="keyGeneratorManager" ref="KeyGeneratorManager"/>
-        <property name="dashboardTableDAO" ref="dashboardDashboardTableDAO"/>
-    </bean>
-
-    <bean id="dashboardDashboardTableService"
-          class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.DashboardTableService">
-        <property name="dashboardTableManager" ref="dashboardDashboardTableManager"/>
-    </bean>
-
-    <bean id="dashboardTableWidgetValidator"
-          class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.widgettype.validators.DashboardTableWidgetValidator">
-    </bean>
-
+    
 </beans>

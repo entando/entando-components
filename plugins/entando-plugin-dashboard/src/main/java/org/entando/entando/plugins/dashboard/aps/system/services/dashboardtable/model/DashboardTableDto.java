@@ -6,6 +6,11 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable.model;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.entando.entando.web.common.json.JsonDateDeserializer;
+import org.entando.entando.web.common.json.JsonDateSerializer;
+
 public class DashboardTableDto {
 
 	private int id;

@@ -5,23 +5,23 @@
  */
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardtable;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
-
 import java.util.List;
+
+import com.agiletec.aps.system.common.FieldSearchFilter;
 
 public interface IDashboardTableDAO {
 
-    List<Integer> searchDashboardTables(FieldSearchFilter[] filters);
+	public List<Integer> searchDashboardTables(FieldSearchFilter[] filters);
+	
+	public DashboardTable loadDashboardTable(int id);
 
-    DashboardTable loadDashboardTable(int id);
+	public List<Integer> loadDashboardTables();
 
-    List<Integer> loadDashboardTables();
+	public void removeDashboardTable(int id);
+	
+	public void updateDashboardTable(DashboardTable dashboardTable);
 
-    void removeDashboardTable(int id);
+	public void insertDashboardTable(DashboardTable dashboardTable);
 
-    void updateDashboardTable(DashboardTable dashboardTable);
-
-    void insertDashboardTable(DashboardTable dashboardTable);
-
-    int countDashboardTables(FieldSearchFilter[] filters);
+    public int countDashboardTables(FieldSearchFilter[] filters);
 }

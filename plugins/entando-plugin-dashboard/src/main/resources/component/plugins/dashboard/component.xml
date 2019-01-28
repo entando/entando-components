@@ -7,6 +7,11 @@
 			<datasource name="servDataSource">
 				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardConfig</class>
 				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardTable</class>
+				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardLineChart</class>
+				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardBarChart</class>
+				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardDonutChart</class>
+				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardGaugeChart</class>
+				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardPieChart</class>
 			</datasource>
 		</tableMapping>
 		<environment code="production">
