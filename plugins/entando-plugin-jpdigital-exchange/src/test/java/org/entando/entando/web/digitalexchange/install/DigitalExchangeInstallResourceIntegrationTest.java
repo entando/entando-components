@@ -26,7 +26,10 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesMocker;
 import org.entando.entando.aps.system.services.digitalexchange.install.ComponentZipUtil;
+import org.entando.entando.aps.system.services.group.IGroupService;
 import org.entando.entando.aps.system.services.pagemodel.IPageModelService;
+import org.entando.entando.aps.system.services.role.IRoleService;
+import org.entando.entando.aps.system.services.role.model.RoleDto;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
@@ -63,20 +66,30 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
     private static File tempWidgetZipFile;
     private static File tempPageModelZipFile;
+    private static File tempGroupZipFile;
+    private static File tempRoleZipFile;
 
     @BeforeClass
-    public static void setupZip() {
+    public static void setupZips() {
         tempWidgetZipFile = ComponentZipUtil.getTestWidgetZip();
         tempPageModelZipFile = ComponentZipUtil.getTestPageModelZip();
+        tempGroupZipFile = ComponentZipUtil.getTestGroupZip();
+        tempRoleZipFile = ComponentZipUtil.getTestRoleZip();
     }
 
     @AfterClass
-    public static void deleteZip() {
+    public static void deleteZips() {
         if (tempWidgetZipFile != null) {
             tempWidgetZipFile.delete();
         }
         if (tempPageModelZipFile != null) {
             tempPageModelZipFile.delete();
+        }
+        if (tempGroupZipFile != null) {
+            tempGroupZipFile.delete();
+        }
+        if (tempRoleZipFile != null) {
+            tempRoleZipFile.delete();
         }
     }
 
@@ -91,6 +104,12 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
     @Autowired
     private IPageModelService pageModelService;
+
+    @Autowired
+    private IGroupService groupService;
+
+    @Autowired
+    private IRoleService roleService;
 
     @Autowired
     private I18nManager i18nManager;
@@ -113,10 +132,14 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                         try {
                             if (request.getEndpoint().contains("packages")) {
                                 Resource resource = mock(Resource.class);
-                                if (request.getEndpoint().contains("test_widget")) {
+                                if (request.getEndpoint().contains("de_test_widget")) {
                                     when(resource.getInputStream()).thenReturn(new FileInputStream(tempWidgetZipFile));
-                                } else {
+                                } else if (request.getEndpoint().contains("de_test_page_model")) {
                                     when(resource.getInputStream()).thenReturn(new FileInputStream(tempPageModelZipFile));
+                                } else if (request.getEndpoint().contains("de_test_group")) {
+                                    when(resource.getInputStream()).thenReturn(new FileInputStream(tempGroupZipFile));
+                                } else {
+                                    when(resource.getInputStream()).thenReturn(new FileInputStream(tempRoleZipFile));
                                 }
                                 return resource;
                             } else {
@@ -140,7 +163,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
     @Test
     public void shouldInstallWidget() throws Exception {
 
-        String componentCode = "test_widget";
+        String componentCode = "de_test_widget";
 
         installAndCheckForCompletion(componentCode);
 
@@ -152,15 +175,41 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
     @Test
     public void shouldInstallPageModel() throws Exception {
 
-        String componentCode = "test_page_model";
+        String componentCode = "de_test_page_model";
 
         installAndCheckForCompletion(componentCode);
 
         assertThat(pageModelService.getPageModel(componentCode)).isNotNull();
-        assertThat(i18nManager.getLabel("TEST_LABEL", "en")).isEqualTo("Test label");
-        assertThat(storageManager.exists("components/test_page_model/test.css", false)).isTrue();
+        assertThat(i18nManager.getLabel("DE_TEST_LABEL", "en")).isEqualTo("Test label DE");
+        assertThat(storageManager.exists("components/de_test_page_model/test.css", false)).isTrue();
 
         pageModelService.removePageModel(componentCode);
+    }
+
+    @Test
+    public void shouldInstallGroup() throws Exception {
+
+        String componentCode = "de_test_group";
+
+        installAndCheckForCompletion(componentCode);
+
+        assertThat(groupService.getGroup(componentCode)).isNotNull();
+
+        groupService.removeGroup(componentCode);
+    }
+
+    @Test
+    public void shouldInstallRole() throws Exception {
+
+        String componentCode = "de_test_role";
+
+        installAndCheckForCompletion(componentCode);
+
+        RoleDto role = roleService.getRole(componentCode);
+        assertThat(role).isNotNull();
+        assertThat(role.getPermissions().get("superuser")).isTrue();
+
+        roleService.removeRole(componentCode);
     }
 
     private void installAndCheckForCompletion(String componentId) throws Exception {

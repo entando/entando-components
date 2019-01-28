@@ -13,10 +13,6 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 
@@ -24,15 +20,6 @@ import org.springframework.validation.DataBinder;
  * Utility methods used to register custom SpEL functions.
  */
 public class CommandUtils {
-
-    public static Object fromJson(InputStream in, Class<?> type) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(in, type);
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
 
     public static BindingResult getBindingResult() {
         return new DataBinder(null).getBindingResult();

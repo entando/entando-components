@@ -1,0 +1,7 @@
+{
+    "name": "DE Test Role",
+    "code": "de_test_role",
+    "permissions": {
+        "superuser": true
+    }
+ }

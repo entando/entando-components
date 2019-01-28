@@ -25,12 +25,20 @@ import org.apache.commons.io.IOUtils;
 public class ComponentZipUtil {
 
     public static File getTestWidgetZip() {
-        return ComponentZipUtil.zip("test_widget", "component.xml", "data/port_data_test.sql", "data/port_uninstallation.sql");
+        return ComponentZipUtil.zip("de_test_widget", "component.xml", "data/de_test_widget.json");
     }
 
     public static File getTestPageModelZip() {
-        return ComponentZipUtil.zip("test_page_model", "component.xml", "data/port_data_test.sql",
-                "data/port_uninstallation.sql", "data/test-label.json", "resources/test.css");
+        return ComponentZipUtil.zip("de_test_page_model", "component.xml", "data/port_data_test.sql",
+                "data/de_test_page_model.json", "data/de_test_label.json", "resources/test.css");
+    }
+
+    public static File getTestRoleZip() {
+        return ComponentZipUtil.zip("de_test_role", "component.xml", "data/de_test_role.json");
+    }
+
+    public static File getTestGroupZip() {
+        return ComponentZipUtil.zip("de_test_group", "component.xml", "data/de_test_group.json");
     }
 
     /**

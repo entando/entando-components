@@ -33,7 +33,7 @@ public class ComponentDescriptorTest {
 
         ComponentDescriptor component;
 
-        try (InputStream in = ComponentDescriptorTest.class.getClassLoader().getResourceAsStream("components/test_page_model/component.xml")) {
+        try (InputStream in = ComponentDescriptorTest.class.getClassLoader().getResourceAsStream("components/de_test_page_model/component.xml")) {
             Document document = new SAXBuilder().build(in);
             component = new ComponentDescriptor(document.getRootElement(), storageManager);
         }

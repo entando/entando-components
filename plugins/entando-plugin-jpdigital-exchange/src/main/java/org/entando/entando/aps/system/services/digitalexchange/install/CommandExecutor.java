@@ -53,8 +53,6 @@ public class CommandExecutor implements ApplicationContextAware {
     public CommandExecutor() {
 
         try {
-            context.registerFunction("fromXml", JAXB.class.getDeclaredMethod("unmarshal", InputStream.class, Class.class));
-            context.registerFunction("fromJson", CommandUtils.class.getDeclaredMethod("fromJson", InputStream.class, Class.class));
             context.registerFunction("bindingResult", CommandUtils.class.getDeclaredMethod("getBindingResult"));
             context.registerFunction("call", Command.class.getDeclaredMethod("newInstance", String.class, String[].class));
         } catch (NoSuchMethodException ex) {

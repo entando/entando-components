@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
-    <code>test_page_model</code>
-    <description>Test Page Model</description>
+    <code>de_test_group</code>
+    <description>DE Test Group</description>
     <dependencies>
     </dependencies>
     <installation>
@@ -16,18 +16,16 @@
         <environment code="test">
             <defaultSqlResources>
                 <datasource name="portDataSource">
-                    test_page_model/data/port_data_test.sql
                 </datasource>
             </defaultSqlResources>
         </environment>
         <execution>
-            <op>#call('createLabel', 'test_page_model/data/test-label.json')</op>
+            <op>#call('createGroup', 'de_test_group/data/de_test_group.json')</op>
         </execution>
     </installation>
     <uninstallation>
         <sqlResources>
             <datasource name="portDataSource">
-                test_page_model/data/port_uninstallation.sql
             </datasource>
             <datasource name="servDataSource">
             </datasource>

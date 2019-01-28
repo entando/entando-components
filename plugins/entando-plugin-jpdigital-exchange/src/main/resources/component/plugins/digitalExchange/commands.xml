@@ -2,16 +2,32 @@
 <commands>
     <map>
         <entry>
+            <key>createPageModel</key>
+            <value>@pageModelController.addPageModel(@modelParser.parse('%s', T(org.entando.entando.web.pagemodel.model.PageModelRequest)), #bindingResult())</value>
+        </entry>
+        <entry>
+            <key>createWidget</key>
+            <value>@widgetController.addWidget(@modelParser.parse('%s', T(org.entando.entando.web.widget.model.WidgetRequest)), #bindingResult())</value>
+        </entry>
+        <entry>
+            <key>createGroup</key>
+            <value>@groupController.addGroup(@modelParser.parse('%s', T(org.entando.entando.web.group.model.GroupRequest)), #bindingResult())</value>
+        </entry>
+        <entry>
+            <key>createRole</key>
+            <value>@roleController.addRole(@modelParser.parse('%s', T(org.entando.entando.web.role.model.RoleRequest)), #bindingResult())</value>
+        </entry>
+        <entry>
             <key>createLabel</key>
-            <value>@labelController.addLabelGroup(#fromJson(@componentStorageManager.getProtectedStream('%s'), T(org.entando.entando.web.label.LabelRequest)))</value>
+            <value>@labelController.addLabelGroup(@modelParser.parse('%s', T(org.entando.entando.web.label.LabelRequest)))</value>
         </entry>
         <entry>
             <key>createContentType</key>
-            <value>@contentTypeResourceController.create(#fromJson(@componentStorageManager.getProtectedStream('%s'), T(com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest)), #bindingResult())</value>
+            <value>@contentTypeResourceController.create(@modelParser.parse('%s', T(com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest)), #bindingResult())</value>
         </entry>
         <entry>
             <key>createContentModel</key>
-            <value>@contentModelResourceController.addContentModel(#fromXml(@componentStorageManager.getProtectedStream('%s'), T(com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto)), #bindingResult())</value>
+            <value>@contentModelResourceController.addContentModel(@modelParser.parse('%s', T(com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto)), #bindingResult())</value>
         </entry>
     </map>
 </commands>

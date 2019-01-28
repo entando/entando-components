@@ -27,6 +27,7 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
 import org.entando.entando.web.label.LabelController;
+import org.entando.entando.web.pagemodel.PageModelController;
 import org.springframework.context.ApplicationContext;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -59,6 +60,13 @@ public class ComponentInstallerTest {
 
     @Mock
     private ComponentStorageManager storageManager;
+
+    @Mock
+    private PageModelController pageModelController;
+    
+    @Spy
+    @InjectMocks
+    private ModelParser modelParser;
 
     @Mock
     private DatabaseManager databaseManager;
@@ -103,25 +111,30 @@ public class ComponentInstallerTest {
 
         job = new ComponentInstallationJob();
         job.setDigitalExchange("DE");
-        job.setComponentId("test_page_model");
+        job.setComponentId("de_test_page_model");
 
         when(client.getStreamResponse(any(), any())).thenReturn(new FileInputStream(tempZipFile));
 
         when(client.getSingleResponse(any(String.class), any())).thenReturn(getComponentInfoResponse());
 
         when(storageManager.getProtectedStream(endsWith("component.xml")))
-                .thenReturn(getClass().getClassLoader().getResourceAsStream("components/test_page_model/component.xml"));
+                .thenReturn(getClass().getClassLoader().getResourceAsStream("components/de_test_page_model/component.xml"));
 
         when(storageManager.getProtectedStream(endsWith("port_data_test.sql")))
-                .thenReturn(getClass().getClassLoader().getResourceAsStream("components/test_page_model/data/port_data_test.sql"));
+                .thenReturn(getClass().getClassLoader().getResourceAsStream("components/de_test_page_model/data/port_data_test.sql"));
 
-        when(storageManager.getProtectedStream(endsWith("test-label.json")))
-                .thenReturn(getClass().getClassLoader().getResourceAsStream("components/test_page_model/data/test-label.json"));
+        when(storageManager.getProtectedStream(endsWith("de_test_page_model.json")))
+                .thenReturn(getClass().getClassLoader().getResourceAsStream("components/de_test_page_model/data/de_test_page_model.json"));
+
+        when(storageManager.getProtectedStream(endsWith("de_test_label.json")))
+                .thenReturn(getClass().getClassLoader().getResourceAsStream("components/de_test_page_model/data/de_test_label.json"));
 
         when(storageManager.existsProtected(any())).thenReturn(true);
 
         when(applicationContext.getBean("labelController")).thenReturn(labelController);
         when(applicationContext.getBean("componentStorageManager")).thenReturn(storageManager);
+        when(applicationContext.getBean("modelParser")).thenReturn(modelParser);
+        when(applicationContext.getBean("pageModelController")).thenReturn(pageModelController);
 
         doNothing().when(installer).reloadSystem();
     }

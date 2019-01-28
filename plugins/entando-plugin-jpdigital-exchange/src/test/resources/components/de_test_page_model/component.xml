@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+    <code>de_test_page_model</code>
+    <description>DE Test Page Model</description>
+    <dependencies>
+    </dependencies>
+    <installation>
+        <tableMapping>
+            <datasource name="portDataSource">
+            </datasource>
+            <datasource name="servDataSource">
+            </datasource>
+        </tableMapping>
+        <environment code="production">
+        </environment>
+        <environment code="test">
+            <defaultSqlResources>
+                <datasource name="portDataSource">
+                    de_test_page_model/data/port_data_test.sql
+                </datasource>
+            </defaultSqlResources>
+        </environment>
+        <execution>
+            <op>#call('createPageModel', 'de_test_page_model/data/de_test_page_model.json')</op>
+            <op>#call('createLabel', 'de_test_page_model/data/de_test_label.json')</op>
+        </execution>
+    </installation>
+    <uninstallation>
+        <sqlResources>
+            <datasource name="portDataSource">
+            </datasource>
+            <datasource name="servDataSource">
+            </datasource>
+        </sqlResources>
+        <resources>
+        </resources>
+    </uninstallation>
+</component>

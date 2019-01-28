@@ -1,0 +1,9 @@
+{
+    "code": "de_test_widget",
+    "titles": {
+        "en": "DE Test Widget",
+        "it": "Widget di test DE"
+    },
+    "group": "free",
+    "customUi": "<div></div>"
+}
