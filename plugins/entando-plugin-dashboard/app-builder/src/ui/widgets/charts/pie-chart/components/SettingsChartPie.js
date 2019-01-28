@@ -11,7 +11,7 @@ const SettingsChartPie = ({optionColumns, optionColumnSelected}) => {
   return (
     <div className="SettingsChartPie">
       <Row>
-        <Col xs={1} className="SettingsChartPie">
+        <Col xs={1} className="SettingsChartPie__col">
           <FormGroup className="SettingsChartPie__form-group">
             <ControlLabel>
               <strong>

@@ -37,6 +37,7 @@ const ChartSecondStepContent = ({
 }) => {
   const render = options.render(typeChart, formName);
   const columnSize = options.columnSize(typeChart);
+
   return (
     <div className="ChartSecondStep">
       <PreviewChartSelected

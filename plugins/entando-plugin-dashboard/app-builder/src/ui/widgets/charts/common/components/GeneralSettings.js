@@ -47,7 +47,7 @@ const renderField = ({
   );
 };
 
-const renderGauge = chart => (
+const gaugeSettings = chart => (
   <Row>
     <Col xs={6}>
       <Row>
@@ -85,6 +85,34 @@ const renderGauge = chart => (
                 className="GeneralSettings__field-left"
                 validate={[required]}
               />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </Col>
+  </Row>
+);
+const pieSettings = chart => (
+  <Row>
+    <Col xs={6}>
+      <Row>
+        <Col xs={12}>
+          <label className="GeneralSettings__title">
+            <FormattedMessage id="plugin.chart.pieSettings" />
+          </label>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={6} className="GeneralSettings__col">
+          <Row>
+            <Col xs={6}>
+              <FormGroup className="GeneralSettings__form-group">
+                <ControlLabel>
+                  <FormattedMessage id="plugin.chart.expand" />
+                </ControlLabel>
+                &nbsp;&nbsp;
+                <Field component={SwitchRenderer} name="pie.expand" />
+              </FormGroup>
             </Col>
           </Row>
         </Col>
@@ -231,7 +259,8 @@ const GeneralSettings = ({typeChart, chart}) => {
         fluid
         className={`GeneralSettings__interactive-chart-container ${typeChart}`}
       >
-        {chart === "gauge" ? renderGauge(chart) : null}
+        {chart === "gauge" ? gaugeSettings(chart) : null}
+        {chart === "pie" ? pieSettings(chart) : null}
         <Row>
           <Col xs={12} className="GeneralSettings__col">
             <FormGroup className="GeneralSettings__form-group">

@@ -94,6 +94,7 @@ export default {
     "plugin.chart.dropDownMulti.title": "Select Column",
     "plugin.chart.generalSettings": "General Settings",
     "plugin.chart.gauge": "Gauge Value",
+    "plugin.chart.pieSettings": "Pie Settings",
     "plugin.chart.chartSize": "Chart Size",
     "plugin.chart.padding": "Padding",
     "plugin.chart.interactiveChart": "Interactive Chart",
@@ -108,6 +109,7 @@ export default {
     "plugin.chart.values": "Values",
     "plugin.chart.thickness": "Thickness",
     "plugin.chart.min": "Min",
-    "plugin.chart.max": "Max"
+    "plugin.chart.max": "Max",
+    "plugin.chart.expand": "Expand"
   }
 };

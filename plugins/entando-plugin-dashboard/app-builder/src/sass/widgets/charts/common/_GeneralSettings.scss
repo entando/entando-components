@@ -11,7 +11,7 @@
 
   .row:last-child {
     padding-bottom: 0;
-    border: 0px solid red;
+    border: 0 solid red;
   }
 
   &__title {
@@ -99,7 +99,7 @@
   }
 
   &__general-settings-container.GAUGE_CHART {
-    border: 0px solid red;
+    border: 0 solid red;
     position: absolute;
     top: -240px;
     left: 33%;
@@ -107,7 +107,8 @@
   }
 
   &__general-settings-container.PIE_CHART {
-    border: 0 solid;
+    border: 0 solid blue;
+    position: absolute;
     top: -240px;
     left: 33%;
     width: 60%;

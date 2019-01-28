@@ -1,5 +1,6 @@
 import {connect} from "react-redux";
 import {formValueSelector, getFormSyncErrors} from "redux-form";
+import {pick, omit} from "lodash";
 
 import {fetchServerConfigList} from "state/main/actions";
 
@@ -31,33 +32,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchServerConfigList());
   },
   onSubmit: data => {
-    const {
-      title,
-      serverName,
-      datasource,
-      axis,
-      columns,
-      size,
-      padding,
-      iteraction,
-      legend
-    } = data;
     const transformData = {
-      serverName,
-      datasource,
-      title
+      ...pick(data, ["datasource", "title", "serverName"])
     };
     transformData.configChart = {
-      axis,
-      columns,
-      size,
-      padding,
-      iteraction,
-      legend
+      ...omit(data, ["datasource", "title", "serverName"])
     };
-
-    console.log("Submit data ", transformData);
-    //ownProps.onSubmit();
+    //console.log("Submit data ", transformData);
+    ownProps.onSubmit();
   }
 });
 

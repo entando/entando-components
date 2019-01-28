@@ -236,7 +236,7 @@
     padding: 1em; }
   .GeneralSettings .row:last-child {
     padding-bottom: 0;
-    border: 0px solid red; }
+    border: 0 solid red; }
   .GeneralSettings__title {
     font-size: 16px;
     font-weight: bold; }
@@ -294,13 +294,14 @@
     left: 33%;
     width: 60%; }
   .GeneralSettings__general-settings-container.GAUGE_CHART {
-    border: 0px solid red;
+    border: 0 solid red;
     position: absolute;
     top: -240px;
     left: 33%;
     width: 60%; }
   .GeneralSettings__general-settings-container.PIE_CHART {
-    border: 0 solid;
+    border: 0 solid blue;
+    position: absolute;
     top: -240px;
     left: 33%;
     width: 60%; }
@@ -511,7 +512,7 @@
 
 .SettingsChartPie {
   padding: 3em;
-  border: 0px solid;
+  border: 0 solid;
   min-width: 600px;
   position: absolute;
   top: -240px;
