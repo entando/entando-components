@@ -13,11 +13,22 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
+
 public class ComponentInstallationJob {
 
+    @JsonIgnore
     private String id;
     private String digitalExchange;
-    private String component;
+    @JsonIgnore
+    private String digitalExchangeUrl;
+    private String componentId;
+    private String componentName;
+    private String componentVersion;
+    private Date started;
+    private Date ended;
+    private String user;
     private double progress;
     private InstallationStatus status;
     private String errorMessage;
@@ -38,12 +49,36 @@ public class ComponentInstallationJob {
         this.digitalExchange = digitalExchange;
     }
 
-    public String getComponent() {
-        return component;
+    public String getDigitalExchangeUrl() {
+        return digitalExchangeUrl;
     }
 
-    public void setComponent(String component) {
-        this.component = component;
+    public void setDigitalExchangeUrl(String digitalExchangeUrl) {
+        this.digitalExchangeUrl = digitalExchangeUrl;
+    }
+
+    public String getComponentId() {
+        return componentId;
+    }
+
+    public void setComponentId(String componentId) {
+        this.componentId = componentId;
+    }
+
+    public String getComponentName() {
+        return componentName;
+    }
+
+    public void setComponentName(String componentName) {
+        this.componentName = componentName;
+    }
+
+    public String getComponentVersion() {
+        return componentVersion;
+    }
+
+    public void setComponentVersion(String componentVersion) {
+        this.componentVersion = componentVersion;
     }
 
     public double getProgress() {
@@ -68,5 +103,29 @@ public class ComponentInstallationJob {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public Date getStarted() {
+        return started;
+    }
+
+    public void setStarted(Date started) {
+        this.started = started;
+    }
+
+    public Date getEnded() {
+        return ended;
+    }
+
+    public void setEnded(Date ended) {
+        this.ended = ended;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }

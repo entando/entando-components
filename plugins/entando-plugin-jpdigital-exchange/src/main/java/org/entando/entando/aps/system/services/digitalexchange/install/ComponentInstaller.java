@@ -23,23 +23,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.servlet.ServletContext;
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
-import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeBaseCall;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
-import org.entando.entando.aps.system.services.storage.IStorageManager;
+import org.entando.entando.aps.system.services.digitalexchange.client.PagedDigitalExchangeCall;
+import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentListProcessor;
+import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.context.ServletContextAware;
 
@@ -48,42 +55,90 @@ public class ComponentInstaller implements ServletContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(ComponentInstaller.class);
 
-    protected static final String COMPONENTS_DIR = "de_components";
-    protected static final boolean PROTECTED_RESOURCE = true;
+    private static final String RESOURCES_DIR = "resources";
 
     private final DigitalExchangesClient client;
-    private final IStorageManager storageManager;
+    private final ComponentStorageManager storageManager;
     private final DatabaseManager databaseManager;
     private final InitializerManager initializerManager;
+    private final CommandExecutor commandExecutor;
 
     private ServletContext servletContext;
 
     @Autowired
-    public ComponentInstaller(DigitalExchangesClient client, IStorageManager storageManager,
-            DatabaseManager databaseManager, InitializerManager initializerManager) {
+    public ComponentInstaller(DigitalExchangesClient client, ComponentStorageManager storageManager,
+            DatabaseManager databaseManager, InitializerManager initializerManager,
+            CommandExecutor commandExecutor) {
         this.client = client;
         this.storageManager = storageManager;
         this.databaseManager = databaseManager;
         this.initializerManager = initializerManager;
+        this.commandExecutor = commandExecutor;
     }
 
-    public void install(ComponentInstallationJob job, Consumer<ComponentInstallationJob> updater) {
+    public void install(ComponentInstallationJob job, Consumer<ComponentInstallationJob> updater) throws InstallationException {
 
-        double steps = 3;
+        double steps = 6;
         int currentStep = 0;
+        
+        fillComponentInfo(job);
+        job.setProgress(++currentStep / steps);
+        updater.accept(job);
 
         downloadComponent(job);
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
-        installComponent(job);
+        ComponentDescriptor component = parseComponentDescriptor(job.getComponentId());
+        job.setProgress(++currentStep / steps);
+        updater.accept(job);
+
+        updateDatabase(component);
+        job.setProgress(++currentStep / steps);
+        updater.accept(job);
+
+        component.getInstallationCommands().forEach(commandExecutor::execute);
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
         reloadSystem();
         job.setProgress(1);
         job.setStatus(InstallationStatus.COMPLETED);
+        job.setEnded(new Date());
         updater.accept(job);
+    }
+
+    private void fillComponentInfo(ComponentInstallationJob job) {
+
+        RestListRequest requestList = new RestListRequest();
+        requestList.setPage(1);
+        requestList.setPageSize(1);
+        Filter componentIdFilter = new Filter("id", job.getComponentId());
+        requestList.setFilters(new Filter[]{componentIdFilter});
+
+        PagedDigitalExchangeCall<DigitalExchangeComponent> call = new PagedDigitalExchangeCall<DigitalExchangeComponent>(
+                requestList, new ParameterizedTypeReference<PagedRestResponse<DigitalExchangeComponent>>() {
+        }, "digitalExchange", "components") {
+
+            @Override
+            protected RequestListProcessor<DigitalExchangeComponent> getRequestListProcessor(
+                    RestListRequest request, List<DigitalExchangeComponent> joinedList) {
+                return new DigitalExchangeComponentListProcessor(request, joinedList);
+            }
+        };
+
+        PagedRestResponse<DigitalExchangeComponent> response
+                = client.getSingleResponse(job.getDigitalExchange(), call);
+
+        List<DigitalExchangeComponent> components = response.getPayload();
+
+        if (components.size() != 1) {
+            throw new InstallationException("Found " + components.size() + " components for " + job.getComponentId());
+        }
+        
+        DigitalExchangeComponent component = components.get(0);
+        job.setComponentName(component.getName());
+        job.setComponentVersion(component.getVersion());
     }
 
     private void downloadComponent(ComponentInstallationJob job) {
@@ -92,19 +147,18 @@ public class ComponentInstaller implements ServletContextAware {
 
         try {
 
-            tempZipPath = Files.createTempFile(job.getComponent(), "");
+            tempZipPath = Files.createTempFile(job.getComponentId(), "");
 
             DigitalExchangeBaseCall call = new DigitalExchangeBaseCall(
-                    HttpMethod.GET, "digitalExchange", "components", job.getComponent(), "packages");
+                    HttpMethod.GET, "digitalExchange", "components", job.getComponentId(), "packages");
 
             try (InputStream in = client.getStreamResponse(job.getDigitalExchange(), call)) {
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            createComponentsDir();
-            extractZip(tempZipPath);
+            extractZip(tempZipPath, job.getComponentId());
 
-        } catch (ApsSystemException | IOException | UncheckedIOException ex) {
+        } catch (IOException | UncheckedIOException ex) {
             logger.error("Error while downloading component", ex);
             throw new InstallationException("Unable to save component", ex);
         } finally {
@@ -117,24 +171,28 @@ public class ComponentInstaller implements ServletContextAware {
         }
     }
 
-    private void createComponentsDir() throws ApsSystemException {
-        if (!storageManager.exists(COMPONENTS_DIR, PROTECTED_RESOURCE)) {
-            storageManager.createDirectory(COMPONENTS_DIR, PROTECTED_RESOURCE);
-        }
-    }
-
-    private void extractZip(Path tempZipPath) throws IOException {
+    private void extractZip(Path tempZipPath, String componentId) {
 
         try (ZipFile zip = new ZipFile(tempZipPath.toFile())) {
 
             for (ZipEntry entry : Collections.list(zip.entries())) {
 
-                String path = COMPONENTS_DIR + File.separator + entry.getName();
+                String path = entry.getName();
 
-                if (!entry.isDirectory()) {
-                    storageManager.saveFile(path, PROTECTED_RESOURCE, zip.getInputStream(entry));
-                } else if (!storageManager.exists(path, PROTECTED_RESOURCE)) {
-                    storageManager.createDirectory(path, PROTECTED_RESOURCE);
+                if (path.startsWith(RESOURCES_DIR)) {
+                    String resourcePath = componentId + path.substring(RESOURCES_DIR.length());
+                    if (entry.isDirectory()) {
+                        storageManager.createResourceDirectory(resourcePath);
+                    } else {
+                        storageManager.saveResourceFile(resourcePath, zip.getInputStream(entry));
+                    }
+                } else {
+                    String protectedPath = componentId + File.separator + path;
+                    if (entry.isDirectory()) {
+                        storageManager.createProtectedDirectory(protectedPath);
+                    } else {
+                        storageManager.saveProtectedFile(protectedPath, zip.getInputStream(entry));
+                    }
                 }
             }
         } catch (ApsSystemException | IOException ex) {
@@ -143,11 +201,9 @@ public class ComponentInstaller implements ServletContextAware {
         }
     }
 
-    private void installComponent(ComponentInstallationJob job) {
+    private void updateDatabase(ComponentDescriptor component) {
 
         try {
-
-            Component component = getComponentDefinition(job.getComponent());
 
             SystemInstallationReport systemInstallationReport = initializerManager.getCurrentReport();
 
@@ -164,21 +220,19 @@ public class ComponentInstaller implements ServletContextAware {
         }
     }
 
-    private Component getComponentDefinition(String componentCode) throws ApsSystemException {
+    private ComponentDescriptor parseComponentDescriptor(String componentCode) {
 
-        String componentDefinitionPath = COMPONENTS_DIR + File.separator
-                + componentCode + File.separator + "component.xml";
+        String componentDefinitionPath = componentCode + File.separator + "component.xml";
 
-        if (!storageManager.exists(componentDefinitionPath, PROTECTED_RESOURCE)) {
-            throw new InstallationException("component.xml not found for " + componentCode);
-        }
+        try {
+            if (!storageManager.existsProtected(componentDefinitionPath)) {
+                throw new InstallationException("component.xml not found for " + componentCode);
+            }
 
-        try (InputStream in = storageManager.getStream(componentDefinitionPath, PROTECTED_RESOURCE)) {
-            Document document = new SAXBuilder().build(in);
-            Component component = new Component(document.getRootElement(), new HashMap<>());
-            component.getEnvironments().replaceAll((key, value)
-                    -> new DigitalExchangeComponentEnvironment(storageManager, value));
-            return component;
+            try (InputStream in = storageManager.getProtectedStream(componentDefinitionPath)) {
+                Document document = new SAXBuilder().build(in);
+                return new ComponentDescriptor(document.getRootElement(), storageManager);
+            }
         } catch (Throwable t) {
             logger.error("Error during component defintion parsing", t);
             throw new InstallationException("Unable to parse component.xml for " + componentCode);

@@ -26,6 +26,7 @@ import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponen
 
 public class DigitalExchangeComponentListProcessor extends RequestListProcessor<DigitalExchangeComponent> {
 
+    private static final String ID = "id";
     private static final String NAME = "name";
     private static final String LAST_UPDATE = "lastUpdate";
     private static final String VERSION = "version";
@@ -45,6 +46,8 @@ public class DigitalExchangeComponentListProcessor extends RequestListProcessor<
     protected Function<Filter, Predicate<DigitalExchangeComponent>> getPredicates() {
         return (filter) -> {
             switch (filter.getAttribute()) {
+                case ID:
+                    return c -> FilterUtils.filterString(filter, c::getId);
                 case NAME:
                     return c -> FilterUtils.filterString(filter, c::getName);
                 case LAST_UPDATE:

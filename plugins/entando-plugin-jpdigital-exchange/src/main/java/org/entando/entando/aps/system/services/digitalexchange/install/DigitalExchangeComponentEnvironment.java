@@ -17,15 +17,19 @@ import java.util.List;
 import java.util.Map;
 import org.entando.entando.aps.system.init.model.ComponentEnvironment;
 import org.entando.entando.aps.system.init.model.IPostProcess;
-import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.springframework.core.io.Resource;
 
+/**
+ * ComponentEnvironment able to retrieve the SQL resources from the
+ * ComponentStorageManager instead of the classpath (as done by the
+ * implementation in core).
+ */
 public class DigitalExchangeComponentEnvironment implements ComponentEnvironment {
 
-    private final IStorageManager storageManager;
+    private final ComponentStorageManager storageManager;
     private final ComponentEnvironment componentEnvironment;
 
-    public DigitalExchangeComponentEnvironment(IStorageManager storageManager, ComponentEnvironment componentEnvironment) {
+    public DigitalExchangeComponentEnvironment(ComponentStorageManager storageManager, ComponentEnvironment componentEnvironment) {
         this.storageManager = storageManager;
         this.componentEnvironment = componentEnvironment;
     }

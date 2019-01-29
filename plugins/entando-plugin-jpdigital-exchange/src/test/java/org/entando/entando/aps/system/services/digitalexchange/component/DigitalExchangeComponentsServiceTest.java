@@ -13,10 +13,12 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.component;
 
-import java.util.Arrays;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
+import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
+import org.entando.entando.aps.system.init.IInitializerManager;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClientMocker;
 import org.entando.entando.aps.system.services.digitalexchange.model.ResilientPagedMetadata;
@@ -39,9 +41,19 @@ public class DigitalExchangeComponentsServiceTest {
 
     private static final String[] COMPONENTS_1 = new String[]{"A", "B", "C", "F", "I", "M", "N", "P"};
     private static final String[] COMPONENTS_2 = new String[]{"D", "E", "G", "H", "L", "O"};
+    private static final String INSTALLED_COMPONENT = "A";
 
     @Mock
     private DigitalExchangesService exchangesService;
+
+    @Mock
+    private IInitializerManager initializerManager;
+
+    @Mock
+    private SystemInstallationReport installationReport;
+
+    @Mock
+    private ComponentInstallationReport componentInstallationReport;
 
     private DigitalExchangeComponentsServiceImpl service;
 
@@ -54,10 +66,14 @@ public class DigitalExchangeComponentsServiceTest {
 
         DigitalExchangesClient mockedClient = clientMocker.build();
 
+        when(initializerManager.getCurrentReport()).thenReturn(installationReport);
+        when(installationReport.getComponentReport(INSTALLED_COMPONENT, false))
+                .thenReturn(componentInstallationReport);
+
         when(exchangesService.findById(DE_1_ID)).thenReturn(getDE1());
         when(exchangesService.findById(DE_2_ID)).thenReturn(getDE2());
 
-        service = new DigitalExchangeComponentsServiceImpl(mockedClient, exchangesService);
+        service = new DigitalExchangeComponentsServiceImpl(mockedClient, exchangesService, initializerManager);
     }
 
     @Test
@@ -124,6 +140,13 @@ public class DigitalExchangeComponentsServiceTest {
         public PageVerifier(ResilientPagedMetadata<DigitalExchangeComponent> pagedMetadata) {
             this.pagedMetadata = pagedMetadata;
             assertThat(pagedMetadata.getTotalItems()).isEqualTo(COMPONENTS_1.length + COMPONENTS_2.length);
+            pagedMetadata.getBody().forEach(component -> {
+                if (INSTALLED_COMPONENT.equals(component.getId())) {
+                    assertThat(component.isInstalled()).isTrue();
+                } else {
+                    assertThat(component.isInstalled()).isFalse();
+                }
+            });
         }
 
         public PageVerifier contains(Object... values) {

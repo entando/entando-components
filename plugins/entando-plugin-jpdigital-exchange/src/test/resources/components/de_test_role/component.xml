@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
-    <code>test_widget</code>
-    <description>Test Widget</description>
+    <code>de_test_role</code>
+    <description>DE Test Role</description>
     <dependencies>
     </dependencies>
     <installation>
@@ -16,15 +16,16 @@
         <environment code="test">
             <defaultSqlResources>
                 <datasource name="portDataSource">
-                    test_widget/port_data_test.sql
                 </datasource>
             </defaultSqlResources>
         </environment>
+        <execution>
+            <op>#call('createRole', 'de_test_role/data/de_test_role.json')</op>
+        </execution>
     </installation>
     <uninstallation>
         <sqlResources>
             <datasource name="portDataSource">
-                test_widget/port_uninstallation.sql
             </datasource>
             <datasource name="servDataSource">
             </datasource>

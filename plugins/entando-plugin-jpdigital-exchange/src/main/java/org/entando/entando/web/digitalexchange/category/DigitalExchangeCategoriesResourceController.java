@@ -18,6 +18,7 @@ import org.entando.entando.aps.system.services.digitalexchange.category.DigitalE
 import org.entando.entando.aps.system.services.digitalexchange.model.ResilientListWrapper;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,12 +32,12 @@ public class DigitalExchangeCategoriesResourceController implements DigitalExcha
     }
 
     @Override
-    public SimpleRestResponse<List<String>> getCategories() {
+    public ResponseEntity<SimpleRestResponse<List<String>>> getCategories() {
         ResilientListWrapper<String> categoriesResult = service.getCategories();
 
         SimpleRestResponse<List<String>> response = new SimpleRestResponse<>(categoriesResult.getList());
         response.setErrors(categoriesResult.getErrors());
 
-        return response;
+        return ResponseEntity.ok(response);
     }
 }

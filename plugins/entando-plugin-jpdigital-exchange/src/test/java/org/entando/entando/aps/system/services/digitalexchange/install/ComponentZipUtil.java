@@ -25,7 +25,20 @@ import org.apache.commons.io.IOUtils;
 public class ComponentZipUtil {
 
     public static File getTestWidgetZip() {
-        return ComponentZipUtil.zip("test_widget", "component.xml", "port_data_test.sql", "port_uninstallation.sql");
+        return ComponentZipUtil.zip("de_test_widget", "component.xml", "data/de_test_widget.json");
+    }
+
+    public static File getTestPageModelZip() {
+        return ComponentZipUtil.zip("de_test_page_model", "component.xml", "data/port_data_test.sql",
+                "data/de_test_page_model.json", "data/de_test_label.json", "resources/test.css");
+    }
+
+    public static File getTestRoleZip() {
+        return ComponentZipUtil.zip("de_test_role", "component.xml", "data/de_test_role.json");
+    }
+
+    public static File getTestGroupZip() {
+        return ComponentZipUtil.zip("de_test_group", "component.xml", "data/de_test_group.json");
     }
 
     /**
@@ -40,14 +53,10 @@ public class ComponentZipUtil {
             try (FileOutputStream fos = new FileOutputStream(temporaryZip);
                     ZipOutputStream zos = new ZipOutputStream(fos)) {
 
-                zos.putNextEntry(new ZipEntry(component + "/"));
-                zos.closeEntry();
-
                 for (String file : files) {
-                    String entryName = component + "/" + file;
-                    zos.putNextEntry(new ZipEntry(entryName));
+                    zos.putNextEntry(new ZipEntry(file));
 
-                    String filePath = "components/" + entryName;
+                    String filePath = "components/" + component + "/" + file;
 
                     try (InputStream in = ComponentZipUtil.class.getClassLoader().getResourceAsStream(filePath)) {
                         IOUtils.copy(in, zos);

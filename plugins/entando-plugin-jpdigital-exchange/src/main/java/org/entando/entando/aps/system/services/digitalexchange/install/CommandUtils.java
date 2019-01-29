@@ -13,9 +13,15 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
-public interface DigitalExchangeComponentInstallationService {
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 
-    ComponentInstallationJob install(String exchangeId, String componentId, String username);
+/**
+ * Utility methods used to register custom SpEL functions.
+ */
+public class CommandUtils {
 
-    ComponentInstallationJob checkInstallationStatus(String componentId);
+    public static BindingResult getBindingResult() {
+        return new DataBinder(null).getBindingResult();
+    }
 }
