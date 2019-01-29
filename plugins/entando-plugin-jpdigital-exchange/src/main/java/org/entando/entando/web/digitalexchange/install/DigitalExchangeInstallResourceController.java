@@ -53,7 +53,23 @@ public class DigitalExchangeInstallResourceController implements DigitalExchange
     }
 
     @Override
+    public ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> uninstall(String exchangeId, String componentId, HttpServletRequest request) throws URISyntaxException {
+
+        UserDetails currentUser = (UserDetails) request.getSession().getAttribute("user");
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        ComponentInstallationJob job = installationService.uninstall(exchangeId, componentId, currentUser.getUsername());
+
+        return ResponseEntity.created(
+                new URI("/plugins/digitalExchange/uninstall/" + componentId))
+                .body(new SimpleRestResponse<>(job));
+    }
+
+    @Override
     public ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> getLastJob(@PathVariable("component") String componentId) {
         return ResponseEntity.ok(new SimpleRestResponse<>(installationService.checkInstallationStatus(componentId)));
     }
+
 }

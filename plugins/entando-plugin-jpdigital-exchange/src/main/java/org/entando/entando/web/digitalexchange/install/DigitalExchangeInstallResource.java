@@ -28,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Api(tags = {"digital-exchange", "installation"})
@@ -39,7 +40,7 @@ public interface DigitalExchangeInstallResource {
         @ApiResponse(code = 201, message = "Created")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @GetMapping(value = "{exchange}/install/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "{exchange}/install/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> install(@PathVariable("exchange") String digitalExchangeId,
             @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
 
@@ -50,4 +51,13 @@ public interface DigitalExchangeInstallResource {
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/install/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> getLastJob(@PathVariable("component") String componentId);
+
+    @ApiOperation(value = "Starts component remove job ")
+    @ApiResponses({
+            @ApiResponse( code = 201, message = "Created")
+    })
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @PostMapping(value = "{exchange}/uninstall/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> uninstall(@PathVariable("exchange") String digitalExchangeId,
+           @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
 }

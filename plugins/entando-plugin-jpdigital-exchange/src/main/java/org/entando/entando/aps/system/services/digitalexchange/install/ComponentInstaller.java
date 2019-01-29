@@ -78,6 +78,7 @@ public class ComponentInstaller implements ServletContextAware {
 
     public void install(ComponentInstallationJob job, Consumer<ComponentInstallationJob> updater) throws InstallationException {
 
+        //TODO defines steps and percentages as Enums
         double steps = 6;
         int currentStep = 0;
         
@@ -106,6 +107,37 @@ public class ComponentInstaller implements ServletContextAware {
         job.setStatus(InstallationStatus.COMPLETED);
         job.setEnded(new Date());
         updater.accept(job);
+    }
+
+    public void uninstall(ComponentInstallationJob job, Consumer<ComponentInstallationJob> updater) throws InstallationException {
+
+        double steps = 3;
+        int currentStep = 0;
+
+//        fillComponentInfo(job);
+//        job.setProgress(++currentStep / steps);
+//        updater.accept(job);
+
+        ComponentDescriptor component = parseComponentDescriptor(job.getComponentId());
+        job.setProgress(++currentStep / steps);
+        updater.accept(job);
+
+        //TODO update System initializer
+//        updateDatabase(component);
+//        job.setProgress(++currentStep / steps);
+//        updater.accept(job);
+
+        component.getUninstallationCommands().forEach(commandExecutor::execute);
+        job.setProgress(++currentStep / steps);
+        updater.accept(job);
+
+        //TODO add an entry in the digital_exchange_installation database for the uninstall
+        reloadSystem();
+        job.setProgress(1);
+        job.setStatus(InstallationStatus.COMPLETED);
+        job.setEnded(new Date());
+        updater.accept(job);
+
     }
 
     private void fillComponentInfo(ComponentInstallationJob job) {

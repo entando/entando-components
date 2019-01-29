@@ -73,6 +73,33 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         return job;
     }
 
+    @Override
+    public ComponentInstallationJob uninstall(String exchangeId, String componentId, String username) {
+
+        checkIfAlreadyRunning(componentId);
+
+        DigitalExchange digitalExchange = exchangesService.findById(exchangeId);
+
+        ComponentInstallationJob job = createNewJob(digitalExchange, componentId);
+        job.setUser(username);
+        dao.createComponentInstallationJob(job);
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                componentInstaller.uninstall(job, dao::updateComponentInstallationJob);
+            } catch (Throwable ex) {
+                logger.error("Error while installing " + componentId, ex);
+                job.setStatus(InstallationStatus.ERROR);
+                job.setErrorMessage(ex.getMessage());
+                job.setEnded(new Date());
+                dao.updateComponentInstallationJob(job);
+            }
+        });
+
+        return job;
+    }
+
+
     private synchronized void checkIfAlreadyRunning(String componentId) {
 
         dao.findLast(componentId).ifPresent(job -> {

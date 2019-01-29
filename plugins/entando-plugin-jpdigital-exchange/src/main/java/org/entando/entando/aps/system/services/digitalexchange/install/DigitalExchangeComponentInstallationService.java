@@ -17,5 +17,7 @@ public interface DigitalExchangeComponentInstallationService {
 
     ComponentInstallationJob install(String exchangeId, String componentId, String username);
 
+    ComponentInstallationJob uninstall(String exchangeId, String componentId, String username);
+
     ComponentInstallationJob checkInstallationStatus(String componentId);
 }

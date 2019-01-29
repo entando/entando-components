@@ -54,6 +54,7 @@ import org.junit.After;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -161,7 +162,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
     }
 
     @Test
-    public void shouldInstallWidget() throws Exception {
+    public void shouldInstallAndUninstallWidget() throws Exception {
 
         String componentCode = "de_test_widget";
 
@@ -169,8 +170,12 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         assertThat(widgetService.getWidget(componentCode)).isNotNull();
 
+        uninstallAndCheckForCompletion(componentCode);
+
         widgetService.removeWidget(componentCode);
+
     }
+
 
     @Test
     public void shouldInstallPageModel() throws Exception {
@@ -214,7 +219,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
     private void installAndCheckForCompletion(String componentId) throws Exception {
 
-        ResultActions result = createAuthRequest(get(BASE_URL + "/{exchange}/install/{component}", DE_1_ID, componentId)).execute();
+        ResultActions result = createAuthRequest(post(BASE_URL + "/{exchange}/install/{component}", DE_1_ID, componentId)).execute();
 
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty())
@@ -225,7 +230,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         InstallationStatus status = InstallationStatus.CREATED;
         int attempts = 0;
         while (status != InstallationStatus.COMPLETED && attempts < 10) {
-            status = checkJobStatus(componentId);
+            status = checkInstallJobStatus(componentId);
             assertThat(status).isNotEqualTo(InstallationStatus.ERROR);
             attempts++;
         }
@@ -239,7 +244,33 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                 .matches(cr -> cr.getStatus() == SystemInstallationReport.Status.OK);
     }
 
-    private InstallationStatus checkJobStatus(String componentId) throws Exception {
+    private void uninstallAndCheckForCompletion(String componentId) throws Exception {
+        ResultActions result = createAuthRequest(post(BASE_URL + "/{exchange}/uninstall/{component}", DE_1_ID, componentId)).execute();
+
+        result.andExpect(jsonPath("$.errors").isEmpty())
+                .andExpect(jsonPath("$.metaData").isEmpty())
+                .andExpect(jsonPath("$.payload").isNotEmpty());
+
+        parseJob(result);
+
+        InstallationStatus status = InstallationStatus.CREATED;
+        int attempts = 0;
+        while (status != InstallationStatus.COMPLETED && attempts < 10) {
+            status = checkUninstallJobStatus(componentId);
+            assertThat(status).isNotEqualTo(InstallationStatus.ERROR);
+            attempts++;
+        }
+
+        assertThat(status).isEqualTo(InstallationStatus.COMPLETED);
+
+        SystemInstallationReport report = initializerManager.getCurrentReport();
+
+        assertThat(report.getComponentReport(componentId, false))
+                .isNotNull()
+                .matches(cr -> cr.getStatus() == SystemInstallationReport.Status.OK);
+    }
+
+    private InstallationStatus checkInstallJobStatus(String componentId) throws Exception {
 
         try {
             Thread.sleep(500);
@@ -257,6 +288,26 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         return job.getStatus();
     }
+
+    private InstallationStatus checkUninstallJobStatus(String componentId) throws Exception {
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ignored) {
+        }
+
+        ResultActions result = createAuthRequest(get(BASE_URL + "/uninstall/{componentId}", componentId)).execute();
+
+        result.andExpect(jsonPath("$.errors").isEmpty())
+                .andExpect(jsonPath("$.metaData").isEmpty());
+
+        ComponentInstallationJob job = parseJob(result);
+
+        assertThat(job.getProgress()).isBetween(0d, 1d);
+
+        return job.getStatus();
+    }
+
 
     private ComponentInstallationJob parseJob(ResultActions result) throws IOException {
         String jsonResponse = result.andReturn().getResponse().getContentAsString();
