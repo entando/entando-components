@@ -60,6 +60,9 @@ public class CommandExecutor implements ApplicationContextAware {
         }
 
         try (InputStream in = getClass().getClassLoader().getResourceAsStream("component/plugins/digitalExchange/commands.xml")) {
+            if(in == null) {
+                throw new BeanInitializationException("Unable to load installation commands. File commands.xml not found");
+            }
             commands = JAXB.unmarshal(in, Commands.class);
         } catch (IOException ex) {
             throw new BeanInitializationException("Unable to load installation commands", ex);

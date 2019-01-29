@@ -102,7 +102,10 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
                     job.setComponentName(rs.getString(COL_COMPONENT_NAME));
                     job.setComponentVersion(COL_COMPONENT_VERSION);
                     job.setStarted(new Date(rs.getTimestamp(COL_STARTED_AT).getTime()));
-                    job.setEnded(new Date(rs.getTimestamp(COL_ENDED_AT).getTime()));
+                    Timestamp ended = rs.getTimestamp(COL_ENDED_AT);
+                    if (ended != null) {
+                        job.setEnded(new Date(ended.getTime()));
+                    }
                     job.setUser(rs.getString(COL_STARTED_BY));
                     job.setProgress(rs.getInt(COL_PROGRESS));
                     job.setStatus(InstallationStatus.valueOf(rs.getString(COL_STATUS)));
