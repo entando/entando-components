@@ -15,5 +15,9 @@
         </property>
         <property name="fallbackToSystemLocale" value="true" />
     </bean>
-    
+
+    <bean id="PageModelService" class="org.entando.entando.aps.system.services.pagemodel.DigitalExchangePageModelService" >
+        <constructor-arg name="pageModelManager" ref="PageModelManager"/>
+        <constructor-arg name="dtoBuilder" ref="PageModelDtoBuilder"/>
+    </bean>
 </beans>
