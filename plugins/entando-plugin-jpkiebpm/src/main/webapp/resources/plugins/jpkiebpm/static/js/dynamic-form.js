@@ -12,7 +12,10 @@ org.entando.form.DynamicForm = function (jKIE) {
     this.json.method = jKIE.mainForm.method;
     this.json.action = jKIE.mainForm.action;
     this.json.html = new Array();
-
+    
+    
+    // alert("jKIE.mainForm:" + JSON.stringify(jKIE.mainForm));
+    
     var obj = {
         "id": "processId",
         "name": "processId",
