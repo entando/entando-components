@@ -49,6 +49,31 @@
   .DashboardWidgetConfigPage__tabs-container .nav.nav-tabs li {
     background-color: #f8f8f8; }
 
+.Steps__step a {
+  cursor: default !important; }
+
+.Stepper .wizard-pf-main {
+  padding: 3em; }
+
+.Stepper .wizard-pf-row {
+  height: none;
+  max-height: none;
+  width: 100%; }
+
+.Stepper__data-container {
+  border: 0px solid; }
+
+.Stepper__data-contents {
+  border: 0px solid red;
+  height: 670px; }
+
+.Stepper__btn-container {
+  border: 0px solid;
+  margin-top: 2em; }
+
+.Stepper__btn-back {
+  margin-right: 3em; }
+
 .ServerNameForm__input-group {
   width: 100%;
   border: 0px solid red; }
@@ -172,9 +197,6 @@
 .DashboardConfigPage__btn-tests {
   margin-left: 2em; }
 
-.ChartSteps__step a {
-  cursor: default !important; }
-
 .ChartFirstStep__container-datasource {
   margin-top: 2em; }
 
@@ -230,8 +252,11 @@
 
 .GeneralSettings {
   padding: 3em; }
-  .GeneralSettings .bootstrap-switch-label {
-    visibility: hidden; }
+  .GeneralSettings .row {
+    border: 0 solid; }
+  .GeneralSettings__col {
+    border: 0 solid red;
+    padding-top: 5px; }
   .GeneralSettings .row:not(:first-child) {
     padding: 1em; }
   .GeneralSettings .row:last-child {
@@ -241,35 +266,35 @@
     font-size: 16px;
     font-weight: bold; }
   .GeneralSettings__field-form-group.form-group {
-    border: 0 solid;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start; }
+    border: 0 solid blue;
+    display: inline-block;
+    vertical-align: bottom; }
   .GeneralSettings__field-form-group input[type=number]::-webkit-inner-spin-button {
     opacity: 1;
     height: 2.5em; }
   .GeneralSettings__field-form-group input[type=number] {
     text-align: center; }
-  .GeneralSettings__field-form-group.form-group .control-label {
-    margin-top: 5px;
-    margin-right: 30px; }
+  .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-height.control-label {
+    margin-right: 27px; }
   .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-width.control-label {
-    margin-right: 31px; }
+    margin-right: 30px; }
+  .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-top.control-label {
+    margin-right: 30px; }
   .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-bottom.control-label {
+    margin-right: 7px; }
+  .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-right.control-label {
     margin-right: 8px; }
   .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-left.control-label {
-    margin-right: 38px; }
+    margin-right: 15px; }
   .GeneralSettings__field-form-group.form-group label.GeneralSettings__field-thickness.control-label {
-    margin-right: 10px; }
+    margin-right: 6px; }
   .GeneralSettings__input-number {
     border-top: 1px solid #bbb;
     border-left: 1px solid #bbb;
     border-bottom: 1px solid #bbb;
     border-right: 0;
-    width: 4em;
-    height: 2.5em;
-    margin-left: 1em; }
+    width: 3.5em;
+    height: 2.5em; }
   .GeneralSettings__input-number:focus {
     border-top: 1px solid #bbb;
     border-left: 1px solid #bbb;
@@ -285,8 +310,11 @@
     border-right: 1px solid #bbb;
     border-bottom: 1px solid #bbb;
     padding-top: 5px;
-    width: 2em;
-    margin-left: -1px; }
+    padding-bottom: 6px; }
+  .GeneralSettings__error.help-block {
+    position: relative;
+    top: 30px;
+    left: -105px; }
   .GeneralSettings__general-settings-container.DONUT_CHART {
     border: 0 solid red;
     position: absolute;
@@ -312,8 +340,6 @@
 
 .SettingsChart {
   padding: 3em; }
-  .SettingsChart .bootstrap-switch-label {
-    visibility: hidden; }
   .SettingsChart .row:not(:first-child) {
     padding: 1em; }
   .SettingsChart__col {

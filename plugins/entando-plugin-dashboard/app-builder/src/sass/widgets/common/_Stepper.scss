@@ -1,0 +1,28 @@
+.Stepper {
+  .wizard-pf-main {
+    padding: 3em;
+  }
+
+  .wizard-pf-row {
+      height: none;
+      max-height: none;
+      width: 100%;
+  }
+
+  &__data-container {
+    border: 0px solid;
+  }
+
+  &__data-contents {
+    border: 0px solid red;
+    height: 670px;
+  }
+
+  &__btn-container {
+    border: 0px solid;
+    margin-top: 2em;
+  }
+  &__btn-back {
+    margin-right: 3em;
+  }
+}

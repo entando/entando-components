@@ -41,8 +41,10 @@ const renderField = ({
         dir={direction}
         disabled={disabled}
       />
-      <div className="GeneralSettings__input-number-addon">PX</div>
-      {touched && error && <span className="help-block">{error}</span>}
+      <span className="GeneralSettings__input-number-addon">PX</span>
+      {touched && error && (
+        <span className="GeneralSettings__error help-block">{error}</span>
+      )}
     </FormGroup>
   );
 };
@@ -58,7 +60,7 @@ const gaugeSettings = chart => (
         </Col>
       </Row>
       <Row>
-        <Col xs={6} className="GeneralSettings__col">
+        <Col xs={12} className="GeneralSettings__col">
           <Row>
             <Col xs={6}>
               <Field
@@ -103,7 +105,7 @@ const pieSettings = chart => (
         </Col>
       </Row>
       <Row>
-        <Col xs={6} className="GeneralSettings__col">
+        <Col xs={12} className="GeneralSettings__col">
           <Row>
             <Col xs={6}>
               <FormGroup className="GeneralSettings__form-group">
@@ -134,8 +136,6 @@ const GeneralSettings = ({typeChart, chart}) => {
               <FormattedMessage id="plugin.chart.generalSettings" />
             </label>
           </Col>
-        </Row>
-        <Row>
           <Col xs={4} className="GeneralSettings__col">
             <FormGroup className="GeneralSettings__form-group">
               <ControlLabel>
@@ -145,7 +145,7 @@ const GeneralSettings = ({typeChart, chart}) => {
               </ControlLabel>
             </FormGroup>
           </Col>
-          <Col xs={4} className="GeneralSettings__col">
+          <Col xs={8} className="GeneralSettings__col">
             <FormGroup className="GeneralSettings__form-group">
               <ControlLabel>
                 <strong>
@@ -154,8 +154,6 @@ const GeneralSettings = ({typeChart, chart}) => {
               </ControlLabel>
             </FormGroup>
           </Col>
-        </Row>
-        <Row>
           <Col xs={4} className="GeneralSettings__col">
             <Field
               type="number"
@@ -168,36 +166,33 @@ const GeneralSettings = ({typeChart, chart}) => {
               className="GeneralSettings__field-height"
             />
           </Col>
-          <Col xs={6} className="GeneralSettings__col">
-            <Row>
-              <Col xs={6}>
-                <Field
-                  type="number"
-                  component={renderField}
-                  name="padding.top"
-                  label="plugin.chart.top"
-                  min="0"
-                  max="9999"
-                  direction="rtl"
-                  className="GeneralSettings__field-top"
-                />
-              </Col>
-              <Col xs={6}>
-                <Field
-                  type="number"
-                  component={renderField}
-                  name="padding.right"
-                  label="plugin.chart.right"
-                  min="0"
-                  max="9999"
-                  direction="rtl"
-                  className="GeneralSettings__field-right"
-                />
-              </Col>
-            </Row>
+          <Col xs={8} className="GeneralSettings__col">
+            <Col xs={6}>
+              <Field
+                type="number"
+                component={renderField}
+                name="padding.top"
+                label="plugin.chart.top"
+                min="0"
+                max="9999"
+                direction="rtl"
+                className="GeneralSettings__field-top"
+              />
+            </Col>
+            <Col xs={6}>
+              <Field
+                type="number"
+                component={renderField}
+                name="padding.right"
+                label="plugin.chart.right"
+                min="0"
+                max="9999"
+                direction="rtl"
+                className="GeneralSettings__field-right"
+              />
+            </Col>
           </Col>
-        </Row>
-        <Row>
+
           <Col xs={4} className="GeneralSettings__col">
             <Field
               type="number"
@@ -210,37 +205,34 @@ const GeneralSettings = ({typeChart, chart}) => {
               className="GeneralSettings__field-width"
             />
           </Col>
-          <Col xs={6} className="GeneralSettings__col">
-            <Row>
-              <Col xs={6}>
-                <Field
-                  type="number"
-                  component={renderField}
-                  name="padding.bottom"
-                  label="plugin.chart.bottom"
-                  min="0"
-                  max="9999"
-                  direction="rtl"
-                  className="GeneralSettings__field-bottom"
-                />
-              </Col>
-              <Col xs={6}>
-                <Field
-                  type="number"
-                  component={renderField}
-                  name="padding.left"
-                  label="plugin.chart.left"
-                  min="0"
-                  max="9999"
-                  direction="rtl"
-                  className="GeneralSettings__field-left"
-                />
-              </Col>
-            </Row>
+          <Col xs={8} className="GeneralSettings__col">
+            <Col xs={6}>
+              <Field
+                type="number"
+                component={renderField}
+                name="padding.bottom"
+                label="plugin.chart.bottom"
+                min="0"
+                max="9999"
+                direction="rtl"
+                className="GeneralSettings__field-bottom"
+              />
+            </Col>
+            <Col xs={6}>
+              <Field
+                type="number"
+                component={renderField}
+                name="padding.left"
+                label="plugin.chart.left"
+                min="0"
+                max="9999"
+                direction="rtl"
+                className="GeneralSettings__field-left"
+              />
+            </Col>
           </Col>
-        </Row>
-        <Row>
-          <Col xs={4}>
+
+          <Col xs={12}>
             <Field
               type="number"
               component={renderField}

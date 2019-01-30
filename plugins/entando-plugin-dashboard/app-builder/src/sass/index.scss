@@ -3,6 +3,8 @@
 @import 'widgets/common/Info';
 @import 'widgets/common/DashboardWidgetTitle';
 @import 'widgets/common/DashboardWidgetConfigPage';
+@import 'widgets/common/Steps';
+@import 'widgets/common/Stepper';
 @import 'widgets/common/form/ServerNameForm';
 @import 'widgets/common/form/DatasourceForm';
 @import 'widgets/dashboard-table/DashboardTableForm';
@@ -14,7 +16,6 @@
 @import 'dashboard-config/DashboardConfigDatasourceStatus';
 @import 'dashboard-config/DashboardConfigPage';
 
-@import 'widgets/charts/common/ChartSteps';
 @import 'widgets/charts/common/ChartFirstStep';
 @import 'widgets/charts/common/ColumnToken';
 @import 'widgets/charts/common/FieldArrayDropDownMultiple';
