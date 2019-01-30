@@ -14,6 +14,10 @@
             <value>@groupController.addGroup(@modelParser.parse('%s', T(org.entando.entando.web.group.model.GroupRequest)), #bindingResult())</value>
         </entry>
         <entry>
+            <key>deleteGroup</key>
+            <value>@groupController.deleteGroup(@modelParser.parse('%s'))</value>
+        </entry>
+        <entry>
             <key>createRole</key>
             <value>@roleController.addRole(@modelParser.parse('%s', T(org.entando.entando.web.role.model.RoleRequest)), #bindingResult())</value>
         </entry>
