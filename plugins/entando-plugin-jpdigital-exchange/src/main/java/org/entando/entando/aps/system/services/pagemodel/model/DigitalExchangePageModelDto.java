@@ -13,6 +13,9 @@
  */
 package org.entando.entando.aps.system.services.pagemodel.model;
 
+import java.util.Objects;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 public class DigitalExchangePageModelDto extends PageModelDto {
 
     private String digitalExchange;
@@ -32,5 +35,37 @@ public class DigitalExchangePageModelDto extends PageModelDto {
 
     public void setDigitalExchange(String digitalExchange) {
         this.digitalExchange = digitalExchange;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DigitalExchangePageModelDto that = (DigitalExchangePageModelDto) o;
+        return super.equals(o)
+                && Objects.equals(digitalExchange, that.digitalExchange);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCode(), getDescr(), getConfiguration(), getMainFrame(), getPluginCode(), getTemplate(), digitalExchange, getReferences());
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("code", getCode())
+                .append("descr", getDescr())
+                .append("configuration", getConfiguration())
+                .append("mainFrame", getMainFrame())
+                .append("pluginCode", getPluginCode())
+                .append("template", getTemplate())
+                .append("digitalExchange", digitalExchange)
+                .append("references", getReferences())
+                .toString();
     }
 }

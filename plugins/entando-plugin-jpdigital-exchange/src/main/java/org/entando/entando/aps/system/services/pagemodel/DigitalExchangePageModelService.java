@@ -17,6 +17,7 @@ import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.pagemodel.model.DigitalExchangePageModelDto;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
@@ -32,9 +33,9 @@ public class DigitalExchangePageModelService extends PageModelService {
     }
 
     @Override
-    public PagedMetadata<PageModelDto> getAllPageModels(RestListRequest restRequest) {
+    public PagedMetadata<PageModelDto> getPageModels(RestListRequest restListReq, Map<String, String> requestParams) {
 
-        PagedMetadata<PageModelDto> pageModels = super.getLocalPageModels(restRequest);
+        PagedMetadata<PageModelDto> pageModels = super.getPageModels(restListReq, requestParams);
 
         List<PageModelDto> dePageModels = new ArrayList<>();
 
