@@ -54,6 +54,7 @@ import org.junit.After;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -214,7 +215,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
     private void installAndCheckForCompletion(String componentId) throws Exception {
 
-        ResultActions result = createAuthRequest(get(BASE_URL + "/{exchange}/install/{component}", DE_1_ID, componentId)).execute();
+        ResultActions result = createAuthRequest(post(BASE_URL + "/{exchange}/install/{component}", DE_1_ID, componentId)).execute();
 
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty())
