@@ -19,6 +19,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class DigitalExchangePageModelDto extends PageModelDto {
 
     private String digitalExchange;
+    private boolean installed;
+
+    public DigitalExchangePageModelDto() {
+    }
 
     public DigitalExchangePageModelDto(PageModelDto other) {
         super(other);
@@ -37,6 +41,14 @@ public class DigitalExchangePageModelDto extends PageModelDto {
         this.digitalExchange = digitalExchange;
     }
 
+    public boolean isInstalled() {
+        return installed;
+    }
+
+    public void setInstalled(boolean installed) {
+        this.installed = installed;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -47,12 +59,13 @@ public class DigitalExchangePageModelDto extends PageModelDto {
         }
         DigitalExchangePageModelDto that = (DigitalExchangePageModelDto) o;
         return super.equals(o)
-                && Objects.equals(digitalExchange, that.digitalExchange);
+                && Objects.equals(digitalExchange, that.digitalExchange)
+                && Objects.equals(installed, that.installed);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCode(), getDescr(), getConfiguration(), getMainFrame(), getPluginCode(), getTemplate(), digitalExchange, getReferences());
+        return Objects.hash(getCode(), getDescr(), getConfiguration(), getMainFrame(), getPluginCode(), getTemplate(), digitalExchange, installed, getReferences());
     }
 
     @Override
@@ -65,6 +78,7 @@ public class DigitalExchangePageModelDto extends PageModelDto {
                 .append("pluginCode", getPluginCode())
                 .append("template", getTemplate())
                 .append("digitalExchange", digitalExchange)
+                .append("installed", installed)
                 .append("references", getReferences())
                 .toString();
     }

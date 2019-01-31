@@ -19,12 +19,18 @@ public class DigitalExchangePageModelDtoBuilder extends PageModelDtoBuilder {
 
     @Override
     protected PageModelDto toDto(PageModel src) {
-        DigitalExchangePageModelDto dest = new DigitalExchangePageModelDto(super.toDto(src));
+
+        PageModelDto pageModelDto = super.toDto(src);
 
         if (src instanceof DigitalExchangePageModel) {
-            dest.setDigitalExchange(((DigitalExchangePageModel) src).getDigitalExchange());
+            DigitalExchangePageModelDto dePageModelDto = new DigitalExchangePageModelDto(pageModelDto);
+
+            dePageModelDto.setDigitalExchange(((DigitalExchangePageModel) src).getDigitalExchangeName());
+            dePageModelDto.setInstalled(((DigitalExchangePageModel) src).isInstalled());
+
+            return dePageModelDto;
         }
 
-        return dest;
+        return pageModelDto;
     }
 }

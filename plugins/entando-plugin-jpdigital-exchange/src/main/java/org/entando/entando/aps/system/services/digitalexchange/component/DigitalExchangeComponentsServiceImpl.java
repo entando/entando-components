@@ -13,20 +13,15 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.component;
 
-import java.util.List;
 import org.entando.entando.aps.system.init.IInitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
-import org.entando.entando.aps.system.services.digitalexchange.client.PagedDigitalExchangeCall;
 import org.entando.entando.aps.system.services.digitalexchange.model.ResilientPagedMetadata;
-import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.core.ParameterizedTypeReference;
 
 @Service
 public class DigitalExchangeComponentsServiceImpl implements DigitalExchangeComponentsService {
@@ -55,29 +50,5 @@ public class DigitalExchangeComponentsServiceImpl implements DigitalExchangeComp
         });
 
         return combinedResult;
-    }
-
-    private static class ComponentsCall extends PagedDigitalExchangeCall<DigitalExchangeComponent> {
-
-        private final DigitalExchangesService exchangesService;
-
-        public ComponentsCall(DigitalExchangesService exchangesService, RestListRequest requestList) {
-            super(requestList, new ParameterizedTypeReference<PagedRestResponse<DigitalExchangeComponent>>() {
-            }, "digitalExchange", "components");
-            this.exchangesService = exchangesService;
-        }
-
-        @Override
-        protected void preprocessResponse(String exchangeId, PagedRestResponse<DigitalExchangeComponent> response) {
-            if (response.getErrors().isEmpty()) {
-                String exchangeName = exchangesService.findById(exchangeId).getName();
-                response.getPayload().forEach(de -> de.setDigitalExchange(exchangeName));
-            }
-        }
-
-        @Override
-        protected RequestListProcessor<DigitalExchangeComponent> getRequestListProcessor(RestListRequest request, List<DigitalExchangeComponent> joinedList) {
-            return new DigitalExchangeComponentListProcessor(request, joinedList);
-        }
     }
 }

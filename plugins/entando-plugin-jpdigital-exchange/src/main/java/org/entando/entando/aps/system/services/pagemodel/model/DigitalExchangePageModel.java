@@ -21,15 +21,25 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class DigitalExchangePageModel extends PageModel {
 
-    private String digitalExchange;
+    private String digitalExchangeName;
+    private boolean installed;
 
     @XmlTransient
-    public String getDigitalExchange() {
-        return digitalExchange;
+    public String getDigitalExchangeName() {
+        return digitalExchangeName;
     }
 
-    public void setDigitalExchange(String digitalExchange) {
-        this.digitalExchange = digitalExchange;
+    public void setDigitalExchangeName(String digitalExchangeName) {
+        this.digitalExchangeName = digitalExchangeName;
+    }
+
+    @XmlTransient
+    public boolean isInstalled() {
+        return installed;
+    }
+
+    public void setInstalled(boolean installed) {
+        this.installed = installed;
     }
 
     @Override
@@ -41,7 +51,8 @@ public class DigitalExchangePageModel extends PageModel {
                 .append("mainFrame", getMainFrame())
                 .append("pluginCode", getPluginCode())
                 .append("template", getTemplate())
-                .append("digitalExchange", digitalExchange)
+                .append("digitalExchangeName", digitalExchangeName)
+                .append("installed", installed)
                 .toString();
     }
 
@@ -60,12 +71,13 @@ public class DigitalExchangePageModel extends PageModel {
                 && Arrays.equals(getConfiguration(), pageModel.getConfiguration())
                 && Objects.equals(getPluginCode(), pageModel.getPluginCode())
                 && Objects.equals(getTemplate(), pageModel.getTemplate())
-                && Objects.equals(digitalExchange, pageModel.digitalExchange);
+                && Objects.equals(digitalExchangeName, pageModel.digitalExchangeName)
+                && Objects.equals(installed, pageModel.installed);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getCode(), getDescription(), getMainFrame(), getPluginCode(), getTemplate(), digitalExchange);
+        int result = Objects.hash(getCode(), getDescription(), getMainFrame(), getPluginCode(), getTemplate(), digitalExchangeName, installed);
         result = 31 * result + Arrays.hashCode(getConfiguration());
         return result;
     }

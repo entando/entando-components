@@ -25,7 +25,7 @@ import org.entando.entando.aps.system.services.digitalexchange.component.Digital
 import org.entando.entando.aps.system.services.digitalexchange.install.ComponentDescriptorTest;
 import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallerTest;
 import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeComponentInstallationServiceTest;
-import org.entando.entando.web.digitalexchange.DigitalExchangePageModelServiceTest;
+import org.entando.entando.aps.system.services.pagemodel.DigitalExchangePageModelServiceTest;
 import org.entando.entando.web.digitalexchange.DigitalExchangesControllerIntegrationTest;
 import org.entando.entando.web.digitalexchange.DigitalExchangesControllerTest;
 import org.entando.entando.web.digitalexchange.category.DigitalExchangeCategoriesControllerIntegrationTest;
