@@ -73,11 +73,14 @@ public class DigitalExchangeComponentsControllerIntegrationTest extends Abstract
                 .andExpect(jsonPath("$.metaData.totalItems", is(COMPONENTS_1.length + COMPONENTS_2.length)))
                 .andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.payload[0].name", is("A")))
-                .andExpect(jsonPath("$.payload[0].digitalExchange", is(DE_1_NAME)))
+                .andExpect(jsonPath("$.payload[0].digitalExchangeName", is(DE_1_NAME)))
+                .andExpect(jsonPath("$.payload[0].digitalExchangeId", is(DE_1_ID)))
                 .andExpect(jsonPath("$.payload[1].name", is("B")))
-                .andExpect(jsonPath("$.payload[1].digitalExchange", is(DE_2_NAME)))
+                .andExpect(jsonPath("$.payload[1].digitalExchangeName", is(DE_2_NAME)))
+                .andExpect(jsonPath("$.payload[1].digitalExchangeId", is(DE_2_ID)))
                 .andExpect(jsonPath("$.payload[2].name", is("C")))
-                .andExpect(jsonPath("$.payload[2].digitalExchange", is(DE_1_NAME)));
+                .andExpect(jsonPath("$.payload[2].digitalExchangeName", is(DE_1_NAME)))
+                .andExpect(jsonPath("$.payload[2].digitalExchangeId", is(DE_1_ID)));
     }
 
     @Test
@@ -91,7 +94,8 @@ public class DigitalExchangeComponentsControllerIntegrationTest extends Abstract
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload", hasSize(1)))
                 .andExpect(jsonPath("$.payload[0].name", is("B")))
-                .andExpect(jsonPath("$.payload[0].digitalExchange", is(DE_2_NAME)));
+                .andExpect(jsonPath("$.payload[0].digitalExchangeName", is(DE_2_NAME)))
+                .andExpect(jsonPath("$.payload[0].digitalExchangeId", is(DE_2_ID)));
     }
 
     @Test
@@ -105,7 +109,8 @@ public class DigitalExchangeComponentsControllerIntegrationTest extends Abstract
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload", hasSize(1)))
                 .andExpect(jsonPath("$.payload[0].name", is("D")))
-                .andExpect(jsonPath("$.payload[0].digitalExchange", is(DE_2_NAME)));
+                .andExpect(jsonPath("$.payload[0].digitalExchangeName", is(DE_2_NAME)))
+                .andExpect(jsonPath("$.payload[0].digitalExchangeId", is(DE_2_ID)));
     }
 
     private static DigitalExchangeComponent getComponentB() {

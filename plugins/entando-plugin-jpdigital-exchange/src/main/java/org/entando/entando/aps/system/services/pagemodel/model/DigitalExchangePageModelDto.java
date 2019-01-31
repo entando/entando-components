@@ -18,7 +18,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class DigitalExchangePageModelDto extends PageModelDto {
 
-    private String digitalExchange;
+    private String digitalExchangeName;
     private boolean installed;
 
     public DigitalExchangePageModelDto() {
@@ -30,15 +30,15 @@ public class DigitalExchangePageModelDto extends PageModelDto {
 
     public DigitalExchangePageModelDto(DigitalExchangePageModelDto other) {
         super(other);
-        this.digitalExchange = other.digitalExchange;
+        this.digitalExchangeName = other.digitalExchangeName;
     }
 
     public String getDigitalExchange() {
-        return digitalExchange;
+        return digitalExchangeName;
     }
 
-    public void setDigitalExchange(String digitalExchange) {
-        this.digitalExchange = digitalExchange;
+    public void setDigitalExchangeName(String digitalExchangeName) {
+        this.digitalExchangeName = digitalExchangeName;
     }
 
     public boolean isInstalled() {
@@ -59,13 +59,13 @@ public class DigitalExchangePageModelDto extends PageModelDto {
         }
         DigitalExchangePageModelDto that = (DigitalExchangePageModelDto) o;
         return super.equals(o)
-                && Objects.equals(digitalExchange, that.digitalExchange)
+                && Objects.equals(digitalExchangeName, that.digitalExchangeName)
                 && Objects.equals(installed, that.installed);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCode(), getDescr(), getConfiguration(), getMainFrame(), getPluginCode(), getTemplate(), digitalExchange, installed, getReferences());
+        return Objects.hash(getCode(), getDescr(), getConfiguration(), getMainFrame(), getPluginCode(), getTemplate(), digitalExchangeName, installed, getReferences());
     }
 
     @Override
@@ -77,7 +77,7 @@ public class DigitalExchangePageModelDto extends PageModelDto {
                 .append("mainFrame", getMainFrame())
                 .append("pluginCode", getPluginCode())
                 .append("template", getTemplate())
-                .append("digitalExchange", digitalExchange)
+                .append("digitalExchange", digitalExchangeName)
                 .append("installed", installed)
                 .append("references", getReferences())
                 .toString();

@@ -29,7 +29,11 @@ public class DigitalExchangeComponent {
     private String image;
     private double rating;
     private boolean installed;
-    private String digitalExchange;
+    private String digitalExchangeName;
+
+    // NOTE: the id can be removed when we will return the installation link
+    // following the HATEOAS principle
+    private String digitalExchangeId;
 
     public String getId() {
         return id;
@@ -106,11 +110,19 @@ public class DigitalExchangeComponent {
     /**
      * The name of the Digital Exchange providing the component.
      */
-    public String getDigitalExchange() {
-        return digitalExchange;
+    public String getDigitalExchangeName() {
+        return digitalExchangeName;
     }
 
-    public void setDigitalExchange(String digitalExchange) {
-        this.digitalExchange = digitalExchange;
+    public void setDigitalExchangeName(String digitalExchangeName) {
+        this.digitalExchangeName = digitalExchangeName;
+    }
+
+    public String getDigitalExchangeId() {
+        return digitalExchangeId;
+    }
+
+    public void setDigitalExchangeId(String digitalExchangeId) {
+        this.digitalExchangeId = digitalExchangeId;
     }
 }

@@ -25,7 +25,7 @@ public class DigitalExchangePageModelDtoBuilder extends PageModelDtoBuilder {
         if (src instanceof DigitalExchangePageModel) {
             DigitalExchangePageModelDto dePageModelDto = new DigitalExchangePageModelDto(pageModelDto);
 
-            dePageModelDto.setDigitalExchange(((DigitalExchangePageModel) src).getDigitalExchangeName());
+            dePageModelDto.setDigitalExchangeName(((DigitalExchangePageModel) src).getDigitalExchangeName());
             dePageModelDto.setInstalled(((DigitalExchangePageModel) src).isInstalled());
 
             return dePageModelDto;

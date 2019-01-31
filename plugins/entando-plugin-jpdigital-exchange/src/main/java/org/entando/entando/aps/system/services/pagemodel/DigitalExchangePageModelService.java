@@ -105,7 +105,7 @@ public class DigitalExchangePageModelService extends PageModelService {
         DigitalExchangePageModelDto pageModelDto = new DigitalExchangePageModelDto();
         pageModelDto.setCode(component.getName());
         pageModelDto.setDescr(component.getDescription());
-        pageModelDto.setDigitalExchange(component.getDigitalExchange());
+        pageModelDto.setDigitalExchangeName(component.getDigitalExchangeName());
         return pageModelDto;
     }
 
@@ -131,7 +131,7 @@ public class DigitalExchangePageModelService extends PageModelService {
     private Optional<DigitalExchangePageModelDto> getInstalled(List<DigitalExchangePageModelDto> localPageModels, DigitalExchangePageModelDto dePageModel) {
         return localPageModels.stream()
                 .filter(pm -> pm.getCode().equals(dePageModel.getCode()))
-                .peek(pm -> pm.setDigitalExchange(dePageModel.getDigitalExchange()))
+                .peek(pm -> pm.setDigitalExchangeName(dePageModel.getDigitalExchange()))
                 .findFirst();
     }
 }

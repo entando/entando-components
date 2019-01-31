@@ -13,6 +13,8 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 
@@ -20,13 +22,15 @@ public class ComponentInstallationJob {
 
     @JsonIgnore
     private String id;
-    private String digitalExchange;
+    private String digitalExchangeId;
     @JsonIgnore
     private String digitalExchangeUrl;
     private String componentId;
     private String componentName;
     private String componentVersion;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SystemConstants.API_DATE_FORMAT)
     private Date started;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SystemConstants.API_DATE_FORMAT)
     private Date ended;
     private String user;
     private double progress;
@@ -41,12 +45,12 @@ public class ComponentInstallationJob {
         this.id = id;
     }
 
-    public String getDigitalExchange() {
-        return digitalExchange;
+    public String getDigitalExchangeId() {
+        return digitalExchangeId;
     }
 
-    public void setDigitalExchange(String digitalExchange) {
-        this.digitalExchange = digitalExchange;
+    public void setDigitalExchangeId(String digitalExchangeId) {
+        this.digitalExchangeId = digitalExchangeId;
     }
 
     public String getDigitalExchangeUrl() {

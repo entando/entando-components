@@ -149,7 +149,7 @@ public class DigitalExchangePageModelServiceTest {
         component.setType("pageModel");
         component.setId(DE_PAGE_MODEL_INSTALLED_CODE);
         component.setName(DE_PAGE_MODEL_INSTALLED_CODE);
-        component.setDigitalExchange(EXCHANGE);
+        component.setDigitalExchangeName(EXCHANGE);
         return component;
     }
 
@@ -158,7 +158,7 @@ public class DigitalExchangePageModelServiceTest {
         component.setType("pageModel");
         component.setId(DE_PAGE_MODEL_NOT_INSTALLED_CODE);
         component.setName(DE_PAGE_MODEL_NOT_INSTALLED_CODE);
-        component.setDigitalExchange(EXCHANGE);
+        component.setDigitalExchangeName(EXCHANGE);
         return component;
     }
 

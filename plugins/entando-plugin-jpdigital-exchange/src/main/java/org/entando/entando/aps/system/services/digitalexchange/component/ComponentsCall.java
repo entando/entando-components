@@ -42,7 +42,10 @@ public class ComponentsCall extends PagedDigitalExchangeCall<DigitalExchangeComp
     protected void preprocessResponse(String exchangeId, PagedRestResponse<DigitalExchangeComponent> response) {
         if (response.getErrors().isEmpty()) {
             String exchangeName = exchangesService.findById(exchangeId).getName();
-            response.getPayload().forEach(de -> de.setDigitalExchange(exchangeName));
+            response.getPayload().forEach(de -> {
+                de.setDigitalExchangeName(exchangeName);
+                de.setDigitalExchangeId(exchangeId);
+            });
         }
     }
 
