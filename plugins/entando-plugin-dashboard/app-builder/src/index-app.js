@@ -33,7 +33,7 @@ import DashboardBarChart from "ui/widgets/charts/bar-chart/components/DashboardB
 import DashboardDonutChart from "ui/widgets/charts/donut-chart/components/DashboardDonutChart";
 import DashboardGaugeChart from "ui/widgets/charts/gauge-chart/components/DashboardGaugeChart";
 import DashboardPieChart from "ui/widgets/charts/pie-chart/components/DashboardPieChart";
-import DashboardMap from "ui/widgets/map/components/DashboardMap";
+import DashboardMap from "ui/widgets/geolocalization/components/DashboardMap";
 
 const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
   acc[`plugin.${plugin.id}.${key}`] = enLocale.messages[key];

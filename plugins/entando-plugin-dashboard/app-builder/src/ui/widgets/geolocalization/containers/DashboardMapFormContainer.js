@@ -4,7 +4,7 @@ import {pick, omit} from "lodash";
 
 import {fetchServerConfigList} from "state/main/actions";
 
-import DashboardMapForm from "ui/widgets/map/components/DashboardMapForm";
+import DashboardMapForm from "ui/widgets/geolocalization/components/DashboardMapForm";
 
 const selector = formValueSelector("form-dashboard-map");
 

@@ -36,4 +36,8 @@
 @import 'widgets/charts/pie-chart/DashboardPieChart';
 @import 'widgets/charts/pie-chart/SettingsChartPie';
 
-@import 'common/form/DropdownMultiple';
+@import 'widgets/geolocalization/MapFirstStepContent';
+@import 'widgets/geolocalization/MapSecondStepContent';
+@import 'widgets/geolocalization/FieldArrayDatasource';
+
+@import 'common/DropdownMultiple';

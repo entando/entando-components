@@ -7,6 +7,7 @@ import {
   REMOVE_SERVER_CONFIG,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_COLUMNS,
+  CLEAR_DATASOURCE_COLUMNS,
   SET_SHOW_HIDE_COLUMN,
   SET_DATASOURCE_DATA
 } from "./types";
@@ -62,6 +63,8 @@ const datasourceColumns = (state = [], action = {}) => {
         column.hidden = !column.hidden;
       }
       return newState;
+    case CLEAR_DATASOURCE_COLUMNS:
+      return [];
     default:
       return state;
   }

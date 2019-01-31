@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
+import {uniqueId} from "lodash";
 
 class DropdownMultiple extends Component {
   constructor(props) {
@@ -66,21 +67,21 @@ class DropdownMultiple extends Component {
       if (searchValue.length <= 1) {
         listValue = this.props.list.filter(f =>
           caseSensitiveSearch
-            ? f.label.includes(searchValue)
-            : f.label.toLowerCase().includes(searchValue.toLowerCase())
+            ? f.value.includes(searchValue)
+            : f.value.toLowerCase().includes(searchValue.toLowerCase())
         );
         if (listValue) {
-          listValue.push({id: 0, key: "notFound", label: searchNotFound});
+          listValue.push({id: 0, key: "notFound", value: searchNotFound});
         }
       } else {
         const search = this.props.list.find(f =>
           caseSensitiveSearch
-            ? f.label.startsWith(searchValue)
-            : f.label.toLowerCase().startsWith(searchValue.toLowerCase())
+            ? f.value.startsWith(searchValue)
+            : f.value.toLowerCase().startsWith(searchValue.toLowerCase())
         );
         search
           ? listValue.push(search)
-          : listValue.push({id: 0, key: "notFound", label: searchNotFound});
+          : listValue.push({id: 0, key: "notFound", value: searchNotFound});
       }
       return {
         searchValue,
@@ -97,12 +98,16 @@ class DropdownMultiple extends Component {
   }
 
   render() {
-    const {toggleItem} = this.props;
+    const {toggleItem, disabled} = this.props;
     const {listValue, listOpen, headerTitle, searchValue} = this.state;
 
     return (
-      <div className="DropdownMultiple">
-        <div className="dd-header" onClick={() => this.toggleList()}>
+      <div className={`DropdownMultiple ${disabled ? "disabled" : ""}`}>
+        <div
+          className="dd-header "
+          onClick={() => (!disabled ? this.toggleList() : null)}
+          disabled={disabled}
+        >
           <div className="dd-header-title">{headerTitle}</div>
           {listOpen ? (
             <i className="fa fa-angle-up angle-up" />
@@ -133,16 +138,18 @@ class DropdownMultiple extends Component {
                 </span>
               </div>
             </li>
-            {listValue.map(item => (
-              <li
-                className={`dd-list-item ${item.selected ? "selected" : ""}`}
-                key={item.label}
-                onClick={() => toggleItem(item.id, item.key)}
-              >
-                {item.label}{" "}
-                {item.selected && <i className="fa fa-check check" />}
-              </li>
-            ))}
+            {listValue.map(item => {
+              return (
+                <li
+                  className={`dd-list-item ${item.selected ? "selected" : ""}`}
+                  key={`${item.value}_${uniqueId()}`}
+                  onClick={() => toggleItem(item.id, item.key)}
+                >
+                  {item.value}{" "}
+                  {item.selected && <i className="fa fa-check check" />}
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
@@ -153,7 +160,7 @@ class DropdownMultiple extends Component {
 const COLUMN_TYPE = {
   id: PropTypes.number,
   key: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  label: PropTypes.string,
+  value: PropTypes.string,
   selected: PropTypes.bool
 };
 

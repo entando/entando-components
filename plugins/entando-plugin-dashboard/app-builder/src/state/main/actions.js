@@ -22,6 +22,7 @@ import {
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_DATA,
   SET_DATASOURCE_COLUMNS,
+  CLEAR_DATASOURCE_COLUMNS,
   SET_SHOW_HIDE_COLUMN
 } from "./types";
 
@@ -68,6 +69,10 @@ export const setDatasourceColumns = columns => ({
   payload: {
     columns
   }
+});
+
+export const clearDatasourceColumns = () => ({
+  type: CLEAR_DATASOURCE_COLUMNS
 });
 
 export const setShowHideColumn = column => ({

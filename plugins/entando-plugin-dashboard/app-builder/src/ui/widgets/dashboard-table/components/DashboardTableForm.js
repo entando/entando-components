@@ -14,7 +14,7 @@ import SwitchRenderer from "ui/common/form/SwitchRenderer";
 import ServerNameFormContainer from "ui/widgets/common/form/containers/ServerNameFormContainer";
 import DatasourceFormContainer from "ui/widgets/common/form/containers/DatasourceFormContainer";
 import DashboardTableColumnsContainer from "ui/widgets/dashboard-table/containers/DashboardTableColumnsContainer";
-import DashboardWidgetTitleContainer from "ui/widgets/common/containers/DashboardWidgetTitleContainer";
+import DashboardWidgetTitleContainer from "ui/widgets/common/form/containers/DashboardWidgetTitleContainer";
 
 const rowRequired = messageId => (
   <Row>

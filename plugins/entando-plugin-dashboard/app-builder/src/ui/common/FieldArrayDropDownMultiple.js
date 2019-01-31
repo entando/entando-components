@@ -19,12 +19,12 @@ class FieldArrayDropDownMultiple extends Component {
         columns: optionColumns.map((m, index) => ({
           id: index,
           key: m.key,
-          label: m.value,
-          selected: false
+          value: m.value
+          //selected: false
         }))
       };
     }
-    return null;
+    return state.columns;
   }
 
   toogleSelected(id, key) {
@@ -51,7 +51,8 @@ class FieldArrayDropDownMultiple extends Component {
     const {
       optionColumnSelected,
       className,
-      meta: {error}
+      meta: {error},
+      disabled
     } = this.props;
     let classNames = `FieldArrayDropDownMultiple ${className}`;
     return (
@@ -66,6 +67,7 @@ class FieldArrayDropDownMultiple extends Component {
             toggleItem={this.toogleSelected}
             searchValue=""
             searchNotFound={formattedText("common.DropdownMultiple.notFound")}
+            disabled={disabled}
           />
         </div>
         <div className="FieldArrayDropDownMultiple__token-container">
@@ -79,7 +81,7 @@ class FieldArrayDropDownMultiple extends Component {
                   />
                 </span>
                 <span className="label label-info FieldArrayDropDownMultiple__token-label">
-                  {item.label}
+                  {item.value}
                 </span>
               </div>
             );
@@ -103,12 +105,14 @@ FieldArrayDropDownMultiple.propTypes = {
   fields: PropTypes.shape({
     push: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired
-  }).isRequired
+  }).isRequired,
+  disabled: PropTypes.bool
 };
 FieldArrayDropDownMultiple.defaultProps = {
   className: "",
   optionColumns: [],
-  optionColumnSelected: []
+  optionColumnSelected: [],
+  disabled: false
 };
 
 export default FieldArrayDropDownMultiple;

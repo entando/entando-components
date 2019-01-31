@@ -310,7 +310,8 @@
     border-right: 1px solid #bbb;
     border-bottom: 1px solid #bbb;
     padding-top: 5px;
-    padding-bottom: 6px; }
+    padding-bottom: 6px;
+    padding-right: 5px; }
   .GeneralSettings__error.help-block {
     position: relative;
     top: 30px;
@@ -564,6 +565,24 @@
     border: 0 solid;
     max-height: 250px; }
 
+.MapFirstStepContent {
+  padding: 3em;
+  border: 0 solid; }
+  .MapFirstStepContent .row:last-child {
+    border: 0 solid red;
+    margin-top: 2em; }
+
+.MapSecondStepContent {
+  padding: 3em;
+  border: 0px solid; }
+  .MapSecondStepContent .row {
+    border: 0px solid red; }
+  .MapSecondStepContent__item.col-xs-10 {
+    padding-left: 15px; }
+
+.FieldArrayDatasource {
+  border: 1px solid; }
+
 .DropdownMultiple {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -587,6 +606,14 @@
     cursor: default;
     position: relative;
     background-color: #fff; }
+  .DropdownMultiple .dd-header[disabled] {
+    cursor: not-allowed;
+    box-shadow: none;
+    background-color: #fafafa !important;
+    background-image: none !important;
+    border-color: #d1d1d1 !important;
+    color: #8b8d8f !important;
+    opacity: 1; }
   .DropdownMultiple .dd-header span {
     margin-right: 20px; }
   .DropdownMultiple .dd-header-title {

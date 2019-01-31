@@ -1,0 +1,12 @@
+.MapSecondStepContent {
+  padding: 3em;
+  border: 0px solid;
+
+  .row {
+    border: 0px solid red;
+  }
+
+  &__item.col-xs-10 {
+    padding-left: 15px;
+  }
+}

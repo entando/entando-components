@@ -6,11 +6,15 @@ import {InputGroup} from "patternfly-react";
 import RenderSelectInput from "ui/common/form/RenderSelectInput";
 import FormLabel from "ui/common/form/FormLabel";
 
-const DatasourceForm = ({datasources, onChange, labelSize}) => {
+const DatasourceForm = ({datasources, onChange, labelSize, nameFieldArray}) => {
   const selectOptionsDatasource = datasources.map(m => ({
     value: m.id,
     text: m.datasource
   }));
+
+  const nameField = nameFieldArray
+    ? `${nameFieldArray}[datasource]`
+    : "datasource";
 
   return (
     <InputGroup className="DatasourceForm__input-group">
@@ -29,7 +33,7 @@ const DatasourceForm = ({datasources, onChange, labelSize}) => {
         }
         labelSize={labelSize}
         alignClass="text-left DashboardTableForm__no-padding-right"
-        name="datasource"
+        name={nameField}
         validate={[required]}
       />
     </InputGroup>
@@ -39,10 +43,12 @@ const DatasourceForm = ({datasources, onChange, labelSize}) => {
 DatasourceForm.propTypes = {
   datasources: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onChange: PropTypes.func.isRequired,
-  labelSize: PropTypes.number
+  labelSize: PropTypes.number,
+  nameFieldArray: PropTypes.string
 };
 
 DatasourceForm.defaultProps = {
-  labelSize: 4
+  labelSize: 4,
+  nameFieldArray: null
 };
 export default DatasourceForm;

@@ -24,6 +24,16 @@
     background-color: #fff;
   }
 
+  .dd-header[disabled] {
+    cursor: not-allowed;
+    box-shadow: none;
+    background-color: #fafafa!important;
+    background-image: none!important;
+    border-color: #d1d1d1!important;
+    color: #8b8d8f!important;
+    opacity: 1;
+  }
+
   .dd-header span {
     margin-right: 20px;
   }

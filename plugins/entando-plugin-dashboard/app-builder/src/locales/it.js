@@ -113,6 +113,10 @@ export default {
     "plugin.chart.thickness": "Thickness",
     "plugin.chart.min": "Min",
     "plugin.chart.max": "Max",
-    "plugin.chart.expand": "Expand"
+    "plugin.chart.expand": "Expand",
+    "plugin.geolocalization.label": "Label",
+    "plugin.geolocalization.item": "Item",
+    "plugin.geolocalization.label.requirement":
+      "letters, numbers, symbols, min 3 and max 20 characters"
   }
 };

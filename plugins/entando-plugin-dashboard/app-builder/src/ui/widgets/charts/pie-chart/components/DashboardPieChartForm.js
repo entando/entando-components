@@ -37,7 +37,7 @@ class DashboardPieChartFormBody extends Component {
       <Stepper
         handleSubmit={this.props.handleSubmit}
         validateSteps={validateSteps}
-        step1={<ChartFirstStepContent />}
+        step1={<ChartFirstStepContent formName={FORM_NAME} />}
         step2={
           <ChartSecondStepContent
             typeChart={TYPE_CHART}

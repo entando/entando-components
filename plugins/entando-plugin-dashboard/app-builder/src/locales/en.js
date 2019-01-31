@@ -48,7 +48,7 @@ export default {
     "plugin.table.column.tooltip.hidden": "Click to hidden this column",
     "plugin.table.column.customizable.label": "Customizable columns labels",
     "plugin.table.moreInformation":
-      "Manage the coloumns order and edit the labels coloumn names",
+      "Manage the coloumns order and edit the labels column names",
     "plugin.table.moreInformation.choose":
       "hold-on to move coloumn, double click to edit labels.",
     "plugin.alert.error": "Error during fetch data",
@@ -110,6 +110,10 @@ export default {
     "plugin.chart.thickness": "Thickness",
     "plugin.chart.min": "Min",
     "plugin.chart.max": "Max",
-    "plugin.chart.expand": "Expand"
+    "plugin.chart.expand": "Expand",
+    "plugin.geolocalization.label": "Label",
+    "plugin.geolocalization.item": "Item",
+    "plugin.geolocalization.label.requirement":
+      "letters, numbers, symbols, min 3 and max 20 characters"
   }
 };

@@ -6,8 +6,9 @@ import {getDatasourceList} from "state/main/selectors";
 
 import DatasourceForm from "ui/widgets/common/form/components/DatasourceForm";
 
-const mapStateToProps = state => ({
-  datasources: getDatasourceList(state)
+const mapStateToProps = (state, ownProps) => ({
+  datasources: getDatasourceList(state),
+  nameFieldArray: ownProps.nameFieldArray
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
