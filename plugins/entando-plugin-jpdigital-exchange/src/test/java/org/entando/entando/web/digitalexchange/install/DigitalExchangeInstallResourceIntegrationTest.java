@@ -268,7 +268,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         ComponentInstallationJob job = response.getPayload();
 
-        assertThat(job.getDigitalExchange()).isNotNull();
+        assertThat(job.getDigitalExchangeId()).isNotNull();
         assertThat(job.getStarted()).isNotNull();
         assertThat(job.getUser()).isEqualTo("jack_bauer");
 

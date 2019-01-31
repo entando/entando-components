@@ -110,7 +110,7 @@ public class ComponentInstallerTest {
         commandExecutor.setApplicationContext(applicationContext);
 
         job = new ComponentInstallationJob();
-        job.setDigitalExchange("DE");
+        job.setDigitalExchangeId("DE");
         job.setComponentId("de_test_page_model");
 
         when(client.getStreamResponse(any(), any())).thenReturn(new FileInputStream(tempZipFile));
