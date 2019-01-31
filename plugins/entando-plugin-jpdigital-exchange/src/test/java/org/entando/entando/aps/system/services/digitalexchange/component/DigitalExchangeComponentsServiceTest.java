@@ -151,7 +151,7 @@ public class DigitalExchangeComponentsServiceTest {
 
         public PageVerifier contains(Object... values) {
             assertThat(pagedMetadata.getBody().get(index++))
-                    .extracting(DigitalExchangeComponent::getDigitalExchange, DigitalExchangeComponent::getName)
+                    .extracting(DigitalExchangeComponent::getDigitalExchangeName, DigitalExchangeComponent::getName)
                     .contains(values);
             return this;
         }

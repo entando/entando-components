@@ -128,7 +128,7 @@ public class ComponentInstaller implements ServletContextAware {
         };
 
         PagedRestResponse<DigitalExchangeComponent> response
-                = client.getSingleResponse(job.getDigitalExchange(), call);
+                = client.getSingleResponse(job.getDigitalExchangeId(), call);
 
         List<DigitalExchangeComponent> components = response.getPayload();
 
@@ -152,7 +152,7 @@ public class ComponentInstaller implements ServletContextAware {
             DigitalExchangeBaseCall call = new DigitalExchangeBaseCall(
                     HttpMethod.GET, "digitalExchange", "components", job.getComponentId(), "packages");
 
-            try (InputStream in = client.getStreamResponse(job.getDigitalExchange(), call)) {
+            try (InputStream in = client.getStreamResponse(job.getDigitalExchangeId(), call)) {
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
             }
 
