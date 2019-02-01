@@ -81,6 +81,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         return job;
     }
 
+
     private void executeJob(DigitalExchangeJob job) {
         CompletableFuture.runAsync(() -> {
             try {
@@ -133,14 +134,9 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     }
 
     @Override
-    public DigitalExchangeJob checkInstallationStatus(String componentId) {
-        return dao.findLast(componentId, JobType.INSTALL)
+    public DigitalExchangeJob checkJobStatus(String componentId, JobType jobType) {
+        return dao.findLast(componentId, jobType)
                 .orElseThrow(() -> new RestRourceNotFoundException("component",  componentId));
     }
 
-    @Override
-    public DigitalExchangeJob checkUninstallStatus(String componentId) {
-        return dao.findLast(componentId, JobType.UNINSTALL)
-                .orElseThrow(() -> new RestRourceNotFoundException("component" , componentId));
-    }
 }

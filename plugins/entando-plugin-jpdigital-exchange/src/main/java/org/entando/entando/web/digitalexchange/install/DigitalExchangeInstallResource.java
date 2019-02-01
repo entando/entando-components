@@ -44,14 +44,6 @@ public interface DigitalExchangeInstallResource {
     ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> install(@PathVariable("exchange") String digitalExchangeId,
                                                                    @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
 
-    @ApiOperation(value = "Checks installation job status")
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "OK")
-    })
-    @RestAccessControl(permission = Permission.SUPERUSER)
-    @GetMapping(value = "/install/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getLastJob(@PathVariable("component") String componentId);
-
     @ApiOperation(value = "Starts component remove job ")
     @ApiResponses({
             @ApiResponse( code = 201, message = "Created")
@@ -60,4 +52,21 @@ public interface DigitalExchangeInstallResource {
     @PostMapping(value = "{exchange}/uninstall/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> uninstall(@PathVariable("exchange") String digitalExchangeId,
                                                                      @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
+
+    @ApiOperation(value = "Checks installation job status")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK")
+    })
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping(value = "/install/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getLastInstallJob(@PathVariable("component") String componentId);
+
+    @ApiOperation(value = "Checks removal job status")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK")
+    })
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping(value = "/uninstall/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getLastUninstallJob(@PathVariable("component") String componentId);
+
 }

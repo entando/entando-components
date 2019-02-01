@@ -23,6 +23,7 @@ import java.io.UncheckedIOException;
 import java.util.Collections;
 import java.util.EnumSet;
 
+import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
 import org.entando.entando.aps.system.init.IInitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
@@ -31,13 +32,17 @@ import org.entando.entando.aps.system.services.digitalexchange.install.Component
 import org.entando.entando.aps.system.services.digitalexchange.install.JobType;
 import org.entando.entando.aps.system.services.group.IGroupService;
 import org.entando.entando.aps.system.services.label.ILabelService;
+import org.entando.entando.aps.system.services.label.model.LabelDto;
 import org.entando.entando.aps.system.services.pagemodel.IPageModelService;
+import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
 import org.entando.entando.aps.system.services.role.IRoleService;
 import org.entando.entando.aps.system.services.role.model.RoleDto;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
+import org.entando.entando.web.label.LabelValidator;
+import org.entando.entando.web.pagemodel.validator.PageModelValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -56,6 +61,7 @@ import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.junit.After;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -169,7 +175,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
     }
 
     @Test
-    public void shouldInstallAndUninstallWidget() throws Exception {
+    public void shouldInstallWidget() throws Exception {
 
         String componentCode = "de_test_widget";
 
@@ -178,12 +184,16 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
             assertThat(widgetService.getWidget(componentCode)).isNotNull();
 
-//            uninstallAndCheckForCompletion(componentCode);
 
         } finally {
 
-            if (widgetService.getWidget(componentCode) != null) {
-                widgetService.removeWidget(componentCode);
+            try {
+                if (widgetService.getWidget(componentCode) != null) {
+                    widgetService.removeWidget(componentCode);
+                }
+
+            } catch (RestRourceNotFoundException ignored) {
+
             }
 
         }
@@ -260,6 +270,48 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         }
     }
 
+    @Test
+    public void shouldInstallAndRemovePageComponents() throws Exception {
+
+        String componentCode = "de_test_page_model";
+        String componentAssociatedLabel = "DE_TEST_LABEL";
+
+
+        installAndCheckForCompletion(componentCode);
+
+        assertThat(pageModelService.getPageModel(componentCode)).isNotNull();
+        assertThat(i18nManager.getLabel("DE_TEST_LABEL", "en")).isEqualTo("Test label DE");
+        assertThat(storageManager.exists("components/de_test_page_model/test.css", false)).isTrue();
+
+        uninstallAndCheckForCompletion(componentCode);
+
+        try {
+            PageModelDto pageModelDto = pageModelService.getPageModel(componentCode);
+            throw new Exception("PageModel " + componentCode + " should not be found after component uninstall");
+        } catch (RestRourceNotFoundException ex){
+
+            assertThat(ex.getErrorCode()).isEqualTo(PageModelValidator.ERRCODE_PAGEMODEL_NOT_FOUND);
+            assertThat(ex.getObjectCode()).isEqualTo(componentCode);
+            assertThat(ex.getObjectName()).isEqualTo("pageModel");
+        }
+
+        try {
+            labelService.getLabelGroup(componentAssociatedLabel);
+            throw new Exception("Label " + componentAssociatedLabel + " should not be found after component uninstall");
+        } catch (RestRourceNotFoundException ex) {
+
+            assertThat(ex.getErrorCode()).isEqualTo(LabelValidator.ERRCODE_LABELGROUP_NOT_FOUND);
+            assertThat(ex.getObjectCode()).isEqualTo(componentAssociatedLabel);
+            assertThat(ex.getObjectName()).isEqualTo("label");
+
+        }
+
+        assertThat(storageManager.exists("components/de_test_page_model/test.css", false)).isFalse();
+        assertThat(storageManager.exists("components/de_test_page_model/", true)).isFalse();
+
+
+    }
+
     private void installAndCheckForCompletion(String componentId) throws Exception {
 
         ResultActions result = createAuthRequest(post(BASE_URL + "/{exchange}/install/{component}", DE_1_ID, componentId)).execute();
@@ -308,9 +360,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         SystemInstallationReport report = initializerManager.getCurrentReport();
 
-        assertThat(report.getComponentReport(componentId, false))
-                .isNotNull()
-                .matches(cr -> cr.getStatus() == SystemInstallationReport.Status.OK);
+        assertThat(report.getComponentReport(componentId, false)).isNull();
     }
 
     private JobStatus checkInstallJobStatus(String componentId) throws Exception {
@@ -350,7 +400,6 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         return job.getStatus();
     }
-
 
     private DigitalExchangeJob parseJob(ResultActions result) throws IOException {
         String jsonResponse = result.andReturn().getResponse().getContentAsString();

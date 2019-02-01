@@ -19,6 +19,7 @@ import java.net.URISyntaxException;
 import javax.servlet.http.HttpServletRequest;
 import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeComponentInstallationService;
+import org.entando.entando.aps.system.services.digitalexchange.install.JobType;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,8 +70,12 @@ public class DigitalExchangeInstallResourceController implements DigitalExchange
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getLastJob(@PathVariable("component") String componentId) {
-        return ResponseEntity.ok(new SimpleRestResponse<>(installationService.checkInstallationStatus(componentId)));
+    public ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getLastInstallJob(@PathVariable("component") String componentId) {
+        return ResponseEntity.ok(new SimpleRestResponse<>(installationService.checkJobStatus(componentId, JobType.INSTALL)));
     }
 
+    @Override
+    public ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getLastUninstallJob(@PathVariable("component") String componentId) {
+        return ResponseEntity.ok(new SimpleRestResponse<>(installationService.checkJobStatus(componentId, JobType.UNINSTALL)));
+    }
 }

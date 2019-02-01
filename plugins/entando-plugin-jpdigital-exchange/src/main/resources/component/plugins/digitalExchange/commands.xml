@@ -6,6 +6,9 @@
             <value>@pageModelController.addPageModel(@modelParser.parse('%s', T(org.entando.entando.web.pagemodel.model.PageModelRequest)), #bindingResult())</value>
         </entry>
         <entry>
+            <key>deletePageModel</key>
+            <value>@pageModelController.deletePageModel('%s')</value>
+        </entry><entry>
             <key>createWidget</key>
             <value>@widgetController.addWidget(@modelParser.parse('%s', T(org.entando.entando.web.widget.model.WidgetRequest)), #bindingResult())</value>
         </entry>
