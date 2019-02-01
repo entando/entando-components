@@ -46,8 +46,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.ResultActions;
-import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallationJob;
-import org.entando.entando.aps.system.services.digitalexchange.install.InstallationStatus;
+import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeJob;
+import org.entando.entando.aps.system.services.digitalexchange.install.JobStatus;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.junit.After;
@@ -166,13 +166,17 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         String componentCode = "de_test_widget";
 
-        installAndCheckForCompletion(componentCode);
+        try {
+            installAndCheckForCompletion(componentCode);
 
-        assertThat(widgetService.getWidget(componentCode)).isNotNull();
+            assertThat(widgetService.getWidget(componentCode)).isNotNull();
 
-        uninstallAndCheckForCompletion(componentCode);
+//            uninstallAndCheckForCompletion(componentCode);
 
-        widgetService.removeWidget(componentCode);
+        } finally {
+            widgetService.removeWidget(componentCode);
+        }
+
 
     }
 
@@ -227,15 +231,15 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         parseJob(result);
 
-        InstallationStatus status = InstallationStatus.CREATED;
+        JobStatus status = JobStatus.CREATED;
         int attempts = 0;
-        while (status != InstallationStatus.COMPLETED && attempts < 10) {
+        while (status != JobStatus.COMPLETED && attempts < 10) {
             status = checkInstallJobStatus(componentId);
-            assertThat(status).isNotEqualTo(InstallationStatus.ERROR);
+            assertThat(status).isNotEqualTo(JobStatus.ERROR);
             attempts++;
         }
 
-        assertThat(status).isEqualTo(InstallationStatus.COMPLETED);
+        assertThat(status).isEqualTo(JobStatus.COMPLETED);
 
         SystemInstallationReport report = initializerManager.getCurrentReport();
 
@@ -253,15 +257,15 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         parseJob(result);
 
-        InstallationStatus status = InstallationStatus.CREATED;
+        JobStatus status = JobStatus.CREATED;
         int attempts = 0;
-        while (status != InstallationStatus.COMPLETED && attempts < 10) {
+        while (status != JobStatus.COMPLETED && attempts < 10) {
             status = checkUninstallJobStatus(componentId);
-            assertThat(status).isNotEqualTo(InstallationStatus.ERROR);
+            assertThat(status).isNotEqualTo(JobStatus.ERROR);
             attempts++;
         }
 
-        assertThat(status).isEqualTo(InstallationStatus.COMPLETED);
+        assertThat(status).isEqualTo(JobStatus.COMPLETED);
 
         SystemInstallationReport report = initializerManager.getCurrentReport();
 
@@ -270,7 +274,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                 .matches(cr -> cr.getStatus() == SystemInstallationReport.Status.OK);
     }
 
-    private InstallationStatus checkInstallJobStatus(String componentId) throws Exception {
+    private JobStatus checkInstallJobStatus(String componentId) throws Exception {
 
         try {
             Thread.sleep(500);
@@ -282,14 +286,14 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty());
 
-        ComponentInstallationJob job = parseJob(result);
+        DigitalExchangeJob job = parseJob(result);
 
         assertThat(job.getProgress()).isBetween(0d, 1d);
 
         return job.getStatus();
     }
 
-    private InstallationStatus checkUninstallJobStatus(String componentId) throws Exception {
+    private JobStatus checkUninstallJobStatus(String componentId) throws Exception {
 
         try {
             Thread.sleep(500);
@@ -301,7 +305,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty());
 
-        ComponentInstallationJob job = parseJob(result);
+        DigitalExchangeJob job = parseJob(result);
 
         assertThat(job.getProgress()).isBetween(0d, 1d);
 
@@ -309,14 +313,14 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
     }
 
 
-    private ComponentInstallationJob parseJob(ResultActions result) throws IOException {
+    private DigitalExchangeJob parseJob(ResultActions result) throws IOException {
         String jsonResponse = result.andReturn().getResponse().getContentAsString();
 
-        SimpleRestResponse<ComponentInstallationJob> response = new ObjectMapper()
-                .readValue(jsonResponse, new TypeReference<SimpleRestResponse<ComponentInstallationJob>>() {
+        SimpleRestResponse<DigitalExchangeJob> response = new ObjectMapper()
+                .readValue(jsonResponse, new TypeReference<SimpleRestResponse<DigitalExchangeJob>>() {
                 });
 
-        ComponentInstallationJob job = response.getPayload();
+        DigitalExchangeJob job = response.getPayload();
 
         assertThat(job.getDigitalExchange()).isNotNull();
         assertThat(job.getStarted()).isNotNull();

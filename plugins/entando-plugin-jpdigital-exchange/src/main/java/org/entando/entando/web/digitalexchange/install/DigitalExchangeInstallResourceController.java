@@ -17,7 +17,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.servlet.http.HttpServletRequest;
-import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallationJob;
+import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeComponentInstallationService;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +37,15 @@ public class DigitalExchangeInstallResourceController implements DigitalExchange
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> install(@PathVariable("exchange") String exchangeId,
-            @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> install(@PathVariable("exchange") String exchangeId,
+                                                                          @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException {
 
         UserDetails currentUser = (UserDetails) request.getSession().getAttribute("user");
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        ComponentInstallationJob job = installationService.install(exchangeId, componentId, currentUser.getUsername());
+        DigitalExchangeJob job = installationService.install(exchangeId, componentId, currentUser.getUsername());
 
         return ResponseEntity.created(
                 new URI("/plugins/digitalExchange/install/" + componentId))
@@ -53,15 +53,15 @@ public class DigitalExchangeInstallResourceController implements DigitalExchange
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> uninstall(@PathVariable("exchange") String exchangeId,
-          @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> uninstall(@PathVariable("exchange") String exchangeId,
+                                                                            @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException {
 
         UserDetails currentUser = (UserDetails) request.getSession().getAttribute("user");
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        ComponentInstallationJob job = installationService.uninstall(exchangeId, componentId, currentUser.getUsername());
+        DigitalExchangeJob job = installationService.uninstall(exchangeId, componentId, currentUser.getUsername());
 
         return ResponseEntity.created(
                 new URI("/plugins/digitalExchange/uninstall/" + componentId))
@@ -69,7 +69,7 @@ public class DigitalExchangeInstallResourceController implements DigitalExchange
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> getLastJob(@PathVariable("component") String componentId) {
+    public ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getLastJob(@PathVariable("component") String componentId) {
         return ResponseEntity.ok(new SimpleRestResponse<>(installationService.checkInstallationStatus(componentId)));
     }
 

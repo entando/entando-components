@@ -51,7 +51,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class ComponentInstallerTest {
+public class DigitalExchangeJobExecutorTest {
 
     private static File tempZipFile;
 
@@ -75,7 +75,7 @@ public class ComponentInstallerTest {
     private InitializerManager initializerManager;
 
     @Mock
-    private Consumer<ComponentInstallationJob> jobConsumer;
+    private Consumer<DigitalExchangeJob> jobConsumer;
 
     @Mock
     private ApplicationContext applicationContext;
@@ -88,9 +88,9 @@ public class ComponentInstallerTest {
 
     @InjectMocks
     @Spy
-    private ComponentInstaller installer;
+    private DigitalExchangeJobExecutor installer;
 
-    private ComponentInstallationJob job;
+    private DigitalExchangeJob job;
 
     @BeforeClass
     public static void setupZip() {
@@ -109,7 +109,7 @@ public class ComponentInstallerTest {
 
         commandExecutor.setApplicationContext(applicationContext);
 
-        job = new ComponentInstallationJob();
+        job = new DigitalExchangeJob();
         job.setDigitalExchange("DE");
         job.setComponentId("de_test_page_model");
 
@@ -151,10 +151,10 @@ public class ComponentInstallerTest {
 
         installer.install(job, jobConsumer);
 
-        ArgumentCaptor<ComponentInstallationJob> jobCaptor = ArgumentCaptor.forClass(ComponentInstallationJob.class);
+        ArgumentCaptor<DigitalExchangeJob> jobCaptor = ArgumentCaptor.forClass(DigitalExchangeJob.class);
         verify(jobConsumer, times(6)).accept(jobCaptor.capture());
         assertThat(jobCaptor.getValue().getProgress()).isEqualTo(1);
-        assertThat(jobCaptor.getValue().getStatus()).isEqualTo(InstallationStatus.COMPLETED);
+        assertThat(jobCaptor.getValue().getStatus()).isEqualTo(JobStatus.COMPLETED);
 
         ArgumentCaptor<String> protectedFileCaptor = ArgumentCaptor.forClass(String.class);
         verify(storageManager, times(4)).saveProtectedFile(protectedFileCaptor.capture(), any());
@@ -171,7 +171,7 @@ public class ComponentInstallerTest {
         verify(labelController, times(1)).addLabelGroup(any());
     }
 
-    @Test(expected = InstallationException.class)
+    @Test(expected = JobExecutionException.class)
     public void shouldFailOnDownload() {
 
         when(client.getStreamResponse(any(), any())).thenThrow(UncheckedIOException.class);
@@ -179,7 +179,7 @@ public class ComponentInstallerTest {
         installer.install(job, jobConsumer);
     }
 
-    @Test(expected = InstallationException.class)
+    @Test(expected = JobExecutionException.class)
     public void shouldFailOnUnzip() throws IOException, ApsSystemException {
 
         doThrow(ApsSystemException.class).when(storageManager)
@@ -188,7 +188,7 @@ public class ComponentInstallerTest {
         installer.install(job, jobConsumer);
     }
 
-    @Test(expected = InstallationException.class)
+    @Test(expected = JobExecutionException.class)
     public void shouldFailOnMissingComponentDefinition() throws ApsSystemException {
 
         when(storageManager.existsProtected(endsWith("component.xml"))).thenReturn(false);
@@ -196,7 +196,7 @@ public class ComponentInstallerTest {
         installer.install(job, jobConsumer);
     }
 
-    @Test(expected = InstallationException.class)
+    @Test(expected = JobExecutionException.class)
     public void shouldFailOnParsingXML() throws ApsSystemException {
 
         when(storageManager.getProtectedStream(endsWith("component.xml"))).thenReturn(null);
@@ -204,7 +204,7 @@ public class ComponentInstallerTest {
         installer.install(job, jobConsumer);
     }
 
-    @Test(expected = InstallationException.class)
+    @Test(expected = JobExecutionException.class)
     public void shouldFailOnInstallation() throws ApsSystemException {
 
         doThrow(ApsSystemException.class)

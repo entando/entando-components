@@ -13,10 +13,13 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
-public enum InstallationStatus {
-    
-    CREATED,
-    IN_PROGRESS,
-    COMPLETED,
-    ERROR
+public class JobExecutionException extends RuntimeException {
+
+    public JobExecutionException(String message) {
+        super(message);
+    }
+
+    public JobExecutionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

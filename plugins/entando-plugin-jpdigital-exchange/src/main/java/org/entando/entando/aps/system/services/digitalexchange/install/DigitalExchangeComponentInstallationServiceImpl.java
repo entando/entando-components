@@ -15,7 +15,9 @@ package org.entando.entando.aps.system.services.digitalexchange.install;
 
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
+
 import org.apache.commons.lang.RandomStringUtils;
+import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -34,77 +36,80 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
     private final DigitalExchangesService exchangesService;
     private final DigitalExchangeComponentInstallationDAO dao;
-    private final ComponentInstaller componentInstaller;
+    private final DigitalExchangeJobExecutor digitalExchangeJobExecutor;
 
     @Autowired
     public DigitalExchangeComponentInstallationServiceImpl(
             DigitalExchangesService exchangesService,
             DigitalExchangeComponentInstallationDAO dao,
-            ComponentInstaller componentInstaller) {
+            DigitalExchangeJobExecutor digitalExchangeJobExecutor) {
 
         this.exchangesService = exchangesService;
         this.dao = dao;
-        this.componentInstaller = componentInstaller;
+        this.digitalExchangeJobExecutor = digitalExchangeJobExecutor;
     }
 
     @Override
-    public ComponentInstallationJob install(String exchangeId, String componentId, String username) {
+    public DigitalExchangeJob install(String exchangeId, String componentId, String username) {
 
-        checkIfAlreadyRunning(componentId);
+        checkIfAlreadyRunning(componentId, JobType.INSTALL);
 
         DigitalExchange digitalExchange = exchangesService.findById(exchangeId);
 
-        ComponentInstallationJob job = createNewJob(digitalExchange, componentId);
+        DigitalExchangeJob job = createNewJob(digitalExchange, componentId, JobType.INSTALL);
         job.setUser(username);
         dao.createComponentInstallationJob(job);
 
-        CompletableFuture.runAsync(() -> {
-            try {
-                componentInstaller.install(job, dao::updateComponentInstallationJob);
-            } catch (Throwable ex) {
-                logger.error("Error while installing " + componentId, ex);
-                job.setStatus(InstallationStatus.ERROR);
-                job.setErrorMessage(ex.getMessage());
-                job.setEnded(new Date());
-                dao.updateComponentInstallationJob(job);
-            }
-        });
+        this.executeJob(job);
 
         return job;
     }
 
     @Override
-    public ComponentInstallationJob uninstall(String exchangeId, String componentId, String username) {
+    public DigitalExchangeJob uninstall(String exchangeId, String componentId, String username) {
 
-        checkIfAlreadyRunning(componentId);
+        checkIfAlreadyRunning(componentId, JobType.UNINSTALL);
 
         DigitalExchange digitalExchange = exchangesService.findById(exchangeId);
 
-        ComponentInstallationJob job = createNewJob(digitalExchange, componentId);
+        DigitalExchangeJob job = createNewJob(digitalExchange, componentId, JobType.UNINSTALL);
         job.setUser(username);
         dao.createComponentInstallationJob(job);
 
+        this.executeJob(job);
+
+        return job;
+    }
+
+    private void executeJob(DigitalExchangeJob job) {
         CompletableFuture.runAsync(() -> {
             try {
-                componentInstaller.uninstall(job, dao::updateComponentInstallationJob);
+                switch (job.getJobType()) {
+                    case UNINSTALL:
+                        digitalExchangeJobExecutor.uninstall(job, dao::updateComponentInstallationJob);
+                        break;
+                    case INSTALL:
+                        digitalExchangeJobExecutor.install(job, dao::updateComponentInstallationJob);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Not supported job type " + job.getJobType().name()) ;
+                }
             } catch (Throwable ex) {
-                logger.error("Error while installing " + componentId, ex);
-                job.setStatus(InstallationStatus.ERROR);
+                logger.error("Error while executing job for " + job.getComponentId(), ex);
+                job.setStatus(JobStatus.ERROR);
                 job.setErrorMessage(ex.getMessage());
                 job.setEnded(new Date());
                 dao.updateComponentInstallationJob(job);
             }
         });
-
-        return job;
     }
 
 
-    private synchronized void checkIfAlreadyRunning(String componentId) {
+    private synchronized void checkIfAlreadyRunning(String componentId, JobType jobType) {
 
-        dao.findLast(componentId).ifPresent(job -> {
-            if (job.getStatus() != InstallationStatus.COMPLETED
-                    && job.getStatus() != InstallationStatus.ERROR) {
+        dao.findLast(componentId, jobType).ifPresent(job -> {
+            if (job.getStatus() != JobStatus.COMPLETED
+                    && job.getStatus() != JobStatus.ERROR) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(componentId, "component");
                 bindingResult.reject(ERRCODE_COMPONENT_INSTALLATION_RUNNING, new String[]{}, "digitalExchange.installation.alreadyRunning");
                 throw new ValidationConflictException(bindingResult);
@@ -112,22 +117,30 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         });
     }
 
-    private ComponentInstallationJob createNewJob(DigitalExchange digitalExchange, String componentId) {
+    private DigitalExchangeJob createNewJob(DigitalExchange digitalExchange, String componentId, JobType type) {
 
-        ComponentInstallationJob job = new ComponentInstallationJob();
+        DigitalExchangeJob job = new DigitalExchangeJob();
+        //TODO let the database create this natively
         job.setId(RandomStringUtils.randomAlphanumeric(20));
         job.setComponentId(componentId);
         job.setStarted(new Date());
         job.setDigitalExchange(digitalExchange.getId());
         job.setDigitalExchangeUrl(digitalExchange.getUrl());
-        job.setStatus(InstallationStatus.CREATED);
+        job.setStatus(JobStatus.CREATED);
+        job.setJobType(type);
 
         return job;
     }
 
     @Override
-    public ComponentInstallationJob checkInstallationStatus(String componentId) {
-        return dao.findLast(componentId)
-                .orElseThrow(() -> new IllegalArgumentException("No job found for component " + componentId));
+    public DigitalExchangeJob checkInstallationStatus(String componentId) {
+        return dao.findLast(componentId, JobType.INSTALL)
+                .orElseThrow(() -> new RestRourceNotFoundException("component",  componentId));
+    }
+
+    @Override
+    public DigitalExchangeJob checkUninstallStatus(String componentId) {
+        return dao.findLast(componentId, JobType.UNINSTALL)
+                .orElseThrow(() -> new RestRourceNotFoundException("component" , componentId));
     }
 }

@@ -15,9 +15,11 @@ package org.entando.entando.aps.system.services.digitalexchange.install;
 
 public interface DigitalExchangeComponentInstallationService {
 
-    ComponentInstallationJob install(String exchangeId, String componentId, String username);
+    DigitalExchangeJob install(String exchangeId, String componentId, String username);
 
-    ComponentInstallationJob uninstall(String exchangeId, String componentId, String username);
+    DigitalExchangeJob uninstall(String exchangeId, String componentId, String username);
 
-    ComponentInstallationJob checkInstallationStatus(String componentId);
+    DigitalExchangeJob checkInstallationStatus(String componentId);
+
+    DigitalExchangeJob checkUninstallStatus(String componentId);
 }

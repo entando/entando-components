@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URISyntaxException;
 import javax.servlet.http.HttpServletRequest;
-import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallationJob;
+import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeJob;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.http.MediaType;
@@ -41,8 +41,8 @@ public interface DigitalExchangeInstallResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PostMapping(value = "{exchange}/install/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> install(@PathVariable("exchange") String digitalExchangeId,
-            @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
+    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> install(@PathVariable("exchange") String digitalExchangeId,
+                                                                   @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
 
     @ApiOperation(value = "Checks installation job status")
     @ApiResponses({
@@ -50,7 +50,7 @@ public interface DigitalExchangeInstallResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/install/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> getLastJob(@PathVariable("component") String componentId);
+    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getLastJob(@PathVariable("component") String componentId);
 
     @ApiOperation(value = "Starts component remove job ")
     @ApiResponses({
@@ -58,6 +58,6 @@ public interface DigitalExchangeInstallResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PostMapping(value = "{exchange}/uninstall/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> uninstall(@PathVariable("exchange") String digitalExchangeId,
-           @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
+    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> uninstall(@PathVariable("exchange") String digitalExchangeId,
+                                                                     @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
 }

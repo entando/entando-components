@@ -17,9 +17,9 @@ import java.util.Optional;
 
 public interface DigitalExchangeComponentInstallationDAO {
 
-    void createComponentInstallationJob(ComponentInstallationJob job);
+    void createComponentInstallationJob(DigitalExchangeJob job);
 
-    Optional<ComponentInstallationJob> findLast(String componentId);
+    Optional<DigitalExchangeJob> findLast(String componentId, JobType jobType);
 
-    void updateComponentInstallationJob(ComponentInstallationJob job);
+    void updateComponentInstallationJob(DigitalExchangeJob job);
 }

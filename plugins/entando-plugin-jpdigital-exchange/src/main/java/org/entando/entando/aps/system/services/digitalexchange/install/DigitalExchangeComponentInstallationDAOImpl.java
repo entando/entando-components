@@ -36,15 +36,16 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
     private static final String ALL_COLS = String.join(", ",
             COL_ID, COL_DIGITAL_EXCHANGE_ID, COL_DIGITAL_EXCHANGE_URL, COL_COMPONENT_ID,
             COL_COMPONENT_NAME, COL_COMPONENT_VERSION, COL_STARTED_AT, COL_ENDED_AT,
-            COL_STARTED_BY, COL_PROGRESS, COL_STATUS, COL_ERROR_MESSAGE);
+            COL_STARTED_BY, COL_PROGRESS, COL_STATUS, COL_ERROR_MESSAGE,
+            COL_JOB_TYPE);
 
     private static final String INSERT_JOB = String.format(
-            "INSERT INTO %s (%s) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO %s (%s) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             TABLE_NAME, ALL_COLS);
 
     private static final String SELECT_COMPONENT_JOBS = String.format(
-            "SELECT %s FROM %s WHERE %s = ? ORDER BY %s DESC",
-            ALL_COLS, TABLE_NAME, COL_COMPONENT_ID, COL_STARTED_AT);
+            "SELECT %s FROM %s WHERE %s = ? AND %s = ? ORDER BY %s DESC",
+            ALL_COLS, TABLE_NAME, COL_COMPONENT_ID, COL_JOB_TYPE, COL_STARTED_AT);
 
     private static final String UPDATE_JOB = String.format(
             "UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?",
@@ -57,7 +58,7 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
     }
 
     @Override
-    public void createComponentInstallationJob(ComponentInstallationJob job) {
+    public void createComponentInstallationJob(DigitalExchangeJob job) {
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(INSERT_JOB)) {
 
@@ -72,28 +73,30 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
             ps.setNull(++i, Types.TIMESTAMP); // ended
             ps.setString(++i, job.getUser());
             ps.setDouble(++i, job.getProgress());
-            ps.setString(++i, job.getStatus().toString());
+            ps.setString(++i, job.getStatus().name());
             ps.setString(++i, job.getErrorMessage());
+            ps.setString(++i, job.getJobType().name());
 
             ps.execute();
 
         } catch (SQLException | ApsSystemException ex) {
-            throw new InstallationException("Unable to store installation job information", ex);
+            throw new JobExecutionException("Unable to store installation job information", ex);
         }
     }
 
     @Override
-    public Optional<ComponentInstallationJob> findLast(String componentId) {
+    public Optional<DigitalExchangeJob> findLast(String componentId, JobType jobType) {
 
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(SELECT_COMPONENT_JOBS)) {
 
             ps.setString(1, componentId);
+            ps.setString(2, jobType.name());
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
 
-                    ComponentInstallationJob job = new ComponentInstallationJob();
+                    DigitalExchangeJob job = new DigitalExchangeJob();
 
                     job.setId(rs.getString(COL_ID));
                     job.setDigitalExchange(rs.getString(COL_DIGITAL_EXCHANGE_ID));
@@ -108,8 +111,9 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
                     }
                     job.setUser(rs.getString(COL_STARTED_BY));
                     job.setProgress(rs.getInt(COL_PROGRESS));
-                    job.setStatus(InstallationStatus.valueOf(rs.getString(COL_STATUS)));
+                    job.setStatus(JobStatus.valueOf(rs.getString(COL_STATUS)));
                     job.setErrorMessage(rs.getString(COL_ERROR_MESSAGE));
+                    job.setJobType(JobType.valueOf(rs.getString(COL_JOB_TYPE)));
 
                     return Optional.of(job);
 
@@ -118,12 +122,12 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
                 }
             }
         } catch (SQLException | ApsSystemException ex) {
-            throw new InstallationException("Unable to retrieve installation job information", ex);
+            throw new JobExecutionException("Unable to retrieve installation job information", ex);
         }
     }
 
     @Override
-    public void updateComponentInstallationJob(ComponentInstallationJob job) {
+    public void updateComponentInstallationJob(DigitalExchangeJob job) {
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(UPDATE_JOB)) {
 
@@ -144,7 +148,7 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
             ps.execute();
 
         } catch (SQLException | ApsSystemException ex) {
-            throw new InstallationException("Unable to update installation job information", ex);
+            throw new JobExecutionException("Unable to update installation job information", ex);
         }
     }
 }

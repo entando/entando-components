@@ -35,6 +35,7 @@ public class DigitalExchangeComponentInstallation {
     public static final String COL_PROGRESS = "progress";
     public static final String COL_STATUS = "status";
     public static final String COL_ERROR_MESSAGE = "error_message";
+    public static final String COL_JOB_TYPE = "job_type";
 
     @DatabaseField(columnName = COL_ID, dataType = DataType.STRING, canBeNull = false, id = true, width = 20)
     private String id;
@@ -81,4 +82,7 @@ public class DigitalExchangeComponentInstallation {
 
     @DatabaseField(columnName = COL_ERROR_MESSAGE, dataType = DataType.STRING)
     private String errorMessage;
+
+    @DatabaseField(columnName = COL_JOB_TYPE, dataType = DataType.STRING, canBeNull = false)
+    private String jobType;
 }

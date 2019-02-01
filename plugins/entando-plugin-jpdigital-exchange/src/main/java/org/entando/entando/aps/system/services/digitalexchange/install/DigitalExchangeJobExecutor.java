@@ -51,9 +51,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.context.ServletContextAware;
 
 @org.springframework.stereotype.Component
-public class ComponentInstaller implements ServletContextAware {
+public class DigitalExchangeJobExecutor implements ServletContextAware {
 
-    private static final Logger logger = LoggerFactory.getLogger(ComponentInstaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeJobExecutor.class);
 
     private static final String RESOURCES_DIR = "resources";
 
@@ -66,9 +66,9 @@ public class ComponentInstaller implements ServletContextAware {
     private ServletContext servletContext;
 
     @Autowired
-    public ComponentInstaller(DigitalExchangesClient client, ComponentStorageManager storageManager,
-            DatabaseManager databaseManager, InitializerManager initializerManager,
-            CommandExecutor commandExecutor) {
+    public DigitalExchangeJobExecutor(DigitalExchangesClient client, ComponentStorageManager storageManager,
+                                      DatabaseManager databaseManager, InitializerManager initializerManager,
+                                      CommandExecutor commandExecutor) {
         this.client = client;
         this.storageManager = storageManager;
         this.databaseManager = databaseManager;
@@ -76,7 +76,7 @@ public class ComponentInstaller implements ServletContextAware {
         this.commandExecutor = commandExecutor;
     }
 
-    public void install(ComponentInstallationJob job, Consumer<ComponentInstallationJob> updater) throws InstallationException {
+    public void install(DigitalExchangeJob job, Consumer<DigitalExchangeJob> updater) throws JobExecutionException {
 
         //TODO defines steps and percentages as Enums
         double steps = 6;
@@ -104,12 +104,12 @@ public class ComponentInstaller implements ServletContextAware {
 
         reloadSystem();
         job.setProgress(1);
-        job.setStatus(InstallationStatus.COMPLETED);
+        job.setStatus(JobStatus.COMPLETED);
         job.setEnded(new Date());
         updater.accept(job);
     }
 
-    public void uninstall(ComponentInstallationJob job, Consumer<ComponentInstallationJob> updater) throws InstallationException {
+    public void uninstall(DigitalExchangeJob job, Consumer<DigitalExchangeJob> updater) throws JobExecutionException {
 
         double steps = 5;
         int currentStep = 0;
@@ -137,13 +137,13 @@ public class ComponentInstaller implements ServletContextAware {
         //TODO add an entry in the digital_exchange_installation database for the uninstall
         reloadSystem();
         job.setProgress(1);
-        job.setStatus(InstallationStatus.COMPLETED);
+        job.setStatus(JobStatus.COMPLETED);
         job.setEnded(new Date());
         updater.accept(job);
 
     }
 
-    private void fillComponentInfo(ComponentInstallationJob job) {
+    private void fillComponentInfo(DigitalExchangeJob job) {
 
         RestListRequest requestList = new RestListRequest();
         requestList.setPage(1);
@@ -168,7 +168,7 @@ public class ComponentInstaller implements ServletContextAware {
         List<DigitalExchangeComponent> components = response.getPayload();
 
         if (components.size() != 1) {
-            throw new InstallationException("Found " + components.size() + " components for " + job.getComponentId());
+            throw new JobExecutionException("Found " + components.size() + " components for " + job.getComponentId());
         }
         
         DigitalExchangeComponent component = components.get(0);
@@ -176,7 +176,7 @@ public class ComponentInstaller implements ServletContextAware {
         job.setComponentVersion(component.getVersion());
     }
 
-    private void downloadComponent(ComponentInstallationJob job) {
+    private void downloadComponent(DigitalExchangeJob job) {
 
         Path tempZipPath = null;
 
@@ -195,7 +195,7 @@ public class ComponentInstaller implements ServletContextAware {
 
         } catch (IOException | UncheckedIOException ex) {
             logger.error("Error while downloading component", ex);
-            throw new InstallationException("Unable to save component", ex);
+            throw new JobExecutionException("Unable to save component", ex);
         } finally {
             if (tempZipPath != null) {
                 if (!tempZipPath.toFile().delete()) {
@@ -232,7 +232,7 @@ public class ComponentInstaller implements ServletContextAware {
             }
         } catch (ApsSystemException | IOException ex) {
             logger.error("Error while extracting zip file", ex);
-            throw new InstallationException("Unable to extract zip file", ex);
+            throw new JobExecutionException("Unable to extract zip file", ex);
         }
     }
 
@@ -251,7 +251,7 @@ public class ComponentInstaller implements ServletContextAware {
 
         } catch (ApsSystemException ex) {
             logger.error("Error during component installation", ex);
-            throw new InstallationException("Unable to install component", ex);
+            throw new JobExecutionException("Unable to install component", ex);
         }
     }
 
@@ -269,7 +269,7 @@ public class ComponentInstaller implements ServletContextAware {
 
         } catch (ApsSystemException ex) {
             logger.error("Error during component installation", ex);
-            throw new InstallationException("Unable to install component", ex);
+            throw new JobExecutionException("Unable to install component", ex);
         }
     }
 
@@ -300,7 +300,7 @@ public class ComponentInstaller implements ServletContextAware {
 //        } catch(IOException ex) {
 //
 //            logger.error("Error during removal of component resources", ex);
-//            throw new InstallationException("Unable to remove component resoruces", ex);
+//            throw new JobExecutionException("Unable to remove component resoruces", ex);
 //        }
 //
 //
@@ -321,7 +321,7 @@ public class ComponentInstaller implements ServletContextAware {
 
         } catch (ApsSystemException ex) {
             logger.error("An error occurred while removing downloaded content for the component", ex);
-            throw new InstallationException("Unable to remove component's downloaed content", ex);
+            throw new JobExecutionException("Unable to remove component's downloaed content", ex);
         }
 
     }
@@ -332,7 +332,7 @@ public class ComponentInstaller implements ServletContextAware {
 
         try {
             if (!storageManager.existsProtected(componentDefinitionPath)) {
-                throw new InstallationException("component.xml not found for " + componentCode);
+                throw new JobExecutionException("component.xml not found for " + componentCode);
             }
 
             try (InputStream in = storageManager.getProtectedStream(componentDefinitionPath)) {
@@ -341,7 +341,7 @@ public class ComponentInstaller implements ServletContextAware {
             }
         } catch (Throwable t) {
             logger.error("Error during component defintion parsing", t);
-            throw new InstallationException("Unable to parse component.xml for " + componentCode);
+            throw new JobExecutionException("Unable to parse component.xml for " + componentCode);
         }
     }
 
@@ -350,7 +350,7 @@ public class ComponentInstaller implements ServletContextAware {
             ApsWebApplicationUtils.executeSystemRefresh(servletContext);
         } catch (Throwable t) {
             logger.error("Error during system reloading", t);
-            throw new InstallationException("Unable to reload the system after the installation");
+            throw new JobExecutionException("Unable to reload the system after the installation");
         }
     }
 

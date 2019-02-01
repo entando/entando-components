@@ -82,7 +82,7 @@ public class CommandExecutor implements ApplicationContextAware {
     private void handleCommand(Command command) {
         String templateExpression = commands.getExpression(command.getName());
         if (templateExpression == null) {
-            throw new InstallationException("Unrecognized command " + command.getName());
+            throw new JobExecutionException("Unrecognized command " + command.getName());
         }
         execute(String.format(templateExpression, (Object[]) command.getParameters()));
     }
@@ -93,7 +93,7 @@ public class CommandExecutor implements ApplicationContextAware {
                 RestResponse<?, ?> restResponse = (RestResponse) response.getBody();
                 restResponse.getErrors().forEach(error -> logger.error(error.getMessage()));
             }
-            throw new InstallationException("Execution of " + expression + " returned " + response.getStatusCodeValue());
+            throw new JobExecutionException("Execution of " + expression + " returned " + response.getStatusCodeValue());
         }
     }
 

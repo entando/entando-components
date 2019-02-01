@@ -23,7 +23,7 @@ import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExc
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClientTest;
 import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentsServiceTest;
 import org.entando.entando.aps.system.services.digitalexchange.install.ComponentDescriptorTest;
-import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallerTest;
+import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeJobExecutorTest;
 import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeComponentInstallationServiceTest;
 import org.entando.entando.web.digitalexchange.DigitalExchangesControllerIntegrationTest;
 import org.entando.entando.web.digitalexchange.DigitalExchangesControllerTest;
@@ -41,7 +41,7 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(DigitalExchangesClientTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangesManagerTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeOAuth2RestTemplateFactoryTest.class));
-        suite.addTest(new JUnit4TestAdapter(ComponentInstallerTest.class));
+        suite.addTest(new JUnit4TestAdapter(DigitalExchangeJobExecutorTest.class));
         suite.addTest(new JUnit4TestAdapter(ComponentDescriptorTest.class));
 
         addServicesTests(suite);

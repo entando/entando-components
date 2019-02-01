@@ -16,7 +16,7 @@ package org.entando.entando.aps.system.services.digitalexchange.install;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 
-public class ComponentInstallationJob {
+public class DigitalExchangeJob {
 
     @JsonIgnore
     private String id;
@@ -30,7 +30,8 @@ public class ComponentInstallationJob {
     private Date ended;
     private String user;
     private double progress;
-    private InstallationStatus status;
+    private JobStatus status;
+    private JobType jobType;
     private String errorMessage;
 
     public String getId() {
@@ -89,11 +90,11 @@ public class ComponentInstallationJob {
         this.progress = progress;
     }
 
-    public InstallationStatus getStatus() {
+    public JobStatus getStatus() {
         return status;
     }
 
-    public void setStatus(InstallationStatus status) {
+    public void setStatus(JobStatus status) {
         this.status = status;
     }
 
@@ -128,4 +129,9 @@ public class ComponentInstallationJob {
     public void setUser(String user) {
         this.user = user;
     }
+
+    public JobType getJobType() { return jobType; }
+
+    public void setJobType(JobType jobType) { this.jobType = jobType; }
+
 }

@@ -13,13 +13,10 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
-public class InstallationException extends RuntimeException {
-
-    public InstallationException(String message) {
-        super(message);
-    }
-
-    public InstallationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+public enum JobStatus {
+    
+    CREATED,
+    IN_PROGRESS,
+    COMPLETED,
+    ERROR
 }
