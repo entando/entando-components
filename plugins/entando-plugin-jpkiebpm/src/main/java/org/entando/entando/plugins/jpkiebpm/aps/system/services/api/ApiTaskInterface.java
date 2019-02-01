@@ -742,14 +742,10 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     private void mergeForm(JSONObject taskInputData, KieProcessFormQueryResult form) {
-        logger.info("*************************************************");
-        logger.info("mergeForm");
-
         List<KieProcessFormField> fields = form.getFields();
         Map<String, KieProcessFormField> fieldMap = new HashMap<>();
         for (KieProcessFormField field : fields) {
-            logger.info("field.getName(): " + field.getName());
-
+        
             if (field.getName().contains("_")) {
                 //Store both with and without the underscore. No clear way to know which one is coming back from KIE
                 fieldMap.put(field.getName().split("_")[1], field);
