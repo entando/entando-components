@@ -15,7 +15,12 @@ package org.entando.entando.web.digitalexchange.component;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.util.Date;
+
+import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
+import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
 
 public class DigitalExchangeComponent {
 
@@ -124,5 +129,32 @@ public class DigitalExchangeComponent {
 
     public void setDigitalExchangeId(String digitalExchangeId) {
         this.digitalExchangeId = digitalExchangeId;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return reflectionEquals(this, other);
+    }
+
+    @Override
+    public int hashCode() {
+        return reflectionHashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("lastUpdate", lastUpdate)
+                .append("version", version)
+                .append("type", type)
+                .append("description", description)
+                .append("image", image)
+                .append("rating", rating)
+                .append("installed", installed)
+                .append("digitalExchangeName", digitalExchangeName)
+                .append("digitalExchangeId", digitalExchangeId)
+                .toString();
     }
 }
