@@ -161,16 +161,17 @@ org.entando.form.DynamicForm = function (jKIE) {
             json.html.push(element);
     }
 
-
-    json.html.push({
-        type: "div",
-        html: {
-            "type": "submit",
-            "value": "submit",
-            "name": "submit-bpm-form",
-            "class": "btn btn-primary"
-        }
-    });
+    if (json.method!=='none') {
+        json.html.push({
+            type: "div",
+            html: {
+                "type": "submit",
+                "value": "submit",
+                "name": "submit-bpm-form",
+                "class": "btn btn-primary"
+            }
+        });
+    }
 };
 
 org.entando.form.loadFrom = function (url) {
