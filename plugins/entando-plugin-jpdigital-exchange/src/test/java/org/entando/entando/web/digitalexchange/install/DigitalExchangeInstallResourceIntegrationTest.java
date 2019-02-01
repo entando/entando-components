@@ -21,12 +21,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Collections;
+import java.util.EnumSet;
+
 import org.entando.entando.aps.system.init.IInitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesMocker;
 import org.entando.entando.aps.system.services.digitalexchange.install.ComponentZipUtil;
+import org.entando.entando.aps.system.services.digitalexchange.install.JobType;
 import org.entando.entando.aps.system.services.group.IGroupService;
+import org.entando.entando.aps.system.services.label.ILabelService;
 import org.entando.entando.aps.system.services.pagemodel.IPageModelService;
 import org.entando.entando.aps.system.services.role.IRoleService;
 import org.entando.entando.aps.system.services.role.model.RoleDto;
@@ -107,6 +111,9 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
     private IPageModelService pageModelService;
 
     @Autowired
+    private ILabelService labelService;
+
+    @Autowired
     private IGroupService groupService;
 
     @Autowired
@@ -174,7 +181,11 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 //            uninstallAndCheckForCompletion(componentCode);
 
         } finally {
-            widgetService.removeWidget(componentCode);
+
+            if (widgetService.getWidget(componentCode) != null) {
+                widgetService.removeWidget(componentCode);
+            }
+
         }
 
 
@@ -185,14 +196,28 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
     public void shouldInstallPageModel() throws Exception {
 
         String componentCode = "de_test_page_model";
+        String componentAssociatedLabel = "DE_TEST_LABEL";
 
-        installAndCheckForCompletion(componentCode);
+        try {
 
-        assertThat(pageModelService.getPageModel(componentCode)).isNotNull();
-        assertThat(i18nManager.getLabel("DE_TEST_LABEL", "en")).isEqualTo("Test label DE");
-        assertThat(storageManager.exists("components/de_test_page_model/test.css", false)).isTrue();
+            installAndCheckForCompletion(componentCode);
 
-        pageModelService.removePageModel(componentCode);
+            assertThat(pageModelService.getPageModel(componentCode)).isNotNull();
+            assertThat(i18nManager.getLabel("DE_TEST_LABEL", "en")).isEqualTo("Test label DE");
+            assertThat(storageManager.exists("components/de_test_page_model/test.css", false)).isTrue();
+
+        } finally {
+
+            if (pageModelService.getPageModel(componentCode) != null) {
+                pageModelService.removePageModel(componentCode);
+            }
+
+            if (labelService.getLabelGroup(componentAssociatedLabel) != null) {
+                labelService.removeLabelGroup(componentAssociatedLabel);
+            }
+
+        }
+
     }
 
     @Test
@@ -200,11 +225,20 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         String componentCode = "de_test_group";
 
-        installAndCheckForCompletion(componentCode);
+        try {
 
-        assertThat(groupService.getGroup(componentCode)).isNotNull();
+            installAndCheckForCompletion(componentCode);
 
-        groupService.removeGroup(componentCode);
+            assertThat(groupService.getGroup(componentCode)).isNotNull();
+
+        } finally {
+
+            if(groupService.getGroup(componentCode) != null) {
+                groupService.removeGroup(componentCode);
+            }
+
+        }
+
     }
 
     @Test
@@ -212,13 +246,18 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         String componentCode = "de_test_role";
 
-        installAndCheckForCompletion(componentCode);
+        try {
+            installAndCheckForCompletion(componentCode);
 
-        RoleDto role = roleService.getRole(componentCode);
-        assertThat(role).isNotNull();
-        assertThat(role.getPermissions().get("superuser")).isTrue();
+            RoleDto role = roleService.getRole(componentCode);
+            assertThat(role).isNotNull();
+            assertThat(role.getPermissions().get("superuser")).isTrue();
 
-        roleService.removeRole(componentCode);
+        } finally {
+            if (roleService.getRole(componentCode) != null) {
+                roleService.removeRole(componentCode);
+            }
+        }
     }
 
     private void installAndCheckForCompletion(String componentId) throws Exception {
@@ -325,6 +364,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         assertThat(job.getDigitalExchange()).isNotNull();
         assertThat(job.getStarted()).isNotNull();
         assertThat(job.getUser()).isEqualTo("jack_bauer");
+        assertThat(job.getJobType()).isIn(EnumSet.allOf(JobType.class));
 
         return job;
     }
