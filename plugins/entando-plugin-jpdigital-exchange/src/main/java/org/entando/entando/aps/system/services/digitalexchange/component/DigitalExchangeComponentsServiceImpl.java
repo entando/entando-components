@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.digitalexchange.component;
 
 import java.util.List;
 import org.entando.entando.aps.system.init.IInitializerManager;
+import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
@@ -51,7 +52,9 @@ public class DigitalExchangeComponentsServiceImpl implements DigitalExchangeComp
         // Fill installed fields
         SystemInstallationReport installationReport = initializerManager.getCurrentReport();
         combinedResult.getBody().forEach(component -> {
-            component.setInstalled(installationReport.getComponentReport(component.getId(), false) != null);
+            ComponentInstallationReport report = installationReport.getComponentReport(component.getId(), false);
+            boolean isInstalled = report == null || report.isUninstalled();
+            component.setInstalled(isInstalled);
         });
 
         return combinedResult;
