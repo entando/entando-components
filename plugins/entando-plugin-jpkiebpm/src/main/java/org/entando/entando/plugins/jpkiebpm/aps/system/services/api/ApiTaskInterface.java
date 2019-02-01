@@ -405,6 +405,8 @@ public class ApiTaskInterface extends KieApiManager {
 
         mergeTaskData(inputData, processForm);
 
+        // In order to avoid duplications of input fields remove all the form fields  
+        // and nestedForms of the processForm to return only the Task Data readonly fields
         processForm.getFields().clear();
         processForm.getNestedForms().clear();
 
@@ -416,7 +418,6 @@ public class ApiTaskInterface extends KieApiManager {
         try {
             this.setLabels(processForm, langCode);
             form = KieApiUtil.createForm(processForm, this.getI18nManager(), langCode, this.getFormOverridesMap(widgetInfoId));
-
             form.setTaskId(taskIdString);
             form.setContainerId(containerId);
             form.setProcessId(processId);
