@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-import {uniqueId} from "lodash";
+import {uniqueId, isEqual} from "lodash";
 
 class DropdownMultiple extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class DropdownMultiple extends Component {
 
   static getDerivedStateFromProps(nextProps, state) {
     const {list, title, titleHelper} = nextProps;
-    if (list.length > 0 && state.listValue.length === 0) {
+    if (!isEqual(list, state)) {
       return {listValue: list};
     }
     const count = list.filter(f => f.selected).length;

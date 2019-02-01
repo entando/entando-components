@@ -10,7 +10,9 @@ const MapSecondStepContent = ({
   optionColumns,
   optionColumnSelected,
   datasourcesValue,
-  clearInputDatasourceData
+  clearInputDatasourceData,
+  addColumnOptionSelected,
+  removeColumnOptionSelected
 }) => {
   return (
     <FieldArray
@@ -23,6 +25,8 @@ const MapSecondStepContent = ({
       optionColumnSelected={optionColumnSelected}
       datasourcesValue={datasourcesValue}
       clearInputDatasourceData={clearInputDatasourceData}
+      addColumnOptionSelected={addColumnOptionSelected}
+      removeColumnOptionSelected={removeColumnOptionSelected}
     />
   );
 };
@@ -30,6 +34,8 @@ const MapSecondStepContent = ({
 MapSecondStepContent.propTypes = {
   formName: PropTypes.string,
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  addColumnOptionSelected: PropTypes.func.isRequired,
+  removeColumnOptionSelected: PropTypes.func.isRequired
 };
 export default MapSecondStepContent;

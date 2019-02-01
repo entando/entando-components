@@ -12,7 +12,6 @@ class FieldArrayDatasourceLayer extends Component {
   }
 
   addDatasource() {
-    console.log("addDatasource", this.props);
     const {
       fields,
       label,
@@ -32,22 +31,47 @@ class FieldArrayDatasourceLayer extends Component {
 
   render() {
     const {
+      fields: {name, remove},
+      label,
       formName,
       optionColumns,
       optionColumnSelected,
-      datasourcesValue
+      datasourcesValue,
+      addColumnOptionSelected,
+      removeColumnOptionSelected
     } = this.props;
+
+    const disabledAddButton =
+      label === "" ||
+      optionColumns.length === 0 ||
+      optionColumnSelected.length === 0
+        ? true
+        : false;
+
     return (
-      <Grid className="MapSecondStepContent">
+      <Grid className="FieldArrayDatasource">
         <Row>
           {datasourcesValue.map((m, index) => (
-            <DatasourceLayer
-              key={m.datasource}
-              formName={m.formName}
-              optionColumns={m.optionColumns}
-              optionColumnSelected={m.optionColumnSelected}
-              nameFieldArray={`datasources[${index}]`}
-            />
+            <div
+              key={index}
+              className="FieldArrayDatasource__data-array-container"
+            >
+              <div className="FieldArrayDatasource__data-array-item">
+                <DatasourceLayer
+                  optionColumns={m.optionColumns}
+                  optionColumnSelected={m.optionColumnSelected}
+                  nameFieldArray={`${name}[${index}]`}
+                  addColumnOptionSelected={addColumnOptionSelected}
+                  removeColumnOptionSelected={removeColumnOptionSelected}
+                />
+              </div>
+              <div className="FieldArrayDatasource__icon-remove">
+                <i
+                  className="fa fa-trash fa-2x"
+                  onClick={() => remove(index)}
+                />
+              </div>
+            </div>
           ))}
 
           <DatasourceLayer
@@ -58,6 +82,7 @@ class FieldArrayDatasourceLayer extends Component {
           <Col xs={12}>
             <div className="col-xs-2">
               <Button
+                disabled={disabledAddButton}
                 type="button"
                 bsStyle="default"
                 className="btn-add"
@@ -73,11 +98,21 @@ class FieldArrayDatasourceLayer extends Component {
   }
 }
 FieldArrayDatasourceLayer.propTypes = {
+  name: PropTypes.string,
+  label: PropTypes.string,
+  formName: PropTypes.string.isRequired,
   clearInputDatasourceData: PropTypes.func.isRequired,
-  datasourcesValue: PropTypes.arrayOf(PropTypes.shape({}))
+  removeColumnOptionSelected: PropTypes.func.isRequired,
+  addColumnOptionSelected: PropTypes.func.isRequired,
+  datasourcesValue: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({}))
 };
 FieldArrayDatasourceLayer.defaultProps = {
-  datasourcesValue: []
+  name: null,
+  label: "",
+  datasourcesValue: [],
+  optionColumnSelected: []
 };
 
 export default FieldArrayDatasourceLayer;

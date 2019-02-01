@@ -580,8 +580,22 @@
   .MapSecondStepContent__item.col-xs-10 {
     padding-left: 15px; }
 
-.FieldArrayDatasource {
-  border: 1px solid; }
+.FieldArrayDatasource__data-array-container {
+  border: 0 solid red;
+  position: relative; }
+
+.FieldArrayDatasource__data-array-item {
+  border: 0 solid green; }
+
+.FieldArrayDatasource__icon-remove {
+  border: 0 solid blue;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  right: 0; }
+
+.DatasourceLayer__item.col-xs-10 {
+  padding-left: 10px; }
 
 .DropdownMultiple {
   -webkit-user-select: none;
@@ -601,7 +615,7 @@
     -ms-flex-pack: justify;
     justify-content: space-between;
     line-height: 20px;
-    border: 1px solid #dfdfdf;
+    border: 1px solid #bbb;
     border-radius: 1px;
     cursor: default;
     position: relative;

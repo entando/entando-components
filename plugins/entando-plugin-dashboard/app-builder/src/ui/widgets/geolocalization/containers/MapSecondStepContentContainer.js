@@ -1,5 +1,11 @@
 import {connect} from "react-redux";
-import {formValueSelector, clearFields, arrayRemoveAll} from "redux-form";
+import {
+  formValueSelector,
+  clearFields,
+  arrayRemoveAll,
+  arrayPush,
+  arrayRemove
+} from "redux-form";
 import MapSecondStepContent from "../components/MapSecondStepContent";
 
 import {clearDatasourceColumns} from "state/main/actions";
@@ -28,6 +34,12 @@ const mapsDispatchToProps = (dispatch, ownProps) => {
       dispatch(clearFields(formName, false, false, "label", "datasource"));
       dispatch(clearDatasourceColumns());
       dispatch(arrayRemoveAll(formName, "datasourceColumns"));
+    },
+    addColumnOptionSelected: (fieldName, value) => {
+      dispatch(arrayPush(formName, fieldName, value));
+    },
+    removeColumnOptionSelected: (fieldName, index) => {
+      dispatch(arrayRemove(formName, fieldName, index));
     }
   };
 };

@@ -15,10 +15,13 @@ class DashboardMapFormBody extends Component {
   }
 
   render() {
-    const {formSyncErrors} = this.props;
+    const {formSyncErrors, datasources} = this.props;
     const validateSteps = [false, false, false];
     if (!formSyncErrors.title && !formSyncErrors.serverName) {
       validateSteps[0] = true;
+    }
+    if (datasources.length > 0) {
+      validateSteps[1] = true;
     }
 
     return (
@@ -34,11 +37,13 @@ class DashboardMapFormBody extends Component {
 DashboardMapFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
-  formSyncErrors: PropTypes.shape({})
+  formSyncErrors: PropTypes.shape({}),
+  datasources: PropTypes.arrayOf(PropTypes.shape({}))
 };
 
 DashboardMapFormBody.defaultProps = {
-  formSyncErrors: {}
+  formSyncErrors: {},
+  datasources: []
 };
 
 const DashboardMapForm = reduxForm({

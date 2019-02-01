@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-import DropdownMultiple from "ui/common/DropdownMultiple";
+import {isEqual} from "lodash";
 import {formattedText} from "@entando/utils";
+import DropdownMultiple from "ui/common/DropdownMultiple";
 
 class FieldArrayDropDownMultiple extends Component {
   constructor(props) {
@@ -14,34 +15,39 @@ class FieldArrayDropDownMultiple extends Component {
 
   static getDerivedStateFromProps(nextProps, state) {
     const {optionColumns} = nextProps;
-    if (optionColumns.length > 0 && state.columns.length === 0) {
+    if (!isEqual(optionColumns, state.columns)) {
       return {
         columns: optionColumns.map((m, index) => ({
           id: index,
           key: m.key,
           value: m.value
-          //selected: false
         }))
       };
     }
-    return state.columns;
+    return null;
   }
 
   toogleSelected(id, key) {
+    const {nameFieldArray, fields} = this.props;
     let temp = this.state.columns.find(f => f.key === key);
     temp.selected = !temp.selected;
     this.setState(prevState => ({
       columns: [...prevState.columns, ...temp]
     }));
     if (temp.selected) {
-      this.props.fields.push(temp);
+      const {addColumnOptionSelected} = this.props;
+      fields.push(temp);
+      addColumnOptionSelected && addColumnOptionSelected(nameFieldArray, temp);
     } else {
-      const {optionColumnSelected} = this.props;
+      const {optionColumnSelected, removeColumnOptionSelected} = this.props;
+
       optionColumnSelected
         .map((m, index) => (m.key === key ? index : -1))
         .forEach(index => {
           if (index > -1) {
-            this.props.fields.remove(index);
+            fields.remove(index);
+            removeColumnOptionSelected &&
+              removeColumnOptionSelected(nameFieldArray, index);
           }
         });
     }

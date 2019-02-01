@@ -55,8 +55,20 @@ export const DASHBOARD_CONFIG_LIST = [
 
 export const DATASOURCE_PARKING = {
   id: "parking",
-  datasource: "IOT Parking Area",
+  datasource: "Parking Area",
   datasourceUri: "parking/devices/",
+  status: "ok"
+};
+export const DATASOURCE_BIKE_SHARING = {
+  id: "bike",
+  datasource: "Bike Sharing",
+  datasourceUri: "bike-sharing/devices/",
+  status: "ok"
+};
+export const DATASOURCE_BUS_STATION = {
+  id: "bus",
+  datasource: "Bus station",
+  datasourceUri: "bus-station/devices/",
   status: "ok"
 };
 
@@ -74,7 +86,37 @@ export const DATASOURCE_PARKING_DATA = {
   ],
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
+export const DATASOURCE_BIKE_DATA = {
+  id: "bike",
+  columns: [
+    {key: "inUse", value: "inUse", hidden: false},
+    {key: "coordinates", value: "coordinates", hidden: false},
+    {key: "information", value: "information", hidden: false}
+  ],
+  data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
+};
+export const DATASOURCE_BUS_DATA = {
+  id: "bus",
+  columns: [
+    {key: "status", value: "status", hidden: false},
+    {key: "coordinates", value: "coordinates", hidden: false},
+    {key: "information", value: "information", hidden: false}
+  ],
+  data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
+};
+
+export const DATASOURCES_DATA = {
+  "6ce983ca69c5448599328173084710ef20180504T094803416": {
+    parking: DATASOURCE_PARKING_DATA,
+    bike: DATASOURCE_BIKE_DATA,
+    bus: DATASOURCE_BUS_DATA
+  }
+};
 
 export const DASHBOARD_LIST_DATASOURCE = {
-  "6ce983ca69c5448599328173084710ef20180504T094803416": [DATASOURCE_PARKING]
+  "6ce983ca69c5448599328173084710ef20180504T094803416": [
+    DATASOURCE_PARKING,
+    DATASOURCE_BIKE_SHARING,
+    DATASOURCE_BUS_STATION
+  ]
 };
