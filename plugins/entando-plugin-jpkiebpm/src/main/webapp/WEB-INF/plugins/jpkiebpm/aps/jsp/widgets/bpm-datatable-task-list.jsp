@@ -5,7 +5,6 @@
 <jpkie:datatable widgetConfigInfoIdVar="configId"/>
 <c:set var="id" value="${configId}"/>
 
-
 <script src="<wp:resourceURL />administration/js/jquery-2.2.4.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery.validate.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/additional-methods.js"></script>
@@ -102,6 +101,10 @@
             org.entando.form.dynamicForm = new org.entando.form.DynamicForm(jsonKie);
             //org.entando.form.dynamicForm.json.html[0].value = processId;
             $("#bpm-task-list-modal-form").dform(org.entando.form.dynamicForm.json);
+            
+            var urlTaskData = context + "taskData.json?configId=" + configId +"&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
+            appendTaskData(urlTaskData);
+            
             optModal.title = "BPM Form Data";
             $('#bpm-task-list-modal-form').dialog(optModal);
             $('form.ui-dform-form').submit(function (event1) {
@@ -120,11 +123,9 @@
             postData.task.fields.push({name: "taskId", value: rowData.id});
             postData.task.fields.push({name: "configId", value: configId});
             var action = context + "taskForm.json";
-            //console.log(postData);
 
-            $('form.ui-dform-form checkbox')
             $.ajax({
-                 url: action,
+                url: action,
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify(postData),
@@ -147,6 +148,24 @@
          loadDataTable('#data-table-task-list');
     };
         
+    function appendTaskData(urlTaskData){
+            $("#bpm-task-data").empty();
+               
+            $.when(
+                $.get(urlTaskData, function (data) {
+                    var jsonKieTaskData = data.response.result;
+                    jsonKieTaskData.mainForm.method = "none";
+                    org.entando.form.dynamicFormInfo = new org.entando.form.DynamicForm(jsonKieTaskData);
+                    $("#bpm-task-data").dform(org.entando.form.dynamicFormInfo.json); 
+                })
+            ).done( 
+                function(){
+                    var formFields = $("#bpm-task-data form").children().detach();
+                    var taskDataTitle="<br/><br/><h2 id=\"task-data-title\"> Task data </h2>";
+                    $('#bpm-task-list-modal-form').append(taskDataTitle);
+                    formFields.appendTo('#bpm-task-list-modal-form');
+                });
+    }
 
     function  loadDataTable(idTable) {
             var configId =${configId};
@@ -156,7 +175,7 @@
             {
                 html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Complete</button>',
                         onClick: function (ev, data) {
-
+                            
                         openModalForm(ev, configId, data, context);
                     }
             },
@@ -222,4 +241,9 @@
     <img id="bpm-task-list-modal-diagram-data" />
 </div>
 
-<div id="bpm-task-list-modal-form"/>
+<div id="bpm-task-data-container">    
+    <div id="bpm-task-data"></div>
+</div>
+<div id="bpm-task-list-modal-form"></div>
+
+
