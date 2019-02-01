@@ -53,7 +53,8 @@ public class DigitalExchangeInstallResourceController implements DigitalExchange
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> uninstall(String exchangeId, String componentId, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> uninstall(@PathVariable("exchange") String exchangeId,
+          @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException {
 
         UserDetails currentUser = (UserDetails) request.getSession().getAttribute("user");
         if (currentUser == null) {

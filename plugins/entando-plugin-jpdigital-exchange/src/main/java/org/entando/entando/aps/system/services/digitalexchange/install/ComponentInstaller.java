@@ -94,7 +94,7 @@ public class ComponentInstaller implements ServletContextAware {
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
-        updateDatabase(component);
+        initializeComponent(component);
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
@@ -111,23 +111,26 @@ public class ComponentInstaller implements ServletContextAware {
 
     public void uninstall(ComponentInstallationJob job, Consumer<ComponentInstallationJob> updater) throws InstallationException {
 
-        double steps = 3;
+        double steps = 5;
         int currentStep = 0;
-
-//        fillComponentInfo(job);
-//        job.setProgress(++currentStep / steps);
-//        updater.accept(job);
 
         ComponentDescriptor component = parseComponentDescriptor(job.getComponentId());
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
-        //TODO update System initializer
-//        updateDatabase(component);
-//        job.setProgress(++currentStep / steps);
-//        updater.accept(job);
-
         component.getUninstallationCommands().forEach(commandExecutor::execute);
+        job.setProgress(++currentStep / steps);
+        updater.accept(job);
+
+        cleanComponentDatabase(component);
+        job.setProgress(++currentStep / steps);
+        updater.accept(job);
+
+        cleanComponentResources(component);
+        job.setProgress(++currentStep / steps);
+        updater.accept(job);
+
+        removeComponentDownloadedContent(component);
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
@@ -233,7 +236,7 @@ public class ComponentInstaller implements ServletContextAware {
         }
     }
 
-    private void updateDatabase(ComponentDescriptor component) {
+    private void initializeComponent(ComponentDescriptor component) {
 
         try {
 
@@ -250,6 +253,77 @@ public class ComponentInstaller implements ServletContextAware {
             logger.error("Error during component installation", ex);
             throw new InstallationException("Unable to install component", ex);
         }
+    }
+
+    private void cleanComponentDatabase(ComponentDescriptor component) {
+
+        try {
+
+            SystemInstallationReport systemInstallationReport = initializerManager.getCurrentReport();
+
+            databaseManager.uninstallComponentResources(component, systemInstallationReport);
+
+            initializerManager.saveReport(systemInstallationReport);
+
+//            initializerManager.executeComponentPostInitProcesses(component, systemInstallationReport);
+
+        } catch (ApsSystemException ex) {
+            logger.error("Error during component installation", ex);
+            throw new InstallationException("Unable to install component", ex);
+        }
+    }
+
+    private void cleanComponentResources(ComponentDescriptor component) {
+
+        //TODO check and implement using the storage manager
+
+//        ComponentUninstallerInfo uninstallInfo = component.getUninstallerInfo();
+//
+//        try {
+//            for (String resourcePath: uninstallInfo.getResourcesPaths()) {
+//
+//                Resource componentResource = new ClassPathResource(resourcePath);
+//                if (componentResource.exists()) {
+//                    File resourceFile = componentResource.getFile();
+//                    if (resourceFile.isDirectory()) {
+//                        Files.walk(Paths.get(resourceFile.getAbsolutePath()))
+//                                .map(Path::toFile)
+//                                .sorted((o1, o2) -> -o1.compareTo(o2))
+//                                .forEach(File::delete);
+//                    } else {
+//                        resourceFile.delete();
+//                    }
+//
+//                }
+//            }
+//
+//        } catch(IOException ex) {
+//
+//            logger.error("Error during removal of component resources", ex);
+//            throw new InstallationException("Unable to remove component resoruces", ex);
+//        }
+//
+//
+    }
+
+    private void removeComponentDownloadedContent(ComponentDescriptor component) {
+
+        String componentId = component.getCode();
+
+        try {
+            if (storageManager.existsProtected(componentId) ) {
+                storageManager.deleteProtectedDirectory(componentId);
+            }
+
+            if (storageManager.existsResource(componentId)) {
+                storageManager.deleteResourceDirectory(componentId);
+            }
+
+        } catch (ApsSystemException ex) {
+            logger.error("An error occurred while removing downloaded content for the component", ex);
+            throw new InstallationException("Unable to remove component's downloaed content", ex);
+        }
+
     }
 
     private ComponentDescriptor parseComponentDescriptor(String componentCode) {

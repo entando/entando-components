@@ -45,6 +45,10 @@ public class ComponentStorageManager {
         return storageManager.exists(getPath(subPath), true);
     }
 
+    public boolean existsResource(String subPath) throws ApsSystemException {
+        return storageManager.exists(getPath(subPath), false);
+    }
+
     public void createProtectedDirectory(String subPath) throws ApsSystemException {
         storageManager.createDirectory(getPath(subPath), true);
     }
@@ -61,6 +65,14 @@ public class ComponentStorageManager {
         storageManager.saveFile(getPath(subPath), false, in);
     }
 
+    public void deleteProtectedDirectory(String subPath) throws ApsSystemException {
+        storageManager.deleteDirectory(getPath(subPath), true);
+    }
+
+    public void deleteResourceDirectory(String subPath) throws ApsSystemException {
+        storageManager.deleteDirectory(getPath(subPath), false);
+    }
+
     private String getPath(String subPath) {
         String path = COMPONENTS_DIR;
         if (!subPath.startsWith(File.separator)) {
@@ -69,4 +81,5 @@ public class ComponentStorageManager {
         path += subPath;
         return path;
     }
+
 }
