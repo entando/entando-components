@@ -32,7 +32,9 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;
+import java.util.Arrays;
 import java.util.Date;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -44,7 +46,7 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
 
-    private static final Logger _logger = LoggerFactory.getLogger(ResourceDAO.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResourceDAO.class);
 
     /**
      * Carica una risorsa nel db.
@@ -61,7 +63,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            _logger.error("Error adding resource", t);
+            logger.error("Error adding resource", t);
             throw new RuntimeException("Error adding resource", t);
         } finally {
             closeConnection(conn);
@@ -89,7 +91,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             stat.setTimestamp(8, new java.sql.Timestamp(creationDate.getTime()));
             stat.executeUpdate();
         } catch (Throwable t) {
-            _logger.error("Error adding resource record", t);
+            logger.error("Error adding resource record", t);
             throw new RuntimeException("Error adding resource record", t);
         } finally {
             closeDaoResources(null, stat);
@@ -112,7 +114,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            _logger.error("Error updating resource", t);
+            logger.error("Error updating resource", t);
             throw new RuntimeException("Error updating resource", t);
         } finally {
             closeConnection(conn);
@@ -142,7 +144,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             stat.setString(7, resource.getId());
             stat.executeUpdate();
         } catch (Throwable t) {
-            _logger.error("Error updating resource record", t);
+            logger.error("Error updating resource record", t);
             throw new RuntimeException("Error updating resource record", t);
         } finally {
             closeDaoResources(null, stat);
@@ -165,7 +167,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            _logger.error("Error deleting resource {}", id, t);
+            logger.error("Error deleting resource {}", id, t);
             throw new RuntimeException("Error deleting resource " + id, t);
         } finally {
             this.closeConnection(conn);
@@ -181,7 +183,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             stat.setString(1, resourceId);
             stat.executeUpdate();
         } catch (Throwable t) {
-            _logger.error("Error deleting resource {}", resourceId, t);
+            logger.error("Error deleting resource {}", resourceId, t);
             throw new RuntimeException("Error deleting resource " + resourceId, t);
         } finally {
             closeDaoResources(null, stat);
@@ -248,13 +250,19 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     @Override
     public List<String> searchResourcesId(FieldSearchFilter[] filters, String categoryCode, Collection<String> groupCodes) {
         filters = this.addGroupFilter(filters, groupCodes);
+        List<String> categories = (StringUtils.isBlank(categoryCode)) ? null : Arrays.asList(categoryCode);
+        return this.searchResourcesId(filters, categories);
+    }
+
+    @Override
+    public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories) {
         Connection conn = null;
         List<String> resources = new ArrayList<>();
         PreparedStatement stat = null;
         ResultSet res = null;
         try {
             conn = this.getConnection();
-            stat = this.buildStatement(filters, categoryCode, conn);
+            stat = this.buildStatement(filters, categories, conn);
             res = stat.executeQuery();
             while (res.next()) {
                 String id = res.getString(this.getMasterTableIdFieldName());
@@ -262,8 +270,8 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
                     resources.add(id);
                 }
             }
-        } catch (Exception t) {
-            _logger.error("Error loading resources id", t);
+        } catch (Throwable t) {
+            logger.error("Error loading resources id", t);
             throw new RuntimeException("Error loading resources id", t);
         } finally {
             closeDaoResources(res, stat, conn);
@@ -271,38 +279,44 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
         return resources;
     }
 
-    private PreparedStatement buildStatement(FieldSearchFilter[] filters, String categoryCode, Connection conn) {
-        String query = this.createQueryString(filters, categoryCode);
+    private PreparedStatement buildStatement(FieldSearchFilter[] filters, List<String> categories, Connection conn) {
+        String query = this.createQueryString(filters, categories);
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(query);
             int index = 0;
             index = this.addMetadataFieldFilterStatementBlock(filters, index, stat);
-            if (null != categoryCode && categoryCode.trim().length() > 0) {
-                stat.setString(++index, categoryCode);
+            if (null != categories && categories.size() > 0) {
+                for (String category : categories) {
+                    stat.setString(++index, category);
+                }
             }
         } catch (Throwable t) {
-            _logger.error("Error while creating the statement", t);
+            logger.error("Error while creating the statement", t);
             throw new RuntimeException("Error while creating the statement", t);
         }
         return stat;
     }
 
-    private String createQueryString(FieldSearchFilter[] filters, String categoryCode) {
-        StringBuffer query = this.createBaseQueryBlock(filters, false, categoryCode);
+    private String createQueryString(FieldSearchFilter[] filters, List<String> categories) {
+        StringBuffer query = this.createBaseQueryBlock(filters, false, categories);
         boolean hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, false);
-        if (null != categoryCode && categoryCode.trim().length() > 0) {
+        if (null != categories && categories.size() > 0) {
             hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
-            query.append("resourcerelations.refcategory = ? ");
+            for (int i = 0; i < categories.size(); i++) {
+                if (i > 0) {
+                    query.append(" AND ");
+                }
+                query.append("resourcerelations.refcategory = ? ");
+            }
         }
         super.appendOrderQueryBlocks(filters, query, false);
-        //query.append("ORDER BY resources.descr ");
         return query.toString();
     }
 
-    private StringBuffer createBaseQueryBlock(FieldSearchFilter[] filters, boolean selectAll, String categoryCode) {
+    private StringBuffer createBaseQueryBlock(FieldSearchFilter[] filters, boolean selectAll, List<String> categories) {
         StringBuffer query = super.createBaseQueryBlock(filters, selectAll);
-        if (null != categoryCode && categoryCode.trim().length() > 0) {
+        if (null != categories && categories.size() > 0) {
             query.append("INNER JOIN resourcerelations ON resources.resid = resourcerelations.resid ");
         }
         return query;
@@ -340,7 +354,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
                 resourceVo.setLastModified(res.getTimestamp(7));
             }
         } catch (Exception t) {
-            _logger.error("Errore loading resource {}", id, t);
+            logger.error("Errore loading resource {}", id, t);
             throw new RuntimeException("Errore loading resource" + id, t);
         } finally {
             closeDaoResources(res, stat, conn);
@@ -372,7 +386,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
                 }
                 stat.executeBatch();
             } catch (Exception t) {
-                _logger.error("Error adding resourcerelations record for {}", resource.getId(), t);
+                logger.error("Error adding resourcerelations record for {}", resource.getId(), t);
                 throw new RuntimeException("Error adding resourcerelations record for " + resource.getId(), t);
             } finally {
                 closeDaoResources(null, stat);
@@ -416,7 +430,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             stat.setString(1, resourceId);
             stat.executeUpdate();
         } catch (Exception t) {
-            _logger.error("Error deleting resource records for resource {}", resourceId, t);
+            logger.error("Error deleting resource records for resource {}", resourceId, t);
             throw new RuntimeException("Error deleting resource records for resource " + resourceId, t);
         } finally {
             closeDaoResources(null, stat);

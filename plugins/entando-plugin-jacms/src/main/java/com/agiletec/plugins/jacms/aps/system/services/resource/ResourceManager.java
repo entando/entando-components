@@ -348,11 +348,24 @@ public class ResourceManager extends AbstractService implements IResourceManager
     public List<String> searchResourcesId(String type, String text,
             String filename, String categoryCode, Collection<String> groupCodes) throws ApsSystemException {
         if (null == groupCodes || groupCodes.isEmpty()) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
         List<String> resourcesId = null;
         try {
             resourcesId = this.getResourceDAO().searchResourcesId(type, text, filename, categoryCode, groupCodes);
+        } catch (Throwable t) {
+            logger.error("Error searching resources id", t);
+            throw new ApsSystemException("Error searching resources id", t);
+        }
+        return resourcesId;
+    }
+
+    @Override
+    public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories) throws ApsSystemException {
+        this.checkFilterKeys(filters);
+        List<String> resourcesId = null;
+        try {
+            resourcesId = this.getResourceDAO().searchResourcesId(filters, categories);
         } catch (Throwable t) {
             logger.error("Error searching resources id", t);
             throw new ApsSystemException("Error searching resources id", t);
