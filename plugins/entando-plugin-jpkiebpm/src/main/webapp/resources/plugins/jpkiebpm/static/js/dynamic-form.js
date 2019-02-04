@@ -12,7 +12,10 @@ org.entando.form.DynamicForm = function (jKIE) {
     this.json.method = jKIE.mainForm.method;
     this.json.action = jKIE.mainForm.action;
     this.json.html = new Array();
-
+    
+    
+    // alert("jKIE.mainForm:" + JSON.stringify(jKIE.mainForm));
+    
     var obj = {
         "id": "processId",
         "name": "processId",
@@ -158,16 +161,17 @@ org.entando.form.DynamicForm = function (jKIE) {
             json.html.push(element);
     }
 
-
-    json.html.push({
-        type: "div",
-        html: {
-            "type": "submit",
-            "value": "submit",
-            "name": "submit-bpm-form",
-            "class": "btn btn-primary"
-        }
-    });
+    if (json.method!=='none') {
+        json.html.push({
+            type: "div",
+            html: {
+                "type": "submit",
+                "value": "submit",
+                "name": "submit-bpm-form",
+                "class": "btn btn-primary"
+            }
+        });
+    }
 };
 
 org.entando.form.loadFrom = function (url) {
