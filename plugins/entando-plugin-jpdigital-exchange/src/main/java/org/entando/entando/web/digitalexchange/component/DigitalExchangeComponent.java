@@ -15,7 +15,12 @@ package org.entando.entando.web.digitalexchange.component;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.util.Date;
+
+import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
+import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
 
 public class DigitalExchangeComponent {
 
@@ -29,7 +34,11 @@ public class DigitalExchangeComponent {
     private String image;
     private double rating;
     private boolean installed;
-    private String digitalExchange;
+    private String digitalExchangeName;
+
+    // NOTE: the id can be removed when we will return the installation link
+    // following the HATEOAS principle
+    private String digitalExchangeId;
 
     public String getId() {
         return id;
@@ -106,11 +115,46 @@ public class DigitalExchangeComponent {
     /**
      * The name of the Digital Exchange providing the component.
      */
-    public String getDigitalExchange() {
-        return digitalExchange;
+    public String getDigitalExchangeName() {
+        return digitalExchangeName;
     }
 
-    public void setDigitalExchange(String digitalExchange) {
-        this.digitalExchange = digitalExchange;
+    public void setDigitalExchangeName(String digitalExchangeName) {
+        this.digitalExchangeName = digitalExchangeName;
+    }
+
+    public String getDigitalExchangeId() {
+        return digitalExchangeId;
+    }
+
+    public void setDigitalExchangeId(String digitalExchangeId) {
+        this.digitalExchangeId = digitalExchangeId;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return reflectionEquals(this, other);
+    }
+
+    @Override
+    public int hashCode() {
+        return reflectionHashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("lastUpdate", lastUpdate)
+                .append("version", version)
+                .append("type", type)
+                .append("description", description)
+                .append("image", image)
+                .append("rating", rating)
+                .append("installed", installed)
+                .append("digitalExchangeName", digitalExchangeName)
+                .append("digitalExchangeId", digitalExchangeId)
+                .toString();
     }
 }

@@ -110,7 +110,7 @@ public class DigitalExchangeJobExecutorTest {
         commandExecutor.setApplicationContext(applicationContext);
 
         job = new DigitalExchangeJob();
-        job.setDigitalExchange("DE");
+        job.setDigitalExchangeId("DE");
         job.setComponentId("de_test_page_model");
 
         when(client.getStreamResponse(any(), any())).thenReturn(new FileInputStream(tempZipFile));

@@ -64,7 +64,7 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
 
             int i = 0;
             ps.setString(++i, job.getId());
-            ps.setString(++i, job.getDigitalExchange());
+            ps.setString(++i, job.getDigitalExchangeId());
             ps.setString(++i, job.getDigitalExchangeUrl());
             ps.setString(++i, job.getComponentId());
             ps.setString(++i, job.getComponentName());
@@ -99,7 +99,7 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
                     DigitalExchangeJob job = new DigitalExchangeJob();
 
                     job.setId(rs.getString(COL_ID));
-                    job.setDigitalExchange(rs.getString(COL_DIGITAL_EXCHANGE_ID));
+                    job.setDigitalExchangeId(rs.getString(COL_DIGITAL_EXCHANGE_ID));
                     job.setDigitalExchangeUrl(rs.getString(COL_DIGITAL_EXCHANGE_URL));
                     job.setComponentId(rs.getString(COL_COMPONENT_ID));
                     job.setComponentName(rs.getString(COL_COMPONENT_NAME));

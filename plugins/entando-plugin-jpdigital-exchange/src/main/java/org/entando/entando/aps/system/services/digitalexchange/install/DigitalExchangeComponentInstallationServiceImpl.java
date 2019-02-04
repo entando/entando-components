@@ -125,7 +125,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         job.setId(RandomStringUtils.randomAlphanumeric(20));
         job.setComponentId(componentId);
         job.setStarted(new Date());
-        job.setDigitalExchange(digitalExchange.getId());
+        job.setDigitalExchangeId(digitalExchange.getId());
         job.setDigitalExchangeUrl(digitalExchange.getUrl());
         job.setStatus(JobStatus.CREATED);
         job.setJobType(type);
