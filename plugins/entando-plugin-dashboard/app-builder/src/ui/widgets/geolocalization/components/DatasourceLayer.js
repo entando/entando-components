@@ -19,7 +19,9 @@ const DatasourceLayer = ({
   optionColumnSelected,
   nameFieldArray,
   addColumnOptionSelected,
-  removeColumnOptionSelected
+  removeColumnOptionSelected,
+  datasourceSelected,
+  disabled
 }) => (
   <Grid className="DatasourceLayer">
     <Row>
@@ -27,6 +29,7 @@ const DatasourceLayer = ({
         <DatasourceFormContainer
           formName={formName}
           nameFieldArray={nameFieldArray}
+          disabled={disabled}
         />
       </Col>
       <Col xs={6} className="DatasourceLayer__col-label">
@@ -60,6 +63,7 @@ const DatasourceLayer = ({
                     : "datasourceColumns"
                 }
                 component={FieldArrayDropDownMultiple}
+                idKey={datasourceSelected}
                 optionColumns={optionColumns}
                 optionColumnSelected={optionColumnSelected}
                 disabled={optionColumns.length === 0 ? true : false}
@@ -83,6 +87,7 @@ const DatasourceLayer = ({
 );
 
 DatasourceLayer.propTypes = {
+  datasourceSelected: PropTypes.string,
   formName: PropTypes.string,
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})),
@@ -92,6 +97,7 @@ DatasourceLayer.propTypes = {
 };
 
 DatasourceLayer.defaultProps = {
+  datasourceSelected: "",
   formName: "",
   optionColumnSelected: [],
   nameFieldArray: undefined,

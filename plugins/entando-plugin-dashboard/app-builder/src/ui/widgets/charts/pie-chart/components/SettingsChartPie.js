@@ -38,7 +38,11 @@ const SettingsChartPie = ({optionColumns, optionColumnSelected}) => {
 
 SettingsChartPie.propTypes = {
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({}))
+};
+
+SettingsChartPie.defaultProps = {
+  optionColumnSelected: []
 };
 
 export default SettingsChartPie;

@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 
 import {Grid, Row, Col} from "patternfly-react";
 
-import PluginContainer from "ui/PageTitle";
 import registerServiceWorker from "registerServiceWorker";
 import {setCurrentLocale} from "@entando/utils";
 
@@ -23,6 +22,7 @@ import "patternfly/dist/css/patternfly.min.css";
 import "patternfly/dist/css/patternfly-additions.min.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import DashboardMap from "ui/widgets/geolocalization/components/DashboardMap";
+import DashboardPieChart from "ui/widgets/charts/pie-chart/components/DashboardPieChart";
 
 const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
   acc[`plugin.${plugin.id}.${key}`] = enLocale.messages[key];
@@ -39,6 +39,11 @@ export default ReactDOM.render(
         <Row>
           <Col xs={12}>
             <DashboardMap />
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <DashboardPieChart />
           </Col>
         </Row>
       </Grid>

@@ -10,7 +10,9 @@ const GAUGE_CHART = "GAUGE_CHART";
 const PIE_CHART = "PIE_CHART";
 const options = {
   columnSize: type =>
-    [DONUT_CHART, GAUGE_CHART, PIE_CHART].includes(type) ? 4 : 12
+    [DONUT_CHART, GAUGE_CHART, PIE_CHART].includes(type) ? 4 : 12,
+  width: type =>
+    [DONUT_CHART, GAUGE_CHART, PIE_CHART].includes(type) ? 250 : undefined
 };
 
 const ChartThirdStepContent = ({
@@ -22,6 +24,7 @@ const ChartThirdStepContent = ({
   chart
 }) => {
   const columnSize = options.columnSize(typeChart);
+  const width = options.width(typeChart);
   return (
     <div className="ChartThirdStep">
       <PreviewChartSelected
@@ -31,6 +34,7 @@ const ChartThirdStepContent = ({
         labelChartPreview={labelChartPreview}
         axisRotated={rotated}
         heightChart={250}
+        widthChart={width}
         columnSize={columnSize}
       />
       <Row>

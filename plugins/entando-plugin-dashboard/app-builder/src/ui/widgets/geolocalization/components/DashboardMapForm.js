@@ -4,6 +4,7 @@ import {reduxForm} from "redux-form";
 import Stepper from "ui/widgets/common/components/Stepper";
 import MapFirstStepContent from "ui/widgets/geolocalization/components/MapFirstStepContent";
 import MapSecondStepContentContainer from "ui/widgets/geolocalization/containers/MapSecondStepContentContainer";
+import MapThirdStepContent from "ui/widgets/geolocalization/components/MapThirdStepContent";
 
 const FORM_NAME = "form-dashboard-map";
 
@@ -26,16 +27,17 @@ class DashboardMapFormBody extends Component {
 
     return (
       <Stepper
-        handleSubmit={this.props.handleSubmit}
+        handleSubmit={this.props.onSubmit}
         validateSteps={validateSteps}
         step1={<MapFirstStepContent />}
         step2={<MapSecondStepContentContainer formName={FORM_NAME} />}
+        step3={<MapThirdStepContent />}
       />
     );
   }
 }
 DashboardMapFormBody.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
   formSyncErrors: PropTypes.shape({}),
   datasources: PropTypes.arrayOf(PropTypes.shape({}))

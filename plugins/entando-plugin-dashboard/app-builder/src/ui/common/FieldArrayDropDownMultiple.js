@@ -8,21 +8,45 @@ class FieldArrayDropDownMultiple extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: props.optionColumns || []
+      columns: props.optionColumns || [],
+      searchValue: "",
+      idKey: props.idKey
     };
     this.toogleSelected = this.toogleSelected.bind(this);
+    this.searchItem = this.searchItem.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, state) {
-    const {optionColumns} = nextProps;
-    if (!isEqual(optionColumns, state.columns)) {
+    const {idKey, optionColumns, fields} = nextProps;
+    // console.log("getDerivedStateFromProps props idKey ", nextProps.idKey);
+    // console.log("getDerivedStateFromProps state idKey ", state.idKey);
+    if (optionColumns.length > 0 && state.columns.length === 0) {
+      console.log("Init");
       return {
+        idKey,
         columns: optionColumns.map((m, index) => ({
           id: index,
           key: m.key,
-          value: m.value
+          value: m.value,
+          selected: false
         }))
       };
+    } else if (idKey !== state.idKey) {
+      if (!isEqual(optionColumns, state.columns)) {
+        // console.log("cambio datasource");
+        // console.log("state optionColumns", state.columns);
+        fields.removeAll();
+        return {
+          idKey,
+          columns: optionColumns.map((m, index) => ({
+            id: index,
+            key: m.key,
+            value: m.value,
+            selected: false
+          }))
+        };
+      }
     }
     return null;
   }
@@ -30,27 +54,70 @@ class FieldArrayDropDownMultiple extends Component {
   toogleSelected(id, key) {
     const {nameFieldArray, fields} = this.props;
     let temp = this.state.columns.find(f => f.key === key);
-    temp.selected = !temp.selected;
-    this.setState(prevState => ({
-      columns: [...prevState.columns, ...temp]
-    }));
-    if (temp.selected) {
-      const {addColumnOptionSelected} = this.props;
-      fields.push(temp);
-      addColumnOptionSelected && addColumnOptionSelected(nameFieldArray, temp);
-    } else {
-      const {optionColumnSelected, removeColumnOptionSelected} = this.props;
+    if (temp) {
+      temp.selected = !temp.selected;
+      this.setState(prevState => ({
+        columns: [...prevState.columns, ...temp]
+      }));
+      if (temp.selected) {
+        const {addColumnOptionSelected} = this.props;
+        fields.push(temp);
+        addColumnOptionSelected &&
+          addColumnOptionSelected(nameFieldArray, temp);
+      } else {
+        const {optionColumnSelected, removeColumnOptionSelected} = this.props;
 
-      optionColumnSelected
-        .map((m, index) => (m.key === key ? index : -1))
-        .forEach(index => {
-          if (index > -1) {
-            fields.remove(index);
-            removeColumnOptionSelected &&
-              removeColumnOptionSelected(nameFieldArray, index);
-          }
-        });
+        optionColumnSelected
+          .map((m, index) => (m.key === key ? index : -1))
+          .forEach(index => {
+            if (index > -1) {
+              fields.remove(index);
+              removeColumnOptionSelected &&
+                removeColumnOptionSelected(nameFieldArray, index);
+            }
+          });
+      }
     }
+  }
+
+  searchItem(ev) {
+    const searchValue = ev.target.value;
+    const {optionColumns} = this.props;
+    let listValue = [];
+    if (searchValue.length <= 1) {
+      listValue = optionColumns.filter(f =>
+        f.value.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      if (listValue.length === 0) {
+        listValue.push({
+          id: 0,
+          key: "notFound",
+          value: formattedText("common.DropdownMultiple.notFound")
+        });
+      }
+    } else {
+      const search = optionColumns.find(f =>
+        f.value.toLowerCase().startsWith(searchValue.toLowerCase())
+      );
+      search
+        ? listValue.push(search)
+        : listValue.push({
+            id: 0,
+            key: "notFound",
+            value: formattedText("common.DropdownMultiple.notFound")
+          });
+    }
+
+    this.setState({
+      columns: listValue,
+      searchValue
+    });
+  }
+
+  clearSearch() {
+    this.setState({
+      searchValue: ""
+    });
   }
 
   render() {
@@ -71,8 +138,9 @@ class FieldArrayDropDownMultiple extends Component {
             title={formattedText("plugin.chart.dropDownMulti.title")}
             list={this.state.columns}
             toggleItem={this.toogleSelected}
-            searchValue=""
-            searchNotFound={formattedText("common.DropdownMultiple.notFound")}
+            searchItem={this.searchItem}
+            searchValue={this.state.searchValue}
+            clearSearch={this.clearSearch}
             disabled={disabled}
           />
         </div>
@@ -101,12 +169,13 @@ class FieldArrayDropDownMultiple extends Component {
 
 const COLUMN_TYPE = {
   key: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  label: PropTypes.string
+  value: PropTypes.string,
+  selected: PropTypes.bool
 };
 
 FieldArrayDropDownMultiple.propTypes = {
   className: PropTypes.string,
-  optionColumn: PropTypes.arrayOf(PropTypes.shape(COLUMN_TYPE)),
+  optionColumns: PropTypes.arrayOf(PropTypes.shape(COLUMN_TYPE)),
   optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})),
   fields: PropTypes.shape({
     push: PropTypes.func.isRequired,

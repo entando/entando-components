@@ -16,6 +16,12 @@ const mapStateToProps = (state, ownProps) => {
   const {formName} = ownProps;
   const selector = formValueSelector(formName);
   const optionColumns = getDatasourceColumns(state);
+  // console.log(
+  //   "MapSecondStepContentContainer optionColumns",
+  //   optionColumns,
+  //   " formName",
+  //   formName
+  // );
 
   return {
     formName,

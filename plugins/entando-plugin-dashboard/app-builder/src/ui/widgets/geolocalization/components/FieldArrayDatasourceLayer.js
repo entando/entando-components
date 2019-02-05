@@ -34,6 +34,7 @@ class FieldArrayDatasourceLayer extends Component {
       fields: {name, remove},
       label,
       formName,
+      datasourceSelected,
       optionColumns,
       optionColumnSelected,
       datasourcesValue,
@@ -58,11 +59,14 @@ class FieldArrayDatasourceLayer extends Component {
             >
               <div className="FieldArrayDatasource__data-array-item">
                 <DatasourceLayer
+                  formName={formName}
                   optionColumns={m.optionColumns}
                   optionColumnSelected={m.optionColumnSelected}
                   nameFieldArray={`${name}[${index}]`}
                   addColumnOptionSelected={addColumnOptionSelected}
                   removeColumnOptionSelected={removeColumnOptionSelected}
+                  datasourceSelected={m.datasource}
+                  disabled
                 />
               </div>
               <div className="FieldArrayDatasource__icon-remove">
@@ -78,6 +82,7 @@ class FieldArrayDatasourceLayer extends Component {
             formName={formName}
             optionColumns={optionColumns}
             optionColumnSelected={optionColumnSelected}
+            datasourceSelected={datasourceSelected}
           />
           <Col xs={12}>
             <div className="col-xs-2">
@@ -104,6 +109,7 @@ FieldArrayDatasourceLayer.propTypes = {
   clearInputDatasourceData: PropTypes.func.isRequired,
   removeColumnOptionSelected: PropTypes.func.isRequired,
   addColumnOptionSelected: PropTypes.func.isRequired,
+  datasourceSelected: PropTypes.string,
   datasourcesValue: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({}))
@@ -111,6 +117,7 @@ FieldArrayDatasourceLayer.propTypes = {
 FieldArrayDatasourceLayer.defaultProps = {
   name: null,
   label: "",
+  datasourceSelected: "",
   datasourcesValue: [],
   optionColumnSelected: []
 };

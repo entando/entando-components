@@ -9,6 +9,24 @@ export const getAppbuilder = createSelector(
   localState => localState.appBuilder
 );
 
+const getDatasouce = createSelector(
+  [getLocalState],
+  localState => localState.datasource
+);
+
+export const getDatasouceSelected = createSelector(
+  [getDatasouce],
+  ds => ds.selected
+);
+export const getDatasourceColumns = createSelector(
+  [getDatasouce],
+  ds => ds.columns
+);
+export const getDatasouceData = createSelector(
+  [getDatasouce],
+  ds => ds.data
+);
+
 export const getInfoPage = createSelector(
   [getAppbuilder],
   ab => ab.infoPage
@@ -31,11 +49,6 @@ export const getServerConfigList = createSelector(
 export const getDatasourceList = createSelector(
   [getLocalState],
   localState => localState.datasourceList
-);
-
-export const getDatasourceColumns = createSelector(
-  getLocalState,
-  localState => localState.datasourceColumns
 );
 
 export const getPluginPage = createSelector(

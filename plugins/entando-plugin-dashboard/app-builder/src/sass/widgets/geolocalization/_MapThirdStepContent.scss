@@ -1,0 +1,98 @@
+.MapThirdStepContent {
+  padding: 3em;
+  border: 0 solid;
+
+  .row {
+    border: 0 solid red;
+  }
+
+  &__map-size-container {
+    border: 0 solid blue;
+    margin-top: 30px;
+  }
+
+  &__padding-container {
+    border: 0 solid blue;
+    margin-top: 30px;
+  }
+
+  &__field-form-group.form-group {
+    border: 0 solid blue;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
+  &__field-form-group input[type=number]::-webkit-inner-spin-button {
+    opacity: 1;
+    height: 2.5em;
+  }
+
+  &__field-form-group input[type=number] {
+    text-align: center;
+  }
+
+  &__field-form-group.form-group label.MapThirdStepContent__field-height.control-label {
+    margin-right: 10px;
+  }
+
+  &__field-form-group.form-group label.MapThirdStepContent__field-width.control-label {
+    margin-left: 30px;
+    margin-right: 10px;
+  }
+
+  &__field-form-group.form-group label.MapThirdStepContent__field-top.control-label {
+    margin-right: 32px;
+  }
+
+  &__field-form-group.form-group label.MapThirdStepContent__field-bottom.control-label {
+    margin-right: 10px;
+  }
+
+  &__field-form-group.form-group label.MapThirdStepContent__field-right.control-label {
+    margin-right: 10px;
+    margin-left: 30px;
+  }
+
+  &__field-form-group.form-group label.MapThirdStepContent__field-left.control-label {
+    margin-right: 18px;
+    margin-left: 30px;
+  }
+
+  &__input-number {
+    border-top: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    border-right: 0;
+    width: 3.5em;
+    height: 2.5em;
+  }
+
+  &__input-number:focus {
+    border-top: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    box-shadow: none;
+  }
+
+  &__input-number:hover {
+    border-top: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    box-shadow: none;
+  }
+
+  &__input-number-addon {
+    border-top: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    padding-top: 5px;
+    padding-bottom: 6px;
+    padding-right: 5px;
+  }
+
+  &__error.help-block {
+    position: relative;
+    top: 30px;
+    left: -105px;
+  }
+}

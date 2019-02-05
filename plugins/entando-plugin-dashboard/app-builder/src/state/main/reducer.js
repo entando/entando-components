@@ -9,7 +9,9 @@ import {
   SET_DATASOURCE_COLUMNS,
   CLEAR_DATASOURCE_COLUMNS,
   SET_SHOW_HIDE_COLUMN,
-  SET_DATASOURCE_DATA
+  SET_DATASOURCE_DATA,
+  SET_SELECTED_DATASOURCE,
+  CLEAR_SELECTED_DATASOURCE
 } from "./types";
 
 const reduxStatus = () => "works";
@@ -52,6 +54,18 @@ const datasourceList = (state = [], action = {}) => {
   }
 };
 
+const datasourceSelected = (state = "", action = {}) => {
+  switch (action.type) {
+    case SET_SELECTED_DATASOURCE:
+      return action.payload.datasource;
+    case CLEAR_SELECTED_DATASOURCE:
+      return "";
+
+    default:
+      return state;
+  }
+};
+
 const datasourceColumns = (state = [], action = {}) => {
   switch (action.type) {
     case SET_DATASOURCE_COLUMNS:
@@ -85,7 +99,10 @@ export default combineReducers({
     languages
   }),
   dashboardConfig,
-  datasourceList,
-  datasourceColumns,
-  datasourceData
+  datasource: combineReducers({
+    selected: datasourceSelected,
+    columns: datasourceColumns,
+    data: datasourceData
+  }),
+  datasourceList
 });

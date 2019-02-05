@@ -1,7 +1,7 @@
 import {getRoute, getParams, getSearchParams, gotoRoute} from "@entando/router";
 import {addToast, addErrors, TOAST_ERROR} from "@entando/messages";
 import {formattedText} from "@entando/utils";
-import {formValueSelector, change} from "redux-form";
+import {formValueSelector} from "redux-form";
 
 import {getPageConfiguration, getLanguages} from "api/appBuilder";
 
@@ -23,7 +23,9 @@ import {
   SET_DATASOURCE_DATA,
   SET_DATASOURCE_COLUMNS,
   CLEAR_DATASOURCE_COLUMNS,
-  SET_SHOW_HIDE_COLUMN
+  SET_SHOW_HIDE_COLUMN,
+  SET_SELECTED_DATASOURCE,
+  CLEAR_SELECTED_DATASOURCE
 } from "./types";
 
 const DATASOURCE_PROPERTY_DATA = "data";
@@ -87,6 +89,17 @@ export const setDatasourceData = data => ({
   payload: {
     data
   }
+});
+
+export const setSelectedDatasource = datasource => ({
+  type: SET_SELECTED_DATASOURCE,
+  payload: {
+    datasource
+  }
+});
+
+export const clearSelectedDatasource = () => ({
+  type: CLEAR_SELECTED_DATASOURCE
 });
 
 // thunk
@@ -224,17 +237,15 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
   const state = getState();
   const selector = formValueSelector(formName);
   const configId = selector(state, field);
+  dispatch(clearSelectedDatasource());
+  dispatch(setSelectedDatasource(datasourceId));
   dispatch(
     wrapApiCallFetchDatasource(getDatasourceData, setDatasourceColumns)(
       configId,
       datasourceId,
       DATASOURCE_PROPERTY_COLUMNS
     )
-  ).then(columns => {
-    columns.forEach(item => {
-      dispatch(change(formName, `columns[${item.key}]`, item.value));
-    });
-  });
+  );
 };
 
 export const fetchDatasourceData = (configId, datasourceId) => dispatch =>

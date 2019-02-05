@@ -48,8 +48,8 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 VALUES ('dashboard-gauge-chart',
   '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Publish Dashboard Gauge Chart</property>
-<property key="it">Pubblica Dashboard Gauge Chart</property>
+<property key="en">Publish DashboardGaugeChart</property>
+<property key="it">Pubblica DashboardGaugeChart</property>
 </properties>', '<config>
 	<parameter name="id">id</parameter>
 	<action name="dashboardDashboardGaugeChartConfig"/>
@@ -64,4 +64,15 @@ VALUES ('dashboard-pie-chart',
 </properties>', '<config>
 	<parameter name="id">id</parameter>
 	<action name="dashboardDashboardPieChartConfig"/>
+</config>','dashboard', NULL, NULL, 1, 'free');
+
+
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup)
+VALUES ('dashboard-map', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Publish DashboardMap</property>
+<property key="it">Pubblica DashboardMap</property>
+</properties>', '<config>
+	<parameter name="id">id</parameter>
+	<action name="dashboardDashboardMapConfig"/>
 </config>','dashboard', NULL, NULL, 1, 'free');

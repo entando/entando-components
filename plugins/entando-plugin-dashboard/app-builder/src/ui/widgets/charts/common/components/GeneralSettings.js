@@ -159,7 +159,7 @@ const GeneralSettings = ({typeChart, chart}) => {
               type="number"
               component={renderField}
               name="size.height"
-              label="plugin.chart.height"
+              label="common.height"
               min="0"
               max="9999"
               direction="rtl"
@@ -172,7 +172,7 @@ const GeneralSettings = ({typeChart, chart}) => {
                 type="number"
                 component={renderField}
                 name="padding.top"
-                label="plugin.chart.top"
+                label="common.top"
                 min="0"
                 max="9999"
                 direction="rtl"
@@ -184,7 +184,7 @@ const GeneralSettings = ({typeChart, chart}) => {
                 type="number"
                 component={renderField}
                 name="padding.right"
-                label="plugin.chart.right"
+                label="common.right"
                 min="0"
                 max="9999"
                 direction="rtl"
@@ -198,7 +198,7 @@ const GeneralSettings = ({typeChart, chart}) => {
               type="number"
               component={renderField}
               name="size.with"
-              label="plugin.chart.width"
+              label="common.width"
               min="0"
               max="9999"
               direction="rtl"
@@ -211,7 +211,7 @@ const GeneralSettings = ({typeChart, chart}) => {
                 type="number"
                 component={renderField}
                 name="padding.bottom"
-                label="plugin.chart.bottom"
+                label="common.bottom"
                 min="0"
                 max="9999"
                 direction="rtl"
@@ -223,7 +223,7 @@ const GeneralSettings = ({typeChart, chart}) => {
                 type="number"
                 component={renderField}
                 name="padding.left"
-                label="plugin.chart.left"
+                label="common.left"
                 min="0"
                 max="9999"
                 direction="rtl"
@@ -281,7 +281,7 @@ const GeneralSettings = ({typeChart, chart}) => {
           <Col xs={2} className="GeneralSettings__col">
             <FormGroup className="GeneralSettings__form-group">
               <ControlLabel>
-                <FormattedMessage id="plugin.chart.legendPosition" />
+                <FormattedMessage id="common.legendPosition" />
               </ControlLabel>
             </FormGroup>
           </Col>
@@ -294,7 +294,7 @@ const GeneralSettings = ({typeChart, chart}) => {
                   name="legend.position"
                   value="bottom"
                 />
-                <FormattedMessage id="plugin.chart.bottom" />
+                <FormattedMessage id="common.bottom" />
               </label>
               <label className="radio-inline">
                 <Field
@@ -303,7 +303,7 @@ const GeneralSettings = ({typeChart, chart}) => {
                   name="legend.position"
                   value="right"
                 />
-                <FormattedMessage id="plugin.chart.right" />
+                <FormattedMessage id="common.right" />
               </label>
             </FormGroup>
           </Col>

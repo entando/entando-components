@@ -26,6 +26,15 @@ export default {
     "common.firstStep": "First Step",
     "common.secondStep": "Second Step",
     "common.thirdStep": "Third Step",
+
+    "common.height": "Height",
+    "common.width": "Width",
+    "common.top": "Top",
+    "common.bottom": "Bottom",
+    "common.right": "Right",
+    "common.left": "Left",
+    "common.legendPosition": "Legend Position",
+
     "plugin.fieldsRequired": "Campi Richiesti",
     "plugin.chooseAnOptionServerName": "Seleziona Server",
     "plugin.chooseAnOptionDatasource": "Seleziona Sorgente Dati",
@@ -101,14 +110,9 @@ export default {
     "plugin.chart.chartSize": "Chart Size",
     "plugin.chart.padding": "Padding",
     "plugin.chart.interactiveChart": "Interactive Chart",
-    "plugin.chart.height": "Height",
-    "plugin.chart.width": "Width",
-    "plugin.chart.top": "Top",
-    "plugin.chart.bottom": "Bottom",
-    "plugin.chart.right": "Right",
-    "plugin.chart.left": "Left",
+
     "plugin.chart.showDetailMouseClick": "Show details on mouse click",
-    "plugin.chart.legendPosition": "Legend Position",
+
     "plugin.chart.values": "Values",
     "plugin.chart.thickness": "Thickness",
     "plugin.chart.min": "Min",
@@ -117,6 +121,12 @@ export default {
     "plugin.geolocalization.label": "Label",
     "plugin.geolocalization.item": "Item",
     "plugin.geolocalization.label.requirement":
-      "letters, numbers, symbols, min 3 and max 20 characters"
+      "letters, numbers, symbols, min 3 and max 20 characters",
+    "plugin.geolocalization.mapSize": "Map Size",
+    "plugin.geolocalization.mapSizeResponsive": "adaptive in responsive View",
+    "plugin.geolocalization.padding": "Padding",
+    "plugin.geolocalization.interactiveMap": "Intereactive Map",
+    "plugin.geolocalization.interactiveMapDetails":
+      "Show details on mouse click"
   }
 };

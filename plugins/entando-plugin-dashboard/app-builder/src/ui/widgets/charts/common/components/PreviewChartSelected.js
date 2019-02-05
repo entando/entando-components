@@ -60,7 +60,7 @@ PreviewChartSelected.propTypes = {
 PreviewChartSelected.defaultProps = {
   axisRotated: false,
   heightChart: 250,
-  widthChart: 250,
+  widthChart: undefined,
   columnSize: 12
 };
 

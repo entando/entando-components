@@ -200,4 +200,36 @@
 		</attribute>
 	</tag>
 
+  <tag>
+		<description>Loads and returns the list of the DashboardMaps available in the system.</description>
+		<name>dashboardMaps</name>
+		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardMapListTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The name of the variable setted in the pagecontext.</description>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<description>Loads and returns an DashboardMap given a key.</description>
+		<name>dashboardMap</name>
+		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardMapTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>Identifier of the DashboardMap to load</description>
+			<name>key</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The name of the variable setted in the pagecontext.</description>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
 </taglib>

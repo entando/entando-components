@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-import {uniqueId, isEqual} from "lodash";
+import {uniqueId} from "lodash";
 
 class DropdownMultiple extends Component {
   constructor(props) {
@@ -8,13 +8,9 @@ class DropdownMultiple extends Component {
     this.state = {
       listOpen: false,
       headerTitle: props.title,
-      timeOut: null,
-      listValue: props.list,
-      searchValue: props.searchValue
+      timeOut: null
     };
     this.close = this.close.bind(this);
-    this.searchListValue = this.searchListValue.bind(this);
-    this.clearSearch = this.clearSearch.bind(this);
   }
 
   componentDidUpdate() {
@@ -40,9 +36,7 @@ class DropdownMultiple extends Component {
 
   static getDerivedStateFromProps(nextProps, state) {
     const {list, title, titleHelper} = nextProps;
-    if (!isEqual(list, state)) {
-      return {listValue: list};
-    }
+    //console.log("DropdownMultiple - list ", list);
     const count = list.filter(f => f.selected).length;
     if (count === 0) {
       return {headerTitle: title};
@@ -59,48 +53,16 @@ class DropdownMultiple extends Component {
     }));
   }
 
-  searchListValue(ev) {
-    const searchValue = ev.target.value;
-    const {searchNotFound, caseSensitiveSearch} = this.props;
-    this.setState(() => {
-      let listValue = [];
-      if (searchValue.length <= 1) {
-        listValue = this.props.list.filter(f =>
-          caseSensitiveSearch
-            ? f.value.includes(searchValue)
-            : f.value.toLowerCase().includes(searchValue.toLowerCase())
-        );
-        if (listValue) {
-          listValue.push({id: 0, key: "notFound", value: searchNotFound});
-        }
-      } else {
-        const search = this.props.list.find(f =>
-          caseSensitiveSearch
-            ? f.value.startsWith(searchValue)
-            : f.value.toLowerCase().startsWith(searchValue.toLowerCase())
-        );
-        search
-          ? listValue.push(search)
-          : listValue.push({id: 0, key: "notFound", value: searchNotFound});
-      }
-      return {
-        searchValue,
-        listValue
-      };
-    });
-  }
-
-  clearSearch() {
-    this.setState(() => ({
-      searchValue: "",
-      listValue: this.props.list
-    }));
-  }
-
   render() {
-    const {toggleItem, disabled} = this.props;
-    const {listValue, listOpen, headerTitle, searchValue} = this.state;
-
+    const {
+      toggleItem,
+      disabled,
+      searchItem,
+      searchValue,
+      list,
+      clearSearch
+    } = this.props;
+    const {listOpen, headerTitle} = this.state;
     return (
       <div className={`DropdownMultiple ${disabled ? "disabled" : ""}`}>
         <div
@@ -124,13 +86,13 @@ class DropdownMultiple extends Component {
                   className="form-control"
                   aria-describedby="basic-search"
                   value={searchValue}
-                  onChange={this.searchListValue}
+                  onChange={searchItem}
                 />
                 <span className="dd-list-search-clear">
                   <i
                     className="fa fa-times"
                     aria-hidden="true"
-                    onClick={this.clearSearch}
+                    onClick={clearSearch}
                   />
                 </span>
                 <span className="input-group-addon">
@@ -138,7 +100,7 @@ class DropdownMultiple extends Component {
                 </span>
               </div>
             </li>
-            {listValue.map(item => {
+            {list.map(item => {
               return (
                 <li
                   className={`dd-list-item ${item.selected ? "selected" : ""}`}

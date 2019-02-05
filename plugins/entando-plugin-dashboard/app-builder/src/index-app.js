@@ -77,7 +77,6 @@ export default ReactDOM.render(
             <DashboardLineChart />
           </Col>
         </Row>
-
         <Row>
           <Col xs={12}>
             <PluginContainer titleId="plugin.title" helpId="ConfigPage.help" />

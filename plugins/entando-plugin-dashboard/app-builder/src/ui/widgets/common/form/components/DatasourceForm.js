@@ -6,7 +6,13 @@ import {InputGroup} from "patternfly-react";
 import RenderSelectInput from "ui/common/form/RenderSelectInput";
 import FormLabel from "ui/common/form/FormLabel";
 
-const DatasourceForm = ({datasources, onChange, labelSize, nameFieldArray}) => {
+const DatasourceForm = ({
+  datasources,
+  onChange,
+  labelSize,
+  nameFieldArray,
+  disabled
+}) => {
   const selectOptionsDatasource = datasources.map(m => ({
     value: m.id,
     text: m.datasource
@@ -21,7 +27,7 @@ const DatasourceForm = ({datasources, onChange, labelSize, nameFieldArray}) => {
       <Field
         component={RenderSelectInput}
         onChange={(ev, value) => onChange(value)}
-        disabled={datasources.length === 0 ? true : false}
+        disabled={disabled || datasources.length === 0 ? true : false}
         options={selectOptionsDatasource}
         defaultOptionId="plugin.chooseAnOptionDatasource"
         label={
@@ -44,11 +50,13 @@ DatasourceForm.propTypes = {
   datasources: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onChange: PropTypes.func.isRequired,
   labelSize: PropTypes.number,
-  nameFieldArray: PropTypes.string
+  nameFieldArray: PropTypes.string,
+  disabled: PropTypes.bool
 };
 
 DatasourceForm.defaultProps = {
   labelSize: 4,
-  nameFieldArray: null
+  nameFieldArray: null,
+  disabled: false
 };
 export default DatasourceForm;

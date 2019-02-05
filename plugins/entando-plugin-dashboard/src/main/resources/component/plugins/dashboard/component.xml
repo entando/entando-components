@@ -12,6 +12,7 @@
 				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardDonutChart</class>
 				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardGaugeChart</class>
 				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardPieChart</class>
+				<class>org.entando.entando.plugins.dashboard.aps.system.init.servdb.DashboardMap</class>
 			</datasource>
 		</tableMapping>
 		<environment code="production">
