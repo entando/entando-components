@@ -52,8 +52,9 @@ public class DigitalExchangePageModelListProcessor extends RequestListProcessor<
                     return p -> FilterUtils.filterString(filter, p::getTemplate);
                 case DIGITAL_EXCHANGE:
                     return p -> FilterUtils.filterString(filter, p::getDigitalExchange);
+                default:
+                    return null;
             }
-            return null;
         };
     }
 
@@ -71,7 +72,7 @@ public class DigitalExchangePageModelListProcessor extends RequestListProcessor<
                     return (a, b) -> a.getTemplate().compareTo(b.getTemplate());
                 case DIGITAL_EXCHANGE:
                     return (a, b) -> a.getDigitalExchange().compareTo(b.getDigitalExchange());
-                case CODE:
+                case CODE: // code is the default sorting field
                 default:
                     return (a, b) -> a.getCode().compareTo(b.getCode());
             }
