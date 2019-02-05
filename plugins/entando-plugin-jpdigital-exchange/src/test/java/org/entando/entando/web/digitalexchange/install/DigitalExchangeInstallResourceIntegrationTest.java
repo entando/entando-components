@@ -38,6 +38,7 @@ import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
 import org.entando.entando.aps.system.services.role.IRoleService;
 import org.entando.entando.aps.system.services.role.model.RoleDto;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
@@ -187,14 +188,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         } finally {
 
-            try {
-                if (widgetService.getWidget(componentCode) != null) {
-                    widgetService.removeWidget(componentCode);
-                }
-
-            } catch (RestRourceNotFoundException ignored) {
-
-            }
+            try { widgetService.removeWidget(componentCode); } catch (ValidationGenericException ignored) { }
 
         }
 
@@ -218,13 +212,8 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         } finally {
 
-            if (pageModelService.getPageModel(componentCode) != null) {
-                pageModelService.removePageModel(componentCode);
-            }
-
-            if (labelService.getLabelGroup(componentAssociatedLabel) != null) {
-                labelService.removeLabelGroup(componentAssociatedLabel);
-            }
+            try { pageModelService.removePageModel(componentCode); } catch (ValidationGenericException ignored) {}
+            try { labelService.removeLabelGroup(componentAssociatedLabel); } catch (ValidationGenericException ignored) {}
 
         }
 
@@ -243,9 +232,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         } finally {
 
-            if(groupService.getGroup(componentCode) != null) {
-                groupService.removeGroup(componentCode);
-            }
+            try { groupService.removeGroup(componentCode); } catch (ValidationGenericException ignored) {}
 
         }
 
@@ -264,9 +251,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
             assertThat(role.getPermissions().get("superuser")).isTrue();
 
         } finally {
-            if (roleService.getRole(componentCode) != null) {
-                roleService.removeRole(componentCode);
-            }
+            try { roleService.removeRole(componentCode); } catch (ValidationGenericException ignored) {}
         }
     }
 

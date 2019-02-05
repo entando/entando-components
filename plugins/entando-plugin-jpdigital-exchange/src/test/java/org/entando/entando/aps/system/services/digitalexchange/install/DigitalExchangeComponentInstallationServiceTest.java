@@ -38,7 +38,7 @@ public class DigitalExchangeComponentInstallationServiceTest {
     private DigitalExchangeComponentInstallationDAO dao;
 
     @Mock
-    private DigitalExchangeJobExecutor digitalExchangeJobExecutor;
+    private DigitalExchangeInstallExecutor digitalExchangeInstallExecutor;
 
     @InjectMocks
     private DigitalExchangeComponentInstallationServiceImpl service;
@@ -49,7 +49,7 @@ public class DigitalExchangeComponentInstallationServiceTest {
         when(exchangesService.findById(DE_1_ID)).thenReturn(getDE1());
 
         String errorMsg = "error_msg";
-        doThrow(new JobExecutionException(errorMsg)).when(digitalExchangeJobExecutor).install(any(), any());
+        doThrow(new JobExecutionException(errorMsg)).when(digitalExchangeInstallExecutor).execute(any(), any());
 
         DigitalExchangeJob job = service.install(DE_1_ID, "test", "admin");
         assertThat(job).isNotNull();

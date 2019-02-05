@@ -45,8 +45,16 @@
             <value>@contentTypeResourceController.create(@modelParser.parse('%s', T(com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest)), #bindingResult())</value>
         </entry>
         <entry>
+            <key>deleteContentType</key>
+            <value>@contentTypeResourceController.delete('%s')</value>
+        </entry>
+        <entry>
             <key>createContentModel</key>
             <value>@contentModelResourceController.addContentModel(@modelParser.parse('%s', T(com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto)), #bindingResult())</value>
+        </entry>
+        <entry>
+            <key>deleteContentModel</key>
+            <value>@contentModelResourceController.deleteContentModel('%s')</value>
         </entry>
     </map>
 </commands>

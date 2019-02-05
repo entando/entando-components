@@ -14,8 +14,8 @@
 package org.entando.entando.aps.system.services.digitalexchange.component;
 
 import java.util.List;
+
 import org.entando.entando.aps.system.init.IInitializerManager;
-import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
@@ -26,8 +26,8 @@ import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DigitalExchangeComponentsServiceImpl implements DigitalExchangeComponentsService {

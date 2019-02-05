@@ -14,6 +14,7 @@
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -36,17 +37,20 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
     private final DigitalExchangesService exchangesService;
     private final DigitalExchangeComponentInstallationDAO dao;
-    private final DigitalExchangeJobExecutor digitalExchangeJobExecutor;
+    private final DigitalExchangeAbstractJobExecutor installExecutor;
+    private final DigitalExchangeAbstractJobExecutor uninstallExecutor;
 
     @Autowired
     public DigitalExchangeComponentInstallationServiceImpl(
             DigitalExchangesService exchangesService,
             DigitalExchangeComponentInstallationDAO dao,
-            DigitalExchangeJobExecutor digitalExchangeJobExecutor) {
+            DigitalExchangeInstallExecutor installExecutor,
+            DigitalExchangeUninstallExecutor uninstallExecutor) {
 
         this.exchangesService = exchangesService;
         this.dao = dao;
-        this.digitalExchangeJobExecutor = digitalExchangeJobExecutor;
+        this.installExecutor = installExecutor;
+        this.uninstallExecutor = uninstallExecutor;
     }
 
     @Override
@@ -60,7 +64,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         job.setUser(username);
         dao.createComponentInstallationJob(job);
 
-        this.executeJob(job);
+        this.executeJob(job, this.installExecutor );
 
         return job;
     }
@@ -76,25 +80,16 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         job.setUser(username);
         dao.createComponentInstallationJob(job);
 
-        this.executeJob(job);
+        this.executeJob(job, this.uninstallExecutor);
 
         return job;
     }
 
 
-    private void executeJob(DigitalExchangeJob job) {
+    private void executeJob(DigitalExchangeJob job, DigitalExchangeAbstractJobExecutor jobExecutor) {
         CompletableFuture.runAsync(() -> {
             try {
-                switch (job.getJobType()) {
-                    case UNINSTALL:
-                        digitalExchangeJobExecutor.uninstall(job, dao::updateComponentInstallationJob);
-                        break;
-                    case INSTALL:
-                        digitalExchangeJobExecutor.install(job, dao::updateComponentInstallationJob);
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Not supported job type " + job.getJobType().name()) ;
-                }
+                jobExecutor.execute(job, dao::updateComponentInstallationJob);
             } catch (Throwable ex) {
                 logger.error("Error while executing job for " + job.getComponentId(), ex);
                 job.setStatus(JobStatus.ERROR);
@@ -121,7 +116,6 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private DigitalExchangeJob createNewJob(DigitalExchange digitalExchange, String componentId, JobType type) {
 
         DigitalExchangeJob job = new DigitalExchangeJob();
-        //TODO let the database create this natively
         job.setId(RandomStringUtils.randomAlphanumeric(20));
         job.setComponentId(componentId);
         job.setStarted(new Date());

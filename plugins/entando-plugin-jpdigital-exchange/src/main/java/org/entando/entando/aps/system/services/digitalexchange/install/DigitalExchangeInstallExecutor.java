@@ -41,8 +41,6 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
-import org.jdom.Document;
-import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,32 +49,18 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.context.ServletContextAware;
 
 @org.springframework.stereotype.Component
-public class DigitalExchangeJobExecutor implements ServletContextAware {
+public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobExecutor {
 
-    private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeJobExecutor.class);
-
-    private static final String RESOURCES_DIR = "resources";
-
-    private final DigitalExchangesClient client;
-    private final ComponentStorageManager storageManager;
-    private final DatabaseManager databaseManager;
-    private final InitializerManager initializerManager;
-    private final CommandExecutor commandExecutor;
-
-    private ServletContext servletContext;
+    private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeInstallExecutor.class);
 
     @Autowired
-    public DigitalExchangeJobExecutor(DigitalExchangesClient client, ComponentStorageManager storageManager,
-                                      DatabaseManager databaseManager, InitializerManager initializerManager,
-                                      CommandExecutor commandExecutor) {
-        this.client = client;
-        this.storageManager = storageManager;
-        this.databaseManager = databaseManager;
-        this.initializerManager = initializerManager;
-        this.commandExecutor = commandExecutor;
+    public DigitalExchangeInstallExecutor(DigitalExchangesClient client, ComponentStorageManager storageManager,
+                                          DatabaseManager databaseManager, InitializerManager initializerManager,
+                                          CommandExecutor commandExecutor) {
+        super(client, storageManager, databaseManager, initializerManager, commandExecutor);
     }
 
-    public void install(DigitalExchangeJob job, Consumer<DigitalExchangeJob> updater) throws JobExecutionException {
+    public void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> updater) throws JobExecutionException {
 
         //TODO defines steps and percentages as Enums
         double steps = 6;
@@ -102,44 +86,7 @@ public class DigitalExchangeJobExecutor implements ServletContextAware {
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
-        reloadSystem();
-        job.setProgress(1);
-        job.setStatus(JobStatus.COMPLETED);
-        job.setEnded(new Date());
-        updater.accept(job);
-    }
-
-    public void uninstall(DigitalExchangeJob job, Consumer<DigitalExchangeJob> updater) throws JobExecutionException {
-
-        double steps = 5;
-        int currentStep = 0;
-
-        ComponentDescriptor component = parseComponentDescriptor(job.getComponentId());
-        job.setProgress(++currentStep / steps);
-        updater.accept(job);
-
-        component.getUninstallationCommands().forEach(commandExecutor::execute);
-        job.setProgress(++currentStep / steps);
-        updater.accept(job);
-
-        cleanComponentDatabase(component);
-        job.setProgress(++currentStep / steps);
-        updater.accept(job);
-
-        cleanComponentResources(component);
-        job.setProgress(++currentStep / steps);
-        updater.accept(job);
-
-        removeComponentDownloadedContent(component);
-        job.setProgress(++currentStep / steps);
-        updater.accept(job);
-
-        //TODO add an entry in the digital_exchange_installation database for the uninstall
-        reloadSystem();
-        job.setProgress(1);
-        job.setStatus(JobStatus.COMPLETED);
-        job.setEnded(new Date());
-        updater.accept(job);
+        completeJob(job, updater);
 
     }
 
@@ -255,107 +202,5 @@ public class DigitalExchangeJobExecutor implements ServletContextAware {
         }
     }
 
-    private void cleanComponentDatabase(ComponentDescriptor component) {
 
-        try {
-
-            SystemInstallationReport systemInstallationReport = initializerManager.getCurrentReport();
-
-            databaseManager.uninstallComponentResources(component, systemInstallationReport);
-
-            initializerManager.saveReport(systemInstallationReport);
-
-//            initializerManager.executeComponentPostInitProcesses(component, systemInstallationReport);
-
-        } catch (ApsSystemException ex) {
-            logger.error("Error during component installation", ex);
-            throw new JobExecutionException("Unable to install component", ex);
-        }
-    }
-
-    private void cleanComponentResources(ComponentDescriptor component) {
-
-        //TODO check and implement using the storage manager
-
-//        ComponentUninstallerInfo uninstallInfo = component.getUninstallerInfo();
-//
-//        try {
-//            for (String resourcePath: uninstallInfo.getResourcesPaths()) {
-//
-//                Resource componentResource = new ClassPathResource(resourcePath);
-//                if (componentResource.exists()) {
-//                    File resourceFile = componentResource.getFile();
-//                    if (resourceFile.isDirectory()) {
-//                        Files.walk(Paths.get(resourceFile.getAbsolutePath()))
-//                                .map(Path::toFile)
-//                                .sorted((o1, o2) -> -o1.compareTo(o2))
-//                                .forEach(File::delete);
-//                    } else {
-//                        resourceFile.delete();
-//                    }
-//
-//                }
-//            }
-//
-//        } catch(IOException ex) {
-//
-//            logger.error("Error during removal of component resources", ex);
-//            throw new JobExecutionException("Unable to remove component resoruces", ex);
-//        }
-//
-//
-    }
-
-    private void removeComponentDownloadedContent(ComponentDescriptor component) {
-
-        String componentId = component.getCode();
-
-        try {
-            if (storageManager.existsProtected(componentId) ) {
-                storageManager.deleteProtectedDirectory(componentId);
-            }
-
-            if (storageManager.existsResource(componentId)) {
-                storageManager.deleteResourceDirectory(componentId);
-            }
-
-        } catch (ApsSystemException ex) {
-            logger.error("An error occurred while removing downloaded content for the component", ex);
-            throw new JobExecutionException("Unable to remove component's downloaed content", ex);
-        }
-
-    }
-
-    private ComponentDescriptor parseComponentDescriptor(String componentCode) {
-
-        String componentDefinitionPath = componentCode + File.separator + "component.xml";
-
-        try {
-            if (!storageManager.existsProtected(componentDefinitionPath)) {
-                throw new JobExecutionException("component.xml not found for " + componentCode);
-            }
-
-            try (InputStream in = storageManager.getProtectedStream(componentDefinitionPath)) {
-                Document document = new SAXBuilder().build(in);
-                return new ComponentDescriptor(document.getRootElement(), storageManager);
-            }
-        } catch (Throwable t) {
-            logger.error("Error during component defintion parsing", t);
-            throw new JobExecutionException("Unable to parse component.xml for " + componentCode);
-        }
-    }
-
-    protected void reloadSystem() {
-        try {
-            ApsWebApplicationUtils.executeSystemRefresh(servletContext);
-        } catch (Throwable t) {
-            logger.error("Error during system reloading", t);
-            throw new JobExecutionException("Unable to reload the system after the installation");
-        }
-    }
-
-    @Override
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
-    }
 }

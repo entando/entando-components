@@ -88,7 +88,7 @@ public class DigitalExchangeJobExecutorTest {
 
     @InjectMocks
     @Spy
-    private DigitalExchangeJobExecutor installer;
+    private DigitalExchangeInstallExecutor installer;
 
     private DigitalExchangeJob job;
 
@@ -149,7 +149,7 @@ public class DigitalExchangeJobExecutorTest {
     @Test
     public void shouldInstallComponent() throws ApsSystemException, IOException {
 
-        installer.install(job, jobConsumer);
+        installer.execute(job, jobConsumer);
 
         ArgumentCaptor<DigitalExchangeJob> jobCaptor = ArgumentCaptor.forClass(DigitalExchangeJob.class);
         verify(jobConsumer, times(6)).accept(jobCaptor.capture());
@@ -176,7 +176,7 @@ public class DigitalExchangeJobExecutorTest {
 
         when(client.getStreamResponse(any(), any())).thenThrow(UncheckedIOException.class);
 
-        installer.install(job, jobConsumer);
+        installer.execute(job, jobConsumer);
     }
 
     @Test(expected = JobExecutionException.class)
@@ -185,7 +185,7 @@ public class DigitalExchangeJobExecutorTest {
         doThrow(ApsSystemException.class).when(storageManager)
                 .saveProtectedFile(any(), any());
 
-        installer.install(job, jobConsumer);
+        installer.execute(job, jobConsumer);
     }
 
     @Test(expected = JobExecutionException.class)
@@ -193,7 +193,7 @@ public class DigitalExchangeJobExecutorTest {
 
         when(storageManager.existsProtected(endsWith("component.xml"))).thenReturn(false);
 
-        installer.install(job, jobConsumer);
+        installer.execute(job, jobConsumer);
     }
 
     @Test(expected = JobExecutionException.class)
@@ -201,7 +201,7 @@ public class DigitalExchangeJobExecutorTest {
 
         when(storageManager.getProtectedStream(endsWith("component.xml"))).thenReturn(null);
 
-        installer.install(job, jobConsumer);
+        installer.execute(job, jobConsumer);
     }
 
     @Test(expected = JobExecutionException.class)
@@ -210,6 +210,6 @@ public class DigitalExchangeJobExecutorTest {
         doThrow(ApsSystemException.class)
                 .when(databaseManager).initComponentDatabases(any(), any(), anyBoolean());
 
-        installer.install(job, jobConsumer);
+        installer.execute(job, jobConsumer);
     }
 }
