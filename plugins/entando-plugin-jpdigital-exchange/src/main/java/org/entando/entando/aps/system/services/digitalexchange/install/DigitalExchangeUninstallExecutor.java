@@ -13,43 +13,16 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import javax.servlet.ServletContext;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.util.ApsWebApplicationUtils;
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.entando.entando.aps.system.services.RequestListProcessor;
-import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeBaseCall;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
-import org.entando.entando.aps.system.services.digitalexchange.client.PagedDigitalExchangeCall;
-import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentListProcessor;
-import org.entando.entando.web.common.model.Filter;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
-import org.jdom.Document;
-import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 
 @org.springframework.stereotype.Component
 public class DigitalExchangeUninstallExecutor extends DigitalExchangeAbstractJobExecutor {
@@ -65,6 +38,7 @@ public class DigitalExchangeUninstallExecutor extends DigitalExchangeAbstractJob
     }
 
 
+    @Override
     public void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> updater) throws JobExecutionException {
 
         double steps = 5;

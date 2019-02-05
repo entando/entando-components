@@ -49,7 +49,7 @@ public interface DigitalExchangeInstallResource {
             @ApiResponse( code = 201, message = "Created")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @PostMapping(value = "{exchange}/uninstall/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/uninstall/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> uninstall(@PathVariable("exchange") String digitalExchangeId,
                                                                      @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
 

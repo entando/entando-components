@@ -60,6 +60,7 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
         super(client, storageManager, databaseManager, initializerManager, commandExecutor);
     }
 
+    @Override
     public void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> updater) throws JobExecutionException {
 
         //TODO defines steps and percentages as Enums
