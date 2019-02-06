@@ -11,14 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
-public interface DigitalExchangeComponentInstallationService {
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 
-    DigitalExchangeJob install(String exchangeId, String componentId, String username);
+/**
+ * Utility methods used to register custom SpEL functions.
+ */
+public class CommandUtils {
 
-    DigitalExchangeJob uninstall(String componentId, String username);
-
-    DigitalExchangeJob checkJobStatus(String componentId, JobType jobType);
-
+    public static BindingResult getBindingResult() {
+        return new DataBinder(null).getBindingResult();
+    }
 }

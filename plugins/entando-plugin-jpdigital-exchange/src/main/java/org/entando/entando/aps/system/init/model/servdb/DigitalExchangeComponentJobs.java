@@ -18,12 +18,13 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import java.util.Date;
 
-@DatabaseTable(tableName = DigitalExchangeComponentInstallation.TABLE_NAME)
-public class DigitalExchangeComponentInstallation {
+@DatabaseTable(tableName = DigitalExchangeComponentJobs.TABLE_NAME)
+public class DigitalExchangeComponentJobs {
 
-    public static final String TABLE_NAME = "digital_exchange_installation";
+    public static final String TABLE_NAME = "digital_exchange_jobs";
 
     public static final String COL_ID = "id";
+    public static final String COL_JOB_TYPE = "job_type";
     public static final String COL_DIGITAL_EXCHANGE_ID = "digital_exchange_id";
     public static final String COL_DIGITAL_EXCHANGE_URL = "digital_exchange_url";
     public static final String COL_COMPONENT_ID = "component_id";
@@ -35,10 +36,12 @@ public class DigitalExchangeComponentInstallation {
     public static final String COL_PROGRESS = "progress";
     public static final String COL_STATUS = "status";
     public static final String COL_ERROR_MESSAGE = "error_message";
-    public static final String COL_JOB_TYPE = "job_type";
 
     @DatabaseField(columnName = COL_ID, dataType = DataType.STRING, canBeNull = false, id = true, width = 20)
     private String id;
+
+    @DatabaseField(columnName = COL_JOB_TYPE, dataType = DataType.STRING, canBeNull = false)
+    private String jobType;
 
     @DatabaseField(columnName = COL_DIGITAL_EXCHANGE_ID, dataType = DataType.STRING, canBeNull = true)
     private String digitalExchangeId;
@@ -80,9 +83,7 @@ public class DigitalExchangeComponentInstallation {
     @DatabaseField(columnName = COL_STATUS, dataType = DataType.STRING, canBeNull = false)
     private String status;
 
-    @DatabaseField(columnName = COL_ERROR_MESSAGE, dataType = DataType.STRING)
+    @DatabaseField(columnName = COL_ERROR_MESSAGE, dataType = DataType.LONG_STRING)
     private String errorMessage;
 
-    @DatabaseField(columnName = COL_JOB_TYPE, dataType = DataType.STRING, canBeNull = false)
-    private String jobType;
 }

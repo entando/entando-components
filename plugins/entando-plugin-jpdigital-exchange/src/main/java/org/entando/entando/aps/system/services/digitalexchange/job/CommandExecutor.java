@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
-import org.entando.entando.aps.system.services.digitalexchange.install.model.Command;
+import org.entando.entando.aps.system.services.digitalexchange.job.model.Command;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.bind.JAXB;
-import org.entando.entando.aps.system.services.digitalexchange.install.model.Commands;
+import org.entando.entando.aps.system.services.digitalexchange.job.model.Commands;
 import org.entando.entando.web.common.model.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

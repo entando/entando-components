@@ -1,4 +1,4 @@
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import java.io.File;
 import java.io.InputStream;

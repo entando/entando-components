@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -26,7 +26,7 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import static org.entando.entando.aps.system.init.model.servdb.DigitalExchangeComponentInstallation.*;
+import static org.entando.entando.aps.system.init.model.servdb.DigitalExchangeComponentJobs.*;
 
 @Component
 public class DigitalExchangeJobDAOImpl extends AbstractDAO implements DigitalExchangeJobDAO {
@@ -34,10 +34,9 @@ public class DigitalExchangeJobDAOImpl extends AbstractDAO implements DigitalExc
     private static final long serialVersionUID = 1L;
 
     private static final String ALL_COLS = String.join(", ",
-            COL_ID, COL_DIGITAL_EXCHANGE_ID, COL_DIGITAL_EXCHANGE_URL, COL_COMPONENT_ID,
+            COL_ID, COL_JOB_TYPE, COL_DIGITAL_EXCHANGE_ID, COL_DIGITAL_EXCHANGE_URL, COL_COMPONENT_ID,
             COL_COMPONENT_NAME, COL_COMPONENT_VERSION, COL_STARTED_AT, COL_ENDED_AT,
-            COL_STARTED_BY, COL_PROGRESS, COL_STATUS, COL_ERROR_MESSAGE,
-            COL_JOB_TYPE);
+            COL_STARTED_BY, COL_PROGRESS, COL_STATUS, COL_ERROR_MESSAGE);
 
     private static final String INSERT_JOB = String.format(
             "INSERT INTO %s (%s) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -64,6 +63,7 @@ public class DigitalExchangeJobDAOImpl extends AbstractDAO implements DigitalExc
 
             int i = 0;
             ps.setString(++i, job.getId());
+            ps.setString(++i, job.getJobType().name());
             ps.setString(++i, job.getDigitalExchangeId());
             ps.setString(++i, job.getDigitalExchangeUrl());
             ps.setString(++i, job.getComponentId());
@@ -75,7 +75,6 @@ public class DigitalExchangeJobDAOImpl extends AbstractDAO implements DigitalExc
             ps.setDouble(++i, job.getProgress());
             ps.setString(++i, job.getStatus().name());
             ps.setString(++i, job.getErrorMessage());
-            ps.setString(++i, job.getJobType().name());
 
             ps.execute();
 

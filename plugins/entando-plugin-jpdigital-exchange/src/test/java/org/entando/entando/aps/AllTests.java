@@ -22,9 +22,9 @@ import org.entando.entando.aps.system.services.digitalexchange.category.DigitalE
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactoryTest;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClientTest;
 import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentsServiceTest;
-import org.entando.entando.aps.system.services.digitalexchange.install.ComponentDescriptorTest;
-import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeJobExecutorTest;
-import org.entando.entando.aps.system.services.digitalexchange.install.DigitalExchangeComponentInstallationServiceTest;
+import org.entando.entando.aps.system.services.digitalexchange.job.ComponentDescriptorTest;
+import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJobExecutorTest;
+import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeComponentJobsServiceTest;
 import org.entando.entando.aps.system.services.pagemodel.DigitalExchangePageModelServiceTest;
 import org.entando.entando.web.digitalexchange.DigitalExchangesControllerIntegrationTest;
 import org.entando.entando.web.digitalexchange.DigitalExchangesControllerTest;
@@ -58,7 +58,7 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(DigitalExchangesServiceTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeComponentsServiceTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeCategoriesServiceTest.class));
-        suite.addTest(new JUnit4TestAdapter(DigitalExchangeComponentInstallationServiceTest.class));
+        suite.addTest(new JUnit4TestAdapter(DigitalExchangeComponentJobsServiceTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangePageModelServiceTest.class));
     }
 

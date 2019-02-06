@@ -11,15 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
-public class JobExecutionException extends RuntimeException {
-
-    public JobExecutionException(String message) {
-        super(message);
-    }
-
-    public JobExecutionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+public enum JobStatus {
+    
+    CREATED,
+    IN_PROGRESS,
+    COMPLETED,
+    ERROR
 }
