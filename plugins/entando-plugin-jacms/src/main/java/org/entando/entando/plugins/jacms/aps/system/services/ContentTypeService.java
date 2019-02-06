@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.jacms.aps.system.services;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.entity.AbstractEntityTypeService;
@@ -12,13 +13,12 @@ import org.springframework.validation.BindingResult;
 import java.util.*;
 
 @Service
-public class ContentTypeService extends AbstractEntityTypeService<IContent, ContentTypeDto> {
+public class ContentTypeService extends AbstractEntityTypeService<Content, ContentTypeDto> {
 
     private static final String CONTENT_MODEL_MANAGER = "jacmsContentManager";
 
-
     @Override
-    protected IDtoBuilder<IContent, ContentTypeDto> getEntityTypeFullDtoBuilder(
+    protected IDtoBuilder<Content, ContentTypeDto> getEntityTypeFullDtoBuilder(
             IEntityManager masterManager) {
         return new ContentTypeDtoBuilder(masterManager.getAttributeRoles());
     }
