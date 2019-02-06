@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install.model;
+package org.entando.entando.aps.system.services.digitalexchange.job.model;
 
 import java.util.Map;
 import javax.xml.bind.annotation.XmlElementWrapper;

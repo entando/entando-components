@@ -7,7 +7,7 @@
             <datasource name="portDataSource">
             </datasource>
             <datasource name="servDataSource">
-                <class>org.entando.entando.aps.system.init.model.servdb.DigitalExchangeComponentInstallation</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.DigitalExchangeComponentJobs</class>
             </datasource>
         </tableMapping>
         <environment code="production">

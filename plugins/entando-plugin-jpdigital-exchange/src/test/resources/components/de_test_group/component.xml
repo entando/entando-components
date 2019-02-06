@@ -32,5 +32,8 @@
         </sqlResources>
         <resources>
         </resources>
+        <execution>
+            <op>#call('deleteRole', 'de_test_role')</op>
+        </execution>
     </uninstallation>
 </component>
