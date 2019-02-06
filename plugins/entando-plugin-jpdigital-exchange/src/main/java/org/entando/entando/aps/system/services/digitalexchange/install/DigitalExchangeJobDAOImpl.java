@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 import static org.entando.entando.aps.system.init.model.servdb.DigitalExchangeComponentInstallation.*;
 
 @Component
-public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO implements DigitalExchangeComponentInstallationDAO {
+public class DigitalExchangeJobDAOImpl extends AbstractDAO implements DigitalExchangeJobDAO {
 
     private static final long serialVersionUID = 1L;
 
@@ -53,12 +53,12 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
             COL_PROGRESS, COL_STATUS, COL_ERROR_MESSAGE, COL_ID);
 
     @Autowired
-    public DigitalExchangeComponentInstallationDAOImpl(DataSource servDataSource) {
+    public DigitalExchangeJobDAOImpl(DataSource servDataSource) {
         super.setDataSource(servDataSource);
     }
 
     @Override
-    public void createComponentInstallationJob(DigitalExchangeJob job) {
+    public void createJob(DigitalExchangeJob job) {
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(INSERT_JOB)) {
 
@@ -127,7 +127,7 @@ public class DigitalExchangeComponentInstallationDAOImpl extends AbstractDAO imp
     }
 
     @Override
-    public void updateComponentInstallationJob(DigitalExchangeJob job) {
+    public void updateJob(DigitalExchangeJob job) {
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(UPDATE_JOB)) {
 

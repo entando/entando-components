@@ -50,8 +50,7 @@ public interface DigitalExchangeInstallResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PostMapping(value = "/uninstall/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> uninstall(@PathVariable("exchange") String digitalExchangeId,
-                                                                     @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
+    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> uninstall(@PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
 
     @ApiOperation(value = "Checks installation job status")
     @ApiResponses({

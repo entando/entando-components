@@ -35,7 +35,7 @@ public class DigitalExchangeComponentInstallationServiceTest {
     private DigitalExchangesService exchangesService;
 
     @Mock
-    private DigitalExchangeComponentInstallationDAO dao;
+    private DigitalExchangeJobDAO dao;
 
     @Mock
     private DigitalExchangeInstallExecutor digitalExchangeInstallExecutor;

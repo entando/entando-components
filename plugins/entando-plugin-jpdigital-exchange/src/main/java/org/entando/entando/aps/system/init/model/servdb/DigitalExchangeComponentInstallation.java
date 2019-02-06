@@ -40,14 +40,14 @@ public class DigitalExchangeComponentInstallation {
     @DatabaseField(columnName = COL_ID, dataType = DataType.STRING, canBeNull = false, id = true, width = 20)
     private String id;
 
-    @DatabaseField(columnName = COL_DIGITAL_EXCHANGE_ID, dataType = DataType.STRING, canBeNull = false)
+    @DatabaseField(columnName = COL_DIGITAL_EXCHANGE_ID, dataType = DataType.STRING, canBeNull = true)
     private String digitalExchangeId;
 
     /**
      * For auditing purpose, because the DE id is auto-generated and became
      * useless if the DE is removed from the configuration.
      */
-    @DatabaseField(columnName = COL_DIGITAL_EXCHANGE_URL, dataType = DataType.STRING, canBeNull = false)
+    @DatabaseField(columnName = COL_DIGITAL_EXCHANGE_URL, dataType = DataType.STRING, canBeNull = true)
     private String digitalExchangeUrl;
 
     @DatabaseField(columnName = COL_COMPONENT_ID, dataType = DataType.STRING, canBeNull = false)

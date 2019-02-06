@@ -14,7 +14,6 @@
 package org.entando.entando.aps.system.services.digitalexchange.install;
 
 import java.util.Date;
-import java.util.EnumMap;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -36,14 +35,14 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private static final String ERRCODE_COMPONENT_INSTALLATION_RUNNING = "1";
 
     private final DigitalExchangesService exchangesService;
-    private final DigitalExchangeComponentInstallationDAO dao;
+    private final DigitalExchangeJobDAO dao;
     private final DigitalExchangeAbstractJobExecutor installExecutor;
     private final DigitalExchangeAbstractJobExecutor uninstallExecutor;
 
     @Autowired
     public DigitalExchangeComponentInstallationServiceImpl(
             DigitalExchangesService exchangesService,
-            DigitalExchangeComponentInstallationDAO dao,
+            DigitalExchangeJobDAO dao,
             DigitalExchangeInstallExecutor installExecutor,
             DigitalExchangeUninstallExecutor uninstallExecutor) {
 
@@ -62,7 +61,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(digitalExchange, componentId, JobType.INSTALL);
         job.setUser(username);
-        dao.createComponentInstallationJob(job);
+        dao.createJob(job);
 
         this.executeJob(job, this.installExecutor );
 
@@ -70,15 +69,13 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     }
 
     @Override
-    public DigitalExchangeJob uninstall(String exchangeId, String componentId, String username) {
+    public DigitalExchangeJob uninstall(String componentId, String username) {
 
         checkIfAlreadyRunning(componentId, JobType.UNINSTALL);
 
-        DigitalExchange digitalExchange = exchangesService.findById(exchangeId);
-
-        DigitalExchangeJob job = createNewJob(digitalExchange, componentId, JobType.UNINSTALL);
+        DigitalExchangeJob job = createNewJob(componentId, JobType.UNINSTALL);
         job.setUser(username);
-        dao.createComponentInstallationJob(job);
+        dao.createJob(job);
 
         this.executeJob(job, this.uninstallExecutor);
 
@@ -89,13 +86,13 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private void executeJob(DigitalExchangeJob job, DigitalExchangeAbstractJobExecutor jobExecutor) {
         CompletableFuture.runAsync(() -> {
             try {
-                jobExecutor.execute(job, dao::updateComponentInstallationJob);
+                jobExecutor.execute(job, dao::updateJob);
             } catch (Throwable ex) {
                 logger.error("Error while executing job for " + job.getComponentId(), ex);
                 job.setStatus(JobStatus.ERROR);
                 job.setErrorMessage(ex.getMessage());
                 job.setEnded(new Date());
-                dao.updateComponentInstallationJob(job);
+                dao.updateJob(job);
             }
         });
     }
@@ -119,12 +116,29 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         job.setId(RandomStringUtils.randomAlphanumeric(20));
         job.setComponentId(componentId);
         job.setStarted(new Date());
-        job.setDigitalExchangeId(digitalExchange.getId());
-        job.setDigitalExchangeUrl(digitalExchange.getUrl());
+
+        if (digitalExchange != null) {
+            job.setDigitalExchangeId(digitalExchange.getId());
+            job.setDigitalExchangeUrl(digitalExchange.getUrl());
+        }
+
         job.setStatus(JobStatus.CREATED);
         job.setJobType(type);
 
         return job;
+    }
+
+    private DigitalExchangeJob createNewJob(String componentId, JobType type) {
+
+        DigitalExchangeJob job = new DigitalExchangeJob();
+        job.setId(RandomStringUtils.randomAlphanumeric(20));
+        job.setComponentId(componentId);
+        job.setStarted(new Date());
+        job.setStatus(JobStatus.CREATED);
+        job.setJobType(type);
+
+        return job;
+
     }
 
     @Override

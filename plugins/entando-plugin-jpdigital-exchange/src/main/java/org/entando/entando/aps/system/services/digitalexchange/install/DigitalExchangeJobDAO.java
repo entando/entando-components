@@ -15,11 +15,11 @@ package org.entando.entando.aps.system.services.digitalexchange.install;
 
 import java.util.Optional;
 
-public interface DigitalExchangeComponentInstallationDAO {
+public interface DigitalExchangeJobDAO {
 
-    void createComponentInstallationJob(DigitalExchangeJob job);
+    void createJob(DigitalExchangeJob job);
 
     Optional<DigitalExchangeJob> findLast(String componentId, JobType jobType);
 
-    void updateComponentInstallationJob(DigitalExchangeJob job);
+    void updateJob(DigitalExchangeJob job);
 }

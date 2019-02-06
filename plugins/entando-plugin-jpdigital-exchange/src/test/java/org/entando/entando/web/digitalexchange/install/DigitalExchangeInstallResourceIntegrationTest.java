@@ -32,7 +32,6 @@ import org.entando.entando.aps.system.services.digitalexchange.install.Component
 import org.entando.entando.aps.system.services.digitalexchange.install.JobType;
 import org.entando.entando.aps.system.services.group.IGroupService;
 import org.entando.entando.aps.system.services.label.ILabelService;
-import org.entando.entando.aps.system.services.label.model.LabelDto;
 import org.entando.entando.aps.system.services.pagemodel.IPageModelService;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
 import org.entando.entando.aps.system.services.role.IRoleService;
@@ -305,7 +304,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                 .andExpect(jsonPath("$.metaData").isEmpty())
                 .andExpect(jsonPath("$.payload").isNotEmpty());
 
-        parseJob(result);
+        parseInstallJob(result);
 
         JobStatus status = JobStatus.CREATED;
         int attempts = 0;
@@ -325,13 +324,13 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
     }
 
     private void uninstallAndCheckForCompletion(String componentId) throws Exception {
-        ResultActions result = createAuthRequest(post(BASE_URL + "/{exchange}/uninstall/{component}", DE_1_ID, componentId)).execute();
+        ResultActions result = createAuthRequest(post(BASE_URL + "/uninstall/{component}", componentId)).execute();
 
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty())
                 .andExpect(jsonPath("$.payload").isNotEmpty());
 
-        parseJob(result);
+        parseUninstallJob(result);
 
         JobStatus status = JobStatus.CREATED;
         int attempts = 0;
@@ -360,7 +359,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty());
 
-        DigitalExchangeJob job = parseJob(result);
+        DigitalExchangeJob job = parseInstallJob(result);
 
         assertThat(job.getProgress()).isBetween(0d, 1d);
 
@@ -379,14 +378,14 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty());
 
-        DigitalExchangeJob job = parseJob(result);
+        DigitalExchangeJob job = parseUninstallJob(result);
 
         assertThat(job.getProgress()).isBetween(0d, 1d);
 
         return job.getStatus();
     }
 
-    private DigitalExchangeJob parseJob(ResultActions result) throws IOException {
+    private DigitalExchangeJob parseInstallJob(ResultActions result) throws IOException {
         String jsonResponse = result.andReturn().getResponse().getContentAsString();
 
         SimpleRestResponse<DigitalExchangeJob> response = new ObjectMapper()
@@ -402,4 +401,23 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         return job;
     }
+
+    private DigitalExchangeJob parseUninstallJob(ResultActions result) throws IOException {
+
+        String jsonResponse = result.andReturn().getResponse().getContentAsString();
+
+        SimpleRestResponse<DigitalExchangeJob> response = new ObjectMapper()
+                .readValue(jsonResponse, new TypeReference<SimpleRestResponse<DigitalExchangeJob>>() {
+                });
+
+        DigitalExchangeJob job = response.getPayload();
+
+        assertThat(job.getStarted()).isNotNull();
+        assertThat(job.getUser()).isEqualTo("jack_bauer");
+        assertThat(job.getJobType()).isIn(EnumSet.allOf(JobType.class));
+
+        return job;
+
+    }
+
 }
