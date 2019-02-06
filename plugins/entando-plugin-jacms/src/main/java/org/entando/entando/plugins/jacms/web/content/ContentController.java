@@ -14,10 +14,11 @@
 package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentService;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
-import org.entando.entando.aps.system.services.userprofile.IUserProfileService;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.entity.validator.EntityValidator;
@@ -46,17 +47,17 @@ public class ContentController {
     public static final String ERRCODE_REFERENCED_ONLINE_CONTENT = "2";
 
     @Autowired
-    private IUserProfileService userProfileService;
+    private IContentService contentService;
 
     @Autowired
     private ContentValidator contentValidator;
 
-    protected IUserProfileService getUserProfileService() {
-        return userProfileService;
+    public IContentService getContentService() {
+        return contentService;
     }
 
-    public void setUserProfileService(IUserProfileService userProfileService) {
-        this.userProfileService = userProfileService;
+    public void setContentService(IContentService contentService) {
+        this.contentService = contentService;
     }
 
     public ContentValidator getContentValidator() {
@@ -75,7 +76,7 @@ public class ContentController {
         if (!this.getContentValidator().existContent(code)) {
             throw new RestRourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Content", code);
         } else {
-            dto = this.getUserProfileService().getUserProfile(code);
+            dto = this.getContentService().getContent(code);
         }
         logger.debug("Main Response -> {}", dto);
         return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
@@ -83,7 +84,7 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<EntityDto>> addContent(@Valid @RequestBody EntityDto bodyRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<EntityDto>> addContent(@Valid @RequestBody ContentDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Add new content -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -92,7 +93,7 @@ public class ContentController {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        EntityDto response = this.getUserProfileService().addUserProfile(bodyRequest, bindingResult);
+        EntityDto response = this.getContentService().addContent(bodyRequest, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -102,13 +103,13 @@ public class ContentController {
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{code}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<EntityDto>> updateContent(@PathVariable String code,
-            @Valid @RequestBody EntityDto bodyRequest, BindingResult bindingResult) {
+            @Valid @RequestBody ContentDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Update content -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
         this.getContentValidator().validateBodyName(code, bodyRequest, bindingResult);
-        EntityDto response = this.getUserProfileService().updateUserProfile(bodyRequest, bindingResult);
+        EntityDto response = this.getContentService().updateContent(bodyRequest, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
