@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.web.digitalexchange.install;
+package org.entando.entando.web.digitalexchange.job;
 
 import com.agiletec.aps.system.services.i18n.I18nManager;
 import com.fasterxml.jackson.core.type.TypeReference;

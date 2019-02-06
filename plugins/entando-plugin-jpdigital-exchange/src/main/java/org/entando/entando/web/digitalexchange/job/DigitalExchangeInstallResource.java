@@ -12,7 +12,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.web.digitalexchange.install;
+package org.entando.entando.web.digitalexchange.job;
 
 import com.agiletec.aps.system.services.role.Permission;
 import io.swagger.annotations.Api;

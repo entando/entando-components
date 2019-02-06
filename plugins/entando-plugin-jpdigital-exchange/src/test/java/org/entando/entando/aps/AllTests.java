@@ -32,7 +32,7 @@ import org.entando.entando.web.digitalexchange.category.DigitalExchangeCategorie
 import org.entando.entando.web.digitalexchange.category.DigitalExchangeCategoriesControllerTest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponentsControllerIntegrationTest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponentsControllerTest;
-import org.entando.entando.web.digitalexchange.install.DigitalExchangeInstallResourceIntegrationTest;
+import org.entando.entando.web.digitalexchange.job.DigitalExchangeInstallResourceIntegrationTest;
 import org.entando.entando.web.pagemodel.DigitalExchangePageModelControllerIntegrationTest;
 import org.entando.entando.web.pagemodel.DigitalExchangePageModelControllerTest;
 
