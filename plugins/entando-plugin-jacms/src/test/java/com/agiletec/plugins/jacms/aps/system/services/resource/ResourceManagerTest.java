@@ -14,6 +14,11 @@
 package com.agiletec.plugins.jacms.aps.system.services.resource;
 
 import com.agiletec.plugins.jacms.aps.system.services.resource.cache.IResourceManagerCacheWrapper;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResource;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -21,7 +26,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.hamcrest.CoreMatchers.is;
+import org.junit.Assert;
 import static org.junit.Assert.assertThat;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
 
 public class ResourceManagerTest {
@@ -38,6 +45,16 @@ public class ResourceManagerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        AttachResource mockAttachResource = Mockito.mock(AttachResource.class);
+        when(mockAttachResource.getType()).thenReturn("Attach");
+        when(mockAttachResource.getResourcePrototype()).thenReturn(mockAttachResource);
+        ImageResource mockImageResource = Mockito.mock(ImageResource.class);
+        when(mockImageResource.getResourcePrototype()).thenReturn(mockImageResource);
+        when(mockImageResource.getType()).thenReturn("Image");
+        Map<String, ResourceInterface> types = new HashMap<>();
+        types.put("Image", mockImageResource);
+        types.put("Attach", mockAttachResource);
+        this.resourceManager.setResourceTypes(types);
     }
 
     @Test
@@ -45,6 +62,12 @@ public class ResourceManagerTest {
         when(cacheWrapper.getStatus()).thenReturn(IResourceManager.STATUS_READY);
         int status = this.resourceManager.getStatus();
         assertThat(status, is(IResourceManager.STATUS_READY));
+    }
+
+    public void createResourceType() {
+        ResourceInterface type = this.resourceManager.createResourceType("Image");
+        Assert.assertNotNull(type);
+        Assert.assertEquals("Image", type.getType());
     }
 
 }
