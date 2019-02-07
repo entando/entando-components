@@ -15,7 +15,7 @@ package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.plugins.jacms.aps.system.services.content.IContentService;
+import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
@@ -47,6 +47,8 @@ public class ContentController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static final String ERRCODE_REFERENCED_ONLINE_CONTENT = "2";
+    public static final String ERRCODE_UNAUTHORIZED_CONTENT = "3";
+    public static final String ERRCODE_DELETE_PUBLIC_PAGE = "5";
 
     @Autowired
     private IContentService contentService;

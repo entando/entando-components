@@ -16,7 +16,7 @@ package org.entando.entando.plugins.jacms.web.content;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.plugins.jacms.aps.system.services.content.IContentService;
+import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentValidator;
 import org.entando.entando.web.AbstractControllerTest;
@@ -63,16 +63,6 @@ public class ContentControllerTest extends AbstractControllerTest {
         when(this.contentValidator.existContent("ART123")).thenReturn(true);
         when(this.contentService.getContent(Mockito.eq("ART123"), Mockito.any(UserDetails.class))).thenReturn(Mockito.mock(ContentDto.class));
         ResultActions result = performGetContent("ART123", user);
-        result.andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldGetUnauthorizedContent() throws Exception {
-        UserDetails user = this.createUser(true);
-        when(this.contentValidator.existContent("ART123")).thenReturn(true);
-        ResultActions result = performGetContent("ART123", user);
-        //change AUTH
-        //result.andExpect(status().isForbidden());
         result.andExpect(status().isOk());
     }
 

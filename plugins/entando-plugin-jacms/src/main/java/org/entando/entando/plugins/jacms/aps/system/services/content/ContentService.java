@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.plugins.jacms.aps.system.services.content;
+package org.entando.entando.plugins.jacms.aps.system.services.content;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,14 @@ import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.page.PageUtilizer;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
@@ -44,6 +47,7 @@ import static org.entando.entando.aps.system.services.page.IPageService.STATUS_D
 import static org.entando.entando.aps.system.services.page.IPageService.STATUS_ONLINE;
 import org.entando.entando.aps.system.services.page.PageServiceUtilizer;
 import org.entando.entando.plugins.jacms.web.content.ContentController;
+import org.entando.entando.web.common.exceptions.ResourcePermissionsException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -65,6 +69,7 @@ public class ContentService extends AbstractEntityService<Content>
     private static final String ERRCODE_CONTENT_REFERENCES = "5";
 
     private IContentManager contentManager;
+    private IAuthorizationManager authorizationManager;
     private IContentAuthorizationHelper contentAuthorizationHelper;
     private ApplicationContext applicationContext;
     private IDtoBuilder<Content, ContentDto> dtoBuilder;
@@ -75,6 +80,14 @@ public class ContentService extends AbstractEntityService<Content>
 
     public void setContentManager(IContentManager contentManager) {
         this.contentManager = contentManager;
+    }
+
+    public IAuthorizationManager getAuthorizationManager() {
+        return authorizationManager;
+    }
+
+    public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
+        this.authorizationManager = authorizationManager;
     }
 
     protected IContentAuthorizationHelper getContentAuthorizationHelper() {
@@ -157,6 +170,7 @@ public class ContentService extends AbstractEntityService<Content>
 
     @Override
     public ContentDto getContent(String code, UserDetails user) {
+        this.checkContentAuthorization(user, code, true, false, null);
         ContentDto dto = (ContentDto) super.getEntity(JacmsSystemConstants.CONTENT_MANAGER, code);
         dto.setReferences(this.getReferencesInfo(dto.getId()));
         return dto;
@@ -164,17 +178,41 @@ public class ContentService extends AbstractEntityService<Content>
 
     @Override
     public ContentDto addContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
+        if (!this.getAuthorizationManager().isAuthOnGroup(user, request.getMainGroup())) {
+            bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{request.getMainGroup()}, "content.group.unauthorized");
+            throw new ResourcePermissionsException(bindingResult);
+        }
         return (ContentDto) this.addEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
     @Override
     public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
+        this.checkContentAuthorization(user, request.getId(), false, true, bindingResult);
         return (ContentDto) super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
     @Override
     public void deleteContent(String code, UserDetails user) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.checkContentAuthorization(user, code, false, true, null);
+        try {
+            Content content = this.getContentManager().loadContent(code, false);
+            if (null == content) {
+                throw new RestRourceNotFoundException(ERRCODE_CONTENT_NOT_FOUND, "content", code);
+            }
+            Content publicContent = this.getContentManager().loadContent(code, true);
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
+            if (null != publicContent) {
+                bindingResult.reject(ContentController.ERRCODE_DELETE_PUBLIC_PAGE,
+                        new String[]{code}, "content.status.published");
+                throw new ValidationGenericException(bindingResult);
+            }
+            this.getContentManager().deleteContent(content);
+        } catch (ValidationGenericException e) {
+            throw e;
+        } catch (ApsSystemException e) {
+            logger.error("Error deleting content {}", code, e);
+            throw new RestServerError("error deleting content", e);
+        }
     }
 
     @Override
@@ -288,6 +326,20 @@ public class ContentService extends AbstractEntityService<Content>
             throw new RestServerError("error in getReferencesInfo ", ex);
         }
         return references;
+    }
+
+    protected void checkContentAuthorization(UserDetails userDetails, String contentId, boolean publicVersion, boolean edit, BindingResult mainBindingResult) {
+        try {
+            if ((!this.getContentAuthorizationHelper().isAuth(userDetails, contentId, publicVersion) && !edit)
+                    || (!this.getContentAuthorizationHelper().isAuthToEdit(userDetails, contentId, publicVersion) && edit)) {
+                BindingResult bindingResult = (null == mainBindingResult) ? new BeanPropertyBindingResult(contentId, "content") : mainBindingResult;
+                bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{contentId}, "content.unauthorized.access");
+                throw new ResourcePermissionsException(bindingResult);
+            }
+        } catch (Exception ex) {
+            logger.error("error checking auth for content {}", contentId, ex);
+            throw new RestServerError("error checking auth for content", ex);
+        }
     }
 
     @Override
