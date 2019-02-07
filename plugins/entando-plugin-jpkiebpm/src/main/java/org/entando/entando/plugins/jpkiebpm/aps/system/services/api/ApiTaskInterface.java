@@ -485,7 +485,7 @@ public class ApiTaskInterface extends KieApiManager {
                     fieldsList.add(apifield);
                 } catch (Exception ex) {
                     logger.error("Error adding task data field{}", ex);
-
+                    
                 }
             }
 
