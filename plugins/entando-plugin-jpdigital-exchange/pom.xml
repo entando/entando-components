@@ -61,6 +61,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>5.3.0.Final</version>
-        </dependency>        
+        </dependency>
+        <!-- Needed for JavaDoc -->
+        <dependency>
+            <groupId>javax.interceptor</groupId>
+            <artifactId>javax.interceptor-api</artifactId>
+            <version>1.2.2</version>
+        </dependency>
     </dependencies>
 </project>

@@ -29,7 +29,7 @@ public class JobEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "user")
+    @Column(name = "job_user")
     private String user;
 
     public Long getId() {
