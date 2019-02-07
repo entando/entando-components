@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content;
 
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -23,16 +24,16 @@ import org.springframework.validation.BindingResult;
  */
 public interface IContentService {
 
-    public ContentDto getContent(String code);
+    public ContentDto getContent(String code, UserDetails user);
 
-    public ContentDto addContent(ContentDto request, BindingResult bindingResult);
+    public ContentDto addContent(ContentDto request, UserDetails user, BindingResult bindingResult);
 
-    public ContentDto updateContent(ContentDto request, BindingResult bindingResult);
+    public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult);
 
-    public void deleteContent(String code);
+    public void deleteContent(String code, UserDetails user);
 
-    public ContentDto updateContentStatus(String code, String status);
+    public ContentDto updateContentStatus(String code, String status, UserDetails user);
 
-    public PagedMetadata<?> getContentReferences(String code, String manager, RestListRequest requestList);
+    public PagedMetadata<?> getContentReferences(String code, String manager, UserDetails user, RestListRequest requestList);
 
 }

@@ -38,6 +38,7 @@
 
     <bean id="ContentService" class="com.agiletec.plugins.jacms.aps.system.services.content.ContentService" >
         <property name="contentManager" ref="jacmsContentManager" />
+        <property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
     </bean>
 
     <context:component-scan base-package="org.entando.entando.plugins.jacms"  />

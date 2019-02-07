@@ -25,7 +25,9 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.page.PageUtilizer;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import java.util.HashMap;
@@ -63,15 +65,24 @@ public class ContentService extends AbstractEntityService<Content>
     private static final String ERRCODE_CONTENT_REFERENCES = "5";
 
     private IContentManager contentManager;
+    private IContentAuthorizationHelper contentAuthorizationHelper;
     private ApplicationContext applicationContext;
     private IDtoBuilder<Content, ContentDto> dtoBuilder;
 
-    public IContentManager getContentManager() {
+    protected IContentManager getContentManager() {
         return contentManager;
     }
 
     public void setContentManager(IContentManager contentManager) {
         this.contentManager = contentManager;
+    }
+
+    protected IContentAuthorizationHelper getContentAuthorizationHelper() {
+        return contentAuthorizationHelper;
+    }
+
+    public void setContentAuthorizationHelper(IContentAuthorizationHelper contentAuthorizationHelper) {
+        this.contentAuthorizationHelper = contentAuthorizationHelper;
     }
 
     public IDtoBuilder<Content, ContentDto> getDtoBuilder() {
@@ -145,29 +156,29 @@ public class ContentService extends AbstractEntityService<Content>
     }
 
     @Override
-    public ContentDto getContent(String code) {
+    public ContentDto getContent(String code, UserDetails user) {
         ContentDto dto = (ContentDto) super.getEntity(JacmsSystemConstants.CONTENT_MANAGER, code);
         dto.setReferences(this.getReferencesInfo(dto.getId()));
         return dto;
     }
 
     @Override
-    public ContentDto addContent(ContentDto request, BindingResult bindingResult) {
+    public ContentDto addContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
         return (ContentDto) this.addEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
     @Override
-    public ContentDto updateContent(ContentDto request, BindingResult bindingResult) {
+    public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
         return (ContentDto) super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
     @Override
-    public void deleteContent(String code) {
+    public void deleteContent(String code, UserDetails user) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public ContentDto updateContentStatus(String code, String status) {
+    public ContentDto updateContentStatus(String code, String status, UserDetails user) {
         try {
             Content content = this.getContentManager().loadContent(code, false);
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
@@ -208,7 +219,7 @@ public class ContentService extends AbstractEntityService<Content>
     }
 
     @Override
-    public PagedMetadata<?> getContentReferences(String code, String managerName, RestListRequest requestList) {
+    public PagedMetadata<?> getContentReferences(String code, String managerName, UserDetails user, RestListRequest requestList) {
         try {
             Content content = this.getContentManager().loadContent(code, false);
             if (null == content) {
