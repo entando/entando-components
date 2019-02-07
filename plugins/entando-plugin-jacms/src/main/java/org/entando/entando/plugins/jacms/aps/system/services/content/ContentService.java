@@ -36,7 +36,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
@@ -59,7 +59,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
-public class ContentService extends AbstractEntityService<Content>
+public class ContentService extends AbstractEntityService<Content, ContentDto>
         implements IContentService, GroupServiceUtilizer<ContentDto>, CategoryServiceUtilizer<ContentDto>, PageServiceUtilizer<ContentDto>, ApplicationContextAware {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -169,9 +169,14 @@ public class ContentService extends AbstractEntityService<Content>
     }
 
     @Override
+    protected ContentDto buildEntityDto(Content entity) {
+        return this.getDtoBuilder().convert(entity);
+    }
+
+    @Override
     public ContentDto getContent(String code, UserDetails user) {
         this.checkContentAuthorization(user, code, true, false, null);
-        ContentDto dto = (ContentDto) super.getEntity(JacmsSystemConstants.CONTENT_MANAGER, code);
+        ContentDto dto = super.getEntity(JacmsSystemConstants.CONTENT_MANAGER, code);
         dto.setReferences(this.getReferencesInfo(dto.getId()));
         return dto;
     }
@@ -182,13 +187,13 @@ public class ContentService extends AbstractEntityService<Content>
             bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{request.getMainGroup()}, "content.group.unauthorized");
             throw new ResourcePermissionsException(bindingResult);
         }
-        return (ContentDto) this.addEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
+        return this.addEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
     @Override
     public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
         this.checkContentAuthorization(user, request.getId(), false, true, bindingResult);
-        return (ContentDto) super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
+        return super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
     @Override
@@ -197,7 +202,7 @@ public class ContentService extends AbstractEntityService<Content>
         try {
             Content content = this.getContentManager().loadContent(code, false);
             if (null == content) {
-                throw new RestRourceNotFoundException(ERRCODE_CONTENT_NOT_FOUND, "content", code);
+                throw new ResourceNotFoundException(ERRCODE_CONTENT_NOT_FOUND, "content", code);
             }
             Content publicContent = this.getContentManager().loadContent(code, true);
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
@@ -221,7 +226,7 @@ public class ContentService extends AbstractEntityService<Content>
             Content content = this.getContentManager().loadContent(code, false);
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
             if (null == content) {
-                throw new RestRourceNotFoundException(ERRCODE_CONTENT_NOT_FOUND, "content", code);
+                throw new ResourceNotFoundException(ERRCODE_CONTENT_NOT_FOUND, "content", code);
             }
             if (status.equals(STATUS_DRAFT) && null == this.getContentManager().loadContent(code, true)) {
                 return this.getDtoBuilder().convert(content);
@@ -248,7 +253,7 @@ public class ContentService extends AbstractEntityService<Content>
                 newContent = this.getContentManager().loadContent(code, false);
             }
             return this.getDtoBuilder().convert(newContent);
-        } catch (ValidationGenericException | RestRourceNotFoundException e) {
+        } catch (ValidationGenericException | ResourceNotFoundException e) {
             throw e;
         } catch (ApsSystemException e) {
             logger.error("Error updating content {} status", code, e);
@@ -262,12 +267,12 @@ public class ContentService extends AbstractEntityService<Content>
             Content content = this.getContentManager().loadContent(code, false);
             if (null == content) {
                 logger.warn("no content found with code {}", code);
-                throw new RestRourceNotFoundException(ERRCODE_CONTENT_NOT_FOUND, "content", code);
+                throw new ResourceNotFoundException(ERRCODE_CONTENT_NOT_FOUND, "content", code);
             }
             ContentServiceUtilizer<?> utilizer = this.getContentServiceUtilizer(managerName);
             if (null == utilizer) {
                 logger.warn("no references found for {}", managerName);
-                throw new RestRourceNotFoundException(ERRCODE_CONTENT_REFERENCES, "reference", managerName);
+                throw new ResourceNotFoundException(ERRCODE_CONTENT_REFERENCES, "reference", managerName);
             }
             List<?> dtoList = utilizer.getContentUtilizer(code);
             List<?> subList = requestList.getSublist(dtoList);

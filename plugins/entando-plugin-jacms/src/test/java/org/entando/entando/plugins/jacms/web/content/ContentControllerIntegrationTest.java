@@ -13,60 +13,48 @@
  */
 package org.entando.entando.plugins.jacms.web.content;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
-import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
-import com.agiletec.aps.system.services.user.IUserManager;
-import com.agiletec.aps.system.services.user.User;
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Date;
-import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
-import org.entando.entando.aps.system.services.userprofile.IUserProfileService;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
-import org.entando.entando.web.userprofile.ProfileController;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-import org.hamcrest.Matchers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class ContentControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
-    private IUserProfileService userProfileService;
+    private IContentService contentService;
 
     @Autowired
-    private IUserProfileManager userProfileManager;
+    private IContentManager contentManager;
 
     @Autowired
-    private IUserManager userManager;
-
-    @Autowired
-    private ProfileController controller;
+    private ContentController controller;
 
     @Test
-    public void testGetUserProfileType() throws Exception {
-        String accessToken = this.createAccessToken();
+    public void testGetContent_1() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         ResultActions result = mockMvc
-                .perform(get("/userProfiles/{username}", new Object[]{"editorCoach"})
-                        .header("Authorization", "Bearer " + accessToken));
+                .perform(get("/plugins/cms/contents/{code}", new Object[]{"ART187"})
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + this.mockOAuthInterceptor(user)));
+        System.out.println("-----------------------");
         System.out.println(result.andReturn().getResponse().getContentAsString());
+        System.out.println("-----------------------");
         result.andExpect(status().isOk());
         result.andExpect(header().string("Access-Control-Allow-Origin", "*"));
         result.andExpect(header().string("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"));
@@ -75,25 +63,32 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
-    public void testGetInvalidUserProfileType() throws Exception {
-        String accessToken = this.createAccessToken();
+    public void testGetContent_2() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
+                .build();
         ResultActions result = mockMvc
-                .perform(get("/userProfiles/{username}", new Object[]{"xxxxx"})
-                        .header("Authorization", "Bearer " + accessToken));
+                .perform(get("/plugins/cms/contents/{code}", new Object[]{"ART187"})
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + this.mockOAuthInterceptor(user)));
+        System.out.println("-----------------------");
+        System.out.println(result.andReturn().getResponse().getContentAsString());
+        System.out.println("-----------------------");
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetInvalidContent() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents/{code}", new Object[]{"ART985"})
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + this.mockOAuthInterceptor(user)));
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isNotFound());
     }
 
-    @Test
-    public void testGetValidUserProfileType() throws Exception {
-        String accessToken = this.createAccessToken();
-        ResultActions result = mockMvc
-                .perform(get("/userProfiles/{username}", new Object[]{"editorCoach"})
-                        .header("Authorization", "Bearer " + accessToken));
-        System.out.println(result.andReturn().getResponse().getContentAsString());
-        result.andExpect(status().isOk());
-    }
-
+    /*
     @Test
     public void testAddUpdateUserProfile() throws Exception {
         try {
@@ -165,9 +160,10 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             }
         }
     }
-
-    /* For an user created without profile, the profile has to be created the
+     */
+ /* For an user created without profile, the profile has to be created the
        first time the "/userProfiles/{user}" endpoint is requested. */
+ /*
     @Test
     public void testGetProfileForNewUser() throws Exception {
         String username = "another_new_user";
@@ -193,7 +189,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             this.userManager.removeUser(username);
         }
     }
-
+     */
     private String createAccessToken() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         return mockOAuthInterceptor(user);

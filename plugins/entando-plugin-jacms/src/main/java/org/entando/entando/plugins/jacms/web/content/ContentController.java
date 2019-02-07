@@ -18,7 +18,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
@@ -79,7 +79,7 @@ public class ContentController {
         logger.debug("Requested content -> {}", code);
         EntityDto dto;
         if (!this.getContentValidator().existContent(code)) {
-            throw new RestRourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Content", code);
+            throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Content", code);
         } else {
             dto = this.getContentService().getContent(code, user);
         }

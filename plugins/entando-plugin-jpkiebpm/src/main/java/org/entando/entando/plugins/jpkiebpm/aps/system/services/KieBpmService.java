@@ -559,13 +559,13 @@ public class KieBpmService implements IKieBpmService {
         try {
             IPage page = this.getPageManager().getDraftPage(widgetConf.getPageCode());
             if (null == page) {
-                throw new RestRourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", widgetConf.getPageCode());
+                throw new ResourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", widgetConf.getPageCode());
             }
             if (widgetConf.getFramePosDraft() > page.getWidgets().length) {
-                throw new RestRourceNotFoundException(ERRCODE_FRAME_INVALID, "frame", String.valueOf(widgetConf.getFramePosDraft()));
+                throw new ResourceNotFoundException(ERRCODE_FRAME_INVALID, "frame", String.valueOf(widgetConf.getFramePosDraft()));
             }
             if (null == this.getWidgetTypeManager().getWidgetType(widgetConf.getWidgetType())) {
-                throw new RestRourceNotFoundException(ERRCODE_WIDGET_INVALID, "widget", String.valueOf(widgetConf.getWidgetType()));
+                throw new ResourceNotFoundException(ERRCODE_WIDGET_INVALID, "widget", String.valueOf(widgetConf.getWidgetType()));
             }
 
             ApsProperties properties = new ApsProperties();
@@ -603,10 +603,10 @@ public class KieBpmService implements IKieBpmService {
         try {
             IPage page = this.getPageManager().getDraftPage(pageCode);
             if (null == page) {
-                throw new RestRourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", pageCode);
+                throw new ResourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", pageCode);
             }
             if (frameId > page.getWidgets().length) {
-                throw new RestRourceNotFoundException(ERRCODE_FRAME_INVALID, "frame", String.valueOf(frameId));
+                throw new ResourceNotFoundException(ERRCODE_FRAME_INVALID, "frame", String.valueOf(frameId));
             }
             this.pageManager.removeWidget(pageCode, frameId);
         } catch (ApsSystemException e) {
