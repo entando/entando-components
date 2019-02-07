@@ -14,7 +14,6 @@ public class DEComponentRatingRequest {
     @NotBlank
     private String exchangeId;
 
-    @NotBlank
     @Min(0)
     @Max(100)
     private int rating;
