@@ -85,7 +85,9 @@
 
         <div class="chat-form">
 
-            <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceComments/postComment.action"/>" method="post" class="form-horizontal" >
+            <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceComments/postComment.action"/><s:if test="configId != null">&configId=<s:property value="configId" /></s:if><s:if test="containerId != null">&containerId=<s:property value="containerId" /></s:if><s:if test="taskId != null">&taskId=<s:property value="taskId" /></s:if>" method="post" class="form-horizontal" >
+                
+                
                 <s:if test="casePath != null">
                     <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
                 </s:if>
@@ -98,6 +100,8 @@
                 <s:if test="channelPath != null">
                     <s:hidden name="channelPath" escapeHtml="false" escapeJavaScript="false"/>
                 </s:if>
+
+                
                 <s:textarea name="commentInput" cssClass="form-control"  placeholder="Message"  value="" ng-model="vm.newCommentText"/>
                 <br/>
                 <div class="text-right">

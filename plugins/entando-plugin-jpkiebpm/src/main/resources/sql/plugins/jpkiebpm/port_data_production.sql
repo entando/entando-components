@@ -73,7 +73,7 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-comments', '<?xml version="1.0" enco
 </properties>', '<config>
         <parameter name="channel">channel</parameter>
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
-	<action name="jpkiebpmBpmCaseInstanceCommentsWidgetViewerConfig"/>
+	<action name="jpkiebpmBpmCaseInstanceSelectorWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
 INSERT INTO widgetcatalog VALUES ('bpm-case-details', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
