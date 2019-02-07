@@ -5,7 +5,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="org.entando.entando.aps.system.services.digitalexchange" />
+    <context:component-scan base-package="org.entando.entando.aps.system.services.digitalexchange, org.entando.entando.aps.system.jpa" />
+    <context:annotation-config />
 
     <bean id="digitalExchangeMessageSource"
           class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -22,5 +23,9 @@
     <bean id="PageModelService" class="org.entando.entando.aps.system.services.pagemodel.DigitalExchangePageModelService" >
         <constructor-arg name="pageModelManager" ref="PageModelManager"/>
         <constructor-arg name="dtoBuilder" ref="DigitalExchangePageModelDtoBuilder"/>
+    </bean>
+    
+    <bean id="persistenceJPAConfig" class="org.entando.entando.aps.system.jpa.PersistenceJPAConfig">
+        <constructor-arg name="portDataSource" ref="portDataSource"/>
     </bean>
 </beans>
