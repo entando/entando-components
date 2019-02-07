@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
-import org.entando.entando.aps.system.services.digitalexchange.install.model.Command;
+import org.entando.entando.aps.system.services.digitalexchange.job.model.Command;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.bind.JAXB;
-import org.entando.entando.aps.system.services.digitalexchange.install.model.Commands;
+import org.entando.entando.aps.system.services.digitalexchange.job.model.Commands;
 import org.entando.entando.web.common.model.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +82,7 @@ public class CommandExecutor implements ApplicationContextAware {
     private void handleCommand(Command command) {
         String templateExpression = commands.getExpression(command.getName());
         if (templateExpression == null) {
-            throw new InstallationException("Unrecognized command " + command.getName());
+            throw new JobExecutionException("Unrecognized command " + command.getName());
         }
         execute(String.format(templateExpression, (Object[]) command.getParameters()));
     }
@@ -93,7 +93,7 @@ public class CommandExecutor implements ApplicationContextAware {
                 RestResponse<?, ?> restResponse = (RestResponse) response.getBody();
                 restResponse.getErrors().forEach(error -> logger.error(error.getMessage()));
             }
-            throw new InstallationException("Execution of " + expression + " returned " + response.getStatusCodeValue());
+            throw new JobExecutionException("Execution of " + expression + " returned " + response.getStatusCodeValue());
         }
     }
 

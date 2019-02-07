@@ -32,5 +32,8 @@
         </sqlResources>
         <resources>
         </resources>
+        <execution>
+            <op>#call('deleteWidget', 'de_test_widget')</op>
+        </execution>
     </uninstallation>
 </component>

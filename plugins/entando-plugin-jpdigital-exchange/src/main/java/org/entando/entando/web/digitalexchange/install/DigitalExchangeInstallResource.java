@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URISyntaxException;
 import javax.servlet.http.HttpServletRequest;
-import org.entando.entando.aps.system.services.digitalexchange.install.ComponentInstallationJob;
+import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJob;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.http.MediaType;
@@ -41,8 +41,16 @@ public interface DigitalExchangeInstallResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PostMapping(value = "{exchange}/install/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> install(@PathVariable("exchange") String digitalExchangeId,
-            @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
+    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> install(@PathVariable("exchange") String digitalExchangeId,
+                                                                   @PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
+
+    @ApiOperation(value = "Starts component remove job ")
+    @ApiResponses({
+            @ApiResponse( code = 201, message = "Created")
+    })
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @PostMapping(value = "/uninstall/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> uninstall(@PathVariable("component") String componentId, HttpServletRequest request) throws URISyntaxException ;
 
     @ApiOperation(value = "Checks installation job status")
     @ApiResponses({
@@ -50,5 +58,14 @@ public interface DigitalExchangeInstallResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/install/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<ComponentInstallationJob>> getLastJob(@PathVariable("component") String componentId);
+    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getLastInstallJob(@PathVariable("component") String componentId);
+
+    @ApiOperation(value = "Checks removal job status")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK")
+    })
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping(value = "/uninstall/{component}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getLastUninstallJob(@PathVariable("component") String componentId);
+
 }
