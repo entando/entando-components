@@ -34,11 +34,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class PersistenceJPAConfig {
 
-    private final DataSource portDataSource;
+    private final DataSource servDataSource;
 
     @Autowired
-    public PersistenceJPAConfig(DataSource portDataSource) {
-        this.portDataSource = portDataSource;
+    public PersistenceJPAConfig(DataSource servDataSource) {
+        this.servDataSource = servDataSource;
     }
 
     @Bean
@@ -47,8 +47,9 @@ public class PersistenceJPAConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
-        em.setDataSource(portDataSource);
-        em.setPackagesToScan(new String[]{"org.entando.entando.aps.system.jpa"});
+        em.setDataSource(servDataSource);
+        em.setPackagesToScan("org.entando.entando.aps.system.jpa",
+                             "org.entando.entando.aps.system.services.digitalexchange.job");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);

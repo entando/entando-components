@@ -14,11 +14,18 @@
 package org.entando.entando.web.digitalexchange.job;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.entando.entando.aps.system.jpa.JobEntity;
 import org.entando.entando.aps.system.jpa.JobRepository;
+import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJob;
+import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJobRepository;
+import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,18 +35,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class JobResourceController {
 
     @Autowired
-    private JobRepository jobRepository;
+    private DigitalExchangeJobRepository jobRepository;
 
     @GetMapping
-    public List<JobEntity> list() {
+    public List<DigitalExchangeJob> list() {
         return jobRepository.list();
     }
 
-    @PostMapping()
-    public JobEntity create() {
-        JobEntity job = new JobEntity();
-        job.setUser(RandomStringUtils.randomAlphanumeric(20));
-        jobRepository.create(job);
-        return job;
+    @GetMapping("/{id}")
+    public ResponseEntity<DigitalExchangeJob> getById(@PathVariable("id") String id) {
+        Optional<DigitalExchangeJob> optionalJob = jobRepository.findById(id);
+        return optionalJob
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+
     }
+
 }

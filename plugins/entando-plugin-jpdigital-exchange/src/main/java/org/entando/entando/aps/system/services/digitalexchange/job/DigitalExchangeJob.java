@@ -16,26 +16,64 @@ package org.entando.entando.aps.system.services.digitalexchange.job;
 import com.agiletec.aps.system.SystemConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.entando.entando.aps.system.init.model.servdb.DigitalExchangeComponentJobs;
+import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
+
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = DigitalExchangeComponentJobs.TABLE_NAME)
 public class DigitalExchangeJob {
 
-    @JsonIgnore
+    @Id
     private String id;
+
+    @Column(name = DigitalExchangeComponentJobs.COL_DIGITAL_EXCHANGE_ID, length = 20)
     private String digitalExchangeId;
+
     @JsonIgnore
+    @Column(name = DigitalExchangeComponentJobs.COL_DIGITAL_EXCHANGE_URL)
     private String digitalExchangeUrl;
+
+    @Column(name = DigitalExchangeComponentJobs.COL_COMPONENT_ID)
     private String componentId;
+
+    @Column(name = DigitalExchangeComponentJobs.COL_COMPONENT_NAME)
     private String componentName;
+
+    @Column(name = DigitalExchangeComponentJobs.COL_COMPONENT_VERSION)
     private String componentVersion;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SystemConstants.API_DATE_FORMAT)
+    @Column(name = DigitalExchangeComponentJobs.COL_STARTED_AT)
     private Date started;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SystemConstants.API_DATE_FORMAT)
+    @Column(name = DigitalExchangeComponentJobs.COL_ENDED_AT)
     private Date ended;
+
+    @Column(name = DigitalExchangeComponentJobs.COL_STARTED_BY)
     private String user;
+
+    @Column(name = DigitalExchangeComponentJobs.COL_PROGRESS)
     private double progress;
+
+    @Enumerated(value=EnumType.STRING)
+    @Column(name = DigitalExchangeComponentJobs.COL_STATUS )
     private JobStatus status;
+
+    @Enumerated(value=EnumType.STRING)
+    @Column(name = DigitalExchangeComponentJobs.COL_JOB_TYPE)
     private JobType jobType;
+
+    @Column(name = DigitalExchangeComponentJobs.COL_ERROR_MESSAGE)
     private String errorMessage;
 
     public String getId() {
@@ -134,8 +172,12 @@ public class DigitalExchangeJob {
         this.user = user;
     }
 
-    public JobType getJobType() { return jobType; }
+    public JobType getJobType() {
+        return jobType;
+    }
 
-    public void setJobType(JobType jobType) { this.jobType = jobType; }
+    public void setJobType(JobType jobType) {
+        this.jobType = jobType;
+    }
 
 }

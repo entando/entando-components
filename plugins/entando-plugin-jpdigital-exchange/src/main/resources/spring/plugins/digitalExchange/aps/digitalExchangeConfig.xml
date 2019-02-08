@@ -26,6 +26,6 @@
     </bean>
     
     <bean id="persistenceJPAConfig" class="org.entando.entando.aps.system.jpa.PersistenceJPAConfig">
-        <constructor-arg name="portDataSource" ref="portDataSource"/>
+        <constructor-arg name="servDataSource" ref="servDataSource"/>
     </bean>
 </beans>
