@@ -39,11 +39,15 @@ import java.util.Properties;
 //@EnableTransactionManagement
 public class PortPersistenceJPAConfig {
 
-    private final DataSource dataSource;
+    private DataSource dataSource;
 
     @Autowired
     public PortPersistenceJPAConfig(@Qualifier("portDataSource") DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public PortPersistenceJPAConfig() {
+        super();
     }
 
     @Bean(name = "portEntityManager")

@@ -19,6 +19,7 @@ import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJobRepository;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,17 +29,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/digitalExchange/job")
-public class JobResourceController {
+public class DigitalExchangeJobResourceController implements DigitalExchangeJobResource {
+
+    private final DigitalExchangeJobRepository jobRepository;
 
     @Autowired
-    private DigitalExchangeJobRepository jobRepository;
+    public DigitalExchangeJobResourceController(DigitalExchangeJobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
 
-    @GetMapping
+    @Override
     public PagedRestResponse<DigitalExchangeJob> list(RestListRequest restListRequest) {
         return jobRepository.findAll(restListRequest);
     }
 
-    @GetMapping("/{id}")
+    @Override
     public ResponseEntity<DigitalExchangeJob> getById(@PathVariable("id") String id) {
         Optional<DigitalExchangeJob> optionalJob = jobRepository.findById(id);
         return optionalJob

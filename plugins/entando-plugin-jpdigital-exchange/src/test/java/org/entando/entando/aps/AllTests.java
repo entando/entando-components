@@ -33,7 +33,7 @@ import org.entando.entando.web.digitalexchange.category.DigitalExchangeCategorie
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponentsControllerIntegrationTest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponentsControllerTest;
 import org.entando.entando.web.digitalexchange.install.DigitalExchangeInstallResourceIntegrationTest;
-import org.entando.entando.web.digitalexchange.job.JobResourceControllerIntegrationTest;
+import org.entando.entando.web.digitalexchange.job.DigitalExchangeJobResourceControllerIntegrationTest;
 import org.entando.entando.web.pagemodel.DigitalExchangePageModelControllerIntegrationTest;
 import org.entando.entando.web.pagemodel.DigitalExchangePageModelControllerTest;
 
@@ -79,6 +79,6 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(DigitalExchangePageModelControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangePageModelControllerTest.class));
 
-        suite.addTest(new JUnit4TestAdapter(JobResourceControllerIntegrationTest.class));
+        suite.addTest(new JUnit4TestAdapter(DigitalExchangeJobResourceControllerIntegrationTest.class));
     }
 }
