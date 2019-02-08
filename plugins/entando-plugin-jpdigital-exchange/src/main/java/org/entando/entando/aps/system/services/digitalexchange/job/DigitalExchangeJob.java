@@ -17,8 +17,8 @@ import com.agiletec.aps.system.SystemConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.entando.entando.aps.system.init.model.servdb.DigitalExchangeComponentJobs;
-import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -27,10 +27,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = DigitalExchangeComponentJobs.TABLE_NAME)
-public class DigitalExchangeJob {
+public class DigitalExchangeJob implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     private String id;
@@ -51,10 +55,12 @@ public class DigitalExchangeJob {
     @Column(name = DigitalExchangeComponentJobs.COL_COMPONENT_VERSION)
     private String componentVersion;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SystemConstants.API_DATE_FORMAT)
     @Column(name = DigitalExchangeComponentJobs.COL_STARTED_AT)
     private Date started;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SystemConstants.API_DATE_FORMAT)
     @Column(name = DigitalExchangeComponentJobs.COL_ENDED_AT)
     private Date ended;
@@ -65,11 +71,11 @@ public class DigitalExchangeJob {
     @Column(name = DigitalExchangeComponentJobs.COL_PROGRESS)
     private double progress;
 
-    @Enumerated(value=EnumType.STRING)
-    @Column(name = DigitalExchangeComponentJobs.COL_STATUS )
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = DigitalExchangeComponentJobs.COL_STATUS)
     private JobStatus status;
 
-    @Enumerated(value=EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     @Column(name = DigitalExchangeComponentJobs.COL_JOB_TYPE)
     private JobType jobType;
 

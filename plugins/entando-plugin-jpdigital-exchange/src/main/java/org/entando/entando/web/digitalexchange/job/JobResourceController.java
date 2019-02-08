@@ -13,20 +13,16 @@
  */
 package org.entando.entando.web.digitalexchange.job;
 
-import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang.RandomStringUtils;
-import org.entando.entando.aps.system.jpa.JobEntity;
-import org.entando.entando.aps.system.jpa.JobRepository;
 import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJobRepository;
-import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,8 +34,8 @@ public class JobResourceController {
     private DigitalExchangeJobRepository jobRepository;
 
     @GetMapping
-    public List<DigitalExchangeJob> list() {
-        return jobRepository.list();
+    public PagedRestResponse<DigitalExchangeJob> list(RestListRequest restListRequest) {
+        return jobRepository.findAll(restListRequest);
     }
 
     @GetMapping("/{id}")
