@@ -13,20 +13,42 @@
  */
 package org.entando.entando.plugins.jacms.web.content;
 
+import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
+import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.DateConverter;
+import com.agiletec.aps.util.FileTextReader;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.jayway.jsonpath.JsonPath;
+import java.io.InputStream;
+import java.util.Date;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class ContentControllerIntegrationTest extends AbstractControllerIntegrationTest {
+
+    @Autowired
+    private IContentManager contentManager;
 
     @Test
     public void testGetContent_1() throws Exception {
@@ -51,6 +73,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         result = this.performGetContent("ART187", null, true, null, user);
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isOk());
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.nullValue()));
     }
 
     @Test
@@ -61,12 +84,49 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         ResultActions result = this.performGetContent("ART179", null, false, null, user);
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isOk());
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         result = this.performGetContent("ART179", null, true, null, user);
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isNotFound());
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload", Matchers.empty()));
     }
 
-    /*
+    @Test
+    public void testGetContentWithModel() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
+                .build();
+        ResultActions result = this.performGetContent("ART180", "1", true, null, user);
+        String result1 = result.andReturn().getResponse().getContentAsString();
+        System.out.println(result1);
+        result.andExpect(status().isOk());
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
+        result = this.performGetContent("ART180", "11", true, null, user);
+        String result2 = result.andReturn().getResponse().getContentAsString();
+        System.out.println(result2);
+
+        result.andExpect(status().isOk());
+        result = this.performGetContent("ART180", "default", true, null, user);
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
+        String result1_copy = result.andReturn().getResponse().getContentAsString();
+        System.out.println(result1_copy);
+        result.andExpect(status().isOk());
+        Assert.assertEquals(result1, result1_copy);
+        result = this.performGetContent("ART180", "list", true, null, user);
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
+        String result2_copy = result.andReturn().getResponse().getContentAsString();
+        System.out.println(result2);
+        result.andExpect(status().isOk());
+        Assert.assertEquals(result2, result2_copy);
+
+        result = this.performGetContent("ART180", "list", true, "en", user);
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
+        String result2_copy_en = result.andReturn().getResponse().getContentAsString();
+        System.out.println(result2_copy_en);
+        result.andExpect(status().isOk());
+        Assert.assertNotEquals(result2_copy_en, result2_copy);
+    }
+
     @Test
     public void testGetInvalidContent() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -74,52 +134,46 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isNotFound());
     }
-     */
- /*
+
     @Test
-    public void testAddUpdateUserProfile() throws Exception {
+    public void testAddUpdateContent() throws Exception {
+        String newContentId = null;
         try {
-            Assert.assertNull(this.userProfileManager.getEntityPrototype("TST"));
+            Assert.assertNull(this.contentManager.getEntityPrototype("TST"));
             String accessToken = this.createAccessToken();
 
-            this.executeProfileTypePost("5_POST_type_valid.json", accessToken, status().isOk());
+            this.executeContentTypePost("1_POST_type_valid.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
 
-            Assert.assertNull(this.userManager.getUser("new_user"));
-            User user = new User();
-            user.setUsername("new_user");
-            user.setPassword("new_user");
-            this.userManager.addUser(user);
-            Assert.assertNotNull(this.userProfileManager.getEntityPrototype("TST"));
-
-            Assert.assertNull(this.userProfileManager.getProfile("new_user"));
-            ResultActions result = this.executeProfilePost("1_POST_invalid.json", accessToken, status().isBadRequest());
+            ResultActions result = this.executeContentPost("1_POST_invalid.json", accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.payload.size()", is(0)));
             result.andExpect(jsonPath("$.errors.size()", is(3)));
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
-            Assert.assertNull(this.userProfileManager.getProfile("new_user"));
 
-            Assert.assertNull(this.userProfileManager.getProfile("new_user"));
-            ResultActions result2 = this.executeProfilePost("1_POST_valid.json", accessToken, status().isOk());
-            result2.andExpect(jsonPath("$.payload.id", is("new_user")));
+            ResultActions result2 = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            result2.andExpect(jsonPath("$.payload.id", Matchers.anything()));
             result2.andExpect(jsonPath("$.errors.size()", is(0)));
             result2.andExpect(jsonPath("$.metaData.size()", is(0)));
-            IUserProfile profile = this.userProfileManager.getProfile("new_user");
-            Assert.assertNotNull(profile);
-            Date date = (Date) profile.getAttribute("Date").getValue();
+            String bodyResult = result2.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload.id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+            Date date = (Date) newContent.getAttribute("Date").getValue();
             Assert.assertEquals("2017-09-21", DateConverter.getFormattedDate(date, "yyyy-MM-dd"));
-            Boolean booleanValue = (Boolean) profile.getAttribute("Boolean").getValue();
+            Boolean booleanValue = (Boolean) newContent.getAttribute("Boolean").getValue();
             Assert.assertTrue(booleanValue);
-            Boolean threeState = (Boolean) profile.getAttribute("ThreeState").getValue();
+            Boolean threeState = (Boolean) newContent.getAttribute("ThreeState").getValue();
             Assert.assertNull(threeState);
 
-            ResultActions result3 = this.executeProfilePut("1_PUT_valid.json", "invalid", accessToken, status().isConflict());
+            ResultActions result3 = this.executeContentPut("1_PUT_valid.json", newContentId, "invalid", accessToken, status().isConflict());
             result3.andExpect(jsonPath("$.payload.size()", is(0)));
             result3.andExpect(jsonPath("$.errors.size()", is(1)));
             result3.andExpect(jsonPath("$.errors[0].code", is("2")));
             result3.andExpect(jsonPath("$.metaData.size()", is(0)));
 
-            ResultActions result4 = this.executeProfilePut("1_PUT_valid.json", "new_user", accessToken, status().isOk());
-            result4.andExpect(jsonPath("$.payload.id", is("new_user")));
+            ResultActions result4 = this.executeContentPut("1_PUT_valid.json", newContentId, newContentId, accessToken, status().isOk());
+            result4.andExpect(jsonPath("$.payload.id", is(newContentId)));
             result4.andExpect(jsonPath("$.errors.size()", is(0)));
             result4.andExpect(jsonPath("$.metaData.size()", is(0)));
             result4.andExpect(jsonPath("$.payload.attributes[0].code", is("Title")));
@@ -128,55 +182,35 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             result4.andExpect(jsonPath("$.payload.attributes[0].elements.size()", is(0)));
             result4.andExpect(jsonPath("$.payload.attributes[0].compositeelements.size()", is(0)));
             result4.andExpect(jsonPath("$.payload.attributes[0].listelements", Matchers.anything()));
-            profile = this.userProfileManager.getProfile("new_user");
-            date = (Date) profile.getAttribute("Date").getValue();
+            newContent = this.contentManager.loadContent(newContentId, false);
+            date = (Date) newContent.getAttribute("Date").getValue();
             Assert.assertEquals("2018-03-21", DateConverter.getFormattedDate(date, "yyyy-MM-dd"));
-            booleanValue = (Boolean) profile.getAttribute("Boolean").getValue();
+            booleanValue = (Boolean) newContent.getAttribute("Boolean").getValue();
             Assert.assertFalse(booleanValue);
-            threeState = (Boolean) profile.getAttribute("ThreeState").getValue();
+            threeState = (Boolean) newContent.getAttribute("ThreeState").getValue();
             Assert.assertNotNull(threeState);
             Assert.assertTrue(threeState);
 
-            ListAttribute list = (ListAttribute) profile.getAttribute("multilist");
+            ListAttribute list = (ListAttribute) newContent.getAttribute("multilist");
             Assert.assertEquals(4, list.getAttributeList("en").size());
         } finally {
-            this.userProfileManager.deleteProfile("new_user");
-            this.userManager.removeUser("new_user");
-            if (null != this.userProfileManager.getEntityPrototype("TST")) {
-                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("TST");
             }
         }
     }
-     */
- /* For an user created without profile, the profile has to be created the
-       first time the "/userProfiles/{user}" endpoint is requested. */
- /*
-    @Test
-    public void testGetProfileForNewUser() throws Exception {
-        String username = "another_new_user";
 
-        try {
-            String accessToken = this.createAccessToken();
-
-            Assert.assertNull(this.userManager.getUser(username));
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(username);
-            this.userManager.addUser(user);
-
-            ResultActions result = executeProfileGet(username, accessToken, status().isOk());
-
-            result.andExpect(jsonPath("$.payload.id", is(username)));
-            result.andExpect(jsonPath("$.payload.typeCode", is(SystemConstants.DEFAULT_PROFILE_TYPE_CODE)));
-            // Checking mandatory attributes with empty values
-            result.andExpect(jsonPath("$.payload.attributes[?(@.code == 'fullname')].value", is(Arrays.asList(""))));
-            result.andExpect(jsonPath("$.payload.attributes[?(@.code == 'email')].value", is(Arrays.asList(""))));
-        } finally {
-            this.userProfileManager.deleteProfile(username);
-            this.userManager.removeUser(username);
-        }
+    private String createAccessToken() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        return mockOAuthInterceptor(user);
     }
-     */
+
     private ResultActions performGetContent(String code, String modelId,
             boolean online, String langCode, UserDetails user) throws Exception {
         String accessToken = mockOAuthInterceptor(user);
@@ -193,12 +227,12 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .sessionAttr("user", user)
                 .header("Authorization", "Bearer " + accessToken));
     }
-    /*
+
     private ResultActions executeContentPost(String fileName, String accessToken, ResultMatcher expected) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
         ResultActions result = mockMvc
-                .perform(post("/userProfiles")
+                .perform(post("/plugins/cms/contents")
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
@@ -206,11 +240,24 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         return result;
     }
 
-    private ResultActions executeContentPut(String fileName, String username, String accessToken, ResultMatcher expected) throws Exception {
+    private ResultActions executeContentPut(String fileName, String valueToReplace, String idInPath, String accessToken, ResultMatcher expected) throws Exception {
+        InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
+        String jsonPutValid = FileTextReader.getText(isJsonPostValid);
+        jsonPutValid = jsonPutValid.replace("**MARKER**", valueToReplace);
+        ResultActions result = mockMvc
+                .perform(put("/plugins/cms/contents/{code}", new Object[]{idInPath})
+                        .content(jsonPutValid)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(expected);
+        return result;
+    }
+
+    private ResultActions executeContentTypePost(String fileName, String accessToken, ResultMatcher expected) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
         ResultActions result = mockMvc
-                .perform(put("/userProfiles/{username}", new Object[]{username})
+                .perform(post("/plugins/cms/contentTypes")
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
@@ -218,16 +265,4 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         return result;
     }
 
-    private ResultActions executeContentPost(String fileName, String accessToken, ResultMatcher expected) throws Exception {
-        InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
-        String jsonPostValid = FileTextReader.getText(isJsonPostValid);
-        ResultActions result = mockMvc
-                .perform(post("/profileTypes")
-                        .content(jsonPostValid)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
-        return result;
-    }
-     */
 }

@@ -90,11 +90,6 @@ public class ContentController {
         if (!this.getContentValidator().existContent(code, status)) {
             throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Content", code);
         } else {
-            System.out.println(" code   ---> " + code);
-            System.out.println("  modelId  ---> " + modelId);
-            System.out.println(" status   ---> " + status);
-            System.out.println(" lang   ---> " + lang);
-            System.out.println(" user   ---> " + user);
             dto = this.getContentService().getContent(code, modelId, status, lang, user);
         }
         logger.debug("Main Response -> {}", dto);

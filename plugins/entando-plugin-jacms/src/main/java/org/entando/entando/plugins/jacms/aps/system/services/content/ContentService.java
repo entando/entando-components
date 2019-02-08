@@ -298,6 +298,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{request.getMainGroup()}, "content.group.unauthorized");
             throw new ResourcePermissionsException(bindingResult);
         }
+        request.setId(null);
         return this.addEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
@@ -406,14 +407,16 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     }
 
     @Override
-    protected void addEntity(IEntityManager entityManager, Content entityToAdd) {
-        this.updateEntity(entityManager, entityToAdd);
+    protected Content addEntity(IEntityManager entityManager, Content entityToAdd) {
+        return this.updateEntity(entityManager, entityToAdd);
     }
 
     @Override
-    protected void updateEntity(IEntityManager entityManager, Content entityToUpdate) {
+    protected Content updateEntity(IEntityManager entityManager, Content entityToUpdate) {
         try {
             this.getContentManager().saveContent(entityToUpdate);
+            System.out.println("entityToUpdate.getId() " + entityToUpdate.getId());
+            return this.getContentManager().loadContent(entityToUpdate.getId(), false);
         } catch (Exception e) {
             logger.error("Error saving content", e);
             throw new RestServerError("Error saving content", e);
