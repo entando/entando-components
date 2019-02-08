@@ -15,6 +15,7 @@ package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -32,7 +33,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.common.validator.AbstractPaginationValidator;
+import org.springframework.validation.Errors;
 
 /**
  * @author E.Santoboni
@@ -65,12 +71,43 @@ public class ContentController {
         this.contentService = contentService;
     }
 
+    protected AbstractPaginationValidator getPaginationValidator() {
+        return new AbstractPaginationValidator() {
+            @Override
+            public boolean supports(Class<?> type) {
+                return true;
+            }
+
+            @Override
+            public void validate(Object o, Errors errors) {
+                //nothing to do
+            }
+
+            @Override
+            protected String getDefaultSortProperty() {
+                return IContentManager.CONTENT_CREATION_DATE_FILTER_KEY;
+            }
+
+        };
+    }
+
     public ContentValidator getContentValidator() {
         return contentValidator;
     }
 
     public void setContentValidator(ContentValidator contentValidator) {
         this.contentValidator = contentValidator;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagedRestResponse<ContentDto>> getContents(RestListRequest requestList, @ModelAttribute("user") UserDetails user,
+            @RequestParam(value = "status", required = false, defaultValue = IContentService.STATUS_DRAFT) String status,
+            @RequestParam(value = "model", required = false) String model,
+            @RequestParam(value = "lang", required = false) String lang) {
+        logger.debug("getting contents with request {} - status {}", requestList, status);
+        this.getPaginationValidator().validateRestListRequest(requestList, ContentDto.class);
+        PagedMetadata<ContentDto> result = this.getContentService().getContents(requestList, model, status, lang, user);
+        return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{code}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
