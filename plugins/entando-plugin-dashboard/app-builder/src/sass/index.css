@@ -600,6 +600,14 @@
     border: 0 solid blue;
     display: inline-block;
     vertical-align: bottom; }
+  .MapThirdStepContent__legend-position-container-radio.col-xs-4 {
+    border: 0 solid;
+    padding: 0; }
+  .MapThirdStepContent__legend-position-container-radio div {
+    padding: 1em; }
+  .MapThirdStepContent__legend-position-container-radio div label {
+    border: 0 solid;
+    width: 100px; }
   .MapThirdStepContent__field-form-group input[type=number]::-webkit-inner-spin-button {
     opacity: 1;
     height: 2.5em; }
@@ -663,8 +671,27 @@
   top: 0;
   right: 0; }
 
-.DatasourceLayer__item.col-xs-10 {
-  padding-left: 10px; }
+.DatasourceLayer {
+  border: 0 solid; }
+  .DatasourceLayer__icons-marker-container {
+    border: 0 solid red;
+    margin-top: 1em;
+    margin-bottom: 1em; }
+  .DatasourceLayer__icons-marker.col-xs-10 {
+    border: 0px solid blue;
+    padding: 0 20px 0px 10px; }
+  .DatasourceLayer__icons-marker div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: space-between;
+    border: 0 solid;
+    justify-content: space-between; }
+  .DatasourceLayer__item.col-xs-10 {
+    padding-left: 10px; }
+
+.IconMarker {
+  border: 1px solid; }
 
 .DropdownMultiple {
   -webkit-user-select: none;

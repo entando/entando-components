@@ -2,3 +2,44 @@
   height: 80vh;
   border: 1px solid;
 }
+
+.marker-icon-default.fa::before {
+  color: #5cb85c;
+  border-radius: 50%;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  font-size: 25px;
+}
+.marker-icon-1.fa::before {
+  color: #428bca;
+  border-radius: 50%;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  font-size: 25px;
+}
+.marker-icon-2.fa::before {
+  color: #d9534f ;
+  border-radius: 50%;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  font-size: 25px;
+}
+.marker-icon-3.fa::before {
+  color: green;
+  border-radius: 50%;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  font-size: 25px;
+}
+.marker-icon-4.fa::before {
+  color: yellow;
+  border-radius: 50%;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  font-size: 25px;
+}

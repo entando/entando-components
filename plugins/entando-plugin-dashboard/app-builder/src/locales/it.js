@@ -26,15 +26,18 @@ export default {
     "common.firstStep": "First Step",
     "common.secondStep": "Second Step",
     "common.thirdStep": "Third Step",
-
     "common.height": "Height",
     "common.width": "Width",
     "common.top": "Top",
     "common.bottom": "Bottom",
     "common.right": "Right",
     "common.left": "Left",
+    "common.topLeft": "Top Left",
+    "common.bottomLeft": "Bottom Left",
+    "common.topRight": "Top Right",
+    "common.bottomRight": "Bottom Right",
     "common.legendPosition": "Legend Position",
-
+    "common.legendPosition.help": "Help",
     "plugin.fieldsRequired": "Campi Richiesti",
     "plugin.chooseAnOptionServerName": "Seleziona Server",
     "plugin.chooseAnOptionDatasource": "Seleziona Sorgente Dati",
@@ -102,8 +105,8 @@ export default {
     "plugin.chart.timeFormat-Y-M-D": "anno-mese-giorno",
     "plugin.chart.timeFormat-D-M-Y": "giorno-mese-anno",
     "plugin.chart.timeFormat-M-D-Y": "mese-giorno-anno",
-    "plugin.chart.dropDownMulti.titleHelper": "Column",
-    "plugin.chart.dropDownMulti.title": "Select Column",
+    "plugin.chart.dropDownMulti.titleHelper": "Item",
+    "plugin.chart.dropDownMulti.title": "Select Item",
     "plugin.chart.generalSettings": "General Settings",
     "plugin.chart.gauge": "Gauge Value",
     "plugin.chart.pieSettings": "Pie Settings",
@@ -127,6 +130,8 @@ export default {
     "plugin.geolocalization.padding": "Padding",
     "plugin.geolocalization.interactiveMap": "Intereactive Map",
     "plugin.geolocalization.interactiveMapDetails":
-      "Show details on mouse click"
+      "Show details on mouse click",
+    "plugin.geolocalization.icons": "Icons",
+    "plugin.geolocalization.icons.help": "Help"
   }
 };

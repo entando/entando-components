@@ -4,7 +4,7 @@ import {Field} from "redux-form";
 import {Grid, Row, Col, FormGroup, ControlLabel} from "patternfly-react";
 
 import FormattedMessage from "ui/i18n/FormattedMessage";
-import SwitchRenderer from "ui/common/form/SwitchRenderer";
+import FormLabel from "ui/common/form/FormLabel";
 
 const renderField = ({
   input,
@@ -57,15 +57,6 @@ const MapThirdStepContent = () => {
               <label className="MapThirdStepContent__map-size">
                 <FormattedMessage id="plugin.geolocalization.mapSize" />
               </label>
-            </Col>
-            <Col xs={12}>
-              <FormGroup className="MapThirdStepContent__form-group">
-                <Field component={SwitchRenderer} name="mapSize" />
-                &nbsp;&nbsp;
-                <ControlLabel>
-                  <FormattedMessage id="plugin.geolocalization.mapSizeResponsive" />
-                </ControlLabel>
-              </FormGroup>
             </Col>
             <Col xs={12}>
               <Field
@@ -143,55 +134,59 @@ const MapThirdStepContent = () => {
             <hr />
           </Col>
           <Col xs={12}>
-            <Col
-              xs={6}
-              className="MapThirdStepContent__map-interactiveMap-container"
-            >
-              <Col xs={12}>
-                <label className="MapThirdStepContent__interactive-map">
-                  <FormattedMessage id="plugin.geolocalization.interactiveMap" />
-                </label>
-              </Col>
-              <Col xs={12}>
-                <FormGroup>
-                  <ControlLabel>
-                    <FormattedMessage id="plugin.geolocalization.interactiveMapDetails" />
-                  </ControlLabel>
-                  <br />
-                  <Field component={SwitchRenderer} name="interactiveMap" />
-                </FormGroup>
-              </Col>
+            <Col xs={12}>
+              <label className="MapThirdStepContent__legend-position">
+                <FormLabel
+                  labelId="common.legendPosition"
+                  helpId="common.legendPosition.help"
+                />
+              </label>
             </Col>
-            <Col
-              xs={6}
-              className="MapThirdStepContent__legend-position-container"
-            >
-              <Col xs={12}>
-                <label className="MapThirdStepContent__legend-position">
-                  <FormattedMessage id="common.legendPosition" />
-                </label>
-              </Col>
-              <Col xs={12}>
-                <FormGroup className="MapThirdStepContent__form-group">
+            <Col xs={12}>
+              <Col
+                xs={4}
+                className="MapThirdStepContent__legend-position-container-radio"
+              >
+                <Col xs={12}>
                   <label className="radio-inline">
                     <Field
                       component="input"
                       type="radio"
                       name="legend.position"
-                      value="bottom"
+                      value="bottomleft"
                     />
-                    <FormattedMessage id="common.bottom" />
+                    <FormattedMessage id="common.topLeft" />
                   </label>
                   <label className="radio-inline">
                     <Field
                       component="input"
                       type="radio"
                       name="legend.position"
-                      value="right"
+                      value="topright"
                     />
-                    <FormattedMessage id="common.right" />
+                    <FormattedMessage id="common.topRight" />
                   </label>
-                </FormGroup>
+                </Col>
+                <Col xs={12}>
+                  <label className="radio-inline">
+                    <Field
+                      component="input"
+                      type="radio"
+                      name="legend.position"
+                      value="bottomright"
+                    />
+                    <FormattedMessage id="common.bottomRight" />
+                  </label>
+                  <label className="radio-inline">
+                    <Field
+                      component="input"
+                      type="radio"
+                      name="legend.position"
+                      value="bottoleft"
+                    />
+                    <FormattedMessage id="common.bottomLeft" />
+                  </label>
+                </Col>
               </Col>
             </Col>
           </Col>

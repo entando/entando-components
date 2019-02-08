@@ -11,7 +11,10 @@ const selector = formValueSelector("form-dashboard-map");
 const mapStateToProps = state => ({
   datasource: selector(state, "datasource"),
   datasources: selector(state, "datasources"),
-  formSyncErrors: getFormSyncErrors("form-dashboard-map")(state)
+  formSyncErrors: getFormSyncErrors("form-dashboard-map")(state),
+  initialValues: {
+    icon: {marker: "fa-map-marker"}
+  }
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

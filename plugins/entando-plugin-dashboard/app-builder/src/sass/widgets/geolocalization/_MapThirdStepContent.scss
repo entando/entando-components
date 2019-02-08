@@ -22,6 +22,20 @@
     vertical-align: bottom;
   }
 
+  &__legend-position-container-radio.col-xs-4 {
+    border: 0 solid;
+    padding: 0;
+  }
+
+  &__legend-position-container-radio div {
+    padding: 1em;
+  }
+
+  &__legend-position-container-radio div label {
+    border: 0 solid;
+    width: 100px;
+  }
+
   &__field-form-group input[type=number]::-webkit-inner-spin-button {
     opacity: 1;
     height: 2.5em;

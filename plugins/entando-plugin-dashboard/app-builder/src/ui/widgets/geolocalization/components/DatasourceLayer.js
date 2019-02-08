@@ -9,9 +9,31 @@ import RenderTextInput from "ui/common/form/RenderTextInput";
 import FormLabel from "ui/common/form/FormLabel";
 import FieldArrayDropDownMultiple from "ui/common/FieldArrayDropDownMultiple";
 import FormattedMessage from "ui/i18n/FormattedMessage";
+import IconMarker from "./IconMarker";
 
 const maxLength20 = maxLength(20);
 const minLength3 = minLength(3);
+
+const ICONS_MARKER_1 = [
+  "fa-map-marker",
+  "fa-map-pin",
+  "fa-circle",
+  "fa-exclamation-triangle",
+  "fa-flag",
+  "fa-star",
+  "fa-street-view",
+  "fa-bed"
+];
+const ICONS_MARKER_2 = [
+  "fa-male",
+  "fa-female",
+  "fa-car",
+  "fa-bus",
+  "fa-bicycle",
+  "fa-train",
+  "fa-plane",
+  "fa-ship"
+];
 
 const DatasourceLayer = ({
   formName,
@@ -33,7 +55,7 @@ const DatasourceLayer = ({
         />
       </Col>
       <Col xs={6} className="DatasourceLayer__col-label">
-        <InputGroup className="">
+        <InputGroup>
           <Field
             component={RenderTextInput}
             name={nameFieldArray ? `${nameFieldArray}[label]` : "label"}
@@ -46,7 +68,33 @@ const DatasourceLayer = ({
           />
         </InputGroup>
       </Col>
+      {optionColumns.length === 0 ? null : (
+        <Col xs={12} className="DatasourceLayer__icons-marker-container">
+          <Col xs={2}>
+            <div className="form-group">
+              <strong>
+                <FormLabel
+                  labelId="plugin.geolocalization.icons"
+                  helpId="plugin.geolocalization.icons.help"
+                />
+              </strong>
+            </div>
+          </Col>
 
+          <Col xs={10} className="DatasourceLayer__icons-marker">
+            <div>
+              {ICONS_MARKER_1.map(name => (
+                <IconMarker key={name} name={name} />
+              ))}
+            </div>
+            <div>
+              {ICONS_MARKER_2.map(name => (
+                <IconMarker key={name} name={name} />
+              ))}
+            </div>
+          </Col>
+        </Col>
+      )}
       <Col xs={12}>
         {optionColumns.length === 0 ? null : (
           <div className="form-group">
