@@ -16,45 +16,23 @@ package org.entando.entando.plugins.jacms.web.content;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.FileTextReader;
-import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import java.io.InputStream;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 public class ContentControllerIntegrationTest extends AbstractControllerIntegrationTest {
-
-    @Autowired
-    private IContentService contentService;
-
-    @Autowired
-    private IContentManager contentManager;
-
-    @Autowired
-    private ContentController controller;
 
     @Test
     public void testGetContent_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        ResultActions result = mockMvc
-                .perform(get("/plugins/cms/contents/{code}", new Object[]{"ART187"})
-                        .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + this.mockOAuthInterceptor(user)));
-        System.out.println("-----------------------");
+        ResultActions result = this.performGetContent("ART187", null, true, null, user);
         System.out.println(result.andReturn().getResponse().getContentAsString());
-        System.out.println("-----------------------");
         result.andExpect(status().isOk());
         result.andExpect(header().string("Access-Control-Allow-Origin", "*"));
         result.andExpect(header().string("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"));
@@ -67,28 +45,37 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
                 .build();
-        ResultActions result = mockMvc
-                .perform(get("/plugins/cms/contents/{code}", new Object[]{"ART187"})
-                        .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + this.mockOAuthInterceptor(user)));
-        System.out.println("-----------------------");
+        ResultActions result = this.performGetContent("ART187", null, false, null, user);
         System.out.println(result.andReturn().getResponse().getContentAsString());
-        System.out.println("-----------------------");
+        result.andExpect(status().isOk());
+        result = this.performGetContent("ART187", null, true, null, user);
+        System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isOk());
     }
 
     @Test
-    public void testGetInvalidContent() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        ResultActions result = mockMvc
-                .perform(get("/plugins/cms/contents/{code}", new Object[]{"ART985"})
-                        .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + this.mockOAuthInterceptor(user)));
+    public void testGetContent_3() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
+                .build();
+        ResultActions result = this.performGetContent("ART179", null, false, null, user);
+        System.out.println(result.andReturn().getResponse().getContentAsString());
+        result.andExpect(status().isOk());
+        result = this.performGetContent("ART179", null, true, null, user);
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isNotFound());
     }
 
     /*
+    @Test
+    public void testGetInvalidContent() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        ResultActions result = this.performGetContent("ART985", null, true, null, user);
+        System.out.println(result.andReturn().getResponse().getContentAsString());
+        result.andExpect(status().isNotFound());
+    }
+     */
+ /*
     @Test
     public void testAddUpdateUserProfile() throws Exception {
         try {
@@ -190,20 +177,24 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         }
     }
      */
-    private String createAccessToken() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        return mockOAuthInterceptor(user);
+    private ResultActions performGetContent(String code, String modelId,
+            boolean online, String langCode, UserDetails user) throws Exception {
+        String accessToken = mockOAuthInterceptor(user);
+        String path = "/plugins/cms/contents/{code}";
+        if (null != modelId) {
+            path += "/model/" + modelId;
+        }
+        path += "?status=" + ((online) ? IContentService.STATUS_ONLINE : IContentService.STATUS_DRAFT);
+        if (null != langCode) {
+            path += "&lang=" + langCode;
+        }
+        return mockMvc.perform(
+                get(path, code)
+                .sessionAttr("user", user)
+                .header("Authorization", "Bearer " + accessToken));
     }
-
-    private ResultActions executeProfileGet(String username, String accessToken, ResultMatcher expected) throws Exception {
-        ResultActions result = mockMvc
-                .perform(get("/userProfiles/{username}", new Object[]{username})
-                        .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
-        return result;
-    }
-
-    private ResultActions executeProfilePost(String fileName, String accessToken, ResultMatcher expected) throws Exception {
+    /*
+    private ResultActions executeContentPost(String fileName, String accessToken, ResultMatcher expected) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
         ResultActions result = mockMvc
@@ -215,7 +206,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         return result;
     }
 
-    private ResultActions executeProfilePut(String fileName, String username, String accessToken, ResultMatcher expected) throws Exception {
+    private ResultActions executeContentPut(String fileName, String username, String accessToken, ResultMatcher expected) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
         ResultActions result = mockMvc
@@ -227,7 +218,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         return result;
     }
 
-    private ResultActions executeProfileTypePost(String fileName, String accessToken, ResultMatcher expected) throws Exception {
+    private ResultActions executeContentPost(String fileName, String accessToken, ResultMatcher expected) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
         ResultActions result = mockMvc
@@ -238,5 +229,5 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         result.andExpect(expected);
         return result;
     }
-
+     */
 }

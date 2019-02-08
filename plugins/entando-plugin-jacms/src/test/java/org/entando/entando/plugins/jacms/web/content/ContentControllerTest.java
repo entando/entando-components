@@ -60,18 +60,18 @@ public class ContentControllerTest extends AbstractControllerTest {
     @Test
     public void shouldGetExistingContent() throws Exception {
         UserDetails user = this.createUser(true);
-        when(this.contentValidator.existContent("ART123")).thenReturn(true);
+        when(this.contentValidator.existContent("ART123", IContentService.STATUS_DRAFT)).thenReturn(true);
         when(this.contentService.getContent(Mockito.eq("ART123"), Mockito.isNull(),
                 Mockito.eq("draft"), Mockito.isNull(), Mockito.any(UserDetails.class))).thenReturn(Mockito.mock(ContentDto.class));
-        ResultActions result = performGetContent("ART123", user);
+        ResultActions result = performGetContent("ART123", null, false, null, user);
         result.andExpect(status().isOk());
     }
 
     @Test
     public void testUnexistingContent() throws Exception {
         UserDetails user = this.createUser(true);
-        when(this.contentValidator.existContent("ART098")).thenReturn(false);
-        ResultActions result = performGetContent("ART098", user);
+        when(this.contentValidator.existContent("ART098", IContentService.STATUS_ONLINE)).thenReturn(false);
+        ResultActions result = performGetContent("ART098", null, true, null, user);
         result.andExpect(status().isNotFound());
     }
 
@@ -107,10 +107,19 @@ public class ContentControllerTest extends AbstractControllerTest {
         result.andExpect(status().isOk());
     }
 
-    private ResultActions performGetContent(String code, UserDetails user) throws Exception {
+    private ResultActions performGetContent(String code, String modelId,
+            boolean online, String langCode, UserDetails user) throws Exception {
         String accessToken = mockOAuthInterceptor(user);
+        String path = "/plugins/cms/contents/{code}";
+        if (null != modelId) {
+            path += "/model/" + modelId;
+        }
+        path += "?status=" + ((online) ? IContentService.STATUS_ONLINE : IContentService.STATUS_DRAFT);
+        if (null != langCode) {
+            path += "&lang=" + langCode;
+        }
         return mockMvc.perform(
-                get("/plugins/cms/contents/{code}", code)
+                get(path, code)
                 .sessionAttr("user", user)
                 .header("Authorization", "Bearer " + accessToken));
     }
@@ -123,7 +132,6 @@ public class ContentControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .sessionAttr("user", user)
                 .header("Authorization", "Bearer " + accessToken));
-
     }
 
     private ResultActions performPutContent(String code, String jsonContent, UserDetails user) throws Exception {

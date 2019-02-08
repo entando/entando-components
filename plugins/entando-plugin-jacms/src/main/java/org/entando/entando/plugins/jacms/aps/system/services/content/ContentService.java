@@ -209,11 +209,11 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     @Override
     public ContentDto getContent(String code, String modelId, String status, String langCode, UserDetails user) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
-        this.checkContentAuthorization(user, code, true, false, bindingResult);
+        boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(status));
+        this.checkContentAuthorization(user, code, online, false, bindingResult);
         ContentDto dto = null;
         try {
-            boolean online = (IContentService.STATUS_UNPUBLISHED.equalsIgnoreCase(status));
-            Content content = this.getContentManager().loadContent(code, online, true);
+            Content content = this.getContentManager().loadContent(code, online);
             if (null == content) {
                 throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Content", code);
             }

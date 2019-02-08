@@ -15,6 +15,8 @@ package org.entando.entando.plugins.jacms.web.content.validator;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,8 +30,14 @@ public class ContentValidator extends EntityValidator {
     @Autowired
     private IContentManager contentManager;
 
-    public boolean existContent(String code) {
-        return super.existEntity(code);
+    public boolean existContent(String code, String status) {
+        boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(status));
+        try {
+            return (null != this.contentManager.loadContent(code, online));
+        } catch (Exception e) {
+            logger.error("Error extracting content", e);
+            throw new RestServerError("error extracting content", e);
+        }
     }
 
     @Override
