@@ -61,7 +61,8 @@ public class ContentControllerTest extends AbstractControllerTest {
     public void shouldGetExistingContent() throws Exception {
         UserDetails user = this.createUser(true);
         when(this.contentValidator.existContent("ART123")).thenReturn(true);
-        when(this.contentService.getContent(Mockito.eq("ART123"), Mockito.any(UserDetails.class))).thenReturn(Mockito.mock(ContentDto.class));
+        when(this.contentService.getContent(Mockito.eq("ART123"), Mockito.isNull(),
+                Mockito.eq("draft"), Mockito.isNull(), Mockito.any(UserDetails.class))).thenReturn(Mockito.mock(ContentDto.class));
         ResultActions result = performGetContent("ART123", user);
         result.andExpect(status().isOk());
     }

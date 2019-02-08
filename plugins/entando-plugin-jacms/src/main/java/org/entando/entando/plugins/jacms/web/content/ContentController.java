@@ -17,9 +17,7 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
-import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.entity.validator.EntityValidator;
@@ -49,7 +47,10 @@ public class ContentController {
     public static final String ERRCODE_REFERENCED_ONLINE_CONTENT = "2";
     public static final String ERRCODE_UNAUTHORIZED_CONTENT = "3";
     public static final String ERRCODE_DELETE_PUBLIC_PAGE = "5";
+    public static final String ERRCODE_INVALID_MODEL = "6";
+    public static final String ERRCODE_INVALID_LANG_CODE = "7";
 
+    // ?status=draft|published
     @Autowired
     private IContentService contentService;
 
@@ -72,16 +73,24 @@ public class ContentController {
         this.contentValidator = contentValidator;
     }
 
-    //@RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(value = "/{code}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<EntityDto>> getContent(@ModelAttribute("user") UserDetails user,
-            @PathVariable String code) throws JsonProcessingException {
-        logger.debug("Requested content -> {}", code);
-        EntityDto dto;
+    public ResponseEntity<SimpleRestResponse<ContentDto>> getContent(@ModelAttribute("user") UserDetails user,
+            @PathVariable String code, @RequestParam(value = "status", required = false, defaultValue = IContentService.STATUS_DRAFT) String status,
+            @RequestParam(value = "lang", required = false) String lang) {
+        return this.getContent(user, code, null, status, lang);
+    }
+
+    @RequestMapping(value = "/{code}/model/{modelId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<ContentDto>> getContent(@ModelAttribute("user") UserDetails user,
+            @PathVariable String code, @PathVariable String modelId,
+            @RequestParam(value = "status", required = false, defaultValue = IContentService.STATUS_DRAFT) String status,
+            @RequestParam(value = "lang", required = false) String lang) {
+        logger.debug("Requested content -> {} - model {} - status {}", code, modelId, status);
+        ContentDto dto;
         if (!this.getContentValidator().existContent(code)) {
             throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Content", code);
         } else {
-            dto = this.getContentService().getContent(code, user);
+            dto = this.getContentService().getContent(code, modelId, status, lang, user);
         }
         logger.debug("Main Response -> {}", dto);
         return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
@@ -89,7 +98,7 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<EntityDto>> addContent(@ModelAttribute("user") UserDetails user,
+    public ResponseEntity<SimpleRestResponse<ContentDto>> addContent(@ModelAttribute("user") UserDetails user,
             @Valid @RequestBody ContentDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Add new content -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
@@ -99,7 +108,7 @@ public class ContentController {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        EntityDto response = this.getContentService().addContent(bodyRequest, user, bindingResult);
+        ContentDto response = this.getContentService().addContent(bodyRequest, user, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -108,14 +117,14 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(value = "/{code}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<EntityDto>> updateContent(@ModelAttribute("user") UserDetails user,
+    public ResponseEntity<SimpleRestResponse<ContentDto>> updateContent(@ModelAttribute("user") UserDetails user,
             @PathVariable String code, @Valid @RequestBody ContentDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Update content -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
         this.getContentValidator().validateBodyName(code, bodyRequest, bindingResult);
-        EntityDto response = this.getContentService().updateContent(bodyRequest, user, bindingResult);
+        ContentDto response = this.getContentService().updateContent(bodyRequest, user, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }

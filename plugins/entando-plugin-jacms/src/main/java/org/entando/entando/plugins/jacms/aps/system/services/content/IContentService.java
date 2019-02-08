@@ -24,7 +24,11 @@ import org.springframework.validation.BindingResult;
  */
 public interface IContentService {
 
-    public ContentDto getContent(String code, UserDetails user);
+    public static final String STATUS_ONLINE = "published";
+    public static final String STATUS_DRAFT = "draft";
+    public static final String STATUS_UNPUBLISHED = "unpublished";
+
+    public ContentDto getContent(String code, String modelId, String status, String langCode, UserDetails user);
 
     public ContentDto addContent(ContentDto request, UserDetails user, BindingResult bindingResult);
 

@@ -14,10 +14,14 @@
 package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import java.util.Date;
 import java.util.Map;
+import org.entando.entando.web.common.json.JsonDateDeserializer;
+import org.entando.entando.web.common.json.JsonDateSerializer;
 
 public class ContentDto extends EntityDto implements Serializable {
 
@@ -33,6 +37,7 @@ public class ContentDto extends EntityDto implements Serializable {
     private String version;
     private String firstEditor;
     private String lastEditor;
+    private String html;
 
     /**
      * The references grouped by service name.
@@ -101,6 +106,8 @@ public class ContentDto extends EntityDto implements Serializable {
         this.defaultModel = defaultModel;
     }
 
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @JsonDeserialize(using = JsonDateDeserializer.class)
     public Date getCreated() {
         return created;
     }
@@ -109,6 +116,8 @@ public class ContentDto extends EntityDto implements Serializable {
         this.created = created;
     }
 
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @JsonDeserialize(using = JsonDateDeserializer.class)
     public Date getLastModified() {
         return lastModified;
     }
@@ -139,6 +148,14 @@ public class ContentDto extends EntityDto implements Serializable {
 
     public void setLastEditor(String lastEditor) {
         this.lastEditor = lastEditor;
+    }
+
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
     }
 
     public Map<String, Boolean> getReferences() {

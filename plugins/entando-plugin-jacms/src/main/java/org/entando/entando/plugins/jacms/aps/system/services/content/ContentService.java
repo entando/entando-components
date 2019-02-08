@@ -25,6 +25,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.PageUtilizer;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
@@ -33,9 +35,14 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
+import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
+import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
@@ -43,14 +50,13 @@ import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.category.CategoryServiceUtilizer;
 import org.entando.entando.aps.system.services.entity.AbstractEntityService;
 import org.entando.entando.aps.system.services.group.GroupServiceUtilizer;
-import static org.entando.entando.aps.system.services.page.IPageService.STATUS_DRAFT;
-import static org.entando.entando.aps.system.services.page.IPageService.STATUS_ONLINE;
 import org.entando.entando.aps.system.services.page.PageServiceUtilizer;
 import org.entando.entando.plugins.jacms.web.content.ContentController;
 import org.entando.entando.web.common.exceptions.ResourcePermissionsException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.entity.validator.EntityValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -68,11 +74,22 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     private static final String ERRCODE_STATUS_INVALID = "3";
     private static final String ERRCODE_CONTENT_REFERENCES = "5";
 
+    private ILangManager langManager;
     private IContentManager contentManager;
+    private IContentModelManager contentModelManager;
     private IAuthorizationManager authorizationManager;
     private IContentAuthorizationHelper contentAuthorizationHelper;
+    private IContentDispenser contentDispenser;
     private ApplicationContext applicationContext;
     private IDtoBuilder<Content, ContentDto> dtoBuilder;
+
+    public ILangManager getLangManager() {
+        return langManager;
+    }
+
+    public void setLangManager(ILangManager langManager) {
+        this.langManager = langManager;
+    }
 
     protected IContentManager getContentManager() {
         return contentManager;
@@ -80,6 +97,14 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
 
     public void setContentManager(IContentManager contentManager) {
         this.contentManager = contentManager;
+    }
+
+    protected IContentModelManager getContentModelManager() {
+        return contentModelManager;
+    }
+
+    public void setContentModelManager(IContentModelManager contentModelManager) {
+        this.contentModelManager = contentModelManager;
     }
 
     public IAuthorizationManager getAuthorizationManager() {
@@ -96,6 +121,14 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
 
     public void setContentAuthorizationHelper(IContentAuthorizationHelper contentAuthorizationHelper) {
         this.contentAuthorizationHelper = contentAuthorizationHelper;
+    }
+
+    protected IContentDispenser getContentDispenser() {
+        return contentDispenser;
+    }
+
+    public void setContentDispenser(IContentDispenser contentDispenser) {
+        this.contentDispenser = contentDispenser;
     }
 
     public IDtoBuilder<Content, ContentDto> getDtoBuilder() {
@@ -174,11 +207,89 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     }
 
     @Override
-    public ContentDto getContent(String code, UserDetails user) {
-        this.checkContentAuthorization(user, code, true, false, null);
-        ContentDto dto = super.getEntity(JacmsSystemConstants.CONTENT_MANAGER, code);
+    public ContentDto getContent(String code, String modelId, String status, String langCode, UserDetails user) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
+        this.checkContentAuthorization(user, code, true, false, bindingResult);
+        ContentDto dto = null;
+        try {
+            boolean online = (IContentService.STATUS_UNPUBLISHED.equalsIgnoreCase(status));
+            Content content = this.getContentManager().loadContent(code, online, true);
+            if (null == content) {
+                throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Content", code);
+            }
+            dto = this.buildEntityDto(content);
+        } catch (ResourceNotFoundException rnf) {
+            throw rnf;
+        } catch (Exception e) {
+            logger.error("Error extracting content", e);
+            throw new RestServerError("error extracting content", e);
+        }
+        dto.setHtml(this.extractRenderedContent(dto, modelId, langCode, bindingResult));
         dto.setReferences(this.getReferencesInfo(dto.getId()));
         return dto;
+    }
+
+    protected String extractRenderedContent(ContentDto dto, String modelId, String langCode, BeanPropertyBindingResult bindingResult) {
+        String render = null;
+        if (null == modelId || modelId.trim().length() == 0) {
+            return null;
+        }
+        Integer modelIdInteger = this.checkModel(dto, modelId, bindingResult);
+        if (null != modelIdInteger) {
+            Lang lang = this.getLangManager().getDefaultLang();
+            if (!StringUtils.isBlank(langCode)) {
+                lang = this.getLangManager().getLang(langCode);
+                if (null == lang) {
+                    bindingResult.reject(ContentController.ERRCODE_INVALID_LANG_CODE,
+                            new String[]{modelId, dto.getTypeCode()}, "content.model.invalidLangCode");
+                    throw new ValidationGenericException(bindingResult);
+                }
+            }
+            render = this.getRenderedContent(dto.getId(), modelIdInteger, lang.getCode());
+        }
+        return render;
+    }
+
+    protected String getRenderedContent(String id, int modelId, String langCode) {
+        String renderedContent = null;
+        ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(id, modelId, langCode, null, true);
+        if (null != renderizationInfo) {
+            this.getContentDispenser().resolveLinks(renderizationInfo, null);
+            renderedContent = renderizationInfo.getRenderedContent();
+        }
+        return renderedContent;
+    }
+
+    protected Integer checkModel(ContentDto dto, String modelId, BeanPropertyBindingResult bindingResult) {
+        Integer modelIdInteger = null;
+        if (StringUtils.isBlank(modelId)) {
+            return null;
+        }
+        if (modelId.equals("default")) {
+            if (null == dto.getDefaultModel()) {
+                bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL, "content.model.nullDefaultModel");
+                throw new ValidationGenericException(bindingResult);
+            }
+            modelIdInteger = Integer.parseInt(dto.getDefaultModel());
+        } else if (modelId.equals("list")) {
+            if (null == dto.getListModel()) {
+                bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL, "content.model.nullListModel");
+                throw new ValidationGenericException(bindingResult);
+            }
+            modelIdInteger = Integer.parseInt(dto.getListModel());
+        } else {
+            modelIdInteger = Integer.parseInt(modelId);
+        }
+        ContentModel model = this.getContentModelManager().getContentModel(modelIdInteger);
+        if (model == null) {
+            bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL, new String[]{modelId}, "content.model.nullModel");
+            throw new ValidationGenericException(bindingResult);
+        } else if (!dto.getTypeCode().equals(model.getContentType())) {
+            bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL,
+                    new String[]{modelId, dto.getTypeCode()}, "content.model.invalid");
+            throw new ValidationGenericException(bindingResult);
+        }
+        return modelIdInteger;
     }
 
     @Override
