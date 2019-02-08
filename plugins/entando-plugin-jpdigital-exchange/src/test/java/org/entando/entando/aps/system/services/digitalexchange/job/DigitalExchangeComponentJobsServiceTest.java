@@ -35,7 +35,7 @@ public class DigitalExchangeComponentJobsServiceTest {
     private DigitalExchangesService exchangesService;
 
     @Mock
-    private DigitalExchangeJobDAO dao;
+    private DigitalExchangeJobRepository repository;
 
     @Mock
     private DigitalExchangeInstallExecutor digitalExchangeInstallExecutor;
@@ -69,7 +69,7 @@ public class DigitalExchangeComponentJobsServiceTest {
 
         DigitalExchangeJob job = new DigitalExchangeJob();
         job.setStatus(JobStatus.IN_PROGRESS);
-        when(dao.findLast("test", JobType.INSTALL)).thenReturn(Optional.of(job));
+        when(repository.findLast("test", JobType.INSTALL)).thenReturn(Optional.of(job));
 
         service.install(DE_1_ID, "test", "admin");
     }

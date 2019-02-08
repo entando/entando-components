@@ -13,6 +13,11 @@
  */
 package org.entando.entando.aps.system.jpa;
 
+import com.agiletec.aps.system.SystemConstants;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class EntityFieldsConverter<T> {
 
     /**
@@ -31,5 +36,14 @@ public class EntityFieldsConverter<T> {
      */
     protected Comparable<?> getComparableValue(String attribute, String value) {
         return value;
+    }
+
+    protected Date parseDate(String value) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(SystemConstants.API_DATE_FORMAT);
+            return sdf.parse(value);
+        } catch (ParseException ex) {
+            throw new IllegalArgumentException(ex);
+        }
     }
 }

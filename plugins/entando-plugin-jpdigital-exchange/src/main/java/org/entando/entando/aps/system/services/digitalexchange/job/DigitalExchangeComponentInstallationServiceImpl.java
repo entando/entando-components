@@ -35,19 +35,19 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private static final String ERRCODE_COMPONENT_INSTALLATION_RUNNING = "1";
 
     private final DigitalExchangesService exchangesService;
-    private final DigitalExchangeJobDAO dao;
+    private final DigitalExchangeJobRepository repository;
     private final DigitalExchangeAbstractJobExecutor installExecutor;
     private final DigitalExchangeAbstractJobExecutor uninstallExecutor;
 
     @Autowired
     public DigitalExchangeComponentInstallationServiceImpl(
             DigitalExchangesService exchangesService,
-            DigitalExchangeJobDAO dao,
+            DigitalExchangeJobRepository repository,
             DigitalExchangeInstallExecutor installExecutor,
             DigitalExchangeUninstallExecutor uninstallExecutor) {
 
         this.exchangesService = exchangesService;
-        this.dao = dao;
+        this.repository = repository;
         this.installExecutor = installExecutor;
         this.uninstallExecutor = uninstallExecutor;
     }
@@ -61,9 +61,9 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(digitalExchange, componentId, JobType.INSTALL);
         job.setUser(username);
-        dao.createJob(job);
+        repository.save(job);
 
-        this.executeJob(job, this.installExecutor );
+        this.executeJob(job, this.installExecutor);
 
         return job;
     }
@@ -75,32 +75,30 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(componentId, JobType.UNINSTALL);
         job.setUser(username);
-        dao.createJob(job);
+        repository.save(job);
 
         this.executeJob(job, this.uninstallExecutor);
 
         return job;
     }
 
-
     private void executeJob(DigitalExchangeJob job, DigitalExchangeAbstractJobExecutor jobExecutor) {
         CompletableFuture.runAsync(() -> {
             try {
-                jobExecutor.execute(job, dao::updateJob);
+                jobExecutor.execute(job, repository::save);
             } catch (Throwable ex) {
                 logger.error("Error while executing job for " + job.getComponentId(), ex);
                 job.setStatus(JobStatus.ERROR);
                 job.setErrorMessage(ex.getMessage());
                 job.setEnded(new Date());
-                dao.updateJob(job);
+                repository.save(job);
             }
         });
     }
 
-
     private synchronized void checkIfAlreadyRunning(String componentId, JobType jobType) {
 
-        dao.findLast(componentId, jobType).ifPresent(job -> {
+        repository.findLast(componentId, jobType).ifPresent(job -> {
             if (job.getStatus() != JobStatus.COMPLETED
                     && job.getStatus() != JobStatus.ERROR) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(componentId, "component");
@@ -143,8 +141,8 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
     @Override
     public DigitalExchangeJob checkJobStatus(String componentId, JobType jobType) {
-        return dao.findLast(componentId, jobType)
-                .orElseThrow(() -> new RestRourceNotFoundException("component",  componentId));
+        return repository.findLast(componentId, jobType)
+                .orElseThrow(() -> new RestRourceNotFoundException("component", componentId));
     }
 
 }

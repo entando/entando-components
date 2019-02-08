@@ -19,7 +19,7 @@ public class JobFieldsConverter extends EntityFieldsConverter<DigitalExchangeJob
 
     @Override
     protected String getFieldName(String attributeName) {
-        if ("code".equals(attributeName)) {
+        if ("code".equals(attributeName)) { // code is the default RestListRequest sorting property
             return "id";
         }
         return super.getFieldName(attributeName);
@@ -34,6 +34,9 @@ public class JobFieldsConverter extends EntityFieldsConverter<DigitalExchangeJob
                 return JobType.valueOf(value);
             case "status":
                 return JobStatus.valueOf(value);
+            case "started":
+            case "ended":
+                return parseDate(value);
             default:
                 return super.getComparableValue(attribute, value);
         }
