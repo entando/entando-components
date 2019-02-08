@@ -13,8 +13,8 @@
  */
 package org.entando.entando.web.digitalexchange.job;
 
-import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJob;
-import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJobRepository;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJobRepository;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobType;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.junit.Test;

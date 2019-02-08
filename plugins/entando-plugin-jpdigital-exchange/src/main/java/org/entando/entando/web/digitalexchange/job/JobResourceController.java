@@ -15,8 +15,8 @@ package org.entando.entando.web.digitalexchange.job;
 
 import java.util.Optional;
 
-import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJob;
-import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJobRepository;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJobRepository;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.beans.factory.annotation.Autowired;

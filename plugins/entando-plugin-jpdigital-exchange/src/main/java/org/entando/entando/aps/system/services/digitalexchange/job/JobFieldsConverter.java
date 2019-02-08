@@ -14,6 +14,7 @@
 package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import org.entando.entando.aps.system.jpa.EntityFieldsConverter;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 
 public class JobFieldsConverter extends EntityFieldsConverter<DigitalExchangeJob> {
 

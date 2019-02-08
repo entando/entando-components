@@ -13,43 +13,47 @@
  */
 package org.entando.entando.aps.system.jpa;
 
-import java.util.Properties;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
-@EnableJpaRepositories
-@EnableTransactionManagement
-public class PersistenceJPAConfig {
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Properties;
 
-    private final DataSource servDataSource;
+//@Configuration
+//@EnableJpaRepositories(
+//        basePackages = {"org.entando.entando.aps.system.jpa.portdb"},
+//        entityManagerFactoryRef = "portEntityManager",
+//        transactionManagerRef = "portTransactionManager"
+//)
+//@EnableTransactionManagement
+public class PortPersistenceJPAConfig {
+
+    private final DataSource dataSource;
 
     @Autowired
-    public PersistenceJPAConfig(DataSource servDataSource) {
-        this.servDataSource = servDataSource;
+    public PortPersistenceJPAConfig(@Qualifier("portDataSource") DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-    @Bean
+    @Bean(name = "portEntityManager")
     // this force the Entando db generation to run before the JPA one
     @DependsOn("InitializerManager")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean getPortEntityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
-        em.setDataSource(servDataSource);
-        em.setPackagesToScan("org.entando.entando.aps.system.jpa",
-                             "org.entando.entando.aps.system.services.digitalexchange.job");
+        em.setDataSource(dataSource);
+        em.setPackagesToScan("org.entando.entando.aps.system.jpa.portdb");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -58,16 +62,11 @@ public class PersistenceJPAConfig {
         return em;
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+    @Bean(name = "portTransactionManager")
+    public PlatformTransactionManager getPortTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(emf);
+        transactionManager.setEntityManagerFactory(this.getPortEntityManagerFactory().getObject());
         return transactionManager;
-    }
-
-    @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
-        return new PersistenceExceptionTranslationPostProcessor();
     }
 
     Properties additionalProperties() {

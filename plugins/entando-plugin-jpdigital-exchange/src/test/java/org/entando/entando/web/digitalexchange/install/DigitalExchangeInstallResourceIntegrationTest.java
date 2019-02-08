@@ -55,7 +55,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.ResultActions;
-import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJob;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobStatus;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.web.common.model.SimpleRestResponse;

@@ -25,7 +25,4 @@
         <constructor-arg name="dtoBuilder" ref="DigitalExchangePageModelDtoBuilder"/>
     </bean>
     
-    <bean id="persistenceJPAConfig" class="org.entando.entando.aps.system.jpa.PersistenceJPAConfig">
-        <constructor-arg name="servDataSource" ref="servDataSource"/>
-    </bean>
 </beans>

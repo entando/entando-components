@@ -14,6 +14,9 @@
 package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import java.util.Optional;
+
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJobRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

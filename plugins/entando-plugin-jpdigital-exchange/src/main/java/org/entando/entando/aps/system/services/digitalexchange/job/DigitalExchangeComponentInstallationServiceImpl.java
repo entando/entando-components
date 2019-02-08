@@ -18,6 +18,8 @@ import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJobRepository;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;

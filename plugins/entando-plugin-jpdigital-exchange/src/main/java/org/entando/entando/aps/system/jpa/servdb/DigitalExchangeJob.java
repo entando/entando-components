@@ -11,11 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.job;
+package org.entando.entando.aps.system.jpa.servdb;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.entando.entando.aps.system.services.digitalexchange.job.JobStatus;
+import org.entando.entando.aps.system.services.digitalexchange.job.JobType;
 
 import java.io.Serializable;
 import java.util.Date;
