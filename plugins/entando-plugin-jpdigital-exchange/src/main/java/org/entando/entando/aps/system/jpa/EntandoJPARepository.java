@@ -37,8 +37,14 @@ public class EntandoJPARepository<T, ID> extends SimpleJpaRepository<T, ID> {
     }
 
     public PagedRestResponse<T> findAll(RestListRequest request) {
-        EntandoJPASpecification<T> specification = new EntandoJPASpecification<>(request, fieldsConverter);
-        Page<T> page = super.findAll(specification, pageableFromRequest(request));
+        Pageable pageable = pageableFromRequest(request);
+        Page<T> page;
+        if (request.getFilters() != null && request.getFilters().length > 0) {
+            EntandoJPASpecification<T> specification = new EntandoJPASpecification<>(request, fieldsConverter);
+            page = findAll(specification, pageable);
+        } else {
+            page = findAll(pageable);
+        }
         return buildResponse(page, request);
     }
 

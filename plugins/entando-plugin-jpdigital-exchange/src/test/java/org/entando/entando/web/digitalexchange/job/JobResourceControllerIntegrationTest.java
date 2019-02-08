@@ -25,11 +25,29 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class JobResourceControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private DigitalExchangeJobRepository repo;
+
+    @Test
+    public void shoudlReturnAll() throws Exception {
+
+        DigitalExchangeJob job1 = new DigitalExchangeJob();
+        job1.setId("job1");
+        repo.save(job1);
+
+        ResultActions result = createAuthRequest(get("/digitalExchange/job")).execute();
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metaData.totalItems", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("job1")));
+
+        repo.deleteById("job1");
+    }
 
     @Test
     public void filterTest() throws Exception {
