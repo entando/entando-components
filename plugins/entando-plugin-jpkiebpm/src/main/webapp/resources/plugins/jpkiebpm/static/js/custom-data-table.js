@@ -77,9 +77,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
         columnDefs: buttonsColumnDef,
         scrollX: true,
         dom: 'lfrtBip',
-                scrollY:        "300px",
-                scrollCollapse: true,
-                
+                   
         buttons: [
             {
                 "extend": 'copy',
