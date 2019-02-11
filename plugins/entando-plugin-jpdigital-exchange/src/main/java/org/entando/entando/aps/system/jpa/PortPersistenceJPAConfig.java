@@ -26,17 +26,16 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-//@Configuration
-//@EnableJpaRepositories(
-//        basePackages = {"org.entando.entando.aps.system.jpa.portdb"},
-//        entityManagerFactoryRef = "portEntityManager",
-//        transactionManagerRef = "portTransactionManager"
-//)
-//@EnableTransactionManagement
+@Configuration
+@EnableJpaRepositories(
+        basePackages = {"org.entando.entando.aps.system.jpa.portdb"},
+        transactionManagerRef = "portTransactionManager",
+        entityManagerFactoryRef = "portEntityManager"
+)
+@EnableTransactionManagement
 public class PortPersistenceJPAConfig {
 
     private DataSource dataSource;

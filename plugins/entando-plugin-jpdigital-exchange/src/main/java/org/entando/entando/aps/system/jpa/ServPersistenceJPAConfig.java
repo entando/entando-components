@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -33,8 +34,8 @@ import java.util.Properties;
 @Configuration
 @EnableJpaRepositories(
         basePackages = {"org.entando.entando.aps.system.jpa.servdb"},
-        entityManagerFactoryRef = "servEntityManager",
-        transactionManagerRef = "servTransactionManager"
+        transactionManagerRef = "servTransactionManager",
+        entityManagerFactoryRef = "servEntityManager"
 )
 @EnableTransactionManagement
 public class ServPersistenceJPAConfig {
@@ -63,6 +64,7 @@ public class ServPersistenceJPAConfig {
     }
 
     @Bean(name = "servTransactionManager")
+    @Primary
     public PlatformTransactionManager getServTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(this.getServEntityManagerFactory().getObject());
