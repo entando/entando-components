@@ -36,7 +36,6 @@ public class EntandoJPASpecification<T> implements Specification<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
 
         List<Predicate> andPredicates = new ArrayList<>();

@@ -1,19 +1,8 @@
-/*
- * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- */
-package org.entando.entando.aps.system.jpa;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
-import javax.persistence.EntityManager;
+import org.entando.entando.aps.system.jpa.EntandoJPASpecification;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJobRepository;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -21,31 +10,35 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.stereotype.Service;
 
-/**
- * JPA Repository able to convert Entando paging, sorting and filtering models
- * into Spring Data JPA ones and vice-versa.
- */
-public class EntandoJPARepository<T, ID> extends SimpleJpaRepository<T, ID> {
+import java.util.Optional;
 
-    private final EntityFieldsConverter<T> fieldsConverter;
+@Service
+public class DigitalExchangeJobService {
 
-    public EntandoJPARepository(Class<T> domainClass, EntityManager em, EntityFieldsConverter<T> fieldsConverter) {
-        super(domainClass, em);
-        this.fieldsConverter = fieldsConverter;
+    private final DigitalExchangeJobRepository repository;
+    private final JobFieldsConverter fieldsConverter;
+
+    public DigitalExchangeJobService(DigitalExchangeJobRepository repository) {
+       this.repository = repository;
+       this.fieldsConverter = new JobFieldsConverter();
     }
 
-    public PagedRestResponse<T> findAll(RestListRequest request) {
+    public PagedRestResponse<DigitalExchangeJob> findAll(RestListRequest request) {
         Pageable pageable = pageableFromRequest(request);
-        Page<T> page;
+        Page<DigitalExchangeJob> page;
         if (request.getFilters() != null && request.getFilters().length > 0) {
-            EntandoJPASpecification<T> specification = new EntandoJPASpecification<>(request, fieldsConverter);
-            page = findAll(specification, pageable);
+            EntandoJPASpecification<DigitalExchangeJob> specification = new EntandoJPASpecification<>(request, fieldsConverter);
+            page = this.repository.findAll(specification, pageable);
         } else {
-            page = findAll(pageable);
+            page = this.repository.findAll(pageable);
         }
         return buildResponse(page, request);
+    }
+
+    public Optional<DigitalExchangeJob> findById(String id) {
+        return this.repository.findById(id);
     }
 
     private Pageable pageableFromRequest(RestListRequest restListRequest) {

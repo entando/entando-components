@@ -16,13 +16,11 @@ package org.entando.entando.web.digitalexchange.job;
 import java.util.Optional;
 
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
-import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJobRepository;
+import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJobService;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,21 +29,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/digitalExchange/job")
 public class DigitalExchangeJobResourceController implements DigitalExchangeJobResource {
 
-    private final DigitalExchangeJobRepository jobRepository;
+    private final DigitalExchangeJobService jobService;
 
     @Autowired
-    public DigitalExchangeJobResourceController(DigitalExchangeJobRepository jobRepository) {
-        this.jobRepository = jobRepository;
+    public DigitalExchangeJobResourceController(DigitalExchangeJobService jobService) {
+        this.jobService = jobService;
     }
 
     @Override
     public PagedRestResponse<DigitalExchangeJob> list(RestListRequest restListRequest) {
-        return jobRepository.findAll(restListRequest);
+        return jobService.findAll(restListRequest);
     }
 
     @Override
     public ResponseEntity<DigitalExchangeJob> getById(@PathVariable("id") String id) {
-        Optional<DigitalExchangeJob> optionalJob = jobRepository.findById(id);
+        Optional<DigitalExchangeJob> optionalJob = jobService.findById(id);
         return optionalJob
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

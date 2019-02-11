@@ -13,6 +13,8 @@
  */
 package org.entando.entando.aps.system.jpa;
 
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
+import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -76,4 +78,5 @@ public class ServPersistenceJPAConfig {
         properties.setProperty("hibernate.hbm2ddl.auto", "create");
         return properties;
     }
+
 }

@@ -14,10 +14,13 @@
 package org.entando.entando.aps.system.jpa;
 
 import com.agiletec.aps.system.SystemConstants;
+import org.springframework.stereotype.Component;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Component
 public class EntityFieldsConverter<T> {
 
     /**
