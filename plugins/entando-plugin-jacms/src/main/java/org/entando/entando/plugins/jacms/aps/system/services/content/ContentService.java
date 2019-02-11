@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services.content;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,10 +43,12 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -218,6 +221,21 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             List<EntitySearchFilter> filters = requestList.buildEntitySearchFilters();
             EntitySearchFilter[] filtersArr = new EntitySearchFilter[filters.size()];
             filtersArr = filters.toArray(filtersArr);
+            List<FieldSearchFilter> basicFilters = requestList.buildFieldSearchFilters();
+            for (FieldSearchFilter basicFilter : basicFilters) {
+                if (StringUtils.isBlank(basicFilter.getKey())) {
+                    continue;
+                }
+                EntitySearchFilter esf = null;
+                boolean isMetadataFilter = Arrays.asList(IContentManager.METADATA_FILTER_KEYS).contains(basicFilter.getKey());
+                if (null != basicFilter.getValue()) {
+                    esf = new EntitySearchFilter(basicFilter.getKey(), !isMetadataFilter, basicFilter.getValue(), basicFilter.isLikeOption());
+                } else {
+                    esf = new EntitySearchFilter(basicFilter.getKey(), !isMetadataFilter, basicFilter.getStart(), basicFilter.getEnd());
+                }
+                esf.setOrder(basicFilter.getOrder());
+                filtersArr = ArrayUtils.add(filtersArr, esf);
+            }
             List<String> userGroupCodes = this.getAllowedGroups(user, online);
             List<String> result = (online)
                     ? this.getContentManager().loadPublicContentsId(null, true, filtersArr, userGroupCodes)
@@ -226,7 +244,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             PagedMetadata<ContentDto> pagedMetadata = new PagedMetadata<>(requestList, sublist.size());
             List<ContentDto> masterList = new ArrayList<>();
             for (String contentId : sublist) {
-                masterList.add(this.buildContentDto(contentId, true, modelId, langCode, bindingResult));
+                masterList.add(this.buildContentDto(contentId, online, modelId, langCode, bindingResult));
             }
             pagedMetadata.setBody(masterList);
             return pagedMetadata;

@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.web.content;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.services.group.Group;
@@ -263,6 +264,53 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(expected);
         return result;
+    }
+
+    @Test
+    public void testGetContents() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filter[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filter[0].operator", "eq")
+                        .param("filter[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        System.out.println(result.andReturn().getResponse().getContentAsString());
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_1() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_DESCR_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.ASC_ORDER)
+                        .param("filter[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filter[0].operator", "eq")
+                        .param("filter[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        System.out.println(bodyResult);
+        result.andExpect(status().isOk());
+        String[] expectedFreeContentsId = {"EVN24", "EVN23",
+            "EVN191", "EVN192", "EVN193", "EVN194", "EVN20", "EVN21", "EVN25"};
+        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
+        Assert.assertEquals(expectedFreeContentsId.length, payloadSize);
+        for (int i = 0; i < expectedFreeContentsId.length; i++) {
+            String expectedId = expectedFreeContentsId[i];
+            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
+            Assert.assertEquals(expectedId, extractedId);
+        }
     }
 
 }

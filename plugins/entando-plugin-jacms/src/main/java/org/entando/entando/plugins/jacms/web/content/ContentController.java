@@ -18,6 +18,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import java.util.Arrays;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
@@ -86,6 +87,15 @@ public class ContentController {
             @Override
             protected String getDefaultSortProperty() {
                 return IContentManager.CONTENT_CREATION_DATE_FILTER_KEY;
+            }
+
+            @Override
+            public boolean isValidField(String fieldName, Class<?> type) {
+                if (fieldName.contains(".")) {
+                    return true;
+                } else {
+                    return Arrays.asList(IContentManager.METADATA_FILTER_KEYS).contains(fieldName);
+                }
             }
 
         };
