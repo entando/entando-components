@@ -13,6 +13,11 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.component;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
@@ -32,16 +37,19 @@ import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class DigitalExchangeComponentsServiceTest {
 
-    private static final String[] COMPONENTS_1 = new String[]{"A", "B", "C", "F", "I", "M", "N", "P"};
+    private static final DigitalExchangeComponent[] COMPONENTS_1 = getMockedComponents1();
     private static final String[] COMPONENTS_2 = new String[]{"D", "E", "G", "H", "L", "O"};
     private static final String INSTALLED_COMPONENT = "A";
+    private static final String LAST_UPDATE = "2018-01-01 00:00:00";
+    private static final String VERSION = "V1";
+    private static final String WIDGET_TYPE = "widget";
+    private static final String CONTENT_MODEL_TYPE = "contentModel";
+    private static final int RATING = 3;
 
     @Mock
     private DigitalExchangesService exchangesService;
@@ -114,22 +122,128 @@ public class DigitalExchangeComponentsServiceTest {
     }
 
     @Test
-    public void shouldFilter() {
+    public void shouldFilterById() {
 
         RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("id");
+        filter.setValue("B");
+        filter.setOperator(FilterOperator.EQUAL.getValue());
+        listRequest.addFilter(filter);
 
+        verifyFilter(listRequest, COMPONENTS_1[1]);
+    }
+
+    @Test
+    public void shouldFilterByName() {
+
+        RestListRequest listRequest = new RestListRequest();
         Filter filter = new Filter();
         filter.setAttribute("name");
         filter.setValue("M");
         filter.setOperator(FilterOperator.EQUAL.getValue());
         listRequest.addFilter(filter);
 
-        ResilientPagedMetadata<DigitalExchangeComponent> pagedMetadata = service.getComponents(listRequest);
+        verifyFilter(listRequest, COMPONENTS_1[5]);
+    }
 
-        assertNotNull(pagedMetadata.getBody());
-        assertEquals(1, pagedMetadata.getBody().size());
-        assertEquals("M", pagedMetadata.getBody().get(0).getName());
-        assertEquals(1, pagedMetadata.getTotalItems());
+    @Test
+    public void shouldFilterByLastUpdate() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("lastUpdate");
+        filter.setValue("2019-01-01 00:00:00");
+        filter.setOperator(FilterOperator.LOWER.getValue());
+        listRequest.addFilter(filter);
+
+        verifyFilter(listRequest, COMPONENTS_1[1]);
+    }
+
+    @Test
+    public void shouldFilterByVersion() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("version");
+        filter.setValue(VERSION);
+        filter.setOperator(FilterOperator.EQUAL.getValue());
+        listRequest.addFilter(filter);
+
+        verifyFilter(listRequest, COMPONENTS_1[2]);
+    }
+
+    @Test
+    public void shouldFilterByType() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("type");
+        filter.setValue(WIDGET_TYPE + "," + CONTENT_MODEL_TYPE);
+        filter.setOperator(FilterOperator.EQUAL.getValue());
+        listRequest.addFilter(filter);
+
+        verifyFilter(listRequest, COMPONENTS_1[3], COMPONENTS_1[4]);
+    }
+
+    @Test
+    public void shouldFilterByRating() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("rating");
+        filter.setValue("4");
+        filter.setOperator(FilterOperator.LOWER.getValue());
+        listRequest.addFilter(filter);
+
+        verifyFilter(listRequest, COMPONENTS_1[5]);
+    }
+
+    @Test
+    public void shouldSortByLastUpdate() {
+
+        RestListRequest listRequest = new RestListRequest();
+        listRequest.setSort("lastUpdate");
+
+        verifyFirst(listRequest, COMPONENTS_1[1]);
+    }
+
+    @Test
+    public void shouldSortByVersion() {
+
+        RestListRequest listRequest = new RestListRequest();
+        listRequest.setSort("version");
+        listRequest.setDirection(FieldSearchFilter.DESC_ORDER);
+
+        verifyFirst(listRequest, COMPONENTS_1[2]);
+    }
+
+    @Test
+    public void shouldSortByType() {
+
+        RestListRequest listRequest = new RestListRequest();
+        listRequest.setSort("type");
+
+        verifyFirst(listRequest, COMPONENTS_1[4]);
+    }
+
+    @Test
+    public void shouldSortByRating() {
+
+        RestListRequest listRequest = new RestListRequest();
+        listRequest.setSort("rating");
+
+        verifyFirst(listRequest, COMPONENTS_1[5]);
+    }
+
+    @Test
+    public void shouldSortByInstalled() {
+
+        RestListRequest listRequest = new RestListRequest();
+        listRequest.setSort("installed");
+        listRequest.setDirection(FieldSearchFilter.DESC_ORDER);
+
+        verifyFirst(listRequest, COMPONENTS_1[0]);
     }
 
     private static class PageVerifier {
@@ -154,6 +268,45 @@ public class DigitalExchangeComponentsServiceTest {
                     .extracting(DigitalExchangeComponent::getDigitalExchangeName, DigitalExchangeComponent::getName)
                     .contains(values);
             return this;
+        }
+    }
+
+    private void verifyFilter(RestListRequest request, DigitalExchangeComponent... filteredComponents) {
+
+        ResilientPagedMetadata<DigitalExchangeComponent> pagedMetadata = service.getComponents(request);
+
+        assertThat(pagedMetadata.getTotalItems()).isEqualTo(filteredComponents.length);
+        assertThat(pagedMetadata.getBody())
+                .isNotNull().hasSize(filteredComponents.length)
+                .containsExactly(filteredComponents);
+    }
+
+    private void verifyFirst(RestListRequest request, DigitalExchangeComponent component) {
+        ResilientPagedMetadata<DigitalExchangeComponent> pagedMetadata = service.getComponents(request);
+        assertThat(pagedMetadata.getBody()).isNotNull().isNotEmpty();
+        assertThat(pagedMetadata.getBody().get(0)).isEqualTo(component);
+    }
+
+    private static DigitalExchangeComponent[] getMockedComponents1() {
+        List<DigitalExchangeComponent> components
+                = DigitalExchangeComponentsMocker.getMockedComponents("A", "B", "C", "F", "I", "M", "N", "P");
+
+        // Some values for testing filtering and sorting
+        setLastUpdate(components.get(1));
+        components.get(2).setVersion(VERSION);
+        components.get(3).setType(WIDGET_TYPE);
+        components.get(4).setType(CONTENT_MODEL_TYPE);
+        components.get(5).setRating(RATING);
+
+        return components.toArray(new DigitalExchangeComponent[components.size()]);
+    }
+
+    private static void setLastUpdate(DigitalExchangeComponent component) {
+        SimpleDateFormat sdf = new SimpleDateFormat(SystemConstants.API_DATE_FORMAT);
+        try {
+            component.setLastUpdate(sdf.parse(LAST_UPDATE));
+        } catch (ParseException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }
