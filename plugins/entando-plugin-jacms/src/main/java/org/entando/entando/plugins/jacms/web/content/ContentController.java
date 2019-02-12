@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.RestEntityListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.springframework.validation.Errors;
@@ -110,7 +110,7 @@ public class ContentController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedRestResponse<ContentDto>> getContents(RestListRequest requestList, @ModelAttribute("user") UserDetails user,
+    public ResponseEntity<PagedRestResponse<ContentDto>> getContents(RestEntityListRequest requestList, @ModelAttribute("user") UserDetails user,
             @RequestParam(value = "status", required = false, defaultValue = IContentService.STATUS_DRAFT) String status,
             @RequestParam(value = "model", required = false) String model,
             @RequestParam(value = "lang", required = false) String lang) {

@@ -13,7 +13,6 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services.content;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,12 +42,10 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -62,6 +59,7 @@ import org.entando.entando.plugins.jacms.web.content.ContentController;
 import org.entando.entando.web.common.exceptions.ResourcePermissionsException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestEntityListRequest;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.slf4j.Logger;
@@ -214,28 +212,13 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     }
 
     @Override
-    public PagedMetadata<ContentDto> getContents(RestListRequest requestList, String modelId, String status, String langCode, UserDetails user) {
+    public PagedMetadata<ContentDto> getContents(RestEntityListRequest requestList, String modelId, String status, String langCode, UserDetails user) {
         try {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(requestList, "content");
             boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(status));
             List<EntitySearchFilter> filters = requestList.buildEntitySearchFilters();
             EntitySearchFilter[] filtersArr = new EntitySearchFilter[filters.size()];
             filtersArr = filters.toArray(filtersArr);
-            List<FieldSearchFilter> basicFilters = requestList.buildFieldSearchFilters();
-            for (FieldSearchFilter basicFilter : basicFilters) {
-                if (StringUtils.isBlank(basicFilter.getKey())) {
-                    continue;
-                }
-                EntitySearchFilter esf = null;
-                boolean isMetadataFilter = Arrays.asList(IContentManager.METADATA_FILTER_KEYS).contains(basicFilter.getKey());
-                if (null != basicFilter.getValue()) {
-                    esf = new EntitySearchFilter(basicFilter.getKey(), !isMetadataFilter, basicFilter.getValue(), basicFilter.isLikeOption());
-                } else {
-                    esf = new EntitySearchFilter(basicFilter.getKey(), !isMetadataFilter, basicFilter.getStart(), basicFilter.getEnd());
-                }
-                esf.setOrder(basicFilter.getOrder());
-                filtersArr = ArrayUtils.add(filtersArr, esf);
-            }
             List<String> userGroupCodes = this.getAllowedGroups(user, online);
             List<String> result = (online)
                     ? this.getContentManager().loadPublicContentsId(null, true, filtersArr, userGroupCodes)
