@@ -1,11 +1,11 @@
 /*
  * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
@@ -23,7 +23,6 @@ import java.io.UncheckedIOException;
 import java.util.Collections;
 import java.util.EnumSet;
 
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
 import org.entando.entando.aps.system.init.IInitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
@@ -61,12 +60,12 @@ import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.junit.After;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.assertj.core.api.Assertions.assertThat;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
@@ -184,16 +183,16 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
             assertThat(widgetService.getWidget(componentCode)).isNotNull();
 
-
         } finally {
 
-            try { widgetService.removeWidget(componentCode); } catch (ValidationGenericException ignored) { }
+            try {
+                widgetService.removeWidget(componentCode);
+            } catch (ValidationGenericException ignored) {
+            }
 
         }
 
-
     }
-
 
     @Test
     public void shouldInstallPageModel() throws Exception {
@@ -211,8 +210,14 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         } finally {
 
-            try { pageModelService.removePageModel(componentCode); } catch (ValidationGenericException ignored) {}
-            try { labelService.removeLabelGroup(componentAssociatedLabel); } catch (ValidationGenericException ignored) {}
+            try {
+                pageModelService.removePageModel(componentCode);
+            } catch (ValidationGenericException ignored) {
+            }
+            try {
+                labelService.removeLabelGroup(componentAssociatedLabel);
+            } catch (ValidationGenericException ignored) {
+            }
 
         }
 
@@ -231,7 +236,10 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         } finally {
 
-            try { groupService.removeGroup(componentCode); } catch (ValidationGenericException ignored) {}
+            try {
+                groupService.removeGroup(componentCode);
+            } catch (ValidationGenericException ignored) {
+            }
 
         }
 
@@ -250,7 +258,10 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
             assertThat(role.getPermissions().get("superuser")).isTrue();
 
         } finally {
-            try { roleService.removeRole(componentCode); } catch (ValidationGenericException ignored) {}
+            try {
+                roleService.removeRole(componentCode);
+            } catch (ValidationGenericException ignored) {
+            }
         }
     }
 
@@ -259,7 +270,6 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
         String componentCode = "de_test_page_model";
         String componentAssociatedLabel = "DE_TEST_LABEL";
-
 
         installAndCheckForCompletion(componentCode);
 
@@ -272,7 +282,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         try {
             PageModelDto pageModelDto = pageModelService.getPageModel(componentCode);
             throw new Exception("PageModel " + componentCode + " should not be found after component uninstall");
-        } catch (RestRourceNotFoundException ex){
+        } catch (ResourceNotFoundException ex) {
 
             assertThat(ex.getErrorCode()).isEqualTo(PageModelValidator.ERRCODE_PAGEMODEL_NOT_FOUND);
             assertThat(ex.getObjectCode()).isEqualTo(componentCode);
@@ -282,17 +292,14 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         try {
             labelService.getLabelGroup(componentAssociatedLabel);
             throw new Exception("Label " + componentAssociatedLabel + " should not be found after component uninstall");
-        } catch (RestRourceNotFoundException ex) {
-
+        } catch (ResourceNotFoundException ex) {
             assertThat(ex.getErrorCode()).isEqualTo(LabelValidator.ERRCODE_LABELGROUP_NOT_FOUND);
             assertThat(ex.getObjectCode()).isEqualTo(componentAssociatedLabel);
             assertThat(ex.getObjectName()).isEqualTo("label");
-
         }
 
         assertThat(storageManager.exists("components/de_test_page_model/test.css", false)).isFalse();
         assertThat(storageManager.exists("components/de_test_page_model/", true)).isFalse();
-
 
     }
 
