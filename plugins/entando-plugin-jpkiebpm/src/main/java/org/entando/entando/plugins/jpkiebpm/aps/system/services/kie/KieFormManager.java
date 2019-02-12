@@ -1421,6 +1421,91 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
     }
 
+    @Override
+    public Set<String> getProcessVariables(KieBpmConfig config, String containerId, String processId) throws ApsSystemException{
+
+
+        HashMap headersMap = new HashMap();
+        String result = null;
+        JSONObject json = null;
+        try {
+            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_GET_PROCESS_VARIABLES)).resolveParams(containerId, processId);
+            headersMap.put("Accept", "application/json");
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            result = (new KieRequestBuilder(client)).setEndpoint(t).setHeaders(headersMap).setDebug(config.getDebug().booleanValue()).doRequest();
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                logger.debug("received successful message: ", result);
+            } else {
+                logger.debug("received empty case definitions message: ");
+            }
+
+            JSONObject variables =  json.getJSONObject("variables");
+
+            return variables.keySet();
+        } catch (Throwable t) {
+            logger.error("Failed to fetch case details ", t);
+            throw new ApsSystemException("Error getting the cases definitions", t);
+        }
+    }
+
+    @Override
+    public Map<String, String> getProcessVariableInstances(KieBpmConfig config, String processInstanceIdd) throws ApsSystemException{
+
+
+        HashMap headersMap = new HashMap();
+        Map<String, String> processVars = new HashMap<>();
+        String result = null;
+        JSONObject json = null;
+        try {
+            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_GET_PROCESS_VARIABLE_INSTANCES)).resolveParams(processInstanceIdd);
+            headersMap.put("Accept", "application/json");
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            result = (new KieRequestBuilder(client)).setEndpoint(t).setHeaders(headersMap).setDebug(config.getDebug().booleanValue()).doRequest();
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                logger.debug("received successful message: ", result);
+            } else {
+                logger.debug("received empty case definitions message: ");
+            }
+
+            JSONArray variables =  json.getJSONArray("variable-instance");
+
+            for(Object var : variables.toList()){
+
+                Map jsonVar =  (Map)var;
+                processVars.put(jsonVar.get("name")+"", jsonVar.get("value")+"");
+            }
+
+            return processVars;
+        } catch (Throwable t) {
+            logger.error("Failed to fetch case details ", t);
+            throw new ApsSystemException("Error getting the cases definitions", t);
+        }
+    }
+
+
+    //HACK IN SOME STATE. TODO Fix this and delete.
+    private Map<String, String> casePathChannel = new HashMap<>();
+    private Map<String, KieBpmConfig> configForChannel = new HashMap<>();
+
+    public void setCasePathForChannel(String channel, String path) {
+        this.casePathChannel.put(channel, path);
+    }
+
+    public String getCasePathForChannel(String channel) {
+        return casePathChannel.get(channel);
+    }
+
+    public KieBpmConfig getConfigForChannel(String channel) {
+        return configForChannel.get(channel);
+    }
+
+    public void setConfigForChannel(String channel, KieBpmConfig config) {
+        configForChannel.put(channel, config);
+    }
+
+
     private IKieFormOverrideManager overrideManager;
 
     public enum TASK_STATES {

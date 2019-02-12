@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Entando
@@ -79,7 +80,7 @@ public interface IKieFormManager {
      * @return
      * @throws ApsSystemException
      */
-    List<KieProcess> getProcessDefinitionsList(KieBpmConfig config ) throws ApsSystemException;
+    List<KieProcess> getProcessDefinitionsList(KieBpmConfig config) throws ApsSystemException;
 
     /**
      * Get the process instances give the process ID
@@ -159,7 +160,6 @@ public interface IKieFormManager {
     String getProcInstDiagramImage(KieBpmConfig config, String containerId) throws ApsSystemException;
 
 
-    
     /**
      * Get the process diagram
      *
@@ -269,7 +269,6 @@ public interface IKieFormManager {
     String setTaskState(KieBpmConfig config, String containerId, String taskId, final TASK_STATES state, Map<String, Object> input, Map<String, String> opt) throws Throwable;
 
     /**
-     *
      * @param user
      * @param opt
      * @return
@@ -280,7 +279,6 @@ public interface IKieFormManager {
     public List<KieTask> getHumanTaskListForAdmin(KieBpmConfig config, String user, Map<String, String> opt) throws ApsSystemException;
 
     /**
-     *
      * @param input
      * @param opt
      * @return
@@ -289,7 +287,6 @@ public interface IKieFormManager {
     public KieProcessInstancesQueryResult getProcessInstancesWithClientData(KieBpmConfig config, Map<String, String> input, Map<String, String> opt) throws Throwable;
 
     /**
-     *
      * @param user
      * @param containerId
      * @param taskId
@@ -301,7 +298,7 @@ public interface IKieFormManager {
      */
     public boolean getCompleteEnrichmentDcumentApprovalTask(KieBpmConfig config, String user, String containerId, String taskId, TASK_STATES state, String review, Map<String, String> opt) throws ApsSystemException;
 
-    public Map<String, String > getHostNameVersionMap();
+    public Map<String, String> getHostNameVersionMap();
 
     public JSONArray getKieServerStatus() throws ApsSystemException;
 
@@ -319,4 +316,11 @@ public interface IKieFormManager {
 
     public String executeStartCase(KieBpmConfig config, String json, String container, String instance) throws ApsSystemException;
 
+    public Set<String> getProcessVariables(KieBpmConfig config, String container, String processid) throws ApsSystemException;
+
+    public Map<String, String> getProcessVariableInstances(KieBpmConfig config, String processInstanceIdd) throws ApsSystemException;
+
+    public void setCasePathForChannel(String channel, String path);
+
+    public String getCasePathForChannel(String channel);
 }

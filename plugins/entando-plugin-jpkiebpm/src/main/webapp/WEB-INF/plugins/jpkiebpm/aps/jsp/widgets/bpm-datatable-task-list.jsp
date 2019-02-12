@@ -33,7 +33,7 @@
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     function addRow(data, label, index) {
-        var html = "<tr><td>" + label + "</td><td>" + data[index] + "</td></tr>"
+        var html = "<tr><td>" + label + "</td><td>" + data[index] + "xxx</td></tr>"
         return data[index] === undefined ? "" : html;
     }
 
@@ -60,7 +60,7 @@
     function getTemplateTaskDetail(data) {
         var template =
                 "<tr><td>Task id</td><td>" + data['task-id'] + "</td></tr>\n" +
-                "<tr><td>Task name</td><td>" + data['task-name'] + "</td></tr>\n" +
+                "<tr><td>Task namexxx</td><td>" + data['task-name'] + "</td></tr>\n" +
                 "<tr><td>Task form</td><td>" + data['task-form'] + "</td></tr>\n" +
                 "<tr><td>Task priority</td><td>" + data['task-priority'] + "</td></tr>\n" +
                 "<tr><td>Task status</td><td>" + data['task-status'] + "</td></tr>\n" +
@@ -83,7 +83,7 @@
     function getTemplateTaskData(data) {
         var length = data.fields.fieldset.field.length;
         var fields = data.fields.fieldset.field;
-        var template = '<tr>';
+        var template = "<tr>zz";
         for (i = 0; i < length; i++) {
             template += "<td>" + capitalize(fields[i].name) + "<br/>" + fields[i].value + "</td>\n";
         }
@@ -234,8 +234,25 @@
                         items = Array.isArray(items) ? items : [items];
                         items = items.map(function (item) {
                         item['activated'] = new Date(item['activated']).toLocaleString();
-                                item['created'] = new Date(item['created']).toLocaleString();
-                                return item;
+                        item['created'] = new Date(item['created']).toLocaleString();
+
+                            const reduceKeyValuePairs = pairs => pairs.reduce((acc, pair) => ({
+                                    ...acc,
+                                    [pair.key]: pair.value,
+                        }), {});
+
+
+                            const kvpWithEntryField = {
+                                    ...item,
+                            ...reduceKeyValuePairs(item.processVariables.entry)
+                        };
+
+                            const {
+                                    processVariables,
+                            ...dest
+                        } = kvpWithEntryField;
+
+                            return dest;
                         });
                         var containerId = data.response.result.taskList.containerId;
 
