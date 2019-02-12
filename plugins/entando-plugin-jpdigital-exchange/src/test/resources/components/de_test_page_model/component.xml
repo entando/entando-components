@@ -34,5 +34,9 @@
         </sqlResources>
         <resources>
         </resources>
+        <execution>
+            <op>#call('deleteLabel', 'DE_TEST_LABEL')</op>
+            <op>#call('deletePageModel', 'de_test_page_model')</op>
+        </execution>
     </uninstallation>
 </component>

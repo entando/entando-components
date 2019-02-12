@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import java.util.Optional;
 import org.junit.Test;
@@ -29,16 +29,16 @@ import static org.mockito.Mockito.when;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DigitalExchangeComponentInstallationServiceTest {
+public class DigitalExchangeComponentJobsServiceTest {
 
     @Mock
     private DigitalExchangesService exchangesService;
 
     @Mock
-    private DigitalExchangeComponentInstallationDAO dao;
+    private DigitalExchangeJobDAO dao;
 
     @Mock
-    private ComponentInstaller componentInstaller;
+    private DigitalExchangeInstallExecutor digitalExchangeInstallExecutor;
 
     @InjectMocks
     private DigitalExchangeComponentInstallationServiceImpl service;
@@ -49,9 +49,9 @@ public class DigitalExchangeComponentInstallationServiceTest {
         when(exchangesService.findById(DE_1_ID)).thenReturn(getDE1());
 
         String errorMsg = "error_msg";
-        doThrow(new InstallationException(errorMsg)).when(componentInstaller).install(any(), any());
+        doThrow(new JobExecutionException(errorMsg)).when(digitalExchangeInstallExecutor).execute(any(), any());
 
-        ComponentInstallationJob job = service.install(DE_1_ID, "test", "admin");
+        DigitalExchangeJob job = service.install(DE_1_ID, "test", "admin");
         assertThat(job).isNotNull();
         assertThat(job.getId()).hasSize(20);
 
@@ -60,16 +60,16 @@ public class DigitalExchangeComponentInstallationServiceTest {
         } catch (InterruptedException ignored) {
         }
 
-        assertThat(job.getStatus()).isEqualTo(InstallationStatus.ERROR);
+        assertThat(job.getStatus()).isEqualTo(JobStatus.ERROR);
         assertThat(job.getErrorMessage()).isEqualTo(errorMsg);
     }
 
     @Test(expected = ValidationConflictException.class)
     public void testAlreadyRunning() {
 
-        ComponentInstallationJob job = new ComponentInstallationJob();
-        job.setStatus(InstallationStatus.IN_PROGRESS);
-        when(dao.findLast("test")).thenReturn(Optional.of(job));
+        DigitalExchangeJob job = new DigitalExchangeJob();
+        job.setStatus(JobStatus.IN_PROGRESS);
+        when(dao.findLast("test", JobType.INSTALL)).thenReturn(Optional.of(job));
 
         service.install(DE_1_ID, "test", "admin");
     }

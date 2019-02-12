@@ -19,7 +19,7 @@
 	<bean id="jacmsAbstractResource" abstract="true" 
 			class="com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractResource" >
 		<property name="storageManager" ref="StorageManager" />
-		<property name="protectedBaseURL" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceRootURL" /></property>
+		<property name="protectedBaseURL" ><value>${protectedResourceRootURL}</value></property>
                 <property name="metadataIgnoreKeys"><value>${jacms.imgMetadata.ignoreKeys}</value></property>
         </bean>
 	

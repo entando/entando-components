@@ -11,12 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
-public enum InstallationStatus {
-    
-    CREATED,
-    IN_PROGRESS,
-    COMPLETED,
-    ERROR
+public interface DigitalExchangeComponentInstallationService {
+
+    DigitalExchangeJob install(String exchangeId, String componentId, String username);
+
+    DigitalExchangeJob uninstall(String componentId, String username);
+
+    DigitalExchangeJob checkJobStatus(String componentId, JobType jobType);
+
 }

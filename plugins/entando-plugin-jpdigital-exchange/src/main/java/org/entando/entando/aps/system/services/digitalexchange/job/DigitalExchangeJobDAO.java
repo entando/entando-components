@@ -11,15 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import java.util.Optional;
 
-public interface DigitalExchangeComponentInstallationDAO {
+public interface DigitalExchangeJobDAO {
 
-    void createComponentInstallationJob(ComponentInstallationJob job);
+    void createJob(DigitalExchangeJob job);
 
-    Optional<ComponentInstallationJob> findLast(String componentId);
+    Optional<DigitalExchangeJob> findLast(String componentId, JobType jobType);
 
-    void updateComponentInstallationJob(ComponentInstallationJob job);
+    void updateJob(DigitalExchangeJob job);
 }

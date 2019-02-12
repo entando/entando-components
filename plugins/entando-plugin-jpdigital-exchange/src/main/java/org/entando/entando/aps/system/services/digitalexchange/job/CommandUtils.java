@@ -11,15 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
-public class InstallationException extends RuntimeException {
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 
-    public InstallationException(String message) {
-        super(message);
-    }
+/**
+ * Utility methods used to register custom SpEL functions.
+ */
+public class CommandUtils {
 
-    public InstallationException(String message, Throwable cause) {
-        super(message, cause);
+    public static BindingResult getBindingResult() {
+        return new DataBinder(null).getBindingResult();
     }
 }

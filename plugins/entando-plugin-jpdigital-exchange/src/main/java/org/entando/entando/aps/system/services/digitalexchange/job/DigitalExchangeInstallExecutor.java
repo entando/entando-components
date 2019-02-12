@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.digitalexchange.install;
+package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.util.ApsWebApplicationUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,12 +23,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import javax.servlet.ServletContext;
+
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
@@ -41,43 +40,28 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
-import org.jdom.Document;
-import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.context.ServletContextAware;
 
 @org.springframework.stereotype.Component
-public class ComponentInstaller implements ServletContextAware {
+public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobExecutor {
 
-    private static final Logger logger = LoggerFactory.getLogger(ComponentInstaller.class);
-
-    private static final String RESOURCES_DIR = "resources";
-
-    private final DigitalExchangesClient client;
-    private final ComponentStorageManager storageManager;
-    private final DatabaseManager databaseManager;
-    private final InitializerManager initializerManager;
-    private final CommandExecutor commandExecutor;
-
-    private ServletContext servletContext;
+    private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeInstallExecutor.class);
 
     @Autowired
-    public ComponentInstaller(DigitalExchangesClient client, ComponentStorageManager storageManager,
-            DatabaseManager databaseManager, InitializerManager initializerManager,
-            CommandExecutor commandExecutor) {
-        this.client = client;
-        this.storageManager = storageManager;
-        this.databaseManager = databaseManager;
-        this.initializerManager = initializerManager;
-        this.commandExecutor = commandExecutor;
+    public DigitalExchangeInstallExecutor(DigitalExchangesClient client, ComponentStorageManager storageManager,
+                                          DatabaseManager databaseManager, InitializerManager initializerManager,
+                                          CommandExecutor commandExecutor) {
+        super(client, storageManager, databaseManager, initializerManager, commandExecutor);
     }
 
-    public void install(ComponentInstallationJob job, Consumer<ComponentInstallationJob> updater) throws InstallationException {
+    @Override
+    public void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> updater) throws JobExecutionException {
 
+        //TODO defines steps and percentages as Enums
         double steps = 6;
         int currentStep = 0;
         
@@ -93,7 +77,7 @@ public class ComponentInstaller implements ServletContextAware {
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
-        updateDatabase(component);
+        initializeComponent(component);
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
@@ -101,14 +85,11 @@ public class ComponentInstaller implements ServletContextAware {
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
-        reloadSystem();
-        job.setProgress(1);
-        job.setStatus(InstallationStatus.COMPLETED);
-        job.setEnded(new Date());
-        updater.accept(job);
+        completeJob(job, updater);
+
     }
 
-    private void fillComponentInfo(ComponentInstallationJob job) {
+    private void fillComponentInfo(DigitalExchangeJob job) {
 
         RestListRequest requestList = new RestListRequest();
         requestList.setPage(1);
@@ -133,7 +114,7 @@ public class ComponentInstaller implements ServletContextAware {
         List<DigitalExchangeComponent> components = response.getPayload();
 
         if (components.size() != 1) {
-            throw new InstallationException("Found " + components.size() + " components for " + job.getComponentId());
+            throw new JobExecutionException("Found " + components.size() + " components for " + job.getComponentId());
         }
         
         DigitalExchangeComponent component = components.get(0);
@@ -141,7 +122,7 @@ public class ComponentInstaller implements ServletContextAware {
         job.setComponentVersion(component.getVersion());
     }
 
-    private void downloadComponent(ComponentInstallationJob job) {
+    private void downloadComponent(DigitalExchangeJob job) {
 
         Path tempZipPath = null;
 
@@ -160,7 +141,7 @@ public class ComponentInstaller implements ServletContextAware {
 
         } catch (IOException | UncheckedIOException ex) {
             logger.error("Error while downloading component", ex);
-            throw new InstallationException("Unable to save component", ex);
+            throw new JobExecutionException("Unable to save component", ex);
         } finally {
             if (tempZipPath != null) {
                 if (!tempZipPath.toFile().delete()) {
@@ -197,11 +178,11 @@ public class ComponentInstaller implements ServletContextAware {
             }
         } catch (ApsSystemException | IOException ex) {
             logger.error("Error while extracting zip file", ex);
-            throw new InstallationException("Unable to extract zip file", ex);
+            throw new JobExecutionException("Unable to extract zip file", ex);
         }
     }
 
-    private void updateDatabase(ComponentDescriptor component) {
+    private void initializeComponent(ComponentDescriptor component) {
 
         try {
 
@@ -216,40 +197,9 @@ public class ComponentInstaller implements ServletContextAware {
 
         } catch (ApsSystemException ex) {
             logger.error("Error during component installation", ex);
-            throw new InstallationException("Unable to install component", ex);
+            throw new JobExecutionException("Unable to install component", ex);
         }
     }
 
-    private ComponentDescriptor parseComponentDescriptor(String componentCode) {
 
-        String componentDefinitionPath = componentCode + File.separator + "component.xml";
-
-        try {
-            if (!storageManager.existsProtected(componentDefinitionPath)) {
-                throw new InstallationException("component.xml not found for " + componentCode);
-            }
-
-            try (InputStream in = storageManager.getProtectedStream(componentDefinitionPath)) {
-                Document document = new SAXBuilder().build(in);
-                return new ComponentDescriptor(document.getRootElement(), storageManager);
-            }
-        } catch (Throwable t) {
-            logger.error("Error during component defintion parsing", t);
-            throw new InstallationException("Unable to parse component.xml for " + componentCode);
-        }
-    }
-
-    protected void reloadSystem() {
-        try {
-            ApsWebApplicationUtils.executeSystemRefresh(servletContext);
-        } catch (Throwable t) {
-            logger.error("Error during system reloading", t);
-            throw new InstallationException("Unable to reload the system after the installation");
-        }
-    }
-
-    @Override
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
-    }
 }
