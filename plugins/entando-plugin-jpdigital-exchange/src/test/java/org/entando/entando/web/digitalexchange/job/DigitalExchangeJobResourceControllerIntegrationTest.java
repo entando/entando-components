@@ -73,7 +73,7 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
                 .andExpect(jsonPath("$.metaData.totalItems", is(1)))
                 .andExpect(jsonPath("$.payload[0].id", is("job2")));
 
-        result = createAuthRequest(get("/digitalExchange/job")
+        result = createAuthRequest(get("/digitalExchange/jobs")
                 .param("filters[0].attribute", "progress")
                 .param("filters[0].operator", "lt")
                 .param("filters[0].value", "0.5")).execute();
@@ -82,7 +82,7 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
                 .andExpect(jsonPath("$.metaData.totalItems", is(1)))
                 .andExpect(jsonPath("$.payload[0].id", is("job1")));
 
-        result = createAuthRequest(get("/digitalExchange/job")
+        result = createAuthRequest(get("/digitalExchange/jobs")
                 .param("filters[0].attribute", "id")
                 .param("filters[0].operator", "eq")
                 .param("filters[0].value", "job1")).execute();
@@ -91,7 +91,7 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
                 .andExpect(jsonPath("$.metaData.totalItems", is(1)))
                 .andExpect(jsonPath("$.payload[0].id", is("job1")));
 
-        result = createAuthRequest(get("/digitalExchange/job")
+        result = createAuthRequest(get("/digitalExchange/jobs")
                 .param("filters[0].attribute", "jobType")
                 .param("filters[0].operator", "eq")
                 .param("filters[0].value", "UNINSTALL")).execute();
