@@ -23,8 +23,8 @@ import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExc
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClientTest;
 import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentsServiceTest;
 import org.entando.entando.aps.system.services.digitalexchange.job.ComponentDescriptorTest;
-import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJobExecutorTest;
 import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeComponentJobsServiceTest;
+import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJobExecutorTest;
 import org.entando.entando.aps.system.services.pagemodel.DigitalExchangePageModelServiceTest;
 import org.entando.entando.web.digitalexchange.DigitalExchangesControllerIntegrationTest;
 import org.entando.entando.web.digitalexchange.DigitalExchangesControllerTest;
@@ -33,6 +33,7 @@ import org.entando.entando.web.digitalexchange.category.DigitalExchangeCategorie
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponentsControllerIntegrationTest;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponentsControllerTest;
 import org.entando.entando.web.digitalexchange.job.DigitalExchangeInstallResourceIntegrationTest;
+import org.entando.entando.web.digitalexchange.job.DigitalExchangeJobResourceControllerIntegrationTest;
 import org.entando.entando.web.pagemodel.DigitalExchangePageModelControllerIntegrationTest;
 import org.entando.entando.web.pagemodel.DigitalExchangePageModelControllerTest;
 
@@ -74,8 +75,10 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeCategoriesControllerTest.class));
 
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeInstallResourceIntegrationTest.class));
-        
+
         suite.addTest(new JUnit4TestAdapter(DigitalExchangePageModelControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangePageModelControllerTest.class));
+
+        suite.addTest(new JUnit4TestAdapter(DigitalExchangeJobResourceControllerIntegrationTest.class));
     }
 }

@@ -19,6 +19,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

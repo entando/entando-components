@@ -91,7 +91,7 @@
 	<bean id="jpwebformGuiGeneratorManager" class="org.entando.entando.plugins.jpwebform.aps.system.services.form.GuiGeneratorManager"
 			parent="abstractService" >
 		<property name="formManager" ref="jpwebformFormManager" />
-		<property name="resourceDiskRootFolder" ><jee:jndi-lookup jndi-name="java:comp/env/resourceDiskRootFolder" /></property>
+		<property name="resourceDiskRootFolder" ><value>${resourceDiskRootFolder}</value></property>
 	</bean>
 	
 	<bean id="jpwebformUserGuiGenerator" class="org.entando.entando.plugins.jpwebform.aps.system.services.form.UserGuiGenerator" >
