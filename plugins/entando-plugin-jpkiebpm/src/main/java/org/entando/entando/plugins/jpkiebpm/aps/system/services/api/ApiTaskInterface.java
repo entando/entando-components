@@ -30,24 +30,27 @@ import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.DatatableFieldDefinition;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBTask;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBTaskList;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.KieApiManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.json.JSONObject;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFields;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFieldset;
 
 public class ApiTaskInterface extends KieApiManager {
 
@@ -305,9 +308,17 @@ public class ApiTaskInterface extends KieApiManager {
                     //Filter the user tasks by process id configured on the widget.
                     filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
 
+                    //TODO Replace this
+                    for(JAXBTask task : taskList.getList()) {
+                        Long processId = task.getProcessInstanceId();
+
+                        Map<String, String> vars = this.getKieFormManager().getProcessVariableInstances(bpmConfig, processId+"");
+                        task.setProcessVariables(vars);
+                    }
+
                     return taskList;
                 }
-            } catch (ApsSystemException e) {
+            } catch (Exception e) {
                 logger.error("Error {}", e);
             }
         }
@@ -334,6 +345,7 @@ public class ApiTaskInterface extends KieApiManager {
         KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
 
         KieTaskDetail taskDetail = this.getKieFormManager().getTaskDetail(bpmConfig, containerId, Long.valueOf(taskIdString), opt);
+
         if (null == taskDetail) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
@@ -402,6 +414,7 @@ public class ApiTaskInterface extends KieApiManager {
         JSONObject taskData = this.getKieFormManager().getTaskFormData(bpmConfig, containerId, Long.valueOf(taskIdString), null);
 
         JSONObject inputData = taskData.getJSONObject("task-input-data");
+        this.getKieFormManager().setCasePathForChannel("1", (String)inputData.get("Exception ID"));
 
         mergeTaskData(inputData, processForm);
 
@@ -477,7 +490,7 @@ public class ApiTaskInterface extends KieApiManager {
                     fieldsList.add(apifield);
                 } catch (Exception ex) {
                     logger.error("Error adding task data field{}", ex);
-
+                    
                 }
             }
 

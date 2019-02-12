@@ -93,8 +93,8 @@ public class KieEndpointDictionary {
         endpoints.put(API_ADMIN_GET_CASES, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/admin/cases/instances?sortOrder=false", HttpStatus.SC_OK));
         endpoints.put(API_POST_RUN_ADDITIONAL_INFO_RULES, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/containers/instances/%s", HttpStatus.SC_OK, true));
         endpoints.put(API_POST_START_CASE, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/containers/%s/cases/%s/instances", HttpStatus.SC_CREATED, true));
-
-
+        endpoints.put(API_GET_PROCESS_VARIABLES, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/processes/definitions/%s/variables", HttpStatus.SC_OK, true));
+        endpoints.put(API_GET_PROCESS_VARIABLE_INSTANCES, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/queries/processes/instances/%s/variables/instances", HttpStatus.SC_OK, true));
 
     }
 

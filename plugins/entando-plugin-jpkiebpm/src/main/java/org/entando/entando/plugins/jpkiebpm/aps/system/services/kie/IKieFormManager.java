@@ -27,9 +27,13 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager.TASK_STATES;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Entando
@@ -76,7 +80,7 @@ public interface IKieFormManager {
      * @return
      * @throws ApsSystemException
      */
-    List<KieProcess> getProcessDefinitionsList(KieBpmConfig config ) throws ApsSystemException;
+    List<KieProcess> getProcessDefinitionsList(KieBpmConfig config) throws ApsSystemException;
 
     /**
      * Get the process instances give the process ID
@@ -298,7 +302,7 @@ public interface IKieFormManager {
      */
     public boolean getCompleteEnrichmentDcumentApprovalTask(KieBpmConfig config, String user, String containerId, String taskId, TASK_STATES state, String review, Map<String, String> opt) throws ApsSystemException;
 
-    public Map<String, String > getHostNameVersionMap();
+    public Map<String, String> getHostNameVersionMap();
 
     public JSONArray getKieServerStatus() throws ApsSystemException;
 
@@ -316,4 +320,11 @@ public interface IKieFormManager {
 
     public String executeStartCase(KieBpmConfig config, String json, String container, String instance) throws ApsSystemException;
 
+    public Set<String> getProcessVariables(KieBpmConfig config, String container, String processid) throws ApsSystemException;
+
+    public Map<String, String> getProcessVariableInstances(KieBpmConfig config, String processInstanceIdd) throws ApsSystemException;
+
+    public void setCasePathForChannel(String channel, String path);
+
+    public String getCasePathForChannel(String channel);
 }
