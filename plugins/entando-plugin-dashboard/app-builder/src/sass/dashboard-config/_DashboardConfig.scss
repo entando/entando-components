@@ -1,16 +1,16 @@
 .DashboardConfig {
-  border: 0px solid;
+  border: 0 solid;
+  padding: 2em;
 
   &__form {
-    border: 0px solid;
+    border: 0 solid;
     padding: 2em;
     margin-top: 6em;
   }
 
-&__form legend {
+  &__form legend {
     font-size: 12px;
   }
-
 
   &__server-configure {
     margin-bottom: 1em;

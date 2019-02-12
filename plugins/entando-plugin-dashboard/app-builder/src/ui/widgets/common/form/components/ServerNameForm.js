@@ -9,7 +9,7 @@ import FormLabel from "ui/common/form/FormLabel";
 const ServerNameForm = ({serverNames, onChange, labelSize}) => {
   const selectOptionsServerName = serverNames.map(m => ({
     value: m.id,
-    text: m.name
+    text: m.serverDescription
   }));
   return (
     <InputGroup className="ServerNameForm__input-group">

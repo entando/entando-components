@@ -3,15 +3,15 @@ import PropTypes from "prop-types";
 
 import ConfigPageContainer from "ui/dashboard-config/list/containers/DashboardConfigPageContainer";
 import DashboardConfigAddPage from "ui/dashboard-config/add/components/DashboardConfigAddPage";
-// import ServerConfigEditPage from "ui/dashboard-config/add/ServerConfigEditPage";
+import DashboardConfigEditPage from "ui/dashboard-config/add/components/DashboardConfigEditPage";
 
 const SubRouter = ({pluginPage}) => {
   console.log("SubRouter pluginPage", pluginPage);
   switch (pluginPage) {
     case "add":
       return <DashboardConfigAddPage />;
-    // case "edit":
-    //   return <ServerConfigEditPage />;
+    case "edit":
+      return <DashboardConfigEditPage />;
     default:
       return <ConfigPageContainer />;
   }

@@ -3,6 +3,8 @@ import {formValueSelector} from "redux-form";
 
 import DashboardConfigForm from "ui/dashboard-config/common/components/DashboardConfigForm";
 
+import {createServerConfig, updateServerConfig} from "state/main/actions";
+
 const selector = formValueSelector("dashboard-config-form");
 
 const mapStateToProps = state => ({
@@ -13,9 +15,14 @@ const mapStateToProps = state => ({
   datasources: selector(state, "datasources") || []
 });
 
-const mapDispatchToProps = () => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmit: values => {
     console.log("values", values);
+    if (ownProps.mode === "add") {
+      dispatch(createServerConfig(values));
+    } else if (ownProps.mode === "edit") {
+      dispatch(updateServerConfig(values));
+    }
   },
   testConnection: () => {
     console.log("test connection");

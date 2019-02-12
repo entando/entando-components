@@ -36,6 +36,7 @@ class DashboardConfigPage extends Component {
               bsStyle="warning"
               className="DashboardConfigPage__btn-tests pull-right"
               onClick={testAllConfigItems}
+              disabled
             >
               <FormattedMessageLocal id="plugin.config.testServers" />
             </Button>

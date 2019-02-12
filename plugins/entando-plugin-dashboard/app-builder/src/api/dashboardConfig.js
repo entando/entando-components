@@ -5,9 +5,9 @@ import {
   DATASOURCES_DATA
 } from "mocks/dashboardConfigs";
 
-export const getServerConfigs = () =>
+export const getServerConfig = () =>
   makeMockRequest({
-    uri: "/api/plugin/dashboard/serverConfigs",
+    uri: "/api/plugin/dashboard/serverConfig",
     method: METHODS.GET,
     mockResponse: DASHBOARD_CONFIG_LIST,
     useAuthentication: false
@@ -15,7 +15,7 @@ export const getServerConfigs = () =>
 
 export const postServerConfig = serverConfig =>
   makeMockRequest({
-    uri: "/api/plugin/dashboard/serverConfigs",
+    uri: "/api/plugin/dashboard/serverConfig",
     method: METHODS.POST,
     body: serverConfig,
     mockResponse: {...serverConfig},
@@ -24,7 +24,7 @@ export const postServerConfig = serverConfig =>
 
 export const putServerConfig = serverConfig =>
   makeMockRequest({
-    uri: `/api/plugin/dashboard/serverConfigs/${serverConfig.id}`,
+    uri: `/api/plugin/dashboard/serverConfig/${serverConfig.id}`,
     method: METHODS.PUT,
     body: serverConfig,
     mockResponse: {...serverConfig},
@@ -33,7 +33,7 @@ export const putServerConfig = serverConfig =>
 
 export const deleteServerConfig = serverConfigId =>
   makeMockRequest({
-    uri: `/api/plugin/dashboard/serverConfigs/${serverConfigId}`,
+    uri: `/api/plugin/dashboard/serverConfig/${serverConfigId}`,
     method: METHODS.DELETE,
     mockResponse: {},
     useAuthentication: false

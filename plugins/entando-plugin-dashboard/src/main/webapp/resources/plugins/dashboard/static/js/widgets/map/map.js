@@ -110,5 +110,5 @@ $(document).ready(() => {
   map.showData(CONFIG_MAP.datasources);
   setInterval(() => {
     map.showData(CONFIG_MAP.datasources);
-  }, 3000);
+  }, 20000);
 });

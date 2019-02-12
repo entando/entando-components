@@ -39,36 +39,58 @@ export const DEVICE4 = {
   information: "Parcheggi Piazza Matteoti"
 };
 
+export const DEVICE_TEMPERATURE = {
+  temperature: 25,
+  timestamp: "2019-02-12T11:03:22+00:00"
+};
+
 export const DASHBOARD_CONFIG_LIST = [
   {
-    active: false,
+    active: true,
     debug: false,
-    id: "6ce983ca69c5448599328173084710ef20180504T094803416",
-    name: "Entando IoT Server Devices",
+    id: "1",
+    serverDescription: "KAA IoT Server Devices CRS4",
     username: "admin",
-    password: "passwordAdmin",
-    uri: "http://entando.iot.com:3303/iot",
+    password: "adminadmin",
+    serverURI: "http://kaa.entando.iot.com:3303",
+    token: "token-code",
+    timeout: 300
+  },
+  {
+    active: true,
+    debug: false,
+    id: "2",
+    serverDescription: "KAA IoT Server PIA",
+    username: "admin",
+    password: "adminadmin",
+    serverURI: "http://kaa.entando.iot.com:3303",
     token: "token-code",
     timeout: 300
   }
 ];
 
+export const DATASOURCE_TEMPERATURE = {
+  id: "temperature",
+  datasource: "Temperature Sensor",
+  datasourceURI: "/api/temperature",
+  status: "ok"
+};
 export const DATASOURCE_PARKING = {
   id: "parking",
   datasource: "Parking Area",
-  datasourceUri: "parking/devices/",
+  datasourceURI: "parking/devices/",
   status: "ok"
 };
 export const DATASOURCE_BIKE_SHARING = {
   id: "bike",
   datasource: "Bike Sharing",
-  datasourceUri: "bike-sharing/devices/",
+  datasourceURI: "bike-sharing/devices/",
   status: "ok"
 };
 export const DATASOURCE_BUS_STATION = {
   id: "bus",
   datasource: "Bus station",
-  datasourceUri: "bus-station/devices/",
+  datasourceURI: "bus-station/devices/",
   status: "ok"
 };
 
@@ -104,19 +126,27 @@ export const DATASOURCE_BUS_DATA = {
   ],
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
+export const DATASOURCE_TEMPERATURE_DATA = {
+  id: "temperature",
+  columns: [
+    {key: "temperature", value: "temperature", hidden: false},
+    {key: "timestamp", value: "timestamp", hidden: false}
+  ],
+  data: []
+};
 
 export const DATASOURCES_DATA = {
-  "6ce983ca69c5448599328173084710ef20180504T094803416": {
+  "1": {
     parking: DATASOURCE_PARKING_DATA,
     bike: DATASOURCE_BIKE_DATA,
     bus: DATASOURCE_BUS_DATA
+  },
+  "2": {
+    temperature: DATASOURCE_TEMPERATURE_DATA
   }
 };
 
 export const DASHBOARD_LIST_DATASOURCE = {
-  "6ce983ca69c5448599328173084710ef20180504T094803416": [
-    DATASOURCE_PARKING,
-    DATASOURCE_BIKE_SHARING,
-    DATASOURCE_BUS_STATION
-  ]
+  "1": [DATASOURCE_PARKING, DATASOURCE_BIKE_SHARING, DATASOURCE_BUS_STATION],
+  "2": [DATASOURCE_TEMPERATURE]
 };

@@ -6,7 +6,7 @@ import {formValueSelector} from "redux-form";
 import {getPageConfiguration, getLanguages} from "api/appBuilder";
 
 import {
-  getServerConfigs,
+  getServerConfig,
   deleteServerConfig,
   postServerConfig,
   putServerConfig,
@@ -18,6 +18,7 @@ import {
   SET_INFO_PAGE,
   SET_LANGUAGES,
   SET_SERVER_CONFIG_LIST,
+  ADD_SERVER_CONFIG,
   REMOVE_SERVER_CONFIG,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_DATA,
@@ -49,6 +50,13 @@ export const setServerConfigList = serverList => ({
   type: SET_SERVER_CONFIG_LIST,
   payload: {
     serverList
+  }
+});
+
+export const addServerConfig = server => ({
+  type: ADD_SERVER_CONFIG,
+  payload: {
+    server
   }
 });
 
@@ -131,6 +139,7 @@ export const fetchLanguages = () => dispatch =>
   new Promise(resolve => {
     getLanguages().then(response => {
       response.json().then(json => {
+        /* da sostituire quando non ci saranno le API non mockate*/
         if (response.ok) {
           dispatch(setLanguages(json.payload));
         } else {
@@ -142,9 +151,9 @@ export const fetchLanguages = () => dispatch =>
     });
   });
 
-export const fetchServerConfigList = () => dispatch =>
+export const fetchServerConfigList = mockServer => dispatch =>
   new Promise(resolve => {
-    getServerConfigs().then(response => {
+    getServerConfig(mockServer).then(response => {
       if (response.ok) {
         response.json().then(json => {
           dispatch(setServerConfigList(json.payload));
@@ -168,9 +177,13 @@ export const removeServerConfig = id => dispatch =>
 
 export const createServerConfig = serverConfig => dispatch =>
   new Promise(resolve => {
+    console.log("createServerConfig", serverConfig);
     postServerConfig(serverConfig).then(response => {
+      console.log("response", response);
       if (response.ok) {
-        fetchServerConfigList()(dispatch).then(resolve);
+        response.json().then(json => {
+          dispatch(addServerConfig(json.payload));
+        });
       } else {
         resolve();
       }
@@ -182,7 +195,7 @@ export const updateServerConfig = serverConfig => dispatch =>
   new Promise(resolve => {
     putServerConfig(serverConfig).then(response => {
       if (response.ok) {
-        fetchServerConfigList()(dispatch).then(resolve);
+        dispatch(fetchServerConfigList()).then(resolve);
       } else {
         resolve();
       }

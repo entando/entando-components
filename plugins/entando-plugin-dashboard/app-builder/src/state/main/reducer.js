@@ -4,6 +4,7 @@ import {
   SET_INFO_PAGE,
   SET_LANGUAGES,
   SET_SERVER_CONFIG_LIST,
+  ADD_SERVER_CONFIG,
   REMOVE_SERVER_CONFIG,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_COLUMNS,
@@ -34,10 +35,14 @@ const languages = (state = [], action = {}) => {
   }
 };
 
-const dashboardConfig = (state = [], action = {}) => {
+const servers = (state = [], action = {}) => {
   switch (action.type) {
     case SET_SERVER_CONFIG_LIST:
       return action.payload.serverList;
+
+    case ADD_SERVER_CONFIG:
+      return [...state, action.payload.server];
+
     case REMOVE_SERVER_CONFIG:
       return state.filter(config => config.id !== action.payload.configId);
     default:
@@ -98,11 +103,13 @@ export default combineReducers({
     infoPage,
     languages
   }),
-  dashboardConfig,
-  datasource: combineReducers({
-    selected: datasourceSelected,
-    columns: datasourceColumns,
-    data: datasourceData
-  }),
-  datasourceList
+  dashboardConfig: combineReducers({
+    servers,
+    datasourceList,
+    datasource: combineReducers({
+      selected: datasourceSelected,
+      columns: datasourceColumns,
+      data: datasourceData
+    })
+  })
 });

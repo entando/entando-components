@@ -17,7 +17,9 @@ const mapDispatchToProps = dispatch => ({
   editConfigItem: configItem => {
     console.log("editConfigItem", configItem);
   },
-  testConfigItem: () => {},
+  testConfigItem: () => {
+    console.log("Test config");
+  },
   testAllConfigItems: () => {},
   gotoPluginPage: page => dispatch(gotoPluginPage(page))
 });

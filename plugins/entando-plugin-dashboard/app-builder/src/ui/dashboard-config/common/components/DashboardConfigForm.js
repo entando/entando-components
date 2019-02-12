@@ -75,7 +75,7 @@ class DashboardConfigFormBody extends Component {
                 <FormattedMessageLocal id="common.debug" />
               </label>
               <Col xs={1}>
-                <Field component={SwitchRenderer} name="debug" />
+                <Field component={SwitchRenderer} name="debug" disabled />
               </Col>
             </FormGroup>
             <div className="DashboardConfig__server-configure">

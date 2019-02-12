@@ -41,13 +41,23 @@ const ServerConfigCard = ({
       <Card className="card-pf card-pf-view">
         <CardTitle>
           <DropdownKebab id="myKebab" className="pull-right" pullRight>
-            <MenuItem onClick={onClickTest}>
+            <MenuItem
+              className="ServerConfigCard__menu-item-test"
+              onClick={onClickTest}
+              disabled
+            >
               <FormattedMessage id="common.test" />
             </MenuItem>
-            <MenuItem onClick={onClickEdit}>
+            <MenuItem
+              className="ServerConfigCard__menu-item-edit"
+              onClick={onClickEdit}
+            >
               <FormattedMessage id="common.edit" />
             </MenuItem>
-            <MenuItem onClick={onClickRemove}>
+            <MenuItem
+              className="ServerConfigCard__menu-item-remove"
+              onClick={onClickRemove}
+            >
               <FormattedMessage id="common.remove" />
             </MenuItem>
           </DropdownKebab>
@@ -61,7 +71,7 @@ const ServerConfigCard = ({
               <FormattedMessage id="plugin.config.server" />
             </strong>
             <br />
-            {configItem.name}
+            {configItem.serverDescription}
           </h3>
           {testConnectionDiv}
           <div className="card-pf-items">
@@ -93,7 +103,7 @@ const ServerConfigCard = ({
             <strong>
               <FormattedMessage id="plugin.config.serverURI" />
             </strong>
-            {configItem.uri}
+            {configItem.serverURI}
           </p>
         </CardBody>
         <hr />

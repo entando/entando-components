@@ -8,6 +8,7 @@ import {OverlayTrigger, Tooltip} from "patternfly-react";
 import {
   SortableContainer,
   SortableElement,
+  sortableHandle,
   arrayMove
 } from "react-sortable-hoc";
 
@@ -20,22 +21,23 @@ const renderField = ({input, meta: {touched, error}}) => {
       : "DashboardTableColumns__container-input";
   return (
     <div className={classContainer}>
-      <input
-        className="DashboardTableColumns__input"
-        id={input.name}
-        {...input}
-        type="text"
-      />
+      <input id={input.name} {...input} type="text" />
       {touched && (error && <span className="help-block">{error}</span>)}
     </div>
   );
 };
+const DragHandle = sortableHandle(() => (
+  <div className="DashboardTableColumns__th-editable-label-dnd" />
+));
 
 const SortableItem = SortableElement(({item, showColumnHandler}) => (
   <th className="DashboardTableColumns__th-editable-label">
     <div className="DashboardTableColumns__th-editable-label-container">
+      <DragHandle />
       <Field component={renderField} name={item.key} validate={[maxLength15]} />
-      {showColumn(item, showColumnHandler)}
+      <div className="DashboardTableColumns__th-editable-label-visible">
+        {showColumn(item, showColumnHandler)}
+      </div>
     </div>
   </th>
 ));
@@ -65,13 +67,13 @@ const showColumn = (item, onClickHandler) => (
 const SortableList = SortableContainer(({items, showColumnHandler}) => {
   return (
     <FormSection name="columns">
-      <div className="DashboardTableColumns__container_columns">
+      <div className="DashboardTableColumns__container-columns">
         <label>
           {items.length > 0 ? (
             <FormattedMessage id={"plugin.table.column.default.label"} />
           ) : null}
         </label>
-        <table className="DashboardTableColumns__table table">
+        <table className="DashboardTableColumns__table table table-striped table-bordered">
           <thead>
             <tr>
               {items.map((item, index) => (
@@ -129,7 +131,7 @@ class DashboardTableColumns extends Component {
           formValues={this.props.formValues}
           lockAxis="x"
           axis="x"
-          pressDelay={100}
+          pressDelay={200}
           onSortEnd={this.onMoveHandler}
         />
       </div>

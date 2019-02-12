@@ -1,20 +1,12 @@
 import React, {Component} from "react";
-import PropTypes from "prop-types";
 import {FormattedMessage} from "react-intl";
 import {Row, Col, Grid, Breadcrumb} from "patternfly-react";
 
 import FormattedMessageLocal from "ui/i18n/FormattedMessage";
-import ServerConfigFormContainer from "ui/server-config/common/ServerConfigFormContainer";
+import DashboardConfigFormContainer from "ui/dashboard-config/common/containers/DashboardConfigFormContainer";
 import PageTitle from "ui/PageTitle";
 
-class ServerConfigAddPage extends Component {
-  componentWillMount() {
-    const {onWillMount} = this.props;
-    if (onWillMount) {
-      onWillMount(this.props);
-    }
-  }
-
+class DashboardConfigEditPage extends Component {
   render() {
     return (
       <Grid fluid>
@@ -43,7 +35,7 @@ class ServerConfigAddPage extends Component {
         </Row>
         <Row>
           <Col xs={12}>
-            <ServerConfigFormContainer mode="add" />
+            <DashboardConfigFormContainer mode="edit" />
           </Col>
         </Row>
       </Grid>
@@ -51,12 +43,4 @@ class ServerConfigAddPage extends Component {
   }
 }
 
-ServerConfigAddPage.propTypes = {
-  onWillMount: PropTypes.func
-};
-
-ServerConfigAddPage.defaultProps = {
-  onWillMount: null
-};
-
-export default ServerConfigAddPage;
+export default DashboardConfigEditPage;
