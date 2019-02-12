@@ -1,19 +1,8 @@
-/*
- * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- */
-package org.entando.entando.aps.system.jpa;
+package org.entando.entando.aps.system.services;
 
-import javax.persistence.EntityManager;
+import org.entando.entando.aps.system.jpa.EntandoJPASpecification;
+import org.entando.entando.aps.system.jpa.EntityFieldsConverter;
+import org.entando.entando.aps.system.jpa.JpaSpecificationRepository;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -21,34 +10,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
-/**
- * JPA Repository able to convert Entando paging, sorting and filtering models
- * into Spring Data JPA ones and vice-versa.
- */
-public class EntandoJPARepositoryOldImplementation<T, ID> extends SimpleJpaRepository<T, ID> {
+public abstract class EntandoBaseJpaService<T, ID> {
 
-    private final EntityFieldsConverter<T> fieldsConverter;
+    protected abstract EntityFieldsConverter<T> getFieldsConverter();
 
-    public EntandoJPARepositoryOldImplementation(Class<T> domainClass, EntityManager em, EntityFieldsConverter<T> fieldsConverter) {
-        super(domainClass, em);
-        this.fieldsConverter = fieldsConverter;
-    }
+    protected abstract JpaSpecificationRepository<T, ID>  getRepository();
 
     public PagedRestResponse<T> findAll(RestListRequest request) {
         Pageable pageable = pageableFromRequest(request);
         Page<T> page;
         if (request.getFilters() != null && request.getFilters().length > 0) {
-            EntandoJPASpecification<T> specification = new EntandoJPASpecification<>(request, fieldsConverter);
-            page = findAll(specification, pageable);
+            EntandoJPASpecification<T> specification = new EntandoJPASpecification<>(request, this.getFieldsConverter());
+            page = this.getRepository().findAll(specification, pageable);
         } else {
-            page = findAll(pageable);
+            page = this.getRepository().findAll(pageable);
         }
         return buildResponse(page, request);
     }
 
-    private Pageable pageableFromRequest(RestListRequest restListRequest) {
+    protected Pageable pageableFromRequest(RestListRequest restListRequest) {
 
         int page = restListRequest.getPage() - 1;
         int size = restListRequest.getPageSize();
@@ -61,16 +42,16 @@ public class EntandoJPARepositoryOldImplementation<T, ID> extends SimpleJpaRepos
         }
     }
 
-    private String[] getSortValues(RestListRequest restListRequest) {
+    protected String[] getSortValues(RestListRequest restListRequest) {
         String[] values = restListRequest.getSort().split(",");
         String[] remappedValues = new String[values.length];
         for (int i = 0; i < values.length; i++) {
-            remappedValues[i] = fieldsConverter.getFieldName(values[i]);
+            remappedValues[i] = this.getFieldsConverter().getFieldName(values[i]);
         }
         return remappedValues;
     }
 
-    private static Sort.Direction getDirection(RestListRequest restListRequest) {
+    protected static Sort.Direction getDirection(RestListRequest restListRequest) {
         switch (restListRequest.getDirection()) {
             case "ASC":
                 return Sort.Direction.ASC;
@@ -81,7 +62,7 @@ public class EntandoJPARepositoryOldImplementation<T, ID> extends SimpleJpaRepos
         }
     }
 
-    private <T> PagedRestResponse<T> buildResponse(Page<T> page, RestListRequest restListRequest) {
+    protected <T> PagedRestResponse<T> buildResponse(Page<T> page, RestListRequest restListRequest) {
 
         PagedMetadata<T> pagedMetadata = new PagedMetadata<>(
                 restListRequest, page.getContent(), (int) page.getTotalElements());

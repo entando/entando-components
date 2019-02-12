@@ -19,7 +19,7 @@ import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 public class JobFieldsConverter extends EntityFieldsConverter<DigitalExchangeJob> {
 
     @Override
-    protected String getFieldName(String attributeName) {
+    public String getFieldName(String attributeName) {
         if ("code".equals(attributeName)) { // code is the default RestListRequest sorting property
             return "id";
         }
@@ -27,7 +27,7 @@ public class JobFieldsConverter extends EntityFieldsConverter<DigitalExchangeJob
     }
 
     @Override
-    protected Comparable<?> getComparableValue(String attribute, String value) {
+    public Comparable<?> getComparableValue(String attribute, String value) {
         switch (attribute) {
             case "progress":
                 return Double.parseDouble(value);

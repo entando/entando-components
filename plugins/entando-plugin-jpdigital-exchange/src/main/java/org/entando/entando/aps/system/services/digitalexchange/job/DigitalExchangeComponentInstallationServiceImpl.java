@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import org.apache.commons.lang.RandomStringUtils;
 import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
-import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJobRepository;
+import org.entando.entando.aps.system.jpa.servdb.repo.DigitalExchangeJobRepository;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -37,19 +37,19 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private static final String ERRCODE_COMPONENT_INSTALLATION_RUNNING = "1";
 
     private final DigitalExchangesService exchangesService;
-    private final DigitalExchangeJobRepository repository;
+    private final DigitalExchangeJobService jobService;
     private final DigitalExchangeAbstractJobExecutor installExecutor;
     private final DigitalExchangeAbstractJobExecutor uninstallExecutor;
 
     @Autowired
     public DigitalExchangeComponentInstallationServiceImpl(
             DigitalExchangesService exchangesService,
-            DigitalExchangeJobRepository repository,
+            DigitalExchangeJobService repository,
             DigitalExchangeInstallExecutor installExecutor,
             DigitalExchangeUninstallExecutor uninstallExecutor) {
 
         this.exchangesService = exchangesService;
-        this.repository = repository;
+        this.jobService = repository;
         this.installExecutor = installExecutor;
         this.uninstallExecutor = uninstallExecutor;
     }
@@ -63,7 +63,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(digitalExchange, componentId, JobType.INSTALL);
         job.setUser(username);
-        repository.save(job);
+        this.jobService.save(job);
 
         this.executeJob(job, this.installExecutor);
 
@@ -77,7 +77,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(componentId, JobType.UNINSTALL);
         job.setUser(username);
-        repository.save(job);
+        this.jobService.save(job);
 
         this.executeJob(job, this.uninstallExecutor);
 
@@ -87,20 +87,20 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private void executeJob(DigitalExchangeJob job, DigitalExchangeAbstractJobExecutor jobExecutor) {
         CompletableFuture.runAsync(() -> {
             try {
-                jobExecutor.execute(job, repository::save);
+                jobExecutor.execute(job, jobService::save);
             } catch (Throwable ex) {
                 logger.error("Error while executing job for " + job.getComponentId(), ex);
                 job.setStatus(JobStatus.ERROR);
                 job.setErrorMessage(ex.getMessage());
                 job.setEnded(new Date());
-                repository.save(job);
+                jobService.save(job);
             }
         });
     }
 
     private synchronized void checkIfAlreadyRunning(String componentId, JobType jobType) {
 
-        repository.findLast(componentId, jobType).ifPresent(job -> {
+        jobService.findLast(componentId, jobType).ifPresent(job -> {
             if (job.getStatus() != JobStatus.COMPLETED
                     && job.getStatus() != JobStatus.ERROR) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(componentId, "component");
@@ -143,7 +143,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
     @Override
     public DigitalExchangeJob checkJobStatus(String componentId, JobType jobType) {
-        return repository.findLast(componentId, jobType)
+        return jobService.findLast(componentId, jobType)
                 .orElseThrow(() -> new RestRourceNotFoundException("component", componentId));
     }
 

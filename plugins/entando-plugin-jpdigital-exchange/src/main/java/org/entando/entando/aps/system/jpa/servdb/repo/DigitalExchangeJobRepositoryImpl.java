@@ -1,9 +1,8 @@
-package org.entando.entando.aps.system.jpa.servdb;
+package org.entando.entando.aps.system.jpa.servdb.repo;
 
-import org.entando.entando.aps.system.jpa.JpaSpecificationRepository;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

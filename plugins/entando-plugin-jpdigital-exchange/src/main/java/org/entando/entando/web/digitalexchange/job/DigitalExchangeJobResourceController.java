@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/digitalExchange/job")
+@RequestMapping(value = "/digitalExchange/jobs")
 public class DigitalExchangeJobResourceController implements DigitalExchangeJobResource {
 
     private final DigitalExchangeJobService jobService;

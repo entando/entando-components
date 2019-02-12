@@ -14,7 +14,7 @@
 package org.entando.entando.web.digitalexchange.job;
 
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
-import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJobRepository;
+import org.entando.entando.aps.system.jpa.servdb.repo.DigitalExchangeJobRepository;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobType;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
         job1.setId("job1");
         repo.save(job1);
 
-        ResultActions result = createAuthRequest(get("/digitalExchange/job")).execute();
+        ResultActions result = createAuthRequest(get("/digitalExchange/jobs")).execute();
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -64,7 +64,7 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
         job2.setJobType(JobType.UNINSTALL);
         repo.save(job2);
 
-        ResultActions result = createAuthRequest(get("/digitalExchange/job")
+        ResultActions result = createAuthRequest(get("/digitalExchange/jobs")
                 .param("filters[0].attribute", "progress")
                 .param("filters[0].operator", "gt")
                 .param("filters[0].value", "0.5")).execute();

@@ -16,7 +16,7 @@ package org.entando.entando.aps.system.services.digitalexchange.job;
 import java.util.Optional;
 
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
-import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJobRepository;
+import org.entando.entando.aps.system.jpa.servdb.repo.DigitalExchangeJobRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -38,7 +38,7 @@ public class DigitalExchangeComponentJobsServiceTest {
     private DigitalExchangesService exchangesService;
 
     @Mock
-    private DigitalExchangeJobRepository repository;
+    private DigitalExchangeJobService jobService;
 
     @Mock
     private DigitalExchangeInstallExecutor digitalExchangeInstallExecutor;
@@ -72,7 +72,7 @@ public class DigitalExchangeComponentJobsServiceTest {
 
         DigitalExchangeJob job = new DigitalExchangeJob();
         job.setStatus(JobStatus.IN_PROGRESS);
-        when(repository.findLast("test", JobType.INSTALL)).thenReturn(Optional.of(job));
+        when(jobService.findLast("test", JobType.INSTALL)).thenReturn(Optional.of(job));
 
         service.install(DE_1_ID, "test", "admin");
     }

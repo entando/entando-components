@@ -29,7 +29,7 @@ public class EntityFieldsConverter<T> {
      * corresponding field name in the entity class. By default they are the
      * same.
      */
-    protected String getFieldName(String attributeName) {
+    public String getFieldName(String attributeName) {
         return attributeName;
     }
 
@@ -37,11 +37,11 @@ public class EntityFieldsConverter<T> {
      * This method can be overridden to provide conversion from String to
      * Integer, Boolean and so on.
      */
-    protected Comparable<?> getComparableValue(String attribute, String value) {
+    public Comparable<?> getComparableValue(String attribute, String value) {
         return value;
     }
 
-    protected Date parseDate(String value) {
+    public Date parseDate(String value) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(SystemConstants.API_DATE_FORMAT);
             return sdf.parse(value);
