@@ -75,7 +75,7 @@ public class DigitalExchangeComponentListProcessor extends RequestListProcessor<
                 case LAST_UPDATE:
                     return (a, b) -> ObjectUtils.compare(a.getLastUpdate(), b.getLastUpdate());
                 case VERSION:
-                    return (a, b) -> StringUtils.compare(a.getVersion(), b.getVersion());
+                    return (a, b) -> StringUtils.compareIgnoreCase(a.getVersion(), b.getVersion());
                 case TYPE:
                     return (a, b) -> StringUtils.compareIgnoreCase(a.getType(), b.getType());
                 case RATING:
