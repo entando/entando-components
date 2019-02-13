@@ -13,17 +13,16 @@
  */
 package org.entando.entando.aps.system.services.pagemodel;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import org.entando.entando.aps.system.services.pagemodel.model.DigitalExchangePageModel;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
+import org.entando.entando.aps.system.services.pagemodel.model.DigitalExchangePageModelDto;
 import org.entando.entando.aps.system.services.pagemodel.model.DigitalExchangePageModelDtoBuilder;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -34,6 +33,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.aps.system.services.digitalexchange.model.ResilientPagedMetadata;
+import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.model.FilterOperator;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
 import org.mockito.Spy;
 import org.mockito.InjectMocks;
@@ -50,6 +51,9 @@ public class DigitalExchangePageModelServiceTest {
     private static final String DE_PAGE_MODEL_INSTALLED_CODE = "2_TEST_PM_DE_INSTALLED";
     private static final String DE_PAGE_MODEL_NOT_INSTALLED_CODE = "3_TEST_PM_DE_NOT_INSTALLED";
     private static final String EXCHANGE = "Leonardo's Exchange";
+    private static final String DESCRIPTION_PREFIX = "description_";
+    private static final String PLUGIN_CODE_PREFIX = "plugin_code";
+    private static final String TEMPLATE = "<h1>Template</h1>";
 
     private static final RestListRequest EMPTY_REQUEST = new RestListRequest();
 
@@ -67,110 +71,271 @@ public class DigitalExchangePageModelServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        when(pageModelManager.searchPageModels(any())).thenReturn(localPageModels());
+        when(pageModelManager.searchPageModels(any())).thenReturn(FakeData.localPageModels());
+        when(client.getCombinedResult(any())).thenReturn(FakeData.clientResponse());
     }
 
     @Test
-    public void get_all_page_models_with_de_excluded_returns_local_page_models() throws ApsSystemException {
+    public void excludingDeShouldReturnLocalPageModels() throws ApsSystemException {
 
         PagedMetadata<PageModelDto> result = dePageModelService.getPageModels(EMPTY_REQUEST, params(true));
 
-        PagedMetadata<PageModelDto> expected = localResultPagedMetadata();
+        PagedMetadata<PageModelDto> expected = ExpectedResults.localResultPagedMetadata();
         assertThat(result).isEqualTo(expected);
     }
 
     @Test
-    public void get_all_page_models_with_de_not_excluded_returns_de_and_local_page_models() throws ApsSystemException {
-
-        when(client.getCombinedResult(any())).thenReturn(clientResponse());
+    public void shouldReturnAllPageModels() throws ApsSystemException {
 
         PagedMetadata<PageModelDto> result = dePageModelService.getPageModels(EMPTY_REQUEST, params(false));
 
-        PagedMetadata<PageModelDto> expected = completeResultPagedMetadata();
+        PagedMetadata<PageModelDto> expected = ExpectedResults.completeResultPagedMetadata();
         assertThat(result).isEqualTo(expected);
     }
 
-    private static SearcherDaoPaginatedResult<PageModel> localPageModels() {
-        return new SearcherDaoPaginatedResult<>(asList(localPageModel(), localPageModelInstalledFromDE()));
+    @Test
+    public void shouldFilterByCode() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("code");
+        filter.setValue(PAGE_MODEL_CODE);
+        filter.setOperator(FilterOperator.EQUAL.getValue());
+        listRequest.addFilter(filter);
+
+        verifyFilter(listRequest, ExpectedResults.localPageModelWithDeInfoDto());
     }
 
-    private PagedMetadata<PageModelDto> localResultPagedMetadata() {
-        return new PagedMetadata<>(EMPTY_REQUEST, dtoList(localPageModel(), localPageModelInstalledFromDE()), 2);
+    @Test
+    public void shouldFilterByDescription() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("description");
+        filter.setValue(DESCRIPTION_PREFIX + DE_PAGE_MODEL_INSTALLED_CODE);
+        filter.setOperator(FilterOperator.EQUAL.getValue());
+        listRequest.addFilter(filter);
+
+        verifyFilter(listRequest, ExpectedResults.dePageModelInstalledDto());
     }
 
-    private PagedMetadata<PageModelDto> completeResultPagedMetadata() {
-        return new PagedMetadata<>(EMPTY_REQUEST,
-                dtoList(localPageModelWithDeInfo(), dePageModelInstalled(), dePageModelNotInstalled()), 3);
+    @Test
+    public void shouldFilterByMainFrame() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("mainFrame");
+        filter.setValue("1");
+        listRequest.addFilter(filter);
+
+        verifyFilter(listRequest, ExpectedResults.localPageModelWithDeInfoDto());
     }
 
-    private static ResilientPagedMetadata<DigitalExchangeComponent> clientResponse() {
-        ResilientPagedMetadata<DigitalExchangeComponent> response = new ResilientPagedMetadata<>();
-        response.setBody(ImmutableList.of(installedComponent(), installableComponent()));
-        return response;
+    @Test
+    public void shouldFilterByPluginCode() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("pluginCode");
+        filter.setValue(PLUGIN_CODE_PREFIX + DE_PAGE_MODEL_INSTALLED_CODE);
+        listRequest.addFilter(filter);
+
+        verifyFilter(listRequest, ExpectedResults.dePageModelInstalledDto());
     }
 
-    private static PageModel localPageModel() {
-        PageModel localPageModel = new PageModel();
-        localPageModel.setCode(PAGE_MODEL_CODE);
-        return localPageModel;
+    @Test
+    public void shouldFilterByTemplate() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("template");
+        filter.setValue(TEMPLATE);
+        listRequest.addFilter(filter);
+
+        verifyFilter(listRequest, ExpectedResults.localPageModelWithDeInfoDto());
     }
 
-    private static PageModel localPageModelInstalledFromDE() {
-        PageModel pageModel = new PageModel();
-        pageModel.setCode(DE_PAGE_MODEL_INSTALLED_CODE);
-        return pageModel;
+    @Test
+    public void shouldFilterByDigitalExchange() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("digitalExchangeName");
+        filter.setValue(EXCHANGE);
+        listRequest.addFilter(filter);
+
+        verifyFilter(listRequest, ExpectedResults.dePageModelInstalledDto(), ExpectedResults.dePageModelNotInstalledDto());
     }
 
-    private DigitalExchangePageModel localPageModelWithDeInfo() {
-        DigitalExchangePageModel pageModel = new DigitalExchangePageModel();
-        pageModel.setCode(PAGE_MODEL_CODE);
-        pageModel.setInstalled(true);
-        return pageModel;
+    @Test
+    public void shouldSortByDescription() {
+
+        RestListRequest listRequest = new RestListRequest();
+        listRequest.setSort("description");
+        listRequest.setDirection(FieldSearchFilter.DESC_ORDER);
+
+        verifyFirst(listRequest, ExpectedResults.dePageModelInstalledDto());
     }
 
-    private static PageModel dePageModelInstalled() {
-        DigitalExchangePageModel pageModel = new DigitalExchangePageModel();
-        pageModel.setCode(DE_PAGE_MODEL_INSTALLED_CODE);
-        pageModel.setDigitalExchangeName(EXCHANGE);
-        pageModel.setInstalled(true);
-        return pageModel;
+    @Test
+    public void shouldSortByMainFrame() {
+
+        RestListRequest listRequest = new RestListRequest();
+        listRequest.setSort("mainFrame");
+        listRequest.setDirection(FieldSearchFilter.DESC_ORDER);
+
+        verifyFirst(listRequest, ExpectedResults.dePageModelInstalledDto());
     }
 
-    private static PageModel dePageModelNotInstalled() {
-        DigitalExchangePageModel pageModel = new DigitalExchangePageModel();
-        pageModel.setCode(DE_PAGE_MODEL_NOT_INSTALLED_CODE);
-        pageModel.setDigitalExchangeName(EXCHANGE);
-        pageModel.setInstalled(false);
-        return pageModel;
+    @Test
+    public void shouldSortByPluginCode() {
+
+        RestListRequest listRequest = new RestListRequest();
+        listRequest.setSort("pluginCode");
+        listRequest.setDirection(FieldSearchFilter.DESC_ORDER);
+
+        verifyFirst(listRequest, ExpectedResults.dePageModelInstalledDto());
     }
 
-    private static DigitalExchangeComponent installedComponent() {
-        DigitalExchangeComponent component = new DigitalExchangeComponent();
-        component.setType("pageModel");
-        component.setId(DE_PAGE_MODEL_INSTALLED_CODE);
-        component.setName(DE_PAGE_MODEL_INSTALLED_CODE);
-        component.setDigitalExchangeName(EXCHANGE);
-        return component;
+    @Test
+    public void shouldSortByDigitalExchangeName() {
+
+        RestListRequest listRequest = new RestListRequest();
+        listRequest.setSort("digitalExchangeName");
+        listRequest.setDirection(FieldSearchFilter.DESC_ORDER);
+
+        verifyFirst(listRequest, ExpectedResults.dePageModelInstalledDto());
     }
 
-    private static DigitalExchangeComponent installableComponent() {
-        DigitalExchangeComponent component = new DigitalExchangeComponent();
-        component.setType("pageModel");
-        component.setId(DE_PAGE_MODEL_NOT_INSTALLED_CODE);
-        component.setName(DE_PAGE_MODEL_NOT_INSTALLED_CODE);
-        component.setDigitalExchangeName(EXCHANGE);
-        return component;
+    private void verifyFilter(RestListRequest request, PageModelDto... filteredPageModels) {
+
+        PagedMetadata<PageModelDto> pagedMetadata = dePageModelService.getPageModels(request, params(false));
+
+        assertThat(pagedMetadata.getTotalItems()).isEqualTo(filteredPageModels.length);
+        assertThat(pagedMetadata.getBody())
+                .isNotNull().hasSize(filteredPageModels.length)
+                .containsExactly(filteredPageModels);
+    }
+
+    private void verifyFirst(RestListRequest request, PageModelDto pageModel) {
+
+        PagedMetadata<PageModelDto> pagedMetadata = dePageModelService.getPageModels(request, params(false));
+
+        assertThat(pagedMetadata.getBody()).isNotNull().isNotEmpty();
+        assertThat(pagedMetadata.getBody().get(0)).isEqualTo(pageModel);
     }
 
     private static Map<String, String> params(boolean excludeDe) {
         return ImmutableMap.of("excludeDe", String.valueOf(excludeDe));
     }
 
-    private List<PageModelDto> dtoList(PageModel... pageModels) {
-        List<PageModelDto> dtoList = new ArrayList<>();
-        for (PageModel pageModel : pageModels) {
-            dtoList.add(dtoBuilder.convert(pageModel));
+    private static class FakeData {
+
+        private static SearcherDaoPaginatedResult<PageModel> localPageModels() {
+            return new SearcherDaoPaginatedResult<>(asList(localPageModel(), localPageModelInstalledFromDE()));
         }
-        return dtoList;
+
+        private static PageModel localPageModel() {
+            PageModel pageModel = new PageModel();
+            pageModel.setCode(PAGE_MODEL_CODE);
+            pageModel.setDescription(DESCRIPTION_PREFIX + PAGE_MODEL_CODE);
+            pageModel.setMainFrame(1);
+            pageModel.setTemplate(TEMPLATE);
+            pageModel.setPluginCode(PLUGIN_CODE_PREFIX + PAGE_MODEL_CODE);
+            return pageModel;
+        }
+
+        private static PageModel localPageModelInstalledFromDE() {
+            PageModel pageModel = new PageModel();
+            pageModel.setCode(DE_PAGE_MODEL_INSTALLED_CODE);
+            pageModel.setDescription(DESCRIPTION_PREFIX + DE_PAGE_MODEL_INSTALLED_CODE);
+            pageModel.setMainFrame(2);
+            pageModel.setPluginCode(PLUGIN_CODE_PREFIX + DE_PAGE_MODEL_INSTALLED_CODE);
+            return pageModel;
+        }
+
+        private static ResilientPagedMetadata<DigitalExchangeComponent> clientResponse() {
+            ResilientPagedMetadata<DigitalExchangeComponent> response = new ResilientPagedMetadata<>();
+            response.setBody(ImmutableList.of(installedComponent(), installableComponent()));
+            return response;
+        }
+
+        private static DigitalExchangeComponent installedComponent() {
+            DigitalExchangeComponent component = new DigitalExchangeComponent();
+            component.setType("pageModel");
+            component.setId(DE_PAGE_MODEL_INSTALLED_CODE);
+            component.setName(DE_PAGE_MODEL_INSTALLED_CODE);
+            component.setDigitalExchangeName(EXCHANGE);
+            return component;
+        }
+
+        private static DigitalExchangeComponent installableComponent() {
+            DigitalExchangeComponent component = new DigitalExchangeComponent();
+            component.setType("pageModel");
+            component.setId(DE_PAGE_MODEL_NOT_INSTALLED_CODE);
+            component.setName(DE_PAGE_MODEL_NOT_INSTALLED_CODE);
+            component.setDigitalExchangeName(EXCHANGE);
+            return component;
+        }
+    }
+
+    private static class ExpectedResults {
+
+        private static PageModelDto localPageModelDto() {
+            PageModelDto dto = new PageModelDto();
+            dto.setCode(PAGE_MODEL_CODE);
+            dto.setDescr(DESCRIPTION_PREFIX + PAGE_MODEL_CODE);
+            dto.setMainFrame(1);
+            dto.setTemplate(TEMPLATE);
+            dto.setPluginCode(PLUGIN_CODE_PREFIX + PAGE_MODEL_CODE);
+            return dto;
+        }
+
+        private static PageModelDto localPageModelInstalledFromDEDto() {
+            PageModelDto dto = new PageModelDto();
+            dto.setCode(DE_PAGE_MODEL_INSTALLED_CODE);
+            dto.setDescr(DESCRIPTION_PREFIX + DE_PAGE_MODEL_INSTALLED_CODE);
+            dto.setMainFrame(2);
+            dto.setPluginCode(PLUGIN_CODE_PREFIX + DE_PAGE_MODEL_INSTALLED_CODE);
+            return dto;
+        }
+
+        private static DigitalExchangePageModelDto localPageModelWithDeInfoDto() {
+            DigitalExchangePageModelDto dto = new DigitalExchangePageModelDto();
+            dto.setCode(PAGE_MODEL_CODE);
+            dto.setDescr(DESCRIPTION_PREFIX + PAGE_MODEL_CODE);
+            dto.setTemplate(TEMPLATE);
+            dto.setMainFrame(1);
+            dto.setPluginCode(PLUGIN_CODE_PREFIX + PAGE_MODEL_CODE);
+            dto.setInstalled(true);
+            return dto;
+        }
+
+        private static DigitalExchangePageModelDto dePageModelInstalledDto() {
+            DigitalExchangePageModelDto dto = new DigitalExchangePageModelDto();
+            dto.setCode(DE_PAGE_MODEL_INSTALLED_CODE);
+            dto.setDescr(DESCRIPTION_PREFIX + DE_PAGE_MODEL_INSTALLED_CODE);
+            dto.setMainFrame(2);
+            dto.setPluginCode(PLUGIN_CODE_PREFIX + DE_PAGE_MODEL_INSTALLED_CODE);
+            dto.setDigitalExchangeName(EXCHANGE);
+            dto.setInstalled(true);
+            return dto;
+        }
+
+        private static DigitalExchangePageModelDto dePageModelNotInstalledDto() {
+            DigitalExchangePageModelDto dto = new DigitalExchangePageModelDto();
+            dto.setCode(DE_PAGE_MODEL_NOT_INSTALLED_CODE);
+            dto.setDigitalExchangeName(EXCHANGE);
+            return dto;
+        }
+
+        private static PagedMetadata<PageModelDto> localResultPagedMetadata() {
+            return new PagedMetadata<>(EMPTY_REQUEST, asList(localPageModelDto(), localPageModelInstalledFromDEDto()), 2);
+        }
+
+        private static PagedMetadata<PageModelDto> completeResultPagedMetadata() {
+            return new PagedMetadata<>(EMPTY_REQUEST,
+                    asList(localPageModelWithDeInfoDto(), dePageModelInstalledDto(), dePageModelNotInstalledDto()), 3);
+        }
     }
 }

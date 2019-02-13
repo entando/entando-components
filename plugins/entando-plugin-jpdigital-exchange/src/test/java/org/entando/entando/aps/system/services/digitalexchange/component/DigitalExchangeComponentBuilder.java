@@ -45,6 +45,21 @@ public class DigitalExchangeComponentBuilder {
         return this;
     }
 
+    public final DigitalExchangeComponentBuilder setVersion(String version) {
+        component.setVersion(version);
+        return this;
+    }
+
+    public final DigitalExchangeComponentBuilder setType(String type) {
+        component.setType(type);
+        return this;
+    }
+
+    public final DigitalExchangeComponentBuilder setRating(double rating) {
+        component.setRating(rating);
+        return this;
+    }
+
     public DigitalExchangeComponentBuilder setLastUpdate(String date) {
         SimpleDateFormat sdf = new SimpleDateFormat(SystemConstants.API_DATE_FORMAT);
         try {
