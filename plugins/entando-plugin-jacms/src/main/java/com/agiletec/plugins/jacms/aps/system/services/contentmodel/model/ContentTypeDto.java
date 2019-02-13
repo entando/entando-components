@@ -1,11 +1,24 @@
+/*
+ * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
 package com.agiletec.plugins.jacms.aps.system.services.contentmodel.model;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.*;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeFullDto;
 import org.entando.entando.plugins.jacms.aps.system.init.portdb.enums.DefaultContentModel;
-import org.entando.entando.plugins.jacms.aps.system.services.IContent;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
@@ -20,9 +33,11 @@ public class ContentTypeDto extends EntityTypeFullDto {
     @JsonProperty("defaultContentModelList")
     private DefaultContentModel defaultContentModelList;
 
-    public ContentTypeDto() { super();}
+    public ContentTypeDto() {
+        super();
+    }
 
-    public ContentTypeDto(IContent src, List<AttributeRole> roles) {
+    public ContentTypeDto(Content src, List<AttributeRole> roles) {
         super(src, roles);
     }
 
@@ -68,11 +83,11 @@ public class ContentTypeDto extends EntityTypeFullDto {
             return false;
         }
         ContentTypeDto contentType = (ContentTypeDto) o;
-        return Objects.equals(getAttributes(), contentType.getAttributes()) &&
-                Objects.equals(getCode(), contentType.getCode()) &&
-                Objects.equals(this.defaultContentModel, contentType.defaultContentModel) &&
-                Objects.equals(this.defaultContentModelList, contentType.defaultContentModelList) &&
-                Objects.equals(getName(), contentType.getName());
+        return Objects.equals(getAttributes(), contentType.getAttributes())
+                && Objects.equals(getCode(), contentType.getCode())
+                && Objects.equals(this.defaultContentModel, contentType.defaultContentModel)
+                && Objects.equals(this.defaultContentModelList, contentType.defaultContentModelList)
+                && Objects.equals(getName(), contentType.getName());
     }
 
     @Override
@@ -83,13 +98,13 @@ public class ContentTypeDto extends EntityTypeFullDto {
     @Override
     public String toString() {
 
-        return "class ContentType {\n" +
-                "    attributes: " + toIndentedString(getAttributes()) + "\n" +
-                "    code: " + toIndentedString(getCode()) + "\n" +
-                "    defaultContentModel: " + toIndentedString(defaultContentModel) + "\n" +
-                "    defaultContentModelList: " + toIndentedString(defaultContentModelList) + "\n" +
-                "    name: " + toIndentedString(getName()) + "\n" +
-                "}";
+        return "class ContentType {\n"
+                + "    attributes: " + toIndentedString(getAttributes()) + "\n"
+                + "    code: " + toIndentedString(getCode()) + "\n"
+                + "    defaultContentModel: " + toIndentedString(defaultContentModel) + "\n"
+                + "    defaultContentModelList: " + toIndentedString(defaultContentModelList) + "\n"
+                + "    name: " + toIndentedString(getName()) + "\n"
+                + "}";
     }
 
     /**

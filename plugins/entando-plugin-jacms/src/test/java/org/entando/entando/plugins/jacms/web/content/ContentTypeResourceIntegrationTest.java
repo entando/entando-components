@@ -1,4 +1,17 @@
-package org.entando.entando.plugins.jacms.web.contentmodel;
+/*
+ * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -39,9 +52,9 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     public void testGetReturnsList() throws Exception {
         mockMvc.perform(
                 get("/plugins/cms/contentTypes")
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -64,11 +77,11 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 post("/plugins/cms/contentTypes")
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(jsonMapper.writeValueAsString(contentTypeRequest))
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonMapper.writeValueAsString(contentTypeRequest))
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("MCT"))
@@ -86,7 +99,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonMapper.writeValueAsString(createdContentType))
                 .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.code").value(createdContentType.getCode()))
                 .andExpect(jsonPath("$.payload.name").value("MyContentType"))
@@ -98,11 +111,11 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 delete("/plugins/cms/contentTypes/{code}", "RST")
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                        .andDo(print())
-                        .andExpect(status().isOk())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                        .andDo(print())
+                .andExpect(status().isOk())
                 .andReturn();
     }
 
@@ -112,20 +125,19 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 get("/plugins/cms/contentTypes/{code}", "MCT")
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound())
                 .andReturn();
-
 
         ContentTypeDto createdContentTypeDto = createContentType();
 
         MvcResult mvcResult = mockMvc.perform(
                 get("/plugins/cms/contentTypes/{code}", createdContentTypeDto.getCode())
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -139,18 +151,18 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     public void testGetAllAttributes() throws Exception {
         mockMvc.perform(
                 get("/plugins/cms/contentTypeAttributes")
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath(
                         "$.payload",
                         containsInAnyOrder(
-                                "Attach","Boolean","CheckBox","Composite","Date","Enumerator",
-                                "EnumeratorMap","Hypertext","Image","Link","List","Longtext",
-                                "Monolist", "Monotext","Number","Text","ThreeState","Timestamp")))
+                                "Attach", "Boolean", "CheckBox", "Composite", "Date", "Enumerator",
+                                "EnumeratorMap", "Hypertext", "Image", "Link", "List", "Longtext",
+                                "Monolist", "Monotext", "Number", "Text", "ThreeState", "Timestamp")))
                 .andReturn();
     }
 
@@ -158,10 +170,10 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     public void testGetAttribute() throws Exception {
         mockMvc.perform(
                 get("/plugins/cms/contentTypeAttributes/{code}", "Text")
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Text"))
@@ -179,11 +191,11 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 post("/plugins/cms/contentTypes/{code}/attributes", contentType.getCode())
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(jsonMapper.writeValueAsString(attribute))
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonMapper.writeValueAsString(attribute))
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.metaData.contentTypeCode").value(contentType.getCode()))
@@ -193,7 +205,6 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andReturn();
     }
 
-
     @Test
     public void testGetAttributeFromContentType() throws Exception {
         EntityTypeAttributeFullDto contentTypeAttribute = createContentTypeAttribute();
@@ -201,16 +212,15 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
                         "MCT", contentTypeAttribute.getCode())
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("MyAttribute"))
                 .andReturn();
     }
-
 
     @Test
     public void testUpdateAttributeFromContentType() throws Exception {
@@ -221,11 +231,11 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 put("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
                         "MCT", contentTypeAttribute.getCode())
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(jsonMapper.writeValueAsString(contentTypeAttribute))
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonMapper.writeValueAsString(contentTypeAttribute))
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.name").value("My New Name"))
@@ -237,21 +247,21 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         EntityTypeAttributeFullDto attribute = createContentTypeAttribute();
 
         mockMvc.perform(
-                get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}", 
+                get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
                         "MCT", attribute.getCode())
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andReturn();
 
         mockMvc.perform(
                 delete("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
                         "MCT", attribute.getCode())
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn();
@@ -259,9 +269,9 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
                         "MCT", attribute.getCode())
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound())
                 .andReturn();
     }
@@ -272,9 +282,9 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 post("/plugins/cms/contentTypes/refresh/{contentTypeCode}", contentType.getCode())
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andReturn();
     }
@@ -285,10 +295,10 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 post("/plugins/cms/contentTypesStatus")
-                        .header("Authorization", "Bearer " + accessToken)
-                        .content(jsonMapper.writeValueAsString(bodyRequest))
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .header("Authorization", "Bearer " + accessToken)
+                .content(jsonMapper.writeValueAsString(bodyRequest))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -298,10 +308,10 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     public void testExtractStatus() throws Exception {
         mockMvc.perform(
                 get("/plugins/cms/contentTypesStatus")
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
     }
@@ -315,10 +325,10 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 put("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}/moveUp",
                         "MCT", code)
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.attributeCode").value(code))
                 .andExpect(jsonPath("$.payload.movement").value("UP"))
@@ -334,10 +344,10 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         mockMvc.perform(
                 put("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}/moveDown",
                         "MCT", code)
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andDo(print())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.attributeCode").value(code))
                 .andExpect(jsonPath("$.payload.movement").value("DOWN"))
@@ -358,10 +368,10 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         MvcResult mvcResult = mockMvc.perform(
                 post("/plugins/cms/contentTypes")
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(jsonMapper.writeValueAsString(contentTypeRequest))
-                        .accept(MediaType.APPLICATION_JSON_UTF8)).andReturn();
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonMapper.writeValueAsString(contentTypeRequest))
+                .accept(MediaType.APPLICATION_JSON_UTF8)).andReturn();
 
         return stringToContentTypeDto(mvcResult);
     }
@@ -388,19 +398,19 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         MvcResult mvcResult = mockMvc.perform(
                 post("/plugins/cms/contentTypes/{contentCode}/attributes", contentType.getCode())
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(jsonMapper.writeValueAsString(attribute))
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonMapper.writeValueAsString(attribute))
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn();
 
         return stringToEntityTypeDto(mvcResult);
     }
 
     private ContentTypeDto stringToContentTypeDto(MvcResult mvcResult) throws IOException {
-        RestResponse<Map<String, String>, Map> restResponse =
-                jsonMapper.readerFor(RestResponse.class)
-                        .readValue(mvcResult.getResponse().getContentAsString());
+        RestResponse<Map<String, String>, Map> restResponse
+                = jsonMapper.readerFor(RestResponse.class)
+                .readValue(mvcResult.getResponse().getContentAsString());
 
         Map<String, String> payload = restResponse.getPayload();
 
@@ -410,9 +420,9 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     }
 
     private EntityTypeAttributeFullDto stringToEntityTypeDto(MvcResult mvcResult) throws IOException {
-        RestResponse<Map<String, String>, Map> restResponse =
-                jsonMapper.readerFor(RestResponse.class)
-                        .readValue(mvcResult.getResponse().getContentAsString());
+        RestResponse<Map<String, String>, Map> restResponse
+                = jsonMapper.readerFor(RestResponse.class)
+                .readValue(mvcResult.getResponse().getContentAsString());
 
         Map<String, String> payload = restResponse.getPayload();
 
@@ -427,9 +437,9 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
         mockMvc.perform(
                 delete("/plugins/cms/contentTypes/{code}", code)
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andReturn();
     }

@@ -36,8 +36,13 @@
         <property name="resourceManager" ref="jacmsResourceManager" />
     </bean>
 
-    <bean id="ContentService" class="com.agiletec.plugins.jacms.aps.system.services.content.ContentService" >
+    <bean id="ContentService" class="org.entando.entando.plugins.jacms.aps.system.services.content.ContentService" >
         <property name="contentManager" ref="jacmsContentManager" />
+        <property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
+        <property name="authorizationManager" ref="AuthorizationManager" />
+        <property name="contentDispenser" ref="jacmsBaseContentDispenser" />
+        <property name="contentModelManager" ref="jacmsContentModelManager" />
+        <property name="langManager" ref="LangManager" />
     </bean>
 
     <context:component-scan base-package="org.entando.entando.plugins.jacms"  />

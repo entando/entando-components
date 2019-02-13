@@ -5,7 +5,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.dictionary.ContentModelDictionary;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentModelService;
 import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
 import org.entando.entando.web.AbstractControllerTest;
@@ -211,7 +211,7 @@ public class ContentModelControllerUnitTest extends AbstractControllerTest {
                 .thenAnswer(invocation -> {
                     ContentModelDto dto = mockedContentModels.get((long) invocation.getArgument(0));
                     if (dto == null) {
-                        throw new RestRourceNotFoundException("", "", "");
+                        throw new ResourceNotFoundException("", "", "");
                     }
                     return dto;
                 });
