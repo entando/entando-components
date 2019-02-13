@@ -1458,27 +1458,33 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
     }
 
+    @Override
+    public String claimTask(KieBpmConfig config, String containerId, String taskId) throws ApsSystemException{
 
-    //HACK IN SOME STATE. TODO Fix this and delete.
-    private Map<String, String> casePathChannel = new HashMap<>();
-    private Map<String, KieBpmConfig> configForChannel = new HashMap<>();
 
-    public void setCasePathForChannel(String channel, String path) {
-        this.casePathChannel.put(channel, path);
+        HashMap headersMap = new HashMap();
+        Map<String, String> processVars = new HashMap<>();
+        String result = null;
+        JSONObject json = null;
+        try {
+            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_PUT_HUMAN_TASK_CLAIMED)).resolveParams(containerId, taskId);
+            headersMap.put("Accept", "application/json");
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            result = (new KieRequestBuilder(client)).setEndpoint(t).setHeaders(headersMap).setDebug(config.getDebug().booleanValue()).doRequest();
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                logger.debug("received successful message: ", result);
+            } else {
+                logger.debug("received empty case definitions message: ");
+            }
+
+        } catch (Throwable t) {
+            logger.error("Failed to fetch case details ", t);
+            throw new ApsSystemException("Error getting the cases definitions", t);
+        }
+
+        return result;
     }
-
-    public String getCasePathForChannel(String channel) {
-        return casePathChannel.get(channel);
-    }
-
-    public KieBpmConfig getConfigForChannel(String channel) {
-        return configForChannel.get(channel);
-    }
-
-    public void setConfigForChannel(String channel, KieBpmConfig config) {
-        configForChannel.put(channel, config);
-    }
-
 
     private IKieFormOverrideManager overrideManager;
 

@@ -324,7 +324,6 @@ public interface IKieFormManager {
 
     public Map<String, String> getProcessVariableInstances(KieBpmConfig config, String processInstanceIdd) throws ApsSystemException;
 
-    public void setCasePathForChannel(String channel, String path);
+    public String claimTask(KieBpmConfig config, String containerId, String taskId) throws ApsSystemException;
 
-    public String getCasePathForChannel(String channel);
 }

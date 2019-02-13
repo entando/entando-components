@@ -50,6 +50,9 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class ApiTaskInterface extends KieApiManager {
@@ -308,14 +311,25 @@ public class ApiTaskInterface extends KieApiManager {
                     //Filter the user tasks by process id configured on the widget.
                     filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
 
-                    //TODO Replace this
+
+                    ExecutorService executorService = Executors.newFixedThreadPool(10);
+                    List<Callable<JAXBTask>> tasksCallables = new ArrayList<>();
                     for(JAXBTask task : taskList.getList()) {
                         Long processId = task.getProcessInstanceId();
 
-                        Map<String, String> vars = this.getKieFormManager().getProcessVariableInstances(bpmConfig, processId+"");
-                        task.setProcessVariables(vars);
+                        Callable<JAXBTask> taskCallable = () -> {
+                            Map<String, String> vars = this.getKieFormManager().getProcessVariableInstances(bpmConfig, processId+"");
+                            task.setProcessVariables(vars);
+                            return task;
+                        };
+
+                        tasksCallables.add(taskCallable);
+
                     }
 
+
+                    executorService.invokeAll(tasksCallables);
+                    executorService.shutdown();
                     return taskList;
                 }
             } catch (Exception e) {
@@ -414,7 +428,6 @@ public class ApiTaskInterface extends KieApiManager {
         JSONObject taskData = this.getKieFormManager().getTaskFormData(bpmConfig, containerId, Long.valueOf(taskIdString), null);
 
         JSONObject inputData = taskData.getJSONObject("task-input-data");
-        this.getKieFormManager().setCasePathForChannel("1", (String)inputData.get("Exception ID"));
 
         mergeTaskData(inputData, processForm);
 

@@ -318,6 +318,26 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         }
     }
 
+    public void testClaimTask() throws Throwable {
+
+        KieBpmConfig config = getConfigForTests();
+
+        if (!TEST_ENABLED) {
+            return;
+        }
+        try {
+            // update configuration to reflect test configuration
+            formManager.addConfig(config);
+
+            String claim = formManager.claimTask(config, "test", "test");
+            assertNotNull(claim);
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            formManager.deleteConfig(config.getId());
+        }
+    }
+
     /**
      * Make sure we have some process definition to use for test whatever it is
      * @return
