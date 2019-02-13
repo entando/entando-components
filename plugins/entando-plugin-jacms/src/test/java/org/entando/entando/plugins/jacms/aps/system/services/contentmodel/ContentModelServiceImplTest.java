@@ -7,7 +7,7 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.*;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.dictionary.ContentModelDictionaryProvider;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import org.assertj.core.api.Condition;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentModelServiceImpl;
 import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
@@ -97,11 +97,11 @@ public class ContentModelServiceImplTest {
         assertThat(contentModelService.getContentModel(1L)).isNotNull();
     }
 
-    @Test(expected = RestRourceNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void shouldFailWithNotFound() {
         try {
             contentModelService.getContentModel(20L);
-        } catch (RestRourceNotFoundException ex) {
+        } catch (ResourceNotFoundException ex) {
             assertThat(ex.getErrorCode()).isEqualTo(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND);
             throw ex;
         }
@@ -185,14 +185,14 @@ public class ContentModelServiceImplTest {
         assertThat(result.getDescr()).isEqualTo(updatedDescription);
     }
 
-    @Test(expected = RestRourceNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void shouldFailUpdatingContentModelBecauseNotFound() {
         try {
             long id = 20L; // inexistent content model
             ContentModelDto contentModelToUpdate = new ContentModelDto();
             contentModelToUpdate.setId(id);
             contentModelService.update(contentModelToUpdate);
-        } catch (RestRourceNotFoundException ex) {
+        } catch (ResourceNotFoundException ex) {
             assertThat(ex.getErrorCode()).isEqualTo(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND);
             throw ex;
         }
@@ -253,11 +253,11 @@ public class ContentModelServiceImplTest {
                 .isNotNull().hasSize(1);
     }
 
-    @Test(expected = RestRourceNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void shouldFailReturningReferences() {
         try {
             contentModelService.getContentModelReferences(20L);
-        } catch (RestRourceNotFoundException ex) {
+        } catch (ResourceNotFoundException ex) {
             assertThat(ex.getErrorCode()).isEqualTo(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND);
             throw ex;
         }

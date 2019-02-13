@@ -1,11 +1,11 @@
 /*
  * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -63,7 +63,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         job.setUser(username);
         dao.createJob(job);
 
-        this.executeJob(job, this.installExecutor );
+        this.executeJob(job, this.installExecutor);
 
         return job;
     }
@@ -82,7 +82,6 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         return job;
     }
 
-
     private void executeJob(DigitalExchangeJob job, DigitalExchangeAbstractJobExecutor jobExecutor) {
         CompletableFuture.runAsync(() -> {
             try {
@@ -96,7 +95,6 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
             }
         });
     }
-
 
     private synchronized void checkIfAlreadyRunning(String componentId, JobType jobType) {
 
@@ -144,7 +142,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     @Override
     public DigitalExchangeJob checkJobStatus(String componentId, JobType jobType) {
         return dao.findLast(componentId, jobType)
-                .orElseThrow(() -> new RestRourceNotFoundException("component",  componentId));
+                .orElseThrow(() -> new ResourceNotFoundException("component", componentId));
     }
 
 }

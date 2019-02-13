@@ -11,23 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.plugins.jacms.aps.system.services.contentmodel.model;
-
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import org.entando.entando.aps.system.services.entity.model.AbstractEntityTypeDtoBuilder;
+package org.entando.entando.plugins.jacms.aps.system.services.content;
 
 import java.util.List;
 
-public class ContentTypeDtoBuilder extends AbstractEntityTypeDtoBuilder<Content, ContentTypeDto> {
+public interface ContentServiceUtilizer<T> {
 
-    public ContentTypeDtoBuilder(List<AttributeRole> roles) {
-        super(roles);
-    }
+    public String getManagerName();
 
-    @Override
-    protected ContentTypeDto toDto(Content src) {
-        return new ContentTypeDto(src, this.getRoles());
-    }
+    public List<T> getContentUtilizer(String contentId);
 
 }

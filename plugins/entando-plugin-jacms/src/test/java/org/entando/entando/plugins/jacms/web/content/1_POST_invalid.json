@@ -1,0 +1,56 @@
+{
+    "id":"anything",
+    "typeCode":"TST",
+    "typeDescription":"Type for test",
+    "description":"New Content for test",
+    "attributes": [
+        {
+            "code": "Title",
+            "value": "Mio titolo"
+        }, {
+            "code": "Subtitle"
+        }, {
+            "code": "Number",
+            "value": 2
+        }, {
+            "code": "Boolean",
+            "value": true
+        }, {
+            "code": "ThreeState",
+            "value": true
+        }, {
+            "code": "Date"
+        }, {
+            "code": "monolist",
+            "elements": [
+                {
+                    "code": "monolist",
+                    "values": {
+                        "it": "multilingua IT_1",
+                        "en": "multilingual EN_1"
+                    }
+                }, {
+                    "code": "monolist",
+                    "values": {
+                        "it": "multilingua IT_2",
+                        "en": "multilingual EN_2"
+                    }
+                }
+            ]
+        }, {
+            "code": "composite",
+            "compositeelements": [
+                {
+                    "code": "SubtitleSub",
+                    "values": {
+                        "it": "multilingua IT",
+                        "en": "multilingual EN"
+                    }
+                }, {
+                    "code": "TitleSub",
+                    "value": "Mio titolo"
+                }
+            ]
+        }
+    ]
+}

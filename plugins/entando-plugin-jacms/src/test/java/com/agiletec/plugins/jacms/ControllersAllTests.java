@@ -17,16 +17,26 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.entando.entando.plugins.jacms.web.content.ContentControllerIntegrationTest;
+import org.entando.entando.plugins.jacms.web.content.ContentControllerTest;
+import org.entando.entando.plugins.jacms.web.content.ContentTypeResourceControllerTest;
+import org.entando.entando.plugins.jacms.web.content.ContentTypeResourceIntegrationTest;
+import org.entando.entando.plugins.jacms.web.contentmodel.ContentModelControllerIntegrationTest;
 import org.entando.entando.plugins.jacms.web.contentmodel.ContentModelControllerUnitTest;
 import org.entando.entando.plugins.jacms.web.page.PageConfigurationControllerIntegrationTest;
 import org.entando.entando.plugins.jacms.web.page.PageConfigurationControllerWidgetsIntegrationTest;
 import org.entando.entando.plugins.jacms.web.page.PageControllerIntegrationTest;
-import org.entando.entando.plugins.jacms.web.contentmodel.ContentModelControllerIntegrationTest;
 
 public class ControllersAllTests extends TestCase {
 
     public static Test suite() {
         TestSuite suite = new TestSuite(ControllersAllTests.class.getName());
+
+        //suite.addTest(new JUnit4TestAdapter(ContentControllerIntegrationTest.class));
+        //suite.addTest(new JUnit4TestAdapter(ContentControllerTest.class));
+
+        //suite.addTest(new JUnit4TestAdapter(ContentTypeResourceControllerTest.class));
+        //suite.addTest(new JUnit4TestAdapter(ContentTypeResourceIntegrationTest.class));
 
         suite.addTest(new JUnit4TestAdapter(ContentModelControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(ContentModelControllerUnitTest.class));
@@ -34,7 +44,6 @@ public class ControllersAllTests extends TestCase {
         suite.addTest(new JUnit4TestAdapter(PageConfigurationControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(PageConfigurationControllerWidgetsIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(PageControllerIntegrationTest.class));
-
         return suite;
     }
 

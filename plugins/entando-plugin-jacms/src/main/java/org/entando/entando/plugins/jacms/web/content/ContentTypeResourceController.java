@@ -1,4 +1,17 @@
-package org.entando.entando.plugins.jacms.web.contentmodel;
+/*
+ * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
@@ -6,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.entity.model.*;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentTypeService;
-import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentTypeValidator;
+import org.entando.entando.plugins.jacms.web.content.validator.ContentTypeValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.*;
 import org.entando.entando.web.common.model.*;
@@ -36,7 +49,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     @Autowired
     public ContentTypeResourceController(ContentTypeService service,
-                                         ContentTypeValidator validator) {
+            ContentTypeValidator validator) {
         this.service = service;
         this.validator = validator;
     }
@@ -58,7 +71,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     private void validateCreate(ContentTypeDtoRequest contentType, BindingResult bindingResult) {
         validator.validate(contentType, bindingResult);
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
     }
@@ -92,9 +105,9 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
         Optional<ContentTypeDto> maybeContentType = service.findOne(code);
 
-        return maybeContentType.map(contentTypeDto ->
-                                        ResponseEntity.ok(new SimpleRestResponse<>(contentTypeDto)))
-                               .orElseGet(() -> ResponseEntity.notFound().build());
+        return maybeContentType.map(contentTypeDto
+                -> ResponseEntity.ok(new SimpleRestResponse<>(contentTypeDto)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
@@ -106,7 +119,6 @@ public class ContentTypeResourceController implements ContentTypeResource {
         ContentTypeDto updated = service.update(contentType, bindingResult);
         return ResponseEntity.ok(new SimpleRestResponse<>(updated));
     }
-
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
@@ -192,8 +204,8 @@ public class ContentTypeResourceController implements ContentTypeResource {
     }
 
     private void validateUpdate(@PathVariable String attributeCode,
-                                @RequestBody @Valid EntityTypeAttributeFullDto attribute,
-                                BindingResult bindingResult) {
+            @RequestBody @Valid EntityTypeAttributeFullDto attribute,
+            BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
