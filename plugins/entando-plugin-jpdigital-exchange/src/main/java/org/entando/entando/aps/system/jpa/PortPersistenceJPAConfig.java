@@ -15,9 +15,11 @@ package org.entando.entando.aps.system.jpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -36,9 +38,13 @@ import java.util.Properties;
         entityManagerFactoryRef = "portEntityManager"
 )
 @EnableTransactionManagement
+@PropertySource("classpath:application.properties")
 public class PortPersistenceJPAConfig {
 
     private DataSource dataSource;
+
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String hibernateDdlAutoMode;
 
     @Autowired
     public PortPersistenceJPAConfig(@Qualifier("portDataSource") DataSource dataSource) {
@@ -74,7 +80,7 @@ public class PortPersistenceJPAConfig {
 
     Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "create");
+        properties.setProperty("hibernate.hbm2ddl.auto", hibernateDdlAutoMode);
         return properties;
     }
 }

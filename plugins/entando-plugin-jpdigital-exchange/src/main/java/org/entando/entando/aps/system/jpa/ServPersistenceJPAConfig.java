@@ -17,10 +17,8 @@ import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -40,9 +38,13 @@ import java.util.Properties;
         entityManagerFactoryRef = "servEntityManager"
 )
 @EnableTransactionManagement
+@PropertySource("classpath:application.properties")
 public class ServPersistenceJPAConfig {
 
     private final DataSource dataSource;
+
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String hibernateDdlAutoMode;
 
     @Autowired
     public ServPersistenceJPAConfig(@Qualifier("servDataSource") DataSource dataSource) {
@@ -75,7 +77,7 @@ public class ServPersistenceJPAConfig {
 
     Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "create");
+        properties.setProperty("hibernate.hbm2ddl.auto", hibernateDdlAutoMode);
         return properties;
     }
 
