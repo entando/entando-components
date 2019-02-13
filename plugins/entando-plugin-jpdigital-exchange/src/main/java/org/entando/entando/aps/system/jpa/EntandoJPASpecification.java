@@ -25,6 +25,10 @@ import org.entando.entando.web.common.model.FilterOperator;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.data.jpa.domain.Specification;
 
+/**
+ * Spring Specification able to convert Entando paging, sorting and filtering
+ * models into Spring Data JPA ones and vice-versa.
+ */
 public class EntandoJPASpecification<T> implements Specification<T> {
 
     private final EntityFieldsConverter<T> converter;

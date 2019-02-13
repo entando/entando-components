@@ -13,8 +13,6 @@
  */
 package org.entando.entando.aps.system.jpa;
 
-import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
-import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +25,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
