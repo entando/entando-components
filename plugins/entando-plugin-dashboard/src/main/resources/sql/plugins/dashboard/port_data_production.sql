@@ -70,8 +70,8 @@ VALUES ('dashboard-pie-chart',
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup)
 VALUES ('dashboard-map', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Publish DashboardMap</property>
-<property key="it">Pubblica DashboardMap</property>
+<property key="en">Publish Dashboard Map</property>
+<property key="it">Pubblica Dashboard Map</property>
 </properties>', '<config>
 	<parameter name="id">id</parameter>
 	<action name="dashboardDashboardMapConfig"/>
