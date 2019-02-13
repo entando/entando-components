@@ -57,22 +57,7 @@
                     <span class="icon fa fa-puzzle-piece" title="Widget"></span>
                     <s:property value="%{getTitle(showlet.type.code, showlet.type.titles)}"/>
                 </p>
-                <s:if test="hasFieldErrors()">
-                    <div class="alert alert-danger alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                            <span class="pficon pficon-close"></span>
-                        </button>
-                        <span class="pficon pficon-error-circle-o"></span>
-                        <strong><s:text name="message.title.FieldErrors"/></strong>
-                        <ul>
-                            <s:iterator value="fieldErrors">
-                                <s:iterator value="value">
-                                    <li><s:property/></li>
-                                    </s:iterator>
-                                </s:iterator>
-                        </ul>
-                    </div>
-                </s:if>
+                <s:include value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/common/errors.jsp"/>
 
                 <s:set var="isknowledgeSourcePathSetted" value="%{knowledgeSourcePath != null && knowledgeSourcePath != ''}"/>
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
@@ -80,40 +65,8 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-xs-8">
-                            <div class="form-group">
-                                <label for="Knowledge Source"><s:text name="Knowledge Source"/></label>
-                                <div class="input-group">
-                                    <s:select 
-                                        disabled="#isknowledgeSourcePathSetted"
-                                        list="knowledgeSource" 
-                                        id="knowledgeSourcePath" 
-                                        name="knowledgeSourcePath"
-                                        listKey="value.id"
-                                        listValue="value.name" class="form-control">
-                                    </s:select>
-                                    <s:if test="#isknowledgeSourcePathSetted">
-                                        <s:hidden name="knowledgeSourcePath" />
-                                    </s:if>
-                                    <span class="input-group-btn">
-                                        <s:if test="#isknowledgeSourcePathSetted">
-                                            <wpsf:submit 
-                                                action="changeKnowledgeSourceForm" 
-                                                value="%{getText('label.changeKnowledgeSource')}"
-                                                cssClass="btn btn-warning"
-                                                />
-                                        </s:if>
-                                        <s:else>
-                                            <wpsf:submit 
-                                                action="chooseKnowledgeSourceForm" 
-                                                value="%{getText('label.chooseKnowledgeSource')}"
-                                                cssClass="btn btn-success"
-                                                />
-                                        </s:else>
-                                    </span>
-                                </div>
-                            </div>
+                            <s:include value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/common/knowledge-source-select.jsp"/>
                         </div>
-
                     </div>
 
                     <s:if test="#isknowledgeSourcePathSetted">
@@ -126,9 +79,9 @@
                                     <div class="input-group">
                                         <s:select 
                                             disabled="#isProcessPathSetted"
-                                            list="process" 
+                                            list="process"
                                             id="processPath"
-                                            name="processPath" 
+                                            name="processPath"
                                             listKey="%{processId + '@' + containerId + '@' + kieSourceId}"
                                             listValue="%{processName + ' @ ' + containerId}"
                                             class="form-control">
@@ -240,27 +193,5 @@
                 </div>
             </div>
         </div>
-
     </s:form>
-    <pre style="display:none;">
-    <!--Saved Configurations-->
-    <br />
-    <br />
-        <!--kieContainerListJson value-->
-    kieContainerListJson value
-    <br />
-        <s:if test="kieContainerListJson != null">
-            <s:property value="kieContainerListJson" escapeJavaScript="false" escapeHtml="false"/>
-        </s:if>
-        <!--/kieContainerListJson value-->
-    <br />
-    <br />
-        <!--knowledgeSourceJson value-->
-    knowledgeSourceJson value
-    <br />
-        <s:if test="knowledgeSourceJson != null">
-            <s:property value="knowledgeSourceJson" escapeJavaScript="false" escapeHtml="false"/>
-        </s:if>
-        <!--/knowledgeSourceJson value-->
-    </pre>
 </div>

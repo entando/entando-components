@@ -23,40 +23,22 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services;
 
-import com.agiletec.aps.system.common.entity.IEntityManager;
-import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
+import com.agiletec.aps.system.common.entity.*;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.*;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
-import com.agiletec.aps.system.services.lang.ILangManager;
-import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.page.Widget;
+import com.agiletec.aps.system.services.lang.*;
+import com.agiletec.aps.system.services.page.*;
 import com.agiletec.aps.util.ApsProperties;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
-import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.aps.system.exception.*;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
-import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
-import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.dataobjectmodel.*;
+import org.entando.entando.aps.system.services.widgettype.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
@@ -67,6 +49,9 @@ import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper
 import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  *
@@ -574,13 +559,13 @@ public class KieBpmService implements IKieBpmService {
         try {
             IPage page = this.getPageManager().getDraftPage(widgetConf.getPageCode());
             if (null == page) {
-                throw new RestRourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", widgetConf.getPageCode());
+                throw new ResourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", widgetConf.getPageCode());
             }
             if (widgetConf.getFramePosDraft() > page.getWidgets().length) {
-                throw new RestRourceNotFoundException(ERRCODE_FRAME_INVALID, "frame", String.valueOf(widgetConf.getFramePosDraft()));
+                throw new ResourceNotFoundException(ERRCODE_FRAME_INVALID, "frame", String.valueOf(widgetConf.getFramePosDraft()));
             }
             if (null == this.getWidgetTypeManager().getWidgetType(widgetConf.getWidgetType())) {
-                throw new RestRourceNotFoundException(ERRCODE_WIDGET_INVALID, "widget", String.valueOf(widgetConf.getWidgetType()));
+                throw new ResourceNotFoundException(ERRCODE_WIDGET_INVALID, "widget", String.valueOf(widgetConf.getWidgetType()));
             }
 
             ApsProperties properties = new ApsProperties();
@@ -618,10 +603,10 @@ public class KieBpmService implements IKieBpmService {
         try {
             IPage page = this.getPageManager().getDraftPage(pageCode);
             if (null == page) {
-                throw new RestRourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", pageCode);
+                throw new ResourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", pageCode);
             }
             if (frameId > page.getWidgets().length) {
-                throw new RestRourceNotFoundException(ERRCODE_FRAME_INVALID, "frame", String.valueOf(frameId));
+                throw new ResourceNotFoundException(ERRCODE_FRAME_INVALID, "frame", String.valueOf(frameId));
             }
             this.pageManager.removeWidget(pageCode, frameId);
         } catch (ApsSystemException e) {

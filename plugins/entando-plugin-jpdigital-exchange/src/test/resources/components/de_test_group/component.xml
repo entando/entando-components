@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+    <code>de_test_group</code>
+    <description>DE Test Group</description>
+    <dependencies>
+    </dependencies>
+    <installation>
+        <tableMapping>
+            <datasource name="portDataSource">
+            </datasource>
+            <datasource name="servDataSource">
+            </datasource>
+        </tableMapping>
+        <environment code="production">
+        </environment>
+        <environment code="test">
+            <defaultSqlResources>
+                <datasource name="portDataSource">
+                </datasource>
+            </defaultSqlResources>
+        </environment>
+        <execution>
+            <op>#call('createGroup', 'de_test_group/data/de_test_group.json')</op>
+        </execution>
+    </installation>
+    <uninstallation>
+        <sqlResources>
+            <datasource name="portDataSource">
+            </datasource>
+            <datasource name="servDataSource">
+            </datasource>
+        </sqlResources>
+        <resources>
+        </resources>
+        <execution>
+            <op>#call('deleteRole', 'de_test_role')</op>
+        </execution>
+    </uninstallation>
+</component>

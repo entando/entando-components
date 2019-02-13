@@ -82,6 +82,7 @@ import junit.framework.TestSuite;
 import org.entando.entando.plugins.jacms.aps.system.services.api.TestApiContentInterface;
 import org.entando.entando.plugins.jacms.aps.system.services.cache.TestCacheInfoManager;
 import org.entando.entando.plugins.jacms.aps.system.services.content.command.common.TestContentBulkCommand;
+import org.entando.entando.plugins.jacms.aps.system.services.contentmodel.ContentModelServiceImplTest;
 import org.entando.entando.plugins.jacms.aps.system.services.page.TestCmsPageManagerWrapper;
 import org.entando.entando.plugins.jacms.apsadmin.common.TestActivityStream;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestContentPreviewAction;
@@ -184,6 +185,7 @@ public class AllTests {
         suite.addTestSuite(TestIntroNewContentAction.class);
         suite.addTestSuite(TestContentGroupBulkAction.class);
         suite.addTestSuite(TestContentCategoryBulkAction.class);
+        suite.addTest(new JUnit4TestAdapter(ContentModelServiceImplTest.class));
 
         // Page
         suite.addTestSuite(TestContentListViewerWidgetAction.class);

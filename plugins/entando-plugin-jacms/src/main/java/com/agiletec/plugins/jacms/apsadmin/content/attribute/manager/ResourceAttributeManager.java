@@ -13,8 +13,7 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute.manager;
 
-import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
-import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.*;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -24,11 +23,10 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.Ab
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.util.ICmsAttributeErrorCodes;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.opensymphony.xwork2.ActionSupport;
-import java.util.List;
-import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.StringUtils;
+import java.util.*;
 
 /**
  * Classe manager degli attributi tipo risorsa (Image o Attach).

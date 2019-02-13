@@ -57,8 +57,9 @@
         <module>entando-plugin-jpkiebpm</module>
         <module>entando-plugin-jpinfinispan</module>
         <module>entando-plugin-jpseo</module>
-    <module>entando-plugin-dashboard</module>
-  </modules>
+        <module>entando-plugin-jpdigital-exchange</module>
+	<module>entando-plugin-dashboard</module>
+    </modules>
     <profiles>
         <profile>
             <id>java8</id>

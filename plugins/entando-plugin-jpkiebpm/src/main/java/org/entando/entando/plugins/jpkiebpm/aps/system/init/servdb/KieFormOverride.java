@@ -1,8 +1,9 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.init.servdb;
 
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
+
+import com.j256.ormlite.field.*;
 import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.Date;
 
 @DatabaseTable(tableName = KieFormOverride.TABLE_NAME)

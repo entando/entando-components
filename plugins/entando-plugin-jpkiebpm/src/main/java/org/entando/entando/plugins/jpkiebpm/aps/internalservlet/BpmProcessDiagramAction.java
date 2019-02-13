@@ -26,8 +26,10 @@ package org.entando.entando.plugins.jpkiebpm.aps.internalservlet;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getProcessInstanceIdFromProcessInstanceJson;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
+
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getProcessIdFromProcessInstanceJson;
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getProcessInstanceIdFromProcessInstanceJson;
 
 public class BpmProcessDiagramAction extends BpmCaseInstanceActionBase {
 
@@ -45,7 +47,7 @@ public class BpmProcessDiagramAction extends BpmCaseInstanceActionBase {
             this.setChannel(channelIn);
 
             KieBpmConfig config = formManager.getKieServerConfigurations().get(this.getKnowledgeSourceId());
-                                   
+
             if (null!=config) {
                 String processInstanceId = String.valueOf(getProcessInstanceIdFromProcessInstanceJson(caseManager.getProcessInstanceByCorrelationKey(config, this.getCasePath())));
                 if (null != processInstanceId) {

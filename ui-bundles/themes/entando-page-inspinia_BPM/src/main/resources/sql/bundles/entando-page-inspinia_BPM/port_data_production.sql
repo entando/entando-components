@@ -1,6 +1,6 @@
 INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('entando-page-inspinia_BPM', 'Inspinia - BPM Case Management widgets', '<frames>
 	<frame pos="0">
-		<descr>bpm-case-instance-selector</descr>
+		<descr>Case instance selector</descr>
 		<sketch x1="0" y1="0" x2="11" y2="0" />
 		<defaultWidget code="bpm-case-instance-selector">
 			<properties>
@@ -19,7 +19,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="2">
-		<descr>Progress Bar basic with label on center</descr>
+		<descr>Case progress status</descr>
 		<sketch x1="0" y1="2" x2="11" y2="2" />
 		<defaultWidget code="bpm-case-progress-status">
 			<properties>
@@ -29,7 +29,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="3">
-		<descr>Rules</descr>
+		<descr>Case roles</descr>
 		<sketch x1="0" y1="3" x2="5" y2="6" />
 		<defaultWidget code="bpm-case-roles">
 			<properties>
@@ -38,7 +38,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="4">
-		<descr>Comments</descr>
+		<descr>Case comments</descr>
 		<sketch x1="6" y1="3" x2="11" y2="6" />
 		<defaultWidget code="bpm-case-comments">
 			<properties>
@@ -47,11 +47,16 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="5">
-		<descr>Task Tables</descr>
+		<descr>Process diagram</descr>
 		<sketch x1="0" y1="7" x2="11" y2="10" />
+		<defaultWidget code="bpm-process-diagram">
+			<properties>
+				<property key="channel">1</property>
+			</properties>
+		</defaultWidget>
 	</frame>
 	<frame pos="6">
-		<descr>Chart</descr>
+		<descr>Case chart</descr>
 		<sketch x1="0" y1="11" x2="5" y2="14" />
 		<defaultWidget code="bpm-case-chart">
 			<properties>
@@ -60,7 +65,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
 		</defaultWidget>
 	</frame>
 	<frame pos="7">
-		<descr>Process Diagram</descr>
+		<descr>Case file</descr>
 		<sketch x1="6" y1="11" x2="11" y2="14" />
 		<defaultWidget code="bpm-case-file">
 			<properties>
@@ -95,9 +100,9 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
         <header class="header-fixed">
             <div class="header-limiter">
                 <h1>
-                    <a href="#">Kie<span>Workbench</span></a>
+                    <a href="#">Entando Case Management Widgets<span></span></a>
                 </h1>
-                <span class=" text-right user-logged">Kie Admin</span>
+                <span class=" text-right user-logged">Entando Admin</span>
             </div>
         </header>
         <div  class="container-bpm" style="margin:10px;">

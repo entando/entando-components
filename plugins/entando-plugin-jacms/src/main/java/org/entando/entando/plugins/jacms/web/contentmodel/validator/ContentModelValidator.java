@@ -13,8 +13,8 @@
  */
 package org.entando.entando.plugins.jacms.web.contentmodel.validator;
 
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
-import org.entando.entando.web.plugins.jacms.contentmodel.model.ContentModelRequest;
 import org.springframework.validation.Errors;
 
 public class ContentModelValidator extends AbstractPaginationValidator {
@@ -30,7 +30,7 @@ public class ContentModelValidator extends AbstractPaginationValidator {
 
     @Override
     public boolean supports(Class<?> paramClass) {
-        return ContentModelRequest.class.equals(paramClass);
+        return ContentModelDto.class.equals(paramClass);
     }
 
     @Override
@@ -38,9 +38,9 @@ public class ContentModelValidator extends AbstractPaginationValidator {
 
     }
 
-    public void validateBodyName(long modelId, ContentModelRequest contentModelReq, Errors errors) {
-        if (modelId != contentModelReq.getId().longValue()) {
-            errors.rejectValue("name", ERRCODE_URINAME_MISMATCH, new Object[]{modelId, contentModelReq.getId()}, "contentmodel.code.mismatch");
+    public void validateBodyName(long modelId, ContentModelDto contentModel, Errors errors) {
+        if (modelId != contentModel.getId()) {
+            errors.rejectValue("id", ERRCODE_URINAME_MISMATCH, new Object[]{modelId, contentModel.getId()}, "contentmodel.code.mismatch");
         }
     }
 

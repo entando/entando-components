@@ -1,14 +1,10 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.page.Page;
-import com.agiletec.aps.system.services.page.PageMetadata;
+import com.agiletec.aps.system.services.page.*;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.opensymphony.xwork2.Action;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.SpyKieFormManagerUtil;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 
 public class BpmBpmCaseInstanceSelectorWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
 

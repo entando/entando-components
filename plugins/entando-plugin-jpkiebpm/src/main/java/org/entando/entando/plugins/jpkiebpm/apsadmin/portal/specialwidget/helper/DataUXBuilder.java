@@ -23,40 +23,20 @@ THE SOFTWARE.
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Model;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Section;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePickerField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.InputField;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateExceptionHandler;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.function.Function;
-import javax.servlet.ServletContext;
-import org.springframework.stereotype.Service;
+import freemarker.template.*;
 import org.apache.struts2.util.ServletContextAware;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.IBpmOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.MultipleSelectorField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.ListBoxField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Option;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.RadioGroupField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.TextField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.*;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.*;
+import org.slf4j.*;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.ServletContext;
+import java.io.*;
+import java.util.*;
+import java.util.function.Function;
 
 @Service
 public class DataUXBuilder<T extends InputField> implements ServletContextAware {
@@ -369,18 +349,16 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             logger.debug("inputField instanceof TextField, adding custom properties");
             TextField textField = (TextField) inputField;
             textField.setPlaceHolder(placeHolder);
-            if(formOverride != null) {
-                String placeHolderOverride = getOverrideProperty(formOverride, PlaceHolderOverride.class, p -> p.getPlaceHolder());
-                if(placeHolderOverride != null) {
-                    textField.setPlaceHolder(placeHolderOverride);
-                }
-            }
         }
 
         if(formOverride != null) {
             String defaultValueOverride = getOverrideProperty(formOverride, DefaultValueOverride.class, d -> d.getDefaultValue());
             if(defaultValueOverride != null) {
                 inputField.setValue(defaultValueOverride);
+            }
+            String placeHolderOverride = getOverrideProperty(formOverride, PlaceHolderOverride.class, p -> p.getPlaceHolder());
+            if (placeHolderOverride != null) {
+                inputField.setLabel(placeHolderOverride);
             }
         }
         

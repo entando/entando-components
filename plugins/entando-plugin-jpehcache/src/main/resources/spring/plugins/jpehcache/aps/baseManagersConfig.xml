@@ -13,7 +13,7 @@
 	<cache:annotation-driven cache-manager="springCacheManager" />
 	
 	<bean id="springEhCacheFactoryManager" class="org.entando.entando.plugins.jpehcache.aps.system.services.EhCacheManagerFactoryBean" p:config-location="classpath:ehcache.xml">
-		<property name="applicationBaseUrl"><jee:jndi-lookup jndi-name="java:comp/env/applicationBaseURL" /></property>
+		<property name="applicationBaseUrl"><value>${applicationBaseURL}</value></property>
 	</bean>
 	
 	<bean id="springCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cache-manager-ref="springEhCacheFactoryManager"/>

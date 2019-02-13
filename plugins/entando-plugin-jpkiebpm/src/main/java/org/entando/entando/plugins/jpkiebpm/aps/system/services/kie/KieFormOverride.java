@@ -13,9 +13,9 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.*;
+
 import java.util.Date;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.IBpmOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.OverrideList;
 
 public class KieFormOverride {
 

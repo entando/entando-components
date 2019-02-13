@@ -29,9 +29,9 @@
     <header class="header-fixed">
         <div class="header-limiter">
             <h1>
-                <a href="#">Kie<span>Workbench</span></a>
+                <a href="#">Entando Case Management Widgets<span></span></a>
             </h1>
-            <span class=" text-right user-logged">Kie Admin</span>
+            <span class=" text-right user-logged">Entando Admin</span>
         </div>
     </header>
 

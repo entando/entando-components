@@ -68,7 +68,6 @@
         <put-attribute name="body"
                        value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/portal/specialwidget/bpmCaseInstanceRolesConfig.jsp"/>
     </definition>
-    <!--f-->
         
     <definition extends="layout.default" name="admin.jpkiebpm.page.widget.bpmCaseInstanceChart.config">
         <put-attribute name="title" value="Kiebpm Case Instance Chart"/>
