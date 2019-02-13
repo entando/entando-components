@@ -39,13 +39,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ContentControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -285,6 +286,23 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))));
     }
 
+    @Test
+    public void testGetReturnsList() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        mockMvc.perform(
+                get("/plugins/cms/contents")
+                .sessionAttr("user", user)
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.metaData.pageSize").value("100"))
+                .andReturn();
+    }
+
     /*
     @Test
     public void testLoadPublicEvents_1() throws Exception {
@@ -297,6 +315,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filter[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
                         .param("filter[0].operator", "eq")
                         .param("filter[0].value", "EVN")
+                        .param("pageSize", "20")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
@@ -319,20 +338,23 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filter[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
                         .param("filter[0].operator", "eq")
                         .param("filter[0].value", "EVN")
+                        .param("pageSize", "20")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
         bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        expectedFreeContentsId.add("EVN103");
-        expectedFreeContentsId.add("EVN41");
-        Assert.assertTrue(payloadSize > expectedFreeContentsId.size());
+        List<String> newExpectedFreeContentsId = new ArrayList<>(expectedFreeContentsId);
+        newExpectedFreeContentsId.add("EVN103");
+        newExpectedFreeContentsId.add("EVN41");
+        Assert.assertTrue(payloadSize > newExpectedFreeContentsId.size());
         for (int i = 0; i < payloadSize; i++) {
             String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
-            Assert.assertTrue(expectedFreeContentsId.contains(extractedId));
+            Assert.assertTrue(newExpectedFreeContentsId.contains(extractedId));
         }
     }
-
+     */
+ /*
     @Test
     public void testLoadPublicEvents_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -468,11 +490,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("status", IContentService.STATUS_ONLINE)
                         .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
                         .param("direction", FieldSearchFilter.DESC_ORDER)
-                        .param("filter[0].entityAttr", "DataInizio")
-                        .param("filter[0].order", "DESC")
-                        .param("filter[1].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
-                        .param("filter[1].operator", "eq")
-                        .param("filter[1].value", "EVN")
+                        .param("filters[0].entityAttr", "DataInizio")
+                        .param("filters[0].order", "DESC")
+                        .param("filters[1].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[1].operator", "eq")
+                        .param("filters[1].value", "EVN")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
@@ -496,20 +518,43 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         ResultActions result = mockMvc
                 .perform(get("/plugins/cms/contents")
                         .param("status", IContentService.STATUS_ONLINE)
-                        .param("filter[0].entityAttr", "DataInizio")
-                        .param("filter[0].order", "DESC")
-                        .param("filter[1].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
-                        .param("filter[1].operator", "eq")
-                        .param("filter[1].value", "EVN")
+                        .param("filters[0].entityAttr", "DataInizio")
+                        .param("filters[0].order", "DESC")
+                        .param("filters[1].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[1].operator", "eq")
+                        .param("filters[1].value", "EVN")
                         .param("pageSize", "5")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
-        String[] expectedFreeOrderedContentsId_2 = {"EVN194", "EVN193", "EVN24",
+        String[] expectedFreeOrderedContentsId_1 = {"EVN194", "EVN193", "EVN24",
             "EVN23", "EVN25"/*, "EVN20", "EVN21", "EVN192", "EVN191"*/};
         int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        Assert.assertEquals(expectedFreeOrderedContentsId_2.length, payloadSize);
+        Assert.assertEquals(expectedFreeOrderedContentsId_1.length, payloadSize);
+        for (int i = 0; i < expectedFreeOrderedContentsId_1.length; i++) {
+            String expectedId = expectedFreeOrderedContentsId_1[i];
+            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
+            Assert.assertEquals(expectedId, extractedId);
+        }
+
+        result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("direction", FieldSearchFilter.DESC_ORDER) //ignored
+                        .param("filters[0].entityAttr", "DataInizio")
+                        .param("filters[0].order", FieldSearchFilter.ASC_ORDER)
+                        .param("filters[1].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[1].operator", "eq")
+                        .param("filters[1].value", "EVN")
+                        .param("pageSize", "6")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        bodyResult = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isOk());
+        String[] expectedFreeOrderedContentsId_2 = {"EVN191", "EVN192", "EVN21", "EVN20", "EVN25", "EVN23"};
+        int payloadSize_2 = JsonPath.read(bodyResult, "$.payload.size()");
+        Assert.assertEquals(expectedFreeOrderedContentsId_2.length, payloadSize_2);
         for (int i = 0; i < expectedFreeOrderedContentsId_2.length; i++) {
             String expectedId = expectedFreeOrderedContentsId_2[i];
             String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
@@ -533,11 +578,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             ResultActions result = mockMvc
                     .perform(get("/plugins/cms/contents")
                             .param("status", IContentService.STATUS_ONLINE)
-                            .param("sort", "attribute.DataInizio")
-                            .param("direction", FieldSearchFilter.DESC_ORDER)
-                            .param("filter[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
-                            .param("filter[0].operator", "eq")
-                            .param("filter[0].value", "EVN")
+                            .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                            .param("filters[0].operator", "eq")
+                            .param("filters[0].value", "EVN")
+                            .param("filters[1].entityAttr", "DataInizio")
+                            .param("filters[1].order", FieldSearchFilter.DESC_ORDER)
                             .sessionAttr("user", user)
                             .header("Authorization", "Bearer " + accessToken));
             String bodyResult = result.andReturn().getResponse().getContentAsString();
