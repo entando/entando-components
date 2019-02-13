@@ -108,6 +108,8 @@ public interface KieBpmSystemConstants {
     public final static String API_PUT_HUMAN_TASK_START = "API_PUT_HUMAN_TASK_START";
     public final static String API_PUT_HUMAN_TASK_OUTPUT = "API_PUT_HUMAN_TASK_OUTPUT";
     public final static String API_PUT_HUMAN_TASK_COMPLETE = "API_PUT_HUMAN_TASK_COMPLETE";
+    public final static String API_PUT_HUMAN_TASK_CLAIMED = "API_PUT_HUMAN_TASK_CLAIMED";
+
     public final static String API_GET_HUMAN_TASK_DETAILS = "API_GET_HUMAN_TASK_DETAILS";
     public final static String API_POST_START_CASE = "API_POST_START_CASE";
     public final static String API_POST_START_CASE_AUTOMATED = "API_POST_START_CASE_AUTOMATED";

@@ -197,7 +197,7 @@
             var url = context + "tasks.json?configId=${id}";
             var extraBtns = [
             {
-            html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Complete</button>',
+            html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
                     onClick: function (ev, data) {
                         openModalForm(ev, configId, data, context);
                     }
