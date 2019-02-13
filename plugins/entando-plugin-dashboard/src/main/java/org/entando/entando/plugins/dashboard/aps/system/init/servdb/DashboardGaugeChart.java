@@ -24,5 +24,5 @@ public class DashboardGaugeChart {
 	private String _widgetId;
 	
 
-public static final String TABLE_NAME = "dashboard_dashboardgaugechart";
+public static final String TABLE_NAME = "dashboard_gauge_chart";
 }

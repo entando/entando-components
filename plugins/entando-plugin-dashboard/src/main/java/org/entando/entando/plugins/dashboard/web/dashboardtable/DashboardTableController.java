@@ -31,7 +31,7 @@ import org.entando.entando.plugins.dashboard.web.dashboardtable.model.DashboardT
 import org.entando.entando.plugins.dashboard.web.dashboardtable.validator.DashboardTableValidator;
 
 @RestController
-@RequestMapping(value = "/dashboard/dashboardTables")
+@RequestMapping(value = "/plugins/dashboard/dashboardTables")
 public class DashboardTableController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

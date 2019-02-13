@@ -21,9 +21,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +93,7 @@ public class DashboardConfigService implements IDashboardConfigService {
         try {
 	        DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(dashboardConfigRequest.getId());
 	        if (null == dashboardConfig) {
-	            throw new RestRourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(dashboardConfigRequest.getId()));
+	            throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(dashboardConfigRequest.getId()));
 	        }
         	BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfig);
             BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardConfig);
@@ -152,7 +150,7 @@ public class DashboardConfigService implements IDashboardConfigService {
 	        DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(id);
 	        if (null == dashboardConfig) {
 	            logger.warn("no dashboardConfig found with code {}", id);
-	            throw new RestRourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(id));
+	            throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(id));
 	        }
 	        DashboardConfigDto dto = this.getDtoBuilder().convert(dashboardConfig);
 	        return dto;

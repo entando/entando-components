@@ -21,9 +21,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +93,7 @@ public class DashboardPieChartService implements IDashboardPieChartService {
         try {
 	        DashboardPieChart dashboardPieChart = this.getDashboardPieChartManager().getDashboardPieChart(dashboardPieChartRequest.getId());
 	        if (null == dashboardPieChart) {
-	            throw new RestRourceNotFoundException(DashboardPieChartValidator.ERRCODE_DASHBOARDPIECHART_NOT_FOUND, "dashboardPieChart", String.valueOf(dashboardPieChartRequest.getId()));
+	            throw new ResourceNotFoundException(DashboardPieChartValidator.ERRCODE_DASHBOARDPIECHART_NOT_FOUND, "dashboardPieChart", String.valueOf(dashboardPieChartRequest.getId()));
 	        }
         	BeanUtils.copyProperties(dashboardPieChartRequest, dashboardPieChart);
             BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardPieChart);
@@ -152,7 +150,7 @@ public class DashboardPieChartService implements IDashboardPieChartService {
 	        DashboardPieChart dashboardPieChart = this.getDashboardPieChartManager().getDashboardPieChart(id);
 	        if (null == dashboardPieChart) {
 	            logger.warn("no dashboardPieChart found with code {}", id);
-	            throw new RestRourceNotFoundException(DashboardPieChartValidator.ERRCODE_DASHBOARDPIECHART_NOT_FOUND, "dashboardPieChart", String.valueOf(id));
+	            throw new ResourceNotFoundException(DashboardPieChartValidator.ERRCODE_DASHBOARDPIECHART_NOT_FOUND, "dashboardPieChart", String.valueOf(id));
 	        }
 	        DashboardPieChartDto dto = this.getDtoBuilder().convert(dashboardPieChart);
 	        return dto;

@@ -54,5 +54,5 @@ public class DashboardTable {
 	private String _columns;
 	
 
-public static final String TABLE_NAME = "dashboard_dashboardtable";
+public static final String TABLE_NAME = "dashboard_table";
 }

@@ -21,9 +21,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +93,7 @@ public class DashboardDonutChartService implements IDashboardDonutChartService {
         try {
 	        DashboardDonutChart dashboardDonutChart = this.getDashboardDonutChartManager().getDashboardDonutChart(dashboardDonutChartRequest.getId());
 	        if (null == dashboardDonutChart) {
-	            throw new RestRourceNotFoundException(DashboardDonutChartValidator.ERRCODE_DASHBOARDDONUTCHART_NOT_FOUND, "dashboardDonutChart", String.valueOf(dashboardDonutChartRequest.getId()));
+	            throw new ResourceNotFoundException(DashboardDonutChartValidator.ERRCODE_DASHBOARDDONUTCHART_NOT_FOUND, "dashboardDonutChart", String.valueOf(dashboardDonutChartRequest.getId()));
 	        }
         	BeanUtils.copyProperties(dashboardDonutChartRequest, dashboardDonutChart);
             BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardDonutChart);
@@ -152,7 +150,7 @@ public class DashboardDonutChartService implements IDashboardDonutChartService {
 	        DashboardDonutChart dashboardDonutChart = this.getDashboardDonutChartManager().getDashboardDonutChart(id);
 	        if (null == dashboardDonutChart) {
 	            logger.warn("no dashboardDonutChart found with code {}", id);
-	            throw new RestRourceNotFoundException(DashboardDonutChartValidator.ERRCODE_DASHBOARDDONUTCHART_NOT_FOUND, "dashboardDonutChart", String.valueOf(id));
+	            throw new ResourceNotFoundException(DashboardDonutChartValidator.ERRCODE_DASHBOARDDONUTCHART_NOT_FOUND, "dashboardDonutChart", String.valueOf(id));
 	        }
 	        DashboardDonutChartDto dto = this.getDtoBuilder().convert(dashboardDonutChart);
 	        return dto;

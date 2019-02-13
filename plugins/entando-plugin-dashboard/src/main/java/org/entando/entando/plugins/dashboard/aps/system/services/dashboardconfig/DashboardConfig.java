@@ -6,6 +6,9 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig;
 
 
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+
+import java.util.List;
 
 public class DashboardConfig {
 
@@ -72,7 +75,13 @@ public class DashboardConfig {
 		this._debug = debug;
 	}
 
-	
+	public List<DatasourcesConfigDto> getDatasources() {
+		return datasources;
+	}
+	public void setDatasources(List<DatasourcesConfigDto> datasources) {
+		this.datasources = datasources;
+	}
+
 	private int _id;
 	private String _serverDescription;
 	private String _serverURI;
@@ -82,5 +91,7 @@ public class DashboardConfig {
 	private int _timeConnection;
 	private int _active;
 	private int _debug;
+	private List<DatasourcesConfigDto> datasources;
+
 
 }

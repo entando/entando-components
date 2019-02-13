@@ -9,6 +9,11 @@
         <property name="dataSource" ref="servDataSource"/>
     </bean>
 
+    <bean id="dashboardDashboardConfigDatasourceDAO"
+          class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigDatasourceDAO">
+        <property name="dataSource" ref="servDataSource"/>
+    </bean>
+
     <bean id="dashboardDashboardConfigManager"
           class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigManager"
           parent="abstractService">

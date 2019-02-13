@@ -31,7 +31,7 @@ import org.entando.entando.plugins.dashboard.web.dashboardlinechart.model.Dashbo
 import org.entando.entando.plugins.dashboard.web.dashboardlinechart.validator.DashboardLineChartValidator;
 
 @RestController
-@RequestMapping(value = "/dashboard/dashboardLineCharts")
+@RequestMapping(value = "/plugins/dashboard/dashboardLineCharts")
 public class DashboardLineChartController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

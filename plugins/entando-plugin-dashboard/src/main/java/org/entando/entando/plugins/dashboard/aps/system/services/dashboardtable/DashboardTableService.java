@@ -21,9 +21,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +93,7 @@ public class DashboardTableService implements IDashboardTableService {
         try {
 	        DashboardTable dashboardTable = this.getDashboardTableManager().getDashboardTable(dashboardTableRequest.getId());
 	        if (null == dashboardTable) {
-	            throw new RestRourceNotFoundException(DashboardTableValidator.ERRCODE_DASHBOARDTABLE_NOT_FOUND, "dashboardTable", String.valueOf(dashboardTableRequest.getId()));
+	            throw new ResourceNotFoundException(DashboardTableValidator.ERRCODE_DASHBOARDTABLE_NOT_FOUND, "dashboardTable", String.valueOf(dashboardTableRequest.getId()));
 	        }
         	BeanUtils.copyProperties(dashboardTableRequest, dashboardTable);
             BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardTable);
@@ -152,7 +150,7 @@ public class DashboardTableService implements IDashboardTableService {
 	        DashboardTable dashboardTable = this.getDashboardTableManager().getDashboardTable(id);
 	        if (null == dashboardTable) {
 	            logger.warn("no dashboardTable found with code {}", id);
-	            throw new RestRourceNotFoundException(DashboardTableValidator.ERRCODE_DASHBOARDTABLE_NOT_FOUND, "dashboardTable", String.valueOf(id));
+	            throw new ResourceNotFoundException(DashboardTableValidator.ERRCODE_DASHBOARDTABLE_NOT_FOUND, "dashboardTable", String.valueOf(id));
 	        }
 	        DashboardTableDto dto = this.getDtoBuilder().convert(dashboardTable);
 	        return dto;

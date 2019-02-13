@@ -31,7 +31,7 @@ import org.entando.entando.plugins.dashboard.web.dashboarddonutchart.model.Dashb
 import org.entando.entando.plugins.dashboard.web.dashboarddonutchart.validator.DashboardDonutChartValidator;
 
 @RestController
-@RequestMapping(value = "/dashboard/dashboardDonutCharts")
+@RequestMapping(value = "/plugins/dashboard/dashboardDonutCharts")
 public class DashboardDonutChartController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

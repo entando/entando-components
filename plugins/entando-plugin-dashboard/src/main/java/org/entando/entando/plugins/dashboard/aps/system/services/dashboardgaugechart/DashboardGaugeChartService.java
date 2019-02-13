@@ -21,9 +21,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +93,7 @@ public class DashboardGaugeChartService implements IDashboardGaugeChartService {
         try {
 	        DashboardGaugeChart dashboardGaugeChart = this.getDashboardGaugeChartManager().getDashboardGaugeChart(dashboardGaugeChartRequest.getId());
 	        if (null == dashboardGaugeChart) {
-	            throw new RestRourceNotFoundException(DashboardGaugeChartValidator.ERRCODE_DASHBOARDGAUGECHART_NOT_FOUND, "dashboardGaugeChart", String.valueOf(dashboardGaugeChartRequest.getId()));
+	            throw new ResourceNotFoundException(DashboardGaugeChartValidator.ERRCODE_DASHBOARDGAUGECHART_NOT_FOUND, "dashboardGaugeChart", String.valueOf(dashboardGaugeChartRequest.getId()));
 	        }
         	BeanUtils.copyProperties(dashboardGaugeChartRequest, dashboardGaugeChart);
             BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardGaugeChart);
@@ -152,7 +150,7 @@ public class DashboardGaugeChartService implements IDashboardGaugeChartService {
 	        DashboardGaugeChart dashboardGaugeChart = this.getDashboardGaugeChartManager().getDashboardGaugeChart(id);
 	        if (null == dashboardGaugeChart) {
 	            logger.warn("no dashboardGaugeChart found with code {}", id);
-	            throw new RestRourceNotFoundException(DashboardGaugeChartValidator.ERRCODE_DASHBOARDGAUGECHART_NOT_FOUND, "dashboardGaugeChart", String.valueOf(id));
+	            throw new ResourceNotFoundException(DashboardGaugeChartValidator.ERRCODE_DASHBOARDGAUGECHART_NOT_FOUND, "dashboardGaugeChart", String.valueOf(id));
 	        }
 	        DashboardGaugeChartDto dto = this.getDtoBuilder().convert(dashboardGaugeChart);
 	        return dto;

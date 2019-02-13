@@ -59,5 +59,5 @@ public class DashboardConfig {
 	private int _debug;
 	
 
-public static final String TABLE_NAME = "dashboard_dashboardconfig";
+public static final String TABLE_NAME = "dashboard_config";
 }

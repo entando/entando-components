@@ -5,22 +5,27 @@ import {fetchServerConfigList, gotoPluginPage} from "state/main/actions";
 
 import {getServerConfigList} from "state/main/selectors";
 
-const mapStateToProps = state => ({
+export const mapStateToProps = state => ({
   serverList: getServerConfigList(state)
 });
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
   onWillMount: () => dispatch(fetchServerConfigList()),
+
   removeConfigItem: id => {
     console.log("removeConfigItem ", id);
   },
+
   editConfigItem: configItem => {
     console.log("editConfigItem", configItem);
   },
+
   testConfigItem: () => {
     console.log("Test config");
   },
+
   testAllConfigItems: () => {},
+
   gotoPluginPage: page => dispatch(gotoPluginPage(page))
 });
 

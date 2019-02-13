@@ -24,5 +24,5 @@ public class DashboardMap {
 	private String _widgetId;
 	
 
-public static final String TABLE_NAME = "dashboard_dashboardmap";
+public static final String TABLE_NAME = "dashboard_map";
 }

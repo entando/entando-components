@@ -6,89 +6,105 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model;
 
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.entando.entando.web.common.json.JsonDateDeserializer;
-import org.entando.entando.web.common.json.JsonDateSerializer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardConfigDto {
 
-	private int id;
-	private String serverDescription;
-	private String serverURI;
-	private String username;
-	private String password;
-	private String token;
-	private int timeConnection;
-	private int active;
-	private int debug;
+    private int id;
+    private String serverDescription;
+    private String serverURI;
+    private String username;
+    private String password;
+    private String token;
+    private int timeConnection;
+    private int active;
+    private int debug;
 
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+    private List<DatasourcesConfigDto> datasources = new ArrayList<>();
 
-	public String getServerDescription() {
-		return serverDescription;
-	}
-	public void setServerDescription(String serverDescription) {
-		this.serverDescription = serverDescription;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getServerURI() {
-		return serverURI;
-	}
-	public void setServerURI(String serverURI) {
-		this.serverURI = serverURI;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getServerDescription() {
+        return serverDescription;
+    }
 
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setServerDescription(String serverDescription) {
+        this.serverDescription = serverDescription;
+    }
 
-	public String getToken() {
-		return token;
-	}
-	public void setToken(String token) {
-		this.token = token;
-	}
+    public String getServerURI() {
+        return serverURI;
+    }
 
-	public int getTimeConnection() {
-		return timeConnection;
-	}
-	public void setTimeConnection(int timeConnection) {
-		this.timeConnection = timeConnection;
-	}
+    public void setServerURI(String serverURI) {
+        this.serverURI = serverURI;
+    }
 
-	public int getActive() {
-		return active;
-	}
-	public void setActive(int active) {
-		this.active = active;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public int getDebug() {
-		return debug;
-	}
-	public void setDebug(int debug) {
-		this.debug = debug;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public int getTimeConnection() {
+        return timeConnection;
+    }
+
+    public void setTimeConnection(int timeConnection) {
+        this.timeConnection = timeConnection;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public int getDebug() {
+        return debug;
+    }
+
+    public void setDebug(int debug) {
+        this.debug = debug;
+    }
 
 
     public static String getEntityFieldName(String dtoFieldName) {
-		return dtoFieldName;
+        return dtoFieldName;
     }
-    
+
+    public List<DatasourcesConfigDto> getDatasources() {
+        return datasources;
+    }
+
+    public void setDatasources(List<DatasourcesConfigDto> datasources) {
+        this.datasources = datasources;
+    }
 }

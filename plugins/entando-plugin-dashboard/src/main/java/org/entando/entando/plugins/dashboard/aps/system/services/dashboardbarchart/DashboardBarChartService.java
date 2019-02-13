@@ -5,30 +5,28 @@
  */
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardbarchart;
 
-import  org.entando.entando.plugins.dashboard.aps.system.services.dashboardbarchart.model.DashboardBarChartDto;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.plugins.dashboard.web.dashboardbarchart.model.DashboardBarChartRequest;
-import org.entando.entando.plugins.dashboard.web.dashboardbarchart.validator.DashboardBarChartValidator;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PostConstruct;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
-import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardbarchart.model.DashboardBarChartDto;
+import org.entando.entando.plugins.dashboard.web.dashboardbarchart.model.DashboardBarChartRequest;
+import org.entando.entando.plugins.dashboard.web.dashboardbarchart.validator.DashboardBarChartValidator;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BeanPropertyBindingResult;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardBarChartService implements IDashboardBarChartService {
 
@@ -95,7 +93,7 @@ public class DashboardBarChartService implements IDashboardBarChartService {
         try {
 	        DashboardBarChart dashboardBarChart = this.getDashboardBarChartManager().getDashboardBarChart(dashboardBarChartRequest.getId());
 	        if (null == dashboardBarChart) {
-	            throw new RestRourceNotFoundException(DashboardBarChartValidator.ERRCODE_DASHBOARDBARCHART_NOT_FOUND, "dashboardBarChart", String.valueOf(dashboardBarChartRequest.getId()));
+	            throw new ResourceNotFoundException(DashboardBarChartValidator.ERRCODE_DASHBOARDBARCHART_NOT_FOUND, "dashboardBarChart", String.valueOf(dashboardBarChartRequest.getId()));
 	        }
         	BeanUtils.copyProperties(dashboardBarChartRequest, dashboardBarChart);
             BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardBarChart);
@@ -152,7 +150,7 @@ public class DashboardBarChartService implements IDashboardBarChartService {
 	        DashboardBarChart dashboardBarChart = this.getDashboardBarChartManager().getDashboardBarChart(id);
 	        if (null == dashboardBarChart) {
 	            logger.warn("no dashboardBarChart found with code {}", id);
-	            throw new RestRourceNotFoundException(DashboardBarChartValidator.ERRCODE_DASHBOARDBARCHART_NOT_FOUND, "dashboardBarChart", String.valueOf(id));
+	            throw new ResourceNotFoundException(DashboardBarChartValidator.ERRCODE_DASHBOARDBARCHART_NOT_FOUND, "dashboardBarChart", String.valueOf(id));
 	        }
 	        DashboardBarChartDto dto = this.getDtoBuilder().convert(dashboardBarChart);
 	        return dto;

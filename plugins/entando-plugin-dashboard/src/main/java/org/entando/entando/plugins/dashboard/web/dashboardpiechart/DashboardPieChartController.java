@@ -31,7 +31,7 @@ import org.entando.entando.plugins.dashboard.web.dashboardpiechart.model.Dashboa
 import org.entando.entando.plugins.dashboard.web.dashboardpiechart.validator.DashboardPieChartValidator;
 
 @RestController
-@RequestMapping(value = "/dashboard/dashboardPieCharts")
+@RequestMapping(value = "/plugins/dashboard/dashboardPieCharts")
 public class DashboardPieChartController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

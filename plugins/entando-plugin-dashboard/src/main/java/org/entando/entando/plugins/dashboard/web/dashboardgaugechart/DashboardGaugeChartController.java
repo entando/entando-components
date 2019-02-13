@@ -31,7 +31,7 @@ import org.entando.entando.plugins.dashboard.web.dashboardgaugechart.model.Dashb
 import org.entando.entando.plugins.dashboard.web.dashboardgaugechart.validator.DashboardGaugeChartValidator;
 
 @RestController
-@RequestMapping(value = "/dashboard/dashboardGaugeCharts")
+@RequestMapping(value = "/plugins/dashboard/dashboardGaugeCharts")
 public class DashboardGaugeChartController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

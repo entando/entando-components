@@ -24,5 +24,5 @@ public class DashboardBarChart {
 	private String _widgetId;
 	
 
-public static final String TABLE_NAME = "dashboard_dashboardbarchart";
+public static final String TABLE_NAME = "dashboard_bar_chart";
 }

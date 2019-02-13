@@ -21,9 +21,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +93,7 @@ public class DashboardLineChartService implements IDashboardLineChartService {
         try {
 	        DashboardLineChart dashboardLineChart = this.getDashboardLineChartManager().getDashboardLineChart(dashboardLineChartRequest.getId());
 	        if (null == dashboardLineChart) {
-	            throw new RestRourceNotFoundException(DashboardLineChartValidator.ERRCODE_DASHBOARDLINECHART_NOT_FOUND, "dashboardLineChart", String.valueOf(dashboardLineChartRequest.getId()));
+	            throw new ResourceNotFoundException(DashboardLineChartValidator.ERRCODE_DASHBOARDLINECHART_NOT_FOUND, "dashboardLineChart", String.valueOf(dashboardLineChartRequest.getId()));
 	        }
         	BeanUtils.copyProperties(dashboardLineChartRequest, dashboardLineChart);
             BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardLineChart);
@@ -152,7 +150,7 @@ public class DashboardLineChartService implements IDashboardLineChartService {
 	        DashboardLineChart dashboardLineChart = this.getDashboardLineChartManager().getDashboardLineChart(id);
 	        if (null == dashboardLineChart) {
 	            logger.warn("no dashboardLineChart found with code {}", id);
-	            throw new RestRourceNotFoundException(DashboardLineChartValidator.ERRCODE_DASHBOARDLINECHART_NOT_FOUND, "dashboardLineChart", String.valueOf(id));
+	            throw new ResourceNotFoundException(DashboardLineChartValidator.ERRCODE_DASHBOARDLINECHART_NOT_FOUND, "dashboardLineChart", String.valueOf(id));
 	        }
 	        DashboardLineChartDto dto = this.getDtoBuilder().convert(dashboardLineChart);
 	        return dto;

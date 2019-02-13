@@ -21,9 +21,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +93,7 @@ public class DashboardMapService implements IDashboardMapService {
         try {
 	        DashboardMap dashboardMap = this.getDashboardMapManager().getDashboardMap(dashboardMapRequest.getId());
 	        if (null == dashboardMap) {
-	            throw new RestRourceNotFoundException(DashboardMapValidator.ERRCODE_DASHBOARDMAP_NOT_FOUND, "dashboardMap", String.valueOf(dashboardMapRequest.getId()));
+	            throw new ResourceNotFoundException(DashboardMapValidator.ERRCODE_DASHBOARDMAP_NOT_FOUND, "dashboardMap", String.valueOf(dashboardMapRequest.getId()));
 	        }
         	BeanUtils.copyProperties(dashboardMapRequest, dashboardMap);
             BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardMap);
@@ -152,7 +150,7 @@ public class DashboardMapService implements IDashboardMapService {
 	        DashboardMap dashboardMap = this.getDashboardMapManager().getDashboardMap(id);
 	        if (null == dashboardMap) {
 	            logger.warn("no dashboardMap found with code {}", id);
-	            throw new RestRourceNotFoundException(DashboardMapValidator.ERRCODE_DASHBOARDMAP_NOT_FOUND, "dashboardMap", String.valueOf(id));
+	            throw new ResourceNotFoundException(DashboardMapValidator.ERRCODE_DASHBOARDMAP_NOT_FOUND, "dashboardMap", String.valueOf(id));
 	        }
 	        DashboardMapDto dto = this.getDtoBuilder().convert(dashboardMap);
 	        return dto;
