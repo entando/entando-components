@@ -12,6 +12,7 @@ import javax.validation.Valid;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
@@ -73,6 +74,13 @@ public class DashboardConfigController {
     public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> getDashboardConfig(@PathVariable String dashboardConfigId) {
 		DashboardConfigDto dashboardConfig = this.getDashboardConfigService().getDashboardConfig(Integer.valueOf(dashboardConfigId));
         return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = "superuser")
+    @RequestMapping(value = "/{dashboardConfigId}/datasources", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<DatasourcesConfigDto>> getDashboardConfigDatasource(@PathVariable String dashboardConfigId) {
+		DashboardConfigDto dashboardConfig = this.getDashboardConfigService().getDashboardConfig(Integer.valueOf(dashboardConfigId));
+        return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig.getDatasources()), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = "superuser")

@@ -7,7 +7,7 @@ import {
 
 export const getServerConfig = () =>
   makeMockRequest({
-    uri: "/api/plugin/dashboard/serverConfig",
+    uri: "/plugins/dashboard/dashboardConfigs",
     method: METHODS.GET,
     mockResponse: DASHBOARD_CONFIG_LIST,
     useAuthentication: false
@@ -15,7 +15,7 @@ export const getServerConfig = () =>
 
 export const postServerConfig = serverConfig =>
   makeMockRequest({
-    uri: "/api/plugin/dashboard/serverConfig",
+    uri: "/plugins/dashboard/dashboardConfigs",
     method: METHODS.POST,
     body: serverConfig,
     mockResponse: {...serverConfig},
@@ -24,7 +24,7 @@ export const postServerConfig = serverConfig =>
 
 export const putServerConfig = serverConfig =>
   makeMockRequest({
-    uri: `/api/plugin/dashboard/serverConfig/${serverConfig.id}`,
+    uri: `/plugins/dashboard/dashboardConfigs/${serverConfig.id}`,
     method: METHODS.PUT,
     body: serverConfig,
     mockResponse: {...serverConfig},
@@ -33,7 +33,7 @@ export const putServerConfig = serverConfig =>
 
 export const deleteServerConfig = serverConfigId =>
   makeMockRequest({
-    uri: `/api/plugin/dashboard/serverConfig/${serverConfigId}`,
+    uri: `/plugins/dashboard/dashboardConfigs/${serverConfigId}`,
     method: METHODS.DELETE,
     mockResponse: {},
     useAuthentication: false
@@ -41,7 +41,7 @@ export const deleteServerConfig = serverConfigId =>
 
 export const getDatasources = configId =>
   makeMockRequest({
-    uri: `/api/plugin/dashboard/serverConfig/${configId}/datasources`,
+    uri: `/plugins/dashboard/dashboardConfigs/${configId}/datasources`,
     method: METHODS.GET,
     mockResponse: DASHBOARD_LIST_DATASOURCE[configId],
     useAuthentication: false
@@ -55,7 +55,7 @@ export const getDatasourceData = (
 ) =>
   makeMockRequest(
     {
-      uri: `/api/plugin/dashboard/serverConfig/${configId}/datasource/${datasourceId}/${type}`,
+      uri: `/plugins/dashboard/dashboardConfigs/${configId}/datasource/${datasourceId}/${type}`,
       method: METHODS.GET,
       mockResponse: DATASOURCES_DATA[configId][datasourceId][type],
       useAuthentication: false
@@ -65,7 +65,7 @@ export const getDatasourceData = (
 
 export const putDatasourceColumn = (configId, datasourceId, columns) =>
   makeMockRequest({
-    uri: `/api/plugin/dashboard/serverConfig/${configId}/datasource/${datasourceId}/columns`,
+    uri: `/plugins/dashboard/dashboardConfigs/${configId}/datasource/${datasourceId}/columns`,
     method: METHODS.PUT,
     body: columns,
     mockResponse: columns,
