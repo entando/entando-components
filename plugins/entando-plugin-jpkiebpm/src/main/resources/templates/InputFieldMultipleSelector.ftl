@@ -1,5 +1,5 @@
 <div class="row">
-    <div class='col-sm-5'>
+    <div class='col-sm-12'>
         <div class="form-group">
             <label id="JPKIE_${field.name}" for="jpkieformparam_${field.name}" class="editLabel">
                 <#include "/FieldLabel.ftl">
