@@ -56,10 +56,10 @@ import org.entando.entando.aps.system.services.entity.AbstractEntityService;
 import org.entando.entando.aps.system.services.group.GroupServiceUtilizer;
 import org.entando.entando.aps.system.services.page.PageServiceUtilizer;
 import org.entando.entando.plugins.jacms.web.content.ContentController;
+import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
 import org.entando.entando.web.common.exceptions.ResourcePermissionsException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestEntityListRequest;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.slf4j.Logger;
@@ -212,7 +212,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     }
 
     @Override
-    public PagedMetadata<ContentDto> getContents(RestEntityListRequest requestList, String modelId, String status, String langCode, UserDetails user) {
+    public PagedMetadata<ContentDto> getContents(RestContentListRequest requestList, String modelId, String status, String langCode, UserDetails user) {
         try {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(requestList, "content");
             boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(status));
@@ -221,8 +221,8 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             filtersArr = filters.toArray(filtersArr);
             List<String> userGroupCodes = this.getAllowedGroups(user, online);
             List<String> result = (online)
-                    ? this.getContentManager().loadPublicContentsId(null, true, filtersArr, userGroupCodes)
-                    : this.getContentManager().loadWorkContentsId(null, false, filtersArr, userGroupCodes);
+                    ? this.getContentManager().loadPublicContentsId(requestList.getCategories(), requestList.isOrClauseCategoryFilter(), filtersArr, userGroupCodes)
+                    : this.getContentManager().loadWorkContentsId(requestList.getCategories(), requestList.isOrClauseCategoryFilter(), filtersArr, userGroupCodes);
             List<String> sublist = requestList.getSublist(result);
             PagedMetadata<ContentDto> pagedMetadata = new PagedMetadata<>(requestList, sublist.size());
             List<ContentDto> masterList = new ArrayList<>();

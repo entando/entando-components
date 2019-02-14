@@ -15,6 +15,7 @@ package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
+import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Permission;
@@ -421,7 +422,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertEquals(expectedId, extractedId);
         }
     }
-    /*
+
     @Test
     public void testLoadOrderedPublicEvents_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -573,5 +574,5 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             }
         }
     }
-     */
+
 }
