@@ -60,6 +60,7 @@ import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper
 
 @Service
 public class DataUXBuilder<T extends InputField> implements ServletContextAware {
+    private static String DEFAULT_FORM_ACTION = "/ExtStr2/do/bpm/FrontEnd/DataTypeForm/save";
 
     private static final Logger logger = LoggerFactory.getLogger(DataUXBuilder.class);
     
@@ -72,6 +73,9 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     public static final String TEMPLATE_FOLDER = "/templates/";
     public static final String MAIN_FTL_TEMPLATE = "PageModel.ftl";
 
+    
+    
+    
     Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
 
     public void init() throws Exception {
@@ -121,9 +125,12 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     public DataUXBuilder() {
 
     }
-
     public String createDataUx(KieProcessFormQueryResult kpfr, int widgetInfoId, String containerId, String processId, String title) throws Exception {
-        logger.debug("CreateDataUx in DataUXBuilde for containerId {} with processId {} and title {} -> kpfr: {}", containerId, processId, title, kpfr);
+        return this.createDataUx( kpfr, widgetInfoId, containerId, processId, title, DEFAULT_FORM_ACTION,"");
+    }
+    
+    public String createDataUx(KieProcessFormQueryResult kpfr, int widgetInfoId, String containerId, String processId, String title, String formAction, String urlParameters) throws Exception {
+        logger.info("CreateDataUx in DataUXBuilde for containerId {} with processId {} and title {} -> kpfr: {}", containerId, processId, title, kpfr);
         Template template = cfg.getTemplate(MAIN_FTL_TEMPLATE);
         Map<String, KieFormOverride> formOverridesMap = getFormOverridesMap(widgetInfoId);        
         Map<String, Section> sections = this.getSections(kpfr, formOverridesMap);
@@ -132,11 +139,11 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         model.setTitle(title);
         model.setContainerId(containerId);
         model.setProcessId(processId);
+        model.setFormAction(formAction);
+        model.setUrlParameters(urlParameters);
         root.put("model", model);
-        logger.debug("sections {}", sections);
-
+        logger.info("sections {}", sections);
         root.put("sections", sections);
-
         Writer stringWriter = new StringWriter();
         template.process(root, stringWriter);
         return stringWriter.toString();
@@ -216,16 +223,15 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     }
 
     private T addField(KieProcessFormField field, KieFormOverride formOverride) throws Exception {
-        logger.debug("------------------------------------");
-        logger.debug("Field getId          -> {}", field.getId());
-        logger.debug("Field getName        -> {}", field.getName());
-        logger.debug("Field getPosition    -> {}", field.getPosition());
-        logger.debug("Field getType        -> {}", field.getType());
-        logger.debug("Field getProperties -> ");
+        logger.info("------------------------------------");
+        logger.info("Field getId          -> {}", field.getId());
+        logger.info("Field getName        -> {}", field.getName());
+        logger.info("Field getPosition    -> {}", field.getPosition());
+        logger.info("Field getType        -> {}", field.getType());
+        logger.info("Field getProperties  -> ");
         field.getProperties().forEach(p
-                -> logger.debug("  Property name:{} value: {}", p.getName(), p.getValue()));
-        logger.debug("------------------------------------");
-
+                -> logger.info("  Property name: {} value: {}", p.getName(), p.getValue()));
+        
         T inputField;
         switch (field.getType()) {
             case "TextBox":
@@ -259,8 +265,21 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         String fieldTypePAM = field.getType();
         String fieldValueExpr = this.valueMapping.get(field.getType());
         String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
+        fieldValue=fieldValue.replaceAll(" ", "_");
+                
+                
+        logger.info("Field getValue        -> {}", fieldValue);
+        logger.info("------------------------------------");
 
         boolean required = Boolean.parseBoolean(field.getProperty("fieldRequired").getValue());
+
+        boolean readOnly = false;
+                
+                if (null!=field.getProperty("readOnly")){
+                    readOnly =  Boolean.parseBoolean(field.getProperty("readOnly").getValue());
+                }
+                
+                
         String placeHolder = field.getProperty("placeHolder").getValue();
         inputField.setId(field.getId());
         inputField.setName(fieldName);
@@ -268,7 +287,8 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         inputField.setRequired(required);
         inputField.setTypePAM(fieldTypePAM);
         inputField.setTypeHTML(fieldTypeHMTL);
-
+        inputField.setReadOnly(readOnly);
+        
         if (inputField instanceof DatePickerField) {
             DatePickerField datePicker = (DatePickerField) inputField;
             boolean showTime = Boolean.parseBoolean(field.getProperty("showTime").getValue());
