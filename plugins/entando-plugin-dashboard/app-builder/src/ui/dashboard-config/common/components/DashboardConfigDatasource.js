@@ -1,4 +1,7 @@
 import React from "react";
+
+import PropTypes from "prop-types";
+
 import {Row, Col, Button, Icon} from "patternfly-react";
 
 import FormattedMessageLocal from "ui/i18n/FormattedMessage";
@@ -85,6 +88,24 @@ const DashboardConfigDatasource = ({
       </Row>
     </div>
   );
+};
+
+const DATASOURCE_TYPE = {
+  name: PropTypes.string,
+  uri: PropTypes.string
+};
+
+DashboardConfigDatasource.PropType = {
+  datasourceValue: PropTypes.shape(DATASOURCE_TYPE),
+  datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE))
+};
+
+DashboardConfigDatasource.defaultProps = {
+  datasourceValue: {
+    name: undefined,
+    uri: undefined
+  },
+  datasources: []
 };
 
 export default DashboardConfigDatasource;

@@ -53,7 +53,7 @@ const renderField = (
   );
 };
 
-class DashboardConfigFormBody extends Component {
+export class DashboardConfigFormBody extends Component {
   render() {
     const {handleSubmit} = this.props;
     return (
@@ -215,12 +215,26 @@ class DashboardConfigFormBody extends Component {
   }
 }
 
+const DATASOURCE_TYPE = {
+  name: PropTypes.string,
+  uri: PropTypes.string
+};
+
 DashboardConfigFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   testConnection: PropTypes.func.isRequired,
-  datasources: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE)),
+  datasourceValue: PropTypes.shape(DATASOURCE_TYPE),
   invalid: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired
+};
+
+DashboardConfigFormBody.defaultProps = {
+  datasourceValue: {
+    name: undefined,
+    uri: undefined
+  },
+  datasources: []
 };
 
 const DashboardConfigForm = reduxForm({

@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
     name: selector(state, "datasource"),
     uri: selector(state, "datasourceURI")
   },
-  datasources: selector(state, "datasources") || []
+  datasources: selector(state, "datasources")
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
