@@ -322,16 +322,26 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
         String accessToken = mockOAuthInterceptor(user);
-        mockMvc.perform(
-                get("/plugins/cms/contents")
-                .sessionAttr("user", user)
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.metaData.pageSize").value("100"))
-                .andReturn();
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8));
+        result.andExpect(status().isOk());
+        result.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+        result.andExpect(jsonPath("$.metaData.pageSize").value("100"));
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
+        result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8));
+        String bodyResult2 = result.andReturn().getResponse().getContentAsString();
+        int payloadSize2 = JsonPath.read(bodyResult2, "$.payload.size()");
+        Assert.assertEquals(payloadSize2, payloadSize);
     }
 
     @Test
