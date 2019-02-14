@@ -36,6 +36,7 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicContentAuthorizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
@@ -504,12 +505,19 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
 
     protected void checkContentAuthorization(UserDetails userDetails, String contentId, boolean publicVersion, boolean edit, BindingResult mainBindingResult) {
         try {
-            if ((!this.getContentAuthorizationHelper().isAuth(userDetails, contentId, publicVersion) && !edit)
-                    || (!this.getContentAuthorizationHelper().isAuthToEdit(userDetails, contentId, publicVersion) && edit)) {
+            PublicContentAuthorizationInfo pcai = (publicVersion) ? this.getContentAuthorizationHelper().getAuthorizationInfo(contentId) : null;
+            List<String> userGroupCodes = new ArrayList<>();
+            List<Group> groups = (null != userDetails) ? this.getAuthorizationManager().getUserGroups(userDetails) : new ArrayList<>();
+            userGroupCodes.addAll(groups.stream().map(Group::getName).collect(Collectors.toList()));
+            userGroupCodes.add(Group.FREE_GROUP_NAME);
+            if (!(publicVersion && !edit && null != pcai && pcai.isUserAllowed(userGroupCodes))
+                    && !this.getContentAuthorizationHelper().isAuthToEdit(userDetails, contentId, publicVersion)) {
                 BindingResult bindingResult = (null == mainBindingResult) ? new BeanPropertyBindingResult(contentId, "content") : mainBindingResult;
                 bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{contentId}, "content.unauthorized.access");
                 throw new ResourcePermissionsException(bindingResult);
             }
+        } catch (ResourcePermissionsException ex) {
+            throw ex;
         } catch (Exception ex) {
             logger.error("error checking auth for content {}", contentId, ex);
             throw new RestServerError("error checking auth for content", ex);

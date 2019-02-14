@@ -15,6 +15,7 @@ package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.services.group.Group;
@@ -95,6 +96,15 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isNotFound());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload", Matchers.empty()));
+    }
+
+    @Test
+    public void testGetContentByGuestUser() throws Exception {
+        ResultActions result = this.performGetContent("ART187", null, true, null, null);
+        result.andExpect(status().isOk());
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
+        result = this.performGetContent("ART187", null, false, null, null);
+        result.andExpect(status().isForbidden());
     }
 
     @Test
@@ -219,7 +229,6 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
     private ResultActions performGetContent(String code, String modelId,
             boolean online, String langCode, UserDetails user) throws Exception {
-        String accessToken = mockOAuthInterceptor(user);
         String path = "/plugins/cms/contents/{code}";
         if (null != modelId) {
             path += "/model/" + modelId;
@@ -228,6 +237,10 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         if (null != langCode) {
             path += "&lang=" + langCode;
         }
+        if (null == user) {
+            return mockMvc.perform(get(path, code));
+        }
+        String accessToken = mockOAuthInterceptor(user);
         return mockMvc.perform(
                 get(path, code)
                 .sessionAttr("user", user)
@@ -284,6 +297,21 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filter[0].value", "EVN")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        System.out.println(result.andReturn().getResponse().getContentAsString());
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))));
+    }
+
+    @Test
+    public void testGetContentsByGuestUser() throws Exception {
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filter[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filter[0].operator", "eq")
+                        .param("filter[0].value", "EVN"));
         result.andExpect(status().isOk());
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))));
@@ -572,6 +600,107 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 this.contentManager.removeOnLineContent(masterContent);
                 this.contentManager.deleteContent(masterContent);
             }
+        }
+    }
+
+    @Test
+    public void testLoadPublicContentsForCategory_1() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("categories[0]", "evento")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isOk());
+        List<String> expectedFreeContentsId = Arrays.asList("EVN192", "EVN193");
+        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
+        Assert.assertEquals(expectedFreeContentsId.size(), payloadSize);
+        for (int i = 0; i < expectedFreeContentsId.size(); i++) {
+            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
+            Assert.assertTrue(expectedFreeContentsId.contains(extractedId));
+        }
+
+        result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("categories[0]", "evento")
+                        .param("filters[0].entityAttr", "DataInizio")
+                        .param("filters[0].operator", "lt")
+                        .param("filters[0].type", "date")
+                        .param("filters[0].value", "2005-02-13 01:00:00")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        bodyResult = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isOk());
+        int newPayloadSize = JsonPath.read(bodyResult, "$.payload.size()");
+        Assert.assertEquals(1, newPayloadSize);
+        String extractedId = JsonPath.read(bodyResult, "$.payload[0].id");
+        Assert.assertEquals("EVN192", extractedId);
+    }
+
+    @Test
+    public void testLoadPublicEventsForCategory_2() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("categories[0]", "general_cat3")
+                        .param("categories[1]", "general_cat2")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isOk());
+        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
+        Assert.assertEquals(1, payloadSize);
+        String singleId = JsonPath.read(bodyResult, "$.payload[0].id");
+        Assert.assertEquals("ART120", singleId);
+
+        result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("categories[0]", "general_cat3")
+                        .param("categories[1]", "general_cat2")
+                        .param("orClauseCategoryFilter", "true")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        bodyResult = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isOk());
+        List<String> expectedFreeContentsId = Arrays.asList("ART111", "ART120", "ART122");
+        int newPayloadSize = JsonPath.read(bodyResult, "$.payload.size()");
+        Assert.assertEquals(expectedFreeContentsId.size(), newPayloadSize);
+        for (int i = 0; i < expectedFreeContentsId.size(); i++) {
+            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
+            Assert.assertTrue(expectedFreeContentsId.contains(extractedId));
+        }
+    }
+
+    @Test
+    public void testLoadWorkContentsByAttribute() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_DRAFT)
+                        .param("filters[0].attribute", IContentManager.ENTITY_ID_FILTER_KEY)
+                        .param("filters[0].order", EntitySearchFilter.ASC_ORDER)
+                        .param("filters[1].entityAttr", "Numero")
+                        .param("filters[1].type", "number")
+                        .param("filters[1].order", FieldSearchFilter.ASC_ORDER)
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isOk());
+        String[] expectedContentsId = {"ART120", "ART121"};
+        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
+        Assert.assertEquals(expectedContentsId.length, payloadSize);
+        for (int i = 0; i < expectedContentsId.length; i++) {
+            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
+            Assert.assertEquals(expectedContentsId[i], extractedId);
         }
     }
 
