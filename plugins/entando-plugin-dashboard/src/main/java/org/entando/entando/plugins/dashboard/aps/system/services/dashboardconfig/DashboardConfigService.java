@@ -6,6 +6,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig;
 
 import  org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
@@ -91,11 +92,18 @@ public class DashboardConfigService implements IDashboardConfigService {
     @Override
     public DashboardConfigDto updateDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
         try {
+
+
 	        DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(dashboardConfigRequest.getId());
 	        if (null == dashboardConfig) {
 	            throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(dashboardConfigRequest.getId()));
 	        }
         	BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfig);
+
+            List<DatasourcesConfigDto> datasources = convertDatasourceRequestToDto(dashboardConfigRequest);
+            dashboardConfig.setDatasources(datasources);
+
+
             BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardConfig);
             if (validationResult.hasErrors()) {
                 throw new ValidationGenericException(validationResult);
@@ -163,9 +171,22 @@ public class DashboardConfigService implements IDashboardConfigService {
     private DashboardConfig createDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
         DashboardConfig dashboardConfig = new DashboardConfig();
         BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfig);
+        List<DatasourcesConfigDto> datasources = convertDatasourceRequestToDto(dashboardConfigRequest);
+        dashboardConfig.setDatasources(datasources);
         return dashboardConfig;
     }
 
+    private  List<DatasourcesConfigDto> convertDatasourceRequestToDto (final DashboardConfigRequest dashboardConfigRequest) {
+        List<DatasourcesConfigDto> datasources = new ArrayList<>();
+        dashboardConfigRequest.getDatasources().forEach(c->{
+            final DatasourcesConfigDto ds = new DatasourcesConfigDto();
+            ds.setDatasource(c.getDatasource());
+            ds.setDatasourceURI(c.getDatasourceURI());
+            ds.setStatus(c.getStatus());
+            datasources.add(ds);
+        });
+        return datasources;
+    }
 
     protected BeanPropertyBindingResult validateForAdd(DashboardConfig dashboardConfig) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(dashboardConfig, "dashboardConfig");

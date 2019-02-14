@@ -68,10 +68,7 @@ public class DashboardConfigManager extends AbstractService implements IDashboar
 		try {
 			int key = this.getKeyGeneratorManager().getUniqueKeyCurrentValue();
 			dashboardConfig.setId(key);
-
 			this.getDashboardConfigDAO().insertDashboardConfig(dashboardConfig);
-
-
 			this.notifyDashboardConfigChangedEvent(dashboardConfig, DashboardConfigChangedEvent.INSERT_OPERATION_CODE);
 		} catch (Throwable t) {
 			logger.error("Error adding DashboardConfig", t);
