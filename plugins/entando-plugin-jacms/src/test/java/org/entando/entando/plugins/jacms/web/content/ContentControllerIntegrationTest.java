@@ -450,7 +450,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertEquals(expectedId, extractedId);
         }
     }
-
+     */
     @Test
     public void testLoadOrderedPublicEvents_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -478,40 +478,9 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertEquals(expectedId, extractedId);
         }
     }
-     */
- /*
+
     @Test
     public void testLoadOrderedPublicEvents_3() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
-                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
-        String accessToken = mockOAuthInterceptor(user);
-        ResultActions result = mockMvc
-                .perform(get("/plugins/cms/contents")
-                        .param("status", IContentService.STATUS_ONLINE)
-                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
-                        .param("direction", FieldSearchFilter.DESC_ORDER)
-                        .param("filters[0].entityAttr", "DataInizio")
-                        .param("filters[0].order", "DESC")
-                        .param("filters[1].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
-                        .param("filters[1].operator", "eq")
-                        .param("filters[1].value", "EVN")
-                        .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isOk());
-        String[] expectedFreeOrderedContentsId_1 = {"EVN21", "EVN25", "EVN24", "EVN23",
-            "EVN20", "EVN194", "EVN193", "EVN192", "EVN191"};
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        Assert.assertEquals(expectedFreeOrderedContentsId_1.length, payloadSize);
-        for (int i = 0; i < expectedFreeOrderedContentsId_1.length; i++) {
-            String expectedId = expectedFreeOrderedContentsId_1[i];
-            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
-            Assert.assertEquals(expectedId, extractedId);
-        }
-    }
-     */
-    @Test
-    public void testLoadOrderedPublicEvents_3_bis() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
         String accessToken = mockOAuthInterceptor(user);
