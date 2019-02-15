@@ -16,3 +16,5 @@ export const CLEAR_SELECTED_DATASOURCE =
 
 export const SET_SHOW_HIDE_COLUMN = "plugin/dashboard/set-show-hide-column";
 export const SET_DATASOURCE_DATA = "plugin/dashboard/set-datasource-data";
+
+export const SET_INTERNAL_ROUTE = "plugin/dashboard/set-internal-route";

@@ -12,10 +12,20 @@ import {
   SET_SHOW_HIDE_COLUMN,
   SET_DATASOURCE_DATA,
   SET_SELECTED_DATASOURCE,
-  CLEAR_SELECTED_DATASOURCE
+  CLEAR_SELECTED_DATASOURCE,
+  SET_INTERNAL_ROUTE
 } from "./types";
 
 const reduxStatus = () => "works";
+
+const internalRoute = (state = "", action = {}) => {
+  switch (action.type) {
+    case SET_INTERNAL_ROUTE:
+      return action.payload.route;
+    default:
+      return state;
+  }
+};
 
 const infoPage = (state = {}, action = {}) => {
   switch (action.type) {
@@ -99,6 +109,7 @@ const datasourceData = (state = [], action = {}) => {
 
 export default combineReducers({
   reduxStatus,
+  internalRoute,
   appBuilder: combineReducers({
     infoPage,
     languages

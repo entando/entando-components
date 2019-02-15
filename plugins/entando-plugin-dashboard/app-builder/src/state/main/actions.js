@@ -26,7 +26,8 @@ import {
   CLEAR_DATASOURCE_COLUMNS,
   SET_SHOW_HIDE_COLUMN,
   SET_SELECTED_DATASOURCE,
-  CLEAR_SELECTED_DATASOURCE
+  CLEAR_SELECTED_DATASOURCE,
+  SET_INTERNAL_ROUTE
 } from "./types";
 
 const DATASOURCE_PROPERTY_DATA = "data";
@@ -110,6 +111,11 @@ export const clearSelectedDatasource = () => ({
   type: CLEAR_SELECTED_DATASOURCE
 });
 
+export const setInternalRoute = route => ({
+  type: SET_INTERNAL_ROUTE,
+  payload: {route}
+});
+
 // thunk
 
 export const gotoPluginPage = pluginPage => (dispatch, getState) => {
@@ -117,7 +123,12 @@ export const gotoPluginPage = pluginPage => (dispatch, getState) => {
   const route = getRoute(state);
   const params = getParams(state);
   const searchParams = getSearchParams(state);
-  gotoRoute(route, params, {...searchParams, pluginPage});
+  try {
+    gotoRoute(route, params, {...searchParams, pluginPage});
+  } catch (error) {
+    console.error("error", error);
+    dispatch(setInternalRoute(pluginPage));
+  }
 };
 
 export const fetchPageInformation = pageCode => dispatch =>

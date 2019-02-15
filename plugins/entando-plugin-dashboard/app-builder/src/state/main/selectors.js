@@ -28,6 +28,11 @@ export const getReduxStatus = createSelector(
   localState => localState.reduxStatus
 );
 
+export const getInternalRoute = createSelector(
+  [getLocalState],
+  localState => localState.internalRoute
+);
+
 const getDashboardConfig = createSelector(
   [getLocalState],
   localState => localState.dashboardConfig
