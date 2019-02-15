@@ -72,7 +72,10 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
 public class ContentService extends AbstractEntityService<Content, ContentDto>
-        implements IContentService, GroupServiceUtilizer<ContentDto>, CategoryServiceUtilizer<ContentDto>, PageServiceUtilizer<ContentDto>, ApplicationContextAware {
+        implements IContentService,
+        GroupServiceUtilizer<ContentDto>, CategoryServiceUtilizer<ContentDto>,
+        PageServiceUtilizer<ContentDto>, ContentServiceUtilizer<ContentDto>,
+        ApplicationContextAware {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -190,6 +193,17 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         } catch (ApsSystemException ex) {
             logger.error("Error loading content references for page {}", pageCode, ex);
             throw new RestServerError("Error loading content references for page", ex);
+        }
+    }
+
+    @Override
+    public List<ContentDto> getContentUtilizer(String contentId) {
+        try {
+            List<String> contentIds = ((ContentUtilizer) this.getContentManager()).getContentUtilizers(contentId);
+            return this.buildDtoList(contentIds);
+        } catch (ApsSystemException ex) {
+            logger.error("Error loading content references for content {}", contentId, ex);
+            throw new RestServerError("Error loading content references for content", ex);
         }
     }
 
