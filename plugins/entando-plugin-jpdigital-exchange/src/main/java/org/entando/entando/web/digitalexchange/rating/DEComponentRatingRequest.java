@@ -14,6 +14,10 @@ public class DEComponentRatingRequest {
     @NotBlank
     private String exchangeId;
 
+    /**
+     * On the DE persistence layer rating can range from 0-100 to make it
+     * compatible with different clients using different scales.
+     */
     @Min(0)
     @Max(100)
     private int rating;
