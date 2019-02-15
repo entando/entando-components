@@ -16,8 +16,6 @@ package org.entando.entando.plugins.jacms.aps.system.services.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -90,7 +88,6 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     private IContentAuthorizationHelper contentAuthorizationHelper;
     private IContentDispenser contentDispenser;
     private ApplicationContext applicationContext;
-    private IDtoBuilder<Content, ContentDto> dtoBuilder;
 
     public ILangManager getLangManager() {
         return langManager;
@@ -141,21 +138,12 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     }
 
     public IDtoBuilder<Content, ContentDto> getDtoBuilder() {
-        return dtoBuilder;
-    }
-
-    public void setDtoBuilder(IDtoBuilder<Content, ContentDto> dtoBuilder) {
-        this.dtoBuilder = dtoBuilder;
-    }
-
-    @PostConstruct
-    private void setUp() {
-        this.setDtoBuilder(new DtoBuilder<Content, ContentDto>() {
+        return new DtoBuilder<Content, ContentDto>() {
             @Override
             protected ContentDto toDto(Content src) {
                 return new ContentDto(src);
             }
-        });
+        };
     }
 
     @Override
@@ -169,6 +157,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             List<String> contentIds = ((GroupUtilizer<String>) this.getContentManager()).getGroupUtilizers(groupCode);
             return this.buildDtoList(contentIds);
         } catch (ApsSystemException ex) {
+            ex.printStackTrace();
             logger.error("Error loading content references for group {}", groupCode, ex);
             throw new RestServerError("Error loading content references for group", ex);
         }
