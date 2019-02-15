@@ -3,7 +3,7 @@ import {formValueSelector} from "redux-form";
 
 import {fetchServerConfigList} from "state/main/actions";
 
-import DashboardTableForm from "ui/widgets/dashboard-table/components/DashboardTableForm";
+import DashboardTableForm from "ui/widgets/table/components/DashboardTableForm";
 
 const selector = formValueSelector("form-dashboard-table");
 

@@ -1,6 +1,10 @@
 const CONFIG_DATA = {
   DATASOURCE_PAYLOAD: {
     id: "parking",
+    options: {
+      downlodable: true,
+      filtrable: true
+    },
     columns: [
       {key: "status", value: "stato", hidden: false},
       {key: "inUse", value: "in Use", hidden: false},

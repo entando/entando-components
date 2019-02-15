@@ -1,7 +1,7 @@
 import {config} from "@entando/apimanager";
 
 import uiComponent from "ui/dashboard-config/common/containers/SubRouterContainer";
-import DashboardTable from "ui/widgets/dashboard-table/components/DashboardTable";
+import DashboardTable from "ui/widgets/table/components/DashboardTable";
 import DashboardLinearChart from "ui/widgets/charts/line-chart/components/DashboardLineChart";
 import DashboardBarChart from "ui/widgets/charts/bar-chart/components/DashboardBarChart";
 import DashboardDonutChart from "ui/widgets/charts/donut-chart/components/DashboardDonutChart";

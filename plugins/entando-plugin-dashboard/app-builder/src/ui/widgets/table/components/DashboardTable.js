@@ -1,7 +1,7 @@
 import React from "react";
 
 import DashboardWidgetConfigPage from "ui/widgets/common/components/DashboardWidgetConfigPage";
-import DashboardTableFormContainer from "ui/widgets/dashboard-table/containers/DashboardTableFormContainer";
+import DashboardTableFormContainer from "ui/widgets/table/containers/DashboardTableFormContainer";
 
 const DashboardTable = ({onSubmit}) => (
   <DashboardWidgetConfigPage>

@@ -2,6 +2,18 @@
   padding: 3em;
   border: 0 solid;
 
+  .row {
+    border: 0px solid red;
+  }
+
+  .col-xs-12 {
+    border: 0px solid blue;
+  }
+
+  &__container-server-name {
+    margin-top: 1em;
+  }
+
   .row:last-child {
     border: 0 solid red;
     margin-top: 2em;

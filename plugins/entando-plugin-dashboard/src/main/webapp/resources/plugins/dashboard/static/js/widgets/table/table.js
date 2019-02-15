@@ -4,8 +4,7 @@ org.entando.dashboard = org.entando.dashboard || {};
 org.entando.dashboard.Table = class {
   constructor(id, config) {
     console.log("Table - config", config);
-    const {columns, data} = config;
-    console.log(data);
+    const {columns, data, options} = config;
     this.id = id;
     const columnsDefs = columns.filter(f => !f.hidden);
     this.config = {
@@ -14,15 +13,23 @@ org.entando.dashboard.Table = class {
           acc1.push(item[col.key]);
           return acc1;
         }, []);
-        //console.log("cols", cols);
         acc.push(cols);
         return acc;
       }, []),
-      columns: columnsDefs.map(m => ({title: m.value}))
+      columns: columnsDefs.map(m => ({title: m.value})),
+      responsive: true,
+      deferRender: true,
+      scrollY: 200,
+      scrollCollapse: true,
+      scroller: true
     };
+    if (options && options.downlodable) {
+      this.config.dom = "Bfrtip";
+      this.config.buttons = ["csv", "excel", "pdf", "print"];
+    }
   }
   show() {
-    console.log("config table", this.config);
-    return $(this.id).DataTable(this.config);
+    console.log(this.config);
+    return new $(this.id).DataTable(this.config);
   }
 };

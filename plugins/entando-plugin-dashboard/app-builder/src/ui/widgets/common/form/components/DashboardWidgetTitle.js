@@ -54,13 +54,11 @@ class DashboardWidgetTitle extends Component {
       });
 
     return (
-      <Tabs
-        className="DashboardWidgetTitle"
-        defaultActiveKey={0}
-        id="labels-tabs"
-      >
-        {tabs}
-      </Tabs>
+      <div className="DashboardWidgetTitle">
+        <Tabs defaultActiveKey={0} id="labels-tabs">
+          {tabs}
+        </Tabs>
+      </div>
     );
   }
 }

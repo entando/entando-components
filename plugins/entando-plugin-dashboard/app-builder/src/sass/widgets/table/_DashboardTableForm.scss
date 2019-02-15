@@ -1,26 +1,35 @@
 .DashboardTableForm {
+  margin: 2em;
+
+  .row {
+    border: 0 solid red;
+  }
+
+  .col-6,
+  .col-xs-12,
+  .col-xs-6 {
+    border: 0 solid blue;
+  }
 
   &__required-fields {
     margin-top: 1em;
     font-size: 12px;
-
   }
 
-  &__container-data {
-    border: 0px solid;
+  &__container-data.DashboardTableForm__sourcers {
     margin-top: 1em;
-    padding: 1em;
+    border: 0 solid red;
+  }
+
+  &__more-information {
+    margin-top: 2em;
   }
 
   &__container-data--disabled {
     margin-top: 1em;
     padding: 1em;
-    color: #8b8d8f ;
+    color: #8b8d8f;
     display: none;
-  }
-
-  &__widget-title {
-    background: #f5f5f5;
   }
 
   &__description {
@@ -32,13 +41,21 @@
     border-bottom: 1px solid #d1d1d1;
   }
 
-  &__input-group {
+  &__switch-all-columns {
+    margin-left: 3em;
+  }
+
+  &__input-group.form-group {
     width: 100%;
+    margin: 0;
+    padding: 1em;
+    min-height: 90px;
   }
 
   &__no-padding-right {
-    padding-right: 0px;
+    padding-right: 0;
   }
+
   &__line-bottom {
     border-bottom: 1px solid #d1d1d1;
   }

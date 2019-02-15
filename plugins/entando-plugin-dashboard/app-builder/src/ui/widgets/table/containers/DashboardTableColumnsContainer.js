@@ -4,7 +4,7 @@ import {updateDatasourceColumns, showHideColumn} from "state/main/actions";
 
 import {getDatasourceColumns} from "state/main/selectors";
 
-import DashboardTableColumns from "ui/widgets/dashboard-table/components/DashboardTableColumns";
+import DashboardTableColumns from "ui/widgets/table/components/DashboardTableColumns";
 
 const mapStateToProps = state => ({
   columns: getDatasourceColumns(state)

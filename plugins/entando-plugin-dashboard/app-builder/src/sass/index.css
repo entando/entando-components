@@ -33,12 +33,14 @@
   display: table-cell;
   padding: 1em; }
 
-.DashboardWidgetTitle__widget-title {
+.DashboardWidgetTitle {
+  border: 1px solid #bbb;
+  margin-top: 1em;
+  padding: 1em 2em;
   background: #f5f5f5; }
-
-.DashboardWidgetTitle__input-group {
-  width: 100%;
-  padding-top: 1em; }
+  .DashboardWidgetTitle__input-group {
+    width: 100%;
+    padding-top: 1em; }
 
 .DashboardWidgetConfigPage {
   padding: 1em; }
@@ -80,46 +82,86 @@
   margin-right: 3em; }
 
 .ServerNameForm__input-group {
-  width: 100%;
-  border: 0px solid red; }
-
-.DatasourceForm__input-group {
-  width: 100%;
-  border: 0px solid red; }
-
-.DashboardTableForm__required-fields {
-  margin-top: 1em;
-  font-size: 12px; }
-
-.DashboardTableForm__container-data {
-  border: 0px solid;
-  margin-top: 1em;
-  padding: 1em; }
-
-.DashboardTableForm__container-data--disabled {
-  margin-top: 1em;
+  border: 0px solid red;
   padding: 1em;
-  color: #8b8d8f;
-  display: none; }
-
-.DashboardTableForm__widget-title {
-  background: #f5f5f5; }
-
-.DashboardTableForm__description {
-  padding: 2em; }
-
-.DashboardTableForm__line {
-  border-top: 1px solid #d1d1d1;
-  border-bottom: 1px solid #d1d1d1; }
-
-.DashboardTableForm__input-group {
   width: 100%; }
 
-.DashboardTableForm__no-padding-right {
-  padding-right: 0px; }
+.DatasourceForm__input-group {
+  border: 0 solid red;
+  width: 100%;
+  padding: 1em; }
 
-.DashboardTableForm__line-bottom {
-  border-bottom: 1px solid #d1d1d1; }
+.DashboardConfig {
+  border: 0 solid;
+  padding: 2em; }
+  .DashboardConfig__form {
+    border: 0 solid;
+    padding: 2em;
+    margin-top: 6em; }
+  .DashboardConfig__form legend {
+    font-size: 12px; }
+  .DashboardConfig__server-configure {
+    margin-bottom: 1em; }
+  .DashboardConfig__list-datasource {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 1em; }
+  .DashboardConfig__btn-save {
+    margin-left: 3em; }
+
+.DashboardConfigDatasource {
+  border: 0px solid;
+  margin-bottom: 3em; }
+  .DashboardConfigDatasource__table {
+    margin-top: 1em; }
+  .DashboardConfigDatasource__table.table {
+    margin-bottom: 0px; }
+
+.DashboardConfigDatasourceStatus {
+  border: 0px solid; }
+  .DashboardConfigDatasourceStatus__test-btn {
+    margin-left: 1em; }
+
+.DashboardConfigPage__btn-tests {
+  margin-left: 2em; }
+
+.DashboardTableForm {
+  margin: 2em; }
+  .DashboardTableForm .row {
+    border: 0 solid red; }
+  .DashboardTableForm .col-6,
+  .DashboardTableForm .col-xs-12,
+  .DashboardTableForm .col-xs-6 {
+    border: 0 solid blue; }
+  .DashboardTableForm__required-fields {
+    margin-top: 1em;
+    font-size: 12px; }
+  .DashboardTableForm__container-data.DashboardTableForm__sourcers {
+    margin-top: 1em;
+    border: 0 solid red; }
+  .DashboardTableForm__more-information {
+    margin-top: 2em; }
+  .DashboardTableForm__container-data--disabled {
+    margin-top: 1em;
+    padding: 1em;
+    color: #8b8d8f;
+    display: none; }
+  .DashboardTableForm__description {
+    padding: 2em; }
+  .DashboardTableForm__line {
+    border-top: 1px solid #d1d1d1;
+    border-bottom: 1px solid #d1d1d1; }
+  .DashboardTableForm__switch-all-columns {
+    margin-left: 3em; }
+  .DashboardTableForm__input-group.form-group {
+    width: 100%;
+    margin: 0;
+    padding: 1em;
+    min-height: 90px; }
+  .DashboardTableForm__no-padding-right {
+    padding-right: 0; }
+  .DashboardTableForm__line-bottom {
+    border-bottom: 1px solid #d1d1d1; }
 
 .DashboardTableColumns {
   overflow-x: auto;
@@ -182,40 +224,6 @@
     font-family: FontAwesome;
     content: "\f070";
     cursor: pointer; }
-
-.DashboardConfig {
-  border: 0 solid;
-  padding: 2em; }
-  .DashboardConfig__form {
-    border: 0 solid;
-    padding: 2em;
-    margin-top: 6em; }
-  .DashboardConfig__form legend {
-    font-size: 12px; }
-  .DashboardConfig__server-configure {
-    margin-bottom: 1em; }
-  .DashboardConfig__list-datasource {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 1em; }
-  .DashboardConfig__btn-save {
-    margin-left: 3em; }
-
-.DashboardConfigDatasource {
-  border: 0px solid;
-  margin-bottom: 3em; }
-  .DashboardConfigDatasource__table {
-    margin-top: 1em; }
-  .DashboardConfigDatasource__table.table {
-    margin-bottom: 0px; }
-
-.DashboardConfigDatasourceStatus {
-  border: 0px solid; }
-  .DashboardConfigDatasourceStatus__test-btn {
-    margin-left: 1em; }
-
-.DashboardConfigPage__btn-tests {
-  margin-left: 2em; }
 
 .ChartFirstStep__container-datasource {
   margin-top: 2em; }
@@ -588,6 +596,12 @@
 .MapFirstStepContent {
   padding: 3em;
   border: 0 solid; }
+  .MapFirstStepContent .row {
+    border: 0px solid red; }
+  .MapFirstStepContent .col-xs-12 {
+    border: 0px solid blue; }
+  .MapFirstStepContent__container-server-name {
+    margin-top: 1em; }
   .MapFirstStepContent .row:last-child {
     border: 0 solid red;
     margin-top: 2em; }
