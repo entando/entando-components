@@ -237,7 +237,8 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                     ? this.getContentManager().loadPublicContentsId(requestList.getCategories(), requestList.isOrClauseCategoryFilter(), filtersArr, userGroupCodes)
                     : this.getContentManager().loadWorkContentsId(requestList.getCategories(), requestList.isOrClauseCategoryFilter(), filtersArr, userGroupCodes);
             if (!StringUtils.isBlank(requestList.getText()) && online) {
-                List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(requestList.getLangCode(), requestList.getText(), userGroupCodes);
+                String langCode = (StringUtils.isBlank(requestList.getLangCode())) ? this.getLangManager().getDefaultLang().getCode() : requestList.getLangCode();
+                List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(langCode, requestList.getText(), userGroupCodes);
                 result.removeIf(i -> !fullTextResult.contains(i));
             }
             List<String> sublist = requestList.getSublist(result);
