@@ -249,6 +249,8 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             }
             pagedMetadata.setBody(masterList);
             return pagedMetadata;
+        } catch (ResourceNotFoundException | ValidationGenericException e) {
+            throw e;
         } catch (Exception t) {
             logger.error("error in search contents", t);
             throw new RestServerError("error in search contents", t);
@@ -496,25 +498,11 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
 
     private Map<String, Boolean> getReferencesInfo(String contentId) {
         Map<String, Boolean> references = new HashMap<>();
-        try {
-            String[] defNames = this.applicationContext.getBeanNamesForType(ContentUtilizer.class);
-            for (String defName : defNames) {
-                ContentUtilizer service = null;
-                try {
-                    service = this.applicationContext.getBean(defName, ContentUtilizer.class);
-                } catch (Throwable t) {
-                    logger.error("error in hasReferencingObjects", t);
-                    service = null;
-                }
-                if (service != null) {
-                    List<?> utilizers = service.getContentUtilizers(contentId);
-                    references.put(service.getName(), (utilizers != null && !utilizers.isEmpty()));
-                }
-            }
-        } catch (ApsSystemException ex) {
-            logger.error("error loading references for content {}", contentId, ex);
-            throw new RestServerError("error in getReferencesInfo ", ex);
-        }
+        Map<String, ContentServiceUtilizer> beans = this.applicationContext.getBeansOfType(ContentServiceUtilizer.class);
+        beans.values().stream().forEach(service -> {
+            List<?> utilizers = service.getContentUtilizer(contentId);
+            references.put(service.getManagerName(), (utilizers != null && !utilizers.isEmpty()));
+        });
         return references;
     }
 

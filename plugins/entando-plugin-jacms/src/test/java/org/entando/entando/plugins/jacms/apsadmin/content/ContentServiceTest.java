@@ -13,24 +13,35 @@
  */
 package org.entando.entando.plugins.jacms.apsadmin.content;
 
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.PageUtilizer;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
+import org.entando.entando.plugins.jacms.aps.system.services.content.ContentServiceUtilizer;
+import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
+import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.model.PagedMetadata;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,6 +77,10 @@ public class ContentServiceTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        ContentServiceUtilizer serviceUtilizer = Mockito.mock(ContentServiceUtilizer.class);
+        Map<String, ContentServiceUtilizer> map = new HashMap<>();
+        map.put("service", serviceUtilizer);
+        when(this.applicationContext.getBeansOfType(ContentServiceUtilizer.class)).thenReturn(map);
     }
 
     @Test
@@ -160,9 +175,48 @@ public class ContentServiceTest {
         }
     }
 
+    @Test
     public void getContents() throws Exception {
-        RestContentListRequest requestList = new RestContentListRequest();
+        RestContentListRequest requestList = this.createContentsRequest();
+        requestList.setStatus(IContentService.STATUS_ONLINE);
+        requestList.setPageSize(2);
+        UserDetails user = Mockito.mock(UserDetails.class);
+        when(this.langManager.getDefaultLang()).thenReturn(Mockito.mock(Lang.class));
+        when(this.authorizationManager.getUserGroups(user)).thenReturn(new ArrayList<>());
+        List<String> contentsId = Arrays.asList("ART1", "ART2", "ART3", "ART4", "ART5", "ART6");
+        when((this.contentManager).loadPublicContentsId(Mockito.nullable(String[].class), Mockito.anyBoolean(),
+                Mockito.nullable(EntitySearchFilter[].class), Mockito.any(List.class))).thenReturn(contentsId);
+        this.createMockContent("ART");
+        this.createMockContentModel("ART");
+        PagedMetadata<ContentDto> metadata = this.contentService.getContents(requestList, user);
+        Assert.assertEquals(2, metadata.getBody().size());
+        Mockito.verify(this.contentManager, Mockito.times(2)).loadContent(Mockito.anyString(), Mockito.eq(true));
+        Mockito.verify(this.contentModelManager, Mockito.times(2)).getContentModel(10);
+    }
 
+    protected RestContentListRequest createContentsRequest() {
+        RestContentListRequest requestList = new RestContentListRequest();
+        Filter[] filters = new Filter[]{new Filter("attribute", "test", "eq")};
+        requestList.setFilters(filters);
+        requestList.setModelId("list");
+        requestList.setResolveLink(true);
+        requestList.setStatus(IContentService.STATUS_DRAFT);
+        return requestList;
+    }
+
+    protected void createMockContent(String typeCode) throws Exception {
+        Content mockContent = Mockito.mock(Content.class);
+        when(mockContent.getListModel()).thenReturn("10");
+        when(mockContent.getDefaultModel()).thenReturn("20");
+        when(mockContent.getTypeCode()).thenReturn(typeCode);
+        when(this.contentManager.loadContent(Mockito.anyString(), Mockito.eq(true))).thenReturn(mockContent);
+    }
+
+    protected void createMockContentModel(String typeCode) throws Exception {
+        ContentModel mockContentModel = Mockito.mock(ContentModel.class);
+        when(mockContentModel.getContentType()).thenReturn("ART");
+        when(mockContentModel.getContentShape()).thenReturn("Content model");
+        when(this.contentModelManager.getContentModel(Mockito.anyLong())).thenReturn(mockContentModel);
     }
 
 }
