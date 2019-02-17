@@ -42,6 +42,7 @@
         <property name="authorizationManager" ref="AuthorizationManager" />
         <property name="contentDispenser" ref="jacmsBaseContentDispenser" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
+        <property name="searchEngineManager" ref="jacmsSearchEngineManager" />
         <property name="langManager" ref="LangManager" />
     </bean>
 

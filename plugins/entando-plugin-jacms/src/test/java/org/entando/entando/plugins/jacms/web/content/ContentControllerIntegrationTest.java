@@ -25,6 +25,7 @@ import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import com.jayway.jsonpath.JsonPath;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.List;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+import static org.hamcrest.CoreMatchers.is;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,7 +44,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -56,6 +57,9 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
     @Autowired
     private IContentManager contentManager;
+
+    @Autowired
+    private ICmsSearchEngineManager searchEngineManager;
 
     @Test
     public void testGetContent_1() throws Exception {
@@ -491,9 +495,6 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
     @Test
     public void testLoadOrderedPublicEvents_2() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
-                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
-        String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get("/plugins/cms/contents")
                         .param("status", IContentService.STATUS_ONLINE)
@@ -501,19 +502,35 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("direction", FieldSearchFilter.DESC_ORDER)
                         .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
                         .param("filters[0].operator", "eq")
-                        .param("filters[0].value", "EVN")
-                        .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
+                        .param("filters[0].value", "EVN"));
         result.andExpect(status().isOk());
-        String[] expectedFreeOrderedContentsId = {"EVN191", "EVN192",
+        String[] expectedFreeOrderedContentsId_1 = {"EVN191", "EVN192",
             "EVN193", "EVN194", "EVN20", "EVN23", "EVN24", "EVN25", "EVN21"};
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        Assert.assertEquals(expectedFreeOrderedContentsId.length, payloadSize);
-        for (int i = 0; i < expectedFreeOrderedContentsId.length; i++) {
-            String expectedId = expectedFreeOrderedContentsId[expectedFreeOrderedContentsId.length - i - 1];
-            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
-            Assert.assertEquals(expectedId, extractedId);
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(expectedFreeOrderedContentsId_1.length)));
+        for (int i = 0; i < expectedFreeOrderedContentsId_1.length; i++) {
+            String expectedId = expectedFreeOrderedContentsId_1[expectedFreeOrderedContentsId_1.length - i - 1];
+            result.andExpect(jsonPath("$.payload[" + i + "].id", is(expectedId)));
+        }
+
+        Thread thread = this.searchEngineManager.startReloadContentsReferences();
+        thread.join();
+
+        result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.ASC_ORDER)
+                        .param("langCode", "it")
+                        .param("text", "Titolo Evento 4")
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN"));
+        result.andExpect(status().isOk());
+        String[] expectedFreeOrderedContentsId_2 = {"EVN191", "EVN192", "EVN193", "EVN194", "EVN24"};
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(expectedFreeOrderedContentsId_2.length)));
+        for (int i = 0; i < expectedFreeOrderedContentsId_2.length; i++) {
+            String expectedId = expectedFreeOrderedContentsId_2[i];
+            result.andExpect(jsonPath("$.payload[" + i + "].id", is(expectedId)));
         }
     }
 

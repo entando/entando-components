@@ -13,13 +13,51 @@
  */
 package org.entando.entando.plugins.jacms.web.content.validator;
 
+import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.web.common.model.RestEntityListRequest;
 
 public class RestContentListRequest extends RestEntityListRequest {
 
+    private String modelId;
+    private boolean resolveLink;
+    private String status = IContentService.STATUS_DRAFT;
+    private String langCode;
+
     private String[] categories;
     private boolean orClauseCategoryFilter;
     private String text;
+
+    public String getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(String modelId) {
+        this.modelId = modelId;
+    }
+
+    public boolean isResolveLink() {
+        return resolveLink;
+    }
+
+    public void setResolveLink(boolean resolveLink) {
+        this.resolveLink = resolveLink;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getLangCode() {
+        return langCode;
+    }
+
+    public void setLangCode(String langCode) {
+        this.langCode = langCode;
+    }
 
     public String[] getCategories() {
         return categories;

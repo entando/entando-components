@@ -113,13 +113,10 @@ public class ContentController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedRestResponse<ContentDto>> getContents(RestContentListRequest requestList,
-            @RequestParam(value = "status", required = false, defaultValue = IContentService.STATUS_DRAFT) String status,
-            @RequestParam(value = "model", required = false) String model,
-            @RequestParam(value = "lang", required = false) String lang) {
-        logger.debug("getting contents with request {} - status {}", requestList, status);
+    public ResponseEntity<PagedRestResponse<ContentDto>> getContents(RestContentListRequest requestList) {
+        logger.debug("getting contents with request {} - status {}", requestList, requestList.getStatus());
         this.getPaginationValidator().validateRestListRequest(requestList, ContentDto.class);
-        PagedMetadata<ContentDto> result = this.getContentService().getContents(requestList, model, status, lang, this.extractCurrentUser());
+        PagedMetadata<ContentDto> result = this.getContentService().getContents(requestList, this.extractCurrentUser());
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 

@@ -41,6 +41,6 @@ public interface IContentService {
 
     public PagedMetadata<?> getContentReferences(String code, String manager, UserDetails user, RestListRequest requestList);
 
-    public PagedMetadata<ContentDto> getContents(RestContentListRequest requestList, String modelId, String status, String langCode, UserDetails user);
+    public PagedMetadata<ContentDto> getContents(RestContentListRequest requestList, UserDetails user);
 
 }

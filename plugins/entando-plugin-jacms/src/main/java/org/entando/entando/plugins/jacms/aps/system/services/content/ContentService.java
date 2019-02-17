@@ -41,6 +41,7 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
+import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -87,6 +88,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     private IAuthorizationManager authorizationManager;
     private IContentAuthorizationHelper contentAuthorizationHelper;
     private IContentDispenser contentDispenser;
+    private ICmsSearchEngineManager searchEngineManager;
     private ApplicationContext applicationContext;
 
     public ILangManager getLangManager() {
@@ -137,6 +139,14 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         this.contentDispenser = contentDispenser;
     }
 
+    protected ICmsSearchEngineManager getSearchEngineManager() {
+        return searchEngineManager;
+    }
+
+    public void setSearchEngineManager(ICmsSearchEngineManager searchEngineManager) {
+        this.searchEngineManager = searchEngineManager;
+    }
+
     public IDtoBuilder<Content, ContentDto> getDtoBuilder() {
         return new DtoBuilder<Content, ContentDto>() {
             @Override
@@ -157,7 +167,6 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             List<String> contentIds = ((GroupUtilizer<String>) this.getContentManager()).getGroupUtilizers(groupCode);
             return this.buildDtoList(contentIds);
         } catch (ApsSystemException ex) {
-            ex.printStackTrace();
             logger.error("Error loading content references for group {}", groupCode, ex);
             throw new RestServerError("Error loading content references for group", ex);
         }
@@ -216,10 +225,10 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     }
 
     @Override
-    public PagedMetadata<ContentDto> getContents(RestContentListRequest requestList, String modelId, String status, String langCode, UserDetails user) {
+    public PagedMetadata<ContentDto> getContents(RestContentListRequest requestList, UserDetails user) {
         try {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(requestList, "content");
-            boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(status));
+            boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(requestList.getStatus()));
             List<EntitySearchFilter> filters = requestList.buildEntitySearchFilters();
             EntitySearchFilter[] filtersArr = new EntitySearchFilter[filters.size()];
             filtersArr = filters.toArray(filtersArr);
@@ -227,15 +236,20 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             List<String> result = (online)
                     ? this.getContentManager().loadPublicContentsId(requestList.getCategories(), requestList.isOrClauseCategoryFilter(), filtersArr, userGroupCodes)
                     : this.getContentManager().loadWorkContentsId(requestList.getCategories(), requestList.isOrClauseCategoryFilter(), filtersArr, userGroupCodes);
+            if (!StringUtils.isBlank(requestList.getText()) && online) {
+                List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(requestList.getLangCode(), requestList.getText(), userGroupCodes);
+                result.removeIf(i -> !fullTextResult.contains(i));
+            }
             List<String> sublist = requestList.getSublist(result);
             PagedMetadata<ContentDto> pagedMetadata = new PagedMetadata<>(requestList, sublist.size());
             List<ContentDto> masterList = new ArrayList<>();
             for (String contentId : sublist) {
-                masterList.add(this.buildContentDto(contentId, online, modelId, langCode, bindingResult));
+                masterList.add(this.buildContentDto(contentId, online,
+                        requestList.getModelId(), requestList.getLangCode(), requestList.isResolveLink(), bindingResult));
             }
             pagedMetadata.setBody(masterList);
             return pagedMetadata;
-        } catch (Throwable t) {
+        } catch (Exception t) {
             logger.error("error in search contents", t);
             throw new RestServerError("error in search contents", t);
         }
@@ -265,12 +279,13 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
         boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(status));
         this.checkContentAuthorization(user, code, online, false, bindingResult);
-        ContentDto dto = this.buildContentDto(code, online, modelId, langCode, bindingResult);
+        ContentDto dto = this.buildContentDto(code, online, modelId, langCode, true, bindingResult);
         dto.setReferences(this.getReferencesInfo(dto.getId()));
         return dto;
     }
 
-    protected ContentDto buildContentDto(String code, boolean onLine, String modelId, String langCode, BindingResult bindingResult) {
+    protected ContentDto buildContentDto(String code, boolean onLine,
+            String modelId, String langCode, boolean resolveLink, BindingResult bindingResult) {
         ContentDto dto = null;
         try {
             Content content = this.getContentManager().loadContent(code, onLine);
@@ -284,12 +299,13 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             logger.error("Error extracting content", e);
             throw new RestServerError("error extracting content", e);
         }
-        dto.setHtml(this.extractRenderedContent(dto, modelId, langCode, bindingResult));
+        dto.setHtml(this.extractRenderedContent(dto, modelId, langCode, resolveLink, bindingResult));
         dto.setReferences(this.getReferencesInfo(dto.getId()));
         return dto;
     }
 
-    protected String extractRenderedContent(ContentDto dto, String modelId, String langCode, BindingResult bindingResult) {
+    protected String extractRenderedContent(ContentDto dto, String modelId,
+            String langCode, boolean resolveLink, BindingResult bindingResult) {
         String render = null;
         if (null == modelId || modelId.trim().length() == 0) {
             return null;
@@ -305,19 +321,15 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                     throw new ValidationGenericException(bindingResult);
                 }
             }
-            render = this.getRenderedContent(dto.getId(), modelIdInteger, lang.getCode());
+            ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(dto.getId(), modelIdInteger, lang.getCode(), null, true);
+            if (null != renderizationInfo) {
+                if (resolveLink) {
+                    this.getContentDispenser().resolveLinks(renderizationInfo, null);
+                }
+                render = renderizationInfo.getRenderedContent();
+            }
         }
         return render;
-    }
-
-    protected String getRenderedContent(String id, int modelId, String langCode) {
-        String renderedContent = null;
-        ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(id, modelId, langCode, null, true);
-        if (null != renderizationInfo) {
-            this.getContentDispenser().resolveLinks(renderizationInfo, null);
-            renderedContent = renderizationInfo.getRenderedContent();
-        }
-        return renderedContent;
     }
 
     protected Integer checkModel(ContentDto dto, String modelId, BindingResult bindingResult) {

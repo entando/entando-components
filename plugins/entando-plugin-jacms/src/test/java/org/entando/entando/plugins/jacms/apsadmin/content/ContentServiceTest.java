@@ -20,6 +20,7 @@ import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.page.PageUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
@@ -29,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
+import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -133,6 +135,34 @@ public class ContentServiceTest {
             Mockito.verify(((PageUtilizer) this.contentManager), Mockito.times(1)).getPageUtilizers(Mockito.anyString());
             Mockito.verify(this.contentManager, Mockito.times(0)).loadContent(Mockito.anyString(), Mockito.eq(true));
         }
+    }
+
+    @Test
+    public void getContentUtilizer() throws Exception {
+        List<String> contentsId = Arrays.asList("ART1111", "ART2222", "ART333", "ART444", "ART5", "ART6");
+        when(((ContentUtilizer) this.contentManager).getContentUtilizers(Mockito.anyString())).thenReturn(contentsId);
+        when(this.contentManager.loadContent(Mockito.anyString(), Mockito.eq(true))).thenReturn(Mockito.any(Content.class));
+        List<ContentDto> dtos = this.contentService.getContentUtilizer("NEW456");
+        Assert.assertEquals(6, dtos.size());
+        Mockito.verify(((ContentUtilizer) this.contentManager), Mockito.times(1)).getContentUtilizers(Mockito.anyString());
+        Mockito.verify(this.contentManager, Mockito.times(6)).loadContent(Mockito.anyString(), Mockito.eq(true));
+    }
+
+    @Test(expected = RestServerError.class)
+    public void getContentUtilizerWithError() throws Exception {
+        when(((ContentUtilizer) this.contentManager).getContentUtilizers(Mockito.anyString())).thenThrow(ApsSystemException.class);
+        try {
+            List<ContentDto> dtos = this.contentService.getContentUtilizer("NEW456");
+            Assert.fail();
+        } finally {
+            Mockito.verify(((ContentUtilizer) this.contentManager), Mockito.times(1)).getContentUtilizers(Mockito.anyString());
+            Mockito.verify(this.contentManager, Mockito.times(0)).loadContent(Mockito.anyString(), Mockito.eq(true));
+        }
+    }
+
+    public void getContents() throws Exception {
+        RestContentListRequest requestList = new RestContentListRequest();
+
     }
 
 }
