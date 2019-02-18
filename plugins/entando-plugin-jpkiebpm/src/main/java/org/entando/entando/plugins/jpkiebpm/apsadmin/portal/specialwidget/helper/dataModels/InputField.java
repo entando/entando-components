@@ -32,6 +32,7 @@ public class InputField {
     private String typeHTML;
     private String value;
     private boolean required;
+    private boolean readOnly;
 
     public String getId() {
         return id;
@@ -87,6 +88,14 @@ public class InputField {
 
     public void setRequired(boolean required) {
         this.required = required;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 
 }

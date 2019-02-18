@@ -68,11 +68,9 @@ import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigReque
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- *
- * @author paddeo
- */
+
 public class KieBpmService implements IKieBpmService {
+    private static String FORM_ACTION = "/ExtStr2/do/bpm/FrontEnd/DataTypeTaskForm/save";
 
     private final String PROP_BPM_GROUP = "groups";
     private final String PREFIX_BPM_GROUP = "bpm_";
