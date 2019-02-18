@@ -26,6 +26,7 @@ import com.agiletec.aps.util.FileTextReader;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
+import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import static org.hamcrest.CoreMatchers.is;
@@ -46,6 +48,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -59,6 +62,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
     @Autowired
     private ICmsSearchEngineManager searchEngineManager;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testGetContentWithModel() throws Exception {
@@ -162,6 +167,67 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
             ListAttribute list = (ListAttribute) newContent.getAttribute("multilist");
             Assert.assertEquals(4, list.getAttributeList("en").size());
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
+    public void testAddDeleteContent() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("TST"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_valid.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            result.andExpect(jsonPath("$.payload.id", Matchers.anything()));
+            result.andExpect(jsonPath("$.errors.size()", is(0)));
+            result.andExpect(jsonPath("$.metaData.size()", is(0)));
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload.id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+            Assert.assertNotNull(newContent);
+            Content newPublicContent = this.contentManager.loadContent(newContentId, true);
+            Assert.assertNull(newPublicContent);
+
+            ContentStatusRequest contentStatusRequest = new ContentStatusRequest();
+            contentStatusRequest.setStatus("published");
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/{code}/status", newContentId)
+                            .content(mapper.writeValueAsString(contentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            newPublicContent = this.contentManager.loadContent(newContentId, true);
+            Assert.assertNotNull(newPublicContent);
+
+            contentStatusRequest.setStatus("draft");
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/{code}/status", newContentId)
+                            .content(mapper.writeValueAsString(contentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            newPublicContent = this.contentManager.loadContent(newContentId, true);
+            Assert.assertNull(newPublicContent);
+
+            result = mockMvc
+                    .perform(delete("/plugins/cms/contents/{code}", new Object[]{newContentId})
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            Assert.assertNotNull(this.contentManager.loadContent(newContentId, false));
         } finally {
             if (null != newContentId) {
                 Content newContent = this.contentManager.loadContent(newContentId, false);
