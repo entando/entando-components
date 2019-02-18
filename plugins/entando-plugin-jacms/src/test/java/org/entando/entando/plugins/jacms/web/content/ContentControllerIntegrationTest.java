@@ -227,7 +227,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());
-            Assert.assertNotNull(this.contentManager.loadContent(newContentId, false));
+            Assert.assertNull(this.contentManager.loadContent(newContentId, false));
         } finally {
             if (null != newContentId) {
                 Content newContent = this.contentManager.loadContent(newContentId, false);
