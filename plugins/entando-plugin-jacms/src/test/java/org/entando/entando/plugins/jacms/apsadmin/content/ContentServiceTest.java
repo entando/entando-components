@@ -229,7 +229,7 @@ public class ContentServiceTest {
     }
 
     @Test(expected = ValidationGenericException.class)
-    public void getContentsWithModelError() throws Exception {
+    public void getContentsWithModelError_1() throws Exception {
         RestContentListRequest requestList = this.createContentsRequest();
         requestList.setStatus(IContentService.STATUS_ONLINE);
         requestList.setModelId("34");
@@ -248,6 +248,30 @@ public class ContentServiceTest {
         } finally {
             Mockito.verify(this.contentManager, Mockito.times(1)).loadContent(Mockito.anyString(), Mockito.eq(true));
             Mockito.verify(this.contentModelManager, Mockito.times(1)).getContentModel(34);
+            Mockito.verifyZeroInteractions(this.searchEngineManager);
+            Mockito.verifyZeroInteractions(this.contentDispenser);
+        }
+    }
+
+    @Test(expected = ValidationGenericException.class)
+    public void getContentsWithModelError_2() throws Exception {
+        RestContentListRequest requestList = this.createContentsRequest();
+        requestList.setStatus(IContentService.STATUS_ONLINE);
+        requestList.setModelId("list");
+        UserDetails user = Mockito.mock(UserDetails.class);
+        when(this.langManager.getDefaultLang()).thenReturn(Mockito.mock(Lang.class));
+        when(this.authorizationManager.getUserGroups(user)).thenReturn(new ArrayList<>());
+        List<String> contentsId = Arrays.asList("ART1", "ART2", "ART3", "ART4", "ART5", "ART6");
+        when((this.contentManager).loadPublicContentsId(Mockito.nullable(String[].class), Mockito.anyBoolean(),
+                Mockito.nullable(EntitySearchFilter[].class), Mockito.any(List.class))).thenReturn(contentsId);
+        this.createMockContent("ART");
+        this.createMockContentModel("NEW");
+        try {
+            PagedMetadata<ContentDto> metadata = this.contentService.getContents(requestList, user);
+            Assert.fail();
+        } finally {
+            Mockito.verify(this.contentManager, Mockito.times(1)).loadContent(Mockito.anyString(), Mockito.eq(true));
+            Mockito.verify(this.contentModelManager, Mockito.times(1)).getContentModel(10);
             Mockito.verifyZeroInteractions(this.searchEngineManager);
             Mockito.verifyZeroInteractions(this.contentDispenser);
         }
@@ -273,7 +297,7 @@ public class ContentServiceTest {
 
     protected void createMockContentModel(String typeCode) throws Exception {
         ContentModel mockContentModel = Mockito.mock(ContentModel.class);
-        when(mockContentModel.getContentType()).thenReturn("ART");
+        when(mockContentModel.getContentType()).thenReturn(typeCode);
         when(mockContentModel.getContentShape()).thenReturn("Content model");
         when(this.contentModelManager.getContentModel(Mockito.anyLong())).thenReturn(mockContentModel);
     }

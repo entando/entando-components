@@ -19,6 +19,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.web.common.annotation.RestAccessControl;
@@ -35,11 +37,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
+import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
 
 /**
@@ -174,6 +179,37 @@ public class ContentController {
             throw new ValidationGenericException(bindingResult);
         }
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RequestMapping(value = "/{code}/status", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse<ContentDto, Map<String, String>>> updatePageStatus(@PathVariable String code,
+            @Valid @RequestBody ContentStatusRequest contentStatusRequest, BindingResult bindingResult) {
+        logger.debug("changing status for content {} with request {}", code, contentStatusRequest);
+        Map<String, String> metadata = new HashMap<>();
+        //field validations
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+        ContentDto contentDto = this.getContentService().updateContentStatus(code, contentStatusRequest.getStatus(), this.extractCurrentUser());
+        metadata.put("status", contentStatusRequest.getStatus());
+        return new ResponseEntity<>(new RestResponse<>(contentDto, metadata), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RequestMapping(value = "/{code}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<?>> deleteContent(@PathVariable String code) {
+        logger.debug("Deleting content -> {}", code);
+        DataBinder binder = new DataBinder(code);
+        BindingResult bindingResult = binder.getBindingResult();
+        //field validations
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+        this.getContentService().deleteContent(code, this.extractCurrentUser());
+        Map<String, String> payload = new HashMap<>();
+        payload.put("code", code);
+        return new ResponseEntity<>(new SimpleRestResponse<>(payload), HttpStatus.OK);
     }
 
     protected UserDetails extractCurrentUser() {
