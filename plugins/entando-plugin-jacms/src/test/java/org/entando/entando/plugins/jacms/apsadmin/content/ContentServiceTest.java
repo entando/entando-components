@@ -327,7 +327,7 @@ public class ContentServiceTest {
     }
 
     @Test(expected = ResourceNotFoundException.class)
-    public void getContentWithError() throws Exception {
+    public void getContentWithError_1() throws Exception {
         UserDetails user = Mockito.mock(UserDetails.class);
         when(this.langManager.getDefaultLang()).thenReturn(Mockito.mock(Lang.class));
         when(this.authorizationManager.getUserGroups(user)).thenReturn(new ArrayList<>());
@@ -343,6 +343,22 @@ public class ContentServiceTest {
             Mockito.verifyZeroInteractions(this.contentModelManager);
             Mockito.verifyZeroInteractions(this.contentDispenser);
             Mockito.verifyZeroInteractions(this.searchEngineManager);
+        }
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void getContentWithError_2() throws Exception {
+        UserDetails user = Mockito.mock(UserDetails.class);
+        when(this.contentAuthorizationHelper.getAuthorizationInfo(Mockito.anyString())).thenReturn(null);
+        try {
+            ContentDto dto = this.contentService.getContent("ART11", "list", IContentService.STATUS_ONLINE, null, false, user);
+            Assert.fail();
+        } finally {
+            Mockito.verifyZeroInteractions(this.contentModelManager);
+            Mockito.verifyZeroInteractions(this.contentDispenser);
+            Mockito.verifyZeroInteractions(this.contentManager);
+            Mockito.verifyZeroInteractions(this.searchEngineManager);
+            Mockito.verifyZeroInteractions(this.langManager);
         }
     }
 
