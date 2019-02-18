@@ -14,10 +14,9 @@
                     </select>
         </div>
     </div>
-    <script type="text/javascript">
-        
-         $('#selectpicker_${field.id}').selectpicker(
-          {  size: ${field.maxDropdownElements},
+    <script type="text/javascript">        
+         $('#selectpicker_${field.id}').selectpicker({  
+            size: ${field.maxDropdownElements},
             maxOptions: ${field.maxElementsOnTitle},
             liveSearch: ${field.allowFilter?c},            
             actionsBox: ${field.allowClearSelection?c}
