@@ -1,6 +1,7 @@
 package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import org.entando.entando.aps.system.jpa.EntityFieldsConverter;
+import org.entando.entando.aps.system.jpa.JpaSpecificationRepository;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.jpa.servdb.repo.DigitalExchangeJobRepository;
 import org.entando.entando.aps.system.services.EntandoBaseJpaService;

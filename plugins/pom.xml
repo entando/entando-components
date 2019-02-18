@@ -58,6 +58,7 @@
         <module>entando-plugin-jpinfinispan</module>
         <module>entando-plugin-jpseo</module>
         <module>entando-plugin-jpdigital-exchange</module>
+        <module>entando-plugin-jpspringdatajpa</module>
     </modules>
     <profiles>
         <profile>

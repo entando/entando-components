@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(transactionManager = "servTransactionManager")
-public interface DigitalExchangeJobRepository extends JpaSpecificationRepository<DigitalExchangeJob, String>,
-        DigitalExchangeJobRepositoryCustom {
+public interface DigitalExchangeJobRepository extends
+        DigitalExchangeJobRepositoryCustom, JpaSpecificationRepository<DigitalExchangeJob, String> {
 
 }
