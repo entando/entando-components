@@ -1,7 +1,8 @@
+import "test/enzyme-init";
+import {shallow} from "enzyme";
+
 import React from "react";
 
-import {configure, shallow} from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import {
   Card,
   CardTitle,
@@ -11,8 +12,6 @@ import {
 } from "patternfly-react";
 
 import ServerConfigCard from "ui/dashboard-config/list/components/ServerConfigCard";
-
-configure({adapter: new Adapter()});
 
 const props = {
   configItem: {},

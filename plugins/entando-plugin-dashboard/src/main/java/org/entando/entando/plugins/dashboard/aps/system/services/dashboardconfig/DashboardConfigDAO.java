@@ -1,8 +1,20 @@
+
 /*
  *
- * <Your licensing text here>
+ *  * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ *  *
+ *  * This library is free software; you can redistribute it and/or modify it under
+ *  * the terms of the GNU Lesser General Public License as published by the Free
+ *  * Software Foundation; either version 2.1 of the License, or (at your option)
+ *  * any later version.
+ *  *
+ *  * This library is distributed in the hope that it will be useful, but WITHOUT
+ *  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ *  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ *  * details.
  *
  */
+
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
@@ -145,8 +157,8 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
         stat.setNull(index++, Types.VARCHAR);
       }
       stat.setInt(index++, dashboardConfig.getTimeConnection());
-      stat.setInt(index++, dashboardConfig.getActive());
-      stat.setInt(index++, dashboardConfig.getDebug());
+      stat.setInt(index++, dashboardConfig.getActive() ? 1 : 0);
+      stat.setInt(index++, dashboardConfig.getDebug() ? 1 : 0);
       stat.executeUpdate();
     } catch (Throwable t) {
       logger.error("Error on insert dashboardConfig", t);
@@ -176,8 +188,8 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
   }
 
   private void updateDashboardConfigDatasource(final DashboardConfig dashboardConfig, final Connection conn) throws SQLException {
-    this.removeDashboardConfigDatasource(dashboardConfig.getId(),conn);
-    this.insertDashboardConfigDatasource(dashboardConfig,conn);
+    this.removeDashboardConfigDatasource(dashboardConfig.getId(), conn);
+    this.insertDashboardConfigDatasource(dashboardConfig, conn);
 
   }
 
@@ -205,8 +217,8 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
         stat.setNull(index++, Types.VARCHAR);
       }
       stat.setInt(index++, dashboardConfig.getTimeConnection());
-      stat.setInt(index++, dashboardConfig.getActive());
-      stat.setInt(index++, dashboardConfig.getDebug());
+      stat.setInt(index++, dashboardConfig.getActive() ? 1 : 0);
+      stat.setInt(index++, dashboardConfig.getDebug() ? 1 : 0);
       stat.setInt(index++, dashboardConfig.getId());
       stat.executeUpdate();
     } catch (Throwable t) {
@@ -323,8 +335,8 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       dashboardConfig.setPassword(res.getString("password"));
       dashboardConfig.setToken(res.getString("token"));
       dashboardConfig.setTimeConnection(res.getInt("timeconnection"));
-      dashboardConfig.setActive(res.getInt("active"));
-      dashboardConfig.setDebug(res.getInt("debug"));
+      dashboardConfig.setActive(res.getBoolean("active"));
+      dashboardConfig.setDebug(res.getBoolean("debug"));
 
     } catch (Throwable t) {
       logger.error("Error in buildDashboardConfigFromRes", t);

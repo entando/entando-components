@@ -16,7 +16,7 @@ jest.mock("state/main/selectors", () => ({
 
 getServerConfigList.mockReturnValue(DASHBOARD_CONFIG_LIST);
 
-let dispatchMock = jest.fn();
+const dispatchMock = jest.fn();
 
 const INITIAL_STATE = {
   dashboardConfig: {

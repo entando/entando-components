@@ -1,50 +1,57 @@
-import {makeMockRequest, METHODS} from "@entando/apimanager";
+import {makeMockRequest, makeRequest, METHODS} from "@entando/apimanager";
 import {
   DASHBOARD_CONFIG_LIST,
   DASHBOARD_LIST_DATASOURCE,
   DATASOURCES_DATA
 } from "mocks/dashboardConfigs";
 
-export const getServerConfig = () =>
-  makeMockRequest({
-    uri: "/plugins/dashboard/dashboardConfigs",
+export const getServerConfig = configItem => {
+  let uri = "/api/plugins/dashboard/dashboardConfigs";
+  let mockResponse = DASHBOARD_CONFIG_LIST;
+  if (configItem) {
+    uri = `${uri}/${configItem.id}`;
+    mockResponse = DASHBOARD_CONFIG_LIST[configItem.id];
+  }
+  return makeRequest({
+    uri,
     method: METHODS.GET,
-    mockResponse: DASHBOARD_CONFIG_LIST,
-    useAuthentication: false
+    mockResponse,
+    useAuthentication: true
   });
+};
 
 export const postServerConfig = serverConfig =>
-  makeMockRequest({
-    uri: "/plugins/dashboard/dashboardConfigs",
+  makeRequest({
+    uri: "/api/plugins/dashboard/dashboardConfigs",
     method: METHODS.POST,
     body: serverConfig,
     mockResponse: {...serverConfig},
-    useAuthentication: false
+    useAuthentication: true
   });
 
 export const putServerConfig = serverConfig =>
-  makeMockRequest({
-    uri: `/plugins/dashboard/dashboardConfigs/${serverConfig.id}`,
+  makeRequest({
+    uri: `/api/plugins/dashboard/dashboardConfigs/${serverConfig.id}`,
     method: METHODS.PUT,
     body: serverConfig,
     mockResponse: {...serverConfig},
-    useAuthentication: false
+    useAuthentication: true
   });
 
 export const deleteServerConfig = serverConfigId =>
-  makeMockRequest({
-    uri: `/plugins/dashboard/dashboardConfigs/${serverConfigId}`,
+  makeRequest({
+    uri: `/api/plugins/dashboard/dashboardConfigs/${serverConfigId}`,
     method: METHODS.DELETE,
     mockResponse: {},
-    useAuthentication: false
+    useAuthentication: true
   });
 
 export const getDatasources = configId =>
-  makeMockRequest({
-    uri: `/plugins/dashboard/dashboardConfigs/${configId}/datasources`,
+  makeRequest({
+    uri: `/api/plugins/dashboard/dashboardConfigs/${configId}/datasources`,
     method: METHODS.GET,
-    mockResponse: DASHBOARD_LIST_DATASOURCE[configId],
-    useAuthentication: false
+    mockResponse: DASHBOARD_LIST_DATASOURCE[configId] || [],
+    useAuthentication: true
   });
 
 export const getDatasourceData = (
@@ -55,19 +62,19 @@ export const getDatasourceData = (
 ) =>
   makeMockRequest(
     {
-      uri: `/plugins/dashboard/dashboardConfigs/${configId}/datasource/${datasourceId}/${type}`,
+      uri: `/api/plugins/dashboard/dashboardConfigs/${configId}/datasource/${datasourceId}/${type}`,
       method: METHODS.GET,
       mockResponse: DATASOURCES_DATA[configId][datasourceId][type],
-      useAuthentication: false
+      useAuthentication: true
     },
     page
   );
 
 export const putDatasourceColumn = (configId, datasourceId, columns) =>
   makeMockRequest({
-    uri: `/plugins/dashboard/dashboardConfigs/${configId}/datasource/${datasourceId}/columns`,
+    uri: `/api/plugins/dashboard/dashboardConfigs/${configId}/datasource/${datasourceId}/columns`,
     method: METHODS.PUT,
     body: columns,
     mockResponse: columns,
-    useAuthentication: false
+    useAuthentication: true
   });

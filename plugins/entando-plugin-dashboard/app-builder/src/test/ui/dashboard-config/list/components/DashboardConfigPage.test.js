@@ -1,14 +1,10 @@
+import "test/enzyme-init";
+import {shallow} from "enzyme";
+
 import React from "react";
-
-import {configure, shallow} from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-
 import {DASHBOARD_CONFIG_LIST} from "mocks/dashboardConfigs";
-
 import DashboardConfigPage from "ui/dashboard-config/list/components/DashboardConfigPage";
 import ServerConfigCard from "ui/dashboard-config/list/components/ServerConfigCard";
-
-configure({adapter: new Adapter()});
 
 const props = {
   serverList: [],

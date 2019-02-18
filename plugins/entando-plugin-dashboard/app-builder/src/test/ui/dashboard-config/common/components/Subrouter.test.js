@@ -1,13 +1,11 @@
-import React from "react";
+import "test/enzyme-init";
+import {shallow} from "enzyme";
 
+import React from "react";
 import SubRouter from "ui/dashboard-config/common/components/SubRouter";
 import ConfigPageContainer from "ui/dashboard-config/list/containers/DashboardConfigPageContainer";
 import DashboardConfigAddPage from "ui/dashboard-config/add/components/DashboardConfigAddPage";
 import DashboardConfigEditPage from "ui/dashboard-config/add/components/DashboardConfigEditPage";
-
-import {configure, shallow} from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-configure({adapter: new Adapter()});
 
 describe("SubRouter", () => {
   let component;

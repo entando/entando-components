@@ -1,8 +1,20 @@
+
 /*
  *
- * <Your licensing text here>
+ *  * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ *  *
+ *  * This library is free software; you can redistribute it and/or modify it under
+ *  * the terms of the GNU Lesser General Public License as published by the Free
+ *  * Software Foundation; either version 2.1 of the License, or (at your option)
+ *  * any later version.
+ *  *
+ *  * This library is distributed in the hope that it will be useful, but WITHOUT
+ *  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ *  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ *  * details.
  *
  */
+
 package org.entando.entando.plugins.dashboard.apsadmin.dashboardconfig;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
@@ -187,17 +199,17 @@ public class DashboardConfigAction extends BaseAction {
 		this._timeConnection = timeConnection;
 	}
 
-	public int getActive() {
+	public boolean getActive() {
 		return _active;
 	}
-	public void setActive(int active) {
+	public void setActive(boolean active) {
 		this._active = active;
 	}
 
-	public int getDebug() {
+	public boolean getDebug() {
 		return _debug;
 	}
-	public void setDebug(int debug) {
+	public void setDebug(boolean debug) {
 		this._debug = debug;
 	}
 
@@ -217,8 +229,8 @@ public class DashboardConfigAction extends BaseAction {
 	private String _password;
 	private String _token;
 	private int _timeConnection;
-	private int _active;
-	private int _debug;
+	private boolean _active;
+	private boolean _debug;
 	
 	private IDashboardConfigManager _dashboardConfigManager;
 	

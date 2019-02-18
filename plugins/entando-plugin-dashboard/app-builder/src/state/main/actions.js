@@ -1,7 +1,7 @@
 import {getRoute, getParams, getSearchParams, gotoRoute} from "@entando/router";
 import {addToast, addErrors, TOAST_ERROR} from "@entando/messages";
 import {formattedText} from "@entando/utils";
-import {formValueSelector} from "redux-form";
+import {formValueSelector, initialize} from "redux-form";
 
 import {getPageConfiguration, getLanguages} from "api/appBuilder";
 
@@ -162,12 +162,15 @@ export const fetchLanguages = () => dispatch =>
     });
   });
 
-export const fetchServerConfigList = mockServer => dispatch =>
+export const fetchServerConfigList = configItem => dispatch =>
   new Promise(resolve => {
-    getServerConfig(mockServer).then(response => {
+    getServerConfig(configItem).then(response => {
       if (response.ok) {
         response.json().then(json => {
           dispatch(setServerConfigList(json.payload));
+          if (configItem) {
+            dispatch(setInternalRoute("edit"));
+          }
           resolve();
         });
       } else {
@@ -175,6 +178,26 @@ export const fetchServerConfigList = mockServer => dispatch =>
       }
     });
   });
+
+export const editServerConfig = (formName, configItem) => dispatch => {
+  new Promise(resolve => {
+    getDatasources(configItem.id).then(response => {
+      response.json().then(json => {
+        if (response.ok) {
+          dispatch(setInternalRoute("edit"));
+          const config = configItem;
+          config.datasources = [...json.payload];
+          dispatch(initialize(formName, configItem));
+          resolve();
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          resolve();
+        }
+      });
+    });
+  });
+};
 
 export const removeServerConfig = id => dispatch =>
   new Promise(resolve => {
@@ -188,11 +211,10 @@ export const removeServerConfig = id => dispatch =>
 
 export const createServerConfig = serverConfig => dispatch =>
   new Promise(resolve => {
-    console.log("createServerConfig", serverConfig);
     postServerConfig(serverConfig).then(response => {
-      console.log("response", response);
       if (response.ok) {
         response.json().then(json => {
+          dispatch(setInternalRoute("home"));
           dispatch(addServerConfig(json.payload));
         });
       } else {
@@ -206,6 +228,7 @@ export const updateServerConfig = serverConfig => dispatch =>
   new Promise(resolve => {
     putServerConfig(serverConfig).then(response => {
       if (response.ok) {
+        dispatch(setInternalRoute("home"));
         dispatch(fetchServerConfigList()).then(resolve);
       } else {
         resolve();

@@ -1,23 +1,21 @@
 import React from "react";
-
 import PropTypes from "prop-types";
-
-import {Row, Col, Button, Icon} from "patternfly-react";
-
+import {
+  Row,
+  Col,
+  Button,
+  Icon
+} from "patternfly-react";
 import FormattedMessageLocal from "ui/i18n/FormattedMessage";
-
 import DashboardConfigDatasourceStatusContainer from "ui/dashboard-config/common/containers/DashboardConfigDatasourceStatusContainer";
-
 const addDatasource = (fields, value) => {
-  if (value.name !== undefined && value.uri !== undefined) {
+  if(value.datasource !== undefined && value.datasourceURI !== undefined) {
     fields.push(value);
   }
 };
-
 const removeDatasource = (fields, index) => {
   fields.remove(index);
 };
-
 const DashboardConfigDatasource = ({
   fields,
   datasourceValue,
@@ -26,17 +24,15 @@ const DashboardConfigDatasource = ({
   pageSize,
   totalItems,
   changePage
-}) => {
-  return (
-    <div className="DashboardConfigDatasource">
+}) => (<div className="DashboardConfigDatasource">
       <Row>
         <Col xs={12}>
           <div className="btn-toolbar pull-right">
             <Button
               className="DashboardConfigDatasource__datasource-btn"
               disabled={
-                datasourceValue.name === undefined ||
-                datasourceValue.uri === undefined
+                datasourceValue.datasource === undefined ||
+                datasourceValue.datasourceURI === undefined
               }
               type="button"
               bsStyle="default"
@@ -66,8 +62,8 @@ const DashboardConfigDatasource = ({
               <tbody>
                 {datasources.map((ds, index) => (
                   <tr key={`datasource-${index}`}>
-                    <td>{ds.name}</td>
-                    <td>{ds.uri}</td>
+                    <td>{ds.datasource}</td>
+                    <td>{ds.datasourceURI}</td>
                     <td>
                       <DashboardConfigDatasourceStatusContainer />
                     </td>
@@ -86,26 +82,20 @@ const DashboardConfigDatasource = ({
           </Col>
         )}
       </Row>
-    </div>
-  );
-};
-
+    </div>);
 const DATASOURCE_TYPE = {
-  name: PropTypes.string,
-  uri: PropTypes.string
+  datasource: PropTypes.string,
+  datasourceURI: PropTypes.string
 };
-
 DashboardConfigDatasource.PropType = {
   datasourceValue: PropTypes.shape(DATASOURCE_TYPE),
   datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE))
 };
-
 DashboardConfigDatasource.defaultProps = {
   datasourceValue: {
-    name: undefined,
-    uri: undefined
+    datasource: undefined,
+    datasourceURI: undefined
   },
   datasources: []
 };
-
 export default DashboardConfigDatasource;

@@ -1,7 +1,16 @@
-import React, {Component} from "react";
-import {Field, FieldArray, reduxForm} from "redux-form";
+import React from "react";
+import {
+  Field,
+  FieldArray,
+  reduxForm
+} from "redux-form";
 import PropTypes from "prop-types";
-import {FormGroup, Row, Col, Button} from "patternfly-react";
+import {
+  FormGroup,
+  Row,
+  Col,
+  Button
+} from "patternfly-react";
 import FormSectionTitle from "ui/common/form/FormSectionTitle";
 import {
   formattedText,
@@ -10,54 +19,54 @@ import {
   maxLength,
   isNumber
 } from "@entando/utils";
-
 import FormattedMessageLocal from "ui/i18n/FormattedMessage";
 import SwitchRenderer from "ui/common/form/SwitchRenderer";
 import RenderTextInput from "ui/common/form/RenderTextInput";
 import FormLabel from "ui/common/form/FormLabel";
-
 import DashboardConfigDatasource from "ui/dashboard-config/common/components/DashboardConfigDatasource";
-
 const maxLength30 = maxLength(30);
 const minLength3 = minLength(3);
-
-const renderField = (
-  name,
-  labelId,
-  placeholder,
-  validate,
-  labelSize,
-  append
-) => {
+const renderField = (name, labelId, placeholder, validate, labelSize, append) => {
   let required = false;
-  if (validate) {
+  if(validate) {
     required = validate.includes("required");
   }
   let pholder = "";
-  if (placeholder) {
+  if(placeholder) {
     pholder = placeholder;
   } else {
     pholder = labelId;
   }
-  return (
-    <Field
+  return (<Field
       component={RenderTextInput}
       name={name}
-      label={<FormLabel labelId={labelId} required={required} />}
-      placeholder={formattedText(pholder)}
-      validate={validate}
-      labelSize={labelSize}
-      alignClass="text-left"
-      append={append}
-    />
-  );
+      label={<FormLabel labelId={labelId} required={required} />
+  }
+  placeholder = {
+    formattedText(pholder)
+  }
+  validate = {
+    validate
+  }
+  labelSize = {
+    labelSize
+  }
+  alignClass = "text-left"
+  append = {
+    append
+  }
+  />);
 };
-
-export class DashboardConfigFormBody extends Component {
-  render() {
-    const {handleSubmit} = this.props;
-    return (
-      <div className="DashboardConfig">
+export const DashboardConfigFormBody = ({
+  handleSubmit,
+  invalid,
+  submitting,
+  datasources,
+  datasourceValue,
+  testConnection
+}) => {
+  const disableSubmit = invalid || submitting || datasources.length === 0
+  return (<div className="DashboardConfig">
         <FormSectionTitle titleId="plugin.config.settings" />
         <form
           onSubmit={handleSubmit}
@@ -148,7 +157,8 @@ export class DashboardConfigFormBody extends Component {
                       className="DashboardConfig__test-btn"
                       type="button"
                       bsStyle="default"
-                      onClick={this.props.testConnection}
+                      disabled={testConnection ? false : true}
+                      onClick={testConnection}
                     >
                       <FormattedMessageLocal id="plugin.config.testConnection" />
                     </Button>
@@ -186,8 +196,8 @@ export class DashboardConfigFormBody extends Component {
             <FieldArray
               name="datasources"
               component={DashboardConfigDatasource}
-              datasourceValue={this.props.datasourceValue}
-              datasources={this.props.datasources}
+              datasourceValue={datasourceValue}
+              datasources={datasources}
             />
             <Row>
               <Col xs={12}>
@@ -195,7 +205,7 @@ export class DashboardConfigFormBody extends Component {
                   className="DashboardConfig__btn-save pull-right"
                   type="submit"
                   bsStyle="primary"
-                  disabled={this.props.invalid || this.props.submitting}
+                  disabled={disableSubmit}
                 >
                   <FormattedMessageLocal id="common.save" />
                 </Button>
@@ -210,35 +220,29 @@ export class DashboardConfigFormBody extends Component {
             </Row>
           </fieldset>
         </form>
-      </div>
-    );
-  }
+      </div>);
 }
-
 const DATASOURCE_TYPE = {
-  name: PropTypes.string,
-  uri: PropTypes.string
+  datasource: PropTypes.string,
+  datasourceURI: PropTypes.string
 };
-
 DashboardConfigFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  testConnection: PropTypes.func.isRequired,
+  testConnection: PropTypes.func,
   datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE)),
   datasourceValue: PropTypes.shape(DATASOURCE_TYPE),
   invalid: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired
 };
-
 DashboardConfigFormBody.defaultProps = {
   datasourceValue: {
-    name: undefined,
-    uri: undefined
+    datasource: undefined,
+    datasourceURI: undefined
   },
-  datasources: []
+  datasources: [],
+  testConnection: null
 };
-
 const DashboardConfigForm = reduxForm({
   form: "dashboard-config-form"
 })(DashboardConfigFormBody);
-
 export default DashboardConfigForm;

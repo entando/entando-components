@@ -1,7 +1,11 @@
 import {connect} from "react-redux";
 import DashboardConfigPage from "ui/dashboard-config/list/components/DashboardConfigPage";
 
-import {fetchServerConfigList, gotoPluginPage} from "state/main/actions";
+import {
+  fetchServerConfigList,
+  editServerConfig,
+  gotoPluginPage
+} from "state/main/actions";
 
 import {getServerConfigList} from "state/main/selectors";
 
@@ -13,16 +17,14 @@ export const mapDispatchToProps = dispatch => ({
   onWillMount: () => dispatch(fetchServerConfigList()),
 
   removeConfigItem: id => {
-    console.log("removeConfigItem ", id);
+    //console.log("removeConfigItem ", id);
   },
 
-  editConfigItem: configItem => {
-    console.log("editConfigItem", configItem);
+  editConfigItem: (formName, configItem) => {
+    dispatch(editServerConfig(formName, configItem));
   },
 
-  testConfigItem: () => {
-    console.log("Test config");
-  },
+  testConfigItem: () => {},
 
   testAllConfigItems: () => {},
 

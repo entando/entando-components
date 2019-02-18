@@ -1,10 +1,9 @@
+import "test/enzyme-init";
+import {shallow} from "enzyme";
+
 import React from "react";
 import {Field, FieldArray} from "redux-form";
 import {DashboardConfigFormBody} from "ui/dashboard-config/common/components/DashboardConfigForm";
-
-import {configure, shallow} from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-configure({adapter: new Adapter()});
 
 const props = {
   handleSubmit: jest.fn(),

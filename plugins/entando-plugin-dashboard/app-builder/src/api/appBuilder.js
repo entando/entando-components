@@ -1,18 +1,18 @@
-import {makeMockRequest, METHODS} from "@entando/apimanager";
+import {makeRequest, METHODS} from "@entando/apimanager";
 import {PAGE_CONFIGURATION, LANGUAGES} from "mocks/appBuilder";
 
 export const getPageConfiguration = pageCode =>
-  makeMockRequest({
+  makeRequest({
     uri: `/api/pages/${pageCode}/configuration`,
     method: METHODS.GET,
-    mockResponse: PAGE_CONFIGURATION,
-    useAuthentication: false
+    mockResponse: PAGE_CONFIGURATION || {},
+    useAuthentication: true
   });
 
 export const getLanguages = () =>
-  makeMockRequest({
+  makeRequest({
     uri: `/api/languages`,
     method: METHODS.GET,
-    mockResponse: LANGUAGES,
-    useAuthentication: false
+    mockResponse: LANGUAGES || [],
+    useAuthentication: true
   });

@@ -6,7 +6,6 @@ import DashboardConfigAddPage from "ui/dashboard-config/add/components/Dashboard
 import DashboardConfigEditPage from "ui/dashboard-config/add/components/DashboardConfigEditPage";
 
 const SubRouter = ({pluginPage}) => {
-  console.log("SubRouter pluginPage :", pluginPage);
   switch (pluginPage) {
     case "add":
       return <DashboardConfigAddPage />;
