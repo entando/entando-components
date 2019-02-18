@@ -135,7 +135,7 @@ public class ContentController {
     @RequestMapping(value = "/{code}/model/{modelId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<ContentDto>> getContent(@PathVariable String code, @PathVariable String modelId,
             @RequestParam(name = "status", required = false, defaultValue = IContentService.STATUS_DRAFT) String status,
-            @RequestParam(name = "resolveLinks", required = false) boolean resolveLinks,
+            @RequestParam(name = "resolveLinks", required = false, defaultValue = "false") boolean resolveLinks,
             @RequestParam(name = "lang", required = false) String lang) {
         logger.debug("Requested content -> {} - model {} - status {}", code, modelId, status);
         ContentDto dto;
