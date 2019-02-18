@@ -487,7 +487,12 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
         String kieSourceId = params[2];
 
         KieBpmConfig config = this.formManager.getKieServerConfigurations().get(kieSourceId);
-        KieProcessFormQueryResult form = this.getFormManager().getProcessForm(config, containerId, processId);
+        logger.info("config {}",config.getName());
+        logger.info("containerId {}", containerId);
+        logger.info("processId {}", processId);
+        logger.info("formManager {}", formManager);
+
+        KieProcessFormQueryResult form = this.formManager.getProcessForm(config, containerId, processId);
         List<KieProcessFormField> fields = new ArrayList<>();
         this.addFields(form, fields);
         return fields;

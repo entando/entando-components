@@ -12,8 +12,8 @@
                         </#list>
                         </#if>
                     </select>
-                </div>
         </div>
+    </div>
     <script type="text/javascript">
         
          $('#selectpicker_${field.id}').selectpicker(
@@ -22,6 +22,5 @@
             liveSearch: ${field.allowFilter?c},            
             actionsBox: ${field.allowClearSelection?c}
          });
-        </script>
-    </div>
+    </script>
 </div>

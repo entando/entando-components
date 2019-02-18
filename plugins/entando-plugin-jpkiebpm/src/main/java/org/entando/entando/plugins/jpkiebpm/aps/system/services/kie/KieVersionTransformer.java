@@ -397,8 +397,10 @@ public class KieVersionTransformer {
         if (field.getType().equals("ListBox")) {
             KieProcessProperty optionsProperty = new KieProcessProperty();
             optionsProperty.setName("options");
-            String collect = options.stream().collect(Collectors.joining(","));
-
+            String collect =  "";
+            if (null!=options){
+                collect = options.stream().collect(Collectors.joining(","));
+            }
             optionsProperty.setValue(collect);
             field.getProperties().add(optionsProperty);            
             

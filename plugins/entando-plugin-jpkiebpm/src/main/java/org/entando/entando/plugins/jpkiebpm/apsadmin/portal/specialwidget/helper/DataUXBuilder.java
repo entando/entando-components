@@ -302,9 +302,15 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             for (String f : optionsValues) {
                 String[] split = f.split("=");
                 Option opt = new Option();
-                opt.setName(split[0]);
-                opt.setValue(split[1]);
-                selectOption.add(opt);
+                if (split.length > 0) {
+                    opt.setName(split[0]);
+                    if (split.length > 1) {
+                        opt.setValue(split[1]);
+                    } else {
+                        opt.setValue("");
+                    }
+                    selectOption.add(opt);
+                }
             }
             select.setOptions(selectOption);
 
