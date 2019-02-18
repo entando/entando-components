@@ -29,7 +29,7 @@ public interface IContentService {
     public static final String STATUS_DRAFT = "draft";
     public static final String STATUS_UNPUBLISHED = "unpublished";
 
-    public ContentDto getContent(String code, String modelId, String status, String langCode, UserDetails user);
+    public ContentDto getContent(String code, String modelId, String status, String langCode, boolean resolveLinks, UserDetails user);
 
     public ContentDto addContent(ContentDto request, UserDetails user, BindingResult bindingResult);
 

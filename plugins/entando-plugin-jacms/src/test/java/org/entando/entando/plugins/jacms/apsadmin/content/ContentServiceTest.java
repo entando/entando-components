@@ -26,6 +26,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicContentAuthorizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
@@ -38,6 +39,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentServiceUtilizer;
@@ -49,6 +51,7 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -300,6 +303,47 @@ public class ContentServiceTest {
         when(mockContentModel.getContentType()).thenReturn(typeCode);
         when(mockContentModel.getContentShape()).thenReturn("Content model");
         when(this.contentModelManager.getContentModel(Mockito.anyLong())).thenReturn(mockContentModel);
+    }
+
+    @Test
+    public void getContent() throws Exception {
+        UserDetails user = Mockito.mock(UserDetails.class);
+        when(this.langManager.getDefaultLang()).thenReturn(Mockito.mock(Lang.class));
+        when(this.authorizationManager.getUserGroups(user)).thenReturn(new ArrayList<>());
+        PublicContentAuthorizationInfo pcai = Mockito.mock(PublicContentAuthorizationInfo.class);
+        when(pcai.isUserAllowed(ArgumentMatchers.<String>anyList())).thenReturn(true);
+        when(this.contentAuthorizationHelper.getAuthorizationInfo(Mockito.anyString())).thenReturn(pcai);
+        when((this.contentDispenser).getRenderizationInfo(Mockito.nullable(String.class), Mockito.anyLong(),
+                Mockito.nullable(String.class), Mockito.nullable(RequestContext.class), Mockito.anyBoolean())).thenReturn(Mockito.mock(ContentRenderizationInfo.class));
+        this.createMockContent("ART");
+        this.createMockContentModel("ART");
+        ContentDto dto = this.contentService.getContent("ART11", "list", IContentService.STATUS_ONLINE, null, false, user);
+        Assert.assertNotNull(dto);
+        Mockito.verify(this.contentManager, Mockito.times(1)).loadContent(Mockito.anyString(), Mockito.eq(true));
+        Mockito.verify(this.contentModelManager, Mockito.times(1)).getContentModel(10);
+        Mockito.verify(this.contentDispenser, Mockito.times(0))
+                .resolveLinks(Mockito.any(ContentRenderizationInfo.class), Mockito.nullable(RequestContext.class));
+        Mockito.verifyZeroInteractions(this.searchEngineManager);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void getContentWithError() throws Exception {
+        UserDetails user = Mockito.mock(UserDetails.class);
+        when(this.langManager.getDefaultLang()).thenReturn(Mockito.mock(Lang.class));
+        when(this.authorizationManager.getUserGroups(user)).thenReturn(new ArrayList<>());
+        PublicContentAuthorizationInfo pcai = Mockito.mock(PublicContentAuthorizationInfo.class);
+        when(pcai.isUserAllowed(ArgumentMatchers.<String>anyList())).thenReturn(true);
+        when(this.contentAuthorizationHelper.getAuthorizationInfo(Mockito.anyString())).thenReturn(pcai);
+        when(this.contentManager.loadContent(Mockito.anyString(), Mockito.eq(true))).thenReturn(null);
+        try {
+            ContentDto dto = this.contentService.getContent("ART11", "list", IContentService.STATUS_ONLINE, null, false, user);
+            Assert.fail();
+        } finally {
+            Mockito.verify(this.contentManager, Mockito.times(1)).loadContent(Mockito.anyString(), Mockito.eq(true));
+            Mockito.verifyZeroInteractions(this.contentModelManager);
+            Mockito.verifyZeroInteractions(this.contentDispenser);
+            Mockito.verifyZeroInteractions(this.searchEngineManager);
+        }
     }
 
 }

@@ -278,11 +278,11 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     }
 
     @Override
-    public ContentDto getContent(String code, String modelId, String status, String langCode, UserDetails user) {
+    public ContentDto getContent(String code, String modelId, String status, String langCode, boolean resolveLink, UserDetails user) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
         boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(status));
         this.checkContentAuthorization(user, code, online, false, bindingResult);
-        ContentDto dto = this.buildContentDto(code, online, modelId, langCode, true, bindingResult);
+        ContentDto dto = this.buildContentDto(code, online, modelId, langCode, resolveLink, bindingResult);
         dto.setReferences(this.getReferencesInfo(dto.getId()));
         return dto;
     }
@@ -328,8 +328,10 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             if (null != renderizationInfo) {
                 if (resolveLink) {
                     this.getContentDispenser().resolveLinks(renderizationInfo, null);
+                    render = renderizationInfo.getRenderedContent();
+                } else {
+                    render = renderizationInfo.getCachedRenderedContent();
                 }
-                render = renderizationInfo.getRenderedContent();
             }
         }
         return render;
@@ -510,6 +512,9 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     protected void checkContentAuthorization(UserDetails userDetails, String contentId, boolean publicVersion, boolean edit, BindingResult mainBindingResult) {
         try {
             PublicContentAuthorizationInfo pcai = (publicVersion) ? this.getContentAuthorizationHelper().getAuthorizationInfo(contentId) : null;
+            if (publicVersion && null == pcai) {
+                throw new ResourceNotFoundException(ERRCODE_CONTENT_NOT_FOUND, "content", contentId);
+            }
             List<String> userGroupCodes = new ArrayList<>();
             List<Group> groups = (null != userDetails) ? this.getAuthorizationManager().getUserGroups(userDetails) : new ArrayList<>();
             userGroupCodes.addAll(groups.stream().map(Group::getName).collect(Collectors.toList()));
@@ -520,7 +525,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                 bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{contentId}, "content.unauthorized.access");
                 throw new ResourcePermissionsException(bindingResult);
             }
-        } catch (ResourcePermissionsException ex) {
+        } catch (ResourceNotFoundException | ResourcePermissionsException ex) {
             throw ex;
         } catch (Exception ex) {
             logger.error("error checking auth for content {}", contentId, ex);

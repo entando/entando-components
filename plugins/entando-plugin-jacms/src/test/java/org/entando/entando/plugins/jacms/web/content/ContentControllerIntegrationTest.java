@@ -47,7 +47,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -62,84 +61,34 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     private ICmsSearchEngineManager searchEngineManager;
 
     @Test
-    public void testGetContent_1() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        ResultActions result = this.performGetContent("ART187", null, true, null, user);
-        System.out.println(result.andReturn().getResponse().getContentAsString());
-        result.andExpect(status().isOk());
-        result.andExpect(header().string("Access-Control-Allow-Origin", "*"));
-        result.andExpect(header().string("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"));
-        result.andExpect(header().string("Access-Control-Allow-Headers", "Content-Type, Authorization"));
-        result.andExpect(header().string("Access-Control-Max-Age", "3600"));
-    }
-
-    @Test
-    public void testGetContent_2() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
-                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
-                .build();
-        ResultActions result = this.performGetContent("ART187", null, false, null, user);
-        System.out.println(result.andReturn().getResponse().getContentAsString());
-        result.andExpect(status().isOk());
-        result = this.performGetContent("ART187", null, true, null, user);
-        System.out.println(result.andReturn().getResponse().getContentAsString());
-        result.andExpect(status().isOk());
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.nullValue()));
-    }
-
-    @Test
-    public void testGetContent_3() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
-                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
-                .build();
-        ResultActions result = this.performGetContent("ART179", null, false, null, user);
-        System.out.println(result.andReturn().getResponse().getContentAsString());
-        result.andExpect(status().isOk());
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
-        result = this.performGetContent("ART179", null, true, null, user);
-        System.out.println(result.andReturn().getResponse().getContentAsString());
-        result.andExpect(status().isNotFound());
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload", Matchers.empty()));
-    }
-
-    @Test
-    public void testGetContentByGuestUser() throws Exception {
-        ResultActions result = this.performGetContent("ART187", null, true, null, null);
-        result.andExpect(status().isOk());
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
-        result = this.performGetContent("ART187", null, false, null, null);
-        result.andExpect(status().isForbidden());
-    }
-
-    @Test
     public void testGetContentWithModel() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
                 .build();
-        ResultActions result = this.performGetContent("ART180", "1", true, null, user);
+        ResultActions result = this.performGetContent("ART180", "1", true, null, true, user);
         String result1 = result.andReturn().getResponse().getContentAsString();
         System.out.println(result1);
         result.andExpect(status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
-        result = this.performGetContent("ART180", "11", true, null, user);
+        result = this.performGetContent("ART180", "11", true, null, true, user);
         String result2 = result.andReturn().getResponse().getContentAsString();
         System.out.println(result2);
 
         result.andExpect(status().isOk());
-        result = this.performGetContent("ART180", "default", true, null, user);
+        result = this.performGetContent("ART180", "default", true, null, true, user);
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         String result1_copy = result.andReturn().getResponse().getContentAsString();
         System.out.println(result1_copy);
         result.andExpect(status().isOk());
         Assert.assertEquals(result1, result1_copy);
-        result = this.performGetContent("ART180", "list", true, null, user);
+        result = this.performGetContent("ART180", "list", true, null, true, user);
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         String result2_copy = result.andReturn().getResponse().getContentAsString();
         System.out.println(result2);
         result.andExpect(status().isOk());
         Assert.assertEquals(result2, result2_copy);
 
-        result = this.performGetContent("ART180", "list", true, "en", user);
+        result = this.performGetContent("ART180", "list", true, "en", true, user);
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         String result2_copy_en = result.andReturn().getResponse().getContentAsString();
         System.out.println(result2_copy_en);
@@ -150,7 +99,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     @Test
     public void testGetInvalidContent() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        ResultActions result = this.performGetContent("ART985", null, true, null, user);
+        ResultActions result = this.performGetContent("ART985", null, true, null, true, user);
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isNotFound());
     }
@@ -232,7 +181,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     private ResultActions performGetContent(String code, String modelId,
-            boolean online, String langCode, UserDetails user) throws Exception {
+            boolean online, String langCode, boolean resolveLink, UserDetails user) throws Exception {
         String path = "/plugins/cms/contents/{code}";
         if (null != modelId) {
             path += "/model/" + modelId;
@@ -241,6 +190,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         if (null != langCode) {
             path += "&lang=" + langCode;
         }
+        path += "&resolveLink=" + (resolveLink ? "true" : "false");
         if (null == user) {
             return mockMvc.perform(get(path, code));
         }

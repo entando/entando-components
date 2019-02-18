@@ -127,21 +127,22 @@ public class ContentController {
 
     @RequestMapping(value = "/{code}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<ContentDto>> getContent(@PathVariable String code,
-            @RequestParam(value = "status", required = false, defaultValue = IContentService.STATUS_DRAFT) String status,
-            @RequestParam(value = "lang", required = false) String lang) {
-        return this.getContent(code, null, status, lang);
+            @RequestParam(name = "status", required = false, defaultValue = IContentService.STATUS_DRAFT) String status,
+            @RequestParam(name = "lang", required = false) String lang) {
+        return this.getContent(code, null, status, false, lang);
     }
 
     @RequestMapping(value = "/{code}/model/{modelId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<ContentDto>> getContent(@PathVariable String code, @PathVariable String modelId,
-            @RequestParam(value = "status", required = false, defaultValue = IContentService.STATUS_DRAFT) String status,
-            @RequestParam(value = "lang", required = false) String lang) {
+            @RequestParam(name = "status", required = false, defaultValue = IContentService.STATUS_DRAFT) String status,
+            @RequestParam(name = "resolveLinks", required = false) boolean resolveLinks,
+            @RequestParam(name = "lang", required = false) String lang) {
         logger.debug("Requested content -> {} - model {} - status {}", code, modelId, status);
         ContentDto dto;
         if (!this.getContentValidator().existContent(code, status)) {
             throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Content", code);
         } else {
-            dto = this.getContentService().getContent(code, modelId, status, lang, this.extractCurrentUser());
+            dto = this.getContentService().getContent(code, modelId, status, lang, resolveLinks, this.extractCurrentUser());
         }
         logger.debug("Main Response -> {}", dto);
         return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
