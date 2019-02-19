@@ -8,7 +8,7 @@
     </parent>
     <artifactId>entando-plugin-jpspringdatajpa</artifactId>
     <groupId>org.entando.entando.plugins</groupId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>Entando Plugin: Spring Data JPA support</name>
     <description>Handles interactions with database using Spring Data JPA</description>
     <url>http://www.entando.com/</url>
