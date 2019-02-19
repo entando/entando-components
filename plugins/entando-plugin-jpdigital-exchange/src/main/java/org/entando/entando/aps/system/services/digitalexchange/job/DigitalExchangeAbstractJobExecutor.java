@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;

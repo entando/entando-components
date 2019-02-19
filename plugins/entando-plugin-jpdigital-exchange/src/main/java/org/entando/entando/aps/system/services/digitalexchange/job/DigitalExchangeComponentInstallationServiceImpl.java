@@ -18,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -35,19 +36,19 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private static final String ERRCODE_COMPONENT_INSTALLATION_RUNNING = "1";
 
     private final DigitalExchangesService exchangesService;
-    private final DigitalExchangeJobDAO dao;
+    private final DigitalExchangeJobService jobService;
     private final DigitalExchangeAbstractJobExecutor installExecutor;
     private final DigitalExchangeAbstractJobExecutor uninstallExecutor;
 
     @Autowired
     public DigitalExchangeComponentInstallationServiceImpl(
             DigitalExchangesService exchangesService,
-            DigitalExchangeJobDAO dao,
+            DigitalExchangeJobService repository,
             DigitalExchangeInstallExecutor installExecutor,
             DigitalExchangeUninstallExecutor uninstallExecutor) {
 
         this.exchangesService = exchangesService;
-        this.dao = dao;
+        this.jobService = repository;
         this.installExecutor = installExecutor;
         this.uninstallExecutor = uninstallExecutor;
     }
@@ -61,7 +62,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(digitalExchange, componentId, JobType.INSTALL);
         job.setUser(username);
-        dao.createJob(job);
+        this.jobService.save(job);
 
         this.executeJob(job, this.installExecutor);
 
@@ -75,7 +76,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(componentId, JobType.UNINSTALL);
         job.setUser(username);
-        dao.createJob(job);
+        this.jobService.save(job);
 
         this.executeJob(job, this.uninstallExecutor);
 
@@ -85,20 +86,20 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private void executeJob(DigitalExchangeJob job, DigitalExchangeAbstractJobExecutor jobExecutor) {
         CompletableFuture.runAsync(() -> {
             try {
-                jobExecutor.execute(job, dao::updateJob);
+                jobExecutor.execute(job, jobService::save);
             } catch (Throwable ex) {
                 logger.error("Error while executing job for " + job.getComponentId(), ex);
                 job.setStatus(JobStatus.ERROR);
                 job.setErrorMessage(ex.getMessage());
                 job.setEnded(new Date());
-                dao.updateJob(job);
+                jobService.save(job);
             }
         });
     }
 
     private synchronized void checkIfAlreadyRunning(String componentId, JobType jobType) {
 
-        dao.findLast(componentId, jobType).ifPresent(job -> {
+        jobService.findLast(componentId, jobType).ifPresent(job -> {
             if (job.getStatus() != JobStatus.COMPLETED
                     && job.getStatus() != JobStatus.ERROR) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(componentId, "component");
@@ -141,7 +142,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
     @Override
     public DigitalExchangeJob checkJobStatus(String componentId, JobType jobType) {
-        return dao.findLast(componentId, jobType)
+        return jobService.findLast(componentId, jobType)
                 .orElseThrow(() -> new ResourceNotFoundException("component", componentId));
     }
 

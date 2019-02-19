@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.web.digitalexchange.install;
+package org.entando.entando.web.digitalexchange.job;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.servlet.http.HttpServletRequest;
-import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJob;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeComponentInstallationService;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobType;
 import org.entando.entando.web.common.model.SimpleRestResponse;

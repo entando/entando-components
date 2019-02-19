@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.web.digitalexchange.install;
+package org.entando.entando.web.digitalexchange.job;
 
 import com.agiletec.aps.system.services.i18n.I18nManager;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -54,7 +54,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.ResultActions;
-import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJob;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobStatus;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.web.common.model.SimpleRestResponse;
