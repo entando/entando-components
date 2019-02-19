@@ -37,10 +37,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.Bp
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.KieApiManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiField;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiForm;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputFormTask;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
@@ -53,9 +50,10 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFields;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFieldset;
 
 public class ApiTaskInterface extends KieApiManager {
 
@@ -313,9 +311,28 @@ public class ApiTaskInterface extends KieApiManager {
                     //Filter the user tasks by process id configured on the widget.
                     filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
 
+
+                    ExecutorService executorService = Executors.newFixedThreadPool(10);
+                    List<Callable<JAXBTask>> tasksCallables = new ArrayList<>();
+                    for(JAXBTask task : taskList.getList()) {
+                        Long processId = task.getProcessInstanceId();
+
+                        Callable<JAXBTask> taskCallable = () -> {
+                            Map<String, String> vars = this.getKieFormManager().getProcessVariableInstances(bpmConfig, processId+"");
+                            task.setProcessVariables(vars);
+                            return task;
+                        };
+
+                        tasksCallables.add(taskCallable);
+
+                    }
+
+
+                    executorService.invokeAll(tasksCallables);
+                    executorService.shutdown();
                     return taskList;
                 }
-            } catch (ApsSystemException e) {
+            } catch (Exception e) {
                 logger.error("Error {}", e);
             }
         }
@@ -342,6 +359,7 @@ public class ApiTaskInterface extends KieApiManager {
         KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
 
         KieTaskDetail taskDetail = this.getKieFormManager().getTaskDetail(bpmConfig, containerId, Long.valueOf(taskIdString), opt);
+
         if (null == taskDetail) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);

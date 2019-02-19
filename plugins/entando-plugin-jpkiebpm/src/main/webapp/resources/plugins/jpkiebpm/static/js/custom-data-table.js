@@ -59,7 +59,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
 
     }
 
-    var jsonColumns = getConfigColumnDatatable(items,extraConfig && extraConfig.columnDefinition);
+    var jsonColumns = getConfigColumnDatatable(items, extraConfig && extraConfig.columnDefinition);
     var buttonsColumnDef;
     if (extraConfig && extraConfig.buttons && Array.isArray(extraConfig.buttons)) {
         jsonColumns.push({});
