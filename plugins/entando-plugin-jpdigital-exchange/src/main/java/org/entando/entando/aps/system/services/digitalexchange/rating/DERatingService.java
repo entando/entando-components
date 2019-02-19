@@ -46,7 +46,7 @@ public class DERatingService {
         DEComponentRatingResult result = new DEComponentRatingResult();
         call.setErrorResponseHandler(ex -> {
             int status = ex.getRawStatusCode();
-            if (status == HttpStatus.NOT_IMPLEMENTED.value()) {
+            if (status == HttpStatus.METHOD_NOT_ALLOWED.value()) {
                 result.setRatingUnsupported();
             } else if (status == HttpStatus.NOT_FOUND.value()) {
                 throw new ResourceNotFoundException("component", ratingRequest.getComponentId());

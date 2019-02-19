@@ -200,6 +200,52 @@ public class DigitalExchangeComponentsServiceTest {
     }
 
     @Test
+    public void shouldFilterByInstalled() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("installed");
+        filter.setValue("true");
+        filter.setOperator(FilterOperator.EQUAL.getValue());
+        listRequest.addFilter(filter);
+
+        ResilientPagedMetadata<DigitalExchangeComponent> pagedMetadata = service.getComponents(listRequest);
+
+        assertThat(pagedMetadata.getTotalItems()).isEqualTo(1);
+        assertThat(pagedMetadata.getBody().get(0).getName()).isEqualTo(INSTALLED_COMPONENT);
+    }
+
+    @Test
+    public void shouldFilterByDigitalExchangeName() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("digitalExchangeName");
+        filter.setValue(DE_1_NAME);
+        filter.setOperator(FilterOperator.EQUAL.getValue());
+        listRequest.addFilter(filter);
+
+        ResilientPagedMetadata<DigitalExchangeComponent> pagedMetadata = service.getComponents(listRequest);
+
+        assertThat(pagedMetadata.getTotalItems()).isEqualTo(COMPONENTS_1.length);
+    }
+
+    @Test
+    public void shouldFilterByDigitalExchangeId() {
+
+        RestListRequest listRequest = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("digitalExchangeId");
+        filter.setValue(DE_2_ID);
+        filter.setOperator(FilterOperator.EQUAL.getValue());
+        listRequest.addFilter(filter);
+
+        ResilientPagedMetadata<DigitalExchangeComponent> pagedMetadata = service.getComponents(listRequest);
+
+        assertThat(pagedMetadata.getTotalItems()).isEqualTo(COMPONENTS_2.length);
+    }
+
+    @Test
     public void shouldSortByLastUpdate() {
 
         RestListRequest listRequest = new RestListRequest();

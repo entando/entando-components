@@ -21,12 +21,12 @@ import org.entando.entando.web.common.model.RestError;
 
 public class DEComponentRatingResult {
 
-    private boolean ratingUnsupported;
+    private boolean ratingSupported = true;
     private DERatingsSummary ratingsSummary;
     private List<RestError> errors = new ArrayList<>();
 
     public void setRatingUnsupported() {
-        this.ratingUnsupported = true;
+        this.ratingSupported = false;
     }
 
     public void setRatingsSummary(DERatingsSummary ratingsSummary) {
@@ -34,7 +34,7 @@ public class DEComponentRatingResult {
     }
 
     public boolean isRatingSupported() {
-        return !ratingUnsupported;
+        return ratingSupported;
     }
 
     public DERatingsSummary getRatingsSummary() {

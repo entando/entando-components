@@ -28,6 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 public class DigitalExchangeCategoriesServiceTest {
@@ -49,13 +50,13 @@ public class DigitalExchangeCategoriesServiceTest {
     public void shouldGetCategories() {
 
         when(configManager.getConfigItem(DigitalExchangeConstants.CONFIG_ITEM_DIGITAL_EXCHANGE_CATEGORIES))
-                .thenReturn("pageModels,fragments,widgets,contentModels,contentTypes");
+                .thenReturn("widgets,pageModels,components,fragments,api,contentModels,contentTypes");
 
         ResilientListWrapper<String> result = service.getCategories();
 
         assertTrue(result.getErrors().isEmpty());
         assertEquals(3, result.getList().size());
-        assertTrue(result.getList().containsAll(Arrays.asList("pageModels", "fragments", "widgets")));
+        assertThat(result.getList()).containsExactly("widgets", "pageModels", "fragments");
     }
 
     @Test

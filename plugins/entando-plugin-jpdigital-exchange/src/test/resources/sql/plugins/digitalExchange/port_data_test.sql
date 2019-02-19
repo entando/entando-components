@@ -15,4 +15,4 @@
     <active>true</active>
   </digitalExchange>
 </digitalExchanges>');
-INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'digitalExchangeCategories', 'Supported Digital Exchange categories', 'pageModels,fragments,widgets,contentModels,contentTypes');
+INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'digitalExchangeCategories', 'Supported Digital Exchange categories', 'widgets,pageModels,components,fragments,api,contentModels,contentTypes');

@@ -63,7 +63,7 @@ public class DEComponentRatingResourceController implements DEComponentRatingRes
 
         if (!result.isRatingSupported()) {
             response.addError(new RestError(ERROR_CODE_RATING_NOT_SUPPORTED, "digitalExchange.rating.notSupported"));
-            return new ResponseEntity<>(response, HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
         }
 
         if (!result.getErrors().isEmpty()) {
