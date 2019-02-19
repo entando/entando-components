@@ -30,11 +30,14 @@ public class DigitalExchangeComponentListProcessor extends RequestListProcessor<
 
     private static final String ID = "id";
     private static final String NAME = "name";
+    private static final String TYPE = "type";
     private static final String LAST_UPDATE = "lastUpdate";
     private static final String VERSION = "version";
-    private static final String TYPE = "type";
+    private static final String DESCRIPTION = "description";
     private static final String RATING = "rating";
     private static final String INSTALLED = "installed";
+    private static final String DIGITAL_EXCHANGE_NAME = "digitalExchangeName";
+    private static final String DIGITAL_EXCHANGE_ID = "digitalExchangeId";
 
     public DigitalExchangeComponentListProcessor(RestListRequest restListRequest, List<DigitalExchangeComponent> components) {
         super(restListRequest, components);
@@ -52,16 +55,22 @@ public class DigitalExchangeComponentListProcessor extends RequestListProcessor<
                     return c -> FilterUtils.filterString(filter, c.getId());
                 case NAME:
                     return c -> FilterUtils.filterString(filter, c.getName());
+                case TYPE:
+                    return c -> FilterUtils.filterString(filter, c.getType());
                 case LAST_UPDATE:
                     return c -> FilterUtils.filterDate(filter, c.getLastUpdate());
                 case VERSION:
                     return c -> FilterUtils.filterString(filter, c.getVersion());
-                case TYPE:
-                    return c -> FilterUtils.filterString(filter, c.getType());
+                case DESCRIPTION:
+                    return c -> FilterUtils.filterString(filter, c.getDescription());
                 case RATING:
                     return c -> FilterUtils.filterDouble(filter, c.getRating());
                 case INSTALLED:
                     return c -> FilterUtils.filterBoolean(filter, c.isInstalled());
+                case DIGITAL_EXCHANGE_NAME:
+                    return c -> FilterUtils.filterString(filter, c.getDigitalExchangeName());
+                case DIGITAL_EXCHANGE_ID:
+                    return c -> FilterUtils.filterString(filter, c.getDigitalExchangeId());
                 default:
                     return null;
             }
@@ -82,6 +91,10 @@ public class DigitalExchangeComponentListProcessor extends RequestListProcessor<
                     return (a, b) -> Double.compare(a.getRating(), b.getRating());
                 case INSTALLED:
                     return (a, b) -> Boolean.compare(a.isInstalled(), b.isInstalled());
+                case DIGITAL_EXCHANGE_NAME:
+                    return (a, b) -> StringUtils.compareIgnoreCase(a.getDigitalExchangeName(), b.getDigitalExchangeName());
+                case DIGITAL_EXCHANGE_ID:
+                    return (a, b) -> StringUtils.compareIgnoreCase(a.getDigitalExchangeId(), b.getDigitalExchangeId());
                 case NAME: // name is the default sorting field
                 default:
                     return (a, b) -> StringUtils.compareIgnoreCase(a.getName(), b.getName());

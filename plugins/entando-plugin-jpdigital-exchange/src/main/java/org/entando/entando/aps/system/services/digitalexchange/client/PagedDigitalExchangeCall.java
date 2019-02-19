@@ -120,6 +120,7 @@ public abstract class PagedDigitalExchangeCall<T> extends DigitalExchangeCall<Pa
         List<T> subList = request.getSublist(joinedList);
 
         ResilientPagedMetadata<T> pagedMetadata = new ResilientPagedMetadata<>(request, subList, total);
+        pagedMetadata.setFilters(request.getFilters());
         pagedMetadata.setErrors(errors);
 
         return pagedMetadata;

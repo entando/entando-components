@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.digitalexchange.category;
 
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.entando.entando.aps.system.DigitalExchangeConstants;
@@ -75,6 +76,9 @@ public class DigitalExchangeCategoriesServiceImpl implements DigitalExchangeCate
                 .distinct()
                 .filter(c -> supportedCategories.contains(c))
                 .collect(Collectors.toList());
+        
+        // Sort the categories according the supported categories order
+        categories.sort(Comparator.comparingInt(supportedCategories::indexOf));
         
         result.getList().addAll(categories);
         result.getErrors().addAll(responses.getErrors());
