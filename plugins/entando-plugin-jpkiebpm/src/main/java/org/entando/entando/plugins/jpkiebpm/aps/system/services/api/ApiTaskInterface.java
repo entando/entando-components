@@ -593,6 +593,36 @@ public class ApiTaskInterface extends KieApiManager {
         }
     }
 
+    public void claimTask(Properties properties) {
+
+        final String configId = properties.getProperty("configId");
+        if (null != configId) {
+            try {
+                final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+                final String information = bpmWidgetInfo.getInformationDraft();
+                if (StringUtils.isNotEmpty(information)) {
+                    final ApsProperties config = new ApsProperties();
+                    config.loadFromXml(information);
+                    String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+                    KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
+                    String containerId = config.getProperty("containerId");
+                    String taskId = properties.getProperty("taskId");
+
+
+                    this.getKieFormManager().claimTask(bpmConfig, containerId, taskId);
+                }
+            } catch (ApsSystemException e) {
+                logger.error("Error {}", e.getMessage());
+            } catch (IOException e) {
+                logger.error("Error load configuration  {} ", e.getMessage());
+            } catch (Throwable ex) {
+                logger.error("Error {}", ex);
+            }
+
+        }
+
+    }
+
     public void mergeTaskData(JSONObject taskData, KieProcessFormQueryResult form) {
 
         logger.debug("Task data " + taskData.toString());
