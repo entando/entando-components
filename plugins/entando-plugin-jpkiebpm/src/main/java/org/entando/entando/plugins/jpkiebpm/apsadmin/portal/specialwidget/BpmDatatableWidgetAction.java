@@ -151,7 +151,7 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
             String procId = this.getProcessId();
             String contId = this.getContainerId();
 
-            if(this.getContainerId() ==null) {
+            if(this.getContainerId() ==null && this.getProcessPath()!=null) {
                 final String[] param = this.getProcessPath().split("@");
                 procId = param[0];
                 contId = param[1];
