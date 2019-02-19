@@ -90,11 +90,6 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
         opt.put("user", DEMO_USER);
         KieBpmConfig config = super.getFormManager().getKieServerConfigurations().get(this.getKnowledgeSourcePath());
         List<KieTask> task = super.getFormManager().getHumanTaskList(config, null, opt);
-    /* AP OldCode
-	   if (!task.isEmpty()) {
-            super.loadDataIntoFieldDatatable(task);
-        }
-    */
 
         Set<String> variableFields = super.getFormManager().getProcessVariables(config, containerId, procId);
         //JPW -- Assign process variables for datatable
@@ -104,7 +99,6 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
 
         List<String> fields = new ArrayList<>();
         fields.addAll(variableFields);
-
 
         //Horrible hack. To be replaced by an actual call.
         if (!task.isEmpty()) {
