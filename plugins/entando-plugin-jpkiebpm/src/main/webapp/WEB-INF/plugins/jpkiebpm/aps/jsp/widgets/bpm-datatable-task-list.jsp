@@ -1,9 +1,15 @@
 <%@ taglib uri="/aps-core" prefix="wp" %>
 <%@ taglib uri="/jpkiebpm-aps-core" prefix="jpkie" %>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jpkie:datatable widgetConfigInfoIdVar="configId"/>
 <c:set var="id" value="${configId}"/>
+
+<jpkie:tasklistwidgetinfo redirectOnClickRowVar="redirectOnClickRowVar"/>
+<jpkie:tasklistwidgetinfo redirectDetailsPageVar="redirectDetailsPageVar"/>
+<jpkie:tasklistwidgetinfo showClaimButtonVar="showClaimButtonVar"/>
+<jpkie:tasklistwidgetinfo showCompleteButtonVar="showCompleteButtonVar"/>
 
 <script src="<wp:resourceURL />administration/js/jquery-2.2.4.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery.validate.js"></script>
@@ -28,8 +34,8 @@
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/fixedColumns.dataTables.min.css" media="screen"/>
 
 <script>
-    
-      
+    <jpkie:datatable widgetConfigInfoIdVar="configId"/>
+            
     
     function capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -165,7 +171,7 @@
     {
         var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />";
         var configId =${configId};
-        var urlNewPage = context + "en/task_details.page?configId=" + configId + "&containerId=" + containerId + "&taskId=" + taskId;
+        var urlNewPage = context + "<wp:info key="currentLang" />/<c:out value="${redirectDetailsPageVar}" />.page?configId=" + configId + "&containerId=" + containerId + "&taskId=" + taskId;
         window.open(urlNewPage);
     }
     
@@ -198,12 +204,22 @@
             var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
             var url = context + "tasks.json?configId=${id}";
             var extraBtns = [
+            <c:if test="${showClaimButtonVar == 'true'}">
             {
-            html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
+                html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
                     onClick: function (ev, data) {
                         openModalForm(ev, configId, data, context);
                     }
             },
+            </c:if>                        
+            <c:if test="${showCompleteButtonVar == 'true'}">
+            {
+                html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Complete</button>',
+                    onClick: function (ev, data) {
+                        openModalForm(ev, configId, data, context);
+                    }
+            },
+            </c:if>            
             {
             html: '<button type="button" class=" class-open-bpm-task-list-modal-diagram-details btn btn-info btn-sm ">Diagram</button>',
                     onClick: function (event, rowData) {
@@ -221,40 +237,38 @@
                     }
             }
             ];
+
+
             var extraConfig = {
-            buttons: extraBtns,
-                    onClickRow: function (event, rowData) {
-                     //   $("#data-table-task-list tbody").on('click', 'tr td:not(:first-child)',function () {
-                      //  alert(rowData.containerId +" "+ rowData.id);
+                  <c:if test="${redirectOnClickRowVar == 'true'}">
+                    buttons: extraBtns,
+                        onClickRow: function (event, rowData) {
+                        // Click Row details code
+                        // $("#data-table-task-list tbody").on('click', 'tr td:not(:first-child)',function () {
                         openDetailsPage(rowData.containerId , rowData.id);                    
-                    //});
-                }
-                
+                        }
+                    </c:if>
+                    <c:if test="${redirectOnClickRowVar == 'false'}">
+                    buttons: extraBtns,
+                        onClickRow: function (ev, rowData) {
+                            $('#bpm-task-list-modal-data-table-tbody').empty();
+
+                            var url = context + "taskDetail.json?containerId=" + rowData.containerId + "&taskId=" + rowData.id;
+                            $.get(url, function (data) {
+                                $('#bpm-task-list-modal-data-table-tbody').append(getTemplateTaskDetail(data.response.result.mainForm));
+                                optModal.title = "BPM Data";
+                                $('#bpm-task-list-modal-data').dialog(optModal);
+                                });
+                            }                        
+                    </c:if>                
                };
                 $.get(url, function (data) {
                 var items = data.response.result.taskList.list || [];
                         items = Array.isArray(items) ? items : [items];
                         items = items.map(function (item) {
                         item['activated'] = new Date(item['activated']).toLocaleString();
-                        item['created'] = new Date(item['created']).toLocaleString();
-
-                            const reduceKeyValuePairs = pairs => pairs.reduce((acc, pair) => ({
-                                    ...acc,
-                                    [pair.key]: pair.value,
-                        }), {});
-
-
-                            const kvpWithEntryField = {
-                                    ...item,
-                            ...reduceKeyValuePairs(item.processVariables.entry)
-                        };
-
-                            const {
-                                    processVariables,
-                            ...dest
-                        } = kvpWithEntryField;
-
-                            return dest;
+                                item['created'] = new Date(item['created']).toLocaleString();
+                                return item;
                         });
                         var containerId = data.response.result.taskList.containerId;
 
@@ -265,6 +279,7 @@
         };
 
 <%--
+// Click Row details code
 /* Formatting function for row details*/
 function format ( rowData ) {
                 var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";

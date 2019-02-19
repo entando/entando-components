@@ -1,3 +1,26 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2019 Entando Inc..
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -133,7 +156,10 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
                 sourceId = param[2];
             }
             widgetInfo.setWidgetType(widget.getType().getCode());
-            ApsProperties properties = new ApsProperties();
+            
+            // Add subclasses additional properties if this class is extended            
+            ApsProperties properties = addAdditionalPropertiesIntoWidgetInfo();
+            
             this.setPropertiesIntoWidgetInfo(properties, procId, contId, sourceId);
             widgetInfo.setInformationDraft(properties.toXml());
             this.updateConfigWidget(widgetInfo, widget);
@@ -240,4 +266,11 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
         fd.setOverride(widgetInfo.getConfigDraft().getProperty(PREFIX_OVERRIDE + fd.getName()));
         return fd;
     }
+
+    //This method is used in the ubclasses to add other custom properties
+    //Here must return a new empty ApsProperties() object;
+    protected ApsProperties addAdditionalPropertiesIntoWidgetInfo() {
+        return new ApsProperties();        
+    }
+
 }
