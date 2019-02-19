@@ -29,8 +29,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 @ActiveProfiles("DEcategoriesTest")
@@ -46,8 +46,8 @@ public class DigitalExchangeCategoriesControllerIntegrationTest extends Abstract
         @Primary
         public DigitalExchangeOAuth2RestTemplateFactory getRestTemplateFactory() {
             return new DigitalExchangesMocker()
-                    .addDigitalExchange(DE_1_ID, new SimpleRestResponse<>(Arrays.asList("pageModels", "fragments", "unsupportedType1")))
-                    .addDigitalExchange(DE_2_ID, new SimpleRestResponse<>(Arrays.asList("pageModels", "widgets", "unsupportedType2")))
+                    .addDigitalExchange(DE_1_ID, new SimpleRestResponse<>(Arrays.asList("pageModel", "fragment", "unsupportedType1")))
+                    .addDigitalExchange(DE_2_ID, new SimpleRestResponse<>(Arrays.asList("pageModel", "widget", "unsupportedType2")))
                     .initMocks();
         }
     }
@@ -61,8 +61,8 @@ public class DigitalExchangeCategoriesControllerIntegrationTest extends Abstract
         result.andExpect(jsonPath("$.metaData").isEmpty());
         result.andExpect(jsonPath("$.errors").isEmpty());
         result.andExpect(jsonPath("$.payload", hasSize(3)));
-        result.andExpect(jsonPath("$.payload", hasItem("pageModels")));
-        result.andExpect(jsonPath("$.payload", hasItem("fragments")));
-        result.andExpect(jsonPath("$.payload", hasItem("widgets")));
+        result.andExpect(jsonPath("$.payload[0]", is("widget")));
+        result.andExpect(jsonPath("$.payload[1]", is("pageModel")));
+        result.andExpect(jsonPath("$.payload[2]", is("fragment")));
     }
 }

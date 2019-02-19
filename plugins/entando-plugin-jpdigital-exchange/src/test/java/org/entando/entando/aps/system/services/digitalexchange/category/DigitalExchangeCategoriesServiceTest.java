@@ -50,13 +50,13 @@ public class DigitalExchangeCategoriesServiceTest {
     public void shouldGetCategories() {
 
         when(configManager.getConfigItem(DigitalExchangeConstants.CONFIG_ITEM_DIGITAL_EXCHANGE_CATEGORIES))
-                .thenReturn("widgets,pageModels,components,fragments,api,contentModels,contentTypes");
+                .thenReturn("widget,pageModel,component,fragment,api,contentModel,contentType");
 
         ResilientListWrapper<String> result = service.getCategories();
 
         assertTrue(result.getErrors().isEmpty());
         assertEquals(3, result.getList().size());
-        assertThat(result.getList()).containsExactly("widgets", "pageModels", "fragments");
+        assertThat(result.getList()).containsExactly("widget", "pageModel", "fragment");
     }
 
     @Test
@@ -72,8 +72,8 @@ public class DigitalExchangeCategoriesServiceTest {
     }
 
     private void initClientMocks() {
-        List<String> de1Categories = Arrays.asList("pageModels", "fragments", "unsupportedType1");
-        List<String> de2Categories = Arrays.asList("pageModels", "widgets", "unsupportedType2");
+        List<String> de1Categories = Arrays.asList("pageModel", "fragment", "unsupportedType1");
+        List<String> de2Categories = Arrays.asList("pageModel", "widget", "unsupportedType2");
 
         clientMocker = new DigitalExchangesClientMocker();
         clientMocker.getDigitalExchangesMocker()
