@@ -9,7 +9,11 @@ const selector = formValueSelector("form-dashboard-table");
 
 const mapStateToProps = state => ({
   initialValues: {
-    allColumns: true
+    allColumns: true,
+    options: {
+      downlodable: true,
+      filtrable: true
+    }
   },
   datasource: selector(state, "datasource")
 });
@@ -21,7 +25,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmit: data => {
     const transformedData = {...data};
     transformedData.allColumns = data.allColumns ? "true" : "false";
-    ownProps.onSubmit();
+    transformedData.options.downlodable = data.options.downlodable
+      ? "true"
+      : "false";
+    transformedData.options.filtrable = data.options.filtrable
+      ? "true"
+      : "false";
+    ownProps.onSubmit(transformedData);
   }
 });
 

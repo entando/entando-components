@@ -70,8 +70,15 @@
   }
 
   &__container-input--error {
+    border: 1px solid #c00;
+    width: 100%;
+  }
+
+  &__container-input--error input {
     color: #c00;
     width: 100%;
+    padding: 0;
+    height: 23px;
   }
 
   &__th-editable-label-visible {

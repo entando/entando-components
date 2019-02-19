@@ -1,9 +1,9 @@
 import {getRoute, getParams, getSearchParams, gotoRoute} from "@entando/router";
 import {addToast, addErrors, TOAST_ERROR} from "@entando/messages";
 import {formattedText} from "@entando/utils";
-import {formValueSelector, initialize} from "redux-form";
+import {formValueSelector, initialize, change} from "redux-form";
 
-import {getPageConfiguration, getLanguages} from "api/appBuilder";
+import {getLanguages} from "api/appBuilder";
 
 import {
   getServerConfig,
@@ -131,28 +131,13 @@ export const gotoPluginPage = pluginPage => (dispatch, getState) => {
   }
 };
 
-export const fetchPageInformation = pageCode => dispatch =>
-  new Promise(resolve => {
-    getPageConfiguration(pageCode).then(response => {
-      response.json().then(json => {
-        if (response.ok) {
-          dispatch(setInfoPage(json.payload));
-        } else {
-          dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
-          resolve();
-        }
-      });
-    });
-  });
-
 export const fetchLanguages = () => dispatch =>
   new Promise(resolve => {
     getLanguages().then(response => {
       response.json().then(json => {
-        /* da sostituire quando non ci saranno le API non mockate*/
         if (response.ok) {
-          dispatch(setLanguages(json.payload));
+          const languages = json.payload.filter(f => f.isActive);
+          dispatch(setLanguages(languages));
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
           dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
@@ -292,7 +277,18 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
       datasourceId,
       DATASOURCE_PROPERTY_COLUMNS
     )
-  );
+  ).then(data => {
+    // set values in input field
+    data.forEach(item => {
+      dispatch(
+        change(
+          formName,
+          `${DATASOURCE_PROPERTY_COLUMNS}.${item.key}`,
+          item.value
+        )
+      );
+    });
+  });
 };
 
 export const fetchDatasourceData = (configId, datasourceId) => dispatch =>

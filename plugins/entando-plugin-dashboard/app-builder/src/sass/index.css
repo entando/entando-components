@@ -210,8 +210,13 @@
     padding: 0;
     height: 23px; }
   .DashboardTableColumns__container-input--error {
-    color: #c00;
+    border: 1px solid #c00;
     width: 100%; }
+  .DashboardTableColumns__container-input--error input {
+    color: #c00;
+    width: 100%;
+    padding: 0;
+    height: 23px; }
   .DashboardTableColumns__th-editable-label-visible {
     border: 0 solid red;
     min-width: 30px;

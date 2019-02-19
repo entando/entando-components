@@ -2,7 +2,7 @@ import {makeMockRequest, makeRequest, METHODS} from "@entando/apimanager";
 import {
   DASHBOARD_CONFIG_LIST,
   DASHBOARD_LIST_DATASOURCE,
-  DATASOURCES_DATA
+  DATASOURCE_TEMPERATURE_DATA
 } from "mocks/dashboardConfigs";
 
 export const getServerConfig = configItem => {
@@ -64,7 +64,7 @@ export const getDatasourceData = (
     {
       uri: `/api/plugins/dashboard/dashboardConfigs/${configId}/datasource/${datasourceId}/${type}`,
       method: METHODS.GET,
-      mockResponse: DATASOURCES_DATA[configId][datasourceId][type],
+      mockResponse: DATASOURCE_TEMPERATURE_DATA[type],
       useAuthentication: true
     },
     page

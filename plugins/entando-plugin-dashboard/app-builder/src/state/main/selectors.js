@@ -2,6 +2,7 @@ import {createSelector} from "reselect";
 import {getSearchParams} from "@entando/router";
 import {name as id} from "../../../package.json";
 
+const getPagesState = state => state.pages;
 export const getLocalState = state => state.plugins[id];
 
 export const getPluginPage = createSelector(
@@ -15,8 +16,10 @@ export const getAppbuilder = createSelector(
 );
 
 export const getInfoPage = createSelector(
-  [getAppbuilder],
-  ab => ab.infoPage
+  [getPagesState],
+  pages => {
+    return pages && (pages.selected || {});
+  }
 );
 export const getLanguages = createSelector(
   [getAppbuilder],

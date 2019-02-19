@@ -39,7 +39,6 @@ class DashboardTableFormBody extends Component {
                 component="input"
                 type="checkbox"
                 name="options.downlodable"
-                checked
               />
               <strong>
                 <FormattedMessage id="plugin.table.downlodable" />
@@ -62,7 +61,6 @@ class DashboardTableFormBody extends Component {
                 component="input"
                 type="checkbox"
                 name="options.filtrable"
-                checked
               />
               <strong>
                 <FormattedMessage id="plugin.table.filterable" />

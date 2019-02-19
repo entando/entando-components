@@ -1,42 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
-    "http://struts.apache.org/dtds/struts-2.3.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
 
-    <package name="dashboard_do/dashboard/DashboardTable/Page/SpecialWidget" namespace="/do/Page/SpecialWidget" extends="core_do/Page/SpecialWidget">
+    <package name="dashboard_do/dashboard/DashboardTable/Page/SpecialWidget" namespace="/do/Page/SpecialWidget"
+             extends="core_do/Page/SpecialWidget">
 
 
-    	<action name="dashboardDashboardTableConfig" class="dashboardDashboardTableConfigAction" method="init">
-        	<result type="tiles">dashboard.admin.page.widget.DashboardTable.entry</result>
-            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        <action name="dashboardDashboardTableConfig" class="dashboardDashboardTableConfigAction" method="init">
+            <result type="tiles">dashboard.admin.page.widget.DashboardTable.entry</result>
+            <interceptor-ref name="entandoDefaultStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
         </action>
 
     </package>
 
 
-	<package name="dashboard_do/dashboard/DashboardTable/Page/SpecialWidget/dashboardDashboardTableConfig" namespace="/do/dashboard/DashboardTable/Page/SpecialWidget/dashboardDashboardTableConfig" extends="entando-default">
+    <package name="dashboard_do/dashboard/DashboardTable/Page/SpecialWidget/dashboardDashboardTableConfig"
+             namespace="/do/dashboard/DashboardTable/Page/SpecialWidget/dashboardDashboardTableConfig"
+             extends="entando-default">
 
-		<global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+        <global-results>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
 
 
-		<action name="saveConfig" class="dashboardDashboardTableConfigAction" method="save">
-    		<result type="tiles" name="input">dashboard.admin.page.widget.DashboardTable.entry</result>
-        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        <action name="saveConfig" class="dashboardDashboardTableConfigAction" method="save">
+            <result type="tiles" name="input">dashboard.admin.page.widget.DashboardTable.entry</result>
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">managePages</param>
+            </interceptor-ref>
         </action>
 
-	</package>
-
+    </package>
 
 
 </struts>

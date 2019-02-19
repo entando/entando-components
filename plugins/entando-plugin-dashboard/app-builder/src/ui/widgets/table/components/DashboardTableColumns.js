@@ -19,6 +19,7 @@ const renderField = ({input, meta: {touched, error}}) => {
     touched && error
       ? "DashboardTableColumns__container-input--error"
       : "DashboardTableColumns__container-input";
+
   return (
     <div className={classContainer}>
       <input id={input.name} {...input} type="text" />
@@ -128,7 +129,6 @@ class DashboardTableColumns extends Component {
         <SortableList
           items={this.props.columns}
           showColumnHandler={this.props.onShowHideColumn}
-          formValues={this.props.formValues}
           lockAxis="x"
           axis="x"
           pressDelay={200}

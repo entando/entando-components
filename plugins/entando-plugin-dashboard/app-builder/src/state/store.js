@@ -4,7 +4,7 @@ import {reducer as formReducer} from "redux-form";
 import thunk from "redux-thunk";
 import rootReducer from "state/main/reducer";
 
-import {config, api} from "@entando/apimanager";
+import {config, api, currentUser} from "@entando/apimanager";
 
 import {name} from "../../package.json";
 
@@ -14,7 +14,7 @@ const wrappedReducer = combineReducers({
 
 const pluginsReducer = combineReducers({
   plugins: wrappedReducer,
-
+  currentUser,
   api,
   form: formReducer
 });

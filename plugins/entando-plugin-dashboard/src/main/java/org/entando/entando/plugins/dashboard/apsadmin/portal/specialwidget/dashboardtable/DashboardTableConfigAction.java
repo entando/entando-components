@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 public class DashboardTableConfigAction extends SimpleWidgetConfigAction {
 
     private static final Logger _logger = LoggerFactory.getLogger(DashboardTableConfigAction.class);
+    private int _id;
+    private String config;
+    private IDashboardTableManager _dashboardTableManager;
 
     protected String extractInitConfig() {
         String result = super.extractInitConfig();
@@ -24,6 +27,7 @@ public class DashboardTableConfigAction extends SimpleWidgetConfigAction {
         if (StringUtils.isNotBlank(id)) {
             this.setId(new Integer(id));
         }
+        setConfig(this.getWidget().getConfig().getProperty("config"));
         return result;
     }
 
@@ -45,6 +49,14 @@ public class DashboardTableConfigAction extends SimpleWidgetConfigAction {
         this._id = id;
     }
 
+    public String getConfig() {
+        return config;
+    }
+
+    public void setConfig(String config) {
+        this.config = config;
+    }
+
     protected IDashboardTableManager getDashboardTableManager() {
         return _dashboardTableManager;
     }
@@ -53,7 +65,6 @@ public class DashboardTableConfigAction extends SimpleWidgetConfigAction {
         this._dashboardTableManager = dashboardTableManager;
     }
 
-    private int _id;
-    private IDashboardTableManager _dashboardTableManager;
+
 }
 
