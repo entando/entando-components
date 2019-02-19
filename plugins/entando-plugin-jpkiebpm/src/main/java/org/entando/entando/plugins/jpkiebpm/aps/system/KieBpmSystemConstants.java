@@ -126,4 +126,10 @@ public interface KieBpmSystemConstants {
 
     public final static String KNOWLEDGE_WORKER = "knowledgeWorker";
     public final static String LEGAL_WORKER = "legalWorker";
+    
+    
+    public final String WIDGET_PARAM_REDIRECT_ONCLICK_ROW = "redirect_onclick_row";
+    public final String WIDGET_PARAM_REDIRECT_ONCLICK_ROW_DETAILS_PAGE = "redirect_onclick_row_details_page";
+    public final String WIDGET_PARAM_SHOW_CLAIM_BUTTON = "show_claim_button";
+    public final String WIDGET_PARAM_SHOW_COMPLETE_BUTTON = "show_complete_button";
 }
