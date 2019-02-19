@@ -33,9 +33,7 @@
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/responsive.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/fixedColumns.dataTables.min.css" media="screen"/>
 
-<script>
-    <jpkie:datatable widgetConfigInfoIdVar="configId"/>
-            
+<script>            
     
     function capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -262,16 +260,28 @@
                             }                        
                     </c:if>                
                };
-                $.get(url, function (data) {
-                var items = data.response.result.taskList.list || [];
+               
+                $.get(url, function (data) {         
+                    var items = data.response.result.taskList.list || [];
                         items = Array.isArray(items) ? items : [items];
                         items = items.map(function (item) {
                         item['activated'] = new Date(item['activated']).toLocaleString();
-                                item['created'] = new Date(item['created']).toLocaleString();
-                                return item;
+                        item['created'] = new Date(item['created']).toLocaleString();
+                            const reduceKeyValuePairs = pairs => pairs.reduce((acc, pair) => ({
+                                    ...acc,
+                                    [pair.key]: pair.value,
+                        }), {});
+                            const kvpWithEntryField = {
+                                    ...item,
+                            ...reduceKeyValuePairs(item.processVariables.entry)
+                        };
+                            const {
+                                    processVariables,
+                            ...dest
+                        } = kvpWithEntryField;
+                            return dest;
                         });
                         var containerId = data.response.result.taskList.containerId;
-
                         extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
                         org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);                                    
                 });
