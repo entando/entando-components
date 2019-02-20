@@ -1504,7 +1504,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             }
 
         } catch (Throwable t) {
-            logger.error("Failed to fetch case details ", t);
+            logger.error("Failed to claim task details ", t);
             throw new ApsSystemException("Error getting the cases definitions", t);
         }
 
