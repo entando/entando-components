@@ -1,5 +1,6 @@
 import {connect} from "react-redux";
 import {formValueSelector} from "redux-form";
+import jsonTransform from "helpers/jsonTransform";
 
 import {fetchServerConfigList} from "state/main/actions";
 
@@ -31,7 +32,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     transformedData.options.filtrable = data.options.filtrable
       ? "true"
       : "false";
-    ownProps.onSubmit(transformedData);
+    ownProps.onSubmit(jsonTransform(transformedData));
   }
 });
 

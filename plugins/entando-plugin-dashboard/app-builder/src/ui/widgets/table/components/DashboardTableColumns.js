@@ -139,10 +139,19 @@ class DashboardTableColumns extends Component {
   }
 }
 
+const COLUMN_TYPE = {
+  key: PropTypes.string,
+  hidden: PropTypes.bool
+};
+
 DashboardTableColumns.propTypes = {
-  columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  columns: PropTypes.arrayOf(PropTypes.shape(COLUMN_TYPE)),
   onMoveColumn: PropTypes.func.isRequired,
   onShowHideColumn: PropTypes.func.isRequired
+};
+
+DashboardTableColumns.defaultProps = {
+  columns: []
 };
 
 export default DashboardTableColumns;
