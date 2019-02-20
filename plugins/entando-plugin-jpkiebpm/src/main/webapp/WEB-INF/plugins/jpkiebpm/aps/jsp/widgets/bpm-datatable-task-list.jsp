@@ -229,7 +229,12 @@
                             heading: 'Success',
                             text: 'Claim of the task with id '+dataTaskId+ ' executed successfully!',
                             showHideTransition: 'slide',
-                            icon: 'success'
+                            icon: 'success',
+                            allowToastClose : true,
+                            hideAfter : 5000,
+                            stack : 5,
+                            textAlign : 'left', 
+                            position : 'top-right'
                         });
                         refreshDataTable();
                         return data;
@@ -239,7 +244,12 @@
                             heading: 'Error',
                             text: 'Claim of the task with id '+dataTaskId+ ' not executed',
                             showHideTransition: 'fade',
-                            icon: 'error'
+                            icon: 'error',
+                            allowToastClose : true,
+                            hideAfter : 5000,
+                            stack : 5,
+                            textAlign : 'left', 
+                            position : 'top-right'
                         })
                        
                     }
@@ -263,9 +273,14 @@
                         else {
                             $.toast({
                                 heading: 'Information',
-                                text: 'the Status of the task is not Ready',
+                                text: 'The status of the task with id '+data.id +' is not Ready',
                                 showHideTransition: 'slide',
-                                icon: 'info'
+                                icon: 'info',
+                                allowToastClose : true,
+                                hideAfter : 5000,
+                                stack : 5,
+                                textAlign : 'left', 
+                                position : 'top-right'
                             });
                         }
                     }
