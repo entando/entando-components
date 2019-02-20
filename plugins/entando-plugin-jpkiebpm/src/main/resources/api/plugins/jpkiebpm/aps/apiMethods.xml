@@ -355,22 +355,8 @@
             </parameters>
         </method>
     </resource>
-<!--
-    <resource name="claimTask" namespace="jpkiebpm">
-        <description>Red Hat Bpm Claim Task</description>
-        <source pluginCode="jpkiebpm">plugins</source>
-        <method httpMethod="POST" active="true">
-            <description>Return task detail</description>
-            <springBean name="jpkiebpmApiTaskInterface" method="claimTask"/>
-            <responseClass>org.entando.entando.aps.system.services.api.model.StringApiResponse</responseClass>
-            <parameters>
-                <parameter key="taskId" required="true">
-                    <description>The task Id</description>
-                </parameter>
-            </parameters>
-        </method>
-    </resource>
-  -->  
+
+
     <resource name="claimTask" namespace="jpkiebpm">
         <description>Red Hat Bpm Claim Task</description>
         <source pluginCode="jpkiebpm">plugins</source>
