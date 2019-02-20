@@ -286,7 +286,7 @@
                         $('#bpm-task-list-modal-diagram-data').attr("src","");
                             $.get(url, function (data) {
                             $.when(
-                                    $('#bpm-task-list-modal-diagram-data').attr("src", "data:image/svg+xml;utf8," + data.response.result)).done(
+                                    $('#bpm-task-list-modal-diagram-data').attr("src", "data:image/svg+xml;utf8," + encodeURIComponent(data.response.result))).done(
                                 function(){
                                     optModal.title = "BPM Process Diagram";
                                             optModal.show.effect = "fold";
