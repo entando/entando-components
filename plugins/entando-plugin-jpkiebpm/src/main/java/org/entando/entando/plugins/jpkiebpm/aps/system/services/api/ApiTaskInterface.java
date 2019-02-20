@@ -25,6 +25,7 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.api;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
@@ -634,9 +635,11 @@ public class ApiTaskInterface extends KieApiManager {
                     KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
                     String containerId = config.getProperty("containerId");
                     String taskId = claimTask.getTaskId();
+                    
+                    //TODO Check the user passed to the API
+                    String username = bpmConfig.getUsername();
 
-
-                    this.getKieFormManager().claimTask(bpmConfig, containerId, taskId);
+                    this.getKieFormManager().claimTask(bpmConfig, containerId, taskId, username);
                 }
             } catch (Throwable ex) {
                 logger.error("Error {}", ex);

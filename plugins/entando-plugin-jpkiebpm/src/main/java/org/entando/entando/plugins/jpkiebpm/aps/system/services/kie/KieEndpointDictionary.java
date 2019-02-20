@@ -24,7 +24,8 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import org.apache.http.HttpStatus;
-import org.entando.entando.plugins.jprestapi.aps.core.*;
+import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
+import org.entando.entando.plugins.jprestapi.aps.core.IEndpoint;
 
 import java.util.HashMap;
 
@@ -64,7 +65,7 @@ public class KieEndpointDictionary {
         endpoints.put(API_GET_ALL_TASK_LIST_ADMIN, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/queries/tasks/instances/admins", HttpStatus.SC_OK, true));
         endpoints.put(API_POST_ALL_PROCESS_INSTANCES_W_CLIENT_DATA, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/queries/definitions/getProcessInstancesWithClient/filtered-data", HttpStatus.SC_OK, true));
 
-        
+
         endpoints.put(API_GET_CASES_DEFINITIONS, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/cases/definitions", HttpStatus.SC_OK));
         endpoints.put(API_GET_CASES_LIST, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/cases/instances", HttpStatus.SC_OK));
         endpoints.put(API_GET_CASES_DETAILS, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/cases/instances/%s", HttpStatus.SC_OK));
@@ -93,7 +94,9 @@ public class KieEndpointDictionary {
         endpoints.put(API_ADMIN_GET_CASES, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/admin/cases/instances?sortOrder=false", HttpStatus.SC_OK));
         endpoints.put(API_POST_RUN_ADDITIONAL_INFO_RULES, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/containers/instances/%s", HttpStatus.SC_OK, true));
         endpoints.put(API_POST_START_CASE, new Endpoint(IEndpoint.httpVerb.POST, "/services/rest/server/containers/%s/cases/%s/instances", HttpStatus.SC_CREATED, true));
-
+        endpoints.put(API_GET_PROCESS_VARIABLES, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/containers/%s/processes/definitions/%s/variables", HttpStatus.SC_OK, true));
+        endpoints.put(API_GET_PROCESS_VARIABLE_INSTANCES, new Endpoint(IEndpoint.httpVerb.GET, "/services/rest/server/queries/processes/instances/%s/variables/instances", HttpStatus.SC_OK, true));
+        endpoints.put(API_PUT_HUMAN_TASK_CLAIMED, new Endpoint(IEndpoint.httpVerb.PUT, "/server/containers/%s/tasks/%s/states/claimed?user=%s", HttpStatus.SC_CREATED, true));
 
 
     }
