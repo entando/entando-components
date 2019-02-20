@@ -27,8 +27,9 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.Ab
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.TestContentDOM;
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.attribute.ResourceAttributeHandlerTest;
 import com.agiletec.plugins.jacms.aps.system.services.content.util.TestContentAttributeIterator;
-import com.agiletec.plugins.jacms.aps.system.services.content.widget.TestContentListHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.widget.TestContentViewerHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelperIntegrationTest;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentViewerHelperIntegrationTest;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentViewerHelperTest;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModelManagerIntegrationTest;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModelManagerTest;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.TestContentModelDAO;
@@ -41,7 +42,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceManagerIn
 import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceManagerTest;
 import com.agiletec.plugins.jacms.aps.system.services.resource.TestResourceDAO;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.TestResourceDOM;
-import com.agiletec.plugins.jacms.aps.system.services.searchengine.TestSearchEngineManager;
+import com.agiletec.plugins.jacms.aps.system.services.searchengine.SearchEngineManagerIntegrationTest;
+import com.agiletec.plugins.jacms.aps.system.services.searchengine.SearchEngineManagerTest;
 import com.agiletec.plugins.jacms.apsadmin.category.TestTrashReferencedCategory;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentAdminActionIntegrationTest;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentAdminActionTest;
@@ -111,8 +113,9 @@ public class AllTests {
         suite.addTestSuite(TestContentBulkCommand.class);
         suite.addTestSuite(TestContentEntityManager.class);
         suite.addTestSuite(TestContentDOM.class);
-        suite.addTestSuite(TestContentListHelper.class);
-        suite.addTestSuite(TestContentViewerHelper.class);
+        suite.addTestSuite(ContentListHelperIntegrationTest.class);
+        suite.addTestSuite(ContentViewerHelperIntegrationTest.class);
+        suite.addTest(new JUnit4TestAdapter(ContentViewerHelperTest.class));
         suite.addTestSuite(TestContentAttributeIterator.class);
         suite.addTestSuite(TestContentDAO.class);
         suite.addTestSuite(TestContentManager.class);
@@ -142,7 +145,8 @@ public class AllTests {
         suite.addTestSuite(ResourceManagerIntegrationTest.class);
         suite.addTest(new JUnit4TestAdapter(ResourceManagerTest.class));
         //
-        suite.addTestSuite(TestSearchEngineManager.class);
+        suite.addTestSuite(SearchEngineManagerIntegrationTest.class);
+        suite.addTest(new JUnit4TestAdapter(SearchEngineManagerTest.class));
         suite.addTestSuite(TestApplicationContext.class);
 
         // Test cross utilizers

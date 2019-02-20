@@ -40,7 +40,7 @@ import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
  *
  * @author E.Santoboni
  */
-public class TestSearchEngineManager extends BaseTestCase {
+public class SearchEngineManagerIntegrationTest extends BaseTestCase {
 
     private IContentManager contentManager = null;
     private IResourceManager resourceManager = null;

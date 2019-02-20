@@ -26,7 +26,7 @@ import com.agiletec.aps.util.ApsProperties;
 /**
  * @author W.Ambu
  */
-public class TestContentViewerHelper extends BaseTestCase {
+public class ContentViewerHelperIntegrationTest extends BaseTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
