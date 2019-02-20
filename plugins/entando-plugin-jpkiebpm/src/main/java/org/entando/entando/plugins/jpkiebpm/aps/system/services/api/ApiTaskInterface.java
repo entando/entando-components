@@ -620,7 +620,7 @@ public class ApiTaskInterface extends KieApiManager {
         }
     }
 
-    public void claimTask(KieApiClaimTask claimTask) {
+    public void claimTask(KieApiClaimTask claimTask) throws ApiException {
 
         final String configId = claimTask.getConfigId();
         if (null != configId) {
@@ -638,12 +638,9 @@ public class ApiTaskInterface extends KieApiManager {
 
                     this.getKieFormManager().claimTask(bpmConfig, containerId, taskId);
                 }
-            } catch (ApsSystemException e) {
-                logger.error("Error {}", e.getMessage());
-            } catch (IOException e) {
-                logger.error("Error load configuration  {} ", e.getMessage());
             } catch (Throwable ex) {
                 logger.error("Error {}", ex);
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Error executing claim", Response.Status.BAD_REQUEST);
             }
 
         }

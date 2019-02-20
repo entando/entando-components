@@ -1487,7 +1487,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     @Override
     public String claimTask(KieBpmConfig config, String containerId, String taskId) throws ApsSystemException{
 
-
         HashMap headersMap = new HashMap();
         Map<String, String> processVars = new HashMap<>();
         String result = null;
