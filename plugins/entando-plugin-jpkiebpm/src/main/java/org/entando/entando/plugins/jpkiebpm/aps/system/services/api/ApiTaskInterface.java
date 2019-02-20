@@ -54,6 +54,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieApiClaimTask;
 
 public class ApiTaskInterface extends KieApiManager {
 
@@ -619,9 +620,9 @@ public class ApiTaskInterface extends KieApiManager {
         }
     }
 
-    public void claimTask(Properties properties) {
+    public void claimTask(KieApiClaimTask claimTask) {
 
-        final String configId = properties.getProperty("configId");
+        final String configId = claimTask.getConfigId();
         if (null != configId) {
             try {
                 final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
@@ -632,7 +633,7 @@ public class ApiTaskInterface extends KieApiManager {
                     String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
                     KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
                     String containerId = config.getProperty("containerId");
-                    String taskId = properties.getProperty("taskId");
+                    String taskId = claimTask.getTaskId();
 
 
                     this.getKieFormManager().claimTask(bpmConfig, containerId, taskId);

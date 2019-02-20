@@ -26,13 +26,14 @@
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.responsive.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.fixedColumns.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.buttons.js"></script>
+<script src="<wp:resourceURL />plugins/jpkiebpm/static/js/lib/jquery-toast/jquery.toast.min.js"></script>
 
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery-ui.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/buttons.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/responsive.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/fixedColumns.dataTables.min.css" media="screen"/>
-
+<link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery.toast.min.css" media="screen"/>
 <script>            
     
     function capitalize(string) {
@@ -165,6 +166,10 @@
         });
     };
     
+    
+    
+    
+    
     function openDetailsPage(containerId, taskId)
     {
         var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />";
@@ -197,6 +202,51 @@
                 });
     }
 
+    function claimTask(ev, configId, dataTaskId, context){
+            var configId =${configId};
+            //alert("configId "+configId+ " containerId: "+rowData.containerId + " taskId "+ rowData.id);
+
+                ev.preventDefault();
+                var postData = {
+                    claimTask: {
+                        taskId: dataTaskId,
+                        configId:  configId
+                    }
+                };
+                
+               // alert("postData: "+JSON.stringify(postData));
+                
+                var action = context + "claimTask.json";
+
+                $.ajax({
+                    url: action,
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(postData),
+                    dataType: 'json',
+                    success: function (data) {
+                        $.toast({
+                            heading: 'Success',
+                            text: 'Claim of the task with id '+dataTaskId+ ' executed successfully!',
+                            showHideTransition: 'slide',
+                            icon: 'success'
+                        });
+                        refreshDataTable();
+                        return data;
+                    },
+                    error: function () {
+                        $.toast({
+                            heading: 'Error',
+                            text: 'Claim of the task with id '+dataTaskId+ ' not executed',
+                            showHideTransition: 'fade',
+                            icon: 'error'
+                        })
+                       
+                    }
+                });
+    
+    }
+
     function  loadDataTable(idTable) {
     var configId =${configId};
             var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
@@ -206,7 +256,7 @@
             {
                 html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
                     onClick: function (ev, data) {
-                        openModalForm(ev, configId, data, context);
+                        claimTask(ev, configId, data.id, context);
                     }
             },
             </c:if>                        
