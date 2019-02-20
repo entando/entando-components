@@ -227,7 +227,7 @@
                     success: function (data) {
                         $.toast({
                             heading: 'Success',
-                            text: 'Claim of the task with id '+dataTaskId+ ' executed successfully!',
+                            text: 'Task '+dataTaskId+ ' claimed successfully!',
                             showHideTransition: 'slide',
                             icon: 'success',
                             allowToastClose : true,
@@ -242,7 +242,7 @@
                     error: function () {
                         $.toast({
                             heading: 'Error',
-                            text: 'Claim of the task with id '+dataTaskId+ ' not executed',
+                            text: 'Failed to claim task '+dataTaskId+ ' ',
                             showHideTransition: 'fade',
                             icon: 'error',
                             allowToastClose : true,
@@ -273,7 +273,7 @@
                         else {
                             $.toast({
                                 heading: 'Information',
-                                text: 'The status of the task with id '+data.id +' is not Ready',
+                                text: 'Task with '+data.id +' is already claimed. Only tasks in Ready can be claimed.',
                                 showHideTransition: 'slide',
                                 icon: 'info',
                                 allowToastClose : true,

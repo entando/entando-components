@@ -43,7 +43,6 @@ public class BpmCaseInstanceCommentsAction extends BpmCaseInstanceActionBase {
     private String caseCommentId;
     
     private String configId;
-    private String containerId ;
     private String taskId;
 
     public String getConfigId() {
@@ -54,13 +53,6 @@ public class BpmCaseInstanceCommentsAction extends BpmCaseInstanceActionBase {
         this.configId = configId;
     }
 
-    public String getContainerId() {
-        return containerId;
-    }
-
-    public void setContainerId(String containerId) {
-        this.containerId = containerId;
-    }
 
     public String getTaskId() {
         return taskId;
@@ -69,9 +61,7 @@ public class BpmCaseInstanceCommentsAction extends BpmCaseInstanceActionBase {
     public void setTaskId(String taskId) {
         this.taskId = taskId;
     }
-    
 
-    
     private String updateInstance() {
         try {
             String frontEndCaseDataIn = extractWidgetConfig("frontEndCaseData");
@@ -120,14 +110,13 @@ public class BpmCaseInstanceCommentsAction extends BpmCaseInstanceActionBase {
                 this.setContainerid(frontEndCaseDataInjs.getString("container-id"));
                 this.setChannelPath(this.getChannel());
 
-  
-
                 config = formManager.getKieServerConfigurations().get(frontEndCaseDataInjs.getString("knowledge-source-id"));
 //                List<String> cases = this.caseManager.getCaseInstancesList(config, this.getContainerid());
 
 
-                JSONObject taskData = formManager.getTaskFormData(config, containerId, Long.valueOf(taskId), null);
 
+                //TODO This seems a bit excessive just to get the case id
+                JSONObject taskData = formManager.getTaskFormData(config, this.getContainerid(), Long.valueOf(taskId), null);
                 JSONObject inputData = taskData.getJSONObject("task-input-data");
 
 
