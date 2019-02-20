@@ -32,11 +32,11 @@ public class ControllersAllTests extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite(ControllersAllTests.class.getName());
 
-        //suite.addTest(new JUnit4TestAdapter(ContentControllerIntegrationTest.class));
-        //suite.addTest(new JUnit4TestAdapter(ContentControllerTest.class));
+        suite.addTest(new JUnit4TestAdapter(ContentControllerIntegrationTest.class));
+        suite.addTest(new JUnit4TestAdapter(ContentControllerTest.class));
 
-        //suite.addTest(new JUnit4TestAdapter(ContentTypeResourceControllerTest.class));
-        //suite.addTest(new JUnit4TestAdapter(ContentTypeResourceIntegrationTest.class));
+        suite.addTest(new JUnit4TestAdapter(ContentTypeResourceControllerTest.class));
+        suite.addTest(new JUnit4TestAdapter(ContentTypeResourceIntegrationTest.class));
 
         suite.addTest(new JUnit4TestAdapter(ContentModelControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(ContentModelControllerUnitTest.class));

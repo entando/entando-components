@@ -13,7 +13,9 @@
  */
 package org.entando.entando.plugins.jacms.web.content;
 
+import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -32,6 +34,7 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -41,6 +44,9 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     private ObjectMapper jsonMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     private String accessToken;
+
+    @Autowired
+    private IContentManager contentManager;
 
     @Before
     public void setupTest() {
@@ -64,87 +70,110 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
     @Test
     public void testCreateContentType() throws Exception {
-        deleteContentType("MCT");
-
-        Content content = new Content();
-        content.setTypeCode("MCT");
-        content.setDescription("My content type");
-        content.setDefaultModel("My Model");
-        content.setListModel("Model list");
-
-        ContentTypeDtoRequest contentTypeRequest = new ContentTypeDtoRequest(content);
-        contentTypeRequest.setName("Content request");
-
-        mockMvc.perform(
-                post("/plugins/cms/contentTypes")
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(jsonMapper.writeValueAsString(contentTypeRequest))
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                //                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.payload.code").value("MCT"))
-                .andReturn();
+        String typeCode = "TX1";
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+            Content content = new Content();
+            content.setTypeCode(typeCode);
+            content.setDescription("My content type " + typeCode);
+            content.setDefaultModel("My Model");
+            content.setListModel("Model list");
+            ContentTypeDtoRequest contentTypeRequest = new ContentTypeDtoRequest(content);
+            contentTypeRequest.setName("Content request");
+            mockMvc.perform(
+                    post("/plugins/cms/contentTypes")
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(jsonMapper.writeValueAsString(contentTypeRequest))
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    //                .andDo(print())
+                    .andExpect(status().isCreated())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$.payload.code").value(typeCode))
+                    .andReturn();
+            Assert.assertNotNull(this.contentManager.getEntityPrototype(typeCode));
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
     }
 
     @Test
     public void testUpdateContentType() throws Exception {
-        ContentTypeDto createdContentType = createContentType();
-
-        createdContentType.setName("MyContentType");
-
-        mockMvc.perform(put("/plugins/cms/contentTypes")
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(jsonMapper.writeValueAsString(createdContentType))
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.code").value(createdContentType.getCode()))
-                .andExpect(jsonPath("$.payload.name").value("MyContentType"))
-                .andReturn();
+        String typeCode = "TX2";
+        try {
+            ContentTypeDto createdContentType = createContentType(typeCode);
+            createdContentType.setName("MyContentType");
+            mockMvc.perform(put("/plugins/cms/contentTypes")
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(jsonMapper.writeValueAsString(createdContentType))
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    //                .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.code").value(createdContentType.getCode()))
+                    .andExpect(jsonPath("$.payload.name").value("MyContentType"))
+                    .andReturn();
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
     }
 
     @Test
     public void testDeleteContentType() throws Exception {
-
-        mockMvc.perform(
-                delete("/plugins/cms/contentTypes/{code}", "RST")
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                //                        .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
+        String typeCode = "TX3";
+        try {
+            this.createContentType(typeCode);
+            mockMvc.perform(
+                    delete("/plugins/cms/contentTypes/{code}", typeCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        } catch (Exception e) {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+            throw e;
+        }
     }
 
     @Test
     public void testGetContentType() throws Exception {
-        deleteContentType("MCT");
-
+        String typeCode = "TX4";
         mockMvc.perform(
-                get("/plugins/cms/contentTypes/{code}", "MCT")
+                get("/plugins/cms/contentTypes/{code}", typeCode)
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound())
                 .andReturn();
-
-        ContentTypeDto createdContentTypeDto = createContentType();
-
-        MvcResult mvcResult = mockMvc.perform(
-                get("/plugins/cms/contentTypes/{code}", createdContentTypeDto.getCode())
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        ContentTypeDto contentTypeDto = stringToContentTypeDto(mvcResult);
-
-        assertThat(contentTypeDto).isEqualToComparingFieldByField(createdContentTypeDto);
+        try {
+            ContentTypeDto createdContentTypeDto = this.createContentType(typeCode);
+            MvcResult mvcResult = mockMvc.perform(
+                    get("/plugins/cms/contentTypes/{code}", createdContentTypeDto.getCode())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+            ContentTypeDto contentTypeDto = stringToContentTypeDto(mvcResult);
+            assertThat(contentTypeDto).isEqualToComparingFieldByField(createdContentTypeDto);
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
     }
 
     @Test
@@ -182,117 +211,147 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
     @Test
     public void testCreateContentTypeAttribute() throws Exception {
-        ContentTypeDto contentType = createContentType();
-
-        EntityTypeAttributeFullDto attribute = new EntityTypeAttributeFullDto();
-        attribute.setCode("MyAttribute");
-        attribute.setType("Text");
-        attribute.setName("My test attribute");
-
-        mockMvc.perform(
-                post("/plugins/cms/contentTypes/{code}/attributes", contentType.getCode())
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(jsonMapper.writeValueAsString(attribute))
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.metaData.contentTypeCode").value(contentType.getCode()))
-                .andExpect(jsonPath("$.payload.code").value(attribute.getCode()))
-                .andExpect(jsonPath("$.payload.type").value(attribute.getType()))
-                .andExpect(jsonPath("$.payload.name").value(attribute.getName()))
-                .andReturn();
+        String typeCode = "TX5";
+        try {
+            ContentTypeDto contentType = this.createContentType(typeCode);
+            EntityTypeAttributeFullDto attribute = new EntityTypeAttributeFullDto();
+            attribute.setCode("MyAttribute");
+            attribute.setType("Text");
+            attribute.setName("My test attribute");
+            mockMvc.perform(
+                    post("/plugins/cms/contentTypes/{code}/attributes", contentType.getCode())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(jsonMapper.writeValueAsString(attribute))
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    //                .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$.metaData.contentTypeCode").value(contentType.getCode()))
+                    .andExpect(jsonPath("$.payload.code").value(attribute.getCode()))
+                    .andExpect(jsonPath("$.payload.type").value(attribute.getType()))
+                    .andExpect(jsonPath("$.payload.name").value(attribute.getName()))
+                    .andReturn();
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
     }
 
     @Test
     public void testGetAttributeFromContentType() throws Exception {
-        EntityTypeAttributeFullDto contentTypeAttribute = createContentTypeAttribute();
-
-        mockMvc.perform(
-                get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
-                        "MCT", contentTypeAttribute.getCode())
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.payload.code").value("MyAttribute"))
-                .andReturn();
+        String typeCode = "TX5";
+        try {
+            EntityTypeAttributeFullDto contentTypeAttribute = this.createContentTypeAttribute(typeCode);
+            mockMvc.perform(
+                    get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
+                            typeCode, contentTypeAttribute.getCode())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    //                .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$.payload.code").value("MyAttribute"))
+                    .andReturn();
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
     }
 
     @Test
     public void testUpdateAttributeFromContentType() throws Exception {
-        EntityTypeAttributeFullDto contentTypeAttribute = createContentTypeAttribute();
-
-        contentTypeAttribute.setName("My New Name");
-
-        mockMvc.perform(
-                put("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
-                        "MCT", contentTypeAttribute.getCode())
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(jsonMapper.writeValueAsString(contentTypeAttribute))
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.payload.name").value("My New Name"))
-                .andReturn();
+        String typeCode = "TX6";
+        try {
+            EntityTypeAttributeFullDto contentTypeAttribute = createContentTypeAttribute(typeCode);
+            contentTypeAttribute.setName("My New Name");
+            mockMvc.perform(
+                    put("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
+                            typeCode, contentTypeAttribute.getCode())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(jsonMapper.writeValueAsString(contentTypeAttribute))
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    //                .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$.payload.name").value("My New Name"))
+                    .andReturn();
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
     }
 
     @Test
     public void testDeleteContentTypeAttribute() throws Exception {
-        EntityTypeAttributeFullDto attribute = createContentTypeAttribute();
-
-        mockMvc.perform(
-                get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
-                        "MCT", attribute.getCode())
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        mockMvc.perform(
-                delete("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
-                        "MCT", attribute.getCode())
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andReturn();
-
-        mockMvc.perform(
-                get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
-                        "MCT", attribute.getCode())
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isNotFound())
-                .andReturn();
+        String typeCode = "TX7";
+        EntityTypeAttributeFullDto attribute = createContentTypeAttribute(typeCode);
+        try {
+            mockMvc.perform(
+                    get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
+                            typeCode, attribute.getCode())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            mockMvc.perform(
+                    delete("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
+                            typeCode, attribute.getCode())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    //                .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andReturn();
+            mockMvc.perform(
+                    get("/plugins/cms/contentTypes/{contentCode}/attributes/{code}",
+                            typeCode, attribute.getCode())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(status().isNotFound())
+                    .andReturn();
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
     }
 
     @Test
     public void testRefreshContentType() throws Exception {
-        ContentTypeDto contentType = createContentType();
-
-        mockMvc.perform(
-                post("/plugins/cms/contentTypes/refresh/{contentTypeCode}", contentType.getCode())
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andReturn();
+        String typeCode = "TX8";
+        try {
+            ContentTypeDto contentType = this.createContentType(typeCode);
+            mockMvc.perform(
+                    post("/plugins/cms/contentTypes/refresh/{contentTypeCode}", contentType.getCode())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(status().isOk())
+                    .andReturn();
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
     }
 
     @Test
     public void testReloadReferences() throws Exception {
         ContentTypeRefreshRequest bodyRequest = new ContentTypeRefreshRequest();
-
         mockMvc.perform(
                 post("/plugins/cms/contentTypesStatus")
                 .header("Authorization", "Bearer " + accessToken)
@@ -311,80 +370,82 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
-                //                .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
     }
 
     @Test
     public void moveAttributeUp() throws Exception {
-        List<EntityTypeAttributeFullDto> attributes = createContentTypeAttributes();
-
-        String code = attributes.get(1).getCode();
-
-        mockMvc.perform(
-                put("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}/moveUp",
-                        "MCT", code)
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.attributeCode").value(code))
-                .andExpect(jsonPath("$.payload.movement").value("UP"))
-                .andReturn();
+        String typeCode = "TX9";
+        try {
+            List<EntityTypeAttributeFullDto> attributes = createContentTypeAttributes(typeCode);
+            String code = attributes.get(1).getCode();
+            mockMvc.perform(
+                    put("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}/moveUp", typeCode, code)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.attributeCode").value(code))
+                    .andExpect(jsonPath("$.payload.movement").value("UP"))
+                    .andReturn();
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
     }
 
     @Test
     public void moveAttributeDown() throws Exception {
-        List<EntityTypeAttributeFullDto> attributes = createContentTypeAttributes();
-
-        String code = attributes.get(0).getCode();
-
-        mockMvc.perform(
-                put("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}/moveDown",
-                        "MCT", code)
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.attributeCode").value(code))
-                .andExpect(jsonPath("$.payload.movement").value("DOWN"))
-                .andReturn();
+        String typeCode = "TXA";
+        try {
+            List<EntityTypeAttributeFullDto> attributes = createContentTypeAttributes(typeCode);
+            String code = attributes.get(0).getCode();
+            mockMvc.perform(
+                    put("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}/moveDown", typeCode, code)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.attributeCode").value(code))
+                    .andExpect(jsonPath("$.payload.movement").value("DOWN"))
+                    .andReturn();
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
     }
 
-    private ContentTypeDto createContentType() throws Exception {
-        deleteContentType("MCT");
-
+    private ContentTypeDto createContentType(String typeCode) throws Exception {
+        Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
         Content content = new Content();
-        content.setTypeCode("MCT");
-        content.setDescription("My content type");
+        content.setTypeCode(typeCode);
+        content.setDescription("My content type " + typeCode);
         content.setDefaultModel("My Model");
         content.setListModel("Model list");
-
         ContentTypeDtoRequest contentTypeRequest = new ContentTypeDtoRequest(content);
         contentTypeRequest.setName("Content request");
-
         MvcResult mvcResult = mockMvc.perform(
                 post("/plugins/cms/contentTypes")
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonMapper.writeValueAsString(contentTypeRequest))
                 .accept(MediaType.APPLICATION_JSON_UTF8)).andReturn();
-
+        Assert.assertNotNull(this.contentManager.getEntityPrototype(typeCode));
         return stringToContentTypeDto(mvcResult);
     }
 
-    private EntityTypeAttributeFullDto createContentTypeAttribute() throws Exception {
-        ContentTypeDto contentType = createContentType();
-
+    private EntityTypeAttributeFullDto createContentTypeAttribute(String typeCode) throws Exception {
+        ContentTypeDto contentType = createContentType(typeCode);
         return postForAttribute(contentType, "MyAttribute");
     }
 
-    private List<EntityTypeAttributeFullDto> createContentTypeAttributes() throws Exception {
-        ContentTypeDto contentType = createContentType();
-
+    private List<EntityTypeAttributeFullDto> createContentTypeAttributes(String typeCode) throws Exception {
+        ContentTypeDto contentType = createContentType(typeCode);
         return ImmutableList.of(
                 postForAttribute(contentType, "MyAttribute1"),
                 postForAttribute(contentType, "MyAttribute2")
@@ -395,7 +456,6 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         EntityTypeAttributeFullDto attribute = new EntityTypeAttributeFullDto();
         attribute.setCode(code);
         attribute.setType("Text");
-
         MvcResult mvcResult = mockMvc.perform(
                 post("/plugins/cms/contentTypes/{contentCode}/attributes", contentType.getCode())
                 .header("Authorization", "Bearer " + accessToken)
@@ -403,7 +463,6 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .content(jsonMapper.writeValueAsString(attribute))
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn();
-
         return stringToEntityTypeDto(mvcResult);
     }
 
@@ -411,9 +470,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         RestResponse<Map<String, String>, Map> restResponse
                 = jsonMapper.readerFor(RestResponse.class)
                 .readValue(mvcResult.getResponse().getContentAsString());
-
         Map<String, String> payload = restResponse.getPayload();
-
         return new ContentTypeDto()
                 .name(payload.get("name"))
                 .code(payload.get("code"));
@@ -423,18 +480,14 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         RestResponse<Map<String, String>, Map> restResponse
                 = jsonMapper.readerFor(RestResponse.class)
                 .readValue(mvcResult.getResponse().getContentAsString());
-
         Map<String, String> payload = restResponse.getPayload();
-
         EntityTypeAttributeFullDto result = new EntityTypeAttributeFullDto();
         result.setCode(payload.get("code"));
         result.setType(payload.get("type"));
-
         return result;
     }
 
     private void deleteContentType(String code) throws Exception {
-
         mockMvc.perform(
                 delete("/plugins/cms/contentTypes/{code}", code)
                 .header("Authorization", "Bearer " + accessToken)
@@ -443,4 +496,5 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andReturn();
     }
+
 }

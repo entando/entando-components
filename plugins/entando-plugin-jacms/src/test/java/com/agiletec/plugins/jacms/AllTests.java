@@ -158,6 +158,7 @@ public class AllTests {
         suite.addTestSuite(TestApiContentInterface.class);
 
         suite.addTest(ControllersAllTests.suite());
+        suite.addTest(ServicesAllTests.suite());
 
         // -------------------------------------
         suite.addTestSuite(TestTrashReferencedCategory.class);

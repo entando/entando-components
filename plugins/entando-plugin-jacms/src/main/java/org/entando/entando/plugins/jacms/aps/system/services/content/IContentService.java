@@ -15,8 +15,8 @@ package org.entando.entando.plugins.jacms.aps.system.services.content;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
 import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestEntityListRequest;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.validation.BindingResult;
 
@@ -29,7 +29,7 @@ public interface IContentService {
     public static final String STATUS_DRAFT = "draft";
     public static final String STATUS_UNPUBLISHED = "unpublished";
 
-    public ContentDto getContent(String code, String modelId, String status, String langCode, UserDetails user);
+    public ContentDto getContent(String code, String modelId, String status, String langCode, boolean resolveLinks, UserDetails user);
 
     public ContentDto addContent(ContentDto request, UserDetails user, BindingResult bindingResult);
 
@@ -41,6 +41,6 @@ public interface IContentService {
 
     public PagedMetadata<?> getContentReferences(String code, String manager, UserDetails user, RestListRequest requestList);
 
-    public PagedMetadata<ContentDto> getContents(RestEntityListRequest requestList, String modelId, String status, String langCode, UserDetails user);
+    public PagedMetadata<ContentDto> getContents(RestContentListRequest requestList, UserDetails user);
 
 }

@@ -18,6 +18,7 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import javax.servlet.http.HttpSession;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentValidator;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
@@ -45,6 +46,9 @@ public class ContentControllerTest extends AbstractControllerTest {
     @Mock
     private IContentService contentService;
 
+    @Mock
+    private HttpSession httpSession;
+
     @InjectMocks
     private ContentController controller;
 
@@ -60,9 +64,10 @@ public class ContentControllerTest extends AbstractControllerTest {
     @Test
     public void shouldGetExistingContent() throws Exception {
         UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
         when(this.contentValidator.existContent("ART123", IContentService.STATUS_DRAFT)).thenReturn(true);
         when(this.contentService.getContent(Mockito.eq("ART123"), Mockito.isNull(),
-                Mockito.eq("draft"), Mockito.isNull(), Mockito.any(UserDetails.class))).thenReturn(Mockito.mock(ContentDto.class));
+                Mockito.eq("draft"), Mockito.isNull(), Mockito.anyBoolean(), Mockito.any(UserDetails.class))).thenReturn(Mockito.mock(ContentDto.class));
         ResultActions result = performGetContent("ART123", null, false, null, user);
         result.andExpect(status().isOk());
     }
@@ -70,6 +75,7 @@ public class ContentControllerTest extends AbstractControllerTest {
     @Test
     public void testUnexistingContent() throws Exception {
         UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
         when(this.contentValidator.existContent("ART098", IContentService.STATUS_ONLINE)).thenReturn(false);
         ResultActions result = performGetContent("ART098", null, true, null, user);
         result.andExpect(status().isNotFound());
@@ -78,6 +84,7 @@ public class ContentControllerTest extends AbstractControllerTest {
     @Test
     public void testAddContent() throws Exception {
         UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
         when(this.contentService.addContent(Mockito.any(ContentDto.class), Mockito.any(UserDetails.class), Mockito.any(BindingResult.class)))
                 .thenReturn(Mockito.mock(ContentDto.class));
         String mockJson = "{\n"
@@ -94,6 +101,7 @@ public class ContentControllerTest extends AbstractControllerTest {
     @Test
     public void testUpdateContent() throws Exception {
         UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
         when(this.contentService.updateContent(Mockito.any(ContentDto.class), Mockito.any(UserDetails.class), Mockito.any(BindingResult.class)))
                 .thenReturn(Mockito.mock(ContentDto.class));
         String mockJson = "{\n"

@@ -11,10 +11,22 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.plugins.jacms.aps.system.services.resource;
+package com.agiletec.plugins.jacms;
 
-public interface IResourceService {
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import org.entando.entando.plugins.jacms.apsadmin.content.ContentServiceTest;
 
-    String BEAN_NAME = "jacmsResourceService";
+public class ServicesAllTests extends TestCase {
+
+    public static Test suite() {
+        TestSuite suite = new TestSuite(ServicesAllTests.class.getName());
+
+        suite.addTest(new JUnit4TestAdapter(ContentServiceTest.class));
+
+        return suite;
+    }
 
 }
