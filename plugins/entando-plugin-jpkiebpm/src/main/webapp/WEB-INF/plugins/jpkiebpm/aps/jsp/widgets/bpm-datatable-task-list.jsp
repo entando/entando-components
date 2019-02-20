@@ -256,7 +256,18 @@
             {
                 html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
                     onClick: function (ev, data) {
-                        claimTask(ev, configId, data.id, context);
+                        
+                        if (data.status=='Ready'){
+                            claimTask(ev, configId, data.id, context);
+                        }
+                        else {
+                            $.toast({
+                                heading: 'Information',
+                                text: 'the Status of the task is not Ready',
+                                showHideTransition: 'slide',
+                                icon: 'info'
+                            });
+                        }
                     }
             },
             </c:if>                        
@@ -335,6 +346,7 @@
                         extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
                         org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);                                    
                 });
+                
 
         };
 
