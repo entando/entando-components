@@ -342,11 +342,15 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     public KieTaskDetail getTaskDetail(Properties properties) throws Throwable {
+        logger.debug("getTaskDetail");
         String containerId = properties.getProperty("containerId");
         String taskIdString = properties.getProperty("taskId");
         String user = properties.getProperty("user");
         String configId = properties.getProperty("configId");
-
+        logger.debug("containerId {}",containerId);
+        logger.debug("taskIdString {}", taskIdString);
+        logger.debug("user {}", user);
+        logger.debug("configId {}", configId);
         Map<String, String> opt = null;
         if (StringUtils.isNotBlank(user)) {
             opt = new HashMap<>();
@@ -358,14 +362,18 @@ public class ApiTaskInterface extends KieApiManager {
         final ApsProperties config = new ApsProperties();
         config.loadFromXml(information);
         String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+        logger.debug("knowledgetSource {}", knowledgetSource);
+
         KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
 
         KieTaskDetail taskDetail = this.getKieFormManager().getTaskDetail(bpmConfig, containerId, Long.valueOf(taskIdString), opt);
+        logger.debug("taskDetail {}", taskDetail.getName());
 
         if (null == taskDetail) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
         }
+        logger.debug("return taskDetail {}", taskDetail.getName());
         return taskDetail;
     }
 

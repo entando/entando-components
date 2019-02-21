@@ -40,7 +40,7 @@
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     function addRow(data, label, index) {
-        var html = "<tr><td>" + label + "</td><td>" + data[index] + "xxx</td></tr>"
+        var html = "<tr><td>" + label + "</td><td>" + data[index] + "</td></tr>"
         return data[index] === undefined ? "" : html;
     }
 
@@ -67,7 +67,7 @@
     function getTemplateTaskDetail(data) {
         var template =
                 "<tr><td>Task id</td><td>" + data['task-id'] + "</td></tr>\n" +
-                "<tr><td>Task namexxx</td><td>" + data['task-name'] + "</td></tr>\n" +
+                "<tr><td>Task name</td><td>" + data['task-name'] + "</td></tr>\n" +
                 "<tr><td>Task form</td><td>" + data['task-form'] + "</td></tr>\n" +
                 "<tr><td>Task priority</td><td>" + data['task-priority'] + "</td></tr>\n" +
                 "<tr><td>Task status</td><td>" + data['task-status'] + "</td></tr>\n" +
@@ -327,7 +327,7 @@
                         onClickRow: function (ev, rowData) {
                             $('#bpm-task-list-modal-data-table-tbody').empty();
 
-                            var url = context + "taskDetail.json?containerId=" + rowData.containerId + "&taskId=" + rowData.id;
+                            var url = context + "taskDetail.json?configId=" + configId +"&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
                             $.get(url, function (data) {
                                 $('#bpm-task-list-modal-data-table-tbody').append(getTemplateTaskDetail(data.response.result.mainForm));
                                 optModal.title = "BPM Data";
