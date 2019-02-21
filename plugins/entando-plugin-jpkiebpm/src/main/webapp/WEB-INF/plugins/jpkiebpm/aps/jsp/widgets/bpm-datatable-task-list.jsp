@@ -250,7 +250,7 @@
                             stack : 5,
                             textAlign : 'left', 
                             position : 'top-right'
-                        })
+                        })                       
                        
                     }
                 });
