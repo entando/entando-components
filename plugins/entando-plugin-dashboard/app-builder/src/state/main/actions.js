@@ -24,7 +24,6 @@ import {
   SET_DATASOURCE_DATA,
   SET_DATASOURCE_COLUMNS,
   CLEAR_DATASOURCE_COLUMNS,
-  SET_SHOW_HIDE_COLUMN,
   SET_SELECTED_DATASOURCE,
   CLEAR_SELECTED_DATASOURCE,
   SET_INTERNAL_ROUTE
@@ -84,13 +83,6 @@ export const setDatasourceColumns = columns => ({
 
 export const clearDatasourceColumns = () => ({
   type: CLEAR_DATASOURCE_COLUMNS
-});
-
-export const setShowHideColumn = column => ({
-  type: SET_SHOW_HIDE_COLUMN,
-  payload: {
-    column
-  }
 });
 
 export const setDatasourceData = data => ({
@@ -283,7 +275,7 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
       dispatch(
         change(
           formName,
-          `${DATASOURCE_PROPERTY_COLUMNS}.${item.key}`,
+          `${DATASOURCE_PROPERTY_COLUMNS}.${item.key}.label`,
           item.value
         )
       );
@@ -322,11 +314,6 @@ export const updateDatasourceColumns = (formName, columns) => (
       });
     });
   });
-
-export const showHideColumn = key => dispatch => {
-  console.log("Show Hide Column ", key);
-  dispatch(setShowHideColumn(key));
-};
 
 /*
  Widget Chart thunk

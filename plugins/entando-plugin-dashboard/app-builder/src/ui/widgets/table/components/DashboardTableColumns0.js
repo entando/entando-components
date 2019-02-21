@@ -4,7 +4,6 @@ import {Field, FormSection} from "redux-form";
 import {maxLength} from "@entando/utils";
 import FormattedMessage from "ui/i18n/FormattedMessage";
 import {OverlayTrigger, Tooltip} from "patternfly-react";
-import {uniqueId} from "lodash";
 
 import {
   SortableContainer,
@@ -29,16 +28,15 @@ const renderField = ({input, meta: {touched, error}}) => {
   );
 };
 
-const renderHiddenColum = ({input}) => {
-  return (
-    <input
-      id={input.name}
-      {...input}
-      type="checkbox"
-      className={"DashboardTableColumns__th-column-is-hidden"}
-    />
-  );
-};
+const renderHiddenColum = ({input, item, onClickHandler}) => (
+  <i
+    {...input}
+    className={`DashboardTableColumns__th-column-${
+      item.hidden ? "hidden" : "show"
+    }`}
+    onClick={() => onClickHandler(item.key)}
+  />
+);
 
 const DragHandle = sortableHandle(() => (
   <div className="DashboardTableColumns__th-editable-label-dnd" />
@@ -48,24 +46,20 @@ const SortableItem = SortableElement(({item, showColumnHandler}) => (
   <th className="DashboardTableColumns__th-editable-label">
     <div className="DashboardTableColumns__th-editable-label-container">
       <DragHandle />
-      <Field
-        component={renderField}
-        name={`${item.key}.label`}
-        validate={[maxLength15]}
-      />
+      <Field component={renderField} name={item.key} validate={[maxLength15]} />
       <div className="DashboardTableColumns__th-editable-label-visible">
-        {showColumn(item.key)}
+        {showColumn(item, showColumnHandler)}
       </div>
     </div>
   </th>
 ));
 
-const showColumn = name => (
+const showColumn = (item, onClickHandler) => (
   <OverlayTrigger
     overlay={
-      <Tooltip id={name}>
+      <Tooltip id={item.key}>
         <FormattedMessage
-          id={`plugin.table.column.tooltip.${name} ? "show" : "hidden"`}
+          id={`plugin.table.column.tooltip.${item.hidden ? "show" : "hidden"}`}
         />
       </Tooltip>
     }
@@ -73,7 +67,18 @@ const showColumn = name => (
     trigger={["hover"]}
     rootClose={false}
   >
-    <Field component={renderHiddenColum} name={`${name}.hidden`} />
+    <i
+      className={`DashboardTableColumns__th-column-${
+        item.hidden ? "hidden" : "show"
+      }`}
+      onClick={() => onClickHandler(item.key)}
+    />
+    <Field
+      component={renderHiddenColum}
+      name={`${item.key}.hidden`}
+      item={item}
+      onClickHandler={onClickHandler}
+    />
   </OverlayTrigger>
 );
 
@@ -158,7 +163,8 @@ const COLUMN_TYPE = {
 
 DashboardTableColumns.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(COLUMN_TYPE)),
-  onMoveColumn: PropTypes.func.isRequired
+  onMoveColumn: PropTypes.func.isRequired,
+  onShowHideColumn: PropTypes.func.isRequired
 };
 
 DashboardTableColumns.defaultProps = {

@@ -221,14 +221,16 @@
     border: 0 solid red;
     min-width: 30px;
     padding: 2px; }
-  .DashboardTableColumns__th-column-show:after {
+  .DashboardTableColumns__th-column-is-hidden {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; }
+  .DashboardTableColumns__th-column-is-hidden::before {
     font-family: FontAwesome;
-    content: "\f06e";
-    cursor: pointer; }
-  .DashboardTableColumns__th-column-hidden:after {
+    content: "\f06e"; }
+  .DashboardTableColumns__th-column-is-hidden:checked::before {
     font-family: FontAwesome;
-    content: "\f070";
-    cursor: pointer; }
+    content: "\f070"; }
 
 .ChartFirstStep__container-datasource {
   margin-top: 2em; }

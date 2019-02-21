@@ -9,7 +9,6 @@ import {
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_COLUMNS,
   CLEAR_DATASOURCE_COLUMNS,
-  SET_SHOW_HIDE_COLUMN,
   SET_DATASOURCE_DATA,
   SET_SELECTED_DATASOURCE,
   CLEAR_SELECTED_DATASOURCE,
@@ -85,13 +84,6 @@ const datasourceColumns = (state = [], action = {}) => {
   switch (action.type) {
     case SET_DATASOURCE_COLUMNS:
       return action.payload.columns;
-    case SET_SHOW_HIDE_COLUMN:
-      const newState = [...state];
-      const column = newState.find(f => f.key === action.payload.column);
-      if (column) {
-        column.hidden = !column.hidden;
-      }
-      return newState;
     case CLEAR_DATASOURCE_COLUMNS:
       return [];
     default:

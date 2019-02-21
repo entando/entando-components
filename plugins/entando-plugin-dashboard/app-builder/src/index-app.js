@@ -23,17 +23,7 @@ import "patternfly/dist/css/patternfly.min.css";
 import "patternfly/dist/css/patternfly-additions.min.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 
-import DashboardConfigAddPage from "ui/dashboard-config/add/components/DashboardConfigAddPage";
-
-import DashboardConfigPageContainer from "ui/dashboard-config/list/containers/DashboardConfigPageContainer";
-
 import DashboardTable from "ui/widgets/table/components/DashboardTable";
-import DashboardLineChart from "ui/widgets/charts/line-chart/components/DashboardLineChart";
-import DashboardBarChart from "ui/widgets/charts/bar-chart/components/DashboardBarChart";
-import DashboardDonutChart from "ui/widgets/charts/donut-chart/components/DashboardDonutChart";
-import DashboardGaugeChart from "ui/widgets/charts/gauge-chart/components/DashboardGaugeChart";
-import DashboardPieChart from "ui/widgets/charts/pie-chart/components/DashboardPieChart";
-import DashboardMap from "ui/widgets/geolocalization/components/DashboardMap";
 
 const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
   acc[`plugin.${plugin.id}.${key}`] = enLocale.messages[key];
@@ -50,56 +40,6 @@ export default ReactDOM.render(
         <Row>
           <Col xs={12}>
             <DashboardTable />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <DashboardMap />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <DashboardPieChart />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <DashboardGaugeChart />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <DashboardDonutChart />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <DashboardBarChart />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <DashboardLineChart />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <PluginContainer titleId="plugin.title" helpId="ConfigPage.help" />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <DashboardConfigPageContainer />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <DashboardConfigAddPage />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <hr />
           </Col>
         </Row>
       </Grid>

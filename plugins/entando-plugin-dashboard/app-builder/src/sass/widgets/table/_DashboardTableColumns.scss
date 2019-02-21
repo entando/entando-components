@@ -87,15 +87,19 @@
     padding: 2px;
   }
 
-  &__th-column-show:after {
-    font-family: FontAwesome;
-    content: "\f06e";
-    cursor: pointer;
+  &__th-column-is-hidden {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
 
-  &__th-column-hidden:after {
+  &__th-column-is-hidden::before {
+    font-family: FontAwesome;
+    content: "\f06e";
+  }
+
+  &__th-column-is-hidden:checked::before {
     font-family: FontAwesome;
     content: "\f070";
-    cursor: pointer;
   }
 }

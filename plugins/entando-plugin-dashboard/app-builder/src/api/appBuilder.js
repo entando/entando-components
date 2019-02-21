@@ -14,5 +14,5 @@ export const getLanguages = () =>
     uri: `/api/languages`,
     method: METHODS.GET,
     mockResponse: LANGUAGES || [],
-    useAuthentication: true
+    useAuthentication: false
   });

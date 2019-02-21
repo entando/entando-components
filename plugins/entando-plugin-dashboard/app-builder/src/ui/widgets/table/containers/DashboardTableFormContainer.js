@@ -25,6 +25,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   onSubmit: data => {
     const transformedData = {...data};
+    transformedData.columns = Object.keys(data.columns)
+      .filter(f => !data.columns[f].hidden)
+      .reduce((acc, key) => {
+        acc[key] = transformedData.columns[key].label;
+        return acc;
+      }, {});
     transformedData.allColumns = data.allColumns ? "true" : "false";
     transformedData.options.downlodable = data.options.downlodable
       ? "true"

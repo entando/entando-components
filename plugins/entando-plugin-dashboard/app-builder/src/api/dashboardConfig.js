@@ -16,7 +16,7 @@ export const getServerConfig = configItem => {
     uri,
     method: METHODS.GET,
     mockResponse,
-    useAuthentication: true
+    useAuthentication: false
   });
 };
 
@@ -51,7 +51,7 @@ export const getDatasources = configId =>
     uri: `/api/plugins/dashboard/dashboardConfigs/${configId}/datasources`,
     method: METHODS.GET,
     mockResponse: DASHBOARD_LIST_DATASOURCE[configId] || [],
-    useAuthentication: true
+    useAuthentication: false
   });
 
 export const getDatasourceData = (
@@ -65,7 +65,7 @@ export const getDatasourceData = (
       uri: `/api/plugins/dashboard/dashboardConfigs/${configId}/datasource/${datasourceId}/${type}`,
       method: METHODS.GET,
       mockResponse: DATASOURCE_TEMPERATURE_DATA[type],
-      useAuthentication: true
+      useAuthentication: false
     },
     page
   );

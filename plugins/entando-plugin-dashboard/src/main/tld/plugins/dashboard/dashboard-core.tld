@@ -1,235 +1,284 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
-  <description>
-    <![CDATA["dashboard core tag library"]]>
-  </description>
-  <display-name>"dashboard core tag library"</display-name>
-  <tlib-version>2.2</tlib-version>
-  <short-name>dashboard</short-name>
-  <uri>/dashboard-core</uri>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+    <description>
+        <![CDATA["dashboard core tag library"]]>
+    </description>
+    <display-name>"dashboard core tag library"</display-name>
+    <tlib-version>2.2</tlib-version>
+    <short-name>dashboard</short-name>
+    <uri>/dashboard-core</uri>
 
-  <tag>
-    <description>Loads and returns the list of the DashboardTables available in the system.</description>
-    <name>dashboardTables</name>
-    <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardTableListTag</tag-class>
-    <body-content>empty</body-content>
-    <attribute>
-      <description>The name of the variable setted in the pagecontext.</description>
-      <name>var</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-  </tag>
 
-  <tag>
-    <description>Loads and returns an DashboardTable given a key.</description>
-    <name>dashboardTable</name>
-    <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardTableTag</tag-class>
-    <body-content>empty</body-content>
-    <attribute>
-      <description>Identifier of the DashboardTable to load</description>
-      <name>key</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>The name of the variable setted in the pagecontext.</description>
-      <name>var</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-  </tag>
+    <tag>
+        <description>
+            <![CDATA[Returns informations about the widget table.]]>
+        </description>
+        <name>currentConfigDashboardTable</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardTableConfigTab</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description><![CDATA[The requested parameter. It can assume one of the following values:<br/>
+				- "code" returns the code of the associated widget type (empty if none associated)<br/>
+				- "title" returns the name of the associated widget type (empty if none associated)<br/>
+				- "config" returns the value of the configuration parameter declared in the "configParam" attribute. If configParam is null return entire config <br/>
+				The default is "title".]]></description>
+            <name>param</name>
+            <required>yes</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description><![CDATA[Name of the configuration parameter request. This attribute is mandatory when
+				the attribute "param" is set to "config".]]></description>
+            <name>configParam</name>
+            <required>no</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description><![CDATA[Name of the page context variable where the requested information is pushed.
+				In this case the special characters <b>will not</b> be escaped.]]></description>
+            <name>var</name>
+            <required>no</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description><![CDATA[Id of the frame hosting the widget with the desired informations.]]></description>
+            <name>frame</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description><![CDATA[Toggles the escape of the special characters. Admitted value are (true|false), the
+				default is "true".]]></description>
+            <name>escapeXml</name>
+            <required>no</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
 
-  <tag>
-    <description>Loads and returns the list of the DashboardLineCharts available in the system.</description>
-    <name>dashboardLineCharts</name>
-    <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardLineChartListTag</tag-class>
-    <body-content>empty</body-content>
-    <attribute>
-      <description>The name of the variable setted in the pagecontext.</description>
-      <name>var</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-  </tag>
 
-  <tag>
-    <description>Loads and returns an DashboardLineChart given a key.</description>
-    <name>dashboardLineChart</name>
-    <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardLineChartTag</tag-class>
-    <body-content>empty</body-content>
-    <attribute>
-      <description>Identifier of the DashboardLineChart to load</description>
-      <name>key</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>The name of the variable setted in the pagecontext.</description>
-      <name>var</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-  </tag>
+    <tag>
+        <description>Loads and returns the list of the DashboardTables available in the system.</description>
+        <name>dashboardTables</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardTableListTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
-  <tag>
-    <description>Loads and returns the list of the DashboardBarCharts available in the system.</description>
-    <name>dashboardBarCharts</name>
-    <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardBarChartListTag</tag-class>
-    <body-content>empty</body-content>
-    <attribute>
-      <description>The name of the variable setted in the pagecontext.</description>
-      <name>var</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-  </tag>
+    <tag>
+        <description>Loads and returns an DashboardTable given a key.</description>
+        <name>dashboardTable</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardTableTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>Identifier of the DashboardTable to load</description>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
-  <tag>
-    <description>Loads and returns an DashboardBarChart given a key.</description>
-    <name>dashboardBarChart</name>
-    <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardBarChartTag</tag-class>
-    <body-content>empty</body-content>
-    <attribute>
-      <description>Identifier of the DashboardBarChart to load</description>
-      <name>key</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>The name of the variable setted in the pagecontext.</description>
-      <name>var</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-  </tag>
+    <tag>
+        <description>Loads and returns the list of the DashboardLineCharts available in the system.</description>
+        <name>dashboardLineCharts</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardLineChartListTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
-  <tag>
-		<description>Loads and returns the list of the DashboardDonutCharts available in the system.</description>
-		<name>dashboardDonutCharts</name>
-		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardDonutChartListTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description>The name of the variable setted in the pagecontext.</description>
-			<name>var</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
+    <tag>
+        <description>Loads and returns an DashboardLineChart given a key.</description>
+        <name>dashboardLineChart</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardLineChartTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>Identifier of the DashboardLineChart to load</description>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
-	<tag>
-		<description>Loads and returns an DashboardDonutChart given a key.</description>
-		<name>dashboardDonutChart</name>
-		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardDonutChartTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description>Identifier of the DashboardDonutChart to load</description>
-			<name>key</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>The name of the variable setted in the pagecontext.</description>
-			<name>var</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
+    <tag>
+        <description>Loads and returns the list of the DashboardBarCharts available in the system.</description>
+        <name>dashboardBarCharts</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardBarChartListTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
-  <tag>
-		<description>Loads and returns the list of the DashboardGaugeCharts available in the system.</description>
-		<name>dashboardGaugeCharts</name>
-		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardGaugeChartListTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description>The name of the variable setted in the pagecontext.</description>
-			<name>var</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
+    <tag>
+        <description>Loads and returns an DashboardBarChart given a key.</description>
+        <name>dashboardBarChart</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardBarChartTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>Identifier of the DashboardBarChart to load</description>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
-	<tag>
-		<description>Loads and returns an DashboardGaugeChart given a key.</description>
-		<name>dashboardGaugeChart</name>
-		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardGaugeChartTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description>Identifier of the DashboardGaugeChart to load</description>
-			<name>key</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>The name of the variable setted in the pagecontext.</description>
-			<name>var</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
+    <tag>
+        <description>Loads and returns the list of the DashboardDonutCharts available in the system.</description>
+        <name>dashboardDonutCharts</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardDonutChartListTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
-  <tag>
-		<description>Loads and returns the list of the DashboardPieCharts available in the system.</description>
-		<name>dashboardPieCharts</name>
-		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardPieChartListTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description>The name of the variable setted in the pagecontext.</description>
-			<name>var</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
+    <tag>
+        <description>Loads and returns an DashboardDonutChart given a key.</description>
+        <name>dashboardDonutChart</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardDonutChartTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>Identifier of the DashboardDonutChart to load</description>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
-	<tag>
-		<description>Loads and returns an DashboardPieChart given a key.</description>
-		<name>dashboardPieChart</name>
-		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardPieChartTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description>Identifier of the DashboardPieChart to load</description>
-			<name>key</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>The name of the variable setted in the pagecontext.</description>
-			<name>var</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
+    <tag>
+        <description>Loads and returns the list of the DashboardGaugeCharts available in the system.</description>
+        <name>dashboardGaugeCharts</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardGaugeChartListTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
-  <tag>
-		<description>Loads and returns the list of the DashboardMaps available in the system.</description>
-		<name>dashboardMaps</name>
-		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardMapListTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description>The name of the variable setted in the pagecontext.</description>
-			<name>var</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
+    <tag>
+        <description>Loads and returns an DashboardGaugeChart given a key.</description>
+        <name>dashboardGaugeChart</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardGaugeChartTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>Identifier of the DashboardGaugeChart to load</description>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
-	<tag>
-		<description>Loads and returns an DashboardMap given a key.</description>
-		<name>dashboardMap</name>
-		<tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardMapTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description>Identifier of the DashboardMap to load</description>
-			<name>key</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>The name of the variable setted in the pagecontext.</description>
-			<name>var</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
+    <tag>
+        <description>Loads and returns the list of the DashboardPieCharts available in the system.</description>
+        <name>dashboardPieCharts</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardPieChartListTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <description>Loads and returns an DashboardPieChart given a key.</description>
+        <name>dashboardPieChart</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardPieChartTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>Identifier of the DashboardPieChart to load</description>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <description>Loads and returns the list of the DashboardMaps available in the system.</description>
+        <name>dashboardMaps</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardMapListTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <description>Loads and returns an DashboardMap given a key.</description>
+        <name>dashboardMap</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DashboardMapTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>Identifier of the DashboardMap to load</description>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
 </taglib>
