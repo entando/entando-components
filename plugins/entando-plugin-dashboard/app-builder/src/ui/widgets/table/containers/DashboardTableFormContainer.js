@@ -2,26 +2,30 @@ import {connect} from "react-redux";
 import {formValueSelector} from "redux-form";
 import jsonTransform from "helpers/jsonTransform";
 
-import {fetchServerConfigList} from "state/main/actions";
+import {fetchServerConfigList, getTableWidgetConfig} from "state/main/actions";
 
 import DashboardTableForm from "ui/widgets/table/components/DashboardTableForm";
 
 const selector = formValueSelector("form-dashboard-table");
 
-const mapStateToProps = state => ({
-  initialValues: {
-    allColumns: true,
-    options: {
-      downlodable: true,
-      filtrable: true
-    }
-  },
-  datasource: selector(state, "datasource")
-});
+const mapStateToProps = state => {
+  return {
+    initialValues: {
+      allColumns: true,
+      options: {
+        downlodable: true,
+        filtrable: true
+      }
+    },
+    datasource: selector(state, "datasource")
+  };
+};
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
-    dispatch(fetchServerConfigList());
+    dispatch(fetchServerConfigList()).then(() => {
+      dispatch(getTableWidgetConfig("form-dashboard-table"));
+    });
   },
   onSubmit: data => {
     const transformedData = {...data};

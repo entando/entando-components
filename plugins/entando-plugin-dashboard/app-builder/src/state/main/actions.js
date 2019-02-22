@@ -14,6 +14,9 @@ import {
   getDatasourceData,
   putDatasourceColumn
 } from "api/dashboardConfig";
+
+import {getWidgetConfigSelector} from "state/app-builder/selectors";
+
 import {
   SET_INFO_PAGE,
   SET_LANGUAGES,
@@ -123,6 +126,16 @@ export const gotoPluginPage = pluginPage => (dispatch, getState) => {
   }
 };
 
+export const getTableWidgetConfig = formName => (dispatch, getState) => {
+  const state = getState();
+  const config = getWidgetConfigSelector(state);
+  if (config) {
+    dispatch(fecthDatasourceList(config.serverName));
+    dispatch(setDatasourceColumns(config.columnsArray));
+    dispatch(initialize(formName, config));
+  }
+};
+
 export const fetchLanguages = () => dispatch =>
   new Promise(resolve => {
     getLanguages().then(response => {
@@ -213,10 +226,10 @@ export const updateServerConfig = serverConfig => dispatch =>
     });
   });
 
-export const fecthDatasourceList = configId => dispatch =>
+export const fecthDatasourceList = serverId => dispatch =>
   new Promise(resolve => {
-    if (configId) {
-      getDatasources(configId).then(response => {
+    if (serverId) {
+      getDatasources(serverId).then(response => {
         response.json().then(json => {
           if (response.ok) {
             dispatch(setDatasourceList(json.payload));

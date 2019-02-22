@@ -16,7 +16,7 @@ export const getServerConfig = configItem => {
     uri,
     method: METHODS.GET,
     mockResponse,
-    useAuthentication: false
+    useAuthentication: true
   });
 };
 
@@ -46,33 +46,33 @@ export const deleteServerConfig = serverConfigId =>
     useAuthentication: true
   });
 
-export const getDatasources = configId =>
+export const getDatasources = serverId =>
   makeRequest({
-    uri: `/api/plugins/dashboard/dashboardConfigs/${configId}/datasources`,
+    uri: `/api/plugins/dashboard/dashboardConfigs/${serverId}/datasources`,
     method: METHODS.GET,
-    mockResponse: DASHBOARD_LIST_DATASOURCE[configId] || [],
-    useAuthentication: false
+    mockResponse: DASHBOARD_LIST_DATASOURCE[serverId] || [],
+    useAuthentication: true
   });
 
 export const getDatasourceData = (
-  configId,
+  serverId,
   datasourceId,
   type,
   page = {page: 1, pageSize: 0}
 ) =>
   makeMockRequest(
     {
-      uri: `/api/plugins/dashboard/dashboardConfigs/${configId}/datasource/${datasourceId}/${type}`,
+      uri: `/api/plugins/dashboard/dashboardConfigs/${serverId}/datasource/${datasourceId}/${type}`,
       method: METHODS.GET,
       mockResponse: DATASOURCE_TEMPERATURE_DATA[type],
-      useAuthentication: false
+      useAuthentication: true
     },
     page
   );
 
-export const putDatasourceColumn = (configId, datasourceId, columns) =>
+export const putDatasourceColumn = (serverId, datasourceId, columns) =>
   makeMockRequest({
-    uri: `/api/plugins/dashboard/dashboardConfigs/${configId}/datasource/${datasourceId}/columns`,
+    uri: `/api/plugins/dashboard/dashboardConfigs/${serverId}/datasource/${datasourceId}/columns`,
     method: METHODS.PUT,
     body: columns,
     mockResponse: columns,

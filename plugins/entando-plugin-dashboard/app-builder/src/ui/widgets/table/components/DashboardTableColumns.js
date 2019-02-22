@@ -4,7 +4,6 @@ import {Field, FormSection} from "redux-form";
 import {maxLength} from "@entando/utils";
 import FormattedMessage from "ui/i18n/FormattedMessage";
 import {OverlayTrigger, Tooltip} from "patternfly-react";
-import {uniqueId} from "lodash";
 
 import {
   SortableContainer,

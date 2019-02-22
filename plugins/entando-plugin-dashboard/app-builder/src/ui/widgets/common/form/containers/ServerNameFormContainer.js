@@ -11,8 +11,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onChange: (event, newValue) => {
-    dispatch(fecthDatasourceList(newValue));
+  onChange: (event, serverId) => {
+    dispatch(fecthDatasourceList(serverId));
   }
 });
 

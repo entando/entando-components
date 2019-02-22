@@ -158,14 +158,7 @@ class DashboardTableFormBody extends Component {
             </Col>
           </Col>
 
-          <Col
-            xs={12}
-            className={
-              this.state.toggleAllColums
-                ? "DashboardTableForm__container-data--disabled"
-                : "DashboardTableForm__container-data"
-            }
-          >
+          <Col xs={12}>
             <DashboardTableColumnsContainer />
           </Col>
 
