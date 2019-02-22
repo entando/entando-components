@@ -9,6 +9,7 @@ import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ public interface DigitalExchangeJobResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public PagedRestResponse<DigitalExchangeJob> list(RestListRequest restListRequest);
+    public ResponseEntity<PagedRestResponse<DigitalExchangeJob>> list(RestListRequest restListRequest);
 
     @ApiOperation(value = "Get a Digital Exchange job by id")
     @ApiResponses({
@@ -33,5 +34,5 @@ public interface DigitalExchangeJobResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DigitalExchangeJob> getById(String jobId);
+    public ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getById(String jobId);
 }

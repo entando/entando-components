@@ -16,7 +16,6 @@ package org.entando.entando.aps.system.services.digitalexchange.job;
 import java.util.Optional;
 
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
-import org.entando.entando.aps.system.jpa.servdb.repo.DigitalExchangeJobRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -27,8 +26,10 @@ import org.entando.entando.web.common.exceptions.ValidationConflictException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,7 +57,7 @@ public class DigitalExchangeComponentJobsServiceTest {
 
         DigitalExchangeJob job = service.install(DE_1_ID, "test", "admin");
         assertThat(job).isNotNull();
-        assertThat(job.getId()).hasSize(20);
+        verify(jobService, atLeast(1)).save(job);
 
         try {
             Thread.sleep(500);

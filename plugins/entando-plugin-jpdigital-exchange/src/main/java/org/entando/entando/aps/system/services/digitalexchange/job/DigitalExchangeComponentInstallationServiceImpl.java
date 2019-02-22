@@ -112,7 +112,6 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private DigitalExchangeJob createNewJob(DigitalExchange digitalExchange, String componentId, JobType type) {
 
         DigitalExchangeJob job = new DigitalExchangeJob();
-        job.setId(RandomStringUtils.randomAlphanumeric(20));
         job.setComponentId(componentId);
         job.setStarted(new Date());
 
@@ -121,7 +120,6 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
             job.setDigitalExchangeUrl(digitalExchange.getUrl());
         }
 
-        job.setStatus(JobStatus.CREATED);
         job.setJobType(type);
 
         return job;
@@ -130,10 +128,8 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private DigitalExchangeJob createNewJob(String componentId, JobType type) {
 
         DigitalExchangeJob job = new DigitalExchangeJob();
-        job.setId(RandomStringUtils.randomAlphanumeric(20));
         job.setComponentId(componentId);
         job.setStarted(new Date());
-        job.setStatus(JobStatus.CREATED);
         job.setJobType(type);
 
         return job;
