@@ -17,11 +17,13 @@ import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.jpa.servdb.repo.DigitalExchangeJobRepository;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobType;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,37 +34,43 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
     @Autowired
     private DigitalExchangeJobRepository repo;
 
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        repo.deleteAll();
+    }
+
+    @After
+    public void tearDown() {
+        repo.deleteAll();
+    }
+
     @Test
     public void shoudlReturnAll() throws Exception {
 
         DigitalExchangeJob job1 = new DigitalExchangeJob();
-        job1.setId("job1");
-        repo.save(job1);
+        String jobId = repo.save(job1).getId();
 
         ResultActions result = createAuthRequest(get("/digitalExchange/jobs")).execute();
 
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.metaData.totalItems", is(1)))
-                .andExpect(jsonPath("$.payload[0].id", is("job1")));
-
-        repo.deleteById("job1");
+                .andExpect(jsonPath("$.payload[0].id", is(jobId)));
     }
 
     @Test
     public void filterTest() throws Exception {
 
         DigitalExchangeJob job1 = new DigitalExchangeJob();
-        job1.setId("job1");
         job1.setProgress(0.4);
         job1.setJobType(JobType.INSTALL);
-        repo.save(job1);
+        String jobId1 = repo.save(job1).getId();
 
         DigitalExchangeJob job2 = new DigitalExchangeJob();
-        job2.setId("job2");
         job2.setProgress(0.7);
         job2.setJobType(JobType.UNINSTALL);
-        repo.save(job2);
+        String jobId2 = repo.save(job2).getId();
 
         ResultActions result = createAuthRequest(get("/digitalExchange/jobs")
                 .param("filters[0].attribute", "progress")
@@ -71,7 +79,7 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
 
         result.andDo(print())
                 .andExpect(jsonPath("$.metaData.totalItems", is(1)))
-                .andExpect(jsonPath("$.payload[0].id", is("job2")));
+                .andExpect(jsonPath("$.payload[0].id", is(jobId2)));
 
         result = createAuthRequest(get("/digitalExchange/jobs")
                 .param("filters[0].attribute", "progress")
@@ -80,16 +88,16 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
 
         result.andDo(print())
                 .andExpect(jsonPath("$.metaData.totalItems", is(1)))
-                .andExpect(jsonPath("$.payload[0].id", is("job1")));
+                .andExpect(jsonPath("$.payload[0].id", is(jobId1)));
 
         result = createAuthRequest(get("/digitalExchange/jobs")
                 .param("filters[0].attribute", "id")
                 .param("filters[0].operator", "eq")
-                .param("filters[0].value", "job1")).execute();
+                .param("filters[0].value", jobId1)).execute();
 
         result.andDo(print())
                 .andExpect(jsonPath("$.metaData.totalItems", is(1)))
-                .andExpect(jsonPath("$.payload[0].id", is("job1")));
+                .andExpect(jsonPath("$.payload[0].id", is(jobId1)));
 
         result = createAuthRequest(get("/digitalExchange/jobs")
                 .param("filters[0].attribute", "jobType")
@@ -98,9 +106,31 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
 
         result.andDo(print())
                 .andExpect(jsonPath("$.metaData.totalItems", is(1)))
-                .andExpect(jsonPath("$.payload[0].id", is("job2")));
+                .andExpect(jsonPath("$.payload[0].id", is(jobId2)));
+    }
 
-        repo.deleteById("job1");
-        repo.deleteById("job2");
+    @Test
+    public void shouldReturnSingleJob() throws Exception {
+
+        DigitalExchangeJob job1 = new DigitalExchangeJob();
+        String jobId = repo.save(job1).getId();
+
+        ResultActions result = createAuthRequest(get("/digitalExchange/jobs/{jobId}", jobId)).execute();
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.errors").isEmpty())
+                .andExpect(jsonPath("$.metaData").isEmpty())
+                .andExpect(jsonPath("$.payload.id", is(jobId)));
+    }
+
+    @Test
+    public void shouldReturnNotFound() throws Exception {
+
+        ResultActions result = createAuthRequest(get("/digitalExchange/jobs/{jobId}", "unexisting")).execute();
+
+        result.andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors", hasSize(1)));
     }
 }

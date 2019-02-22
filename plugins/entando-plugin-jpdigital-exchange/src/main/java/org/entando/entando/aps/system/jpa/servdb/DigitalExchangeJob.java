@@ -27,9 +27,11 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.apache.commons.lang.RandomStringUtils;
 
 @Entity
 @Table(name = DigitalExchangeJob.TABLE_NAME)
@@ -54,7 +56,7 @@ public class DigitalExchangeJob implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = COL_ID)
+    @Column(name = COL_ID, length = 20)
     private String id;
 
     @Column(name = COL_DIGITAL_EXCHANGE_ID, length = 20)
@@ -100,6 +102,12 @@ public class DigitalExchangeJob implements Serializable {
     @Column(name = COL_ERROR_MESSAGE)
     private String errorMessage;
 
+    @PrePersist
+    protected void onCreate() {
+        id = RandomStringUtils.randomAlphanumeric(20);
+        status = JobStatus.CREATED;
+    }
+    
     public String getId() {
         return id;
     }

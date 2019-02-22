@@ -311,7 +311,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                 .andExpect(jsonPath("$.metaData").isEmpty())
                 .andExpect(jsonPath("$.payload").isNotEmpty());
 
-        parseInstallJob(result);
+        assertThat(parseJob(result).getDigitalExchangeId()).isNotNull();
 
         JobStatus status = JobStatus.CREATED;
         int attempts = 0;
@@ -337,7 +337,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                 .andExpect(jsonPath("$.metaData").isEmpty())
                 .andExpect(jsonPath("$.payload").isNotEmpty());
 
-        parseUninstallJob(result);
+        parseJob(result);
 
         JobStatus status = JobStatus.CREATED;
         int attempts = 0;
@@ -366,7 +366,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty());
 
-        DigitalExchangeJob job = parseInstallJob(result);
+        DigitalExchangeJob job = parseJob(result);
 
         assertThat(job.getProgress()).isBetween(0d, 1d);
 
@@ -385,32 +385,14 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         result.andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty());
 
-        DigitalExchangeJob job = parseUninstallJob(result);
+        DigitalExchangeJob job = parseJob(result);
 
         assertThat(job.getProgress()).isBetween(0d, 1d);
 
         return job.getStatus();
     }
 
-    private DigitalExchangeJob parseInstallJob(ResultActions result) throws IOException {
-        String jsonResponse = result.andReturn().getResponse().getContentAsString();
-
-        SimpleRestResponse<DigitalExchangeJob> response = new ObjectMapper()
-                .readValue(jsonResponse, new TypeReference<SimpleRestResponse<DigitalExchangeJob>>() {
-                });
-
-        DigitalExchangeJob job = response.getPayload();
-
-        assertThat(job.getDigitalExchangeId()).isNotNull();
-        assertThat(job.getStarted()).isNotNull();
-        assertThat(job.getUser()).isEqualTo("jack_bauer");
-        assertThat(job.getJobType()).isIn(EnumSet.allOf(JobType.class));
-
-        return job;
-    }
-
-    private DigitalExchangeJob parseUninstallJob(ResultActions result) throws IOException {
-
+    private DigitalExchangeJob parseJob(ResultActions result) throws IOException {
         String jsonResponse = result.andReturn().getResponse().getContentAsString();
 
         SimpleRestResponse<DigitalExchangeJob> response = new ObjectMapper()
@@ -424,7 +406,5 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         assertThat(job.getJobType()).isIn(EnumSet.allOf(JobType.class));
 
         return job;
-
     }
-
 }

@@ -14,11 +14,13 @@
 package org.entando.entando.web.digitalexchange.job;
 
 import java.util.Optional;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJobService;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,17 +39,16 @@ public class DigitalExchangeJobResourceController implements DigitalExchangeJobR
     }
 
     @Override
-    public PagedRestResponse<DigitalExchangeJob> list(RestListRequest restListRequest) {
-        return jobService.findAll(restListRequest);
+    public ResponseEntity<PagedRestResponse<DigitalExchangeJob>> list(RestListRequest restListRequest) {
+        return ResponseEntity.ok(jobService.findAll(restListRequest));
     }
 
     @Override
-    public ResponseEntity<DigitalExchangeJob> getById(@PathVariable("id") String id) {
+    public ResponseEntity<SimpleRestResponse<DigitalExchangeJob>> getById(@PathVariable("id") String id) {
         Optional<DigitalExchangeJob> optionalJob = jobService.findById(id);
         return optionalJob
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-
+                .map(job -> ResponseEntity.ok(new SimpleRestResponse<>(job)))
+                .orElseThrow(() -> new ResourceNotFoundException("job", id));
     }
 
 }

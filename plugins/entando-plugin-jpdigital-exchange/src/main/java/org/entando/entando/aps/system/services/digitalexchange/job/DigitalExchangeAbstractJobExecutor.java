@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.ServletContextAware;
 
-public abstract class DigitalExchangeAbstractJobExecutor implements ServletContextAware {
+public abstract class DigitalExchangeAbstractJobExecutor implements DigitalExchangeJobExecutor, ServletContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeAbstractJobExecutor.class);
 
@@ -87,6 +87,7 @@ public abstract class DigitalExchangeAbstractJobExecutor implements ServletConte
         }
     }
 
-    abstract void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> consumer) throws JobExecutionException;
+    @Override
+    public abstract void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> consumer) throws JobExecutionException;
 
 }
