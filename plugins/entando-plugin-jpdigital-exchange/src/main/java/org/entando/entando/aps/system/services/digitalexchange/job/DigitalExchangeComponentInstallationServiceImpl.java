@@ -14,9 +14,6 @@
 package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import java.util.Date;
-import java.util.concurrent.CompletableFuture;
-
-import org.apache.commons.lang.RandomStringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
@@ -29,7 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 @Service
-public class DigitalExchangeComponentInstallationServiceImpl implements DigitalExchangeComponentInstallationService {
+public class DigitalExchangeComponentInstallationServiceImpl extends JobRunner implements DigitalExchangeComponentInstallationService {
 
     private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeComponentInstallationServiceImpl.class);
 
@@ -43,12 +40,13 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     @Autowired
     public DigitalExchangeComponentInstallationServiceImpl(
             DigitalExchangesService exchangesService,
-            DigitalExchangeJobService repository,
+            DigitalExchangeJobService jobService,
             DigitalExchangeInstallExecutor installExecutor,
             DigitalExchangeUninstallExecutor uninstallExecutor) {
 
+        super(jobService);
         this.exchangesService = exchangesService;
-        this.jobService = repository;
+        this.jobService = jobService;
         this.installExecutor = installExecutor;
         this.uninstallExecutor = uninstallExecutor;
     }
@@ -62,7 +60,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(digitalExchange, componentId, JobType.INSTALL);
         job.setUser(username);
-        this.jobService.save(job);
+        job = this.jobService.save(job);
 
         this.executeJob(job, this.installExecutor);
 
@@ -76,25 +74,11 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(componentId, JobType.UNINSTALL);
         job.setUser(username);
-        this.jobService.save(job);
+        job = this.jobService.save(job);
 
         this.executeJob(job, this.uninstallExecutor);
 
         return job;
-    }
-
-    private void executeJob(DigitalExchangeJob job, DigitalExchangeAbstractJobExecutor jobExecutor) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                jobExecutor.execute(job, jobService::save);
-            } catch (Throwable ex) {
-                logger.error("Error while executing job for " + job.getComponentId(), ex);
-                job.setStatus(JobStatus.ERROR);
-                job.setErrorMessage(ex.getMessage());
-                job.setEnded(new Date());
-                jobService.save(job);
-            }
-        });
     }
 
     private synchronized void checkIfAlreadyRunning(String componentId, JobType jobType) {
@@ -133,7 +117,6 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
         job.setJobType(type);
 
         return job;
-
     }
 
     @Override

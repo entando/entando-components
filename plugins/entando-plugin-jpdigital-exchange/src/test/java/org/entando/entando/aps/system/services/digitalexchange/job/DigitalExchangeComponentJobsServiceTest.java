@@ -51,6 +51,7 @@ public class DigitalExchangeComponentJobsServiceTest {
     public void testJobFailure() {
 
         when(exchangesService.findById(DE_1_ID)).thenReturn(getDE1());
+        when(jobService.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         String errorMsg = "error_msg";
         doThrow(new JobExecutionException(errorMsg)).when(digitalExchangeInstallExecutor).execute(any(), any());

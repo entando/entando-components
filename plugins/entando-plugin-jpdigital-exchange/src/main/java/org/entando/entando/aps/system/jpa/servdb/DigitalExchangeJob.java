@@ -56,7 +56,7 @@ public class DigitalExchangeJob implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = COL_ID)
+    @Column(name = COL_ID, length = 20)
     private String id;
 
     @Column(name = COL_DIGITAL_EXCHANGE_ID, length = 20)
