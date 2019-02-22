@@ -329,7 +329,7 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
             // update configuration to reflect test configuration
             formManager.addConfig(config);
 
-            String claim = formManager.claimTask(config, "test", "test");
+            String claim = formManager.claimTask(config, "test", "test", "test");
             assertNotNull(claim);
         } catch (Throwable t) {
             throw t;

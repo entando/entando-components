@@ -75,7 +75,8 @@
                 <s:set var="isknowledgeSourcePathSetted" value="%{knowledgeSourcePath != null && knowledgeSourcePath != ''}"/>
                 <s:set var="isProcessPathSetted" value="%{processPath != null && processPath != ''}"/>
                 <s:set var="isGroupsSetted" value="%{groups != null && groups != ''}"/>
-
+                <s:set var="redirectDetailsPageVar" value="%{redirectDetailsPage}"/>              
+                
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-xs-8">
@@ -138,7 +139,7 @@
                                             <div class="col-sm-12 input-group">
                                                 <select name="redirectDetailsPage" id="redirectDetailsPage" class="form-control">
                                                     <s:iterator value="freePages" var="page">
-                                                        <option <s:if test="%{redirectDetailsPage} == #page.code">selected="selected"</s:if> 
+                                                        <option <s:if test="#redirectDetailsPageVar == #page.code">selected="selected"</s:if> 
                                                          value="<s:property value="#page.code"/>"><s:if test="!#page.showable"> [i]</s:if><s:property value="#page.getShortFullTitle(currentLang.code)"/></option>
                                                     </s:iterator>
                                                 </select>

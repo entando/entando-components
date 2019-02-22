@@ -1485,15 +1485,14 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public String claimTask(KieBpmConfig config, String containerId, String taskId) throws ApsSystemException{
-
+    public String claimTask(KieBpmConfig config, String containerId, String taskId, String username) throws ApsSystemException{
 
         HashMap headersMap = new HashMap();
         Map<String, String> processVars = new HashMap<>();
         String result = null;
         JSONObject json = null;
         try {
-            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_PUT_HUMAN_TASK_CLAIMED)).resolveParams(containerId, taskId);
+            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_PUT_HUMAN_TASK_CLAIMED)).resolveParams(containerId, taskId, username);
             headersMap.put("Accept", "application/json");
             KieClient client = KieApiUtil.getClientFromConfig(config);
             result = (new KieRequestBuilder(client)).setEndpoint(t).setHeaders(headersMap).setDebug(config.getDebug().booleanValue()).doRequest();
@@ -1505,7 +1504,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             }
 
         } catch (Throwable t) {
-            logger.error("Failed to fetch case details ", t);
+            logger.error("Failed to claim task details ", t);
             throw new ApsSystemException("Error getting the cases definitions", t);
         }
 

@@ -26,20 +26,21 @@
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.responsive.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.fixedColumns.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.buttons.js"></script>
+<script src="<wp:resourceURL />plugins/jpkiebpm/static/js/lib/jquery-toast/jquery.toast.min.js"></script>
 
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery-ui.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/buttons.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/responsive.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/fixedColumns.dataTables.min.css" media="screen"/>
-
+<link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery.toast.min.css" media="screen"/>
 <script>            
     
     function capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     function addRow(data, label, index) {
-        var html = "<tr><td>" + label + "</td><td>" + data[index] + "xxx</td></tr>"
+        var html = "<tr><td>" + label + "</td><td>" + data[index] + "</td></tr>"
         return data[index] === undefined ? "" : html;
     }
 
@@ -66,7 +67,7 @@
     function getTemplateTaskDetail(data) {
         var template =
                 "<tr><td>Task id</td><td>" + data['task-id'] + "</td></tr>\n" +
-                "<tr><td>Task namexxx</td><td>" + data['task-name'] + "</td></tr>\n" +
+                "<tr><td>Task name</td><td>" + data['task-name'] + "</td></tr>\n" +
                 "<tr><td>Task form</td><td>" + data['task-form'] + "</td></tr>\n" +
                 "<tr><td>Task priority</td><td>" + data['task-priority'] + "</td></tr>\n" +
                 "<tr><td>Task status</td><td>" + data['task-status'] + "</td></tr>\n" +
@@ -165,6 +166,10 @@
         });
     };
     
+    
+    
+    
+    
     function openDetailsPage(containerId, taskId)
     {
         var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />";
@@ -197,6 +202,61 @@
                 });
     }
 
+    function claimTask(ev, configId, dataTaskId, context){
+            var configId =${configId};
+            //alert("configId "+configId+ " containerId: "+rowData.containerId + " taskId "+ rowData.id);
+
+                ev.preventDefault();
+                var postData = {
+                    claimTask: {
+                        taskId: dataTaskId,
+                        configId:  configId
+                    }
+                };
+                
+               // alert("postData: "+JSON.stringify(postData));
+                
+                var action = context + "claimTask.json";
+
+                $.ajax({
+                    url: action,
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(postData),
+                    dataType: 'json',
+                    success: function (data) {
+                        $.toast({
+                            heading: 'Success',
+                            text: 'Task '+dataTaskId+ ' claimed successfully!',
+                            showHideTransition: 'slide',
+                            icon: 'success',
+                            allowToastClose : true,
+                            hideAfter : 5000,
+                            stack : 5,
+                            textAlign : 'left', 
+                            position : 'top-right'
+                        });
+                        refreshDataTable();
+                        return data;
+                    },
+                    error: function () {
+                        $.toast({
+                            heading: 'Error',
+                            text: 'Failed to claim task '+dataTaskId+ ' ',
+                            showHideTransition: 'fade',
+                            icon: 'error',
+                            allowToastClose : true,
+                            hideAfter : 5000,
+                            stack : 5,
+                            textAlign : 'left', 
+                            position : 'top-right'
+                        })                       
+                       
+                    }
+                });
+    
+    }
+
     function  loadDataTable(idTable) {
     var configId =${configId};
             var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
@@ -206,7 +266,23 @@
             {
                 html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
                     onClick: function (ev, data) {
-                        openModalForm(ev, configId, data, context);
+                        
+                        if (data.status=='Ready'){
+                            claimTask(ev, configId, data.id, context);
+                        }
+                        else {
+                            $.toast({
+                                heading: 'Information',
+                                text: 'Task with '+data.id +' is already claimed. Only tasks in Ready can be claimed.',
+                                showHideTransition: 'slide',
+                                icon: 'info',
+                                allowToastClose : true,
+                                hideAfter : 5000,
+                                stack : 5,
+                                textAlign : 'left', 
+                                position : 'top-right'
+                            });
+                        }
                     }
             },
             </c:if>                        
@@ -225,7 +301,7 @@
                         $('#bpm-task-list-modal-diagram-data').attr("src","");
                             $.get(url, function (data) {
                             $.when(
-                                    $('#bpm-task-list-modal-diagram-data').attr("src", "data:image/svg+xml;utf8," + data.response.result)).done(
+                                    $('#bpm-task-list-modal-diagram-data').attr("src", "data:image/svg+xml;utf8," + encodeURIComponent(data.response.result))).done(
                                 function(){
                                     optModal.title = "BPM Process Diagram";
                                             optModal.show.effect = "fold";
@@ -251,7 +327,7 @@
                         onClickRow: function (ev, rowData) {
                             $('#bpm-task-list-modal-data-table-tbody').empty();
 
-                            var url = context + "taskDetail.json?containerId=" + rowData.containerId + "&taskId=" + rowData.id;
+                            var url = context + "taskDetail.json?configId=" + configId +"&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
                             $.get(url, function (data) {
                                 $('#bpm-task-list-modal-data-table-tbody').append(getTemplateTaskDetail(data.response.result.mainForm));
                                 optModal.title = "BPM Data";
@@ -285,6 +361,7 @@
                         extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
                         org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);                                    
                 });
+                
 
         };
 
