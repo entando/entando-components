@@ -41,6 +41,37 @@
     </resource>
 
 
+    <!--See this for info https://datatables.net/manual/server-side -->
+
+    <resource name="datatabletasks" namespace="jpkiebpm">
+        <description>The task list for the task list widget</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a task list</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="getDataTableTasks"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.api.response.DataTableTaskListResponse</responseClass>
+            
+            <parameters>
+                <parameter key="configId" required="true">
+                    <description>The confguration id of jpkiebpm_widgetinfo</description>
+                </parameter>
+                <parameter key="draw" required="true">
+                    <description>The draw counter</description>
+                </parameter>
+                <parameter key="start" required="false">
+                    <description>Paging first record indicator</description>
+                </parameter>                
+                <parameter key="length" required="false">
+                    <description>Number of records that the table can display</description>
+                </parameter>
+                <parameter key="search" required="false">
+                    <description>The search value</description>
+                </parameter>                
+            </parameters>
+        </method>
+    </resource>
+
+
     <resource name="taskDetail" namespace="jpkiebpm">
         <description>Red Hat Bpm Task Detail</description>
         <source pluginCode="jpkiebpm">plugins</source>

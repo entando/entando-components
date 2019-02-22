@@ -1,8 +1,22 @@
 var org = org || {};
 org.entando = org.entando || {};
 org.entando.datatable = org.entando.datatable || {};
-org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, containerId) {
+org.entando.datatable.CustomDatatable = function (context, items, idTable, extraConfig, containerId, configId) {
 
+    function getColumnDatatableNew(columnDefinition) {
+
+        if (columnDefinition) {
+            columnDefinition = Array.isArray(columnDefinition) ? columnDefinition : [columnDefinition];
+
+
+            var columns = columnDefinition.map(function (col, i) {
+                return {                    
+                    data: col.title
+                    };
+            });
+            return columns;
+        }
+    }
 
     function getConfigColumnDatatable(items, columnDefinition) {
         
@@ -13,6 +27,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
         
             var columns = columnDefinition.map(function(col, i) {
                 return {
+          
                     title: col.title || col.data,
                     data: col.data,
                     visible: col.visible,
@@ -35,6 +50,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
                 targets: i + 1
             };
         });
+//        ADD FIRST COLUMN FOR ROW DETAILS BUTTONS
 //        columns.unshift({
 //            "class": "details-control",
 //            "orderable": false,
@@ -47,7 +63,6 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
 
 
     function getJsonData(items, columns) {
-
         return items.map(function (el) {
             var obj = {};
             columns.forEach(function (key) {
@@ -59,8 +74,13 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
 
     }
 
+
     var jsonColumns = getConfigColumnDatatable(items, extraConfig && extraConfig.columnDefinition);
+    var jsonColumnsNew = [];
+    var jsonDataList = [];
     var buttonsColumnDef;
+    
+    
     if (extraConfig && extraConfig.buttons && Array.isArray(extraConfig.buttons)) {
         jsonColumns.push({});
         var buttonsStr = extraConfig.buttons.map(function(btn, i) {
@@ -84,12 +104,38 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
         destroy: true,
         responsive: false,
         processing: true,
-        data: getJsonData(items, jsonColumns),
+        serverSide: true,        
+        ajax: {
+            url: context+ "datatabletasks.json?configId=" + configId,
+            dataFilter: function(data){
+                //alert("dataFilter");
+                var jsonData = jQuery.parseJSON(data);
+                var json = {};
+                    json.draw=jsonData.response.result.taskList.draw;
+                    json.recordsTotal = jsonData.response.result.taskList.recordsTotal;
+                    json.recordsFiltered = jsonData.response.result.taskList.recordsFiltered;
+                    //items = json.data;
+                    jsonColumnsNew = getConfigColumnDatatable(json.data,jsonData.response.result.taskList.fieldDefinition.fields);
+                    //jsonColumnsNew = getColumnDatatableNew(jsonData.response.result.taskList.fieldDefinition.fields);
+                    jsonDataList = getJsonData(jsonData.response.result.taskList.list, jsonColumnsNew);
+
+                    //alert("jsonColumns:" + JSON.stringify(jsonColumns));
+                    //alert("jsonData:" + JSON.stringify(jsonDataList));
+                    
+                    console.log("jsonColumns" , JSON.stringify(jsonColumns));
+                    console.log("jsonData", JSON.stringify(jsonDataList));
+
+
+                    json.data = jsonDataList;
+                    json = JSON.stringify(json);
+
+                return json; // return JSON string
+            },
+        },
         columns: jsonColumns,
         columnDefs: buttonsColumnDef,
-        scrollX: true,
-        dom: 'lfrtBip',
-                   
+        scrollX: true, 
+        dom: 'lfrtBip',                   
         buttons: [
             {
                 "extend": 'copy',

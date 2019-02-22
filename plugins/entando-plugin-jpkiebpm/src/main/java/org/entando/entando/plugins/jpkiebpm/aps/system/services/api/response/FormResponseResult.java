@@ -18,9 +18,6 @@ import javax.xml.bind.annotation.XmlElement;
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBForm;
 
-/**
- * @author E.Santoboni
- */
 public class FormResponseResult extends AbstractApiResponseResult {
 
     @Override

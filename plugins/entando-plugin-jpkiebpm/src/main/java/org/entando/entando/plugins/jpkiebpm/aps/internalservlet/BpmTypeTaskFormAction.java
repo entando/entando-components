@@ -655,7 +655,9 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             number.setName(field.getName());
             number.setDefaultLangCode(this.getCurrentLang().getCode());
             number.setRequired(req);
-            number.setValue(BigDecimal.valueOf(Long.valueOf(valuesMap.get(field.getName()))));
+            if (null != valuesMap.get(field.getName())){
+                number.setValue(BigDecimal.valueOf(Long.valueOf(valuesMap.get(field.getName()))));
+            }
             entityType.addAttribute(number);
         }
 

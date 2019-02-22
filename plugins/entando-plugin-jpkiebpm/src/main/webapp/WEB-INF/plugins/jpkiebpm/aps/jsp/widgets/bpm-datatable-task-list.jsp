@@ -327,8 +327,8 @@
                         onClickRow: function (ev, rowData) {
                             $('#bpm-task-list-modal-data-table-tbody').empty();
 
-                            var url = context + "taskDetail.json?configId=" + configId +"&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
-                            $.get(url, function (data) {
+                            var taskUrl = context + "taskDetail.json?configId=" + configId +"&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
+                            $.get(taskUrl, function (data) {
                                 $('#bpm-task-list-modal-data-table-tbody').append(getTemplateTaskDetail(data.response.result.mainForm));
                                 optModal.title = "BPM Data";
                                 $('#bpm-task-list-modal-data').dialog(optModal);
@@ -337,8 +337,12 @@
                     </c:if>                
                };
                
+               
+              
                 $.get(url, function (data) {         
-                    var items = data.response.result.taskList.list || [];
+                  
+                    var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
+                        var items = data.response.result.taskList.list || [];
                         items = Array.isArray(items) ? items : [items];
                         items = items.map(function (item) {
                         item['activated'] = new Date(item['activated']).toLocaleString();
@@ -359,10 +363,13 @@
                         });
                         var containerId = data.response.result.taskList.containerId;
                         extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
-                        org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);                                    
+                        org.entando.datatable.CustomDatatable(context, items, idTable, extraConfig, containerId, configId);                                    
                 });
                 
-
+                // var items =  [];
+                // var containerId ="";
+                // org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId, configId);                                    
+              
         };
 
 <%--
