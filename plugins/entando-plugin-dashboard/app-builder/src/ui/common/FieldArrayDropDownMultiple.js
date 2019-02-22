@@ -22,7 +22,7 @@ class FieldArrayDropDownMultiple extends Component {
     // console.log("getDerivedStateFromProps props idKey ", nextProps.idKey);
     // console.log("getDerivedStateFromProps state idKey ", state.idKey);
     if (optionColumns.length > 0 && state.columns.length === 0) {
-      console.log("Init");
+      //console.log("Init");
       return {
         idKey,
         columns: optionColumns.map((m, index) => ({

@@ -15,7 +15,7 @@ import DatasourceFormContainer from "ui/widgets/common/form/containers/Datasourc
 import DashboardTableColumnsContainer from "ui/widgets/table/containers/DashboardTableColumnsContainer";
 import DashboardWidgetTitleContainer from "ui/widgets/common/form/containers/DashboardWidgetTitleContainer";
 
-class DashboardTableFormBody extends Component {
+export class DashboardTableFormBody extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,9 +25,7 @@ class DashboardTableFormBody extends Component {
   }
 
   componentWillMount() {
-    if (this.props.onWillMount) {
-      this.props.onWillMount();
-    }
+    this.props.onWillMount();
   }
   renderDownlodable() {
     return (
@@ -193,12 +191,14 @@ DashboardTableFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
   invalid: PropTypes.bool,
-  submitting: PropTypes.bool
+  submitting: PropTypes.bool,
+  datasource: PropTypes.string
 };
 
 DashboardTableFormBody.defaultProps = {
   invalid: false,
-  submitting: false
+  submitting: false,
+  datasource: ""
 };
 const DashboardTableForm = reduxForm({
   form: "form-dashboard-table"

@@ -30,6 +30,7 @@ describe("DashboardConfigPage", () => {
   it("will call onWillMount on componentWillMount", () => {
     expect(props.onWillMount).toHaveBeenCalled();
   });
+
   it("simulate click add Server", () => {
     component.find(".DashboardConfigPage__btn-add").simulate("click");
     expect(props.gotoPluginPage).toHaveBeenCalledWith("add");

@@ -6,11 +6,11 @@ import {getDatasourceColumns} from "state/main/selectors";
 
 import DashboardTableColumns from "ui/widgets/table/components/DashboardTableColumns";
 
-const mapStateToProps = state => ({
+export const mapStateToProps = state => ({
   columns: getDatasourceColumns(state)
 });
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
   onMoveColumn: columns =>
     dispatch(updateDatasourceColumns("form-dashboard-table", columns))
 });
