@@ -33,8 +33,8 @@ public class DigitalExchangeJobService extends EntandoBaseJpaService<DigitalExch
         return this.getRepository().findById(id);
     }
 
-    public void save(DigitalExchangeJob job) {
-        this.getRepository().save(job);
+    public DigitalExchangeJob save(DigitalExchangeJob job) {
+        return this.getRepository().save(job);
     }
 
     public Optional<DigitalExchangeJob> findLast(String componentId, JobType type) {
