@@ -52,7 +52,7 @@ public class DigitalExchangeComponentsServiceImpl implements DigitalExchangeComp
         // Fill installed fields
         SystemInstallationReport installationReport = initializerManager.getCurrentReport();
         combinedResult.getBody().forEach(component -> {
-            component.setInstalled(installationReport.getComponentReport(component.getId(), false) != null);
+            component.setInstalled(installationReport.getComponentReport(component.getName(), false) != null);
         });
 
         List<DigitalExchangeComponent> localFilteredList = new DigitalExchangeComponentListProcessor(
