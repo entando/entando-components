@@ -267,6 +267,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         try {
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_GET_HUMAN_TASK_LIST);
+            
             // generate client from the current configuration
             KieClient client = KieApiUtil.getClientFromConfig(config);
             // perform query

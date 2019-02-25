@@ -314,14 +314,13 @@ public class ApiTaskInterface extends KieApiManager {
                     //Filter the user tasks by process id configured on the widget.
                     filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
 
-
                     ExecutorService executorService = Executors.newFixedThreadPool(10);
                     List<Callable<JAXBTask>> tasksCallables = new ArrayList<>();
-                    for(JAXBTask task : taskList.getList()) {
+                    for (JAXBTask task : taskList.getList()) {
                         Long processId = task.getProcessInstanceId();
 
                         Callable<JAXBTask> taskCallable = () -> {
-                            Map<String, String> vars = this.getKieFormManager().getProcessVariableInstances(bpmConfig, processId+"");
+                            Map<String, String> vars = this.getKieFormManager().getProcessVariableInstances(bpmConfig, processId + "");
                             task.setProcessVariables(vars);
                             return task;
                         };
@@ -329,7 +328,6 @@ public class ApiTaskInterface extends KieApiManager {
                         tasksCallables.add(taskCallable);
 
                     }
-
 
                     executorService.invokeAll(tasksCallables);
                     executorService.shutdown();
@@ -345,24 +343,25 @@ public class ApiTaskInterface extends KieApiManager {
     public JAXBDataTableTaskList getDataTableTasks(Properties properties) {
 
         logger.info("********************************************************");
+        logger.info("*********** getDataTableTasks *************");
+        
         // https://datatables.net/manual/server-side
         //properties.entrySet().forEach(p->logger.info("getDataTableTasks {}",p));
 
         final String configId = properties.getProperty("configId");
         final Integer draw;
-        Integer length=10;
+        Integer length = 10;
 
         try {
             draw = Integer.parseInt(properties.getProperty("draw"));
         } catch (NumberFormatException e) {
             return null;
         }
-        
+
         final String start = properties.getProperty("start");
         final String search = properties.getProperty("search[value]");
-        
-        
-        if (StringUtils.isNotEmpty(properties.getProperty("length"))){
+
+        if (StringUtils.isNotEmpty(properties.getProperty("length"))) {
             try {
                 length = Integer.parseInt(properties.getProperty("length"));
             } catch (NumberFormatException e) {
@@ -376,15 +375,15 @@ public class ApiTaskInterface extends KieApiManager {
         logger.info("search {}", search);
         logger.info("length {}", length);
 
+        //FILTER FOR status array[string] optional task status (Created, Ready, Reserved, InProgress, Suspended, Completed, Failed, Error, Exited, Obsolete)
+
+        
         JAXBDataTableTaskList taskList = new JAXBDataTableTaskList();
         taskList.setDraw(draw);
-        
+
         //TODO  set here correct values retrieved from PAM
-        taskList.setRecordsFiltered(100);
         taskList.setRecordsTotal(100);
 
-         
-        
         if (null != configId) {
             try {
                 final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
@@ -399,15 +398,42 @@ public class ApiTaskInterface extends KieApiManager {
                     String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
                     KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
 
-                   // JAXBTaskList taskList = new JAXBTaskList();
+                    // JAXBTaskList taskList = new JAXBTaskList();
                     this.setElementDatatableFieldDefinition(config, taskList);
-                    this.setElementList(bpmConfig, config, taskList);
+                    Map<String, String> opt = new HashMap();
+                    //page =  % d & pageSize =  % d & filter =  % s & sort =  % s & sortOrder =  % s
+                    opt.put("pageSize", String.valueOf(length));
+                    Integer page=getPage(Integer.valueOf(start), Integer.valueOf(length));
+                    if (null!=page){
+                       opt.put("page",String.valueOf(page) );
+                    }
+                 
+                    /*
+                    if (StringUtils.isNotBlank(search)) {
+                         opt.put("filter", "task-id:"+search);
+                    }
+                    */
+                    
+                    
+                   this.setElementList(bpmConfig, config, taskList, opt);
                     taskList.setContainerId(config.getProperty("containerId"));
                     taskList.setProcessId(config.getProperty("processId"));
                     taskList.setConfigId(bpmConfig.getId());
-                    //Filter the user tasks by process id configured on the widget.
-                    filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
-
+                   // filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
+                    
+                   
+                    if (StringUtils.isNotBlank(search)) {
+                        logger.info("SEARCH {} " + search);
+                        filterTasksByProcessIdSearch(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID), search);
+                        logger.info("      taskList.getList().size(): {}" + taskList.getList().size());
+                    } else {
+                        logger.info("DEFAULT");
+                        filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
+                        logger.info("      taskList.getList().size(): {}" + taskList.getList().size());
+                    }
+                    
+                   logger.info("***********      taskList.getList().size(): {}" + taskList.getList().size());
+                    
                     ExecutorService executorService = Executors.newFixedThreadPool(length);
                     List<Callable<JAXBTask>> tasksCallables = new ArrayList<>();
                     for (JAXBTask task : taskList.getList()) {
@@ -423,18 +449,21 @@ public class ApiTaskInterface extends KieApiManager {
 
                     executorService.invokeAll(tasksCallables);
                     executorService.shutdown();
-        
+
+                    taskList.setRecordsFiltered(100);
+
                     logger.info("********************************************************");
+                   
                     return taskList;
                 }
             } catch (Exception e) {
                 logger.error("Error {}", e);
             }
         }
-        
+        logger.info("RETURN taskList.getList().size(): {}" + taskList.getList().size());
+
         logger.info("********************************************************");
-   
-        
+
         return taskList;
     }
 
@@ -739,7 +768,7 @@ public class ApiTaskInterface extends KieApiManager {
                     KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
                     String containerId = config.getProperty("containerId");
                     String taskId = claimTask.getTaskId();
-                    
+
                     //TODO Check the user passed to the API
                     String username = bpmConfig.getUsername();
 
@@ -864,15 +893,15 @@ public class ApiTaskInterface extends KieApiManager {
             taskList.setList(list);
         }
     }
-    
-    
-    /********************
-     * 
+
+    /**
+     * ******************
+     *
      * REFACTORING USING GENERICS ?
-     * 
-     ***************************/ 
-     
-        private void setElementDatatableFieldDefinition(final ApsProperties config, JAXBDataTableTaskList taskList) {
+     *
+     **************************
+     */
+    private void setElementDatatableFieldDefinition(final ApsProperties config, JAXBDataTableTaskList taskList) {
         final String PREFIX_FIELD = "field_";
         final String PREFIX_VISIBLE = "visible_";
         final String PREFIX_OVERRIDE = "override_";
@@ -911,23 +940,26 @@ public class ApiTaskInterface extends KieApiManager {
         });
     }
 
-    
-
-    private void setElementList(KieBpmConfig bpmConfig, final ApsProperties config, JAXBDataTableTaskList taskList) throws ApsSystemException {
+    private void setElementList(KieBpmConfig bpmConfig, final ApsProperties config, JAXBDataTableTaskList taskList , Map<String,String> opt) throws ApsSystemException {
         String groups = config.getProperty("groups");
         if (groups != null) {
             groups = groups.replace(" ", "");
             final List<JAXBTask> list = new ArrayList<>();
-            final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, groups, null);
+            final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, groups, opt);
+            
+            
+            logger.info("*********** setElementList rawList: "+rawList.size());
             for (final KieTask task : rawList) {
                 task.setConfigId(bpmConfig.getId());
                 list.add(new JAXBTask(task));
             }
+            
+            logger.info("*********** setElementList RETURN LIST : " + list.size());
+      
             taskList.setList(list);
         }
     }
-    
-    
+
     //********************************************
     private void startTasks(KieBpmConfig bpmConfig, List<KieTask> list, HashMap<String, String> opt) {
         for (KieTask cur : list) {
@@ -1006,7 +1038,9 @@ public class ApiTaskInterface extends KieApiManager {
             taskList.setList(filteredTasks);
         }
     }
+
     
+    //--------------------------------------------------
     
     
     private void filterTasksByProcessId(JAXBDataTableTaskList taskList, String processDefId) {
@@ -1016,5 +1050,24 @@ public class ApiTaskInterface extends KieApiManager {
                     .collect(Collectors.toList());
             taskList.setList(filteredTasks);
         }
+    }
+
+    private void filterTasksByProcessIdSearch(JAXBDataTableTaskList taskList, String processDefId, String search) {
+        if (taskList.getList() != null) {
+            List<JAXBTask> filteredTasks = taskList.getList().stream()
+                    .filter(task -> task.getProcessDefinitionId().equals(processDefId))
+                    .filter(f -> Long.toString(f.getId()).contains(search))
+                    .collect(Collectors.toList());
+            taskList.setList(filteredTasks);
+        }
+    }
+
+    private Integer getPage(Integer start, Integer length) {
+        if (start==0){
+            return null;
+        } else  {
+            return start / length;
+        }    
+                
     }
 }
