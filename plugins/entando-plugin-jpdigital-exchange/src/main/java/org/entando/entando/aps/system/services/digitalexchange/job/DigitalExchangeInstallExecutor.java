@@ -145,7 +145,7 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            extractZip(tempZipPath, job.getComponentName());
+            extractZip(tempZipPath, job.getComponentId());
 
         } catch (IOException | UncheckedIOException ex) {
             logger.error("Error while downloading component", ex);
@@ -234,7 +234,7 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
         return packageRetrievalJob.getStatus() == JobStatus.COMPLETED;
     }
 
-    private void extractZip(Path tempZipPath, String componentName) {
+    private void extractZip(Path tempZipPath, String componentId) {
 
         try (ZipFile zip = new ZipFile(tempZipPath.toFile())) {
 
@@ -243,14 +243,14 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
                 String path = entry.getName();
 
                 if (path.startsWith(RESOURCES_DIR)) {
-                    String resourcePath = componentName + path.substring(RESOURCES_DIR.length());
+                    String resourcePath = componentId + path.substring(RESOURCES_DIR.length());
                     if (entry.isDirectory()) {
                         storageManager.createResourceDirectory(resourcePath);
                     } else {
                         storageManager.saveResourceFile(resourcePath, zip.getInputStream(entry));
                     }
                 } else {
-                    String protectedPath = componentName + File.separator + path;
+                    String protectedPath = componentId + File.separator + path;
                     if (entry.isDirectory()) {
                         storageManager.createProtectedDirectory(protectedPath);
                     } else {
