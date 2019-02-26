@@ -95,10 +95,10 @@ export const setDatasourceData = data => ({
   }
 });
 
-export const setSelectedDatasource = datasource => ({
+export const setSelectedDatasource = datasourceId => ({
   type: SET_SELECTED_DATASOURCE,
   payload: {
-    datasource
+    datasourceId
   }
 });
 
@@ -143,6 +143,7 @@ export const fetchLanguages = () => dispatch =>
         if (response.ok) {
           const languages = json.payload.filter(f => f.isActive);
           dispatch(setLanguages(languages));
+          resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
           dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
@@ -167,7 +168,7 @@ export const fetchServerConfigList = configItem => dispatch =>
         resolve();
       }
     });
-  });
+  }).catch(() => {});
 
 export const editServerConfig = (formName, configItem) => dispatch => {
   new Promise(resolve => {

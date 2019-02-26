@@ -36,7 +36,6 @@ class DropdownMultiple extends Component {
 
   static getDerivedStateFromProps(nextProps, state) {
     const {list, title, titleHelper} = nextProps;
-    //console.log("DropdownMultiple - list ", list);
     const count = list.filter(f => f.selected).length;
     if (count === 0) {
       return {headerTitle: title};
@@ -107,7 +106,7 @@ class DropdownMultiple extends Component {
                   key={`${item.value}_${uniqueId()}`}
                   onClick={() => toggleItem(item.id, item.key)}
                 >
-                  {item.value}{" "}
+                  {item.value}
                   {item.selected && <i className="fa fa-check check" />}
                 </li>
               );

@@ -20,8 +20,11 @@ describe("DashboardTableColumnsContainer", () => {
   });
 
   describe("mapDispatchToProps", () => {
-    it("should map the correct function properties", () => {
+    beforeEach(() => {
       props = mapDispatchToProps(dispatchMock);
+    });
+
+    it("should map the correct function properties", () => {
       expect(props.onMoveColumn).toBeDefined();
     });
 

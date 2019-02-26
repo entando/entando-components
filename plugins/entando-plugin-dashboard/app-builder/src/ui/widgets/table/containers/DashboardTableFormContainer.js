@@ -8,20 +8,18 @@ import DashboardTableForm from "ui/widgets/table/components/DashboardTableForm";
 
 const selector = formValueSelector("form-dashboard-table");
 
-const mapStateToProps = state => {
-  return {
-    initialValues: {
-      allColumns: true,
-      options: {
-        downlodable: true,
-        filtrable: true
-      }
-    },
-    datasource: selector(state, "datasource")
-  };
-};
+export const mapStateToProps = state => ({
+  initialValues: {
+    allColumns: true,
+    options: {
+      downlodable: true,
+      filtrable: true
+    }
+  },
+  datasource: selector(state, "datasource")
+});
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+export const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList()).then(() => {
       dispatch(getTableWidgetConfig("form-dashboard-table"));
@@ -29,8 +27,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   onSubmit: data => {
     const transformedData = {...data};
+    delete transformedData.columnsArray;
     transformedData.columns = Object.keys(data.columns)
-      .filter(f => !data.columns[f].hidden)
+      .filter(f => {
+        return !data.columns[f].hidden;
+      })
       .reduce((acc, key) => {
         acc[key] = transformedData.columns[key].label;
         return acc;

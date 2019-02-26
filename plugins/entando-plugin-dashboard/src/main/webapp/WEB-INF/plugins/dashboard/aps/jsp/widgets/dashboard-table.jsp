@@ -24,39 +24,41 @@
 
 <dt:currentConfigDashboardTable param="config" var="configTable"/>
 
-<script>
-    $(document).ready(() => {
-        console.log('jQuery ready');
-        const config = "${configTable}".replace(new RegExp("=", "g"), ':');
-        console.log('config : ', config);
-        const configPropertyToJson = (config, property, type) => {
-            const obj = type ==='array' ? [] : {};
-            return config.split(',')
+        <script>
+          $(document).ready(() => {
+            console.log('jQuery ready');
+            const config = "${configTable}".replace(new RegExp("=", "g"), ':');
+            console.log('config : ', config);
+            const configPropertyToJson = (config, property, type) => {
+              const obj = type ==='array' ? [] : {};
+              return config.split(',')
                 .filter(f => f.includes(property))
                 .reduce((acc, item) => {
-                    const data = item.split('.');
-                    el = data[1].split(':');
-                    type === 'array' ?
-                        acc.push({key: el[0], value: el[1]}) :
-                        acc = {...acc,[el[0]]: el[1]}
-                    return acc;
+                  const data = item.split('.');
+                  const el = data[1].split(':');
+                  type === 'array' ?
+                    acc.push({key: el[0], value: el[1]}) :
+                    acc = {...acc,[el[0]]: el[1]}
+                  return acc;
                 }, obj);
-        };
+            };
+            const title = configPropertyToJson(config,'title','object');
+            $('#title-table').html(title.en);
+            const options = configPropertyToJson(config,'options','object');
+            const columns = configPropertyToJson(config,'columns','array');
+            const CONFIG_TABLE = {
+              options,
+              columns,
+              data: []
+            }
+            console.log('CONFIG_TABLE: ', CONFIG_TABLE);
+            const table = new org.entando.dashboard.Table("table", CONFIG_TABLE);
+            table.show();
 
-        const options = configPropertyToJson(config,'options','object');
-        const columns = configPropertyToJson(config,'columns','array');
-        const CONFIG_TABLE = {
-            options,
-            columns,
-            data: []
-        }
-        console.log('CONFIG_TABLE: ', CONFIG_TABLE);
-        const table = new org.entando.dashboard.Table("table", CONFIG_TABLE);
-        table.show();
+          });
+        </script>
 
-    });
-</script>
-
-<div id="dashboard-table" class="container-fluid">
-    <table id="table" class="table table-striped table-bordered" style="width:100%"></table>
-</div>
+        <div id="dashboard-table" class="container-fluid">
+          <h3 id="title-table"></h3>
+          <table id="table" class="table table-striped table-bordered" style="width:100%"></table>
+        </div>

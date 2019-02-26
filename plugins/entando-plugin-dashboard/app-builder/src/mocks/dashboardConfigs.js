@@ -44,6 +44,18 @@ export const DEVICE_TEMPERATURE = {
   timestamp: "2019-02-12T11:03:22+00:00"
 };
 
+export const SERVER_PIA = {
+  active: true,
+  debug: false,
+  id: "2",
+  serverDescription: "KAA IoT Server PIA",
+  username: "admin",
+  password: "adminadmin",
+  serverURI: "http://kaa.entando.iot.com:3303",
+  token: "token-code",
+  timeout: 300
+};
+
 export const DASHBOARD_CONFIG_LIST = [
   {
     active: true,
@@ -56,17 +68,7 @@ export const DASHBOARD_CONFIG_LIST = [
     token: "token-code",
     timeout: 300
   },
-  {
-    active: true,
-    debug: false,
-    id: "2",
-    serverDescription: "KAA IoT Server PIA",
-    username: "admin",
-    password: "adminadmin",
-    serverURI: "http://kaa.entando.iot.com:3303",
-    token: "token-code",
-    timeout: 300
-  }
+  SERVER_PIA
 ];
 
 export const DATASOURCE_TEMPERATURE = {
