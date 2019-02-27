@@ -71,7 +71,7 @@ const datasourceList = (state = [], action = {}) => {
 const datasourceSelected = (state = "", action = {}) => {
   switch (action.type) {
     case SET_SELECTED_DATASOURCE:
-      return action.payload.datasource;
+      return action.payload.datasourceId;
     case CLEAR_SELECTED_DATASOURCE:
       return "";
 

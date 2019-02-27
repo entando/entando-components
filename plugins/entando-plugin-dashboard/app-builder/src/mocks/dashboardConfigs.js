@@ -138,14 +138,10 @@ export const DATASOURCE_TEMPERATURE_DATA = {
 };
 
 export const DATASOURCES_DATA = {
-  "1": {
-    parking: DATASOURCE_PARKING_DATA,
-    bike: DATASOURCE_BIKE_DATA,
-    bus: DATASOURCE_BUS_DATA
-  },
-  "2": {
-    temperature: DATASOURCE_TEMPERATURE_DATA
-  }
+  parking: DATASOURCE_PARKING_DATA,
+  bike: DATASOURCE_BIKE_DATA,
+  bus: DATASOURCE_BUS_DATA,
+  temperature: DATASOURCE_TEMPERATURE_DATA
 };
 
 export const DASHBOARD_LIST_DATASOURCE = {

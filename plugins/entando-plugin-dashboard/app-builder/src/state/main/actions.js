@@ -156,21 +156,23 @@ export const fetchLanguages = () => dispatch =>
 export const fetchServerConfigList = configItem => dispatch =>
   new Promise(resolve => {
     getServerConfig(configItem).then(response => {
-      if (response.ok) {
-        response.json().then(json => {
+      response.json().then(json => {
+        if (response.ok) {
           dispatch(setServerConfigList(json.payload));
           if (configItem) {
             dispatch(setInternalRoute("edit"));
           }
           resolve();
-        });
-      } else {
-        resolve();
-      }
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          resolve();
+        }
+      });
     });
   }).catch(() => {});
 
-export const editServerConfig = (formName, configItem) => dispatch => {
+export const editServerConfig = (formName, configItem) => dispatch =>
   new Promise(resolve => {
     getDatasources(configItem.id).then(response => {
       response.json().then(json => {
@@ -178,7 +180,7 @@ export const editServerConfig = (formName, configItem) => dispatch => {
           dispatch(setInternalRoute("edit"));
           const config = configItem;
           config.datasources = [...json.payload];
-          dispatch(initialize(formName, configItem));
+          dispatch(initialize(formName, config));
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
@@ -188,42 +190,51 @@ export const editServerConfig = (formName, configItem) => dispatch => {
       });
     });
   });
-};
 
 export const removeServerConfig = id => dispatch =>
   new Promise(resolve => {
     deleteServerConfig(id).then(response => {
       if (response.ok) {
         dispatch(removeServerConfigSync(id));
+        resolve();
+      } else {
+        dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+        resolve();
       }
-      resolve();
     });
   });
 
 export const createServerConfig = serverConfig => dispatch =>
   new Promise(resolve => {
     postServerConfig(serverConfig).then(response => {
-      if (response.ok) {
-        response.json().then(json => {
+      response.json().then(json => {
+        if (response.ok) {
           dispatch(setInternalRoute("home"));
           dispatch(addServerConfig(json.payload));
-        });
-      } else {
-        resolve();
-      }
-      resolve();
+          resolve();
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          resolve();
+        }
+      });
     });
   });
 
 export const updateServerConfig = serverConfig => dispatch =>
   new Promise(resolve => {
     putServerConfig(serverConfig).then(response => {
-      if (response.ok) {
-        dispatch(setInternalRoute("home"));
-        dispatch(fetchServerConfigList()).then(resolve);
-      } else {
-        resolve();
-      }
+      response.json().then(json => {
+        if (response.ok) {
+          dispatch(setInternalRoute("home"));
+          dispatch(setServerConfigList(json.payload));
+          resolve();
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          resolve();
+        }
+      });
     });
   });
 
@@ -257,6 +268,8 @@ const wrapApiCallFetchDatasource = (apiCall, actionCreator) => (
     apiCall(...args).then(response => {
       response.json().then(json => {
         if (response.ok) {
+          console.log("json", json.payload);
+          console.log("actionCreator", actionCreator);
           dispatch(actionCreator(json.payload));
           resolve(json.payload);
         } else {
@@ -271,31 +284,40 @@ const wrapApiCallFetchDatasource = (apiCall, actionCreator) => (
 export const fetchDatasourceColumns = (formName, field, datasourceId) => (
   dispatch,
   getState
-) => {
-  const state = getState();
-  const selector = formValueSelector(formName);
-  const configId = selector(state, field);
-  dispatch(clearSelectedDatasource());
-  dispatch(setSelectedDatasource(datasourceId));
-  dispatch(
-    wrapApiCallFetchDatasource(getDatasourceData, setDatasourceColumns)(
-      configId,
-      datasourceId,
-      DATASOURCE_PROPERTY_COLUMNS
-    )
-  ).then(data => {
-    // set values in input field
-    data.forEach(item => {
-      dispatch(
-        change(
-          formName,
-          `${DATASOURCE_PROPERTY_COLUMNS}.${item.key}.label`,
-          item.value
-        )
-      );
-    });
+) =>
+  new Promise(resolve => {
+    const state = getState();
+    const selector = formValueSelector(formName);
+    const serverId = selector(state, field);
+    dispatch(clearSelectedDatasource());
+    dispatch(setSelectedDatasource(datasourceId));
+    getDatasourceData(serverId, datasourceId, DATASOURCE_PROPERTY_COLUMNS).then(
+      response => {
+        response.json().then(json => {
+          if (response.ok) {
+            dispatch(setDatasourceColumns(json.payload));
+            // set values in input field
+            json.payload.forEach(item => {
+              dispatch(
+                change(
+                  formName,
+                  `${DATASOURCE_PROPERTY_COLUMNS}.${item.key}.label`,
+                  item.value
+                )
+              );
+            });
+            resolve();
+          } else {
+            dispatch(addErrors(json.errors.map(e => e.message)));
+            dispatch(
+              addToast(formattedText("plugin.alert.error"), TOAST_ERROR)
+            );
+            resolve();
+          }
+        });
+      }
+    );
   });
-};
 
 export const fetchDatasourceData = (configId, datasourceId) => dispatch =>
   dispatch(
