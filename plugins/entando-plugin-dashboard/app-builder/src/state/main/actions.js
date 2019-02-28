@@ -15,7 +15,10 @@ import {
   putDatasourceColumn
 } from "api/dashboardConfig";
 
-import {getWidgetConfigSelector} from "state/app-builder/selectors";
+import {
+  getWidgetConfigSelector,
+  getWidgetChartConfigSelector
+} from "state/app-builder/selectors";
 
 import {
   SET_INFO_PAGE,
@@ -141,6 +144,15 @@ export const getTableWidgetConfig = formName => (dispatch, getState) => {
     dispatch(fecthDatasourceList(config.serverName));
     dispatch(setDatasourceColumns(config.columnsArray));
     dispatch(initialize(formName, config));
+  }
+};
+export const getChartWidgetConfig = formName => (dispatch, getState) => {
+  const state = getState();
+  const config = getWidgetChartConfigSelector(state);
+  if (config) {
+    const json = JSON.parse(config.config);
+    dispatch(fecthDatasourceList(json.serverName));
+    dispatch(initialize(formName, json));
   }
 };
 

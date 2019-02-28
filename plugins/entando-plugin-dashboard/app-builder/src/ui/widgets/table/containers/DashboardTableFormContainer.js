@@ -44,6 +44,8 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
       ? "true"
       : "false";
     ownProps.onSubmit(jsonTransform(transformedData));
+    // console.log("jsonTrasnform", jsonTransform(transformedData));
+    // ownProps.onSubmit({config: JSON.stringify(transformedData)});
   }
 });
 

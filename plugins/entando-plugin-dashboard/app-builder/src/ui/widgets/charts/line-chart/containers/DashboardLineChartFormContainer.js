@@ -2,7 +2,7 @@ import {connect} from "react-redux";
 import {formValueSelector, getFormSyncErrors} from "redux-form";
 import {pick, omit} from "lodash";
 
-import {fetchServerConfigList} from "state/main/actions";
+import {fetchServerConfigList, getChartWidgetConfig} from "state/main/actions";
 
 import DashboardLineChartForm from "ui/widgets/charts/line-chart/components/DashboardLineChartForm";
 
@@ -29,7 +29,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
-    dispatch(fetchServerConfigList());
+    dispatch(fetchServerConfigList()).then(() => {
+      dispatch(getChartWidgetConfig("form-dashboard-line-chart"));
+    });
   },
   onSubmit: data => {
     const transformData = {
@@ -39,8 +41,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       ...omit(data, ["datasource", "title", "serverName"])
     };
 
-    //console.log("Submit data ", transformData);
-    ownProps.onSubmit();
+    console.log("Submit data ", {config: data});
+    ownProps.onSubmit({config: JSON.stringify(data)});
   }
 });
 

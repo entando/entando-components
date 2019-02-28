@@ -57,6 +57,11 @@ export const getWidgetConfigSelector = createSelector(
   }
 );
 
+export const getWidgetChartConfigSelector = createSelector(
+  [getSelectedPageConfig, getParams],
+  (selectedPage, params) => get(selectedPage, `${params.framePos}.config`)
+);
+
 export const getInfoPage = createSelector(
   [getPagesState],
   pages => {
