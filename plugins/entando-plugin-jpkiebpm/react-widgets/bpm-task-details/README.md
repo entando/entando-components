@@ -15,18 +15,22 @@ In the widget directory, you can run:
 
 ### `npm run build`
 
-After that the main.js file will be created in the folder /build/static/js/
+If the node_modules folder is not present before build run
+
+### `npm install`
+
+After that the main.js file will be created in the folder `/build/static/js/`
 
 ## Copy the react widget to the kie plugin
 
 After theebuild of the new version of the widget you can copy the main.js file
 from /build/static/js/ in the folder below:
-entando-components/plugins/entando-plugin-jpkiebpm/src/main/webapp/resources/plugins/jpkiebpm/static/js/react-resources/WIDGET_NAME_FOLDER
+`entando-components/plugins/entando-plugin-jpkiebpm/src/main/webapp/resources/plugins/jpkiebpm/static/js/react-resources/WIDGET_NAME_FOLDER`
 and your version of the react widget is now available
 
 ## Rebuild the kie plugin
 Rebuild the kie plugin runnning 'mvn clean install' in the kie plugin main folder
-entando-components/plugins/entando-plugin-jpkiebpm/
+`entando-components/plugins/entando-plugin-jpkiebpm/`
 
 ## Reload your application
-To see the changes on your plugin you have to reload your webapp
+To see the changes on the kie plugin you need to reload your webapp
