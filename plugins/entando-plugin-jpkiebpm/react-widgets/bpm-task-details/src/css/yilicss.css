@@ -1,0 +1,268 @@
+
+/* Style the tab */
+
+.tab {
+    overflow: hidden;
+    border: 0px solid #ccc;
+}
+
+/* Style the buttons inside the tab */
+
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 30px 36px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+
+.tab button:hover {
+    background-color: rgb(64, 113, 247);
+}
+
+/* Create an active/current tablink class */
+
+.tab button.active {
+    background-color: rgb(255, 255, 255);
+}
+
+/* Style the tab content */
+
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid rgb(255, 255, 255);
+    border-top: none;
+}
+
+
+/* --------- */
+.md_tabs {
+    overflow: hidden;
+    border: 0px solid #ccc;
+}
+
+/* Style the buttons inside the tab */
+
+.md_tabs button {
+    background-color: inherit;
+    float: right;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 16px;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+/* Change background color of buttons on hover */
+
+.md_tabs button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+
+.md_tabs button.active {
+  background-color: rgb(39, 166, 240);
+      color: #fff;
+      font-weight: bold;
+
+}
+
+/* Style the tab content */
+
+.md_tabscontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid rgb(255, 255, 255);
+    border-top: none;
+}
+
+
+.colorSquare {
+float: left;
+width: 10px;
+height: 10px;
+margin: 5px;
+border: 1px solid rgba(0, 0, 0, .2);
+
+}
+
+.green {
+background: #6EC664;
+}
+
+.red {
+background: #D0021B;
+}
+
+.orange {
+background: #F5A623;
+}
+
+.icon {
+    float:center;
+    height: 50px;
+    width: 50px;
+}
+
+
+.topNav {
+    overflow: hidden;
+    border: 0px solid #ccc;
+    float: center;
+    border: none;
+    outline: none;
+    padding: 10px 0px;
+    font-size: 17px;
+
+}
+
+.navigationBar {
+    background-color: #022234;
+    color: #ffffff;
+}
+
+.HelloBar {
+    background-color: rgb(255, 255, 255);
+    color: #000000;
+    width: 120%;
+    vertical-align: text-bottom;
+    height: 6em;
+    display: flex;
+    align-items: center;
+}
+
+.HelloBar h2 {
+    margin: 0
+}
+
+.ReviewTime{
+    background-color: rgb(255, 255, 255);
+    color: #000000;
+    width: 88%;
+    vertical-align: text-bottom;
+    height: 12.8em;
+}
+
+.PersonRanking{
+    background-color: rgb(255, 255, 255);
+    color: #000000;
+    width: 88%;
+    height: 25em;
+}
+.ProgressBarBody{
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+
+}
+
+.ProgressBar{
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+
+}
+
+.ProgressBarText{
+    margin-left: 10%;
+}
+
+
+.MiddleDashboardBody{
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+}
+
+
+.firstDonut{
+    position: relative;
+    float: center;
+    width: 80%;
+    background-color: rgb(255, 255, 255);
+}
+
+.ranking_card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+/* On mouse-over, add a deeper shadow */
+.ranking_card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+
+.ranking_container_first {
+  border-spacing: 5px;
+      /* border-bottom: groove; */
+      border-color: white;
+      background: #27AE60;
+      -ms-flex-align: center;
+      align-items: center;
+      color: white;
+      margin: 2px 0 2px 0;
+
+}
+
+.ranking_container_gray {
+      margin: 0;
+    border-spacing: 5px;
+  margin: 2px 0 2px 0;
+    border-color: white;
+    background: #BDBDBD;
+    align-items: center;
+    color: white;
+
+}
+
+.ranking_container {
+      margin: 0;
+     border-spacing: 5px;
+    margin: 2px 0 2px 0;
+     border-color: white;
+     background: #6FCF97;
+     align-items: center;
+     color: white;
+
+ }
+ .ranking_container_button {
+       margin: 0;
+
+
+  }
+
+.ranking_container h1,h2,h3 {
+    display: inline;
+}
+
+.ranking_container_first h1,h2,h3 {
+    display: inline;
+}
+
+
+.ranking_container_gray h1,h2,h3 {
+    display: inline;
+}
+
+.chart-title {
+  text-align: center;
+    margin: 41px 0 64px 0px;
+}
+
+.chart-legend {
+    text-align: left;
+    margin-top: 15px;
+}
+
+.donutChart {
+    margin-top: 15px;
+}
