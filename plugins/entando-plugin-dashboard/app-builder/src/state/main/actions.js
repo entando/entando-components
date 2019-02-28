@@ -22,6 +22,7 @@ import {
   SET_LANGUAGES,
   SET_SERVER_CONFIG_LIST,
   ADD_SERVER_CONFIG,
+  UPDATE_SERVER_CONFIG,
   REMOVE_SERVER_CONFIG,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_DATA,
@@ -58,6 +59,13 @@ export const setServerConfigList = serverList => ({
 
 export const addServerConfig = server => ({
   type: ADD_SERVER_CONFIG,
+  payload: {
+    server
+  }
+});
+
+export const updateServerConfigAction = server => ({
+  type: UPDATE_SERVER_CONFIG,
   payload: {
     server
   }
@@ -227,7 +235,7 @@ export const updateServerConfig = serverConfig => dispatch =>
       response.json().then(json => {
         if (response.ok) {
           dispatch(setInternalRoute("home"));
-          dispatch(setServerConfigList(json.payload));
+          dispatch(updateServerConfigAction(json.payload));
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
@@ -295,6 +303,7 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
       response => {
         response.json().then(json => {
           if (response.ok) {
+            // API ancora mockata
             dispatch(setDatasourceColumns(json.payload));
             // set values in input field
             json.payload.forEach(item => {

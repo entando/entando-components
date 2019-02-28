@@ -1,25 +1,12 @@
-import React, {
-  Component
-} from "react";
+import React, {Component} from "react";
 import PropTypes from "prop-types";
-import {
-  Row,
-  Col,
-  Grid,
-  CardGrid,
-  Button
-} from "patternfly-react";
+import {Row, Col, Grid, CardGrid, Button} from "patternfly-react";
 import FormattedMessageLocal from "ui/i18n/FormattedMessage";
 import PageTitle from "ui/PageTitle";
 import ServerConfigCard from "ui/dashboard-config/list/components/ServerConfigCard";
 class DashboardConfigPage extends Component {
   componentWillMount() {
-    const {
-      onWillMount
-    } = this.props;
-    if(onWillMount) {
-      onWillMount(this.props);
-    }
+    this.props.onWillMount();
   }
   render() {
     const {
@@ -31,7 +18,8 @@ class DashboardConfigPage extends Component {
       gotoPluginPage,
       editConfigItem
     } = this.props;
-    return (<Grid fluid className="DashboardConfigPage">
+    return (
+      <Grid fluid className="DashboardConfigPage">
         <Row>
           <Col xs={12}>
             <PageTitle titleId="plugin.title" helpId="ConfigPage.help" />
@@ -66,13 +54,16 @@ class DashboardConfigPage extends Component {
                   testConnectionOutcome={connectionOutcomes[configItem.id]}
                   onClickRemove={() => removeConfigItem(configItem.id)}
                   onClickTest={() => testConfigItem(configItem)}
-                  onClickEdit={() => editConfigItem('dashboard-config-form',configItem)}
+                  onClickEdit={() =>
+                    editConfigItem("dashboard-config-form", configItem)
+                  }
                 />
               ))}
             </Row>
           </CardGrid>
         </div>
-      </Grid>);
+      </Grid>
+    );
   }
 }
 DashboardConfigPage.propTypes = {
@@ -82,10 +73,8 @@ DashboardConfigPage.propTypes = {
   testAllConfigItems: PropTypes.func.isRequired,
   editConfigItem: PropTypes.func.isRequired,
   gotoPluginPage: PropTypes.func.isRequired,
-  serverList: PropTypes.arrayOf(PropTypes.shape({}))
-    .isRequired,
-  connectionOutcomes: PropTypes.objectOf(PropTypes.string)
-    .isRequired
+  serverList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  connectionOutcomes: PropTypes.objectOf(PropTypes.string).isRequired
 };
 DashboardConfigPage.defaultProps = {
   connectionOutcomes: {}

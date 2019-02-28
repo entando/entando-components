@@ -2,7 +2,7 @@ import {config} from "@entando/apimanager";
 
 import uiComponent from "ui/dashboard-config/common/containers/SubRouterContainer";
 import DashboardTable from "ui/widgets/table/components/DashboardTable";
-import DashboardLinearChart from "ui/widgets/charts/line-chart/components/DashboardLineChart";
+import DashboardLineChart from "ui/widgets/charts/line-chart/components/DashboardLineChart";
 import DashboardBarChart from "ui/widgets/charts/bar-chart/components/DashboardBarChart";
 import DashboardDonutChart from "ui/widgets/charts/donut-chart/components/DashboardDonutChart";
 import DashboardGaugeChart from "ui/widgets/charts/gauge-chart/components/DashboardGaugeChart";
@@ -32,7 +32,7 @@ const plugin = {
   apiManagerConfig: config,
   widgetForms: {
     "dashboard-table": DashboardTable,
-    "dashboard-linear-chart": DashboardLinearChart,
+    "dashboard-line-chart": DashboardLineChart,
     "dashboard-bar-chart": DashboardBarChart,
     "dashboard-donut-chart": DashboardDonutChart,
     "dashboard-gauge": DashboardGaugeChart,

@@ -5,6 +5,7 @@ import {
   SET_LANGUAGES,
   SET_SERVER_CONFIG_LIST,
   ADD_SERVER_CONFIG,
+  UPDATE_SERVER_CONFIG,
   REMOVE_SERVER_CONFIG,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_COLUMNS,
@@ -51,6 +52,12 @@ const servers = (state = [], action = {}) => {
 
     case ADD_SERVER_CONFIG:
       return [...state, action.payload.server];
+
+    case UPDATE_SERVER_CONFIG: {
+      const {server} = action.payload;
+      const newState = state.filter(f => f.id !== server.id);
+      return [...newState, server];
+    }
 
     case REMOVE_SERVER_CONFIG:
       return state.filter(config => config.id !== action.payload.configId);

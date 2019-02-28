@@ -24,6 +24,7 @@ import {
   SET_INTERNAL_ROUTE,
   REMOVE_SERVER_CONFIG,
   ADD_SERVER_CONFIG,
+  UPDATE_SERVER_CONFIG,
   CLEAR_SELECTED_DATASOURCE,
   SET_SELECTED_DATASOURCE
 } from "state/main/types";
@@ -125,6 +126,7 @@ describe("state/main/actions", () => {
           .catch(done.fail);
       });
     });
+
     describe("fetchServerConfigList", () => {
       beforeEach(() => {
         getServerConfig.mockImplementation(
@@ -172,6 +174,7 @@ describe("state/main/actions", () => {
           .catch(done.fail);
       });
     });
+
     describe("editServerConfig", () => {
       beforeEach(() => {
         getDatasources.mockImplementation(
@@ -210,6 +213,7 @@ describe("state/main/actions", () => {
           .catch(done.fail);
       });
     });
+
     describe("removeServerConfig", () => {
       beforeEach(() => {
         deleteServerConfig.mockImplementation(mockApi({payload: {}}));
@@ -274,7 +278,7 @@ describe("state/main/actions", () => {
           actions = store.getActions();
           expect(actions).toHaveLength(2);
           expect(actions[0]).toHaveProperty("type", SET_INTERNAL_ROUTE);
-          expect(actions[1]).toHaveProperty("type", SET_SERVER_CONFIG_LIST);
+          expect(actions[1]).toHaveProperty("type", UPDATE_SERVER_CONFIG);
           done();
         });
       });

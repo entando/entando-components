@@ -8,10 +8,9 @@ import {
 } from "mocks/dashboardConfigs";
 
 import {
-  setInfoPage,
-  setLanguages,
   setServerConfigList,
   addServerConfig,
+  updateServerConfigAction,
   removeServerConfigSync,
   setDatasourceList,
   setDatasourceColumns,
@@ -22,30 +21,22 @@ import {
   setInternalRoute
 } from "state/main/actions";
 
-import {
-  SET_INFO_PAGE,
-  SET_LANGUAGES,
-  SET_SERVER_CONFIG_LIST,
-  ADD_SERVER_CONFIG,
-  REMOVE_SERVER_CONFIG,
-  SET_DATASOURCE_LIST,
-  SET_DATASOURCE_COLUMNS,
-  CLEAR_DATASOURCE_COLUMNS,
-  SET_DATASOURCE_DATA,
-  SET_SELECTED_DATASOURCE,
-  CLEAR_SELECTED_DATASOURCE,
-  SET_INTERNAL_ROUTE
-} from "state/main/types";
-
 describe("state/main/reducer", () => {
   const state = reducer();
+  let newState;
+
   it("should return an object", () => {
     expect(typeof state).toBe("object");
   });
 
-  describe("servers", () => {
-    let newState;
+  describe("internalRoute", () => {
+    it("SET_INTERNAL_ROUTE", () => {
+      newState = reducer(state, setInternalRoute("home"));
+      expect(newState).toHaveProperty("internalRoute", "home");
+    });
+  });
 
+  describe("servers", () => {
     it("SET_SERVER_CONFIG_LIST", () => {
       newState = reducer(state, setServerConfigList(DASHBOARD_CONFIG_LIST));
       expect(newState.dashboardConfig.servers instanceof Array).toBe(true);
@@ -56,6 +47,14 @@ describe("state/main/reducer", () => {
 
     it("ADD_SERVER_CONFIG", () => {
       newState = reducer(state, addServerConfig(SERVER_PIA));
+      expect(newState).toHaveProperty("dashboardConfig.servers");
+      expect(newState.dashboardConfig.servers).toContainEqual(SERVER_PIA);
+    });
+
+    it("UPDATE_SERVER_CONFIG", () => {
+      newState = reducer(state, addServerConfig(SERVER_PIA));
+      newState = reducer(newState, updateServerConfigAction(SERVER_PIA));
+      expect(newState).toHaveProperty("dashboardConfig.servers");
       expect(newState.dashboardConfig.servers).toContainEqual(SERVER_PIA);
     });
 
@@ -65,4 +64,65 @@ describe("state/main/reducer", () => {
       expect(newState.dashboardConfig.servers).not.toContainEqual("2");
     });
   });
+
+  describe("datasourceList", () => {
+    it("SET_DATASOURCE_LIST", () => {
+      newState = reducer(state, setDatasourceList(DASHBOARD_LIST_DATASOURCE));
+      expect(newState).toHaveProperty(
+        "dashboardConfig.datasourceList",
+        DASHBOARD_LIST_DATASOURCE
+      );
+    });
+  });
+
+  describe("datasourceSelected", () => {
+    it("SET_SELECTED_DATASOURCE", () => {
+      newState = reducer(state, setSelectedDatasource("temperature"));
+      expect(newState).toHaveProperty(
+        "dashboardConfig.datasource.selected",
+        "temperature"
+      );
+    });
+
+    it("CLEAR_SELECTED_DATASOURCE", () => {
+      newState = reducer(state, clearSelectedDatasource());
+      expect(newState).toHaveProperty(
+        "dashboardConfig.datasource.selected",
+        ""
+      );
+    });
+  });
+
+  describe("datasourceColumns", () => {
+    it("SET_DATASOURCE_COLUMNS", () => {
+      newState = reducer(
+        state,
+        setDatasourceColumns(DATASOURCE_TEMPERATURE_DATA.columns)
+      );
+      expect(newState).toHaveProperty(
+        "dashboardConfig.datasource.columns",
+        DATASOURCE_TEMPERATURE_DATA.columns
+      );
+    });
+
+    it("CLEAR_DATASOURCE_COLUMNS", () => {
+      newState = reducer(state, clearDatasourceColumns());
+      expect(newState).toHaveProperty("dashboardConfig.datasource.columns", []);
+    });
+  });
+
+  describe("datasourceData", () => {
+    it("SET_DATASOURCE_DATA", () => {
+      newState = reducer(
+        state,
+        setDatasourceData(DATASOURCE_TEMPERATURE_DATA.data)
+      );
+      expect(newState).toHaveProperty(
+        "dashboardConfig.datasource.data",
+        DATASOURCE_TEMPERATURE_DATA.data
+      );
+    });
+  });
+
+  // end describe
 });

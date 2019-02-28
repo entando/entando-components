@@ -1,4 +1,4 @@
-import {makeRequest, METHODS} from "@entando/apimanager";
+import {makeMockRequest, makeRequest, METHODS} from "@entando/apimanager";
 import {
   DASHBOARD_CONFIG_LIST,
   DASHBOARD_LIST_DATASOURCE,
@@ -60,7 +60,7 @@ export const getDatasourceData = (
   type,
   page = {page: 1, pageSize: 0}
 ) =>
-  makeRequest(
+  makeMockRequest(
     {
       uri: `/api/plugins/dashboard/dashboardConfigs/${serverId}/datasource/${datasourceId}/${type}`,
       method: METHODS.GET,

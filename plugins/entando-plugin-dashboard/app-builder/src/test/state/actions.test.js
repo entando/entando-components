@@ -5,6 +5,7 @@ import {
   setLanguages,
   setServerConfigList,
   addServerConfig,
+  updateServerConfigAction,
   removeServerConfigSync,
   setDatasourceList,
   setDatasourceColumns,
@@ -27,6 +28,7 @@ import {
   SET_LANGUAGES,
   SET_SERVER_CONFIG_LIST,
   ADD_SERVER_CONFIG,
+  UPDATE_SERVER_CONFIG,
   REMOVE_SERVER_CONFIG,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_COLUMNS,
@@ -87,6 +89,7 @@ describe("state/main/actions", () => {
         );
       });
     });
+
     describe("addServerConfig", () => {
       beforeEach(() => {
         action = addServerConfig(SERVER_PIA);
@@ -101,6 +104,22 @@ describe("state/main/actions", () => {
         expect(action).toHaveProperty("payload.server", SERVER_PIA);
       });
     });
+
+    describe("updateServerConfig", () => {
+      beforeEach(() => {
+        action = updateServerConfigAction(SERVER_PIA);
+      });
+
+      it("is FSA compliant", () => {
+        expect(isFSA(action)).toBe(true);
+      });
+
+      it("actions is correct setup ", () => {
+        expect(action).toHaveProperty("type", UPDATE_SERVER_CONFIG);
+        expect(action).toHaveProperty("payload.server", SERVER_PIA);
+      });
+    });
+
     describe("removeServerConfigSync", () => {
       beforeEach(() => {
         action = removeServerConfigSync("1");
@@ -115,6 +134,7 @@ describe("state/main/actions", () => {
         expect(action).toHaveProperty("payload.configId", "1");
       });
     });
+
     describe("setDatasourceList", () => {
       beforeEach(() => {
         action = setDatasourceList(DASHBOARD_LIST_DATASOURCE);
@@ -132,6 +152,7 @@ describe("state/main/actions", () => {
         );
       });
     });
+
     describe("setDatasourceColumns", () => {
       beforeEach(() => {
         action = setDatasourceColumns(DATASOURCE_TEMPERATURE_DATA.columns);
@@ -149,6 +170,7 @@ describe("state/main/actions", () => {
         );
       });
     });
+
     describe("clearDatasourceColumns", () => {
       beforeEach(() => {
         action = clearDatasourceColumns();
@@ -162,6 +184,7 @@ describe("state/main/actions", () => {
         expect(action).toHaveProperty("type", CLEAR_DATASOURCE_COLUMNS);
       });
     });
+
     describe("setDatasourceData", () => {
       beforeEach(() => {
         action = setDatasourceData(DATASOURCE_TEMPERATURE_DATA.data);
@@ -179,6 +202,7 @@ describe("state/main/actions", () => {
         );
       });
     });
+
     describe("setSelectedDatasource", () => {
       beforeEach(() => {
         action = setSelectedDatasource(DATASOURCE_TEMPERATURE_DATA.id);
@@ -196,6 +220,7 @@ describe("state/main/actions", () => {
         );
       });
     });
+
     describe("clearSelectedDatasource", () => {
       beforeEach(() => {
         action = clearSelectedDatasource();
@@ -209,6 +234,7 @@ describe("state/main/actions", () => {
         expect(action).toHaveProperty("type", CLEAR_SELECTED_DATASOURCE);
       });
     });
+
     describe("setInternalRoute", () => {
       beforeEach(() => {
         action = setInternalRoute("home");
