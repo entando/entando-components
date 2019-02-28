@@ -1,0 +1,276 @@
+
+  .progtrckr {
+    text-align: center;
+    padding-bottom: 16px;
+  }
+
+  .ibox-title {
+    padding: 17px 15px 17px !important;
+    min-height: 48px;
+}
+
+  .progtrckr li {
+    margin-bottom: 10px;
+  }
+table.borderless td{
+    border: none !important;
+}
+
+html, body, #main-contents{
+    /* position: absolute; */
+    min-height: 450px !important;
+}
+.stepZillNextabt{
+
+    position: absolute;
+    right:   2%;
+    bottom:   0;
+}
+.stepZillRightabt{
+
+    position: absolute;
+    left:    2%;
+    bottom:   0;
+}
+.neibourbt{
+  margin-left: 5px;
+}
+.row-white-bg td{
+  background-color: #fff;
+}
+.row-hover :hover{
+  background-color: rgb(228, 228, 228);
+}
+.row-white-bg th{
+  background-color: #fff;
+  border: none !important;
+}
+.extend-row-white-bg td{
+  background-color: #fff;
+  border: none !important;
+
+}
+.extend-row-white-bg th{
+  background-color: #fff;
+  border: none !important;
+
+}
+
+.ReviewTime__icon{
+  font-size: 57px;
+  margin-top: 23px;
+}
+
+.ReviewTime__container{
+height:45px;
+}
+
+.ReviewTime__child-container{
+height: 138px;
+}
+
+.ReviewTime__time{
+  margin-top: 30px;
+  font-size: 34px;
+}
+
+.MiddleDashboard__container{
+  margin-bottom: 0 !important;
+  padding: 0  !important;
+  min-height: 0 !important;
+}
+
+.MiddleDashboard__container .md_tabs button {
+  height: 62px;
+  width: 80px;
+}
+
+.PersonRanking__number {
+  margin-top: 10px;
+font-size: 39px;
+font-weight: bold;
+}
+
+.PersonRanking__time {
+  font-size: 27px;
+      font-weight: 100;
+      position: absolute;
+      top: 22px;
+      right: 11px;
+}
+
+.PersonRanking__name {
+  margin-top: 21px;
+font-size: 27px;
+font-weight: 100;
+}
+
+.PersonRanking__pos {
+  font-size: 20px;
+      font-weight: bold;
+      position: absolute;
+      top: 55px;
+      right: 15px;
+      color: rgba(255, 255, 255, 0.58);
+}
+.PersonRanking__avg {
+  font-size: 15px;
+font-weight: bold;
+position: absolute;
+top: 1px;
+right: 15px;
+}
+
+.PersonRanking__btn {
+    margin-top: 16px;
+    background: #00659C;
+    width: 100%;
+    color: #fff;
+    font-size: 20px;
+    border: 1px solid #00659C;
+    text-transform: uppercase;
+    font-weight: bold;
+    height: 50px;
+}
+
+.extend-row-white-bg.table>thead>tr>th {
+    background: #1a7bb9;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* HEAD  */
+.row-white-bg.table > thead > tr > th:nth-child(2) {
+  width: 21% !important;
+}
+
+.row-white-bg.table > thead > tr > th:nth-child(3) {
+  width: 13% !important;
+}
+
+.row-white-bg.table > thead > tr > th:nth-child(4) {
+  width: 18% !important;
+}
+
+.row-white-bg.table > thead > tr > th:nth-child(5) {
+  width: 25% !important;
+}
+
+.row-white-bg.table > thead > tr > th:nth-child(6) {
+  width: 21% !important;
+}
+
+/* BODY  */
+.row-white-bg.table>tbody>tr>td:nth-child(2) {
+  width: 21% !important;
+}
+
+.row-white-bg.table>tbody>tr>td:nth-child(3) {
+  width: 13% !important;
+}
+
+.row-white-bg.table>tbody>tr>td:nth-child(4) {
+  width: 18% !important;
+}
+.row-white-bg.table>tbody>tr>td:nth-child(5) {
+  width: 25% !important;
+}
+
+.row-white-bg.table>tbody>tr>td:nth-child(6) {
+  width: 21% !important;
+}
+/* --------------------- */
+/* HEAD  */
+.tableheader.table > thead > tr > th:nth-child(1) {
+  width: 5% !important;
+}
+
+.tableheader.table > thead > tr > th:nth-child(2) {
+  width: 21% !important;
+}
+
+.tableheader.table > thead > tr > th:nth-child(3) {
+  width: 13% !important;
+}
+
+.tableheader.table > thead > tr > th:nth-child(4) {
+  width: 18% !important;
+}
+
+.tableheader.table > thead > tr > th:nth-child(5) {
+  width: 25% !important;
+}
+
+.tableheader.table > thead > tr > th:nth-child(6) {
+  width: 21% !important;
+}
+
+/* BODY  */
+.tableheader.table>tbody>tr>td:nth-child(1) {
+  width: 5% !important;
+}
+
+.tableheader.table>tbody>tr>td:nth-child(2) {
+  width: 21% !important;
+}
+
+.tableheader.table>tbody>tr>td:nth-child(3) {
+  width: 13% !important;
+}
+
+.tableheader.table>tbody>tr>td:nth-child(4) {
+  width: 18% !important;
+}
+.tableheader.table>tbody>tr>td:nth-child(5) {
+  width: 25% !important;
+}
+
+.tableheader.table>tbody>tr>td:nth-child(6) {
+  width: 21% !important;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+  border-radius: 1px !important;
+}
+
+
+/* HEAD  */
+.extend-row-white-bg.table > thead > tr > th:nth-child(2) {
+  width: 21% !important;
+}
+
+.extend-row-white-bg.table > thead > tr > th:nth-child(3) {
+  width: 13% !important;
+}
+
+.extend-row-white-bg.table > thead > tr > th:nth-child(4) {
+  width: 29% !important;
+}
+
+.extend-row-white-bg.table > thead > tr > th:nth-child(5) {
+  width: 25% !important;
+}
+
+.extend-row-white-bg.table > thead > tr > th:nth-child(6) {
+  width: 21% !important;
+}
+
+/* BODY  */
+.extend-row-white-bg.table>tbody>tr>td:nth-child(2) {
+  width: 21% !important;
+}
+
+.extend-row-white-bg.table>tbody>tr>td:nth-child(3) {
+  width: 13% !important;
+}
+
+.extend-row-white-bg.table>tbody>tr>td:nth-child(4) {
+  width: 29% !important;
+}
+.extend-row-white-bg.table>tbody>tr>td:nth-child(5) {
+  width: 25% !important;
+}
+
+.extend-row-white-bg.table>tbody>tr>td:nth-child(6) {
+  width: 21% !important;
+}
