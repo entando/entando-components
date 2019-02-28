@@ -142,7 +142,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         model.setFormAction(formAction);
         model.setUrlParameters(urlParameters);
         root.put("model", model);
-        logger.info("sections {}", sections);
+        logger.debug("sections {}", sections);
         root.put("sections", sections);
         Writer stringWriter = new StringWriter();
         template.process(root, stringWriter);
@@ -223,14 +223,14 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     }
 
     private T addField(KieProcessFormField field, KieFormOverride formOverride) throws Exception {
-        logger.info("------------------------------------");
-        logger.info("Field getId          -> {}", field.getId());
-        logger.info("Field getName        -> {}", field.getName());
-        logger.info("Field getPosition    -> {}", field.getPosition());
-        logger.info("Field getType        -> {}", field.getType());
-        logger.info("Field getProperties  -> ");
+        logger.debug("------------------------------------");
+        logger.debug("Field getId          -> {}", field.getId());
+        logger.debug("Field getName        -> {}", field.getName());
+        logger.debug("Field getPosition    -> {}", field.getPosition());
+        logger.debug("Field getType        -> {}", field.getType());
+        logger.debug("Field getProperties  -> ");
         field.getProperties().forEach(p
-                -> logger.info("  Property name: {} value: {}", p.getName(), p.getValue()));
+                -> logger.debug("  Property name: {} value: {}", p.getName(), p.getValue()));
         
         T inputField;
         switch (field.getType()) {
@@ -268,8 +268,8 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         fieldValue=fieldValue.replaceAll(" ", "_");
                 
                 
-        logger.info("Field getValue        -> {}", fieldValue);
-        logger.info("------------------------------------");
+        logger.debug("Field getValue        -> {}", fieldValue);
+        logger.debug("------------------------------------");
 
         boolean required = Boolean.parseBoolean(field.getProperty("fieldRequired").getValue());
 
