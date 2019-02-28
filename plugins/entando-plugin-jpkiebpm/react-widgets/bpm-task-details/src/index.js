@@ -11,16 +11,6 @@ import taskDetailReducer from './state/reducers/reducers';
 
 import './styles/style.css';
 
-// import 'bootstrap/dist/css/bootstrap.css';
-// import './../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import './../node_modules/font-awesome/css/font-awesome.css';
-// import './../node_modules/animate.css/animate.min.css';
-// import './steps/css/main.css';
-// import './css/cssoverride.css';
-// import './css/yilicss.css';
-
-
-
 const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 
 const rootReducer = combineReducers({
