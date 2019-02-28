@@ -23,23 +23,44 @@ THE SOFTWARE.
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
-import freemarker.template.*;
-import org.apache.struts2.util.ServletContextAware;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.*;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.*;
-import org.slf4j.*;
-import org.springframework.stereotype.Service;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Model;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Section;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePickerField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.InputField;
 
-import javax.servlet.ServletContext;
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateExceptionHandler;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Function;
+import javax.servlet.ServletContext;
+import org.springframework.stereotype.Service;
+import org.apache.struts2.util.ServletContextAware;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.IBpmOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.MultipleSelectorField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.ListBoxField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Option;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.RadioGroupField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.TextField;
 
 @Service
 public class DataUXBuilder<T extends InputField> implements ServletContextAware {
+    private static String DEFAULT_FORM_ACTION = "/ExtStr2/do/bpm/FrontEnd/DataTypeForm/save";
 
     private static final Logger logger = LoggerFactory.getLogger(DataUXBuilder.class);
     
@@ -52,6 +73,9 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     public static final String TEMPLATE_FOLDER = "/templates/";
     public static final String MAIN_FTL_TEMPLATE = "PageModel.ftl";
 
+    
+    
+    
     Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
 
     public void init() throws Exception {
@@ -101,9 +125,12 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     public DataUXBuilder() {
 
     }
-
     public String createDataUx(KieProcessFormQueryResult kpfr, int widgetInfoId, String containerId, String processId, String title) throws Exception {
-        logger.debug("CreateDataUx in DataUXBuilde for containerId {} with processId {} and title {} -> kpfr: {}", containerId, processId, title, kpfr);
+        return this.createDataUx( kpfr, widgetInfoId, containerId, processId, title, DEFAULT_FORM_ACTION,"");
+    }
+    
+    public String createDataUx(KieProcessFormQueryResult kpfr, int widgetInfoId, String containerId, String processId, String title, String formAction, String urlParameters) throws Exception {
+        logger.info("CreateDataUx in DataUXBuilde for containerId {} with processId {} and title {} -> kpfr: {}", containerId, processId, title, kpfr);
         Template template = cfg.getTemplate(MAIN_FTL_TEMPLATE);
         Map<String, KieFormOverride> formOverridesMap = getFormOverridesMap(widgetInfoId);        
         Map<String, Section> sections = this.getSections(kpfr, formOverridesMap);
@@ -112,11 +139,11 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         model.setTitle(title);
         model.setContainerId(containerId);
         model.setProcessId(processId);
+        model.setFormAction(formAction);
+        model.setUrlParameters(urlParameters);
         root.put("model", model);
         logger.debug("sections {}", sections);
-
         root.put("sections", sections);
-
         Writer stringWriter = new StringWriter();
         template.process(root, stringWriter);
         return stringWriter.toString();
@@ -201,66 +228,58 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         logger.debug("Field getName        -> {}", field.getName());
         logger.debug("Field getPosition    -> {}", field.getPosition());
         logger.debug("Field getType        -> {}", field.getType());
-        logger.debug("Field getProperties -> ");
+        logger.debug("Field getProperties  -> ");
         field.getProperties().forEach(p
-                -> logger.debug("  Property name:{} value: {}", p.getName(), p.getValue()));
-        logger.debug("------------------------------------");
-
+                -> logger.debug("  Property name: {} value: {}", p.getName(), p.getValue()));
+        
         T inputField;
         switch (field.getType()) {
             case "TextBox":
-                logger.debug("{} recognized as TextBox, inputField set to TextField",field.getName());
-                inputField = (T) new TextField();
-                break;
             case "TextArea":
-                logger.debug("{} recognized as TextArea, inputField set to TextArea", field.getName());
-                inputField = (T) new TextField();
-                break;
             case "IntegerBox":
-                logger.debug("{} recognized as IntegerBox, inputField set to IntegerBox", field.getName());
-                inputField = (T) new TextField();
-                break;
             case "InputText":
-                logger.debug("{} recognized as InputText, inputField set to InputText", field.getName());
-                inputField = (T) new TextField();
-                break;
             case "InputTextInteger":
-                logger.debug("{} recognized as InputTextInteger, inputField set to InputTextInteger", field.getName());
                 inputField = (T) new TextField();
                 break;
             case "ListBox":
-                logger.debug("{} recognized as ListBox, inputField set to ListBox", field.getName());
                 inputField = (T) new ListBoxField();
                 break;
             case "RadioGroup":
-                logger.debug("{} recognized as RadioGroup, inputField set to RadioGroup", field.getName());
                 inputField = (T) new RadioGroupField();
                 break;
             case "DatePicker":
-                logger.debug("{} recognized as DatePicker, inputField set to DatePicker", field.getName());
                 inputField = (T) new DatePickerField();
                 break;
             case "MultipleSelector":
-                logger.debug("{} recognized as MultipleSelector, inputField set to MultipleSelector", field.getName());
                 inputField = (T) new MultipleSelectorField();
                 break;
             case "CheckBox":
-                logger.debug("{} recognized as CheckBox, inputField set to CheckBox", field.getName());
                 inputField = (T) new InputField();
                 break;
             default:
-                logger.debug("{} inputField not recognized, inputField set to default InputField", field.getName());
                 inputField = (T) new InputField();
         }
-        logger.info("adding default properties to inputField");
 
         String fieldName = field.getName();
         String fieldTypeHMTL = this.typeMapping.get(field.getType());
         String fieldTypePAM = field.getType();
         String fieldValueExpr = this.valueMapping.get(field.getType());
         String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
+        fieldValue=fieldValue.replaceAll(" ", "_");
+                
+                
+        logger.debug("Field getValue        -> {}", fieldValue);
+        logger.debug("------------------------------------");
 
         boolean required = Boolean.parseBoolean(field.getProperty("fieldRequired").getValue());
+
+        boolean readOnly = false;
+                
+                if (null!=field.getProperty("readOnly")){
+                    readOnly =  Boolean.parseBoolean(field.getProperty("readOnly").getValue());
+                }
+                
+                
         String placeHolder = field.getProperty("placeHolder").getValue();
         inputField.setId(field.getId());
         inputField.setName(fieldName);
@@ -268,17 +287,14 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         inputField.setRequired(required);
         inputField.setTypePAM(fieldTypePAM);
         inputField.setTypeHTML(fieldTypeHMTL);
-
+        inputField.setReadOnly(readOnly);
+        
         if (inputField instanceof DatePickerField) {
-            logger.debug("inputField instanceof DatePickerField, adding custom properties");
-
             DatePickerField datePicker = (DatePickerField) inputField;
             boolean showTime = Boolean.parseBoolean(field.getProperty("showTime").getValue());
             datePicker.setShowTime(showTime);
         }
         if (inputField instanceof ListBoxField) {
-            logger.debug("inputField instanceof ListBoxField, adding custom properties");
-
             ListBoxField select = (ListBoxField) inputField;
             String optionsString = field.getProperty("options").getValue();
             List<String> optionsValues = Arrays.asList(optionsString.split(","));
@@ -286,9 +302,15 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             for (String f : optionsValues) {
                 String[] split = f.split("=");
                 Option opt = new Option();
-                opt.setName(split[0]);
-                opt.setValue(split[1]);
-                selectOption.add(opt);
+                if (split.length > 0) {
+                    opt.setName(split[0]);
+                    if (split.length > 1) {
+                        opt.setValue(split[1]);
+                    } else {
+                        opt.setValue("");
+                    }
+                    selectOption.add(opt);
+                }
             }
             select.setOptions(selectOption);
 
@@ -299,8 +321,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             select.setAddEmptyOption(addEmptyOption);
         }
         if (inputField instanceof RadioGroupField) {
-            logger.debug("inputField instanceof RadioGroupField, adding custom properties");
-
             RadioGroupField select = (RadioGroupField) inputField;
             String optionsString = field.getProperty("options").getValue();
             List<String> optionsValues = Arrays.asList(optionsString.split(","));
@@ -321,7 +341,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             select.setInline(inline);
         }
         if (inputField instanceof MultipleSelectorField) {
-            logger.debug("inputField instanceof MultipleSelectorField, adding custom properties");
             MultipleSelectorField multipleSelector = (MultipleSelectorField) inputField;
             String optionsString = field.getProperty("listOfValues").getValue();
 
@@ -346,7 +365,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         }
 
         if (inputField instanceof TextField) {
-            logger.debug("inputField instanceof TextField, adding custom properties");
             TextField textField = (TextField) inputField;
             textField.setPlaceHolder(placeHolder);
         }

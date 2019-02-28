@@ -129,3 +129,8 @@ INSERT INTO widgetcatalog VALUES ('bpm-case-file', '<?xml version="1.0" encoding
 	<parameter name="frontEndCaseData">frontEndCaseData</parameter>
 	<action name="jpkiebpmBpmCaseInstanceFileWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+INSERT INTO widgetcatalog VALUES ('bpm-task-details','<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">PAM-Task details</property>
+<property key="it">Dettagli task PAM</property>
+</properties>',NULL,'jpkiebpm', NULL, NULL, 1, NULL);
