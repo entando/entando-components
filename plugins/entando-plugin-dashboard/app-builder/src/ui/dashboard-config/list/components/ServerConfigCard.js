@@ -90,6 +90,12 @@ const ServerConfigCard = ({
           </div>
           <p className="card-pf-info">
             <strong>
+              <FormattedMessage id="plugin.config.id" />
+            </strong>
+            {configItem.id}
+          </p>
+          <p className="card-pf-info">
+            <strong>
               <FormattedMessage id="plugin.config.debug" />
             </strong>
             {configItem.debug ? (

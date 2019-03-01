@@ -2,7 +2,7 @@ import {connect} from "react-redux";
 import {formValueSelector, getFormSyncErrors} from "redux-form";
 import {pick, omit} from "lodash";
 
-import {fetchServerConfigList, getChartWidgetConfig} from "state/main/actions";
+import {fetchServerConfigList, getWidgetConfig} from "state/main/actions";
 
 import DashboardLineChartForm from "ui/widgets/charts/line-chart/components/DashboardLineChartForm";
 
@@ -20,7 +20,16 @@ const mapStateToProps = state => ({
       x: {type: "indexed"},
       y2: {show: false}
     },
-
+    size: {
+      width: 300,
+      height: 500
+    },
+    padding: {
+      top: 50,
+      right: 50,
+      bottom: 50,
+      left: 50
+    },
     legend: {
       position: "bottom"
     }
@@ -30,7 +39,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList()).then(() => {
-      dispatch(getChartWidgetConfig("form-dashboard-line-chart"));
+      dispatch(getWidgetConfig("form-dashboard-line-chart"));
     });
   },
   onSubmit: data => {

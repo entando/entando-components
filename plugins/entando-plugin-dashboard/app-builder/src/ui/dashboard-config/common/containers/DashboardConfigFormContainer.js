@@ -3,7 +3,11 @@ import {formValueSelector} from "redux-form";
 
 import DashboardConfigForm from "ui/dashboard-config/common/components/DashboardConfigForm";
 
-import {createServerConfig, updateServerConfig} from "state/main/actions";
+import {
+  createServerConfig,
+  updateServerConfig,
+  setInternalRoute
+} from "state/main/actions";
 
 const selector = formValueSelector("dashboard-config-form");
 
@@ -23,7 +27,10 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(updateServerConfig(values));
     }
   },
-  testConnection: () => {}
+  testConnection: () => {},
+  gotoHomePage: () => {
+    dispatch(setInternalRoute("home"));
+  }
 });
 
 const DashboardConfigFormContainer = connect(

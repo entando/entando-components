@@ -3,7 +3,11 @@ import {
   mapDispatchToProps
 } from "ui/dashboard-config/common/containers/DashboardConfigFormContainer";
 
-import {createServerConfig, updateServerConfig} from "state/main/actions";
+import {
+  createServerConfig,
+  updateServerConfig,
+  setInternalRoute
+} from "state/main/actions";
 const dispatchMock = jest.fn();
 
 jest.mock("state/main/actions");
@@ -22,6 +26,7 @@ describe("DashboardConfigFormContainer", () => {
     it("should map the correct function properties", () => {
       props = mapDispatchToProps(dispatchMock);
       expect(props.onSubmit).toBeDefined();
+      expect(props.gotoHomePage).toBeDefined();
       expect(props.testConnection).toBeDefined();
     });
 
@@ -29,6 +34,12 @@ describe("DashboardConfigFormContainer", () => {
       props = mapDispatchToProps(dispatchMock, {mode: "add"});
       props.onSubmit();
       expect(createServerConfig).toHaveBeenCalled();
+    });
+
+    it("dispatch function gotoHomePage  ", () => {
+      props = mapDispatchToProps(dispatchMock);
+      props.gotoHomePage();
+      expect(setInternalRoute).toHaveBeenCalled();
     });
 
     it("prop mode equals to edit dispatch function createServerConfig  ", () => {

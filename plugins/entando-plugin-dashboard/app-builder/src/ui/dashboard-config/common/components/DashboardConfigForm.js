@@ -54,7 +54,8 @@ export const DashboardConfigFormBody = ({
   submitting,
   datasources,
   datasourceValue,
-  testConnection
+  testConnection,
+  gotoHomePage
 }) => {
   const disableSubmit = invalid || submitting || datasources.length === 0;
   return (
@@ -169,7 +170,7 @@ export const DashboardConfigFormBody = ({
                 "datasource",
                 "plugin.config.datasource",
                 null,
-                [required, minLength3, maxLength30],
+                [minLength3, maxLength30],
                 2,
                 formattedText("plugin.table.requirement")
               )}
@@ -179,7 +180,7 @@ export const DashboardConfigFormBody = ({
                 "datasourceURI",
                 "plugin.config.datasourceURI",
                 null,
-                [required],
+                [minLength3],
                 2,
                 formattedText("plugin.config.datasourceURIExample")
               )}
@@ -205,6 +206,7 @@ export const DashboardConfigFormBody = ({
                 className="DashboardConfig__btn-cancel pull-right"
                 type="button"
                 bsStyle="default"
+                onClick={gotoHomePage}
               >
                 <FormattedMessageLocal id="common.cancel" />
               </Button>
@@ -221,6 +223,7 @@ const DATASOURCE_TYPE = {
 };
 DashboardConfigFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
+  gotoHomePage: PropTypes.func.isRequired,
   testConnection: PropTypes.func,
   datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE)),
   datasourceValue: PropTypes.shape(DATASOURCE_TYPE),

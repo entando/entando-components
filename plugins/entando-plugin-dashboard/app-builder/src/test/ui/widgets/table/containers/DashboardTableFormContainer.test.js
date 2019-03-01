@@ -3,7 +3,7 @@ import {
   mapDispatchToProps
 } from "ui/widgets/table/containers/DashboardTableFormContainer";
 
-import {fetchServerConfigList, getTableWidgetConfig} from "state/main/actions";
+import {fetchServerConfigList, getWidgetConfig} from "state/main/actions";
 
 const FORM_DATA = {
   allColumns: "true",
@@ -21,7 +21,7 @@ const FORM_DATA = {
 
 jest.mock("state/main/actions", () => ({
   fetchServerConfigList: jest.fn(),
-  getTableWidgetConfig: jest.fn()
+  getWidgetConfig: jest.fn()
 }));
 
 fetchServerConfigList.mockImplementation(() => Promise.resolve({}));
@@ -60,9 +60,7 @@ describe("DashboardTableFormContainer", () => {
       container.onWillMount();
       expect(fetchServerConfigList).toHaveBeenCalled();
       fetchServerConfigList().then(() => {
-        expect(getTableWidgetConfig).toHaveBeenCalledWith(
-          "form-dashboard-table"
-        );
+        expect(getWidgetConfig).toHaveBeenCalledWith("form-dashboard-table");
       });
       done();
     });

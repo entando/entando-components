@@ -30,7 +30,7 @@ import {
 } from "state/main/types";
 
 import {
-  getTableWidgetConfig,
+  getWidgetConfig,
   fetchLanguages,
   fetchServerConfigList,
   editServerConfig,
@@ -78,7 +78,11 @@ jest.mock("api/appBuilder");
 jest.mock("api/dashboardConfig");
 
 jest.mock("state/app-builder/selectors");
-getWidgetConfigSelector.mockReturnValue({});
+
+const VALUE = {
+  config: `{"allColumns":false,"options":{"downlodable":true,"filtrable":true},"title":{"en":"titolo"},"serverName":"4","datasource":"temperature","columns":{"timestamp":{"label":"Time","hidden":false},"temperature":{"label":"TEMPERATURA"}}}`
+};
+getWidgetConfigSelector.mockReturnValue(VALUE);
 
 describe("state/main/actions", () => {
   let store;
@@ -89,14 +93,18 @@ describe("state/main/actions", () => {
   });
 
   describe("thunk", () => {
-    describe("getTableWidgetConfig", () => {
-      it("if exists a config in the widget table initialize the form", () => {
-        store.dispatch(getTableWidgetConfig("form-dashboard-table"));
+    describe("getWidgetConfig", () => {
+      beforeEach(() => {
+        getDatasources.mockImplementation(
+          mockApi({payload: [DATASOURCE_TEMPERATURE]})
+        );
+      });
+      it("if exists a config in the widget initialize the form", () => {
+        store.dispatch(getWidgetConfig("form-dashboard-table"));
         actions = store.getActions();
-        expect(actions).toHaveLength(3);
-        expect(actions[0]).toHaveProperty("type", SET_DATASOURCE_LIST);
-        expect(actions[1]).toHaveProperty("type", SET_DATASOURCE_COLUMNS);
-        expect(actions[2]).toHaveProperty("type", "@@redux-form/INITIALIZE");
+        expect(actions).toHaveLength(2);
+        expect(actions[0]).toHaveProperty("type", SET_DATASOURCE_COLUMNS);
+        expect(actions[1]).toHaveProperty("type", "@@redux-form/INITIALIZE");
         expect(initialize).toHaveBeenCalled();
       });
     });

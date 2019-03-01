@@ -4,6 +4,7 @@ import DashboardConfigPage from "ui/dashboard-config/list/components/DashboardCo
 import {
   fetchServerConfigList,
   editServerConfig,
+  removeServerConfig,
   gotoPluginPage
 } from "state/main/actions";
 
@@ -17,7 +18,7 @@ export const mapDispatchToProps = dispatch => ({
   onWillMount: () => dispatch(fetchServerConfigList()),
 
   removeConfigItem: id => {
-    //console.log("removeConfigItem ", id);
+    dispatch(removeServerConfig(id));
   },
 
   editConfigItem: (formName, configItem) => {

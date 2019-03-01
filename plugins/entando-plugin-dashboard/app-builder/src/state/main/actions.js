@@ -2,6 +2,7 @@ import {getRoute, getParams, getSearchParams, gotoRoute} from "@entando/router";
 import {addToast, addErrors, TOAST_ERROR} from "@entando/messages";
 import {formattedText} from "@entando/utils";
 import {formValueSelector, initialize, change} from "redux-form";
+import {get} from "lodash";
 
 import {getLanguages} from "api/appBuilder";
 
@@ -15,10 +16,7 @@ import {
   putDatasourceColumn
 } from "api/dashboardConfig";
 
-import {
-  getWidgetConfigSelector,
-  getWidgetChartConfigSelector
-} from "state/app-builder/selectors";
+import {getWidgetConfigSelector} from "state/app-builder/selectors";
 
 import {
   SET_INFO_PAGE,
@@ -137,21 +135,22 @@ export const gotoPluginPage = pluginPage => (dispatch, getState) => {
   }
 };
 
-export const getTableWidgetConfig = formName => (dispatch, getState) => {
+export const getWidgetConfig = formName => (dispatch, getState) => {
   const state = getState();
   const config = getWidgetConfigSelector(state);
   if (config) {
-    dispatch(fecthDatasourceList(config.serverName));
-    dispatch(setDatasourceColumns(config.columnsArray));
-    dispatch(initialize(formName, config));
-  }
-};
-export const getChartWidgetConfig = formName => (dispatch, getState) => {
-  const state = getState();
-  const config = getWidgetChartConfigSelector(state);
-  if (config) {
     const json = JSON.parse(config.config);
+    const columns = Object.keys(json.columns).reduce((acc, key) => {
+      const obj = {
+        key,
+        value: get(json.columns, `${key}.label`),
+        hidden: get(json.columns, `${key}.hidden`, false)
+      };
+      acc.push(obj);
+      return acc;
+    }, []);
     dispatch(fecthDatasourceList(json.serverName));
+    dispatch(setDatasourceColumns(columns));
     dispatch(initialize(formName, json));
   }
 };

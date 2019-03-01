@@ -71,12 +71,12 @@
   border: 0 solid; }
 
 .Stepper__data-contents {
-  border: 0 solid red;
-  height: 670px; }
+  border: 0px solid red;
+  height: 655px; }
 
 .Stepper__btn-container {
-  border: 0 solid;
-  margin-top: 2em; }
+  border: 0 solid blue;
+  margin-top: 3.5em; }
 
 .Stepper__btn-back {
   margin-right: 3em; }
@@ -254,7 +254,9 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
-  align-items: flex-start; }
+  align-items: flex-start;
+  overflow-y: auto;
+  max-height: 60px; }
 
 .FieldArrayDropDownMultiple__token {
   margin: 2px;
@@ -286,7 +288,7 @@
     padding: 0 !important; }
 
 .GeneralSettings {
-  padding: 3em; }
+  padding: 1em; }
   .GeneralSettings .row {
     border: 0 solid; }
   .GeneralSettings__col {
@@ -375,18 +377,22 @@
     border: 0 solid; }
 
 .SettingsChart {
-  padding: 3em; }
+  padding: 1em;
+  border: 0 solid yellow; }
   .SettingsChart .row:not(:first-child) {
     padding: 1em; }
   .SettingsChart__col {
     border: 0 solid;
     min-height: 200px; }
-  .SettingsChart__form-group {
+  .SettingsChart__form-group.form-group {
     border: 0 solid;
-    min-height: 60px; }
+    margin-bottom: 3px; }
   .SettingsChart__timeformat-container {
     border: 0 solid;
-    padding-left: 1.5em; }
+    padding-left: 1em; }
+  .SettingsChart__timeformat-container .radio {
+    margin-top: 0;
+    margin-bottom: 5px; }
   .SettingsChart__selector-multi:before {
     content: '\25BE' !important;
     position: absolute;

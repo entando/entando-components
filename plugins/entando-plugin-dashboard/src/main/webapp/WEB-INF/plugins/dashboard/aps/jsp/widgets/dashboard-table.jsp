@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
-<%@ taglib prefix="dt" uri="/dashboard-core" %>
+
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
 <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" /> -->
@@ -22,38 +22,23 @@
 <script type="text/javascript" src="<wp:resourceURL />plugins/dashboard/static/js/widgets/table/data/data.js"></script>
 <script type="text/javascript" src="<wp:resourceURL />plugins/dashboard/static/js/widgets/table/table.js"></script>
 
-<dt:currentConfigDashboardTable param="config" var="configTable"/>
+<wp:currentWidget param="config" configParam="config" var="configTable" />
 
         <script>
           $(document).ready(() => {
-            console.log('jQuery ready');
-            const config = "${configTable}".replace(new RegExp("=", "g"), ':');
+            console.log('jQuery ready Table');
+            const config = ${configTable};
             console.log('config : ', config);
-            const configPropertyToJson = (config, property, type) => {
-              const obj = type ==='array' ? [] : {};
-              return config.split(',')
-                .filter(f => f.includes(property))
-                .reduce((acc, item) => {
-                  const data = item.split('.');
-                  const el = data[1].split(':');
-                  type === 'array' ?
-                    acc.push({key: el[0], value: el[1]}) :
-                    acc = {...acc,[el[0]]: el[1]}
-                  return acc;
-                }, obj);
-            };
-            const title = configPropertyToJson(config,'title','object');
+            const { title, columns, options } = config;
             $('#title-table').html(title.en);
-            const options = configPropertyToJson(config,'options','object');
-            const columns = configPropertyToJson(config,'columns','array');
-            const CONFIG_TABLE = {
-              options,
-              columns,
-              data: []
-            }
-            console.log('CONFIG_TABLE: ', CONFIG_TABLE);
-            const table = new org.entando.dashboard.Table("table", CONFIG_TABLE);
-            table.show();
+             const CONFIG_TABLE = {
+               options,
+               columns,
+               data: []
+             }
+             console.log('CONFIG_TABLE: ', CONFIG_TABLE);
+             const table = new org.entando.dashboard.Table("table", CONFIG_TABLE);
+             table.show();
 
           });
         </script>

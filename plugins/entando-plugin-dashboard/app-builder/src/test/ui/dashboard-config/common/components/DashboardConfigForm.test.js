@@ -7,6 +7,7 @@ import {DashboardConfigFormBody} from "ui/dashboard-config/common/components/Das
 
 const props = {
   handleSubmit: jest.fn(),
+  gotoHomePage: jest.fn(),
   testConnection: jest.fn(),
   datasources: [],
   invalid: false,
@@ -31,6 +32,11 @@ describe("DashboardConfigForm", () => {
     const preventDefault = jest.fn();
     component.find("form").simulate("submit", {preventDefault});
     expect(props.handleSubmit).toHaveBeenCalled();
+  });
+
+  it("click cancel button calls gotoHomePage", () => {
+    component.find(".DashboardConfig__btn-cancel").simulate("click");
+    expect(props.gotoHomePage).toHaveBeenCalled();
   });
 
   it("have FieldArray", () => {

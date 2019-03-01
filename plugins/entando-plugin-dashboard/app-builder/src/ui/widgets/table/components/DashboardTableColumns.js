@@ -28,17 +28,6 @@ const renderField = ({input, meta: {touched, error}}) => {
   );
 };
 
-const renderHiddenColum = ({input}) => {
-  return (
-    <input
-      id={input.name}
-      {...input}
-      type="checkbox"
-      className={"DashboardTableColumns__th-column-is-hidden"}
-    />
-  );
-};
-
 const DragHandle = sortableHandle(() => (
   <div className="DashboardTableColumns__th-editable-label-dnd" />
 ));
@@ -53,28 +42,32 @@ const SortableItem = SortableElement(({item, showColumnHandler}) => (
         validate={[maxLength15]}
       />
       <div className="DashboardTableColumns__th-editable-label-visible">
-        {showColumn(item.key)}
+        <OverlayTrigger
+          overlay={
+            <Tooltip id={`${item.key}-overlay`}>
+              <FormattedMessage
+                id={`plugin.table.column.tooltip.${
+                  item.key
+                } ? "show" : "hidden"`}
+              />
+            </Tooltip>
+          }
+          placement="top"
+          trigger={["hover"]}
+          rootClose={false}
+        >
+          <Field
+            component="input"
+            type="checkbox"
+            id={`${item.key}.hidden`}
+            name={`${item.key}.hidden`}
+            className="DashboardTableColumns__th-column-is-hidden"
+          />
+        </OverlayTrigger>
       </div>
     </div>
   </th>
 ));
-
-const showColumn = name => (
-  <OverlayTrigger
-    overlay={
-      <Tooltip id={name}>
-        <FormattedMessage
-          id={`plugin.table.column.tooltip.${name} ? "show" : "hidden"`}
-        />
-      </Tooltip>
-    }
-    placement="top"
-    trigger={["hover"]}
-    rootClose={false}
-  >
-    <Field component={renderHiddenColum} name={`${name}.hidden`} />
-  </OverlayTrigger>
-);
 
 const SortableList = SortableContainer(({items, showColumnHandler}) => {
   return (

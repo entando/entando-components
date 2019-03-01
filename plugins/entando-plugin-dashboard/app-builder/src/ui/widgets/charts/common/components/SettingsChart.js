@@ -100,6 +100,12 @@ class SettingsChart extends Component {
   }
 
   rederAxisX() {
+    const {
+      optionColumns,
+      datasourceSelected,
+      optionColumnXSelected,
+      axisXType
+    } = this.props;
     return (
       <Col xs={4} className="SettingsChart__col">
         <FormGroup className="SettingsChart__form-group">
@@ -112,19 +118,39 @@ class SettingsChart extends Component {
           "plugin.chart.labelXaxis",
           "plugin.table.requirement"
         )}
-        <FormGroup>
+        <FieldArray
+          className="SettingsChart__column-selected"
+          name="columns.x"
+          idKey={datasourceSelected}
+          component={FieldArrayDropDownMultiple}
+          optionColumns={optionColumns}
+          optionColumnSelected={optionColumnXSelected}
+        />
+        <FormGroup className="SettingsChart__form-group">
           <Field name="axis.x.type" component="select" className="form-control">
             <option value="indexed">Default</option>
-            <option value="timeseries">Time</option>
+            <option value="timeseries">Timeseries</option>
+            <option value="customTime">Custom Time</option>
           </Field>
         </FormGroup>
-        {this.props.axisXType === "timeseries" ? this.chooseTimeFormat() : null}
+        {axisXType === "timeseries" ? this.chooseTimeFormat() : null}
+        {axisXType === "customTime"
+          ? wrapInputTextField(
+              "data.xFormat",
+              "plugin.chart.customTime",
+              "plugin.chart.customTime.help"
+            )
+          : null}
       </Col>
     );
   }
 
   rederAxisY() {
-    const {optionColumns, optionColumnYSelected} = this.props;
+    const {
+      optionColumns,
+      datasourceSelected,
+      optionColumnYSelected
+    } = this.props;
 
     return (
       <Col xs={4} className="SettingsChart__col">
@@ -141,6 +167,7 @@ class SettingsChart extends Component {
         <FieldArray
           className="SettingsChart__column-selected"
           name="columns.y"
+          idKey={datasourceSelected}
           component={FieldArrayDropDownMultiple}
           optionColumns={optionColumns}
           optionColumnSelected={optionColumnYSelected}
@@ -150,7 +177,11 @@ class SettingsChart extends Component {
   }
 
   rederAxisY2() {
-    const {optionColumns, optionColumnY2Selected} = this.props;
+    const {
+      optionColumns,
+      datasourceSelected,
+      optionColumnY2Selected
+    } = this.props;
     return (
       <Col xs={4} className="SettingsChart__col">
         <FormGroup className="SettingsChart__form-group">
@@ -177,6 +208,7 @@ class SettingsChart extends Component {
         <FieldArray
           className="SettingsChart__column-selected"
           name="columns.y2"
+          idKey={datasourceSelected}
           component={FieldArrayDropDownMultiple}
           optionColumns={optionColumns}
           optionColumnSelected={optionColumnY2Selected}

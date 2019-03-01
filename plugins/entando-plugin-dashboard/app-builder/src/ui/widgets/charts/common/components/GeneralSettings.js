@@ -197,7 +197,7 @@ const GeneralSettings = ({typeChart, chart}) => {
             <Field
               type="number"
               component={renderField}
-              name="size.with"
+              name="size.width"
               label="common.width"
               min="0"
               max="9999"

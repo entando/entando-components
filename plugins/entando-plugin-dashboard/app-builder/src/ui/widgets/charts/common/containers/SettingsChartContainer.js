@@ -8,11 +8,13 @@ import {getDatasourceColumns} from "state/main/selectors";
 const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector(ownProps.formName);
   return {
+    datasourceSelected: selector(state, "datasource"),
     optionColumns: getDatasourceColumns(state),
     axisY2Show: selector(state, "axis.y2.show"),
     axisXType: selector(state, "axis.x.type"),
     selectedColumnsY: selector(state, "selectedColumnsY") || [],
     selectedColumnsY2: selector(state, "selectedColumnsY2") || [],
+    optionColumnXSelected: selector(state, "columns.x") || [],
     optionColumnYSelected: selector(state, "columns.y") || [],
     optionColumnY2Selected: selector(state, "columns.y2") || []
   };

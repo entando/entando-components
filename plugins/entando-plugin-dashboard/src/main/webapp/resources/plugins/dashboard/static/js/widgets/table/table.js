@@ -4,8 +4,17 @@ org.entando.dashboard = org.entando.dashboard || {};
 org.entando.dashboard.Table = class {
   constructor(id, config) {
     console.log("Table - config", config);
-    const {columns, data, options} = config;
+    const {data, options} = config;
     this.id = id;
+    const columns = Object.keys(config.columns).reduce((acc, key) => {
+      const obj = {
+        value: config.columns[key].label,
+        hidden: config.columns[key].hidden || false
+      };
+      acc.push(obj);
+      return acc;
+    }, []);
+
     const columnsDefs = columns.filter(f => !f.hidden);
     this.config = {
       data: data.reduce((acc, item) => {

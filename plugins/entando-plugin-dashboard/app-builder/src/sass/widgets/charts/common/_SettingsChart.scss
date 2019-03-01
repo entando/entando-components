@@ -1,11 +1,9 @@
 .SettingsChart {
-  padding: 3em;
-
+  padding: 1em;
+  border: 0 solid yellow;
   // .bootstrap-switch-label {
   //   visibility: hidden;
   // }
-
-
   .row:not(:first-child) {
     padding: 1em;
   }
@@ -15,14 +13,19 @@
     min-height: 200px;
   }
 
-  &__form-group {
+  &__form-group.form-group {
     border: 0 solid;
-    min-height: 60px;
+    margin-bottom: 3px;
   }
 
   &__timeformat-container {
     border: 0 solid;
-    padding-left: 1.5em;
+    padding-left: 1em;
+  }
+
+  &__timeformat-container .radio {
+    margin-top: 0;
+    margin-bottom: 5px;
   }
 
   &__selector-multi:before {

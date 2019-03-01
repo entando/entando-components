@@ -31,7 +31,6 @@ describe("DashboardConfigPageContainer", () => {
     });
     it("maps servers property state in DashboardConfigPage", () => {
       expect(props).toHaveProperty("serverList");
-      //expect(props).toHaveProperty("serverList", DASHBOARD_CONFIG_LIST);
       expect(props.serverList).toEqual(
         expect.arrayContaining(DASHBOARD_CONFIG_LIST)
       );

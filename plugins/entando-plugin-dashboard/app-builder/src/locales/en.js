@@ -65,6 +65,7 @@ export default {
       "hold-on to move coloumn, double click to edit labels.",
     "plugin.alert.error": "Error during fetch data",
     "plugin.entando-dashboard": "Dashboard Plugin",
+    "plugin.config.id": "Id",
     "plugin.config.settings": "General Settings",
     "plugin.config.serverConfigure":
       "Check your Server to configure these fields",
@@ -102,6 +103,9 @@ export default {
     "plugin.chart.timeFormat-Y-M-D": "year-month-day",
     "plugin.chart.timeFormat-D-M-Y": "day-month-year",
     "plugin.chart.timeFormat-M-D-Y": "month-day-year",
+    "plugin.chart.customTime": "Custom format",
+    "plugin.chart.customTime.help":
+      "Set a format to parse string specified. see D3.js / Time Formatting",
     "plugin.chart.dropDownMulti.titleHelper": "Item",
     "plugin.chart.dropDownMulti.title": "Select Item",
     "plugin.chart.generalSettings": "General Settings",

@@ -1,54 +1,44 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-import {isEqual} from "lodash";
 import {formattedText} from "@entando/utils";
 import DropdownMultiple from "ui/common/DropdownMultiple";
 
 class FieldArrayDropDownMultiple extends Component {
   constructor(props) {
     super(props);
+    // this.state = {
+    //   columns: props.optionColumns || [],
+    //   searchValue: "",
+    //   idKey: props.idKey
+    // };
     this.state = {
-      columns: props.optionColumns || [],
+      columns: [],
       searchValue: "",
-      idKey: props.idKey
+      idKey: null
     };
     this.toogleSelected = this.toogleSelected.bind(this);
     this.searchItem = this.searchItem.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
   }
 
-  static getDerivedStateFromProps(nextProps, state) {
-    const {idKey, optionColumns, fields} = nextProps;
-    // console.log("getDerivedStateFromProps props idKey ", nextProps.idKey);
-    // console.log("getDerivedStateFromProps state idKey ", state.idKey);
-    if (optionColumns.length > 0 && state.columns.length === 0) {
-      //console.log("Init");
-      return {
-        idKey,
-        columns: optionColumns.map((m, index) => ({
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      (prevProps.optionColumns.length > 0 && prevState.columns.length === 0) ||
+      prevProps.idKey !== prevState.idKey
+    ) {
+      if (prevProps.idKey !== prevState.idKey) {
+        prevProps.fields.removeAll();
+      }
+      this.setState({
+        idKey: prevProps.idKey,
+        columns: prevProps.optionColumns.map((m, index) => ({
           id: index,
           key: m.key,
           value: m.value,
           selected: false
         }))
-      };
-    } else if (idKey !== state.idKey) {
-      if (!isEqual(optionColumns, state.columns)) {
-        // console.log("cambio datasource");
-        // console.log("state optionColumns", state.columns);
-        fields.removeAll();
-        return {
-          idKey,
-          columns: optionColumns.map((m, index) => ({
-            id: index,
-            key: m.key,
-            value: m.value,
-            selected: false
-          }))
-        };
-      }
+      });
     }
-    return null;
   }
 
   toogleSelected(id, key) {
