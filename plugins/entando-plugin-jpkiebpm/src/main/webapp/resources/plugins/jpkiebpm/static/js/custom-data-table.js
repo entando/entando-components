@@ -77,6 +77,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
         columnDefs: buttonsColumnDef,
         scrollX: true,
         dom: 'lfrtBip',
+                   
         buttons: [
             {
                 "extend": 'copy',
@@ -85,7 +86,8 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
             },
             {
                 "extend": 'excel',
-                //"text": '<i class="fa fa-file-excel-o"></i>',
+                //"text": '<i class
+                //="fa fa-file-excel-o"></i>',
                 "titleAttr": 'Excel'
             },
             {
@@ -93,7 +95,11 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
                 //"text": '<i class="fa fa-file-text-o"></i>',
                 "titleAttr": 'CSV'
             }
-        ]
+        ],
+        fixedColumns: {
+            leftColumns: 0,
+            rightColumns: 1
+        },
     };
 
 
@@ -115,12 +121,11 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
     }
 
     if (extraConfig && extraConfig.buttons && Array.isArray(extraConfig.buttons)) {
-
         extraConfig.buttons.forEach(function(btn, i) {
             if (!btn.onClick || typeof btn.onClick !== 'function') {
                 return;
             }
-            $(idTable+ ' tbody').on('click','.btn'+i,function(ev){
+            $(idTable+ '_wrapper tbody').on('click','.btn'+i,function(ev){
                 ev.preventDefault();
                 ev.stopPropagation();
                 btn.onClick(ev, table.row($(this).closest('tr')).data());
