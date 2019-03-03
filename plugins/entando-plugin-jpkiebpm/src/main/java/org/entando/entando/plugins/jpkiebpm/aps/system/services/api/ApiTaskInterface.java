@@ -25,7 +25,6 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.api;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
@@ -41,6 +40,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.KieApiMa
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieApiClaimTask;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
@@ -55,7 +55,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieApiClaimTask;
 
 public class ApiTaskInterface extends KieApiManager {
 
@@ -72,192 +71,6 @@ public class ApiTaskInterface extends KieApiManager {
         fieldMandatory.put("processInstanceId", Boolean.TRUE);
         fieldMandatory.put("id", Boolean.TRUE);
         fieldMandatory.put("processDefinitionId", Boolean.TRUE);
-    }
-
-    public JAXBTask getTask(Properties properties) throws Throwable {
-        JAXBTask resTask = null;
-        final String idString = properties.getProperty("id");
-        final String page = properties.getProperty("page");
-        final String pageSize = properties.getProperty("pageSize");
-        final String user = properties.getProperty("user");
-        HashMap<String, String> opt = new HashMap<>();
-        int id; // parameter appended to the original payload
-
-        try {
-            id = Integer.parseInt(idString);
-            if (StringUtils.isNotBlank("page")) {
-                opt.put("page", page);
-            }
-            if (StringUtils.isNotBlank("pageSize")) {
-                opt.put("pageSize", pageSize);
-            }
-            if (StringUtils.isNotBlank("user")) {
-                opt.put("user", user);
-            }
-        } catch (NumberFormatException e) {
-            throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Invalid number format for 'id' parameter - '" + idString + "'", Response.Status.CONFLICT);
-        }
-
-        //TODO JPW check this
-        String configId = properties.getProperty("configId");
-        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
-        final String information = bpmWidgetInfo.getInformationDraft();
-        final ApsProperties config = new ApsProperties();
-        config.loadFromXml(information);
-        String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
-        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
-
-        try {
-            List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, "", opt);
-            for (KieTask task : rawList) {
-                if (id == task.getId()) {
-                    resTask = new JAXBTask(task);
-                    task.setConfigId(bpmConfig.getId());
-                    break;
-                }
-            }
-            if (null == resTask) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Task with id '" + idString + "' does not exist", Response.Status.CONFLICT);
-            }
-        } catch (Exception ex) {
-            logger.error("Error in getTask", ex);
-            throw ex;
-        }
-        return resTask;
-    }
-
-    public JAXBTaskList getUserTask(Properties properties) throws Throwable {
-
-        final String user = properties.getProperty("user");
-        HashMap<String, String> opt = new HashMap<>();
-        int id; // parameter appended to the original payload
-
-        if (StringUtils.isNotBlank("user")) {
-            opt.put("user", user);
-        }
-
-        //TODO JPW check this
-        String configId = properties.getProperty("configId");
-        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
-        final String information = bpmWidgetInfo.getInformationDraft();
-        final ApsProperties config = new ApsProperties();
-        config.loadFromXml(information);
-        String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
-        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
-
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, "", opt);
-        JAXBTaskList taskList = new JAXBTaskList();
-        List<JAXBTask> list = new ArrayList<>();
-        for (KieTask raw : rawList) {
-            JAXBTask task = new JAXBTask(raw);
-            task.setConfigId(bpmConfig.getId());
-            list.add(task);
-            taskList.setContainerId(task.getContainerId());
-            taskList.setOwner(user);
-            taskList.setProcessId(task.getProcessDefinitionId());
-        }
-        taskList.setList(list);
-        this.startTasks(bpmConfig, rawList, opt);
-        if (taskList.getList().isEmpty()) {
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Tasks for user '" + user + "' does not exist", Response.Status.CONFLICT);
-        }
-
-        //Filter the user tasks by process id configured on the widget.
-        filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
-        return taskList;
-    }
-
-    public JAXBTaskList getLegalWorkerTask(Properties properties) throws Throwable {
-        HashMap<String, String> opt = new HashMap<>();
-        final String pageSize = properties.getProperty("pageSize");
-        final String page = properties.getProperty("page");
-        final String user = properties.getProperty("user");
-        int id; // parameter appended to the original payload
-
-        //TODO JPW check this
-        String configId = properties.getProperty("configId");
-        if (StringUtils.isNotBlank(page)) {
-            opt.put("page", page);
-        }
-        if (StringUtils.isNotBlank(pageSize)) {
-            opt.put("pageSize", pageSize);
-        } else {
-            opt.put("pageSize", "5000");
-        }
-
-        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
-        final String information = bpmWidgetInfo.getInformationDraft();
-        final ApsProperties config = new ApsProperties();
-        config.loadFromXml(information);
-        String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
-        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
-
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForUser(bpmConfig, KieBpmSystemConstants.LEGAL_WORKER, opt);
-        final JAXBTaskList taskList = new JAXBTaskList();
-        List<JAXBTask> list = new ArrayList<>();
-        if (null != rawList
-                && !rawList.isEmpty()) {
-            for (KieTask raw : rawList) {
-                JAXBTask task = new JAXBTask(raw);
-                task.setConfigId(bpmConfig.getId());
-                list.add(task);
-                taskList.setContainerId(task.getContainerId());
-                taskList.setOwner(user);
-                taskList.setProcessId(task.getProcessDefinitionId());
-            }
-        }
-
-        //Filter the user tasks by process id configured on the widget.
-        filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
-        taskList.setList(list);
-        return taskList;
-    }
-
-    public JAXBTaskList getKnowledgeWorkerTask(Properties properties) throws Throwable {
-        HashMap<String, String> opt = new HashMap<>();
-        final String pageSize = properties.getProperty("pageSize");
-        final String page = properties.getProperty("page");
-        final String user = properties.getProperty("user");
-
-        //TODO JPW check this
-        String configId = properties.getProperty("configId");
-        int id; // parameter appended to the original payload
-
-        if (StringUtils.isNotBlank(page)) {
-            opt.put("page", page);
-        }
-        if (StringUtils.isNotBlank(pageSize)) {
-            opt.put("pageSize", pageSize);
-        } else {
-            opt.put("pageSize", "5000");
-        }
-
-        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
-        final String information = bpmWidgetInfo.getInformationDraft();
-        final ApsProperties config = new ApsProperties();
-        config.loadFromXml(information);
-        String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
-        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
-
-        List<KieTask> rawList = this.getKieFormManager().getHumanTaskListForUser(bpmConfig, KieBpmSystemConstants.KNOWLEDGE_WORKER, opt);
-        final JAXBTaskList taskList = new JAXBTaskList();
-        List<JAXBTask> list = new ArrayList<>();
-        if (null != rawList
-                && !rawList.isEmpty()) {
-            for (KieTask raw : rawList) {
-                JAXBTask task = new JAXBTask(raw);
-                task.setConfigId(bpmConfig.getId());
-                list.add(task);
-                taskList.setContainerId(task.getContainerId());
-                taskList.setOwner(user);
-                taskList.setProcessId(task.getProcessDefinitionId());
-            }
-        }
-
-        //Filter the user tasks by process id configured on the widget.
-        filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
-        taskList.setList(list);
-        return taskList;
     }
 
     public String getDiagram(Properties properties) {
@@ -328,7 +141,6 @@ public class ApiTaskInterface extends KieApiManager {
                         tasksCallables.add(taskCallable);
 
                     }
-
 
                     executorService.invokeAll(tasksCallables);
                     executorService.shutdown();
