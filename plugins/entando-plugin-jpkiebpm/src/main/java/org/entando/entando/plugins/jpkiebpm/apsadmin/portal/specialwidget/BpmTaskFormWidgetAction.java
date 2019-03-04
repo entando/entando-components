@@ -14,38 +14,31 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.common.entity.*;
-import com.agiletec.aps.system.common.entity.model.*;
-import com.agiletec.aps.system.common.entity.model.attribute.*;
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
-import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
-import org.entando.entando.aps.system.services.dataobject.model.DataObject;
-import org.entando.entando.aps.system.services.dataobjectmodel.*;
-import org.entando.entando.aps.system.services.widgettype.*;
+import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
-import org.slf4j.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
-
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.convertKieContainerToListToJson;
 import com.opensymphony.xwork2.Preparable;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverrideInEditing;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
@@ -54,9 +47,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.OverrideList;
 
-public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements BpmSourceAndProcessSelector<KieProcess>, Preparable {
+public class BpmTaskFormWidgetAction extends SimpleWidgetConfigAction implements BpmSourceAndProcessSelector<KieProcess>, Preparable {
 
-    private static final Logger logger = LoggerFactory.getLogger(BpmFormWidgetAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(BpmTaskFormWidgetAction.class);
     private String processId;
     private String containerId;
     private String processPath;
@@ -71,11 +64,13 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
     private List<KieProcess> processes;
     private List<KieFormOverrideInEditing> overrides;
     private Integer overrideToDeleteIndex;
+    private KieBpmConfig config;
+
 
     @Autowired
     private DataUXBuilder uXBuilder;
 
-    private BpmSourceAndProcessSelectorHelper<BpmFormWidgetAction, KieProcess> selectorHelper;
+    private BpmSourceAndProcessSelectorHelper<BpmTaskFormWidgetAction, KieProcess> selectorHelper;
 
     /**
      * This method is called before each action.
@@ -83,7 +78,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
     @Override
     public void prepare() throws ApsSystemException {
 
-        selectorHelper = new BpmSourceAndProcessSelectorHelper<BpmFormWidgetAction, KieProcess>(this) {
+        selectorHelper = new BpmSourceAndProcessSelectorHelper<BpmTaskFormWidgetAction, KieProcess>(this) {
 
             @Override
             public void unsetAll() {
@@ -127,7 +122,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
         }
     }
 
-    @Override
+    //@Override
     protected void createValuedShowlet() throws Exception {
         // If the widget is not new we need to retrieve the widgetInfoId but not
         // the WidgetInfo itself (because we are overwriting it) so here we call
@@ -154,72 +149,6 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
 
         this.storeKieFormOverrides(widgetInfo.getId());
 
-        WidgetType type = widget.getType();
-        if (type.hasParameter(KieBpmSystemConstants.WIDGET_PARAM_DATA_TYPE_CODE)
-                && type.hasParameter(KieBpmSystemConstants.WIDGET_PARAM_DATA_UX_ID)) {
-            String xml = widgetInfo.getInformationDraft();
-            ApsProperties props = new ApsProperties();
-            props.loadFromXml(xml);
-            String processId = props.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID);
-            String containerId = props.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID);
-            String kieSourceId = props.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
-            String title = containerId;
-
-            //DataModel - start
-            KieBpmConfig config = this.getFormManager().getKieServerConfigurations().get(kieSourceId);
-            KieProcessFormQueryResult kpfr = this.getFormManager().getProcessForm(config, containerId, processId);
-
-            //add missing fields FIXME this should be in the form retrieved
-            //kpfr = FSIDemoHelper.addMissinFields(kpfr);
-            Map<String, IApsEntity> types = this.getDataObjectManager().getEntityPrototypes();
-            String typeCode = null;
-            IApsEntity entityType = null;
-            for (IApsEntity etype : types.values()) {
-                if (etype.getTypeDescription().contains(processId)) {
-                    entityType = etype;
-                    typeCode = etype.getTypeCode();
-                }
-            }
-            if (entityType == null) {
-                typeCode = EntityNaming.generateEntityName(types);
-                entityType = (IApsEntity) this.getDataObjectManager().getEntityClass().newInstance();
-                entityType.setTypeCode(typeCode);
-                entityType.setTypeDescription(processId + "_" + containerId);
-                this.addAttributesToEntityType(entityType, kpfr);
-
-                if(selectorHelper.loadProcesses()) {
-                    for (KieProcess proc : processes) {
-                        if (proc.getProcessId().equalsIgnoreCase(processId)) {
-                            title = proc.getProcessName();
-                        }
-                    }
-                    try {
-                        this.processTitle(title, this.getCurrentLang().getCode());
-                    } catch (ApsSystemException ex) {
-                        java.util.logging.Logger.getLogger(BpmFormWidgetAction.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                ((IEntityTypesConfigurer) this.getDataObjectManager()).addEntityPrototype(entityType);
-            }
-            DataObjectModel dataModel = new DataObjectModel();
-            //dataModel.setId(0); TODO gestire id
-            dataModel.setDataType(typeCode);
-            //dataModel.setDescription(processId + "_" + containerId); exceeds 50 chars limit
-            dataModel.setDescription("Model for " + containerId);
-
-            String dataUx = uXBuilder.createDataUx(kpfr, widgetInfo.getId(), containerId, processId, title);
-            dataModel.setShape(dataUx);
-            this.getDataObjectModelManager().addDataObjectModel(dataModel);
-
-            ((DataObject) entityType).setDefaultModel(String.valueOf(dataModel.getId()));
-            ((DataObject) entityType).setListModel(String.valueOf(dataModel.getId()));
-            ((IEntityTypesConfigurer) this.getDataObjectManager()).updateEntityPrototype(entityType);
-
-            widget.getConfig().setProperty(KieBpmSystemConstants.WIDGET_PARAM_DATA_TYPE_CODE, entityType.getTypeCode());
-            widget.getConfig().setProperty(KieBpmSystemConstants.WIDGET_PARAM_DATA_UX_ID, String.valueOf(dataModel.getId()));
-            //DataModel - end
-        }
-
         widget.getConfig().setProperty(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID, String.valueOf(widgetInfo.getId()));
         this.setWidget(widget);
     }
@@ -230,147 +159,6 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
 
     public void setuXBuilder(DataUXBuilder uXBuilder) {
         this.uXBuilder = uXBuilder;
-    }
-
-    private void addAttributesToEntityType(IApsEntity entityType, KieProcessFormQueryResult form) {
-        if (null != form && null != form.getFields()) {
-            if (form.getFields().size() > 0) {
-                try {
-                    if (form.getFields().get(0).getName().contains("_")) {
-                        this.processForm(form.getFields().get(0), this.getCurrentLang().getCode());
-                    } else {
-                        String formName = null;
-                        if (KieApiUtil.getFieldProperty(form.getProperties(), "name").contains(".")) {
-                            formName = KieApiUtil.getFieldProperty(form.getProperties(), "name")
-                                    .substring(0, KieApiUtil.getFieldProperty(form.getProperties(), "name").indexOf("."));
-                        } else {
-                            formName = KieApiUtil.getFieldProperty(form.getProperties(), "name");
-                        }
-                        String formLabel = KieApiUtil.getI18nFormLabelProperty(formName);
-                        if (null == this.getI18nManager().getLabel(formLabel, this.getCurrentLang().getCode())) {
-                            this.saveEntandoLabel(formLabel, formName);
-                        }
-                    }
-                } catch (ApsSystemException ex) {
-                    logger.error("error on addAttributesToEntityType {}", ex);
-                }
-            }
-            for (KieProcessFormField field : form.getFields()) {
-                logger.debug("addAttributeToEntityType {}", field.getName());
-                this.addAttributeToEntityType(entityType, field);
-            }
-            if (null != form.getNestedForms()) {
-                for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
-                    logger.debug("addAttributeToEntityType getNestedForms");
-                    this.addAttributesToEntityType(entityType, subForm);
-                }
-            }
-        }
-    }
-
-    private void addAttributeToEntityType(IApsEntity entityType, KieProcessFormField field) {
-        String fieldRequired = KieApiUtil.getFieldProperty(field, "fieldRequired");
-        boolean req = (fieldRequired != null && fieldRequired.equalsIgnoreCase("true"));
-
-        if (field.getType().equalsIgnoreCase("TextBox")
-                || (field.getType().equalsIgnoreCase("TextArea"))
-                || (field.getType().equalsIgnoreCase("InputText"))
-                || (field.getType().equalsIgnoreCase("ListBox"))
-                || (field.getType().equalsIgnoreCase("RadioGroup"))) {
-            MonoTextAttribute text = (MonoTextAttribute) this.getAttributePrototype("Monotext");
-            text.setName(field.getName());
-            text.setDefaultLangCode(this.getCurrentLang().getCode());
-            text.setRequired(req);
-            entityType.addAttribute(text);
-        }
-        if (field.getType().equalsIgnoreCase("IntegerBox") || field.getType().equalsIgnoreCase("InputTextInteger")
-                || field.getType().equalsIgnoreCase("InputTextFloat") || field.getType().equalsIgnoreCase("FloatBox")) {
-            NumberAttribute number = (NumberAttribute) this.getAttributePrototype("Number");
-            number.setName(field.getName());
-            number.setDefaultLangCode(this.getCurrentLang().getCode());
-            number.setRequired(req);
-            entityType.addAttribute(number);
-        }
-
-        if (field.getType().equalsIgnoreCase("CheckBox")) {
-            BooleanAttribute bool = (BooleanAttribute) this.getAttributePrototype("Boolean");
-            bool.setName(field.getName());
-            bool.setDefaultLangCode(this.getCurrentLang().getCode());
-            bool.setRequired(req);
-            entityType.addAttribute(bool);
-        }
-        if (field.getType().equalsIgnoreCase("DatePicker")) {
-            DateAttribute date = (DateAttribute) this.getAttributePrototype("Date");
-            date.setName(field.getName());
-            date.setDefaultLangCode(this.getCurrentLang().getCode());
-            date.setRequired(req);
-            entityType.addAttribute(date);
-        }
-        if (field.getType().equalsIgnoreCase("MultipleSelector")) {
-
-            MonoTextAttribute text = (MonoTextAttribute) this.getAttributePrototype("Monotext");
-            text.setName(field.getName());
-            text.setDefaultLangCode(this.getCurrentLang().getCode());
-            text.setRequired(req);
-
-            MonoListAttribute list = (MonoListAttribute) this.getAttributePrototype("Monolist");
-            list.setName(field.getName());
-            list.setDefaultLangCode(this.getCurrentLang().getCode());
-            list.setNestedAttributeType(text);
-            list.setRequired(req);
-
-            entityType.addAttribute(list);
-        }
-
-        try {
-            this.processField(field, this.getCurrentLang().getCode());
-        } catch (ApsSystemException ex) {
-            logger.debug("Errpr processing field {}", ex);
-        }
-    }
-
-    private void processField(KieProcessFormField field, String langCode) throws ApsSystemException {
-        String bpmLabel = KieApiUtil.getFieldProperty(field, "label");
-        if (org.apache.commons.lang.StringUtils.isNotBlank(bpmLabel)) {
-            String fieldName = KieApiUtil.getI18nLabelProperty(field);
-            if (null == this.getI18nManager().getLabel(fieldName, langCode)) {
-                this.saveEntandoLabel(fieldName, bpmLabel);
-            }
-        }
-    }
-
-    private void processForm(KieProcessFormField field, String langCode) throws ApsSystemException {
-        String formLabel = KieApiUtil.getI18nFormLabelProperty(field);
-        if (org.apache.commons.lang.StringUtils.isNotBlank(formLabel)) {
-            String formValue = KieApiUtil.getI18nFormLabelValue(field);
-            if (null == this.getI18nManager().getLabel(formLabel, langCode)) {
-                this.saveEntandoLabel(formLabel, formValue);
-            }
-        }
-    }
-
-    private void processTitle(String containerId, String langCode) throws ApsSystemException {
-        String titleLabel = KieApiUtil.getI18nTitleLabelProperty(containerId);
-        if (org.apache.commons.lang.StringUtils.isNotBlank(titleLabel)) {
-            String titleValue = KieApiUtil.getI18nTitleLabelValue(containerId);
-            if (null == this.getI18nManager().getLabel(titleLabel, langCode)) {
-                this.saveEntandoLabel(titleLabel, titleValue);
-            }
-        }
-    }
-
-    protected void saveEntandoLabel(String fieldName, String bpmLabel) throws ApsSystemException {
-        ApsProperties apsLabels = new ApsProperties();
-        for (Lang lang : this.getLangManager().getLangs()) {
-            apsLabels.put(lang.getCode(), bpmLabel);
-        }
-        this.getI18nManager().addLabelGroup(fieldName, apsLabels);
-    }
-
-    protected AttributeInterface getAttributePrototype(String typeCode) {
-        IEntityManager entityManager = this.getDataObjectManager();
-        Map<String, AttributeInterface> attributeTypes = entityManager.getEntityAttributePrototypes();
-        return attributeTypes.get(typeCode);
     }
 
     @Override
@@ -470,25 +258,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
         KieFormOverride model = this.getKieFormOverrideManager().getKieFormOverride(id);
         return model;
     }
-
-    public List<KieProcessFormField> getFields() throws ApsSystemException {
-        String[] params = this.getProcessPath().split("@");
-        String processId = params[0];
-        String containerId = params[1];
-        String kieSourceId = params[2];
-
-        KieBpmConfig config = this.formManager.getKieServerConfigurations().get(kieSourceId);
-        logger.info("config {}",config.getName());
-        logger.info("containerId {}", containerId);
-        logger.info("processId {}", processId);
-        logger.info("formManager {}", formManager);
-
-        KieProcessFormQueryResult form = this.formManager.getProcessForm(config, containerId, processId);
-        List<KieProcessFormField> fields = new ArrayList<>();
-        this.addFields(form, fields);
-        return fields;
-    }
-
+    
     @Override
     public Map<String, KieBpmConfig> getKnowledgeSource() {
         return knowledgeSource;
@@ -774,6 +544,14 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
             return FAILURE;
         }
         return SUCCESS;
+    }
+
+    public KieBpmConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(KieBpmConfig config) {
+        this.config = config;
     }
 
     public static class FieldDatatable {

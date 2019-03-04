@@ -6,9 +6,10 @@
             </legend>
         <#else> 
         </#if>
+        <div class="fields">
+
         <#if section.fields??>
             <#list section.fields as field>
-        <div class="fields">
                 <#switch field.typePAM>
                 <#case "TextBox">
                     <#include "/InputFieldTextBox.ftl">
@@ -50,8 +51,8 @@
                     <#include "/InputFieldTextBox.ftl">
                     <#break>
                 </#switch>
-            </div>
             </#list>
         </#if>
+        </div>
         </fieldset>
     </div>
