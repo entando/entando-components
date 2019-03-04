@@ -284,7 +284,10 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             
             
             Map < String, String> toBpmStrings = toBpm.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (String) e.getValue()));
+            
+            logger.info("*********** inputtoBpmStrings {} ", toBpmStrings.toString());
 
+            
             final String result = this.getFormManager().completeHumanFormTask(config, containerId, processId, Long.valueOf(taskId), toBpmStrings);
             logger.info("Result {} ", result);
       
