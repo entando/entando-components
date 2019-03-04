@@ -75,7 +75,6 @@ public abstract class DigitalExchangeAbstractJobExecutor implements DigitalExcha
         job.setStatus(JobStatus.COMPLETED);
         job.setEnded(new Date());
         consumer.accept(job);
-
     }
 
     protected void reloadSystem() {
@@ -89,5 +88,4 @@ public abstract class DigitalExchangeAbstractJobExecutor implements DigitalExcha
 
     @Override
     public abstract void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> consumer) throws JobExecutionException;
-
 }

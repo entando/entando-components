@@ -24,7 +24,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -36,16 +38,20 @@ import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeBaseCall;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.aps.system.services.digitalexchange.client.PagedDigitalExchangeCall;
+import org.entando.entando.aps.system.services.digitalexchange.client.SimpleDigitalExchangeCall;
 import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentListProcessor;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.RestClientResponseException;
 
 @org.springframework.stereotype.Component
 public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobExecutor {
@@ -54,8 +60,8 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
 
     @Autowired
     public DigitalExchangeInstallExecutor(DigitalExchangesClient client, ComponentStorageManager storageManager,
-                                          DatabaseManager databaseManager, InitializerManager initializerManager,
-                                          CommandExecutor commandExecutor) {
+            DatabaseManager databaseManager, InitializerManager initializerManager,
+            CommandExecutor commandExecutor) {
         super(client, storageManager, databaseManager, initializerManager, commandExecutor);
     }
 
@@ -65,7 +71,7 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
         //TODO defines steps and percentages as Enums
         double steps = 6;
         int currentStep = 0;
-        
+
         fillComponentInfo(job);
         job.setProgress(++currentStep / steps);
         updater.accept(job);
@@ -87,7 +93,6 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
         updater.accept(job);
 
         completeJob(job, updater);
-
     }
 
     private void fillComponentInfo(DigitalExchangeJob job) {
@@ -117,7 +122,7 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
         if (components.size() != 1) {
             throw new JobExecutionException("Found " + components.size() + " components for " + job.getComponentId());
         }
-        
+
         DigitalExchangeComponent component = components.get(0);
         job.setComponentName(component.getName());
         job.setComponentVersion(component.getVersion());
@@ -131,8 +136,10 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
 
             tempZipPath = Files.createTempFile(job.getComponentId(), "");
 
-            DigitalExchangeBaseCall call = new DigitalExchangeBaseCall(
-                    HttpMethod.GET, "digitalExchange", "components", job.getComponentId(), "packages");
+            DigitalExchangeBaseCall<InputStream> call = new DigitalExchangeBaseCall<>(
+                    HttpMethod.GET, "digitalExchange", "components", job.getComponentId(), "package");
+
+            call.setErrorResponseHandler(getPackageNotFoundExceptionHandler(job, call));
 
             try (InputStream in = client.getStreamResponse(job.getDigitalExchangeId(), call)) {
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
@@ -151,6 +158,80 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
                 }
             }
         }
+    }
+
+    private Function<RestClientResponseException, Optional<InputStream>> getPackageNotFoundExceptionHandler(
+            DigitalExchangeJob job, DigitalExchangeBaseCall<InputStream> call) {
+
+        return ex -> {
+            if (ex.getRawStatusCode() == HttpStatus.NOT_FOUND.value()) {
+
+                waitForPackageAvailability(job);
+
+                call.setErrorResponseHandler(null);
+                return Optional.of(client.getStreamResponse(job.getDigitalExchangeId(), call));
+            }
+
+            return Optional.empty();
+        };
+    }
+
+    private void waitForPackageAvailability(DigitalExchangeJob job) {
+
+        DigitalExchangeJob packageRetrievalJob = startPackageCreation(job);
+
+        if (packageRetrievalJob.getStatus() == JobStatus.COMPLETED) {
+            // package already available
+            return;
+        }
+
+        boolean packageAvailable = false;
+
+        int attempt = 0;
+        while (!packageAvailable && attempt < 30) {
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ignored) {
+            }
+
+            // Check job status
+            packageAvailable = checkPackageAvailable(job.getDigitalExchangeId(), packageRetrievalJob.getId());
+            attempt++;
+        }
+
+        if (!packageAvailable) {
+            throw new JobExecutionException("Timeout error: the DE spent too much time preparing the package");
+        }
+    }
+
+    private DigitalExchangeJob startPackageCreation(DigitalExchangeJob job) {
+
+        SimpleDigitalExchangeCall<DigitalExchangeJob> packageCreationCall = new SimpleDigitalExchangeCall<>(
+                HttpMethod.POST, new ParameterizedTypeReference<SimpleRestResponse<DigitalExchangeJob>>() {
+        }, "digitalExchange", "components", job.getComponentId(), "package");
+
+        DigitalExchangeJob packageRetrievalJob = client.getSingleResponse(job.getDigitalExchangeId(), packageCreationCall).getPayload();
+
+        if (packageRetrievalJob.getStatus() == JobStatus.ERROR) {
+            throw new JobExecutionException("An error happened when the DE was preparing the package");
+        }
+
+        return packageRetrievalJob;
+    }
+
+    private boolean checkPackageAvailable(String exchangeId, String jobId) {
+        SimpleDigitalExchangeCall<DigitalExchangeJob> jobStatusCall = new SimpleDigitalExchangeCall<>(
+                HttpMethod.GET, new ParameterizedTypeReference<SimpleRestResponse<DigitalExchangeJob>>() {
+        }, "digitalExchange", "jobs", jobId);
+
+        DigitalExchangeJob packageRetrievalJob = client.getSingleResponse(exchangeId, jobStatusCall).getPayload();
+
+        if (packageRetrievalJob.getStatus() == JobStatus.ERROR) {
+            throw new JobExecutionException("An error happened when the DE was preparing the package");
+        }
+
+        return packageRetrievalJob.getStatus() == JobStatus.COMPLETED;
     }
 
     private void extractZip(Path tempZipPath, String componentId) {
@@ -201,6 +282,4 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
             throw new JobExecutionException("Unable to install component", ex);
         }
     }
-
-
 }
