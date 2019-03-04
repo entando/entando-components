@@ -5,12 +5,10 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
 
 
     function getConfigColumnDatatable(items, columnDefinition) {
-        
-                
+                        
         if (columnDefinition) {
             columnDefinition = Array.isArray(columnDefinition) ? columnDefinition : [columnDefinition];
-           
-        
+                  
             var columns = columnDefinition.map(function(col, i) {
                 return {
                     title: col.title || col.data,
@@ -20,8 +18,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
                     targets: col.position || i + 1
                 };
             });
-            
-        
+                    
             return columns;
         }
         console.log('Items received: ' + items);
@@ -35,19 +32,10 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
                 targets: i + 1
             };
         });
-//        columns.unshift({
-//            "class": "details-control",
-//            "orderable": false,
-//            "data": null,
-//            "defaultContent": ""
-//        });
         return columns;
     }
 
-
-
     function getJsonData(items, columns) {
-
         return items.map(function (el) {
             var obj = {};
             columns.forEach(function (key) {
@@ -56,7 +44,6 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
             obj.containerId = containerId;
             return obj;
         });
-
     }
 
     var jsonColumns = getConfigColumnDatatable(items,extraConfig && extraConfig.columnDefinition);
@@ -98,8 +85,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
             },
             {
                 "extend": 'excel',
-                //"text": '<i class
-                //="fa fa-file-excel-o"></i>',
+                //"text": '<i class="fa fa-file-excel-o"></i>',
                 "titleAttr": 'Excel'
             },
             {
@@ -144,79 +130,4 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
             });
         });
     }
-
-    // Array to track the ids of the details displayed rows
-    var detailRows = [];
-
-        $(idTable + ' tbody').on('click', 'tr td.details-control',
-            function (event) {
-                 event.preventDefault();
-                 event.stopPropagation();
-                // var dt = $('#data-table-task-list').DataTable();
-                //alert(dt);
-                var tr = $(this).closest('tr');
-                var row = table.row(tr);
-                var idx = $.inArray(tr.attr('id'), detailRows);
-
-                if (row.child.isShown()) {
-                    tr.removeClass('details');
-                    row.child.hide();
-
-                    // Remove from the 'open' array
-                    detailRows.splice(idx, 1);
-                } else {
-                    tr.addClass('details');
-
-                         var dataT;
-                            
-                             $.when(
-                             
-                             dataT= format(row.data())
-                            ).done(function(){
-                            row.child(dataT).show();    
-                            //row.child.show();
-                            });
-                    // Add to the 'open' array
-                    if (idx === -1) {
-                        detailRows.push(tr.attr('id'));
-                    }
-                }
-            }
-    );
-
-
-
-    
-//    // Handle click on "Expand All" button
-//    $('#btn-show-all-children').on('click', function () {
-//        // Enumerate all rows
-//        table.rows().every(function () {
-//            // If row has details collapsed
-//            if (!this.child.isShown()) {
-//                // Open this row
-//                var dataT='';
-//                $.when(
-//                   dataT=format(this.data())
-//                ).done(
-//                    this.child(dataT).show()                      
-//                );
-//                $(this).find("td:first").addClass('shown');
-//           }
-//        });
-//    });
-
-
-//    // Handle click on "Collapse All" button
-//    $('#btn-hide-all-children').on('click', function () {
-//        // Enumerate all rows
-//        table.rows().every(function () {
-//            // If row has details expanded
-//            if (this.child.isShown()) {
-//                // Collapse row details
-//                this.child.hide();
-//                $(this).find("td:first").removeClass('shown');
-//           }
-//        });
-//    }); 
-
 };
