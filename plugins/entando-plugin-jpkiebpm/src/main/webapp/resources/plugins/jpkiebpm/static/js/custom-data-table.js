@@ -5,8 +5,10 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
 
 
     function getConfigColumnDatatable(items, columnDefinition) {
+                        
         if (columnDefinition) {
             columnDefinition = Array.isArray(columnDefinition) ? columnDefinition : [columnDefinition];
+                  
             var columns = columnDefinition.map(function(col, i) {
                 return {
                     title: col.title || col.data,
@@ -16,6 +18,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
                     targets: col.position || i + 1
                 };
             });
+                    
             return columns;
         }
         console.log('Items received: ' + items);
@@ -32,10 +35,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
         return columns;
     }
 
-
-
     function getJsonData(items, columns) {
-
         return items.map(function (el) {
             var obj = {};
             columns.forEach(function (key) {
@@ -44,7 +44,6 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
             obj.containerId = containerId;
             return obj;
         });
-
     }
 
     var jsonColumns = getConfigColumnDatatable(items,extraConfig && extraConfig.columnDefinition);
@@ -86,8 +85,7 @@ org.entando.datatable.CustomDatatable = function (items, idTable, extraConfig, c
             },
             {
                 "extend": 'excel',
-                //"text": '<i class
-                //="fa fa-file-excel-o"></i>',
+                //"text": '<i class="fa fa-file-excel-o"></i>',
                 "titleAttr": 'Excel'
             },
             {
