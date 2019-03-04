@@ -381,8 +381,6 @@ public class ApiTaskInterface extends KieApiManager {
         JAXBDataTableTaskList taskList = new JAXBDataTableTaskList();
         taskList.setDraw(draw);
 
-        //TODO  set here correct values retrieved from PAM
-        taskList.setRecordsTotal(100);
 
         if (null != configId) {
             try {
@@ -449,8 +447,9 @@ public class ApiTaskInterface extends KieApiManager {
 
                     executorService.invokeAll(tasksCallables);
                     executorService.shutdown();
-
-                    taskList.setRecordsFiltered(100);
+                    //TODO  set here correct values retrieved from PAM
+                    taskList.setRecordsTotal(taskList.getList().size());
+                    taskList.setRecordsFiltered(taskList.getList().size()+1);
 
                     logger.info("********************************************************");
                    
@@ -460,7 +459,7 @@ public class ApiTaskInterface extends KieApiManager {
                 logger.error("Error {}", e);
             }
         }
-        logger.info("RETURN taskList.getList().size(): {}" + taskList.getList().size());
+        logger.info("RETURN taskList.getList().size(): {}", taskList.getList().size());
 
         logger.info("********************************************************");
 
@@ -676,7 +675,7 @@ public class ApiTaskInterface extends KieApiManager {
         String configId = null;
         Map<String, String> input = new HashMap<>();
         for (KieApiInputFormTask.Field field : form.getFields()) {
-            logger.info(">>> KieApiInputFormTask field {} = {}", field.getName(), field.getValue());
+            logger.debug("KieApiInputFormTask field {} = {}", field.getName(), field.getValue());
             if (field.getName().equalsIgnoreCase("containerId")) {
                 containerId = field.getValue();
             }
@@ -700,7 +699,8 @@ public class ApiTaskInterface extends KieApiManager {
         KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
 
         final String result = this.getKieFormManager().completeHumanFormTask(bpmConfig, containerId, processId, Long.valueOf(taskId), input);
-        logger.info("Result {} ", result);
+        logger.debug("--> Result {} ", result);
+  
     }
 
     public void setTaskState(final KiaApiTaskState state) throws Throwable {
@@ -894,13 +894,6 @@ public class ApiTaskInterface extends KieApiManager {
         }
     }
 
-    /**
-     * ******************
-     *
-     * REFACTORING USING GENERICS ?
-     *
-     **************************
-     */
     private void setElementDatatableFieldDefinition(final ApsProperties config, JAXBDataTableTaskList taskList) {
         final String PREFIX_FIELD = "field_";
         final String PREFIX_VISIBLE = "visible_";
@@ -960,7 +953,6 @@ public class ApiTaskInterface extends KieApiManager {
         }
     }
 
-    //********************************************
     private void startTasks(KieBpmConfig bpmConfig, List<KieTask> list, HashMap<String, String> opt) {
         for (KieTask cur : list) {
             if (!cur.getStatus().equalsIgnoreCase("inprogress")) {
@@ -1038,11 +1030,7 @@ public class ApiTaskInterface extends KieApiManager {
             taskList.setList(filteredTasks);
         }
     }
-
-    
-    //--------------------------------------------------
-    
-    
+            
     private void filterTasksByProcessId(JAXBDataTableTaskList taskList, String processDefId) {
         if (taskList.getList() != null) {
             List<JAXBTask> filteredTasks = taskList.getList().stream()

@@ -756,7 +756,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             for (Map.Entry entry : map.entrySet()) {
                 fixedKeys.put(StringUtils.uncapitalize((String) entry.getKey()), entry.getValue());
             }
-            completeHumanFormTask(config, containerId, taskId, form, taskData, fixedKeys);
+            result = completeHumanFormTask(config, containerId, taskId, form, taskData, fixedKeys);
 
         } catch (Throwable t) {
             logger.error("Failed to complete kie task ", t);

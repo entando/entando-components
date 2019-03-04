@@ -364,12 +364,7 @@
                         var containerId = data.response.result.taskList.containerId;
                         extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
                         org.entando.datatable.CustomDatatable(context, items, idTable, extraConfig, containerId, configId);                                    
-                });
-                
-                // var items =  [];
-                // var containerId ="";
-                // org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId, configId);                                    
-              
+                });                
         };
 
 <%--

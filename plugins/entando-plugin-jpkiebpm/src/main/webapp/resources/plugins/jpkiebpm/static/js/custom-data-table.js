@@ -3,28 +3,10 @@ org.entando = org.entando || {};
 org.entando.datatable = org.entando.datatable || {};
 org.entando.datatable.CustomDatatable = function (context, items, idTable, extraConfig, containerId, configId) {
 
-    function getColumnDatatableNew(columnDefinition) {
-
-        if (columnDefinition) {
-            columnDefinition = Array.isArray(columnDefinition) ? columnDefinition : [columnDefinition];
-
-
-            var columns = columnDefinition.map(function (col, i) {
-                return {                    
-                    data: col.title
-                    };
-            });
-            return columns;
-        }
-    }
-
     function getConfigColumnDatatable(items, columnDefinition) {
-        
-                
         if (columnDefinition) {
             columnDefinition = Array.isArray(columnDefinition) ? columnDefinition : [columnDefinition];
-           
-        
+                   
             var columns = columnDefinition.map(function(col, i) {
                 return {
           
@@ -35,11 +17,8 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
                     targets: col.position || i + 1
                 };
             });
-            
-        
             return columns;
         }
-        console.log('Items received: ' + items);
         var keys = items.length ? Object.keys(items[0]) : [];
         var columns = keys.map(function(key, i) {
             return {
@@ -59,9 +38,26 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
 //        });
         return columns;
     }
-
-
-
+    function getJsonDataWithProcessVariables(items) {
+        return items.map(function (item) {
+            item['activated'] = new Date(item['activated']).toLocaleString();
+            item['created'] = new Date(item['created']).toLocaleString();
+            const reduceKeyValuePairs = pairs => pairs.reduce((acc, pair) => ({
+                        ...acc,
+                        [pair.key]: pair.value,
+                    }), {});
+            const kvpWithEntryField = {
+                ...item,
+                ...reduceKeyValuePairs(item.processVariables.entry)
+            };
+            const {
+                processVariables,
+                ...dest
+            } = kvpWithEntryField;
+            return dest;
+        });
+        }
+    
     function getJsonData(items, columns) {
         return items.map(function (el) {
             var obj = {};
@@ -76,8 +72,8 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
 
 
     var jsonColumns = getConfigColumnDatatable(items, extraConfig && extraConfig.columnDefinition);
-    var jsonColumnsNew = [];
-    var jsonDataList = [];
+    //var jsonColumnsNew = [];
+    //var jsonDataList = [];
     var buttonsColumnDef;
     
     
@@ -104,7 +100,15 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
         destroy: true,
         responsive: false,
         processing: true,
-        serverSide: true,        
+        serverSide: true,     
+        pagingType: "simple",
+        infoCallback: function (settings, start, end, max, total, pre) {
+            //return "Showing "+ start + " to " + end + " entries";
+            var api = this.api();
+            var pageInfo = api.page.info();
+
+            return 'Page ' + (pageInfo.page + 1);
+            },
         ajax: {
             url: context+ "datatabletasks.json?configId=" + configId,
             dataFilter: function(data){
@@ -114,23 +118,17 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
                     json.draw=jsonData.response.result.taskList.draw;
                     json.recordsTotal = jsonData.response.result.taskList.recordsTotal;
                     json.recordsFiltered = jsonData.response.result.taskList.recordsFiltered;
-                    //items = json.data;
-                    jsonColumnsNew = getConfigColumnDatatable(json.data,jsonData.response.result.taskList.fieldDefinition.fields);
-                    //jsonColumnsNew = getColumnDatatableNew(jsonData.response.result.taskList.fieldDefinition.fields);
-                    jsonDataList = getJsonData(jsonData.response.result.taskList.list, jsonColumnsNew);
-
-                    //alert("jsonColumns:" + JSON.stringify(jsonColumns));
-                    //alert("jsonData:" + JSON.stringify(jsonDataList));
-                    
-                    console.log("jsonColumns" , JSON.stringify(jsonColumns));
-                    console.log("jsonData", JSON.stringify(jsonDataList));
-
-
-                    json.data = jsonDataList;
+                    //jsonColumnsNew = getConfigColumnDatatable(json.data,jsonData.response.result.taskList.fieldDefinition.fields);
+                    //jsonDataList = getJsonData(jsonData.response.result.taskList.list, jsonColumnsNew);
+                    jsonDataProcessVars = getJsonDataWithProcessVariables(jsonData.response.result.taskList.list);                    
+                    json.data = jsonDataProcessVars;
                     json = JSON.stringify(json);
 
                 return json; // return JSON string
             },
+            error: function (xhr, error, thrown) {
+                alert('You are not logged in');
+            }
         },
         columns: jsonColumns,
         columnDefs: buttonsColumnDef,
@@ -165,7 +163,6 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
         config.language = extraConfig.language;
     }
 
-
     if (extraConfig.createdRow && typeof extraConfig.createdRow === 'function' ){
         config.createdRow = extraConfig.createdRow;
     }
@@ -191,48 +188,42 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
         });
     }
 
-    // Array to track the ids of the details displayed rows
-    var detailRows = [];
-
-        $(idTable + ' tbody').on('click', 'tr td.details-control',
-            function (event) {
-                 event.preventDefault();
-                 event.stopPropagation();
-                // var dt = $('#data-table-task-list').DataTable();
-                //alert(dt);
-                var tr = $(this).closest('tr');
-                var row = table.row(tr);
-                var idx = $.inArray(tr.attr('id'), detailRows);
-
-                if (row.child.isShown()) {
-                    tr.removeClass('details');
-                    row.child.hide();
-
-                    // Remove from the 'open' array
-                    detailRows.splice(idx, 1);
-                } else {
-                    tr.addClass('details');
-
-                         var dataT;
-                            
-                             $.when(
-                             
-                             dataT= format(row.data())
-                            ).done(function(){
-                            row.child(dataT).show();    
-                            //row.child.show();
-                            });
-                    // Add to the 'open' array
-                    if (idx === -1) {
-                        detailRows.push(tr.attr('id'));
-                    }
-                }
-            }
-    );
-
-
-
-    
+//    // Array to track the ids of the details displayed rows
+//    var detailRows = [];
+//        $(idTable + ' tbody').on('click', 'tr td.details-control',
+//            function (event) {
+//                 event.preventDefault();
+//                 event.stopPropagation();
+//                // var dt = $('#data-table-task-list').DataTable();
+//                var tr = $(this).closest('tr');
+//                var row = table.row(tr);
+//                var idx = $.inArray(tr.attr('id'), detailRows);
+//
+//                if (row.child.isShown()) {
+//                    tr.removeClass('details');
+//                    row.child.hide();
+//
+//                    // Remove from the 'open' array
+//                    detailRows.splice(idx, 1);
+//                } else {
+//                    tr.addClass('details');
+//
+//                         var dataT;
+//                            
+//                             $.when(
+//                             
+//                             dataT= format(row.data())
+//                            ).done(function(){
+//                            row.child(dataT).show();    
+//                            //row.child.show();
+//                            });
+//                    // Add to the 'open' array
+//                    if (idx === -1) {
+//                        detailRows.push(tr.attr('id'));
+//                    }
+//                }
+//            }
+//    );
 //    // Handle click on "Expand All" button
 //    $('#btn-show-all-children').on('click', function () {
 //        // Enumerate all rows
