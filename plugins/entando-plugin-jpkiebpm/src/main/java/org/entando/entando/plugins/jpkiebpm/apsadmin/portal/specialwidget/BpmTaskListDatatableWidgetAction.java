@@ -26,25 +26,18 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
         List<KieTask> task = super.getFormManager().getHumanTaskList(config, null, opt);
 
         Set<String> variableFields = super.getFormManager().getProcessVariables(config, containerId, procId);
-        //JPW -- Assign process variables for datatable
-//        /server/queries/processes/instances/{pInstanceId}/variables/instances
-//        /server/containers/{id}/processes/definitions/{pId}/variables
-        //JPW -- Assog tasl varoab;es
 
         List<String> fields = new ArrayList<>();
         fields.addAll(variableFields);
 
-
-        //Horrible hack. To be replaced by an actual call.
+        //TODO To be replaced by an actual call.
         if (!task.isEmpty()) {
             StringTokenizer tokenizer = new StringTokenizer(task.get(0).toString(), ",");
-            Byte position = 1;
             while (tokenizer.hasMoreTokens()) {
                 final String name = tokenizer.nextToken().trim();
                 fields.add(name);
             }
         }
-
         loadDataIntoFieldDatatable(fields);
     }
 }
