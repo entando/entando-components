@@ -35,6 +35,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.ResultMatcher;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -66,6 +67,32 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.metaData.pageSize").value("100"))
                 .andReturn();
+
+        mockMvc.perform(
+                get("/plugins/cms/contentTypes")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testCreateUnauthorizedContentType() throws Exception {
+        String typeCode = "TX0";
+        Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        Content content = new Content();
+        content.setTypeCode(typeCode);
+        content.setDescription("My content type " + typeCode);
+        content.setDefaultModel("My Model");
+        content.setListModel("Model list");
+        ContentTypeDtoRequest contentTypeRequest = new ContentTypeDtoRequest(content);
+        contentTypeRequest.setName("Content request");
+        mockMvc.perform(
+                post("/plugins/cms/contentTypes")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonMapper.writeValueAsString(contentTypeRequest))
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isUnauthorized());
+        Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
     }
 
     @Test
@@ -86,7 +113,6 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(jsonMapper.writeValueAsString(contentTypeRequest))
                     .accept(MediaType.APPLICATION_JSON_UTF8))
-                    //                .andDo(print())
                     .andExpect(status().isCreated())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.payload.code").value(typeCode))
@@ -148,6 +174,28 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
     @Test
     public void testGetContentType() throws Exception {
+        this.executeGetContentType("ART", status().isOk());
+        this.executeGetContentType("XXX", status().isNotFound());
+    }
+
+    private void executeGetContentType(String typeCode, ResultMatcher expectedResult) throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypes/{code}", typeCode)
+                .header("Authorization", "Bearer " + accessToken)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(expectedResult)
+                .andReturn();
+        mockMvc.perform(
+                get("/plugins/cms/contentTypes/{code}", typeCode)
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(expectedResult)
+                .andReturn();
+    }
+
+    @Test
+    public void testCreateAndGetContentType() throws Exception {
         String typeCode = "TX4";
         mockMvc.perform(
                 get("/plugins/cms/contentTypes/{code}", typeCode)
