@@ -46,6 +46,11 @@ public class DigitalExchangesClientMocker {
         when(digitalExchangesManager.getDigitalExchanges()).thenReturn(digitalExchangesMocker.getFakeExchanges());
         OAuth2RestTemplate restTemplate = restTemplateFactory.createOAuth2RestTemplate(null);
         when(digitalExchangesManager.getRestTemplate(any())).thenReturn(restTemplate);
+        when(digitalExchangesManager.findById(any())).thenAnswer(invocation -> {
+            return digitalExchangesMocker.getFakeExchanges().stream()
+                    .filter(de -> de.getId().equals(invocation.getArgument(0)))
+                    .findFirst();
+        });
         return new DigitalExchangesClientImpl(digitalExchangesManager, messageSource);
     }
 

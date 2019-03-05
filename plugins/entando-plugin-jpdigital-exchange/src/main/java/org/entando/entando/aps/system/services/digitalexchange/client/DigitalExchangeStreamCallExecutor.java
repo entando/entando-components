@@ -23,16 +23,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 
-public class DigitalExchangeStreamCallExecutor extends DigitalExchangeBaseCallExecutor<DigitalExchangeBaseCall, InputStream> {
+public class DigitalExchangeStreamCallExecutor extends DigitalExchangeBaseCallExecutor<DigitalExchangeBaseCall<InputStream>, InputStream> {
 
     public DigitalExchangeStreamCallExecutor(MessageSource messageSource,
             DigitalExchange digitalExchange, OAuth2RestTemplate restTemplate,
-            DigitalExchangeBaseCall call) {
+            DigitalExchangeBaseCall<InputStream> call) {
         super(messageSource, digitalExchange, restTemplate, call);
     }
 
     @Override
-    protected InputStream executeCall(OAuth2RestTemplate restTemplate, String url, DigitalExchangeBaseCall call) {
+    protected InputStream executeCall(OAuth2RestTemplate restTemplate, String url, DigitalExchangeBaseCall<InputStream> call) {
 
         ResponseEntity<Resource> responseEntity = restTemplate.exchange(
                 call.getURL(getDigitalExchange()), call.getMethod(), call.getEntity(), Resource.class);

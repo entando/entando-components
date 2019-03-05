@@ -90,7 +90,7 @@ public class DigitalExchangesClientImpl implements DigitalExchangesClient {
     }
 
     @Override
-    public InputStream getStreamResponse(String digitalExchangeId, DigitalExchangeBaseCall call) {
+    public InputStream getStreamResponse(String digitalExchangeId, DigitalExchangeBaseCall<InputStream> call) {
         DigitalExchange digitalExchange = getDigitalExchange(digitalExchangeId);
         OAuth2RestTemplate restTemplate = digitalExchangesManager.getRestTemplate(digitalExchange.getId());
         return new DigitalExchangeStreamCallExecutor(messageSource, digitalExchange, restTemplate, call).getResponse();

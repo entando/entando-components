@@ -13,9 +13,12 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.client;
 
+import java.util.Optional;
+import java.util.function.Function;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -26,11 +29,12 @@ import org.springframework.web.util.UriComponentsBuilder;
  * when it is necessary to parse a response into a specific class and/or combine
  * the result of multiple requests.
  */
-public class DigitalExchangeBaseCall {
+public class DigitalExchangeBaseCall<R> {
 
     private final HttpMethod method;
     private final String[] urlSegments;
     private HttpEntity<?> entity;
+    private Function<RestClientResponseException, Optional<R>> exceptionHandler;
 
     /**
      * @param method e.g. GET, POST, ...
@@ -64,5 +68,21 @@ public class DigitalExchangeBaseCall {
 
     public void setEntity(HttpEntity<?> entity) {
         this.entity = entity;
+    }
+
+    /**
+     * This method can be used to handle specific HTTP status codes returned by
+     * the Digital Exchange instance. The exceptionHandler must return true if
+     * the exception has been handled.
+     */
+    public void setErrorResponseHandler(Function<RestClientResponseException, Optional<R>> exceptionHandler) {
+        this.exceptionHandler = exceptionHandler;
+    }
+
+    protected Optional<R> handleErrorResponse(RestClientResponseException ex) {
+        if (exceptionHandler != null) {
+            return exceptionHandler.apply(ex);
+        }
+        return Optional.empty();
     }
 }

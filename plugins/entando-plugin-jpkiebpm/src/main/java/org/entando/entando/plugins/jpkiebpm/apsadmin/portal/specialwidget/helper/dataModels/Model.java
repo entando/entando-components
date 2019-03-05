@@ -28,7 +28,9 @@ public class Model {
     private String title;
     private String containerId;
     private String processId;
-
+    private String formAction;
+    private String urlParameters;
+    
     public String getTitle() {
         return title;
     }
@@ -51,6 +53,22 @@ public class Model {
 
     public void setProcessId(String processId) {
         this.processId = processId;
+    }
+
+    public String getFormAction() {
+        return formAction;
+    }
+
+    public void setFormAction(String formAction) {
+        this.formAction = formAction;
+    }
+
+    public String getUrlParameters() {
+        return urlParameters;
+    }
+
+    public void setUrlParameters(String urlParameters) {
+        this.urlParameters = urlParameters;
     }
 
 }
