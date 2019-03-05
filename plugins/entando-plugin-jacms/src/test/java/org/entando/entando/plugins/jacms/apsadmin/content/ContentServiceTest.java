@@ -212,7 +212,7 @@ public class ContentServiceTest {
     public void getContentsWithoutHtml() throws Exception {
         RestContentListRequest requestList = this.createContentsRequest();
         requestList.setStatus(IContentService.STATUS_ONLINE);
-        requestList.setModelId(null);
+        requestList.setModel(null);
         requestList.setPageSize(5);
         requestList.setText("text");
         UserDetails user = Mockito.mock(UserDetails.class);
@@ -235,7 +235,7 @@ public class ContentServiceTest {
     public void getContentsWithModelError_1() throws Exception {
         RestContentListRequest requestList = this.createContentsRequest();
         requestList.setStatus(IContentService.STATUS_ONLINE);
-        requestList.setModelId("34");
+        requestList.setModel("34");
         UserDetails user = Mockito.mock(UserDetails.class);
         when(this.langManager.getDefaultLang()).thenReturn(Mockito.mock(Lang.class));
         when(this.authorizationManager.getUserGroups(user)).thenReturn(new ArrayList<>());
@@ -260,7 +260,7 @@ public class ContentServiceTest {
     public void getContentsWithModelError_2() throws Exception {
         RestContentListRequest requestList = this.createContentsRequest();
         requestList.setStatus(IContentService.STATUS_ONLINE);
-        requestList.setModelId("list");
+        requestList.setModel("list");
         UserDetails user = Mockito.mock(UserDetails.class);
         when(this.langManager.getDefaultLang()).thenReturn(Mockito.mock(Lang.class));
         when(this.authorizationManager.getUserGroups(user)).thenReturn(new ArrayList<>());
@@ -284,7 +284,7 @@ public class ContentServiceTest {
         RestContentListRequest requestList = new RestContentListRequest();
         Filter[] filters = new Filter[]{new Filter("attribute", "test", "eq")};
         requestList.setFilters(filters);
-        requestList.setModelId("list");
+        requestList.setModel("list");
         requestList.setResolveLink(true);
         requestList.setStatus(IContentService.STATUS_DRAFT);
         return requestList;

@@ -16,7 +16,6 @@ package org.entando.entando.aps.system.services.digitalexchange.client;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.model.RestError;
 import org.entando.entando.web.common.model.RestResponse;
-import org.springframework.web.client.RestClientResponseException;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.slf4j.Logger;
@@ -37,21 +36,16 @@ public class DigitalExchangeCallExecutor<R extends RestResponse<?, ?>, C> extend
 
     @Override
     protected R executeCall(OAuth2RestTemplate restTemplate, String url, DigitalExchangeCall<R, C> call) {
-        try {
-            ResponseEntity<R> responseEntity = restTemplate
-                    .exchange(url, call.getMethod(), call.getEntity(), call.getParameterizedTypeReference());
+        ResponseEntity<R> responseEntity = restTemplate
+                .exchange(url, call.getMethod(), call.getEntity(), call.getParameterizedTypeReference());
 
-            R response = responseEntity.getBody();
+        R response = responseEntity.getBody();
 
-            if (call.isResponseParsable(response)) {
-                return response;
-            } else {
-                logger.error("Error calling {}. Unable to parse response", url);
-                return getErrorResponse(ERRCODE_DE_WRONG_PAYLOAD, "digitalExchange.unparsableResponse", getDigitalExchange().getName());
-            }
-        } catch (RestClientResponseException ex) {
-            call.handleErrorResponse(ex);
-            throw ex;
+        if (call.isResponseParsable(response)) {
+            return response;
+        } else {
+            logger.error("Error calling {}. Unable to parse response", url);
+            return getErrorResponse(ERRCODE_DE_WRONG_PAYLOAD, "digitalExchange.unparsableResponse", getDigitalExchange().getName());
         }
     }
 

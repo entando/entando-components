@@ -14,11 +14,13 @@
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/lib/dynamic-form/jquery.dform-1.1.0.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dynamic-form.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery.dataTables.js"></script>
-<script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.buttons.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jszip.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/buttons.html5.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/buttons.colVis.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.responsive.min.js"></script>
+<script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.fixedColumns.min.js"></script>
+<script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.buttons.js"></script>
+
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery-ui.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/buttons.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery.dataTables.min.css" media="screen"/>
@@ -83,7 +85,7 @@
     function getTemplateTaskData(data) {
         var length = data.fields.fieldset.field.length;
         var fields = data.fields.fieldset.field;
-        var template = "<tr>zz";
+        var template = '<tr>';
         for (i = 0; i < length; i++) {
             template += "<td>" + capitalize(fields[i].name) + "<br/>" + fields[i].value + "</td>\n";
         }
@@ -95,7 +97,6 @@
     var windowHeight = $(window).height();
 
     var optModal = {
-        //appendTo: "#data-table-active",
         width: windowWidth - 100,
         height: windowHeight - 100,
         modal: true,
@@ -115,7 +116,6 @@
             var jsonKie = data.response.result;
             jsonKie.mainForm.method = "post";
             org.entando.form.dynamicForm = new org.entando.form.DynamicForm(jsonKie);
-            //org.entando.form.dynamicForm.json.html[0].value = processId;
             $("#bpm-task-list-modal-form").dform(org.entando.form.dynamicForm.json);
 
             var urlTaskData = context + "taskData.json?configId=" + configId + "&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
@@ -197,7 +197,7 @@
             var url = context + "tasks.json?configId=${id}";
             var extraBtns = [
             {
-            html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
+            html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Complete</button>',
                     onClick: function (ev, data) {
                         openModalForm(ev, configId, data, context);
                     }
@@ -222,10 +222,7 @@
             var extraConfig = {
             buttons: extraBtns,
                     onClickRow: function (event, rowData) {
-                     //   $("#data-table-task-list tbody").on('click', 'tr td:not(:first-child)',function () {
-                      //  alert(rowData.containerId +" "+ rowData.id);
                         openDetailsPage(rowData.containerId , rowData.id);                    
-                    //});
                 }
                 
                };
@@ -245,47 +242,14 @@
 
         };
 
-<%--
-/* Formatting function for row details*/
-function format ( rowData ) {
-                var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
 
-    var configId =${configId};
-    var taskData='';
-    var taskDataTable='';
-    var urlTaskData = context + "taskData.json?configId=" + configId + "&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
-
-    $.ajax({
-           url: urlTaskData,
-           type: 'get',
-           contentType: 'application/json',
-           async: false,
-           timeout: 30000,
-           dataType: 'json',
-           success: function (data) {
-               taskData=getTemplateTaskData(data.response.result.mainForm);
-               taskDataTable='<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+taskData+'</table>';                       
-           },
-           error: function () {
-               console.log('Error reading taskData for id'+ rowData.id);
-           }
-       }); 
-      
-    return taskDataTable;
-}
---%>
  
 $(document).ready(function () {
     loadDataTable('#data-table-task-list');
 });
     
 </script>
-<%-- 
-<div class="showHideButtons">
-    <button id="btn-show-all-children" type="button">Expand All</button>
-    <button id="btn-hide-all-children" type="button">Collapse All</button>
-</div>
---%>
+
 
 <table id="data-table-task-list" class="display nowrap" cellspacing="0" width="100%"></table>
 

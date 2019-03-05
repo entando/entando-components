@@ -18,21 +18,21 @@ import org.entando.entando.web.common.model.RestEntityListRequest;
 
 public class RestContentListRequest extends RestEntityListRequest {
 
-    private String modelId;
+    private String model;
     private boolean resolveLink;
     private String status = IContentService.STATUS_DRAFT;
-    private String langCode;
+    private String lang;
 
     private String[] categories;
     private boolean orClauseCategoryFilter;
     private String text;
 
-    public String getModelId() {
-        return modelId;
+    public String getModel() {
+        return model;
     }
 
-    public void setModelId(String modelId) {
-        this.modelId = modelId;
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public boolean isResolveLink() {
@@ -51,12 +51,12 @@ public class RestContentListRequest extends RestEntityListRequest {
         this.status = status;
     }
 
-    public String getLangCode() {
-        return langCode;
+    public String getLang() {
+        return lang;
     }
 
-    public void setLangCode(String langCode) {
-        this.langCode = langCode;
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 
     public String[] getCategories() {

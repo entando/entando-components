@@ -143,7 +143,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
             return new DigitalExchangesMocker()
                     .addDigitalExchange(DE_1_ID, (request) -> {
                         try {
-                            if (request.getEndpoint().contains("packages")) {
+                            if (request.getEndpoint().contains("package")) {
                                 Resource resource = mock(Resource.class);
                                 if (request.getEndpoint().contains("de_test_widget")) {
                                     when(resource.getInputStream()).thenReturn(new FileInputStream(tempWidgetZipFile));
@@ -189,9 +189,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                 widgetService.removeWidget(componentCode);
             } catch (ValidationGenericException ignored) {
             }
-
         }
-
     }
 
     @Test
@@ -218,9 +216,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                 labelService.removeLabelGroup(componentAssociatedLabel);
             } catch (ValidationGenericException ignored) {
             }
-
         }
-
     }
 
     @Test
@@ -240,9 +236,7 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                 groupService.removeGroup(componentCode);
             } catch (ValidationGenericException ignored) {
             }
-
         }
-
     }
 
     @Test
