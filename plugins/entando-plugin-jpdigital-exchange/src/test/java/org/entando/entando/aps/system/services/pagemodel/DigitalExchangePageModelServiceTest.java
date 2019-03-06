@@ -50,7 +50,7 @@ public class DigitalExchangePageModelServiceTest {
     private static final String PAGE_MODEL_CODE = "1_TEST_PM";
     private static final String DE_PAGE_MODEL_INSTALLED_CODE = "2_TEST_PM_DE_INSTALLED";
     private static final String DE_PAGE_MODEL_NOT_INSTALLED_CODE = "3_TEST_PM_DE_NOT_INSTALLED";
-    private static final String EXCHANGE = "Leonardo Exchange";
+    private static final String EXCHANGE = "Leonardo's Exchange";
     private static final String DESCRIPTION_PREFIX = "description_";
     private static final String PLUGIN_CODE_PREFIX = "plugin_code";
     private static final String TEMPLATE = "<h1>Template</h1>";
