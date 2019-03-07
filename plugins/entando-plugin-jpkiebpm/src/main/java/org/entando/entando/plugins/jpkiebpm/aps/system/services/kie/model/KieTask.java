@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Map;
 
 /**
  *
@@ -156,6 +157,14 @@ public class KieTask {
         this.configId = configId;
     }
 
+    public Map<String, String> getProcessVariables() {
+        return processVariables;
+    }
+
+    public void setProcessVariables(Map<String, String> processVariables) {
+        this.processVariables = processVariables;
+    }
+
     @XmlElement(name = "task-id")
     private Long id;
 
@@ -201,6 +210,7 @@ public class KieTask {
     @XmlElement(name = "configId")
     private String configId;
 
+    private Map<String, String> processVariables;
 
     @Override
     public String toString() {
