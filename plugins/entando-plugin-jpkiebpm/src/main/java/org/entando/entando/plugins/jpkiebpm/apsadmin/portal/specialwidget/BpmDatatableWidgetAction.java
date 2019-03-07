@@ -92,27 +92,36 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
     public List<FieldDatatable> getFieldsDatatable() throws ApsSystemException {
 
         if (this.fieldsDatatable.isEmpty()) {
-            this.loadFieldIntoDatatableFromBpm();
+
+            String procId = this.getProcessId();
+            String contId = this.getContainerId();
+
+            if(this.getContainerId() ==null) {
+                final String[] param = this.getProcessPath().split("@");
+                procId = param[0];
+                contId = param[1];
+            }
+
+            this.loadFieldIntoDatatableFromBpm(contId, procId);
         }
 
         return this.fieldsDatatable;
     }
 
-    protected abstract void loadFieldIntoDatatableFromBpm() throws ApsSystemException;
+    protected abstract void loadFieldIntoDatatableFromBpm(String containerId, String processId) throws ApsSystemException;
 
-    protected void loadDataIntoFieldDatatable(List element) {
+    protected void loadDataIntoFieldDatatable(List<String> fields) {
 
-        StringTokenizer tokenizer = new StringTokenizer(element.get(0).toString(), ",");
         Byte position = 1;
-        while (tokenizer.hasMoreTokens()) {
-            final String name = tokenizer.nextToken().trim();
+        for(String name : fields) {
             final FieldDatatable fd = new FieldDatatable(name);
             fd.setField(PREFIX_FIELD + name);
             fd.setPosition(position++);
-            fd.setVisible(Boolean.valueOf(true));
+            fd.setVisible(true);
             fd.setOverride("");
             this.fieldsDatatable.add(fd);
         }
+
     }
 
     protected void setPropertiesIntoWidgetInfo(final ApsProperties properties, final String procId, final String contId, final String sourceId) {
@@ -165,7 +174,15 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
     public String chooseForm() {
         String response = super.chooseForm();
         try {
-            this.loadFieldIntoDatatableFromBpm();
+            String procId = this.getProcessId();
+            String contId = this.getContainerId();
+
+            if(this.getContainerId() ==null && this.getProcessPath()!=null) {
+                final String[] param = this.getProcessPath().split("@");
+                procId = param[0];
+                contId = param[1];
+            }
+            this.loadFieldIntoDatatableFromBpm(contId, procId);
         } catch (ApsSystemException t) {
             logger.error("Error in chooseForm", t);
             return FAILURE;

@@ -123,44 +123,44 @@
             jsonKie.mainForm.method = "post";
             org.entando.form.dynamicForm = new org.entando.form.DynamicForm(jsonKie);
             $("#bpm-task-list-modal-form").dform(org.entando.form.dynamicForm.json);
-            
-            var urlTaskData = context + "taskData.json?configId=" + configId +"&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
+
+            var urlTaskData = context + "taskData.json?configId=" + configId + "&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
             appendTaskData(urlTaskData);
-            
+
             optModal.title = "BPM Form Data";
             $('#bpm-task-list-modal-form').dialog(optModal);
             $('form.ui-dform-form').submit(function (event1) {
-            event1.preventDefault();
-            var postData = {
-                task: {
-                    fields: []
-                }
-            };
-            $('form.ui-dform-form').serializeArray().forEach(function (el) {
-                var entry = {name: el.name, value: el.value};
+                event1.preventDefault();
+                var postData = {
+                    task: {
+                        fields: []
+                    }
+                };
+                $('form.ui-dform-form').serializeArray().forEach(function (el) {
+                    var entry = {name: el.name, value: el.value};
                     postData.task.fields.push(entry);
                 });
-            postData.task.fields.push({name: "processId", value: rowData.processDefinitionId});
-            postData.task.fields.push({name: "containerId", value: rowData.containerId});
-            postData.task.fields.push({name: "taskId", value: rowData.id});
-            postData.task.fields.push({name: "configId", value: configId});
-            var action = context + "taskForm.json";
+                postData.task.fields.push({name: "processId", value: rowData.processDefinitionId});
+                postData.task.fields.push({name: "containerId", value: rowData.containerId});
+                postData.task.fields.push({name: "taskId", value: rowData.id});
+                postData.task.fields.push({name: "configId", value: configId});
+                var action = context + "taskForm.json";
 
-            $.ajax({
-                url: action,
-                type: 'post',
-                contentType: 'application/json',
-                data: JSON.stringify(postData),
-                dataType: 'json',
-                success: function(data) {
-		        $("#bpm-task-list-modal-form").dialog("close");
-		            refreshDataTable();
-		            return data;
-		        },
-                error: function() {
-                    //console.log('Error');
-                }
-            });
+                $.ajax({
+                    url: action,
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(postData),
+                    dataType: 'json',
+                    success: function(data) {
+                        $("#bpm-task-list-modal-form").dialog("close");
+                        refreshDataTable();
+                        return data;
+                    },
+                    error: function() {
+                        //console.log('Error');
+                    }
+                });
             });
         });
     };
@@ -185,9 +185,9 @@
                     var jsonKieTaskData = data.response.result;
                     jsonKieTaskData.mainForm.method = "none";
                     org.entando.form.dynamicFormInfo = new org.entando.form.DynamicForm(jsonKieTaskData);
-                    $("#bpm-task-data").dform(org.entando.form.dynamicFormInfo.json); 
+                    $("#bpm-task-data").dform(org.entando.form.dynamicFormInfo.json);
                 })
-            ).done( 
+                ).done(
                 function(){
                     var formFields = $("#bpm-task-data form").children().detach();
                     var taskDataTitle="<br/><br/><h2 id=\"task-data-title\"> Task data </h2>";
@@ -240,8 +240,6 @@
                   <c:if test="${redirectOnClickRowVar == 'true'}">
                     buttons: extraBtns,
                         onClickRow: function (event, rowData) {
-                        // Click Row details code
-                        // $("#data-table-task-list tbody").on('click', 'tr td:not(:first-child)',function () {
                         openDetailsPage(rowData.containerId , rowData.id);                    
                         }
                     </c:if>
@@ -281,6 +279,7 @@
                             return dest;
                         });
                         var containerId = data.response.result.taskList.containerId;
+
                         extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
                         org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);                                    
                 });
@@ -306,6 +305,7 @@
     });
     
 </script>
+
 
 <table id="data-table-task-list" class="display nowrap" cellspacing="0" width="100%"></table>
 

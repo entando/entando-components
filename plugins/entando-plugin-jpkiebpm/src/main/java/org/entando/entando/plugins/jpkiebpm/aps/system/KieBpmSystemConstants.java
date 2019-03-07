@@ -108,12 +108,16 @@ public interface KieBpmSystemConstants {
     public final static String API_PUT_HUMAN_TASK_START = "API_PUT_HUMAN_TASK_START";
     public final static String API_PUT_HUMAN_TASK_OUTPUT = "API_PUT_HUMAN_TASK_OUTPUT";
     public final static String API_PUT_HUMAN_TASK_COMPLETE = "API_PUT_HUMAN_TASK_COMPLETE";
+    public final static String API_PUT_HUMAN_TASK_CLAIMED = "API_PUT_HUMAN_TASK_CLAIMED";
+
     public final static String API_GET_HUMAN_TASK_DETAILS = "API_GET_HUMAN_TASK_DETAILS";
     public final static String API_POST_START_CASE = "API_POST_START_CASE";
     public final static String API_POST_START_CASE_AUTOMATED = "API_POST_START_CASE_AUTOMATED";
     public final static String API_POST_START_CASE_MANUAL = "API_POST_START_CASE_MANUAL";
     public final static String API_ADMIN_GET_CASES = "API_ADMIN_GET_CASES";
     public final static String API_POST_RUN_ADDITIONAL_INFO_RULES = "API_POST_RUN_ADDITIONAL_INFO_RULES";
+    public final static String API_GET_PROCESS_VARIABLES = "API_GET_PROCESS_VARIABLES";
+    public final static String API_GET_PROCESS_VARIABLE_INSTANCES = "API_GET_PROCESS_VARIABLE_INSTANCES";
 
     public static final String WIDGET_PARAM_DATA_TYPE_CODE = "dataTypeCode";
     public static final String WIDGET_PARAM_DATA_UX_ID = "dataUxId";
