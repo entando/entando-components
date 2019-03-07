@@ -30,6 +30,17 @@ INSERT INTO widgetcatalog VALUES ('bpm-datatype-form', '<?xml version="1.0" enco
 	<parameter name="widgetInfoId">Widget Info ID</parameter>
 	<action name="jpkiebpmBpmFormWidgetViewerConfig"/>
 </config>', 'jpkiebpm', NULL, NULL, 1, NULL);
+
+INSERT INTO widgetcatalog VALUES ('bpm-datatype-task-form', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">PAM-Task Form by DataType</property>
+<property key="it">PAM-Task Form by DataType</property>
+</properties>', '<config>
+	<parameter name="dataTypeCode">Data Type Code</parameter>
+	<parameter name="dataUxId">Data Ux ID</parameter>
+	<parameter name="widgetInfoId">Widget Info ID</parameter>
+	<action name="jpkiebpmBpmTaskFormWidgetViewerConfig"/>
+</config>', 'jpkiebpm', NULL, NULL, 1, NULL);
 INSERT INTO widgetcatalog VALUES ('bpm-datatable-task-list', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">PAM-Datatable Task List</property>

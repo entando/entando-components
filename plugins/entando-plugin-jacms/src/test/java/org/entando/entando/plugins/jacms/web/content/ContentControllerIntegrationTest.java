@@ -32,7 +32,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
@@ -643,6 +645,64 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 this.contentManager.removeOnLineContent(masterContent);
                 this.contentManager.deleteContent(masterContent);
             }
+        }
+    }
+
+    @Test
+    public void testLoadPublicContentsWithHtml() throws Exception {
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "ART"));
+        result.andExpect(status().isOk());
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        List<String> expectedFreeContentsId = Arrays.asList("ART1", "ART180", "ART187", "ART121");
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(expectedFreeContentsId.size())));
+        for (int i = 0; i < expectedFreeContentsId.size(); i++) {
+            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
+            Assert.assertEquals(expectedFreeContentsId.get(i), extractedId);
+            Assert.assertNull(JsonPath.read(bodyResult, "$.payload[" + i + "].html"));
+        }
+
+        Map<String, String> extractedHtml = new HashMap<>();
+        result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("model", "list")
+                        .param("lang", "it")
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "ART"));
+        bodyResult = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(expectedFreeContentsId.size())));
+        for (int i = 0; i < expectedFreeContentsId.size(); i++) {
+            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
+            Assert.assertEquals(expectedFreeContentsId.get(i), extractedId);
+            String html = JsonPath.read(bodyResult, "$.payload[" + i + "].html");
+            Assert.assertNotNull(html);
+            extractedHtml.put(extractedId, html);
+        }
+        result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("model", "list")
+                        .param("lang", "en")
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "ART"));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(expectedFreeContentsId.size())));
+        bodyResult = result.andReturn().getResponse().getContentAsString();
+        for (int i = 0; i < expectedFreeContentsId.size(); i++) {
+            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
+            Assert.assertEquals(expectedFreeContentsId.get(i), extractedId);
+            String html = JsonPath.read(bodyResult, "$.payload[" + i + "].html");
+            Assert.assertNotNull(html);
+            Assert.assertNotNull(extractedHtml.get(extractedId));
+            Assert.assertFalse(html.equals(extractedHtml.get(extractedId)));
         }
     }
 

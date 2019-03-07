@@ -34,7 +34,8 @@
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/responsive.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/fixedColumns.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery.toast.min.css" media="screen"/>
-<script>            
+
+<script>
     
     function capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -90,7 +91,7 @@
     function getTemplateTaskData(data) {
         var length = data.fields.fieldset.field.length;
         var fields = data.fields.fieldset.field;
-        var template = "<tr>zz";
+        var template = '<tr>';
         for (i = 0; i < length; i++) {
             template += "<td>" + capitalize(fields[i].name) + "<br/>" + fields[i].value + "</td>\n";
         }
@@ -102,7 +103,6 @@
     var windowHeight = $(window).height();
 
     var optModal = {
-        //appendTo: "#data-table-active",
         width: windowWidth - 100,
         height: windowHeight - 100,
         modal: true,
@@ -153,12 +153,12 @@
                     contentType: 'application/json',
                     data: JSON.stringify(postData),
                     dataType: 'json',
-                    success: function (data) {
+                    success: function(data) {
                         $("#bpm-task-list-modal-form").dialog("close");
                         refreshDataTable();
                         return data;
                     },
-                    error: function () {
+                    error: function() {
                         //console.log('Error');
                     }
                 });
@@ -204,7 +204,6 @@
 
     function claimTask(ev, configId, dataTaskId, context){
             var configId =${configId};
-            //alert("configId "+configId+ " containerId: "+rowData.containerId + " taskId "+ rowData.id);
 
                 ev.preventDefault();
                 var postData = {
@@ -214,7 +213,7 @@
                     }
                 };
                 
-               // alert("postData: "+JSON.stringify(postData));
+
                 
                 var action = context + "claimTask.json";
 
@@ -258,7 +257,7 @@
     }
 
     function  loadDataTable(idTable) {
-    var configId =${configId};
+    	    var configId =${configId};
             var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
             var url = context + "tasks.json?configId=${id}";
             var extraBtns = [
@@ -317,8 +316,6 @@
                   <c:if test="${redirectOnClickRowVar == 'true'}">
                     buttons: extraBtns,
                         onClickRow: function (event, rowData) {
-                        // Click Row details code
-                        // $("#data-table-task-list tbody").on('click', 'tr td:not(:first-child)',function () {
                         openDetailsPage(rowData.containerId , rowData.id);                    
                         }
                     </c:if>
@@ -358,55 +355,32 @@
                             return dest;
                         });
                         var containerId = data.response.result.taskList.containerId;
+
                         extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
                         org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);                                    
                 });
-                
-
+            }
         };
 
-<%--
-// Click Row details code
-/* Formatting function for row details*/
-function format ( rowData ) {
-                var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
-
-    var configId =${configId};
-    var taskData='';
-    var taskDataTable='';
-    var urlTaskData = context + "taskData.json?configId=" + configId + "&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
-
-    $.ajax({
-           url: urlTaskData,
-           type: 'get',
-           contentType: 'application/json',
-           async: false,
-           timeout: 30000,
-           dataType: 'json',
-           success: function (data) {
-               taskData=getTemplateTaskData(data.response.result.mainForm);
-               taskDataTable='<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+taskData+'</table>';                       
-           },
-           error: function () {
-               console.log('Error reading taskData for id'+ rowData.id);
-           }
-       }); 
-      
-    return taskDataTable;
-}
---%>
- 
-$(document).ready(function () {
-    loadDataTable('#data-table-task-list');
-});
+    $.get(url, function (data) {
+    var items = data.response.result.taskList.list || [];
+            items = Array.isArray(items) ? items : [items];
+            items = items.map(function (item) {
+            item['activated'] = new Date(item['activated']).toLocaleString();
+                    item['created'] = new Date(item['created']).toLocaleString();
+                    return item;
+            });
+            var containerId = data.response.result.taskList.containerId;
+            extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
+            org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);
+    });
+    };
+    
+    $(document).ready(function () {
+        loadDataTable('#data-table-task-list');
+    });
     
 </script>
-<%-- 
-<div class="showHideButtons">
-    <button id="btn-show-all-children" type="button">Expand All</button>
-    <button id="btn-hide-all-children" type="button">Collapse All</button>
-</div>
---%>
 
 <table id="data-table-task-list" class="display nowrap" cellspacing="0" width="100%"></table>
 

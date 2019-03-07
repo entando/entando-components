@@ -1,5 +1,5 @@
 <div class="row">
-    <div class='col-sm-5'>
+    <div class='col-sm-12'>
         <div class="form-group">
             <label id="JPKIE_${field.name}" for="jpkieformparam_${field.name}" class="editLabel">
                 <#include "/FieldLabel.ftl">
@@ -12,16 +12,14 @@
                         </#list>
                         </#if>
                     </select>
-                </div>
         </div>
-    <script type="text/javascript">
-        
-         $('#selectpicker_${field.id}').selectpicker(
-          {  size: ${field.maxDropdownElements},
+    </div>
+    <script type="text/javascript">        
+         $('#selectpicker_${field.id}').selectpicker({  
+            size: ${field.maxDropdownElements},
             maxOptions: ${field.maxElementsOnTitle},
             liveSearch: ${field.allowFilter?c},            
             actionsBox: ${field.allowClearSelection?c}
          });
-        </script>
-    </div>
+    </script>
 </div>

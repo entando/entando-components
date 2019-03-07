@@ -179,7 +179,7 @@ public class DigitalExchangeComponentsServiceTest {
         RestListRequest listRequest = new RestListRequest();
         Filter filter = new Filter();
         filter.setAttribute("type");
-        filter.setValue(WIDGET_TYPE + "," + CONTENT_MODEL_TYPE);
+        filter.setAllowedValues(new String[]{WIDGET_TYPE, CONTENT_MODEL_TYPE});
         filter.setOperator(FilterOperator.EQUAL.getValue());
         listRequest.addFilter(filter);
 

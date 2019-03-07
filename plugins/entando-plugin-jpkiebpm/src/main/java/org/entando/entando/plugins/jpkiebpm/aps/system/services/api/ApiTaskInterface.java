@@ -25,7 +25,6 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.api;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
@@ -55,7 +54,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieApiClaimTask;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieApiClaimTask;	
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFields;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFieldset;
 
 public class ApiTaskInterface extends KieApiManager {
 
@@ -649,6 +650,10 @@ public class ApiTaskInterface extends KieApiManager {
 
                     this.getKieFormManager().claimTask(bpmConfig, containerId, taskId, username);
                 }
+            } catch (ApsSystemException e) {
+                logger.error("Error {}", e.getMessage());
+            } catch (IOException e) {
+                logger.error("Error load configuration  {} ", e.getMessage());
             } catch (Throwable ex) {
                 logger.error("Error {}", ex);
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Error executing claim", Response.Status.BAD_REQUEST);

@@ -237,7 +237,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                     ? this.getContentManager().loadPublicContentsId(requestList.getCategories(), requestList.isOrClauseCategoryFilter(), filtersArr, userGroupCodes)
                     : this.getContentManager().loadWorkContentsId(requestList.getCategories(), requestList.isOrClauseCategoryFilter(), filtersArr, userGroupCodes);
             if (!StringUtils.isBlank(requestList.getText()) && online) {
-                String langCode = (StringUtils.isBlank(requestList.getLangCode())) ? this.getLangManager().getDefaultLang().getCode() : requestList.getLangCode();
+                String langCode = (StringUtils.isBlank(requestList.getLang())) ? this.getLangManager().getDefaultLang().getCode() : requestList.getLang();
                 List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(langCode, requestList.getText(), userGroupCodes);
                 result.removeIf(i -> !fullTextResult.contains(i));
             }
@@ -246,7 +246,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             List<ContentDto> masterList = new ArrayList<>();
             for (String contentId : sublist) {
                 masterList.add(this.buildContentDto(contentId, online,
-                        requestList.getModelId(), requestList.getLangCode(), requestList.isResolveLink(), bindingResult));
+                        requestList.getModel(), requestList.getLang(), requestList.isResolveLink(), bindingResult));
             }
             pagedMetadata.setBody(masterList);
             return pagedMetadata;

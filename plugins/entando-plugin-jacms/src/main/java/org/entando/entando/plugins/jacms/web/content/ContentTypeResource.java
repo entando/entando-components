@@ -68,7 +68,6 @@ public interface ContentTypeResource {
         @ApiResponse(code = 401, message = "Unauthorized"),
         @ApiResponse(code = 403, message = "Forbidden")})
     @GetMapping(path = "/plugins/cms/contentTypes")
-    @RestAccessControl(permission = Permission.SUPERUSER)
     ResponseEntity<PagedRestResponse<EntityTypeShortDto>> list(RestListRequest listRequest);
 
     @ApiOperation(

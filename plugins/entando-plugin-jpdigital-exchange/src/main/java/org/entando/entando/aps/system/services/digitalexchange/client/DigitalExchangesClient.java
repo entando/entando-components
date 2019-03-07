@@ -35,5 +35,5 @@ public interface DigitalExchangesClient {
     
     <R extends RestResponse<?, ?>, C> R getSingleResponse(String digitalExchangeId, DigitalExchangeCall<R, C> call);
     
-    InputStream getStreamResponse(String digitalExchangeId, DigitalExchangeBaseCall call);
+    InputStream getStreamResponse(String digitalExchangeId, DigitalExchangeBaseCall<InputStream> call);
 }

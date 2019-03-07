@@ -14,11 +14,9 @@
 package org.entando.entando.aps.system.services.digitalexchange.client;
 
 import java.util.Map;
-import java.util.function.Consumer;
 import org.entando.entando.web.common.model.RestResponse;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.client.RestClientResponseException;
 
 /**
  * Base class containing the information necessary to query a specific Digital
@@ -28,10 +26,9 @@ import org.springframework.web.client.RestClientResponseException;
  * @param <R> the type of each DE response
  * @param <C> the type of the combined response
  */
-public abstract class DigitalExchangeCall<R extends RestResponse<?, ?>, C> extends DigitalExchangeBaseCall {
+public abstract class DigitalExchangeCall<R extends RestResponse<?, ?>, C> extends DigitalExchangeBaseCall<R> {
 
     private final ParameterizedTypeReference<R> parameterizedTypeReference;
-    private Consumer<RestClientResponseException> exceptionConsumer;
 
     /**
      * @param method e.g. GET, POST, ...
@@ -57,20 +54,6 @@ public abstract class DigitalExchangeCall<R extends RestResponse<?, ?>, C> exten
 
     protected boolean isResponseParsable(R response) {
         return response != null;
-    }
-
-    /**
-     * This method can be used to handle specific HTTP status codes returned by
-     * the Digital Exchange instance.
-     */
-    public void setErrorResponseHandler(Consumer<RestClientResponseException> exceptionConsumer) {
-        this.exceptionConsumer = exceptionConsumer;
-    }
-
-    protected void handleErrorResponse(RestClientResponseException ex) {
-        if (exceptionConsumer != null) {
-            exceptionConsumer.accept(ex);
-        }
     }
 
     protected abstract R getEmptyRestResponse();

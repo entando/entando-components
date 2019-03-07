@@ -12,3 +12,14 @@
     display: block;
     clear: both;
 }
+.ui-dform-div {
+    background-color: #FFF;
+}
+.ui-dform-submit-box {
+    border-top: 1px solid #ddd;
+    text-align: right;
+    margin: 0 20px;
+}
+.ui-dform-submit{
+    margin: 20px 0px;
+}

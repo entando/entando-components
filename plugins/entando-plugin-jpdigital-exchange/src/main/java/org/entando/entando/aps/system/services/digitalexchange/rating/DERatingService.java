@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.rating;
 
+import java.util.Optional;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.aps.system.services.digitalexchange.client.SimpleDigitalExchangeCall;
@@ -51,6 +52,7 @@ public class DERatingService {
             } else if (status == HttpStatus.NOT_FOUND.value()) {
                 throw new ResourceNotFoundException("component", ratingRequest.getComponentId());
             }
+            return Optional.empty();
         });
 
         SimpleRestResponse<DERatingsSummary> response = client.getSingleResponse(ratingRequest.getExchangeId(), call);

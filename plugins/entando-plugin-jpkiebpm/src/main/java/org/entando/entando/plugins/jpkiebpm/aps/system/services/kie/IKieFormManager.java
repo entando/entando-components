@@ -160,6 +160,7 @@ public interface IKieFormManager {
     String getProcInstDiagramImage(KieBpmConfig config, String containerId) throws ApsSystemException;
 
 
+    
     /**
      * Get the process diagram
      *
@@ -269,6 +270,7 @@ public interface IKieFormManager {
     String setTaskState(KieBpmConfig config, String containerId, String taskId, final TASK_STATES state, Map<String, Object> input, Map<String, String> opt) throws Throwable;
 
     /**
+     *
      * @param user
      * @param opt
      * @return
@@ -279,6 +281,7 @@ public interface IKieFormManager {
     public List<KieTask> getHumanTaskListForAdmin(KieBpmConfig config, String user, Map<String, String> opt) throws ApsSystemException;
 
     /**
+     *
      * @param input
      * @param opt
      * @return
@@ -287,6 +290,7 @@ public interface IKieFormManager {
     public KieProcessInstancesQueryResult getProcessInstancesWithClientData(KieBpmConfig config, Map<String, String> input, Map<String, String> opt) throws Throwable;
 
     /**
+     *
      * @param user
      * @param containerId
      * @param taskId
