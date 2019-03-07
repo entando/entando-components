@@ -356,4 +356,18 @@
         </method>
     </resource>
 
+    <resource name="claimtask" namespace="jpkiebpm">
+        <description>Red Hat Bpm Task Detail</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="POST" active="true">
+            <description>Return task detail</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="claimTask"/>
+            <parameters>
+                <parameter key="taskId" required="true">
+                    <description>The task Id</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+
 </apiMethodDefinitions>
