@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeCall;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
@@ -74,6 +75,12 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
             validateName(digitalExchange);
         }
         validateURL(digitalExchange);
+
+        // A null secret shouldn't reset an existing secret
+        if (StringUtils.isEmpty(digitalExchange.getClientSecret())) {
+            digitalExchange.setClientSecret(oldDigitalExchange.getClientSecret());
+        }
+
         return manager.update(digitalExchange);
     }
 

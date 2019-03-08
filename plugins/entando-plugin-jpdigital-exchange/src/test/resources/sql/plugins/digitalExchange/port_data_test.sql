@@ -4,6 +4,8 @@
     <id>DE_1</id>
     <name>DigitalExchange 1</name>
     <url>https://de1.entando.com/</url>
+    <key>client-key</key>
+    <secret>y9rSwMSXW9zU9ma9vxqiXw==</secret>
     <timeout>1000</timeout>
     <active>true</active>
   </digitalExchange>
@@ -11,6 +13,8 @@
     <id>DE_2</id>
     <name>DigitalExchange 2</name>
     <url>https://de2.entando.com/</url>
+    <key>client-key</key>
+    <secret>y9rSwMSXW9zU9ma9vxqiXw==</secret>
     <timeout>1000</timeout>
     <active>true</active>
   </digitalExchange>

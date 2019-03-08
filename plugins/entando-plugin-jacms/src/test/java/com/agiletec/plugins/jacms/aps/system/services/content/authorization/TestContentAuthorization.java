@@ -22,14 +22,11 @@ import com.agiletec.aps.system.services.group.GroupManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.role.RoleManager;
 import com.agiletec.aps.system.services.user.IUserManager;
-import com.agiletec.aps.system.services.user.MockUser;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.BlowfishApsEncrypter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import java.util.List;
 
 /**
  * @author E.Santoboni
@@ -130,7 +127,7 @@ public class TestContentAuthorization extends BaseTestCase {
     }
 
     private void addUserForTest(String username, String password) throws Throwable {
-        MockUser user = new MockUser();
+        User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.setDisabled(false);
