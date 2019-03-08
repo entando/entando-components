@@ -30,13 +30,18 @@ import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
-import org.entando.entando.plugins.jprestapi.aps.core.*;
+import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
+import org.entando.entando.plugins.jprestapi.aps.core.RequestBuilder;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
-import org.json.*;
-import org.slf4j.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -1459,15 +1464,14 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public String claimTask(KieBpmConfig config, String containerId, String taskId) throws ApsSystemException{
-
+    public String claimTask(KieBpmConfig config, String containerId, String taskId, String username) throws ApsSystemException{
 
         HashMap headersMap = new HashMap();
         Map<String, String> processVars = new HashMap<>();
         String result = null;
         JSONObject json = null;
         try {
-            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_PUT_HUMAN_TASK_CLAIMED)).resolveParams(containerId, taskId);
+            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_PUT_HUMAN_TASK_CLAIMED)).resolveParams(containerId, taskId, username);
             headersMap.put("Accept", "application/json");
             KieClient client = KieApiUtil.getClientFromConfig(config);
             result = (new KieRequestBuilder(client)).setEndpoint(t).setHeaders(headersMap).setDebug(config.getDebug().booleanValue()).doRequest();
@@ -1479,7 +1483,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             }
 
         } catch (Throwable t) {
-            logger.error("Failed to fetch case details ", t);
+            logger.error("Failed to claim task details ", t);
             throw new ApsSystemException("Error getting the cases definitions", t);
         }
 

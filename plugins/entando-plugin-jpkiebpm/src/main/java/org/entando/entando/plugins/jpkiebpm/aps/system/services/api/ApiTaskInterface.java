@@ -54,6 +54,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieApiClaimTask;	
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFields;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFieldset;
 
 public class ApiTaskInterface extends KieApiManager {
 
@@ -340,11 +343,15 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     public KieTaskDetail getTaskDetail(Properties properties) throws Throwable {
+        logger.debug("getTaskDetail");
         String containerId = properties.getProperty("containerId");
         String taskIdString = properties.getProperty("taskId");
         String user = properties.getProperty("user");
         String configId = properties.getProperty("configId");
-
+        logger.debug("containerId {}",containerId);
+        logger.debug("taskIdString {}", taskIdString);
+        logger.debug("user {}", user);
+        logger.debug("configId {}", configId);
         Map<String, String> opt = null;
         if (StringUtils.isNotBlank(user)) {
             opt = new HashMap<>();
@@ -356,14 +363,18 @@ public class ApiTaskInterface extends KieApiManager {
         final ApsProperties config = new ApsProperties();
         config.loadFromXml(information);
         String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+        logger.debug("knowledgetSource {}", knowledgetSource);
+
         KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
 
         KieTaskDetail taskDetail = this.getKieFormManager().getTaskDetail(bpmConfig, containerId, Long.valueOf(taskIdString), opt);
+        logger.debug("taskDetail {}", taskDetail.getName());
 
         if (null == taskDetail) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
         }
+        logger.debug("return taskDetail {}", taskDetail.getName());
         return taskDetail;
     }
 
@@ -619,9 +630,9 @@ public class ApiTaskInterface extends KieApiManager {
         }
     }
 
-    public void claimTask(Properties properties) {
+    public void claimTask(KieApiClaimTask claimTask) throws ApiException {
 
-        final String configId = properties.getProperty("configId");
+        final String configId = claimTask.getConfigId();
         if (null != configId) {
             try {
                 final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
@@ -632,10 +643,12 @@ public class ApiTaskInterface extends KieApiManager {
                     String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
                     KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
                     String containerId = config.getProperty("containerId");
-                    String taskId = properties.getProperty("taskId");
+                    String taskId = claimTask.getTaskId();
+                    
+                    //TODO Check the user passed to the API
+                    String username = bpmConfig.getUsername();
 
-
-                    this.getKieFormManager().claimTask(bpmConfig, containerId, taskId);
+                    this.getKieFormManager().claimTask(bpmConfig, containerId, taskId, username);
                 }
             } catch (ApsSystemException e) {
                 logger.error("Error {}", e.getMessage());
@@ -643,6 +656,7 @@ public class ApiTaskInterface extends KieApiManager {
                 logger.error("Error load configuration  {} ", e.getMessage());
             } catch (Throwable ex) {
                 logger.error("Error {}", ex);
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Error executing claim", Response.Status.BAD_REQUEST);
             }
 
         }
