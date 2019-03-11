@@ -24,7 +24,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import static org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClientImpl.*;
 
-public abstract class DigitalExchangeBaseCallExecutor<C extends DigitalExchangeBaseCall, R> {
+public abstract class DigitalExchangeBaseCallExecutor<C extends DigitalExchangeBaseCall<R>, R> {
 
     private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeCallExecutor.class);
 
@@ -59,8 +59,10 @@ public abstract class DigitalExchangeBaseCallExecutor<C extends DigitalExchangeB
 
         } catch (RestClientResponseException ex) { // Error response
 
-            logger.error("Error calling {}. Status code: {}", url, ex.getRawStatusCode());
-            return getErrorResponse(ERRCODE_DE_HTTP_ERROR, "digitalExchange.httpError", digitalExchange.getName(), ex.getRawStatusCode());
+            return call.handleErrorResponse(ex).orElseGet(() -> {
+                logger.error("Error calling {}. Status code: {}", url, ex.getRawStatusCode());
+                return getErrorResponse(ERRCODE_DE_HTTP_ERROR, "digitalExchange.httpError", digitalExchange.getName(), ex.getRawStatusCode());
+            });
 
         } catch (ResourceAccessException ex) { // Other (e.g. unknown host)
 

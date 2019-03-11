@@ -29,7 +29,7 @@ public class SimpleDigitalExchangeCall<T> extends DigitalExchangeCall<SimpleRest
             ParameterizedTypeReference<SimpleRestResponse<T>> parameterizedTypeReference, String... urlSegments) {
         super(method, parameterizedTypeReference, urlSegments);
     }
-    
+
     @Override
     protected SimpleRestResponse<T> getEmptyRestResponse() {
         return new SimpleRestResponse<>(null);
@@ -40,5 +40,10 @@ public class SimpleDigitalExchangeCall<T> extends DigitalExchangeCall<SimpleRest
         ResilientListWrapper<T> wrapper = new ResilientListWrapper<>();
         results.values().forEach(wrapper::addValueFromResponse);
         return wrapper;
+    }
+
+    @Override
+    protected boolean isResponseParsable(SimpleRestResponse<T> response) {
+        return super.isResponseParsable(response) && response.getPayload() != null;
     }
 }

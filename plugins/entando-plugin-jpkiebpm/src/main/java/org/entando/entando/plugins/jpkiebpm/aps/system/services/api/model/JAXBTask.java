@@ -18,14 +18,35 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTas
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author E.Santoboni
  */
 @XmlRootElement(name = "task")
 @XmlType(propOrder = {"id", "activated", "created", "desc", "name", "owner", "parentId", "priority",
-        "processDefinitionId", "processInstanceId", "skipable", "status", "subject", "containerId", "visible", "override", "configId"})
+        "processDefinitionId", "processInstanceId", "skipable", "status", "subject", "containerId", "visible", "override", "configId", "processVariables"})
 public class JAXBTask implements Comparable<JAXBTask> {
+
+    private Map<String, String> processVariables;
+    private Long _activated;
+    private Long _created;
+    private String _desc;
+    private Long _id;
+    private String _name;
+    private String _owner;
+    private Long _parentId;
+    private Long _priority;
+    private String _processDefinitionId;
+    private Long _processInstanceId;
+    private Boolean _skipable;
+    private String _status;
+    private String _subject;
+    private String _containerId;
+    private Boolean visible;
+    private String override;
+    private String configId;
 
     public JAXBTask() {
     }
@@ -46,6 +67,11 @@ public class JAXBTask implements Comparable<JAXBTask> {
         this.setSubject(task.getSubject());
         this.setContainerId(task.getContainerId());
         this.setConfigId(task.getConfigId());
+        this.setProcessVariables(task.getProcessVariables());
+
+        this.processVariables = new HashMap<>();
+        this.processVariables.put("key1", "key1");
+        this.processVariables.put("key2", "key2");
     }
 
     @XmlElement(name = "activated")
@@ -206,22 +232,15 @@ public class JAXBTask implements Comparable<JAXBTask> {
         this.configId = configId;
     }
 
-    private Long _activated;
-    private Long _created;
-    private String _desc;
-    private Long _id;
-    private String _name;
-    private String _owner;
-    private Long _parentId;
-    private Long _priority;
-    private String _processDefinitionId;
-    private Long _processInstanceId;
-    private Boolean _skipable;
-    private String _status;
-    private String _subject;
-    private String _containerId;
-    private Boolean visible;
-    private String override;
-    private String configId;
+    @XmlElement(name = "processVariables")
+    public Map<String, String> getProcessVariables() {
+        return processVariables;
+    }
+
+    public void setProcessVariables(Map<String, String> processVariables) {
+        this.processVariables = processVariables;
+    }
+
+
 
 }

@@ -24,6 +24,7 @@ import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExc
 import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentsServiceTest;
 import org.entando.entando.aps.system.services.digitalexchange.job.ComponentDescriptorTest;
 import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeComponentJobsServiceTest;
+import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeInstallExecutorTest;
 import org.entando.entando.aps.system.services.digitalexchange.job.DigitalExchangeJobExecutorTest;
 import org.entando.entando.aps.system.services.digitalexchange.rating.DERatingServiceTest;
 import org.entando.entando.aps.system.services.pagemodel.DigitalExchangePageModelServiceTest;
@@ -50,6 +51,7 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeOAuth2RestTemplateFactoryTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeJobExecutorTest.class));
         suite.addTest(new JUnit4TestAdapter(ComponentDescriptorTest.class));
+        suite.addTest(new JUnit4TestAdapter(DigitalExchangeInstallExecutorTest.class));
 
         addServicesTests(suite);
         addControllersTests(suite);

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="OidcHelper"
+          class="org.entando.entando.plugins.oidc.oidc.aps.controller.OidcHelper"
+          parent="abstractService">
+    </bean>
+
+    <bean id="OidcConfiguration"
+          class="org.entando.entando.plugins.oidc.oidc.aps.controller.OidcConfiguration">
+        <property name="oidcActive">
+            <value>${entando.oidc.active}</value>
+        </property>
+        <property name="oidcAuthLocation">
+            <value>${entando.oidc.auth.location}</value>
+        </property>
+        <property name="oidcTokenLocation">
+            <value>${entando.oidc.token.location}</value>
+        </property>
+        <property name="oidcClientId">
+            <value>${entando.oidc.client.id}</value>
+        </property>
+        <property name="oidcRedirectBaseUrl">
+            <value>${entando.oidc.redirect.base.url}</value>
+        </property>
+        <property name="defaultIdentityProvider">
+            <value>${entando.default.identity.provider}</value>
+        </property>
+    </bean>
+    <bean id="OidcAuthenticatorControlService"
+          class="org.entando.entando.plugins.oidc.oidc.aps.controller.OidcAuthenticator"
+          parent="abstractControlService">
+        <property name="authenticationProvider" ref="AuthenticationProviderManager"/>
+        <property name="userManager" ref="UserManager"/>
+    </bean>
+    <bean id="IdentityProviderExtractor"
+          class="org.entando.entando.plugins.oidc.oidc.aps.controller.DomainNameIdentityProviderExtractor">
+        <property name="oidcConfiguration" ref="OidcConfiguration"/>
+    </bean>
+
+
+
+
+</beans>
