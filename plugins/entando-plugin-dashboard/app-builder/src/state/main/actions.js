@@ -1,7 +1,7 @@
 import {getRoute, getParams, getSearchParams, gotoRoute} from "@entando/router";
 import {addToast, addErrors, TOAST_ERROR} from "@entando/messages";
 import {formattedText} from "@entando/utils";
-import {formValueSelector, initialize, change} from "redux-form";
+import {formValueSelector, initialize, change, arrayPush} from "redux-form";
 import {get} from "lodash";
 
 import {getLanguages} from "api/appBuilder";
@@ -135,6 +135,7 @@ export const gotoPluginPage = pluginPage => (dispatch, getState) => {
   }
 };
 
+// used for widget table
 export const getWidgetConfig = formName => (dispatch, getState) => {
   const state = getState();
   const config = getWidgetConfigSelector(state);
@@ -152,6 +153,44 @@ export const getWidgetConfig = formName => (dispatch, getState) => {
     dispatch(fecthDatasourceList(json.serverName));
     dispatch(setDatasourceColumns(columns));
     dispatch(initialize(formName, json));
+  }
+};
+//used for widgets chart
+export const getWidgetConfigChart = formName => (dispatch, getState) => {
+  const state = getState();
+  const config = getWidgetConfigSelector(state);
+  if (config) {
+    const configJson = JSON.parse(config.config);
+    dispatch(fecthDatasourceList(configJson.serverName));
+    dispatch(initialize(formName, configJson));
+    // API ancora mockata
+    getDatasourceData(
+      configJson.serverName,
+      configJson.datasource,
+      DATASOURCE_PROPERTY_COLUMNS
+    ).then(response => {
+      response.json().then(json => {
+        if (response.ok) {
+          // API ancora mockata
+          dispatch(setDatasourceColumns(json.payload));
+          configJson.columns.x &&
+            configJson.columns.x.forEach(item => {
+              dispatch(arrayPush(formName, "columns.x", item));
+            });
+          configJson.columns.y &&
+            configJson.columns.y.forEach(item => {
+              dispatch(arrayPush(formName, "columns.y", item));
+            });
+          configJson.columns.y2 &&
+            configJson.columns.y2.forEach(item => {
+              dispatch(arrayPush(formName, "columns.y2", item));
+            });
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+        }
+      });
+    });
   }
 };
 

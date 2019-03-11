@@ -161,7 +161,6 @@ const GeneralSettings = ({typeChart, chart}) => {
               name="size.height"
               label="common.height"
               min="0"
-              max="9999"
               direction="rtl"
               className="GeneralSettings__field-height"
             />
@@ -174,7 +173,6 @@ const GeneralSettings = ({typeChart, chart}) => {
                 name="padding.top"
                 label="common.top"
                 min="0"
-                max="9999"
                 direction="rtl"
                 className="GeneralSettings__field-top"
               />
@@ -186,7 +184,6 @@ const GeneralSettings = ({typeChart, chart}) => {
                 name="padding.right"
                 label="common.right"
                 min="0"
-                max="9999"
                 direction="rtl"
                 className="GeneralSettings__field-right"
               />
@@ -200,7 +197,6 @@ const GeneralSettings = ({typeChart, chart}) => {
               name="size.width"
               label="common.width"
               min="0"
-              max="9999"
               direction="rtl"
               className="GeneralSettings__field-width"
             />
@@ -213,7 +209,6 @@ const GeneralSettings = ({typeChart, chart}) => {
                 name="padding.bottom"
                 label="common.bottom"
                 min="0"
-                max="9999"
                 direction="rtl"
                 className="GeneralSettings__field-bottom"
               />
@@ -225,7 +220,6 @@ const GeneralSettings = ({typeChart, chart}) => {
                 name="padding.left"
                 label="common.left"
                 min="0"
-                max="9999"
                 direction="rtl"
                 className="GeneralSettings__field-left"
               />
@@ -239,7 +233,7 @@ const GeneralSettings = ({typeChart, chart}) => {
               name={`${chart}.width`}
               label="plugin.chart.thickness"
               min="0"
-              max="9999"
+              max="999"
               direction="rtl"
               className="GeneralSettings__field-thickness"
               disabled={chart === "line" ? true : false}

@@ -1,8 +1,8 @@
 import {connect} from "react-redux";
 import {formValueSelector, getFormSyncErrors} from "redux-form";
-import {pick, omit} from "lodash";
+import {get, set, pick} from "lodash";
 
-import {fetchServerConfigList, getWidgetConfig} from "state/main/actions";
+import {fetchServerConfigList, getWidgetConfigChart} from "state/main/actions";
 
 import DashboardLineChartForm from "ui/widgets/charts/line-chart/components/DashboardLineChartForm";
 
@@ -39,19 +39,26 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList()).then(() => {
-      dispatch(getWidgetConfig("form-dashboard-line-chart"));
+      dispatch(getWidgetConfigChart("form-dashboard-line-chart"));
     });
   },
   onSubmit: data => {
-    const transformData = {
-      ...pick(data, ["datasource", "title", "serverName"])
+    const transformData = {...data};
+    transformData.data = {
+      json: [],
+      keys: {
+        x: get(data, "columns.x[0].key"),
+        value: get(data, "columns.y").map(m => m.key)
+      }
     };
-    transformData.configChart = {
-      ...omit(data, ["datasource", "title", "serverName"])
-    };
+    if (get(data, "axis.x.type") === "timeseries") {
+      set(transformData, "axis.x.type", "timeseries");
+      transformData.data.xFormat = get(data, "axis.x.tick.format");
+    }
 
-    console.log("Submit data ", {config: data});
-    ownProps.onSubmit({config: JSON.stringify(data)});
+    transformData.columns = pick(transformData.columns, ["x", "y"]);
+    console.log("Submit data ", {config: transformData});
+    ownProps.onSubmit({config: JSON.stringify(transformData)});
   }
 });
 

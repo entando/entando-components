@@ -95,6 +95,17 @@ class SettingsChart extends Component {
             <FormattedMessage id="plugin.chart.timeFormat-M-D-Y" />
           </label>
         </div>
+        <div className="radio">
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="plugin.chart.timeFormatCustom" />
+              &nbsp;
+              <Field name="axis.x.tick.format" component="input" type="text" />
+              <br />
+              <FormattedMessage id="plugin.chart.timeFormatCustom.help" />
+            </ControlLabel>
+          </FormGroup>
+        </div>
       </div>
     );
   }
@@ -130,17 +141,9 @@ class SettingsChart extends Component {
           <Field name="axis.x.type" component="select" className="form-control">
             <option value="indexed">Default</option>
             <option value="timeseries">Timeseries</option>
-            <option value="customTime">Custom Time</option>
           </Field>
         </FormGroup>
         {axisXType === "timeseries" ? this.chooseTimeFormat() : null}
-        {axisXType === "customTime"
-          ? wrapInputTextField(
-              "data.xFormat",
-              "plugin.chart.customTime",
-              "plugin.chart.customTime.help"
-            )
-          : null}
       </Col>
     );
   }

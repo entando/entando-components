@@ -1,43 +1,91 @@
-import React, {Component} from "react";
+import React, {PureComponent} from "react";
 import PropTypes from "prop-types";
 import {formattedText} from "@entando/utils";
 import DropdownMultiple from "ui/common/DropdownMultiple";
+import {isEqual, get} from "lodash";
 
-class FieldArrayDropDownMultiple extends Component {
+class FieldArrayDropDownMultiple extends PureComponent {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   columns: props.optionColumns || [],
-    //   searchValue: "",
-    //   idKey: props.idKey
-    // };
     this.state = {
-      columns: [],
+      columns: props.optionColumns,
       searchValue: "",
-      idKey: null
+      idKey: undefined
     };
     this.toogleSelected = this.toogleSelected.bind(this);
     this.searchItem = this.searchItem.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      (prevProps.optionColumns.length > 0 && prevState.columns.length === 0) ||
-      prevProps.idKey !== prevState.idKey
-    ) {
-      if (prevProps.idKey !== prevState.idKey) {
-        prevProps.fields.removeAll();
-      }
-      this.setState({
-        idKey: prevProps.idKey,
-        columns: prevProps.optionColumns.map((m, index) => ({
-          id: index,
-          key: m.key,
-          value: m.value,
-          selected: false
-        }))
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log(
+  //     "FieldArrayDropDownMultiple - componentDidUpdate Props",this.props
+  //   );
+  //   console.log(
+  //     "FieldArrayDropDownMultiple - componentDidUpdate prevProps",
+  //     prevProps
+  //   );
+  //   console.log(
+  //     "FieldArrayDropDownMultiple - componentDidUpdate prevState",
+  //     prevState
+  //   );
+  //   if (
+  //     (prevProps.optionColumns.length > 0 && prevState.columns.length === 0) ||
+  //     prevProps.idKey !== prevState.idKey
+  //   ) {
+  //     if (prevProps.idKey !== prevState.idKey) {
+  //       prevProps.fields.removeAll();
+  //     }
+  //
+  //     this.setState({
+  //       idKey: prevProps.idKey,
+  //       columns: prevProps.optionColumns.map((m, index) => ({
+  //         id: index,
+  //         key: m.key,
+  //         value: m.value,
+  //         selected: false
+  //       }))
+  //     });
+  //   }
+  // }
+
+  refreshState(idKey, optionColumns) {
+    this.setState({
+      idKey,
+      columns: optionColumns.map((m, index) => ({
+        id: index,
+        key: m.key,
+        value: m.value,
+        selected: m.selected || false
+      }))
+    });
+  }
+
+  /*
+ it's necessary when call dispatch initialize for link data for DropdownMultiple and FieldArray
+ */
+  static getDerivedStateFromProps(props, state) {
+    if (props.fields && props.fields.length > 0) {
+      const columns = state.columns;
+      props.optionColumnSelected.forEach(item => {
+        const idx = columns.findIndex(el => el.key === item.key);
+        if (idx !== -1) {
+          columns[idx].selected = item.selected;
+        }
       });
+      return {
+        columns
+      };
+    }
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.optionColumns.length > 0 && prevState.columns.length === 0) {
+      this.refreshState(this.props.idKey, this.props.optionColumns);
+    } else if (prevProps.idKey !== prevState.idKey) {
+      this.props.fields.removeAll();
+      this.refreshState(this.props.idKey, this.props.optionColumns);
     }
   }
 
@@ -117,6 +165,7 @@ class FieldArrayDropDownMultiple extends Component {
       meta: {error},
       disabled
     } = this.props;
+
     let classNames = `FieldArrayDropDownMultiple ${className}`;
     return (
       <div className={classNames}>

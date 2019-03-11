@@ -106,8 +106,8 @@ export default {
     "plugin.chart.timeFormat-Y-M-D": "anno-mese-giorno",
     "plugin.chart.timeFormat-D-M-Y": "giorno-mese-anno",
     "plugin.chart.timeFormat-M-D-Y": "mese-giorno-anno",
-    "plugin.chart.customTime": "Custom format",
-    "plugin.chart.customTime.help":
+    "plugin.chart.timeFormat": "Custom format",
+    "plugin.chart.timeFormat.help":
       "Set a format to parse string specified. see D3.js / Time Formatting",
     "plugin.chart.dropDownMulti.titleHelper": "Item",
     "plugin.chart.dropDownMulti.title": "Select Item",
