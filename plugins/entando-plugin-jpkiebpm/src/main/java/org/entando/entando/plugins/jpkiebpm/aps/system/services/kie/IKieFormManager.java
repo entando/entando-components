@@ -30,14 +30,10 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author Entando
- */
 public interface IKieFormManager {
 
     String BEAN_NAME_ID = "jpkiebpmsManager";
@@ -64,7 +60,7 @@ public interface IKieFormManager {
      * @return
      * @throws com.agiletec.aps.system.exception.ApsSystemException
      */
-    public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException;
+    public Map<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException;
 
     /**
      * List KIE containers
@@ -326,4 +322,5 @@ public interface IKieFormManager {
 
     public String claimTask(KieBpmConfig config, String containerId, String taskId,String username) throws ApsSystemException;
 
+    void setXmlConverter(KieBpmConfigXMLConverter xmlConverter);
 }

@@ -41,6 +41,8 @@ public class DigitalExchangesManagerTest {
     private static final String KEY = "test-key";
     private static final String SECRET = "client-secret";
     private static final BlowfishEncryptor ENCRYPTOR = new BlowfishEncryptor(KEY);
+    private static final DigitalExchangeConfigXmlConverter XML_CONVERTER
+            = new DigitalExchangeConfigXmlConverter(ENCRYPTOR);
 
     @Mock
     private ConfigInterface configManager;
@@ -55,7 +57,7 @@ public class DigitalExchangesManagerTest {
         MockitoAnnotations.initMocks(this);
         mockRestTemplateFactory();
         mockValidDigitalExchangesConfig();
-        manager = new DigitalExchangesManagerImpl(configManager, restTemplateFactory, ENCRYPTOR);
+        manager = new DigitalExchangesManagerImpl(configManager, restTemplateFactory, XML_CONVERTER);
         manager.refresh();
     }
 

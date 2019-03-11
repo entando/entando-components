@@ -33,7 +33,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class KieBpmConfigAction extends BaseAction {
 
@@ -54,7 +54,7 @@ public class KieBpmConfigAction extends BaseAction {
     private Integer timeout;
     private Boolean debug;
 
-    private HashMap<String, KieBpmConfig> knowledgeSource;
+    private Map<String, KieBpmConfig> knowledgeSource;
     private String knowledgeSourceStatus;
     private String knowledgeSourceTestAllResult;
 
@@ -156,7 +156,7 @@ public class KieBpmConfigAction extends BaseAction {
             //Save the current Config
 
             JSONArray output = new JSONArray();
-            HashMap<String, KieBpmConfig> serverConfigurations = this.getFormManager().getKieServerConfigurations();
+            Map<String, KieBpmConfig> serverConfigurations = this.getFormManager().getKieServerConfigurations();
             for (String key : serverConfigurations.keySet()) {
                 KieBpmConfig config = serverConfigurations.get(key);
                 JSONObject serverJS = new JSONObject();
@@ -334,11 +334,11 @@ public class KieBpmConfigAction extends BaseAction {
         this.debug = debug;
     }
 
-    public HashMap<String, KieBpmConfig> getKnowledgeSource() {
+    public Map<String, KieBpmConfig> getKnowledgeSource() {
         return knowledgeSource;
     }
 
-    public void setKnowledgeSource(HashMap<String, KieBpmConfig> knowledgeSource) {
+    public void setKnowledgeSource(Map<String, KieBpmConfig> knowledgeSource) {
         this.knowledgeSource = knowledgeSource;
     }
 

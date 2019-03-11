@@ -9,7 +9,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_c
             <id>1</id>
             <name>default</name>
             <username>krisv</username>
-            <password>krisv</password>
+            <password>SyWkC7JJhGA=</password>
             <hostname>localhost</hostname>
             <schema>http</schema>
             <port>8080</port>
@@ -24,7 +24,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_c
             <id>2</id>
             <name>test2</name>
             <username>krisv</username>
-            <password>krisv</password>
+            <password>SyWkC7JJhGA=</password>
             <hostname>localhost</hostname>
             <schema>http</schema>
             <port>8082</port>

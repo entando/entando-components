@@ -64,6 +64,8 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     //
     //TODO JPW -- Remove?
     private ConfigInterface configManager;
+    
+    private KieBpmConfigXMLConverter xmlConverter;
 
     @Override
     public void init() {
@@ -98,18 +100,17 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                     config.setId(uuid);
                 }
 
-                HashMap<String, KieBpmConfig> currentConfigs = getKieServerConfigurations();
+                Map<String, KieBpmConfig> currentConfigs = getKieServerConfigurations();
                 currentConfigs.values().contains(config);
 
                 //Get current config from database
                 String xmlin = this.getConfigManager().getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
                 //add new config
-                KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xmlin, KiaBpmConfigFactory.class, true, false);
-                kBpmConfFctry.addKiaBpmConfig(config);
-                String xml = JAXBHelper.marshall(kBpmConfFctry, true, false);
+                KieBpmConfigFactory kBpmConfFctry = xmlConverter.unmarshal(xmlin);
+                kBpmConfFctry.addKieBpmConfig(config);
+                String xml = xmlConverter.marshal(kBpmConfFctry);
                 //load updated config
                 this.getConfigManager().updateConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM, xml);
-
             }
         } catch (Throwable t) {
             throw new ApsSystemException("Error adding configuration", t);
@@ -123,9 +124,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                 //Get current config from database
                 String xmlin = this.getConfigManager().getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
                 //delete new config
-                KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xmlin, KiaBpmConfigFactory.class, true, false);
-                kBpmConfFctry.removeKiaBpmConfig(kieId);
-                String xml = JAXBHelper.marshall(kBpmConfFctry, true, false);
+                KieBpmConfigFactory kBpmConfFctry = xmlConverter.unmarshal(xmlin);
+                kBpmConfFctry.removeKieBpmConfig(kieId);
+                String xml = xmlConverter.marshal(kBpmConfFctry);
                 //load updated config
                 this.getConfigManager().updateConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM, xml);
             } else {
@@ -137,15 +138,15 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public HashMap<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException {
+    public Map<String, KieBpmConfig> getKieServerConfigurations() throws ApsSystemException {
         try {
             String xml = this.getConfigManager().getConfigItem(KieBpmSystemConstants.KIE_BPM_CONFIG_ITEM);
 
             if (xml == null) {
-                return new HashMap<String, KieBpmConfig>();
+                return new HashMap<>();
             }
-            KiaBpmConfigFactory kBpmConfFctry = (KiaBpmConfigFactory) JAXBHelper.unmarshall(xml, KiaBpmConfigFactory.class, true, false);
-            return kBpmConfFctry.getKieBpmConfigeMap();
+            KieBpmConfigFactory kBpmConfFctry = xmlConverter.unmarshal(xml);
+            return kBpmConfFctry.getKieBpmConfigMap();
         } catch (Throwable t) {
             throw new ApsSystemException("Error in getKieServerConfigurations", t);
         }
@@ -248,7 +249,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     public List<KieTask> getHumanTaskListForUser(KieBpmConfig config, String user, Map<String, String> opt) throws ApsSystemException {
         if (null == opt
                 && StringUtils.isNotBlank(user)) {
-            opt = new HashMap<String, String>();
+            opt = new HashMap<>();
         }
         if (StringUtils.isNotBlank(user)) {
             opt.put("user", user);
@@ -1049,6 +1050,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         this.overrideManager = overrideManager;
     }
 
+    @Override
     public Map<String, String> getHostNameVersionMap() {
         return this.hostNameVersionMap;
     }
@@ -1060,7 +1062,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         JSONArray serversStatus = new JSONArray();
         String result = null;
         JSONObject json = null;
-        HashMap<String, KieBpmConfig> serverConfigurations = this.getKieServerConfigurations();
+        Map<String, KieBpmConfig> serverConfigurations = this.getKieServerConfigurations();
         for (String key : serverConfigurations.keySet()) {
 
             KieBpmConfig config = serverConfigurations.get(key);
@@ -1374,6 +1376,14 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     public void setConfigManager(ConfigInterface configManager) {
         this.configManager = configManager;
+    }
+
+    public KieBpmConfigXMLConverter getXmlConverter() {
+        return xmlConverter;
+    }
+
+    public void setXmlConverter(KieBpmConfigXMLConverter xmlConverter) {
+        this.xmlConverter = xmlConverter;
     }
 
     public JSONObject getCaseDetails(KieBpmConfig config, String containerId, String caseId) throws ApsSystemException {

@@ -31,8 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchangesConfig;
-import org.entando.entando.aps.util.crypto.BlowfishEncryptor;
-import org.entando.entando.aps.util.crypto.XMLFieldsEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -46,7 +44,7 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
 
     private final ConfigInterface configManager;
     private final DigitalExchangeOAuth2RestTemplateFactory restTemplateFactory;
-    private final XMLFieldsEncryptor<DigitalExchangesConfig> xmlFieldsEncryptor;
+    private final DigitalExchangeConfigXmlConverter xmlConverter;
 
     private final List<DigitalExchange> exchanges = new CopyOnWriteArrayList<>();
     private final Map<String, OAuth2RestTemplate> templates = new ConcurrentHashMap<>();
@@ -54,10 +52,10 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
     @Autowired
     public DigitalExchangesManagerImpl(ConfigInterface configManager,
             DigitalExchangeOAuth2RestTemplateFactory restTemplateFactory,
-            BlowfishEncryptor blowfishEncryptor) {
+            DigitalExchangeConfigXmlConverter xmlConverter) {
         this.configManager = configManager;
         this.restTemplateFactory = restTemplateFactory;
-        xmlFieldsEncryptor = new XMLFieldsEncryptor<>(blowfishEncryptor, DigitalExchangesConfig.class);
+        this.xmlConverter = xmlConverter;
     }
 
     @PostConstruct
@@ -148,7 +146,7 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
         }
 
         try {
-            DigitalExchangesConfig config = xmlFieldsEncryptor.unmarshal(digitalExchangesConfig);
+            DigitalExchangesConfig config = xmlConverter.unmarshal(digitalExchangesConfig);
             exchanges.addAll(config.getDigitalExchanges());
         } catch (DataBindingException ex) {
             logger.error("Unable to parse DigitalExchanges XML configuration", ex);
@@ -171,7 +169,7 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
         DigitalExchangesConfig config = new DigitalExchangesConfig();
         config.setDigitalExchanges(exchanges);
 
-        String configString = xmlFieldsEncryptor.marshal(config);
+        String configString = xmlConverter.marshal(config);
 
         try {
             configManager.updateConfigItem(DigitalExchangeConstants.CONFIG_ITEM_DIGITAL_EXCHANGES, configString);

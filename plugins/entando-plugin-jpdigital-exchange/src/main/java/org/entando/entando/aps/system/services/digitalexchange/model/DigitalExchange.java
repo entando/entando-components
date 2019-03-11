@@ -22,8 +22,6 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import org.entando.entando.aps.util.crypto.EncryptorAdapter;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -64,8 +62,20 @@ public class DigitalExchange {
 
     @JsonProperty(value = "secret", access = JsonProperty.Access.WRITE_ONLY)
     @XmlElement(name = "secret")
-    @XmlJavaTypeAdapter(EncryptorAdapter.class)
     private String clientSecret;
+    
+    public DigitalExchange() {
+    }
+
+    public DigitalExchange(DigitalExchange other) {
+        this.id = other.id;
+        this.name = other.name;
+        this.url = other.url;
+        this.timeout = other.timeout;
+        this.active = other.active;
+        this.clientKey = other.clientKey;
+        this.clientSecret = other.clientSecret;
+    }
 
     public String getId() {
         return id;
