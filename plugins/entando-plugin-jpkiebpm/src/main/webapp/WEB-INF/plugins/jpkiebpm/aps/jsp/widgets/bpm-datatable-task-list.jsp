@@ -264,9 +264,8 @@
             <c:if test="${showClaimButtonVar == 'true'}">
             {
                 html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
-                    onClick: function (ev, data) {
-                        
-                        if (data.status=='Ready'){
+                    onClick: function (ev, data) {         
+                        if (data.status=='Ready') { 
                             claimTask(ev, configId, data.id, context);
                         }
                         else {
@@ -358,23 +357,8 @@
 
                         extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
                         org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);                                    
-                });
-            }
+                });                                            
         };
-
-    $.get(url, function (data) {
-    var items = data.response.result.taskList.list || [];
-            items = Array.isArray(items) ? items : [items];
-            items = items.map(function (item) {
-            item['activated'] = new Date(item['activated']).toLocaleString();
-                    item['created'] = new Date(item['created']).toLocaleString();
-                    return item;
-            });
-            var containerId = data.response.result.taskList.containerId;
-            extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
-            org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);
-    });
-    };
     
     $(document).ready(function () {
         loadDataTable('#data-table-task-list');
