@@ -102,7 +102,6 @@
     var windowHeight = $(window).height();
 
     var optModal = {
-        //appendTo: "#data-table-active",
         width: windowWidth - 100,
         height: windowHeight - 100,
         modal: true,
@@ -122,7 +121,6 @@
             var jsonKie = data.response.result;
             jsonKie.mainForm.method = "post";
             org.entando.form.dynamicForm = new org.entando.form.DynamicForm(jsonKie);
-            //org.entando.form.dynamicForm.json.html[0].value = processId;
             $("#bpm-task-list-modal-form").dform(org.entando.form.dynamicForm.json);
 
             var urlTaskData = context + "taskData.json?configId=" + configId + "&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
@@ -166,10 +164,6 @@
         });
     };
     
-    
-    
-    
-    
     function openDetailsPage(containerId, taskId)
     {
         var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />";
@@ -204,7 +198,6 @@
 
     function claimTask(ev, configId, dataTaskId, context){
             var configId =${configId};
-            //alert("configId "+configId+ " containerId: "+rowData.containerId + " taskId "+ rowData.id);
 
                 ev.preventDefault();
                 var postData = {
@@ -213,9 +206,7 @@
                         configId:  configId
                     }
                 };
-                
-               // alert("postData: "+JSON.stringify(postData));
-                
+                                
                 var action = context + "claimTask.json";
 
                 $.ajax({
@@ -317,8 +308,6 @@
                   <c:if test="${redirectOnClickRowVar == 'true'}">
                     buttons: extraBtns,
                         onClickRow: function (event, rowData) {
-                        // Click Row details code
-                        // $("#data-table-task-list tbody").on('click', 'tr td:not(:first-child)',function () {
                         openDetailsPage(rowData.containerId , rowData.id);                    
                         }
                     </c:if>
@@ -338,7 +327,9 @@
                };
                
                
-              
+              /*TODO Change the API and the request to get only the field 
+              definitions (without data) on the first call*/
+             
                 $.get(url, function (data) {         
                   
                     var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
@@ -367,48 +358,12 @@
                 });                
         };
 
-<%--
-// Click Row details code
-/* Formatting function for row details*/
-function format ( rowData ) {
-                var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
-
-    var configId =${configId};
-    var taskData='';
-    var taskDataTable='';
-    var urlTaskData = context + "taskData.json?configId=" + configId + "&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
-
-    $.ajax({
-           url: urlTaskData,
-           type: 'get',
-           contentType: 'application/json',
-           async: false,
-           timeout: 30000,
-           dataType: 'json',
-           success: function (data) {
-               taskData=getTemplateTaskData(data.response.result.mainForm);
-               taskDataTable='<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+taskData+'</table>';                       
-           },
-           error: function () {
-               console.log('Error reading taskData for id'+ rowData.id);
-           }
-       }); 
-      
-    return taskDataTable;
-}
---%>
  
 $(document).ready(function () {
     loadDataTable('#data-table-task-list');
 });
     
 </script>
-<%-- 
-<div class="showHideButtons">
-    <button id="btn-show-all-children" type="button">Expand All</button>
-    <button id="btn-hide-all-children" type="button">Collapse All</button>
-</div>
---%>
 
 <table id="data-table-task-list" class="display nowrap" cellspacing="0" width="100%"></table>
 

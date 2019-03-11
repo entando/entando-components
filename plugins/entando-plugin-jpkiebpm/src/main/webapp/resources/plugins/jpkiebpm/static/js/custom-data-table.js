@@ -29,15 +29,9 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
                 targets: i + 1
             };
         });
-//        ADD FIRST COLUMN FOR ROW DETAILS BUTTONS
-//        columns.unshift({
-//            "class": "details-control",
-//            "orderable": false,
-//            "data": null,
-//            "defaultContent": ""
-//        });
         return columns;
     }
+
     function getJsonDataWithProcessVariables(items) {
         return items.map(function (item) {
             item['activated'] = new Date(item['activated']).toLocaleString();
@@ -67,16 +61,12 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
             obj.containerId = containerId;
             return obj;
         });
-
     }
 
 
     var jsonColumns = getConfigColumnDatatable(items, extraConfig && extraConfig.columnDefinition);
-    //var jsonColumnsNew = [];
-    //var jsonDataList = [];
     var buttonsColumnDef;
-    
-    
+        
     if (extraConfig && extraConfig.buttons && Array.isArray(extraConfig.buttons)) {
         jsonColumns.push({});
         var buttonsStr = extraConfig.buttons.map(function(btn, i) {
@@ -111,23 +101,26 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
             },
         ajax: {
             url: context+ "datatabletasks.json?configId=" + configId,
+            type: "POST",
+            contentType: "application/json",
+            data: function (data) {
+                return JSON.stringify({request: data});
+            },
             dataFilter: function(data){
-                //alert("dataFilter");
+                //alert("dataFilter "+ data);
                 var jsonData = jQuery.parseJSON(data);
                 var json = {};
-                    json.draw=jsonData.response.result.taskList.draw;
-                    json.recordsTotal = jsonData.response.result.taskList.recordsTotal;
-                    json.recordsFiltered = jsonData.response.result.taskList.recordsFiltered;
-                    //jsonColumnsNew = getConfigColumnDatatable(json.data,jsonData.response.result.taskList.fieldDefinition.fields);
-                    //jsonDataList = getJsonData(jsonData.response.result.taskList.list, jsonColumnsNew);
-                    jsonDataProcessVars = getJsonDataWithProcessVariables(jsonData.response.result.taskList.list);                    
+                    json.draw=jsonData.taskList.draw;
+                    json.recordsTotal = jsonData.taskList.recordsTotal;
+                    json.recordsFiltered = jsonData.taskList.recordsFiltered;
+                    jsonDataProcessVars = getJsonDataWithProcessVariables(jsonData.taskList.list);                    
                     json.data = jsonDataProcessVars;
                     json = JSON.stringify(json);
-
+                   // alert(json);
                 return json; // return JSON string
             },
             error: function (xhr, error, thrown) {
-                alert('You are not logged in');
+                alert('Error reading the task list');
             }
         },
         columns: jsonColumns,
@@ -187,73 +180,5 @@ org.entando.datatable.CustomDatatable = function (context, items, idTable, extra
             });
         });
     }
-
-//    // Array to track the ids of the details displayed rows
-//    var detailRows = [];
-//        $(idTable + ' tbody').on('click', 'tr td.details-control',
-//            function (event) {
-//                 event.preventDefault();
-//                 event.stopPropagation();
-//                // var dt = $('#data-table-task-list').DataTable();
-//                var tr = $(this).closest('tr');
-//                var row = table.row(tr);
-//                var idx = $.inArray(tr.attr('id'), detailRows);
-//
-//                if (row.child.isShown()) {
-//                    tr.removeClass('details');
-//                    row.child.hide();
-//
-//                    // Remove from the 'open' array
-//                    detailRows.splice(idx, 1);
-//                } else {
-//                    tr.addClass('details');
-//
-//                         var dataT;
-//                            
-//                             $.when(
-//                             
-//                             dataT= format(row.data())
-//                            ).done(function(){
-//                            row.child(dataT).show();    
-//                            //row.child.show();
-//                            });
-//                    // Add to the 'open' array
-//                    if (idx === -1) {
-//                        detailRows.push(tr.attr('id'));
-//                    }
-//                }
-//            }
-//    );
-//    // Handle click on "Expand All" button
-//    $('#btn-show-all-children').on('click', function () {
-//        // Enumerate all rows
-//        table.rows().every(function () {
-//            // If row has details collapsed
-//            if (!this.child.isShown()) {
-//                // Open this row
-//                var dataT='';
-//                $.when(
-//                   dataT=format(this.data())
-//                ).done(
-//                    this.child(dataT).show()                      
-//                );
-//                $(this).find("td:first").addClass('shown');
-//           }
-//        });
-//    });
-
-
-//    // Handle click on "Collapse All" button
-//    $('#btn-hide-all-children').on('click', function () {
-//        // Enumerate all rows
-//        table.rows().every(function () {
-//            // If row has details expanded
-//            if (this.child.isShown()) {
-//                // Collapse row details
-//                this.child.hide();
-//                $(this).find("td:first").removeClass('shown');
-//           }
-//        });
-//    }); 
 
 };

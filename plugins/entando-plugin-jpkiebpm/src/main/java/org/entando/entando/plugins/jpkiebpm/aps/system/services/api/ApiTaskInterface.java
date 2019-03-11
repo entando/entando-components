@@ -25,7 +25,6 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.api;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
@@ -55,7 +54,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.datatablerequest.DataTableColumnRequest;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.datatablerequest.DataTableTaskListApiRequest;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.JAXBDataTableTaskList;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.datatablerequest.DataTableOrderRequest;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.datatablerequest.DataTableSearchRequest;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieApiClaimTask;
 
 public class ApiTaskInterface extends KieApiManager {
@@ -340,47 +343,51 @@ public class ApiTaskInterface extends KieApiManager {
         return null;
     }
 
-    public JAXBDataTableTaskList getDataTableTasks(Properties properties) {
+    public JAXBDataTableTaskList getDataTableTasks(DataTableTaskListApiRequest request, Properties properties) {
 
         logger.info("********************************************************");
         logger.info("*********** getDataTableTasks *************");
         
-        // https://datatables.net/manual/server-side
-        //properties.entrySet().forEach(p->logger.info("getDataTableTasks {}",p));
-
         final String configId = properties.getProperty("configId");
-        final Integer draw;
+        Integer draw;
         Integer length = 10;
-
+        DataTableOrderRequest order = request.getOrder();
+        Integer orderColumn = null;
+        String orderDirection = null;
+        DataTableSearchRequest search = request.getSearch();
+        Integer page;
+        String searchValue = search.getValue();
+        List<DataTableColumnRequest> columns = request.getColumns();
+        
         try {
-            draw = Integer.parseInt(properties.getProperty("draw"));
+            draw = request.getDraw();
         } catch (NumberFormatException e) {
             return null;
         }
 
-        final String start = properties.getProperty("start");
-        final String search = properties.getProperty("search[value]");
+        final String start = Integer.toString(request.getStart());
 
-        if (StringUtils.isNotEmpty(properties.getProperty("length"))) {
-            try {
-                length = Integer.parseInt(properties.getProperty("length"));
-            } catch (NumberFormatException e) {
-                return null;
-            }
-
+        if (null != request.getLength()) {            
+                length = request.getLength();            
         }
+                
         logger.info("configId {}", configId);
         logger.info("draw {}", draw);
         logger.info("start {}", start);
-        logger.info("search {}", search);
         logger.info("length {}", length);
+        
+        if (null != order.getColumn()) {
+            orderColumn = order.getColumn();
+            logger.info("order column{}", orderColumn);
+        }
 
-        //FILTER FOR status array[string] optional task status (Created, Ready, Reserved, InProgress, Suspended, Completed, Failed, Error, Exited, Obsolete)
-
+        if (null != order.getDir()) {
+            orderDirection = order.getDir();
+            logger.info("order dir {}", orderDirection);
+        }
         
         JAXBDataTableTaskList taskList = new JAXBDataTableTaskList();
         taskList.setDraw(draw);
-
 
         if (null != configId) {
             try {
@@ -395,42 +402,39 @@ public class ApiTaskInterface extends KieApiManager {
                     }
                     String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
                     KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
-
-                    // JAXBTaskList taskList = new JAXBTaskList();
                     this.setElementDatatableFieldDefinition(config, taskList);
                     Map<String, String> opt = new HashMap();
-                    //page =  % d & pageSize =  % d & filter =  % s & sort =  % s & sortOrder =  % s
                     opt.put("pageSize", String.valueOf(length));
-                    Integer page=getPage(Integer.valueOf(start), Integer.valueOf(length));
+                    page=getPage(Integer.valueOf(start), Integer.valueOf(length));
                     if (null!=page){
                        opt.put("page",String.valueOf(page) );
                     }
-                 
-                    /*
-                    if (StringUtils.isNotBlank(search)) {
-                         opt.put("filter", "task-id:"+search);
+             
+                    if (null != orderColumn) {
+                        logger.info("ORDER BY {} with firldId", columns.get(orderColumn).getData(), orderColumn);
+                        opt.put("sort", "t.taskData." + columns.get(orderColumn).getData());
+                        if (null != orderDirection) {
+                            logger.info("ORDER DIRECTION {}", orderDirection);
+                            opt.put("sortOrder",  orderDirection);
+
+                        }
                     }
-                    */
+    
+                    if (StringUtils.isNotBlank(searchValue)) {
+                         opt.put("filter", searchValue);
+                    }
+                 
                     
                     
                    this.setElementList(bpmConfig, config, taskList, opt);
                     taskList.setContainerId(config.getProperty("containerId"));
                     taskList.setProcessId(config.getProperty("processId"));
                     taskList.setConfigId(bpmConfig.getId());
-                   // filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
+               
+                    filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
+                    logger.info("      taskList.getList().size(): {}" + taskList.getList().size());
                     
-                   
-                    if (StringUtils.isNotBlank(search)) {
-                        logger.info("SEARCH {} " + search);
-                        filterTasksByProcessIdSearch(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID), search);
-                        logger.info("      taskList.getList().size(): {}" + taskList.getList().size());
-                    } else {
-                        logger.info("DEFAULT");
-                        filterTasksByProcessId(taskList, config.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID));
-                        logger.info("      taskList.getList().size(): {}" + taskList.getList().size());
-                    }
-                    
-                   logger.info("***********      taskList.getList().size(): {}" + taskList.getList().size());
+                    logger.info("***********      taskList.getList().size(): {}" + taskList.getList().size());
                     
                     ExecutorService executorService = Executors.newFixedThreadPool(length);
                     List<Callable<JAXBTask>> tasksCallables = new ArrayList<>();
@@ -451,16 +455,19 @@ public class ApiTaskInterface extends KieApiManager {
                     taskList.setRecordsTotal(taskList.getList().size());
                     taskList.setRecordsFiltered(taskList.getList().size()+1);
 
-                    logger.info("********************************************************");
+                   // logger.info("********************************************************");
                    
-                    return taskList;
+                  //  return taskList;
                 }
             } catch (Exception e) {
                 logger.error("Error {}", e);
             }
         }
         logger.info("RETURN taskList.getList().size(): {}", taskList.getList().size());
-
+        logger.info("columns size {}", request.getColumns().size());
+        for (DataTableColumnRequest column : columns ){
+            logger.info("columns  {}", column.getData());
+        }
         logger.info("********************************************************");
 
         return taskList;
@@ -1035,16 +1042,6 @@ public class ApiTaskInterface extends KieApiManager {
         if (taskList.getList() != null) {
             List<JAXBTask> filteredTasks = taskList.getList().stream()
                     .filter(task -> task.getProcessDefinitionId().equals(processDefId))
-                    .collect(Collectors.toList());
-            taskList.setList(filteredTasks);
-        }
-    }
-
-    private void filterTasksByProcessIdSearch(JAXBDataTableTaskList taskList, String processDefId, String search) {
-        if (taskList.getList() != null) {
-            List<JAXBTask> filteredTasks = taskList.getList().stream()
-                    .filter(task -> task.getProcessDefinitionId().equals(processDefId))
-                    .filter(f -> Long.toString(f.getId()).contains(search))
                     .collect(Collectors.toList());
             taskList.setList(filteredTasks);
         }
