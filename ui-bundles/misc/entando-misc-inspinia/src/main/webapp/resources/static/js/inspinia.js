@@ -129,11 +129,12 @@ $(document).ready(function () {
     });
 
     // Tooltips demo
+    /*
     $('.tooltip-demo').tooltip({
         selector: "[data-toggle=tooltip]",
         container: "body"
     });
-
+    */
 
     // Full height of sidebar
     function fix_height() {
