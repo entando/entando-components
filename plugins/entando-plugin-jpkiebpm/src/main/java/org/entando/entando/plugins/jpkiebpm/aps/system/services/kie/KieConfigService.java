@@ -30,8 +30,6 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
 import org.slf4j.Logger;

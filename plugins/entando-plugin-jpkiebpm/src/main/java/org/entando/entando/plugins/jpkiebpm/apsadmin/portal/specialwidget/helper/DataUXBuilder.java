@@ -27,16 +27,39 @@ import freemarker.template.*;
 import org.apache.struts2.util.ServletContextAware;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.*;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.*;
-import org.slf4j.*;
-import org.springframework.stereotype.Service;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Model;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Section;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePickerField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.InputField;
 
-import javax.servlet.ServletContext;
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateExceptionHandler;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Function;
+import javax.servlet.ServletContext;
+import org.springframework.stereotype.Service;
+import org.apache.struts2.util.ServletContextAware;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.IBpmOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.MultipleSelectorField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.ListBoxField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Option;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.RadioGroupField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.TextField;
 
 @Service
 public class DataUXBuilder<T extends InputField> implements ServletContextAware {
@@ -53,9 +76,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     public static final String TEMPLATE_FOLDER = "/templates/";
     public static final String MAIN_FTL_TEMPLATE = "PageModel.ftl";
 
-    
-    
-    
     Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
 
     public void init() throws Exception {
@@ -105,6 +125,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     public DataUXBuilder() {
 
     }
+
     public String createDataUx(KieProcessFormQueryResult kpfr, int widgetInfoId, String containerId, String processId, String title) throws Exception {
         return this.createDataUx( kpfr, widgetInfoId, containerId, processId, title, DEFAULT_FORM_ACTION,"");
     }
@@ -122,7 +143,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         model.setFormAction(formAction);
         model.setUrlParameters(urlParameters);
         root.put("model", model);
-        logger.info("sections {}", sections);
+        logger.debug("sections {}", sections);
         root.put("sections", sections);
         Writer stringWriter = new StringWriter();
         template.process(root, stringWriter);
@@ -203,15 +224,16 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     }
 
     private T addField(KieProcessFormField field, KieFormOverride formOverride) throws Exception {
-        logger.info("------------------------------------");
-        logger.info("Field getId          -> {}", field.getId());
-        logger.info("Field getName        -> {}", field.getName());
-        logger.info("Field getPosition    -> {}", field.getPosition());
-        logger.info("Field getType        -> {}", field.getType());
-        logger.info("Field getProperties  -> ");
+        logger.debug("------------------------------------");
+        logger.debug("Field getId          -> {}", field.getId());
+        logger.debug("Field getName        -> {}", field.getName());
+        logger.debug("Field getPosition    -> {}", field.getPosition());
+        logger.debug("Field getType        -> {}", field.getType());
+        logger.debug("Field getProperties -> ");
         field.getProperties().forEach(p
-                -> logger.info("  Property name: {} value: {}", p.getName(), p.getValue()));
-        
+                -> logger.debug("  Property name:{} value: {}", p.getName(), p.getValue()));
+        logger.debug("------------------------------------");
+
         T inputField;
         switch (field.getType()) {
             case "TextBox":
@@ -268,8 +290,8 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         fieldValue=fieldValue.replaceAll(" ", "_");
                 
                 
-        logger.info("Field getValue        -> {}", fieldValue);
-        logger.info("------------------------------------");
+        logger.debug("Field getValue        -> {}", fieldValue);
+        logger.debug("------------------------------------");
 
         boolean required = Boolean.parseBoolean(field.getProperty("fieldRequired").getValue());
 
