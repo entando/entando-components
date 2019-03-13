@@ -172,7 +172,14 @@ export const getWidgetConfigChart = formName => (dispatch, getState) => {
       response.json().then(json => {
         if (response.ok) {
           // API ancora mockata
-          dispatch(setDatasourceColumns(json.payload));
+          dispatch(
+            setDatasourceColumns(
+              json.payload.map(m => ({
+                key: m.key,
+                value: m.value
+              }))
+            )
+          );
           configJson.columns.x &&
             configJson.columns.x.forEach(item => {
               dispatch(arrayPush(formName, "columns.x", item));

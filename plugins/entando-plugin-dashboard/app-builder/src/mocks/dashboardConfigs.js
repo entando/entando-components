@@ -134,7 +134,20 @@ export const DATASOURCE_TEMPERATURE_DATA = {
     {key: "temperature", value: "temperature", hidden: false},
     {key: "timestamp", value: "timestamp", hidden: false}
   ],
-  data: []
+  data: [
+    {
+      timestamp: "2013-01-01 09:10:00",
+      temperature: 300
+    },
+    {
+      timestamp: "2013-01-01 09:20:00",
+      temperature: 200
+    },
+    {
+      timestamp: "2013-01-01 09:30:00",
+      temperature: 100
+    }
+  ]
 };
 
 export const DATASOURCES_DATA = {
@@ -147,4 +160,70 @@ export const DATASOURCES_DATA = {
 export const DASHBOARD_LIST_DATASOURCE = {
   "1": [DATASOURCE_PARKING, DATASOURCE_BIKE_SHARING, DATASOURCE_BUS_STATION],
   "2": [DATASOURCE_TEMPERATURE]
+};
+
+export const CONFIG_CHART = {
+  config: {
+    axis: {
+      chart: "line",
+      rotated: false,
+      x: {
+        type: "timeseries",
+        label: "time",
+        tick: {
+          format: "%Y-%m-%d%H:%M:%S"
+        }
+      },
+      y2: {
+        show: false
+      },
+      y: {
+        label: "temp"
+      }
+    },
+    size: {
+      width: 300,
+      height: 500
+    },
+    padding: {
+      top: 50,
+      right: 50,
+      bottom: 50,
+      left: 50
+    },
+    legend: {
+      position: "bottom"
+    },
+    title: {
+      en: "Line chart"
+    },
+    serverName: 2,
+    datasource: "temperature",
+    columns: {
+      x: [
+        {
+          id: 1,
+          key: "timestamp",
+          value: "timestamp",
+          selected: true
+        }
+      ],
+      y: [
+        {
+          id: 0,
+          key: "temperature",
+          value: "temperature",
+          selected: true
+        }
+      ]
+    },
+    data: {
+      json: [],
+      keys: {
+        x: "timestamp",
+        value: ["temperature"]
+      },
+      xFormat: "%Y-%m-%d%H:%M:%S"
+    }
+  }
 };

@@ -1,6 +1,6 @@
 .Stepper {
   .wizard-pf-main {
-    padding: 3em;
+    padding: 2.5em;
   }
 
   .wizard-pf-steps-indicator {
@@ -18,13 +18,13 @@
   }
 
   &__data-contents {
-    border: 0px solid red;
-    height: 655px;
+    border: 0 solid red;
+    height: 700px;
   }
 
   &__btn-container {
     border: 0 solid blue;
-    margin-top: 3.5em;
+    margin-top: 8em;
   }
 
   &__btn-back {

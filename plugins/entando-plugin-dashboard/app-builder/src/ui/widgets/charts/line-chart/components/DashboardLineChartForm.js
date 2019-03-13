@@ -15,9 +15,7 @@ const CHART_PREVIEW = "Line Chart";
 
 class DashboardLineChartFormBody extends Component {
   componentWillMount() {
-    if (this.props.onWillMount) {
-      this.props.onWillMount();
-    }
+    this.props.onWillMount();
   }
 
   render() {

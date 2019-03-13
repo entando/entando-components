@@ -28,17 +28,23 @@ class FieldArrayDropDownMultiple extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.fields && nextProps.fields.length > 0) {
-      const {columns} = this.state;
-      nextProps.optionColumnSelected.forEach(item => {
+  /*
+ it's necessary when call dispatch initialize for link data for DropdownMultiple and FieldArray
+ */
+  static getDerivedStateFromProps(props, state) {
+    if (props.fields && props.fields.length > 0) {
+      const columns = state.columns;
+      props.optionColumnSelected.forEach(item => {
         const idx = columns.findIndex(el => el.key === item.key);
         if (idx !== -1) {
           columns[idx].selected = item.selected;
         }
       });
-      this.setState({columns});
+      return {
+        columns
+      };
     }
+    return null;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -65,6 +71,7 @@ class FieldArrayDropDownMultiple extends Component {
           addColumnOptionSelected(nameFieldArray, temp);
       } else {
         const {optionColumnSelected, removeColumnOptionSelected} = this.props;
+
         optionColumnSelected
           .map((m, index) => (m.key === key ? index : -1))
           .forEach(index => {

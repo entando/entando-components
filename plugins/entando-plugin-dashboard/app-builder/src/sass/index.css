@@ -57,7 +57,7 @@
   cursor: default !important; }
 
 .Stepper .wizard-pf-main {
-  padding: 3em; }
+  padding: 2.5em; }
 
 .Stepper .wizard-pf-steps-indicator {
   border-top: 0; }
@@ -71,12 +71,12 @@
   border: 0 solid; }
 
 .Stepper__data-contents {
-  border: 0px solid red;
-  height: 655px; }
+  border: 0 solid red;
+  height: 700px; }
 
 .Stepper__btn-container {
   border: 0 solid blue;
-  margin-top: 3.5em; }
+  margin-top: 8em; }
 
 .Stepper__btn-back {
   margin-right: 3em; }
@@ -288,7 +288,8 @@
     padding: 0 !important; }
 
 .GeneralSettings {
-  padding: 1em; }
+  padding-left: 1em;
+  padding-right: 1em; }
   .GeneralSettings .row {
     border: 0 solid; }
   .GeneralSettings__col {
@@ -377,7 +378,8 @@
     border: 0 solid; }
 
 .SettingsChart {
-  padding: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
   border: 0 solid yellow; }
   .SettingsChart .row:not(:first-child) {
     padding: 1em; }

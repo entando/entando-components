@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {PureComponent} from "react";
 import PropTypes from "prop-types";
 import {Field, FieldArray} from "redux-form";
 import {
@@ -58,7 +58,7 @@ const wrapInputTextField = (name, label, append, disabled = false) => {
   );
 };
 
-class SettingsChart extends Component {
+class SettingsChart extends PureComponent {
   chooseTimeFormat() {
     return (
       <div className="SettingsChart__timeformat-container">
@@ -136,6 +136,7 @@ class SettingsChart extends Component {
           component={FieldArrayDropDownMultiple}
           optionColumns={optionColumns}
           optionColumnSelected={optionColumnXSelected}
+          toogleSelectedOption={this.props.toogleSelectedOption}
         />
         <FormGroup className="SettingsChart__form-group">
           <Field name="axis.x.type" component="select" className="form-control">
