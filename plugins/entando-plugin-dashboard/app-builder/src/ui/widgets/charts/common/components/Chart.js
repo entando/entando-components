@@ -42,6 +42,12 @@ const CHART_CONFIG = {
     className: "line-chart-pf",
     defaultConfig: c3ChartDefaults.getDefaultLineConfig()
   },
+  SPLINE_CHART: {
+    type: "spline",
+    displayName: "LineChart",
+    className: "line-chart-pf",
+    defaultConfig: c3ChartDefaults.getDefaultLineConfig()
+  },
   PIE_CHART: {
     type: "pie",
     displayName: "PieChart",

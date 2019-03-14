@@ -120,6 +120,7 @@ export default {
     "plugin.chart.min": "Min",
     "plugin.chart.max": "Max",
     "plugin.chart.expand": "Expand",
+    "plugin.chart.spline": "Change layout to spline",
     "plugin.geolocalization.label": "Label",
     "plugin.geolocalization.item": "Item",
     "plugin.geolocalization.label.requirement":

@@ -1,5 +1,5 @@
 .SettingsChart {
-  padding-left:  1em;
+  padding-left: 1em;
   padding-right: 1em;
   border: 0 solid yellow;
   // .bootstrap-switch-label {
@@ -17,6 +17,7 @@
   &__form-group.form-group {
     border: 0 solid;
     margin-bottom: 3px;
+    min-height: 35px;
   }
 
   &__timeformat-container {

@@ -9,7 +9,8 @@ import DatasourceForm from "ui/widgets/common/form/components/DatasourceForm";
 const mapStateToProps = (state, ownProps) => ({
   datasources: getDatasourceList(state),
   nameFieldArray: ownProps.nameFieldArray,
-  disabled: ownProps.disabled
+  disabled: ownProps.disabled,
+  labelSize: ownProps.labelSize
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -132,20 +132,28 @@ export const DATASOURCE_TEMPERATURE_DATA = {
   id: "temperature",
   columns: [
     {key: "temperature", value: "temperature", hidden: false},
-    {key: "timestamp", value: "timestamp", hidden: false}
+    {key: "temperature1", value: "temperature1", hidden: false},
+    {key: "timestamp", value: "timestamp", hidden: false},
+    {key: "timestamp1", value: "timestamp1", hidden: false}
   ],
   data: [
     {
-      timestamp: "2013-01-01 09:10:00",
-      temperature: 300
+      timestamp: "2019-01-01 09:10:00",
+      timestamp1: "2019-01-11 08:00:00",
+      temperature: 300,
+      temperature1: 150
     },
     {
-      timestamp: "2013-01-01 09:20:00",
-      temperature: 200
+      timestamp: "2019-01-01 09:20:00",
+      timestamp1: "2019-01-12 09:30:00",
+      temperature: 200,
+      temperature1: 175
     },
     {
-      timestamp: "2013-01-01 09:30:00",
-      temperature: 100
+      timestamp: "2019-01-01 09:30:00",
+      timestamp1: "2019-01-20 10:30:00",
+      temperature: 100,
+      temperature1: 50
     }
   ]
 };

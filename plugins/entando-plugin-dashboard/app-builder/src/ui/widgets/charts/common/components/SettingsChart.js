@@ -136,7 +136,7 @@ class SettingsChart extends PureComponent {
           component={FieldArrayDropDownMultiple}
           optionColumns={optionColumns}
           optionColumnSelected={optionColumnXSelected}
-          toogleSelectedOption={this.props.toogleSelectedOption}
+          validate={[required]}
         />
         <FormGroup className="SettingsChart__form-group">
           <Field name="axis.x.type" component="select" className="form-control">
@@ -175,6 +175,7 @@ class SettingsChart extends PureComponent {
           component={FieldArrayDropDownMultiple}
           optionColumns={optionColumns}
           optionColumnSelected={optionColumnYSelected}
+          validate={[required]}
         />
       </Col>
     );
@@ -195,12 +196,12 @@ class SettingsChart extends PureComponent {
               content={<FormattedMessage id="plugin.chart.Y2axis.help" />}
               close="true"
             />
+            <Field
+              component={SwitchRenderer}
+              name="axis.y2.show"
+              className="pull-right"
+            />
           </ControlLabel>
-          <Field
-            component={SwitchRenderer}
-            name="axis.y2.show"
-            className="pull-right"
-          />
         </FormGroup>
         {wrapInputTextField(
           "axis.y2.label",

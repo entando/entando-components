@@ -82,14 +82,16 @@
   margin-right: 3em; }
 
 .ServerNameForm__input-group {
-  border: 0px solid red;
-  padding: 1em;
-  width: 100%; }
+  border: 0 solid red;
+  width: 100%;
+  padding-top: 1em;
+  padding-bottom: 1em; }
 
 .DatasourceForm__input-group {
   border: 0 solid red;
   width: 100%;
-  padding: 1em; }
+  padding-top: 1em;
+  padding-bottom: 1em; }
 
 .DashboardConfig {
   border: 0 solid;
@@ -388,7 +390,8 @@
     min-height: 200px; }
   .SettingsChart__form-group.form-group {
     border: 0 solid;
-    margin-bottom: 3px; }
+    margin-bottom: 3px;
+    min-height: 35px; }
   .SettingsChart__timeformat-container {
     border: 0 solid;
     padding-left: 1em; }
@@ -712,11 +715,15 @@
   border: 0 solid blue;
   margin: 0;
   position: absolute;
-  top: 0;
+  top: 10px;
   right: 0; }
 
 .DatasourceLayer {
   border: 0 solid; }
+  .DatasourceLayer__input-group {
+    border: 0px solid red;
+    width: 100%;
+    padding: 1em; }
   .DatasourceLayer__icons-marker-container {
     border: 0 solid red;
     margin-top: 1em;

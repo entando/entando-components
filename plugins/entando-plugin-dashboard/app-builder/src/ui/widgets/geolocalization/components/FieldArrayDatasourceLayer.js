@@ -85,17 +85,15 @@ class FieldArrayDatasourceLayer extends Component {
             datasourceSelected={datasourceSelected}
           />
           <Col xs={12}>
-            <div className="col-xs-2">
-              <Button
-                disabled={disabledAddButton}
-                type="button"
-                bsStyle="default"
-                className="btn-add"
-                onClick={() => this.addDatasource()}
-              >
-                <FormattedMessage id="common.add" />
-              </Button>
-            </div>
+            <Button
+              disabled={disabledAddButton}
+              type="button"
+              bsStyle="primary"
+              className="btn-add"
+              onClick={() => this.addDatasource()}
+            >
+              <FormattedMessage id="common.add" />
+            </Button>
           </Col>
         </Row>
       </Grid>

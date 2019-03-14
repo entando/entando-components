@@ -117,14 +117,13 @@ export default {
     "plugin.chart.chartSize": "Chart Size",
     "plugin.chart.padding": "Padding",
     "plugin.chart.interactiveChart": "Interactive Chart",
-
     "plugin.chart.showDetailMouseClick": "Show details on mouse click",
-
     "plugin.chart.values": "Values",
     "plugin.chart.thickness": "Thickness",
     "plugin.chart.min": "Min",
     "plugin.chart.max": "Max",
     "plugin.chart.expand": "Expand",
+    "plugin.chart.spline": "Change layout to spline",
     "plugin.geolocalization.label": "Label",
     "plugin.geolocalization.item": "Item",
     "plugin.geolocalization.label.requirement":

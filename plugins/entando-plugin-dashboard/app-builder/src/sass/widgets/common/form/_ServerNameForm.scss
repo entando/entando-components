@@ -1,7 +1,8 @@
 .ServerNameForm {
   &__input-group {
-    border: 0px solid red;
-    padding: 1em;
+    border: 0 solid red;
     width: 100%;
+    padding-top: 1em;
+    padding-bottom: 1em;
   }
 }

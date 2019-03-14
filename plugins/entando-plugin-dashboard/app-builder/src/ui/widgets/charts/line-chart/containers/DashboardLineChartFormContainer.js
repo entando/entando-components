@@ -13,6 +13,9 @@ const mapStateToProps = state => ({
   formSyncErrors: getFormSyncErrors("form-dashboard-line-chart")(state),
   axis: {rotated: selector(state, "axis.rotated")},
   chart: selector(state, "chart"),
+  spline: selector(state, "spline"),
+  columns: selector(state, "columns"),
+
   initialValues: {
     axis: {
       chart: "line",
@@ -47,10 +50,24 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     transformData.data = {
       json: [],
       keys: {
-        x: get(data, "columns.x[0].key"),
-        value: get(data, "columns.y").map(m => m.key)
+        //        x: get(data, "columns.x[0].key"),
+        value: [
+          ...get(data, "columns.x").map(m => m.key),
+          ...get(data, "columns.y").map(m => m.key)
+        ]
       }
     };
+    /* https://c3js.org/reference.html#data-xs This option can be used if we want to show the data that has different x values.*/
+    if (data.columns.x.length > 1) {
+      const {x, y} = data.columns;
+      transformData.data.xs = x.reduce((acc, item, index) => {
+        acc[y[index].key] = item.key;
+        return acc;
+      }, {});
+    } else {
+      transformData.data.keys.x = get(data, "columns.x[0].key");
+    }
+
     if (get(data, "axis.x.type") === "timeseries") {
       set(transformData, "axis.x.type", "timeseries");
       transformData.data.xFormat = get(data, "axis.x.tick.format");

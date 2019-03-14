@@ -227,17 +227,34 @@ const GeneralSettings = ({typeChart, chart}) => {
           </Col>
 
           <Col xs={12}>
-            <Field
-              type="number"
-              component={renderField}
-              name={`${chart}.width`}
-              label="plugin.chart.thickness"
-              min="0"
-              max="999"
-              direction="rtl"
-              className="GeneralSettings__field-thickness"
-              disabled={chart === "line" ? true : false}
-            />
+            {typeChart === "LINE_CHART" || typeChart === "SPLINE_CHART" ? (
+              <FormGroup className="GeneralSettings__form-group">
+                <Field
+                  name="spline"
+                  id="spline"
+                  component="input"
+                  type="checkbox"
+                />
+                &nbsp;&nbsp;
+                <ControlLabel>
+                  <strong>
+                    <FormattedMessage id="plugin.chart.spline" />
+                  </strong>
+                </ControlLabel>
+              </FormGroup>
+            ) : (
+              <Field
+                type="number"
+                component={renderField}
+                name={`${chart}.width`}
+                label="plugin.chart.thickness"
+                min="0"
+                max="999"
+                direction="rtl"
+                className="GeneralSettings__field-thickness"
+                disabled={typeChart === "LINE_CHART" ? true : false}
+              />
+            )}
           </Col>
         </Row>
       </Grid>

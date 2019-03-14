@@ -10,7 +10,7 @@ import ChartThirdStepContent from "ui/widgets/charts/common/components/ChartThir
 const data = {columns: [["data1", 10, 30, 10, 20, 40, 50]]};
 
 const FORM_NAME = "form-dashboard-line-chart";
-const TYPE_CHART = "LINE_CHART";
+let TYPE_CHART = "LINE_CHART";
 const CHART_PREVIEW = "Line Chart";
 
 class DashboardLineChartFormBody extends Component {
@@ -21,7 +21,9 @@ class DashboardLineChartFormBody extends Component {
   render() {
     const {
       formSyncErrors,
-      axis: {rotated}
+      axis: {rotated},
+      spline,
+      columns
     } = this.props;
 
     const validateSteps = [false, false, false];
@@ -32,10 +34,15 @@ class DashboardLineChartFormBody extends Component {
     ) {
       validateSteps[0] = true;
     }
-    if (!formSyncErrors.axis) {
-      validateSteps[1] = true;
+    if (!formSyncErrors.axis && !formSyncErrors.columns) {
+      if (
+        (columns && columns.x.length === 0) ||
+        (columns && columns.y.length === 0)
+      ) {
+        validateSteps[1] = false;
+      } else validateSteps[1] = true;
     }
-
+    spline ? (TYPE_CHART = "SPLINE_CHART") : (TYPE_CHART = "LINE_CHART");
     return (
       <Stepper
         handleSubmit={this.props.handleSubmit}
@@ -66,13 +73,11 @@ class DashboardLineChartFormBody extends Component {
 DashboardLineChartFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
-  invalid: PropTypes.bool,
-  submitting: PropTypes.bool
+  spline: PropTypes.bool
 };
 
 DashboardLineChartFormBody.defaultProps = {
-  invalid: false,
-  submitting: false
+  spline: false
 };
 const DashboardLineChartForm = reduxForm({
   form: FORM_NAME

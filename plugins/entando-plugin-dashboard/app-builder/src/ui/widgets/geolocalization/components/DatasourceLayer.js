@@ -52,17 +52,19 @@ const DatasourceLayer = ({
           formName={formName}
           nameFieldArray={nameFieldArray}
           disabled={disabled}
+          labelSize={5}
         />
       </Col>
-      <Col xs={6} className="DatasourceLayer__col-label">
-        <InputGroup>
+      <Col xs={6} className="DatasourceLayer__label">
+        <InputGroup className="DatasourceLayer__input-group">
           <Field
             component={RenderTextInput}
             name={nameFieldArray ? `${nameFieldArray}[label]` : "label"}
             label={
               <FormLabel labelId="plugin.geolocalization.label" required />
             }
-            alignClass="text-left"
+            alignClass="DatasourceLayer__align-class"
+            labelSize={2}
             validate={[required, minLength3, maxLength20]}
             append={formattedText("plugin.geolocalization.label.requirement")}
           />
@@ -80,7 +82,6 @@ const DatasourceLayer = ({
               </strong>
             </div>
           </Col>
-
           <Col xs={10} className="DatasourceLayer__icons-marker">
             <div>
               {ICONS_MARKER_1.map(name => (

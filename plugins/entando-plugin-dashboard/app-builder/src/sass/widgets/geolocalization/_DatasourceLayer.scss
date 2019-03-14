@@ -1,6 +1,12 @@
 .DatasourceLayer {
   border: 0 solid;
 
+  &__input-group {
+    border: 0px solid red;
+    width: 100%;
+    padding: 1em;
+  }
+
   &__icons-marker-container {
     border: 0 solid red;
     margin-top: 1em;
