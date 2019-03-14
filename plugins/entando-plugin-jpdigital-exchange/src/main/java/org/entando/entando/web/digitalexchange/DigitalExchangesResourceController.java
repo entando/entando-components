@@ -54,7 +54,13 @@ public class DigitalExchangesResourceController implements DigitalExchangesResou
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        return ResponseEntity.ok(new SimpleRestResponse<>(digitalExchangeService.create(digitalExchange)));
+
+        DigitalExchange de = digitalExchangeService.create(digitalExchange);
+        SimpleRestResponse response = new SimpleRestResponse<>(de);
+        if ( ! de.hasPublicKey() ) {
+            response.addError(new RestError("1", "DigitalExchange not activated: no public key available"));
+        }
+        return ResponseEntity.ok(response);
     }
 
     @Override

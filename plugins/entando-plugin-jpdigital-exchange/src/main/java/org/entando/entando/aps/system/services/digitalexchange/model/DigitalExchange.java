@@ -64,6 +64,10 @@ public class DigitalExchange {
     @XmlElement(name = "secret")
     private String clientSecret;
 
+    @JsonProperty("publicKey")
+    @XmlElement(name = "publicKey")
+    private String publicKey;
+
     public String getId() {
         return id;
     }
@@ -118,5 +122,13 @@ public class DigitalExchange {
 
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
+    }
+
+    public String getPublicKey() { return publicKey; }
+
+    public void setPublicKey(String publicKey) { this.publicKey = publicKey; }
+
+    public boolean hasPublicKey() {
+        return null != this.getPublicKey() && !this.getPublicKey().isEmpty();
     }
 }

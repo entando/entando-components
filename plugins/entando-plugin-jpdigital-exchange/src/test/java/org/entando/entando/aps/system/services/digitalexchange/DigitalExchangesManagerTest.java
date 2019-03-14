@@ -196,6 +196,7 @@ public class DigitalExchangesManagerTest {
                         + "    <secret>client-secret</secret>"
                         + "    <timeout>5000</timeout>"
                         + "    <active>true</active>"
+                        + "    <publicKey>" + DE_PEM + "</publicKey>"
                         + "  </digitalExchange>"
                         + "</digitalExchanges>");
     }

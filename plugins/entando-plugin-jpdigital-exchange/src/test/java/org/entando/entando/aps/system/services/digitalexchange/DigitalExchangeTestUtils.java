@@ -29,6 +29,8 @@ public final class DigitalExchangeTestUtils {
 
     public static final String DE_URL = "http://www.entando.com/";
 
+    public static final String DE_PEM = "test";
+
     private DigitalExchangeTestUtils() {
     }
 

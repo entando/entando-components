@@ -16,6 +16,7 @@ package org.entando.entando.aps.system.services.digitalexchange;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeCall;
@@ -63,9 +64,13 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
 
         validateName(digitalExchange);
         validateURL(digitalExchange);
+        if (!digitalExchange.hasPublicKey()) {
+            digitalExchange.setPublicKey(downloadPublicKey(digitalExchange));
+        }
 
         return manager.create(digitalExchange);
     }
+
 
     @Override
     public DigitalExchange update(DigitalExchange digitalExchange) {
@@ -118,6 +123,20 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
             errors.reject(ERRCODE_DIGITAL_EXCHANGE_INVALID_URL, null, "digitalExchange.url.invalid");
             throw new ValidationConflictException(errors);
         }
+    }
+
+    private String downloadPublicKey(DigitalExchange digitalExchange) {
+
+        SimpleDigitalExchangeCall<String> call = new SimpleDigitalExchangeCall<>(
+                HttpMethod.GET, new ParameterizedTypeReference<SimpleRestResponse<String>>() {
+        }, "digitalExchange", "publicKey");
+        call.setErrorResponseHandler( ex -> {
+            digitalExchange.setPublicKey(null);
+            digitalExchange.setActive(false);
+            return Optional.empty();
+        });
+
+        return client.getSingleResponse(digitalExchange, call).getPayload();
     }
 
     private static class TestExchangesCall extends DigitalExchangeCall<SimpleRestResponse<Map<String, List<RestError>>>, Map<String, List<RestError>>> {
