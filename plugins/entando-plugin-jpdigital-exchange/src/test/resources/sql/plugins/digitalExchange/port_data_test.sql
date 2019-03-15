@@ -5,7 +5,7 @@
     <name>DigitalExchange 1</name>
     <url>https://de1.entando.com/</url>
     <key>client-key</key>
-    <secret>y9rSwMSXW9zU9ma9vxqiXw==</secret>
+    <secret>RgSYKg/KCgElATb35ge57E8Cwrr0daZ/+TmqsbCn5ewnQWiMcyd9hA==</secret>
     <timeout>1000</timeout>
     <active>true</active>
   </digitalExchange>
@@ -14,7 +14,7 @@
     <name>DigitalExchange 2</name>
     <url>https://de2.entando.com/</url>
     <key>client-key</key>
-    <secret>y9rSwMSXW9zU9ma9vxqiXw==</secret>
+    <secret>RgSYKg/KCgElATb35ge57E8Cwrr0daZ/+TmqsbCn5ewnQWiMcyd9hA==</secret>
     <timeout>1000</timeout>
     <active>true</active>
   </digitalExchange>

@@ -5,7 +5,7 @@
 
     <bean id="kieBpmConfigXMLConverter"
           class="org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieBpmConfigXMLConverter">
-        <constructor-arg ref="blowfishEncryptor" />
+        <constructor-arg ref="defaultTextEncryptor" />
     </bean>
     
     <bean id="jpkiebpmsManager"

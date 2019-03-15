@@ -18,7 +18,7 @@ import java.util.List;
 import org.entando.entando.aps.system.DigitalExchangeConstants;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
-import org.entando.entando.aps.util.crypto.BlowfishEncryptor;
+import org.entando.entando.aps.util.crypto.DefaultTextEncryptor;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.junit.Before;
@@ -40,7 +40,7 @@ public class DigitalExchangesManagerTest {
 
     private static final String KEY = "test-key";
     private static final String SECRET = "client-secret";
-    private static final BlowfishEncryptor ENCRYPTOR = new BlowfishEncryptor(KEY);
+    private static final DefaultTextEncryptor ENCRYPTOR = new DefaultTextEncryptor(KEY);
     private static final DigitalExchangeConfigXmlConverter XML_CONVERTER
             = new DigitalExchangeConfigXmlConverter(ENCRYPTOR);
 

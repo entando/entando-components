@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesMocker;
-import org.entando.entando.aps.util.crypto.BlowfishEncryptor;
+import org.entando.entando.aps.util.crypto.DefaultTextEncryptor;
 import org.entando.entando.web.common.IgnoreJacksonWriteOnlyAccess;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.context.annotation.Bean;
@@ -75,8 +75,8 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
 
         @Bean
         @Primary
-        public BlowfishEncryptor getBlowfishEncryptor() {
-            return new BlowfishEncryptor("test-key");
+        public DefaultTextEncryptor getDefaultTextEncryptor() {
+            return new DefaultTextEncryptor("test-key");
         }
     }
 

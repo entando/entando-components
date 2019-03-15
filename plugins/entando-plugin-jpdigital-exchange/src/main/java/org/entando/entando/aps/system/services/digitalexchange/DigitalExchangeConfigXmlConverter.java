@@ -17,7 +17,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import javax.xml.bind.JAXB;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchangesConfig;
-import org.entando.entando.aps.util.crypto.BlowfishEncryptor;
+import org.entando.entando.aps.util.crypto.DefaultTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class DigitalExchangeConfigXmlConverter {
     private final TextEncryptor encryptor;
 
     @Autowired
-    public DigitalExchangeConfigXmlConverter(BlowfishEncryptor encryptor) {
+    public DigitalExchangeConfigXmlConverter(DefaultTextEncryptor encryptor) {
         this.encryptor = encryptor;
     }
 
