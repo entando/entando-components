@@ -29,10 +29,14 @@ public abstract class JobRunner {
         this.jobService = jobService;
     }
 
-    protected void executeJob(DigitalExchangeJob job, DigitalExchangeJobExecutor jobExecutor) {
+    protected void executeJob(DigitalExchangeJob job, DigitalExchangeJobExecutor<?> jobExecutor) {
+        executeJob(job, jobExecutor, null);
+    }
+
+    protected <T> void executeJob(DigitalExchangeJob job, DigitalExchangeJobExecutor<T> jobExecutor, T additionalParam) {
         CompletableFuture.runAsync(() -> {
             try {
-                jobExecutor.execute(job, jobService::save);
+                jobExecutor.execute(job, jobService::save, additionalParam);
             } catch (Throwable ex) {
                 logger.error("Error while executing job " + job.getId(), ex);
                 job.setStatus(JobStatus.ERROR);
