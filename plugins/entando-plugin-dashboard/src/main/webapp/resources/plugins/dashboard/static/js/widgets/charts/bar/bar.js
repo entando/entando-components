@@ -3,19 +3,21 @@ if (org === undefined) {
 }
 org.entando = org.entando || {};
 org.entando.dashboard = org.entando.dashboard || {};
-org.entando.dashboard.LineChart = class {
+org.entando.dashboard.BarChart = class {
   constructor(id, config) {
-    console.log("Line Chart - config", config);
-    const {axis, size, padding, legend, data} = config;
+    console.log("Bar Chart - config", config);
+    const {axis, size, padding, legend, data, bar} = config;
 
     this.configuration = {
       bindto: id,
+      bar,
       axis,
       legend,
       size,
       padding,
       data
     };
+
     console.log("configuration : ", this.configuration);
     this.chart = c3.generate(this.configuration);
   }

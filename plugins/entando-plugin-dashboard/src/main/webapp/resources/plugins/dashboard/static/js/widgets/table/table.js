@@ -1,4 +1,6 @@
-const org = {};
+if (org === undefined) {
+  var org = {};
+}
 org.entando = org.entando || {};
 org.entando.dashboard = org.entando.dashboard || {};
 org.entando.dashboard.Table = class {

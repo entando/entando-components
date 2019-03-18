@@ -1,4 +1,4 @@
-import React, {PureComponent} from "react";
+import React, {Component} from "react";
 import PropTypes from "prop-types";
 import {Field, FieldArray} from "redux-form";
 import {
@@ -58,7 +58,7 @@ const wrapInputTextField = (name, label, append, disabled = false) => {
   );
 };
 
-class SettingsChart extends PureComponent {
+class SettingsChart extends Component {
   chooseTimeFormat() {
     return (
       <div className="SettingsChart__timeformat-container">

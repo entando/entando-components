@@ -8,7 +8,11 @@ import FormattedMessage from "ui/i18n/FormattedMessage";
 
 import FieldArrayDropDownMultiple from "ui/common/FieldArrayDropDownMultiple";
 
-const SettingsChartGauge = ({optionColumns, optionColumnSelected}) => {
+const SettingsChartGauge = ({
+  datasourceSelected,
+  optionColumns,
+  optionColumnXSelected
+}) => {
   return (
     <div className="SettingsChartGauge">
       <Row>
@@ -24,10 +28,11 @@ const SettingsChartGauge = ({optionColumns, optionColumnSelected}) => {
         <Col xs={11} className="SettingsChartGauge__col">
           <FieldArray
             className="SettingsChartGauge__column-selected"
-            name="columns"
+            name="columns.x"
+            idKey={datasourceSelected}
             component={FieldArrayDropDownMultiple}
             optionColumns={optionColumns}
-            optionColumnSelected={optionColumnSelected}
+            optionColumnSelected={optionColumnXSelected}
             validate={[required]}
           />
         </Col>
@@ -38,7 +43,7 @@ const SettingsChartGauge = ({optionColumns, optionColumnSelected}) => {
 
 SettingsChartGauge.propTypes = {
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  optionColumnXSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 };
 
 export default SettingsChartGauge;

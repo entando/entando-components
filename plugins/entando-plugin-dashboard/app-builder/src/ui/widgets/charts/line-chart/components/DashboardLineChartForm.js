@@ -35,13 +35,27 @@ class DashboardLineChartFormBody extends Component {
       validateSteps[0] = true;
     }
     if (!formSyncErrors.axis && !formSyncErrors.columns) {
-      if (
-        (columns && columns.x.length === 0) ||
-        (columns && columns.y.length === 0)
+      validateSteps[1] = true;
+    }
+    if (columns) {
+      if (Object.keys(formSyncErrors).length > 0) {
+        validateSteps[1] = false;
+      } else if (
+        (columns.x && columns.x.length === 0) ||
+        (columns.y && columns.y.length === 0)
       ) {
         validateSteps[1] = false;
-      } else validateSteps[1] = true;
+      } else if (columns.x && columns.y) {
+        if (columns.x.length > columns.y.length) {
+          validateSteps[1] = false;
+        } else {
+          validateSteps[1] = true;
+        }
+      } else {
+        validateSteps[1] = false;
+      }
     }
+
     spline ? (TYPE_CHART = "SPLINE_CHART") : (TYPE_CHART = "LINE_CHART");
     return (
       <Stepper

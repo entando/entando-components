@@ -35,8 +35,8 @@ const plugin = {
     "dashboard-line-chart": DashboardLineChart,
     "dashboard-bar-chart": DashboardBarChart,
     "dashboard-donut-chart": DashboardDonutChart,
-    "dashboard-gauge": DashboardGaugeChart,
-    "dashboard-pie": DashboardPieChart,
+    "dashboard-gauge-chart": DashboardGaugeChart,
+    "dashboard-pie-chart": DashboardPieChart,
     "dashboard-map": DashboardMapChart
   }
 };

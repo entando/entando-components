@@ -15,15 +15,15 @@ const CHART_PREVIEW = "Bar Chart";
 
 class DashboardBarChartFormBody extends Component {
   componentWillMount() {
-    if (this.props.onWillMount) {
-      this.props.onWillMount();
-    }
+    this.props.onWillMount();
   }
 
   render() {
     const {
       formSyncErrors,
-      axis: {rotated}
+      axis: {rotated},
+      columns,
+      chart
     } = this.props;
     const validateSteps = [false, false, false];
     if (
@@ -33,8 +33,26 @@ class DashboardBarChartFormBody extends Component {
     ) {
       validateSteps[0] = true;
     }
-    if (!formSyncErrors.axis) {
+    if (!formSyncErrors.axis && !formSyncErrors.columns) {
       validateSteps[1] = true;
+    }
+    if (columns) {
+      if (Object.keys(formSyncErrors).length > 0) {
+        validateSteps[1] = false;
+      } else if (
+        (columns.x && columns.x.length === 0) ||
+        (columns.y && columns.y.length === 0)
+      ) {
+        validateSteps[1] = false;
+      } else if (columns.x && columns.y) {
+        if (columns.x.length > columns.y.length) {
+          validateSteps[1] = false;
+        } else {
+          validateSteps[1] = true;
+        }
+      } else {
+        validateSteps[1] = false;
+      }
     }
 
     return (
@@ -58,6 +76,7 @@ class DashboardBarChartFormBody extends Component {
             labelChartPreview={CHART_PREVIEW}
             formName={FORM_NAME}
             rotated={rotated}
+            chart={chart}
           />
         }
       />

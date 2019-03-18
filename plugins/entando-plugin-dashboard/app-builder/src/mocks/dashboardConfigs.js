@@ -178,60 +178,25 @@ export const CONFIG_CHART = {
       x: {
         type: "timeseries",
         label: "time",
-        tick: {
-          format: "%Y-%m-%d%H:%M:%S"
-        }
+        tick: {format: "%Y-%m-%d %H:%M:%S"}
       },
-      y2: {
-        show: false
-      },
-      y: {
-        label: "temp"
-      }
+      y2: {show: false},
+      y: {label: "temperature"}
     },
-    size: {
-      width: 300,
-      height: 500
-    },
-    padding: {
-      top: 50,
-      right: 50,
-      bottom: 50,
-      left: 50
-    },
-    legend: {
-      position: "bottom"
-    },
-    title: {
-      en: "Line chart"
-    },
-    serverName: 2,
+    size: {width: 300, height: 500},
+    padding: {top: 50, right: 50, bottom: 50, left: 50},
+    legend: {position: "bottom"},
+    title: {en: "Line chart"},
+    serverName: "2",
     datasource: "temperature",
     columns: {
-      x: [
-        {
-          id: 1,
-          key: "timestamp",
-          value: "timestamp",
-          selected: true
-        }
-      ],
-      y: [
-        {
-          id: 0,
-          key: "temperature",
-          value: "temperature",
-          selected: true
-        }
-      ]
+      x: [{id: 2, key: "timestamp", value: "timestamp", selected: true}],
+      y: [{id: 0, key: "temperature", value: "temperature", selected: true}]
     },
     data: {
       json: [],
-      keys: {
-        x: "timestamp",
-        value: ["temperature"]
-      },
-      xFormat: "%Y-%m-%d%H:%M:%S"
+      keys: {value: ["timestamp", "temperature"], x: "timestamp"},
+      xFormat: "%Y-%m-%d %H:%M:%S"
     }
   }
 };
