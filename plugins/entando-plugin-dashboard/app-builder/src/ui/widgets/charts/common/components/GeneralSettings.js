@@ -249,7 +249,10 @@ const GeneralSettings = ({typeChart, chart}) => (
                 </strong>
               </ControlLabel>
             </FormGroup>
-          ) : (
+          ) : null}
+          {typeChart === "BAR_CHART" ||
+          typeChart === "DONUT_CHART" ||
+          typeChart === "GAUGE_CHART" ? (
             <Field
               type="number"
               component={renderField}
@@ -261,7 +264,7 @@ const GeneralSettings = ({typeChart, chart}) => (
               className="GeneralSettings__field-thickness"
               disabled={typeChart === "LINE_CHART" ? true : false}
             />
-          )}
+          ) : null}
         </Col>
       </Row>
     </Grid>

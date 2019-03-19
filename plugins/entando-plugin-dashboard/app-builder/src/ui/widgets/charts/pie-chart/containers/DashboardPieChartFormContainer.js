@@ -1,16 +1,21 @@
 import {connect} from "react-redux";
 import {formValueSelector, getFormSyncErrors} from "redux-form";
-import {pick, omit} from "lodash";
+import {pick, get} from "lodash";
 
-import {fetchServerConfigList} from "state/main/actions";
+import {fetchServerConfigList, getWidgetConfigChart} from "state/main/actions";
 
 import DashboardPieChartForm from "ui/widgets/charts/pie-chart/components/DashboardPieChartForm";
 
+const FORM_NAME = "form-dashboard-pie-chart";
+
 const mapStateToProps = state => {
-  const formName = "form-dashboard-pie-chart";
-  const selector = formValueSelector(formName);
+  const selector = formValueSelector(FORM_NAME);
 
   return {
+    chart: "pie",
+    datasource: selector(state, "datasource"),
+    formSyncErrors: getFormSyncErrors(FORM_NAME)(state),
+
     initialValues: {
       chart: "pie",
       axis: {
@@ -18,31 +23,56 @@ const mapStateToProps = state => {
         x: {type: "indexed"},
         y2: {show: false}
       },
-
+      size: {
+        width: 300,
+        height: 500
+      },
+      padding: {
+        top: 50,
+        right: 50,
+        bottom: 50,
+        left: 50
+      },
+      pie: {
+        expand: true
+      },
       legend: {
         position: "bottom"
       }
-    },
-    chart: selector(state, "chart"),
-    datasource: selector(state, "datasource"),
-    formSyncErrors: getFormSyncErrors(formName)(state)
+    }
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
-    dispatch(fetchServerConfigList());
+    dispatch(fetchServerConfigList()).then(() => {
+      dispatch(getWidgetConfigChart(FORM_NAME));
+    });
   },
   onSubmit: data => {
     const transformData = {
-      ...pick(data, ["datasource", "title", "serverName"])
+      ...data,
+      size: {
+        width: parseInt(data.size.width, 10),
+        height: parseInt(data.size.height, 10)
+      },
+      padding: {
+        top: parseInt(data.padding.top, 10),
+        right: parseInt(data.padding.right, 10),
+        bottom: parseInt(data.padding.bottom, 10),
+        left: parseInt(data.padding.left, 10)
+      }
     };
-    transformData.configChart = {
-      ...omit(data, ["datasource", "title", "serverName"])
+    transformData.data = {
+      type: "pie",
+      json: [],
+      keys: {
+        value: [...get(data, "columns.x").map(m => m.key)]
+      }
     };
-
-    //console.log("Submit data ", transformData);
-    ownProps.onSubmit();
+    transformData.columns = pick(transformData.columns, ["x"]);
+    console.log("Submit data ", {config: transformData});
+    ownProps.onSubmit({config: JSON.stringify(transformData)});
   }
 });
 

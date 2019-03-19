@@ -12,7 +12,7 @@ const mapStateToProps = state => {
   return {
     datasource: selector(state, "datasource"),
     formSyncErrors: getFormSyncErrors(FORM_NAME)(state),
-    chart: selector(state, "chart"),
+    chart: "gauge",
     columns: selector(state, "columns"),
 
     initialValues: {
@@ -36,7 +36,6 @@ const mapStateToProps = state => {
         min: 0,
         max: 100
       },
-
       legend: {
         position: "bottom"
       }

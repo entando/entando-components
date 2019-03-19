@@ -38,9 +38,9 @@ const DATASOURCE_PROPERTY_DATA = "data";
 const DATASOURCE_PROPERTY_COLUMNS = "columns";
 
 // Use for TEST
-// const GAUGE = {
+// const CONFIG_CHART = {
 //   config:
-//     '{"chart":"gauge","axis":{"rotated":false,"x":{"type":"indexed"},"y2":{"show":false}},"size":{"width":300,"height":500},"padding":{"top":50,"right":50,"bottom":50,"left":50},"gauge":{"min":0,"max":"1000"},"legend":{"position":"bottom"},"title":{"en":"Gauge"},"serverName":"2","datasource":"temperature","columns":{"x":[{"id":1,"key":"temperature1","value":"temperature1","selected":true},{"id":0,"key":"temperature","value":"temperature","selected":true}]},"data":{"type":"gauge","json":[],"keys":{"value":["temperature1","temperature"]}}}'
+//     '{"chart":"donut","axis":{"rotated":false,"x":{"type":"indexed"},"y2":{"show":false}},"size":{"width":300,"height":500},"padding":{"top":50,"right":50,"bottom":50,"left":50},"donut":{"min":0,"max":"1000", "width":"10"},"legend":{"position":"bottom"},"title":{"en":"Gauge"},"serverName":"2","datasource":"temperature","columns":{"x":[{"id":1,"key":"temperature1","value":"temperature1","selected":true},{"id":0,"key":"temperature","value":"temperature","selected":true}]},"data":{"type":"gauge","json":[],"keys":{"value":["temperature1","temperature"]}}}'
 // };
 
 export const setInfoPage = info => ({
@@ -164,7 +164,7 @@ export const getWidgetConfig = formName => (dispatch, getState) => {
 //used for widgets chart
 export const getWidgetConfigChart = formName => (dispatch, getState) => {
   const state = getState();
-  const config = getWidgetConfigSelector(state);
+  const config = getWidgetConfigSelector(state); //|| CONFIG_CHART;
   if (config) {
     const configJson = JSON.parse(config.config);
     console.log("config", configJson);

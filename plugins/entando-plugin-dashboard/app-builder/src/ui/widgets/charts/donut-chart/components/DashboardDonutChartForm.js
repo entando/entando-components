@@ -15,9 +15,7 @@ const CHART_PREVIEW = "Donut Chart";
 
 class DashboardDonutChartFormBody extends Component {
   componentWillMount() {
-    if (this.props.onWillMount) {
-      this.props.onWillMount();
-    }
+    this.props.onWillMount();
   }
 
   render() {

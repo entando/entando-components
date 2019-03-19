@@ -48,8 +48,8 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 VALUES ('dashboard-gauge-chart',
   '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Publish DashboardGaugeChart</property>
-<property key="it">Pubblica DashboardGaugeChart</property>
+<property key="en">Publish Dashboard Gauge Chart</property>
+<property key="it">Pubblica Dashboard Gauge Chart</property>
 </properties>', '<config>
 	<parameter name="id">id</parameter>
 	<action name="dashboardDashboardGaugeChartConfig"/>

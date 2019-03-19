@@ -58,6 +58,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         right: parseInt(data.padding.right, 10),
         bottom: parseInt(data.padding.bottom, 10),
         left: parseInt(data.padding.left, 10)
+      },
+      bar: {
+        width: parseInt(data.bar.width, 10)
       }
     };
     transformData.data = {
