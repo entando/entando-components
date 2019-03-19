@@ -8,7 +8,11 @@ import FormattedMessage from "ui/i18n/FormattedMessage";
 
 import FieldArrayDropDownMultiple from "ui/common/FieldArrayDropDownMultiple";
 
-const SettingsChartDonut = ({optionColumns, optionColumnSelected}) => {
+const SettingsChartDonut = ({
+  datasourceSelected,
+  optionColumns,
+  optionColumnXSelected
+}) => {
   return (
     <div className="SettingsChartDonut">
       <Row>
@@ -24,10 +28,11 @@ const SettingsChartDonut = ({optionColumns, optionColumnSelected}) => {
         <Col xs={11} className="SettingsChartDonut__col">
           <FieldArray
             className="SettingsChartDonut__column-selected"
-            name="columns"
+            name="columns.x"
+            idKey={datasourceSelected}
             component={FieldArrayDropDownMultiple}
             optionColumns={optionColumns}
-            optionColumnSelected={optionColumnSelected}
+            optionColumnSelected={optionColumnXSelected}
             validate={[required]}
           />
         </Col>
@@ -38,7 +43,7 @@ const SettingsChartDonut = ({optionColumns, optionColumnSelected}) => {
 
 SettingsChartDonut.propTypes = {
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  optionColumnXSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 };
 
 export default SettingsChartDonut;

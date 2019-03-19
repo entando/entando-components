@@ -85,15 +85,18 @@ export default ReactDOM.render(
       <Grid fluid>
         <Row>
           <Col xs={12}>
-            <DashboardMap />
-            <DashboardConfigPageContainer />
-            <DashboardConfigAddPage />
             <DashboardTable />
             <DashboardPieChart />
-            <DashboardGaugeChart />
             <DashboardDonutChart />
-            <DashboardBarChart />
             <DashboardLineChart />
+            <DashboardBarChart />
+            <DashboardDonutChart />
+            <DashboardGaugeChart />
+            <DashboardPieChart />
+            <DashboardMap />
+
+            <DashboardConfigAddPage />
+            <DashboardConfigPageContainer />
           </Col>
         </Row>
       </Grid>

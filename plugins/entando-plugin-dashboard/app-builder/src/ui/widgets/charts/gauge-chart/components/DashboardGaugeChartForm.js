@@ -15,9 +15,7 @@ const CHART_PREVIEW = "Gauge Chart";
 
 class DashboardGaugeChartFormBody extends Component {
   componentWillMount() {
-    if (this.props.onWillMount) {
-      this.props.onWillMount();
-    }
+    this.props.onWillMount();
   }
 
   render() {

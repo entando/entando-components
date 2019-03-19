@@ -99,42 +99,42 @@ export const DATASOURCE_BUS_STATION = {
 export const DATASOURCE_PARKING_DATA = {
   id: "parking",
   columns: [
-    {key: "status", value: "status", hidden: false},
-    {key: "inUse", value: "inUse", hidden: false},
-    {key: "batteryLevel", value: "batteryLevel", hidden: false},
-    {key: "deviceCode", value: "deviceCode", hidden: false},
-    {key: "deviceBrand", value: "deviceBrand", hidden: false},
-    {key: "expirationGuarantee", value: "expirationG.", hidden: true},
-    {key: "coordinates", value: "coordinates", hidden: false},
-    {key: "information", value: "information", hidden: false}
+    {key: "status", value: "status"},
+    {key: "inUse", value: "inUse"},
+    {key: "batteryLevel", value: "batteryLevel"},
+    {key: "deviceCode", value: "deviceCode"},
+    {key: "deviceBrand", value: "deviceBrand"},
+    {key: "expirationGuarantee", value: "expirationG."},
+    {key: "coordinates", value: "coordinates"},
+    {key: "information", value: "information"}
   ],
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
 export const DATASOURCE_BIKE_DATA = {
   id: "bike",
   columns: [
-    {key: "inUse", value: "inUse", hidden: false},
-    {key: "coordinates", value: "coordinates", hidden: false},
-    {key: "information", value: "information", hidden: false}
+    {key: "inUse", value: "inUse"},
+    {key: "coordinates", value: "coordinates"},
+    {key: "information", value: "information"}
   ],
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
 export const DATASOURCE_BUS_DATA = {
   id: "bus",
   columns: [
-    {key: "status", value: "status", hidden: false},
-    {key: "coordinates", value: "coordinates", hidden: false},
-    {key: "information", value: "information", hidden: false}
+    {key: "status", value: "status"},
+    {key: "coordinates", value: "coordinates"},
+    {key: "information", value: "information"}
   ],
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
 export const DATASOURCE_TEMPERATURE_DATA = {
   id: "temperature",
   columns: [
-    {key: "temperature", value: "temperature", hidden: false},
-    {key: "temperature1", value: "temperature1", hidden: false},
-    {key: "timestamp", value: "timestamp", hidden: false},
-    {key: "timestamp1", value: "timestamp1", hidden: false}
+    {key: "temperature", value: "temperature"},
+    {key: "temperature1", value: "temperature1"},
+    {key: "timestamp", value: "timestamp"},
+    {key: "timestamp1", value: "timestamp1"}
   ],
   data: [
     {
@@ -178,60 +178,25 @@ export const CONFIG_CHART = {
       x: {
         type: "timeseries",
         label: "time",
-        tick: {
-          format: "%Y-%m-%d%H:%M:%S"
-        }
+        tick: {format: "%Y-%m-%d %H:%M:%S"}
       },
-      y2: {
-        show: false
-      },
-      y: {
-        label: "temp"
-      }
+      y2: {show: false},
+      y: {label: "temperature"}
     },
-    size: {
-      width: 300,
-      height: 500
-    },
-    padding: {
-      top: 50,
-      right: 50,
-      bottom: 50,
-      left: 50
-    },
-    legend: {
-      position: "bottom"
-    },
-    title: {
-      en: "Line chart"
-    },
-    serverName: 2,
+    size: {width: 300, height: 500},
+    padding: {top: 50, right: 50, bottom: 50, left: 50},
+    legend: {position: "bottom"},
+    title: {en: "Line chart"},
+    serverName: "2",
     datasource: "temperature",
     columns: {
-      x: [
-        {
-          id: 1,
-          key: "timestamp",
-          value: "timestamp",
-          selected: true
-        }
-      ],
-      y: [
-        {
-          id: 0,
-          key: "temperature",
-          value: "temperature",
-          selected: true
-        }
-      ]
+      x: [{id: 2, key: "timestamp", value: "timestamp", selected: true}],
+      y: [{id: 0, key: "temperature", value: "temperature", selected: true}]
     },
     data: {
       json: [],
-      keys: {
-        x: "timestamp",
-        value: ["temperature"]
-      },
-      xFormat: "%Y-%m-%d%H:%M:%S"
+      keys: {value: ["timestamp", "temperature"], x: "timestamp"},
+      xFormat: "%Y-%m-%d %H:%M:%S"
     }
   }
 };

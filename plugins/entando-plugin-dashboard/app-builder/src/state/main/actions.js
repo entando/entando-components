@@ -37,6 +37,12 @@ import {
 const DATASOURCE_PROPERTY_DATA = "data";
 const DATASOURCE_PROPERTY_COLUMNS = "columns";
 
+// Use for TEST
+// const CONFIG_CHART = {
+//   config:
+//     '{"chart":"donut","axis":{"rotated":false,"x":{"type":"indexed"},"y2":{"show":false}},"size":{"width":300,"height":500},"padding":{"top":50,"right":50,"bottom":50,"left":50},"donut":{"min":0,"max":"1000", "width":"10"},"legend":{"position":"bottom"},"title":{"en":"Gauge"},"serverName":"2","datasource":"temperature","columns":{"x":[{"id":1,"key":"temperature1","value":"temperature1","selected":true},{"id":0,"key":"temperature","value":"temperature","selected":true}]},"data":{"type":"gauge","json":[],"keys":{"value":["temperature1","temperature"]}}}'
+// };
+
 export const setInfoPage = info => ({
   type: SET_INFO_PAGE,
   payload: {
@@ -158,11 +164,13 @@ export const getWidgetConfig = formName => (dispatch, getState) => {
 //used for widgets chart
 export const getWidgetConfigChart = formName => (dispatch, getState) => {
   const state = getState();
-  const config = getWidgetConfigSelector(state);
+  const config = getWidgetConfigSelector(state); //|| CONFIG_CHART;
   if (config) {
     const configJson = JSON.parse(config.config);
+    console.log("config", configJson);
+
     dispatch(fecthDatasourceList(configJson.serverName));
-    dispatch(initialize(formName, configJson));
+
     // API ancora mockata
     getDatasourceData(
       configJson.serverName,
@@ -171,7 +179,10 @@ export const getWidgetConfigChart = formName => (dispatch, getState) => {
     ).then(response => {
       response.json().then(json => {
         if (response.ok) {
-          // API ancora mockata
+          dispatch(initialize(formName, configJson));
+          dispatch(clearSelectedDatasource());
+          dispatch(setSelectedDatasource(configJson.datasource));
+          // // API ancora mockata
           dispatch(
             setDatasourceColumns(
               json.payload.map(m => ({
@@ -180,10 +191,12 @@ export const getWidgetConfigChart = formName => (dispatch, getState) => {
               }))
             )
           );
+
           configJson.columns.x &&
-            configJson.columns.x.forEach(item => {
+            configJson.columns.x.forEach((item, index) => {
               dispatch(arrayPush(formName, "columns.x", item));
             });
+
           configJson.columns.y &&
             configJson.columns.y.forEach(item => {
               dispatch(arrayPush(formName, "columns.y", item));

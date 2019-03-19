@@ -6,11 +6,12 @@ import {fetchServerConfigList, getWidgetConfigChart} from "state/main/actions";
 
 import DashboardLineChartForm from "ui/widgets/charts/line-chart/components/DashboardLineChartForm";
 
-const selector = formValueSelector("form-dashboard-line-chart");
+const FORM_NAME = "form-dashboard-line-chart";
+const selector = formValueSelector(FORM_NAME);
 
 const mapStateToProps = state => ({
   datasource: selector(state, "datasource"),
-  formSyncErrors: getFormSyncErrors("form-dashboard-line-chart")(state),
+  formSyncErrors: getFormSyncErrors(FORM_NAME)(state),
   axis: {rotated: selector(state, "axis.rotated")},
   chart: selector(state, "chart"),
   spline: selector(state, "spline"),
@@ -42,15 +43,27 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList()).then(() => {
-      dispatch(getWidgetConfigChart("form-dashboard-line-chart"));
+      dispatch(getWidgetConfigChart(FORM_NAME));
     });
   },
   onSubmit: data => {
-    const transformData = {...data};
+    const transformData = {
+      ...data,
+      size: {
+        width: parseInt(data.size.width, 10),
+        height: parseInt(data.size.height, 10)
+      },
+      padding: {
+        top: parseInt(data.padding.top, 10),
+        right: parseInt(data.padding.right, 10),
+        bottom: parseInt(data.padding.bottom, 10),
+        left: parseInt(data.padding.left, 10)
+      }
+    };
     transformData.data = {
+      type: "line",
       json: [],
       keys: {
-        //        x: get(data, "columns.x[0].key"),
         value: [
           ...get(data, "columns.x").map(m => m.key),
           ...get(data, "columns.y").map(m => m.key)
@@ -64,6 +77,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         acc[y[index].key] = item.key;
         return acc;
       }, {});
+      set(transformData, "axis.x.tick.multiline", true);
+      set(transformData, "axis.x.tick.multilineMax", 2);
+      set(transformData, "axis.x.tick.rotate", 75);
     } else {
       transformData.data.keys.x = get(data, "columns.x[0].key");
     }

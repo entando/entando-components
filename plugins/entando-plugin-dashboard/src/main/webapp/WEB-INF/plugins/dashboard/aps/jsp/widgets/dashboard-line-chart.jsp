@@ -16,23 +16,30 @@
 $(document).ready(() => {
   const JSON_DATA =[
     {
-      timestamp: "2019-03-05T15:53:27+00:00",
-      temperature: 300
+      timestamp: "2019-01-01 09:10:00",
+      timestamp1: "2019-01-11 08:00:00",
+      temperature: 300,
+      temperature1: 150
     },
     {
-      timestamp: "2019-03-05T16:53:27+00:00",
-      temperature: 200
+      timestamp: "2019-01-03 09:20:00",
+      timestamp1: "2019-01-12 09:30:00",
+      temperature: 200,
+      temperature1: 175
+    },
+    {
+      timestamp: "2019-01-07 09:30:00",
+      timestamp1: "2019-01-20 10:30:00",
+      temperature: 100,
+      temperature1: 50
     }
   ]
 
-
-
   console.log('jQuery ready Line chart');
   const config = ${configLineChart};
-  console.log('config Line chart :', config);
+  console.log('Config Line chart :', config);
   $('#title-chart').html(config.title.en);
   const lineChart = new org.entando.dashboard.LineChart("#line-chart", config);
-  lineChart.show();
   lineChart.update(JSON_DATA);
 
 });

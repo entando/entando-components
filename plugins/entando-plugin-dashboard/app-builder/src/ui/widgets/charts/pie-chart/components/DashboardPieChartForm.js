@@ -15,9 +15,7 @@ const CHART_PREVIEW = "Pie Chart";
 
 class DashboardPieChartFormBody extends Component {
   componentWillMount() {
-    if (this.props.onWillMount) {
-      this.props.onWillMount();
-    }
+    this.props.onWillMount();
   }
 
   render() {

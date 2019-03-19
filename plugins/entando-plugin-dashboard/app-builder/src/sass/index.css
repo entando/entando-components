@@ -352,6 +352,8 @@
     padding-top: 5px;
     padding-bottom: 6px;
     padding-right: 5px; }
+  .GeneralSettings__input-field-gauge {
+    width: 80px; }
   .GeneralSettings__error.help-block {
     position: relative;
     top: 30px;

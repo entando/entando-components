@@ -7,7 +7,7 @@ class FieldArrayDropDownMultiple extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: props.optionColumns,
+      columns: [],
       searchValue: "",
       idKey: undefined
     };

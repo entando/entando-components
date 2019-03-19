@@ -6,7 +6,13 @@ org.entando.dashboard = org.entando.dashboard || {};
 org.entando.dashboard.LineChart = class {
   constructor(id, config) {
     console.log("Line Chart - config", config);
-    const {axis, size, padding, legend, data} = config;
+    const {
+      axis,
+      size,
+      padding: {left, right, bottom, top},
+      legend,
+      data
+    } = config;
 
     this.configuration = {
       bindto: id,

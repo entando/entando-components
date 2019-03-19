@@ -3,10 +3,10 @@ if (org === undefined) {
 }
 org.entando = org.entando || {};
 org.entando.dashboard = org.entando.dashboard || {};
-org.entando.dashboard.LineChart = class {
+org.entando.dashboard.PieChart = class {
   constructor(id, config) {
-    console.log("Line Chart - config", config);
-    const {axis, size, padding, legend, data} = config;
+    console.log("Pie Chart - config", config);
+    const {axis, size, padding, legend, data, pie} = config;
 
     this.configuration = {
       bindto: id,
@@ -14,10 +14,12 @@ org.entando.dashboard.LineChart = class {
       legend,
       size,
       padding,
-      data
+      data,
+      pie
     };
     console.log("configuration : ", this.configuration);
     this.chart = c3.generate(this.configuration);
+    this.chart.resize();
   }
 
   update(json) {

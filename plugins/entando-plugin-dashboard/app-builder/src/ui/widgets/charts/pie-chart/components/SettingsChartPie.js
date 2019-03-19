@@ -8,7 +8,11 @@ import FormattedMessage from "ui/i18n/FormattedMessage";
 
 import FieldArrayDropDownMultiple from "ui/common/FieldArrayDropDownMultiple";
 
-const SettingsChartPie = ({optionColumns, optionColumnSelected}) => {
+const SettingsChartPie = ({
+  datasourceSelected,
+  optionColumns,
+  optionColumnXSelected
+}) => {
   return (
     <div className="SettingsChartPie">
       <Row>
@@ -24,10 +28,11 @@ const SettingsChartPie = ({optionColumns, optionColumnSelected}) => {
         <Col xs={11} className="SettingsChartPie__col">
           <FieldArray
             className="SettingsChartPie__column-selected"
-            name="columns"
+            name="columns.x"
+            idKey={datasourceSelected}
             component={FieldArrayDropDownMultiple}
             optionColumns={optionColumns}
-            optionColumnSelected={optionColumnSelected}
+            optionColumnSelected={optionColumnXSelected}
             validate={[required]}
           />
         </Col>
@@ -38,11 +43,6 @@ const SettingsChartPie = ({optionColumns, optionColumnSelected}) => {
 
 SettingsChartPie.propTypes = {
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({}))
+  optionColumnXSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 };
-
-SettingsChartPie.defaultProps = {
-  optionColumnSelected: []
-};
-
 export default SettingsChartPie;
