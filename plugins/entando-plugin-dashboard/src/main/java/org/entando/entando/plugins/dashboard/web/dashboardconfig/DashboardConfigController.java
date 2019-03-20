@@ -18,19 +18,27 @@
 package org.entando.entando.plugins.dashboard.web.dashboardconfig;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.agiletec.aps.system.services.role.Permission;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
+import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.*;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -39,12 +47,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
-import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
-import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
 @RequestMapping(value = "/plugins/dashboard/dashboardConfigs")
@@ -76,14 +85,32 @@ public class DashboardConfigController {
     public void setDashboardConfigValidator(DashboardConfigValidator dashboardConfigValidator) {
         this.dashboardConfigValidator = dashboardConfigValidator;
     }
+    
+//    @RestAccessControl(permission = "superuser")
 
-    protected IConnectorService getConnectorService() {
-        return iConnectorService;
-    }
+  protected IConnectorService getConnectorService() {
+    return iConnectorService;
+  }
 
-    public void setiConnectorService(
-        IConnectorService iConnectorService) {
-        this.iConnectorService = iConnectorService;
+  public void setiConnectorService(
+      IConnectorService iConnectorService) {
+    this.iConnectorService = iConnectorService;
+  }
+
+    @RequestMapping(value = "/servertypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<ServerType>> getDashboardTypes(RestListRequest requestList) throws JsonProcessingException {
+//        this.getDashboardConfigValidator().validateRestListRequest(requestList, DashboardConfigDto.class);
+//        PagedMetadata<DashboardConfigDto> result = this.getDashboardConfigService().getDashboardConfigs(requestList);
+//        this.getDashboardConfigValidator().validateRestListResult(requestList, result);
+//        logger.debug("Main Response -> {}", result);
+    	ServerType x = new ServerType();
+    	x.setDescription("descr");
+    	x.setCode("codicino");
+    	List<ServerType> lista = new ArrayList<ServerType>();
+    	lista.add(x);
+    	lista.add(x);
+    	lista.add(x);
+        return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
     }
     
     @RestAccessControl(permission = "superuser")
