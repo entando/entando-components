@@ -41,4 +41,11 @@ public interface IConnectorService {
         String datasourceCode, String serverType);
 
     JsonObject getDeviceMeasurements(IDashboardDatasourceDto dto);
+    
+//    getMe(){
+//    	Apre connessione
+//    	RichiedeMisure,
+//    	TrasformaMisureSecondoSpecFrontEnd
+//}
+    
 }

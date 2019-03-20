@@ -3,6 +3,7 @@ import {combineReducers} from "redux";
 import {
   SET_INFO_PAGE,
   SET_LANGUAGES,
+  SET_SERVER_TYPE,
   SET_SERVER_CONFIG_LIST,
   ADD_SERVER_CONFIG,
   UPDATE_SERVER_CONFIG,
@@ -40,6 +41,16 @@ const languages = (state = [], action = {}) => {
   switch (action.type) {
     case SET_LANGUAGES:
       return action.payload.languages;
+    default:
+      return state;
+  }
+};
+
+const serverType = (state = [], action = {}) => {
+  switch (action.type) {
+    case SET_SERVER_TYPE:
+      return action.payload.serverTypeList;
+
     default:
       return state;
   }
@@ -114,6 +125,7 @@ export default combineReducers({
     languages
   }),
   dashboardConfig: combineReducers({
+    serverType,
     servers,
     datasourceList,
     datasource: combineReducers({

@@ -200,3 +200,14 @@ export const CONFIG_CHART = {
     }
   }
 };
+
+export const SERVER_TYPE_LIST = [
+  {
+    code: "kaa",
+    description: "Server  KAA"
+  },
+  {
+    code: "site",
+    description: "SiteWhere"
+  }
+];
