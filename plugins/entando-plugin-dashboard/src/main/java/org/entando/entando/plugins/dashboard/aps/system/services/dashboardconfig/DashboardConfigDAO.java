@@ -306,7 +306,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       stat.setString(2,datasourceCode);
 
       res = stat.executeQuery();
-      datasource.setDatasourceCode(res.getString("datasourceCode"));
+      datasource.setDatasourceCode(res.getString("datasourcecode"));
       datasource.setDatasource(res.getString("datasource"));
       datasource.setDatasourceURI(res.getString("datasourceuri"));
       datasource.setStatus(res.getString("status"));
@@ -336,7 +336,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       res = stat.executeQuery();
       while (res.next()) {
         DatasourcesConfigDto datasource = new DatasourcesConfigDto();
-        datasource.setDatasourceCode(res.getString("datasourceCode"));
+        datasource.setDatasourceCode(res.getString("datasourcecode"));
         datasource.setDatasource(res.getString("datasource"));
         datasource.setDatasourceURI(res.getString("datasourceuri"));
         datasource.setStatus(res.getString("status"));
@@ -383,7 +383,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
   private static final String LOAD_DASHBOARD_CONFIGS_ID = "SELECT id FROM dashboard_config";
 
 
-  private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourceCode ,datasource, datasourceuri, status ) VALUES (?, ?, ?, ?)";
+  private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status ) VALUES (?, ?, ?, ?)";
 
   private static final String DELETE_DATASOURCE = "DELETE FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
 
