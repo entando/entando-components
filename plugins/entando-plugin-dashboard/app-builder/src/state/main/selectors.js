@@ -34,6 +34,10 @@ const getDashboardConfig = createSelector(
   localState => localState.dashboardConfig
 );
 
+export const getServerType = createSelector(
+  [getDashboardConfig],
+  dc => dc.serverType
+);
 const getDatasouce = createSelector(
   [getDashboardConfig],
   dc => dc.datasource

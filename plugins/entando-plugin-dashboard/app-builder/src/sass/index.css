@@ -96,6 +96,8 @@
 .DashboardConfig {
   border: 0 solid;
   padding: 2em; }
+  .DashboardConfig .form-group .control-label {
+    text-align: left; }
   .DashboardConfig__form {
     border: 0 solid;
     padding: 2em;

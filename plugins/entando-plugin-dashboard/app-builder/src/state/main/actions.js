@@ -7,6 +7,7 @@ import {get} from "lodash";
 import {getLanguages} from "api/appBuilder";
 
 import {
+  getServerType,
   getServerConfig,
   deleteServerConfig,
   postServerConfig,
@@ -22,6 +23,7 @@ import {
   SET_INFO_PAGE,
   SET_LANGUAGES,
   SET_SERVER_CONFIG_LIST,
+  SET_SERVER_TYPE,
   ADD_SERVER_CONFIG,
   UPDATE_SERVER_CONFIG,
   REMOVE_SERVER_CONFIG,
@@ -54,6 +56,13 @@ export const setLanguages = languages => ({
   type: SET_LANGUAGES,
   payload: {
     languages
+  }
+});
+
+export const setServerType = serverTypeList => ({
+  type: SET_SERVER_TYPE,
+  payload: {
+    serverTypeList
   }
 });
 
@@ -164,7 +173,7 @@ export const getWidgetConfig = formName => (dispatch, getState) => {
 //used for widgets chart
 export const getWidgetConfigChart = formName => (dispatch, getState) => {
   const state = getState();
-  const config = getWidgetConfigSelector(state); //|| CONFIG_CHART;
+  const config = getWidgetConfigSelector(state); // || CONFIG_CHART;
   if (config) {
     const configJson = JSON.parse(config.config);
     console.log("config", configJson);
@@ -230,6 +239,23 @@ export const fetchLanguages = () => dispatch =>
       });
     });
   });
+
+export const fetchServerType = () => dispatch =>
+  new Promise(resolve => {
+    getServerType().then(response => {
+      response.json().then(json => {
+        if (response.ok) {
+          console.log("json", json);
+          dispatch(setServerType(json.payload));
+          resolve();
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          resolve();
+        }
+      });
+    });
+  }).catch(() => {});
 
 export const fetchServerConfigList = configItem => dispatch =>
   new Promise(resolve => {

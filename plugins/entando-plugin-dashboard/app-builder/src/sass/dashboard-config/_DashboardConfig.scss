@@ -2,6 +2,10 @@
   border: 0 solid;
   padding: 2em;
 
+  .form-group .control-label {
+    text-align: left;
+  }
+
   &__form {
     border: 0 solid;
     padding: 2em;

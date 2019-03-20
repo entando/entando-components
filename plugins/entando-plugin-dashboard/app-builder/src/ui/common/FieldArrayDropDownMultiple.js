@@ -8,6 +8,7 @@ class FieldArrayDropDownMultiple extends Component {
     super(props);
     this.state = {
       columns: [],
+      columnsOnInit: [],
       searchValue: "",
       idKey: undefined
     };
@@ -37,7 +38,7 @@ class FieldArrayDropDownMultiple extends Component {
           columns[idx].selected = item.selected;
         }
       });
-      this.setState({columns});
+      this.setState({columns, columnsOnInit: columns});
     }
   }
 
@@ -81,40 +82,35 @@ class FieldArrayDropDownMultiple extends Component {
   searchItem(ev) {
     const searchValue = ev.target.value;
     const {optionColumns} = this.props;
-    let listValue = [];
-    if (searchValue.length <= 1) {
-      listValue = optionColumns.filter(f =>
-        f.value.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      if (listValue.length === 0) {
-        listValue.push({
-          id: 0,
-          key: "notFound",
-          value: formattedText("common.DropdownMultiple.notFound")
-        });
-      }
-    } else {
-      const search = optionColumns.find(f =>
-        f.value.toLowerCase().startsWith(searchValue.toLowerCase())
-      );
-      search
-        ? listValue.push(search)
-        : listValue.push({
-            id: 0,
-            key: "notFound",
-            value: formattedText("common.DropdownMultiple.notFound")
-          });
+    const {columnsOnInit} = this.state;
+    const listValue = optionColumns.filter(f =>
+      f.value.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    console.log("searchItem columnsOnInit ", columnsOnInit);
+    if (listValue.length === 0) {
+      listValue.push({
+        id: 0,
+        key: "notFound",
+        value: formattedText("common.DropdownMultiple.notFound")
+      });
     }
-
+    listValue.forEach(item => {
+      const idx = columnsOnInit.findIndex(f => f.value === item.value);
+      if (idx !== -1) {
+        item.selected = columnsOnInit[idx].selected;
+      }
+    });
     this.setState({
       columns: listValue,
       searchValue
     });
   }
 
-  clearSearch() {
+  clearSearch(ev) {
+    const searchValue = ev.target.value;
     this.setState({
-      searchValue: ""
+      searchValue: "",
+      columns: searchValue ? this.state.columnsOnInit : this.props.optionColumns
     });
   }
 
