@@ -7,10 +7,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigManager;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.connector.sitewhere.dto.DashboardSitewhereDatasourceDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.connector.sitewhere.service.ISitewhereConnectorService;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorIot;
@@ -18,8 +19,11 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IM
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IMeasurementTemplateService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
+import org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.dto.DashboardSitewhereDatasourceDto;
+import org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.dto.SitewhereApplicationConfigDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -49,13 +53,17 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
   @Autowired
   IMeasurementTemplateService measurementTemplateService;
 
+  @Autowired
+  DashboardConfigManager dashboardConfigManager;
+  
   @Override
-  public <T extends AbstractDashboardDatasourceDto> boolean pingDevice(T dashboardDatasourceDto)
+  public boolean pingDevice(IDashboardDatasourceDto dashboardDatasourceDto)
       throws IOException {
 
-    DashboardSitewhereDatasourceDto sitewhereConn = IoTUtils
-        .getDashboardDataSourceConnecDto(dashboardDatasourceDto,
-            DashboardSitewhereDatasourceDto.class);
+    DashboardSitewhereDatasourceDto sitewhereConn = null;
+    // IoTUtils
+    //        .getDashboardDataSourceConnecDto(dashboardDatasourceDto,
+    //            DashboardSitewhereDatasourceDto.class);
 
     logger.info("{} pingDevice {}", this.getClass().getSimpleName(),
         sitewhereConn.getSitewhereDatasourceConfigDto().getName());
@@ -79,13 +87,15 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
   }
 
   @Override
-  public <T extends AbstractDashboardDatasourceDto> JsonObject saveDeviceMeasurement(
-      T dashboardDatasourceDto,
+  public JsonObject saveDeviceMeasurement(
+      IDashboardDatasourceDto dashboardDatasourceDto,
       JsonArray measurementBody) throws ApsSystemException {
 
-    DashboardSitewhereDatasourceDto sitewhereConn = IoTUtils
-        .getDashboardDataSourceConnecDto(dashboardDatasourceDto,
-            DashboardSitewhereDatasourceDto.class);
+    DashboardSitewhereDatasourceDto sitewhereConn = null;
+    
+//    IoTUtils
+//        .getDashboardDataSourceConnecDto(dashboardDatasourceDto,
+//            DashboardSitewhereDatasourceDto.class);
 
     String assignmentId = sitewhereConn.getSitewhereDatasourceConfigDto()
         .getAssignmentId();
@@ -118,6 +128,19 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
   }
 
   @Override
+  public IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(DashboardConfigDto dashboardConfigDto,
+      String datasourceCode) {
+    
+    DatasourcesConfigDto datasourcesConfigDto = dashboardConfigManager
+        .getDatasourceByDatasourcecodeAndDashboard(dashboardConfigDto.getId(), datasourceCode);
+    
+    DashboardSitewhereDatasourceDto dto = new DashboardSitewhereDatasourceDto();
+    dto.setSitewhereDatasourceConfigDto((SitewhereApplicationConfigDto) datasourcesConfigDto);
+    dto.setDashboardConfigDto(dashboardConfigDto);
+    return dto;
+  }
+
+  @Override
   public List<? extends AbstractDashboardDatasourceDto> getAllDevices(
       DashboardConfigDto dashboardConfigDto) {
 
@@ -145,43 +168,15 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
   }
 
   @Override
-  public <T extends AbstractDashboardDatasourceDto> MeasurementTemplate getSchema(
-      T dashboardSitewhereDatasourceDto) {
-//    DashboardSitewhereDatasourceDto sitewhereConn = (DashboardSitewhereDatasourceDto) dashboardSitewhereDatasourceDto;
-//
-//    MeasurementTemplate measurementTemplate = null; //TODO
-//
-////    MeasurementTemplate measurementTemplate = measurementTemplateService
-////        .getById(kaaConn.getDashboardConfigDto().getId(),
-////            kaaConn.getKaaDatasourceConfigDto().getDatasourceCode());
-//
-//    logger.info("{} getSchema {} on {}", this.getClass().getSimpleName(),
-//        sitewhereConn.getSitewhereDatasourceConfigDto().getDatasourceURI(),
-//        sitewhereConn.getSitewhereDatasourceConfigDto().getDatasourceCode());
-//
-//    return measurementTemplate;
-
-    /**
-     * NON HA SENSO OTTENERE LO SCHEMA DI UN DEVICE, DATO CHE LO SCHEMA è GENERICO E PIù DEVICE POSSONO
-     * AVERE LO STESSO SCHEMA O OGNI DEVICE HA PIù SCHEMA.
-     * è STATO INTRODOTTO IL MEASUREMENTCONFIG, QUINDI OGNI DEVICE HA LA SUA CONFIGURAZIONE 
-     * ALLA QUALE è COLLEGATO L'ID DEL TEMPLATE, L'ID DEL SERVER E L'ID DEL DEVICE, E UN BOOLEAN
-     * PER VEDERE SE è LO SCHEMA ATTIVO O NO.
-     * DUNQUE QUESTA FUNZIONE SARà SEMPRE INUTILE.
-     */
-
-    return null;
-  }
-
-  @Override
-  public <T extends AbstractDashboardDatasourceDto> void saveMeasurementTemplate(
-      T dashboardSitewhereDatasource)
+  public void saveMeasurementTemplate(IDashboardDatasourceDto dashboardSitewhereDatasource)
       throws ApsSystemException {
     MeasurementTemplate measurementTemplate = new MeasurementTemplate();
 
-    DashboardSitewhereDatasourceDto sitewhereConn = IoTUtils
-        .getDashboardDataSourceConnecDto(dashboardSitewhereDatasource,
-            DashboardSitewhereDatasourceDto.class);
+    DashboardSitewhereDatasourceDto sitewhereConn = null;
+    
+//    IoTUtils
+//        .getDashboardDataSourceConnecDto(dashboardSitewhereDatasource,
+//            DashboardSitewhereDatasourceDto.class);
 
     String url = StringUtils
         .join(sitewhereConn.getDashboardUrl(), SITEWHERE_URL_BASE_PATH,

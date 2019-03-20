@@ -1,4 +1,4 @@
-package org.entando.entando.plugins.jpchangeme.aps;
+package org.entando.entando.plugins.jpkaaconnector.aps;
 
 public class TestApsSample extends ApsPluginBaseTestCase {
 	

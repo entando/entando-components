@@ -1,8 +1,8 @@
-package org.entando.entando.plugins.jpchangeme.aps;
+package org.entando.entando.plugins.jpsitewhereconnector.aps;
 
 import com.agiletec.ConfigTestUtils;
 import com.agiletec.aps.BaseTestCase;
-import org.entando.entando.plugins.jpchangeme.PluginConfigTestUtils;
+import org.entando.entando.plugins.jpsitewhereconnector.PluginConfigTestUtils;
 
 public class ApsPluginBaseTestCase extends BaseTestCase {
 	

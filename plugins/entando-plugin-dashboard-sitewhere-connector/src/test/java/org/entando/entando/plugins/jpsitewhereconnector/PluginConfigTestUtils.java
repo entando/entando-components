@@ -1,4 +1,4 @@
-package org.entando.entando.plugins.jpchangeme;
+package org.entando.entando.plugins.jpsitewhereconnector;
 
 import com.agiletec.ConfigTestUtils;
 

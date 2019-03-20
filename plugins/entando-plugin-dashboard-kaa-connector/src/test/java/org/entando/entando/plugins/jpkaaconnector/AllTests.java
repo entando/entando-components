@@ -1,7 +1,7 @@
-package org.entando.entando.plugins.jpchangeme;
+package org.entando.entando.plugins.jpkaaconnector;
 
-import org.entando.entando.plugins.jpchangeme.aps.TestApsSample;
-import org.entando.entando.plugins.jpchangeme.apsadmin.TestApsAdminSample;
+import org.entando.entando.plugins.jpkaaconnector.apsadmin.TestApsAdminSample;
+import org.entando.entando.plugins.jpkaaconnector.aps.TestApsSample;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;

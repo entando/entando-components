@@ -42,6 +42,6 @@ public interface IDashboardConfigManager {
 
     SearcherDaoPaginatedResult<DashboardConfig> getDashboardConfigs(List<FieldSearchFilter> fieldSearchFilters) throws ApsSystemException;
     
-    DatasourcesConfigDto getDatasourceByDatasourcecodeAndDashboard(String datasourcecode, int dashboardId);
+    DatasourcesConfigDto getDatasourceByDatasourcecodeAndDashboard(int dashboardId, String datasourceCode);
     
 }

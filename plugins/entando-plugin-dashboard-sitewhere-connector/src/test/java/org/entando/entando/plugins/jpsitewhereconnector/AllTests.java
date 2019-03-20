@@ -1,7 +1,7 @@
-package org.entando.entando.plugins.jpchangeme;
+package org.entando.entando.plugins.jpsitewhereconnector;
 
-import org.entando.entando.plugins.jpchangeme.aps.TestApsSample;
-import org.entando.entando.plugins.jpchangeme.apsadmin.TestApsAdminSample;
+import org.entando.entando.plugins.jpsitewhereconnector.aps.TestApsSample;
+import org.entando.entando.plugins.jpsitewhereconnector.apsadmin.TestApsAdminSample;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;

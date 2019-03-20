@@ -1,8 +1,9 @@
-package org.entando.entando.plugins.jpchangeme.apsadmin;
+package org.entando.entando.plugins.jpkaaconnector.apsadmin;
 
 import com.agiletec.ConfigTestUtils;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-import org.entando.entando.plugins.jpchangeme.PluginConfigTestUtils;
+
+import org.entando.entando.plugins.jpkaaconnector.PluginConfigTestUtils;
 
 public class ApsAdminPluginBaseTestCase extends ApsAdminBaseTestCase {
 	

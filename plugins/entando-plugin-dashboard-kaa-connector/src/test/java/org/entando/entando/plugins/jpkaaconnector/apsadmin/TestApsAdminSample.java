@@ -1,4 +1,4 @@
-package org.entando.entando.plugins.jpchangeme.apsadmin;
+package org.entando.entando.plugins.jpkaaconnector.apsadmin;
 
 public class TestApsAdminSample extends ApsAdminPluginBaseTestCase {
 	
