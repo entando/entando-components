@@ -21,4 +21,5 @@
         <property name="dashboardConfigManager" ref="dashboardDashboardConfigManager"/>
     </bean>
 
+
 </beans>

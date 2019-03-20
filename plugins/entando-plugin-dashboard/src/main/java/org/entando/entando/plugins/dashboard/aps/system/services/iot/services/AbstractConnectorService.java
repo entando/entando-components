@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
 
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.CONNECTION_TIMEOUT;
 
-public abstract class AbstractConnectorService {
+public abstract class AbstractConnectorService implements IConnectorService{
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
   

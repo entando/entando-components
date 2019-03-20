@@ -1,24 +1,29 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
+import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @Service
 public class ConnectorService extends AbstractConnectorService implements IConnectorService {
@@ -36,7 +41,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       ConnectorFactory connectorFactory) {
     this.connectorFactory = connectorFactory;
   }
-
+	
   @Override
   public LinkedHashMap<String, String> getConnectorTypes() throws IOException {
     return null;
@@ -61,6 +66,43 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     logger.info("{} getAllDevices to {}", this.getClass().getSimpleName(), dashboardConfigDto.getServerURI());
     return connectorFactory.get(dashboardConfigDto.getServerDescription()).getAllDevices(dashboardConfigDto);
   }
+  
+  
+  @Override
+  public PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList) {
+      try {
+          List<FieldSearchFilter> filters = new ArrayList<FieldSearchFilter>(requestList.buildFieldSearchFilters());
+          filters
+                 .stream()
+                 .filter(i -> i.getKey() != null)
+                 .forEach(i -> i.setKey(DashboardConfigDto.getEntityFieldName(i.getKey())));
+          
+          List<Map<String, Object>> lista = new ArrayList<Map<String,Object>>();
+          
+          Map<String, Object> lisa1 = new HashMap<String, Object>();
+          Map<String, Object> lisa2 = new HashMap<String, Object>();
+      lisa1.put("temperature", "5");
+      lisa1.put("date", "12/12/2012");
+
+      lisa2.put("temperature", "15");
+      lisa2.put("date", "12/12/2013");
+      lista.add(lisa1);
+      lista.add(lisa2);
+  		
+          SearcherDaoPaginatedResult<Map<String, Object>> langsResult = new SearcherDaoPaginatedResult<>(lista.size(), lista);
+          langsResult.setCount(lista.size());
+          
+
+          PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata<>(requestList, langsResult);
+          pagedMetadata.setBody(lista);
+          return pagedMetadata;
+      } catch (Throwable t) {
+          logger.error("error in search dashboardConfigs", t);
+          throw new RestServerError("error in search dashboardConfigs", t);
+      }
+  }
+
+  
 
   @Override
   public void setDeviceMeasurementSchema(
