@@ -39,8 +39,10 @@ export default {
     "common.legendPosition": "Legend Position",
     "common.legendPosition.help": "Help",
     "plugin.fieldsRequired": "Required Fields",
+    "plugin.chooseAnOptionServerType": "Select Server Type",
     "plugin.chooseAnOptionServerName": "Select Server Name",
     "plugin.chooseAnOptionDatasource": "Select Data Source",
+    "plugin.serverType": "Server Type",
     "plugin.serverName": "Server Name",
     "plugin.serverName.help": "Help Server Name",
     "plugin.datasource": "Data Source",
@@ -78,6 +80,7 @@ export default {
     "plugin.config.connectionTimeOut": "Conn. Timeout",
     "plugin.config.connectionTimeOutAppend": "in millis",
     "plugin.config.listDatasource": "List of Context (Specific URI)",
+    "plugin.config.datasourceCode": "Datasource Code",
     "plugin.config.datasource": "Datasource",
     "plugin.config.datasourceURI": "Datasource URI",
     "plugin.config.datasourceURIExample":

@@ -2,8 +2,17 @@ import {makeMockRequest, makeRequest, METHODS} from "@entando/apimanager";
 import {
   DASHBOARD_CONFIG_LIST,
   DASHBOARD_LIST_DATASOURCE,
-  DATASOURCES_DATA
+  DATASOURCES_DATA,
+  SERVER_TYPE_LIST
 } from "mocks/dashboardConfigs";
+
+export const getServerType = () =>
+  makeRequest({
+    uri: "/api/plugins/dashboard/dashboardConfigs/servertypes",
+    method: METHODS.GET,
+    mockResponse: SERVER_TYPE_LIST,
+    useAuthentication: true
+  });
 
 export const getServerConfig = configItem => {
   let uri = "/api/plugins/dashboard/dashboardConfigs";

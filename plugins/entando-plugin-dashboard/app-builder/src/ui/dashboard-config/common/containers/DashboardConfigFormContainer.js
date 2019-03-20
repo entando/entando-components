@@ -4,10 +4,13 @@ import {formValueSelector} from "redux-form";
 import DashboardConfigForm from "ui/dashboard-config/common/components/DashboardConfigForm";
 
 import {
+  fetchServerType,
   createServerConfig,
   updateServerConfig,
   setInternalRoute
 } from "state/main/actions";
+
+import {getServerType} from "state/main/selectors";
 
 const selector = formValueSelector("dashboard-config-form");
 
@@ -16,10 +19,12 @@ export const mapStateToProps = state => ({
     datasource: selector(state, "datasource"),
     datasourceURI: selector(state, "datasourceURI")
   },
-  datasources: selector(state, "datasources")
+  datasources: selector(state, "datasources"),
+  serverTypeList: getServerType(state)
 });
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
+  onWillMount: () => dispatch(fetchServerType()),
   onSubmit: values => {
     if (ownProps.mode === "add") {
       dispatch(createServerConfig(values));
