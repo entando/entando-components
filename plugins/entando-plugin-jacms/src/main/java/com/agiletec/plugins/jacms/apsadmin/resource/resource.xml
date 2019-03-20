@@ -60,8 +60,51 @@
             <result type="tiles">admin.jacms.resource.entry</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
         </action>
-        
-       
+
+        <action name="upload" class="jacmsResourceFileChunksUploadAction" method="upload">
+            <result type="stream" name="input">
+                <param name="contentType">plain/text</param>
+                <param name="inputStream">inputStream</param>
+            </result>
+            <result type="stream" name="failure">
+                <param name="contentType">plain/text</param>
+                <param name="inputStream">inputStream</param>
+            </result>
+
+            <result type="stream">
+                <param name="contentType">plain/text</param>
+                <param name="inputStream">inputStream</param>
+            </result>
+
+            <interceptor-ref name="apsFileUpload" />
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">manageResources</param>
+            </interceptor-ref>
+
+        </action>
+
+
+
+        <action name="stopUploadAndDelete" class="jacmsResourceFileChunksStopUploadAndDeleteAction" method="stopUploadAndDelete">
+            <result type="stream" name="input">
+                <param name="contentType">plain/text</param>
+                <param name="inputStream">inputStream</param>
+            </result>
+            <result type="stream" name="failure">
+                <param name="contentType">plain/text</param>
+                <param name="inputStream">inputStream</param>
+            </result>
+            <result type="stream">
+                <param name="contentType">plain/text</param>
+                <param name="inputStream">inputStream</param>
+            </result>
+
+            <interceptor-ref name="apsFileUpload" />
+            <interceptor-ref name="entandoValidationStack">
+                <param name="requestAuth.requiredPermission">manageResources</param>
+            </interceptor-ref>
+
+        </action>
         
         <action name="save" class="jacmsMultipleResourceAction" method="save">
             <result type="tiles" name="input">admin.jacms.resource.entry</result>
