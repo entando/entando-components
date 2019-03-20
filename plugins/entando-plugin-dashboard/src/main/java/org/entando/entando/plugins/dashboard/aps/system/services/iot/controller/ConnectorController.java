@@ -19,24 +19,37 @@ import com.google.gson.JsonArray;
 @RestController("plugins/iotConnector")
 public class ConnectorController {
 
-  @Autowired
-  IDashboardConfigService iDashboardConfigService;
+	@Autowired
+	IDashboardConfigService iDashboardConfigService;
 
-  @Autowired
-  IConnectorService iConnectorService;
-  
-  @RequestMapping(value = "measurements/{dashboardId}/{datasourceCode}", method = RequestMethod.POST)
-  public ResponseEntity<?> saveMeasurement(@PathVariable int dashboardId,
-      @PathVariable String datasourceCode, @RequestBody JsonArray jsonElements) throws Exception {
+	@Autowired
+	IConnectorService iConnectorService;
 
-    DashboardConfigDto dashboardDto = iDashboardConfigService
-        .getDashboardConfig(dashboardId);
-    
-	  IDashboardDatasourceDto dto = iConnectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto, datasourceCode, dashboardDto.getServerDescription());
-    
-    iConnectorService.saveDeviceMeasurement(dto, jsonElements);
-    
+	@RequestMapping(value = "measurements/{dashboardId}/{datasourceCode}", method = RequestMethod.POST)
+	public ResponseEntity<?> saveMeasurement(@PathVariable int dashboardId, @PathVariable String datasourceCode,
+			@RequestBody JsonArray jsonElements) throws Exception {
+
+		DashboardConfigDto dashboardDto = iDashboardConfigService.getDashboardConfig(dashboardId);
+
+		IDashboardDatasourceDto dto = iConnectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
+				datasourceCode, dashboardDto.getServerDescription());
+
+		iConnectorService.saveDeviceMeasurement(dto, jsonElements);
+
 //    return new ResponseEntity<>(measurement, HttpStatus.OK);
-	  return null;
-  }
+		return null;
+	}
+	
+	
+	@RequestMapping(value = "measurements/{dashboardId}/{datasourceCode}", method = RequestMethod.GET)
+	public ResponseEntity<?> getMeasurement(@PathVariable int dashboardId, @PathVariable String datasourceCode,@RequestBody JsonArray jsonElements) throws Exception {
+		
+		DashboardConfigDto dashboardDto = iDashboardConfigService.getDashboardConfig(dashboardId);
+		
+		IDashboardDatasourceDto dto = iConnectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto, datasourceCode, dashboardDto.getServerDescription());
+		
+//		iConnectorService.getMeasurement();
+		
+		return null;
+	}
 }

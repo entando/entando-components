@@ -39,4 +39,12 @@ public interface IConnectorService {
 
     IDashboardDatasourceDto getDashboardDatasourceDtobyIdAndCodeAndServerType(DashboardConfigDto dashboardConfigDto,
         String datasourceCode, String serverType);
+    
+    
+//    getMe(){
+//    	Apre connessione
+//    	RichiedeMisure,
+//    	TrasformaMisureSecondoSpecFrontEnd
+//}
+    
 }
