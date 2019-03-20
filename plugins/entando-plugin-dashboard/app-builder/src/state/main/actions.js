@@ -245,7 +245,6 @@ export const fetchServerType = () => dispatch =>
     getServerType().then(response => {
       response.json().then(json => {
         if (response.ok) {
-          console.log("json", json);
           dispatch(setServerType(json.payload));
           resolve();
         } else {

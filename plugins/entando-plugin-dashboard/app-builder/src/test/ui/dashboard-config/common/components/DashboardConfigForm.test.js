@@ -6,9 +6,11 @@ import {Field, FieldArray} from "redux-form";
 import {DashboardConfigFormBody} from "ui/dashboard-config/common/components/DashboardConfigForm";
 
 const props = {
+  onWillMount: jest.fn(),
   handleSubmit: jest.fn(),
   gotoHomePage: jest.fn(),
   testConnection: jest.fn(),
+  serverTypeList: [],
   datasources: [],
   invalid: false,
   submitting: false
@@ -22,6 +24,10 @@ describe("DashboardConfigForm", () => {
 
   it("renders without crashing", () => {
     expect(component.exists()).toBe(true);
+  });
+
+  it("will call onWillMount on componentWillMount", () => {
+    expect(props.onWillMount).toHaveBeenCalled();
   });
 
   it("contain one form ", () => {
@@ -42,7 +48,8 @@ describe("DashboardConfigForm", () => {
   it("have FieldArray", () => {
     expect(component.find(FieldArray)).toHaveLength(1);
   });
+
   it("have Fields", () => {
-    expect(component.find(Field)).toHaveLength(10);
+    expect(component.find(Field)).toHaveLength(12);
   });
 });

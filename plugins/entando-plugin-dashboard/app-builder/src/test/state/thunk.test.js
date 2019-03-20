@@ -7,6 +7,7 @@ import {mockApi} from "../testUtils";
 
 import {getLanguages} from "api/appBuilder";
 import {
+  getServerType,
   getServerConfig,
   deleteServerConfig,
   postServerConfig,
@@ -17,6 +18,7 @@ import {
 } from "api/dashboardConfig";
 
 import {
+  SET_SERVER_TYPE,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_COLUMNS,
   SET_LANGUAGES,
@@ -32,6 +34,7 @@ import {
 import {
   getWidgetConfig,
   fetchLanguages,
+  fetchServerType,
   fetchServerConfigList,
   editServerConfig,
   removeServerConfig,
@@ -46,6 +49,7 @@ import {getWidgetConfigSelector} from "state/app-builder/selectors";
 
 import {LANGUAGES} from "mocks/appBuilder";
 import {
+  SERVER_TYPE_LIST,
   DASHBOARD_CONFIG_LIST,
   DATASOURCE_TEMPERATURE,
   SERVER_PIA,
@@ -63,6 +67,7 @@ const INITIAL_STATE = {
       languages: {}
     },
     dashboardConfig: {
+      serverType: [],
       servers: "",
       datasourceList: [],
       datasource: {
@@ -125,6 +130,34 @@ describe("state/main/actions", () => {
         getLanguages.mockImplementation(mockApi({errors: true}));
         store
           .dispatch(fetchLanguages())
+          .then(() => {
+            expect(store.getActions()).toHaveLength(2);
+            expect(store.getActions()[0]).toHaveProperty("type", ADD_ERRORS);
+            expect(store.getActions()[1]).toHaveProperty("type", ADD_TOAST);
+            done();
+          })
+          .catch(done.fail);
+      });
+    });
+
+    describe("fetchServerType", () => {
+      beforeEach(() => {
+        getServerType.mockImplementation(mockApi({payload: SERVER_TYPE_LIST}));
+      });
+
+      it("if response OK dispatch setServerConfigList", done => {
+        store.dispatch(fetchServerType()).then(() => {
+          actions = store.getActions();
+          expect(actions).toHaveLength(1);
+          expect(actions[0]).toHaveProperty("type", SET_SERVER_TYPE);
+          done();
+        });
+      });
+
+      it("if API response is not ok, dispatch ADD_ERRORS", done => {
+        getServerType.mockImplementation(mockApi({errors: true}));
+        store
+          .dispatch(fetchServerType())
           .then(() => {
             expect(store.getActions()).toHaveLength(2);
             expect(store.getActions()[0]).toHaveProperty("type", ADD_ERRORS);
@@ -347,7 +380,7 @@ describe("state/main/actions", () => {
           )
           .then(() => {
             actions = store.getActions();
-            expect(store.getActions()).toHaveLength(5);
+            expect(store.getActions()).toHaveLength(7);
             expect(actions[0]).toHaveProperty(
               "type",
               CLEAR_SELECTED_DATASOURCE
@@ -356,6 +389,8 @@ describe("state/main/actions", () => {
             expect(actions[2]).toHaveProperty("type", SET_DATASOURCE_COLUMNS);
             expect(actions[3]).toHaveProperty("type", "@@redux-form/CHANGE");
             expect(actions[4]).toHaveProperty("type", "@@redux-form/CHANGE");
+            expect(actions[5]).toHaveProperty("type", "@@redux-form/CHANGE");
+            expect(actions[6]).toHaveProperty("type", "@@redux-form/CHANGE");
             done();
           })
           .catch(done.fail);

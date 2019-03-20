@@ -49,7 +49,7 @@ const renderField = (
     />
   );
 };
-class DashboardConfigFormBody extends Component {
+export class DashboardConfigFormBody extends Component {
   componentWillMount() {
     this.props.onWillMount();
   }

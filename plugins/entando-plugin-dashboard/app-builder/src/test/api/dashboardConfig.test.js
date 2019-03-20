@@ -1,10 +1,12 @@
 import "test/enzyme-init";
 import {
+  getServerType,
   getServerConfig,
   postServerConfig,
   putServerConfig,
   deleteServerConfig,
-  getDatasources
+  getDatasources,
+  putDatasourceColumn
 } from "api/dashboardConfig";
 import {makeRequest, METHODS} from "@entando/apimanager";
 
@@ -37,6 +39,23 @@ const CONFIG = {
 describe("api/dashboardConfig", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe("getServerType", () => {
+    it("returns a promise", () => {
+      expect(getServerType()).toBeInstanceOf(Promise);
+    });
+
+    it("if successful, returns a mock ok response", () => {
+      getServerType();
+      expect(makeRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          uri: "/api/plugins/dashboard/dashboardConfigs/servertypes",
+          method: METHODS.GET,
+          useAuthentication: true
+        })
+      );
+    });
   });
 
   describe("getServerConfig", () => {
@@ -132,6 +151,25 @@ describe("api/dashboardConfig", () => {
           uri: "/api/plugins/dashboard/dashboardConfigs/1/datasources",
           method: METHODS.GET,
           useAuthentication: true
+        })
+      );
+    });
+  });
+
+  describe("putDatasourceColumn", () => {
+    const columns = [{key: "temperature", value: "temperature"}];
+    it("returns a promise", () => {
+      expect(putDatasourceColumn(1, 2, columns)).toBeInstanceOf(Promise);
+    });
+
+    it("if successful, returns a mock ok response", () => {
+      putDatasourceColumn(1, 2, columns);
+      expect(makeRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          uri: "/api/plugins/dashboard/dashboardConfigs/1/datasource/2/columns",
+          method: METHODS.PUT,
+          useAuthentication: true,
+          body: columns
         })
       );
     });
