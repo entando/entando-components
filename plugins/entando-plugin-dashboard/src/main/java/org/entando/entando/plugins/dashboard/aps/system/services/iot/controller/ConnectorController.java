@@ -52,7 +52,7 @@ public class ConnectorController {
 
     IDashboardDatasourceDto dto = iConnectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto, datasourceCode, dashboardDto.getServerDescription());
 
-    JsonObject json = iConnectorService.getDeviceMeasurements(dto);
+    JsonArray json = iConnectorService.getDeviceMeasurements(dto,100L,null,null);
 
     return new ResponseEntity<>(json, HttpStatus.OK);
     

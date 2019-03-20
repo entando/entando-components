@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -62,7 +63,18 @@ public class IoTUtils {
       fieldNames = StringUtils.join(fildNameList.subList(1,fildNameList.size()), IoTConstants.JSON_FIELD_SEPARATOR);
       return getNestedFieldFromJson(jsonObject.getAsJsonObject(fieldName),fieldNames);
     }
-    return null;
+    
+    else if (jsonObject.get(fieldName).isJsonArray() && fildNameList.size() == 2) {
+      JsonArray jsonArray = new JsonArray();
+      for (JsonElement json:jsonObject.get(fildNameList.get(0)).getAsJsonArray()) {
+        if (json.isJsonObject() && json.getAsJsonObject().get(fildNameList.get(1)) != null) {
+          jsonArray.add(json.getAsJsonObject().get(fildNameList.get(1)));
+        }
+      }
+      return jsonArray;
+    }
+      
+      return null;
   }
 
   public static JsonElement getNestedFieldFromJson(String jsonObject, String fieldNames) {

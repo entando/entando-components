@@ -1,14 +1,13 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.google.gson.JsonArray;
@@ -40,7 +39,7 @@ public interface IConnectorService {
     IDashboardDatasourceDto getDashboardDatasourceDtobyIdAndCodeAndServerType(DashboardConfigDto dashboardConfigDto,
         String datasourceCode, String serverType);
 
-    JsonObject getDeviceMeasurements(IDashboardDatasourceDto dto);
+    JsonArray getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Instant startDate, Instant endDate);
     
 //    getMe(){
 //    	Apre connessione

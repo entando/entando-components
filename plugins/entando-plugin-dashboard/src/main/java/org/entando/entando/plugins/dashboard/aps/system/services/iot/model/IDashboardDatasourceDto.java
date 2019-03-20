@@ -16,7 +16,6 @@ public interface IDashboardDatasourceDto {
 	<T extends DatasourcesConfigDto> T getDatasource();
 	
 	String getDatasourceCode();
-	
-	
-	
+
+	boolean supports(String serverType);
 }
