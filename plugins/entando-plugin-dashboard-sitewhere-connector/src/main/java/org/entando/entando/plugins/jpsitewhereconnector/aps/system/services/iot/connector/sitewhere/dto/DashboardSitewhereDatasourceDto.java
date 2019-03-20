@@ -27,6 +27,11 @@ public class DashboardSitewhereDatasourceDto extends AbstractDashboardDatasource
     }
 
     @Override
+    public int getDashboardId() {
+        return super.getDashboardConfigDto().getId();
+    }
+
+    @Override
     public <T extends DatasourcesConfigDto> T getDatasource() {
         return (T) super.getDatasourcesConfigDto();
     }
