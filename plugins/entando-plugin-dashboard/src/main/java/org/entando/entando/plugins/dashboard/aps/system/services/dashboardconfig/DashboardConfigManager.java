@@ -19,7 +19,6 @@ package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfi
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.event.DashboardConfigChangedEvent;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -150,9 +149,12 @@ public class DashboardConfigManager extends AbstractService implements IDashboar
   }
 
   @Override
-  public DatasourcesConfigDto getDatasourceByDatasourcecodeAndDashboard(String datasourcecode,
-      int dashboardId) {
-    return this.getDashboardConfigDAO().loadDatasourceConfigByDatasourceCodeAndDashboardConfig(datasourcecode,dashboardId);
+  public DatasourcesConfigDto getDatasourceByDatasourcecodeAndDashboard(
+      int dashboardId, String datasourceCode) {
+    
+    
+    return this.getDashboardConfigDAO().loadDatasourceConfigByDatasourceCodeAndDashboardConfig(dashboardId,
+        datasourceCode);
   }
 
 

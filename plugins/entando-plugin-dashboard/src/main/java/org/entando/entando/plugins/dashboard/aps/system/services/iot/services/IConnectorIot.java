@@ -32,4 +32,5 @@ public interface IConnectorIot {
 	JsonObject saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, JsonArray measurementBody)
 			throws Exception;
 
+  IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(DashboardConfigDto dashboardConfigDto, String datasourceCode);
 }

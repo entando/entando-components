@@ -40,6 +40,5 @@ public interface IDashboardConfigDAO {
 
     int countDashboardConfigs(FieldSearchFilter[] filters);
     
-    DatasourcesConfigDto loadDatasourceConfigByDatasourceCodeAndDashboardConfig(String datasourcecode,
-        int dashboardId);
+    DatasourcesConfigDto loadDatasourceConfigByDatasourceCodeAndDashboardConfig(int dashboardId, String datasourceCode);
 }

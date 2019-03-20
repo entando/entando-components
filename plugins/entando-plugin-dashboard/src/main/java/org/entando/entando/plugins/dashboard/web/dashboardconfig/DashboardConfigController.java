@@ -17,6 +17,7 @@
 
 package org.entando.entando.plugins.dashboard.web.dashboardconfig;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,12 +26,14 @@ import javax.validation.Valid;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,6 +58,9 @@ public class DashboardConfigController {
     @Autowired
     private DashboardConfigValidator dashboardConfigValidator;
 
+    @Autowired
+    private IConnectorService iConnectorService;
+
     protected IDashboardConfigService getDashboardConfigService() {
         return dashboardConfigService;
     }
@@ -71,6 +77,15 @@ public class DashboardConfigController {
         this.dashboardConfigValidator = dashboardConfigValidator;
     }
 
+    protected IConnectorService getConnectorService() {
+        return iConnectorService;
+    }
+
+    public void setiConnectorService(
+        IConnectorService iConnectorService) {
+        this.iConnectorService = iConnectorService;
+    }
+    
     @RestAccessControl(permission = "superuser")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<PagedMetadata<DashboardConfigDto>> > getDashboardConfigs(RestListRequest requestList) throws JsonProcessingException {
@@ -136,6 +151,32 @@ public class DashboardConfigController {
         result.put("id", Integer.valueOf(dashboardConfigId));
         return new ResponseEntity<>(new SimpleRestResponse(result), HttpStatus.OK);
     }
+    @RestAccessControl(permission = "superuser")
+    @RequestMapping(value = "/datasource", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<Map>> getDataSourceByDashboardConfig(@Valid @RequestBody DashboardConfigRequest dashboardConfigRequest, BindingResult bindingResult)
+        throws IOException {
+
+        //TODO
+//        connectorIotService
+
+
+        return new ResponseEntity<>(new SimpleRestResponse(null), HttpStatus.OK);
+    }
+
+    //@RestAccessControl(permission = "superuser")
+    @RequestMapping(value = "/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> pingDashboardConfig(@Valid @RequestBody DashboardConfigRequest dashboardConfigRequest, BindingResult bindingResult)
+        throws IOException {
+        logger.debug("{} ping to {}", this.getClass().getSimpleName(), dashboardConfigRequest.getServerURI());
+        
+
+        DashboardConfigDto dashboardConfigDto = new DashboardConfigDto();
+        BeanUtils.copyProperties(dashboardConfigRequest,dashboardConfigDto);
+
+        boolean res = iConnectorService.pingServer(dashboardConfigDto);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+    
 
 }
 

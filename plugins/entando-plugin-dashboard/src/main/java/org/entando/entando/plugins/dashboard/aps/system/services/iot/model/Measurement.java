@@ -1,44 +1,59 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.model;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class Measurement {
 
-  Map<String, JsonArray> measurement;
+  private String id;
+  private int dashboardId;
+  private String datasourceCode;
+  private String templateId;
+  private List<MeasurementObject> measurements;
 
-  public Map<String, JsonArray> getMeasurement() {
-    if(measurement == null) {
-      measurement = new HashMap<>();
-    }
-    return measurement;
+  public String getId() {
+    return id;
   }
 
-  public void setMeasurement(
-      Map<String, JsonArray> measurement) {
-    if(measurement == null) {
-      measurement = new HashMap<>();
-    }
-    this.measurement = measurement;
+  public void setId(String id) {
+    this.id = id;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Measurement that = (Measurement) o;
-    return Objects.equals(measurement, that.measurement);
+  public int getDashboardId() {
+    return dashboardId;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(measurement);
+  public void setDashboardId(int dashboardId) {
+    this.dashboardId = dashboardId;
+  }
+
+  public String getDatasourceCode() {
+    return datasourceCode;
+  }
+
+  public void setDatasourceCode(String datasourceCode) {
+    this.datasourceCode = datasourceCode;
+  }
+
+  public String getTemplateId() {
+    return templateId;
+  }
+
+  public void setTemplateId(String templateId) {
+    this.templateId = templateId;
+  }
+
+  public List<MeasurementObject> getMeasurements() {
+    return measurements;
+  }
+
+  public void setMeasurements(
+      List<MeasurementObject> measurements) {
+    this.measurements = measurements;
   }
 }
