@@ -138,6 +138,7 @@
                             <s:set var="URLoriginal" value="%{#resource.getImagePath(0)}"/>
                             <s:url var="URLedit" action="edit" namespace="/do/jacms/Resource">
                                 <s:param name="resourceId" value="%{#resourceid}"/>
+                                <s:param name="resourceTypeCode" value="%{#resource.type}"/>
                             </s:url>
                             <s:url var="URLuse" action="joinResource" namespace="/do/jacms/Content/Resource">
                                 <s:param name="resourceId" value="%{#resourceid}"/>
@@ -246,6 +247,7 @@
                             <s:set var="URLoriginal" value="%{#resource.getImagePath(0)}"/>
                             <s:url var="URLedit" action="edit" namespace="/do/jacms/Resource">
                                 <s:param name="resourceId" value="%{#resourceid}"/>
+                                <s:param name="resourceTypeCode" value="%{#resource.type}"/>
                             </s:url>
                             <s:url var="URLuse" action="joinResource" namespace="/do/jacms/Content/Resource">
                                 <s:param name="resourceId" value="%{#resourceid}"/>
