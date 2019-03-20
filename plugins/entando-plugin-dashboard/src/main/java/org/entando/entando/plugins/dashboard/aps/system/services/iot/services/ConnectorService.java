@@ -2,6 +2,7 @@ package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -127,7 +128,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   }
 
   @Override
-  public JsonArray getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Instant startDate, Instant endDate) {
+  public JsonArray getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Date startDate, Date endDate) {
     logger.info("{} getDeviceMeasurement By Dashboard and datasource ids :{}, {}", this.getClass().getSimpleName(), dto.getDashboardId() ,dto.getDatasourceCode());
     return connectorFactory.getConnector(dto.getServerType()).getMeasurements(dto,nMeasurements,startDate,endDate);
   }

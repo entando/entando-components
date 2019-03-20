@@ -48,4 +48,30 @@ public abstract class AbstractDashboardDatasourceDto implements IDashboardDataso
       DatasourcesConfigDto datasourcesConfigDto) {
     this.datasourcesConfigDto = datasourcesConfigDto;
   }
+  
+  
+  @Override
+	public String getServerType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getDashboardId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public <T extends DatasourcesConfigDto> T getDatasource() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getDatasourceCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }
