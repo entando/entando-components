@@ -9,7 +9,7 @@
 	
 	<!-- EXAMPLE -->
 	<!-- 
-	<include file="org/entando/entando/plugins/aps/system/jpchangeme.xml"/>
+	<include file="org/entando/entando/plugins/aps/system/jpsitewhereconnector.xml"/>
 	 -->
    
 </struts>

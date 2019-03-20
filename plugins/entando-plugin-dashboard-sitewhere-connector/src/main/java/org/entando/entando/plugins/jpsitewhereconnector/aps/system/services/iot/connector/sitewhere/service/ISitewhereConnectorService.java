@@ -2,7 +2,7 @@ package org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot
 
 import com.google.gson.JsonArray;
 
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.connector.sitewhere.dto.DashboardSitewhereDatasourceDto;
+import org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.dto.DashboardSitewhereDatasourceDto;
 
 import java.time.Instant;
 

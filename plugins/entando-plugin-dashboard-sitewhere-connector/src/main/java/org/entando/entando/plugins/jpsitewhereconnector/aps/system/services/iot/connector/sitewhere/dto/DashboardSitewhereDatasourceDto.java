@@ -1,6 +1,9 @@
 package org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.dto;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
+
+import static org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.SitewhereConstants.SITEWHERE_SERVER_TYPE;
 
 public class DashboardSitewhereDatasourceDto extends AbstractDashboardDatasourceDto {
 
@@ -17,5 +20,19 @@ public class DashboardSitewhereDatasourceDto extends AbstractDashboardDatasource
         SitewhereApplicationConfigDto sitewhereDatasourceConfigDto) {
         super.setDatasourcesConfigDto(sitewhereDatasourceConfigDto);
     }
-    
+
+    @Override
+    public String getServerType() {
+        return SITEWHERE_SERVER_TYPE;
+    }
+
+    @Override
+    public <T extends DatasourcesConfigDto> T getDatasource() {
+        return (T) super.getDatasourcesConfigDto();
+    }
+
+    @Override
+    public String getDatasourceCode() {
+        return super.getDatasourcesConfigDto().getDatasourceCode();
+    }
 }
