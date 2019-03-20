@@ -83,7 +83,7 @@ public class DashboardConfigController {
 //    @RestAccessControl(permission = "superuser")
     
     @RequestMapping(value = "/servertypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ServerType> > getDashboardTypes() throws JsonProcessingException {
+    public ResponseEntity<SimpleRestResponse<ServerType>> getDashboardTypes(RestListRequest requestList) throws JsonProcessingException {
 //        this.getDashboardConfigValidator().validateRestListRequest(requestList, DashboardConfigDto.class);
 //        PagedMetadata<DashboardConfigDto> result = this.getDashboardConfigService().getDashboardConfigs(requestList);
 //        this.getDashboardConfigValidator().validateRestListResult(requestList, result);
@@ -93,7 +93,9 @@ public class DashboardConfigController {
     	x.setCode("codicino");
     	List<ServerType> lista = new ArrayList<ServerType>();
     	lista.add(x);
-        return new ResponseEntity<>(lista, HttpStatus.OK);
+    	lista.add(x);
+    	lista.add(x);
+        return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = "superuser")
