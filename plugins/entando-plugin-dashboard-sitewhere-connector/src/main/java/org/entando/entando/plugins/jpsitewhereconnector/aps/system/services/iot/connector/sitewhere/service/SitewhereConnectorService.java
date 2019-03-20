@@ -17,13 +17,11 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measu
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorIot;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IMeasurementConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IMeasurementTemplateService;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.dto.DashboardSitewhereDatasourceDto;
 import org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.dto.SitewhereApplicationConfigDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +36,10 @@ import java.util.Map.Entry;
 
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.JSON_FIELD_SEPARATOR;
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.KAA_SERVER_TYPE;
-import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.SITEWHERE_TENANT;
-import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.SITEWHERE_URL_BASE_PATH;
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.getObjectFromJson;
+import static org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.SitewhereConstants.ONE_RESULT_PAGINATION;
+import static org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.SitewhereConstants.SITEWHERE_TENANT;
+import static org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.SitewhereConstants.SITEWHERE_URL_BASE_PATH;
 
 @Service
 public class SitewhereConnectorService implements ISitewhereConnectorService, IConnectorIot {
@@ -107,7 +106,7 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
         .join(dashboardDatasourceDto.getDashboardUrl(), SITEWHERE_URL_BASE_PATH,
             "/assignments/",
             assignmentId,
-            "/measurements" + IoTConstants.ONE_RESULT_PAGINATION);
+            "/measurements" + ONE_RESULT_PAGINATION);
 
     ResponseEntity<String> result = IoTUtils
         .getRequestMethod(url, getSitewhereHeaders(sitewhereConn.getDashboardConfigDto()));
@@ -138,6 +137,11 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
     dto.setSitewhereDatasourceConfigDto((SitewhereApplicationConfigDto) datasourcesConfigDto);
     dto.setDashboardConfigDto(dashboardConfigDto);
     return dto;
+  }
+
+  @Override
+  public JsonObject getDeviceMeasurements(IDashboardDatasourceDto dto) {
+    return null;
   }
 
   @Override
@@ -182,7 +186,7 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
         .join(sitewhereConn.getDashboardUrl(), SITEWHERE_URL_BASE_PATH,
             "/assignments/",
             sitewhereConn.getSitewhereDatasourceConfigDto().getAssignmentId(),
-            "/measurements" + IoTConstants.ONE_RESULT_PAGINATION);
+            "/measurements" + ONE_RESULT_PAGINATION);
 
     ResponseEntity<String> result = IoTUtils
         .getRequestMethod(url, getSitewhereHeaders(sitewhereConn.getDashboardConfigDto()));

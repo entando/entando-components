@@ -1,5 +1,6 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.utils;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
@@ -49,6 +50,21 @@ public class IotUtilsTest {
     }.getType(), JsonObject.class);
     assertTrue(StringUtils.isNotBlank(IoTUtils.getNestedFieldFromJson(jsonObject,"hardwareId").getAsString()));
     assertTrue(IoTUtils.getNestedFieldFromJson(jsonObject,"specification" + IoTConstants.JSON_FIELD_SEPARATOR + "asset").getAsJsonObject() != null);
+  }
+  
+  @Test
+  public void testGetNestedFieldFromJsonArray() throws IOException {
+    final File file = ResourceUtils.getFile("classpath:testjson/device-list.json");
+    final FileInputStream fis;
+    fis = new FileInputStream(file);
+    final String flusso = IOUtils.toString(fis, "UTF-8");
+    JsonObject jsonObject = IoTUtils.getObjectFromJson(flusso, new TypeToken<JsonObject>() {
+    }.getType(), JsonObject.class);
+    JsonElement res = IoTUtils.getNestedFieldFromJson(jsonObject,
+        "results" + IoTConstants.JSON_FIELD_SEPARATOR + "measurementsSummary");
+    
+    res.getAsJsonArray().forEach(x -> assertTrue(StringUtils.isNotBlank(x.getAsString())));
+    
   }
   
 }

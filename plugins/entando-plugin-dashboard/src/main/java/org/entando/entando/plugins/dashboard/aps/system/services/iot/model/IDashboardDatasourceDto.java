@@ -11,8 +11,11 @@ public interface IDashboardDatasourceDto {
 
 	String getServerType();
 	
+	int getDashboardId();
+	
 	<T extends DatasourcesConfigDto> T getDatasource();
 	
 	String getDatasourceCode();
-	
+
+	boolean supports(String serverType);
 }

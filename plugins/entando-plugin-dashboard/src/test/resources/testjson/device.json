@@ -1,0 +1,67 @@
+{
+  "createdDate": "2019-03-14T07:19:55.095+0000",
+  "createdBy": "system",
+  "deleted": false,
+  "hardwareId": "dispositivoAndroid",
+  "siteToken": "bb105f8d-3150-41f5-b9d1-db04965668d3",
+  "deviceElementMappings": [],
+  "comments": "Device created by on-demand registration.",
+  "specification": {
+    "createdDate": "2019-03-14T07:16:47.907+0000",
+    "createdBy": "system",
+    "deleted": false,
+    "token": "d2604433-e4eb-419b-97c7-88efe9b2cd41",
+    "name": "Android Tablet",
+    "assetModuleId": "fs-devices",
+    "assetId": "173",
+    "assetName": "Galaxy Tab 3",
+    "assetImageUrl": "https://s3.amazonaws.com/sitewhere-demo/construction/misc/android-logo.png",
+    "asset": {
+      "id": "173",
+      "name": "Galaxy Tab 3",
+      "type": "Device",
+      "assetCategoryId": "fs-devices",
+      "imageUrl": "https://s3.amazonaws.com/sitewhere-demo/construction/misc/android-logo.png",
+      "properties": {
+        "sd.size": "1gb",
+        "cpu": "Dual Core Application Processor ",
+        "manufacturer": "Samsung"
+      },
+      "sku": "GTAB3",
+      "description": " This thin, lightweight Android tablet features a 7-inch touch display along with the same familiar interface as other Samsung Galaxy devices, making it easy to use. Use it to quickly browse the web, watch movies, read e-books, or download apps from Google Play."
+    },
+    "containerPolicy": "Standalone",
+    "metadata": {}
+  },
+  "assignment": {
+    "createdDate": "2019-03-14T07:19:55.097+0000",
+    "createdBy": "system",
+    "deleted": false,
+    "token": "c5c3c572-363d-464a-aee7-da5a7f1c6403",
+    "deviceHardwareId": "dispositivoAndroid",
+    "assignmentType": "Unassociated",
+    "siteToken": "bb105f8d-3150-41f5-b9d1-db04965668d3",
+    "status": "Active",
+    "activeDate": "2019-03-14T07:19:55.097+0000",
+    "metadata": {}
+  },
+  "site": {
+    "createdDate": "2019-03-14T07:16:47.753+0000",
+    "createdBy": "system",
+    "deleted": false,
+    "token": "bb105f8d-3150-41f5-b9d1-db04965668d3",
+    "name": "Construction Site",
+    "description": "A construction site with many high-value assets that should not be taken offsite. \nThe system provides location tracking for the assets and notifies administrators if any of the assets move \noutside of the general site area or into areas where they are not allowed.",
+    "imageUrl": "https://s3.amazonaws.com/sitewhere-demo/construction/construction.jpg",
+    "map": {
+      "type": "openstreetmap",
+      "metadata": {
+        "zoomLevel": "15",
+        "centerLatitude": "34.10469794977326",
+        "centerLongitude": "-84.23966646194458"
+      }
+    },
+    "metadata": {}
+  },
+  "metadata": {}
+}

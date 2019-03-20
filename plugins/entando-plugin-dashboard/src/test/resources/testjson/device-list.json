@@ -1,0 +1,35 @@
+{
+  "numResults": 6334,
+  "results": [
+    {
+      "id": "5c9265a5e4b062f412e9b22b",
+      "eventType": "Measurements",
+      "siteToken": "bb105f8d-3150-41f5-b9d1-db04965668d3",
+      "deviceAssignmentToken": "539997be-92ea-4eea-9e17-e57a376b1a8a",
+      "assignmentType": "Unassociated",
+      "eventDate": "2019-03-20T16:09:09.139+0000",
+      "receivedDate": "2019-03-20T16:09:09.140+0000",
+      "measurements": {
+        "distance": 9632,
+        "temperature": 44
+      },
+      "measurementsSummary": "distance: 9632.0, temperature: 44.0",
+      "metadata": {}
+    },
+    {
+      "id": "5c92659be4b062f412e9b229",
+      "eventType": "Measurements",
+      "siteToken": "bb105f8d-3150-41f5-b9d1-db04965668d3",
+      "deviceAssignmentToken": "539997be-92ea-4eea-9e17-e57a376b1a8a",
+      "assignmentType": "Unassociated",
+      "eventDate": "2019-03-20T16:08:59.031+0000",
+      "receivedDate": "2019-03-20T16:08:59.032+0000",
+      "measurements": {
+        "distance": 9968,
+        "temperature": 57
+      },
+      "measurementsSummary": "distance: 9968.0, temperature: 57.0",
+      "metadata": {}
+    }
+  ]
+}
