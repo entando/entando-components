@@ -6,6 +6,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDash
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,7 @@ public class ConnectorController {
   @Autowired
   IConnectorService iConnectorService;
   
-  @RequestMapping(value = "measurements/{dashboardId}/{datasourceCode}", method = RequestMethod.POST)
+  @RequestMapping(value = "measurements/{dashboardId}/{datasourceCode}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> saveMeasurement(@PathVariable int dashboardId,
       @PathVariable String datasourceCode, @RequestBody JsonArray jsonElements) throws Exception {
 
@@ -41,6 +42,22 @@ public class ConnectorController {
     
     return new ResponseEntity<>(json, HttpStatus.OK);
   }
+  
+  @RequestMapping(value = "measurements/{dashboardId}/{datasourceCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getMeasurement(@PathVariable int dashboardId,
+      @PathVariable String datasourceCode) throws Exception {
+    
+    DashboardConfigDto dashboardDto = iDashboardConfigService
+        .getDashboardConfig(dashboardId);
+
+    IDashboardDatasourceDto dto = iConnectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto, datasourceCode, dashboardDto.getServerDescription());
+
+    JsonObject json = iConnectorService.getDeviceMeasurements(dto);
+
+    return new ResponseEntity<>(json, HttpStatus.OK);
+    
+  }
+  
   
   @RequestMapping(value = "measurements/setTemplate/{dashboardId}/{datasourceCode}", method = RequestMethod.GET)
   public ResponseEntity<?> setMeasurementTemplate(@PathVariable int dashboardId, @PathVariable String datasourceCode)

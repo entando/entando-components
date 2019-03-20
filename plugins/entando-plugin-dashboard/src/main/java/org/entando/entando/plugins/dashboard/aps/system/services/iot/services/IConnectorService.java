@@ -39,4 +39,6 @@ public interface IConnectorService {
 
     IDashboardDatasourceDto getDashboardDatasourceDtobyIdAndCodeAndServerType(DashboardConfigDto dashboardConfigDto,
         String datasourceCode, String serverType);
+
+    JsonObject getDeviceMeasurements(IDashboardDatasourceDto dto);
 }

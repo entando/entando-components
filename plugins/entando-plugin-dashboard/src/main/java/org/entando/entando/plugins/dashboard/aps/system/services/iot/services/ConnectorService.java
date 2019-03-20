@@ -83,4 +83,10 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     logger.info("{} getDashboardDatasourceDtoByIdAndCode ids :{}, {}", this.getClass().getSimpleName(), dashboardConfigDto.getId() ,datasourceCode);
     return connectorFactory.get(serverType).getDashboardDatasourceDtoByIdAndCode(dashboardConfigDto, datasourceCode);
   }
+
+  @Override
+  public JsonObject getDeviceMeasurements(IDashboardDatasourceDto dto) {
+    logger.info("{} getDeviceMeasurement By Dashboard and datasource ids :{}, {}", this.getClass().getSimpleName(), dto.getDashboardId() ,dto.getDatasourceCode());
+    return connectorFactory.get(dto.getServerType()).getDeviceMeasurements(dto);
+  }
 }
