@@ -16,29 +16,31 @@
 
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig;
 
-import  org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
-import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
-
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.PostConstruct;
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
-import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
-import org.entando.entando.aps.system.exception.ResourceNotFoundException;
-import org.springframework.validation.BeanPropertyBindingResult;
+import  org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
+import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BeanPropertyBindingResult;
+
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 public class DashboardConfigService implements IDashboardConfigService {
 
@@ -178,6 +180,63 @@ public class DashboardConfigService implements IDashboardConfigService {
             throw new RestServerError("error in loading dashboardConfig", e);
         }
     }
+
+// TODO MARCO 
+    
+    
+    @Override
+    public  DatasourcesConfigDto getDashboardDataSourceDtobyIdAndCode(
+        int dashboardId, String datasourceCode) {
+        try {
+            DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(dashboardId);
+            if (null == dashboardConfig) {
+                logger.warn("no dashboardConfig found with code {}", dashboardId);
+                throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(dashboardId));
+            }
+            
+            // DashboardConfigDto dashboardConfigDto = this.getDtoBuilder().convert(dashboardConfig);
+            
+            return (DatasourcesConfigDto) this.getDashboardConfigManager().getDatasourceByDatasourcecodeAndDashboard(datasourceCode, dashboardId);
+        } catch (ApsSystemException e) {
+            logger.error("Error loading dashboardConfig {}", dashboardId, e);
+            throw new RestServerError("error in loading dashboardConfig", e);
+        }
+    }
+    
+//    
+//    @Override
+//    public <T extends AbstractDashboardDatasourceDto> T getDashboardDataSourceDtobyIdAndCode(
+//        int dashboardId, String datasourceCode) {
+//        try {
+//            DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(dashboardId);
+//            if (null == dashboardConfig) {
+//                logger.warn("no dashboardConfig found with code {}", dashboardId);
+//                throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(dashboardId));
+//            }
+//            DashboardConfigDto dashboardConfigDto = this.getDtoBuilder().convert(dashboardConfig);
+//            switch(dashboardConfigDto.getServerDescription()) {
+//                case KAA_SERVER_TYPE: {
+//                    DashboardKaaDatasourceDto dashboardKaaDatasourceDto = new DashboardKaaDatasourceDto();
+//                    dashboardKaaDatasourceDto.setDashboardConfigDto(dashboardConfigDto);
+//                    dashboardKaaDatasourceDto.setKaaDatasourceConfigDto(
+//                        (KaaApplicationConfigDto) this.getDashboardConfigManager().getDatasourceByDatasourcecodeAndDashboard(datasourceCode, dashboardId)); //TODO verificare lettura
+//                    return (T) dashboardKaaDatasourceDto;
+//                }
+//                case SITEWHERE_SERVER_TYPE: {
+//                    DashboardSitewhereDatasourceDto dashboardSitewhereDatasourceDto = new DashboardSitewhereDatasourceDto();
+//                    dashboardSitewhereDatasourceDto.setDashboardConfigDto(dashboardConfigDto);
+//                    dashboardSitewhereDatasourceDto.setSitewhereDatasourceConfigDto(
+//                        (SitewhereApplicationConfigDto) this.getDashboardConfigManager().getDatasourceByDatasourcecodeAndDashboard(datasourceCode, dashboardId)); //TODO verificare lettura
+//                    return (T) dashboardSitewhereDatasourceDto;
+//                }
+//            }
+//        } catch (ApsSystemException e) {
+//            logger.error("Error loading dashboardConfig {}", dashboardId, e);
+//            throw new RestServerError("error in loading dashboardConfig", e);
+//        }
+//        
+//        return null;
+//    }
 
     private DashboardConfig createDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
         DashboardConfig dashboardConfig = new DashboardConfig();

@@ -293,6 +293,35 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
     return dashboardConfig;
   }
 
+  @Override
+  public DatasourcesConfigDto loadDatasourceConfigByDatasourceCodeAndDashboardConfig(String datasourceCode, int dashboardId) {
+    Connection conn;
+    DatasourcesConfigDto datasource = null;
+    PreparedStatement stat = null;
+    ResultSet res = null;
+    try {
+      conn = this.getConnection();
+      stat = conn.prepareStatement(LOAD_DATASOURCE_BY_DASHBOARD_AND_DATASOURCECODE);
+      stat.setInt(1, dashboardId);
+      stat.setString(2,datasourceCode);
+      res = stat.executeQuery();
+      while (res.next()) {
+        datasource  = new DatasourcesConfigDto();
+        datasource.setDatasourceCode(res.getString("datasourceCode"));
+        datasource.setDatasource(res.getString("datasource"));
+        datasource.setDatasourceURI(res.getString("datasourceuri"));
+        datasource.setStatus(res.getString("status"));
+      }
+    } catch (Throwable t) {
+      logger.error("Error loading dashboardConfig with dashboardId {}", dashboardId, t);
+      throw new RuntimeException("Error loading dashboardConfig with dashboardId " + dashboardId, t);
+    } finally {
+      closeDaoResources(res, stat, null);
+    }
+    
+    return datasource;
+  }
+  
   public DashboardConfig loadDashboardConfig(int id, Connection conn) {
     DashboardConfig dashboardConfig = null;
     PreparedStatement stat = null;
@@ -309,6 +338,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       res = stat.executeQuery();
       while (res.next()) {
         DatasourcesConfigDto datasource = new DatasourcesConfigDto();
+        datasource.setDatasourceCode(res.getString("datasourceCode"));
         datasource.setDatasource(res.getString("datasource"));
         datasource.setDatasourceURI(res.getString("datasourceuri"));
         datasource.setStatus(res.getString("status"));
@@ -355,11 +385,13 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
   private static final String LOAD_DASHBOARD_CONFIGS_ID = "SELECT id FROM dashboard_config";
 
 
-  private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasource, datasourceuri, status ) VALUES (?, ?, ?, ?)";
+  private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourceCode ,datasource, datasourceuri, status ) VALUES (?, ?, ?, ?)";
 
   private static final String DELETE_DATASOURCE = "DELETE FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
 
   private static final String LOAD_DATASOURCE = "SELECT * FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
+  
+  private static final String LOAD_DATASOURCE_BY_DASHBOARD_AND_DATASOURCECODE = "SELECT * FROM dashboard_config_datasource WHERE fk_dashboard_config = ? AND datasourcecode = ?";
 
 
 }

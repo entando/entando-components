@@ -19,6 +19,9 @@ package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfi
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
+
 import java.util.List;
 
 public interface IDashboardConfigDAO {
@@ -36,4 +39,7 @@ public interface IDashboardConfigDAO {
     void insertDashboardConfig(DashboardConfig dashboardConfig);
 
     int countDashboardConfigs(FieldSearchFilter[] filters);
+    
+    DatasourcesConfigDto loadDatasourceConfigByDatasourceCodeAndDashboardConfig(String datasourcecode,
+        int dashboardId);
 }

@@ -59,7 +59,8 @@
         <module>entando-plugin-jpseo</module>
         <module>entando-plugin-jpdigital-exchange</module>
 	<module>entando-plugin-dashboard</module>
-    </modules>
+    <module>entando-plugin-dashboard-sitewhere-connector</module>
+  </modules>
     <profiles>
         <profile>
             <id>java8</id>

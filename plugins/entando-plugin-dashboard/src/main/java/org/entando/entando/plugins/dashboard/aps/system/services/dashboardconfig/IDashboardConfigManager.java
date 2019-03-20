@@ -24,6 +24,8 @@ import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+
 public interface IDashboardConfigManager {
 
     DashboardConfig getDashboardConfig(int id) throws ApsSystemException;
@@ -39,4 +41,7 @@ public interface IDashboardConfigManager {
     void deleteDashboardConfig(int id) throws ApsSystemException;
 
     SearcherDaoPaginatedResult<DashboardConfig> getDashboardConfigs(List<FieldSearchFilter> fieldSearchFilters) throws ApsSystemException;
+    
+    DatasourcesConfigDto getDatasourceByDatasourcecodeAndDashboard(String datasourcecode, int dashboardId);
+    
 }

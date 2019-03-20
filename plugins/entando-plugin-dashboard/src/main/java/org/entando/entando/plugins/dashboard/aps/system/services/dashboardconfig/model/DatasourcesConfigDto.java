@@ -19,6 +19,13 @@ package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfi
 
 public class DatasourcesConfigDto {
 
+    String name; // nome device /application
+
+    String tenantId;  // eq fondamentale tenant di siteWhere (verificare)
+
+    // hardwareId / datasourceCode
+    private String datasourceCode;
+    
     private String datasource;
 
     private String datasourceURI;
@@ -47,5 +54,29 @@ public class DatasourcesConfigDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDatasourceCode() {
+        return datasourceCode;
+    }
+
+    public void setDatasourceCode(String datasourceCode) {
+        this.datasourceCode = datasourceCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

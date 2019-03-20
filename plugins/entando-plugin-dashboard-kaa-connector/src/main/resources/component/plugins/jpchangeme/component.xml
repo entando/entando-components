@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<code>jpchangeme</code>
+	<description>Please Change Me</description>
+	<!--
+	<artifact>
+		<artifactId>${project.artifactId}</artifactId>
+		<groupId>${project.groupId}</groupId>
+		<version>${project.version}</version>
+	</artifact>
+	-->
+	<!--
+	<dependencies>
+		<code>firstDependency</code>
+		<code>secondDependency</code>
+	</dependencies>
+	-->
+	<installation>
+		<tableMapping>
+			<datasource name="portDataSource">
+				<!--
+				<class>org.entando.entando.plugins.jpchangeme.aps.system.init.portdb.FirstTable</class>
+				<class>org.entando.entando.plugins.jpchangeme.aps.system.init.portdb.SecondTable</class>
+				-->
+			</datasource>
+			<datasource name="servDataSource">
+				<!--
+				<class>org.entando.entando.plugins.jpchangeme.aps.system.init.servdb.ThirdTable</class>
+				<class>org.entando.entando.plugins.jpchangeme.aps.system.init.servdb.FourthTable</class>
+				-->
+			</datasource>
+		</tableMapping>
+		<environment code="production">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpchangeme/port_data_production.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpchangeme/serv_data_production.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+		<environment code="test">
+			<defaultSqlResources>
+				<datasource name="portDataSource">
+classpath:sql/plugins/jpchangeme/port_data_test.sql
+				</datasource>
+				<datasource name="servDataSource">
+classpath:sql/plugins/jpchangeme/serv_data_test.sql
+				</datasource>
+			</defaultSqlResources>
+		</environment>
+	</installation>
+	<uninstallation>
+		<sqlResources>
+			<datasource name="portDataSource">
+classpath:sql/plugins/jpchangeme/port_uninstallation.sql
+			</datasource>
+			<datasource name="servDataSource">
+classpath:sql/plugins/jpchangeme/serv_uninstallation.sql
+			</datasource>
+		</sqlResources>
+		<resources>
+			<resource>WEB-INF/plugins/jpchangeme/</resource>
+			<resource>WEB-INF/lib/${project.artifactId}-${project.version}.jar</resource>
+			<resource>protected/plugins/jpchangeme/</resource>
+			<resource>resources/plugins/jpchangeme/</resource>
+		</resources>
+		<!--
+		<postProcesses>
+			<selfRestCall langCode="en" namespace="namespace" resourceName="resourceName="
+					method="GET|POST|PUT|DELETE" expected="200|202" printresponse="true|false" >
+				<contentBody content-type="application/xml" path="classpath:component/plugins/jpchangeme/postprocess/body.xml" />
+			</selfRestCall>
+			.....
+			.....
+		</postProcesses>
+		-->
+	</uninstallation>
+</component>

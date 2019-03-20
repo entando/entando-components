@@ -26,6 +26,8 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
+
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -145,6 +147,12 @@ public class DashboardConfigManager extends AbstractService implements IDashboar
       array = filters.toArray(new FieldSearchFilter[filters.size()]);
     }
     return this.getDashboardConfigs(array);
+  }
+
+  @Override
+  public DatasourcesConfigDto getDatasourceByDatasourcecodeAndDashboard(String datasourcecode,
+      int dashboardId) {
+    return this.getDashboardConfigDAO().loadDatasourceConfigByDatasourceCodeAndDashboardConfig(datasourcecode,dashboardId);
   }
 
 
