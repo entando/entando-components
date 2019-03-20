@@ -31,7 +31,7 @@ public interface IConnectorService {
 //    <T extends AbstractDashboardDatasourceDto> MeasurementConfig getDeviceMeasurementSchema(T dashboardDatasourceDto, String loggerId);
 
 
-    void setDeviceMeasurementSchema(IDashboardDatasourceDto dashboardDatasourceDto, String loggerId)
+    void setDeviceMeasurementSchema(IDashboardDatasourceDto dashboardDatasourceDto)
         throws ApsSystemException;
 
     JsonObject saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, JsonArray measurementBody)

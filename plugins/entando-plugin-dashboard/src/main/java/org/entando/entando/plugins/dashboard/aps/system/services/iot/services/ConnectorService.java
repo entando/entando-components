@@ -64,7 +64,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
   @Override
   public void setDeviceMeasurementSchema(
-      IDashboardDatasourceDto dashboardDatasourceDto, String loggerId) throws ApsSystemException {
+      IDashboardDatasourceDto dashboardDatasourceDto) throws ApsSystemException {
     logger.info("{} getSchema to {}", this.getClass().getSimpleName(), dashboardDatasourceDto.getDashboardConfigDto().getServerURI());
     connectorFactory.get(dashboardDatasourceDto.getDashboardConfigDto().getServerDescription()).saveMeasurementTemplate(dashboardDatasourceDto);;
   }
