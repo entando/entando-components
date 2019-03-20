@@ -33,6 +33,7 @@
     <bean id="jacmsMultipleResourceAction" scope="prototype"
           class="com.agiletec.plugins.jacms.apsadmin.resource.MultipleResourceAction"
           parent="jacmsAbstractResourceAction" >
+        <property name="groupManager" ref="GroupManager" />
     </bean>
 
     <bean id="jacmsResourceFileChunksUploadAction" scope="prototype"
@@ -47,13 +48,6 @@
     <bean id="jacmsResourceAdminAction" scope="prototype"
           class="com.agiletec.plugins.jacms.apsadmin.resource.ResourceAdminAction"
           parent="jacmsAbstractResourceAction" >
-    </bean>
-
-    <bean id="jacmsPortingResource22Action" scope="prototype"
-          class="com.agiletec.plugins.jacms.apsadmin.resource.Porting22Action"
-          parent="abstractBaseAction" >
-        <property name="resourceManager" ref="jacmsResourceManager"/>
-        <property name="groupManager" ref="GroupManager" />
     </bean>
 
 </beans>
