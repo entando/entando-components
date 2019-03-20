@@ -178,23 +178,23 @@ public class DashboardConfigController {
         result.put("id", Integer.valueOf(dashboardConfigId));
         return new ResponseEntity<>(new SimpleRestResponse(result), HttpStatus.OK);
     }
-    @RestAccessControl(permission = "superuser")
+//    @RestAccessControl(permission = "superuser")
     @RequestMapping(value = "/datasource", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> getDataSourceByDashboardConfig(@Valid @RequestBody DashboardConfigRequest dashboardConfigRequest, BindingResult bindingResult)
+    public ResponseEntity<?> getDataSourceByDashboardConfig(@Valid @RequestBody DashboardConfigRequest dashboardConfigRequest, BindingResult bindingResult)
         throws IOException {
 
         //TODO
 //        connectorIotService
 
 
-        return new ResponseEntity<>(new SimpleRestResponse(null), HttpStatus.OK);
+        return new ResponseEntity<>(dashboardConfigRequest, HttpStatus.OK);
     }
 
     //@RestAccessControl(permission = "superuser")
     @RequestMapping(value = "/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> pingDashboardConfig(@Valid @RequestBody DashboardConfigRequest dashboardConfigRequest, BindingResult bindingResult)
         throws IOException {
-        logger.debug("{} ping to {}", this.getClass().getSimpleName(), dashboardConfigRequest.getServerURI());
+        logger.error("{} ping to {}", this.getClass().getSimpleName(), dashboardConfigRequest.getServerURI());
         
 
         DashboardConfigDto dashboardConfigDto = new DashboardConfigDto();
