@@ -90,7 +90,7 @@ public class DashboardConfigController {
 		return connectorService;
 	}
 
-	public void setiConnectorService(IConnectorService connectorService) {
+	public void setConnectorService(IConnectorService connectorService) {
 		this.connectorService = connectorService;
 	}
 
