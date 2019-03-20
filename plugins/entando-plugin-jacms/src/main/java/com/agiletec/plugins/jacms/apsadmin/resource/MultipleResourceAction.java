@@ -65,7 +65,7 @@ public class MultipleResourceAction extends ResourceAction {
             return; // Nothing to do
         }
         for (FieldError fieldError : fieldErrors) {
-            addFieldError(fieldError.fieldName, fieldError.errorMessage);
+            addFieldError(fieldError.getFieldCode(), fieldError.getErrorCode());
         }
     }
 
@@ -364,14 +364,6 @@ public class MultipleResourceAction extends ResourceAction {
 
     public List<String> getFileUploadFileName() {
         return fileUploadFileNames;
-    }
-
-    public Map<String, String> getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(Map<String, String> metadata) {
-        this.metadata = metadata;
     }
 
     protected List<String> fetchFields(String fieldPrefix) {
