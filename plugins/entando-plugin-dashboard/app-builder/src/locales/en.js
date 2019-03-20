@@ -80,6 +80,7 @@ export default {
     "plugin.config.connectionTimeOut": "Conn. Timeout",
     "plugin.config.connectionTimeOutAppend": "in millis",
     "plugin.config.listDatasource": "List of Context (Specific URI)",
+    "plugin.config.datasourceCode": "Datasource Code",
     "plugin.config.datasource": "Datasource",
     "plugin.config.datasourceURI": "Datasource URI",
     "plugin.config.datasourceURIExample":

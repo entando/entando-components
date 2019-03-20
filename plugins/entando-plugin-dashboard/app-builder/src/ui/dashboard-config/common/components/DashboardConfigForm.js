@@ -195,6 +195,18 @@ class DashboardConfigFormBody extends Component {
             <Row>
               <Col xs={6}>
                 {renderField(
+                  "datasourceCode",
+                  "plugin.config.datasourceCode",
+                  null,
+                  [required],
+                  2,
+                  null
+                )}
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={6}>
+                {renderField(
                   "datasource",
                   "plugin.config.datasource",
                   null,

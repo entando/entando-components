@@ -250,7 +250,7 @@ export const fetchServerType = () => dispatch =>
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("alert.error"), TOAST_ERROR));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
           resolve();
         }
       });

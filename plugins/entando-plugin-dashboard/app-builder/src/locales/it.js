@@ -81,7 +81,8 @@ export default {
     "plugin.config.connectionTimeOut": "Conn. Timeout",
     "plugin.config.connectionTimeOutAppend": "in millis",
     "plugin.config.listDatasource": "List of Context (Specific URI)",
-    "plugin.config.datasource": "Datasource",
+    "plugin.datasourceCode": "Codice Sorgente Dati",
+    "plugin.config.datasource": "Sorgente Dati",
     "plugin.config.datasourceURI": "Datasource URI",
     "plugin.config.datasourceURIExample":
       "http://wwww.example.com:8080 or /api/resources",
