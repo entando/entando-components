@@ -39,12 +39,12 @@ public class DashboardConfigDatasource {
 
   @DatabaseField(columnName = "datasourcecode",
       dataType = DataType.STRING,
-      width = 30, canBeNull = false, id=true)
+      width = 255, canBeNull = false, id=true)
   private String datasourceCode;
 
   @DatabaseField(columnName = "datasourceuri",
       dataType = DataType.STRING,
-      width = 255, canBeNull = false)
+      width = 255, canBeNull = true)
   private String datasourceURI;
 
   @DatabaseField(columnName = "status",
