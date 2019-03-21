@@ -13,7 +13,7 @@ import {
   postServerConfig,
   putServerConfig,
   getDatasources,
-  getDatasourceData,
+  getDatasourceColumns,
   putDatasourceColumn
 } from "api/dashboardConfig";
 
@@ -369,7 +369,7 @@ describe("state/main/actions", () => {
 
     describe("fetchDatasourceColumns", () => {
       beforeEach(() => {
-        getDatasourceData.mockImplementation(
+        getDatasourceColumns.mockImplementation(
           mockApi({payload: DATASOURCE_TEMPERATURE_DATA.columns})
         );
       });
@@ -397,7 +397,7 @@ describe("state/main/actions", () => {
       });
 
       it("if API response is not ok, dispatch ADD_ERRORS", done => {
-        getDatasourceData.mockImplementation(mockApi({errors: true}));
+        getDatasourceColumns.mockImplementation(mockApi({errors: true}));
         store
           .dispatch(
             fetchDatasourceColumns("form-table", "columns", "temperature")

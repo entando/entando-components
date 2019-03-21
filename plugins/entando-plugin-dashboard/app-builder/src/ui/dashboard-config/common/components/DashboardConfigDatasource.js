@@ -5,7 +5,7 @@ import FormattedMessageLocal from "ui/i18n/FormattedMessage";
 import DashboardConfigDatasourceStatusContainer from "ui/dashboard-config/common/containers/DashboardConfigDatasourceStatusContainer";
 
 const addDatasource = (fields, value) => {
-  if (value.datasource !== undefined && value.datasourceURI !== undefined) {
+  if (value.datasource !== undefined) {
     fields.push(value);
   }
 };
@@ -17,10 +17,7 @@ const DashboardConfigDatasource = ({
   fields,
   datasourceValue,
   datasources,
-  page,
-  pageSize,
-  totalItems,
-  changePage
+  datasourceCode
 }) => (
   <div className="DashboardConfigDatasource">
     <Row>
@@ -30,7 +27,7 @@ const DashboardConfigDatasource = ({
             className="DashboardConfigDatasource__datasource-btn"
             disabled={
               datasourceValue.datasource === undefined ||
-              datasourceValue.datasourceURI === undefined
+              datasourceCode === undefined
             }
             type="button"
             bsStyle="default"
