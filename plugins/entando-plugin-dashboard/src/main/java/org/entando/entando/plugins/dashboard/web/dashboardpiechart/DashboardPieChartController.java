@@ -29,9 +29,9 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardpiecha
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardpiechart.model.DashboardPieChartDto;
 import org.entando.entando.plugins.dashboard.web.dashboardpiechart.model.DashboardPieChartRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardpiechart.validator.DashboardPieChartValidator;
-
-@RestController
-@RequestMapping(value = "/plugins/dashboard/dashboardPieCharts")
+//
+//@RestController
+//@RequestMapping(value = "/plugins/dashboard/dashboardPieCharts")
 public class DashboardPieChartController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

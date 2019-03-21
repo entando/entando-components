@@ -204,22 +204,23 @@ public class DashboardConfigController {
 		return new ResponseEntity<>(new SimpleRestResponse(null), HttpStatus.OK);
 	}
 
-	// @RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> pingDashboardConfig(@Valid @RequestBody DashboardConfigRequest dashboardConfigRequest,
-			BindingResult bindingResult) throws IOException {
-		logger.debug("{} ping to {}", this.getClass().getSimpleName(), dashboardConfigRequest.getServerURI());
-
-		DashboardConfigDto dashboardConfigDto = new DashboardConfigDto();
-		BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfigDto);
-
-		boolean res = connectorService.pingServer(dashboardConfigDto);
-		return new ResponseEntity<>(res, HttpStatus.OK);
+	@RestAccessControl(permission = "superuser")
+	@RequestMapping(value = "/ping", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(@Valid @RequestBody DashboardConfigRequest dashboardConfigRequest, BindingResult bindingResult) throws IOException {
+        boolean pingResult = false;
+//		logger.debug("{} ping to {}", this.getClass().getSimpleName(), dashboardConfigRequest.getServerURI());
+//
+//		DashboardConfigDto dashboardConfigDto = new DashboardConfigDto();
+//		BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfigDto);
+//
+//        pingResult = connectorService.pingServer(dashboardConfigDto);
+		return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
 	}
 
 
 
-//	@RestAccessControl(permission = "superuser")
+
+	@RestAccessControl(permission = "superuser")
     @RequestMapping(value = "/server/{serverId}/datasource/{datasourceId}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(@PathVariable String serverId, @PathVariable String datasourceId) throws IOException {
 

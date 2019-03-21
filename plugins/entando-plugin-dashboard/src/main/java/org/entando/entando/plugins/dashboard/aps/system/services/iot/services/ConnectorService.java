@@ -88,8 +88,8 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
             lisa2.put("temperature", "15");
             lisa2.put("timestamp", "2019-01-01 09:15:00");
-            lisa2.put("temperature", "25");
-            lisa2.put("timestamp", "2019-01-01 09:20:00");
+            lisa3.put("temperature", "25");
+            lisa3.put("timestamp", "2019-01-01 09:20:00");
             lista.add(lisa1);
             lista.add(lisa2);
             lista.add(lisa3);
