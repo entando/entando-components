@@ -28,6 +28,8 @@ import javax.validation.Valid;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measurement;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
@@ -214,5 +216,50 @@ public class DashboardConfigController {
 		boolean res = connectorService.pingServer(dashboardConfigDto);
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
+
+
+
+//	@RestAccessControl(permission = "superuser")
+    @RequestMapping(value = "/{serverId}/datasource/{datasourceId}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(@PathVariable String serverId, @PathVariable String datasourceId) throws IOException {
+
+        MeasurementColumn col1 = new MeasurementColumn("temperature", "temperature");
+        MeasurementColumn col2 = new MeasurementColumn("timestamp", "timestamp");
+
+        List<MeasurementColumn> listaColonne = new ArrayList<>();
+        listaColonne.add(col1);
+        listaColonne.add(col2);
+        return new ResponseEntity<>(new SimpleRestResponse(listaColonne), HttpStatus.OK);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

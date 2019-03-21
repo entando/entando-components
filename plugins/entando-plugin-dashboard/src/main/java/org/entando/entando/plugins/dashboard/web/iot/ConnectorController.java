@@ -11,6 +11,7 @@ import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,69 +24,64 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 @RestController
-@RequestMapping(value = "/plugins/iotConnector")
+@RequestMapping(value = "/plugins/dashboard/measurements")
 public class ConnectorController {
 
-	@Autowired
-	IDashboardConfigService dashboardConfigService;
+    @Autowired
+    IDashboardConfigService dashboardConfigService;
 
-	@Autowired
-	IConnectorService connectorService;
+    @Autowired
+    IConnectorService connectorService;
 
-	protected IConnectorService getConnectorService() {
-		return connectorService;
-	}
+    protected IConnectorService getConnectorService() {
+        return connectorService;
+    }
 
-	public void setConnectorService(IConnectorService connectorService) {
-		this.connectorService = connectorService;
-	}
+    public void setConnectorService(IConnectorService connectorService) {
+        this.connectorService = connectorService;
+    }
 
-	@RequestMapping(value = "/measurements/{dashboardId}/{datasourceCode}", method = RequestMethod.POST)
-	public ResponseEntity<?> saveMeasurement(@PathVariable int dashboardId, @PathVariable String datasourceCode,
-			@RequestBody JsonArray jsonElements) throws Exception {
+    @RequestMapping(value = "/{dashboardId}/{datasourceId}", method = RequestMethod.POST)
+    public ResponseEntity<?> saveMeasurement(@PathVariable int dashboardId, @PathVariable String datasourceCode,
+                                             @RequestBody JsonArray jsonElements) throws Exception {
 
-		DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
+        DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
 
-		IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
-				datasourceCode, dashboardDto.getServerDescription());
+        IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
+                datasourceCode, dashboardDto.getServerDescription());
 
-		connectorService.saveDeviceMeasurement(dto, jsonElements);
+        connectorService.saveDeviceMeasurement(dto, jsonElements);
 
 //    return new ResponseEntity<>(measurement, HttpStatus.OK);
-		return null;
-	}
+        return null;
+    }
 
-	@RequestMapping(value = "/measurements/{dashboardId}/{datasourceCode}", method = RequestMethod.GET)
-	public ResponseEntity<PagedRestResponse<Map<String, Object>>> getMeasurement(@PathVariable int dashboardId,
-			@PathVariable String datasourceCode, @Param String filtriDaImpostare, RestListRequest requestList) throws Exception {
+    @RequestMapping(value = "/{serverId}/datasource/{datasourceId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagedRestResponse<Map<String, Object>>> getMeasurement(@PathVariable String serverId,
+                                                                                 @PathVariable String datasourceId, RestListRequest requestList) throws Exception {
 
-//		DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
-//
-//		IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
-//				datasourceCode, dashboardDto.getServerDescription());
-		ResponseEntity<PagedRestResponse<Map<String, Object>>>  xx = null;
-		try {
+        ResponseEntity<PagedRestResponse<Map<String, Object>>> listaDati = null;
+        try {
 
-		PagedMetadata<Map<String, Object>> pagedMetadata = this.connectorService.getMeasurements(requestList);
-		
-		 xx =  new ResponseEntity<>(new PagedRestResponse<>(pagedMetadata), HttpStatus.OK);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return xx;
-	}
+            PagedMetadata<Map<String, Object>> pagedMetadata = this.connectorService.getMeasurements(requestList);
+            listaDati = new ResponseEntity<>(new PagedRestResponse<>(pagedMetadata), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listaDati;
+    }
 
-	@RequestMapping(value = "measurements/setTemplate/{dashboardId}/{datasourceCode}", method = RequestMethod.POST)
-	public ResponseEntity<?> setMeasurementTemplate(@PathVariable int dashboardId, @PathVariable String datasourceCode)
-			throws ApsSystemException {
-		DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
+    @RequestMapping(value = "/setTemplate/{dashboardId}/{datasourceCode}", method = RequestMethod.POST)
+    public ResponseEntity<?> setMeasurementTemplate(@PathVariable int dashboardId, @PathVariable String datasourceCode)
+            throws ApsSystemException {
+        DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
 
-		IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
-				datasourceCode, dashboardDto.getServerDescription());
+        IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
+                datasourceCode, dashboardDto.getServerDescription());
 
-		connectorService.setDeviceMeasurementSchema(dto);
+        connectorService.setDeviceMeasurementSchema(dto);
 
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
