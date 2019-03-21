@@ -66,18 +66,26 @@ export const getDatasources = serverId =>
 export const getDatasourceColumns = (
   serverId,
   datasourceId,
-  type,
   page = {page: 1, pageSize: 0}
 ) =>
-  makeMockRequest(
+  makeRequest(
     {
-      uri: `/api/plugins/dashboard/dashboardConfigs/${serverId}/datasource/${datasourceId}/columns`,
+      uri: `/api/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceId}/columns`,
       method: METHODS.GET,
       mockResponse: DATASOURCES_DATA[datasourceId].columns,
       useAuthentication: true
     },
     page
   );
+
+export const putDatasourceColumn = (serverId, datasourceId, columns) =>
+  makeRequest({
+    uri: `/api/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceId}/columns`,
+    method: METHODS.PUT,
+    body: columns,
+    mockResponse: columns,
+    useAuthentication: true
+  });
 
 export const getDatasourceData = (
   serverId,
@@ -86,18 +94,10 @@ export const getDatasourceData = (
 ) =>
   makeMockRequest(
     {
-      uri: `/api/plugins/dashboard/dashboardConfigs/${serverId}/datasource/${datasourceId}/data`,
+      uri: `/api/plugins/dashboard/server/${serverId}/datasource/${datasourceId}/data`,
       method: METHODS.GET,
       mockResponse: DATASOURCES_DATA[datasourceId].data,
       useAuthentication: true
     },
     page
   );
-export const putDatasourceColumn = (serverId, datasourceId, columns) =>
-  makeRequest({
-    uri: `/api/plugins/dashboard/dashboardConfigs/${serverId}/datasource/${datasourceId}/columns`,
-    method: METHODS.PUT,
-    body: columns,
-    mockResponse: columns,
-    useAuthentication: true
-  });

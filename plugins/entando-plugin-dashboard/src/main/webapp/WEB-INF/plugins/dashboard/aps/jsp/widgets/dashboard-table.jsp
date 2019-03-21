@@ -31,14 +31,17 @@
             console.log('config : ', config);
             const { title, columns, options } = config;
             $('#title-table').html(title.en);
-             const CONFIG_TABLE = {
-               options,
-               columns,
-               data: []
-             }
-             console.log('CONFIG_TABLE: ', CONFIG_TABLE);
-             const table = new org.entando.dashboard.Table("table", CONFIG_TABLE);
-             table.show();
+            const url = "<wp:info key="systemParam" paramName="applicationBaseURL"/>api/plugins/dashboard/server/"+config['serverName']+"/datasource/"+config['datasource']+"/data";
+            const CONFIG_TABLE = {
+              serverName: config.serverName,
+              datasource: config.datasource,
+              accessToken: '<c:out value="${sessionScope.currentUser.accessToken}"/>',
+              options,
+              columns,
+            }
+            console.log('CONFIG_TABLE: ', CONFIG_TABLE);
+            const context = "<wp:info key="systemParam" paramName="applicationBaseURL"/>";
+            new org.entando.dashboard.Table(context, "table", CONFIG_TABLE,).show();
 
           });
         </script>

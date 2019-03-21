@@ -4,38 +4,46 @@ if (org === undefined) {
 org.entando = org.entando || {};
 org.entando.dashboard = org.entando.dashboard || {};
 org.entando.dashboard.Table = class {
-  constructor(id, config) {
+  constructor(context, id, config) {
     console.log("Table - config", config);
-    const {data, options} = config;
+    const {options, serverName, datasource, accessToken} = config;
     this.id = id;
+
     const columns = Object.keys(config.columns).reduce((acc, key) => {
       const obj = {
-        value: config.columns[key].label,
-        hidden: config.columns[key].hidden || false
+        data: key,
+        title: config.columns[key].label,
+        visible: !config.columns[key].hidden || false
       };
       acc.push(obj);
       return acc;
     }, []);
 
-    const columnsDefs = columns.filter(f => !f.hidden);
     this.config = {
-      data: data.reduce((acc, item) => {
-        const cols = columnsDefs.reduce((acc1, col) => {
-          acc1.push(item[col.key]);
-          return acc1;
-        }, []);
-        acc.push(cols);
-        return acc;
-      }, []),
-      columns: columnsDefs.map(m => ({title: m.value})),
-      responsive: true,
-      deferRender: true,
       scrollY: 200,
       scrollCollapse: true,
-      scroller: true
+      scroller: true,
+      responsive: true,
+      deferRender: true,
+      processing: true,
+      ajax: {
+        url: `${context}api/plugins/dashboard/server/${serverName}/datasource/${datasource}/data`,
+        type: "GET",
+        contentType: "application/json",
+        beforeSend: request => {
+          if (config.accessToken) {
+            request.setRequestHeader("Authorization", "Bearer " + accessToken);
+          }
+        },
+        dataSrc: json => {
+          console.log("json.payload", json.payload);
+          return json.payload;
+        }
+      },
+      columns
     };
     if (options && options.downlodable) {
-      this.config.dom = "Bfrtip";
+      this.config.dom = "lBfrtip";
       this.config.buttons = ["csv", "excel", "pdf", "print"];
     }
   }
