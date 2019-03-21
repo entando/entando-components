@@ -64,8 +64,14 @@ public class DashboardConfig {
 		dataType = DataType.INTEGER, 
 		 canBeNull= true)
 	private int _active;
-	
-	@DatabaseField(columnName = "debug", 
+
+    @DatabaseField(columnName = "type",
+            dataType = DataType.STRING,
+            width = 100, canBeNull = false, id=true)
+    private String type;
+
+
+    @DatabaseField(columnName = "debug",
 		dataType = DataType.INTEGER, 
 		 canBeNull= true)
 	private int _debug;

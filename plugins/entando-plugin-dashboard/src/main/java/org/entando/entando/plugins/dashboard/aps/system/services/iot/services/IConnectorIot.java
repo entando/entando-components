@@ -11,6 +11,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measu
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 public interface IConnectorIot {
@@ -33,8 +34,9 @@ public interface IConnectorIot {
 	JsonObject saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, JsonArray measurementBody)
 			throws Exception;
 
-  IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(DashboardConfigDto dashboardConfigDto, String datasourceCode);
+	IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(DashboardConfigDto dashboardConfigDto,
+			String datasourceCode);
 
-	JsonArray getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto,
-			Long nMeasurements, Instant startDate, Instant endDate);
+	JsonArray getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
+			Date startDate, Date endDate);
 }

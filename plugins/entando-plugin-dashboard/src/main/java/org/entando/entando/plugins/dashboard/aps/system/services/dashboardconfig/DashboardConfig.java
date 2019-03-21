@@ -25,99 +25,110 @@ import java.util.List;
 
 public class DashboardConfig {
 
-  public int getId() {
-    return _id;
-  }
-
-  public void setId(int id) {
-    this._id = id;
-  }
-
-  public String getServerDescription() {
-    return _serverDescription;
-  }
-
-  public void setServerDescription(String serverDescription) {
-    this._serverDescription = serverDescription;
-  }
-
-  public String getServerURI() {
-    return _serverURI;
-  }
-
-  public void setServerURI(String serverURI) {
-    this._serverURI = serverURI;
-  }
-
-  public String getUsername() {
-    return _username;
-  }
-
-  public void setUsername(String username) {
-    this._username = username;
-  }
-
-  public String getPassword() {
-    return _password;
-  }
-
-  public void setPassword(String password) {
-    this._password = password;
-  }
-
-  public String getToken() {
-    return _token;
-  }
-
-  public void setToken(String token) {
-    this._token = token;
-  }
-
-  public int getTimeConnection() {
-    return _timeConnection;
-  }
-
-  public void setTimeConnection(int timeConnection) {
-    this._timeConnection = timeConnection;
-  }
-
-  public boolean getActive() {
-    return _active;
-  }
-
-  public void setActive(boolean active) {
-    this._active = active;
-  }
-
-  public boolean getDebug() {
-    return _debug;
-  }
-
-  public void setDebug(boolean debug) {
-    this._debug = debug;
-  }
-
-  public List<DatasourcesConfigDto> getDatasources() {
-    if (datasources == null) {
-      datasources = new ArrayList<>();
+    public int getId() {
+        return _id;
     }
-    return datasources;
-  }
 
-  public void setDatasources(final List<DatasourcesConfigDto> datasources) {
-    this.datasources = datasources;
-  }
+    public void setId(int id) {
+        this._id = id;
+    }
 
-  private int _id;
-  private String _serverDescription;
-  private String _serverURI;
-  private String _username;
-  private String _password;
-  private String _token;
-  private int _timeConnection;
-  private boolean _active;
-  private boolean _debug;
-  private List<DatasourcesConfigDto> datasources;
+    public String getServerDescription() {
+        return _serverDescription;
+    }
+
+    public void setServerDescription(String serverDescription) {
+        this._serverDescription = serverDescription;
+    }
+
+    public String getServerURI() {
+        return _serverURI;
+    }
+
+    public void setServerURI(String serverURI) {
+        this._serverURI = serverURI;
+    }
+
+    public String getUsername() {
+        return _username;
+    }
+
+    public void setUsername(String username) {
+        this._username = username;
+    }
+
+    public String getPassword() {
+        return _password;
+    }
+
+    public void setPassword(String password) {
+        this._password = password;
+    }
+
+    public String getToken() {
+        return _token;
+    }
+
+    public void setToken(String token) {
+        this._token = token;
+    }
+
+    public int getTimeConnection() {
+        return _timeConnection;
+    }
+
+    public void setTimeConnection(int timeConnection) {
+        this._timeConnection = timeConnection;
+    }
+
+    public boolean getActive() {
+        return _active;
+    }
+
+    public void setActive(boolean active) {
+        this._active = active;
+    }
+
+    public boolean getDebug() {
+        return _debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this._debug = debug;
+    }
+
+    public String getType() {
+        return _type;
+    }
+
+    public DashboardConfig setType(String type) {
+        this._type = type;
+        return this;
+    }
+
+
+    public List<DatasourcesConfigDto> getDatasources() {
+        if (datasources == null) {
+            datasources = new ArrayList<>();
+        }
+        return datasources;
+    }
+
+    public void setDatasources(final List<DatasourcesConfigDto> datasources) {
+        this.datasources = datasources;
+    }
+
+    private int _id;
+    private String _serverDescription;
+    private String _serverURI;
+    private String _username;
+    private String _password;
+    private String _token;
+    private String _type;
+    private int _timeConnection;
+    private boolean _active;
+    private boolean _debug;
+    private List<DatasourcesConfigDto> datasources;
 
 
 }

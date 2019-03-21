@@ -11,15 +11,17 @@ public class MeasurementObject {
     return name;
   }
 
-  public void setName(String name) {
+  public MeasurementObject setName(String name) {
     this.name = name;
+    return this;
   }
 
   public JsonObject getMeasure() {
     return measure;
   }
 
-  public void setMeasure(JsonObject measure) {
+  public MeasurementObject setMeasure(JsonObject measure) {
     this.measure = measure;
+    return this;
   }
 }
