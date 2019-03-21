@@ -19,6 +19,7 @@ export const mapStateToProps = state => ({
     datasource: selector(state, "datasource"),
     datasourceURI: selector(state, "datasourceURI")
   },
+  datasourceCode: selector(state, "datasourceCode"),
   datasources: selector(state, "datasources"),
   serverTypeList: getServerType(state)
 });

@@ -49,7 +49,7 @@ const renderField = (
     />
   );
 };
-class DashboardConfigFormBody extends Component {
+export class DashboardConfigFormBody extends Component {
   componentWillMount() {
     this.props.onWillMount();
   }
@@ -63,7 +63,8 @@ class DashboardConfigFormBody extends Component {
       datasources,
       datasourceValue,
       testConnection,
-      gotoHomePage
+      gotoHomePage,
+      datasourceCode
     } = this.props;
     const disableSubmit = invalid || submitting || datasources.length === 0;
 
@@ -220,7 +221,7 @@ class DashboardConfigFormBody extends Component {
                   "datasourceURI",
                   "plugin.config.datasourceURI",
                   null,
-                  [minLength3],
+                  null,
                   2,
                   formattedText("plugin.config.datasourceURIExample")
                 )}
@@ -231,6 +232,7 @@ class DashboardConfigFormBody extends Component {
               component={DashboardConfigDatasource}
               datasourceValue={datasourceValue}
               datasources={datasources}
+              datasourceCode={datasourceCode}
             />
             <Row>
               <Col xs={12}>
