@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.jpsitewhereconnector.aps.iot;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +9,9 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementMapping;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IMeasurementConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.MeasurementTemplateService;
@@ -29,6 +33,7 @@ import org.mockito.stubbing.Answer;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.entando.entando.plugins.jpsitewhereconnector.aps.iot.TestUtils.SITEWHERE_ASSIGNMENT_ID;
@@ -109,7 +114,6 @@ public class TestSitewhereConnectorService {
     dashboardDatasourceDto.getSitewhereDatasourceConfigDto().setDatasourceCode(SITEWHERE_HARDWARE_ID);
     dashboardDatasourceDto.getDashboardConfigDto().setToken(TestUtils.SITEWHERE_TENANT_TOKEN);
     dashboardDatasourceDto.getSitewhereDatasourceConfigDto().setAssignmentId(SITEWHERE_ASSIGNMENT_ID);
-    System.out.println(dashboardDatasourceDto.getDashboardUrl());
 
     ArgumentCaptor<MeasurementTemplate> captor = ArgumentCaptor.forClass(MeasurementTemplate.class);
     sitewhereConnectorService.saveMeasurementTemplate(dashboardDatasourceDto);
@@ -121,12 +125,44 @@ public class TestSitewhereConnectorService {
   }
 
   @Test
-  public void testGetMeasurements() {
+  public void testGetMeasurements() throws ApsSystemException {
     dashboardDatasourceDto.getSitewhereDatasourceConfigDto().setDatasourceCode(SITEWHERE_HARDWARE_ID);
     dashboardDatasourceDto.getDashboardConfigDto().setToken(TestUtils.SITEWHERE_TENANT_TOKEN);
     dashboardDatasourceDto.getSitewhereDatasourceConfigDto().setAssignmentId(SITEWHERE_ASSIGNMENT_ID);
-    JsonArray measurements = sitewhereConnectorService.getMeasurements(dashboardDatasourceDto, 2L,Instant.now(), Instant.now());
-    assertTrue(measurements != null);
-  }
+    MeasurementTemplate measurementTemplate = new MeasurementTemplate();
+    measurementTemplate.setId("x");
 
+    MeasurementConfig config = new MeasurementConfig();
+    config.setMeasurementConfigId("xx");
+    config.setDatasourceCode(dashboardDatasourceDto.getDatasourceCode());
+    config.setDashboardId(dashboardDatasourceDto.getDashboardId());
+    config.setMeasurementTemplateId(measurementTemplate.getId());
+
+    MeasurementMapping mappingTemperatura = new MeasurementMapping();
+    mappingTemperatura.setSourceName("temperature");
+    mappingTemperatura.setDetinationName("Temperatura_nuovoNome");
+    mappingTemperatura.setTransformerClass("java.lang.Double");
+    config.addMapping(mappingTemperatura);
+
+    MeasurementMapping mappingDistanza = new MeasurementMapping();
+    mappingDistanza.setSourceName("distance");
+    mappingDistanza.setDetinationName("Distanza_nuovoNome");
+    mappingDistanza.setTransformerClass("java.lang.Double");
+    config.addMapping(mappingDistanza);
+    
+    Mockito.when(measurementTemplateService.getByDashboardIdAndDatasourceCode(dashboardDatasourceDto.getDashboardId(), dashboardDatasourceDto.getDatasourceCode())).thenReturn(measurementTemplate);
+    Mockito.when(iMeasurementConfigService.getByDashboardIdAndDatasourceCodeAndMeasurementTemplateId(dashboardDatasourceDto.getDashboardId(), dashboardDatasourceDto.getDatasourceCode(),measurementTemplate.getId()))
+        .thenReturn(config);
+
+    long nMeasurements = 1L;
+    int nMeasurementsSentPerCall = 2;
+    List<MeasurementObject> measurements = sitewhereConnectorService.getMeasurements(dashboardDatasourceDto,
+        nMeasurements,null, null);
+    System.out.println(new Gson().toJson(measurements, ArrayList.class));
+    assertTrue(measurements != null);
+    assertEquals(measurements.size() ,nMeasurements * nMeasurementsSentPerCall);
+    measurements.forEach(meas -> assertNotNull(meas.getEntandoReceivedDate()));
+    measurements.forEach(meas -> assertNotNull(meas.getName()));
+    measurements.forEach(meas -> assertNotNull(meas.getMeasure()));
+  }
 }
