@@ -15,6 +15,9 @@ public interface IMeasurementTemplateDAO {
 
   List<Integer> searchMeasurementTemplate(FieldSearchFilter[] filters);
 
+  MeasurementTemplate loadMeasurementTemplateByDashboardIdAndDatasourceCode(int dashboardId,
+      String datasourceCode);
+
   MeasurementTemplate loadMeasurementTemplate(String id);
 
   void updateMeasurementTemplate(String id, List<MeasurementType> fields, final Connection conn);

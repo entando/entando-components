@@ -10,4 +10,7 @@ public interface IMeasurementTemplateService {
   void save(MeasurementTemplate measurement) throws ApsSystemException;
 
   MeasurementTemplate getById(String id) throws ApsSystemException;
+
+  MeasurementTemplate getByDashboardIdAndDatasourceCode(int dashboardId, String datasourceCode)
+      throws ApsSystemException;
 }

@@ -93,7 +93,7 @@ public class IoTUtils {
     String query = "";
     for (Entry<String, T> entry : params.entrySet()) {
       if (entry.getValue() != null) {
-        query = StringUtils.join(query, entry.getKey(), entry.getValue(), "&");
+        query = StringUtils.join(query, entry.getKey(), "=", entry.getValue(), "&");
       }
     }
     return query.substring(0, query.length() - 1);
