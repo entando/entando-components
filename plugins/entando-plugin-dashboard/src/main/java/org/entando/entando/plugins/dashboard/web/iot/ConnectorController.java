@@ -41,7 +41,7 @@ public class ConnectorController {
         this.connectorService = connectorService;
     }
 
-    @RequestMapping(value = "/{dashboardId}/{datasourceId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{dashboardId}/{datasourceCode}", method = RequestMethod.POST)
     public ResponseEntity<?> saveMeasurement(@PathVariable int dashboardId, @PathVariable String datasourceCode,
                                              @RequestBody JsonArray jsonElements) throws Exception {
 
@@ -56,9 +56,9 @@ public class ConnectorController {
         return null;
     }
 
-    @RequestMapping(value = "/server/{serverId}/datasource/{datasourceId}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<Map<String, Object>>> getMeasurement(@PathVariable String serverId,
-                                                                                 @PathVariable String datasourceId, RestListRequest requestList) throws Exception {
+                                                                                 @PathVariable String datasourceCode, RestListRequest requestList) throws Exception {
 
         ResponseEntity<PagedRestResponse<Map<String, Object>>> listaDati = null;
         try {

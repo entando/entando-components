@@ -205,9 +205,9 @@ public class DashboardConfigController {
 	}
 
 	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/ping", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(@Valid @RequestBody DashboardConfigRequest dashboardConfigRequest, BindingResult bindingResult) throws IOException {
-        boolean pingResult = false;
+	@RequestMapping(value = "/server/{serverId}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(@PathVariable int serverId) throws IOException {
+        boolean pingResult = true;
 //		logger.debug("{} ping to {}", this.getClass().getSimpleName(), dashboardConfigRequest.getServerURI());
 //
 //		DashboardConfigDto dashboardConfigDto = new DashboardConfigDto();
@@ -217,12 +217,25 @@ public class DashboardConfigController {
 		return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
 	}
 
+    @RestAccessControl(permission = "superuser")
+    @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(@PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
+        boolean pingResult = true;
+//		logger.debug("{} ping to {}", this.getClass().getSimpleName(), dashboardConfigRequest.getServerURI());
+//
+//		DashboardConfigDto dashboardConfigDto = new DashboardConfigDto();
+//		BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfigDto);
+//
+//        pingResult = connectorService.pingServer(dashboardConfigDto);
+        return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
+    }
+
 
 
 
 	@RestAccessControl(permission = "superuser")
     @RequestMapping(value = "/server/{serverId}/datasource/{datasourceId}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(@PathVariable String serverId, @PathVariable String datasourceId) throws IOException {
+    public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(@PathVariable int serverId, @PathVariable String datasourceId) throws IOException {
 
         MeasurementColumn col1 = new MeasurementColumn("temperature", "temperature");
         MeasurementColumn col2 = new MeasurementColumn("timestamp", "timestamp");
