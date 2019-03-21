@@ -13,7 +13,7 @@ import {
   postServerConfig,
   putServerConfig,
   getDatasources,
-  getDatasourceData,
+  getDatasourceColumns,
   putDatasourceColumn
 } from "api/dashboardConfig";
 
@@ -35,9 +35,6 @@ import {
   CLEAR_SELECTED_DATASOURCE,
   SET_INTERNAL_ROUTE
 } from "./types";
-
-const DATASOURCE_PROPERTY_DATA = "data";
-const DATASOURCE_PROPERTY_COLUMNS = "columns";
 
 // Use for TEST
 // const CONFIG_CHART = {
@@ -181,45 +178,45 @@ export const getWidgetConfigChart = formName => (dispatch, getState) => {
     dispatch(fecthDatasourceList(configJson.serverName));
 
     // API ancora mockata
-    getDatasourceData(
-      configJson.serverName,
-      configJson.datasource,
-      DATASOURCE_PROPERTY_COLUMNS
-    ).then(response => {
-      response.json().then(json => {
-        if (response.ok) {
-          dispatch(initialize(formName, configJson));
-          dispatch(clearSelectedDatasource());
-          dispatch(setSelectedDatasource(configJson.datasource));
-          // // API ancora mockata
-          dispatch(
-            setDatasourceColumns(
-              json.payload.map(m => ({
-                key: m.key,
-                value: m.value
-              }))
-            )
-          );
+    getDatasourceColumns(configJson.serverName, configJson.datasource).then(
+      response => {
+        response.json().then(json => {
+          if (response.ok) {
+            dispatch(initialize(formName, configJson));
+            dispatch(clearSelectedDatasource());
+            dispatch(setSelectedDatasource(configJson.datasource));
+            // API ancora mockata
+            dispatch(
+              setDatasourceColumns(
+                json.payload.map(m => ({
+                  key: m.key,
+                  value: m.value
+                }))
+              )
+            );
 
-          configJson.columns.x &&
-            configJson.columns.x.forEach((item, index) => {
-              dispatch(arrayPush(formName, "columns.x", item));
-            });
+            configJson.columns.x &&
+              configJson.columns.x.forEach((item, index) => {
+                dispatch(arrayPush(formName, "columns.x", item));
+              });
 
-          configJson.columns.y &&
-            configJson.columns.y.forEach(item => {
-              dispatch(arrayPush(formName, "columns.y", item));
-            });
-          configJson.columns.y2 &&
-            configJson.columns.y2.forEach(item => {
-              dispatch(arrayPush(formName, "columns.y2", item));
-            });
-        } else {
-          dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
-        }
-      });
-    });
+            configJson.columns.y &&
+              configJson.columns.y.forEach(item => {
+                dispatch(arrayPush(formName, "columns.y", item));
+              });
+            configJson.columns.y2 &&
+              configJson.columns.y2.forEach(item => {
+                dispatch(arrayPush(formName, "columns.y2", item));
+              });
+          } else {
+            dispatch(addErrors(json.errors.map(e => e.message)));
+            dispatch(
+              addToast(formattedText("plugin.alert.error"), TOAST_ERROR)
+            );
+          }
+        });
+      }
+    );
   }
 };
 
@@ -245,7 +242,6 @@ export const fetchServerType = () => dispatch =>
     getServerType().then(response => {
       response.json().then(json => {
         if (response.ok) {
-          console.log("json", json);
           dispatch(setServerType(json.payload));
           resolve();
         } else {
@@ -365,26 +361,6 @@ export const fecthDatasourceList = serverId => dispatch =>
     }
   });
 
-const wrapApiCallFetchDatasource = (apiCall, actionCreator) => (
-  ...args
-) => dispatch =>
-  new Promise(resolve => {
-    apiCall(...args).then(response => {
-      response.json().then(json => {
-        if (response.ok) {
-          console.log("json", json.payload);
-          console.log("actionCreator", actionCreator);
-          dispatch(actionCreator(json.payload));
-          resolve(json.payload);
-        } else {
-          dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
-          resolve();
-        }
-      });
-    });
-  });
-
 export const fetchDatasourceColumns = (formName, field, datasourceId) => (
   dispatch,
   getState
@@ -395,43 +371,53 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
     const serverId = selector(state, field);
     dispatch(clearSelectedDatasource());
     dispatch(setSelectedDatasource(datasourceId));
-    getDatasourceData(serverId, datasourceId, DATASOURCE_PROPERTY_COLUMNS).then(
-      response => {
-        response.json().then(json => {
-          if (response.ok) {
-            // API ancora mockata
-            dispatch(setDatasourceColumns(json.payload));
-            // set values in input field
-            json.payload.forEach(item => {
-              dispatch(
-                change(
-                  formName,
-                  `${DATASOURCE_PROPERTY_COLUMNS}.${item.key}.label`,
-                  item.value
-                )
-              );
-            });
-            resolve();
-          } else {
-            dispatch(addErrors(json.errors.map(e => e.message)));
-            dispatch(
-              addToast(formattedText("plugin.alert.error"), TOAST_ERROR)
-            );
-            resolve();
-          }
-        });
-      }
-    );
+    getDatasourceColumns(serverId, datasourceId).then(response => {
+      response.json().then(json => {
+        if (response.ok) {
+          // API ancora mockata
+          dispatch(setDatasourceColumns(json.payload));
+          // set values in input field
+          json.payload.forEach(item => {
+            dispatch(change(formName, `columns.${item.key}.label`, item.value));
+          });
+          resolve();
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          resolve();
+        }
+      });
+    });
   });
 
-export const fetchDatasourceData = (configId, datasourceId) => dispatch =>
-  dispatch(
-    wrapApiCallFetchDatasource(getDatasourceData, setDatasourceData)(
-      configId,
-      datasourceId,
-      DATASOURCE_PROPERTY_DATA
-    )
-  );
+// const wrapApiCallFetchDatasource = (apiCall, actionCreator) => (
+//   ...args
+// ) => dispatch =>
+//   new Promise(resolve => {
+//     apiCall(...args).then(response => {
+//       response.json().then(json => {
+//         if (response.ok) {
+//           console.log("json", json.payload);
+//           console.log("actionCreator", actionCreator);
+//           dispatch(actionCreator(json.payload));
+//           resolve(json.payload);
+//         } else {
+//           dispatch(addErrors(json.errors.map(e => e.message)));
+//           dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+//           resolve();
+//         }
+//       });
+//     });
+//   });
+
+// export const fetchDatasourceData = (configId, datasourceId) => dispatch =>
+//   dispatch(
+//     wrapApiCallFetchDatasource(getDatasourceData, setDatasourceData)(
+//       configId,
+//       datasourceId,
+//       DATASOURCE_PROPERTY_DATA
+//     )
+//   );
 
 export const updateDatasourceColumns = (formName, columns) => (
   dispatch,

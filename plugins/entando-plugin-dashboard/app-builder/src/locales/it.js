@@ -1,6 +1,7 @@
 export default {
   locale: "it",
   messages: {
+    "app.serverError": "Errore nel server",
     "PluginStatus.test": "ok",
     "menu.itemLabel": "Entando Dashboard Plugin",
     "plugin.title": "Entando Dashboard Plugin",

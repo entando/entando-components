@@ -10,30 +10,39 @@ const DATASOURCE_VALUE = {
   datasource: "Temperature",
   datasourceURI: "/devices/temperature"
 };
-describe("DashboardConfigDatasourceStatus", () => {
+
+describe("DashboardConfigDatasource", () => {
   let component;
   beforeEach(() => {
     component = shallow(<DashboardConfigDatasource />);
   });
+
   it("renders without crashing", () => {
     expect(component.exists()).toBe(true);
   });
+
   it("if props datasourceValue is empty button add is diasbled", () => {
     expect(component.find(Button).prop("disabled")).toBeTruthy();
   });
-  it("if props datasourceValue is not empty button add is not diabled", () => {
+
+  it("if props datasourceValue.datadaousrce and datasourceCode are not empty button add is not diabled", () => {
     component = shallow(
-      <DashboardConfigDatasource datasourceValue={DATASOURCE_VALUE} />
+      <DashboardConfigDatasource
+        datasourceValue={DATASOURCE_VALUE}
+        datasourceCode="111222"
+      />
     );
     expect(component.find(Button).prop("disabled")).toBeFalsy();
   });
+
   it("if props datasourceValue is not empty click button add  calle the function push on the field props", () => {
     const props = {
       fields: {
         push: jest.fn(),
         remove: jest.fn()
       },
-      datasourceValue: DATASOURCE_VALUE
+      datasourceValue: DATASOURCE_VALUE,
+      datasourceCode: "xxx"
     };
     component = shallow(<DashboardConfigDatasource {...props} />);
     const event = component.find(Button);
@@ -41,6 +50,7 @@ describe("DashboardConfigDatasourceStatus", () => {
     event.simulate("click");
     expect(props.fields.push).toHaveBeenCalledWith(DATASOURCE_VALUE);
   });
+
   it("if props datasources is not empty show table ", () => {
     component = shallow(
       <DashboardConfigDatasource datasources={DASHBOARD_LIST_DATASOURCE["1"]} />
