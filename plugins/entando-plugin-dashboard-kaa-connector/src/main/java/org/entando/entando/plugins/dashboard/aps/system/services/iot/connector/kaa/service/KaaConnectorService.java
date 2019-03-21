@@ -5,7 +5,9 @@ import static org.entando.entando.plugins.dashboard.aps.system.services.iot.util
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.getHeaders;
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.getObjectFromJson;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -17,6 +19,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.LogAppe
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorIot;
@@ -186,6 +189,19 @@ public class KaaConnectorService implements IKaaConnectorService, IConnectorIot 
       }
     }
     return returnedJson;
+  }
+
+  @Override
+  public IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(
+      DashboardConfigDto dashboardConfigDto, String datasourceCode) {
+    return null;
+  }
+
+  @Override
+  public List<MeasurementObject> getMeasurements(
+      IDashboardDatasourceDto dashboardKaaDatasourceDto, Long nMeasurements, Date startDate,
+      Date endDate) throws RuntimeException {
+    return null;//getMeasurements From DB
   }
 
   @Override
