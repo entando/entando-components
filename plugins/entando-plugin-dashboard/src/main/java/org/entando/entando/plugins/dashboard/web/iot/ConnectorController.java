@@ -57,7 +57,7 @@ public class ConnectorController {
 
 	@RequestMapping(value = "/measurements/{dashboardId}/{datasourceCode}", method = RequestMethod.GET)
 	public ResponseEntity<PagedRestResponse<Map<String, Object>>> getMeasurement(@PathVariable int dashboardId,
-			@PathVariable String datasourceCode,  RestListRequest requestList) throws Exception {
+			@PathVariable String datasourceCode, @Param String filtriDaImpostare, RestListRequest requestList) throws Exception {
 
 //		DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
 //
