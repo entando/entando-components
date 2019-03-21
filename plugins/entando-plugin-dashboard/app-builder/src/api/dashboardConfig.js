@@ -63,7 +63,7 @@ export const getDatasources = serverId =>
     useAuthentication: true
   });
 
-export const getDatasourceData = (
+export const getDatasourceColumns = (
   serverId,
   datasourceId,
   type,
@@ -71,9 +71,24 @@ export const getDatasourceData = (
 ) =>
   makeMockRequest(
     {
-      uri: `/api/plugins/dashboard/dashboardConfigs/${serverId}/datasource/${datasourceId}/${type}`,
+      uri: `/api/plugins/dashboard/dashboardConfigs/${serverId}/datasource/${datasourceId}/columns`,
       method: METHODS.GET,
-      mockResponse: DATASOURCES_DATA[datasourceId][type],
+      mockResponse: DATASOURCES_DATA[datasourceId].columns,
+      useAuthentication: true
+    },
+    page
+  );
+
+export const getDatasourceData = (
+  serverId,
+  datasourceId,
+  page = {page: 1, pageSize: 0}
+) =>
+  makeMockRequest(
+    {
+      uri: `/api/plugins/dashboard/dashboardConfigs/${serverId}/datasource/${datasourceId}/data`,
+      method: METHODS.GET,
+      mockResponse: DATASOURCES_DATA[datasourceId].data,
       useAuthentication: true
     },
     page

@@ -250,18 +250,18 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
     JsonArray jsonArray = new JsonArray();
     for (JsonElement jsonElement : body.get("results").getAsJsonArray()) {
       JsonObject measurements = jsonElement.getAsJsonObject().get("measurements").getAsJsonObject();
-      for (String key :measurements.keySet()) {
+      for (String key : measurements.keySet()) {
         JsonObject json = new JsonObject();
         json.addProperty("name", key);
-        json.addProperty(key,measurements.get(key).getAsString());
-        json.addProperty("eventDate",jsonElement.getAsJsonObject().get("eventDate").getAsString());
-        json.addProperty("swReceivedDate",jsonElement.getAsJsonObject().get("receivedDate").getAsString());
+        json.addProperty(key, measurements.get(key).getAsString());
+        json.addProperty("eventDate", jsonElement.getAsJsonObject().get("eventDate").getAsString());
+        json.addProperty("swReceivedDate",
+            jsonElement.getAsJsonObject().get("receivedDate").getAsString());
         jsonArray.add(json);
       }
     }
     return jsonArray;
   }
-
 
   private HttpHeaders getSitewhereHeaders(DashboardConfigDto dashboardConfigDto) {
     HttpHeaders header = IoTUtils

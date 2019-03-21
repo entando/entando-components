@@ -3,6 +3,7 @@ import {isFSA} from "flux-standard-action";
 import {
   setInfoPage,
   setLanguages,
+  setServerType,
   setServerConfigList,
   addServerConfig,
   updateServerConfigAction,
@@ -18,6 +19,7 @@ import {
 
 import {PAGE_CONFIGURATION, LANGUAGES} from "mocks/appBuilder";
 import {
+  SERVER_TYPE_LIST,
   SERVER_PIA,
   DASHBOARD_CONFIG_LIST,
   DASHBOARD_LIST_DATASOURCE,
@@ -26,6 +28,7 @@ import {
 import {
   SET_INFO_PAGE,
   SET_LANGUAGES,
+  SET_SERVER_TYPE,
   SET_SERVER_CONFIG_LIST,
   ADD_SERVER_CONFIG,
   UPDATE_SERVER_CONFIG,
@@ -86,6 +89,24 @@ describe("state/main/actions", () => {
         expect(action).toHaveProperty(
           "payload.serverList",
           DASHBOARD_CONFIG_LIST
+        );
+      });
+    });
+
+    describe("setServerType", () => {
+      beforeEach(() => {
+        action = setServerType(SERVER_TYPE_LIST);
+      });
+
+      it("is FSA compliant", () => {
+        expect(isFSA(action)).toBe(true);
+      });
+
+      it("actions is correct setup ", () => {
+        expect(action).toHaveProperty("type", SET_SERVER_TYPE);
+        expect(action).toHaveProperty(
+          "payload.serverTypeList",
+          SERVER_TYPE_LIST
         );
       });
     });

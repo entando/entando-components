@@ -4,6 +4,7 @@ import {
 } from "ui/dashboard-config/common/containers/DashboardConfigFormContainer";
 
 import {
+  fetchServerType,
   createServerConfig,
   updateServerConfig,
   setInternalRoute
@@ -11,6 +12,7 @@ import {
 const dispatchMock = jest.fn();
 
 jest.mock("state/main/actions");
+jest.mock("state/main/selectors");
 
 describe("DashboardConfigFormContainer", () => {
   let props;
@@ -18,31 +20,41 @@ describe("DashboardConfigFormContainer", () => {
     it("maps properties state in DashboardConfigForm", () => {
       props = mapStateToProps({});
       expect(props).toHaveProperty("datasourceValue");
+      expect(props).toHaveProperty("datasourceValue.datasource");
+      expect(props).toHaveProperty("datasourceValue.datasourceURI");
       expect(props).toHaveProperty("datasources");
+      expect(props).toHaveProperty("serverTypeList");
     });
   });
 
   describe("mapDispatchToProps", () => {
     it("should map the correct function properties", () => {
       props = mapDispatchToProps(dispatchMock);
+      expect(props.onWillMount).toBeDefined();
       expect(props.onSubmit).toBeDefined();
       expect(props.gotoHomePage).toBeDefined();
       expect(props.testConnection).toBeDefined();
     });
 
-    it("prop mode equals to add dispatch function createServerConfig  ", () => {
+    it("dispatch function onWillMount", () => {
+      props = mapDispatchToProps(dispatchMock);
+      props.onWillMount();
+      expect(fetchServerType).toHaveBeenCalled();
+    });
+
+    it("prop mode equals to add dispatch function createServerConfig", () => {
       props = mapDispatchToProps(dispatchMock, {mode: "add"});
       props.onSubmit();
       expect(createServerConfig).toHaveBeenCalled();
     });
 
-    it("dispatch function gotoHomePage  ", () => {
+    it("dispatch function gotoHomePage", () => {
       props = mapDispatchToProps(dispatchMock);
       props.gotoHomePage();
       expect(setInternalRoute).toHaveBeenCalled();
     });
 
-    it("prop mode equals to edit dispatch function createServerConfig  ", () => {
+    it("prop mode equals to edit dispatch function createServerConfig", () => {
       props = mapDispatchToProps(dispatchMock, {mode: "edit"});
       props.onSubmit();
       expect(updateServerConfig).toHaveBeenCalled();
