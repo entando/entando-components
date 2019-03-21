@@ -186,10 +186,7 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
     for (String value : values) {
       String[] splittedValue = value.split(":");
       measurementTemplate.addField(splittedValue[0],"insert transformer");
-    }
-//    Iterable<Entry<String, JsonElement>> iterable = measurements.entrySet();
-//
-//    iterable.forEach(e -> measurementTemplate.addField(e.getKey(), e.getValue().getAsString()));
+    } //TODO fix
 
     measurementTemplateService.save(measurementTemplate);
   }
