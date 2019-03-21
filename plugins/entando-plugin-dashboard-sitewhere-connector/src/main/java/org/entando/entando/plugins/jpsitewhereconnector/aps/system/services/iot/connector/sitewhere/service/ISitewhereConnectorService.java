@@ -8,6 +8,4 @@ import java.time.Instant;
 
 public interface ISitewhereConnectorService {
 
-  JsonArray getMeasurements(DashboardSitewhereDatasourceDto dashboardSitewhereDatasourceDto,
-      Long nMeasurements, Instant startDate, Instant endDate);
 }
