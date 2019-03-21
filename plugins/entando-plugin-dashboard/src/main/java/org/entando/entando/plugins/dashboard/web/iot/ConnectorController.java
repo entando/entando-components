@@ -24,7 +24,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 @RestController
-@RequestMapping(value = "/plugins/dashboard/measurements")
+@RequestMapping(value = "/plugins/dashboard")
 public class ConnectorController {
 
     @Autowired
@@ -56,7 +56,7 @@ public class ConnectorController {
         return null;
     }
 
-    @RequestMapping(value = "/{serverId}/datasource/{datasourceId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/server/{serverId}/datasource/{datasourceId}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<Map<String, Object>>> getMeasurement(@PathVariable String serverId,
                                                                                  @PathVariable String datasourceId, RestListRequest requestList) throws Exception {
 

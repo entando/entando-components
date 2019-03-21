@@ -220,7 +220,7 @@ public class DashboardConfigController {
 
 
 //	@RestAccessControl(permission = "superuser")
-    @RequestMapping(value = "/{serverId}/datasource/{datasourceId}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/server/{serverId}/datasource/{datasourceId}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(@PathVariable String serverId, @PathVariable String datasourceId) throws IOException {
 
         MeasurementColumn col1 = new MeasurementColumn("temperature", "temperature");
