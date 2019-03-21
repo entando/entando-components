@@ -5,6 +5,7 @@ import static org.entando.entando.plugins.dashboard.aps.system.services.iot.util
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.getHeaders;
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.getObjectFromJson;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -224,5 +225,19 @@ public class KaaConnectorService implements IKaaConnectorService, IConnectorIot 
     }
     return false;
   }
+
+@Override
+public IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(DashboardConfigDto dashboardConfigDto,
+		String datasourceCode) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public JsonArray getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
+		Instant startDate, Instant endDate) {
+	// TODO Auto-generated method stub
+	return null;
+}
 
 }

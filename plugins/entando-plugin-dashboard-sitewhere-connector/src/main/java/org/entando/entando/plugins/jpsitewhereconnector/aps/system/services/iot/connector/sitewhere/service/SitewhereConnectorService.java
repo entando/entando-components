@@ -139,10 +139,6 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
     return dto;
   }
 
-  @Override
-  public JsonObject getDeviceMeasurements(IDashboardDatasourceDto dto) {
-    return null;
-  }
 
   @Override
   public List<? extends AbstractDashboardDatasourceDto> getAllDevices(
@@ -250,5 +246,12 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
     }
     return false;
   }
+
+@Override
+public JsonArray getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
+		Instant startDate, Instant endDate) {
+	// TODO Auto-generated method stub
+	return null;
+}
 
 }

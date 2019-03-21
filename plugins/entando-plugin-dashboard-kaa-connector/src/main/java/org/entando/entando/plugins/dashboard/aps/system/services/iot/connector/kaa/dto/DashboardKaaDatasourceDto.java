@@ -17,4 +17,10 @@ public class DashboardKaaDatasourceDto extends AbstractDashboardDatasourceDto {
             KaaApplicationConfigDto kaaDatasourceConfigDto) {
         super.setDatasourcesConfigDto(kaaDatasourceConfigDto);
     }
+
+	@Override
+	public boolean supports(String serverType) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
