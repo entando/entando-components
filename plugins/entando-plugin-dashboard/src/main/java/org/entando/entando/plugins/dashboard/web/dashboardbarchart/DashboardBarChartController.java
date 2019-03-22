@@ -30,8 +30,8 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardbarcha
 import org.entando.entando.plugins.dashboard.web.dashboardbarchart.model.DashboardBarChartRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardbarchart.validator.DashboardBarChartValidator;
 
-@RestController
-@RequestMapping(value = "/plugins/dashboard/dashboardBarCharts")
+//@RestController
+//@RequestMapping(value = "/plugins/dashboard/dashboardBarCharts")
 public class DashboardBarChartController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

@@ -30,8 +30,8 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardmap.mo
 import org.entando.entando.plugins.dashboard.web.dashboardmap.model.DashboardMapRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardmap.validator.DashboardMapValidator;
 
-@RestController
-@RequestMapping(value = "/plugins/dashboard/dashboardMaps")
+//@RestController
+//@RequestMapping(value = "/plugins/dashboard/dashboardMaps")
 public class DashboardMapController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

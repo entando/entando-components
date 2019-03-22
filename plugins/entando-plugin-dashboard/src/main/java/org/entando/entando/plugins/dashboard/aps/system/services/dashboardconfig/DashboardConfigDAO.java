@@ -394,7 +394,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
     private static final String LOAD_DASHBOARD_CONFIGS_ID = "SELECT id FROM dashboard_config";
 
 
-    private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status ) VALUES (?, ?, ?, ?)";
+    private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status ) VALUES (?, ?, ?, ?, ?)";
 
     private static final String DELETE_DATASOURCE = "DELETE FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
 
