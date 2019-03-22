@@ -67,7 +67,7 @@ public class DashboardConfig {
 
     @DatabaseField(columnName = "type",
             dataType = DataType.STRING,
-            width = 100, canBeNull = true, id=true)
+            width = 100, canBeNull = true, id=false)
     private String _type;
 
 
