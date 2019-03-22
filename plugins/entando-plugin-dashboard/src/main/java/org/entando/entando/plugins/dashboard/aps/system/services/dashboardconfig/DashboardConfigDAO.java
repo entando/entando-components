@@ -118,7 +118,11 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
                 stat.setInt(index++, dashboardConfig.getId());
                 stat.setString(index++, c.getDatasourceCode());
                 stat.setString(index++, c.getDatasource());
-                stat.setString(index++, c.getDatasourceURI());
+                if (StringUtils.isNotBlank(c.getDatasourceURI())) {
+                    stat.setString(index++, c.getDatasourceURI());
+                } else {
+                    stat.setNull(index++, Types.VARCHAR);
+                }
                 if (StringUtils.isNotBlank(c.getStatus())) {
                     stat.setString(index++, c.getStatus());
                 } else {

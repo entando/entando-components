@@ -84,12 +84,12 @@ public class ConnectorService extends AbstractConnectorService implements IConne
             Map<String, Object> lisa2 = new HashMap<String, Object>();
             Map<String, Object> lisa3 = new HashMap<String, Object>();
             lisa1.put("temperature", "5");
-            lisa1.put("timestamp", "2019-01-01 09:10:00");
+            lisa1.put("timestamp",  System.currentTimeMillis());
 
             lisa2.put("temperature", "15");
-            lisa2.put("timestamp", "2019-01-01 09:15:00");
+            lisa2.put("timestamp",  System.currentTimeMillis() + "5000");
             lisa3.put("temperature", "25");
-            lisa3.put("timestamp", "2019-01-01 09:20:00");
+            lisa3.put("timestamp", System.currentTimeMillis() + "10000");
             lista.add(lisa1);
             lista.add(lisa2);
             lista.add(lisa3);
