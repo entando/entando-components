@@ -27,6 +27,9 @@ export const mapStateToProps = state => ({
 export const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => dispatch(fetchServerType()),
   onSubmit: values => {
+    delete values.datasourceCode;
+    delete values.datasource;
+    delete values.datasourceURI;
     if (ownProps.mode === "add") {
       dispatch(createServerConfig(values));
     } else if (ownProps.mode === "edit") {

@@ -4,9 +4,13 @@ import {Row, Col, Button, Icon} from "patternfly-react";
 import FormattedMessageLocal from "ui/i18n/FormattedMessage";
 import DashboardConfigDatasourceStatusContainer from "ui/dashboard-config/common/containers/DashboardConfigDatasourceStatusContainer";
 
-const addDatasource = (fields, value) => {
-  if (value.datasource !== undefined) {
-    fields.push(value);
+const addDatasource = (fields, obj) => {
+  const {
+    datasourceCode,
+    datasourceValue: {datasource, datasourceURI}
+  } = obj;
+  if (obj.datasourceValue.datasource !== undefined) {
+    fields.push({datasourceCode, datasource, datasourceURI});
   }
 };
 
@@ -31,7 +35,9 @@ const DashboardConfigDatasource = ({
             }
             type="button"
             bsStyle="default"
-            onClick={() => addDatasource(fields, datasourceValue)}
+            onClick={() =>
+              addDatasource(fields, {datasourceCode, datasourceValue})
+            }
           >
             <FormattedMessageLocal id="common.add" />
           </Button>
