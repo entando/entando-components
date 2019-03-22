@@ -34,7 +34,7 @@ public class DashboardConfigDatasource {
 
   @DatabaseField(columnName = "datasource",
       dataType = DataType.STRING,
-      width = 30, canBeNull = false, id=true)
+      width = 30, canBeNull = false)
   private String datasource;
 
   @DatabaseField(columnName = "datasourcecode",
