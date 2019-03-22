@@ -28,10 +28,13 @@ public class DatasourcesConfigRequest {
     private String datasource;
 
     @Size(max = 100, message = "string.size.invalid")
-    @NotBlank(message = "dashboardConfig.datasourceURI.notBlank")
     private String datasourceURI;
 
-    private String status;
+    @Size(max = 100, message = "string.size.invalid")
+    @NotBlank(message = "dashboardConfig.datasourceCode.notBlank")
+    private String datasourceCode;
+    
+	private String status;
 
     public String getDatasource() {
         return datasource;
@@ -56,4 +59,12 @@ public class DatasourcesConfigRequest {
     public void setStatus(String status) {
         this.status = status;
     }
+    
+    public String getDatasourceCode() {
+  		return datasourceCode;
+  	}
+
+  	public void setDatasourceCode(String datasourceCode) {
+  		this.datasourceCode = datasourceCode;
+  	}
 }
