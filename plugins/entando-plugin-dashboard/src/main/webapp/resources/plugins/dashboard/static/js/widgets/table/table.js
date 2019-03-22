@@ -6,7 +6,8 @@ org.entando.dashboard = org.entando.dashboard || {};
 org.entando.dashboard.Table = class {
   constructor(context, id, config) {
     console.log("Table - config", config);
-    const {options, serverName, datasource, accessToken} = config;
+
+    const {options, serverName, datasource, accessToken, lang} = config;
     this.id = id;
 
     const columns = Object.keys(config.columns).reduce((acc, key) => {
@@ -19,11 +20,14 @@ org.entando.dashboard.Table = class {
       return acc;
     }, []);
 
+    const language = lang === "it" ? Italian : English;
+
     this.config = {
       scrollY: 200,
       scrollCollapse: true,
       scroller: true,
       responsive: true,
+      language,
       deferRender: true,
       processing: true,
       ajax: {
@@ -35,20 +39,16 @@ org.entando.dashboard.Table = class {
             request.setRequestHeader("Authorization", "Bearer " + accessToken);
           }
         },
-        dataSrc: json => {
-          console.log("json.payload", json.payload);
-          return json.payload;
-        }
+        dataSrc: json => json.payload
       },
       columns
     };
     if (options && options.downlodable) {
-      this.config.dom = "lBfrtip";
+      this.config.dom = "Bfrtip";
       this.config.buttons = ["csv", "excel", "pdf", "print"];
     }
   }
   show() {
-    console.log(this.config);
     return new $(this.id).DataTable(this.config);
   }
 };
