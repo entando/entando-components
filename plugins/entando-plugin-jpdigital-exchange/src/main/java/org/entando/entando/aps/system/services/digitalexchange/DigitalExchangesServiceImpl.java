@@ -13,7 +13,6 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange;
 
-import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ import org.entando.entando.web.common.model.RestError;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.web.util.ThrowableAnalyzer;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +35,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 
-import static org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil.publicKeyFromPEM;
 import static org.entando.entando.web.digitalexchange.DigitalExchangeValidator.*;
 
 @Service
@@ -74,15 +71,8 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
         validateURL(digitalExchange);
 
         DigitalExchange storedDigitalExchange = manager.create(digitalExchange);
-        if (storedDigitalExchange.hasNoPublicKey()) {
-            Optional<String> exchangePublicKey = tryDownloadPublicKey(storedDigitalExchange);
-            if(exchangePublicKey.isPresent()) {
-                storedDigitalExchange.setPublicKey(exchangePublicKey.get());
-            } else {
-                storedDigitalExchange.setPublicKey(null);
-                storedDigitalExchange.setActive(false);
-            }
-        }
+
+        verifyHasPublicKey(storedDigitalExchange);
 
         return storedDigitalExchange;
     }
@@ -95,7 +85,11 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
             validateName(digitalExchange);
         }
         validateURL(digitalExchange);
-        return manager.update(digitalExchange);
+        DigitalExchange updatedDe = manager.update(digitalExchange);
+
+        verifyHasPublicKey(updatedDe);
+
+        return updatedDe;
     }
 
     @Override
@@ -141,20 +135,37 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
         }
     }
 
-    private Optional<String> tryDownloadPublicKey(DigitalExchange digitalExchange) {
+    private void verifyHasPublicKey(DigitalExchange storedDigitalExchange) {
+        if (storedDigitalExchange.hasNoPublicKey()) {
+            tryUpdateWithRemotePublicKey(storedDigitalExchange);
+        }
+    }
+
+    private void tryUpdateWithRemotePublicKey(DigitalExchange digitalExchange) {
 
         try {
-            SimpleDigitalExchangeCall<String> call = new SimpleDigitalExchangeCall<>(
-                    HttpMethod.GET, new ParameterizedTypeReference<SimpleRestResponse<String>>() {
-            }, "digitalExchange", "publicKey");
-
-            SimpleRestResponse<String> response = client.getSingleResponse(digitalExchange, call);
-            return Optional.ofNullable(response.getPayload());
-        } catch (Throwable ex) {
-            logger.error("An error occured while retrieving {} DE public key", digitalExchange.getId());
+            updateWithRemotePublicKey(digitalExchange);
+        } catch (Exception ex) {
+            logger.error("An error occurred while downloading public key for digital exchange " + digitalExchange.getId());
+            digitalExchange.invalidate();
         }
-        return Optional.empty();
     }
+
+    private void updateWithRemotePublicKey(DigitalExchange digitalExchange) {
+        Optional<String> publicKey = getRemotePublicKey(digitalExchange);
+        digitalExchange.setPublicKey(publicKey.orElseThrow(NotExistentPublicKey::new));
+    }
+
+    private Optional<String> getRemotePublicKey(DigitalExchange digitalExchange) {
+        SimpleDigitalExchangeCall<String> call = new SimpleDigitalExchangeCall<>(
+                HttpMethod.GET, new ParameterizedTypeReference<SimpleRestResponse<String>>() {
+        }, "digitalExchange", "publicKey");
+
+        SimpleRestResponse<String> response = client.getSingleResponse(digitalExchange, call);
+        return Optional.ofNullable(response.getPayload());
+    }
+
+    private static class NotExistentPublicKey extends RuntimeException {}
 
     private static class TestExchangesCall extends DigitalExchangeCall<SimpleRestResponse<Map<String, List<RestError>>>, Map<String, List<RestError>>> {
 

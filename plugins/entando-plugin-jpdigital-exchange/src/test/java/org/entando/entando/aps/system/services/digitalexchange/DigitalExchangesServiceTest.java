@@ -94,6 +94,7 @@ public class DigitalExchangesServiceTest {
 
     @Test
     public void shouldUpdateDigitalExchange() {
+        when(manager.update(any(DigitalExchange.class))).thenReturn(getDE1());
         service.update(getDE1());
     }
 

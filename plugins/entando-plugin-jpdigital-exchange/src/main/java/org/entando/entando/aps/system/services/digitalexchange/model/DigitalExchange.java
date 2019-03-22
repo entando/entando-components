@@ -135,4 +135,9 @@ public class DigitalExchange {
     public boolean hasNoPublicKey() {
         return StringUtils.isEmpty(this.getPublicKey());
     }
+
+    public void invalidate() {
+        this.setPublicKey(null);
+        this.setActive(false);
+    }
 }
