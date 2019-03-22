@@ -73,11 +73,11 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   @Override
   public PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList) {
     try {
-      List<FieldSearchFilter> filters = new ArrayList<FieldSearchFilter>(requestList.buildFieldSearchFilters());
-      filters
-          .stream()
-          .filter(i -> i.getKey() != null)
-          .forEach(i -> i.setKey(DashboardConfigDto.getEntityFieldName(i.getKey())));
+//      List<FieldSearchFilter> filters = new ArrayList<FieldSearchFilter>(requestList.buildFieldSearchFilters());
+//      filters
+//          .stream()
+//          .filter(i -> i.getKey() != null)
+//          .forEach(i -> i.setKey(DashboardConfigDto.getEntityFieldName(i.getKey())));
 
       List<Map<String, Object>> lista = new ArrayList<Map<String, Object>>();
 

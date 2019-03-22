@@ -225,10 +225,12 @@ public class DashboardConfigController {
 
         MeasurementColumn col1 = new MeasurementColumn("temperature", "temperature");
         MeasurementColumn col2 = new MeasurementColumn("timestamp", "timestamp");
+			MeasurementColumn col3 = new MeasurementColumn("vel_vento", "vel_vento");
 
         List<MeasurementColumn> listaColonne = new ArrayList<>();
         listaColonne.add(col1);
         listaColonne.add(col2);
+			  listaColonne.add(col3);
         return new ResponseEntity<>(new SimpleRestResponse(listaColonne), HttpStatus.OK);
     }
 
