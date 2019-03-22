@@ -108,7 +108,7 @@ export class DashboardConfigFormBody extends Component {
                     label={<FormLabel labelId="plugin.serverType" />}
                     labelSize={2}
                     alignClass="text-left"
-                    name="serverName"
+                    name="type"
                     validate={[required]}
                   />
                 </Col>
