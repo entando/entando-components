@@ -37,7 +37,7 @@ public class DashboardConfig {
 	
 	@DatabaseField(columnName = "serveruri", 
 		dataType = DataType.STRING, 
-		width=255,  canBeNull=false)
+		width=255,  canBeNull=true)
 	private String _serverURI;
 	
 	@DatabaseField(columnName = "username", 
@@ -67,8 +67,8 @@ public class DashboardConfig {
 
     @DatabaseField(columnName = "type",
             dataType = DataType.STRING,
-            width = 100, canBeNull = false, id=true)
-    private String type;
+            width = 100, canBeNull = true, id=true)
+    private String _type;
 
 
     @DatabaseField(columnName = "debug",
