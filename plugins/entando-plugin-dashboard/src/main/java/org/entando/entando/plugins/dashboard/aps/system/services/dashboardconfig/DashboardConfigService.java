@@ -196,6 +196,7 @@ public class DashboardConfigService implements IDashboardConfigService {
         dashboardConfigRequest.getDatasources().forEach(c->{
             final DatasourcesConfigDto ds = new DatasourcesConfigDto();
             ds.setDatasource(c.getDatasource());
+            ds.setDatasourceCode(c.getDatasourceCode());
             ds.setDatasourceURI(c.getDatasourceURI());
             ds.setStatus(c.getStatus());
             datasources.add(ds);
