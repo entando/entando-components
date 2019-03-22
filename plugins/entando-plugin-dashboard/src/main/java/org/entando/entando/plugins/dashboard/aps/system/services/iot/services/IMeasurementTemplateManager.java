@@ -8,6 +8,10 @@ public interface IMeasurementTemplateManager {
 
   MeasurementTemplate getMeasurementTemplate(String id) throws ApsSystemException;
 
+  MeasurementTemplate getMeasurementTemplateByDashboardIdAndDatasourceCode(int dashboardId,
+      String datasourceCode)
+      throws ApsSystemException;
+
   void insertMeasurementTemplate(MeasurementTemplate measurementTemplate) throws ApsSystemException;
   
 }

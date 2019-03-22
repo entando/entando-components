@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.service;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,9 +11,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigManager;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.MeasurementException;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementMapping;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorIot;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IMeasurementConfigService;
@@ -20,6 +25,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IM
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.dto.DashboardSitewhereDatasourceDto;
 import org.entando.entando.plugins.jpsitewhereconnector.aps.system.services.iot.connector.sitewhere.dto.SitewhereApplicationConfigDto;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +34,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.Instant;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -54,15 +62,16 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
 
   @Autowired
   DashboardConfigManager dashboardConfigManager;
-  
+
+  @Autowired
+  ConnectorFactory connectorFactory;
+
   @Override
   public boolean pingDevice(IDashboardDatasourceDto dashboardDatasourceDto)
       throws IOException {
 
-    DashboardSitewhereDatasourceDto sitewhereConn = null;
-    // IoTUtils
-    //        .getDashboardDataSourceConnecDto(dashboardDatasourceDto,
-    //            DashboardSitewhereDatasourceDto.class);
+    DashboardSitewhereDatasourceDto sitewhereConn = (DashboardSitewhereDatasourceDto) connectorFactory
+        .getDashboardDatasource(dashboardDatasourceDto.getServerType());
 
     logger.info("{} pingDevice {}", this.getClass().getSimpleName(),
         sitewhereConn.getSitewhereDatasourceConfigDto().getName());
@@ -90,11 +99,8 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
       IDashboardDatasourceDto dashboardDatasourceDto,
       JsonArray measurementBody) throws ApsSystemException {
 
-    DashboardSitewhereDatasourceDto sitewhereConn = null;
-    
-//    IoTUtils
-//        .getDashboardDataSourceConnecDto(dashboardDatasourceDto,
-//            DashboardSitewhereDatasourceDto.class);
+    DashboardSitewhereDatasourceDto sitewhereConn = (DashboardSitewhereDatasourceDto) connectorFactory
+        .getDashboardDatasource(dashboardDatasourceDto.getServerType());
 
     String assignmentId = sitewhereConn.getSitewhereDatasourceConfigDto()
         .getAssignmentId();
@@ -114,9 +120,10 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
     JsonObject json = getObjectFromJson(result.getBody(), new TypeToken<JsonObject>() {
     }.getType(), JsonObject.class);
 
-    MeasurementConfig conf = measurementConfigService.getByDashboardIdAndDatasourceCodeAndMeasurementTemplateId(
-        sitewhereConn.getDashboardConfigDto().getId(),
-        datasourceCode, "");
+    MeasurementConfig conf = measurementConfigService
+        .getByDashboardIdAndDatasourceCodeAndMeasurementTemplateId(
+            sitewhereConn.getDashboardConfigDto().getId(),
+            datasourceCode, "");
 
     JsonObject returnedJson = new JsonObject();
 
@@ -127,18 +134,18 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
   }
 
   @Override
-  public IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(DashboardConfigDto dashboardConfigDto,
+  public IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(
+      DashboardConfigDto dashboardConfigDto,
       String datasourceCode) {
-    
+
     DatasourcesConfigDto datasourcesConfigDto = dashboardConfigManager
         .getDatasourceByDatasourcecodeAndDashboard(dashboardConfigDto.getId(), datasourceCode);
-    
+
     DashboardSitewhereDatasourceDto dto = new DashboardSitewhereDatasourceDto();
     dto.setSitewhereDatasourceConfigDto((SitewhereApplicationConfigDto) datasourcesConfigDto);
     dto.setDashboardConfigDto(dashboardConfigDto);
     return dto;
   }
-
 
   @Override
   public List<? extends AbstractDashboardDatasourceDto> getAllDevices(
@@ -168,15 +175,12 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
   }
 
   @Override
-  public void saveMeasurementTemplate(IDashboardDatasourceDto dashboardSitewhereDatasource)
+  public void saveMeasurementTemplate(IDashboardDatasourceDto dashboardDatasourceDto)
       throws ApsSystemException {
     MeasurementTemplate measurementTemplate = new MeasurementTemplate();
 
-    DashboardSitewhereDatasourceDto sitewhereConn = null;
-    
-//    IoTUtils
-//        .getDashboardDataSourceConnecDto(dashboardSitewhereDatasource,
-//            DashboardSitewhereDatasourceDto.class);
+    DashboardSitewhereDatasourceDto sitewhereConn = (DashboardSitewhereDatasourceDto) connectorFactory
+        .getDashboardDatasource(dashboardDatasourceDto.getServerType());
 
     String url = StringUtils
         .join(sitewhereConn.getDashboardUrl(), SITEWHERE_URL_BASE_PATH,
@@ -187,48 +191,107 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
     ResponseEntity<String> result = IoTUtils
         .getRequestMethod(url, getSitewhereHeaders(sitewhereConn.getDashboardConfigDto()));
 
-    JsonObject measurements = IoTUtils.getNestedFieldFromJson(result.getBody(),
-        StringUtils.join("results", JSON_FIELD_SEPARATOR, "measurements")).getAsJsonObject();
-    Iterable<Entry<String, JsonElement>> iterable = measurements.entrySet();
+    JsonObject jsonObject = IoTUtils.getNestedFieldFromJson(result.getBody(),
+        StringUtils.join("results", JSON_FIELD_SEPARATOR, "measurements")).getAsJsonArray().get(0)
+        .getAsJsonObject();
 
-    iterable.forEach(e -> measurementTemplate.addField(e.getKey(), e.getValue().getAsString()));
-
+    for (String key : jsonObject.keySet()) {
+      measurementTemplate.addField(key, jsonObject.get(key).getClass().getSimpleName());
+    }
     measurementTemplateService.save(measurementTemplate);
   }
 
   @Override
-  public JsonArray getMeasurements(DashboardSitewhereDatasourceDto dashboardSitewhereDatasourceDto,
-      Long nMeasurements, Instant startDate, Instant endDate) {
+  public List<MeasurementObject> getMeasurements(IDashboardDatasourceDto dashboardDatasourceDto,
+      Long nMeasurements, Date startDate, Date endDate) throws RuntimeException {
 
-    String assignmentId = dashboardSitewhereDatasourceDto.getSitewhereDatasourceConfigDto()
+    DashboardSitewhereDatasourceDto sitewhereConn = (DashboardSitewhereDatasourceDto) connectorFactory
+        .getDashboardDatasource(dashboardDatasourceDto.getServerType());
+
+    String assignmentId = sitewhereConn.getSitewhereDatasourceConfigDto()
         .getAssignmentId();
 
     String queries = IoTUtils.formatQueryUrl(new HashMap<String, Object>() {{
-      put("endDate=", endDate);
-      put("startDate=", startDate);
-      put("take=", nMeasurements);
+      put("endDate", endDate);
+      put("startDate", startDate);
+      put("take", nMeasurements);
       put("pageSize", nMeasurements);
     }});
 
     String url = StringUtils
-        .join(dashboardSitewhereDatasourceDto.getDashboardUrl(), SITEWHERE_URL_BASE_PATH,
+        .join(sitewhereConn.getDashboardUrl(), SITEWHERE_URL_BASE_PATH,
             "/assignments/",
             assignmentId,
             "/measurements?",
             queries);
 
     ResponseEntity<String> result = IoTUtils.getRequestMethod(url,
-        getSitewhereHeaders(dashboardSitewhereDatasourceDto.getDashboardConfigDto()));
+        getSitewhereHeaders(sitewhereConn.getDashboardConfigDto()));
 
-    JsonObject json = getObjectFromJson(result.getBody(), new TypeToken<JsonObject>() {
+    JsonObject body = getObjectFromJson(result.getBody(), new TypeToken<JsonObject>() {
     }.getType(), JsonObject.class);
 
-    JsonArray finalArray = new JsonArray();
-    for (JsonElement jsonElement : json.get("results").getAsJsonArray()) {
-      finalArray.add(jsonElement.getAsJsonObject().get("measurements").getAsJsonObject());
-    }
+    JsonArray jsonArray = getJsonMeasurements(body);
 
-    return finalArray;
+    MeasurementTemplate measurementTemplate;
+    MeasurementConfig config = null;
+    try {
+      measurementTemplate = measurementTemplateService
+          .getByDashboardIdAndDatasourceCode(dashboardDatasourceDto.getDashboardId(),
+              dashboardDatasourceDto.getDatasourceCode());
+      config = measurementConfigService.getByDashboardIdAndDatasourceCodeAndMeasurementTemplateId(
+          dashboardDatasourceDto.getDashboardId(), dashboardDatasourceDto.getDatasourceCode(),
+          measurementTemplate.getId());
+
+    } catch (Throwable t) {
+      logger.error(String.format(
+          "Cannot find any Measurement Template or Measurement Config for dashboard and datasource ids {} {}",
+          dashboardDatasourceDto.getDashboardId(), dashboardDatasourceDto.getDashboardConfigDto()));
+      throw new MeasurementException(String.format(
+          "Cannot find any Measurement Template or Measurement Config for dashboard and datasource ids {} {}",
+          dashboardDatasourceDto.getDashboardId(), dashboardDatasourceDto.getDashboardConfigDto()));
+    }
+    List<MeasurementObject> measurementObjects = new ArrayList<>();
+//    for (JsonElement element : jsonArray) {
+//      JsonObject jsonObject = element.getAsJsonObject();
+//      measurementObjects.add(getOnePerOneMeasurementObject(config,jsonObject,jsonObject.get("name").getAsString()));
+//    }
+    for (JsonElement element : jsonArray) {
+      JsonObject jsonObject = element.getAsJsonObject();
+//      measurementObjects.add(getMeasurementObject(jsonObject,
+//          IoTUtils.getNestedFieldFromJson(element.getAsJsonObject(), "eventDate").getAsString(),
+//          IoTUtils.getNestedFieldFromJson(element.getAsJsonObject(), "receivedDate").getAsString()));
+      measurementObjects.add(getMeasurementObject(jsonObject));
+    }
+    return measurementObjects;
+  }
+
+  private JsonArray getJsonMeasurements(JsonObject body) {
+    JsonArray jsonArray = new JsonArray();
+    for (JsonElement jsonElement : body.get("results").getAsJsonArray()) {
+      JsonObject measurements = jsonElement.getAsJsonObject().get("measurements").getAsJsonObject();
+//      measurements.addProperty("eventDate", jsonElement.getAsJsonObject().get("eventDate").getAsString());
+//      measurements.addProperty("receivedDate", jsonElement.getAsJsonObject().get("receivedDate").getAsString());
+      jsonArray.add(measurements);
+    }
+    return jsonArray;
+  }
+
+  private JsonArray getOnePerOneJsonMeasurements(JsonObject body) {
+    JsonArray jsonArray = new JsonArray();
+    for (JsonElement jsonElement : body.get("results").getAsJsonArray()) {
+      JsonObject measurements = jsonElement.getAsJsonObject().get("measurements").getAsJsonObject();
+      for (String key : measurements.keySet()) {
+        JsonObject json = new JsonObject();
+        json.addProperty("name", key);
+        json.addProperty(key, measurements.get(key).getAsString());
+        json.addProperty("eventDate", jsonElement.getAsJsonObject().get("eventDate").getAsString());
+        json.addProperty("swReceivedDate",
+            jsonElement.getAsJsonObject().get("receivedDate").getAsString());
+        jsonArray.add(json);
+      }
+    }
+    return jsonArray;
   }
 
   private HttpHeaders getSitewhereHeaders(DashboardConfigDto dashboardConfigDto) {
@@ -247,11 +310,52 @@ public class SitewhereConnectorService implements ISitewhereConnectorService, IC
     return false;
   }
 
-@Override
-public JsonArray getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
-		Instant startDate, Instant endDate) {
-	// TODO Auto-generated method stub
-	return null;
-}
+  private MeasurementObject getMeasurementObject(JsonElement jsonElement) {
+    MeasurementObject measurementObject = new MeasurementObject();
+    if (jsonElement.isJsonObject()) {
+      measurementObject.setMeasure(jsonElement);
+//      measurementObject.setEventDate(eventDate);
+//      measurementObject.setSwReceivedDate(swReceivedDate);
+//      measurementObject.setEntandoReceivedDate(new DateTime().toString("yyyy-MM-dd'T'hh:mm:ss"));
+    }
+    return measurementObject;
+  }
 
+  private MeasurementObject getOnePerOneMeasurementObject(MeasurementConfig config,
+      JsonElement jsonElement, String key) {
+    MeasurementObject measurementObject = new MeasurementObject();
+    measurementObject.setName(config.getMappingKey(key));
+
+    if (jsonElement.isJsonObject()) {
+      measurementObject
+          .setMeasure(jsonElement.getAsJsonObject().get(key));
+
+      if (config.getMappingforSourceName(key).isPresent()) {
+        MeasurementMapping mapping = config
+            .getMappingforSourceName(key).get();
+        try {
+          Class<?> transformerClass = Class.forName(mapping.getTransformerClass());
+          try {
+            measurementObject.setMeasure(
+                new Gson().toJson(
+                    transformerClass.cast(jsonElement.getAsJsonObject().get(key).getAsString())));
+          } catch (ClassCastException e) {
+
+            Constructor<?> constructor = transformerClass.getConstructor(String.class);
+            measurementObject.setMeasure(new Gson().toJson(
+                constructor.newInstance(jsonElement.getAsJsonObject().get(key).getAsString())));
+
+          }
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+          logger.error(String.format("Class {} Not Found for measurementConfigId {}",
+              mapping.getTransformerClass(), config.getMeasurementConfigId()));
+        }
+      }
+      measurementObject.setEventDate(jsonElement.getAsJsonObject().get("eventDate").getAsString());
+      measurementObject
+          .setSwReceivedDate(jsonElement.getAsJsonObject().get("swReceivedDate").getAsString());
+      measurementObject.setEntandoReceivedDate(new DateTime().toString("yyyy-MM-dd'T'hh:mm:ss"));
+    }
+    return measurementObject;
+  }
 }

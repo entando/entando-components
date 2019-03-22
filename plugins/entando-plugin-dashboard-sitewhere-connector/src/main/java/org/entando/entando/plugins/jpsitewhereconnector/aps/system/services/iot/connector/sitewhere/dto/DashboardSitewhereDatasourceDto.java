@@ -35,4 +35,9 @@ public class DashboardSitewhereDatasourceDto extends AbstractDashboardDatasource
     public String getDatasourceCode() {
         return super.getDatasourcesConfigDto().getDatasourceCode();
     }
+
+    @Override
+    public boolean supports(String serverType) {
+        return serverType.equals(this.getServerType());
+    }
 }

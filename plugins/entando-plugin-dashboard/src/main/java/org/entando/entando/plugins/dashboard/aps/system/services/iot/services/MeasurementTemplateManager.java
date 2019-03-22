@@ -33,6 +33,21 @@ public class MeasurementTemplateManager extends AbstractService implements IMeas
     }
     return measurementTemplate;
   }
+  
+  @Override
+  public MeasurementTemplate getMeasurementTemplateByDashboardIdAndDatasourceCode(int dashboardId, String datasourceCode)
+      throws ApsSystemException {
+    MeasurementTemplate measurementTemplate = null;
+    try{
+      measurementTemplate = this.getMeasurementTemplateDAO().loadMeasurementTemplateByDashboardIdAndDatasourceCode(dashboardId,datasourceCode);
+    }
+    catch (Throwable t) {
+      logger.error(String.format("Error loading measurementTemplate with ids '{}' '{}'", dashboardId, datasourceCode), t);
+      throw new ApsSystemException(String.format("Error loading measurementTemplate with id '{}', '{}'", dashboardId, datasourceCode), t);
+    }
+    return measurementTemplate;
+    
+  }
 
   @Override
   public void insertMeasurementTemplate(MeasurementTemplate measurementTemplate)

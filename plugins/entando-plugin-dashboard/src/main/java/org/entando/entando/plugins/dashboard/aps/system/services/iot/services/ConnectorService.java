@@ -13,6 +13,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.slf4j.Logger;
@@ -131,9 +132,9 @@ public class ConnectorService extends AbstractConnectorService implements IConne
         return connectorFactory.getConnector(serverType).getDashboardDatasourceDtoByIdAndCode(dashboardConfigDto, datasourceCode);
     }
 
-    @Override
-    public JsonArray getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Date startDate, Date endDate) {
-        logger.info("{} getDeviceMeasurement By Dashboard and datasource ids :{}, {}", this.getClass().getSimpleName(), dto.getDashboardId(), dto.getDatasourceCode());
-        return connectorFactory.getConnector(dto.getServerType()).getMeasurements(dto, nMeasurements, startDate, endDate);
-    }
+  @Override
+  public List<MeasurementObject> getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Date startDate, Date endDate) {
+    logger.info("{} getDeviceMeasurement By Dashboard and datasource ids :{}, {}", this.getClass().getSimpleName(), dto.getDashboardId() ,dto.getDatasourceCode());
+    return connectorFactory.getConnector(dto.getServerType()).getMeasurements(dto,nMeasurements,startDate,endDate);
+  }
 }

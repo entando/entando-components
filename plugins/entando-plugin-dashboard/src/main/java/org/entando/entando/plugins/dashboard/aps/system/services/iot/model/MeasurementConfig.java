@@ -2,8 +2,10 @@ package org.entando.entando.plugins.dashboard.aps.system.services.iot.model;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class MeasurementConfig {
 
@@ -15,7 +17,7 @@ public class MeasurementConfig {
 
   private String measurementTemplateId;
 
-  private List<MeasurementMapping> mappings;
+  private List<MeasurementMapping> mappings = new ArrayList<>();
 
   public String getMeasurementConfigId() {
     return measurementConfigId;
@@ -57,18 +59,28 @@ public class MeasurementConfig {
       List<MeasurementMapping> mappings) {
     this.mappings = mappings;
   }
-  
+
   public void setMappings(String json) {
     this.mappings = Arrays.asList(new Gson().fromJson(json, MeasurementMapping[].class));
   }
 
+  public void addMapping(MeasurementMapping mapping) {
+    this.getMappings().add(mapping);
+  }
+  
+  
   public String getMappingKey(String sourceName) {
     for (MeasurementMapping mapping : this.getMappings()) {
       if(mapping.sourceName.equals(sourceName)) {
         return mapping.getDetinationName();
       }
-    } 
+    }
     return sourceName;
   }
-  
+
+  public Optional<MeasurementMapping> getMappingforSourceName(String sourceName) {
+    return this.getMappings().stream().filter(mapping -> mapping.getSourceName().equals(sourceName))
+        .findFirst();
+  }
+
 }

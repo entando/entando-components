@@ -8,6 +8,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.connector.kaa.dto.DashboardKaaDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.connector.kaa.dto.KaaApplicationConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.connector.kaa.service.KaaConnectorService;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IMeasurementConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.MeasurementTemplateService;
@@ -17,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
@@ -45,6 +47,9 @@ public class TestKaaConnectorService {
   @Mock
   MeasurementTemplateService measurementTemplateService;
 
+  @Mock
+  ConnectorFactory connectorFactory;
+
   DashboardKaaDatasourceDto dashboardDatasourceDto;
 
   @Before
@@ -67,6 +72,8 @@ public class TestKaaConnectorService {
 
     dashboardConfigDto.getDatasources().add(datasourcesConfigDto);
 
+    Mockito.when(connectorFactory.getDashboardDatasource(Mockito.any())).thenReturn(dashboardDatasourceDto);
+    
   }
 
   @Test

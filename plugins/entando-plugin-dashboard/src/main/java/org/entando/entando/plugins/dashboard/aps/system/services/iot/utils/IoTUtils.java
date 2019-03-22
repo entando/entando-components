@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tiles.request.collection.KeySet;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
 import org.springframework.http.HttpEntity;
@@ -21,6 +22,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class IoTUtils {
 
@@ -66,7 +68,8 @@ public class IoTUtils {
     
     else if (jsonObject.get(fieldName).isJsonArray() && fildNameList.size() == 2) {
       JsonArray jsonArray = new JsonArray();
-      for (JsonElement json:jsonObject.get(fildNameList.get(0)).getAsJsonArray()) {
+      for (JsonElement json : jsonObject.get(fildNameList.get(0)).getAsJsonArray()) {
+        
         if (json.isJsonObject() && json.getAsJsonObject().get(fildNameList.get(1)) != null) {
           jsonArray.add(json.getAsJsonObject().get(fildNameList.get(1)));
         }
@@ -90,7 +93,7 @@ public class IoTUtils {
     String query = "";
     for (Entry<String, T> entry : params.entrySet()) {
       if (entry.getValue() != null) {
-        query = StringUtils.join(query, entry.getKey(), entry.getValue(), "&");
+        query = StringUtils.join(query, entry.getKey(), "=", entry.getValue(), "&");
       }
     }
     return query.substring(0, query.length() - 1);

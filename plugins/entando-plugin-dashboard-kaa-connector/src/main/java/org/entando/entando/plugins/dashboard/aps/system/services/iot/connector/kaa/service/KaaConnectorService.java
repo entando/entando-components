@@ -7,17 +7,21 @@ import static org.entando.entando.plugins.dashboard.aps.system.services.iot.util
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.connector.kaa.dto.DashboardKaaDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.connector.kaa.dto.KaaApplicationConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.LogAppender;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorIot;
@@ -48,22 +52,23 @@ public class KaaConnectorService implements IKaaConnectorService, IConnectorIot 
 
   IMeasurementTemplateService measurementTemplateService;
 
+  ConnectorFactory connectorFactory;
+  
   @Autowired
   public KaaConnectorService(
       IMeasurementConfigService MeasurementConfigService,
-      IMeasurementTemplateService iMeasurementTemplateService) {
+      IMeasurementTemplateService iMeasurementTemplateService,
+      ConnectorFactory connectorFactory) {
     this.measurementConfigService = MeasurementConfigService;
     this.measurementTemplateService = iMeasurementTemplateService;
+    this.connectorFactory = connectorFactory;
   }
 
   @Override
   public boolean pingDevice(IDashboardDatasourceDto dashboardDatasourceDto) {
-    KaaApplicationConfigDto kaaConnection = null;
-    //TODO MARCO
-//    IoTUtils
-//        .getDashboardDataSourceConnecDto(dashboardDatasourceDto, DashboardKaaDatasourceDto.class)
-//        .getKaaDatasourceConfigDto();
-
+    
+    KaaApplicationConfigDto kaaConnection = connectorFactory.getDashboardDatasource(dashboardDatasourceDto.getServerType()).getDatasource();
+    
     logger.info("{} pingDevice {}", this.getClass().getSimpleName(),
         kaaConnection.getDatasourceCode());
 
@@ -115,9 +120,7 @@ public class KaaConnectorService implements IKaaConnectorService, IConnectorIot 
   public void saveMeasurementTemplate(
 		  IDashboardDatasourceDto dashboardKaaDataSource) throws ApsSystemException {
 	  
-    DashboardKaaDatasourceDto kaaConn = null; //TODO MARCO
-//    		IoTUtils
-//        .getDashboardDataSourceConnecDto(dashboardKaaDataSource, DashboardKaaDatasourceDto.class);
+    DashboardKaaDatasourceDto kaaConn = (DashboardKaaDatasourceDto) connectorFactory.getDashboardDatasource(dashboardKaaDataSource.getServerType());
 
     String loggerId = kaaConn.getKaaDatasourceConfigDto().getLoggerId();
 
@@ -161,12 +164,7 @@ public class KaaConnectorService implements IKaaConnectorService, IConnectorIot 
       IDashboardDatasourceDto dashboardDatasourceDto,
       JsonArray measurementBody) throws Exception {
 
-    DashboardKaaDatasourceDto kaaConn = null;
-    
-    //TODO MARCO
-//    		
-//    		IoTUtils
-//        .getDashboardDataSourceConnecDto(dashboardDatasourceDto, DashboardKaaDatasourceDto.class);
+    DashboardKaaDatasourceDto kaaConn = (DashboardKaaDatasourceDto) connectorFactory.getDashboardDatasource(dashboardDatasourceDto.getServerType());
 
     logger.info("{} saveDeviceMeasurement {} on {}", this.getClass().getSimpleName(),
         kaaConn.getKaaDatasourceConfigDto().getDatasourceURI(),
@@ -187,6 +185,19 @@ public class KaaConnectorService implements IKaaConnectorService, IConnectorIot 
       }
     }
     return returnedJson;
+  }
+
+  @Override
+  public IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(
+      DashboardConfigDto dashboardConfigDto, String datasourceCode) {
+    return null;
+  }
+
+  @Override
+  public List<MeasurementObject> getMeasurements(
+      IDashboardDatasourceDto dashboardKaaDatasourceDto, Long nMeasurements, Date startDate,
+      Date endDate) throws RuntimeException {
+    return null;//getMeasurements From DB
   }
 
   @Override
@@ -225,19 +236,5 @@ public class KaaConnectorService implements IKaaConnectorService, IConnectorIot 
     }
     return false;
   }
-
-@Override
-public IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(DashboardConfigDto dashboardConfigDto,
-		String datasourceCode) {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-@Override
-public JsonArray getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
-		Instant startDate, Instant endDate) {
-	// TODO Auto-generated method stub
-	return null;
-}
 
 }
