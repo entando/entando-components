@@ -14,33 +14,24 @@
 
 <script>
 $(document).ready(() => {
-  const JSON_DATA =[
-    {
-      timestamp: "2019-01-01 09:10:00",
-      timestamp1: "2019-01-11 08:00:00",
-      temperature: 300,
-      temperature1: 150
-    },
-    {
-      timestamp: "2019-01-03 09:20:00",
-      timestamp1: "2019-01-12 09:30:00",
-      temperature: 200,
-      temperature1: 175
-    },
-    {
-      timestamp: "2019-01-07 09:30:00",
-      timestamp1: "2019-01-20 10:30:00",
-      temperature: 100,
-      temperature1: 50
-    }
-  ]
-
   console.log('jQuery ready Gauge chart');
   const config = ${configGaugeChart};
   console.log('Config Gauge chart :', config);
   $('#title-gauge-chart').html(config.title.en);
   const gaugeChart = new org.entando.dashboard.GaugeChart("#gauge-chart", config);
-  gaugeChart.update(JSON_DATA);
+  const url = "<wp:info key="systemParam" paramName="applicationBaseURL"/>api/plugins/dashboard/server/"+config['serverName']+"/datasource/"+config['datasource']+"/data";
+  $.ajax({
+    url,
+    beforeSend: (xhr)=> {
+      const accessToken = '<c:out value="${sessionScope.currentUser.accessToken}"/>';
+      if (accessToken) {
+          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      }
+    }
+  }).done((json)=>{
+    gaugeChart.update(json.payload);
+  });
+
 
 });
 </script>
