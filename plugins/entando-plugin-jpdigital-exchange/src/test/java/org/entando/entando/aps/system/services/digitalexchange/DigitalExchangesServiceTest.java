@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.digitalexchange.DigitalExchangeValidator;
@@ -75,7 +76,20 @@ public class DigitalExchangesServiceTest {
 
     @Test
     public void shouldAddDigitalExchange() {
+        when(manager.create(any(DigitalExchange.class))).thenReturn(getDE2());
         service.create(getDE2());
+    }
+
+    @Test
+    public void shouldReturnInactiveDigitalExchangeForUnavailablePublicKey() {
+        Mockito.reset(client);
+        when(manager.create(any(DigitalExchange.class))) .thenReturn(getDEWithoutPublicKey(DE_2_NAME));
+        when(client.getSingleResponse(any(DigitalExchange.class), any())) .thenReturn( new SimpleRestResponse<>(null) );
+
+        DigitalExchange storedDE = service.create(getDEWithoutPublicKey(DE_2_NAME));
+        assertThat(storedDE.isActive()).isFalse();
+        assertThat(storedDE.hasNoPublicKey()).isTrue();
+
     }
 
     @Test
@@ -143,4 +157,5 @@ public class DigitalExchangesServiceTest {
         testAllResult.put(DE_1_ID, new ArrayList<>());
         when(client.getCombinedResult(any())).thenReturn(testAllResult);
     }
+
 }

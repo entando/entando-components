@@ -17,10 +17,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.util.ArrayList;
+
+import com.jayway.jsonpath.JsonPath;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
@@ -172,6 +175,31 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
                 .andExpect(jsonPath("$.metaData").isEmpty())
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].code", is(DigitalExchangeValidator.ERRCODE_DIGITAL_EXCHANGE_NAME_TAKEN)));
+    }
+
+    @Test
+    public void shouldSaveInactiveDigitalExchangeBecauseNoPublicKeyAvailable() throws Exception {
+
+        String generatedId = null;
+        try {
+            DigitalExchange digitalExchange = getNewDE();
+            digitalExchange.setPublicKey(null);
+
+            ResultActions result = createAuthRequest(post(BASE_URL))
+                    .setContent(digitalExchange).execute();
+
+            MvcResult mvcResult = result.andExpect(status().is2xxSuccessful())
+                    .andExpect(jsonPath("$.errors").isNotEmpty())
+                    .andReturn();
+
+            generatedId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.payload.id");
+        } catch (Throwable ex) {
+            throw ex;
+        } finally {
+            if (generatedId != null) {
+                digitalExchangeService.delete(generatedId);
+            }
+        }
     }
 
     @Test

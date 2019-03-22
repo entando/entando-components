@@ -50,6 +50,18 @@ public final class DigitalExchangeTestUtils {
         return getDigitalExchange(INEXISTENT_DE_ID, INEXISTENT_DE_ID);
     }
 
+    public static DigitalExchange getDEWithoutPublicKey(String name) {
+         DigitalExchange deWithoutPublicKey = getDigitalExchange(null, name);
+         deWithoutPublicKey.setPublicKey(null);
+         return deWithoutPublicKey;
+    }
+
+    public static DigitalExchange getDEWithoutPublicKey(String id, String name) {
+        DigitalExchange deWithoutPublicKey = getDigitalExchange(id, name);
+        deWithoutPublicKey.setPublicKey(null);
+        return deWithoutPublicKey;
+    }
+
     public static DigitalExchange getDigitalExchange(String name) {
         return getDigitalExchange(null, name);
     }
@@ -59,6 +71,7 @@ public final class DigitalExchangeTestUtils {
         digitalExchange.setId(id);
         digitalExchange.setName(name);
         digitalExchange.setUrl(DE_URL);
+        digitalExchange.setPublicKey(DE_PEM);
         digitalExchange.setActive(true);
         return digitalExchange;
     }

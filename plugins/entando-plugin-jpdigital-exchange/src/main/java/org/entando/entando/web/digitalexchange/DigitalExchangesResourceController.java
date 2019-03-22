@@ -57,7 +57,7 @@ public class DigitalExchangesResourceController implements DigitalExchangesResou
 
         DigitalExchange de = digitalExchangeService.create(digitalExchange);
         SimpleRestResponse response = new SimpleRestResponse<>(de);
-        if ( ! de.hasPublicKey() ) {
+        if (de.hasNoPublicKey()) {
             response.addError(new RestError("1", "DigitalExchange not activated: no public key available"));
         }
         return ResponseEntity.ok(response);

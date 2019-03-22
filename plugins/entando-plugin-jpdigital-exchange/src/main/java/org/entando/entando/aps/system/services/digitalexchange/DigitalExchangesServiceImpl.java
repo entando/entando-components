@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange;
 
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,16 +27,23 @@ import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExch
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.model.RestError;
 import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.web.util.ThrowableAnalyzer;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+
+import static org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil.publicKeyFromPEM;
 import static org.entando.entando.web.digitalexchange.DigitalExchangeValidator.*;
 
 @Service
 public class DigitalExchangesServiceImpl implements DigitalExchangesService {
+
+    private final Logger logger = LoggerFactory.getLogger(DigitalExchangesServiceImpl.class);
 
     private static final String DIGITAL_EXCHANGE_LABEL = "digitalExchange";
 
@@ -64,11 +72,19 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
 
         validateName(digitalExchange);
         validateURL(digitalExchange);
-        if (!digitalExchange.hasPublicKey()) {
-            digitalExchange.setPublicKey(downloadPublicKey(digitalExchange));
+
+        DigitalExchange storedDigitalExchange = manager.create(digitalExchange);
+        if (storedDigitalExchange.hasNoPublicKey()) {
+            Optional<String> exchangePublicKey = tryDownloadPublicKey(storedDigitalExchange);
+            if(exchangePublicKey.isPresent()) {
+                storedDigitalExchange.setPublicKey(exchangePublicKey.get());
+            } else {
+                storedDigitalExchange.setPublicKey(null);
+                storedDigitalExchange.setActive(false);
+            }
         }
 
-        return manager.create(digitalExchange);
+        return storedDigitalExchange;
     }
 
 
@@ -125,18 +141,19 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
         }
     }
 
-    private String downloadPublicKey(DigitalExchange digitalExchange) {
+    private Optional<String> tryDownloadPublicKey(DigitalExchange digitalExchange) {
 
-        SimpleDigitalExchangeCall<String> call = new SimpleDigitalExchangeCall<>(
-                HttpMethod.GET, new ParameterizedTypeReference<SimpleRestResponse<String>>() {
-        }, "digitalExchange", "publicKey");
-        call.setErrorResponseHandler( ex -> {
-            digitalExchange.setPublicKey(null);
-            digitalExchange.setActive(false);
-            return Optional.empty();
-        });
+        try {
+            SimpleDigitalExchangeCall<String> call = new SimpleDigitalExchangeCall<>(
+                    HttpMethod.GET, new ParameterizedTypeReference<SimpleRestResponse<String>>() {
+            }, "digitalExchange", "publicKey");
 
-        return client.getSingleResponse(digitalExchange, call).getPayload();
+            SimpleRestResponse<String> response = client.getSingleResponse(digitalExchange, call);
+            return Optional.ofNullable(response.getPayload());
+        } catch (Throwable ex) {
+            logger.error("An error occured while retrieving {} DE public key", digitalExchange.getId());
+        }
+        return Optional.empty();
     }
 
     private static class TestExchangesCall extends DigitalExchangeCall<SimpleRestResponse<Map<String, List<RestError>>>, Map<String, List<RestError>>> {

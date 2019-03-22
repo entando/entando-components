@@ -22,7 +22,11 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.validation.annotation.Validated;
+
+import java.security.PublicKey;
 
 @Validated
 @ApiModel
@@ -128,7 +132,7 @@ public class DigitalExchange {
 
     public void setPublicKey(String publicKey) { this.publicKey = publicKey; }
 
-    public boolean hasPublicKey() {
-        return null != this.getPublicKey() && !this.getPublicKey().isEmpty();
+    public boolean hasNoPublicKey() {
+        return StringUtils.isEmpty(this.getPublicKey());
     }
 }
