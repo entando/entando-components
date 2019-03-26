@@ -7,9 +7,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tiles.request.collection.KeySet;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,7 +21,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 public class IoTUtils {
 
@@ -85,7 +83,8 @@ public class IoTUtils {
     return getNestedFieldFromJson(json,fieldNames);
   }
   
-  public static <T extends AbstractDashboardDatasourceDto> T getDashboardDataSourceConnecDto(AbstractDashboardDatasourceDto dashboardDatasourceDto, Class<T> clazz) {
+  public static <T extends DashboardDatasourceDto> T getDashboardDataSourceConnecDto(
+      DashboardDatasourceDto dashboardDatasourceDto, Class<T> clazz) {
     return clazz.cast(dashboardDatasourceDto);
   }
 

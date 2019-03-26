@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
@@ -53,7 +55,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     @Override
     public boolean pingDevice(IDashboardDatasourceDto device) throws IOException {
         logger.info("{} pingDevice on {}", this.getClass().getSimpleName(), device.getDashboardUrl());
-        return connectorFactory.getConnector(device.getDashboardConfigDto().getServerDescription()).pingDevice(device);
+        return connectorFactory.getConnector(device.getDashboardConfigDto().getType()).pingDevice(device);
     }
 
     @Override
@@ -64,10 +66,10 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     }
 
     @Override
-    public <T extends DashboardConfigDto> List<? extends AbstractDashboardDatasourceDto> getAllDevices(
-            T dashboardConfigDto) {
+    public List<DatasourcesConfigDto> getAllDevices(
+            DashboardConfigDto dashboardConfigDto) {
         logger.info("{} getAllDevices to {}", this.getClass().getSimpleName(), dashboardConfigDto.getServerURI());
-        return connectorFactory.getConnector(dashboardConfigDto.getServerDescription()).getAllDevices(dashboardConfigDto);
+        return connectorFactory.getConnector(dashboardConfigDto.getType()).getAllDevices(dashboardConfigDto);
     }
 
 
@@ -114,7 +116,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     public void setDeviceMeasurementSchema(
             IDashboardDatasourceDto dashboardDatasourceDto) throws ApsSystemException {
         logger.info("{} getSchema to {}", this.getClass().getSimpleName(), dashboardDatasourceDto.getDashboardConfigDto().getServerURI());
-        connectorFactory.getConnector(dashboardDatasourceDto.getDashboardConfigDto().getServerDescription()).saveMeasurementTemplate(dashboardDatasourceDto);
+        connectorFactory.getConnector(dashboardDatasourceDto.getDashboardConfigDto().getType()).saveMeasurementTemplate(dashboardDatasourceDto);
         ;
     }
 
@@ -123,7 +125,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
             IDashboardDatasourceDto dashboardDatasourceDto, JsonArray measurementBody)
             throws Exception {
         logger.info("{} saveDeviceMeasurement to {}", this.getClass().getSimpleName(), dashboardDatasourceDto.getDashboardConfigDto().getServerURI());
-        return connectorFactory.getConnector(dashboardDatasourceDto.getDashboardConfigDto().getServerDescription()).saveDeviceMeasurement(dashboardDatasourceDto, measurementBody);
+        return connectorFactory.getConnector(dashboardDatasourceDto.getDashboardConfigDto().getType()).saveDeviceMeasurement(dashboardDatasourceDto, measurementBody);
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
@@ -29,7 +29,7 @@ public interface IConnectorIot {
 
 	boolean pingDevice(IDashboardDatasourceDto dashboardDatasourceDto) throws IOException;
 
-	List<? extends AbstractDashboardDatasourceDto> getAllDevices(DashboardConfigDto dashboardConfigDto);
+	List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto);
 
 	void saveMeasurementTemplate(IDashboardDatasourceDto dashboardDatasource) throws ApsSystemException;
 

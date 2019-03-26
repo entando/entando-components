@@ -3,7 +3,7 @@ package org.entando.entando.plugins.dashboard.aps.system.services.iot.model;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 
-public abstract class AbstractDashboardDatasourceDto implements IDashboardDatasourceDto{
+public class DashboardDatasourceDto implements IDashboardDatasourceDto{
 
   private DashboardConfigDto dashboardConfigDto;
   
@@ -17,7 +17,7 @@ public abstract class AbstractDashboardDatasourceDto implements IDashboardDataso
       DashboardConfigDto dashboardConfigDto) {
     this.dashboardConfigDto = dashboardConfigDto;
   }
-  
+
   public String getDashboardUrl() {
     if(this.getDashboardConfigDto() != null ) {
       return this.getDashboardConfigDto().getServerURI();
@@ -25,21 +25,7 @@ public abstract class AbstractDashboardDatasourceDto implements IDashboardDataso
     return null;
   }
 
-  public String getDatasourceUrl() {
-    if(this.getDatasourcesConfigDto() != null) {
-      return this.getDatasourcesConfigDto().getDatasourceURI();
-    }
-    return null;
-  }
-  
-  public void setDashboardUrl(String dashboardUrl){
-    this.getDashboardConfigDto().setServerURI(dashboardUrl);
-  }
-  
-  public void setDatasourceUrl(String datasourceUrl){
-    this.getDatasourcesConfigDto().setDatasourceURI(datasourceUrl);
-  }
-
+  @Override
   public DatasourcesConfigDto getDatasourcesConfigDto() {
     return datasourcesConfigDto;
   }
@@ -48,30 +34,32 @@ public abstract class AbstractDashboardDatasourceDto implements IDashboardDataso
       DatasourcesConfigDto datasourcesConfigDto) {
     this.datasourcesConfigDto = datasourcesConfigDto;
   }
-  
+
+  public String getDatasourceUrl() {
+    if(this.getDatasourcesConfigDto() != null) {
+      return this.getDatasourcesConfigDto().getDatasourceURI();
+    }
+    return null;
+  }
+
+  @Override
+  public String getServerType() {
+    return dashboardConfigDto.getType();
+  }
+
+  @Override
+  public int getDashboardId() {
+    return dashboardConfigDto.getId();
+  }
+
+  @Override
+  public String getDatasourceCode() {
+    return datasourcesConfigDto.getDatasourceCode();
+  }
   
   @Override
-	public String getServerType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getDashboardId() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public <T extends DatasourcesConfigDto> T getDatasource() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDatasourceCode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+  public boolean supports(String serverType) {
+    return this.getServerType().equals(serverType);
+  }
+  	
 }

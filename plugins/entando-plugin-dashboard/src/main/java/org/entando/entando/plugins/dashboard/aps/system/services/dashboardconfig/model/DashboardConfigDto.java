@@ -24,16 +24,25 @@ import java.util.List;
 public class DashboardConfigDto {
 
   private int id;
-  private String serverDescription;
+//  private String serverDescription;
   private String serverURI;
   private String username;
   private String password;
   private String token;
   private int timeConnection;
+  private String type;
   private boolean active;
   private boolean debug;
-
   private List<DatasourcesConfigDto> datasources = new ArrayList<>();
+
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
 
   public int getId() {
     return id;
@@ -43,13 +52,13 @@ public class DashboardConfigDto {
     this.id = id;
   }
 
-  public String getServerDescription() {
-    return serverDescription;
-  }
-
-  public void setServerDescription(String serverDescription) {
-    this.serverDescription = serverDescription;
-  }
+//  public String getServerDescription() {
+//    return serverDescription;
+//  }
+//
+//  public void setServerDescription(String serverDescription) {
+//    this.serverDescription = serverDescription;
+//  }
 
   public String getServerURI() {
     return serverURI;

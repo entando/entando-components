@@ -17,13 +17,12 @@
 
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model;
 
+import com.google.gson.JsonObject;
+
 public class DatasourcesConfigDto {
 
-    String name; // nome device /application
-
-    String tenantId;  // eq fondamentale tenant di siteWhere (verificare)
-
-    // hardwareId / datasourceCode
+    private String name;
+    
     private String datasourceCode;
     
     private String datasource;
@@ -31,6 +30,24 @@ public class DatasourcesConfigDto {
     private String datasourceURI;
 
     private String status;
+    
+    private JsonObject metadata;
+
+    public JsonObject getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(JsonObject metadata) {
+        this.metadata = metadata;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getDatasource() {
         return datasource;
@@ -64,19 +81,4 @@ public class DatasourcesConfigDto {
         this.datasourceCode = datasourceCode;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
 }

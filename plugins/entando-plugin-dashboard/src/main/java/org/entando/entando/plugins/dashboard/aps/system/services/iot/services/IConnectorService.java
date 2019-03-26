@@ -1,22 +1,22 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface IConnectorService {
 
@@ -26,12 +26,12 @@ public interface IConnectorService {
 
 	<T extends DashboardConfigDto> boolean pingServer(T dashboardConfigDto) throws IOException;
 
-	<T extends DashboardConfigDto> List<? extends AbstractDashboardDatasourceDto> getAllDevices(T dashboardConfigDto);
+	List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto);
 
 	/**
 	 * TODO Lista struttura Misura per configurazione tramite interfaccioa web
 	 */
-//    <T extends AbstractDashboardDatasourceDto> MeasurementConfig getDeviceMeasurementSchema(T dashboardDatasourceDto, String loggerId);
+//    <T extends DashboardDatasourceDto> MeasurementConfig getDeviceMeasurementSchema(T dashboardDatasourceDto, String loggerId);
 
 	void setDeviceMeasurementSchema(IDashboardDatasourceDto dashboardDatasourceDto) throws ApsSystemException;
 

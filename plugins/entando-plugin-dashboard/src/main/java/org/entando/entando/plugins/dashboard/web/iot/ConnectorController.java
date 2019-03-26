@@ -53,7 +53,7 @@ public class ConnectorController {
         DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
 
         IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
-            datasourceCode, dashboardDto.getServerDescription());
+            datasourceCode, dashboardDto.getType());
 
         connectorService.saveDeviceMeasurement(dto, jsonElements);
 
@@ -66,7 +66,7 @@ public class ConnectorController {
 
         DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
         IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
-            datasourceCode, dashboardDto.getServerDescription());
+            datasourceCode, dashboardDto.getType());
         
         ResponseEntity<PagedRestResponse<List<MeasurementObject>>> measurements = null;
         try {
@@ -85,7 +85,7 @@ public class ConnectorController {
         DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
 
         IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
-            datasourceCode, dashboardDto.getServerDescription());
+            datasourceCode, dashboardDto.getType());
 
         connectorService.setDeviceMeasurementSchema(dto);
 
@@ -98,7 +98,7 @@ public class ConnectorController {
 
         IDashboardDatasourceDto dto = connectorService
             .getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto, datasourceCode,
-                dashboardDto.getServerDescription());
+                dashboardDto.getType());
         
         MeasurementConfig config = connectorService.getMeasurementsConfig(dto);
         

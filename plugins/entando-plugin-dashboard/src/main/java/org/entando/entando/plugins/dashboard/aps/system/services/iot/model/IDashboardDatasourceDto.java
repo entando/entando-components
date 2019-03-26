@@ -7,15 +7,17 @@ public interface IDashboardDatasourceDto {
 
 	DashboardConfigDto getDashboardConfigDto();
 
+	DatasourcesConfigDto getDatasourcesConfigDto();
+	
 	String getDashboardUrl();
 
 	String getServerType();
 	
 	int getDashboardId();
 	
-	<T extends DatasourcesConfigDto> T getDatasource();
-	
 	String getDatasourceCode();
 
 	boolean supports(String serverType);
+
+	String getDatasourceUrl();
 }
