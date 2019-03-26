@@ -39,7 +39,7 @@ public interface IConnectorIot {
 	IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(DashboardConfigDto dashboardConfigDto,
 			String datasourceCode);
 
-	PagedMetadata<List<MeasurementObject>> getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
+	PagedMetadata<MeasurementObject> getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
 			Date startDate, Date endDate, RestListRequest restListRequest)  throws RuntimeException;
 
 	MeasurementConfig getMeasurementConfig(IDashboardDatasourceDto dto);

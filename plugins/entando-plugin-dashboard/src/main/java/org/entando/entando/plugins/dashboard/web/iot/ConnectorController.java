@@ -71,7 +71,7 @@ public class ConnectorController {
         ResponseEntity<PagedRestResponse<List<MeasurementObject>>> measurements = null;
         try {
 
-            PagedMetadata<List<MeasurementObject>> pagedMetadata = this.connectorService.getDeviceMeasurements(dto,nMeasurements, startDate,endDate, requestList);
+            PagedMetadata<MeasurementObject> pagedMetadata = this.connectorService.getDeviceMeasurements(dto,nMeasurements, startDate,endDate, requestList);
             measurements = new ResponseEntity(new PagedRestResponse<>(pagedMetadata), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

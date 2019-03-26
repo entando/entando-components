@@ -1,7 +1,6 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,7 +43,7 @@ public interface IConnectorService {
 
 	PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList);
 
-	PagedMetadata<List<MeasurementObject>> getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Date startDate, Date endDate, RestListRequest restListRequest);
+	PagedMetadata<MeasurementObject> getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Date startDate, Date endDate, RestListRequest restListRequest);
 
 	MeasurementConfig getMeasurementsConfig(IDashboardDatasourceDto dto);
 
