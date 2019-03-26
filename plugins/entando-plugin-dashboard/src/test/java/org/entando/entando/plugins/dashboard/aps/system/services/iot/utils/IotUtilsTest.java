@@ -20,26 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 public class IotUtilsTest {
 
-  public static final String SITEWHERE_ASSIGNMENT_ID = "24306e0f-8d16-47a5-a6ed-d31d4e12f26a";
-
-  /**
-   * public static JsonElement getNestedFieldFromJson(JsonObject jsonObject, String fieldNames)
-   *       throws InvalidClassException {
-   *     String  fieldName = fieldNames.split("->")[0];
-   *
-   *     List<String> fildNameList = Arrays.asList(fieldNames.split("->"));
-   *
-   *     if(fildNameList.size() == 1) {
-   *       return jsonObject.get(fieldName);
-   *     }
-   *     else if (jsonObject.get(fieldName).isJsonObject()) {
-   *       fieldNames = StringUtils.join(fildNameList.subList(1,fildNameList.size()),"->");
-   *       return getNestedFieldFromJson(jsonObject.getAsJsonObject(fieldName),fieldNames);
-   *     }
-   *     return null;
-   *   }
-   */
-  
   @Test
   public void testGetNestedFieldsFromJson() throws IOException {
     final File file = ResourceUtils.getFile("classpath:testjson/device.json");
@@ -66,5 +46,4 @@ public class IotUtilsTest {
     res.getAsJsonArray().forEach(x -> assertTrue(StringUtils.isNotBlank(x.getAsString())));
     
   }
-  
 }

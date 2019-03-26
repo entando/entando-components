@@ -7,11 +7,12 @@ import com.google.gson.JsonObject;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.AbstractDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,8 @@ public interface IConnectorIot {
 	IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(DashboardConfigDto dashboardConfigDto,
 			String datasourceCode);
 
-	List<MeasurementObject> getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
-			Date startDate, Date endDate)  throws RuntimeException;
+	PagedMetadata<List<MeasurementObject>> getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
+			Date startDate, Date endDate, RestListRequest restListRequest)  throws RuntimeException;
+
+	MeasurementConfig getMeasurementConfig(IDashboardDatasourceDto dto);
 }

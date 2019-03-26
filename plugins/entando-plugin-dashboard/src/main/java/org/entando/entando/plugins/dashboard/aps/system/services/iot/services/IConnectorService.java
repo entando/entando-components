@@ -44,12 +44,8 @@ public interface IConnectorService {
 
 	PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList);
 
-	List<MeasurementObject> getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Date startDate, Date endDate);
+	PagedMetadata<List<MeasurementObject>> getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Date startDate, Date endDate, RestListRequest restListRequest);
 
-//    getMe(){
-//    	Apre connessione
-//    	RichiedeMisure,
-//    	TrasformaMisureSecondoSpecFrontEnd
-//}
+	MeasurementConfig getMeasurementsConfig(IDashboardDatasourceDto dto);
 
 }
