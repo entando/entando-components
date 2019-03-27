@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class MeasurementTemplateService implements IMeasurementTemplateService {
 
-  @Autowired
   private IMeasurementTemplateManager dashboardConfigManager;
 
   protected IMeasurementTemplateManager getMeasurementTemplateManager() {

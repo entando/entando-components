@@ -38,9 +38,6 @@ public interface IConnectorService {
 	JsonObject saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, JsonArray measurementBody)
 			throws Exception;
 
-	IDashboardDatasourceDto getDashboardDatasourceDtobyIdAndCodeAndServerType(DashboardConfigDto dashboardConfigDto,
-			String datasourceCode, String serverType);
-
 	PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList);
 
 	PagedMetadata<MeasurementObject> getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Date startDate, Date endDate, RestListRequest restListRequest);

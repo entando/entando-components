@@ -36,9 +36,6 @@ public interface IConnectorIot {
 	JsonObject saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, JsonArray measurementBody)
 			throws Exception;
 
-	IDashboardDatasourceDto getDashboardDatasourceDtoByIdAndCode(DashboardConfigDto dashboardConfigDto,
-			String datasourceCode);
-
 	PagedMetadata<MeasurementObject> getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
 			Date startDate, Date endDate, RestListRequest restListRequest)  throws RuntimeException;
 

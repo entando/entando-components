@@ -19,6 +19,9 @@ package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfi
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.slf4j.Logger;
@@ -125,6 +128,16 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
                 }
                 if (StringUtils.isNotBlank(c.getStatus())) {
                     stat.setString(index++, c.getStatus());
+                } else {
+                    stat.setNull(index++, Types.VARCHAR);
+                }
+                if (StringUtils.isNotBlank(c.getName())) {
+                    stat.setString(index++, c.getName());
+                } else {
+                    stat.setNull(index++, Types.VARCHAR);
+                }
+                if (StringUtils.isNotBlank(c.getMetadata().getAsString())) {
+                    stat.setString(index++, c.getMetadata().getAsString());
                 } else {
                     stat.setNull(index++, Types.VARCHAR);
                 }
@@ -355,6 +368,8 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
                 datasource.setDatasource(res.getString("datasource"));
                 datasource.setDatasourceURI(res.getString("datasourceuri"));
                 datasource.setStatus(res.getString("status"));
+                datasource.setName(res.getString("name"));
+                datasource.setMetadata(new Gson().fromJson(res.getString("metadata"),JsonObject.class));
                 dashboardConfig.getDatasources().add(datasource);
             }
 
@@ -399,7 +414,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
     private static final String LOAD_DASHBOARD_CONFIGS_ID = "SELECT id FROM dashboard_config";
 
 
-    private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status ) VALUES (?, ?, ?, ?, ?)";
+    private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status , name, metadata) VALUES (?, ?, ?, ?, ?, ? , ?)";
 
     private static final String DELETE_DATASOURCE = "DELETE FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
 

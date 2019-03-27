@@ -7,6 +7,7 @@ import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigManager;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigDAO;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.event.DashboardConfigChangedEvent;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.dao.IMeasurementConfigDAO;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dao.IMeasurementTemplateDAO;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.slf4j.Logger;
@@ -65,6 +66,11 @@ public class MeasurementTemplateManager extends AbstractService implements IMeas
   
   protected IMeasurementTemplateDAO getMeasurementTemplateDAO(){
     return _measurementTemplateDAO;
+  }
+
+  public void set_measurementTemplateDAO(
+      IMeasurementTemplateDAO _measurementTemplateDAO) {
+    this._measurementTemplateDAO= _measurementTemplateDAO;
   }
   
   protected IKeyGeneratorManager getKeyGeneratorManager() {

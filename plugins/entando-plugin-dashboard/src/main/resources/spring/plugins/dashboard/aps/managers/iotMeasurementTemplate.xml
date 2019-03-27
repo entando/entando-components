@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+
+    <bean id="measurementConfigService"
+      class="org.entando.entando.plugins.dashboard.aps.system.services.iot.services.MeasurementTemplateService">
+        <property name="measurementTemplateManager" ref="measurementTemplateManager"/>
+    </bean>
+
+    <bean id="measurementTemplateManager"
+      class="org.entando.entando.plugins.dashboard.aps.system.services.iot.services.MeasurementTemplateManager">
+        <property name="keyGeneratorManager" ref="KeyGeneratorManager"/>
+        <property name="_measurementTemplateDAO" ref="measurementTemplateDAO"/>
+    </bean>
+
+    <bean id="measurementTemplateDAO"
+      class="org.entando.entando.plugins.dashboard.aps.system.services.iot.dao.MeasurementTemplateDAO">
+        <property name="dataSource" ref="servDataSource"/>
+    </bean>
+    
+</beans>

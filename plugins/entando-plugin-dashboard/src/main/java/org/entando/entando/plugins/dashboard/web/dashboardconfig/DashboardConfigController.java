@@ -28,7 +28,7 @@ import javax.validation.Valid;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measurement;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
@@ -205,48 +205,60 @@ public class DashboardConfigController {
 	}
 
 	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/server/{serverId}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(@PathVariable int serverId) throws IOException {
-        boolean pingResult = true;
-//		logger.debug("{} ping to {}", this.getClass().getSimpleName(), dashboardConfigRequest.getServerURI());
-//
-//		DashboardConfigDto dashboardConfigDto = new DashboardConfigDto();
-//		BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfigDto);
-//
-//        pingResult = connectorService.pingServer(dashboardConfigDto);
+	@RequestMapping(value = "/server/{dashboardId}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(@PathVariable int dashboardId) throws IOException {
+		boolean pingResult = true;
+		logger.debug("{} ping to {}", this.getClass().getSimpleName(), dashboardId);
+
+		DashboardConfigDto dto = dashboardConfigService.getDashboardConfig(dashboardId);
+
+		pingResult = connectorService.pingServer(dto);
 		return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
 	}
 
-    @RestAccessControl(permission = "superuser")
-    @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(@PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
-        boolean pingResult = true;
-//		logger.debug("{} ping to {}", this.getClass().getSimpleName(), dashboardConfigRequest.getServerURI());
-//
-//		DashboardConfigDto dashboardConfigDto = new DashboardConfigDto();
-//		BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfigDto);
-//
-//        pingResult = connectorService.pingServer(dashboardConfigDto);
-        return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
-    }
+	@RestAccessControl(permission = "superuser")
+	@RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(@PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
+		boolean pingResult = true;
+		logger.debug("{} ping to server, datasource : {}, {}", this.getClass().getSimpleName(), serverId,datasourceCode);
+
+		DashboardConfigDto dashboard = dashboardConfigService.getDashboardConfig(serverId);
+		List<DatasourcesConfigDto> datasources = dashboard.getDatasources();
+
+		DatasourcesConfigDto datasource = new DatasourcesConfigDto();
+		
+		for (DatasourcesConfigDto dto : datasources) {
+			if(dto.getDatasourceCode().equals(datasourceCode)) {
+				datasource = dto;
+				break;
+			}
+		}
+		
+		DashboardDatasourceDto conn = new DashboardDatasourceDto();
+		conn.setDashboardConfigDto(dashboard);
+		conn.setDatasourcesConfigDto(datasource);
+		
+		pingResult = connectorService.pingDevice(conn);
+		return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
+	}
 
 
 
 
 	@RestAccessControl(permission = "superuser")
-    @RequestMapping(value = "/server/{serverId}/datasource/{datasourceId}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(@PathVariable int serverId, @PathVariable String datasourceId) throws IOException {
+	@RequestMapping(value = "/server/{serverId}/datasource/{datasourceId}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(@PathVariable int serverId, @PathVariable String datasourceId) throws IOException {
 
-        MeasurementColumn col1 = new MeasurementColumn("temperature", "temperature");
-        MeasurementColumn col2 = new MeasurementColumn("timestamp", "timestamp");
-			MeasurementColumn col3 = new MeasurementColumn("vel_vento", "vel_vento");
+		MeasurementColumn col1 = new MeasurementColumn("temperature", "temperature");
+		MeasurementColumn col2 = new MeasurementColumn("timestamp", "timestamp");
+		MeasurementColumn col3 = new MeasurementColumn("vel_vento", "vel_vento");
 
-        List<MeasurementColumn> listaColonne = new ArrayList<>();
-        listaColonne.add(col1);
-        listaColonne.add(col2);
-			  listaColonne.add(col3);
-        return new ResponseEntity<>(new SimpleRestResponse(listaColonne), HttpStatus.OK);
-    }
+		List<MeasurementColumn> listaColonne = new ArrayList<>();
+		listaColonne.add(col1);
+		listaColonne.add(col2);
+		listaColonne.add(col3);
+		return new ResponseEntity<>(new SimpleRestResponse(listaColonne), HttpStatus.OK);
+	}
 
 
 

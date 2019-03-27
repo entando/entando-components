@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
@@ -52,31 +53,34 @@ public class ConnectorController {
 
         DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
 
-        IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
-            datasourceCode, dashboardDto.getType());
-
-        connectorService.saveDeviceMeasurement(dto, jsonElements);
+//        IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
+//            datasourceCode, dashboardDto.getType());
+//FIXME
+        connectorService.saveDeviceMeasurement(null, jsonElements);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/server/{dashboardId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedRestResponse<List<MeasurementObject>>> getMeasurement(@PathVariable int dashboardId,
-        @PathVariable String datasourceCode, @RequestParam Long nMeasurements, @RequestParam Date startDate, @RequestParam Date endDate, RestListRequest requestList) throws Exception {
+    public ResponseEntity<PagedRestResponse<MeasurementObject>> getMeasurement(@PathVariable int dashboardId,
+        @PathVariable String datasourceCode, @RequestParam (value = "nMeasurements", required = false) long nMeasurements, 
+        @RequestParam (value = "startDate", required = false)Date startDate , 
+        @RequestParam (value = "endDate", required = false)Date endDate, 
+        RestListRequest requestList) throws Exception {
 
         DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
-        IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
-            datasourceCode, dashboardDto.getType());
+        DashboardDatasourceDto dto = new DashboardDatasourceDto();
+        dto.setDashboardConfigDto(dashboardDto);
+        dto.setDatasourcesConfigDto(dashboardDto.getDatasources().stream().filter(x -> x.getDatasourceCode().equals(datasourceCode)).findFirst().get());
         
-        ResponseEntity<PagedRestResponse<List<MeasurementObject>>> measurements = null;
         try {
-
-            PagedMetadata<MeasurementObject> pagedMetadata = this.connectorService.getDeviceMeasurements(dto,nMeasurements, startDate,endDate, requestList);
-            measurements = new ResponseEntity(new PagedRestResponse<>(pagedMetadata), HttpStatus.OK);
+            PagedMetadata<MeasurementObject> pagedMetadata = this.connectorService
+                .getDeviceMeasurements(dto, nMeasurements, startDate, endDate, requestList);
+            return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return measurements;
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @RequestMapping(value = "/setTemplate/{dashboardId}/{datasourceCode}", method = RequestMethod.POST)
@@ -84,10 +88,10 @@ public class ConnectorController {
         throws ApsSystemException {
         DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
 
-        IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
-            datasourceCode, dashboardDto.getType());
-
-        connectorService.setDeviceMeasurementSchema(dto);
+//        IDashboardDatasourceDto dto = connectorService.getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto,
+//            datasourceCode, dashboardDto.getType());
+//FIXME
+//        connectorService.setDeviceMeasurementSchema(dto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -96,13 +100,14 @@ public class ConnectorController {
     public ResponseEntity<?> getMeasurementConfig(@PathVariable int dashboardId, @PathVariable String datasourceCode) {
         DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
 
-        IDashboardDatasourceDto dto = connectorService
-            .getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto, datasourceCode,
-                dashboardDto.getType());
+//        IDashboardDatasourceDto dto = connectorService
+//            .getDashboardDatasourceDtobyIdAndCodeAndServerType(dashboardDto, datasourceCode,
+//                dashboardDto.getType());
+        //FIXME
         
-        MeasurementConfig config = connectorService.getMeasurementsConfig(dto);
+//        MeasurementConfig config = connectorService.getMeasurementsConfig(dto);
         
-        return new ResponseEntity<>(config,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     
 }

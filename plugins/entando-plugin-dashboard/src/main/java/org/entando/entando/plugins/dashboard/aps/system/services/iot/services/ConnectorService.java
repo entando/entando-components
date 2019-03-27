@@ -128,13 +128,6 @@ public class ConnectorService extends AbstractConnectorService implements IConne
         return connectorFactory.getConnector(dashboardDatasourceDto.getDashboardConfigDto().getType()).saveDeviceMeasurement(dashboardDatasourceDto, measurementBody);
     }
 
-    @Override
-    public IDashboardDatasourceDto getDashboardDatasourceDtobyIdAndCodeAndServerType(DashboardConfigDto dashboardConfigDto,
-                                                                                     String datasourceCode, String serverType) {
-        logger.info("{} getDashboardDatasourceDtoByIdAndCode ids :{}, {}", this.getClass().getSimpleName(), dashboardConfigDto.getId(), datasourceCode);
-        return connectorFactory.getConnector(serverType).getDashboardDatasourceDtoByIdAndCode(dashboardConfigDto, datasourceCode);
-    }
-
   @Override
   public PagedMetadata<MeasurementObject> getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Date startDate, Date endDate, RestListRequest restListRequest) {
     logger.info("{} getDeviceMeasurement By Dashboard and datasource ids :{}, {}", this.getClass().getSimpleName(), dto.getDashboardId() ,dto.getDatasourceCode());

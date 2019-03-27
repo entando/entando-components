@@ -12,8 +12,16 @@ import java.util.List;
 @Service
 public class MeasurementConfigService implements IMeasurementConfigService {
 
-  @Autowired
   MeasurementConfigManager measurementConfigManager;
+
+  public MeasurementConfigManager getMeasurementConfigManager() {
+    return measurementConfigManager;
+  }
+
+  public void setMeasurementConfigManager(
+      MeasurementConfigManager measurementConfigManager) {
+    this.measurementConfigManager = measurementConfigManager;
+  }
 
   @Override
   public void save(MeasurementConfig measurementConfig) throws ApsSystemException {
