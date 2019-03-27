@@ -1,5 +1,6 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -13,8 +14,11 @@ public class MeasurementObject {
 
   private String name;
   private String measure;
+  @JsonIgnore
   private String eventDate;
+  @JsonIgnore
   private String swReceivedDate;
+  @JsonIgnore
   private String entandoReceivedDate;
   
   public String getName() {

@@ -17,6 +17,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Dashb
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.slf4j.Logger;
@@ -137,5 +138,10 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     @Override
     public MeasurementConfig getMeasurementsConfig(IDashboardDatasourceDto dto) {
         return connectorFactory.getConnector(dto.getServerType()).getMeasurementConfig(dto);
+    }
+
+    @Override
+    public MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto) {
+        return connectorFactory.getConnector(dto.getServerType()).getDeviceMeasurementSchema(dto);
     }
 }

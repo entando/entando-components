@@ -6,14 +6,17 @@ import java.util.Map;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,7 +74,12 @@ public class ConnectorController {
         DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
         DashboardDatasourceDto dto = new DashboardDatasourceDto();
         dto.setDashboardConfigDto(dashboardDto);
-        dto.setDatasourcesConfigDto(dashboardDto.getDatasources().stream().filter(x -> x.getDatasourceCode().equals(datasourceCode)).findFirst().get());
+        for (DatasourcesConfigDto datasource : dashboardDto.getDatasources()) {
+            if(datasource.getDatasourceCode().equals(datasourceCode)) {
+                dto.setDatasourcesConfigDto(datasource);
+                break;
+            }
+        }
         
         try {
             PagedMetadata<MeasurementObject> pagedMetadata = this.connectorService
@@ -95,7 +103,27 @@ public class ConnectorController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    
+
+    @RequestMapping(value = "/getTemplate/{dashboardId}/{datasourceCode}", method = RequestMethod.POST)
+    public ResponseEntity<SimpleRestResponse<MeasurementTemplate>> getMeasurementTemplate(@PathVariable int dashboardId, @PathVariable String datasourceCode)
+        throws ApsSystemException {
+
+        DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
+        DashboardDatasourceDto dto = new DashboardDatasourceDto();
+        dto.setDashboardConfigDto(dashboardDto);
+        for (DatasourcesConfigDto datasource : dashboardDto.getDatasources()) {
+            if(datasource.getDatasourceCode().equals(datasourceCode)) {
+                dto.setDatasourcesConfigDto(datasource);
+                break;
+            }
+        }
+        MeasurementTemplate template = connectorService
+            .getDeviceMeasurementSchema(dto);
+
+        return new ResponseEntity<>(new SimpleRestResponse(template), HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/{dashboardId}/{datasourceCode}/config")
     public ResponseEntity<?> getMeasurementConfig(@PathVariable int dashboardId, @PathVariable String datasourceCode) {
         DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(dashboardId);
