@@ -1,6 +1,5 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementType;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,9 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestMeasurementConfigService {

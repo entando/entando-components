@@ -13,6 +13,10 @@
 	<packaging>war</packaging>
 	<name>Entando Plugin: Dashboard Plugin</name>
 	<description>CHANGE ME! Enter some quick and useful info</description>
+	
+	<properties>
+		<org.springframework.data-version>2.0.9.RELEASE</org.springframework.data-version>
+	</properties>
 	<developers>
 		<developer>
 			<id>myUsername</id>
@@ -55,11 +59,20 @@
 	</build>
 
 	<dependencies>
+ 
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>${org.springframework.data-version}</version>
+		</dependency>
+ 
+
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20180813</version>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
@@ -72,6 +85,7 @@
 			<version>RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
+		 -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
