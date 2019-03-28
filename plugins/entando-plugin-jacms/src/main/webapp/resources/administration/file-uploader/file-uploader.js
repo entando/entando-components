@@ -411,7 +411,11 @@ jQuery(document).ready(function ($) {
 
     $('#submit').on('click', function (e) {
         if ($(this).attr('in-progress') === undefined) {
-            console.log("CLICK");
+            // Clearing inputs from file values as they are already handled.
+            var fileInputs = document.getElementsByClassName('input-file-button');
+            for (var i = 0; i < fileInputs.length; i++) {
+                fileInputs[i].value = null;
+            }
             e.preventDefault();
             $(this).attr("in-progress", true);
             $(this).attr("disabled", "disabled");
