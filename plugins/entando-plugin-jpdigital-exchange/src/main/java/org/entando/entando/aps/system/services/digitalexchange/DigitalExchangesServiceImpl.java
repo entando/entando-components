@@ -154,6 +154,7 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
     private void updateWithRemotePublicKey(DigitalExchange digitalExchange) {
         Optional<String> publicKey = getRemotePemFormattedPublicKey(digitalExchange);
         digitalExchange.setPublicKey(publicKey.orElseThrow(NotExistentPublicKey::new));
+        manager.update(digitalExchange);
     }
 
     private Optional<String> getRemotePemFormattedPublicKey(DigitalExchange digitalExchange) {
