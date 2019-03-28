@@ -15,13 +15,11 @@ package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,11 +33,14 @@ import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.RequestListProcessor;
+import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeBaseCall;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.aps.system.services.digitalexchange.client.PagedDigitalExchangeCall;
 import org.entando.entando.aps.system.services.digitalexchange.client.SimpleDigitalExchangeCall;
 import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentListProcessor;
+import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
+import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -58,11 +59,16 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
 
     private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeInstallExecutor.class);
 
+    private final DigitalExchangesService digitalExchangesService;
+
     @Autowired
-    public DigitalExchangeInstallExecutor(DigitalExchangesClient client, ComponentStorageManager storageManager,
-            DatabaseManager databaseManager, InitializerManager initializerManager,
-            CommandExecutor commandExecutor) {
+    public DigitalExchangeInstallExecutor(DigitalExchangesClient client, DigitalExchangesService digitalExchangesService,
+                                          ComponentStorageManager storageManager,
+                                          DatabaseManager databaseManager, InitializerManager initializerManager,
+                                          CommandExecutor commandExecutor) {
         super(client, storageManager, databaseManager, initializerManager, commandExecutor);
+        this.digitalExchangesService = digitalExchangesService;
+
     }
 
     @Override
@@ -143,6 +149,15 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
 
             try (InputStream in = client.getStreamResponse(job.getDigitalExchangeId(), call)) {
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            DigitalExchange digitalExchange = digitalExchangesService.findById(job.getDigitalExchangeId());
+            boolean signatureMatches = SignatureUtil.verifySignature(Files.newInputStream(tempZipPath, StandardOpenOption.READ),
+                    SignatureUtil.publicKeyFromPEM(digitalExchange.getPublicKey()),
+                    job.getComponentSignature());
+            if (!signatureMatches) {
+                Files.deleteIfExists(tempZipPath);
+                throw new JobExecutionException("Component signature not valid");
             }
 
             extractZip(tempZipPath, job.getComponentId());

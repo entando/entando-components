@@ -45,6 +45,7 @@ public class DigitalExchangeJob implements Serializable {
     public static final String COL_COMPONENT_ID = "component_id";
     public static final String COL_COMPONENT_NAME = "component_name";
     public static final String COL_COMPONENT_VERSION = "component_version";
+    public static final String COL_COMPONENT_SIGNATURE = "component_signature";
     public static final String COL_STARTED_AT = "started_at";
     public static final String COL_ENDED_AT = "ended_at";
     public static final String COL_STARTED_BY = "started_by";
@@ -74,6 +75,9 @@ public class DigitalExchangeJob implements Serializable {
 
     @Column(name = COL_COMPONENT_VERSION)
     private String componentVersion;
+
+    @Column(name = COL_COMPONENT_SIGNATURE)
+    private String componentSignature;
 
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SystemConstants.API_DATE_FORMAT)
@@ -154,6 +158,14 @@ public class DigitalExchangeJob implements Serializable {
 
     public void setComponentVersion(String componentVersion) {
         this.componentVersion = componentVersion;
+    }
+
+    public String getComponentSignature() {
+        return componentSignature;
+    }
+
+    public void setComponentSignature(String componentSignature) {
+        this.componentSignature = componentSignature;
     }
 
     public double getProgress() {

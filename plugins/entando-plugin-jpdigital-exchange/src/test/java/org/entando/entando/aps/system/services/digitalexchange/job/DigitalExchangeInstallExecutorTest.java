@@ -22,6 +22,7 @@ import java.util.List;
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
+import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
@@ -42,6 +43,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.Resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.getDE1;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -70,6 +73,9 @@ public class DigitalExchangeInstallExecutorTest {
 
     @Mock
     private CommandExecutor commandExecutor;
+
+    @Mock
+    private DigitalExchangesService digitalExchangesService;
 
     private DigitalExchangeInstallExecutor installExecutor;
 
@@ -116,9 +122,11 @@ public class DigitalExchangeInstallExecutorTest {
         client = clientMocker.build();
 
         mockStorageManager();
+        mockDigitalExchangesService();
 
         installExecutor = spy(new DigitalExchangeInstallExecutor(
-                client, storageManager, databaseManager, initializerManager, commandExecutor));
+                client, digitalExchangesService,
+                storageManager, databaseManager, initializerManager, commandExecutor));
 
         doNothing().when(installExecutor).reloadSystem();
     }
@@ -179,5 +187,9 @@ public class DigitalExchangeInstallExecutorTest {
         when(storageManager.getProtectedStream(endsWith("component.xml")))
                 .thenReturn(getClass().getClassLoader()
                         .getResourceAsStream("components/de_test_widget/component.xml"));
+    }
+
+    private void mockDigitalExchangesService() throws Exception {
+        when(digitalExchangesService.findById(anyString())).thenReturn(getDE1());
     }
 }

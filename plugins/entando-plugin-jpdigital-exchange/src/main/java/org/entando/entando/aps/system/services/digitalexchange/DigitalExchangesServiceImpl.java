@@ -152,11 +152,11 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
     }
 
     private void updateWithRemotePublicKey(DigitalExchange digitalExchange) {
-        Optional<String> publicKey = getRemotePublicKey(digitalExchange);
+        Optional<String> publicKey = getRemotePemFormattedPublicKey(digitalExchange);
         digitalExchange.setPublicKey(publicKey.orElseThrow(NotExistentPublicKey::new));
     }
 
-    private Optional<String> getRemotePublicKey(DigitalExchange digitalExchange) {
+    private Optional<String> getRemotePemFormattedPublicKey(DigitalExchange digitalExchange) {
         SimpleDigitalExchangeCall<String> call = new SimpleDigitalExchangeCall<>(
                 HttpMethod.GET, new ParameterizedTypeReference<SimpleRestResponse<String>>() {
         }, "digitalExchange", "publicKey");
