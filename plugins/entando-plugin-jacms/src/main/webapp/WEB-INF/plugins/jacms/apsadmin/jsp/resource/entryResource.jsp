@@ -77,7 +77,7 @@
     <wp:info key="systemParam" paramName="treeStyle_category"/>
 </s:set>
 <s:set var="lockGroupSelect" value="%{resourceId != null}"></s:set>
-<s:form action="save" method="post" cssClass="form-horizontal image-upload-form">
+<s:form action="save" method="post" cssClass="form-horizontal image-upload-form" enctype="multipart/form-data">
     <wpsf:hidden name="fieldCount"/>
     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/inc_fullErrors.jsp"/>
     <p class="sr-only">
@@ -212,7 +212,7 @@
                     </label>
                     to upload
                     <s:file name="fileUpload" id="newFileUpload-multiple" cssClass="input-file-button" label="label.file"
-                            multiple="true"/>
+                            multiple="true" />
                 </div>
             </div>
 
@@ -709,14 +709,11 @@
         </div>
     </div>
 
-    <script></script>
 
     <div class="form-horizontal">
         <div class="form-group">
             <div class="col-sm-12 margin-small-vertical">
                 <input id="submit" type="submit" value="Submit" class="btn btn-primary pull-right">
-                    <s:text name="cropEditor.label.done"/>
-                </input>
             </div>
         </div>
     </div>
