@@ -322,7 +322,7 @@ jQuery(document).ready(function ($) {
     attachmentUploadEnabled = ($('.attachment_upload_enabled').length === 1);
 
     fileUploadManager = new FileUploadManager({
-        sliceSize: 1048576,
+        sliceSize: 10485760,
         saveAction: 'upload',
         stopAction: 'stopUploadAndDelete.action'
     });
