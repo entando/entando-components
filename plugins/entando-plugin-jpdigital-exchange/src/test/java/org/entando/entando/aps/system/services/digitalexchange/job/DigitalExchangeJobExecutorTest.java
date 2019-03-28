@@ -46,7 +46,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.getDE1;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -99,8 +99,6 @@ public class DigitalExchangeJobExecutorTest {
 
     private DigitalExchangeJob job;
 
-    private KeyPair digitalExchangeKeyPair = SignatureUtil.createKeyPair();
-
     @BeforeClass
     public static void setupZip() {
         tempZipFile = ComponentZipUtil.getTestPageModelZip();
@@ -127,7 +125,7 @@ public class DigitalExchangeJobExecutorTest {
 
         when(client.getSingleResponse(any(String.class), any())).thenReturn(getComponentInfoResponse());
 
-        when(digitalExchangesService.findById(anyString())).thenReturn(getTestDigitalExchange());
+        when(digitalExchangesService.findById(anyString())).thenReturn(getDE1());
 
         when(storageManager.getProtectedStream(endsWith("component.xml")))
                 .thenReturn(getClass().getClassLoader().getResourceAsStream("components/de_test_page_model/component.xml"));
@@ -155,7 +153,7 @@ public class DigitalExchangeJobExecutorTest {
         PagedMetadata<DigitalExchangeComponent> pagedMetadata = new PagedMetadata<>();
         try(InputStream in = Files.newInputStream(tempZipFile.toPath(), StandardOpenOption.READ)) {
             DigitalExchangeComponent component = new DigitalExchangeComponent();
-            component.setSignature(SignatureUtil.signPackage(in, digitalExchangeKeyPair.getPrivate()));
+            component.setSignature(SignatureUtil.signPackage(in, SignatureUtil.privateKeyFromPEM(getTestPrivateKey())));
             pagedMetadata.setBody(Collections.singletonList(component));
             return new PagedRestResponse<>(pagedMetadata);
         } catch (IOException exception) {
@@ -163,11 +161,6 @@ public class DigitalExchangeJobExecutorTest {
         }
     }
 
-    private DigitalExchange getTestDigitalExchange() {
-        DigitalExchange testInstance = getDE1();
-        testInstance.setPublicKey(SignatureUtil.publicKeyToPEM(digitalExchangeKeyPair.getPublic()));
-        return testInstance;
-    }
 
     @Test
     public void shouldInstallComponent() throws ApsSystemException, IOException {
@@ -234,5 +227,18 @@ public class DigitalExchangeJobExecutorTest {
                 .when(databaseManager).initComponentDatabases(any(), any(), anyBoolean());
 
         installer.execute(job, jobConsumer);
+    }
+
+    @Test(expected = JobExecutionException.class)
+    public void shouldFailOnNotVerifiedSignature() throws ApsSystemException {
+
+        DigitalExchange testInstance = getDE1();
+        testInstance.setPublicKey(SignatureUtil.publicKeyToPEM(SignatureUtil.createKeyPair().getPublic()));
+
+        when(digitalExchangesService.findById(anyString())).thenReturn(testInstance);
+
+        installer.execute(job, jobConsumer);
+
+
     }
 }

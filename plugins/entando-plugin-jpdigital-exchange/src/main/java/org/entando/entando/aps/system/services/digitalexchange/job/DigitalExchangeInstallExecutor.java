@@ -40,6 +40,7 @@ import org.entando.entando.aps.system.services.digitalexchange.client.PagedDigit
 import org.entando.entando.aps.system.services.digitalexchange.client.SimpleDigitalExchangeCall;
 import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentListProcessor;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
+import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureMatchingException;
 import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedRestResponse;
@@ -152,10 +153,13 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            verifyComponentSignature(job, tempZipPath);
+            verifyDownloadedContentSignature(tempZipPath, job);
 
             extractZip(tempZipPath, job.getComponentId());
 
+        } catch (SignatureMatchingException ex) {
+            logger.error("Component signature doesn't match public key", ex);
+            throw new JobExecutionException("Unable to verify component signature", ex);
         } catch (IOException | UncheckedIOException ex) {
             logger.error("Error while downloading component", ex);
             throw new JobExecutionException("Unable to save component", ex);
@@ -169,15 +173,14 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
         }
     }
 
-    private void verifyComponentSignature(DigitalExchangeJob job, Path tempZipPath) throws IOException {
+    private void verifyDownloadedContentSignature(Path tempZipPath, DigitalExchangeJob job) throws IOException {
         DigitalExchange digitalExchange = digitalExchangesService.findById(job.getDigitalExchangeId());
         try(InputStream in = Files.newInputStream(tempZipPath, StandardOpenOption.READ)) {
             boolean signatureMatches = SignatureUtil.verifySignature(
                     in, SignatureUtil.publicKeyFromPEM(digitalExchange.getPublicKey()),
                     new String(job.getComponentSignature()));
             if (!signatureMatches) {
-                Files.deleteIfExists(tempZipPath);
-                throw new JobExecutionException("Component signature not valid");
+                throw new SignatureMatchingException("Component signature not matching public key");
             }
         }
     }
