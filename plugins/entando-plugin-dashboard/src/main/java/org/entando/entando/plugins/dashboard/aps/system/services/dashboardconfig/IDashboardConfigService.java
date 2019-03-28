@@ -38,5 +38,7 @@ public interface IDashboardConfigService {
 
     DashboardConfigDto getDashboardConfig(int id);
 
+    boolean existsById(int id);
+    
 }
 

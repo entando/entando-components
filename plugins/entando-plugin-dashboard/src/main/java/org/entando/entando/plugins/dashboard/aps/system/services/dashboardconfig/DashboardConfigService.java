@@ -181,6 +181,11 @@ public class DashboardConfigService implements IDashboardConfigService {
         }
     }
 
+    @Override
+    public boolean existsById(int id) {
+        return this.getDashboardConfigManager().existsById(id);
+    }
+
     private DashboardConfig createDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
         DashboardConfig dashboardConfig = new DashboardConfig();
         BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfig);

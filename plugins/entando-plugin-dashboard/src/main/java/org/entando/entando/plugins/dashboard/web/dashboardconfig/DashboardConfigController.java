@@ -32,6 +32,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Dashb
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
@@ -43,7 +44,6 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,233 +61,200 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 @RequestMapping(value = "/plugins/dashboard/dashboardConfigs")
 public class DashboardConfigController {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private IDashboardConfigService dashboardConfigService;
+  @Autowired
+  private IDashboardConfigService dashboardConfigService;
 
-	@Autowired
-	private DashboardConfigValidator dashboardConfigValidator;
+  @Autowired
+  private DashboardConfigValidator dashboardConfigValidator;
 
-	@Autowired
-	private IConnectorService connectorService;
+  @Autowired
+  private IConnectorService connectorService;
 
-	protected IDashboardConfigService getDashboardConfigService() {
-		return dashboardConfigService;
-	}
+  protected IDashboardConfigService getDashboardConfigService() {
+    return dashboardConfigService;
+  }
 
-	public void setDashboardConfigService(IDashboardConfigService dashboardConfigService) {
-		this.dashboardConfigService = dashboardConfigService;
-	}
+  public void setDashboardConfigService(IDashboardConfigService dashboardConfigService) {
+    this.dashboardConfigService = dashboardConfigService;
+  }
 
-	protected DashboardConfigValidator getDashboardConfigValidator() {
-		return dashboardConfigValidator;
-	}
+  protected DashboardConfigValidator getDashboardConfigValidator() {
+    return dashboardConfigValidator;
+  }
 
-	public void setDashboardConfigValidator(DashboardConfigValidator dashboardConfigValidator) {
-		this.dashboardConfigValidator = dashboardConfigValidator;
-	}
+  public void setDashboardConfigValidator(DashboardConfigValidator dashboardConfigValidator) {
+    this.dashboardConfigValidator = dashboardConfigValidator;
+  }
 
-	protected IConnectorService getConnectorService() {
-		return connectorService;
-	}
+  protected IConnectorService getConnectorService() {
+    return connectorService;
+  }
 
-	public void setConnectorService(IConnectorService connectorService) {
-		this.connectorService = connectorService;
-	}
+  public void setConnectorService(IConnectorService connectorService) {
+    this.connectorService = connectorService;
+  }
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/servertypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<ServerType>> getDashboardTypes(RestListRequest requestList)
-			throws JsonProcessingException {
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/servertypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<ServerType>> getDashboardTypes(
+      RestListRequest requestList)
+      throws JsonProcessingException {
 //        this.getDashboardConfigValidator().validateRestListRequest(requestList, DashboardConfigDto.class);
 //        PagedMetadata<DashboardConfigDto> result = this.getDashboardConfigService().getDashboardConfigs(requestList);
 //        this.getDashboardConfigValidator().validateRestListResult(requestList, result);
 //        logger.debug("Main Response -> {}", result);
-		ServerType sitewhere = new ServerType();
-		sitewhere.setCode("sitewhere");
-		sitewhere.setDescription("Sitewhere");
-		ServerType kaa = new ServerType();
-		kaa.setCode("kaa");
-		kaa.setDescription("Kaa");
-		List<ServerType> lista = new ArrayList<ServerType>();
-		lista.add(kaa);
-		lista.add(sitewhere);
-		return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
-	}
+    ServerType sitewhere = new ServerType();
+    sitewhere.setCode("sitewhere");
+    sitewhere.setDescription("Sitewhere");
+    ServerType kaa = new ServerType();
+    kaa.setCode("kaa");
+    kaa.setDescription("Kaa");
+    List<ServerType> lista = new ArrayList<ServerType>();
+    lista.add(kaa);
+    lista.add(sitewhere);
+    return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
+  }
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PagedRestResponse<PagedMetadata<DashboardConfigDto>>> getDashboardConfigs(
-			RestListRequest requestList) throws JsonProcessingException {
-		this.getDashboardConfigValidator().validateRestListRequest(requestList, DashboardConfigDto.class);
-		PagedMetadata<DashboardConfigDto> result = this.getDashboardConfigService().getDashboardConfigs(requestList);
-		this.getDashboardConfigValidator().validateRestListResult(requestList, result);
-		logger.debug("Main Response -> {}", result);
-		return new ResponseEntity<>(new PagedRestResponse(result), HttpStatus.OK);
-	}
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<PagedRestResponse<PagedMetadata<DashboardConfigDto>>> getDashboardConfigs(
+      RestListRequest requestList) throws JsonProcessingException {
+    this.getDashboardConfigValidator()
+        .validateRestListRequest(requestList, DashboardConfigDto.class);
+    PagedMetadata<DashboardConfigDto> result = this.getDashboardConfigService()
+        .getDashboardConfigs(requestList);
+    this.getDashboardConfigValidator().validateRestListResult(requestList, result);
+    logger.debug("Main Response -> {}", result);
+    return new ResponseEntity<>(new PagedRestResponse(result), HttpStatus.OK);
+  }
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/{dashboardConfigId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> getDashboardConfig(
-			@PathVariable String dashboardConfigId) {
-		DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
-				.getDashboardConfig(Integer.valueOf(dashboardConfigId));
-		return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig), HttpStatus.OK);
-	}
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/{dashboardConfigId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> getDashboardConfig(
+      @PathVariable String dashboardConfigId) {
+    DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
+        .getDashboardConfig(Integer.valueOf(dashboardConfigId));
+    return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig), HttpStatus.OK);
+  }
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/{dashboardConfigId}/datasources", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<DatasourcesConfigDto>> getDashboardConfigDatasource(
-			@PathVariable String dashboardConfigId) {
-		DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
-				.getDashboardConfig(Integer.valueOf(dashboardConfigId));
-		return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig.getDatasources()), HttpStatus.OK);
-	}
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/{dashboardConfigId}/datasources", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<DatasourcesConfigDto>> getDashboardConfigDatasource(
+      @PathVariable String dashboardConfigId) {
+    DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
+        .getDashboardConfig(Integer.valueOf(dashboardConfigId));
+    return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig.getDatasources()),
+        HttpStatus.OK);
+  }
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/{dashboardConfigId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> updateDashboardConfig(
-			@PathVariable String dashboardConfigId, @Valid @RequestBody DashboardConfigRequest dashboardConfigRequest,
-			BindingResult bindingResult) {
-		// field validations
-		if (bindingResult.hasErrors()) {
-			throw new ValidationGenericException(bindingResult);
-		}
-		this.getDashboardConfigValidator().validateBodyName(String.valueOf(dashboardConfigId), dashboardConfigRequest,
-				bindingResult);
-		if (bindingResult.hasErrors()) {
-			throw new ValidationGenericException(bindingResult);
-		}
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/{dashboardConfigId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> updateDashboardConfig(
+      @PathVariable String dashboardConfigId,
+      @Valid @RequestBody DashboardConfigRequest dashboardConfigRequest,
+      BindingResult bindingResult) {
+    // field validations
+    if (bindingResult.hasErrors()) {
+      throw new ValidationGenericException(bindingResult);
+    }
+    this.getDashboardConfigValidator()
+        .validateBodyName(String.valueOf(dashboardConfigId), dashboardConfigRequest,
+            bindingResult);
+    if (bindingResult.hasErrors()) {
+      throw new ValidationGenericException(bindingResult);
+    }
 
-		DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
-				.updateDashboardConfig(dashboardConfigRequest);
-		return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig), HttpStatus.OK);
-	}
+    DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
+        .updateDashboardConfig(dashboardConfigRequest);
+    return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig), HttpStatus.OK);
+  }
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> addDashboardConfig(
-			@Valid @RequestBody DashboardConfigRequest dashboardConfigRequest, BindingResult bindingResult) {
-		// field validations
-		if (bindingResult.hasErrors()) {
-			throw new ValidationGenericException(bindingResult);
-		}
-		// business validations
-		getDashboardConfigValidator().validate(dashboardConfigRequest, bindingResult);
-		if (bindingResult.hasErrors()) {
-			throw new ValidationConflictException(bindingResult);
-		}
-		DashboardConfigDto dto = this.getDashboardConfigService().addDashboardConfig(dashboardConfigRequest);
-		return new ResponseEntity<>(new SimpleRestResponse(dto), HttpStatus.OK);
-	}
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> addDashboardConfig(
+      @Valid @RequestBody DashboardConfigRequest dashboardConfigRequest,
+      BindingResult bindingResult) {
+    // field validations
+    if (bindingResult.hasErrors()) {
+      throw new ValidationGenericException(bindingResult);
+    }
+    // business validations
+    getDashboardConfigValidator().validate(dashboardConfigRequest, bindingResult);
+    if (bindingResult.hasErrors()) {
+      throw new ValidationConflictException(bindingResult);
+    }
+    DashboardConfigDto dto = this.getDashboardConfigService()
+        .addDashboardConfig(dashboardConfigRequest);
+    return new ResponseEntity<>(new SimpleRestResponse(dto), HttpStatus.OK);
+  }
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/{dashboardConfigId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<Map>> deleteDashboardConfig(@PathVariable String dashboardConfigId) {
-		logger.info("deleting {}", dashboardConfigId);
-		this.getDashboardConfigService().removeDashboardConfig(Integer.valueOf(dashboardConfigId));
-		Map<String, Integer> result = new HashMap<>();
-		result.put("id", Integer.valueOf(dashboardConfigId));
-		return new ResponseEntity<>(new SimpleRestResponse(result), HttpStatus.OK);
-	}
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/{dashboardConfigId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<Map>> deleteDashboardConfig(
+      @PathVariable String dashboardConfigId) {
+    logger.info("deleting {}", dashboardConfigId);
+    this.getDashboardConfigService().removeDashboardConfig(Integer.valueOf(dashboardConfigId));
+    Map<String, Integer> result = new HashMap<>();
+    result.put("id", Integer.valueOf(dashboardConfigId));
+    return new ResponseEntity<>(new SimpleRestResponse(result), HttpStatus.OK);
+  }
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/datasource", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<Map>> getDataSourceByDashboardConfig(
-			@Valid @RequestBody DashboardConfigRequest dashboardConfigRequest, BindingResult bindingResult)
-			throws IOException {
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/server/{serverId}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(
+      @PathVariable int serverId) throws IOException {
+    boolean pingResult = true;
+    logger.debug("{} ping to {}", this.getClass().getSimpleName(), serverId);
 
-		// TODO
-//        connectorIotService
+    if (!dashboardConfigService.existsById(serverId)) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    DashboardConfigDto dto = dashboardConfigService.getDashboardConfig(serverId);
 
-		return new ResponseEntity<>(new SimpleRestResponse(null), HttpStatus.OK);
-	}
+    pingResult = connectorService.pingServer(dto);
+    return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
+  }
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/server/{dashboardId}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(@PathVariable int dashboardId) throws IOException {
-		boolean pingResult = true;
-		logger.debug("{} ping to {}", this.getClass().getSimpleName(), dashboardId);
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(
+      @PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
+    logger.debug("{} ping to server, datasource : {}, {}", this.getClass().getSimpleName(),
+        serverId, datasourceCode);
 
-		DashboardConfigDto dto = dashboardConfigService.getDashboardConfig(dashboardId);
+    if (!dashboardConfigService.existsById(serverId)) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(serverId);
+    DashboardDatasourceDto dto = IoTUtils
+        .getDashboardDatasourceDto(dashboardDto, datasourceCode);
 
-		pingResult = connectorService.pingServer(dto);
-		return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
-	}
+    if (dto.getDatasourcesConfigDto() == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(@PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
-		boolean pingResult = true;
-		logger.debug("{} ping to server, datasource : {}, {}", this.getClass().getSimpleName(), serverId,datasourceCode);
-
-		DashboardConfigDto dashboard = dashboardConfigService.getDashboardConfig(serverId);
-		List<DatasourcesConfigDto> datasources = dashboard.getDatasources();
-
-		DatasourcesConfigDto datasource = new DatasourcesConfigDto();
-		
-		for (DatasourcesConfigDto dto : datasources) {
-			if(dto.getDatasourceCode().equals(datasourceCode)) {
-				datasource = dto;
-				break;
-			}
-		}
-		
-		DashboardDatasourceDto conn = new DashboardDatasourceDto();
-		conn.setDashboardConfigDto(dashboard);
-		conn.setDatasourcesConfigDto(datasource);
-		
-		pingResult = connectorService.pingDevice(conn);
-		return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
-	}
+    boolean pingResult = connectorService.pingDevice(dto);
+    return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
+  }
 
 
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceId}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(
+      @PathVariable int serverId, @PathVariable String datasourceId) throws IOException {
 
+    MeasurementColumn col1 = new MeasurementColumn("temperature", "temperature");
+    MeasurementColumn col2 = new MeasurementColumn("timestamp", "timestamp");
+    MeasurementColumn col3 = new MeasurementColumn("vel_vento", "vel_vento");
 
-	@RestAccessControl(permission = "superuser")
-	@RequestMapping(value = "/server/{serverId}/datasource/{datasourceId}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(@PathVariable int serverId, @PathVariable String datasourceId) throws IOException {
-
-		MeasurementColumn col1 = new MeasurementColumn("temperature", "temperature");
-		MeasurementColumn col2 = new MeasurementColumn("timestamp", "timestamp");
-		MeasurementColumn col3 = new MeasurementColumn("vel_vento", "vel_vento");
-
-		List<MeasurementColumn> listaColonne = new ArrayList<>();
-		listaColonne.add(col1);
-		listaColonne.add(col2);
-		listaColonne.add(col3);
-		return new ResponseEntity<>(new SimpleRestResponse(listaColonne), HttpStatus.OK);
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    List<MeasurementColumn> listaColonne = new ArrayList<>();
+    listaColonne.add(col1);
+    listaColonne.add(col2);
+    listaColonne.add(col3);
+    return new ResponseEntity<>(new SimpleRestResponse(listaColonne), HttpStatus.OK);
+  }
 
 
 }

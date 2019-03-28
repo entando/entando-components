@@ -1,5 +1,6 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.utils;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -7,12 +8,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Type;
@@ -25,6 +29,29 @@ import java.util.Map.Entry;
 public class IoTUtils {
 
 
+  public static DashboardDatasourceDto getDashboardDatasourceDto(
+      DashboardConfigDto dashboardDto, String datasourceCode) {
+    DashboardDatasourceDto dto = new DashboardDatasourceDto();
+    dto.setDashboardConfigDto(dashboardDto);
+    for (DatasourcesConfigDto datasource : dashboardDto.getDatasources()) {
+      if (datasource.getDatasourceCode().equals(datasourceCode)) {
+        dto.setDatasourcesConfigDto(datasource);
+        return dto;
+      }
+    }
+    return dto;
+  }
+
+  public static FieldSearchFilter[] addFilter(FieldSearchFilter[] filters, FieldSearchFilter filterToAdd) {
+    int len = filters.length;
+    FieldSearchFilter[] newFilters = new FieldSearchFilter[len + 1];
+    for(int i=0; i < len; i++){
+      newFilters[i] = filters[i];
+    }
+    newFilters[len] = filterToAdd;
+    return newFilters;
+  }
+  
   public static String getMeasurementKey(String applicationToken, String loggerId, int version){
     return StringUtils.join(applicationToken,"_",loggerId,"_version",version);
   }

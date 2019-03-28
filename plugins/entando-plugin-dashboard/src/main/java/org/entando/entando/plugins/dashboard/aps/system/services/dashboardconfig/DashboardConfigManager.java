@@ -27,6 +27,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -151,10 +152,18 @@ public class DashboardConfigManager extends AbstractService implements IDashboar
   @Override
   public DatasourcesConfigDto getDatasourceByDatasourcecodeAndDashboard(
       int dashboardId, String datasourceCode) {
-    
-    
+
+
     return this.getDashboardConfigDAO().loadDatasourceConfigByDatasourceCodeAndDashboardConfig(dashboardId,
         datasourceCode);
+  }
+
+  @Override
+  public boolean existsById(int id) {
+    FieldSearchFilter[] filters = new FieldSearchFilter[0];
+    FieldSearchFilter filterToAdd = new FieldSearchFilter(("id"), (Integer)id, false);
+    filters = IoTUtils.addFilter(filters,filterToAdd);
+    return this.getDashboardConfigDAO().countDashboardConfigs(filters) > 0;
   }
 
 

@@ -41,7 +41,8 @@ public interface IDashboardConfigManager {
     void deleteDashboardConfig(int id) throws ApsSystemException;
 
     SearcherDaoPaginatedResult<DashboardConfig> getDashboardConfigs(List<FieldSearchFilter> fieldSearchFilters) throws ApsSystemException;
-    
+
     DatasourcesConfigDto getDatasourceByDatasourcecodeAndDashboard(int dashboardId, String datasourceCode);
-    
+
+    boolean existsById(int id);
 }
