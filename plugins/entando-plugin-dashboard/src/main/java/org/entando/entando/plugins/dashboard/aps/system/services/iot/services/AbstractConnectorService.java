@@ -29,7 +29,7 @@ public abstract class AbstractConnectorService implements IConnectorService{
       con.connect();
     }
     catch (SocketTimeoutException | UnknownHostException e ) {
-      e.printStackTrace();
+      return false;
     }
     int code = con.getResponseCode();
     if (code == HttpStatus.OK.value()) {

@@ -1,12 +1,16 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Objects;
 
 public class MeasurementMapping {
   
   String sourceName;
+  @JsonIgnore
   String sourceType;
   String detinationName;
+  @JsonIgnore
   String transformerClass;
 
   public String getSourceName() {

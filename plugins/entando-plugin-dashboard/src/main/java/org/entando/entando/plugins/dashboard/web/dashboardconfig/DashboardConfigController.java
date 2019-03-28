@@ -19,6 +19,7 @@ package org.entando.entando.plugins.dashboard.web.dashboardconfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,9 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
@@ -53,9 +57,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @RestController
 @RequestMapping(value = "/plugins/dashboard/dashboardConfigs")
@@ -205,7 +213,6 @@ public class DashboardConfigController {
   @RequestMapping(value = "/server/{serverId}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(
       @PathVariable int serverId) throws IOException {
-    boolean pingResult = true;
     logger.debug("{} ping to {}", this.getClass().getSimpleName(), serverId);
 
     if (!dashboardConfigService.existsById(serverId)) {
@@ -213,13 +220,13 @@ public class DashboardConfigController {
     }
     DashboardConfigDto dto = dashboardConfigService.getDashboardConfig(serverId);
 
-    pingResult = connectorService.pingServer(dto);
+    boolean pingResult = connectorService.pingServer(dto);
     return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
   }
 
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(
+  public ResponseEntity<SimpleRestResponse<Boolean>> pingDatasource(
       @PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
     logger.debug("{} ping to server, datasource : {}, {}", this.getClass().getSimpleName(),
         serverId, datasourceCode);
@@ -239,22 +246,77 @@ public class DashboardConfigController {
     return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
   }
 
+  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
+  public ResponseEntity<SimpleRestResponse<JsonObject>> saveMeasurement(@PathVariable int serverId,
+      @PathVariable String datasourceCode,
+      @RequestBody String measure) throws Exception {
 
-  @RestAccessControl(permission = "superuser")
-  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceId}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(
-      @PathVariable int serverId, @PathVariable String datasourceId) throws IOException {
+    if (!dashboardConfigService.existsById(serverId)) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(serverId);
+    DashboardDatasourceDto dto = IoTUtils
+        .getDashboardDatasourceDto(dashboardDto, datasourceCode);
 
-    MeasurementColumn col1 = new MeasurementColumn("temperature", "temperature");
-    MeasurementColumn col2 = new MeasurementColumn("timestamp", "timestamp");
-    MeasurementColumn col3 = new MeasurementColumn("vel_vento", "vel_vento");
-
-    List<MeasurementColumn> listaColonne = new ArrayList<>();
-    listaColonne.add(col1);
-    listaColonne.add(col2);
-    listaColonne.add(col3);
-    return new ResponseEntity<>(new SimpleRestResponse(listaColonne), HttpStatus.OK);
+    if (dto.getDatasourcesConfigDto() == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    JsonObject measurement = connectorService.saveDeviceMeasurement(dto, measure);
+    SimpleRestResponse<JsonObject> response = new SimpleRestResponse<>(measurement);
+    return new ResponseEntity(response, HttpStatus.OK);
   }
 
+  /**
+   * ATTUALE
+   *  "payload": [
+   *        {
+   *            "key": "temperature",
+   *            "value": "temperature"
+   *        },
+   *        {
+   *            "key": "timestamp",
+   *            "value": "timestamp"
+   *        }
+   *    ],
+   *    "metaData": {},
+   *    "errors": []
+   *    
+   * @param serverId
+   * @param datasourceCode
+   * @return
+   * @throws IOException
+   */
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/preview", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getMeasurementPreview(
+      @PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
+    if (!dashboardConfigService.existsById(serverId)) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(serverId);
+    DashboardDatasourceDto dto = IoTUtils.getDashboardDatasourceDto(dashboardDto, datasourceCode);
+    if (dto.getDatasourcesConfigDto() == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    MeasurementTemplate template = connectorService
+        .getDeviceMeasurementSchema(dto);
+    return new ResponseEntity<>(new SimpleRestResponse(template), HttpStatus.OK);
+  }
+
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(
+      @PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
+    if (!dashboardConfigService.existsById(serverId)) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(serverId);
+    DashboardDatasourceDto dto = IoTUtils.getDashboardDatasourceDto(dashboardDto, datasourceCode);
+    if (dto.getDatasourcesConfigDto() == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    MeasurementConfig config = connectorService.getMeasurementsConfig(dto);
+    return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
+  }
 
 }

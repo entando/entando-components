@@ -123,7 +123,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
     @Override
     public JsonObject saveDeviceMeasurement(
-            IDashboardDatasourceDto dashboardDatasourceDto, JsonArray measurementBody)
+            IDashboardDatasourceDto dashboardDatasourceDto, String measurementBody)
             throws Exception {
         logger.info("{} saveDeviceMeasurement to {}", this.getClass().getSimpleName(), dashboardDatasourceDto.getDashboardConfigDto().getServerURI());
         return connectorFactory.getConnector(dashboardDatasourceDto.getDashboardConfigDto().getType()).saveDeviceMeasurement(dashboardDatasourceDto, measurementBody);

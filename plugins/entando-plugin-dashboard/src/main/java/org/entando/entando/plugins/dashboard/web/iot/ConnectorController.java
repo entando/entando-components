@@ -46,25 +46,6 @@ public class ConnectorController {
     this.connectorService = connectorService;
   }
 
-  @RequestMapping(value = "/server/{serverId}/datasource{datasourceCode}", method = RequestMethod.POST)
-  public ResponseEntity<?> saveMeasurement(@PathVariable int serverId,
-      @PathVariable String datasourceCode,
-      @RequestBody JsonArray jsonElements) throws Exception {
-
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(serverId);
-    DashboardDatasourceDto dto = IoTUtils
-        .getDashboardDatasourceDto(dashboardDto, datasourceCode);
-
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    connectorService.saveDeviceMeasurement(null, jsonElements);
-
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
 
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PagedRestResponse<MeasurementObject>> getMeasurement(
@@ -110,24 +91,6 @@ public class ConnectorController {
 
     return new ResponseEntity<>(HttpStatus.OK);
   }
-
-  @RequestMapping(value = "/getTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
-  public ResponseEntity<SimpleRestResponse<MeasurementTemplate>> getMeasurementTemplate(
-      @PathVariable int serverId, @PathVariable String datasourceCode) {
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(serverId);
-    DashboardDatasourceDto dto = IoTUtils.getDashboardDatasourceDto(dashboardDto, datasourceCode);
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    MeasurementTemplate template = connectorService
-        .getDeviceMeasurementSchema(dto);
-
-    return new ResponseEntity<>(new SimpleRestResponse(template), HttpStatus.OK);
-  }
-
 
   @RequestMapping(value = "server/{serverId}/datasource/{datasourceCode}/config")
   public ResponseEntity<?> getMeasurementConfig(@PathVariable int serverId,
