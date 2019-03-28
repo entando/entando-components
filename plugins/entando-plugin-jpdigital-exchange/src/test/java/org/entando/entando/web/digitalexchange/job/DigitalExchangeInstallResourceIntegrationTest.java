@@ -16,10 +16,12 @@ package org.entando.entando.web.digitalexchange.job;
 import com.agiletec.aps.system.services.i18n.I18nManager;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.security.KeyPair;
+import java.security.Signature;
 import java.util.Collections;
 import java.util.EnumSet;
 
@@ -29,6 +31,7 @@ import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExc
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesMocker;
 import org.entando.entando.aps.system.services.digitalexchange.job.ComponentZipUtil;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobType;
+import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
 import org.entando.entando.aps.system.services.group.IGroupService;
 import org.entando.entando.aps.system.services.label.ILabelService;
 import org.entando.entando.aps.system.services.pagemodel.IPageModelService;
@@ -74,9 +77,16 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
 
     private static final String BASE_URL = "/digitalExchange";
 
+    private static final String WIDGET_COMPONENT_ID = "de_test_widget";
     private static File tempWidgetZipFile;
+
+    private static final String PAGE_MODEL_COMPONENT_ID = "de_test_page_model";
     private static File tempPageModelZipFile;
+
+    private static final String GROUP_COMPONENT_ID = "de_test_group";
     private static File tempGroupZipFile;
+
+    private static final String ROLE_COMPONENT_ID = "de_test_role";
     private static File tempRoleZipFile;
 
     @BeforeClass
@@ -147,16 +157,17 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
                                 Resource resource = mock(Resource.class);
                                 if (request.getEndpoint().contains("de_test_widget")) {
                                     when(resource.getInputStream()).thenReturn(new FileInputStream(tempWidgetZipFile));
-                                } else if (request.getEndpoint().contains("de_test_page_model")) {
+                                } else if (request.getEndpoint().contains(PAGE_MODEL_COMPONENT_ID)) {
                                     when(resource.getInputStream()).thenReturn(new FileInputStream(tempPageModelZipFile));
-                                } else if (request.getEndpoint().contains("de_test_group")) {
+                                } else if (request.getEndpoint().contains(GROUP_COMPONENT_ID)) {
                                     when(resource.getInputStream()).thenReturn(new FileInputStream(tempGroupZipFile));
                                 } else {
                                     when(resource.getInputStream()).thenReturn(new FileInputStream(tempRoleZipFile));
                                 }
                                 return resource;
                             } else {
-                                return getComponentInfoResponse();
+                                String componentId = request.getRestListRequest().getFilters()[0].getValue();
+                                return getComponentInfoResponse(componentId);
                             }
                         } catch (IOException ex) {
                             throw new UncheckedIOException(ex);
@@ -166,11 +177,36 @@ public class DigitalExchangeInstallResourceIntegrationTest extends AbstractContr
         }
     }
 
-    private static PagedRestResponse<DigitalExchangeComponent> getComponentInfoResponse() {
+    private static PagedRestResponse<DigitalExchangeComponent> getComponentInfoResponse(String componentId) {
         PagedMetadata<DigitalExchangeComponent> pagedMetadata = new PagedMetadata<>();
         DigitalExchangeComponent component = new DigitalExchangeComponent();
+        component.setSignature(getComponentSignature(componentId));
         pagedMetadata.setBody(Collections.singletonList(component));
         return new PagedRestResponse<>(pagedMetadata);
+    }
+
+    private static String getComponentSignature(String componentId) {
+        File componentFile = null;
+        switch (componentId) {
+            case WIDGET_COMPONENT_ID:
+                componentFile = tempWidgetZipFile;
+                break;
+            case ROLE_COMPONENT_ID:
+                componentFile = tempRoleZipFile;
+                break;
+            case PAGE_MODEL_COMPONENT_ID:
+                componentFile = tempPageModelZipFile;
+                break;
+            case GROUP_COMPONENT_ID:
+                componentFile = tempGroupZipFile;
+                break;
+        }
+        assert componentFile != null;
+        try(InputStream in = Files.newInputStream(componentFile.toPath(),StandardOpenOption.READ)){
+            return SignatureUtil.signPackage(in, SignatureUtil.privateKeyFromPEM(getTestPrivateKey()));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Test

@@ -13,10 +13,12 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.job;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.StandardOpenOption;
+import java.security.KeyPair;
+import java.security.PublicKey;
 import java.util.Collections;
 import java.util.List;
 import org.entando.entando.aps.system.init.DatabaseManager;
@@ -24,6 +26,8 @@ import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
+import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
+import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -41,11 +45,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.Resource;
+import sun.security.rsa.RSAPublicKeyImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.getDE1;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.endsWith;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -76,6 +80,8 @@ public class DigitalExchangeInstallExecutorTest {
 
     @Mock
     private DigitalExchangesService digitalExchangesService;
+
+    private KeyPair digitalExchangeKeyPair = SignatureUtil.createKeyPair();
 
     private DigitalExchangeInstallExecutor installExecutor;
 
@@ -124,6 +130,7 @@ public class DigitalExchangeInstallExecutorTest {
         mockStorageManager();
         mockDigitalExchangesService();
 
+
         installExecutor = spy(new DigitalExchangeInstallExecutor(
                 client, digitalExchangesService,
                 storageManager, databaseManager, initializerManager, commandExecutor));
@@ -149,9 +156,19 @@ public class DigitalExchangeInstallExecutorTest {
     }
 
     private PagedRestResponse<DigitalExchangeComponent> getComponentInfoResponse() {
-        List<DigitalExchangeComponent> component = Collections.singletonList(new DigitalExchangeComponent());
+        List<DigitalExchangeComponent> component = Collections.singletonList(getTestComponent());
         PagedMetadata<DigitalExchangeComponent> componentInfo = new PagedMetadata<>(new RestListRequest(), component, 1);
         return new PagedRestResponse<>(componentInfo);
+    }
+
+    private DigitalExchangeComponent getTestComponent() {
+        DigitalExchangeComponent component = new DigitalExchangeComponent();
+        try(InputStream in = Files.newInputStream(packageFile.toPath(), StandardOpenOption.READ)) {
+            component.setSignature(SignatureUtil.signPackage(in, digitalExchangeKeyPair.getPrivate()));
+        } catch (IOException exception) {
+            throw new UncheckedIOException(exception);
+        }
+        return component;
     }
 
     private RestClientResponseException getNotFoundException() {
@@ -189,7 +206,9 @@ public class DigitalExchangeInstallExecutorTest {
                         .getResourceAsStream("components/de_test_widget/component.xml"));
     }
 
-    private void mockDigitalExchangesService() throws Exception {
-        when(digitalExchangesService.findById(anyString())).thenReturn(getDE1());
+    private void mockDigitalExchangesService() {
+        DigitalExchange testInstance = getDE1();
+        testInstance.setPublicKey(SignatureUtil.publicKeyToPEM(digitalExchangeKeyPair.getPublic()));
+        when(digitalExchangesService.findById(anyString())).thenReturn(testInstance);
     }
 }

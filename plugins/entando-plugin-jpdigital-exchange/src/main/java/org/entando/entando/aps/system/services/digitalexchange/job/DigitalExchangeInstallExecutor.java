@@ -132,6 +132,7 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
         DigitalExchangeComponent component = components.get(0);
         job.setComponentName(component.getName());
         job.setComponentVersion(component.getVersion());
+        job.setComponentSignature(component.getSignature().getBytes());
     }
 
     private void downloadComponent(DigitalExchangeJob job) {
@@ -151,14 +152,7 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            DigitalExchange digitalExchange = digitalExchangesService.findById(job.getDigitalExchangeId());
-            boolean signatureMatches = SignatureUtil.verifySignature(Files.newInputStream(tempZipPath, StandardOpenOption.READ),
-                    SignatureUtil.publicKeyFromPEM(digitalExchange.getPublicKey()),
-                    job.getComponentSignature());
-            if (!signatureMatches) {
-                Files.deleteIfExists(tempZipPath);
-                throw new JobExecutionException("Component signature not valid");
-            }
+            verifyComponentSignature(job, tempZipPath);
 
             extractZip(tempZipPath, job.getComponentId());
 
@@ -171,6 +165,19 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
                     logger.warn("Unable to delete temporary zip file {}",
                             tempZipPath.toFile().getAbsolutePath());
                 }
+            }
+        }
+    }
+
+    private void verifyComponentSignature(DigitalExchangeJob job, Path tempZipPath) throws IOException {
+        DigitalExchange digitalExchange = digitalExchangesService.findById(job.getDigitalExchangeId());
+        try(InputStream in = Files.newInputStream(tempZipPath, StandardOpenOption.READ)) {
+            boolean signatureMatches = SignatureUtil.verifySignature(
+                    in, SignatureUtil.publicKeyFromPEM(digitalExchange.getPublicKey()),
+                    new String(job.getComponentSignature()));
+            if (!signatureMatches) {
+                Files.deleteIfExists(tempZipPath);
+                throw new JobExecutionException("Component signature not valid");
             }
         }
     }

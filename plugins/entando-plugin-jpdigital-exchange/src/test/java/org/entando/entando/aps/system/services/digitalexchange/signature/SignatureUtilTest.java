@@ -40,6 +40,19 @@ public class SignatureUtilTest {
     }
 
     @Test
+    public void testPrivateKeyToPEMAndBack() {
+        KeyPair keyPair = SignatureUtil.createKeyPair();
+
+        PrivateKey privateKey = keyPair.getPrivate();
+
+        String pemPrivateKey = SignatureUtil.privateKeyToPEM(privateKey);
+        PrivateKey parsedKey = SignatureUtil.privateKeyFromPEM(pemPrivateKey);
+
+        assertThat(privateKey.getEncoded()).isEqualTo(parsedKey.getEncoded());
+
+    }
+
+    @Test
     public void testSignAndVerify() {
 
         KeyPair keyPair = SignatureUtil.createKeyPair();

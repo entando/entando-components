@@ -129,9 +129,13 @@ public class DigitalExchange {
         this.clientSecret = clientSecret;
     }
 
-    public String getPublicKey() { return publicKey; }
+    public String getPublicKey() {
+        return publicKey;
+    }
 
-    public void setPublicKey(String publicKey) { this.publicKey = publicKey; }
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
 
     public boolean hasNoPublicKey() {
         return StringUtils.isEmpty(this.getPublicKey());

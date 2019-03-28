@@ -16,13 +16,7 @@ package org.entando.entando.aps.system.services.digitalexchange.signature;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
+import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -34,6 +28,8 @@ public class SignatureUtil {
     private static final int KEY_SIZE = 2048;
     private static final String BEGIN_RSA_PUBLIC_KEY = "-----BEGIN RSA PUBLIC KEY-----\n";
     private static final String END_RSA_PUBLIC_KEY = "-----END RSA PUBLIC KEY-----";
+    private static final String BEGIN_RSA_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n";
+    private static final String END_RSA_PRIVATE_KEY = "-----END RSA PRIVATE KEY-----";
 
     private SignatureUtil() {
         // Utility class. Not to be instantiated.
@@ -60,23 +56,9 @@ public class SignatureUtil {
      */
     public static String publicKeyToPEM(PublicKey publicKey) {
 
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(BEGIN_RSA_PUBLIC_KEY);
-
-        String base64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-        int lineLength = 64;
-        for (int i = 0;; i += lineLength) {
-            if (i >= base64.length()) {
-                break;
-            }
-            int chars = Math.min(base64.length(), i + lineLength);
-            sb.append(base64.substring(i, chars)).append("\n");
-        }
-
-        sb.append(END_RSA_PUBLIC_KEY);
-
-        return sb.toString();
+        return BEGIN_RSA_PUBLIC_KEY +
+                getBase64Key(publicKey) +
+                END_RSA_PUBLIC_KEY;
     }
 
     /**
@@ -88,7 +70,8 @@ public class SignatureUtil {
         String base64Key = pemPublicKey
                 .replace(BEGIN_RSA_PUBLIC_KEY, "")
                 .replace(END_RSA_PUBLIC_KEY, "")
-                .replace("\n", "");
+                .replace("\n", "")
+                .trim();
 
         byte[] bytes = Base64.getDecoder().decode(base64Key);
 
@@ -110,6 +93,47 @@ public class SignatureUtil {
         } catch (GeneralSecurityException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public static String privateKeyToPEM(PrivateKey privateKey) {
+
+        return BEGIN_RSA_PRIVATE_KEY +
+                getBase64Key(privateKey) +
+                END_RSA_PRIVATE_KEY;
+
+    }
+
+    public static PrivateKey privateKeyFromPEM(String pemPrivateKey) {
+        String base64Key = pemPrivateKey
+                .replace(BEGIN_RSA_PRIVATE_KEY, "")
+                .replace(END_RSA_PRIVATE_KEY, "")
+                .replace("\n", "")
+                .trim();
+
+        byte[] bytes = Base64.getDecoder().decode(base64Key);
+
+        try {
+            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(bytes);
+            KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
+            return kf.generatePrivate(privateKeySpec);
+        } catch (GeneralSecurityException ex) {
+            throw new RuntimeException(ex);
+        }
+
+    }
+
+    private static String getBase64Key(Key key) {
+        StringBuilder sb = new StringBuilder();
+        String base64 = Base64.getEncoder().encodeToString(key.getEncoded());
+        int lineLength = 64;
+        for (int i = 0;; i += lineLength) {
+            if (i >= base64.length()) {
+                break;
+            }
+            int chars = Math.min(base64.length(), i + lineLength);
+            sb.append(base64.substring(i, chars)).append("\n");
+        }
+        return sb.toString();
     }
 
     /**

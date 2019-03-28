@@ -14,16 +14,20 @@
 package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.security.KeyPair;
 import java.util.Collections;
 import java.util.function.Consumer;
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
+import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
+import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
+import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponent;
@@ -42,9 +46,8 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.endsWith;
+import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.getDE1;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -58,6 +61,9 @@ public class DigitalExchangeJobExecutorTest {
 
     @Mock
     private DigitalExchangesClient client;
+
+    @Mock
+    private DigitalExchangesService digitalExchangesService;
 
     @Mock
     private ComponentStorageManager storageManager;
@@ -93,6 +99,8 @@ public class DigitalExchangeJobExecutorTest {
 
     private DigitalExchangeJob job;
 
+    private KeyPair digitalExchangeKeyPair = SignatureUtil.createKeyPair();
+
     @BeforeClass
     public static void setupZip() {
         tempZipFile = ComponentZipUtil.getTestPageModelZip();
@@ -108,6 +116,7 @@ public class DigitalExchangeJobExecutorTest {
     @Before
     public void setUp() throws Exception {
 
+
         commandExecutor.setApplicationContext(applicationContext);
 
         job = new DigitalExchangeJob();
@@ -117,6 +126,8 @@ public class DigitalExchangeJobExecutorTest {
         when(client.getStreamResponse(any(), any())).thenReturn(new FileInputStream(tempZipFile));
 
         when(client.getSingleResponse(any(String.class), any())).thenReturn(getComponentInfoResponse());
+
+        when(digitalExchangesService.findById(anyString())).thenReturn(getTestDigitalExchange());
 
         when(storageManager.getProtectedStream(endsWith("component.xml")))
                 .thenReturn(getClass().getClassLoader().getResourceAsStream("components/de_test_page_model/component.xml"));
@@ -142,9 +153,20 @@ public class DigitalExchangeJobExecutorTest {
 
     private PagedRestResponse<DigitalExchangeComponent> getComponentInfoResponse() {
         PagedMetadata<DigitalExchangeComponent> pagedMetadata = new PagedMetadata<>();
-        DigitalExchangeComponent component = new DigitalExchangeComponent();
-        pagedMetadata.setBody(Collections.singletonList(component));
-        return new PagedRestResponse<>(pagedMetadata);
+        try(InputStream in = Files.newInputStream(tempZipFile.toPath(), StandardOpenOption.READ)) {
+            DigitalExchangeComponent component = new DigitalExchangeComponent();
+            component.setSignature(SignatureUtil.signPackage(in, digitalExchangeKeyPair.getPrivate()));
+            pagedMetadata.setBody(Collections.singletonList(component));
+            return new PagedRestResponse<>(pagedMetadata);
+        } catch (IOException exception) {
+            throw new UncheckedIOException(exception);
+        }
+    }
+
+    private DigitalExchange getTestDigitalExchange() {
+        DigitalExchange testInstance = getDE1();
+        testInstance.setPublicKey(SignatureUtil.publicKeyToPEM(digitalExchangeKeyPair.getPublic()));
+        return testInstance;
     }
 
     @Test
