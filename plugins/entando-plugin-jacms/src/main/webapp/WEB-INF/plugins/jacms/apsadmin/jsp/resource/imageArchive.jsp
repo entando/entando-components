@@ -30,7 +30,7 @@
     </s:if>
     <s:else>
         <li><s:text name="breadcrumb.digitalAsset"/></li>
-        </s:else>
+    </s:else>
     <li class="page-title-container">
         <s:property value="%{getText('breadcrumb.dataAsset.' + resourceTypeCode + '.list')}"/>
     </li>
@@ -39,7 +39,7 @@
     <div class="row">
         <div class="col-sm-12 col-md-6">
             <h1 class="page-title-container">
-				<span class="pull-right">
+                <span class="pull-right">
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
                        data-content="<s:text name="label.digitalAsset.help"/>" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
@@ -51,7 +51,7 @@
                 <s:else>
                     <s:text name="title.imageManagement"/>
                 </s:else>
-			</h1>
+            </h1>
         </div>
         <div class="col-sm-12 col-md-6">
             <ul class="nav nav-tabs nav-justified nav-tabs-pattern">
@@ -95,9 +95,66 @@
     <br>
 
     <div class="container-fluid">
+
+        <s:if test="onEditContent">
+
+            <div class="btn-group btn-position filters">
+                <a class="btn btn-default" href="<s:url action="changeOrder" anchor="" includeParams="all" >
+                       <s:param name="resourceTypeCode"><s:property value="resourceTypeCode"/></s:param>
+                       <s:param name="lastGroupBy"><s:property value="lastGroupBy"/></s:param>
+                       <s:param name="lastOrder" ><s:property value="lastOrder" /></s:param>
+                       <s:param name="groupBy">descr</s:param>
+                       <s:param name="entandoaction:changeOrder">changeOrder</s:param>
+                   </s:url>"><s:text name="label.orderBy" />: <s:text name="label.description" />
+                </a>
+                <a  class="btn btn-default "href="<s:url action="changeOrder" anchor="" includeParams="all" >
+                        <s:param name="resourceTypeCode"><s:property value="resourceTypeCode"/></s:param>
+                        <s:param name="lastGroupBy"><s:property value="lastGroupBy"/></s:param>
+                        <s:param name="lastOrder" ><s:property value="lastOrder" /></s:param>
+                        <s:param name="groupBy">created</s:param>
+                        <s:param name="entandoaction:changeOrder">changeOrder</s:param>
+                    </s:url>"><s:text name="label.orderBy" />: <s:text name="label.creationDate" />
+                </a>
+                <a  class="btn btn-default" href="<s:url action="changeOrder" anchor="" includeParams="all" >
+                        <s:param name="resourceTypeCode"><s:property value="resourceTypeCode"/></s:param>
+                        <s:param name="lastGroupBy"><s:property value="lastGroupBy"/></s:param>
+                        <s:param name="lastOrder" ><s:property value="lastOrder" /></s:param>
+                        <s:param name="groupBy">lastModified</s:param>
+                        <s:param name="entandoaction:changeOrder">changeOrder</s:param>
+                    </s:url>"><s:text name="label.orderBy" />: <s:text name="label.lastModified" />
+                </a>
+            </div>
+        </s:if>
+        <s:else>
+
+            <div class="btn-group btn-position filters">
+                <a  class="btn btn-default" href="<s:url action="changeOrder" anchor="" includeParams="all" >
+                        <s:param name="lastGroupBy"><s:property value="lastGroupBy"/></s:param>
+                        <s:param name="lastOrder" ><s:property value="lastOrder" /></s:param>
+                        <s:param name="groupBy">descr</s:param>
+                        <s:param name="entandoaction:changeOrder">changeOrder</s:param>
+                    </s:url>"><s:text name="label.orderBy" />: <s:text name="label.description" />
+                </a>
+                <a  class="btn btn-default" href="<s:url action="changeOrder" anchor="" includeParams="all" >
+                        <s:param name="lastGroupBy"><s:property value="lastGroupBy"/></s:param>
+                        <s:param name="lastOrder" ><s:property value="lastOrder" /></s:param>
+                        <s:param name="groupBy">created</s:param>
+                        <s:param name="entandoaction:changeOrder">changeOrder</s:param>
+                    </s:url>"><s:text name="label.orderBy" />: <s:text name="label.creationDate" />
+                </a>
+                <a  class="btn btn-default" href="<s:url action="changeOrder" anchor="" includeParams="all" >
+                        <s:param name="lastGroupBy"><s:property value="lastGroupBy"/></s:param>
+                        <s:param name="lastOrder" ><s:property value="lastOrder" /></s:param>
+                        <s:param name="groupBy">lastModified</s:param>
+                        <s:param name="entandoaction:changeOrder">changeOrder</s:param>
+                    </s:url>"><s:text name="label.orderBy" />: <s:text name="label.lastModified" />
+                </a>
+            </div>
+        </s:else>
+
         <div class="toolbar-pf">
             <div class="toolbar-pf-action-right mt-10">
-                <div class="form-group toolbar-pf-view-selector">
+                <div class="form-group toolbar-pf-view-selector" id="TabList">
                     <span class="choose_view"><s:text name="label.visualization"/></span>
                     <button class="btn btn-link" data-toggle="tab" href="#table-view">
                         <i class="fa fa-th-large"></i>
@@ -115,17 +172,17 @@
 
             <s:form action="search" class="container-fluid container-cards-pf">
                 <p class="sr-only">
-                    <wpsf:hidden name="text"/>
-                    <wpsf:hidden name="categoryCode"/>
-                    <wpsf:hidden name="resourceTypeCode"/>
-                    <wpsf:hidden name="fileName"/>
-                    <wpsf:hidden name="ownerGroupName"/>
-                    <s:if test="#categoryTreeStyleVar == 'request'">
-                        <s:iterator value="treeNodesToOpen" var="treeNodeToOpenVar">
-                            <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/>
-                        </s:iterator>
-                    </s:if>
-                    <wpsf:hidden name="contentOnSessionMarker"/>
+                <wpsf:hidden name="text"/>
+                <wpsf:hidden name="categoryCode"/>
+                <wpsf:hidden name="resourceTypeCode"/>
+                <wpsf:hidden name="fileName"/>
+                <wpsf:hidden name="ownerGroupName"/>
+                <s:if test="#categoryTreeStyleVar == 'request'">
+                    <s:iterator value="treeNodesToOpen" var="treeNodeToOpenVar">
+                        <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/>
+                    </s:iterator>
+                </s:if>
+                <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
 
                 <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
@@ -193,8 +250,8 @@
                                         </div>
 
                                         <div class="card-pf-top-element">
-                                            <%-- Dimension forced for img thumbnail --%>
-                                            <img src="<s:property value="%{#resource.getImagePath(1)}"/>" alt=" "
+                                                <%-- Dimension forced for img thumbnail --%>
+                                            <img src="<s:property value="%{(null != #resource.getImagePath(1)) ? #resource.getImagePath(1) : #resource.getImagePath(0)}"/>" alt=" "
                                                  style="height:90px;max-width:130px" class="img-responsive center-block"/>
                                         </div>
                                         <h2 class="card-pf-title text-center">
@@ -207,6 +264,10 @@
                                             <s:else>
                                                 <s:property value="#fileNameVar"/>
                                             </s:else>
+                                            <div class="creation-dates-card">
+                                                <s:text name="label.creationDate" />&nbsp;<s:date name="#resource.creationDate" format="dd/MM/yyyy HH:mm" /><br />
+                                                <s:text name="label.lastModified" />&nbsp;<s:date name="#resource.lastModified" format="dd/MM/yyyy HH:mm" />
+                                            </div>
                                         </h2>
                                     </div>
                                 </div>
@@ -223,17 +284,17 @@
         <div id="list-view" class="tab-pane fade in active">
             <s:form action="search" class="container-fluid">
                 <p class="sr-only">
-                    <wpsf:hidden name="text"/>
-                    <wpsf:hidden name="categoryCode"/>
-                    <wpsf:hidden name="resourceTypeCode"/>
-                    <wpsf:hidden name="fileName"/>
-                    <wpsf:hidden name="ownerGroupName"/>
-                    <s:if test="#categoryTreeStyleVar == 'request'">
-                        <s:iterator value="treeNodesToOpen" var="treeNodeToOpenVar">
-                            <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/>
-                        </s:iterator>
-                    </s:if>
-                    <wpsf:hidden name="contentOnSessionMarker"/>
+                <wpsf:hidden name="text"/>
+                <wpsf:hidden name="categoryCode"/>
+                <wpsf:hidden name="resourceTypeCode"/>
+                <wpsf:hidden name="fileName"/>
+                <wpsf:hidden name="ownerGroupName"/>
+                <s:if test="#categoryTreeStyleVar == 'request'">
+                    <s:iterator value="treeNodesToOpen" var="treeNodeToOpenVar">
+                        <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/>
+                    </s:iterator>
+                </s:if>
+                <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
                 <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
 
@@ -287,16 +348,16 @@
                                                 </s:else>
                                             </li>
                                             <s:if test="%{!onEditContent}">
-                                            <li>
-                                                <a href="<s:property value="URLtrash" escapeHtml="false" />"><s:text name="label.delete"/></a>
-                                            </li>
+                                                <li>
+                                                    <a href="<s:property value="URLtrash" escapeHtml="false" />"><s:text name="label.delete"/></a>
+                                                </li>
                                             </s:if>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="list-view-pf-main-info">
                                     <div class="list-view-pf-left col-o" style="width: 130px">
-                                        <img src="<s:property value="%{#resource.getImagePath(1)}"/>" alt=" " class="img-responsive center-block"/>
+                                        <img src="<s:property value="%{(null != #resource.getImagePath(1)) ? #resource.getImagePath(1) : #resource.getImagePath(0)}"/>" alt=" " class="img-responsive center-block"/>
                                     </div>
                                     <div class="list-view-pf-body">
                                         <div class="list-view-pf">
@@ -315,10 +376,14 @@
                                             <div class="list-group-item-text">
                                                 <s:property value="#fileDescVar"/>
                                             </div>
+                                            <div class="creation-dates">
+                                                <div class="list-date">
+                                                    <s:text name="label.creationDate" />&nbsp;<s:date name="#resource.creationDate" format="dd/MM/yyyy HH:mm" /><br />
+                                                    <s:text name="label.lastModified" />&nbsp;<s:date name="#resource.lastModified" format="dd/MM/yyyy HH:mm" />
+                                                </div> 
+                                            </div>
                                             <br>
                                             <div class="list-view-pf-additional-info" style="width: 100%">
-
-
                                                 <s:set var="dimensionId" value="0"/>
                                                 <s:set var="resourceInstance" value='%{#resource.getInstance(#dimensionId,null)}'/>
                                                 <a href="<s:property value="%{#resource.getImagePath(#dimensionId)}" />" class="list-view-pf-additional-info-item">
@@ -340,9 +405,9 @@
                                                             x<s:property value="#dimInfo.dimy"/>&nbsp;px
                                                             <span class="badge">
                                                                 <s:property
-                                                                    value='#resourceInstance.fileLength.replaceAll(" ", "&nbsp;")'
-                                                                    escapeXml="false"
-                                                                    escapeHtml="false" escapeJavaScript="false"/>
+                                                                        value='#resourceInstance.fileLength.replaceAll(" ", "&nbsp;")'
+                                                                        escapeXml="false"
+                                                                        escapeHtml="false" escapeJavaScript="false"/>
                                                             </span>
                                                         </a>
                                                     </s:if>
@@ -362,6 +427,27 @@
             </s:form>
         </div>
     </div>
+    <script>
+
+        $('#TabList button').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+        $("button").on("shown.bs.tab", function (e) {
+            var id = $(e.target).attr("href").substr(1);
+            window.location.hash = id;
+        });
+
+        $('.filters a').click(function (e) {
+            e.preventDefault();
+            var newhash = window.location.hash;
+            var newhref = $(this).attr('href');
+            var link = newhref + newhash;
+            location.href = link;
+        });
+        var hash = window.location.hash;
+        $('#TabList button[href="' + hash + '"]').tab('show');
+    </script>      
 
     <wp:ifauthorized permission="superuser">
         <s:if test="!onEditContent">

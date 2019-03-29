@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ * Copyright 2015-Present Entando Inc. (http://www.entando.com) All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -37,11 +37,6 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
 
     private static final Logger _logger = LoggerFactory.getLogger(ExtendedResourceFinderAction.class);
 
-    private String contentOnSessionMarker;
-
-    private String resourceId;
-    private String entryContentAnchorDest;
-
     public String entryFindResource() {
         this.setCategoryCode(null);
         return SUCCESS;
@@ -49,20 +44,21 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
 
     @Override
     public List<String> getResources() throws Throwable {
-        List<String> resourcesId = null;
+        List<String> resourceIds = null;
         try {
             List<String> groupCodes = new ArrayList<>();
             groupCodes.add(Group.FREE_GROUP_NAME);
             if (null != this.getContent().getMainGroup()) {
                 groupCodes.add(this.getContent().getMainGroup());
             }
-            resourcesId = this.getResourceManager().searchResourcesId(this.getResourceTypeCode(),
-                    this.getText(), this.getFileName(), this.getCategoryCode(), groupCodes);
+            List<String> groupCodesForSearch = (groupCodes.contains(Group.ADMINS_GROUP_NAME)) ? null : groupCodes;
+            resourceIds = this.getResourceManager().searchResourcesId(this.createSearchFilters(),
+                    this.getCategoryCode(), groupCodesForSearch);
         } catch (Throwable t) {
             _logger.error("error in getResources", t);
             throw t;
         }
-        return resourcesId;
+        return resourceIds;
     }
 
     /**
@@ -82,7 +78,8 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
      */
     public String joinResource() {
         try {
-            ResourceInterface resource = this.getResourceManager().loadResource(this.getResourceId());
+            String resourceId = this.getResourceId();
+            ResourceInterface resource = this.getResourceManager().loadResource(resourceId);
             this.buildEntryContentAnchorDest();
             List<ResourceInterface> resources = new ArrayList<>();
             resources.add(resource);
@@ -115,30 +112,35 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
     }
 
     public String getContentOnSessionMarker() {
-        return contentOnSessionMarker;
+        return _contentOnSessionMarker;
     }
 
     public void setContentOnSessionMarker(String contentOnSessionMarker) {
-        this.contentOnSessionMarker = contentOnSessionMarker;
+        this._contentOnSessionMarker = contentOnSessionMarker;
     }
 
     public String getResourceId() {
-        return resourceId;
+        return _resourceId;
     }
 
     public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
+        this._resourceId = resourceId;
     }
 
     public String getEntryContentAnchorDest() {
-        if (null == this.entryContentAnchorDest) {
+        if (null == this._entryContentAnchorDest) {
             this.buildEntryContentAnchorDest();
         }
-        return entryContentAnchorDest;
+        return _entryContentAnchorDest;
     }
 
     protected void setEntryContentAnchorDest(String entryContentAnchorDest) {
-        this.entryContentAnchorDest = entryContentAnchorDest;
+        this._entryContentAnchorDest = entryContentAnchorDest;
     }
+
+    private String _contentOnSessionMarker;
+
+    private String _resourceId;
+    private String _entryContentAnchorDest;
 
 }
