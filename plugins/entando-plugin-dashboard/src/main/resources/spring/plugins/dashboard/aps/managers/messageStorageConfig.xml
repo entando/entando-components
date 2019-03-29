@@ -23,7 +23,7 @@
 	<mongo:repositories base-package="org.entando.entando.plugins.dashboard.aps.system.services.**.repository" mongo-template-ref="mongoTemplate"/>
 
 	<mongo:mongo-client id="mongoClient" 
-			host="localhost" 
+			host="192.168.137.5" 
 			port="27017"
 			/>
 

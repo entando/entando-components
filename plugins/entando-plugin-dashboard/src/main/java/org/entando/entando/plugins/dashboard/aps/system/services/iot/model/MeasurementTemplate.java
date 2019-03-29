@@ -8,6 +8,7 @@ import org.entando.entando.aps.system.init.model.servdb.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Rappresenta una tipologia di dato proveniente da un datasource, erogabile sul portale
@@ -61,5 +62,22 @@ public class MeasurementTemplate {
   public void setFields(String fields) {
     this.fields = Arrays.asList(new Gson().fromJson(fields,MeasurementType[].class));
   }
-  
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MeasurementTemplate that = (MeasurementTemplate) o;
+    return Objects.equals(id, that.id) &&
+        Objects.equals(fields, that.fields);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, fields);
+  }
 }

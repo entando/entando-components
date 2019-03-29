@@ -29,19 +29,6 @@ import java.util.Map.Entry;
 public class IoTUtils {
 
 
-  public static DashboardDatasourceDto getDashboardDatasourceDto(
-      DashboardConfigDto dashboardDto, String datasourceCode) {
-    DashboardDatasourceDto dto = new DashboardDatasourceDto();
-    dto.setDashboardConfigDto(dashboardDto);
-    for (DatasourcesConfigDto datasource : dashboardDto.getDatasources()) {
-      if (datasource.getDatasourceCode().equals(datasourceCode)) {
-        dto.setDatasourcesConfigDto(datasource);
-        return dto;
-      }
-    }
-    return dto;
-  }
-
   public static FieldSearchFilter[] addFilter(FieldSearchFilter[] filters, FieldSearchFilter filterToAdd) {
     int len = filters.length;
     FieldSearchFilter[] newFilters = new FieldSearchFilter[len + 1];
@@ -71,9 +58,13 @@ public class IoTUtils {
   }
 
   public static <T> T getObjectFromJson(String jsonString, Type type, Class<T> tClass) {
-    Gson gson = new Gson();
-    T object = gson.fromJson(jsonString, type);
+    T object = new Gson().fromJson(jsonString, type);
     return tClass.cast(object);
+  }
+
+  public static <T> T getObjectFromJson(JsonElement json, Type type, Class<T> tClass) {
+    String jsonString = new Gson().toJson(json);
+    return getObjectFromJson(jsonString, type,tClass);
   }
 
   public static JsonElement getNestedFieldFromJson(JsonObject jsonObject, String fieldNames){
@@ -86,9 +77,19 @@ public class IoTUtils {
       return jsonObject.get(fieldName);
     }
     
+    if(jsonObject.get(fieldName) == null) {
+      return null;
+    }
+    
     else if (jsonObject.get(fieldName).isJsonObject()) {
       fieldNames = StringUtils.join(fildNameList.subList(1,fildNameList.size()), IoTConstants.JSON_FIELD_SEPARATOR);
       return getNestedFieldFromJson(jsonObject.getAsJsonObject(fieldName),fieldNames);
+    }
+    
+    else if(jsonObject.get(fieldName).isJsonPrimitive() && fildNameList.size() > 0) {
+      jsonObject = new Gson().fromJson(jsonObject.get(fieldName).getAsString(), JsonObject.class);
+      fieldNames = StringUtils.join(fildNameList.subList(1,fildNameList.size()), IoTConstants.JSON_FIELD_SEPARATOR);
+      return getNestedFieldFromJson(jsonObject,fieldNames);
     }
     
     else if (jsonObject.get(fieldName).isJsonArray() && fildNameList.size() == 2) {

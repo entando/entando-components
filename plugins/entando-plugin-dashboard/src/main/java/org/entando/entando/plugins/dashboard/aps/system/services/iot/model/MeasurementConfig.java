@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class MeasurementConfig {
@@ -83,4 +84,25 @@ public class MeasurementConfig {
         .findFirst();
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MeasurementConfig config = (MeasurementConfig) o;
+    return dashboardId == config.dashboardId &&
+        Objects.equals(measurementConfigId, config.measurementConfigId) &&
+        Objects.equals(datasourceCode, config.datasourceCode) &&
+        Objects.equals(measurementTemplateId, config.measurementTemplateId) &&
+        Objects.equals(mappings, config.mappings);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects
+        .hash(measurementConfigId, dashboardId, datasourceCode, measurementTemplateId, mappings);
+  }
 }

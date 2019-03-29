@@ -35,7 +35,7 @@ public interface IConnectorIot {
 
 	void saveMeasurementTemplate(IDashboardDatasourceDto dashboardDatasource) throws ApsSystemException;
 
-	JsonObject saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, String measurementBody)
+	void saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, String measurementBody)
 			throws Exception;
 
 	PagedMetadata<MeasurementObject> getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,

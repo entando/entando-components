@@ -5,7 +5,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 
 public class MeasurementMapping {
-  
+
+  public MeasurementMapping() {
+  }
+
+  public MeasurementMapping(String sourceName, String sourceType, String detinationName,
+      String transformerClass) {
+    this.sourceName = sourceName;
+    this.sourceType = sourceType;
+    this.detinationName = detinationName;
+    this.transformerClass = transformerClass;
+  }
+
+  public MeasurementMapping(String sourceName, String detinationName) {
+    this.sourceName = sourceName;
+    this.detinationName = detinationName;
+  }
+
   String sourceName;
   @JsonIgnore
   String sourceType;

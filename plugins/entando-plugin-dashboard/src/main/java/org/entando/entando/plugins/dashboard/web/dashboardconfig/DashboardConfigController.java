@@ -17,25 +17,18 @@
 
 package org.entando.entando.plugins.dashboard.web.dashboardconfig;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.JsonObject;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
@@ -57,13 +50,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/plugins/dashboard/dashboardConfigs")
@@ -234,9 +228,8 @@ public class DashboardConfigController {
     if (!dashboardConfigService.existsById(serverId)) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(serverId);
-    DashboardDatasourceDto dto = IoTUtils
-        .getDashboardDatasourceDto(dashboardDto, datasourceCode);
+    DashboardDatasourceDto dto = dashboardConfigService
+        .getDashboardDatasourceDto(serverId, datasourceCode);
 
     if (dto.getDatasourcesConfigDto() == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -244,26 +237,6 @@ public class DashboardConfigController {
 
     boolean pingResult = connectorService.pingDevice(dto);
     return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
-  }
-
-  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
-  public ResponseEntity<SimpleRestResponse<JsonObject>> saveMeasurement(@PathVariable int serverId,
-      @PathVariable String datasourceCode,
-      @RequestBody String measure) throws Exception {
-
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(serverId);
-    DashboardDatasourceDto dto = IoTUtils
-        .getDashboardDatasourceDto(dashboardDto, datasourceCode);
-
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    JsonObject measurement = connectorService.saveDeviceMeasurement(dto, measure);
-    SimpleRestResponse<JsonObject> response = new SimpleRestResponse<>(measurement);
-    return new ResponseEntity(response, HttpStatus.OK);
   }
 
   /**
@@ -293,8 +266,7 @@ public class DashboardConfigController {
     if (!dashboardConfigService.existsById(serverId)) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(serverId);
-    DashboardDatasourceDto dto = IoTUtils.getDashboardDatasourceDto(dashboardDto, datasourceCode);
+    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
     if (dto.getDatasourcesConfigDto() == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -310,8 +282,7 @@ public class DashboardConfigController {
     if (!dashboardConfigService.existsById(serverId)) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    DashboardConfigDto dashboardDto = dashboardConfigService.getDashboardConfig(serverId);
-    DashboardDatasourceDto dto = IoTUtils.getDashboardDatasourceDto(dashboardDto, datasourceCode);
+    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
     if (dto.getDatasourcesConfigDto() == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

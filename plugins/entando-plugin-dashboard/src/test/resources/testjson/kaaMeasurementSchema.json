@@ -1,0 +1,15 @@
+{
+  "id": "65537",
+  "metaInfo": {
+    "id": "65537",
+    "fqn": "DataCollectionTimestamp.DataCollectionTstamp",
+    "tenantId": "1",
+    "applicationId": "32768"
+  },
+  "version": 1,
+  "body": "{\n  \"type\" : \"record\",\n  \"name\" : \"DataCollectionTstamp\",\n  \"namespace\" : \"DataCollectionTimestamp\",\n  \"fields\" : [ {\n    \"name\" : \"temperature\",\n    \"type\" : \"int\"\n  }, {\n    \"name\" : \"timestamp\",\n    \"type\" : \"long\",\n    \"displayName\" : \"\",\n    \"displayPrompt\" : \"\"\n  } ],\n  \"version\" : 1,\n  \"dependencies\" : [ ],\n  \"displayName\" : \"DataCollectionTimestamp\"\n}",
+  "defaultRecord": "{\"temperature\":0,\"timestamp\":0}",
+  "createdUsername": "devuser",
+  "createdTime": 1553705467047,
+  "dependencySet": []
+}

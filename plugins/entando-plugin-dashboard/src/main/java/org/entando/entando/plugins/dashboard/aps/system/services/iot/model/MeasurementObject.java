@@ -20,7 +20,15 @@ public class MeasurementObject {
   private String swReceivedDate;
   @JsonIgnore
   private String entandoReceivedDate;
-  
+
+  public MeasurementObject() {
+  }
+
+  public MeasurementObject(String name, String measure) {
+    this.name = name;
+    this.measure = measure;
+  }
+
   public String getName() {
     return name;
   }

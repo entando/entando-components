@@ -8,6 +8,6 @@ public class IoTConstants {
 
   public static final String JSON_FIELD_SEPARATOR = "->";
   
-  public static final String MEASUREMENT_TYPE_EXCEPTION = "Invalid Measurement Type";
+  public static final String MEASUREMENT_TYPE_EXCEPTION = "Invalid MeasurementPayload Type";
   
 }

@@ -9,16 +9,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class IotMessage {
 
 	@Id
-    private String id;
+	private String id;
 	private Instant createdAt;
 	private MessagePayload content;
 	private int serverId;
 	private String dashboardCode;
-    
+
 	public IotMessage() {
 
 	}
-	
+
 	public IotMessage(int serverId, String dashboardCode, MessagePayload content) {
 		this.serverId = serverId;
 		this.dashboardCode = dashboardCode;
@@ -31,14 +31,14 @@ public class IotMessage {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public Instant getCreatedAt() {
 		return createdAt;
 	}
 	public void setCreatedAt(Instant createdAt) {
 		this.createdAt = createdAt;
 	}
-	
+
 	public MessagePayload getContent() {
 		return content;
 	}
@@ -54,7 +54,7 @@ public class IotMessage {
 	public void setDashboardCode(String dashboardCode) {
 		this.dashboardCode = dashboardCode;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Message [" + (id != null ? "id=" + id + ", " : "")
@@ -69,6 +69,6 @@ public class IotMessage {
 	public void setServerId(int serverId) {
 		this.serverId = serverId;
 	}
-   
-    
+
+
 }
