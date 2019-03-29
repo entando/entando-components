@@ -49,7 +49,7 @@ public class ConnectorController {
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
   public ResponseEntity<?> saveMeasurement(@PathVariable int serverId,
       @PathVariable String datasourceCode,
-      @RequestBody String measure) throws Exception {
+      @RequestBody String measure) {
 
     if (!dashboardConfigService.existsById(serverId)) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);

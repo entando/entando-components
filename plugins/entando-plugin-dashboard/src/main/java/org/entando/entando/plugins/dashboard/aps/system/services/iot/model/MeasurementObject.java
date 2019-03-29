@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import org.joda.time.DateTime;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class MeasurementObject {
 
@@ -68,5 +69,26 @@ public class MeasurementObject {
 
   public void setEntandoReceivedDate(String entandoReceivedDate) {
     this.entandoReceivedDate = entandoReceivedDate;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MeasurementObject that = (MeasurementObject) o;
+    return Objects.equals(name, that.name) &&
+        Objects.equals(measure, that.measure) &&
+        Objects.equals(eventDate, that.eventDate) &&
+        Objects.equals(swReceivedDate, that.swReceivedDate) &&
+        Objects.equals(entandoReceivedDate, that.entandoReceivedDate);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, measure, eventDate, swReceivedDate, entandoReceivedDate);
   }
 }

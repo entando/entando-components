@@ -37,8 +37,7 @@ public interface IConnectorService {
 
 	void setDeviceMeasurementSchema(IDashboardDatasourceDto dashboardDatasourceDto) throws ApsSystemException;
 
-	void saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, String measure)
-			throws Exception;
+	void saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, String measure);
 
 	PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList);
 

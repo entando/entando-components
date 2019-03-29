@@ -35,8 +35,7 @@ public interface IConnectorIot {
 
 	void saveMeasurementTemplate(IDashboardDatasourceDto dashboardDatasource) throws ApsSystemException;
 
-	void saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, String measurementBody)
-			throws Exception;
+	void saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, String measurementBody);
 
 	PagedMetadata<MeasurementObject> getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto, Long nMeasurements,
 			Date startDate, Date endDate, RestListRequest restListRequest)  throws RuntimeException;
