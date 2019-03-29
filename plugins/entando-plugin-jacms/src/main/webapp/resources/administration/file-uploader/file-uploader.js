@@ -430,13 +430,17 @@ jQuery(document).ready(function ($) {
     $cropEditorModal.find('.nav-tabs').on('shown.bs.tab', '[data-toggle="tab"]', function () {
         var fileId = parseInt($(this).closest('.image-navigation-item').data('storeItemId'));
         var file = fileUploadManager.files[fileId];
-        setupCropper(fileId);
+        if(!file.cropper.ready) {
+            setupCropper(fileId);
+        }
     });
 
     $cropEditorModal.on('shown.bs.modal', function () {
         var fileId = parseInt($(this).find('.tab-pane.active').data('storeItemId'));
         var file = fileUploadManager.files[fileId];
-        setupCropper(fileId);
+        if(!file.cropper.ready) {
+            setupCropper(fileId);
+        }
     });
 
 
@@ -460,21 +464,22 @@ jQuery(document).ready(function ($) {
 
                     // DOMToastSuccess("Image cropped!");
                 } else {
-                    var imageData = file.cropper.getCroppedCanvas().toDataURL(file.type);
-                    var newFile = fileUploadManager.prepareFile(dataURLtoFile(imageData, name));
-                    newFile.name = newFile.uploadId.substr(0, 4) + "_" + file.name;
-                    newFile.description = newFile.uploadId.substr(0, 4) + "_" + file.description;
+                    if (file.cropper.ready) {
+                        var imageData = file.cropper.getCroppedCanvas().toDataURL();
+                        var newFile = fileUploadManager.prepareFile(dataURLtoFile(imageData, name));
+                        newFile.name = newFile.uploadId.substr(0, 4) + "_" + file.name;
+                        newFile.description = newFile.uploadId.substr(0, 4) + "_" + file.description;
 
-                    newFile.domElements.$formGroup = fileUploadManager.addFormGroupForNewFile();
+                        newFile.domElements.$formGroup = fileUploadManager.addFormGroupForNewFile();
 
-                    newFile.imageData = imageData;
+                        newFile.imageData = imageData;
 
 
-                    var newFileId = fileUploadManager.insertFile(newFile);
-                    var tabResult = addTab(newFileId);
-                    fileUploadManager.files[newFileId].domElements.$tabNavigationItem = tabResult.$tabNavigationItem;
-                    fileUploadManager.files[newFileId].domElements.$tabPane = tabResult.$tabPane;
-
+                        var newFileId = fileUploadManager.insertFile(newFile);
+                        var tabResult = addTab(newFileId);
+                        fileUploadManager.files[newFileId].domElements.$tabNavigationItem = tabResult.$tabNavigationItem;
+                        fileUploadManager.files[newFileId].domElements.$tabPane = tabResult.$tabPane;
+                    }
                 }
 
                 // DOMToastSuccess("Crop created!");
