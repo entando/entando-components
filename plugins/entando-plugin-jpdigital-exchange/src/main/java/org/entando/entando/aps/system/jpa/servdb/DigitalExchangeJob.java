@@ -22,15 +22,8 @@ import org.entando.entando.aps.system.services.digitalexchange.job.JobType;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+
 import org.apache.commons.lang.RandomStringUtils;
 
 @Entity
@@ -45,6 +38,7 @@ public class DigitalExchangeJob implements Serializable {
     public static final String COL_COMPONENT_ID = "component_id";
     public static final String COL_COMPONENT_NAME = "component_name";
     public static final String COL_COMPONENT_VERSION = "component_version";
+    public static final String COL_COMPONENT_SIGNATURE = "component_signature";
     public static final String COL_STARTED_AT = "started_at";
     public static final String COL_ENDED_AT = "ended_at";
     public static final String COL_STARTED_BY = "started_by";
@@ -74,6 +68,10 @@ public class DigitalExchangeJob implements Serializable {
 
     @Column(name = COL_COMPONENT_VERSION)
     private String componentVersion;
+
+    @Lob
+    @Column(name = COL_COMPONENT_SIGNATURE)
+    private byte[] componentSignature;
 
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SystemConstants.API_DATE_FORMAT)
@@ -154,6 +152,14 @@ public class DigitalExchangeJob implements Serializable {
 
     public void setComponentVersion(String componentVersion) {
         this.componentVersion = componentVersion;
+    }
+
+    public byte[] getComponentSignature() {
+        return componentSignature;
+    }
+
+    public void setComponentSignature(byte[] componentSignature) {
+        this.componentSignature = componentSignature;
     }
 
     public double getProgress() {

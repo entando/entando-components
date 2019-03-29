@@ -18,6 +18,7 @@ import java.util.List;
 import org.entando.entando.aps.system.DigitalExchangeConstants;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
+import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.junit.Before;
@@ -196,6 +197,7 @@ public class DigitalExchangesManagerTest {
                         + "    <secret>client-secret</secret>"
                         + "    <timeout>5000</timeout>"
                         + "    <active>true</active>"
+                        + "    <publicKey>" + getTestPublicKey() + "</publicKey>"
                         + "  </digitalExchange>"
                         + "</digitalExchanges>");
     }

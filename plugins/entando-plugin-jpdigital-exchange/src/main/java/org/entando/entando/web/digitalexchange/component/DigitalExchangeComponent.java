@@ -54,6 +54,8 @@ public class DigitalExchangeComponent {
     // following the HATEOAS principle
     private String digitalExchangeId;
 
+    private String signature;
+
     public String getId() {
         return id;
     }
@@ -156,6 +158,17 @@ public class DigitalExchangeComponent {
         return this;
     }
 
+    /**
+     * RSA signature of the installation package encoded using Base64.
+     */
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
     @Override
     public boolean equals(Object other) {
         return reflectionEquals(this, other);
@@ -180,6 +193,7 @@ public class DigitalExchangeComponent {
                 .append("installed", installed)
                 .append("digitalExchangeName", digitalExchangeName)
                 .append("digitalExchangeId", digitalExchangeId)
+                .append("signature", signature)
                 .toString();
     }
 }

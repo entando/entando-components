@@ -15,13 +15,11 @@ package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,11 +33,15 @@ import org.entando.entando.aps.system.init.InitializerManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.RequestListProcessor;
+import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeBaseCall;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.aps.system.services.digitalexchange.client.PagedDigitalExchangeCall;
 import org.entando.entando.aps.system.services.digitalexchange.client.SimpleDigitalExchangeCall;
 import org.entando.entando.aps.system.services.digitalexchange.component.DigitalExchangeComponentListProcessor;
+import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
+import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureMatchingException;
+import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -58,11 +60,16 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
 
     private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeInstallExecutor.class);
 
+    private final DigitalExchangesService digitalExchangesService;
+
     @Autowired
-    public DigitalExchangeInstallExecutor(DigitalExchangesClient client, ComponentStorageManager storageManager,
-            DatabaseManager databaseManager, InitializerManager initializerManager,
-            CommandExecutor commandExecutor) {
+    public DigitalExchangeInstallExecutor(DigitalExchangesClient client, DigitalExchangesService digitalExchangesService,
+                                          ComponentStorageManager storageManager,
+                                          DatabaseManager databaseManager, InitializerManager initializerManager,
+                                          CommandExecutor commandExecutor) {
         super(client, storageManager, databaseManager, initializerManager, commandExecutor);
+        this.digitalExchangesService = digitalExchangesService;
+
     }
 
     @Override
@@ -126,6 +133,7 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
         DigitalExchangeComponent component = components.get(0);
         job.setComponentName(component.getName());
         job.setComponentVersion(component.getVersion());
+        job.setComponentSignature(component.getSignature().getBytes());
     }
 
     private void downloadComponent(DigitalExchangeJob job) {
@@ -145,8 +153,13 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
                 Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
             }
 
+            verifyDownloadedContentSignature(tempZipPath, job);
+
             extractZip(tempZipPath, job.getComponentId());
 
+        } catch (SignatureMatchingException ex) {
+            logger.error("Component signature doesn't match public key", ex);
+            throw new JobExecutionException("Unable to verify component signature", ex);
         } catch (IOException | UncheckedIOException ex) {
             logger.error("Error while downloading component", ex);
             throw new JobExecutionException("Unable to save component", ex);
@@ -156,6 +169,18 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
                     logger.warn("Unable to delete temporary zip file {}",
                             tempZipPath.toFile().getAbsolutePath());
                 }
+            }
+        }
+    }
+
+    private void verifyDownloadedContentSignature(Path tempZipPath, DigitalExchangeJob job) throws IOException {
+        DigitalExchange digitalExchange = digitalExchangesService.findById(job.getDigitalExchangeId());
+        try(InputStream in = Files.newInputStream(tempZipPath, StandardOpenOption.READ)) {
+            boolean signatureMatches = SignatureUtil.verifySignature(
+                    in, SignatureUtil.publicKeyFromPEM(digitalExchange.getPublicKey()),
+                    new String(job.getComponentSignature()));
+            if (!signatureMatches) {
+                throw new SignatureMatchingException("Component signature not matching public key");
             }
         }
     }
