@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.ServletContextAware;
 
-public abstract class DigitalExchangeAbstractJobExecutor implements ServletContextAware {
+public abstract class DigitalExchangeAbstractJobExecutor implements DigitalExchangeJobExecutor<Void>, ServletContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeAbstractJobExecutor.class);
 
@@ -34,8 +35,8 @@ public abstract class DigitalExchangeAbstractJobExecutor implements ServletConte
 
     @Autowired
     public DigitalExchangeAbstractJobExecutor(DigitalExchangesClient client, ComponentStorageManager storageManager,
-                                      DatabaseManager databaseManager, InitializerManager initializerManager,
-                                      CommandExecutor commandExecutor) {
+            DatabaseManager databaseManager, InitializerManager initializerManager,
+            CommandExecutor commandExecutor) {
         this.client = client;
         this.storageManager = storageManager;
         this.databaseManager = databaseManager;
@@ -74,7 +75,6 @@ public abstract class DigitalExchangeAbstractJobExecutor implements ServletConte
         job.setStatus(JobStatus.COMPLETED);
         job.setEnded(new Date());
         consumer.accept(job);
-
     }
 
     protected void reloadSystem() {
@@ -86,6 +86,10 @@ public abstract class DigitalExchangeAbstractJobExecutor implements ServletConte
         }
     }
 
-    abstract void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> consumer) throws JobExecutionException;
+    @Override
+    public void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> consumer, Void additionalParam) {
+        execute(job, consumer);
+    }
 
+    public abstract void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> consumer);
 }

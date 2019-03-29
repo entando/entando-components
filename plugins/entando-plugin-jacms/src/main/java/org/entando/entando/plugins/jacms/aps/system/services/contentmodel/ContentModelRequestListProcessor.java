@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.util.FilterUtils;
 import org.entando.entando.web.common.model.Filter;
@@ -43,11 +44,11 @@ public class ContentModelRequestListProcessor extends RequestListProcessor<Conte
         return (filter) -> {
             switch (filter.getAttribute()) {
                 case KEY_ID:
-                    return c -> FilterUtils.filterLong(filter, c::getId);
+                    return c -> FilterUtils.filterLong(filter, c.getId());
                 case KEY_CONTENT_TYPE:
-                    return c -> FilterUtils.filterString(filter, c::getContentType);
+                    return c -> FilterUtils.filterString(filter, c.getContentType());
                 case KEY_DESCR:
-                    return c -> FilterUtils.filterString(filter, c::getDescription);
+                    return c -> FilterUtils.filterString(filter, c.getDescription());
                 default:
                     return null;
             }
@@ -62,9 +63,9 @@ public class ContentModelRequestListProcessor extends RequestListProcessor<Conte
                 default:
                     return (a, b) -> Long.compare(a.getId(), b.getId());
                 case KEY_CONTENT_TYPE:
-                    return (a, b) -> a.getContentType().compareTo(b.getContentType());
+                    return (a, b) -> StringUtils.compare(a.getContentType(), b.getContentType());
                 case KEY_DESCR:
-                    return (a, b) -> a.getDescription().compareTo(b.getDescription());
+                    return (a, b) -> StringUtils.compare(a.getDescription(), b.getDescription());
             }
         };
     }

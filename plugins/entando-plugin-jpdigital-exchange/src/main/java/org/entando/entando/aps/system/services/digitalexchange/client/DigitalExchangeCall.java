@@ -26,7 +26,7 @@ import org.springframework.http.HttpMethod;
  * @param <R> the type of each DE response
  * @param <C> the type of the combined response
  */
-public abstract class DigitalExchangeCall<R extends RestResponse<?, ?>, C> extends DigitalExchangeBaseCall {
+public abstract class DigitalExchangeCall<R extends RestResponse<?, ?>, C> extends DigitalExchangeBaseCall<R> {
 
     private final ParameterizedTypeReference<R> parameterizedTypeReference;
 

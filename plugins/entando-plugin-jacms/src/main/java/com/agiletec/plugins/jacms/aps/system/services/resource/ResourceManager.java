@@ -37,14 +37,6 @@ import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import static com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager.RESOURCE_CREATION_DATE_FILTER_KEY;
-import static com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager.RESOURCE_DESCR_FILTER_KEY;
-import static com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager.RESOURCE_FILENAME_FILTER_KEY;
-import static com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager.RESOURCE_ID_FILTER_KEY;
-import static com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY;
-import static com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager.RESOURCE_MODIFY_DATE_FILTER_KEY;
-import static com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager.RESOURCE_TYPE_FILTER_KEY;
-import static com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager.STATUS_READY;
 import com.agiletec.plugins.jacms.aps.system.services.resource.cache.IResourceManagerCacheWrapper;
 import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMonoInstanceResource;
@@ -348,11 +340,24 @@ public class ResourceManager extends AbstractService implements IResourceManager
     public List<String> searchResourcesId(String type, String text,
             String filename, String categoryCode, Collection<String> groupCodes) throws ApsSystemException {
         if (null == groupCodes || groupCodes.isEmpty()) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
         List<String> resourcesId = null;
         try {
             resourcesId = this.getResourceDAO().searchResourcesId(type, text, filename, categoryCode, groupCodes);
+        } catch (Throwable t) {
+            logger.error("Error searching resources id", t);
+            throw new ApsSystemException("Error searching resources id", t);
+        }
+        return resourcesId;
+    }
+
+    @Override
+    public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories) throws ApsSystemException {
+        this.checkFilterKeys(filters);
+        List<String> resourcesId = null;
+        try {
+            resourcesId = this.getResourceDAO().searchResourcesId(filters, categories);
         } catch (Throwable t) {
             logger.error("Error searching resources id", t);
             throw new ApsSystemException("Error searching resources id", t);

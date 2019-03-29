@@ -16,20 +16,34 @@ package org.entando.entando.web.digitalexchange.component;
 import com.agiletec.aps.system.SystemConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Date;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
 
+@Validated
 public class DigitalExchangeComponent {
 
+    @NotNull
+    @Size(min = 1, max = 30)
     private String id;
+
+    @NotNull
+    @Size(min = 1, max = 30)
     private String name;
+
+    @NotNull
+    @Size(min = 1, max = 30)
+    private String type;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SystemConstants.API_DATE_FORMAT)
     private Date lastUpdate;
+
     private String version;
-    private String type;
     private String description;
     private String image;
     private double rating;
@@ -40,76 +54,87 @@ public class DigitalExchangeComponent {
     // following the HATEOAS principle
     private String digitalExchangeId;
 
+    private String signature;
+
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public DigitalExchangeComponent setId(String id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public DigitalExchangeComponent setName(String name) {
         this.name = name;
+        return this;
     }
 
     public Date getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Date lastUpdate) {
+    public DigitalExchangeComponent setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+        return this;
     }
 
     public String getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public DigitalExchangeComponent setVersion(String version) {
         this.version = version;
+        return this;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public DigitalExchangeComponent setType(String type) {
         this.type = type;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public DigitalExchangeComponent setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     public String getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public DigitalExchangeComponent setImage(String image) {
         this.image = image;
+        return this;
     }
 
     public double getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public DigitalExchangeComponent setRating(double rating) {
         this.rating = rating;
+        return this;
     }
 
     public boolean isInstalled() {
         return installed;
     }
 
-    public void setInstalled(boolean installed) {
+    public DigitalExchangeComponent setInstalled(boolean installed) {
         this.installed = installed;
+        return this;
     }
 
     /**
@@ -119,16 +144,29 @@ public class DigitalExchangeComponent {
         return digitalExchangeName;
     }
 
-    public void setDigitalExchangeName(String digitalExchangeName) {
+    public DigitalExchangeComponent setDigitalExchangeName(String digitalExchangeName) {
         this.digitalExchangeName = digitalExchangeName;
+        return this;
     }
 
     public String getDigitalExchangeId() {
         return digitalExchangeId;
     }
 
-    public void setDigitalExchangeId(String digitalExchangeId) {
+    public DigitalExchangeComponent setDigitalExchangeId(String digitalExchangeId) {
         this.digitalExchangeId = digitalExchangeId;
+        return this;
+    }
+
+    /**
+     * RSA signature of the installation package encoded using Base64.
+     */
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 
     @Override
@@ -155,6 +193,7 @@ public class DigitalExchangeComponent {
                 .append("installed", installed)
                 .append("digitalExchangeName", digitalExchangeName)
                 .append("digitalExchangeId", digitalExchangeId)
+                .append("signature", signature)
                 .toString();
     }
 }

@@ -14,6 +14,8 @@
 package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import java.util.Optional;
+
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,8 +26,10 @@ import org.entando.entando.web.common.exceptions.ValidationConflictException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,7 +39,7 @@ public class DigitalExchangeComponentJobsServiceTest {
     private DigitalExchangesService exchangesService;
 
     @Mock
-    private DigitalExchangeJobDAO dao;
+    private DigitalExchangeJobService jobService;
 
     @Mock
     private DigitalExchangeInstallExecutor digitalExchangeInstallExecutor;
@@ -47,13 +51,14 @@ public class DigitalExchangeComponentJobsServiceTest {
     public void testJobFailure() {
 
         when(exchangesService.findById(DE_1_ID)).thenReturn(getDE1());
+        when(jobService.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         String errorMsg = "error_msg";
-        doThrow(new JobExecutionException(errorMsg)).when(digitalExchangeInstallExecutor).execute(any(), any());
+        doThrow(new JobExecutionException(errorMsg)).when(digitalExchangeInstallExecutor).execute(any(), any(), any());
 
         DigitalExchangeJob job = service.install(DE_1_ID, "test", "admin");
         assertThat(job).isNotNull();
-        assertThat(job.getId()).hasSize(20);
+        verify(jobService, atLeast(1)).save(job);
 
         try {
             Thread.sleep(500);
@@ -69,7 +74,7 @@ public class DigitalExchangeComponentJobsServiceTest {
 
         DigitalExchangeJob job = new DigitalExchangeJob();
         job.setStatus(JobStatus.IN_PROGRESS);
-        when(dao.findLast("test", JobType.INSTALL)).thenReturn(Optional.of(job));
+        when(jobService.findLast("test", JobType.INSTALL)).thenReturn(Optional.of(job));
 
         service.install(DE_1_ID, "test", "admin");
     }

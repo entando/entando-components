@@ -16,6 +16,7 @@ package org.entando.entando.aps.system.services.digitalexchange;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeCall;
@@ -25,16 +26,21 @@ import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExch
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.model.RestError;
 import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+
 import static org.entando.entando.web.digitalexchange.DigitalExchangeValidator.*;
 
 @Service
 public class DigitalExchangesServiceImpl implements DigitalExchangesService {
+
+    private final Logger logger = LoggerFactory.getLogger(DigitalExchangesServiceImpl.class);
 
     private static final String DIGITAL_EXCHANGE_LABEL = "digitalExchange";
 
@@ -64,8 +70,13 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
         validateName(digitalExchange);
         validateURL(digitalExchange);
 
-        return manager.create(digitalExchange);
+        DigitalExchange storedDigitalExchange = manager.create(digitalExchange);
+
+        verifyHasPublicKey(storedDigitalExchange);
+
+        return storedDigitalExchange;
     }
+
 
     @Override
     public DigitalExchange update(DigitalExchange digitalExchange) {
@@ -74,7 +85,11 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
             validateName(digitalExchange);
         }
         validateURL(digitalExchange);
-        return manager.update(digitalExchange);
+        DigitalExchange updatedDe = manager.update(digitalExchange);
+
+        verifyHasPublicKey(updatedDe);
+
+        return updatedDe;
     }
 
     @Override
@@ -119,6 +134,39 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
             throw new ValidationConflictException(errors);
         }
     }
+
+    private void verifyHasPublicKey(DigitalExchange storedDigitalExchange) {
+        if (storedDigitalExchange.hasNoPublicKey()) {
+            tryUpdateWithRemotePublicKey(storedDigitalExchange);
+        }
+    }
+
+    private void tryUpdateWithRemotePublicKey(DigitalExchange digitalExchange) {
+
+        try {
+            updateWithRemotePublicKey(digitalExchange);
+        } catch (Exception ex) {
+            logger.error("An error occurred while downloading public key for digital exchange " + digitalExchange.getId());
+            digitalExchange.invalidate();
+        }
+    }
+
+    private void updateWithRemotePublicKey(DigitalExchange digitalExchange) {
+        Optional<String> publicKey = getRemotePemFormattedPublicKey(digitalExchange);
+        digitalExchange.setPublicKey(publicKey.orElseThrow(NotExistentPublicKey::new));
+        manager.update(digitalExchange);
+    }
+
+    private Optional<String> getRemotePemFormattedPublicKey(DigitalExchange digitalExchange) {
+        SimpleDigitalExchangeCall<String> call = new SimpleDigitalExchangeCall<>(
+                HttpMethod.GET, new ParameterizedTypeReference<SimpleRestResponse<String>>() {
+        }, "digitalExchange", "publicKey");
+
+        SimpleRestResponse<String> response = client.getSingleResponse(digitalExchange, call);
+        return Optional.ofNullable(response.getPayload());
+    }
+
+    private static class NotExistentPublicKey extends RuntimeException {}
 
     private static class TestExchangesCall extends DigitalExchangeCall<SimpleRestResponse<Map<String, List<RestError>>>, Map<String, List<RestError>>> {
 
