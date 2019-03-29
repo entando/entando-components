@@ -167,6 +167,8 @@ public interface IResourceManager {
     public List<String> searchResourcesId(FieldSearchFilter[] filters,
             String categoryCode, Collection<String> groupCodes) throws ApsSystemException;
 
+    public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories) throws ApsSystemException;
+
     /**
      * Restituisce la risorsa con l'id specificato.
      *

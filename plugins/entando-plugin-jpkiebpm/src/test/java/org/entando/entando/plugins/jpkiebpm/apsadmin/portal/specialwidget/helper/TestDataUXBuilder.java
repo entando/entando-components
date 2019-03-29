@@ -1,28 +1,27 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 
 import java.nio.file.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
-import static org.mockito.Mockito.mock;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class TestDataUXBuilder extends TestCase {
 
-    private final static transient Logger logger = Logger.getLogger(TestDataUXBuilder.class);
+    private final static transient Logger logger = LoggerFactory.getLogger(TestDataUXBuilder.class);
 
     private static final String CONTAINER_ID = "CONTAINER_ID";
     private static final String PROCESS_ID = "PROCESS_ID";
