@@ -1,11 +1,11 @@
 /*
  * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.digitalexchange.DigitalExchangeValidator;
 import org.entando.entando.web.common.model.SimpleRestResponse;
@@ -37,6 +36,7 @@ import static org.mockito.Mockito.when;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.assertj.core.api.Assertions.assertThat;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
 public class DigitalExchangesServiceTest {
@@ -68,7 +68,7 @@ public class DigitalExchangesServiceTest {
         assertNotNull(service.findById(DE_1_ID));
     }
 
-    @Test(expected = RestRourceNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void shouldFindNothing() {
         service.findById(INEXISTENT_DE_ID);
     }
@@ -83,7 +83,7 @@ public class DigitalExchangesServiceTest {
         service.update(getDE1());
     }
 
-    @Test(expected = RestRourceNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void shouldFailUpdatingDigitalExchange() {
         service.update(getInexistentDE());
     }
@@ -93,7 +93,7 @@ public class DigitalExchangesServiceTest {
         service.delete(DE_1_ID);
     }
 
-    @Test(expected = RestRourceNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void shouldFailDeletingDigitalExchange() {
         service.delete(INEXISTENT_DE_ID);
     }

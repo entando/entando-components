@@ -30,13 +30,18 @@ import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiProcessStart;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
-import org.entando.entando.plugins.jprestapi.aps.core.*;
+import org.entando.entando.plugins.jprestapi.aps.core.Endpoint;
+import org.entando.entando.plugins.jprestapi.aps.core.RequestBuilder;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
-import org.json.*;
-import org.slf4j.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -1393,6 +1398,96 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             logger.error("Failed to fetch case details ", t);
             throw new ApsSystemException("Error getting the cases definitions", t);
         }
+    }
+
+    @Override
+    public Set<String> getProcessVariables(KieBpmConfig config, String containerId, String processId) throws ApsSystemException{
+
+
+        HashMap headersMap = new HashMap();
+        String result = null;
+        JSONObject json = null;
+        try {
+            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_GET_PROCESS_VARIABLES)).resolveParams(containerId, processId);
+            headersMap.put("Accept", "application/json");
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            result = (new KieRequestBuilder(client)).setEndpoint(t).setHeaders(headersMap).setDebug(config.getDebug().booleanValue()).doRequest();
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                logger.debug("received successful message: ", result);
+            } else {
+                logger.debug("received empty case definitions message: ");
+            }
+
+            JSONObject variables =  json.getJSONObject("variables");
+
+            return variables.keySet();
+        } catch (Throwable t) {
+            logger.error("Failed to fetch case details ", t);
+            throw new ApsSystemException("Error getting the cases definitions", t);
+        }
+    }
+
+    @Override
+    public Map<String, String> getProcessVariableInstances(KieBpmConfig config, String processInstanceIdd) throws ApsSystemException{
+
+
+        HashMap headersMap = new HashMap();
+        Map<String, String> processVars = new HashMap<>();
+        String result = null;
+        JSONObject json = null;
+        try {
+            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_GET_PROCESS_VARIABLE_INSTANCES)).resolveParams(processInstanceIdd);
+            headersMap.put("Accept", "application/json");
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            result = (new KieRequestBuilder(client)).setEndpoint(t).setHeaders(headersMap).setDebug(config.getDebug().booleanValue()).doRequest();
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                logger.debug("received successful message: ", result);
+            } else {
+                logger.debug("received empty case definitions message: ");
+            }
+
+            JSONArray variables =  json.getJSONArray("variable-instance");
+
+            for(Object var : variables.toList()){
+
+                Map jsonVar =  (Map)var;
+                processVars.put(jsonVar.get("name")+"", jsonVar.get("value")+"");
+            }
+
+            return processVars;
+        } catch (Throwable t) {
+            logger.error("Failed to fetch case details ", t);
+            throw new ApsSystemException("Error getting the cases definitions", t);
+        }
+    }
+
+    @Override
+    public String claimTask(KieBpmConfig config, String containerId, String taskId, String username) throws ApsSystemException{
+
+        HashMap headersMap = new HashMap();
+        Map<String, String> processVars = new HashMap<>();
+        String result = null;
+        JSONObject json = null;
+        try {
+            Endpoint t = ((Endpoint) KieEndpointDictionary.create().get(KieBpmSystemConstants.API_PUT_HUMAN_TASK_CLAIMED)).resolveParams(containerId, taskId, username);
+            headersMap.put("Accept", "application/json");
+            KieClient client = KieApiUtil.getClientFromConfig(config);
+            result = (new KieRequestBuilder(client)).setEndpoint(t).setHeaders(headersMap).setDebug(config.getDebug().booleanValue()).doRequest();
+            if (!result.isEmpty()) {
+                json = new JSONObject(result);
+                logger.debug("received successful message: ", result);
+            } else {
+                logger.debug("received empty case definitions message: ");
+            }
+
+        } catch (Throwable t) {
+            logger.error("Failed to claim task details ", t);
+            throw new ApsSystemException("Error getting the cases definitions", t);
+        }
+
+        return result;
     }
 
     private IKieFormOverrideManager overrideManager;

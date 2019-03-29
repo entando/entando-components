@@ -25,13 +25,11 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import org.apache.commons.beanutils.BeanComparator;
-import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieContainer;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieServerConfigDto;
 import org.entando.entando.plugins.jpkiebpm.web.config.validator.ConfigValidator;
 import org.slf4j.Logger;
@@ -82,10 +80,10 @@ public class KieConfigService implements IKieConfigService {
             KieBpmConfig config = map.get(configCode);
             if (null == config) {
                 logger.warn("no config found with code {}", configCode);
-                throw new RestRourceNotFoundException(ConfigValidator.ERRCODE_CONFIG_NOT_FOUND, "kie server config", configCode);
+                throw new ResourceNotFoundException(ConfigValidator.ERRCODE_CONFIG_NOT_FOUND, "kie server config", configCode);
             }
             configDto = this.getKieServerConfigDtoBuilder().convert(config);
-        } catch (RestRourceNotFoundException t) {
+        } catch (ResourceNotFoundException t) {
             throw t;
         } catch (Exception t) {
             logger.error("error in get configuration", t);
@@ -137,7 +135,7 @@ public class KieConfigService implements IKieConfigService {
             Map<String, KieBpmConfig> map = this.getKieFormManager().getKieServerConfigurations();
             KieBpmConfig config = map.get(configRequest.getId());
             if (null == config) {
-                throw new RestRourceNotFoundException(ConfigValidator.ERRCODE_CONFIG_NOT_FOUND, "kie bpm config", configRequest.getId());
+                throw new ResourceNotFoundException(ConfigValidator.ERRCODE_CONFIG_NOT_FOUND, "kie bpm config", configRequest.getId());
             }
             KieBpmConfig newConfig = this.buildConfig(configRequest);
             this.getKieFormManager().addConfig(newConfig);
@@ -148,7 +146,7 @@ public class KieConfigService implements IKieConfigService {
                 bindingResult.reject("schema", "Invalid configuration");
             }
             configDto = this.getKieServerConfigDtoBuilder().convert(newConfig);
-        } catch (RestRourceNotFoundException t) {
+        } catch (ResourceNotFoundException t) {
             throw t;
         } catch (Exception t) {
             logger.error("error in put configuration", t);

@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 
 public class DigitalExchangeCategoriesControllerTest extends AbstractControllerTest {
 
@@ -63,14 +63,14 @@ public class DigitalExchangeCategoriesControllerTest extends AbstractControllerT
         result.andExpect(jsonPath("$.metaData").isEmpty());
         result.andExpect(jsonPath("$.errors").isEmpty());
         result.andExpect(jsonPath("$.payload", hasSize(2)));
-        result.andExpect(jsonPath("$.payload", hasItem("pageModels")));
-        result.andExpect(jsonPath("$.payload", hasItem("fragments")));
+        result.andExpect(jsonPath("$.payload[0]", is("pageModel")));
+        result.andExpect(jsonPath("$.payload[1]", is("fragment")));
     }
 
     private void initServiceMocks() {
 
         ResilientListWrapper<String> response = new ResilientListWrapper<>();
-        response.getList().addAll(Arrays.asList("pageModels", "fragments"));
+        response.getList().addAll(Arrays.asList("pageModel", "fragment"));
 
         when(service.getCategories()).thenReturn(response);
     }

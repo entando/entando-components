@@ -154,6 +154,8 @@
         </div>
     </div>
 
+
+
     <div class="tab-content">
         <div id="table-view" class="tab-pane fade">
             <s:form action="search" class="container-fluid container-cards-pf">
@@ -294,7 +296,10 @@
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight3">
                                                         <li>
-                                                            <a href="<s:url action="edit" namespace="/do/jacms/Resource"><s:param name="resourceId" value="%{#resourceid}" /></s:url>"
+                                                            <a href="<s:url action="edit" namespace="/do/jacms/Resource">
+                                                                   <s:param name="resourceId" value="%{#resourceid}" />
+                                                                   <s:param name="resourceTypeCode" value="%{#resource.type}" />
+                                                               </s:url>"
                                                                title="<s:text name="label.edit" />: <s:property value="#resource.descr" /> ">
                                                                 <span><s:text name="label.edit"/></span>
                                                             </a>
@@ -481,7 +486,10 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight4">
                                                 <li>
-                                                    <a href="<s:url action="edit" namespace="/do/jacms/Resource"><s:param name="resourceId" value="%{#resourceid}" /></s:url>"
+                                                    <a href="<s:url action="edit" namespace="/do/jacms/Resource">
+                                                           <s:param name="resourceId" value="%{#resourceid}" />
+                                                           <s:param name="resourceTypeCode" value="%{#resource.type}" />
+                                                       </s:url>"
                                                        title="<s:text name="label.edit" />: <s:property value="#resource.descr" /> ">
                                                         <span><s:text name="label.edit"/></span>
                                                     </a>
@@ -524,6 +532,7 @@
                                                     </s:if>
                                                 </div>
                                                 <div class="list-group-item-text">
+
                                                     <a href="<s:property value="%{#resource.documentPath}" />"
                                                        title="<s:text name="label.download" />: <s:property value="#resource.masterFileName" />"
                                                        class="pull-left margin-small-top">
@@ -568,7 +577,6 @@
                 </wpsa:subset>
             </s:form>
             <script>
-
                 $('#TabAttachList button').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');
@@ -588,7 +596,7 @@
                 // al caricamento passa l' hash al tab
                 var hash = window.location.hash;
                 $('#TabAttachList button[href="' + hash + '"]').tab('show');
-            </script>      
+            </script>
         </div>
     </div>
 </div>

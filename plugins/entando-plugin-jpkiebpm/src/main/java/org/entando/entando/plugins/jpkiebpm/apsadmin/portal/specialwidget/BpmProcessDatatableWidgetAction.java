@@ -1,29 +1,34 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.group.IGroupManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IBpmWidgetInfoManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
-import org.slf4j.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
 
     private static final Logger logger = LoggerFactory.getLogger(BpmProcessDatatableWidgetAction.class);
 
     @Override
-    protected void loadFieldIntoDatatableFromBpm() throws ApsSystemException {
+    protected void loadFieldIntoDatatableFromBpm(String containerId, String processId) throws ApsSystemException {
         KieBpmConfig config = getFormManager().getKieServerConfigurations().get(this.getKnowledgeSourcePath());
         List<KieProcess> processes = getFormManager().getProcessDefinitionsList(config);
         if (!processes.isEmpty()) {
-            super.loadDataIntoFieldDatatable(processes);
+
+            //Horrible hack. To be replaced by an actual call.
+            List<String> fields = new ArrayList<>();
+            StringTokenizer tokenizer = new StringTokenizer(processes.get(0).toString(), ",");
+            Byte position = 1;
+            while (tokenizer.hasMoreTokens()) {
+                final String name = tokenizer.nextToken().trim();
+                fields.add(name);
+
+            }
+
+            super.loadDataIntoFieldDatatable(fields);
         }
 
         Map<String, String> columns = new HashMap<>();

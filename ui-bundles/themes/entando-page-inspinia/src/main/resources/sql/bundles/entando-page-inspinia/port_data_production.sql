@@ -130,7 +130,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('e
         <div id="wrapper">
             <nav class="navbar-default navbar-static-side" role="navigation">
                 <div class="sidebar-collapse">
-                    <ul class="nav metismenu" id="side-menu">
+                    <ul class="nav" id="side-menu-1">
                         <li class="nav-header">
                             <div class="dropdown profile-element">
                                 <#if (accountExpired?? && accountExpired == true) || (wrongAccountCredential?? && wrongAccountCredential == true)>open</#if>

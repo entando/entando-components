@@ -44,7 +44,9 @@ import static org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConsta
 
 public class CaseManager extends AbstractService implements ICaseManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(KieFormManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(CaseManager.class);
+
+    private Map<String, String> casePathChannel = new HashMap<>();
 
 
     @Override

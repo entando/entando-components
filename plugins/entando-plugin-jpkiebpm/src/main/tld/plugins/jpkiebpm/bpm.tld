@@ -31,4 +31,38 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    
+    
+    
+    
+    <tag>
+        <description><![CDATA[task list widget info tag]]></description>
+        <name>tasklistwidgetinfo</name>
+        <tag-class>org.entando.entando.plugins.jpkiebpm.aps.tags.CurrentWidgetTaskListPropsTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description><![CDATA[value of redirect OnClick Row key data config]]></description>
+            <name>redirectOnClickRowVar</name>
+            <required>no</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description><![CDATA[value redirect Details Page of key data config]]></description>
+            <name>redirectDetailsPageVar</name>
+            <required>no</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description><![CDATA[value show complete button  of key data config]]></description>
+            <name>showCompleteButtonVar</name>
+            <required>no</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>        
+        <attribute>
+            <description><![CDATA[value show claim button  of key data config]]></description>
+            <name>showClaimButtonVar</name>
+            <required>no</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>                    
+    </tag>
 </taglib>
