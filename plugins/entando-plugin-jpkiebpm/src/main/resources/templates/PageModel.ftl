@@ -1,4 +1,4 @@
-<div class="container">
+<div>
     <#include "/ModelHeader.ftl">
         <#list sections as k, section>
             <#include "/Section.ftl">

@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.system.services.pagemodel.model.DigitalExchangePageModelDto;
 import org.entando.entando.aps.util.FilterUtils;
@@ -26,11 +27,11 @@ import org.entando.entando.web.common.model.RestListRequest;
 public class DigitalExchangePageModelListProcessor extends RequestListProcessor<DigitalExchangePageModelDto> {
 
     private static final String CODE = "code";
-    private static final String DESCRIPTION = "descr";
+    private static final String DESCRIPTION = "description";
     private static final String MAIN_FRAME = "mainFrame";
     private static final String PLUGIN_CODE = "pluginCode";
     private static final String TEMPLATE = "template";
-    private static final String DIGITAL_EXCHANGE = "digitalExchange";
+    private static final String DIGITAL_EXCHANGE_NAME = "digitalExchangeName";
 
     public DigitalExchangePageModelListProcessor(RestListRequest restListRequest, List<DigitalExchangePageModelDto> items) {
         super(restListRequest, items);
@@ -38,20 +39,20 @@ public class DigitalExchangePageModelListProcessor extends RequestListProcessor<
 
     @Override
     protected Function<Filter, Predicate<DigitalExchangePageModelDto>> getPredicates() {
-        return (filter) -> {
+        return filter -> {
             switch (filter.getAttribute()) {
                 case CODE:
-                    return p -> FilterUtils.filterString(filter, p::getCode);
+                    return p -> FilterUtils.filterString(filter, p.getCode());
                 case DESCRIPTION:
-                    return p -> FilterUtils.filterString(filter, p::getDescr);
+                    return p -> FilterUtils.filterString(filter, p.getDescr());
                 case MAIN_FRAME:
-                    return p -> FilterUtils.filterInt(filter, p::getMainFrame);
+                    return p -> FilterUtils.filterInt(filter, p.getMainFrame());
                 case PLUGIN_CODE:
-                    return p -> FilterUtils.filterString(filter, p::getPluginCode);
+                    return p -> FilterUtils.filterString(filter, p.getPluginCode());
                 case TEMPLATE:
-                    return p -> FilterUtils.filterString(filter, p::getTemplate);
-                case DIGITAL_EXCHANGE:
-                    return p -> FilterUtils.filterString(filter, p::getDigitalExchange);
+                    return p -> FilterUtils.filterString(filter, p.getTemplate());
+                case DIGITAL_EXCHANGE_NAME:
+                    return p -> FilterUtils.filterString(filter, p.getDigitalExchange());
                 default:
                     return null;
             }
@@ -63,18 +64,16 @@ public class DigitalExchangePageModelListProcessor extends RequestListProcessor<
         return sort -> {
             switch (sort) {
                 case DESCRIPTION:
-                    return (a, b) -> a.getPluginCode().compareTo(b.getPluginCode());
+                    return (a, b) -> StringUtils.compare(a.getPluginCode(), b.getPluginCode());
                 case MAIN_FRAME:
                     return (a, b) -> Integer.compare(a.getMainFrame(), b.getMainFrame());
                 case PLUGIN_CODE:
-                    return (a, b) -> a.getPluginCode().compareTo(b.getPluginCode());
-                case TEMPLATE:
-                    return (a, b) -> a.getTemplate().compareTo(b.getTemplate());
-                case DIGITAL_EXCHANGE:
-                    return (a, b) -> a.getDigitalExchange().compareTo(b.getDigitalExchange());
+                    return (a, b) -> StringUtils.compare(a.getPluginCode(), b.getPluginCode());
+                case DIGITAL_EXCHANGE_NAME:
+                    return (a, b) -> StringUtils.compare(a.getDigitalExchange(), b.getDigitalExchange());
                 case CODE: // code is the default sorting field
                 default:
-                    return (a, b) -> a.getCode().compareTo(b.getCode());
+                    return (a, b) -> StringUtils.compare(a.getCode(), b.getCode());
             }
         };
     }

@@ -14,6 +14,7 @@
 package org.entando.entando.aps.system.services.digitalexchange.client;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -90,7 +91,7 @@ public class DigitalExchangesClientImpl implements DigitalExchangesClient {
     }
 
     @Override
-    public InputStream getStreamResponse(String digitalExchangeId, DigitalExchangeBaseCall call) {
+    public InputStream getStreamResponse(String digitalExchangeId, DigitalExchangeBaseCall<InputStream> call) {
         DigitalExchange digitalExchange = getDigitalExchange(digitalExchangeId);
         OAuth2RestTemplate restTemplate = digitalExchangesManager.getRestTemplate(digitalExchange.getId());
         return new DigitalExchangeStreamCallExecutor(messageSource, digitalExchange, restTemplate, call).getResponse();

@@ -16,7 +16,12 @@
         </a>
     </li>
     <li class="page-title-container">
-       <s:text name="label.add" />
+        <s:if test="getStrutsAction() == 1">
+            <s:text name="label.add" />
+        </s:if>
+        <s:else>
+            <s:text name="label.edit" />
+        </s:else>
     </li>
 </ol>
 
@@ -63,6 +68,7 @@
     <p class="sr-only"><s:text name="note.editContent" /></p>
     <s:url namespace="/do/jacms/Content/Ajax"  action="autosave" var="dataAutosaveActionVar" />
     <s:form cssClass="form-horizontal " data-form-type="autosave" data-autosave-action="%{#dataAutosaveActionVar}">
+
 
         <legend>
             <s:text name="label.info" /><span class="text-right-required"><s:text name="label.requiredFields" /></span>
@@ -128,13 +134,12 @@
                 </div>
 
                 <!-- Extra Groups List -->
-                <s:if test="content.groups.size != 0">
+                <s:if test="%{content.groups.size != 0}">
                     <div class="mt-20">
                         <s:iterator value="content.groups" var="groupName">
                             <wpsa:actionParam action="removeGroup" var="actionName" >
                                 <wpsa:actionSubParam name="groupToRemove" value="%{#groupName}" />
                             </wpsa:actionParam>
-
                             <div class="label label-default label-tag label-sm">
                                 <s:property value="%{getGroupsMap()[#groupName].getDescr()}"/>&#32;
                                 <wpsf:submit type="button" cssClass="btn btn-link" action="%{#actionName}"
@@ -154,7 +159,6 @@
             <s:text name="label.categories" /><span class="text-right-required"><s:text name="label.requiredFields" /></span>
         </legend>
 
-
         <div class="form-group">
             <label class="col-sm-2 control-label"><s:text name="label.categories"/></label>
             <div class="col-sm-10">
@@ -168,7 +172,7 @@
         <legend>
             <s:text name="label.custom.attributes" /><span class="text-right-required"><s:text name="label.requiredFields" /></span>
         </legend>
-        
+
         <s:if test="%{null == content.mainGroup || content.mainGroup == ''}">
             <div class="alert alert-warning">
                 <span class="icon fa fa-warning"></span>
@@ -178,7 +182,10 @@
 
         <p class="sr-only">
             <wpsf:hidden name="contentOnSessionMarker" />
+            <wpsf:hidden name="resourceTypeCode" id="resourceTypeCode"/>
+
         </p>
+
         <p class="sr-only" id="quickmenu"><s:text name="title.quickMenu" /></p>
 
         <s:if test="%{null != content.mainGroup && content.mainGroup != ''}">
@@ -378,7 +385,7 @@
                 </s:iterator><%-- lang iterator --%>
             </div><%-- tabs container --%>
         </s:if>
-        
+
         <!-- Sezione Info -->
         <wpsa:hookPoint key="jacms.entryContent.tabGeneral" objectName="hookPointElements_jacms_entryContent_tabGeneral">
             <div id="info" class="panel panel-default">

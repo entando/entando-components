@@ -15,8 +15,15 @@
         margin-left: 12px;
     }
 
-    legend.overrides {
+    legend.subtitle {
         margin-left: -20px;
+    }
+    #check ul {
+        padding-left: 0px;
+        margin-left: -20px;
+    }
+    .switch-label {
+        margin-left: 12px;
     }
 </style>
 
@@ -114,12 +121,48 @@
                                     </div>
                                 </div>
 
-                                <!--override section--> 
+                                    
 
+                                 <s:if test="#isProcessPathSetted">
+                                     <!-- Redirect PAGE -->
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12 input-group">
+                                            <wpsf:checkbox name="redirectOnClickRow" value="%{redirectOnClickRow}" id="redirectOnClickRow" cssClass="bootstrap-switch" />
+                                            <label class="switch-label" for="redirectOnClickRowPage"><s:text name="label.redirectOnClickRow" /></label>
+                                        </div>
+                                    </div>
+                                    <div id="redirectDetailsPageGroup" class="form-group">
+                                        <label for="redirectDetailsPage"><s:text name="label.redirectDetailsPage" /></label>
+                                                                 
+                                            <div class="col-sm-12 input-group">
+                                                <select name="redirectDetailsPage" id="redirectDetailsPage" class="form-control">
+                                                    <s:iterator value="freePages" var="page">
+                                                        <option <s:if test="%{redirectDetailsPage} == #page.code">selected="selected"</s:if> 
+                                                         value="<s:property value="#page.code"/>"><s:if test="!#page.showable"> [i]</s:if><s:property value="#page.getShortFullTitle(currentLang.code)"/></option>
+                                                    </s:iterator>
+                                                </select>
+                                            </div>
+                                    </div>
+                                            
+                                    <!-- Show/hide buttons -->
+
+                                    <div class="form-group">
+                                          <div class="col-sm-12 input-group">
+                                            <wpsf:checkbox name="showClaimButton" value="%{showClaimButton}" id="showClaimButton" cssClass="bootstrap-switch" />
+                                            <label class="switch-label" for="showClaimButton"><s:text name="label.showClaimButton" /></label>
+                                          </div>
+                                    </div>
+                                    <div class="form-group">
+                                           <div class="col-sm-12 input-group">
+                                            <wpsf:checkbox name="showCompleteButton" value="%{showCompleteButton}" id="showCompleteButton" cssClass="bootstrap-switch" />
+                                            <label class="switch-label" for="showCompleteButton"><s:text name="label.showCompleteButton" /></label>
+                                           </div>
+                                     </div>
+                                 </s:if>    
+                                    
                                 <s:if test="#isProcessPathSetted">
-                                    <legend class="overrides">
-                                        <s:text name="label.override.found" /> test
-                                    </legend>
+
                                     <s:set var="ovMap" value="formOverridesMap" />
                                     <s:iterator var="item" value="#ovMap">
                                         <s:set var="checked" value="ovrd.contains(#item.value.id)"/>
@@ -168,10 +211,11 @@
                 </s:if>
 
                 <s:if test="#isProcessPathSetted">
+                    <legend class="subtitle" for="Bpm Groups">
+                        <s:text name="Bpm Groups"/>
+                    </legend>
                     <div class="form-group">
-                        <label class="control-label col-xs-2" for="Bpm Groups">
-                            <s:text name="Bpm Groups"/>
-                        </label>
+            
                         <div class="col-xs-5">
                             <div id="check">
                                 <s:if test="!#isGroupsSetted">
@@ -198,7 +242,13 @@
                             </div>
                         </div>
                     </div>
-                    <hr/>
+                    
+                    <!--override section--> 
+
+                    <legend class="subtitle">
+                        <s:text name="label.override.found" />
+                    </legend>
+                    
                     <div class="table-responsive overflow-visible">
 
                         <table id="sort" class="grid table table-bordered table-hover">
@@ -294,4 +344,19 @@
 <!--remove class after checkboxlist is run by application--> 
 <script>
     $("ul").removeClass("bootstrap-switch");
+</script>
+    
+<script>   
+    $(document).ready(function(){        
+        var redirectOnClickRowVar = $("#redirectOnClickRow").bootstrapSwitch('state');
+        if (redirectOnClickRowVar===false){
+            $("#redirectDetailsPageGroup").hide();       
+        }
+
+        $('#redirectOnClickRow').on('switchChange.bootstrapSwitch', function (event, state) {
+            $( "#redirectDetailsPageGroup" ).slideToggle( "slow" );                  
+        }); 
+
+    });
+   
 </script>

@@ -15,6 +15,17 @@
         <property name="formOverrideManager" ref="jpkiebpmFormOverrideManager"/>
     </bean>
     
+    <bean id="jpkiebpmBpmTaskFormWidgetAction"
+          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmTaskFormWidgetAction"
+          parent="simpleWidgetAction" scope="prototype">
+        <property name="kieFormOverrideManager" ref="jpkiebpmFormOverrideManager"/>
+        <property name="formManager" ref="jpkiebpmsManager"/>
+        <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
+        <property name="dataObjectManager" ref="DataObjectManager"/>
+        <property name="dataObjectModelManager" ref="DataObjectModelManager"/>
+        <property name="i18nManager" ref="I18nManager"/>
+    </bean>
+    
     <bean id="jpkiebpmBpmFormWidgetAction"
           class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmFormWidgetAction"
           parent="simpleWidgetAction" scope="prototype">
@@ -24,7 +35,6 @@
         <property name="dataObjectManager" ref="DataObjectManager"/>
         <property name="dataObjectModelManager" ref="DataObjectModelManager"/>
         <property name="i18nManager" ref="I18nManager"/>
-        <!--property name="uXBuilder" ref="jpkiebpmDataUXBuilder" /-->
     </bean>
 
     <bean id="jpkiebpmBpmTaskListDatatableWidgetAction"

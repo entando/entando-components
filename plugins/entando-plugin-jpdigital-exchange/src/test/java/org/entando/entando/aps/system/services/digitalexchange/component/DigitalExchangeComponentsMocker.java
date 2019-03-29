@@ -29,15 +29,21 @@ import org.entando.entando.web.digitalexchange.component.DigitalExchangeComponen
 public class DigitalExchangeComponentsMocker {
 
     public static Function<DigitalExchangeMockedRequest, RestResponse<?, ?>> mock(String... ids) {
+        return request -> mock(request, getComponentsStream(ids));
+    }
 
-        return request -> {
-            Stream<DigitalExchangeComponent> stream
-                    = Arrays.stream(ids).map(id
-                            -> new DigitalExchangeComponentBuilder(id)
-                            .setLastUpdate(new Date()).build());
+    public static List<DigitalExchangeComponent> getMockedComponents(String... ids) {
+        return getComponentsStream(ids).collect(Collectors.toList());
+    }
 
-            return mock(request, stream);
-        };
+    private static Stream<DigitalExchangeComponent> getComponentsStream(String... ids) {
+        return Arrays.stream(ids).map(id
+                -> new DigitalExchangeComponentBuilder(id)
+                        .setLastUpdate(new Date())
+                        .setVersion("5.1.0")
+                        .setType("pageModel")
+                        .setRating(5)
+                        .build());
     }
 
     public static Function<DigitalExchangeMockedRequest, RestResponse<?, ?>> mock(DigitalExchangeComponent... components) {

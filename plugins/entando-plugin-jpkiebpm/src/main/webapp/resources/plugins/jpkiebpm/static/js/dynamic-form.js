@@ -12,7 +12,10 @@ org.entando.form.DynamicForm = function (jKIE) {
     this.json.method = jKIE.mainForm.method;
     this.json.action = jKIE.mainForm.action;
     this.json.html = new Array();
-
+    
+    
+    // alert("jKIE.mainForm:" + JSON.stringify(jKIE.mainForm));
+    
     var obj = {
         "id": "processId",
         "name": "processId",
@@ -60,8 +63,7 @@ org.entando.form.DynamicForm = function (jKIE) {
     var addInpuntElement = function (el) {
         if (!el.fieldset) {
             return createObjectElement(el);
-        }
-        else {
+        } else {
             var obj = {};
             obj.type = "div";
             obj.html = {
@@ -73,6 +75,8 @@ org.entando.form.DynamicForm = function (jKIE) {
                 el.fieldset.field.forEach(function (el) {
                     obj.html.html.push(addInpuntElement(el));
                 })
+            } else {
+                obj.html.html.push(addInpuntElement(el.fieldset.field));
             }
 
             return (obj);
@@ -127,20 +131,15 @@ org.entando.form.DynamicForm = function (jKIE) {
         var obj = {"required": true};
         if (el.minlength) {
             obj.minlength = el.minlength;
-        }
-        else if (el.maxlength) {
+        } else if (el.maxlength) {
             obj.maxlength = el.maxlength;
-        }
-        else if (el.min) {
+        } else if (el.min) {
             obj.min = el.min;
-        }
-        else if (el.max) {
+        } else if (el.max) {
             obj.max = el.max;
-        }
-        else if (el.number) {
+        } else if (el.number) {
             obj.number = el.number;
-        }
-        else if (el.digits) {
+        } else if (el.digits) {
             obj.digits = el.digits;
         }
         return obj;
@@ -153,24 +152,26 @@ org.entando.form.DynamicForm = function (jKIE) {
         jKIE.mainForm.fields.forEach(function (el) {
 
             var element = addInpuntElement(el);
-            if (element !== null) json.html.push(element);
+            if (element !== null)
+                json.html.push(element);
+        });
+    } else {
+        var element = addInpuntElement(jKIE.mainForm.fields);
+        if (element !== null)
+            json.html.push(element);
+    }
+
+    if (json.method!=='none') {
+        json.html.push({
+            type: "div",
+            html: {
+                "type": "submit",
+                "value": "submit",
+                "name": "submit-bpm-form",
+                "class": "btn btn-primary"
+            }
         });
     }
-    else {
-        var element = addInpuntElement(jKIE.mainForm.fields);
-        if (element !== null) json.html.push(element);
-    }
-
-
-    json.html.push({
-        type: "div",
-        html: {
-            "type": "submit",
-            "value": "submit",
-            "name": "submit-bpm-form",
-            "class": "btn btn-primary"
-        }
-    });
 };
 
 org.entando.form.loadFrom = function (url) {

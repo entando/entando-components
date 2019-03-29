@@ -17,6 +17,9 @@ import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.opensymphony.xwork2.Action;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author E.Santoboni
@@ -163,6 +166,39 @@ public class TestResourceFinderAction extends ApsAdminBaseTestCase {
         assertEquals(1, action.getResources().size());
     }
 
+    public void testSearchWithOrder_1() throws Throwable {
+        List<String> expected = Arrays.asList(new String[]{"22", "44", "82"});
+        this.executeTestSearchWithOrder_1(expected, "created");
+        expected = Arrays.asList(new String[]{"44", "82", "22"});
+        this.executeTestSearchWithOrder_1(expected, "lastModified");
+        expected = Arrays.asList(new String[]{"82", "22", "44"});
+        this.executeTestSearchWithOrder_1(expected, "descr");
+    }
+
+    public void testSearchWithOrder_2() throws Throwable {
+        String result = this.executeSearchResourceWithOrder("admin", "Image", "lastModified", "created", "DESC");
+        assertEquals(Action.SUCCESS, result);
+        ResourceFinderAction action = (ResourceFinderAction) this.getAction();
+        List<String> listResult = action.getResources();
+        List<String> expected = Arrays.asList(new String[]{"44", "82", "22"});
+        assertEquals(expected, listResult);
+    }
+
+    private void executeTestSearchWithOrder_1(List<String> expected, String field) throws Throwable {
+        String result = this.executeSearchResourceWithOrder("admin", "Image", field, field, "DESC");
+        assertEquals(Action.SUCCESS, result);
+        ResourceFinderAction action = (ResourceFinderAction) this.getAction();
+        List<String> listResult = action.getResources();
+        assertEquals(expected, listResult);
+
+        result = this.executeSearchResourceWithOrder("admin", "Image", field, field, "ASC");
+        assertEquals(Action.SUCCESS, result);
+        action = (ResourceFinderAction) this.getAction();
+        listResult = action.getResources();
+        Collections.reverse(expected);
+        assertEquals(expected, listResult);
+    }
+
     private String executeSearchResource(String username, String resourceTypeCode,
             String text, String ownerGroupName, String fileName, String categoryCode) throws Throwable {
         this.setUserOnSession(username);
@@ -172,6 +208,17 @@ public class TestResourceFinderAction extends ApsAdminBaseTestCase {
         this.addParameter("fileName", fileName);
         this.addParameter("ownerGroupName", ownerGroupName);
         this.addParameter("categoryCode", categoryCode);
+        return this.executeAction();
+    }
+
+    private String executeSearchResourceWithOrder(String username, String resourceTypeCode,
+            String groupBy, String lastGroupBy, String lastOrder) throws Throwable {
+        this.setUserOnSession(username);
+        this.initAction("/do/jacms/Resource", "search");
+        this.addParameter("resourceTypeCode", resourceTypeCode);
+        this.addParameter("groupBy", groupBy);
+        this.addParameter("lastGroupBy", lastGroupBy);
+        this.addParameter("lastOrder", lastOrder);
         return this.executeAction();
     }
 

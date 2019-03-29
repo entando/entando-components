@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.RequestListProcessor;
 import org.entando.entando.aps.util.FilterUtils;
 import org.entando.entando.web.common.model.Filter;
@@ -28,11 +30,14 @@ public class DigitalExchangeComponentListProcessor extends RequestListProcessor<
 
     private static final String ID = "id";
     private static final String NAME = "name";
+    private static final String TYPE = "type";
     private static final String LAST_UPDATE = "lastUpdate";
     private static final String VERSION = "version";
-    private static final String TYPE = "type";
+    private static final String DESCRIPTION = "description";
     private static final String RATING = "rating";
     private static final String INSTALLED = "installed";
+    private static final String DIGITAL_EXCHANGE_NAME = "digitalExchangeName";
+    private static final String DIGITAL_EXCHANGE_ID = "digitalExchangeId";
 
     public DigitalExchangeComponentListProcessor(RestListRequest restListRequest, List<DigitalExchangeComponent> components) {
         super(restListRequest, components);
@@ -44,22 +49,28 @@ public class DigitalExchangeComponentListProcessor extends RequestListProcessor<
 
     @Override
     protected Function<Filter, Predicate<DigitalExchangeComponent>> getPredicates() {
-        return (filter) -> {
+        return filter -> {
             switch (filter.getAttribute()) {
                 case ID:
-                    return c -> FilterUtils.filterString(filter, c::getId);
+                    return c -> FilterUtils.filterString(filter, c.getId());
                 case NAME:
-                    return c -> FilterUtils.filterString(filter, c::getName);
-                case LAST_UPDATE:
-                    return c -> FilterUtils.filterDate(filter, c::getLastUpdate);
-                case VERSION:
-                    return c -> FilterUtils.filterString(filter, c::getVersion);
+                    return c -> FilterUtils.filterString(filter, c.getName());
                 case TYPE:
-                    return c -> FilterUtils.filterString(filter, c::getType);
+                    return c -> FilterUtils.filterString(filter, c.getType());
+                case LAST_UPDATE:
+                    return c -> FilterUtils.filterDate(filter, c.getLastUpdate());
+                case VERSION:
+                    return c -> FilterUtils.filterString(filter, c.getVersion());
+                case DESCRIPTION:
+                    return c -> FilterUtils.filterString(filter, c.getDescription());
                 case RATING:
-                    return c -> FilterUtils.filterDouble(filter, c::getRating);
+                    return c -> FilterUtils.filterDouble(filter, c.getRating());
                 case INSTALLED:
-                    return c -> FilterUtils.filterBoolean(filter, c::isInstalled);
+                    return c -> FilterUtils.filterBoolean(filter, c.isInstalled());
+                case DIGITAL_EXCHANGE_NAME:
+                    return c -> FilterUtils.filterString(filter, c.getDigitalExchangeName());
+                case DIGITAL_EXCHANGE_ID:
+                    return c -> FilterUtils.filterString(filter, c.getDigitalExchangeId());
                 default:
                     return null;
             }
@@ -71,18 +82,22 @@ public class DigitalExchangeComponentListProcessor extends RequestListProcessor<
         return sort -> {
             switch (sort) {
                 case LAST_UPDATE:
-                    return (a, b) -> a.getLastUpdate().compareTo(b.getLastUpdate());
+                    return (a, b) -> ObjectUtils.compare(a.getLastUpdate(), b.getLastUpdate());
                 case VERSION:
-                    return (a, b) -> a.getVersion().compareToIgnoreCase(b.getVersion());
+                    return (a, b) -> StringUtils.compareIgnoreCase(a.getVersion(), b.getVersion());
                 case TYPE:
-                    return (a, b) -> a.getType().compareToIgnoreCase(b.getType());
+                    return (a, b) -> StringUtils.compareIgnoreCase(a.getType(), b.getType());
                 case RATING:
                     return (a, b) -> Double.compare(a.getRating(), b.getRating());
                 case INSTALLED:
                     return (a, b) -> Boolean.compare(a.isInstalled(), b.isInstalled());
-                case NAME:
+                case DIGITAL_EXCHANGE_NAME:
+                    return (a, b) -> StringUtils.compareIgnoreCase(a.getDigitalExchangeName(), b.getDigitalExchangeName());
+                case DIGITAL_EXCHANGE_ID:
+                    return (a, b) -> StringUtils.compareIgnoreCase(a.getDigitalExchangeId(), b.getDigitalExchangeId());
+                case NAME: // name is the default sorting field
                 default:
-                    return (a, b) -> a.getName().compareToIgnoreCase(b.getName());
+                    return (a, b) -> StringUtils.compareIgnoreCase(a.getName(), b.getName());
             }
         };
     }

@@ -27,19 +27,43 @@ import freemarker.template.*;
 import org.apache.struts2.util.ServletContextAware;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.*;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.*;
-import org.slf4j.*;
-import org.springframework.stereotype.Service;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Model;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Section;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePickerField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.InputField;
 
-import javax.servlet.ServletContext;
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateExceptionHandler;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Function;
+import javax.servlet.ServletContext;
+import org.springframework.stereotype.Service;
+import org.apache.struts2.util.ServletContextAware;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.IBpmOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.MultipleSelectorField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.ListBoxField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Option;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.RadioGroupField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.TextField;
 
 @Service
 public class DataUXBuilder<T extends InputField> implements ServletContextAware {
+    private static String DEFAULT_FORM_ACTION = "/ExtStr2/do/bpm/FrontEnd/DataTypeForm/save";
 
     private static final Logger logger = LoggerFactory.getLogger(DataUXBuilder.class);
     
@@ -103,7 +127,11 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     }
 
     public String createDataUx(KieProcessFormQueryResult kpfr, int widgetInfoId, String containerId, String processId, String title) throws Exception {
-        logger.debug("CreateDataUx in DataUXBuilde for containerId {} with processId {} and title {} -> kpfr: {}", containerId, processId, title, kpfr);
+        return this.createDataUx( kpfr, widgetInfoId, containerId, processId, title, DEFAULT_FORM_ACTION,"");
+    }
+    
+    public String createDataUx(KieProcessFormQueryResult kpfr, int widgetInfoId, String containerId, String processId, String title, String formAction, String urlParameters) throws Exception {
+        logger.info("CreateDataUx in DataUXBuilde for containerId {} with processId {} and title {} -> kpfr: {}", containerId, processId, title, kpfr);
         Template template = cfg.getTemplate(MAIN_FTL_TEMPLATE);
         Map<String, KieFormOverride> formOverridesMap = getFormOverridesMap(widgetInfoId);        
         Map<String, Section> sections = this.getSections(kpfr, formOverridesMap);
@@ -112,11 +140,11 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         model.setTitle(title);
         model.setContainerId(containerId);
         model.setProcessId(processId);
+        model.setFormAction(formAction);
+        model.setUrlParameters(urlParameters);
         root.put("model", model);
         logger.debug("sections {}", sections);
-
         root.put("sections", sections);
-
         Writer stringWriter = new StringWriter();
         template.process(root, stringWriter);
         return stringWriter.toString();
@@ -259,8 +287,21 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         String fieldTypePAM = field.getType();
         String fieldValueExpr = this.valueMapping.get(field.getType());
         String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
+        fieldValue=fieldValue.replaceAll(" ", "_");
+                
+                
+        logger.debug("Field getValue        -> {}", fieldValue);
+        logger.debug("------------------------------------");
 
         boolean required = Boolean.parseBoolean(field.getProperty("fieldRequired").getValue());
+
+        boolean readOnly = false;
+                
+                if (null!=field.getProperty("readOnly")){
+                    readOnly =  Boolean.parseBoolean(field.getProperty("readOnly").getValue());
+                }
+                
+                
         String placeHolder = field.getProperty("placeHolder").getValue();
         inputField.setId(field.getId());
         inputField.setName(fieldName);
@@ -268,7 +309,8 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         inputField.setRequired(required);
         inputField.setTypePAM(fieldTypePAM);
         inputField.setTypeHTML(fieldTypeHMTL);
-
+        inputField.setReadOnly(readOnly);
+        
         if (inputField instanceof DatePickerField) {
             logger.debug("inputField instanceof DatePickerField, adding custom properties");
 
@@ -286,9 +328,15 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             for (String f : optionsValues) {
                 String[] split = f.split("=");
                 Option opt = new Option();
-                opt.setName(split[0]);
-                opt.setValue(split[1]);
-                selectOption.add(opt);
+                if (split.length > 0) {
+                    opt.setName(split[0]);
+                    if (split.length > 1) {
+                        opt.setValue(split[1]);
+                    } else {
+                        opt.setValue("");
+                    }
+                    selectOption.add(opt);
+                }
             }
             select.setOptions(selectOption);
 

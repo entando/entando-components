@@ -22,7 +22,12 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+
+import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
 import org.springframework.validation.annotation.Validated;
+
+import java.security.PublicKey;
 
 @Validated
 @ApiModel
@@ -63,6 +68,10 @@ public class DigitalExchange {
     @JsonProperty("secret")
     @XmlElement(name = "secret")
     private String clientSecret;
+
+    @JsonProperty("publicKey")
+    @XmlElement(name = "publicKey")
+    private String publicKey;
 
     public String getId() {
         return id;
@@ -118,5 +127,22 @@ public class DigitalExchange {
 
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public boolean hasNoPublicKey() {
+        return StringUtils.isEmpty(this.getPublicKey());
+    }
+
+    public void invalidate() {
+        this.setPublicKey(null);
+        this.setActive(false);
     }
 }

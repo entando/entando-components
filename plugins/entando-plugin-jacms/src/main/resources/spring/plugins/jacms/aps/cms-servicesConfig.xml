@@ -5,45 +5,49 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean id="ContentViewerWidgetValidator" class="org.entando.entando.plugins.jacms.aps.system.services.widgettype.validators.ContentViewerWidgetValidator">
+    <bean id="jacmsContentViewerWidgetValidator" class="org.entando.entando.plugins.jacms.aps.system.services.widgettype.validators.ContentViewerWidgetValidator">
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
     </bean>
 
-    <bean id="AbstractListViewerWidgetValidator" abstract="true" class="org.entando.entando.plugins.jacms.aps.system.services.widgettype.validators.AbstractListViewerWidgetValidator">
+    <bean id="jacmsAbstractListViewerWidgetValidator" abstract="true" class="org.entando.entando.plugins.jacms.aps.system.services.widgettype.validators.AbstractListViewerWidgetValidator">
         <property name="langManager" ref="LangManager" />
         <property name="pageManager" ref="PageManager" />
     </bean>
 
-    <bean id="RowContentListViewerWidgetValidator" parent="AbstractListViewerWidgetValidator"
+    <bean id="jacmsRowContentListViewerWidgetValidator" parent="jacmsAbstractListViewerWidgetValidator"
           class="org.entando.entando.plugins.jacms.aps.system.services.widgettype.validators.RowContentListViewerWidgetValidator" >
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
     </bean>
 
-    <bean id="ContentListViewerWidgetValidator"  parent="AbstractListViewerWidgetValidator"
+    <bean id="jacmsContentListViewerWidgetValidator"  parent="jacmsAbstractListViewerWidgetValidator"
           class="org.entando.entando.plugins.jacms.aps.system.services.widgettype.validators.ContentListViewerWidgetValidator">
         <property name="widgetTypeManager" ref="WidgetTypeManager" />
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
     </bean>
 
-    <bean id="RowContentListViewerConfigProcessor" class="org.entando.entando.plugins.jacms.aps.system.services.widgettype.validators.RowContentListViewerConfigProcessor" />
+    <bean id="jacmsRowContentListViewerConfigProcessor" class="org.entando.entando.plugins.jacms.aps.system.services.widgettype.validators.RowContentListViewerConfigProcessor" />
     
     <!-- ************************************* -->
-
-    <bean id="ResourceService" class="com.agiletec.plugins.jacms.aps.system.services.resource.ResourceService" >
+    
+    <bean id="jacmsResourceService" class="com.agiletec.plugins.jacms.aps.system.services.resource.ResourceService" >
         <property name="resourceManager" ref="jacmsResourceManager" />
     </bean>
 
-    <bean id="ContentService" class="org.entando.entando.plugins.jacms.aps.system.services.content.ContentService" >
+    <bean id="jacmsContentService" class="org.entando.entando.plugins.jacms.aps.system.services.content.ContentService" >
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
         <property name="authorizationManager" ref="AuthorizationManager" />
         <property name="contentDispenser" ref="jacmsBaseContentDispenser" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
+        <property name="searchEngineManager" ref="jacmsSearchEngineManager" />
         <property name="langManager" ref="LangManager" />
     </bean>
+	
+    <bean id="jacmPageServiceWrapper" 
+          class="org.entando.entando.plugins.jacms.aps.system.services.page.CmsPageServiceWrapper" />
 
     <context:component-scan base-package="org.entando.entando.plugins.jacms"  />
 

@@ -11,7 +11,6 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-
 package org.entando.entando.aps.system.services.digitalexchange.rating;
 
 import java.util.Objects;
@@ -29,6 +28,13 @@ public class DERatingsSummary {
         this.componentId = componentId;
         this.rating = rating;
         this.numberOfRatings = numberOfRatings;
+    }
+
+    /**
+     * Necessary for instantiating a new summary from JPQL.
+     */
+    public DERatingsSummary(String componentId, Double rating, Long numberOfRatings) {
+        this(componentId, rating, numberOfRatings.intValue());
     }
 
     public String getComponentId() {
@@ -57,12 +63,16 @@ public class DERatingsSummary {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         DERatingsSummary that = (DERatingsSummary) o;
-        return rating == that.rating &&
-               numberOfRatings == that.numberOfRatings &&
-               Objects.equals(componentId, that.componentId);
+        return rating == that.rating
+                && numberOfRatings == that.numberOfRatings
+                && Objects.equals(componentId, that.componentId);
     }
 
     @Override
@@ -72,10 +82,10 @@ public class DERatingsSummary {
 
     @Override
     public String toString() {
-        return "DERatingsSummary{" +
-               "componentId='" + componentId + '\'' +
-               ", rating=" + rating +
-               ", numberOfRatings=" + numberOfRatings +
-               '}';
+        return "DERatingsSummary{"
+                + "componentId='" + componentId + '\''
+                + ", rating=" + rating
+                + ", numberOfRatings=" + numberOfRatings
+                + '}';
     }
 }

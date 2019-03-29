@@ -105,7 +105,28 @@
             <expectedType>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiInputFormTask</expectedType>
         </method>
     </resource>
-
+    
+    <resource name="taskData" namespace="jpkiebpm">
+        <description>Red Hat Bpm Task Form Informations</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a bpm form</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="getTaskData"/>
+            <responseClass>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieProcessFormApiResponse</responseClass>
+            <parameters>
+                <parameter key="containerId" required="true">
+                    <description>The container id</description>
+                </parameter>
+                <parameter key="taskId" required="true">
+                    <description>The task Id</description>
+                </parameter>
+                <parameter key="configId" required="true">
+                    <description>The widget info Id</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    
     <resource name="instanceProcessesList" namespace="jpkiebpm">
         <description>Red Hat Bpm process list</description>
         <source pluginCode="jpkiebpm">plugins</source>
@@ -332,6 +353,17 @@
                 </parameter>
 
             </parameters>
+        </method>
+    </resource>
+
+
+    <resource name="claimTask" namespace="jpkiebpm">
+        <description>Red Hat Bpm Claim Task</description>
+        <source pluginCode="jpkiebpm">plugins</source>
+        <method httpMethod="POST" active="true">
+            <description>send the document needed for the task</description>
+            <springBean name="jpkiebpmApiTaskInterface" method="claimTask"/>
+            <expectedType>org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieApiClaimTask</expectedType>
         </method>
     </resource>
 

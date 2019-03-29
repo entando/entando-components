@@ -31,12 +31,20 @@
     </bean>
 
     <bean id="jacmsMultipleResourceAction" scope="prototype"
-              class="com.agiletec.plugins.jacms.apsadmin.resource.MultipleResourceAction"
-              parent="jacmsResourceAction" >
+          class="com.agiletec.plugins.jacms.apsadmin.resource.MultipleResourceAction"
+          parent="jacmsAbstractResourceAction" >
         <property name="groupManager" ref="GroupManager" />
     </bean>
 
-        
+    <bean id="jacmsResourceFileChunksUploadAction" scope="prototype"
+          class="com.agiletec.plugins.jacms.apsadmin.resource.ResourceFileChunksUploadAction"
+          parent="jacmsAbstractResourceAction" >
+    </bean>
+
+    <bean id="jacmsResourceFileChunksStopUploadAndDeleteAction" scope="prototype"
+          class="com.agiletec.plugins.jacms.apsadmin.resource.ResourceFileChunksStopUploadAndDeleteAction">
+    </bean>
+
     <bean id="jacmsResourceAdminAction" scope="prototype"
           class="com.agiletec.plugins.jacms.apsadmin.resource.ResourceAdminAction"
           parent="jacmsAbstractResourceAction" >

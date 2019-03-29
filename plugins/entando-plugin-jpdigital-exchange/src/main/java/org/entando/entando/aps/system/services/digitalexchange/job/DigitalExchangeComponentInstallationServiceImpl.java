@@ -14,10 +14,8 @@
 package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import java.util.Date;
-import java.util.concurrent.CompletableFuture;
-
-import org.apache.commons.lang.RandomStringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -28,26 +26,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 @Service
-public class DigitalExchangeComponentInstallationServiceImpl implements DigitalExchangeComponentInstallationService {
+public class DigitalExchangeComponentInstallationServiceImpl extends JobRunner implements DigitalExchangeComponentInstallationService {
 
     private static final Logger logger = LoggerFactory.getLogger(DigitalExchangeComponentInstallationServiceImpl.class);
 
     private static final String ERRCODE_COMPONENT_INSTALLATION_RUNNING = "1";
 
     private final DigitalExchangesService exchangesService;
-    private final DigitalExchangeJobDAO dao;
+    private final DigitalExchangeJobService jobService;
     private final DigitalExchangeAbstractJobExecutor installExecutor;
     private final DigitalExchangeAbstractJobExecutor uninstallExecutor;
 
     @Autowired
     public DigitalExchangeComponentInstallationServiceImpl(
             DigitalExchangesService exchangesService,
-            DigitalExchangeJobDAO dao,
+            DigitalExchangeJobService jobService,
             DigitalExchangeInstallExecutor installExecutor,
             DigitalExchangeUninstallExecutor uninstallExecutor) {
 
+        super(jobService);
         this.exchangesService = exchangesService;
-        this.dao = dao;
+        this.jobService = jobService;
         this.installExecutor = installExecutor;
         this.uninstallExecutor = uninstallExecutor;
     }
@@ -61,7 +60,7 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(digitalExchange, componentId, JobType.INSTALL);
         job.setUser(username);
-        dao.createJob(job);
+        job = this.jobService.save(job);
 
         this.executeJob(job, this.installExecutor);
 
@@ -75,30 +74,16 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
 
         DigitalExchangeJob job = createNewJob(componentId, JobType.UNINSTALL);
         job.setUser(username);
-        dao.createJob(job);
+        job = this.jobService.save(job);
 
         this.executeJob(job, this.uninstallExecutor);
 
         return job;
     }
 
-    private void executeJob(DigitalExchangeJob job, DigitalExchangeAbstractJobExecutor jobExecutor) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                jobExecutor.execute(job, dao::updateJob);
-            } catch (Throwable ex) {
-                logger.error("Error while executing job for " + job.getComponentId(), ex);
-                job.setStatus(JobStatus.ERROR);
-                job.setErrorMessage(ex.getMessage());
-                job.setEnded(new Date());
-                dao.updateJob(job);
-            }
-        });
-    }
-
     private synchronized void checkIfAlreadyRunning(String componentId, JobType jobType) {
 
-        dao.findLast(componentId, jobType).ifPresent(job -> {
+        jobService.findLast(componentId, jobType).ifPresent(job -> {
             if (job.getStatus() != JobStatus.COMPLETED
                     && job.getStatus() != JobStatus.ERROR) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(componentId, "component");
@@ -111,7 +96,6 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private DigitalExchangeJob createNewJob(DigitalExchange digitalExchange, String componentId, JobType type) {
 
         DigitalExchangeJob job = new DigitalExchangeJob();
-        job.setId(RandomStringUtils.randomAlphanumeric(20));
         job.setComponentId(componentId);
         job.setStarted(new Date());
 
@@ -120,7 +104,6 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
             job.setDigitalExchangeUrl(digitalExchange.getUrl());
         }
 
-        job.setStatus(JobStatus.CREATED);
         job.setJobType(type);
 
         return job;
@@ -129,19 +112,16 @@ public class DigitalExchangeComponentInstallationServiceImpl implements DigitalE
     private DigitalExchangeJob createNewJob(String componentId, JobType type) {
 
         DigitalExchangeJob job = new DigitalExchangeJob();
-        job.setId(RandomStringUtils.randomAlphanumeric(20));
         job.setComponentId(componentId);
         job.setStarted(new Date());
-        job.setStatus(JobStatus.CREATED);
         job.setJobType(type);
 
         return job;
-
     }
 
     @Override
     public DigitalExchangeJob checkJobStatus(String componentId, JobType jobType) {
-        return dao.findLast(componentId, jobType)
+        return jobService.findLast(componentId, jobType)
                 .orElseThrow(() -> new ResourceNotFoundException("component", componentId));
     }
 
