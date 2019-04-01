@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
 
-    <bean id="measurementConfigService"
+    <bean id="measurementTemplateService"
       class="org.entando.entando.plugins.dashboard.aps.system.services.iot.services.MeasurementTemplateService">
         <property name="measurementTemplateManager" ref="measurementTemplateManager"/>
     </bean>

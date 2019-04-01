@@ -13,7 +13,6 @@ public interface MessageRepository extends MongoRepository<IotMessage, String> {
 
 	public Page<IotMessage> findByServerIdAndDashboardCodeAndCreatedAtBetween(int serverId, String dashboardCode, Date start, Date end, Pageable pageable);
 	
-	
 	public void deleteByServerIdAndDashboardCode(int serverId, String dashboardCode);
 
 	public void deleteByServerId(int serverId);
