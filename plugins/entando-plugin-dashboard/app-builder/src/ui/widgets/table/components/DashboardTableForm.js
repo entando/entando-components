@@ -173,7 +173,11 @@ export class DashboardTableFormBody extends Component {
 
           <Col xs={12}>
             <Col xs={6}>
-              <Button className="pull-left" bsStyle="default">
+              <Button
+                className="pull-left"
+                bsStyle="default"
+                onClick={this.props.onCancel}
+              >
                 <FormattedMessage id="common.cancel" />
               </Button>
             </Col>
@@ -197,6 +201,7 @@ export class DashboardTableFormBody extends Component {
 DashboardTableFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
   invalid: PropTypes.bool,
   submitting: PropTypes.bool,
   datasource: PropTypes.string

@@ -12,6 +12,7 @@ import DatasourceFormContainer from "ui/widgets/common/form/containers/Datasourc
 const props = {
   handleSubmit: jest.fn(),
   onWillMount: jest.fn(),
+  onCancel: jest.fn(),
   invalid: false,
   submitting: false
 };
