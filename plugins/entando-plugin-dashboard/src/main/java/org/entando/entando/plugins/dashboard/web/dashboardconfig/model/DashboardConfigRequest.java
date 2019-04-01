@@ -49,6 +49,7 @@ public class DashboardConfigRequest {
 
   private boolean debug;
 
+  private String type;
 
   private List<DatasourcesConfigRequest> datasources;
 
@@ -58,6 +59,22 @@ public class DashboardConfigRequest {
 
   public void setId(int id) {
     this.id = id;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public boolean isDebug() {
+    return debug;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   public String getServerDescription() {

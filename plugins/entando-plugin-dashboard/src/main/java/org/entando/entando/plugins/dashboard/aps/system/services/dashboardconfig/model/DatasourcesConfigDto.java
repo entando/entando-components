@@ -17,6 +17,7 @@
 
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.JsonObject;
 
 public class DatasourcesConfigDto {
@@ -31,6 +32,7 @@ public class DatasourcesConfigDto {
 
     private String status;
     
+    @JsonIgnore
     private JsonObject metadata;
 
     public JsonObject getMetadata() {

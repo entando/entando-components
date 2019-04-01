@@ -29,6 +29,7 @@ import  org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfi
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
+import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -86,9 +87,9 @@ public class DashboardConfigService implements IDashboardConfigService {
         try {
             List<FieldSearchFilter> filters = new ArrayList<FieldSearchFilter>(requestList.buildFieldSearchFilters());
             filters
-                   .stream()
-                   .filter(i -> i.getKey() != null)
-                   .forEach(i -> i.setKey(DashboardConfigDto.getEntityFieldName(i.getKey())));
+                .stream()
+                .filter(i -> i.getKey() != null)
+                .forEach(i -> i.setKey(DashboardConfigDto.getEntityFieldName(i.getKey())));
 
             SearcherDaoPaginatedResult<DashboardConfig> dashboardConfigs = this.getDashboardConfigManager().getDashboardConfigs(filters);
             List<DashboardConfigDto> dtoList = dtoBuilder.convert(dashboardConfigs.getList());
@@ -108,11 +109,11 @@ public class DashboardConfigService implements IDashboardConfigService {
         try {
 
 
-	        DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(dashboardConfigRequest.getId());
-	        if (null == dashboardConfig) {
-	            throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(dashboardConfigRequest.getId()));
-	        }
-        	BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfig);
+            DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(dashboardConfigRequest.getId());
+            if (null == dashboardConfig) {
+                throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(dashboardConfigRequest.getId()));
+            }
+            BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfig);
 
             List<DatasourcesConfigDto> datasources = convertDatasourceRequestToDto(dashboardConfigRequest);
             dashboardConfig.setDatasources(datasources);
@@ -169,13 +170,13 @@ public class DashboardConfigService implements IDashboardConfigService {
     @Override
     public DashboardConfigDto getDashboardConfig(int  id) {
         try {
-	        DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(id);
-	        if (null == dashboardConfig) {
-	            logger.warn("no dashboardConfig found with code {}", id);
-	            throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(id));
-	        }
-	        DashboardConfigDto dto = this.getDtoBuilder().convert(dashboardConfig);
-	        return dto;
+            DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(id);
+            if (null == dashboardConfig) {
+                logger.warn("no dashboardConfig found with code {}", id);
+                throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(id));
+            }
+            DashboardConfigDto dto = this.getDtoBuilder().convert(dashboardConfig);
+            return dto;
         } catch (ApsSystemException e) {
             logger.error("Error loading dashboardConfig {}", id, e);
             throw new RestServerError("error in loading dashboardConfig", e);
@@ -214,15 +215,18 @@ public class DashboardConfigService implements IDashboardConfigService {
 
     private  List<DatasourcesConfigDto> convertDatasourceRequestToDto (final DashboardConfigRequest dashboardConfigRequest) {
         List<DatasourcesConfigDto> datasources = new ArrayList<>();
-        dashboardConfigRequest.getDatasources().forEach(c->{
-            final DatasourcesConfigDto ds = new DatasourcesConfigDto();
-            ds.setDatasource(c.getDatasource());
-            ds.setDatasourceCode(c.getDatasourceCode());
-            ds.setDatasourceURI(c.getDatasourceURI());
-            ds.setStatus(c.getStatus());
-            datasources.add(ds);
-        });
+        if(dashboardConfigRequest.getDatasources()!= null) {
+            for (DatasourcesConfigRequest datasource: dashboardConfigRequest.getDatasources()) {
+                DatasourcesConfigDto ds = new DatasourcesConfigDto();
+                ds.setDatasource(datasource.getDatasource());
+                ds.setDatasourceCode(datasource.getDatasourceCode());
+                ds.setDatasourceURI(datasource.getDatasourceURI());
+                ds.setStatus(datasource.getStatus());
+                datasources.add(ds);
+            }
+        }
         return datasources;
+
     }
 
     protected BeanPropertyBindingResult validateForAdd(DashboardConfig dashboardConfig) {

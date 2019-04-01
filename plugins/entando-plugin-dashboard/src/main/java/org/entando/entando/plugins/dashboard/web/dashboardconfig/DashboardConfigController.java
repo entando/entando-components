@@ -175,8 +175,8 @@ public class DashboardConfigController {
 
   @RestAccessControl(permission = "superuser")
   @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> addDashboardConfig(
-      @Valid @RequestBody DashboardConfigRequest dashboardConfigRequest,
+  public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> addDashboardConfig( 
+      @RequestBody DashboardConfigRequest dashboardConfigRequest,
       BindingResult bindingResult) {
     // field validations
     if (bindingResult.hasErrors()) {

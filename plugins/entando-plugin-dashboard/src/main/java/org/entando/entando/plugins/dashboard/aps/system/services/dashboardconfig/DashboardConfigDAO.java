@@ -136,8 +136,8 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
                 } else {
                     stat.setNull(index++, Types.VARCHAR);
                 }
-                if (StringUtils.isNotBlank(c.getMetadata().getAsString())) {
-                    stat.setString(index++, c.getMetadata().getAsString());
+                if (StringUtils.isNotBlank(new Gson().toJson(c.getMetadata()))) {
+                    stat.setString(index++, new Gson().toJson(c.getMetadata().getAsString()));
                 } else {
                     stat.setNull(index++, Types.VARCHAR);
                 }

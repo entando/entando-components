@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.storage;
 
 import java.time.Instant;
+import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -46,23 +47,6 @@ public class IotMessage {
 		this.content = content;
 	}
 
-
-
-	public String getDashboardCode() {
-		return dashboardCode;
-	}
-	public void setDashboardCode(String dashboardCode) {
-		this.dashboardCode = dashboardCode;
-	}
-
-	@Override
-	public String toString() {
-		return "Message [" + (id != null ? "id=" + id + ", " : "")
-				+ (createdAt != null ? "createdAt=" + createdAt + ", " : "")
-				+ (content != null ? "content=" + content + ", " : "")
-				+ ("serverId=" + serverId)
-				+ (dashboardCode != null ? "dashboardCode=" + dashboardCode : "") + "]";
-	}
 	public int getServerId() {
 		return serverId;
 	}
@@ -71,4 +55,40 @@ public class IotMessage {
 	}
 
 
+	public String getDashboardCode() {
+		return dashboardCode;
+	}
+
+	public void setDashboardCode(String dashboardCode) {
+		this.dashboardCode = dashboardCode;
+	}
+	@Override
+	public String toString() {
+		return "Message [" + (id != null ? "id=" + id + ", " : "")
+				+ (createdAt != null ? "createdAt=" + createdAt + ", " : "")
+				+ (content != null ? "content=" + content + ", " : "")
+				+ ("serverId=" + serverId)
+				+ (dashboardCode != null ? "dashboardCode=" + dashboardCode : "") + "]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		IotMessage that = (IotMessage) o;
+		return serverId == that.serverId &&
+				Objects.equals(id, that.id) &&
+				Objects.equals(createdAt, that.createdAt) &&
+				Objects.equals(content, that.content) &&
+				Objects.equals(dashboardCode, that.dashboardCode);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, createdAt, content, serverId, dashboardCode);
+	}
 }
