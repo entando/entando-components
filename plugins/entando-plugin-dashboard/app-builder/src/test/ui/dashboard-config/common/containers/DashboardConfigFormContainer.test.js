@@ -14,6 +14,12 @@ const dispatchMock = jest.fn();
 jest.mock("state/main/actions");
 jest.mock("state/main/selectors");
 
+const DATASOURCE_VALUE = {
+  datasourceCode: "xxx",
+  datasource: "Temperature",
+  datasourceURI: "/devices/temperature"
+};
+
 describe("DashboardConfigFormContainer", () => {
   let props;
   describe("mapStateToProps", () => {
@@ -44,7 +50,7 @@ describe("DashboardConfigFormContainer", () => {
 
     it("prop mode equals to add dispatch function createServerConfig", () => {
       props = mapDispatchToProps(dispatchMock, {mode: "add"});
-      props.onSubmit();
+      props.onSubmit(DATASOURCE_VALUE);
       expect(createServerConfig).toHaveBeenCalled();
     });
 
@@ -56,7 +62,7 @@ describe("DashboardConfigFormContainer", () => {
 
     it("prop mode equals to edit dispatch function createServerConfig", () => {
       props = mapDispatchToProps(dispatchMock, {mode: "edit"});
-      props.onSubmit();
+      props.onSubmit(DATASOURCE_VALUE);
       expect(updateServerConfig).toHaveBeenCalled();
     });
   });
