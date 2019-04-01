@@ -99,16 +99,16 @@ public class DashboardConfigController {
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/servertypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<ServerType>> getDashboardTypes() {
-//    ServerType sitewhere = new ServerType();
-//    sitewhere.setCode("sitewhere");
-//    sitewhere.setDescription("Sitewhere");
-//    ServerType kaa = new ServerType();
-//    kaa.setCode("kaa");
-//    kaa.setDescription("Kaa");
-//    List<ServerType> lista = new ArrayList<ServerType>();
-//    lista.add(kaa);
-//    lista.add(sitewhere);
-    List<ServerType> lista = connectorService.getDashboardTypes();
+    ServerType sitewhere = new ServerType();
+    sitewhere.setCode("sitewhere");
+    sitewhere.setDescription("Sitewhere");
+    ServerType kaa = new ServerType();
+    kaa.setCode("kaa");
+    kaa.setDescription("Kaa");
+    List<ServerType> lista = new ArrayList<ServerType>();
+    lista.add(kaa);
+    lista.add(sitewhere);
+//    List<ServerType> lista = connectorService.getDashboardTypes();
     return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
   }
 
