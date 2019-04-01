@@ -7,6 +7,7 @@ import {Button} from "patternfly-react";
 import {DASHBOARD_LIST_DATASOURCE} from "mocks/dashboardConfigs";
 
 const DATASOURCE_VALUE = {
+  datasourceCode: "xxx",
   datasource: "Temperature",
   datasourceURI: "/devices/temperature"
 };
@@ -35,7 +36,7 @@ describe("DashboardConfigDatasource", () => {
     expect(component.find(Button).prop("disabled")).toBeFalsy();
   });
 
-  it("if props datasourceValue is not empty click button add  calle the function push on the field props", () => {
+  it("if props datasourceValue is not empty click button add  call the function push on the field props", () => {
     const props = {
       fields: {
         push: jest.fn(),
@@ -57,7 +58,7 @@ describe("DashboardConfigDatasource", () => {
     );
     expect(component.find("table")).toHaveLength(1);
     expect(component.find("thead")).toHaveLength(1);
-    expect(component.find("tr th")).toHaveLength(4);
+    expect(component.find("tr th")).toHaveLength(5);
     expect(component.find("tbody")).toHaveLength(1);
   });
 });

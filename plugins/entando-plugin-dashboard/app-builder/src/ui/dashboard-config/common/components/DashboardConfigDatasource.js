@@ -48,21 +48,25 @@ const DashboardConfigDatasource = ({
           <table className="DashboardConfigDatasource__table table table-striped table-bordered table-reponsive">
             <thead>
               <tr>
-                <th width="32%">
+                <th width="20%">
+                  <FormattedMessageLocal id="plugin.config.datasourceCode" />
+                </th>
+                <th width="35%">
                   <FormattedMessageLocal id="plugin.config.datasource" />
                 </th>
-                <th width="32%">
+                <th width="35%">
                   <FormattedMessageLocal id="plugin.config.datasourceURI" />
                 </th>
                 <th>
                   <FormattedMessageLocal id="plugin.config.datasourceStatus" />
                 </th>
-                <th width="5%">&nbsp;</th>
+                <th width="3%">&nbsp;</th>
               </tr>
             </thead>
             <tbody>
               {datasources.map((ds, index) => (
                 <tr key={`datasource-${index}`}>
+                  <td>{ds.datasourceCode}</td>
                   <td>{ds.datasource}</td>
                   <td>{ds.datasourceURI}</td>
                   <td>

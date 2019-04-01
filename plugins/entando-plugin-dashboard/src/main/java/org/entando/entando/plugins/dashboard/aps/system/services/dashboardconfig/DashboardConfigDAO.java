@@ -359,6 +359,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
             if (res.next()) {
                 dashboardConfig = this.buildDashboardConfigFromRes(res);
             }
+            closeDaoResources(res, stat);
             stat = conn.prepareStatement(LOAD_DATASOURCE);
             stat.setInt(1, id);
             res = stat.executeQuery();
