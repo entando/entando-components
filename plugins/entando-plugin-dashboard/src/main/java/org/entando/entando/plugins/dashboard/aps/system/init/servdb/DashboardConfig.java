@@ -75,7 +75,6 @@ public class DashboardConfig {
 		dataType = DataType.INTEGER, 
 		 canBeNull= true)
 	private int _debug;
-	
-
+    
 public static final String TABLE_NAME = "dashboard_config";
 }
