@@ -30,17 +30,17 @@ public class DashboardConfigDto {
   private String password;
   private String token;
   private int timeConnection;
-  private String type;
+  private ServerType type;
   private boolean active;
   private boolean debug;
   private List<DatasourcesConfigDto> datasources = new ArrayList<>();
 
 
-  public String getType() {
+  public ServerType getType() {
     return type;
   }
 
-  public void setType(String type) {
+  public void setType(ServerType type) {
     this.type = type;
   }
 

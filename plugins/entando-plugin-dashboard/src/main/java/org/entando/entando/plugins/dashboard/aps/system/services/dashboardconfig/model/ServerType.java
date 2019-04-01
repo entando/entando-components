@@ -10,7 +10,14 @@ public class ServerType {
 
 	@JsonProperty("description")
 	private String description;
-	
+
+	public ServerType() {
+	}
+
+	public ServerType(String code) {
+		this.code = code;
+	}
+
 	public String getCode() {
 		return code;
 	}
@@ -18,7 +25,6 @@ public class ServerType {
 	public void setCode(String code) {
 		this.code = code;
 	}
-
 
 	public String getDescription() {
 		return description;
