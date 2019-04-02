@@ -66,6 +66,7 @@ export class DashboardConfigFormBody extends Component {
       gotoHomePage,
       datasourceCode
     } = this.props;
+
     const disableSubmit = invalid || submitting || datasources.length === 0;
 
     const optionServerTypeList = serverTypeList.map(m => ({
@@ -165,7 +166,7 @@ export class DashboardConfigFormBody extends Component {
               <Row>
                 <Col xs={6}>
                   {renderField(
-                    "timeout",
+                    "timeConnection",
                     "plugin.config.connectionTimeOut",
                     null,
                     [isNumber],
@@ -199,7 +200,7 @@ export class DashboardConfigFormBody extends Component {
                   "datasourceCode",
                   "plugin.config.datasourceCode",
                   null,
-                  [required],
+                  null,
                   2,
                   null
                 )}
