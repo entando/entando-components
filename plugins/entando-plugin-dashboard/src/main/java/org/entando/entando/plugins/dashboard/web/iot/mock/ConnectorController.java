@@ -53,16 +53,6 @@ public class ConnectorController {
       @PathVariable String datasourceCode,
       @RequestBody String measure) {
 
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService
-        .getDashboardDatasourceDto(serverId, datasourceCode);
-
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    connectorService.saveDeviceMeasurement(dto, measure);
     return new ResponseEntity(HttpStatus.OK);
   }
 
@@ -70,29 +60,20 @@ public class ConnectorController {
   public ResponseEntity<PagedRestResponse<MeasurementObject>> getMeasurement(
       @PathVariable int serverId,
       @PathVariable String datasourceCode,
-      @RequestParam(value = "nMeasurements", required = false) long nMeasurements,
       @RequestParam(value = "startDate", required = false) Instant startDate,
       @RequestParam(value = "endDate", required = false) Instant endDate,
       RestListRequest requestList) throws Exception {
 
 	  logger.error("Error loading dashboardConfig with id '{}'");
 	  
-    return new ResponseEntity(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED);
+    return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
   public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
       @PathVariable String datasourceCode)
       throws ApsSystemException {
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-//    connectorService.setDeviceMeasurementSchema(dto);
-
-    return new ResponseEntity<>(HttpStatus.OK);
+   
+    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
