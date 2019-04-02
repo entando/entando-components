@@ -264,8 +264,8 @@ public class DashboardConfigController {
     mapping.setSourceName("temperature");
     mapping.setDestinationName("temperatureDest");
     MeasurementMapping mappingtimestamp = new MeasurementMapping();
-    mapping.setSourceName("timestamp");
-    mapping.setDestinationName("timestamp");
+    mappingtimestamp.setSourceName("timestamp");
+    mappingtimestamp.setDestinationName("timestamp");
     config.setDatasourceCode("dashCode");
     config.addMapping(mapping);
     config.addMapping(mappingtimestamp);
