@@ -1,15 +1,18 @@
-package org.entando.entando.plugins.dashboard.web.iot;
+package org.entando.entando.plugins.dashboard.web.iot.mock;
 
 import java.time.Instant;
 import java.util.Date;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigManager;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
-import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessage;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -26,9 +29,11 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 
 @RestController
 @RequestMapping(value = "/plugins/dashboard")
-@Profile("!mock")
+@Profile("mock")
 public class ConnectorController {
 
+	private static final Logger logger = LoggerFactory.getLogger(ConnectorController.class);
+	
   @Autowired
   IDashboardConfigService dashboardConfigService;
 
@@ -62,38 +67,17 @@ public class ConnectorController {
   }
 
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<PagedRestResponse<IotMessage>> getMeasurement(
+  public ResponseEntity<PagedRestResponse<MeasurementObject>> getMeasurement(
       @PathVariable int serverId,
       @PathVariable String datasourceCode,
+      @RequestParam(value = "nMeasurements", required = false) long nMeasurements,
       @RequestParam(value = "startDate", required = false) Instant startDate,
       @RequestParam(value = "endDate", required = false) Instant endDate,
       RestListRequest requestList) throws Exception {
 
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    Date start = null;
-    Date end = null;
-    if(startDate != null) {
-      start = Date.from(startDate);
-    }
-    if(endDate != null) {
-      end = Date.from(endDate);
-    }
-    
-    
-    try {
-      PagedMetadata<IotMessage> pagedMetadata = this.connectorService
-          .getDeviceMeasurements(dto, start, end, requestList);
-      return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	  logger.error("Error loading dashboardConfig with id '{}'");
+	  
+    return new ResponseEntity(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED);
   }
 
   @RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)

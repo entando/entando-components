@@ -278,7 +278,7 @@ public class DashboardConfigController {
     MeasurementConfig config = new MeasurementConfig();
     MeasurementMapping mapping = new MeasurementMapping();
     mapping.setSourceName("temperature");
-    mapping.setDetinationName("temperatureDest");
+    mapping.setDestinationName("temperatureDest");
     config.setDatasourceCode("dashCode");
     config.addMapping(mapping);
     return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);

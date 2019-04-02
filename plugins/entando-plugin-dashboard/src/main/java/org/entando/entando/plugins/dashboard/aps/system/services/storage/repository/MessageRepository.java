@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.storage.repository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessage;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,6 @@ public interface MessageRepository extends MongoRepository<IotMessage, String> {
 
 	public void deleteByServerId(int serverId);
 
-
-    
+	public List<IotMessage> findAllByServerIdAndDashboardCodeAndCreatedAtBetween(int serverId, String dashboardCode, Date start, Date end);
+	
 }

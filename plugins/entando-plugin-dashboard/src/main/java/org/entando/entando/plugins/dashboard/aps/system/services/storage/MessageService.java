@@ -2,9 +2,9 @@ package org.entando.entando.plugins.dashboard.aps.system.services.storage;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.storage.repository.MessageRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +82,11 @@ public class MessageService extends AbstractService implements IMessageService {
 			pageable = createDefaultPageable();
 		}
 		return this.messageRepository.findByServerIdAndDashboardCodeAndCreatedAtBetween(serverId, dashboardCode, start, end, pageable);
-		
 	}
-	
-	
 
+	@Override
+	public List<IotMessage> findAllByServerConfigurationAndDateBetween(int serverId, String dashboardCode, Date start,
+			Date end) {
+		return this.messageRepository.findAllByServerIdAndDashboardCodeAndCreatedAtBetween(serverId, dashboardCode, start, end);
+	}
 }
