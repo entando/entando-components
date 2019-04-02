@@ -98,43 +98,43 @@ export const DATASOURCE_BUS_STATION = {
 
 export const DATASOURCE_PARKING_DATA = {
   id: "parking",
-  columns: [
-    {key: "status", value: "status"},
-    {key: "inUse", value: "inUse"},
-    {key: "batteryLevel", value: "batteryLevel"},
-    {key: "deviceCode", value: "deviceCode"},
-    {key: "deviceBrand", value: "deviceBrand"},
-    {key: "expirationGuarantee", value: "expirationG."},
-    {key: "coordinates", value: "coordinates"},
-    {key: "information", value: "information"}
+  mappings: [
+    {sourceName: "status", destinationName: "status"},
+    {sourceName: "inUse", destinationName: "inUse"},
+    {sourceName: "batteryLevel", destinationName: "batteryLevel"},
+    {sourceName: "deviceCode", destinationName: "deviceCode"},
+    {sourceName: "deviceBrand", destinationName: "deviceBrand"},
+    {sourceName: "expirationGuarantee", destinationName: "expirationG."},
+    {sourceName: "coordinates", destinationName: "coordinates"},
+    {sourceName: "information", destinationName: "information"}
   ],
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
 export const DATASOURCE_BIKE_DATA = {
   id: "bike",
-  columns: [
-    {key: "inUse", value: "inUse"},
-    {key: "coordinates", value: "coordinates"},
-    {key: "information", value: "information"}
+  mappings: [
+    {sourceName: "inUse", destinationName: "inUse"},
+    {sourceName: "coordinates", destinationName: "coordinates"},
+    {sourceName: "information", destinationName: "information"}
   ],
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
 export const DATASOURCE_BUS_DATA = {
   id: "bus",
-  columns: [
-    {key: "status", value: "status"},
-    {key: "coordinates", value: "coordinates"},
-    {key: "information", value: "information"}
+  mappings: [
+    {sourceName: "status", destinationName: "status"},
+    {sourceName: "coordinates", destinationName: "coordinates"},
+    {sourceName: "information", destinationName: "information"}
   ],
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
 export const DATASOURCE_TEMPERATURE_DATA = {
   id: "temperature",
-  columns: [
-    {key: "temperature", value: "temperature"},
-    {key: "temperature1", value: "temperature1"},
-    {key: "timestamp", value: "timestamp"},
-    {key: "timestamp1", value: "timestamp1"}
+  mappings: [
+    {sourceName: "temperature", destinationName: "temperature"},
+    {sourceName: "temperature1", destinationName: "temperature1"},
+    {sourceName: "timestamp", destinationName: "timestamp"},
+    {sourceName: "timestamp1", destinationName: "timestamp1"}
   ],
   data: [
     {
@@ -189,13 +189,30 @@ export const CONFIG_CHART = {
     title: {en: "Line chart"},
     serverName: "2",
     datasource: "temperature",
-    columns: {
-      x: [{id: 2, key: "timestamp", value: "timestamp", selected: true}],
-      y: [{id: 0, key: "temperature", value: "temperature", selected: true}]
+    mappings: {
+      x: [
+        {
+          id: 2,
+          sourceName: "timestamp",
+          destinationName: "timestamp",
+          selected: true
+        }
+      ],
+      y: [
+        {
+          id: 0,
+          sourceName: "temperature",
+          destinationName: "temperature",
+          selected: true
+        }
+      ]
     },
     data: {
       json: [],
-      keys: {value: ["timestamp", "temperature"], x: "timestamp"},
+      sourceNames: {
+        destinationName: ["timestamp", "temperature"],
+        x: "timestamp"
+      },
       xFormat: "%Y-%m-%d %H:%M:%S"
     }
   }

@@ -181,10 +181,7 @@ export const getWidgetConfigChart = formName => (dispatch, getState) => {
   if (config) {
     const configJson = JSON.parse(config.config);
     console.log("config", configJson);
-
     dispatch(fecthDatasourceList(configJson.serverName));
-
-    // API ancora mockata
     getDatasourceColumns(configJson.serverName, configJson.datasource).then(
       response => {
         response.json().then(json => {
@@ -192,12 +189,12 @@ export const getWidgetConfigChart = formName => (dispatch, getState) => {
             dispatch(initialize(formName, configJson));
             dispatch(clearSelectedDatasource());
             dispatch(setSelectedDatasource(configJson.datasource));
-            // API ancora mockata
+            const {mappings} = json.payload;
             dispatch(
               setDatasourceColumns(
-                json.payload.map(m => ({
-                  key: m.key,
-                  value: m.value
+                mappings.map(m => ({
+                  key: m.sourceName,
+                  value: m.destinationName
                 }))
               )
             );
@@ -381,10 +378,17 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
     getDatasourceColumns(serverId, datasourceId).then(response => {
       response.json().then(json => {
         if (response.ok) {
-          // API ancora mockata
-          dispatch(setDatasourceColumns(json.payload));
+          const {mappings} = json.payload;
+          const columns = mappings.reduce((acc, item) => {
+            acc.push({
+              key: item.sourceName,
+              value: item.destinationName
+            });
+            return acc;
+          }, []);
+          dispatch(setDatasourceColumns(columns));
           // set values in input field
-          json.payload.forEach(item => {
+          columns.forEach(item => {
             dispatch(change(formName, `columns.${item.key}.label`, item.value));
           });
           resolve();
