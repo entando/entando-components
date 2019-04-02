@@ -44,7 +44,7 @@ public class DashboardDatasourceDto implements IDashboardDatasourceDto{
   }
 
   @Override
-  public ServerType getServerType() {
+  public String getServerType() {
     return dashboardConfigDto.getType();
   }
 

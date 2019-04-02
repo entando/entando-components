@@ -100,11 +100,11 @@ public class DashboardConfigController {
   @RequestMapping(value = "/servertypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<ServerType>> getDashboardTypes() {
     ServerType sitewhere = new ServerType();
-    sitewhere.setCode("sitewhere");
-    sitewhere.setDescription("Sitewhere");
+    sitewhere.setCode("SITEWHERE");
+    sitewhere.setDescription("SITEWHERE");
     ServerType kaa = new ServerType();
-    kaa.setCode("kaa");
-    kaa.setDescription("Kaa");
+    kaa.setCode("KAA");
+    kaa.setDescription("KAA");
     List<ServerType> lista = new ArrayList<ServerType>();
     lista.add(kaa);
     lista.add(sitewhere);

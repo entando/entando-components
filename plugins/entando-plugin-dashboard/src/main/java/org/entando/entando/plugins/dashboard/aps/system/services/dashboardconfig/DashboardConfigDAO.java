@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -180,11 +181,16 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
 			stat.setInt(index++, dashboardConfig.getTimeConnection());
 			stat.setInt(index++, dashboardConfig.getActive() ? 1 : 0);
 			stat.setInt(index++, dashboardConfig.getDebug() ? 1 : 0);
-			if (StringUtils.isNotBlank(dashboardConfig.getType())) {
+			if (dashboardConfig.getType() != null && StringUtils.isNotBlank(dashboardConfig.getType())) {
 				stat.setString(index++, dashboardConfig.getType());
 			} else {
 				stat.setNull(index++, Types.VARCHAR);
 			}
+//			if (dashboardConfig.getType() != null && StringUtils.isNotBlank(dashboardConfig.getType().getDescription())) {
+//				stat.setString(index++, dashboardConfig.getType().getDescription());
+//			} else {
+//				stat.setNull(index++, Types.VARCHAR);
+//			}
 			stat.executeUpdate();
 		} catch (Throwable t) {
 			logger.error("Error on insert dashboardConfig", t);
@@ -246,7 +252,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
 			stat.setInt(index++, dashboardConfig.getTimeConnection());
 			stat.setInt(index++, dashboardConfig.getActive() ? 1 : 0);
 			stat.setInt(index++, dashboardConfig.getDebug() ? 1 : 0);
-			if (StringUtils.isNotBlank(dashboardConfig.getType())) {
+			if (dashboardConfig.getType() != null && StringUtils.isNotBlank(dashboardConfig.getType())) {
 				stat.setString(index++, dashboardConfig.getType());
 			} else {
 				stat.setNull(index++, Types.VARCHAR);
@@ -401,14 +407,13 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
 			dashboardConfig.setActive(res.getBoolean("active"));
 			dashboardConfig.setDebug(res.getBoolean("debug"));
 			dashboardConfig.setType(res.getString("type"));
-
 		} catch (Throwable t) {
 			logger.error("Error in buildDashboardConfigFromRes", t);
 		}
 		return dashboardConfig;
 	}
 
-	private static final String ADD_DASHBOARD_CONFIG = "INSERT INTO dashboard_config (id, serverdescription, serveruri, username, password, token, timeconnection, active, debug, type ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+	private static final String ADD_DASHBOARD_CONFIG = "INSERT INTO dashboard_config (id, serverdescription, serveruri, username, password, token, timeconnection, active, debug, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String UPDATE_DASHBOARD_CONFIG = "UPDATE dashboard_config SET  serverdescription=?,  serveruri=?,  username=?,  password=?,  token=?,  timeconnection=?,  active=?, debug=?, type = ? WHERE id = ?";
 

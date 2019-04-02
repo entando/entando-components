@@ -12,7 +12,7 @@ public interface IDashboardDatasourceDto {
 	
 	String getDashboardUrl();
 
-	ServerType getServerType();
+	String getServerType();
 	
 	int getDashboardId();
 	

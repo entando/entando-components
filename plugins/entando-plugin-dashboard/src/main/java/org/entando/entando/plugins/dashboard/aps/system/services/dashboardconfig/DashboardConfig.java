@@ -18,7 +18,10 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig;
 
 
+import com.mongodb.connection.Server;
+
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,8 +108,7 @@ public class DashboardConfig {
         this._type = type;
         return this;
     }
-
-
+    
     public List<DatasourcesConfigDto> getDatasources() {
         if (datasources == null) {
             datasources = new ArrayList<>();
@@ -124,7 +126,7 @@ public class DashboardConfig {
     private String _username;
     private String _password;
     private String _token;
-    private String _type;
+    private String _type ;
     private int _timeConnection;
     private boolean _active;
     private boolean _debug;

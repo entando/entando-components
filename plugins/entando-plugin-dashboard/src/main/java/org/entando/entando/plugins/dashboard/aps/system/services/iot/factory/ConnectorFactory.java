@@ -36,10 +36,10 @@ public class ConnectorFactory  implements ApplicationContextAware {
             return defName;
         }
         
-        public IDashboardDatasourceDto getDashboardDatasource(ServerType serverType) {
+        public IDashboardDatasourceDto getDashboardDatasource(String serverType) {
           Map<String, IDashboardDatasourceDto> beans = applicationContext.getBeansOfType(IDashboardDatasourceDto.class);
           IDashboardDatasourceDto defName = beans.values().stream().filter(
-              conn -> conn.supports(serverType.getCode())).findFirst().get();
+              conn -> conn.supports(serverType)).findFirst().get();
           return defName;
         }
 
@@ -47,7 +47,7 @@ public class ConnectorFactory  implements ApplicationContextAware {
   public List<ServerType> getServerType() {
     Map<String, IConnectorIot> beans = applicationContext.getBeansOfType(IConnectorIot.class);
     List<ServerType> serverTypes = new ArrayList<>();
-    beans.values().forEach(conn -> serverTypes.add(conn.getServerType()));
+    beans.values().forEach(conn -> serverTypes.add(new ServerType(conn.getServerType())));
     return serverTypes;
   }
 }

@@ -45,5 +45,5 @@ public interface IConnectorIot {
 
 	MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto);
 	
-	ServerType getServerType();
+	String getServerType();
 }
