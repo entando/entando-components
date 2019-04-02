@@ -9,23 +9,23 @@ public class MeasurementMapping {
   public MeasurementMapping() {
   }
 
-  public MeasurementMapping(String sourceName, String sourceType, String detinationName,
+  public MeasurementMapping(String sourceName, String sourceType, String destinationName,
       String transformerClass) {
     this.sourceName = sourceName;
     this.sourceType = sourceType;
-    this.detinationName = detinationName;
+    this.destinationName = destinationName;
     this.transformerClass = transformerClass;
   }
 
-  public MeasurementMapping(String sourceName, String detinationName) {
+  public MeasurementMapping(String sourceName, String destinationName) {
     this.sourceName = sourceName;
-    this.detinationName = detinationName;
+    this.destinationName = destinationName;
   }
 
   String sourceName;
   @JsonIgnore
   String sourceType;
-  String detinationName;
+  String destinationName;
   @JsonIgnore
   String transformerClass;
 
@@ -45,12 +45,12 @@ public class MeasurementMapping {
     this.sourceType = sourceType;
   }
 
-  public String getDetinationName() {
-    return detinationName;
+  public String getDestinationName() {
+    return destinationName;
   }
 
-  public void setDetinationName(String detinationName) {
-    this.detinationName = detinationName;
+  public void setDestinationName(String destinationName) {
+    this.destinationName = destinationName;
   }
 
   public String getTransformerClass() {
@@ -72,12 +72,12 @@ public class MeasurementMapping {
     MeasurementMapping that = (MeasurementMapping) o;
     return Objects.equals(sourceName, that.sourceName) &&
         Objects.equals(sourceType, that.sourceType) &&
-        Objects.equals(detinationName, that.detinationName) &&
+        Objects.equals(destinationName, that.destinationName) &&
         Objects.equals(transformerClass, that.transformerClass);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sourceName, sourceType, detinationName, transformerClass);
+    return Objects.hash(sourceName, sourceType, destinationName, transformerClass);
   }
 }

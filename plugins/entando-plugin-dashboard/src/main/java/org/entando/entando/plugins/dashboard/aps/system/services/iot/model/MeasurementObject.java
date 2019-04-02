@@ -13,7 +13,6 @@ import java.util.Objects;
 
 public class MeasurementObject {
 
-  private String name;
   private String measure;
   @JsonIgnore
   private String eventDate;
@@ -25,19 +24,18 @@ public class MeasurementObject {
   public MeasurementObject() {
   }
 
-  public MeasurementObject(String name, String measure) {
-    this.name = name;
-    this.measure = measure;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public MeasurementObject setName(String name) {
-    this.name = name;
-    return this;
-  }
+//  public MeasurementObject(String name, String measure) {
+//    this.measure = measure;
+//  }
+//
+//  public String getName() {
+//    return name;
+//  }
+//
+//  public MeasurementObject setName(String name) {
+//    this.name = name;
+//    return this;
+//  }
 
   public String getMeasure() {
     return measure;
@@ -71,24 +69,24 @@ public class MeasurementObject {
     this.entandoReceivedDate = entandoReceivedDate;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    MeasurementObject that = (MeasurementObject) o;
-    return Objects.equals(name, that.name) &&
-        Objects.equals(measure, that.measure) &&
-        Objects.equals(eventDate, that.eventDate) &&
-        Objects.equals(swReceivedDate, that.swReceivedDate) &&
-        Objects.equals(entandoReceivedDate, that.entandoReceivedDate);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name, measure, eventDate, swReceivedDate, entandoReceivedDate);
-  }
+//  @Override
+//  public boolean equals(Object o) {
+//    if (this == o) {
+//      return true;
+//    }
+//    if (o == null || getClass() != o.getClass()) {
+//      return false;
+//    }
+//    MeasurementObject that = (MeasurementObject) o;
+//    return //Objects.equals(name, that.name) &&
+//        Objects.equals(measure, that.measure) &&
+//        Objects.equals(eventDate, that.eventDate) &&
+//        Objects.equals(swReceivedDate, that.swReceivedDate) &&
+//        Objects.equals(entandoReceivedDate, that.entandoReceivedDate);
+//  }
+//
+//  @Override
+//  public int hashCode() {
+//    return Objects.hash(name, measure, eventDate, swReceivedDate, entandoReceivedDate);
+//  }
 }

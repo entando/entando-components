@@ -73,7 +73,7 @@ public class MeasurementConfig {
   public String getMappingKey(String sourceName) {
     for (MeasurementMapping mapping : this.getMappings()) {
       if(mapping.sourceName.equals(sourceName)) {
-        return mapping.getDetinationName();
+        return mapping.getDestinationName();
       }
     }
     return sourceName;

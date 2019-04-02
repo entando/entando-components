@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.storage;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,5 +26,7 @@ public interface IMessageService {
 	void deleteByServerId(int serverId);
 
 	Page<IotMessage> findByServerConfigurationAndDate(int serverId, String dashboardCode, Date start, Date end, Pageable pageable);
+	
+	List<IotMessage> findAllByServerConfigurationAndDateBetween(int serverId, String dashboardCode, Date start, Date end);
 	
 }
