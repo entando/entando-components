@@ -3,7 +3,11 @@ import {
   mapDispatchToProps
 } from "ui/widgets/table/containers/DashboardTableFormContainer";
 
-import {fetchServerConfigList, getWidgetConfig} from "state/main/actions";
+import {
+  fetchServerConfigList,
+  getWidgetConfig,
+  gotoConfigurationPage
+} from "state/main/actions";
 
 const FORM_DATA = {
   allColumns: "true",
@@ -19,10 +23,12 @@ const FORM_DATA = {
   }
 };
 
-jest.mock("state/main/actions", () => ({
-  fetchServerConfigList: jest.fn(),
-  getWidgetConfig: jest.fn()
-}));
+jest.mock("state/main/actions");
+
+// jest.mock("state/main/actions", () => ({
+//   fetchServerConfigList: jest.fn(),
+//   getWidgetConfig: jest.fn()
+// }));
 
 fetchServerConfigList.mockImplementation(() => Promise.resolve({}));
 
@@ -54,6 +60,7 @@ describe("DashboardTableFormContainer", () => {
     it("should map the correct function properties", () => {
       expect(container.onWillMount).toBeDefined();
       expect(container.onSubmit).toBeDefined();
+      expect(container.onCancel).toBeDefined();
     });
 
     it("should call onWillMount and dispatch action fetchServerConfigList and getTableWidgetConfig", done => {
@@ -68,6 +75,11 @@ describe("DashboardTableFormContainer", () => {
     it("should call onSubmit dispatch ownProps.onSubmit", () => {
       container.onSubmit(FORM_DATA);
       expect(ownProps.onSubmit).toHaveBeenCalled();
+    });
+
+    it("should call onCancel dispatch gotoConfigurationPage", () => {
+      container.onCancel();
+      expect(gotoConfigurationPage).toHaveBeenCalled();
     });
   });
 });

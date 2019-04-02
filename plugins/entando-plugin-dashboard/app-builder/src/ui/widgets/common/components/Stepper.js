@@ -39,7 +39,11 @@ class Stepper extends Component {
     const disabledButtonNext = !validateSteps[activeSubStepIndex];
     return (
       <div className="Stepper__btn-container">
-        <Button bsStyle="default" className="btn-cancel" onClick={this.close}>
+        <Button
+          bsStyle="default"
+          className="btn-cancel"
+          onClick={this.props.onCancel}
+        >
           Cancel
         </Button>
 
@@ -129,6 +133,7 @@ class Stepper extends Component {
 }
 
 Stepper.propTypes = {
+  onCancel: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func,
   step1: PropTypes.node,
   step2: PropTypes.node,

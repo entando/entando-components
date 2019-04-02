@@ -35,14 +35,6 @@ public class DashboardConfigDto {
   private boolean debug;
   private List<DatasourcesConfigDto> datasources = new ArrayList<>();
 
-  public String getServerDescription() {
-    return serverDescription;
-  }
-
-  public void setServerDescription(String serverDescription) {
-    this.serverDescription = serverDescription;
-  }
-
   public boolean isActive() {
     return active;
   }
@@ -67,13 +59,13 @@ public class DashboardConfigDto {
     this.id = id;
   }
 
-//  public String getServerDescription() {
-//    return serverDescription;
-//  }
-//
-//  public void setServerDescription(String serverDescription) {
-//    this.serverDescription = serverDescription;
-//  }
+  public String getServerDescription() {
+    return serverDescription;
+  }
+
+  public void setServerDescription(String serverDescription) {
+    this.serverDescription = serverDescription;
+  }
 
   public String getServerURI() {
     return serverURI;
