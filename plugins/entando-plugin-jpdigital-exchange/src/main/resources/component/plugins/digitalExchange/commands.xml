@@ -56,5 +56,13 @@
             <key>deleteContentModel</key>
             <value>@contentModelResourceController.deleteContentModel('%s')</value>
         </entry>
+        <entry>
+            <key>createPlugin</key>
+            <value>@servicePluginInstaller.createPluginResource('%s', '%s')</value>
+        </entry>
+        <entry>
+            <key>deletePlugin</key>
+            <value>@servicePluginInstaller.deletePluginResource('%s')</value>
+        </entry>
     </map>
 </commands>

@@ -1,0 +1,9 @@
+apiVersion: entando.org/v1alpha1
+kind: EntandoPlugin
+metadata:
+  name: example-entando-plugin
+  namespace: default
+spec:
+  deploymentName: example-entando-plugin
+  replicas: 1
+  image: centos/httpd-24-centos7:latest
