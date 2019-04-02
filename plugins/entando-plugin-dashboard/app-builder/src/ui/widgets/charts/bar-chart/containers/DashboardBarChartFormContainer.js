@@ -2,7 +2,11 @@ import {connect} from "react-redux";
 import {formValueSelector, getFormSyncErrors} from "redux-form";
 import {pick, get, set} from "lodash";
 
-import {fetchServerConfigList, getWidgetConfigChart} from "state/main/actions";
+import {
+  fetchServerConfigList,
+  getWidgetConfigChart,
+  gotoConfigurationPage
+} from "state/main/actions";
 
 import DashboardBarChartForm from "ui/widgets/charts/bar-chart/components/DashboardBarChartForm";
 
@@ -46,6 +50,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(getWidgetConfigChart(FORM_NAME));
     });
   },
+  onCancel: () => dispatch(gotoConfigurationPage()),
   onSubmit: data => {
     const transformData = {
       ...data,

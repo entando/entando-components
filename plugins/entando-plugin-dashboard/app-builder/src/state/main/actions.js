@@ -134,10 +134,17 @@ export const setInternalRoute = route => ({
 
 // thunk
 
+export const gotoConfigurationPage = () => (dispatch, getState) => {
+  const state = getState();
+  const params = getParams(state);
+  window.location.assign(`/page/configuration/${params.pageCode}`);
+};
+
 export const gotoPluginPage = pluginPage => (dispatch, getState) => {
   const state = getState();
   const route = getRoute(state);
   const params = getParams(state);
+
   const searchParams = getSearchParams(state);
   try {
     gotoRoute(route, params, {...searchParams, pluginPage});

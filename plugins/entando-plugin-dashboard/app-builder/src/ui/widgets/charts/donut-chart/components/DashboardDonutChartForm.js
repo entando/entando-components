@@ -35,6 +35,7 @@ class DashboardDonutChartFormBody extends Component {
     return (
       <Stepper
         handleSubmit={this.props.handleSubmit}
+        onCancel={this.props.onCancel}
         validateSteps={validateSteps}
         step1={<ChartFirstStepContent formName={FORM_NAME} />}
         step2={
@@ -60,7 +61,8 @@ class DashboardDonutChartFormBody extends Component {
 }
 DashboardDonutChartFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  onWillMount: PropTypes.func.isRequired
+  onWillMount: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired
 };
 
 const DashboardDonutChartForm = reduxForm({

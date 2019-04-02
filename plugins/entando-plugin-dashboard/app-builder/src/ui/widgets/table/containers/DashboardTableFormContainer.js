@@ -1,7 +1,11 @@
 import {connect} from "react-redux";
 import {formValueSelector} from "redux-form";
 
-import {fetchServerConfigList, getWidgetConfig} from "state/main/actions";
+import {
+  fetchServerConfigList,
+  getWidgetConfig,
+  gotoConfigurationPage
+} from "state/main/actions";
 
 import DashboardTableForm from "ui/widgets/table/components/DashboardTableForm";
 
@@ -27,7 +31,8 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmit: data => {
     const transformedData = {...data};
     ownProps.onSubmit({config: JSON.stringify(transformedData)});
-  }
+  },
+  onCancel: () => dispatch(gotoConfigurationPage())
 });
 
 const DashboardTableFormContainer = connect(

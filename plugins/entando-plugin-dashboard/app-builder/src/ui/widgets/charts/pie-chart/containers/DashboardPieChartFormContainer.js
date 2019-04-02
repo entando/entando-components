@@ -2,7 +2,11 @@ import {connect} from "react-redux";
 import {formValueSelector, getFormSyncErrors} from "redux-form";
 import {pick, get} from "lodash";
 
-import {fetchServerConfigList, getWidgetConfigChart} from "state/main/actions";
+import {
+  fetchServerConfigList,
+  getWidgetConfigChart,
+  gotoConfigurationPage
+} from "state/main/actions";
 
 import DashboardPieChartForm from "ui/widgets/charts/pie-chart/components/DashboardPieChartForm";
 
@@ -49,6 +53,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(getWidgetConfigChart(FORM_NAME));
     });
   },
+
+  onCancel: () => dispatch(gotoConfigurationPage()),
+
   onSubmit: data => {
     const transformData = {
       ...data,
