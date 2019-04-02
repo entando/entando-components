@@ -12,7 +12,7 @@
 	<groupId>org.entando.entando.plugins</groupId>
 	<packaging>war</packaging>
 	<name>Entando Plugin: Dashboard Plugin</name>
-	<description>CHANGE ME! Enter some quick and useful info</description>
+	<description>Dashboard Plugin</description>
 	
 	<properties>
 		<org.springframework.data-version>2.0.9.RELEASE</org.springframework.data-version>

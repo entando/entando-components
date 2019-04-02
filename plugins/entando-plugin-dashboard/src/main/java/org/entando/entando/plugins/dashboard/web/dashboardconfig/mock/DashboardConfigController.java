@@ -15,15 +15,9 @@
  *
  */
 
-package org.entando.entando.plugins.dashboard.web.dashboardconfig;
+package org.entando.entando.plugins.dashboard.web.dashboardconfig.mock;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
@@ -32,6 +26,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementMapping;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
@@ -57,11 +52,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/plugins/dashboard/dashboardConfigs")
-@Profile("!mock")
+@Profile("mock")
 public class DashboardConfigController {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -275,14 +275,12 @@ public class DashboardConfigController {
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(
       @PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    MeasurementConfig config = connectorService.getMeasurementsConfig(dto);
+    MeasurementConfig config = new MeasurementConfig();
+    MeasurementMapping mapping = new MeasurementMapping();
+    mapping.setSourceName("temperature");
+    mapping.setDetinationName("temperatureDest");
+    config.setDatasourceCode("dashCode");
+    config.addMapping(mapping);
     return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
   }
 
