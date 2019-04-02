@@ -5,8 +5,14 @@ import java.util.Date;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
+==== BASE ====
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
+==== BASE ====
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
+==== BASE ====
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
+==== BASE ====
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -48,15 +54,23 @@ public class ConnectorController {
       @PathVariable String datasourceCode,
       @RequestBody String measure) {
 
-   
-    return new ResponseEntity(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED);
+    if (!dashboardConfigService.existsById(serverId)) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    DashboardDatasourceDto dto = dashboardConfigService
+        .getDashboardDatasourceDto(serverId, datasourceCode);
+
+    if (dto.getDatasourcesConfigDto() == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    connectorService.saveDeviceMeasurement(dto, measure);
+    return new ResponseEntity(HttpStatus.OK);
   }
 
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<PagedRestResponse<MeasurementObject>> getMeasurement(
+  public ResponseEntity<PagedRestResponse<IotMessage>> getMeasurement(
       @PathVariable int serverId,
       @PathVariable String datasourceCode,
-      @RequestParam(value = "nMeasurements", required = false) long nMeasurements,
       @RequestParam(value = "startDate", required = false) Instant startDate,
       @RequestParam(value = "endDate", required = false) Instant endDate,
       RestListRequest requestList) throws Exception {
@@ -68,10 +82,19 @@ public class ConnectorController {
     if (dto.getDatasourcesConfigDto() == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
+    Date start = null;
+    Date end = null;
+    if(startDate != null) {
+      start = Date.from(startDate);
+    }
+    if(endDate != null) {
+      end = Date.from(endDate);
+    }
+    
+    
     try {
-      PagedMetadata<MeasurementObject> pagedMetadata = this.connectorService
-          .getDeviceMeasurements(dto, nMeasurements, Date.from(startDate), Date.from(endDate), requestList);
+      PagedMetadata<IotMessage> pagedMetadata = this.connectorService
+          .getDeviceMeasurements(dto, start, end, requestList);
       return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
     } catch (Exception e) {
       e.printStackTrace();

@@ -12,6 +12,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDash
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
+import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessage;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 
@@ -42,7 +43,7 @@ public interface IConnectorService {
 
 	PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList);
 
-	PagedMetadata<MeasurementObject> getDeviceMeasurements(IDashboardDatasourceDto dto, Long nMeasurements, Date startDate, Date endDate, RestListRequest restListRequest);
+	PagedMetadata<IotMessage> getDeviceMeasurements(IDashboardDatasourceDto dto, Date startDate, Date endDate, RestListRequest restListRequest);
 
 	MeasurementConfig getMeasurementsConfig(IDashboardDatasourceDto dto);
 
