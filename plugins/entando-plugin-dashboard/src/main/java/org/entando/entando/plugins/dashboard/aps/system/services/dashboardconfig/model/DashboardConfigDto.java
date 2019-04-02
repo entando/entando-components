@@ -24,7 +24,7 @@ import java.util.List;
 public class DashboardConfigDto {
 
   private int id;
-//  private String serverDescription;
+  private String serverDescription;
   private String serverURI;
   private String username;
   private String password;
@@ -35,6 +35,21 @@ public class DashboardConfigDto {
   private boolean debug;
   private List<DatasourcesConfigDto> datasources = new ArrayList<>();
 
+  public String getServerDescription() {
+    return serverDescription;
+  }
+
+  public void setServerDescription(String serverDescription) {
+    this.serverDescription = serverDescription;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public boolean isDebug() {
+    return debug;
+  }
 
   public String getType() {
     return type;
