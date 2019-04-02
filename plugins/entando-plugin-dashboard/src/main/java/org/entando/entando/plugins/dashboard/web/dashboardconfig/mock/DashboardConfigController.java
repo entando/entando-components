@@ -28,6 +28,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measu
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementMapping;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
@@ -111,7 +112,6 @@ public class DashboardConfigController {
     List<ServerType> lista = new ArrayList<ServerType>();
     lista.add(kaa);
     lista.add(sitewhere);
-//    List<ServerType> lista = connectorService.getDashboardTypes();
     return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
   }
 
@@ -153,7 +153,6 @@ public class DashboardConfigController {
       @PathVariable String dashboardConfigId,
       @Valid @RequestBody DashboardConfigRequest dashboardConfigRequest,
       BindingResult bindingResult) {
-    // field validations
     if (bindingResult.hasErrors()) {
       throw new ValidationGenericException(bindingResult);
     }
@@ -221,18 +220,8 @@ public class DashboardConfigController {
     logger.debug("{} ping to server, datasource : {}, {}", this.getClass().getSimpleName(),
         serverId, datasourceCode);
 
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService
-        .getDashboardDatasourceDto(serverId, datasourceCode);
-
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    boolean pingResult = connectorService.pingDevice(dto);
-    return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
+   
+    return new ResponseEntity<>(new SimpleRestResponse<>(true), HttpStatus.OK);
   }
 
   /**
@@ -259,16 +248,11 @@ public class DashboardConfigController {
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/preview", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getMeasurementPreview(
       @PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    MeasurementTemplate template = connectorService
-        .getDeviceMeasurementSchema(dto);
-    return new ResponseEntity<>(new SimpleRestResponse(template), HttpStatus.OK);
+	  MeasurementColumn col  =new MeasurementColumn();
+	  col.setKey("chiave");
+	  col.setValue("valore");
+	  
+    return new ResponseEntity<>(new SimpleRestResponse(col), HttpStatus.OK);
   }
 
   @RestAccessControl(permission = "superuser")
@@ -279,8 +263,12 @@ public class DashboardConfigController {
     MeasurementMapping mapping = new MeasurementMapping();
     mapping.setSourceName("temperature");
     mapping.setDestinationName("temperatureDest");
+    MeasurementMapping mappingtimestamp = new MeasurementMapping();
+    mapping.setSourceName("timestamp");
+    mapping.setDestinationName("timestamp");
     config.setDatasourceCode("dashCode");
     config.addMapping(mapping);
+    config.addMapping(mappingtimestamp);
     return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
   }
 
