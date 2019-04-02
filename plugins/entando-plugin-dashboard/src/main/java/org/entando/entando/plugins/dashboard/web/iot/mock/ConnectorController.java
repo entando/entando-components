@@ -1,13 +1,17 @@
 package org.entando.entando.plugins.dashboard.web.iot.mock;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigManager;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
+import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessage;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -26,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 @RestController
 @RequestMapping(value = "/plugins/dashboard")
@@ -33,47 +39,65 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public class ConnectorController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConnectorController.class);
-	
-  @Autowired
-  IDashboardConfigService dashboardConfigService;
 
-  @Autowired
-  IConnectorService connectorService;
+	@Autowired
+	IDashboardConfigService dashboardConfigService;
 
-  protected IConnectorService getConnectorService() {
-    return connectorService;
-  }
+	@Autowired
+	IConnectorService connectorService;
 
-  public void setConnectorService(IConnectorService connectorService) {
-    this.connectorService = connectorService;
-  }
+	protected IConnectorService getConnectorService() {
+		return connectorService;
+	}
 
-  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
-  public ResponseEntity<?> saveMeasurement(@PathVariable int serverId,
-      @PathVariable String datasourceCode,
-      @RequestBody String measure) {
+	public void setConnectorService(IConnectorService connectorService) {
+		this.connectorService = connectorService;
+	}
 
-    return new ResponseEntity(HttpStatus.OK);
-  }
+	@RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
+	public ResponseEntity<?> saveMeasurement(@PathVariable int serverId, @PathVariable String datasourceCode,
+			@RequestBody String measure) {
 
-  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<PagedRestResponse<MeasurementObject>> getMeasurement(
-      @PathVariable int serverId,
-      @PathVariable String datasourceCode,
-      @RequestParam(value = "startDate", required = false) Instant startDate,
-      @RequestParam(value = "endDate", required = false) Instant endDate,
-      RestListRequest requestList) throws Exception {
+		return new ResponseEntity(HttpStatus.OK);
+	}
 
-	  logger.error("Error loading dashboardConfig with id '{}'");
-	  
-    return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-  }
+	@RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<PagedRestResponse<IotMessage>> getMeasurement(@PathVariable int serverId,
+			@PathVariable String datasourceCode, @RequestParam(value = "startDate", required = false) Instant startDate,
+			@RequestParam(value = "endDate", required = false) Instant endDate, RestListRequest requestList)
+			throws Exception {
+		try {
+			IotMessage iotMessage = new IotMessage();
+			MeasurementPayload m = new MeasurementPayload();
+			JsonObject obj = new JsonObject();
 
-  @RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
-  public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
-      @PathVariable String datasourceCode)
-      throws ApsSystemException {
-   
-    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-  }
+			String jsonString = "{\"timestamp\":\"2019-03-22T15:03:26\",\"temperature\":\"20\"}";
+
+			JsonElement c = new com.google.gson.JsonParser().parse(jsonString);
+			obj.add("measure", c);
+
+			List<JsonObject> misur = new ArrayList<JsonObject>();
+			misur.add(obj);
+			m.setMeasurements(misur);
+			iotMessage.setContent(m);
+
+			List<IotMessage> lista = new ArrayList<IotMessage>();
+			lista.add(iotMessage);
+
+			PagedMetadata<IotMessage> pagedMetadata = new PagedMetadata<>(requestList, 1);
+			pagedMetadata.setBody(lista);
+
+			return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity(HttpStatus.BAD_GATEWAY);
+	}
+
+	@RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
+	public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId, @PathVariable String datasourceCode)
+			throws ApsSystemException {
+
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }
