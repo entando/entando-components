@@ -11,8 +11,6 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
-import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.CONNECTION_TIMEOUT;
-
 public abstract class AbstractConnectorService implements IConnectorService{
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -24,7 +22,7 @@ public abstract class AbstractConnectorService implements IConnectorService{
     URL urlObj = new URL(serverObj.getServerURI());
     HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
     con.setRequestMethod("GET");
-    con.setConnectTimeout(CONNECTION_TIMEOUT);
+    con.setConnectTimeout(server.getTimeConnection());
     try {
       con.connect();
     }

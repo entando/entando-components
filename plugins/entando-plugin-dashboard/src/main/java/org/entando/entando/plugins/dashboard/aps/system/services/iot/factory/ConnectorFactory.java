@@ -1,5 +1,6 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.factory;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorIot;
 import org.springframework.beans.BeansException;
@@ -7,6 +8,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -39,6 +42,12 @@ public class ConnectorFactory  implements ApplicationContextAware {
               conn -> conn.supports(serverType)).findFirst().get();
           return defName;
         }
-        
 
-    }
+
+  public List<ServerType> getServerType() {
+    Map<String, IConnectorIot> beans = applicationContext.getBeansOfType(IConnectorIot.class);
+    List<ServerType> serverTypes = new ArrayList<>();
+    beans.values().forEach(conn -> serverTypes.add(new ServerType(conn.getServerType())));
+    return serverTypes;
+  }
+}

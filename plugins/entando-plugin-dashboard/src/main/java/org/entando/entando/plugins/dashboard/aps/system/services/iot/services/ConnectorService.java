@@ -1,19 +1,14 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 import org.entando.entando.aps.system.exception.RestServerError;
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
@@ -25,11 +20,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ConnectorService extends AbstractConnectorService implements IConnectorService {
@@ -142,5 +139,10 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     @Override
     public MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto) {
         return connectorFactory.getConnector(dto.getServerType()).getDeviceMeasurementSchema(dto);
+    }
+
+    @Override
+    public List<ServerType> getDashboardTypes() {
+        return connectorFactory.getServerType();
     }
 }

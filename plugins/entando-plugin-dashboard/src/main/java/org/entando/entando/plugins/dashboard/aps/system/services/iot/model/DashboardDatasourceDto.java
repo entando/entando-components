@@ -2,6 +2,7 @@ package org.entando.entando.plugins.dashboard.aps.system.services.iot.model;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 
 public class DashboardDatasourceDto implements IDashboardDatasourceDto{
 

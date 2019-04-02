@@ -18,6 +18,7 @@
 package org.entando.entando.plugins.dashboard.web.dashboardconfig.model;
 
 
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;

@@ -18,7 +18,6 @@
 package org.entando.entando.plugins.dashboard.web.dashboardconfig;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.JsonObject;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
@@ -29,7 +28,6 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measu
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
@@ -100,22 +98,17 @@ public class DashboardConfigController {
 
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/servertypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SimpleRestResponse<ServerType>> getDashboardTypes(
-      RestListRequest requestList)
-      throws JsonProcessingException {
-//        this.getDashboardConfigValidator().validateRestListRequest(requestList, DashboardConfigDto.class);
-//        PagedMetadata<DashboardConfigDto> result = this.getDashboardConfigService().getDashboardConfigs(requestList);
-//        this.getDashboardConfigValidator().validateRestListResult(requestList, result);
-//        logger.debug("Main Response -> {}", result);
+  public ResponseEntity<SimpleRestResponse<ServerType>> getDashboardTypes() {
     ServerType sitewhere = new ServerType();
-    sitewhere.setCode("sitewhere");
-    sitewhere.setDescription("Sitewhere");
+    sitewhere.setCode("SITEWHERE");
+    sitewhere.setDescription("SITEWHERE");
     ServerType kaa = new ServerType();
-    kaa.setCode("kaa");
-    kaa.setDescription("Kaa");
+    kaa.setCode("KAA");
+    kaa.setDescription("KAA");
     List<ServerType> lista = new ArrayList<ServerType>();
     lista.add(kaa);
     lista.add(sitewhere);
+//    List<ServerType> lista = connectorService.getDashboardTypes();
     return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
   }
 
