@@ -19,5 +19,13 @@ public interface MessageRepository extends MongoRepository<IotMessage, String> {
 	public void deleteByServerId(int serverId);
 
 	public List<IotMessage> findAllByServerIdAndDashboardCodeAndCreatedAtBetween(int serverId, String dashboardCode, Date start, Date end);
+
+	public List<IotMessage> findAllByServerIdAndDashboardCodeAndCreatedAtAfter(int dashboardId, String datasourceCode,
+			Date startDate);
+
+	public List<IotMessage> findAllByServerIdAndDashboardCodeAndCreatedAtBefore(int dashboardId, String datasourceCode,
+			Date endDate);
+
+	public List<IotMessage> findAllByServerIdAndDashboardCode(int dashboardId, String datasourceCode);
 	
 }

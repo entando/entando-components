@@ -8,15 +8,11 @@ import static org.junit.Assert.assertThat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.Date;
 
 import org.entando.entando.plugins.dashboard.aps.DashboardBaseTestCase;
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigManager;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,7 +47,7 @@ public class MessageServiceIntegrationTest extends DashboardBaseTestCase {
 		assertThat(searchResult.getTotalElements(), is(0L));
 
 		this.messageService.deleteByServerId(SERVER_ID);
-		IotMessage message = new IotMessage(SERVER_ID, "mars", null);
+		IotMessageDto message = new IotMessageDto(SERVER_ID, "mars", null);
 		message.setContent(new SimpleMessagePayload(mapper.writeValueAsString("data_from_mars")));
 		this.messageService.add(message);
 		assertThat( message.getId(), is(not(nullValue())));
@@ -74,7 +70,7 @@ public class MessageServiceIntegrationTest extends DashboardBaseTestCase {
 		long itemsCount = 300;
 		for (int i = 0; i < itemsCount; i++) {
 			created = created.plus(12, ChronoUnit.HOURS);
-			IotMessage message = new IotMessage(SERVER_ID, dashBoardCode, null);
+			IotMessageDto message = new IotMessageDto(SERVER_ID, dashBoardCode, null);
 			message.setCreatedAt(created.toInstant());
 			String content = String.format("payload_%s_%s", 
 					message.getServerId(), 
@@ -106,8 +102,4 @@ public class MessageServiceIntegrationTest extends DashboardBaseTestCase {
 		assertThat(searchResult.getTotalElements(), is(2L));
 
 	}
-
-	
-	
-	
 }

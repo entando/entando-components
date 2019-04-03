@@ -1,5 +1,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.storage;
 
+import com.google.gson.Gson;
+
 public class SimpleMessagePayload implements MessagePayload {
 
 	private String value;
@@ -18,6 +20,11 @@ public class SimpleMessagePayload implements MessagePayload {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	@Override
+	public String getJson() {
+		return new Gson().toJson(this);
 	}
 	
 }

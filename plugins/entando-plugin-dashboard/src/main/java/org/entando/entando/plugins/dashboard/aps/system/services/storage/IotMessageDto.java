@@ -9,23 +9,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.mongodb.BasicDBObject;
 
-@Document(collection = "iot_messages")
-public class IotMessage {
+public class IotMessageDto {
 
 	@Id
 	private String id;
 	private Instant createdAt;
-	private BasicDBObject content;
+	private MessagePayload content;
 	private int serverId;
 	private String dashboardCode;
 
-	public IotMessage() {
+	public IotMessageDto() {
 
 	}
 
-	public IotMessage(int serverId, String dashboardCode, BasicDBObject content) {
+	public IotMessageDto(int serverId, String dashboardCode, MeasurementPayload content) {
 		this.serverId = serverId;
 		this.dashboardCode = dashboardCode;
 		this.content = content;
@@ -45,10 +43,10 @@ public class IotMessage {
 		this.createdAt = createdAt;
 	}
 
-	public BasicDBObject getContent() {
-		return (BasicDBObject) content;
+	public MessagePayload getContent() {
+		return content;
 	}
-	public void setContent(BasicDBObject content) {
+	public void setContent(MessagePayload content) {
 		this.content = content;
 	}
 
@@ -84,7 +82,7 @@ public class IotMessage {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		IotMessage that = (IotMessage) o;
+		IotMessageDto that = (IotMessageDto) o;
 		return serverId == that.serverId &&
 				Objects.equals(id, that.id) &&
 				Objects.equals(createdAt, that.createdAt) &&
@@ -95,10 +93,6 @@ public class IotMessage {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, createdAt, content, serverId, dashboardCode);
-	}
-	
-	public String getJson() {
-		return new Gson().toJson(this);
 	}
 	
 }

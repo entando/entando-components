@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.agiletec.aps.system.common.AbstractService;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 
 @Service
 public class MessageService extends AbstractService implements IMessageService {
@@ -38,7 +40,6 @@ public class MessageService extends AbstractService implements IMessageService {
 
 	@Override
 	public void init() throws Exception {
-		//messageRepository.
 	}
 
 	@Override
@@ -58,9 +59,23 @@ public class MessageService extends AbstractService implements IMessageService {
 		if (null == message.getCreatedAt()) {			
 			message.setCreatedAt(Instant.now());
 		}
+		
+//		MongoCollection<BasicDBObject> dbCollection = database.getCollection("iot_messages",BasicDBObject.class);          
+//		BasicDBObject document = new BasicDBObject(BasicDBObject.parse(message.getJson()));          
+//		dbCollection.insertOne(document);
+//		return message;
+		
 		return  this.messageRepository.insert(message);
 	}
 
+	@Override
+	public IotMessage add(IotMessageDto message) {
+		if (null == message.getCreatedAt()) {			
+			message.setCreatedAt(Instant.now());
+		}
+		return this.messageRepository.insert(MessageBuilder.getEntity(message));
+	}
+	
 	@Override
 	public Page<IotMessage> findByServerConfiguration(int serverId, String dashboardCode, Pageable pageable) {
 		return this.messageRepository.findByServerIdAndDashboardCode(serverId, dashboardCode, pageable);
@@ -89,4 +104,22 @@ public class MessageService extends AbstractService implements IMessageService {
 			Date end) {
 		return this.messageRepository.findAllByServerIdAndDashboardCodeAndCreatedAtBetween(serverId, dashboardCode, start, end);
 	}
+
+	@Override
+	public List<IotMessage> findAllByServerConfigurationAndDateAfter(int dashboardId, String datasourceCode,
+			Date startDate) {
+		return this.messageRepository.findAllByServerIdAndDashboardCodeAndCreatedAtAfter(dashboardId, datasourceCode, startDate);
+	}
+
+	@Override
+	public List<IotMessage> findAllByServerConfigurationAndDateBefore(int dashboardId, String datasourceCode,
+			Date endDate) {
+		return this.messageRepository.findAllByServerIdAndDashboardCodeAndCreatedAtBefore(dashboardId, datasourceCode, endDate);
+	}
+
+	@Override
+	public List<IotMessage> findAllByServerConfiguration(int dashboardId, String datasourceCode) {
+		return this.messageRepository.findAllByServerIdAndDashboardCode(dashboardId, datasourceCode);
+	}
+
 }
