@@ -29,8 +29,7 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
     });
   },
   onSubmit: data => {
-    const transformedData = {...data};
-    ownProps.onSubmit({config: JSON.stringify(transformedData)});
+    ownProps.onSubmit({config: JSON.stringify(data)});
   },
   onCancel: () => dispatch(gotoConfigurationPage())
 });

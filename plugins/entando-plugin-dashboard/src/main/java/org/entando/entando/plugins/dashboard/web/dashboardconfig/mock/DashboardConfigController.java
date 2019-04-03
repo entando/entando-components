@@ -15,15 +15,9 @@
  *
  */
 
-package org.entando.entando.plugins.dashboard.web.dashboardconfig;
+package org.entando.entando.plugins.dashboard.web.dashboardconfig.mock;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
@@ -32,7 +26,9 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementMapping;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
@@ -57,11 +53,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/plugins/dashboard/dashboardConfigs")
-@Profile("!mock")
+@Profile("mock")
 public class DashboardConfigController {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -111,7 +112,6 @@ public class DashboardConfigController {
     List<ServerType> lista = new ArrayList<ServerType>();
     lista.add(kaa);
     lista.add(sitewhere);
-//    List<ServerType> lista = connectorService.getDashboardTypes();
     return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
   }
 
@@ -153,7 +153,6 @@ public class DashboardConfigController {
       @PathVariable String dashboardConfigId,
       @Valid @RequestBody DashboardConfigRequest dashboardConfigRequest,
       BindingResult bindingResult) {
-    // field validations
     if (bindingResult.hasErrors()) {
       throw new ValidationGenericException(bindingResult);
     }
@@ -221,18 +220,8 @@ public class DashboardConfigController {
     logger.debug("{} ping to server, datasource : {}, {}", this.getClass().getSimpleName(),
         serverId, datasourceCode);
 
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService
-        .getDashboardDatasourceDto(serverId, datasourceCode);
-
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    boolean pingResult = connectorService.pingDevice(dto);
-    return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
+   
+    return new ResponseEntity<>(new SimpleRestResponse<>(true), HttpStatus.OK);
   }
 
   /**
@@ -259,30 +248,27 @@ public class DashboardConfigController {
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/preview", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getMeasurementPreview(
       @PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    MeasurementTemplate template = connectorService
-        .getDeviceMeasurementSchema(dto);
-    return new ResponseEntity<>(new SimpleRestResponse(template), HttpStatus.OK);
+	  MeasurementColumn col  =new MeasurementColumn();
+	  col.setKey("chiave");
+	  col.setValue("valore");
+	  
+    return new ResponseEntity<>(new SimpleRestResponse(col), HttpStatus.OK);
   }
 
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(
       @PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    MeasurementConfig config = connectorService.getMeasurementsConfig(dto);
+    MeasurementConfig config = new MeasurementConfig();
+    MeasurementMapping mapping = new MeasurementMapping();
+    mapping.setSourceName("temperature");
+    mapping.setDestinationName("temperatureDest");
+    MeasurementMapping mappingtimestamp = new MeasurementMapping();
+    mappingtimestamp.setSourceName("timestamp");
+    mappingtimestamp.setDestinationName("timestamp");
+    config.setDatasourceCode("dashCode");
+    config.addMapping(mapping);
+    config.addMapping(mappingtimestamp);
     return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
   }
 

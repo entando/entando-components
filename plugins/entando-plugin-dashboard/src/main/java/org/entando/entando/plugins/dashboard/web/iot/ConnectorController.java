@@ -11,6 +11,7 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 
 @RestController
 @RequestMapping(value = "/plugins/dashboard")
+@Profile("!mock")
 public class ConnectorController {
 
   @Autowired
@@ -82,7 +84,6 @@ public class ConnectorController {
     if(endDate != null) {
       end = Date.from(endDate);
     }
-    
     
     try {
       PagedMetadata<IotMessageDto> pagedMetadata = this.connectorService
