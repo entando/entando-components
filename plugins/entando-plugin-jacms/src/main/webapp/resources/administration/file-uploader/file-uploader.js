@@ -1,5 +1,4 @@
 var cropEditorEnabled = false;
-console.log(cropEditorEnabled);
 var attachmentUploadEnabled = false;
 
 var FileUploadManager = function (config) {
@@ -477,6 +476,7 @@ jQuery(document).ready(function ($) {
                     var imageData = "";
                     if (file) {
                         imageData = file.cropper.getCroppedCanvas().toDataURL(file.type);
+                        file.fileInput = dataURLtoFile(imageData, file.name);
                         file.cropper.replace(imageData);
                         file.imageData = imageData;
                         fileUploadManager.files[fileId] = file;
@@ -679,6 +679,69 @@ jQuery(document).ready(function ($) {
             }
         }
     });
+
+
+    // Parses `#aspect-ratio-values` element and retrieves toolbar values to setup aspect-ratio toolbar.
+    var DOMsetupAspectRatioToolbar = function () {
+        var defaultAspectRatios = $('#aspect-ratio-values').text().trim().split(";");
+        var $aspectRatioToolbar = $('.aspect-ratio-buttons');
+
+        var render = function (val) {
+            var aspectRatioValues = val.split(':');
+            var aspectRatio = aspectRatioValues[0] / aspectRatioValues[1];
+            var template =
+                '<label class="btn btn-primary" data-method="setAspectRatio" data-option="' + aspectRatio + '">\n' +
+                '<input type="radio" class="sr-only" name="aspectRatio" value="' + aspectRatio + '">\n' +
+                '<span class="docs-tooltip">' + val + '</span>\n' +
+                '</label>';
+
+            return template;
+        };
+
+        for (var i in defaultAspectRatios) {
+            if (defaultAspectRatios[i].length > 0) {
+                $aspectRatioToolbar.find('.btn-group').append(render(defaultAspectRatios[i]));
+            }
+        }
+    };
+
+    DOMsetupAspectRatioToolbar();
+
+
+    /**
+     * Handling single image edit form.
+     */
+
+    var singleImageEdit = $('#imageUrl');
+
+    // If this is single image edit form retrieve image, convert it to base64 string to add it to Store as storeItem.
+    if (singleImageEdit.length === 1) {
+        var imagePath = singleImageEdit.data('value');
+        toDataUrl(imagePath, function (imageData) {
+
+            var name = $('#descr_0').val();
+            var imageData = imageData;
+            var type = imageData.substring("data:".length, imageData.indexOf(";base64"));
+
+            var newFile = fileUploadManager.prepareFile(dataURLtoFile(imageData, name));
+            newFile.name = name;
+            newFile.domElements.$formGroup = $('#formGroup-0');
+            newFile.imageData = imageData;
+
+
+            var newFileId = fileUploadManager.insertFile(newFile);
+            var tabResult = addTab(newFileId);
+
+            // tabResult.$tabNavigationItem.removeClass('active');
+            // tabResult.$tabPane.removeClass('active');
+
+            fileUploadManager.files[newFileId].domElements.$tabNavigationItem = tabResult.$tabNavigationItem;
+            fileUploadManager.files[newFileId].domElements.$tabPane = tabResult.$tabPane;
+
+            // setupCropper(newFileId);
+
+        });
+    }
 
 
 });
