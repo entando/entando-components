@@ -7,6 +7,9 @@ import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMess
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+
+import com.mongodb.BasicDBObject;
 
 public interface MessageRepository extends MongoRepository<IotMessage, String> {
 
@@ -27,5 +30,8 @@ public interface MessageRepository extends MongoRepository<IotMessage, String> {
 			Date endDate);
 
 	public List<IotMessage> findAllByServerIdAndDashboardCode(int dashboardId, String datasourceCode);
+
+	@Query(value = "{'serverId': ?0, 'dashboardCode': ?1}", fields = "{'measurement' : 1, '_id' : 0}")
+	public List<BasicDBObject> findContentMeasurementByServerIdAndDashboardCode(int dashboardId, String datasourceCode);
 	
 }

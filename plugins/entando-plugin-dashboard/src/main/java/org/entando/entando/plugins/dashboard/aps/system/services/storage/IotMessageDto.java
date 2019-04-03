@@ -3,19 +3,14 @@ package org.entando.entando.plugins.dashboard.aps.system.services.storage;
 import java.time.Instant;
 import java.util.Objects;
 
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 public class IotMessageDto {
 
 	@Id
 	private String id;
 	private Instant createdAt;
-	private MessagePayload content;
+	private MessagePayload measurement;
 	private int serverId;
 	private String dashboardCode;
 
@@ -23,10 +18,10 @@ public class IotMessageDto {
 
 	}
 
-	public IotMessageDto(int serverId, String dashboardCode, MeasurementPayload content) {
+	public IotMessageDto(int serverId, String dashboardCode, MessagePayload content) {
 		this.serverId = serverId;
 		this.dashboardCode = dashboardCode;
-		this.content = content;
+		this.measurement = content;
 	}
 
 	public String getId() {
@@ -44,10 +39,10 @@ public class IotMessageDto {
 	}
 
 	public MessagePayload getContent() {
-		return content;
+		return measurement;
 	}
 	public void setContent(MessagePayload content) {
-		this.content = content;
+		this.measurement = content;
 	}
 
 	public int getServerId() {
@@ -69,7 +64,7 @@ public class IotMessageDto {
 	public String toString() {
 		return "Message [" + (id != null ? "id=" + id + ", " : "")
 				+ (createdAt != null ? "createdAt=" + createdAt + ", " : "")
-				+ (content != null ? "content=" + content + ", " : "")
+				+ (measurement != null ? "content=" + measurement + ", " : "")
 				+ ("serverId=" + serverId)
 				+ (dashboardCode != null ? "dashboardCode=" + dashboardCode : "") + "]";
 	}
@@ -86,13 +81,13 @@ public class IotMessageDto {
 		return serverId == that.serverId &&
 				Objects.equals(id, that.id) &&
 				Objects.equals(createdAt, that.createdAt) &&
-				Objects.equals(content, that.content) &&
+				Objects.equals(measurement, that.measurement) &&
 				Objects.equals(dashboardCode, that.dashboardCode);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, createdAt, content, serverId, dashboardCode);
+		return Objects.hash(id, createdAt, measurement, serverId, dashboardCode);
 	}
 	
 }

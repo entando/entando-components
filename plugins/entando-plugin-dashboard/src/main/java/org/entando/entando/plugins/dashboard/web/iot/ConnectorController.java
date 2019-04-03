@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessageDto;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -62,7 +63,7 @@ public class ConnectorController {
   }
 
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<PagedRestResponse<IotMessageDto>> getMeasurement(
+  public ResponseEntity<PagedRestResponse<MeasurementPayload>> getMeasurement(
       @PathVariable int serverId,
       @PathVariable String datasourceCode,
       @RequestParam(value = "startDate", required = false) Instant startDate,
@@ -86,7 +87,7 @@ public class ConnectorController {
     }
     
     try {
-      PagedMetadata<IotMessageDto> pagedMetadata = this.connectorService
+      PagedMetadata<MeasurementPayload> pagedMetadata = this.connectorService
           .getDeviceMeasurements(dto, start, end, requestList);
       return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
     } catch (Exception e) {

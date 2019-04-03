@@ -1,9 +1,11 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.storage;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.storage.repository.MessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.agiletec.aps.system.common.AbstractService;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
+import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
 
 @Service
 public class MessageService extends AbstractService implements IMessageService {
@@ -120,6 +122,15 @@ public class MessageService extends AbstractService implements IMessageService {
 	@Override
 	public List<IotMessage> findAllByServerConfiguration(int dashboardId, String datasourceCode) {
 		return this.messageRepository.findAllByServerIdAndDashboardCode(dashboardId, datasourceCode);
+	}
+
+	@Override
+	public List<MeasurementPayload> findMeasurementsByServerConfiguration(int dashboardId, String datasourceCode) {
+		Gson gson = new Gson();
+		List<BasicDBObject> measurementJson = this.messageRepository.findContentMeasurementByServerIdAndDashboardCode(dashboardId, datasourceCode);
+		List<MeasurementPayload> payloads = new ArrayList<>();
+		measurementJson.forEach(j -> payloads.add(gson.fromJson(j.toJson(), MeasurementPayload.class)));
+		return payloads;
 	}
 
 }
