@@ -3,6 +3,7 @@ package org.entando.entando.plugins.dashboard.web.iot;
 import java.time.Instant;
 import java.util.Date;
 
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
@@ -10,6 +11,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMess
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.entity.validator.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -48,15 +50,7 @@ public class ConnectorController {
       @PathVariable String datasourceCode,
       @RequestBody String measure) {
 
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService
-        .getDashboardDatasourceDto(serverId, datasourceCode);
-
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+      DashboardDatasourceDto dto = this.getAndCheckDashboardDatasourceDto(serverId, datasourceCode);
     connectorService.saveDeviceMeasurement(dto, measure);
     return new ResponseEntity(HttpStatus.OK);
   }
@@ -69,14 +63,8 @@ public class ConnectorController {
       @RequestParam(value = "endDate", required = false) Instant endDate,
       RestListRequest requestList) throws Exception {
 
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    Date start = null;
+      DashboardDatasourceDto dto = this.getAndCheckDashboardDatasourceDto(serverId, datasourceCode);
+      Date start = null;
     Date end = null;
     if(startDate != null) {
       start = Date.from(startDate);
@@ -90,22 +78,28 @@ public class ConnectorController {
           .getDeviceMeasurements(dto, start, end, requestList);
       return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
     } catch (Exception e) {
+        
       e.printStackTrace();
     }
     return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
+    private DashboardDatasourceDto getAndCheckDashboardDatasourceDto(@PathVariable int serverId, @PathVariable String datasourceCode) {
+        if (!dashboardConfigService.existsById(serverId)) {
+            throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "ServerId", String.valueOf(serverId));
+        }
+        DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
+        if (dto.getDatasourcesConfigDto() == null) {
+            throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "ServerId: " + String.valueOf(serverId) + " datasourceCode " , datasourceCode);
+        }
+        return dto;
+    }
+
+    @RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
   public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
       @PathVariable String datasourceCode)
       throws ApsSystemException {
-    if (!dashboardConfigService.existsById(serverId)) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-    if (dto.getDatasourcesConfigDto() == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+        DashboardDatasourceDto dto = this.getAndCheckDashboardDatasourceDto(serverId, datasourceCode);
 //    connectorService.setDeviceMeasurementSchema(dto);
 
     return new ResponseEntity<>(HttpStatus.OK);
