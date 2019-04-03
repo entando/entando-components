@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.storage.MessagePayload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 
@@ -19,7 +20,7 @@ public class MeasurementPayload implements MessagePayload {
 		this.measurement = measurement;
 	}
 
-	public Map<String, Object> getMeasurements() {
+	public Map<String, Object> getMeasurement() {
 		return measurement;
 	}
 
