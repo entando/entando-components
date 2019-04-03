@@ -98,44 +98,52 @@ export const DATASOURCE_BUS_STATION = {
 
 export const DATASOURCE_PARKING_DATA = {
   id: "parking",
-  mappings: [
-    {sourceName: "status", destinationName: "status"},
-    {sourceName: "inUse", destinationName: "inUse"},
-    {sourceName: "batteryLevel", destinationName: "batteryLevel"},
-    {sourceName: "deviceCode", destinationName: "deviceCode"},
-    {sourceName: "deviceBrand", destinationName: "deviceBrand"},
-    {sourceName: "expirationGuarantee", destinationName: "expirationG."},
-    {sourceName: "coordinates", destinationName: "coordinates"},
-    {sourceName: "information", destinationName: "information"}
-  ],
+  payload: {
+    mappings: [
+      {sourceName: "status", destinationName: "status"},
+      {sourceName: "inUse", destinationName: "inUse"},
+      {sourceName: "batteryLevel", destinationName: "batteryLevel"},
+      {sourceName: "deviceCode", destinationName: "deviceCode"},
+      {sourceName: "deviceBrand", destinationName: "deviceBrand"},
+      {sourceName: "expirationGuarantee", destinationName: "expirationG."},
+      {sourceName: "coordinates", destinationName: "coordinates"},
+      {sourceName: "information", destinationName: "information"}
+    ]
+  },
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
 export const DATASOURCE_BIKE_DATA = {
   id: "bike",
-  mappings: [
-    {sourceName: "inUse", destinationName: "inUse"},
-    {sourceName: "coordinates", destinationName: "coordinates"},
-    {sourceName: "information", destinationName: "information"}
-  ],
+  payload: {
+    mappings: [
+      {sourceName: "inUse", destinationName: "inUse"},
+      {sourceName: "coordinates", destinationName: "coordinates"},
+      {sourceName: "information", destinationName: "information"}
+    ]
+  },
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
 export const DATASOURCE_BUS_DATA = {
   id: "bus",
-  mappings: [
-    {sourceName: "status", destinationName: "status"},
-    {sourceName: "coordinates", destinationName: "coordinates"},
-    {sourceName: "information", destinationName: "information"}
-  ],
+  payload: {
+    mappings: [
+      {sourceName: "status", destinationName: "status"},
+      {sourceName: "coordinates", destinationName: "coordinates"},
+      {sourceName: "information", destinationName: "information"}
+    ]
+  },
   data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4]
 };
 export const DATASOURCE_TEMPERATURE_DATA = {
   id: "temperature",
-  mappings: [
-    {sourceName: "temperature", destinationName: "temperature"},
-    {sourceName: "temperature1", destinationName: "temperature1"},
-    {sourceName: "timestamp", destinationName: "timestamp"},
-    {sourceName: "timestamp1", destinationName: "timestamp1"}
-  ],
+  payload: {
+    mappings: [
+      {sourceName: "temperature", destinationName: "temperature"},
+      {sourceName: "temperature1", destinationName: "temperature1"},
+      {sourceName: "timestamp", destinationName: "timestamp"},
+      {sourceName: "timestamp1", destinationName: "timestamp1"}
+    ]
+  },
   data: [
     {
       timestamp: "2019-01-01 09:10:00",
@@ -189,28 +197,28 @@ export const CONFIG_CHART = {
     title: {en: "Line chart"},
     serverName: "2",
     datasource: "temperature",
-    mappings: {
+    columns: {
       x: [
         {
-          id: 2,
-          sourceName: "timestamp",
-          destinationName: "timestamp",
+          id: 1,
+          key: "timestamp",
+          value: "timestamp",
           selected: true
         }
       ],
       y: [
         {
-          id: 0,
-          sourceName: "temperature",
-          destinationName: "temperature",
+          id: 3,
+          key: "temperature",
+          value: "temperature",
           selected: true
         }
       ]
     },
     data: {
       json: [],
-      sourceNames: {
-        destinationName: ["timestamp", "temperature"],
+      key: {
+        value: ["timestamp", "temperature"],
         x: "timestamp"
       },
       xFormat: "%Y-%m-%d %H:%M:%S"

@@ -370,7 +370,7 @@ describe("state/main/actions", () => {
     describe("fetchDatasourceColumns", () => {
       beforeEach(() => {
         getDatasourceColumns.mockImplementation(
-          mockApi({payload: DATASOURCE_TEMPERATURE_DATA.columns})
+          mockApi({payload: DATASOURCE_TEMPERATURE_DATA.payload})
         );
       });
       it("if response OK dispatch clearSelectedDatasource, setSelectedDatasource", done => {

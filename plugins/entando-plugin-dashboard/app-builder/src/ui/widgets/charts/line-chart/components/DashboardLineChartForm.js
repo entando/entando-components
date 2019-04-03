@@ -13,7 +13,7 @@ const FORM_NAME = "form-dashboard-line-chart";
 let TYPE_CHART = "LINE_CHART";
 const CHART_PREVIEW = "Line Chart";
 
-class DashboardLineChartFormBody extends Component {
+export class DashboardLineChartFormBody extends Component {
   componentWillMount() {
     this.props.onWillMount();
   }
@@ -89,7 +89,11 @@ DashboardLineChartFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  spline: PropTypes.bool
+  spline: PropTypes.bool,
+  axis: PropTypes.shape({
+    rotated: PropTypes.bool
+  }).isRequired,
+  formSyncErrors: PropTypes.shape({}).isRequired
 };
 
 DashboardLineChartFormBody.defaultProps = {

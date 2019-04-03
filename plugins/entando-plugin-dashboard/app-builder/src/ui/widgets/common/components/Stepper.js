@@ -137,7 +137,8 @@ Stepper.propTypes = {
   handleSubmit: PropTypes.func,
   step1: PropTypes.node,
   step2: PropTypes.node,
-  step3: PropTypes.node
+  step3: PropTypes.node,
+  validateSteps: PropTypes.arrayOf(PropTypes.bool).isRequired
 };
 
 Stepper.defaultProps = {
