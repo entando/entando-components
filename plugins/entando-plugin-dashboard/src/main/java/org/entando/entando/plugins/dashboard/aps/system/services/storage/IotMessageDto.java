@@ -3,32 +3,25 @@ package org.entando.entando.plugins.dashboard.aps.system.services.storage;
 import java.time.Instant;
 import java.util.Objects;
 
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.mongodb.BasicDBObject;
-
-@Document(collection = "iot_messages")
-public class IotMessage {
+public class IotMessageDto {
 
 	@Id
 	private String id;
 	private Instant createdAt;
-	private BasicDBObject content;
+	private MessagePayload measurement;
 	private int serverId;
 	private String dashboardCode;
 
-	public IotMessage() {
+	public IotMessageDto() {
 
 	}
 
-	public IotMessage(int serverId, String dashboardCode, BasicDBObject content) {
+	public IotMessageDto(int serverId, String dashboardCode, MessagePayload content) {
 		this.serverId = serverId;
 		this.dashboardCode = dashboardCode;
-		this.content = content;
+		this.measurement = content;
 	}
 
 	public String getId() {
@@ -45,11 +38,11 @@ public class IotMessage {
 		this.createdAt = createdAt;
 	}
 
-	public BasicDBObject getContent() {
-		return (BasicDBObject) content;
+	public MessagePayload getContent() {
+		return measurement;
 	}
-	public void setContent(BasicDBObject content) {
-		this.content = content;
+	public void setContent(MessagePayload content) {
+		this.measurement = content;
 	}
 
 	public int getServerId() {
@@ -71,7 +64,7 @@ public class IotMessage {
 	public String toString() {
 		return "Message [" + (id != null ? "id=" + id + ", " : "")
 				+ (createdAt != null ? "createdAt=" + createdAt + ", " : "")
-				+ (content != null ? "content=" + content + ", " : "")
+				+ (measurement != null ? "content=" + measurement + ", " : "")
 				+ ("serverId=" + serverId)
 				+ (dashboardCode != null ? "dashboardCode=" + dashboardCode : "") + "]";
 	}
@@ -84,21 +77,17 @@ public class IotMessage {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		IotMessage that = (IotMessage) o;
+		IotMessageDto that = (IotMessageDto) o;
 		return serverId == that.serverId &&
 				Objects.equals(id, that.id) &&
 				Objects.equals(createdAt, that.createdAt) &&
-				Objects.equals(content, that.content) &&
+				Objects.equals(measurement, that.measurement) &&
 				Objects.equals(dashboardCode, that.dashboardCode);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, createdAt, content, serverId, dashboardCode);
-	}
-	
-	public String getJson() {
-		return new Gson().toJson(this);
+		return Objects.hash(id, createdAt, measurement, serverId, dashboardCode);
 	}
 	
 }

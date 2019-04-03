@@ -77,17 +77,17 @@ public class ConnectorController {
 			obj.add("measure", c);
 
 			List<JsonObject> misur = new ArrayList<JsonObject>();
-			misur.add(obj);
-			m.setMeasurements(misur);
-			iotMessage.setContent(m);
-
-			List<IotMessage> lista = new ArrayList<IotMessage>();
-			lista.add(iotMessage);
-
-			PagedMetadata<IotMessage> pagedMetadata = new PagedMetadata<>(requestList, 1);
-			pagedMetadata.setBody(lista);
-
-			return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
+//			misur.add(obj);
+//			m.setMeasurements(misur);
+//			iotMessage.setContent(m);
+//
+//			List<IotMessage> lista = new ArrayList<IotMessage>();
+//			lista.add(iotMessage);
+//
+//			PagedMetadata<IotMessage> pagedMetadata = new PagedMetadata<>(requestList, 1);
+//			pagedMetadata.setBody(lista);
+//
+//			return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

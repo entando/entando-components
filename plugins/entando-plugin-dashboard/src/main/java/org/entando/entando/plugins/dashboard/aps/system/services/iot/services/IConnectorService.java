@@ -11,8 +11,9 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Dashb
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
-import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessage;
+import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessageDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 
@@ -35,7 +36,7 @@ public interface IConnectorService {
 	/**
 	 * TODO Lista struttura Misura per configurazione tramite interfaccioa web
 	 */
-//    <T extends DashboardDatasourceDto> MeasurementConfig getDeviceMeasurementSchema(T dashboardDatasourceDto, String loggerId);
+	//    <T extends DashboardDatasourceDto> MeasurementConfig getDeviceMeasurementSchema(T dashboardDatasourceDto, String loggerId);
 
 	void setDeviceMeasurementSchema(IDashboardDatasourceDto dashboardDatasourceDto) throws ApsSystemException;
 
@@ -43,11 +44,11 @@ public interface IConnectorService {
 
 	PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList);
 
-	PagedMetadata<IotMessage> getDeviceMeasurements(IDashboardDatasourceDto dto, Date startDate, Date endDate, RestListRequest restListRequest);
+	PagedMetadata<MeasurementPayload> getDeviceMeasurements(IDashboardDatasourceDto dto, Date startDate, Date endDate, RestListRequest restListRequest);
 
 	MeasurementConfig getMeasurementsConfig(IDashboardDatasourceDto dto);
 
-  MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto);
+	MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto);
 
-  List<ServerType> getDashboardTypes();
+	List<ServerType> getDashboardTypes();
 }

@@ -15,7 +15,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
-import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessage;
+import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessageDto;
 import org.entando.entando.plugins.dashboard.web.iot.ConnectorController;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -194,8 +194,8 @@ public class TestConnectorController extends AbstractControllerTest {
     mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
 
-    List<IotMessage> measurementObjects = new ArrayList<>();
-    PagedMetadata<IotMessage> pagedMetadata = new PagedMetadata<>();
+    List<IotMessageDto> measurementObjects = new ArrayList<>();
+    PagedMetadata<IotMessageDto> pagedMetadata = new PagedMetadata<>();
     pagedMetadata.setBody(measurementObjects);
 
     Instant startDate = Instant.ofEpochMilli(1553814852743L);
@@ -226,8 +226,8 @@ public class TestConnectorController extends AbstractControllerTest {
     mockDto.setDatasourcesConfigDto(null);
 
 
-    List<IotMessage> measurementObjects = new ArrayList<>();
-    PagedMetadata<IotMessage> pagedMetadata = new PagedMetadata<>();
+    List<IotMessageDto> measurementObjects = new ArrayList<>();
+    PagedMetadata<IotMessageDto> pagedMetadata = new PagedMetadata<>();
     pagedMetadata.setBody(measurementObjects);
 
     Instant startDate = Instant.ofEpochMilli(1553814852743L);
