@@ -13,11 +13,11 @@ import DashboardLineChartForm from "ui/widgets/charts/line-chart/components/Dash
 const FORM_NAME = "form-dashboard-line-chart";
 const selector = formValueSelector(FORM_NAME);
 
-const mapStateToProps = state => ({
+export const mapStateToProps = state => ({
+  chart: "line",
   datasource: selector(state, "datasource"),
   formSyncErrors: getFormSyncErrors(FORM_NAME)(state),
   axis: {rotated: selector(state, "axis.rotated")},
-  chart: selector(state, "chart"),
   spline: selector(state, "spline"),
   columns: selector(state, "columns"),
 
@@ -44,7 +44,7 @@ const mapStateToProps = state => ({
   }
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+export const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList()).then(() => {
       dispatch(getWidgetConfigChart(FORM_NAME));

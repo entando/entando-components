@@ -197,28 +197,28 @@ export const CONFIG_CHART = {
     title: {en: "Line chart"},
     serverName: "2",
     datasource: "temperature",
-    mappings: {
+    columns: {
       x: [
         {
-          id: 2,
-          sourceName: "timestamp",
-          destinationName: "timestamp",
+          id: 1,
+          key: "timestamp",
+          value: "timestamp",
           selected: true
         }
       ],
       y: [
         {
-          id: 0,
-          sourceName: "temperature",
-          destinationName: "temperature",
+          id: 3,
+          key: "temperature",
+          value: "temperature",
           selected: true
         }
       ]
     },
     data: {
       json: [],
-      sourceNames: {
-        destinationName: ["timestamp", "temperature"],
+      key: {
+        value: ["timestamp", "temperature"],
         x: "timestamp"
       },
       xFormat: "%Y-%m-%d %H:%M:%S"

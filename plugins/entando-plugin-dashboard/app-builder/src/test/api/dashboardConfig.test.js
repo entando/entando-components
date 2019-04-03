@@ -7,7 +7,8 @@ import {
   deleteServerConfig,
   getDatasources,
   putDatasourceColumn,
-  getDatasourceColumns
+  getDatasourceColumns,
+  getDatasourceData
 } from "api/dashboardConfig";
 import {makeRequest, METHODS} from "@entando/apimanager";
 
@@ -188,6 +189,25 @@ describe("api/dashboardConfig", () => {
         expect.objectContaining({
           uri:
             "/api/plugins/dashboard/dashboardConfigs/server/2/datasource/temperature/columns",
+          method: METHODS.GET,
+          useAuthentication: true
+        }),
+        {page: 1, pageSize: 0}
+      );
+    });
+  });
+
+  describe("getDatasourceData", () => {
+    it("returns a promise", () => {
+      expect(getDatasourceData(2, "temperature")).toBeInstanceOf(Promise);
+    });
+
+    it("if successful, returns a mock ok response", () => {
+      getDatasourceData(2, "temperature");
+      expect(makeRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          uri:
+            "/api/plugins/dashboard/dashboardConfigs/server/2/datasource/temperature/data",
           method: METHODS.GET,
           useAuthentication: true
         }),
