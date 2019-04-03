@@ -1,9 +1,18 @@
 package org.entando.entando.plugins.dashboard.web;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
@@ -22,21 +31,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
-import com.google.gson.JsonElement;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.sun.xml.bind.v2.schemagen.xmlschema.Any;
-
-import static org.mockito.Mockito.when;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ConnectorControllerTest extends AbstractControllerTest {
 
@@ -61,30 +57,50 @@ public class ConnectorControllerTest extends AbstractControllerTest {
                 .setHandlerExceptionResolvers(createHandlerExceptionResolver())
                 .build();
     }
+	
+	@Test
+    public void when_GetMeasurement_WhenServerNotExist_thanError() throws Exception {
+        when(this.dashboardConfigService.existsById(Mockito.anyInt())).thenReturn(false);
+        
+        String accessToken = "token";
+        ResultActions result =mockMvc.perform(get("/plugins/dashboard/server/2/datasource/3/data")
+                .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().is4xxClientError());
+    }
+	
+	@Test
+    public void when_GetMeasurement_WhenServerExistAndDashboardCodeNotExist_thanError() throws Exception {
+       
+        when(this.dashboardConfigService.existsById(Mockito.anyInt())).thenReturn(true);
+        DashboardDatasourceDto dashboardDatasourceDto = new DashboardDatasourceDto();
+        dashboardDatasourceDto.setDatasourcesConfigDto(null);
+        when(dashboardConfigService.getDashboardDatasourceDto(Mockito.anyInt(), Mockito.anyString())).thenReturn(dashboardDatasourceDto);
+        
+        String accessToken = "token";
+        ResultActions result =mockMvc.perform(get("/plugins/dashboard/server/2/datasource/3/data")
+                .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().is4xxClientError());
+        
+    }
 
     @Test
-    public void shouldGetExistingMeasurement() throws Exception {
+    public void should_GetExistingMeasurement_When_ServerExist() throws Exception {
        
-    	IotMessage iotMessage = new IotMessage();
-		MeasurementPayload m = new MeasurementPayload();
-		JsonObject obj = new JsonObject();
-
-		String jsonString = "{\"timestamp\":\"2019-03-22T15:03:26\",\"temperature\":\"20\"}";
-
-		JsonElement c = new com.google.gson.JsonParser().parse(jsonString);
-		obj.add("measure", c);
-
-		List<JsonObject> misur = new ArrayList<JsonObject>();
-		misur.add(obj);
-//		m.setMeasurements(misur);
-//		iotMessage.setContent(m);
-
-		List<IotMessage> lista = new ArrayList<IotMessage>();
-		lista.add(iotMessage);
+		Map<String, Object> mappa1 = new HashMap<String, Object>();
+		mappa1.put("temperature", 2.3);
+		mappa1.put("timestamp", "2019-03-04 12:13:14");
+		
+		Map<String, Object> mappa2 = new HashMap<String, Object>();
+		mappa2.put("temperature", 12.3);
+		mappa2.put("timestamp", "2019-03-04 13:13:14");
+		
+		
+		List<Map<String, Object>> lista = new ArrayList<Map<String, Object>>();
+		lista.add(mappa1);
+		lista.add(mappa2);
 		
 		RestListRequest requestList = new RestListRequest();
-
-		PagedMetadata<IotMessage> pagedMetadata = new PagedMetadata<>(requestList, 1);
+		PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata<>(requestList, 1);
 		pagedMetadata.setBody(lista);
     	
         when(this.dashboardConfigService.existsById(Mockito.anyInt())).thenReturn(true);
@@ -92,33 +108,19 @@ public class ConnectorControllerTest extends AbstractControllerTest {
         dashboardDatasourceDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
         when(dashboardConfigService.getDashboardDatasourceDto(Mockito.anyInt(), Mockito.anyString())).thenReturn(dashboardDatasourceDto);
         
-//        when(connectorService.getDeviceMeasurements(dashboardDatasourceDto, null,null, requestList)).thenReturn(pagedMetadata);
+        when(connectorService.getDeviceMeasurements(dashboardDatasourceDto, null,null, requestList)).thenReturn(lista);
         
-        String accessToken = "ddd";
+        String accessToken = "token";
         ResultActions result =mockMvc.perform(get("/plugins/dashboard/server/2/datasource/3/data")
                 .header("Authorization", "Bearer " + accessToken));
-//        result.andExpect(status().isOk());
+        result.andExpect(status().is2xxSuccessful());
+        
+        System.out.println("respt " + result.andReturn().getResponse().getContentAsString());
+        
+        //TODO check 
     }
     
     
-//    private String accessToken ="222";
-//    
-//    private ResultActions performGetContent(String code, String modelId,
-//            boolean online, String langCode, UserDetails user) throws Exception {
-//        String accessToken = mockOAuthInterceptor(user);
-//        String path = "/plugins/cms/contents/{code}";
-//        if (null != modelId) {
-//            path += "/model/" + modelId;
-//        }
-//        path += "?status=" + ((online) ? IContentService.STATUS_ONLINE : IContentService.STATUS_DRAFT);
-//        if (null != langCode) {
-//            path += "&lang=" + langCode;
-//        }
-//        return mockMvc.perform(
-//                get(path, code)
-//                .sessionAttr("user", user)
-//                .header("Authorization", "Bearer " + accessToken));
-//    }
     
     
 
