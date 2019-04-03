@@ -97,11 +97,11 @@ describe("state/main/reducer", () => {
     it("SET_DATASOURCE_COLUMNS", () => {
       newState = reducer(
         state,
-        setDatasourceColumns(DATASOURCE_TEMPERATURE_DATA.columns)
+        setDatasourceColumns(DATASOURCE_TEMPERATURE_DATA.payload.mappings)
       );
       expect(newState).toHaveProperty(
         "dashboardConfig.datasource.columns",
-        DATASOURCE_TEMPERATURE_DATA.columns
+        DATASOURCE_TEMPERATURE_DATA.payload.mappings
       );
     });
 

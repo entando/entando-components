@@ -6,7 +6,8 @@ import {
   putServerConfig,
   deleteServerConfig,
   getDatasources,
-  putDatasourceColumn
+  putDatasourceColumn,
+  getDatasourceColumns
 } from "api/dashboardConfig";
 import {makeRequest, METHODS} from "@entando/apimanager";
 
@@ -27,7 +28,7 @@ const CONFIG = {
   password: "adminadmin",
   serverURI: "http://kaa.entando.iot.com:3303",
   token: "token-code",
-  timeout: 300,
+  timeoutConnection: 300,
   datasources: [
     {
       datasource: "Temperature",
@@ -166,11 +167,31 @@ describe("api/dashboardConfig", () => {
       putDatasourceColumn(1, 2, columns);
       expect(makeRequest).toHaveBeenCalledWith(
         expect.objectContaining({
-          uri: "/api/plugins/dashboard/dashboardConfigs/1/datasource/2/columns",
+          uri:
+            "/api/plugins/dashboard/dashboardConfigs/server/1/datasource/2/columns",
           method: METHODS.PUT,
           useAuthentication: true,
           body: columns
         })
+      );
+    });
+  });
+
+  describe("getDatasourceColumns", () => {
+    it("returns a promise", () => {
+      expect(getDatasourceColumns(2, "temperature")).toBeInstanceOf(Promise);
+    });
+
+    it("if successful, returns a mock ok response", () => {
+      getDatasourceColumns(2, "temperature");
+      expect(makeRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          uri:
+            "/api/plugins/dashboard/dashboardConfigs/server/2/datasource/temperature/columns",
+          method: METHODS.GET,
+          useAuthentication: true
+        }),
+        {page: 1, pageSize: 0}
       );
     });
   });

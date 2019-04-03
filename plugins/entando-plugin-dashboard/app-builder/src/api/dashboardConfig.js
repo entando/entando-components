@@ -72,7 +72,7 @@ export const getDatasourceColumns = (
     {
       uri: `/api/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceId}/columns`,
       method: METHODS.GET,
-      mockResponse: DATASOURCES_DATA[datasourceId].mappings,
+      //mockResponse: DATASOURCES_DATA[datasourceId].payload.mappings,
       useAuthentication: true
     },
     page

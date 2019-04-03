@@ -39,7 +39,13 @@ org.entando.dashboard.Table = class {
             request.setRequestHeader("Authorization", "Bearer " + accessToken);
           }
         },
-        dataSrc: json => json.payload
+        dataSrc: json => json.payload,
+        error: xhr => {
+          const str = `status: ${xhr.status} text: ${xhr.statusText} error: ${
+            xhr.responseJSON.errors[0].message
+          }`;
+          alert(str);
+        }
       },
       columns
     };

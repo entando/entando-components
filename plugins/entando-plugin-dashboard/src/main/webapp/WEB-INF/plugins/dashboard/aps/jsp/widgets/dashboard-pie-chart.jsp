@@ -32,6 +32,9 @@ $(document).ready(() => {
     }
   }).done((json)=>{
     pieChart.update(json.payload);
+  }).fail((xhr)=>{
+    const str = "status:"+xhr.status+" text:"+ xhr.statusText+ " error: " +xhr.responseJSON.errors[0].message ;
+    alert(str);
   });
 });
 
